@@ -7,6 +7,7 @@ require 'devise'
 require 'slim'
 require 'sass-rails'
 require 'bootstrap-sass'
+require 'simple_form'
 
 module Folio
   class Engine < ::Rails::Engine

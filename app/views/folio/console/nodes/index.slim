@@ -1,0 +1,19 @@
+/= render partial: "partials/nav"
+
+/.row
+  .col-md-12
+    form(action="#{explore_units_path}", method='get')
+      .ui.right.action.left.icon.input
+        i.search.icon
+        input(type="text" id="q" name="q" value="#{@query}" placeholder="Search...")
+        button.ui.button type="submit"  Filter
+
+.row
+  .col-md-8
+    table.table.table-stripped
+      thead
+        th = t(".title")
+        th = t(".translations")
+      
+      tbody
+        = render partial: "nodes_table", locals: { nodes: @nodes }

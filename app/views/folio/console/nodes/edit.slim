@@ -1,0 +1,10 @@
+.container
+  .row
+    .col-md-8
+      = simple_form_for(@node, html: { class: 'form-horizontal' }) do |f|
+        = f.input :title
+        = f.input :slug
+        = f.input :perex
+        = f.input :content, input_html: { class: "redactor" }
+        = f.submit
+        = link_to "back", console_nodes_path

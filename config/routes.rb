@@ -11,5 +11,6 @@ Folio::Engine.routes.draw do
   namespace :console do
     root to: 'dashboard#index'
     resource :dashboard
+    resources :nodes
   end
 end
