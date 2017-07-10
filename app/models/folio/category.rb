@@ -1,9 +1,9 @@
-class Folio::Category < Folio::Node
+# frozen_string_literal: true
 
-  has_many :translations, class_name: "Folio::CategoryTranslation"
+class Folio::Category < Folio::Node
+  has_many :translations, class_name: 'Folio::CategoryTranslation'
 
   before_validation do
-    self.locale = self.site.locale if locale.nil?
+    self.locale = site.locale if locale.nil?
   end
-
 end

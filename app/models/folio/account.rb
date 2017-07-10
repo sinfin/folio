@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Folio
   class Account < ApplicationRecord
     # Include default devise modules. Others available are:

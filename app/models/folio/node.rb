@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 module Folio
   class Node < ApplicationRecord
     extend FriendlyId
 
     # Relations
     has_ancestry
-    belongs_to :site, class_name: "Folio::Site"
-    friendly_id :title, use: [:slugged, :scoped, :history], :scope => [:site]
+    belongs_to :site, class_name: 'Folio::Site'
+    friendly_id :title, use: %i[slugged scoped history], scope: [:site]
 
     # Validations
     validates :title, :slug, :locale, presence: true
@@ -21,7 +23,7 @@ module Folio
     }
 
     before_validation do
-      self.site = self.parent.site unless self.parent.blank?
+      self.site = parent.site unless parent.blank?
     end
   end
 end

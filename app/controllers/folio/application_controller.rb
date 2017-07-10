@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Folio
   class ApplicationController < ActionController::Base
     protect_from_forgery with: :exception
@@ -5,6 +7,5 @@ module Folio
     before_action do
       @roots = Folio::Node.roots
     end
-    
   end
 end
