@@ -7,11 +7,11 @@ require "folio/version"
 Gem::Specification.new do |s|
   s.name        = "folio"
   s.version     = Folio::VERSION
-  s.authors     = ["Filip Ornstein"]
-  s.email       = ["filip@sinfin.cz"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Folio."
-  s.description = "TODO: Description of Folio."
+  s.authors     = ["Sinfin"]
+  s.email       = ["info@sinfin.cz"]
+  s.homepage    = "http://sinfin.digital"
+  s.summary     = "Summary of Folio."
+  s.description = "Description of Folio."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
