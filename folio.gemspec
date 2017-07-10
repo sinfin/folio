@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency "slim"
   s.add_dependency "simple_form"
 
-  s.add_development_dependency "sqlite3"#, platforms: [:mri, :mingw, :x64_mingw]
   s.add_development_dependency "byebug"#, platforms: [:mri, :mingw, :x64_mingw]
   s.add_development_dependency "pry-rails"
   s.add_development_dependency "pry-remote"

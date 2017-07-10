@@ -6,7 +6,7 @@ class CreateFolioSites < ActiveRecord::Migration[5.1]
       t.string   :domain, index: true
 
       t.string   :locale, default: :en
-      t.string   :locales, index: true
+      t.jsonb   :locales, index: true
 
       t.timestamps
     end

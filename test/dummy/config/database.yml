@@ -1,25 +1,32 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-#
 default: &default
-  adapter: sqlite3
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: 50
+
 
 development:
   <<: *default
-  database: db/development.sqlite3
+  database: folio_development
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
+# TODO - use BUILD_TAG or similar on Jenkins
+# https://wiki.jenkins-ci.org/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-JenkinsSetEnvironmentVariables
+  database: folio_<%= "test#{ENV['GIT_BRANCH']}#{ENV['BUILD_NUMBER']}".presence || 'test' %>
+  pool: 2
+
+staging:
+  <<: *default
+  database: folio_staging
+  pool: 4
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  adapter: postgresql
+  encoding: unicode
+  pool: 50
+  database: folio_production
+  host: db.folio.io

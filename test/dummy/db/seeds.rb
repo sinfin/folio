@@ -10,7 +10,7 @@ Folio::Site.destroy_all
 Folio::Node.destroy_all
 
 
-site = Folio::Site.create!(title: "Sinfin.digital", domain: "sinfin.localhost", locale: "cs", locales: "en, de, es"])
+site = Folio::Site.create!(title: "Sinfin.digital", domain: "sinfin.localhost", locale: "cs", locales: ["en", "de", "es"])
 
 about = Folio::Page.create!(title: "O nás", site: site)
 # about.translations << Folio::PageTranslation.create!(original_id: about.id, title: "About us", locale: :en, site: site)

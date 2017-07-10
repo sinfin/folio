@@ -12,8 +12,11 @@
 
 ActiveRecord::Schema.define(version: 20170710125813) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "folio_nodes", force: :cascade do |t|
-    t.integer "folio_site_id"
+    t.integer "site_id"
     t.string "title"
     t.string "slug"
     t.text "perex"
@@ -32,11 +35,11 @@ ActiveRecord::Schema.define(version: 20170710125813) do
     t.datetime "updated_at", null: false
     t.index ["ancestry"], name: "index_folio_nodes_on_ancestry"
     t.index ["code"], name: "index_folio_nodes_on_code"
-    t.index ["folio_site_id"], name: "index_folio_nodes_on_folio_site_id"
     t.index ["locale"], name: "index_folio_nodes_on_locale"
     t.index ["original_id"], name: "index_folio_nodes_on_original_id"
     t.index ["position"], name: "index_folio_nodes_on_position"
     t.index ["published_at"], name: "index_folio_nodes_on_published_at"
+    t.index ["site_id"], name: "index_folio_nodes_on_site_id"
     t.index ["slug"], name: "index_folio_nodes_on_slug"
     t.index ["type"], name: "index_folio_nodes_on_type"
   end
@@ -45,7 +48,7 @@ ActiveRecord::Schema.define(version: 20170710125813) do
     t.string "title"
     t.string "domain"
     t.string "locale", default: "en"
-    t.string "locales"
+    t.jsonb "locales"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["domain"], name: "index_folio_sites_on_domain"
