@@ -26,10 +26,12 @@ Gem::Specification.new do |s|
   s.add_dependency "mini_magick"
   s.add_dependency "slim"
   s.add_dependency "simple_form"
+  s.add_dependency "devise"
+  s.add_dependency "bootstrap-sass"
+  s.add_dependency "sass-rails"
 
-  s.add_development_dependency "byebug"#, platforms: [:mri, :mingw, :x64_mingw]
+  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "devise-bootstrapped"
+  s.add_development_dependency "byebug"
   s.add_development_dependency "pry-rails"
-  s.add_development_dependency "pry-remote"
-  s.add_development_dependency 'capybara', '~> 2.13'
-  s.add_development_dependency 'selenium-webdriver'
 end

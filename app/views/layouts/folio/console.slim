@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title Folio console
+    = stylesheet_link_tag    "folio/console/base", media: "all"
+    = javascript_include_tag "folio/console/base"
+    = csrf_meta_tags
+
+  body
+    = yield

@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Folio::Engine => "/"
+  mount Folio::Engine => '/'
 end

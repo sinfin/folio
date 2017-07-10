@@ -1,8 +1,13 @@
-require "folio/engine"
+require 'folio/engine'
 require 'friendly_id'
 require 'ancestry'
+require 'devise'
 require 'slim'
+require 'sass-rails'
+require 'bootstrap-sass'
 
 module Folio
-  # Your code goes here...
+  class Engine < ::Rails::Engine
+    config.assets.precompile += %w( folio/console/base.css folio/console/base.js )
+  end
 end

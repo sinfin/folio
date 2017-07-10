@@ -4,17 +4,17 @@ html lang=I18n.locale
     = render partial: 'layouts/folio/head'
 
   body class=(flash.present? ? 'cms-with-flash-messages' : 'cms-no-flash-messages')
-  
+
     = render partial: "folio/partials/header"
-  
+
     = yield
-    
+
     = render partial: "folio/partials/footer"
 
 
     = javascript_include_tag 'application'
-    
+
     = yield :javascripts
 
-    
+
     / = partial 'partials/cookie_consent'
