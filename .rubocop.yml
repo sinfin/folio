@@ -1,0 +1,13 @@
+inherit_gem:
+  rubocop-rails:
+    - config/rails.yml
+
+AllCops:
+  TargetRubyVersion: 2.4.1
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+  SupportedStyles:
+    - single_quotes
+    - double_quotes
+  ConsistentQuotesInMultiline: false
