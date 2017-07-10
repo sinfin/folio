@@ -23,3 +23,5 @@ site.nodes << reference
 Folio::Page.create!(title: 'Smart Cities', parent: reference)
 Folio::Page.create!(title: 'Vyvolej.to', parent: reference)
 Folio::Page.create!(title: 'DAM', parent: reference)
+
+Folio::Account.create!(email: 'test@test.test', password: 'testtest')
