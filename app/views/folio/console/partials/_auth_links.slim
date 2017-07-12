@@ -1,0 +1,4 @@
+/ li
+  = link_to t('.profile'), ''
+li
+  = link_to t('.logout', user: current_admin.email), destroy_account_session_path, target: '_blank'

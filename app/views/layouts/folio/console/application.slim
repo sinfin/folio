@@ -1,0 +1,12 @@
+doctype html
+html lang=I18n.locale
+  head
+    = render partial: 'layouts/folio/console/head'
+
+  body
+    = render partial: 'layouts/folio/console/header'
+    = yield
+    = render partial: "layouts/folio/console/footer"
+    
+    = javascript_include_tag "folio/console/base"
+    = yield :javascripts

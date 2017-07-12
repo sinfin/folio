@@ -9,8 +9,9 @@ Folio::Engine.routes.draw do
   resources :pages, only: %i[index show]
 
   namespace :console do
-    root to: 'dashboard#index'
-    resource :dashboard
+    root to: 'nodes#index'
+    resources :dashboard
     resources :nodes
+    resources :accounts
   end
 end
