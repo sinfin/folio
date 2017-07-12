@@ -10,7 +10,7 @@ Folio::Engine.routes.draw do
 
   namespace :console do
     root to: 'nodes#index'
-    resources :dashboard
+    resources :dashboard, only: :index
     resources :nodes
     resources :accounts
   end

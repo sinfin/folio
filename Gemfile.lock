@@ -8,10 +8,13 @@ PATH
       carrierwave
       devise
       friendly_id (~> 5.1.0)
+      kaminari
+      kaminari-bootstrap (~> 3.0.1)
       mini_magick
       pg
       pg_search
       rails (~> 5.1.2)
+      responders
       sass-rails
       simple_form
       slim
@@ -63,7 +66,7 @@ GEM
       rake (>= 10.4, < 13.0)
     arel (8.0.0)
     ast (2.3.0)
-    autoprefixer-rails (7.1.2.1)
+    autoprefixer-rails (7.1.2.2)
       execjs
     bcrypt (3.1.11)
     bootstrap-sass (3.3.7)
@@ -105,6 +108,21 @@ GEM
       guard (~> 2.0)
       rubocop (~> 0.20)
     i18n (0.8.6)
+    kaminari (1.0.1)
+      activesupport (>= 4.1.0)
+      kaminari-actionview (= 1.0.1)
+      kaminari-activerecord (= 1.0.1)
+      kaminari-core (= 1.0.1)
+    kaminari-actionview (1.0.1)
+      actionview
+      kaminari-core (= 1.0.1)
+    kaminari-activerecord (1.0.1)
+      activerecord
+      kaminari-core (= 1.0.1)
+    kaminari-bootstrap (3.0.1)
+      kaminari (>= 0.13.0)
+      rails
+    kaminari-core (1.0.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -239,4 +257,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.14.6
+   1.15.1

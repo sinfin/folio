@@ -4,7 +4,7 @@ html lang=I18n.locale
     = render partial: 'layouts/folio/console/head'
 
   body
-    = render partial: 'layouts/folio/console/header'
+    = render partial: 'layouts/folio/console/header' unless @devise
     = yield
     = render partial: "layouts/folio/console/footer"
     

@@ -1,0 +1,34 @@
+h2.sub-header = Folio::Account.model_name.human(count: 5)
+
+= filter_form({}, class: 'form-horizontal') do
+  .form-group
+    .col-md-2
+      = query_field t('.query')
+    .col-md-2
+      = active_account_select
+
+.table-responsive
+  table.table.table-striped
+    thead
+      tr
+        th = Folio::Account.human_attribute_name(:full_name)
+        th = Folio::Account.human_attribute_name(:email)
+        th = Folio::Account.human_attribute_name(:role)
+        th = Folio::Account.human_attribute_name(:is_active)
+        th.text-right
+          = link_to icon('plus'), new_console_account_path, class: 'btn btn-success'
+
+
+    tbody
+      - @accounts.each do |account|
+        tr
+          td = link_to account.full_name, edit_console_account_path(account.id)
+          td = account.email
+          td = admin_user.role
+          td = t account.is_active.to_s
+          td.text-right
+            = delete_button account, console_account_path(admin_user), class: 'text-danger'
+
+
+
+= paginate @accounts

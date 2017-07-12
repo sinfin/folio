@@ -33,6 +33,11 @@ class DeviseCreateFolioAccounts < ActiveRecord::Migration[5.1]
       # t.datetime :locked_at
 
       t.timestamps null: false
+
+      t.string  :first_name
+      t.string  :last_name
+      t.string  :role
+      t.boolean :is_active, default: true
     end
 
     add_index :folio_accounts, :email,                unique: true

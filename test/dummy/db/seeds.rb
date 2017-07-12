@@ -24,4 +24,4 @@ Folio::Page.create!(title: 'Smart Cities', parent: reference)
 Folio::Page.create!(title: 'Vyvolej.to', parent: reference)
 Folio::Page.create!(title: 'DAM', parent: reference)
 
-Folio::Account.create!(email: 'test@test.test', password: 'testtest')
+Folio::Account.create!(email: 'test@test.com', password: '123456', role: :superuser, first_name: 'Test', last_name: 'Dummy')

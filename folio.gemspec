@@ -31,6 +31,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise'
   s.add_dependency 'bootstrap-sass'
   s.add_dependency 'sass-rails'
+  s.add_dependency 'kaminari'
+  s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
+  s.add_dependency 'responders'
 
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'devise-bootstrapped'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'folio/application_responder'
 
 require_dependency 'folio/application_controller'
 
@@ -8,6 +9,8 @@ module Folio
     #TODO: before_action :authorize_account!
 
     layout 'folio/console/application'
+    self.responder = ApplicationResponder
+    respond_to :html
 
     # rescue_from CanCan::AccessDenied do |exception|
     #   redirect_to dashboard_path, alert: exception.message
@@ -20,7 +23,7 @@ module Folio
     private
 
       def set_locale
-        I18n.locale = :cs
+        I18n.locale = :en
       end
 
       # TODO: authorize account
