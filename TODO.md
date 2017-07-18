@@ -1,13 +1,15 @@
-[ ] friendly_id
+[x] friendly_id
 [ ] pgsearch s diakritikou
-[ ] published scope podle published_at
+[x] published scope podle published_at
 [ ] attachments / images na S3
 [ ] image thumbnails async
 [ ] image placements
 [ ] redactor.js rich content with images
 [ ] sitemap.xml
 [ ] fb meta fields
-[x] devise / authz
+[x] devise
+[x] accounts
+[ ] cancancan / authz
 [ ] leadform / async mailerem
 [ ] ahoy tracking
 [ ] Google Analytics tracking
@@ -17,3 +19,4 @@
 [ ] tagy obrazků
 [ ] tagy nodů
 [ ] node type galerie
+[ ] node / translations history
