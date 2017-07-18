@@ -12,7 +12,7 @@
 [ ] cancancan / authz
 [ ] leadform / async mailerem
 [ ] ahoy tracking
-[ ] Google Analytics tracking
+[x] Google Analytics tracking
 [ ] GAdwords tracking / obecny JS tracking
 [ ] capistrano deployment
 [ ] generovani modelu a CRUD (gem od Jakuba)

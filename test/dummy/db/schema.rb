@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710131529) do
+ActiveRecord::Schema.define(version: 20170718232640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,8 @@ ActiveRecord::Schema.define(version: 20170710131529) do
     t.jsonb "locales"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "google_analytics_tracking_code"
+    t.string "facebook_pixel_code"
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["locales"], name: "index_folio_sites_on_locales"
   end

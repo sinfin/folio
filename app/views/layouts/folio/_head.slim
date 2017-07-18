@@ -19,6 +19,6 @@ meta name="viewport"    content="width=device-width, user-scalable=no, initial-s
 = stylesheet_link_tag 'application', media: 'all'
 = csrf_meta_tags
 = action_cable_meta_tag
-/ = render partial: 'partials/analytics', locals: { order: @order }
+= render partial: 'layouts/folio/analytics', locals: { order: @order }
 
 / link rel="manifest" href="/manifest.json"

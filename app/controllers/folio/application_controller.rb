@@ -5,6 +5,7 @@ module Folio
     protect_from_forgery with: :exception
 
     before_action do
+      @site = Folio::Site.first
       @roots = Folio::Node.roots
     end
   end
