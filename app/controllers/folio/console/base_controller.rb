@@ -56,5 +56,11 @@ module Folio
       def current_page
         params.permit(:page)[:page].to_i || 1
       end
+
+      def filter_params
+        params.permit(:by_query)
+      end
+
+      helper_method :filter_params
   end
 end

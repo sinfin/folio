@@ -24,10 +24,10 @@ h2.sub-header = Folio::Account.model_name.human(count: 5)
         tr
           td = link_to account.full_name, edit_console_account_path(account.id)
           td = account.email
-          td = admin_user.role
+          td = account.role
           td = t account.is_active.to_s
           td.text-right
-            = delete_button account, console_account_path(admin_user), class: 'text-danger'
+            = delete_button account, console_account_path(account), class: 'text-danger'
 
 
 
