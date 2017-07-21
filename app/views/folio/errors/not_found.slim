@@ -1,0 +1,9 @@
+.container
+    h1
+      = t("error_pages.#{ @status }_message")
+
+    p
+      = t('error_pages.try_home_1')
+      '
+      = link_to t('error_pages.link'), home_path
+      = t('error_pages.try_home_2')

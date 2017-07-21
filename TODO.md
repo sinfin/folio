@@ -20,3 +20,4 @@
 [ ] tagy nodů
 [ ] node type galerie
 [ ] node / translations history
+[x] dynamic error pages
