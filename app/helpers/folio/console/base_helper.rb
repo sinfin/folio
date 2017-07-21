@@ -7,9 +7,18 @@ module Folio
       [i, title].compact.join(' ').html_safe
     end
 
-    def delete_button(record, path, opts = { label: 'Smazat' })
+    def edit_button(record, path, opts = { label: 'Edit' })
       name = record.try(:full_title) || record.title
-      question = t('really_delete', title: name)
+      ico = icon 'edit', opts.delete(:label)
+
+      opts.reverse_merge!(class: 'btn btn-info pull-right')
+
+      link_to(ico, path, opts).html_safe
+    end
+
+    def delete_button(record, path, opts = { label: 'Delete' })
+      name = record.try(:full_title) || record.title
+      question = t('folio.console.really_delete', title: name)
       ico = icon 'trash', opts.delete(:label)
 
       opts.reverse_merge!('data-confirm': question,
