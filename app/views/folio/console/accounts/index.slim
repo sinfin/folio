@@ -19,11 +19,8 @@ h2.sub-header = Folio::Account.model_name.human(count: 5)
         / th = Folio::Account.human_attribute_name(:last_sign_in_ip)
         th = Folio::Account.human_attribute_name(:created_at)
         th = Folio::Account.human_attribute_name(:is_active)
-        th colspan=2
-        
-        
-        th.text-right
-          = link_to icon('plus'), new_console_account_path, class: 'btn btn-success'
+        th.text-right colspan=2
+          = new_button new_console_account_path
 
 
     tbody
@@ -36,13 +33,8 @@ h2.sub-header = Folio::Account.model_name.human(count: 5)
           td = time_ago_in_words account.last_sign_in_at
           td = l account.created_at, format: :short
           td = t account.is_active.to_s
-          td = edit_button account, edit_console_account_path(account.id)
-          td = delete_button account, console_account_path(account.id)
-        
-          
-          td.text-right
-            = delete_button account, console_account_path(account), class: 'text-danger'
-
+          td.text-right = edit_button account, edit_console_account_path(account.id)
+          td.text-right = delete_button account, console_account_path(account.id)
 
 
 = paginate @accounts

@@ -7,6 +7,14 @@ module Folio
       [i, title].compact.join(' ').html_safe
     end
 
+    def new_button(path, opts = { label: 'New' })
+      ico = icon 'plus', opts.delete(:label)
+
+      opts.reverse_merge!(class: 'btn btn-success pull-right')
+
+      link_to(ico, path, opts).html_safe
+    end
+
     def edit_button(record, path, opts = { label: 'Edit' })
       name = record.try(:full_title) || record.title
       ico = icon 'edit', opts.delete(:label)
