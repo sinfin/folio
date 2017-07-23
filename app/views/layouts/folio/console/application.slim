@@ -5,7 +5,10 @@ html lang=I18n.locale
 
   body
     = render partial: 'layouts/folio/console/header' unless @devise
-    = yield
+    
+    .container-fluid#main-content
+      = yield
+      
     = render partial: "layouts/folio/console/footer"
     
     = javascript_include_tag "folio/console/base"

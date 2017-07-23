@@ -1,0 +1,19 @@
+.row
+  .col-sm-6
+    = f.error_notification
+
+    = f.input :title
+    = f.input :slug
+    = f.input :perex
+    = f.input :content, input_html: { class: "redactor" }
+    = f.input :meta_title
+    = f.input :meta_description, as: :text
+    = f.input :code
+    = f.input :ancestry
+    = f.input :type
+    = f.input :featured
+    = f.input :published_at
+    = f.input :locale
+
+    = f.submit
+    = link_to "back", console_nodes_path
