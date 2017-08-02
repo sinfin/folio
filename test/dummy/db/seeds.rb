@@ -10,6 +10,8 @@
 
 Folio::Site.destroy_all
 Folio::Node.destroy_all
+Folio::Image.destroy_all
+Folio::Account.destroy_all
 
 site = Folio::Site.create!(title: 'Sinfin.digital', domain: 'sinfin.localhost', locale: 'cs', locales: %w[en de es], google_analytics_tracking_code: 'UA-8111656-1')
 
@@ -26,3 +28,10 @@ Folio::Page.create!(title: 'Hidden', parent: reference, published: false, publis
 Folio::Page.create!(title: 'DAM', parent: reference, published: true, published_at: 1.month.since)
 
 Folio::Account.create!(email: 'test@test.com', password: '123456', role: :superuser, first_name: 'Test', last_name: 'Dummy')
+
+Folio::Image.create!(file: open('https://unsplash.com/photos/smWTOhdPvJc/download?force=true'))
+Folio::Image.create!(file: open('https://unsplash.com/photos/9gnXVOgo_-I/download?force=true'))
+Folio::Image.create!(file: open('https://unsplash.com/photos/DlnK1KOREds/download?force=true'))
+Folio::Image.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
+
+Folio::Document.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))

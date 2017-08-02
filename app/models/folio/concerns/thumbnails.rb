@@ -18,8 +18,8 @@ module Thumbnails
       ret.url = Dragonfly.app.remote_url_for(ret.uid)
       ret
     else
-      if attachment.mime_type =~ /svg/
-        url = attachment.url
+      if file.mime_type =~ /svg/
+        url = file.url
       else
         GenerateThumbnailJob.perform_later(self, w_x_h)
         url = "http://dummyimage.com/#{w_x_h}/FFF/000.png&text=Generating…"
@@ -37,19 +37,19 @@ module Thumbnails
 
   def landscape?
     fail_for_non_images
-    attachment.present? && attachment.width >= attachment.height
+    file.present? && file.width >= file.height
   end
 
   private
 
     def reset_thumbnails
       fail_for_non_images
-      self.thumbnail_sizes = {} if attachment_uid_changed?
+      self.thumbnail_sizes = {} if file_uid_changed?
     end
 
     def compute_sizes(size)
       fail_for_non_images
-      thumbnail = attachment.thumb(size, format: :jpg).encode('jpg', '-quality 90')
+      thumbnail = file.thumb(size, format: :jpg).encode('jpg', '-quality 90')
       {
         uid: thumbnail.store,
         signature: thumbnail.signature,
@@ -64,7 +64,7 @@ module Thumbnails
     end
 
     def set_mime_type
-      return unless attachment.present?
-      self.mime_type = attachment.mime_type
+      return unless file.present?
+      self.mime_type = file.mime_type
     end
 end

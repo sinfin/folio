@@ -4,9 +4,9 @@ module Folio
 
     VALID_FORMATS = %i{jpeg jpg png bmp svg gif}
 
-    validates_property :format, of: :attachment, in: VALID_FORMATS,
+    validates_property :format, of: :file, in: VALID_FORMATS,
                        case_sensitive: false,
                        message: I18n.t('dragonfly.invalid_format', formats: VALID_FORMATS.join(', ')),
-                       if: :attachment_changed?
+                       if: :file_changed?
   end
 end

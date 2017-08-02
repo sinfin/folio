@@ -7,6 +7,7 @@ module Folio
       # class_option :orm
 
       def copy_initializer
+        template '../templates/.env.sample.erb', '.env.sample'
         template '../templates/config/sitemap.rb.erb', 'config/sitemap.rb'
         template '../templates/config/schedule.rb.erb', 'config/schedule.rb'
       end
