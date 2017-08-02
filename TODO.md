@@ -7,22 +7,24 @@
 [x] dynamic error pages
 [x] whenever
 
+I. fáze
+[ ] node / translations
 [ ] tagy nodů
-[ ] node type galerie
-[ ] node / translations history
 [ ] cancancan / authz
+[ ] attachments / images na S3
+[ ] redactor.js rich content with images
+[ ] leadform / async mailerem
+[ ] řazení nodů
+
+II. fáze
+[ ] node type galerie
 [ ] pgsearch s diakritikou
 [ ] capistrano deployment
 [ ] generovani modelu a CRUD (gem od Jakuba)
-
-[ ] attachments / images na S3
 [ ] image thumbnails async
 [ ] image placements
 [ ] tagy obrazků
-
-[ ] redactor.js rich content with images
 [ ] fb meta fields
-
-[ ] leadform / async mailerem
 [ ] ahoy tracking
 [ ] GAdwords tracking / obecny JS tracking
+[ ] node history

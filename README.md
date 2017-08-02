@@ -18,7 +18,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install folio
+$ rails generate folio:install
 ```
 
 ## Contributing
