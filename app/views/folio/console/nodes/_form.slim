@@ -9,7 +9,7 @@
     = f.input :meta_title
     = f.input :meta_description, as: :text
     = f.input :code
-    = f.input :ancestry
+    = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
     = f.input :type
     = f.input :featured
     = f.input :published_at

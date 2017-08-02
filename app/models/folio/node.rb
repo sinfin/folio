@@ -26,5 +26,24 @@ module Folio
     before_validation do
       self.site = parent.site unless parent.blank?
     end
+
+    def self.arrange_as_array(options = {}, hash = nil)
+      hash ||= arrange(options)
+
+      arr = []
+      hash.each do |node, children|
+        arr << node
+        arr += arrange_as_array(options, children) unless children.empty?
+      end
+      arr
+    end
+
+    def to_label
+      self.title
+    end
+    def
+       name_depth
+      "#{'-' * self.depth} #{self.to_label}"
+    end
   end
 end
