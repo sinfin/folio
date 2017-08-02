@@ -11,6 +11,7 @@ require 'simple_form'
 require 'kaminari'
 require 'responders'
 require 'font-awesome-rails'
+require 'jquery-rails'
 
 module Folio
   class Engine < ::Rails::Engine

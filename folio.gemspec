@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
   s.add_dependency 'responders'
   s.add_dependency 'font-awesome-rails'
+  s.add_dependency 'jquery-rails'
 
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'devise-bootstrapped'
