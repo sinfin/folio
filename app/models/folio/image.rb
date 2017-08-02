@@ -1,5 +1,5 @@
 module Folio
-  class Image < ApplicationRecord
+  class Image < Folio::File
     # include Thumbnails
 
     VALID_FORMATS = %i{jpeg jpg png bmp svg gif}

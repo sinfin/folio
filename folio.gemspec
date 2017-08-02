@@ -39,6 +39,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'sitemap_generator'
   s.add_dependency 'whenever'
 
+  s.add_dependency 'dragonfly'
+  s.add_dependency 'dragonfly-s3_data_store'
+
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'devise-bootstrapped'
   s.add_development_dependency 'byebug'

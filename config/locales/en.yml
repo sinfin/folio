@@ -4,6 +4,8 @@ en:
   time:
     formats:
       short: "%d %b %Y, %H:%m"
+  dragonfly:
+    invalid_format: Invalid format
   folio:
     console:
       accounts:

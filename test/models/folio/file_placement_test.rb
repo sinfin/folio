@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Folio
-  class ImageTest < ActiveSupport::TestCase
+  class FilePlacementTest < ActiveSupport::TestCase
     # test "the truth" do
     #   assert true
     # end
