@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170802143748) do
+ActiveRecord::Schema.define(version: 20170802145256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,23 +36,25 @@ ActiveRecord::Schema.define(version: 20170802143748) do
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
-  create_table "folio_image_placements", force: :cascade do |t|
+  create_table "folio_file_placements", force: :cascade do |t|
     t.bigint "node_id"
     t.bigint "image_id"
     t.string "caption"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["image_id"], name: "index_folio_image_placements_on_image_id"
-    t.index ["node_id"], name: "index_folio_image_placements_on_node_id"
+    t.index ["image_id"], name: "index_folio_file_placements_on_image_id"
+    t.index ["node_id"], name: "index_folio_file_placements_on_node_id"
   end
 
-  create_table "folio_images", force: :cascade do |t|
-    t.string "photo_uid"
-    t.string "photo_name"
+  create_table "folio_files", force: :cascade do |t|
+    t.string "file_uid"
+    t.string "file_name"
+    t.string "type"
     t.text "thumbnail_sizes", default: "--- {}\n"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["type"], name: "index_folio_files_on_type"
   end
 
   create_table "folio_nodes", force: :cascade do |t|
