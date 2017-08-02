@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'sitemap_generator'
+  s.add_dependency 'whenever'
 
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'devise-bootstrapped'

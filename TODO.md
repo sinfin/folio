@@ -1,23 +1,28 @@
 [x] friendly_id
-[ ] pgsearch s diakritikou
 [x] published scope podle published_at
-[ ] attachments / images na S3
-[ ] image thumbnails async
-[ ] image placements
-[ ] redactor.js rich content with images
-[ ] sitemap.xml
-[ ] fb meta fields
 [x] devise
 [x] accounts
-[ ] cancancan / authz
-[ ] leadform / async mailerem
-[ ] ahoy tracking
+[x] sitemap.xml
 [x] Google Analytics tracking
-[ ] GAdwords tracking / obecny JS tracking
-[ ] capistrano deployment
-[ ] generovani modelu a CRUD (gem od Jakuba)
-[ ] tagy obrazků
+[x] dynamic error pages
+[x] whenever
+
 [ ] tagy nodů
 [ ] node type galerie
 [ ] node / translations history
-[x] dynamic error pages
+[ ] cancancan / authz
+[ ] pgsearch s diakritikou
+[ ] capistrano deployment
+[ ] generovani modelu a CRUD (gem od Jakuba)
+
+[ ] attachments / images na S3
+[ ] image thumbnails async
+[ ] image placements
+[ ] tagy obrazků
+
+[ ] redactor.js rich content with images
+[ ] fb meta fields
+
+[ ] leadform / async mailerem
+[ ] ahoy tracking
+[ ] GAdwords tracking / obecny JS tracking
