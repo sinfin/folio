@@ -41,9 +41,9 @@ module Folio
     def to_label
       self.title
     end
-    def
-       name_depth
-      "#{'-' * self.depth} #{self.to_label}"
+
+    def name_depth
+      "#{'&nbsp;' * self.depth} #{self.to_label}".html_safe
     end
   end
 end
