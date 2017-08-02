@@ -19,6 +19,7 @@ PATH
       responders
       sass-rails
       simple_form
+      sitemap_generator
       slim
 
 GEM
@@ -227,6 +228,8 @@ GEM
     simple_form (3.5.0)
       actionpack (> 4, < 5.2)
       activemodel (> 4, < 5.2)
+    sitemap_generator (5.0.5)
+      builder
     slim (3.0.8)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)

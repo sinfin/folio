@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Folio::Engine.routes.default_url_options[:host] = Folio::Site.first.url
+
 Folio::Engine.routes.draw do
   get 'errors/not_found'
 

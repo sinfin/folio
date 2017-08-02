@@ -8,5 +8,14 @@ module Folio
     # Validations
     validates :title, presence: true
     validates :domain, uniqueness: true
+
+    def url
+      "#{scheme}://#{self.domain}"
+    end
+
+    private
+      def scheme
+        'http'
+      end
   end
 end
