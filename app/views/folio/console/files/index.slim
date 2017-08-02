@@ -1,0 +1,44 @@
+/= render partial: "partials/nav"
+
+/ .row
+  .col-md-12
+    form(action="#{console_files_path}", method='get')
+      .ui.right.action.left.icon.input
+        i.search.icon
+        input(type="text" id="q" name="q" value="#{@query}" placeholder="Search...")
+        button.ui.button type="submit"  Filter
+        
+ul.nav.nav-tabs role="tablist" 
+  li.nav-item.active
+    a.nav-link.active data-toggle="tab" href="#images" role="tab" = t(".images")
+  li.nav-item
+    a.nav-link.active data-toggle="tab" href="#documents" role="tab" = t(".documents")
+    
+.tab-content
+  #images.tab-pane.active role="tabpanel"
+    table-responsive
+      table.table.table-striped
+        thead
+          tr
+            th = t(".file_name")
+            th.text-right colspan=2
+              = new_button new_console_file_path(file_type: :image), { label: 'New Image' }
+        tbody
+          - @images.each do |image|
+            tr
+              td = image.id
+              td = image_tag image.file.thumb('200x200#').url
+              
+  #documents.tab-pane role="tabpanel"
+    table-responsive
+      table.table.table-striped
+        thead
+          tr
+            th = t(".file_name")
+            th.text-right colspan=2
+              = new_button new_console_file_path(file_type: :document), { label: 'New Document' }
+        tbody
+          - @documents.each do |document|
+            tr
+              td = document.id
+              td   
