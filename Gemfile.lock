@@ -7,6 +7,7 @@ PATH
       bootstrap-sass
       carrierwave
       devise
+      font-awesome-rails
       friendly_id (~> 5.1.0)
       kaminari
       kaminari-bootstrap (~> 3.0.1)
@@ -66,7 +67,7 @@ GEM
       rake (>= 10.4, < 13.0)
     arel (8.0.0)
     ast (2.3.0)
-    autoprefixer-rails (7.1.2.2)
+    autoprefixer-rails (7.1.2.3)
       execjs
     bcrypt (3.1.11)
     bootstrap-sass (3.3.7)
@@ -90,6 +91,8 @@ GEM
     erubi (1.6.1)
     execjs (2.7.0)
     ffi (1.9.18)
+    font-awesome-rails (4.7.0.2)
+      railties (>= 3.2, < 5.2)
     formatador (0.2.5)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
@@ -257,4 +260,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.15.1
+   1.15.2

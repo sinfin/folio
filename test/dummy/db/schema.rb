@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20170718232640) do
     t.string "type"
     t.boolean "featured"
     t.integer "position"
+    t.boolean "published"
     t.datetime "published_at"
     t.integer "original_id"
     t.string "locale", limit: 6
@@ -56,9 +57,11 @@ ActiveRecord::Schema.define(version: 20170718232640) do
     t.datetime "updated_at", null: false
     t.index ["ancestry"], name: "index_folio_nodes_on_ancestry"
     t.index ["code"], name: "index_folio_nodes_on_code"
+    t.index ["featured"], name: "index_folio_nodes_on_featured"
     t.index ["locale"], name: "index_folio_nodes_on_locale"
     t.index ["original_id"], name: "index_folio_nodes_on_original_id"
     t.index ["position"], name: "index_folio_nodes_on_position"
+    t.index ["published"], name: "index_folio_nodes_on_published"
     t.index ["published_at"], name: "index_folio_nodes_on_published_at"
     t.index ["site_id"], name: "index_folio_nodes_on_site_id"
     t.index ["slug"], name: "index_folio_nodes_on_slug"

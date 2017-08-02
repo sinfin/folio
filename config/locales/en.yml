@@ -1,4 +1,9 @@
 en:
+  'true': Yes
+  'false': Ne
+  time:
+    formats:
+      short: "%d %b %Y, %H:%m"
   folio:
     console:
       accounts:

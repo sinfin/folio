@@ -10,6 +10,7 @@ require 'bootstrap-sass'
 require 'simple_form'
 require 'kaminari'
 require 'responders'
+require 'font-awesome-rails'
 
 module Folio
   class Engine < ::Rails::Engine

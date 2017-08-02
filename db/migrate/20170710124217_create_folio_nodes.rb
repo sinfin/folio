@@ -17,9 +17,10 @@ class CreateFolioNodes < ActiveRecord::Migration[5.1]
       t.string  'ancestry', index: true
       t.string  'type', index: true
 
-      t.boolean   'featured'
-      t.integer   'position', index: true
-      t.datetime  'published_at', index: true
+      t.boolean  'featured', index: true
+      t.integer  'position', index: true
+      t.boolean  'published', index: true
+      t.datetime 'published_at', index: true
 
       t.integer 'original_id', index: true
       t.string  :locale, limit: 6, index: true

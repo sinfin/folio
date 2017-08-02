@@ -18,6 +18,7 @@ module Folio
     scope :ordered,   -> { order(position: :asc) }
     scope :published, -> {
       ordered
+        .where('published', true)
         .where('published_at IS NOT NULL')
         .where('published_at <= ?', Time.now)
     }
