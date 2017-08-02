@@ -7,6 +7,7 @@ PATH
       bootstrap-sass
       carrierwave
       devise
+      dotenv-rails
       dragonfly
       dragonfly-s3_data_store
       font-awesome-rails
@@ -96,6 +97,10 @@ GEM
       responders
       warden (~> 1.2.3)
     devise-bootstrapped (0.1.1)
+    dotenv (2.2.1)
+    dotenv-rails (2.2.1)
+      dotenv (= 2.2.1)
+      railties (>= 3.2, < 5.2)
     dragonfly (1.0.12)
       addressable (~> 2.3)
       multi_json (~> 1.0)

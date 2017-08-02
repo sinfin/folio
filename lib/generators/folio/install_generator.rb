@@ -8,6 +8,7 @@ module Folio
 
       def copy_initializer
         template '../templates/.env.sample.erb', '.env.sample'
+        copy_file '../templates/config/secrets.yml', 'config/secrets.yml'
         template '../templates/config/sitemap.rb.erb', 'config/sitemap.rb'
         template '../templates/config/schedule.rb.erb', 'config/schedule.rb'
       end

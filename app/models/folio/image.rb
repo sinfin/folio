@@ -1,6 +1,8 @@
+require_dependency 'folio/concerns/thumbnails'
+
 module Folio
   class Image < Folio::File
-    # include Thumbnails
+    include Thumbnails
 
     VALID_FORMATS = %i{jpeg jpg png bmp svg gif}
 
