@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718232640) do
+ActiveRecord::Schema.define(version: 20170802143748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,25 @@ ActiveRecord::Schema.define(version: 20170718232640) do
     t.boolean "is_active", default: true
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
+  end
+
+  create_table "folio_image_placements", force: :cascade do |t|
+    t.bigint "node_id"
+    t.bigint "image_id"
+    t.string "caption"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["image_id"], name: "index_folio_image_placements_on_image_id"
+    t.index ["node_id"], name: "index_folio_image_placements_on_node_id"
+  end
+
+  create_table "folio_images", force: :cascade do |t|
+    t.string "photo_uid"
+    t.string "photo_name"
+    t.text "thumbnail_sizes", default: "--- {}\n"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "folio_nodes", force: :cascade do |t|
