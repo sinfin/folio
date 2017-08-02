@@ -10,7 +10,7 @@
     = f.input :meta_description, as: :text
     = f.input :code
     = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
-    = f.input :type
+    = f.input :type, collection: Folio::Node.types, include_blank: false
     = f.input :featured
     = f.input :published
     = f.input :published_at

@@ -10,8 +10,12 @@ module Folio
     friendly_id :title, use: %i[slugged scoped history], scope: [:site]
 
     # Validations
+    def self.types
+      %w"Folio::Page Folio::Category"
+    end
     validates :title, :slug, :locale, presence: true
     validates :slug, uniqueness: { scope: :site_id }
+    validates :type, inclusion: { in: types }
 
     # Scopes
     scope :featured,  -> { where(featured: true) }
