@@ -10,13 +10,8 @@ nav.navbar.navbar-inverse.navbar-fixed-top
 
     #navbar.navbar-collapse.collapse
       ul.nav.navbar-nav.navbar-left
-        li
-          = link_to console_nodes_path do
-            = t('.nodes')
-            - if false
-              '
-              .badge = 0
 
+        = li_link_to t('.nodes'), console_nodes_path
         = li_link_to t('.files'), console_files_path
         = li_link_to t('.users'), console_accounts_path
 
