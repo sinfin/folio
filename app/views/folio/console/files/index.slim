@@ -30,8 +30,8 @@ ul.nav.nav-tabs role="tablist"
               = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
             .caption
               ul.list-unstyled
-                li = "#{image.file_width}x#{image.file_height}px"
-                li = "#{image.file_size}b"
+                li = "#{image.file_width} × #{image.file_height}px"
+                li = number_to_human_size image.file_size
                 li = link_to icon('trash'), console_file_path(image), method: :delete,  data: { confirm: t('folio.console.really_delete', title: image.file_name) }
               
   #documents.tab-pane role="tabpanel"
@@ -49,6 +49,6 @@ ul.nav.nav-tabs role="tablist"
             tr
               td = document.id
               td = document.file_name
-              td = "#{document.file_size}b"
+              td = number_to_human_size document.file_size
               td = edit_button document, edit_console_file_path(document)
               td = delete_button document, console_file_path(document)

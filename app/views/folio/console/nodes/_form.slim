@@ -1,5 +1,9 @@
 .row
+  .col-sm-12
+    h1 = @node.title
   .col-sm-6
+    h2 =t('.node.title')
+    
     = f.error_notification
 
     = f.input :title
@@ -18,3 +22,19 @@
 
     = f.submit
     = link_to "back", console_nodes_path
+    
+    
+  .col-sm-6
+    h2 =t('.gallery.title')
+    - @node.file_placements.each do |fp|
+      .col-xs-6.col-sm-4.col-md-2
+        .thumbnail
+          = link_to edit_console_file_path(fp.file) do
+            = image_tag fp.file.file.thumb('250x250#').url, class: 'img-responsive'
+          .caption
+            ul.list-unstyled
+              li: h3 = fp.caption
+              li = "#{fp.file.file_width} × #{fp.file.file_height}px"
+              li = number_to_human_size fp.file.file_size
+              / TODO: mazani placementu checkboxem
+              li = link_to icon('trash'), console_file_path(fp.file), method: :delete,  data: { confirm: t('folio.console.really_delete', title: fp.file.file_name) }
