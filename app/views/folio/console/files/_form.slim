@@ -1,0 +1,12 @@
+.row
+  .col-sm-6
+    = f.input :type, as: :hidden
+    -if f.object.file.present?
+      - if f.object.instance_of? Folio::Image
+        = image_tag f.object.file.thumb('500x500').url, class: 'img-responsive thumbnail'
+      - else
+        = link_to f.object.file_name, f.object.file.url
+    = f.file_field :file
+    
+    = f.submit
+    = link_to "back", console_files_path

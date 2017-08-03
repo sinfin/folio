@@ -17,28 +17,38 @@ ul.nav.nav-tabs role="tablist"
 .tab-content
   #images.tab-pane.active role="tabpanel"
     table-responsive
-      table.table.table-striped
+      table.table
         thead
           tr
-            th = t(".file_name")
             th.text-right colspan=2
               = new_button new_console_file_path(file_type: :image), { label: 'New Image' }
-        tbody
-          - @images.each do |image|
-            tr
-              td = image.id
-              td = image_tag image.file.thumb('200x200#').url
+    .row
+      - @images.each do |image|
+        .col-xs-6.col-sm-4.col-md-2
+          .thumbnail
+            = link_to edit_console_file_path(image) do
+              = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
+            .caption
+              ul.list-unstyled
+                li = "#{image.file_width}x#{image.file_height}px"
+                li = "#{image.file_size}b"
+                li = link_to icon('trash'), console_file_path(image), method: :delete,  data: { confirm: t('folio.console.really_delete', title: image.file_name) }
               
   #documents.tab-pane role="tabpanel"
     table-responsive
       table.table.table-striped
         thead
           tr
+            th = t(".id")
             th = t(".file_name")
+            th = t(".file_size")
             th.text-right colspan=2
               = new_button new_console_file_path(file_type: :document), { label: 'New Document' }
         tbody
           - @documents.each do |document|
             tr
               td = document.id
-              td   
+              td = document.file_name
+              td = "#{document.file_size}b"
+              td = edit_button document, edit_console_file_path(document)
+              td = delete_button document, console_file_path(document)
