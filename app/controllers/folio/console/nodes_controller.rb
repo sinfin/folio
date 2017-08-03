@@ -33,7 +33,7 @@ module Folio
     end
 
     def node_params
-      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id)
+      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id, file_placements_attributes: [:id, :caption, :file_id, :_destroy])
       p.delete(:password) unless p[:password].present?
       p
     end

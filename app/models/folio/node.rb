@@ -10,6 +10,8 @@ module Folio
     friendly_id :title, use: %i[slugged scoped history], scope: [:site]
     has_many :file_placements, class_name: 'Folio::FilePlacement'
 
+    accepts_nested_attributes_for :file_placements, allow_destroy: true
+
     # Validations
     def self.types
       %w"Folio::Page Folio::Category"
