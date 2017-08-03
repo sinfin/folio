@@ -12,6 +12,10 @@ en:
         index:
           edit: Edit
       really_delete: Are you sure that you want delete %{title}?
+    site:
+      settings:
+        title: Settings
+        title_long: Settings for site %{site}
   error_pages:
     403_message: We are sorry, your access to this page was denied.
     404_message: We are sorry, the page does not exist.

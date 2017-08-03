@@ -36,5 +36,5 @@ nav.navbar.navbar-inverse.navbar-fixed-top
 
 
       ul.nav.navbar-nav.navbar-right
-
+        li = link_to t('folio.site.settings.title'), edit_console_site_path(@site)
         = render 'folio/console/partials/auth_links'

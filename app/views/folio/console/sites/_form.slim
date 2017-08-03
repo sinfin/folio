@@ -1,0 +1,17 @@
+.row
+  .col-sm-12
+    h1 = t('folio.site.settings.title_long', site: @site.title)
+  .col-sm-6
+    = f.error_notification
+
+    = f.input :title
+    = f.input :domain
+    = f.input :locale
+    = f.input :locales, as: :string
+    = f.input :google_analytics_tracking_code
+    = f.input :facebook_pixel_code
+
+    = f.submit
+    = link_to "back", console_nodes_path
+    
+  

@@ -23,5 +23,6 @@ Folio::Engine.routes.draw do
     resources :nodes
     resources :files, except: [:show]
     resources :accounts
+    resources :sites
   end
 end
