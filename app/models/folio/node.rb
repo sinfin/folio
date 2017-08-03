@@ -9,6 +9,7 @@ module Folio
     belongs_to :site, class_name: 'Folio::Site'
     friendly_id :title, use: %i[slugged scoped history], scope: [:site]
     has_many :file_placements, class_name: 'Folio::FilePlacement'
+    has_many :translations, class_name: 'Folio::NodeTranslation'
 
     # Validations
     def self.types
@@ -49,6 +50,21 @@ module Folio
 
     def name_depth
       "#{'&nbsp;' * self.depth} #{self.to_label}".html_safe
+    end
+
+    def cast
+      self
+    end
+
+    def translate(locale)
+      case locale
+      when locale == self.locale
+        cast
+      when self.translations.where(locale: locale).exists?
+        self.translations.find_by(locale: locale).cast
+      else
+        cast
+      end
     end
   end
 end

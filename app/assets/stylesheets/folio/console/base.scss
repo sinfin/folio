@@ -1,7 +1,13 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "font-awesome";
+@import "nodes";
 
 body{
   margin-top: 50px;
+}
+
+a.inactive{
+  color: grey;
+  border-bottom: 1px dotted grey;
 }
