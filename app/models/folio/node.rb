@@ -8,6 +8,7 @@ module Folio
     has_ancestry
     belongs_to :site, class_name: 'Folio::Site'
     friendly_id :title, use: %i[slugged scoped history], scope: [:site]
+    has_many :file_placements, class_name: 'Folio::FilePlacement'
 
     # Validations
     def self.types

@@ -10,7 +10,7 @@
 
 Folio::Site.destroy_all
 Folio::Node.destroy_all
-Folio::Image.destroy_all
+Folio::File.destroy_all
 Folio::Account.destroy_all
 
 site = Folio::Site.create!(title: 'Sinfin.digital', domain: 'sinfin.localhost', locale: 'cs', locales: %w[en de es], google_analytics_tracking_code: 'UA-8111656-1')
@@ -22,16 +22,22 @@ site.nodes << about
 
 reference = Folio::Category.create!(title: 'Reference', site: site, published: true, published_at: 1.day.ago)
 site.nodes << reference
-Folio::Page.create!(title: 'Smart Cities', parent: reference, published: true, published_at: 1.day.ago)
+pagesc = Folio::Page.create!(title: 'Smart Cities', parent: reference, published: true, published_at: 1.day.ago)
 Folio::Page.create!(title: 'Vyvolej.to', parent: reference, published: true, published_at: Time.now, featured: true)
 Folio::Page.create!(title: 'Hidden', parent: reference, published: false, published_at: Time.now, featured: true)
 Folio::Page.create!(title: 'DAM', parent: reference, published: true, published_at: 1.month.since)
 
 Folio::Account.create!(email: 'test@test.com', password: '123456', role: :superuser, first_name: 'Test', last_name: 'Dummy')
 
-Folio::Image.create!(file: open('https://unsplash.com/photos/smWTOhdPvJc/download?force=true'))
-Folio::Image.create!(file: open('https://unsplash.com/photos/9gnXVOgo_-I/download?force=true'))
-Folio::Image.create!(file: open('https://unsplash.com/photos/DlnK1KOREds/download?force=true'))
-Folio::Image.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
+img1 = Folio::Image.create!(file: open('https://unsplash.com/photos/smWTOhdPvJc/download?force=true'))
+img2 = Folio::Image.create!(file: open('https://unsplash.com/photos/9gnXVOgo_-I/download?force=true'))
+img3 = Folio::Image.create!(file: open('https://unsplash.com/photos/DlnK1KOREds/download?force=true'))
+img4 = Folio::Image.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
+doc1 = Folio::Document.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
 
-Folio::Document.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
+about.file_placements << Folio::FilePlacement.new(file: img1, caption: 'Image 1')
+about.file_placements << Folio::FilePlacement.new(file: img2, caption: 'Image 2')
+about.file_placements << Folio::FilePlacement.new(file: img3, caption: 'Image 3')
+about.file_placements << Folio::FilePlacement.new(file: doc1, caption: 'Doc 1')
+about.file_placements << Folio::FilePlacement.new(file: img4, caption: 'Image 4')
+pagesc.file_placements << Folio::FilePlacement.new(file: img2, caption: 'Image 2a')

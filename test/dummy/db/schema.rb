@@ -38,12 +38,12 @@ ActiveRecord::Schema.define(version: 20170802150024) do
 
   create_table "folio_file_placements", force: :cascade do |t|
     t.bigint "node_id"
-    t.bigint "image_id"
+    t.bigint "file_id"
     t.string "caption"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["image_id"], name: "index_folio_file_placements_on_image_id"
+    t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["node_id"], name: "index_folio_file_placements_on_node_id"
   end
 
