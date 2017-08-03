@@ -15,7 +15,7 @@ module Folio
     # end
 
     def site_params
-      params.require(:node).permit(:title, :domain, :locale, :locales, :google_analytics_tracking_code, :facebook_pixel_code)
+      params.require(:site).permit(:title, :domain, :locale, :google_analytics_tracking_code, :facebook_pixel_code, locales: [])
     end
   end
 end

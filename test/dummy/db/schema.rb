@@ -97,13 +97,12 @@ ActiveRecord::Schema.define(version: 20170802150024) do
     t.string "title"
     t.string "domain"
     t.string "locale", default: "en"
-    t.jsonb "locales"
+    t.string "locales", default: [], array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "google_analytics_tracking_code"
     t.string "facebook_pixel_code"
     t.index ["domain"], name: "index_folio_sites_on_domain"
-    t.index ["locales"], name: "index_folio_sites_on_locales"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
