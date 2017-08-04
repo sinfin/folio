@@ -5,7 +5,14 @@ module Folio
     before_action :find_node, except: [:index, :create, :new]
 
     def index
-      @nodes = Folio::Node.arrange
+      if !params[:by_query].blank? || !params[:by_published].blank? || !params[:by_type].blank?
+        @nodes = Folio::Node.
+                        order('created_at desc').
+                        filter(filter_params).
+                        page(current_page)
+      else
+        @nodes = Folio::Node.arrange
+      end
     end
 
     def new
@@ -32,8 +39,12 @@ module Folio
       @node = Folio::Node.friendly.find(params[:id])
     end
 
+    def filter_params
+      params.permit(:by_query, :by_published, :by_type)
+    end
+
     def node_params
-      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id)
+      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id, file_placements_attributes: [:id, :caption, :file_id, :_destroy])
       p.delete(:password) unless p[:password].present?
       p
     end

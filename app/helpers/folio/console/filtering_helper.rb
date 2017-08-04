@@ -11,19 +11,13 @@ module Folio
                      placeholder: placeholder
     end
 
-    # def state_select_options(model)
-    #   opts = model.group(:state).count.map { |state, count|
-    #     name = t("states.#{model.simple_name}.#{state}")
-    #     [ name, state ]
-    #   }
-    #   options_for_select(opts, filter_params[:with_state])
-    # end
-    #
-    # def state_filter_select(model)
-    #   select_tag :with_state,
-    #              state_select_options(model),
-    #              class: 'form-control',
-    #              include_blank: t("states.#{model.simple_name}.all")
-    # end
+    def custom_options_for_select(model, by_attribute, opts)
+      # Eg.: opts = [['Potvrzené', ''], ['Nepotvrzené', 1]]
+      selected = filter_params[by_attribute]
+      select_tag by_attribute,
+                 options_for_select(opts, selected),
+                 class: 'form-control',
+                 include_blank: false
+    end
   end
 end

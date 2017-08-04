@@ -5,7 +5,8 @@
     h2 =t('.node.title')
     
     = f.error_notification
-
+    
+    = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
     = f.input :title
     = f.input :slug
     = f.input :perex
@@ -13,28 +14,35 @@
     = f.input :meta_title
     = f.input :meta_description, as: :text
     = f.input :code
-    = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
     = f.input :type, collection: Folio::Node.types, include_blank: false
     = f.input :featured
     = f.input :published
     = f.input :published_at
     = f.input :locale
 
+  .col-sm-6
+    h2 = t('.gallery.title')
+    .row
+      = f.simple_fields_for :file_placements do |fp|
+        .col-xs-12.col-sm-6.col-md-4
+          - if fp.try(:object).try(:file)
+            .thumbnail
+              = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive'
+              .caption
+                ul.list-unstyled
+                  li = fp.input :caption
+                  li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
+                  li = number_to_human_size fp.object.file.file_size
+                  li = fp.input :_destroy, as: :boolean
+                
+      /= f.simple_fields_for :file_placements, Folio::FilePlacement.new do |fp|
+        .col-xs-12.col-sm-6.col-md-4
+          .thumbnail
+            = fp.association :file
+            .caption
+              ul.list-unstyled
+                li = fp.input :caption
+
+  .col-sm-12
     = f.submit
     = link_to "back", console_nodes_path
-    
-    
-  .col-sm-6
-    h2 =t('.gallery.title')
-    - @node.file_placements.each do |fp|
-      .col-xs-6.col-sm-4.col-md-2
-        .thumbnail
-          = link_to edit_console_file_path(fp.file) do
-            = image_tag fp.file.file.thumb('250x250#').url, class: 'img-responsive'
-          .caption
-            ul.list-unstyled
-              li: h3 = fp.caption
-              li = "#{fp.file.file_width} × #{fp.file.file_height}px"
-              li = number_to_human_size fp.file.file_size
-              / TODO: mazani placementu checkboxem
-              li = link_to icon('trash'), console_file_path(fp.file), method: :delete,  data: { confirm: t('folio.console.really_delete', title: fp.file.file_name) }
