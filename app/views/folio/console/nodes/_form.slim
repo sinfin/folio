@@ -1,11 +1,10 @@
 .row
-  .col-sm-12
-    h1 = @node.title
   .col-sm-6
     h2 =t('.node.title')
     
     = f.error_notification
-    
+      
+    = f.input :locale, disabled: true
     = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
     = f.input :title
     = f.input :slug
@@ -17,8 +16,7 @@
     = f.input :type, collection: Folio::Node.types, include_blank: false
     = f.input :featured
     = f.input :published
-    = f.input :published_at
-    = f.input :locale
+    = f.input :published_at    
 
   .col-sm-6
     h2 = t('.gallery.title')

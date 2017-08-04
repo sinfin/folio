@@ -7,6 +7,10 @@ class Folio::NodeTranslation < Folio::Node
   # Validations
   validates :locale, uniqueness: { scope: :node }
 
+  def translations
+    node_original.node_translations
+  end
+
   # Casting ActiveRecord class to an original Node class
   def cast
     self.becomes(node_original.class)
