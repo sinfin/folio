@@ -20,6 +20,12 @@ module Folio
     validates :slug, uniqueness: { scope: :site_id }
     validates :type, inclusion: { in: types }
 
+    # Callbacks
+    before_validation do
+      self.site = parent.site if site.nil?
+      self.locale = site.locale if locale.nil?
+    end
+
     # Scopes
     scope :featured,  -> { where(featured: true) }
     scope :ordered,   -> { order(position: :asc) }

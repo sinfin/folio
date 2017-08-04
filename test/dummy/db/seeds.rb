@@ -29,11 +29,11 @@ Folio::Page.create!(title: 'DAM', parent: reference, published: true, published_
 
 Folio::Account.create!(email: 'test@test.com', password: '123456', role: :superuser, first_name: 'Test', last_name: 'Dummy')
 
-img1 = Folio::Image.create!(file: open('https://unsplash.com/photos/smWTOhdPvJc/download?force=true'))
-img2 = Folio::Image.create!(file: open('https://unsplash.com/photos/9gnXVOgo_-I/download?force=true'))
-img3 = Folio::Image.create!(file: open('https://unsplash.com/photos/DlnK1KOREds/download?force=true'))
-img4 = Folio::Image.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
-doc1 = Folio::Document.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'))
+img1 = Folio::Image.create!(file: open('https://unsplash.com/photos/smWTOhdPvJc/download?force=true'), file_name: 'table.png')
+img2 = Folio::Image.create!(file: open('https://unsplash.com/photos/9gnXVOgo_-I/download?force=true'), file_name: 'earth_001.jpg')
+img3 = Folio::Image.create!(file: open('https://unsplash.com/photos/DlnK1KOREds/download?force=true'), file_name: 'landscape.png')
+img4 = Folio::Image.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'), file_name: 'yoga.jpg')
+doc1 = Folio::Document.create!(file: open('https://unsplash.com/photos/TswcU9rBUWY/download?force=true'), file_name: 'doc.docx')
 
 about.file_placements << Folio::FilePlacement.new(file: img1, caption: 'Image 1')
 about.file_placements << Folio::FilePlacement.new(file: img2, caption: 'Image 2')
