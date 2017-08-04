@@ -29,10 +29,47 @@ module Folio
         .where('published_at IS NOT NULL')
         .where('published_at <= ?', Time.now)
     }
+    scope :unpublished, -> {
+      nodes = Folio::Node.arel_table
+      ordered
+        .where(
+          nodes[:published].eq(false)
+          .or(nodes[:published_at].eq(nil))
+          .or(nodes[:published_at].gt(Time.now))
+        )
+    }
 
-    before_validation do
-      self.site = parent.site unless parent.blank?
-    end
+    scope :by_query, -> (q) {
+      if q.present?
+        args = ["%#{q}%"] * 3
+        where('title ILIKE ? OR perex ILIKE ? OR content ILIKE ?', *args)
+        # search_node(args)
+      else
+        where(nil)
+      end
+    }
+
+    scope :by_published, -> (state) {
+      case state
+      when 'published'
+        published
+      when 'unpublished'
+        unpublished
+      else
+        where(nil)
+      end
+    }
+
+    scope :by_type, -> (type) {
+      case type
+      when 'page'
+        where(type: 'Folio::Page')
+      when 'category'
+        where(type: 'Folio::Category')
+      else
+        where(nil)
+      end
+    }
 
     def self.arrange_as_array(options = {}, hash = nil)
       hash ||= arrange(options)

@@ -6,8 +6,14 @@
 [x] Google Analytics tracking
 [x] dynamic error pages
 [x] whenever
+[x] documents placements
+[x] nodes filter
 
 I. fáze
+[ ] documents tags
+[ ] documents multiple upload / výběr z knihovny (Redactor.js plugin image manager)
+[ ] documents upload z editace node (AJAX)
+[ ] documents upload progress bar
 [ ] node / translations
 [ ] tagy nodů
 [ ] cancancan / authz
@@ -21,9 +27,8 @@ II. fáze
 [ ] pgsearch s diakritikou
 [ ] capistrano deployment
 [ ] generovani modelu a CRUD (gem od Jakuba)
-[ ] image thumbnails async
-[ ] image placements
-[ ] tagy obrazků
+[ ] document thumbnails async
+
 [ ] fb meta fields
 [ ] ahoy tracking
 [ ] GAdwords tracking / obecny JS tracking

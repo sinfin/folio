@@ -5,7 +5,8 @@
     h2 =t('.node.title')
     
     = f.error_notification
-
+    
+    = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
     = f.input :title
     = f.input :slug
     = f.input :perex
@@ -13,7 +14,6 @@
     = f.input :meta_title
     = f.input :meta_description, as: :text
     = f.input :code
-    = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id
     = f.input :type, collection: Folio::Node.types, include_blank: false
     = f.input :featured
     = f.input :published
@@ -25,16 +25,17 @@
     .row
       = f.simple_fields_for :file_placements do |fp|
         .col-xs-12.col-sm-6.col-md-4
-          .thumbnail
-            = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive'
-            .caption
-              ul.list-unstyled
-                li = fp.input :caption
-                li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
-                li = number_to_human_size fp.object.file.file_size
-                li = fp.input :_destroy, as: :boolean
+          - if fp.try(:object).try(:file)
+            .thumbnail
+              = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive'
+              .caption
+                ul.list-unstyled
+                  li = fp.input :caption
+                  li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
+                  li = number_to_human_size fp.object.file.file_size
+                  li = fp.input :_destroy, as: :boolean
                 
-      = f.simple_fields_for :file_placements, Folio::FilePlacement.new do |fp|
+      /= f.simple_fields_for :file_placements, Folio::FilePlacement.new do |fp|
         .col-xs-12.col-sm-6.col-md-4
           .thumbnail
             = fp.association :file

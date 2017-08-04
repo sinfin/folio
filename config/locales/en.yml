@@ -8,6 +8,13 @@ en:
     invalid_format: Invalid format
   folio:
     console:
+      nodes:
+        index:
+          query: Fulltext search
+          all_nodes: All nodes
+          published: Published only
+          unpublished: Drafts only
+          all_types: All types
       accounts:
         index:
           edit: Edit

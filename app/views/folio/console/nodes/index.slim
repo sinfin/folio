@@ -1,12 +1,16 @@
 /= render partial: "partials/nav"
 
-/.row
-  .col-md-12
-    form(action="#{explore_units_path}", method='get')
-      .ui.right.action.left.icon.input
-        i.search.icon
-        input(type="text" id="q" name="q" value="#{@query}" placeholder="Search...")
-        button.ui.button type="submit"  Filter
+= filter_form({}, class: 'form-horizontal') do
+  .form-group
+    .col-md-2
+      = query_field t('.query')
+    /.col-md-1
+      = tag_filter_select Folio::Node
+    .col-md-2
+      = custom_options_for_select(Folio::Node,:by_published,[[t('.all_nodes'), nil], [t('.published'), 'published'], [t('.unpublished'), 'unpublished']])
+    .col-md-2
+      = custom_options_for_select(Folio::Node,:by_type,[[t('.all_types'), nil],[t('.page'), 'page'],[t('.category'), 'category']])
+    
 
 .table-responsive
   table.table.table-striped
