@@ -6,6 +6,7 @@ PATH
       annotate
       bootstrap-sass
       carrierwave
+      coffee-rails
       devise
       dotenv-rails
       dragonfly
@@ -89,6 +90,13 @@ GEM
       mime-types (>= 1.16)
     chronic (0.10.2)
     coderay (1.1.1)
+    coffee-rails (4.2.2)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     devise (4.3.0)
       bcrypt (~> 3.0)

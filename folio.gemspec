@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise'
   s.add_dependency 'bootstrap-sass'
   s.add_dependency 'sass-rails'
+  s.add_dependency 'coffee-rails'
   s.add_dependency 'kaminari'
   s.add_dependency 'kaminari-bootstrap', '~> 3.0.1'
   s.add_dependency 'responders'
@@ -39,6 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sitemap_generator'
   s.add_dependency 'whenever'
   s.add_dependency 'dotenv-rails'
+
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
