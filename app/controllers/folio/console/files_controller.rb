@@ -18,8 +18,11 @@ module Folio
     end
 
     def create
-      @file = Folio::File.create(file_params)
-      respond_with @file, location: console_files_path
+      @files = []
+      file_params[:files].each do |file|
+        @files << Folio::File.create(file: file, type: file_params[:type])
+      end
+      respond_with @files, location: console_files_path
     end
 
     def update
@@ -38,7 +41,7 @@ module Folio
     end
 
     def file_params
-      params.require(:file).permit(:file, :type)
+      params.require(:file).permit(:file, :type, files: [])
     end
   end
 end

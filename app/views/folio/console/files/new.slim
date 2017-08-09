@@ -1,2 +1,8 @@
 = simple_form_for(@file, as: :file, url: console_files_path, html: { class: 'form-vertical' }) do |f|
-  = render 'form', f: f
+  .row
+    .col-sm-6
+      = f.input :type, as: :hidden
+      = f.file_field :files, multiple: true
+      
+      = f.submit
+      = link_to "back", console_files_path
