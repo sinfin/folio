@@ -22,7 +22,7 @@
 
   .col-sm-6
     h2 = t('.gallery.title')
-    .row
+    .row#file_placements
       = f.simple_fields_for :file_placements do |fp|
         .col-xs-12.col-sm-6.col-md-4
           - if fp.try(:object).try(:file)
@@ -35,14 +35,40 @@
                   li = number_to_human_size fp.object.file.file_size
                   li = fp.input :_destroy, as: :boolean
                 
-      /= f.simple_fields_for :file_placements, Folio::FilePlacement.new do |fp|
-        .col-xs-12.col-sm-6.col-md-4
+      = f.simple_fields_for :file_placements, Folio::FilePlacement.new, defaults: { disabled: true } do |fp|
+        .col-xs-12.col-sm-6.col-md-4.hidden.nestedField id="file-placement-new" data-fp-index="#{fp.index}"
           .thumbnail
-            = fp.association :file
+            = image_tag '', class: 'img-responsive'
             .caption
               ul.list-unstyled
                 li = fp.input :caption
+                / li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
+                / li = number_to_human_size fp.object.file.file_size
+                li: button.btn.btn-default#removeFile type='button' destroy
+          = fp.association :file, as: :hidden
+    .row
+      .col-xs-12.col-sm-6.col-md-4
+        a.btn.btn-success data-toggle='modal' data-target='#filesModal'
+          | Add new
 
   .col-sm-12
     = f.submit
     = link_to "back", console_nodes_path
+  
+  #filesModal.modal.fade aria-labelledby="myModalLabel" role="dialog" tabindex="-1" data-file-placement-id="0"
+    .modal-dialog.modal-lg role="document" 
+      .modal-content
+        .modal-header
+          button.close aria-label="Close" data-dismiss="modal" type="button" 
+            span aria-hidden="true"  &times;
+          h4#fileModalLabel.modal-title Modal title
+        .modal-body
+          .row
+            - Folio::Image.all.each do |image|
+              .col-sm-6.col-md-3
+                a.thumbnail.selectImage data-file-id="#{image.id}"
+                  = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
+            
+        .modal-footer
+          button.btn.btn-default data-dismiss="modal" type="button"  Close
+          button.btn.btn-success#saveModal data-dismiss="modal" type="button"  Add
