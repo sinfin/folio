@@ -30,13 +30,12 @@ $ ->
         $input.prop('disabled', false)
         $input.attr('id', $input.attr('id').replace(/_[0-9]+_/, "_#{index_counter}_"))
         $input.attr('name', $input.attr('name').replace(/\[[0-9]+\]/, "[#{index_counter}]"))
-        console.log $input.type
         $input.val($image.data('file-id')) if $input.attr('type') == 'hidden'
       
       $copy.appendTo('#file_placements')
       index_counter++
   
-  $(document).on 'hide.bs.modal', '#filesModal', (event) ->
+  $(document).on 'hidden.bs.modal', '#filesModal', (event) ->
     $(this).closest('.modal').find('.selectImage.active').removeClass('active')
       
   $(document).on 'click', '#removeFile', ->
