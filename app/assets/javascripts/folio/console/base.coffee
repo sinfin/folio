@@ -42,10 +42,36 @@ $ ->
   $(document).on 'click', '#removeFile', ->
     $(this).closest('.nestedField').remove()
     index_counter--
-    
+  
   # disable auto discover
   Dropzone.autoDiscover = false
   # grap our upload form by its id
-  dropzone = $('#new_file').dropzone
+  # disable auto discover
+  Dropzone.autoDiscover = false
+  # grap our upload form by its id
+  $('#new_file').dropzone
     maxFilesize: 1
-    paramName: 'file[file]'        
+    paramName: 'file[file]'
+    
+  $('#new_image').dropzone
+    maxFilesize: 1
+    paramName: 'file[file]'
+    # FIXME: enlarge smaller images?
+    thumbnailWidth: 250
+    thumbnailHeight: 250
+    previewTemplate: document.querySelector('#dropzone-template').innerHTML
+    addedfile: (file) ->
+      return
+    thumbnail: (file, dataUrl) ->
+      file.dataUrl = dataUrl
+      return file
+    success: (file, response) ->
+      file.previewElement = Dropzone.createElement(this.options.previewTemplate)
+      $template = $(file.previewElement)
+      $template.find('a.thumbnail.selectImage')
+        .addClass('active')
+        .data('file-id', response.id)
+      $template.find('img').attr('src', file.dataUrl)
+      
+      $('#dropzone-template').after(file.previewElement)
+      return

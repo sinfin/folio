@@ -54,21 +54,3 @@
   .col-sm-12
     = f.submit
     = link_to "back", console_nodes_path
-  
-  #filesModal.modal.fade aria-labelledby="myModalLabel" role="dialog" tabindex="-1" data-file-placement-id="0"
-    .modal-dialog.modal-lg role="document" 
-      .modal-content
-        .modal-header
-          button.close aria-label="Close" data-dismiss="modal" type="button" 
-            span aria-hidden="true"  &times;
-          h4#fileModalLabel.modal-title Modal title
-        .modal-body
-          .row
-            - Folio::Image.all.each do |image|
-              .col-sm-6.col-md-3
-                a.thumbnail.selectImage data-file-id="#{image.id}"
-                  = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
-            
-        .modal-footer
-          button.btn.btn-default data-dismiss="modal" type="button"  Close
-          button.btn.btn-success#saveModal data-dismiss="modal" type="button"  Add

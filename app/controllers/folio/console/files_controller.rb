@@ -22,7 +22,7 @@ module Folio
       if @file.save
         respond_to do |format|
           format.html { redirect_to action: :index }
-          format.json { render json: { message: 'success' }, status: 200 }
+          format.json { render json: { message: 'success', id: @file.id }, status: 200 }
         end
       else
         respond_to do |format|
