@@ -18,11 +18,18 @@ module Folio
     end
 
     def create
-      @files = []
-      file_params[:files].each do |file|
-        @files << Folio::File.create(file: file, type: file_params[:type])
+      @file = Folio::File.create(file_params)
+      if @file.save
+        respond_to do |format|
+          format.html { redirect_to action: :index }
+          format.json { render json: { message: 'success' }, status: 200 }
+        end
+      else
+        respond_to do |format|
+          format.html { render action: :new }
+          format.json { render json: { error: @file.errors.full_messages.join(',') }, status: 400 }
+        end
       end
-      respond_with @files, location: console_files_path
     end
 
     def update
@@ -41,7 +48,7 @@ module Folio
     end
 
     def file_params
-      params.require(:file).permit(:file, :type, files: [])
+      params.require(:file).permit(:file, :type)
     end
   end
 end

@@ -1,6 +1,7 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap-sprockets
+#= require dropzone
 
 $ ->
 
@@ -41,3 +42,10 @@ $ ->
   $(document).on 'click', '#removeFile', ->
     $(this).closest('.nestedField').remove()
     index_counter--
+    
+  # disable auto discover
+  Dropzone.autoDiscover = false
+  # grap our upload form by its id
+  dropzone = $('#new_file').dropzone
+    maxFilesize: 1
+    paramName: 'file[file]'        
