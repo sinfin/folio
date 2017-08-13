@@ -20,12 +20,14 @@ module Folio
       if params[:node][:original_id].blank?
         @node = Folio::Node.new()
       else
-        parent = Folio::Node.find(params[:node][:original_id])
-        binding.pry
-        @node = parent.dup
+        original = Folio::Node.find(params[:node][:original_id])
+        @node = original.dup
         @node.locale = params[:node][:locale]
         @node.becomes!(Folio::NodeTranslation)
-        @node.original_id = parent.id
+        @node.original_id = original.id
+        @node.save!
+
+        redirect_to edit_console_node_path(@node)
       end
     end
 

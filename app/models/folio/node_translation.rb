@@ -5,7 +5,7 @@ class Folio::NodeTranslation < Folio::Node
   belongs_to :node_original, class_name: 'Folio::Node', foreign_key: :original_id
 
   # Validations
-  validates :locale, uniqueness: { scope: :node }
+  validates :locale, uniqueness: { scope: [:original_id] }
 
   def translations
     node_original.node_translations
