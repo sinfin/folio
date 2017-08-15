@@ -7,6 +7,8 @@
         h4#fileModalLabel.modal-title Modal title
       .modal-body
         .row
+          #dropzone-error.col-md-12.hidden
+            .alert.alert-danger role="alert"
           .col-sm-6.col-md-3
             .thumbnail
               = simple_form_for(Folio::Image.new, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone', id: 'new_image'}) do |f|
