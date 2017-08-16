@@ -2,7 +2,7 @@
 Short description and motivation.
 
 ## Usage
-How to use my plugin.
+Copy `redactor.js` and `redactor.css` to `test/dummy/vendor/assets/redactor`. 
 
 ## Installation
 Add this line to your application's Gemfile:
