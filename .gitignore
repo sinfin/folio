@@ -8,3 +8,5 @@ test/dummy/tmp/
 test/dummy/public/sitemap.*
 test/dummy/.env
 test/dummy/public/system/dragonfly
+test/dummy/vendor/assets/redactor/*.css
+test/dummy/vendor/assets/redactor/*.js
