@@ -4,7 +4,7 @@
   .col-sm-12
     ul.nav.nav-tabs
       = li_link_to @node.original.title, edit_console_node_path(@node.original.id)
-      - @node.node_translations.find_each do |translation|
+      - @node.translations.find_each do |translation|
         = li_link_to "[#{translation.locale}] #{translation.title}", edit_console_node_path(translation.id)
 
 = simple_form_for(@node, as: :node, url: console_node_path(@node.id), html: { class: 'form-vertical' }) do |f|

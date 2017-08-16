@@ -7,9 +7,9 @@ class Folio::NodeTranslation < Folio::Node
   # Validations
   validates :locale, uniqueness: { scope: [:original_id] }
 
-  def translations
-    node_original.node_translations
-  end
+  # Scopes
+  delegate :original, to: :node_original
+  delegate :translations, to: :node_original
 
   # Casting ActiveRecord class to an original Node class
   def cast
@@ -20,8 +20,8 @@ class Folio::NodeTranslation < Folio::Node
     case locale
     when locale == self.locale
       cast
-    when node_original.translations.where(locale: locale).exists?
-      self.translations.find_by(locale: locale).cast
+    when node_original.node_translations.where(locale: locale).exists?
+      self.node_translations.find_by(locale: locale).cast
     else
       node_original.cast
     end

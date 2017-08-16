@@ -106,12 +106,16 @@ module Folio
       self
     end
 
+    def translations
+      node_translations
+    end
+
     def translate(locale)
       case locale
       when locale == self.locale
         cast
-      when self.translations.where(locale: locale).exists?
-        self.translations.find_by(locale: locale).cast
+      when self.node_translations.where(locale: locale).exists?
+        self.node_translations.find_by(locale: locale).cast
       else
         cast
       end
