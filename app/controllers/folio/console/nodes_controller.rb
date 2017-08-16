@@ -17,7 +17,7 @@ module Folio
     end
 
     def new
-      if params[:node][:original_id].blank?
+      if params[:node].blank? || params[:node][:original_id].blank?
         @node = Folio::Node.new()
       else
         original = Folio::Node.find(params[:node][:original_id])
