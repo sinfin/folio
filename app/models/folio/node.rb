@@ -7,7 +7,7 @@ module Folio
     # Relations
     has_ancestry
     belongs_to :site, class_name: 'Folio::Site'
-    friendly_id :title, use: %i[slugged scoped history], scope: [:site]
+    friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
     has_many :file_placements, class_name: 'Folio::FilePlacement'
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id
 
