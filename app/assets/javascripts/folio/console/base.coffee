@@ -47,15 +47,15 @@ $ ->
     $(this).closest('.nested-field').remove()
     index_counter--
 
+  # disable auto discover
+  Dropzone.autoDiscover = false
+  # grap our upload form by its id
+  $('#new_file').dropzone
+    maxFilesize: 10 # MB
+    paramName: 'file[file]'
+  
   template = document.querySelector('#dropzone-template')
   if template
-    # disable auto discover
-    Dropzone.autoDiscover = false
-    # grap our upload form by its id
-    $('#new_file').dropzone
-      maxFilesize: 10 # MB
-      paramName: 'file[file]'
-      
     $('#new_image').dropzone
       maxFilesize: 10 # MB
       resizeMethod: 'crop'

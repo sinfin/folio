@@ -19,6 +19,7 @@ module Folio
     end
 
     def create
+      binding.pry
       @file = Folio::File.create(file_params)
       respond_with @file, location: console_files_path
     end
