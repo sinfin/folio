@@ -22,7 +22,7 @@
 
   .col-sm-6
     h2 = t('.gallery.title')
-    .row#file_placements
+    .row#file-placements-images data-fp-index=f.object.file_placements.count
       = f.simple_fields_for :file_placements, f.object.file_placements.with_image do |fp|
         .col-xs-12.col-sm-6.col-md-4
           .thumbnail
@@ -34,36 +34,48 @@
                 li = number_to_human_size fp.object.file.file_size
                 li = fp.input :_destroy, as: :boolean
                 
-      = f.simple_fields_for :file_placements, Folio::FilePlacement.new, defaults: { disabled: true } do |fp|
-        .col-xs-12.col-sm-6.col-md-4.hidden.nestedField id="file-placement-new" data-fp-index="#{fp.index}"
+      = f.simple_fields_for :file_placements, Folio::FilePlacement.new, child_index: "{{i}}", defaults: { disabled: true } do |fp|
+        .col-xs-12.col-sm-6.col-md-4.hidden.nested-field.file-placement-new 
           .thumbnail
             = image_tag '', class: 'img-responsive'
             .caption
               ul.list-unstyled
                 li = fp.input :caption
-                / li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
-                / li = number_to_human_size fp.object.file.file_size
-                li: button.btn.btn-default#removeFile type='button' destroy
+                li name='size'
+                li name='file_size'
+                li: button.btn.btn-default.remove-file-placement type='button' = t('remove')
           = fp.association :file, as: :hidden
     .row
       .col-xs-12.col-sm-6.col-md-4
-        a.btn.btn-success data-toggle='modal' data-target='#filesModal'
+        a.btn.btn-success data-toggle='modal' data-target='#images-modal'
           | Add new
 
   .col-sm-6
     h2 = t('.documents.title')
-    table.table#file_placements
+    table.table
       thead
         th = t('file_name')
         th = t('caption')
         th colspan='2' = t('file_size')
-      tbody
-      = f.simple_fields_for :file_placements, f.object.file_placements.with_document do |fp|
-        tr
-          td = fp.object.file.file_name
-          td = fp.input :caption, label: false
-          td = number_to_human_size fp.object.file.file_size
-          td = fp.input :_destroy, as: :boolean
+      tbody#file-placements-documents data-fp-index=f.object.file_placements.count
+        = f.simple_fields_for :file_placements, f.object.file_placements.with_document do |fp|
+          tr
+            td = fp.object.file.file_name
+            td = fp.input :caption, label: false
+            td = number_to_human_size fp.object.file.file_size
+            td 
+              = fp.input :_destroy, as: :boolean
+              = fp.association :file, as: :hidden
+        = f.simple_fields_for :file_placements, Folio::FilePlacement.new, child_index: "{{i}}",  defaults: { disabled: true } do |fp|
+          tr.hidden.nested-field.file-placement-new
+            td name='file_name'
+            td = fp.input :caption, label: false
+            td name='file_size'
+            td
+              button.btn.btn-default.remove-file-placement type='button' = t('remove')
+              = fp.association :file, as: :hidden
+    a.btn.btn-success data-toggle='modal' data-target='#documents-modal'
+      | Add new
   .col-sm-12
     = f.submit
     = link_to "back", console_nodes_path

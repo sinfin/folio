@@ -3,6 +3,7 @@ require_dependency 'folio/application_controller'
 module Folio
   class Console::FilesController < Console::BaseController
     before_action :find_file, except: [:index, :create, :new]
+    respond_to :json, only: :create
 
     def index
       @images = Folio::Image.all
@@ -19,17 +20,7 @@ module Folio
 
     def create
       @file = Folio::File.create(file_params)
-      if @file.save
-        respond_to do |format|
-          format.html { redirect_to action: :index }
-          format.json { render json: { message: 'success', id: @file.id }, status: 200 }
-        end
-      else
-        respond_to do |format|
-          format.html { render action: :new }
-          format.json { render json: { error: @file.errors.full_messages.join(',') }, status: 400 }
-        end
-      end
+      respond_with @file, location: console_files_path
     end
 
     def update

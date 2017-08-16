@@ -10,5 +10,9 @@ module Folio
                        case_sensitive: false,
                        message: I18n.t('dragonfly.invalid_format', formats: VALID_FORMATS.join(', ')),
                        if: :file_changed?
+
+    def as_json(options = {})
+      super(options).update(file_size: ActiveSupport::NumberHelper.number_to_human_size(self.file_size))
+    end
   end
 end

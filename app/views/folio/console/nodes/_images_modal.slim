@@ -1,10 +1,10 @@
-#filesModal.modal.fade aria-labelledby="myModalLabel" role="dialog" tabindex="-1" data-file-placement-id="0"
+#images-modal.modal.fade aria-labelledby="images-modal" role="dialog" tabindex="-1" data-file-placement-id="0" data-target="#file-placements-images"
   .modal-dialog.modal-lg role="document" 
     .modal-content
       .modal-header
         button.close aria-label="Close" data-dismiss="modal" type="button" 
           span aria-hidden="true"  &times;
-        h4#fileModalLabel.modal-title Modal title
+        h4#fileModalLabel.modal-title = t('images')
       .modal-body
         .row
           #dropzone-error.col-md-12.hidden
@@ -17,13 +17,13 @@
                   = link_to 'Add new files', new_console_file_path
           #dropzone-template.hidden
             .col-sm-6.col-md-3
-              a.thumbnail.selectImage
+              a.thumbnail.select-file
                 = image_tag '', class: 'img-responsive'
           - Folio::Image.all.each do |image|
             .col-sm-6.col-md-3
-              a.thumbnail.selectImage data-file-id="#{image.id}"
+              a.thumbnail.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
                 = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
           
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close
-        button.btn.btn-success#saveModal data-dismiss="modal" type="button"  Add
+        button.btn.btn-success.save-modal data-dismiss="modal" type="button"  Add

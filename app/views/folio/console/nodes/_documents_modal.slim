@@ -1,0 +1,34 @@
+#documents-modal.modal.fade aria-labelledby="documents-modal" role="dialog" tabindex="-1" data-file-placement-id="0" data-target="#file-placements-documents"
+  .modal-dialog.modal-lg role="document" 
+    .modal-content
+      .modal-header
+        button.close aria-label="Close" data-dismiss="modal" type="button" 
+          span aria-hidden="true"  &times;
+        h4#fileModalLabel.modal-title  = t('documents')
+      .modal-body
+        .row
+          #dropzone-error.col-md-12.hidden
+            .alert.alert-danger role="alert"
+          .col-md-12
+            table.table.table-hover
+              thead
+                th = t('file_name')
+                th colspan='2' = t('file_size')
+              tbody
+                / .thumbnail
+                /   = simple_form_for(Folio::Document.new, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone', id: 'new_image'}) do |f|
+                /     = f.input :type, as: :hidden
+                /     .fallback
+                /       = link_to 'Add new files', new_console_file_path
+                / #dropzone-template.hidden
+                /   .col-sm-6.col-md-3
+                /     a.thumbnail.selectFile
+                /       = image_tag '', class: 'img-responsive'
+                - Folio::Document.all.each do |document|
+                    tr.select-file data-file-id=document.id data-file-filesize=number_to_human_size(document.file_size) data-file-filename=document.file_name
+                      td = document.file_name
+                      td = number_to_human_size document.file_size
+          
+      .modal-footer
+        button.btn.btn-default data-dismiss="modal" type="button"  Close
+        button.btn.btn-success.save-modal data-dismiss="modal" type="button"  Add
