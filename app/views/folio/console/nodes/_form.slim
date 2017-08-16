@@ -23,17 +23,16 @@
   .col-sm-6
     h2 = t('.gallery.title')
     .row#file_placements
-      = f.simple_fields_for :file_placements do |fp|
+      = f.simple_fields_for :file_placements, f.object.file_placements.with_image do |fp|
         .col-xs-12.col-sm-6.col-md-4
-          - if fp.try(:object).try(:file)
-            .thumbnail
-              = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive'
-              .caption
-                ul.list-unstyled
-                  li = fp.input :caption
-                  li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
-                  li = number_to_human_size fp.object.file.file_size
-                  li = fp.input :_destroy, as: :boolean
+          .thumbnail
+            = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive'
+            .caption
+              ul.list-unstyled
+                li = fp.input :caption
+                li = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
+                li = number_to_human_size fp.object.file.file_size
+                li = fp.input :_destroy, as: :boolean
                 
       = f.simple_fields_for :file_placements, Folio::FilePlacement.new, defaults: { disabled: true } do |fp|
         .col-xs-12.col-sm-6.col-md-4.hidden.nestedField id="file-placement-new" data-fp-index="#{fp.index}"
@@ -51,6 +50,20 @@
         a.btn.btn-success data-toggle='modal' data-target='#filesModal'
           | Add new
 
+  .col-sm-6
+    h2 = t('.documents.title')
+    table.table#file_placements
+      thead
+        th = t('file_name')
+        th = t('caption')
+        th colspan='2' = t('file_size')
+      tbody
+      = f.simple_fields_for :file_placements, f.object.file_placements.with_document do |fp|
+        tr
+          td = fp.object.file.file_name
+          td = fp.input :caption, label: false
+          td = number_to_human_size fp.object.file.file_size
+          td = fp.input :_destroy, as: :boolean
   .col-sm-12
     = f.submit
     = link_to "back", console_nodes_path
