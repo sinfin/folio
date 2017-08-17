@@ -10,25 +10,24 @@
           #dropzone-error.col-md-12.hidden
             .alert.alert-danger role="alert"
           .col-md-12
+            .thumbnail
+              = simple_form_for(Folio::Document.new, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone', id: 'new_document'}) do |f|
+                = f.input :type, as: :hidden
+                .fallback
+                  = link_to 'Add new files', new_console_file_path(file_type: :document)
             table.table.table-hover
               thead
                 th = t('file_name')
                 th colspan='2' = t('file_size')
               tbody
-                / .thumbnail
-                /   = simple_form_for(Folio::Document.new, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone', id: 'new_image'}) do |f|
-                /     = f.input :type, as: :hidden
-                /     .fallback
-                /       = link_to 'Add new files', new_console_file_path
-                / #dropzone-template.hidden
-                /   .col-sm-6.col-md-3
-                /     a.thumbnail.selectFile
-                /       = image_tag '', class: 'img-responsive'
+                tr#document-dropzone-template.hidden.select-file
+                  td name='file_name'
+                  td name='file_size'
                 - Folio::Document.all.each do |document|
-                    tr.select-file data-file-id=document.id data-file-filesize=number_to_human_size(document.file_size) data-file-filename=document.file_name
-                      td = document.file_name
-                      td = number_to_human_size document.file_size
-          
+                  tr.select-file data-file-id=document.id data-file-filesize=number_to_human_size(document.file_size) data-file-filename=document.file_name
+                    td = document.file_name
+                    td = number_to_human_size document.file_size
+
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close
         button.btn.btn-success.save-modal data-dismiss="modal" type="button"  Add
