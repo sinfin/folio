@@ -7,6 +7,7 @@ cs:
     console:
       nodes:
         index:
+          title: Stránky
           query: Vyhledávání
           all_nodes: Všechny nody
           published: Jen publikované
@@ -17,7 +18,12 @@ cs:
             confirm: Chcete přeložit stránku do %{language}?
       accounts:
         index:
+          title: Uživatelé
           edit: Upravit
+          query: Vyhledávání uživatelů
+      files:
+        index:
+          title: Soubory
       really_delete: Jste si jist, že chcete smazat %{}?
     site:
       settings:
