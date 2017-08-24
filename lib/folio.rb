@@ -15,9 +15,17 @@ require 'kaminari'
 require 'font-awesome-rails'
 require 'jquery-rails'
 require 'dropzonejs-rails'
+require 'countries'
 
 module Folio
   class Engine < ::Rails::Engine
     config.assets.precompile += %w[folio/console/base.css folio/console/base.js]
   end
+
+  LANGUAGES = {
+    cs: 'CZ',
+    de: 'DE',
+    es: 'ES',
+    en: 'US'
+  }
 end

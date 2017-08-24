@@ -4,6 +4,12 @@ cs:
   dragonfly:
     invalid_format: Nepodporovaný formát
   folio:
+    locale:
+      languages:
+        cs: čeština
+        de: němčina
+        en: angličtina
+        es: Španělština
     console:
       nodes:
         index:
@@ -16,6 +22,11 @@ cs:
         node_row:
           new:
             confirm: Chcete přeložit stránku do %{language}?
+        form:
+          node:
+            title: Obsah
+          gallery:
+            title: Přílohy
       accounts:
         index:
           title: Uživatelé
