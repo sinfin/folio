@@ -8,13 +8,13 @@
 [x] whenever
 [x] documents placements
 [x] nodes filter
+[x] node / translations
 
 I. fáze
 [ ] documents tags
 [ ] documents multiple upload / výběr z knihovny (Redactor.js plugin image manager)
 [ ] documents upload z editace node (AJAX)
 [ ] documents upload progress bar
-[ ] node / translations
 [ ] tagy nodů
 [ ] cancancan / authz
 [ ] attachments / images na S3
