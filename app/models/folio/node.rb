@@ -127,6 +127,7 @@ module Folio
         translation.locale = locale
         translation.becomes!(Folio::NodeTranslation)
         translation.original_id = self.id
+        translation.published = false
 
         # Files
         self.file_placements.find_each do |fp|
@@ -134,6 +135,9 @@ module Folio
         end
 
         # TODO: Atoms
+        # self.atoms.find_each do |atom|
+        #   translation.atoms << atom.dup
+        # end
 
         translation.save!
 
