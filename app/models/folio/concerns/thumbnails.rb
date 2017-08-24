@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 module Folio
   module Thumbnails
     extend ActiveSupport::Concern

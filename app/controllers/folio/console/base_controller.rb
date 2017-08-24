@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'folio/application_responder'
 
 require_dependency 'folio/application_controller'

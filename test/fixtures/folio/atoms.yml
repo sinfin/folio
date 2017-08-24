@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  node: one
+  content: MyText
+  position: 1
+
+two:
+  type: 
+  node: two
+  content: MyText
+  position: 1

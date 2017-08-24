@@ -1,0 +1,8 @@
+.nested-fields.panel.panel-default: .panel-body
+  = f.input :type, collection: Folio::Atom.types, include_blank: false
+  = f.input :content, input_html: { class: "redactor" }
+  = f.input :position
+  - if f.object.id
+    = f.input :_destroy, as: :boolean
+  - else
+    = link_to_remove_association t('.nodes.remove_atom'), f, class: 'btn btn-default'
