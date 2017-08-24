@@ -1,9 +1,6 @@
 cs:
   'true': Ano
   'false': Ne
-  time:
-    formats:
-      short: "%d. %-m. %Y, %H:%m"
   dragonfly:
     invalid_format: Nepodporovaný formát
   folio:
