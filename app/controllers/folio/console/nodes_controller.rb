@@ -21,13 +21,10 @@ module Folio
         @node = Folio::Node.new()
       else
         original = Folio::Node.find(params[:node][:original_id])
-        @node = original.dup
-        @node.locale = params[:node][:locale]
-        @node.becomes!(Folio::NodeTranslation)
-        @node.original_id = original.id
-        @node.save!
 
-        redirect_to edit_console_node_path(@node)
+        @node = original.translate!(params[:node][:locale])
+
+        redirect_to edit_console_node_path(@node.id)
       end
     end
 

@@ -8,8 +8,8 @@ module Folio
     has_ancestry
     belongs_to :site, class_name: 'Folio::Site'
     friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
-    has_many :file_placements, class_name: 'Folio::FilePlacement'
-    has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id
+    has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
+    has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
 
     accepts_nested_attributes_for :file_placements, allow_destroy: true
 
@@ -127,7 +127,17 @@ module Folio
         translation.locale = locale
         translation.becomes!(Folio::NodeTranslation)
         translation.original_id = self.id
+
+        # Files
+        self.file_placements.find_each do |fp|
+          translation.file_placements << fp.dup
+        end
+
+        # TODO: Atoms
+
         translation.save!
+
+        translation
       end
     end
   end
