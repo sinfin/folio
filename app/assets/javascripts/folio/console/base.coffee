@@ -10,6 +10,38 @@ $ ->
   $(document).on 'change', '#filter-form', ->
     $(this).submit()
     
+  $(document).on 'change', '.atom-type-select', ->
+    $content = $(this).closest('.nested-fields').find('.atom-content')
+    switch this.value
+      when 'Folio::Atom::Text'
+        $content.redactor()
+      when 'Folio::Atom::Embedded'
+        $content.redactor('core.destroy')
+
+  $(document).on 'click', '.btn.position-up', ->
+    $this_atom = $(this).closest('.nested-fields')
+    $that_atom = $this_atom.prevAll(".nested-fields:first")
+    
+    pos = $this_atom.find('.position').val()
+    $that_atom.find('.position').val(pos)
+    $this_atom.find('.position').val(pos - 1)
+    $this_atom.after($that_atom)
+    
+  $(document).on 'click', '.btn.position-down', ->
+    $this_atom = $(this).closest('.nested-fields')
+    $that_atom = $this_atom.nextAll(".nested-fields:first")
+    
+    pos = $that_atom.find('.position').val()
+    $this_atom.find('.position').val(pos)
+    $that_atom.find('.position').val(pos - 1)
+    $that_atom.after($this_atom)
+  
+  $(document).on 'cocoon:after-insert', (e, insertedItem) ->
+    pos = +$(insertedItem).prevAll(".nested-fields:first").find('.position').val()
+    $(insertedItem).find('.position').val(pos + 1)
+    $(insertedItem).find('.redactor').each ->
+      $(this).redactor()
+      
   $(document).on 'click', '.select-file', ->
     $image = $(this)
     if $image.hasClass('active')

@@ -10,7 +10,7 @@ module Folio
     friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
     has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
-    has_many :atoms, class_name: 'Folio::Atom', dependent: :destroy
+    has_many :atoms, -> { order(:position) }, class_name: 'Folio::Atom', dependent: :destroy
 
     accepts_nested_attributes_for :file_placements, allow_destroy: true
     accepts_nested_attributes_for :atoms, reject_if: :all_blank, allow_destroy: true

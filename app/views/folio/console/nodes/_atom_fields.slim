@@ -1,8 +1,14 @@
 .nested-fields.panel.panel-default: .panel-body
-  = f.input :type, collection: Folio::Atom.types, include_blank: false
-  = f.input :content, input_html: { class: "redactor" }
-  = f.input :position
-  - if f.object.id
-    = f.input :_destroy, as: :boolean
-  - else
-    = link_to_remove_association t('.nodes.remove_atom'), f, class: 'btn btn-default'
+  .row
+    .col-sm-6
+      = f.input :type, collection: Folio::Atom.types, include_blank: false, input_html: { class: 'atom-type-select' }
+    .col-sm-6.text-right
+      .btn.btn-default.position-up = icon 'arrow-up'
+      .btn.btn-default.position-down = icon 'arrow-down'
+      = f.hidden_field :position, class: 'position'
+    .col-sm-12
+      = f.input :content, input_html: { class: "atom-content #{f.object.type == 'Folio::Atom::Text' ? 'redactor' : '' }" }
+      - if f.object.id
+        = f.input :_destroy, as: :boolean
+      - else
+        = link_to_remove_association t('.nodes.remove_atom'), f, class: 'btn btn-default'
