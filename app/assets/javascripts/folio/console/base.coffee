@@ -2,6 +2,7 @@
 #= require jquery_ujs
 #= require bootstrap-sprockets
 #= require dropzone
+#= require cocoon
 # = require redactor
 #= require ./redactor-init
 
