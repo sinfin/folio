@@ -5,13 +5,16 @@ tr
         - if tree
           i.caret.right.icon style="margin-left:#{node.ancestors.count * 2}rem" 
           '
-        = link_to node.title, edit_console_node_path(node)
+        = link_to node.title, edit_console_node_path(node.id)
       - unless tree
         li.small == node_breadcrumbs(node.ancestors)
   td
     ul 
     - node.site.locales.each do |locale|
-      li style="display: inline; margin-right: 1em;"= link_to locale
+      - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
+        li style="display: inline; margin-right: 1em;"= link_to locale, edit_console_node_path(node.node_translations.find_by(locale: locale).id)
+      - else
+        li style="display: inline; margin-right: 1em;"= link_to locale, new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: "inactive", rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
       
   td = node.type
   td = featured_icon node.featured

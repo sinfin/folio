@@ -7,8 +7,9 @@ module Folio
     # Relations
     has_ancestry
     belongs_to :site, class_name: 'Folio::Site'
-    friendly_id :title, use: %i[slugged scoped history], scope: [:site]
+    friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
     has_many :file_placements, class_name: 'Folio::FilePlacement'
+    has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id
 
     accepts_nested_attributes_for :file_placements, allow_destroy: true
 
@@ -17,8 +18,8 @@ module Folio
       %w"Folio::Page Folio::Category"
     end
     validates :title, :slug, :locale, presence: true
-    validates :slug, uniqueness: { scope: :site_id }
-    validates :type, inclusion: { in: types }
+    validates :slug, uniqueness: { scope: [:site_id, :locale] }
+    validates :type, inclusion: { in: types.push('Folio::NodeTranslation') }
 
     # Callbacks
     before_validation do
@@ -27,6 +28,7 @@ module Folio
     end
 
     # Scopes
+    scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
     scope :featured,  -> { where(featured: true) }
     scope :ordered,   -> { order(position: :asc) }
     scope :published, -> {
@@ -94,6 +96,39 @@ module Folio
 
     def name_depth
       "#{'&nbsp;' * self.depth} #{self.to_label}".html_safe
+    end
+
+    def cast
+      self
+    end
+
+    def original
+      self
+    end
+
+    def translations
+      node_translations
+    end
+
+    def translate(locale)
+      case locale
+      when locale == self.locale
+        cast
+      when self.node_translations.where(locale: locale).exists?
+        self.node_translations.find_by(locale: locale).cast
+      else
+        cast
+      end
+    end
+
+    def translate!(locale)
+      ActiveRecord::Base.transaction do
+        translation = self.dup
+        translation.locale = locale
+        translation.becomes!(Folio::NodeTranslation)
+        translation.original_id = self.id
+        translation.save!
+      end
     end
   end
 end

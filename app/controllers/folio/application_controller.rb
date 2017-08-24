@@ -6,7 +6,9 @@ module Folio
 
     before_action do
       @site = Folio::Site.first
-      @roots = Folio::Node.roots
+      @roots = @site.nodes.where(locale: I18n.locale).roots
+
+      I18n.locale = @site.locale unless params[:locale]
     end
   end
 end

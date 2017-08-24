@@ -3,6 +3,7 @@
 @import "font-awesome";
 @import "redactor";
 @import "dropzone/dropzone";
+@import "nodes";
 
 body{
   margin-top: 50px;
@@ -14,4 +15,8 @@ body{
 
 .dropzone {
   border: 0;
+
+a.inactive{
+  color: grey;
+  border-bottom: 1px dotted grey;
 }

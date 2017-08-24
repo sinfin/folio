@@ -7,16 +7,28 @@ module Folio
     def index
       if !params[:by_query].blank? || !params[:by_published].blank? || !params[:by_type].blank?
         @nodes = Folio::Node.
-                        order('created_at desc').
-                        filter(filter_params).
-                        page(current_page)
+        original.
+        order('created_at desc').
+        filter(filter_params).
+        page(current_page)
       else
-        @nodes = Folio::Node.arrange
+        @nodes = Folio::Node.original.arrange
       end
     end
 
     def new
-      @node = Folio::Node.new
+      if params[:node].blank? || params[:node][:original_id].blank?
+        @node = Folio::Node.new()
+      else
+        original = Folio::Node.find(params[:node][:original_id])
+        @node = original.dup
+        @node.locale = params[:node][:locale]
+        @node.becomes!(Folio::NodeTranslation)
+        @node.original_id = original.id
+        @node.save!
+
+        redirect_to edit_console_node_path(@node)
+      end
     end
 
     def create
@@ -44,7 +56,7 @@ module Folio
     end
 
     def node_params
-      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id, file_placements_attributes: [:id, :caption, :file_id, :_destroy])
+      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id, :original_id, file_placements_attributes: [:id, :caption, :file_id, :_destroy])
       p.delete(:password) unless p[:password].present?
       p
     end
