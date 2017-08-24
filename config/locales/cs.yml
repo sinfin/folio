@@ -1,0 +1,35 @@
+cs:
+  'true': Ano
+  'false': Ne
+  time:
+    formats:
+      short: "%d. %-m. %Y, %H:%m"
+  dragonfly:
+    invalid_format: Nepodporovaný formát
+  folio:
+    console:
+      nodes:
+        index:
+          query: Vyhledávání
+          all_nodes: Všechny nody
+          published: Jen publikované
+          unpublished: Jen rozpracované
+          all_types: Všechny typy
+        node_row:
+          new:
+            confirm: Chcete přeložit stránku do %{language}?
+      accounts:
+        index:
+          edit: Upravit
+      really_delete: Jste si jist, že chcete smazat %{}?
+    site:
+      settings:
+        title: Nastavení
+        title_long: Nastavení stránky %{site}
+  error_pages:
+    403_message: We are sorry, your access to this page was denied.
+    404_message: We are sorry, the page does not exist.
+    500_message: Oops, there was a mistake, we are sorry :-(
+    try_home_1: Try go back to the
+    try_home_2: ", thank you."
+    link: homepage

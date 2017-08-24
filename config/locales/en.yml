@@ -1,6 +1,6 @@
 en:
   'true': Yes
-  'false': Ne
+  'false': No
   time:
     formats:
       short: "%d %b %Y, %H:%m"
@@ -15,6 +15,9 @@ en:
           published: Published only
           unpublished: Drafts only
           all_types: All types
+        node_row:
+          new:
+            confirm: Do you want to translate the page to %{language}?
       accounts:
         index:
           edit: Edit
