@@ -211,5 +211,5 @@ cs:
     formats:
       default: "%a %d. %B %Y %H:%M %z"
       long: "%A %d. %B %Y %H:%M"
-      short: "%d. %m. %H:%M"
+      short: "%d. %m. %Y %H:%M"
     pm: pm
