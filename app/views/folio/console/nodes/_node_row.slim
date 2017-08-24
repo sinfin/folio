@@ -12,9 +12,9 @@ tr
     ul 
     - node.site.locales.each do |locale|
       - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
-        li style="display: inline; margin-right: 1em;"= link_to locale, edit_console_node_path(node.node_translations.find_by(locale: locale).id)
+        li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), edit_console_node_path(node.node_translations.find_by(locale: locale).id)
       - else
-        li style="display: inline; margin-right: 1em;"= link_to locale, new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: "inactive", rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
+        li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: "inactive", rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
       
   td = node.type
   td = featured_icon node.featured

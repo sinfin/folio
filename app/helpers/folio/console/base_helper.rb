@@ -36,9 +36,14 @@ module Folio
       link_to(ico, path, opts).html_safe
     end
 
-    def locale_to_label(locale)
+    def locale_to_label(locale, short: false)
       c = ISO3166::Country.new(Folio::LANGUAGES[locale.to_sym])
-      "#{t("folio.locale.languages.#{locale}")} #{c.try(:emoji_flag)}"
+
+      if short
+        "#{locale} #{c.try(:emoji_flag)}"
+      else
+        "#{t("folio.locale.languages.#{locale}")} #{c.try(:emoji_flag)}"
+      end
     end
   end
 end
