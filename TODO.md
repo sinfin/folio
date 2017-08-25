@@ -21,6 +21,7 @@ I. fáze
 [ ] redactor.js rich content with images
 [ ] leadform / async mailerem
 [ ] řazení nodů
+[ ] newsletter subscription
 
 II. fáze
 [ ] node type galerie
@@ -28,6 +29,10 @@ II. fáze
 [ ] capistrano deployment
 [ ] generovani modelu a CRUD (gem od Jakuba)
 [ ] document thumbnails async
+
+ARC
+[ ] menu_items (link to node / path / url / model )
+[ ] pinyin transkripce titles na slugy (https://github.com/janx/ruby-pinyin)
 
 [ ] fb meta fields
 [ ] ahoy tracking
