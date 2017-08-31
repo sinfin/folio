@@ -9,7 +9,7 @@
 $ ->
   $(document).on 'change', '#filter-form', ->
     $(this).submit()
-    
+
   $(document).on 'change', '.atom-type-select', ->
     $content = $(this).closest('.nested-fields').find('.atom-content')
     switch this.value
@@ -18,30 +18,50 @@ $ ->
       when 'Folio::Atom::Embedded'
         $content.redactor('core.destroy')
 
+  $('#paginate-images a').on 'ajax:success', (e, data, status, json) ->
+    # pagination
+    $li = $(this).parent()
+    $li.parent().find('li.active').removeClass('active')
+    $li.addClass('active')
+
+    $(this).closest('.modal-body').find('.row > .col-image')
+      .each (index) ->
+        $template = $(this)
+        image = data[index]
+        $template.find('a.thumbnail.select-file')
+          .data('file-id', image.id)
+          .data('file-filesize', image.file_size)
+          .data('file-size', image.size)
+        $template.find('img')
+          .attr('src', image.thumb_url)
+  # # WIP
+  # .on "ajax:error", (e, xhr, status, error) ->
+  #   $("#new_article").append "<p>ERROR</p>"
+
   $(document).on 'click', '.btn.position-up', ->
     $this_atom = $(this).closest('.nested-fields')
     $that_atom = $this_atom.prevAll(".nested-fields:first")
-    
+
     pos = $this_atom.find('.position').val()
     $that_atom.find('.position').val(pos)
     $this_atom.find('.position').val(pos - 1)
     $this_atom.after($that_atom)
-    
+
   $(document).on 'click', '.btn.position-down', ->
     $this_atom = $(this).closest('.nested-fields')
     $that_atom = $this_atom.nextAll(".nested-fields:first")
-    
+
     pos = $that_atom.find('.position').val()
     $this_atom.find('.position').val(pos)
     $that_atom.find('.position').val(pos - 1)
     $that_atom.after($this_atom)
-  
+
   $(document).on 'cocoon:after-insert', (e, insertedItem) ->
     pos = +$(insertedItem).prevAll(".nested-fields:first").find('.position').val()
     $(insertedItem).find('.position').val(pos + 1)
     $(insertedItem).find('.redactor').each ->
       $(this).redactor()
-      
+
   $(document).on 'click', '.select-file', ->
     $image = $(this)
     if $image.hasClass('active')
@@ -50,7 +70,7 @@ $ ->
       $image.addClass('active')
 
   index_counter = undefined
-  
+
   $(document).on 'click', '.save-modal', ->
     $modal = $(this).closest('.modal')
     $target = $($modal.data('target'))
@@ -58,7 +78,7 @@ $ ->
       $file = $(this)
       $copy = $target.find('.file-placement-new').clone()
       index_counter = index_counter || $target.data('fp-index')
-      
+
       $copy.removeClass('hidden file-placement-new').removeAttr('id')
       $copy.find('img').attr('src', $file.find('img').attr('src'))
       $copy.find('input').each () ->
@@ -72,10 +92,10 @@ $ ->
       $copy.find("[name='size']").html($file.data('file-size'))
       $copy.appendTo($target)
       index_counter++
-  
+
   $(document).on 'hidden.bs.modal', '.modal', (event) ->
     $(this).closest('.modal').find('.select-file.active').removeClass('active')
-      
+
   $(document).on 'click', '.remove-file-placement', ->
     $(this).closest('.nested-field').remove()
     index_counter--
@@ -86,7 +106,7 @@ $ ->
   $('#new_file').dropzone
     maxFilesize: 10 # MB
     paramName: 'file[file]'
-  
+
   template = document.querySelector('#image-dropzone-template')
   if template
     $('#new_image').dropzone
@@ -112,16 +132,18 @@ $ ->
           .addClass('active')
           .data('file-id', response.id)
           .data('file-filesize', response.file_size)
-          .data('file-size', "#{response.file_width} × #{response.file_height}px")
+          .data('file-size', response.size)
         if file.thumbnailUrl
           $template.find('img').attr('src', file.thumbnailUrl)
+
+        $('#image-dropzone-template').parent().children('.col-image:last-child').remove()
         $('#image-dropzone-template').after($template)
         return file
       error: (file, message) ->
         $('#dropzone-error').removeClass('hidden')
         $('#dropzone-error .alert').html("#{file.upload.filename}: #{message}")
         return file
-  
+
   template = document.querySelector('#document-dropzone-template')
   if template
     $('#new_document').dropzone

@@ -3,11 +3,15 @@ require_dependency 'folio/application_controller'
 module Folio
   class Console::FilesController < Console::BaseController
     before_action :find_file, except: [:index, :create, :new]
-    respond_to :json, only: :create
+    respond_to :js, only: [:index, :create]
 
     def index
-      @images = Folio::Image.all
-      @documents = Folio::Document.all
+      @images = Image.page(current_page)
+      @documents = Document.page(current_page)
+      respond_with(@images) do |format|
+        format.html { render }
+        format.js { render json: @images }
+      end
     end
 
     def new

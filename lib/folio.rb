@@ -5,6 +5,7 @@ require 'friendly_id'
 require 'ancestry'
 require 'devise'
 require 'responders'
+require 'active_model_serializers'
 require 'sitemap_generator'
 
 require 'slim'
