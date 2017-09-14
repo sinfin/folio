@@ -20,13 +20,15 @@
                 th = t('file_name')
                 th colspan='2' = t('file_size')
               tbody
-                tr#document-dropzone-template.hidden.select-file
+                tr#document-dropzone-template.hidden.select-file.template
                   td name='file_name'
                   td name='file_size'
-                - Folio::Document.all.each do |document|
+                - @documents.each do |document|
                   tr.select-file data-file-id=document.id data-file-filesize=number_to_human_size(document.file_size) data-file-filename=document.file_name
-                    td = document.file_name
-                    td = number_to_human_size document.file_size
+                    td name='file_name' = document.file_name
+                    td name='file_size' = number_to_human_size document.file_size
+          .col-sm-12
+            #paginate-documents = paginate @documents, remote: true, format: :json, params: {controller: 'files', action: 'index', type: 'document', id: nil}, theme: 'remote'
 
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close

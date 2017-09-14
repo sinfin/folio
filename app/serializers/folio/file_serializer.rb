@@ -1,7 +1,9 @@
 module Folio
   class FileSerializer < ActiveModel::Serializer
-    attributes :id, :file_size, :thumb_url
+    attributes :id, :file_size, :file_name
+
     attribute :size, if: :image?
+    attribute :thumb_url, if: :image?
 
     def thumb_url
       object.thumb('250x250#').url
@@ -16,7 +18,7 @@ module Folio
     end
 
     def image?
-      object.class == Folio::Image
+      object.type == 'Folio::Image'
     end
   end
 end

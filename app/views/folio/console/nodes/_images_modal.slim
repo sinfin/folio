@@ -17,16 +17,15 @@
                   = link_to 'Add new files', new_console_file_path
           #image-dropzone-template.hidden
             .col-sm-6.col-md-3.col-image
-              a.thumbnail.selectable
+              a.thumbnail.select-file
                 = image_tag '', class: 'img-responsive'
-          - images = Folio::Image.page(1)
-          - images.each do |image|
+          - @images.each do |image|
             .col-sm-6.col-md-3.col-image
-              a.thumbnail.selectable data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
+              a.thumbnail.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
                 = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
         .row
           .col-sm-12
-            #paginate-images = paginate images, remote: true, format: :json, params: {controller: 'files', action: 'index', id: nil}, theme: 'remote'
+            #paginate-images = paginate @images, remote: true, format: :json, params: {controller: 'files', action: 'index', type: 'image', id: nil}, theme: 'remote'
           
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close

@@ -3,20 +3,21 @@ require_dependency 'folio/application_controller'
 module Folio
   class Console::FilesController < Console::BaseController
     before_action :find_file, except: [:index, :create, :new]
-    respond_to :js, only: [:index, :create]
+    respond_to :json, only: [:index, :create]
 
     def index
       if !params[:by_tag].blank?
         @images = Image.filter(filter_params).page(current_page)
-        @documents = Document.filter(filter_params).page(current_page)
+        @documents = Document.filter(filter_params)
       else
         @images = Image.page(current_page)
-        @documents = Document.page(current_page)
+        @documents = Document.all
       end
 
-      respond_with(@images) do |format|
-        format.html { render }
-        format.js { render json: @images }
+      if params[:type] == 'image'
+        render json: @images.page(current_page)
+      elsif params[:type] == 'document'
+        render json: @documents.page(current_page)
       end
     end
 

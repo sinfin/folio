@@ -3,6 +3,7 @@ require_dependency 'folio/application_controller'
 module Folio
   class Console::NodesController < Console::BaseController
     before_action :find_node, except: [:index, :create, :new]
+    before_action :find_files, only: [:new, :edit]
 
     def index
       if !params[:by_query].blank? || !params[:by_published].blank? || !params[:by_type].blank? || !params[:by_tag].blank?
@@ -46,6 +47,11 @@ module Folio
   private
     def find_node
       @node = Folio::Node.friendly.find(params[:id])
+    end
+
+    def find_files
+      @images = Folio::Image.page(1)
+      @documents = Folio::Document.page(1)
     end
 
     def filter_params
