@@ -18,6 +18,7 @@ cs:
           all_nodes: Všechny nody
           published: Jen publikované
           unpublished: Jen rozpracované
+          all_tags: Všechny tagy
           all_types: Všechny typy
         node_row:
           new:

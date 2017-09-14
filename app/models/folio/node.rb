@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require_dependency 'folio/concerns/taggable'
+
 module Folio
   class Node < ApplicationRecord
     extend FriendlyId
+    include Taggable
 
     # Relations
     has_ancestry

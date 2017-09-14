@@ -7,7 +7,7 @@ h1
   .form-group
     .col-md-2
       = query_field t('.query')
-    /.col-md-1
+    .col-md-2
       = tag_filter_select Folio::Node
     .col-md-2
       = custom_options_for_select(Folio::Node,:by_published,[[t('.all_nodes'), nil], [t('.published'), 'published'], [t('.unpublished'), 'unpublished']])

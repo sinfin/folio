@@ -6,8 +6,14 @@ module Folio
     respond_to :js, only: [:index, :create]
 
     def index
-      @images = Image.page(current_page)
-      @documents = Document.page(current_page)
+      if !params[:by_tag].blank?
+        @images = Image.filter(filter_params).page(current_page)
+        @documents = Document.filter(filter_params).page(current_page)
+      else
+        @images = Image.page(current_page)
+        @documents = Document.page(current_page)
+      end
+
       respond_with(@images) do |format|
         format.html { render }
         format.js { render json: @images }
@@ -41,6 +47,11 @@ module Folio
     def find_file
       @file = Folio::File.find(params[:id])
     end
+
+    def filter_params
+      params.permit(:by_tag)
+    end
+
 
     def file_params
       params.require(:file).permit(:file, :tag_list, :type)

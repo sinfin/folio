@@ -1,7 +1,10 @@
+require_dependency 'folio/concerns/taggable'
+
 module Folio
   class File < ApplicationRecord
+    include Taggable
+
     dragonfly_accessor :file
-    acts_as_taggable
 
     # Relations
     has_many :file_placements, class_name: 'Folio::FilePlacement'

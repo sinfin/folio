@@ -14,6 +14,7 @@ en:
           all_nodes: All nodes
           published: Published only
           unpublished: Drafts only
+          all_tags: All tags
           all_types: All types
         node_row:
           new:

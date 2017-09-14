@@ -5,7 +5,7 @@ module Folio
     before_action :find_node, except: [:index, :create, :new]
 
     def index
-      if !params[:by_query].blank? || !params[:by_published].blank? || !params[:by_type].blank?
+      if !params[:by_query].blank? || !params[:by_published].blank? || !params[:by_type].blank? || !params[:by_tag].blank?
         @nodes = Folio::Node.
         original.
         order('created_at desc').
@@ -49,11 +49,11 @@ module Folio
     end
 
     def filter_params
-      params.permit(:by_query, :by_published, :by_type)
+      params.permit(:by_query, :by_published, :by_type, :by_tag)
     end
 
     def node_params
-      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :type, :featured, :published, :published_at, :locale, :parent_id, :original_id, file_placements_attributes: [:id, :caption, :file_id, :_destroy],  atoms_attributes: [:id, :type, :content, :position, :_destroy])
+      p = params.require(:node).permit(:title, :slug, :perex, :content, :meta_title, :meta_description, :code, :tag_list, :type, :featured, :published, :published_at, :locale, :parent_id, :original_id, file_placements_attributes: [:id, :caption, :file_id, :_destroy],  atoms_attributes: [:id, :type, :content, :position, :_destroy])
       p.delete(:password) unless p[:password].present?
       p
     end
