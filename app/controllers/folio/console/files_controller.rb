@@ -43,7 +43,7 @@ module Folio
     end
 
     def file_params
-      params.require(:file).permit(:file, :type)
+      params.require(:file).permit(:file, :tag_list, :type)
     end
   end
 end

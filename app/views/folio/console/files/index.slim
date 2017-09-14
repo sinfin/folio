@@ -34,6 +34,9 @@ ul.nav.nav-tabs role="tablist"
             .caption
               ul.list-unstyled
                 li = image.file.name
+                li
+                  - image.tag_list.each do |tag|
+                    span.label.label-default = tag
                 li = "#{image.file_width} × #{image.file_height}px"
                 li = number_to_human_size image.file_size
                 li = link_to icon('download'), image.file.url
@@ -47,6 +50,7 @@ ul.nav.nav-tabs role="tablist"
             th = t(".id")
             th = t(".file_name")
             th = t(".file_size")
+            th = t(".tag_list")
             th = t(".file_download")
             th.text-right colspan=2
               = new_button new_console_file_path(file_type: :document), { label: 'New Document' }
@@ -56,6 +60,9 @@ ul.nav.nav-tabs role="tablist"
               td = document.id
               td = document.file_name
               td = number_to_human_size document.file_size
+              td
+                - document.tag_list.each do |tag|
+                  span.label.label-default = tag
               td = link_to icon('download'), document.file.url
               td = edit_button document, edit_console_file_path(document)
               td = delete_button document, console_file_path(document)

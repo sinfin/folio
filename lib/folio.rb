@@ -7,6 +7,7 @@ require 'devise'
 require 'responders'
 require 'active_model_serializers'
 require 'sitemap_generator'
+require 'acts-as-taggable-on'
 
 require 'slim'
 require 'sass-rails'
