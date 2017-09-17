@@ -16,7 +16,7 @@ I. fáze
 [x] documents upload z editace node (AJAX)
 [ ] documents upload progress bar
 [x] tagy nodů
-[ ] cancancan / authz
+[x] cancancan / authz
 [ ] attachments / images na S3
 [x] redactor.js rich content with images
 [ ] leadform / async mailerem

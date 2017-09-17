@@ -2,11 +2,11 @@ require_dependency 'folio/application_controller'
 
 module Folio
   class Console::AccountsController < Console::BaseController
-    before_action :find_account, except: [ :index, :create, :new ]
+    load_and_authorize_resource :account, class: 'Folio::Account'
 
     def index
       params[:by_is_active] = true if params[:by_is_active].nil?
-      @accounts = Account.
+      @accounts = @accounts.
                       order(:created_at).
                       filter(filter_params).
                       page(current_page)
@@ -33,10 +33,6 @@ module Folio
     end
 
     private
-
-      def find_account
-        @account = Account.find(params[:id])
-      end
 
       def filter_params
         params.permit(:by_is_active, :by_query)

@@ -31,10 +31,10 @@ module Folio
       # def authorize_admin_user!
       #   authorize! :manage, :all
       # end
-      #
-      # def current_ability
-      #   @ability ||= Ability.new(current_admin)
-      # end
+
+      def current_ability
+        @current_ability ||= ConsoleAbility.new(current_admin)
+      end
 
       def current_admin
         current_account

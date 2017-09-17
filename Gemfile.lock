@@ -7,6 +7,7 @@ PATH
       ancestry
       annotate
       bootstrap-sass
+      cancancan (~> 2.0)
       carrierwave
       cocoon
       coffee-rails
@@ -96,6 +97,7 @@ GEM
       sass (>= 3.3.4)
     builder (3.2.3)
     byebug (9.1.0)
+    cancancan (2.0.0)
     carrierwave (1.1.0)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
