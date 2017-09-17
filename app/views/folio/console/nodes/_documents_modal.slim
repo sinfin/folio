@@ -28,7 +28,7 @@
                     td name='file_name' = document.file_name
                     td name='file_size' = number_to_human_size document.file_size
           .col-sm-12
-            #paginate-documents = paginate @documents, remote: true, format: :json, params: {controller: 'files', action: 'index', type: 'document', id: nil}, theme: 'remote'
+            #paginate-documents = paginate @documents, remote: true, params: {controller: 'files', action: 'index', type: 'document', id: nil, format: :json}, theme: 'remote'
 
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close

@@ -6,23 +6,21 @@ module Folio
     respond_to :json, only: [:index, :create]
 
     def index
-      if !params[:by_tag].blank?
-        @images = Image.filter(filter_params)
-        @documents = Document.filter(filter_params)
+      if params[:type] == 'document'
+        @files = Document.all
       else
-        @images = Image.all
-        @documents = Document.all
+        @files = Image.all
       end
 
-      if params[:page]
-        @images = @images.page(current_page)
-        @documents = @documents.page(current_page)
+      if !params[:by_tag].blank?
+        @files = @files.filter(filter_params)
       end
 
-      if params[:type] == 'image'
-        render json: @images
-      elsif params[:type] == 'document'
-        render json: @documents
+      @files = @files.page(current_page)
+
+      respond_with(@files) do |format|
+        format.html
+        format.json { render json: @files }
       end
     end
 

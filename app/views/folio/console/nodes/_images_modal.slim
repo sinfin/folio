@@ -25,7 +25,7 @@
                 = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
         .row
           .col-sm-12
-            #paginate-images = paginate @images, remote: true, format: :json, params: {controller: 'files', action: 'index', type: 'image', id: nil}, theme: 'remote'
+            #paginate-images = paginate @images, remote: true, params: {controller: 'files', action: 'index', type: 'image', format: :json, id: nil}, theme: 'remote'
           
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close
