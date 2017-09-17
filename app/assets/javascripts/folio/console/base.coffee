@@ -6,6 +6,7 @@
 #= require redactor
 
 #= require ./redactor-init
+#= require ./redactor-imagemanager
 #= require ./nodes
 #= require ./files
 

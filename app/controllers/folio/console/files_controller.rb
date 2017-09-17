@@ -7,17 +7,22 @@ module Folio
 
     def index
       if !params[:by_tag].blank?
-        @images = Image.filter(filter_params).page(current_page)
+        @images = Image.filter(filter_params)
         @documents = Document.filter(filter_params)
       else
-        @images = Image.page(current_page)
+        @images = Image.all
         @documents = Document.all
       end
 
+      if params[:page]
+        @images = @images.page(current_page)
+        @documents = @documents.page(current_page)
+      end
+
       if params[:type] == 'image'
-        render json: @images.page(current_page)
+        render json: @images
       elsif params[:type] == 'document'
-        render json: @documents.page(current_page)
+        render json: @documents
       end
     end
 

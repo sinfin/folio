@@ -3,10 +3,15 @@ module Folio
     attributes :id, :file_size, :file_name
 
     attribute :size, if: :image?
-    attribute :thumb_url, if: :image?
+    attribute :thumb, if: :image?
+    attribute :url, if: :image?
 
-    def thumb_url
+    def thumb
       object.thumb('250x250#').url
+    end
+
+    def url
+      object.file.url
     end
 
     def file_size

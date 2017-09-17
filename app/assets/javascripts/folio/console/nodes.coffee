@@ -25,7 +25,7 @@ $ ->
             .data('file-size', image.size)
             .removeClass('active')
           $template.find('img')
-            .attr('src', image.thumb_url)
+            .attr('src', image.thumb)
           $template.removeClass('hidden')
         else
           $template.addClass('hidden')
