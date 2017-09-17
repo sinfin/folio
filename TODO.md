@@ -11,14 +11,14 @@
 [x] node / translations
 
 I. fáze
-[ ] documents tags
-[ ] documents multiple upload / výběr z knihovny (Redactor.js plugin image manager)
-[ ] documents upload z editace node (AJAX)
+[x] documents tags
+[x] documents multiple upload / výběr z knihovny (Redactor.js plugin image manager)
+[x] documents upload z editace node (AJAX)
 [ ] documents upload progress bar
-[ ] tagy nodů
+[x] tagy nodů
 [ ] cancancan / authz
 [ ] attachments / images na S3
-[ ] redactor.js rich content with images
+[x] redactor.js rich content with images
 [ ] leadform / async mailerem
 [ ] řazení nodů
 [ ] newsletter subscription
