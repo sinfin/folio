@@ -12,7 +12,7 @@ require 'acts-as-taggable-on'
 
 require 'slim'
 require 'sass-rails'
-require 'bootstrap-sass'
+require 'bootstrap'
 require 'simple_form'
 require 'cocoon'
 require 'kaminari'

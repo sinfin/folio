@@ -1,35 +1,30 @@
-nav.navbar.navbar-inverse.navbar-fixed-top
-  .container-fluid
-    .navbar-header
-      button.navbar-toggle.collapsed aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" type="button"
-        span.sr-only Toggle navigation
-        span.icon-bar
-        span.icon-bar
-        span.icon-bar
-      a.navbar-brand href=console_dashboard_index_path = @site.title
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+  a.navbar-brand href=console_dashboard_index_path = @site.title
+  button.navbar-toggler aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbar" data-toggle="collapse" type="button" 
+    span.navbar-toggler-icon
 
-    #navbar.navbar-collapse.collapse
-      ul.nav.navbar-nav.navbar-left
+  #navbar.navbar-collapse.collapse
+    ul.navbar-nav.mr-auto
 
-        = li_link_to t('.nodes'), console_nodes_path
-        = li_link_to t('.files'), console_files_path
-        = li_link_to t('.users'), console_accounts_path
+      = nav_item_link_to t('.nodes'), console_nodes_path
+      = nav_item_link_to t('.files'), console_files_path
+      = nav_item_link_to t('.users'), console_accounts_path
 
 
-        /li.dropdown
-          a.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button"
-            = t('.analytics')
-            span.caret
-          ul.dropdown-menu
-            = li_link_to t('.visits'), console_visits_path
-            li.divider role="separator"
-            li.dropdown-header = t '.beware'
-            = li_link_to 'Sidekiq', '/sidekiq', target: 'sidekiq'
+      /li.dropdown
+        a.dropdown-toggle aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" role="button"
+          = t('.analytics')
+          span.caret
+        ul.dropdown-menu
+          = nav_item_link_to t('.visits'), console_visits_path
+          li.divider role="separator"
+          li.dropdown-header = t '.beware'
+          = nav_item_link_to 'Sidekiq', '/sidekiq', target: 'sidekiq'
 
 
-        li.divider role="separator"
+      li.divider role="separator"
 
 
-      ul.nav.navbar-nav.navbar-right
-        li = link_to t('folio.site.settings.title'), edit_console_site_path(@site)
-        = render 'folio/console/partials/auth_links'
+    ul.nav.navbar-nav.navbar-right
+      li.nav-item = link_to t('folio.site.settings.title'), edit_console_site_path(@site), class: 'nav-link'
+      = render 'folio/console/partials/auth_links'
