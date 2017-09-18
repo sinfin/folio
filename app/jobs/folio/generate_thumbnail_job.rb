@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Folio
   class GenerateThumbnailJob < ApplicationJob
     queue_as :default

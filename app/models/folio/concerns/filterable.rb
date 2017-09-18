@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://gist.github.com/justinweiss/9065666
 #
 # Call scopes directly from your URL params:

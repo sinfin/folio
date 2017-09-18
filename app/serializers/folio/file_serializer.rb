@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Folio
   class FileSerializer < ActiveModel::Serializer
     attributes :id, :file_size, :file_name

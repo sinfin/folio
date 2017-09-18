@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Folio::ConsoleAbility
   include CanCan::Ability
 

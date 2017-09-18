@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Folio
   module Console::BootstrapHelper
     def nav_item_link_to(title, path, opts = {}, active = false, &block)
