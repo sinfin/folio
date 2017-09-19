@@ -24,12 +24,8 @@ module Folio
     accepts_nested_attributes_for :atoms, reject_if: :all_blank, allow_destroy: true
 
     # Validations
-    # def self.types
-    #   %w"Folio::Page Folio::Category"
-    # end
     validates :title, :slug, :locale, presence: true
     validates :slug, uniqueness: { scope: [:site_id, :locale] }
-    # validates :type, inclusion: { in: types.push('Folio::NodeTranslation') }
 
     # Callbacks
     before_validation do

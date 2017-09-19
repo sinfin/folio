@@ -1,7 +1,7 @@
 .nested-fields.panel.panel-default: .panel-body
   .row
     .col-sm-6
-      = f.input :type, collection: Folio::Atom.types, include_blank: false, input_html: { class: 'atom-type-select' }
+      = f.input :type, collection: [Folio::Atom] + Folio::Atom.subclasses, include_blank: false, input_html: { class: 'atom-type-select' }
     .col-sm-6.text-right
       .btn.btn-default.position-up = icon 'arrow-up'
       .btn.btn-default.position-down = icon 'arrow-down'
