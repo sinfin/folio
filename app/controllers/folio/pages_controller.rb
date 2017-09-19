@@ -19,6 +19,8 @@ module Folio
         if request.path != page_path(@page)
           return redirect_to @page, status: :moved_permanently
         end
+
+        add_breadcrumb @page.title, url_for(@page)
       end
   end
 end

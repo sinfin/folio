@@ -45,6 +45,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'dotenv-rails'
   s.add_dependency 'countries'
   s.add_dependency 'acts-as-taggable-on', '~> 4.0'
+  s.add_dependency 'breadcrumbs_on_rails'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
