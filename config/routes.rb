@@ -26,6 +26,7 @@ Folio::Engine.routes.draw do
     root to: 'nodes#index'
     resources :dashboard, only: :index
     resources :nodes
+    resources :menus
     resources :files, except: [:show]
     resources :accounts
     resources :sites

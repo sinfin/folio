@@ -11,6 +11,8 @@
 Folio::Site.destroy_all
 Folio::Node.destroy_all
 Folio::File.destroy_all
+Folio::Menu.destroy_all
+Folio::MenuItem.destroy_all
 Folio::Account.destroy_all
 
 site = Folio::Site.create!(title: 'Sinfin.digital', domain: 'sinfin.localhost', locale: 'cs', locales: ['en', 'de', 'es'], google_analytics_tracking_code: 'UA-8111656-1')
@@ -26,6 +28,10 @@ pagesc = Folio::Page.create!(title: 'Smart Cities', parent: reference, published
 Folio::Page.create!(title: 'Vyvolej.to', parent: reference, published: true, published_at: Time.now, featured: true)
 Folio::Page.create!(title: 'Hidden', parent: reference, published: false, published_at: Time.now, featured: true)
 Folio::Page.create!(title: 'DAM', parent: reference, published: true, published_at: 1.month.since)
+
+menu = Folio::Menu::Header.create!
+Folio::MenuItem.create!(menu: menu, title: 'Reference', node: reference, position: 0)
+Folio::MenuItem.create!(menu: menu, title: 'About', node: about, position: 1)
 
 Folio::Account.create!(email: 'test@test.com', password: '123456', role: :superuser, first_name: 'Test', last_name: 'Dummy')
 

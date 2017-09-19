@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170914103263) do
+ActiveRecord::Schema.define(version: 20170919113252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,29 @@ ActiveRecord::Schema.define(version: 20170914103263) do
     t.bigint "file_size"
     t.string "mime_type", limit: 255
     t.index ["type"], name: "index_folio_files_on_type"
+  end
+
+  create_table "folio_menu_items", force: :cascade do |t|
+    t.bigint "menu_id"
+    t.bigint "node_id"
+    t.string "type"
+    t.string "ancestry"
+    t.string "title"
+    t.string "rails_path"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ancestry"], name: "index_folio_menu_items_on_ancestry"
+    t.index ["menu_id"], name: "index_folio_menu_items_on_menu_id"
+    t.index ["node_id"], name: "index_folio_menu_items_on_node_id"
+    t.index ["type"], name: "index_folio_menu_items_on_type"
+  end
+
+  create_table "folio_menus", force: :cascade do |t|
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["type"], name: "index_folio_menus_on_type"
   end
 
   create_table "folio_nodes", force: :cascade do |t|

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  menu: one
+  node: one
+  title: MyString
+  rails_path: MyString
+  position: 1
+
+two:
+  menu: two
+  node: two
+  title: MyString
+  rails_path: MyString
+  position: 1

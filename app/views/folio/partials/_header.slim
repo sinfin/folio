@@ -4,5 +4,5 @@ nav class="navbar navbar-default navbar-fixed-top"
       = link_to_unless_current "Homepage", "/"
     #navbar class="collapse navbar-collapse"
         ul class="nav navbar-nav"
-          - for page in @roots
-            li = link_to_unless_current page.title, url_for(page.cast)
+          - for menu_item in Folio::Menu::Header.first.menu_items
+            li = active_link_to_unless_current menu_item.title, url_for(menu_item.link)

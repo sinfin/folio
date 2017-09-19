@@ -1,3 +1,4 @@
+
 cs:
   'true': Ano
   'false': Ne
@@ -36,6 +37,9 @@ cs:
       files:
         index:
           title: Soubory
+      menus:
+        index:
+          title: Menu
       really_delete: Jste si jist, že chcete smazat %{}?
     site:
       settings:
