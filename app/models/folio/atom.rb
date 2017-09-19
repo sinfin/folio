@@ -2,8 +2,9 @@
 
 module Folio
   class Atom < ApplicationRecord
-    # Relations
     belongs_to :node
+
+    scope :ordered, -> { order(position: :asc) }
 
     def cell_name
       nil

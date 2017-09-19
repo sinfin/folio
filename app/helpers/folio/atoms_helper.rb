@@ -3,7 +3,7 @@
 module Folio
   module AtomsHelper
     def render_atoms(atoms)
-      atoms.map do |atom|
+      atoms.ordered.map do |atom|
         if atom.cell_name
           cell(atom.cell_name, atom.data)
         else
