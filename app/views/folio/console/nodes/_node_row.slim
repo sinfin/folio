@@ -3,25 +3,27 @@ tr
     ul
       li
         - if tree
-          i.caret.right.icon style="margin-left:#{node.ancestors.count * 2}rem" 
+          i.caret.right.icon style="margin-left:#{node.ancestors.count * 2}rem"
           '
         = link_to node.title, edit_console_node_path(node.id)
       - unless tree
         li.small == node_breadcrumbs(node.ancestors)
   td
-    ul 
+    ul
     - node.site.locales.each do |locale|
       - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
         li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), edit_console_node_path(node.node_translations.find_by(locale: locale).id)
       - else
         li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: "inactive", rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
-      
+
   td = node.type
   td = featured_icon node.featured
   / td = node.ancestry
   td = on_off_icon node.published
-  td = l(node.published_at, format: :short)
-  
+  td
+    - if node.published_at.present?
+      = l(node.published_at, format: :short)
+
   td.text-right = edit_button node, edit_console_node_path(node.id)
   td.text-right = delete_button node, console_node_path(node.id)
 
