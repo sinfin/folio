@@ -5,7 +5,6 @@ PATH
       active_model_serializers (~> 0.10.0)
       acts-as-taggable-on (~> 4.0)
       ancestry
-      annotate
       bootstrap (~> 4.0.0.beta)
       cancancan (~> 2.0)
       carrierwave
@@ -349,6 +348,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   byebug
   devise-bootstrapped
   factory_girl_rails
