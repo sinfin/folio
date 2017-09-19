@@ -13,10 +13,9 @@ module Folio
     friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
 
     has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
-    has_many :files, through: :file_placements do
-      def documents; with_document; end
-      def images; with_image; end
-    end
+    has_many :files, through: :file_placements
+    has_many :images, source: :file, through: :file_placements
+    has_many :documents, source: :file, through: :file_placements
 
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
     has_many :atoms, -> { order(:position) }, class_name: 'Folio::Atom', dependent: :destroy
