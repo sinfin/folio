@@ -1,0 +1,12 @@
+.container
+  h1 = t(".error_#{@error_code}.title")
+
+  h2 = t(".error_#{@error_code}.text_line_1")
+
+  p = t(".error_#{@error_code}.text_line_2")
+
+  br
+
+  p
+    a href="/"
+      = t('.back_to_home')
