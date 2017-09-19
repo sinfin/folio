@@ -5,8 +5,17 @@ module Folio
     # Relations
     belongs_to :node
 
-    # Validations
-    validates :type, :content, presence: true
+    def cell_name
+      nil
+    end
+
+    def partial_name
+      model_name.param_key
+    end
+
+    def data
+      content
+    end
   end
 end
 

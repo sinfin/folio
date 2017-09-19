@@ -1,8 +1,8 @@
 #images-modal.modal.fade aria-labelledby="images-modal" role="dialog" tabindex="-1" data-file-placement-id="0" data-target="#file-placements-images"
-  .modal-dialog.modal-lg role="document" 
+  .modal-dialog.modal-lg role="document"
     .modal-content
       .modal-header
-        button.close aria-label="Close" data-dismiss="modal" type="button" 
+        button.close aria-label="Close" data-dismiss="modal" type="button"
           span aria-hidden="true"  &times;
         h4#fileModalLabel.modal-title = t('images')
       .modal-body
@@ -19,14 +19,17 @@
             .col-sm-6.col-md-3.col-image
               a.thumbnail.select-file
                 = image_tag '', class: 'img-responsive'
-          - @images.each do |image|
-            .col-sm-6.col-md-3.col-image
-              a.thumbnail.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
-                = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
+
+          - if @images.present?
+            - @images.each do |image|
+              .col-sm-6.col-md-3.col-image
+                a.thumbnail.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
+                  = image_tag image.file.thumb('250x250#').url, class: 'img-responsive'
+
         .row
           .col-sm-12
             #paginate-images = paginate @images, remote: true, params: {controller: 'files', action: 'index', type: 'image', format: :json, id: nil}, theme: 'remote'
-          
+
       .modal-footer
         button.btn.btn-default data-dismiss="modal" type="button"  Close
         button.btn.btn-success.save-modal data-dismiss="modal" type="button"  Add
