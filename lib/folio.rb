@@ -20,6 +20,7 @@ require 'font-awesome-rails'
 require 'jquery-rails'
 require 'dropzonejs-rails'
 require 'countries'
+require 'breadcrumbs_on_rails'
 
 module Folio
   class Engine < ::Rails::Engine
