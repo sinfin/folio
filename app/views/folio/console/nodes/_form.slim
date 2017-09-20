@@ -19,6 +19,8 @@
     = f.input :published
     = f.input :published_at
 
+    = render 'additional_form_fields', f: f
+
     h2 = t('.atoms.title')
     #atoms
       = f.simple_fields_for :atoms do |atom|

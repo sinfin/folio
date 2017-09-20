@@ -97,6 +97,10 @@ module Folio
       arr
     end
 
+    def additional_params
+      []
+    end
+
     def to_label
       self.title
     end
