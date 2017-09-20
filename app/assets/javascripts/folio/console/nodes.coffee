@@ -69,7 +69,7 @@ $ ->
       $copy = $target.find('.file-placement-new').clone()
       index_counter = index_counter || $target.data('fp-index')
 
-      $copy.removeClass('hidden file-placement-new').removeAttr('id')
+      $copy.removeClass('file-placement-new').removeAttr('id hidden')
       $copy.find('img').attr('src', $file.find('img').attr('src'))
       $copy.find('input').each () ->
         $input = $(this)

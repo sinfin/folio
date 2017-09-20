@@ -1,14 +1,16 @@
-h1
-  = icon('user-o')
-  '
-  = t('.title')
-
-= filter_form({}, class: 'form-horizontal') do
-  .form-group
-    .col-md-2
-      = query_field t('.query')
-    .col-md-2
-      = active_account_select
+.row
+  .col-3
+    h1
+      = icon('user-o')
+      '
+      = t('.title')
+  .col
+    = filter_form({}, class: 'form-horizontal') do
+      .form-group
+        .col-md-2
+          = query_field t('.query')
+        .col-md-2
+          = active_account_select
 
 .table-responsive
   table.table.table-striped

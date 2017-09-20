@@ -4,10 +4,10 @@ module Folio
   module Console::BootstrapHelper
     def nav_item_link_to(title, path, opts = {}, active = false, &block)
       klass = 'nav-item'
-      klass += ' active' if active || request.fullpath == path
+      klass += ' active' if active || current_page?(path)
 
       opts[:class] = opts[:class].to_s + ' nav-link'
-      opts[:class] += ' active'  if active || request.fullpath == path
+      opts[:class] += ' active'  if active || current_page?(path)
 
       if block_given?
         content_tag :li, class: klass do
