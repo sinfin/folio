@@ -1,10 +1,10 @@
-#documents-modal.modal.fade aria-labelledby="documents-modal" role="dialog" tabindex="-1" data-file-placement-id="0" data-target="#file-placements-documents"
+#documents-modal.modal.fade aria-hidden="true" aria-labelledby="documents-modal" role="dialog" tabindex="-1" data-file-placement-id="0" data-target="#file-placements-documents"
   .modal-dialog.modal-lg role="document" 
     .modal-content
       .modal-header
+        h5.modal-title  = t('documents')
         button.close aria-label="Close" data-dismiss="modal" type="button" 
           span aria-hidden="true"  &times;
-        h4#fileModalLabel.modal-title  = t('documents')
       .modal-body
         .row
           #dropzone-error.col-md-12 hidden=''

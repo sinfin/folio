@@ -10,6 +10,13 @@ body{
 
 .select-file {
   cursor: pointer;
+
+}
+.card.active {
+  border-color: $blue !important;
+}
+tr.active {
+  background-color: $gray-300 !important;
 }
 
 .dropzone {

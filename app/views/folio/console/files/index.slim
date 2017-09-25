@@ -39,8 +39,9 @@ ul.nav.nav-tabs
                 li.list-group-item Vestibulum at eros
                 li.list-group-item = "#{image.file_width} × #{image.file_height}px"
                 li.list-group-item = number_to_human_size image.file_size
-                li.list-group-item = link_to icon('download'), image.file.url
-                li.list-group-item = link_to icon('trash'), console_file_path(image), method: :delete,  data: { confirm: t('folio.console.really_delete', title: image.file_name) }
+                li.list-group-item 
+                  span.mr-2 = link_to icon('download'), image.file.url
+                  = link_to icon('trash'), console_file_path(image), method: :delete,  data: { confirm: t('folio.console.really_delete', title: image.file_name) }
                   
         .col-xs-12
           = paginate @files
