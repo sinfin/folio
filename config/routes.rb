@@ -25,8 +25,8 @@ Folio::Engine.routes.draw do
   namespace :console do
     root to: 'nodes#index'
     resources :dashboard, only: :index
-    resources :nodes
-    resources :menus
+    resources :nodes, except: [:show]
+    resources :menus, except: [:show]
     resources :files, except: [:show]
     resources :accounts
     resources :sites
