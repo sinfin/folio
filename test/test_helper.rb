@@ -5,11 +5,19 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../test/dummy/db
 ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
 require 'factory_girl_rails'
 require 'rails/test_help'
-require 'cell/test_case'
+# require 'cells'
+# require 'cells-rails'
+# require 'cells-slim'
+# require 'cell/test_case'
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
+
+# class Cell::TestCase
+#   controller ApplicationController
+#   include ::FactoryGirl::Syntax::Methods
+# end
 
 # Load fixtures from the engine
 if ActiveSupport::TestCase.respond_to?(:fixture_path=)
