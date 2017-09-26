@@ -137,6 +137,8 @@ ActiveRecord::Schema.define(version: 20170925111436) do
   create_table "folio_sites", force: :cascade do |t|
     t.string "title"
     t.string "domain"
+    t.string "email"
+    t.string "phone"
     t.string "locale", default: "en"
     t.string "locales", default: [], array: true
     t.datetime "created_at", null: false

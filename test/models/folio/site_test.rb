@@ -17,6 +17,8 @@ end
 #  id                             :integer          not null, primary key
 #  title                          :string
 #  domain                         :string
+#  email                          :string
+#  phone                          :string
 #  locale                         :string           default("en")
 #  locales                        :string           default([]), is an Array
 #  created_at                     :datetime         not null
