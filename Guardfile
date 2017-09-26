@@ -21,3 +21,8 @@ guard :rubocop, cli: ['--auto-correct'] do
   watch(/.+\.rb$/)
   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end
+
+guard :coffeelint do
+  watch %r{^app/assets/javascripts/.*\.coffee$}
+  watch %r{^app/cells/.*/.*\.coffee$}
+end

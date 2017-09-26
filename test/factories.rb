@@ -14,6 +14,10 @@ FactoryGirl.define do
     site
   end
 
+  factory :image, class: Folio::Image do
+    file Folio::Engine.root.join('test/fixtures/folio/test.gif')
+  end
+
   factory :lead, class: Folio::Lead do
     email { Faker::Internet.email }
     phone { Faker::Internet.phone }
