@@ -12,7 +12,7 @@ module Folio
     belongs_to :site, class_name: 'Folio::Site'
     friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
 
-    has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
+    has_many :file_placements, class_name: 'Folio::FilePlacement', as: :placement, dependent: :destroy
     has_many :files, through: :file_placements
     has_many :images, source: :file, through: :file_placements
     has_many :documents, source: :file, through: :file_placements

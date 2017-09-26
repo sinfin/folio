@@ -47,14 +47,15 @@ ActiveRecord::Schema.define(version: 20170925111436) do
   end
 
   create_table "folio_file_placements", force: :cascade do |t|
-    t.bigint "node_id"
+    t.string "placement_type"
+    t.bigint "placement_id"
     t.bigint "file_id"
     t.string "caption"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
-    t.index ["node_id"], name: "index_folio_file_placements_on_node_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
   end
 
   create_table "folio_files", force: :cascade do |t|

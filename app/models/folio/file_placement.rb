@@ -4,7 +4,7 @@ module Folio
   class FilePlacement < ApplicationRecord
     # Relations
     belongs_to :file, class_name: 'Folio::File'
-    belongs_to :node, class_name: 'Folio::Node'
+    belongs_to :placement, polymorphic: true
 
     # Scopes
     scope :with_image,   -> { joins(:file).where("folio_files.type = 'Folio::Image'") }
