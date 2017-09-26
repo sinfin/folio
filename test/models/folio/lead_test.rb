@@ -1,7 +1,7 @@
 require 'test_helper'
 
 module Folio
-  class MenuTest < ActiveSupport::TestCase
+  class LeadTest < ActiveSupport::TestCase
     # test "the truth" do
     #   assert true
     # end
@@ -10,14 +10,12 @@ end
 
 # == Schema Information
 #
-# Table name: folio_menus
+# Table name: folio_leads
 #
 #  id         :integer          not null, primary key
-#  type       :string
+#  email      :string
+#  phone      :string
+#  note       :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_folio_menus_on_type  (type)
 #

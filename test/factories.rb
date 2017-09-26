@@ -13,4 +13,10 @@ FactoryGirl.define do
     title { Faker::Lorem.word }
     site
   end
+
+  factory :lead, class: Folio::Lead do
+    email { Faker::Internet.email }
+    phone { Faker::Internet.phone }
+    note { Faker::Lorem.paragraph }
+  end
 end

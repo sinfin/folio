@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170919113252) do
+ActiveRecord::Schema.define(version: 20170925111436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,14 @@ ActiveRecord::Schema.define(version: 20170919113252) do
     t.bigint "file_size"
     t.string "mime_type", limit: 255
     t.index ["type"], name: "index_folio_files_on_type"
+  end
+
+  create_table "folio_leads", force: :cascade do |t|
+    t.string "email"
+    t.string "phone"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "folio_menu_items", force: :cascade do |t|

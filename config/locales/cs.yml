@@ -61,3 +61,11 @@ cs:
           text_line_1: Omlouváme se, ale něco se rozbilo.
           text_line_2: Zkuste přejít na homepage, nebo se vraťte později.
           title: '500'
+
+    lead_form:
+      email: E-mail
+      phone: Telefon
+      submit: Odeslat
+      note: Zpráva
+      note_placeholder: ''
+      message: Děkujeme za zaslání vaší zprávy!

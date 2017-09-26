@@ -1,0 +1,19 @@
+.folio-lead-form-wrap class=(submitted ? 'folio-lead-form-submitted' : nil)
+  = simple_form_for lead, url: parent_controller.leads_path, html: { class: 'folio-lead-form' } do |f|
+    .row
+      .col-sm
+        = f.input :email, label: t('.email')
+      .col-sm
+        = f.input :phone, label: t('.phone')
+
+    .row
+      .col-sm
+        = f.input :note, label: t('.note'), placeholder: t('.note_placeholder')
+
+    = f.button :submit, t('.submit')
+
+  - if submitted
+    .folio-lead-form-message
+      = t('.message')
+
+  span.folio-loader

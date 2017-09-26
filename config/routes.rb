@@ -17,6 +17,7 @@ Folio::Engine.routes.draw do
 
   resources :categories, only: %i[index show]
   resources :pages, only: %i[index show]
+  resources :leads, only: %i[create]
 
   match '/404', to: 'errors#page404', via: :all
   match '/422', to: 'errors#page422', via: :all

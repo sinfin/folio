@@ -15,7 +15,7 @@ Folio::Menu.destroy_all
 Folio::MenuItem.destroy_all
 Folio::Account.destroy_all
 
-site = Folio::Site.create!(title: 'Sinfin.digital', domain: 'sinfin.localhost', locale: 'cs', locales: ['en', 'de', 'es'], google_analytics_tracking_code: 'UA-8111656-1')
+site = Folio::Site.create!(title: 'Sinfin.digital', domain: 'sinfin.localhost', locale: 'cs', locales: ['en', 'de', 'es'], google_analytics_tracking_code: 'UA-8111656-1', email: 'info@sinfin.cz', phone: '+420 123 456 789')
 
 about = Folio::Page.create!(title: 'O nás', site: site, published: true, published_at: 1.day.ago)
 # about.translations << Folio::PageTranslation.create!(original_id: about.id, title: "About us", locale: :en, site: site)

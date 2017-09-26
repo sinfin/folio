@@ -1,0 +1,34 @@
+@import 'loader'
+
+.folio-lead-form-wrap
+  position: relative
+
+  .folio-loader
+    z-index: 2
+    display: none
+
+.folio-lead-form-message
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  display: none
+  align-items: center
+  justify-content: center
+  z-index: 2
+
+.folio-lead-form-submitting
+  .folio-loader
+    display: block
+
+.folio-lead-form
+  position: relative
+  z-index: 1
+
+.folio-lead-form-submitted
+  .folio-lead-form
+    visibility: hidden
+
+  .folio-lead-form-message
+    display: flex
