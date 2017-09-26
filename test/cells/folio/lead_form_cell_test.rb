@@ -14,4 +14,9 @@ class LeadFormCellTest < Cell::TestCase
     html = cell('folio/lead_form', create(:lead)).(:show)
     assert html.has_css?('.folio-lead-form-submitted')
   end
+
+  test 'shows note from option' do
+    html = cell('folio/lead_form', nil, note: 'foo').(:show)
+    assert_equal 'foo', html.find_css_selector('textarea').value
+  end
 end
