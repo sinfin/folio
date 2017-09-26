@@ -9,5 +9,9 @@ module Folio
     def submitted
       !lead.new_record?
     end
+
+    def note
+      options[:note] || model.note
+    end
   end
 end
