@@ -20,7 +20,7 @@ FactoryGirl.define do
 
   factory :lead, class: Folio::Lead do
     email { Faker::Internet.email }
-    phone { Faker::Internet.phone }
+    phone { Faker::PhoneNumber.phone_number }
     note { Faker::Lorem.paragraph }
   end
 end
