@@ -12,9 +12,12 @@ cs:
         en: angličtina
         es: španělština
     console:
+      query: Vyhledávání...
       nodes:
         index:
           title: Stránky
+          translations: Překlady
+          type: Typ
           query: Vyhledávání
           all_nodes: Všechny nody
           published: Jen publikované
@@ -28,7 +31,11 @@ cs:
           node:
             title: Obsah
           gallery:
-            title: Přílohy
+            title: Galerie
+          documents:
+            title: Dokumenty
+          atoms:
+            title: Atomy
       accounts:
         index:
           title: Uživatelé

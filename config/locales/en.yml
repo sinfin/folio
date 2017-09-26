@@ -8,9 +8,12 @@ en:
     invalid_format: Invalid format
   folio:
     console:
+      query: Search...
       nodes:
         index:
           query: Fulltext search
+          translations: Translations
+          type: Type
           all_nodes: All nodes
           published: Published only
           unpublished: Drafts only
