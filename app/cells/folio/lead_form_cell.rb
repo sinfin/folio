@@ -11,7 +11,8 @@ module Folio
     end
 
     def note
-      options[:note] || model.note
+      return options[:note] if options[:note]
+      model.note if model
     end
   end
 end
