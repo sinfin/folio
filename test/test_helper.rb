@@ -5,6 +5,7 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../test/dummy/db
 ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
 require 'factory_girl_rails'
 require 'rails/test_help'
+require 'pry'
 # require 'cells'
 # require 'cells-rails'
 # require 'cells-slim'

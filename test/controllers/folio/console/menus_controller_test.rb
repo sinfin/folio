@@ -1,21 +1,24 @@
 require 'test_helper'
+require_relative 'base_controller_test'
 
 module Folio
-  class Console::MenusControllerTest < ActionDispatch::IntegrationTest
-    include Engine.routes.url_helpers
+  class Console::MenusControllerTest < Folio::Console::BaseControllerTest
+    setup do
+      @menu = create(:menu_with_menu_items)
+    end
 
     test 'should get index' do
-      get console_menus_index_url
+      get console_menus_url
       assert_response :success
     end
 
     test 'should get new' do
-      get console_menus_new_url
+      get new_console_menu_url
       assert_response :success
     end
 
     test 'should get edit' do
-      get console_menus_edit_url
+      get edit_console_menu_url(@menu)
       assert_response :success
     end
   end
