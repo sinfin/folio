@@ -6,5 +6,9 @@ module Folio
       klass = ' active' if active || current_page?(path)
       link_to(title, path, class: klass)
     end
+
+    def nested_page_url(page)
+      page_url(page.parent, child_id: page)
+    end
   end
 end
