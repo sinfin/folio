@@ -15,10 +15,6 @@ Folio::Engine.routes.draw do
 
   root to: 'home#index', as: :home
 
-  resources :categories, only: %i[index show]
-  resources :pages, only: %i[index show]
-  resources :leads, only: %i[create]
-
   match '/404', to: 'errors#page404', via: :all
   match '/422', to: 'errors#page422', via: :all
   match '/500', to: 'errors#page500', via: :all
@@ -32,4 +28,13 @@ Folio::Engine.routes.draw do
     resources :accounts
     resources :sites
   end
+
+  scope '/:locale', locale: /cs|en|zh/ do
+    resources :categories, only: %i[index show]
+    # resources :pages, only: %i[index show]
+    resources :leads, only: %i[create]
+
+    get ':id/(:child_id)', to: 'pages#show', as: 'page'
+  end
+
 end

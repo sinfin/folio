@@ -8,7 +8,11 @@ module Folio
       @site = Folio::Site.first
       @roots = @site.nodes.where(locale: I18n.locale).roots
 
-      I18n.locale = @site.locale unless params[:locale]
+      I18n.locale = params[:locale] || @site.locale
+    end
+
+    def default_url_options(options = {})
+      { locale: I18n.locale }.merge options
     end
   end
 end
