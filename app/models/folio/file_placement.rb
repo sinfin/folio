@@ -7,8 +7,9 @@ module Folio
     belongs_to :placement, polymorphic: true
 
     # Scopes
-    scope :with_image,   -> { joins(:file).where("folio_files.type = 'Folio::Image'") }
-    scope :with_document,   -> { joins(:file).where("folio_files.type = 'Folio::Document'") }
+    scope :with_image,    -> { joins(:file).where("folio_files.type = 'Folio::Image'") }
+    scope :with_document, -> { joins(:file).where("folio_files.type = 'Folio::Document'") }
+    scope :ordered,       -> { order(position: :asc) }
   end
 end
 
