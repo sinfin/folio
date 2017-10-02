@@ -20,7 +20,7 @@ module Folio
     end
 
     def data
-      content
+      self
     end
   end
 end

@@ -14,6 +14,11 @@ FactoryGirl.define do
     site
   end
 
+  factory :atom, class: Folio::Atom do
+    content { Faker::Lorem.paragraph }
+    node
+  end
+
   factory :image, class: Folio::Image do
     file Folio::Engine.root.join('test/fixtures/folio/test.gif')
   end

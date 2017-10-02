@@ -7,7 +7,7 @@ module Folio
         if atom.cell_name
           cell(atom.cell_name, atom.data)
         else
-          render "folio/atoms/#{atom.partial_name}", locals: { data: atom.data }
+          render "folio/atoms/#{atom.partial_name}", data: atom.data
         end
       end.join('').html_safe
     end
