@@ -76,3 +76,12 @@ cs:
       note: Zpráva
       note_placeholder: ''
       message: Děkujeme za zaslání vaší zprávy!
+
+  atom_names:
+    'Folio::Atom::Text': Text
+
+  node_names:
+    'Folio::Node': Node
+    'Folio::Category': Kategorie
+    'Folio::Page': Stránka
+    'Folio::NodeTranslation': Překlad

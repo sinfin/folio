@@ -13,7 +13,7 @@
     = f.input :meta_title
     = f.input :meta_description, as: :text
     = f.input :code
-    = f.input :type, collection: [Folio::Node] + Folio::Node.subclasses, include_blank: false
+    = f.input :type, collection: node_types_for_select, include_blank: false
     = f.input :tag_list, as: :text, value: f.object.tag_list.to_s
     = f.input :featured
     = f.input :published

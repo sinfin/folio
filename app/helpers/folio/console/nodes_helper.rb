@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+def get_subclasses(node)
+  [node] + node.subclasses.map { |subclass| get_subclasses(subclass) }
+end
+
 module Folio
   module Console::NodesHelper
     def node_breadcrumbs(ancestors)
@@ -8,6 +12,12 @@ module Folio
           link_to(node.title, edit_console_node_path(node))
         end
         links.join(' / ')
+      end
+    end
+
+    def node_types_for_select
+      get_subclasses(Folio::Node).flatten.map do |type|
+        [t("node_names.#{type}"), type]
       end
     end
   end
