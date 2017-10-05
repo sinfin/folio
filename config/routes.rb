@@ -25,6 +25,7 @@ Folio::Engine.routes.draw do
     resources :nodes, except: [:show]
     resources :menus, except: [:show]
     resources :files, except: [:show]
+    resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
     resources :sites
   end

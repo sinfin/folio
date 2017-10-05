@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170925111436) do
+ActiveRecord::Schema.define(version: 20171005115000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,12 @@ ActiveRecord::Schema.define(version: 20170925111436) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["type"], name: "index_folio_menus_on_type"
+  end
+
+  create_table "folio_newsletter_subscriptions", force: :cascade do |t|
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "folio_nodes", force: :cascade do |t|

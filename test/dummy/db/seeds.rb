@@ -14,6 +14,7 @@ Folio::File.destroy_all
 Folio::Menu.destroy_all
 Folio::MenuItem.destroy_all
 Folio::Account.destroy_all
+Folio::NewsletterSubscription.destroy_all
 
 site = Folio::Site.create!(title: 'Sinfin.digital', domain: 'sinfin.localhost', locale: 'cs', locales: ['en', 'de', 'es'], google_analytics_tracking_code: 'UA-8111656-1', email: 'info@sinfin.cz', phone: '+420 123 456 789')
 
@@ -50,3 +51,10 @@ pagesc.file_placements << Folio::FilePlacement.new(file: img2, caption: 'Image 2
 
 about.translate!(:en)
 about.translate!(:de)
+
+20.times do
+  Folio::NewsletterSubscription.create!(
+    email: Faker::Internet.email,
+    created_at: Faker::Time.backward(30)
+  )
+end
