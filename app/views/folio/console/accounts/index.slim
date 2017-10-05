@@ -1,16 +1,16 @@
 .row
-  .col-3
+  .col
     h1
       = icon('user-o')
       '
       = t('.title')
-  .col
-    = filter_form({}, class: 'form-horizontal') do
-      .form-group
-        .col-md-2
-          = query_field t('.query')
-        .col-md-2
+  .col-md-5
+    = filter_form do
+      .row
+        .col-sm
           = active_account_select
+        .col-sm
+          = query_field t('.query')
 
 .table-responsive
   table.table.table-striped
