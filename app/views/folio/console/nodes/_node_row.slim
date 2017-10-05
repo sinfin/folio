@@ -1,13 +1,10 @@
 tr
   td
-    ul
-      li
-        - if tree
-          i.caret.right.icon style="margin-left:#{node.ancestors.count * 2}rem"
-          '
-        = link_to node.title, edit_console_node_path(node.id)
-      - unless tree
-        li.small == node_breadcrumbs(node.ancestors)
+    - if tree
+      = fa_icon node.console_caret_icon, class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"
+    = link_to node.title, edit_console_node_path(node.id)
+    - unless tree
+      li.small == node_breadcrumbs(node.ancestors)
   td
     ul
     - node.site.locales.each do |locale|

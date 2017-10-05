@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Category < Folio::Node
+  def console_caret_icon
+    'bars'
+  end
 end
 
 # == Schema Information

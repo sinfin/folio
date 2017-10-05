@@ -109,6 +109,10 @@ module Folio
       "#{'&nbsp;' * self.depth} #{self.to_label}".html_safe
     end
 
+    def console_caret_icon
+      'caret-right'
+    end
+
     def cast
       self
     end

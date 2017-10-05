@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Page < Folio::Node
+  def console_caret_icon
+    'file-text-o'
+  end
 end
 
 # == Schema Information
