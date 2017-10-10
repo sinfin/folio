@@ -6,9 +6,9 @@ module Folio
 
     before_action do
       @site = Folio::Site.first
-      @roots = @site.nodes.where(locale: I18n.locale).roots
 
       I18n.locale = params[:locale] || @site.locale
+      @roots = @site.nodes.where(locale: I18n.locale).roots
     end
 
     def default_url_options(options = {})

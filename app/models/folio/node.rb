@@ -126,10 +126,9 @@ module Folio
     end
 
     def translate(locale)
-      case locale
-      when locale == self.locale
+      if locale == self.locale
         cast
-      when self.node_translations.where(locale: locale).exists?
+      elsif self.node_translations.published.where(locale: locale).exists?
         self.node_translations.find_by(locale: locale).cast
       else
         cast
@@ -159,6 +158,12 @@ module Folio
         translation
       end
     end
+  end
+end
+
+if Rails.env.development?
+  Dir["#{Folio::Engine.root}/app/models/folio/node_translation.rb"].each do |file|
+    require_dependency file
   end
 end
 
