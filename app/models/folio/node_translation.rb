@@ -17,10 +17,9 @@ class Folio::NodeTranslation < Folio::Node
   end
 
   def translate(locale)
-    case locale
-    when locale == self.locale
+    if locale == self.locale.to_sym
       cast
-    when node_original.node_translations.where(locale: locale).exists?
+    elsif node_original.node_translations.where(locale: locale).exists?
       self.node_translations.find_by(locale: locale).cast
     else
       node_original.cast

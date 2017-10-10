@@ -137,7 +137,7 @@ module Folio
     end
 
     def translate(locale)
-      if locale == self.locale
+      if locale == self.locale.to_sym
         cast
       elsif self.node_translations.published.where(locale: locale).exists?
         self.node_translations.find_by(locale: locale).cast
