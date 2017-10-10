@@ -6,6 +6,7 @@ module Folio
   class Node < ApplicationRecord
     extend FriendlyId
     include Taggable
+    include PgSearch
 
     # Relations
     has_ancestry
@@ -33,6 +34,11 @@ module Folio
       self.site = parent.site if site.nil?
       self.locale = site.locale if locale.nil?
     end
+
+    # Multi-search
+    include PgSearch
+    multisearchable against: [ :title, :perex ], if: :searchable?
+    # pg_search_scope :search, against: [:title, :name], using: { tsearch: { prefix: true } }
 
     # Scopes
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
@@ -111,6 +117,11 @@ module Folio
 
     def console_caret_icon
       'caret-right'
+    end
+
+    # override in subclasses
+    def searchable?
+      false
     end
 
     def cast

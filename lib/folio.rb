@@ -9,6 +9,7 @@ require 'responders'
 require 'active_model_serializers'
 require 'sitemap_generator'
 require 'acts-as-taggable-on'
+require 'pg_search'
 
 require 'slim'
 require 'sass-rails'
