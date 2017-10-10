@@ -47,6 +47,11 @@ cs:
       menus:
         index:
           title: Menu
+      leads:
+        index:
+          title: Leads
+        show:
+          title: Lead
       really_delete: Jste si jist, že chcete smazat %{title}?
     site:
       settings:

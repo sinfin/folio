@@ -1,0 +1,24 @@
+.row
+  .col-6
+    h1
+      = icon('phone')
+      '
+      = t('.title')
+  .col
+    = filter_form(console_leads_path) do
+      .form-row
+        .col-6.ml-auto
+          = query_field t('folio.console.query')
+
+.table-responsive
+  table.table.table-striped
+    thead
+      tr
+        th = t(".email")
+        th = t(".phone")
+        th colspan=3 = t(".created_at")
+
+    tbody
+      = render partial: "lead", collection: @leads
+
+= paginate @leads

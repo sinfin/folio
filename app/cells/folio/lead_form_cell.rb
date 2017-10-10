@@ -1,6 +1,7 @@
 module Folio
   class LeadFormCell < FolioCell
     include SimpleForm::ActionViewExtensions::FormHelper
+    include Folio::Engine.routes.url_helpers
 
     def lead
       model || Folio::Lead.new

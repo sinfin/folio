@@ -1,6 +1,12 @@
 module Folio
   class Lead < ApplicationRecord
+    # Validations
     validates_format_of :email, with: /[^@]+@[^@]+/ # modified devise regex
+    validates :email, :note, presence: true
+
+    def title
+      email
+    end
   end
 end
 

@@ -1,5 +1,5 @@
 .folio-lead-form-wrap class=(submitted ? 'folio-lead-form-submitted' : nil)
-  = simple_form_for lead, url: parent_controller.leads_path, html: { class: 'folio-lead-form' } do |f|
+  = simple_form_for lead, url: leads_path, html: { class: 'folio-lead-form' } do |f|
     .row
       .col-sm
         = f.input :email, label: t('.email')
