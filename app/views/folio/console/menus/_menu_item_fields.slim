@@ -8,11 +8,11 @@
     .col-sm-2
       = f.input :rails_path
     .col-sm-2
-      = f.input :node_id, collection: Folio::Node.original 
+      = f.input :node_id, collection: Folio::Node.original
     .col-sm-2.text-right
-      .btn.btn-default.position-up = icon 'arrow-up'
-      .btn.btn-default.position-down = icon 'arrow-down'
+      .btn.btn-outline-secondary.ml-2.position-up = icon 'arrow-up'
+      .btn.btn-outline-secondary.ml-2.position-down = icon 'arrow-down'
       - if f.object.id
         = f.input :_destroy, as: :boolean
       - else
-        = link_to_remove_association t('.nodes.remove_atom'), f, class: 'btn btn-default'
+        = link_to_remove_association t('.nodes.remove_atom'), f, class: 'btn btn-danger'

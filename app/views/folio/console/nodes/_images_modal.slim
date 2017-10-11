@@ -3,28 +3,28 @@
     .modal-content
       .modal-header
         h5.modal-title = t('images')
-        button.close aria-label="Close" data-dismiss="modal" type="button" 
+        button.close aria-label="Close" data-dismiss="modal" type="button"
           span aria-hidden="true"  &times;
       .modal-body
         .row
           #dropzone-error.col-md-12 hidden=''
             .alert.alert-danger role="alert"
           .col-sm-6.col-md-3
-            .card.bg-light
+            .card.bg-light.mb-2
               = simple_form_for(Folio::Image.new, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone', id: 'new_image'}) do |f|
                 = f.input :type, as: :hidden
                 .fallback
                   = link_to 'Add new files', new_console_file_path
           #image-dropzone-template hidden=''
             .col-sm-6.col-md-3.col-image
-              a.card.bg-light.select-file
+              a.card.bg-light.mb-2.select-file
                 = image_tag '', class: 'card-img img-thumbnail'
 
           - if @images.present?
             - @images.each do |image|
               .col-sm-6.col-md-3.col-image
-                
-                  a.card.bg-light.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
+
+                  a.card.bg-light.mb-2.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
                     = image_tag image.file.thumb('250x250#').url, class: 'card-img img-thumbnail'
 
         .row
@@ -32,5 +32,5 @@
             #paginate-images = paginate @images, remote: true, params: {controller: 'files', action: 'index', type: 'image', format: :json, id: nil}, theme: 'remote'
 
       .modal-footer
-        button.btn.btn-default data-dismiss="modal" type="button"  Close
+        button.btn.btn-secondary data-dismiss="modal" type="button"  Close
         button.btn.btn-success.save-modal data-dismiss="modal" type="button"  Add

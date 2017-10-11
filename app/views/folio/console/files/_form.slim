@@ -7,8 +7,8 @@
 
     == cell('folio/console/tagsinput', f)
 
-    = link_to 'back', console_nodes_path, class: 'btn btn-default'
-    = f.button :submit, class: 'btn btn-default'
+    = link_to t('console.folio.back'), console_files_path, class: 'btn btn-secondary'
+    = f.button :submit
   .col-sm-6
     - if f.object.instance_of? Folio::Image
       = image_tag f.object.file.thumb('500x500').url, class: 'img-responsive thumbnail'

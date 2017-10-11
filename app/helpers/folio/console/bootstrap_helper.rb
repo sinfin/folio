@@ -21,7 +21,7 @@ module Folio
     end
 
     def btn_to_js(title, opts = {})
-      opts = opts.merge class: 'btn btn-default'
+      opts = opts.merge class: 'btn btn-light'
       link_to title, '#', opts
     end
 
@@ -42,7 +42,7 @@ module Folio
       render partial: 'admin/partials/panel', locals: vars
     end
 
-    def dropdown(links, class_name: 'btn btn-default btn-sm')
+    def dropdown(links, class_name: 'btn btn-light btn-sm')
       if links.empty?
         nil
       elsif links.size == 1
