@@ -3,6 +3,8 @@
 #= require popper
 #= require bootstrap-sprockets
 #= require dropzone
+
+
 #= require cocoon
 #= require redactor
 
@@ -10,13 +12,15 @@
 
 #= require ./redactor-init
 #= require ./redactor-imagemanager
-#= require ./nodes
-#= require ./files
 
 $ ->
   # disable auto discover
   Dropzone.autoDiscover = false
 
+#= require ./nodes
+#= require ./files
+
+$ ->
   $(document).on 'change', '#filter-form', ->
     $(this).submit()
 
