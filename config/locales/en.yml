@@ -7,13 +7,21 @@ en:
   dragonfly:
     invalid_format: Invalid format
   folio:
+    locale:
+      languages:
+        cs: czech
+        de: german
+        en: english
+        es: spanish
+
     console:
       query: Search...
       nodes:
         index:
-          query: Fulltext search
+          title: Nodes
           translations: Translations
           type: Type
+          query: Fulltext search
           all_nodes: All nodes
           published: Published only
           unpublished: Drafts only
@@ -22,13 +30,33 @@ en:
         node_row:
           new:
             confirm: Do you want to translate the page to %{language}?
+        form:
+          node:
+            title: Content
+          gallery:
+            title: Gallery
+          documents:
+            title: Documents
+          atoms:
+            title: Atoms
       accounts:
         index:
+          title: Accounts
           edit: Edit
+          query: Accounts serach
+      files:
+        index:
+          title: Files
       menus:
         index:
           title: Menu
+      leads:
+        index:
+          title: Leads
+        show:
+          title: Lead
       really_delete: Are you sure that you want delete %{title}?
+
     site:
       settings:
         title: Settings
@@ -49,3 +77,20 @@ en:
           text_line_1: We're sorry, but something's broken down.
           text_line_2: Try the homepage or return later.
           title: '500'
+
+    lead_form:
+      email: E-mail
+      phone: Phone
+      submit: Submit
+      note: Message
+      note_placeholder: ''
+      message: Thanks for your message!
+
+  atom_names:
+    'Folio::Atom::Text': Text
+
+  node_names:
+    'Folio::Node': Node
+    'Folio::Category': Category
+    'Folio::Page': Page
+    'Folio::NodeTranslation': Translation

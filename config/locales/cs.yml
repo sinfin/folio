@@ -1,7 +1,9 @@
-
 cs:
   'true': Ano
   'false': Ne
+  time:
+    formats:
+      short: "%d %b %Y, %H:%m"
   dragonfly:
     invalid_format: Nepodporovaný formát
   folio:
@@ -11,6 +13,7 @@ cs:
         de: němčina
         en: angličtina
         es: španělština
+
     console:
       query: Vyhledávání...
       nodes:
@@ -53,6 +56,7 @@ cs:
         show:
           title: Lead
       really_delete: Jste si jist, že chcete smazat %{title}?
+
     site:
       settings:
         title: Nastavení
