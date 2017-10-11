@@ -28,7 +28,7 @@ fieldset
     .col-sm
       = f.input :meta_description, as: :text
     .col-sm
-      = f.input :tag_list, as: :text, value: f.object.tag_list.to_s
+      == cell('folio/console/tagsinput', f)
 
   .row
     .col-sm

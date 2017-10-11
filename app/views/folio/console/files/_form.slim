@@ -4,8 +4,9 @@
     -if f.object.file.present?
       = link_to f.object.file_name, f.object.file.url
     = f.input :file, as: :file
-    = f.input :tag_list, as: :text, value: f.object.tag_list.to_s
-    
+
+    == cell('folio/console/tagsinput', f)
+
     = link_to 'back', console_nodes_path, class: 'btn btn-default'
     = f.button :submit, class: 'btn btn-default'
   .col-sm-6

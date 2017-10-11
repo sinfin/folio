@@ -7,7 +7,7 @@
 @import "dropzone/dropzone";
 @import "cells";
 
-body{
+body {
   margin-top: 65px;
 }
 
@@ -26,7 +26,7 @@ tr.active {
   border: 0;
 }
 
-a.inactive{
+a.inactive {
   color: grey;
   border-bottom: 1px dotted grey;
 }

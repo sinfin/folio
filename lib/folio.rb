@@ -11,6 +11,9 @@ require 'sitemap_generator'
 require 'acts-as-taggable-on'
 require 'pg_search'
 
+require 'cells'
+require 'cells-rails'
+require 'cells-slim'
 require 'slim'
 require 'sass-rails'
 require 'bootstrap'
@@ -22,6 +25,7 @@ require 'jquery-rails'
 require 'dropzonejs-rails'
 require 'countries'
 require 'breadcrumbs_on_rails'
+require 'rails-assets-selectize'
 
 module Folio
   class Engine < ::Rails::Engine

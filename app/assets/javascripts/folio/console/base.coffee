@@ -6,6 +6,8 @@
 #= require cocoon
 #= require redactor
 
+#= require folio/console/tagsinput/tagsinput
+
 #= require ./redactor-init
 #= require ./redactor-imagemanager
 #= require ./nodes
