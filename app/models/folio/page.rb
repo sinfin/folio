@@ -4,6 +4,10 @@ class Folio::Page < Folio::Node
   def console_caret_icon
     'file-text-o'
   end
+
+  def self.partial
+    'folio/pages/show'
+  end
 end
 
 # == Schema Information

@@ -16,9 +16,11 @@ module Folio
     end
 
     def node_types_for_select
-      get_subclasses(Folio::Node).flatten.map do |type|
-        [t("node_names.#{type}"), type]
+      for_select = []
+      get_subclasses(Folio::Node).flatten.each do |type|
+        for_select << [t("node_names.#{type}"), type] if type.partial
       end
+      for_select
     end
   end
 end

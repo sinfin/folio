@@ -124,6 +124,10 @@ module Folio
       false
     end
 
+    def self.partial
+      false
+    end
+
     def cast
       self
     end

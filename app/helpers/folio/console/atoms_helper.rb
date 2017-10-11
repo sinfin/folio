@@ -7,9 +7,11 @@ end
 module Folio
   module Console::AtomsHelper
     def atom_types_for_select
-      (get_subclasses(Folio::Atom).flatten - [Folio::Atom]).map do |type|
-        [t("atom_names.#{type}"), type]
+      for_select = []
+      get_subclasses(Folio::Atom).flatten.each do |type|
+        for_select << [t("atom_names.#{type}"), type, { 'data-form' => type.form }] if type.form
       end
+      for_select
     end
   end
 end

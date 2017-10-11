@@ -1,11 +1,22 @@
 $ ->
   $(document).on 'change', '.atom-type-select', ->
-    $content = $(this).closest('.nested-fields').find('.atom-content')
-    switch this.value
-      when 'Folio::Atom::Text'
-        $content.redactor()
-      when 'Folio::Atom::Embedded'
-        $content.redactor('core.destroy')
+    $t = $(this)
+    form = $t.find(':selected').data('form')
+    $content = $t.closest('.nested-fields').find('.atom-content')
+    switch form
+      when 'redactor'
+        $content.show()
+        $textarea = $content.find('textarea')
+        # check if redactor is active
+        if $textarea.is(':visible')
+          $textarea.redactor()
+      when 'string'
+        $content.show()
+        $textarea = $content.find('textarea')
+        unless $textarea.is(':visible')
+          $textarea.redactor('core.destroy')
+      when 'none'
+        $content.hide()
 
   $('#paginate-images a').on 'ajax:success', (e, data, status, json) ->
     # pagination

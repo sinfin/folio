@@ -22,6 +22,11 @@ module Folio
     def data
       self
     end
+
+    # override in subclasses
+    def self.form
+      false
+    end
   end
 end
 

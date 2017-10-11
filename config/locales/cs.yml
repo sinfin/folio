@@ -15,6 +15,7 @@ cs:
         es: španělština
 
     console:
+      back: Zpět
       query: Vyhledávání...
       nodes:
         index:
@@ -33,12 +34,18 @@ cs:
         form:
           node:
             title: Obsah
+          additional_form_fields: Další pole
           gallery:
             title: Galerie
+            add: Přidat obrázek
           documents:
             title: Dokumenty
+            add: Přidat dokument
           atoms:
             title: Atomy
+            add: Přidat atom
+        atom_fields:
+          remove: Odebrat atom
       accounts:
         index:
           title: Uživatelé

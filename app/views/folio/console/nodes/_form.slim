@@ -43,7 +43,7 @@ fieldset
 fieldset#atoms
   h2 = t('.atoms.title')
 
-  = f.simple_fields_for :atoms do |atom|
+  = f.simple_fields_for :atoms, atom do |atom|
     = render 'atom_fields', f: atom
   .links
     = link_to_add_association t('.node.add_atom'), f, :atoms, class: 'btn btn-success'
@@ -73,7 +73,7 @@ fieldset
           = fp.association :file, as: :hidden
     .col-12
       a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#images-modal'
-        | Add new
+        = t('.gallery.add')
 
 fieldset
   h2 = t('.documents.title')
@@ -100,7 +100,7 @@ fieldset
             button.btn.btn-default.remove-file-placement type='button' = t('remove')
             = fp.association :file, as: :hidden
   a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#documents-modal'
-    | Add new
+    = t('.documents.add')
 
-= link_to 'back', console_nodes_path, class: 'btn btn-default'
-= f.button :submit, class: 'btn btn-default'
+= link_to t('console.folio.back'), console_nodes_path, class: 'btn btn-secondary mr-2'
+= f.button :submit

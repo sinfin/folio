@@ -2,6 +2,9 @@
 
 module Folio
   class Atom::Text < Atom
+    def self.form
+      :redactor
+    end
   end
 end
 

@@ -4,6 +4,10 @@ class Folio::Category < Folio::Node
   def console_caret_icon
     'bars'
   end
+
+  def self.partial
+    'folio/pages/show'
+  end
 end
 
 # == Schema Information
