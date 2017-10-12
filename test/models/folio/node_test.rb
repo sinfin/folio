@@ -4,9 +4,14 @@ require 'test_helper'
 
 module Folio
   class NodeTest < ActiveSupport::TestCase
-    # test "the truth" do
-    #   assert true
-    # end
+    test "translate node with atoms" do
+      node = create(:node_with_atoms, atoms_count: 3)
+      translation = node.translate!(:en)
+      assert_equal translation.atoms.count, 3
+
+      translation.update(published: true, published_at: 1.minute.ago)
+      assert node.translate(:en) == translation
+    end
   end
 end
 

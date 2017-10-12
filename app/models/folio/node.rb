@@ -140,7 +140,7 @@ module Folio
       node_translations
     end
 
-    def translate(locale)
+    def translate(locale = I18n.locale)
       if locale == self.locale.to_sym
         cast
       elsif self.node_translations.published.where(locale: locale).exists?
@@ -164,9 +164,9 @@ module Folio
         end
 
         # TODO: Atoms
-        # self.atoms.find_each do |atom|
-        #   translation.atoms << atom.dup
-        # end
+        self.atoms.find_each do |atom|
+          translation.atoms << atom.dup
+        end
 
         translation.save!
 

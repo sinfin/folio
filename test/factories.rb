@@ -10,8 +10,17 @@ FactoryGirl.define do
   end
 
   factory :node, class: Folio::Node do
+    locale :cs
     title { Faker::Lorem.word }
     site
+    factory :node_with_atoms do
+      transient do
+        atoms_count 3
+      end
+      after(:create) do |node, evaluator|
+        node.atoms = create_list(:atom, evaluator.atoms_count)
+      end
+    end
   end
 
   factory :atom, class: Folio::Atom do
