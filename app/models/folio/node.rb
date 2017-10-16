@@ -150,13 +150,15 @@ module Folio
       end
     end
 
-    def translate!(locale)
+    def translate!(locale, attributes = {})
       ActiveRecord::Base.transaction do
         translation = self.dup
         translation.locale = locale
         translation.becomes!(Folio::NodeTranslation)
         translation.original_id = self.id
         translation.published = false
+
+        translation.assign_attributes(attributes)
 
         # Files
         self.file_placements.find_each do |fp|
@@ -165,7 +167,11 @@ module Folio
 
         # TODO: Atoms
         self.atoms.find_each do |atom|
-          translation.atoms << atom.dup
+          atom_translation = atom.dup
+          atom.file_placements.find_each do |fp|
+            atom_translation.file_placements << fp.dup
+          end
+          translation.atoms << atom_translation
         end
 
         translation.save!

@@ -51,7 +51,8 @@ about.file_placements << Folio::FilePlacement.new(file: doc1, caption: 'Doc 1')
 about.file_placements << Folio::FilePlacement.new(file: img4, caption: 'Image 4')
 pagesc.file_placements << Folio::FilePlacement.new(file: img2, caption: 'Image 2a')
 
-about.translate!(:en)
+about_en = about.translate!(:en)
+about_en.update(title: 'About', published: true)
 about.translate!(:de)
 
 20.times do

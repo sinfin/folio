@@ -17,7 +17,7 @@ module Folio
     end
 
     def nested_page_url(page)
-      page_url(page.parent, child_id: page)
+      page_url(page.parent.translate, child_id: page)
     end
   end
 end

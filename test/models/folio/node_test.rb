@@ -4,7 +4,7 @@ require 'test_helper'
 
 module Folio
   class NodeTest < ActiveSupport::TestCase
-    test "translate node with atoms" do
+    test 'translate node with atoms' do
       node = create(:node_with_atoms, atoms_count: 3)
       translation = node.translate!(:en)
       assert_equal translation.atoms.count, 3
