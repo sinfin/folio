@@ -31,7 +31,7 @@ Folio::Engine.routes.draw do
     resources :sites
   end
 
-  scope '/:locale', locale: /cs|en|zh/ do
+  scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
     resources :categories, only: %i[index show]
     # resources :pages, only: %i[index show]
     resources :leads, only: %i[create]
