@@ -16,7 +16,7 @@ module Folio
     end
 
     def partial_name
-      model_name.param_key
+      model_name.element
     end
 
     def data
