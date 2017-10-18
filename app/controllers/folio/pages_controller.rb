@@ -4,6 +4,8 @@ require_dependency 'folio/application_controller'
 
 module Folio
   class PagesController < BaseController
+    include Folio::UrlHelper
+
     before_action :find_page
 
     def show; end
@@ -11,12 +13,12 @@ module Folio
     private
 
       def find_page
-        @page = @roots.published.friendly.find params[:id]
-        add_breadcrumb @page.title, page_url(@page)
+        path = params[:path].split('/')
 
-        if params[:child_id]
-          @page = @page.children.published.friendly.find params[:child_id]
-          add_breadcrumb @page.title, page_url(@page.parent, child_id: @page)
+        @page = @roots.published.friendly.find path.shift
+        path.each do |p|
+          @page = @page.children.published.friendly.find p
+          add_breadcrumb @page.title, nested_page_url(@page)
         end
         # # If an old id or a numeric id was used to find the record, then
         # # the request path will not match the post_path, and we should do

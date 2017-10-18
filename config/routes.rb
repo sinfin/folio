@@ -36,7 +36,7 @@ Folio::Engine.routes.draw do
     # resources :pages, only: %i[index show]
     resources :leads, only: %i[create]
 
-    get ':id/(:child_id)', to: 'pages#show', as: 'page'
+    get '/*path', to: 'pages#show', as: 'page'
   end
 
 end
