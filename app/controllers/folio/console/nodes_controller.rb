@@ -10,15 +10,15 @@ module Folio
     before_action :find_files, only: [:new, :edit]
 
     def index
-      if !params[:by_query].blank? || !params[:by_published].blank? || !params[:by_type].blank? || !params[:by_tag].blank?
+      if %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
         @nodes = Folio::Node.
         original.
-        order('created_at desc').
+        ordered.
         filter(filter_params).
         page(current_page)
       else
         @limit = 3
-        @nodes = Folio::Node.original.arrange(order: :position)
+        @nodes = Folio::Node.original.arrange(order: 'position asc, created_at desc')
       end
     end
 
@@ -60,7 +60,7 @@ module Folio
     end
 
     def filter_params
-      params.permit(:by_query, :by_published, :by_type, :by_tag)
+      params.permit(:by_query, :by_published, :by_type, :by_tag, :by_parent)
     end
 
     def node_params

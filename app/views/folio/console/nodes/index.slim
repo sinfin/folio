@@ -7,13 +7,15 @@
   .col-md
     = filter_form({}) do
       .row
-        .col-sm
+        .col
+          = custom_options_for_select(Folio::Node, :by_parent,[[t('.all_parents'), nil]] + @roots.map { |r| [r.title, r.id] })
+        .col
           = tag_filter_select Folio::Node
-        .col-sm
+        .col
           = custom_options_for_select(Folio::Node,:by_published,[[t('.all_nodes'), nil], [t('.published'), 'published'], [t('.unpublished'), 'unpublished']])
-        .col-sm
+        .col
           = custom_options_for_select(Folio::Node,:by_type,[[t('.all_types'), nil],[t('.page'), 'page'],[t('.category'), 'category']])
-        .col-sm
+        .col
           = query_field t('.query')
 
 

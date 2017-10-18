@@ -43,6 +43,7 @@ module Folio
 
     # Scopes
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
+    scope :ordered,  -> { order('position asc, created_at desc') }
     scope :featured,  -> { where(featured: true) }
     scope :ordered,   -> { order(position: :asc) }
     scope :published, -> {
@@ -81,6 +82,8 @@ module Folio
         where(nil)
       end
     }
+
+    scope :by_parent, -> (parent) { children_of(parent) }
 
     scope :by_type, -> (type) {
       case type
