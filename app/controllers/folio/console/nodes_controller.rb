@@ -4,6 +4,8 @@ require_dependency 'folio/application_controller'
 
 module Folio
   class Console::NodesController < Console::BaseController
+    include Console::NodesHelper
+
     before_action :find_node, except: [:index, :create, :new]
     before_action :find_files, only: [:new, :edit]
 
@@ -15,7 +17,8 @@ module Folio
         filter(filter_params).
         page(current_page)
       else
-        @nodes = Folio::Node.original.arrange
+        @limit = 3
+        @nodes = Folio::Node.original.arrange(order: :position)
       end
     end
 

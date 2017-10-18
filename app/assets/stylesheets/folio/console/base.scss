@@ -34,3 +34,7 @@ a.inactive {
 .badge {
     margin-left: 0.2rem;
 }
+
+[class^="icon-"].icon-fixed-width, [class*=" icon-"].icon-fixed-width {
+  text-align: center;
+}

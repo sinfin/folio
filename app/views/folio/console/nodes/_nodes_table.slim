@@ -1,6 +1,13 @@
 - if nodes.class == ActiveSupport::OrderedHash
+  - i = 0
   - nodes.map do |node, children|
-    = render partial: "node_row", locals: { node: node, children: children, tree: nodes.class == ActiveSupport::OrderedHash }
+    - i += 1
+    - if node.root? || i <= @limit
+      = render partial: "node_row", locals: { node: node, children: children, tree: nodes.class == ActiveSupport::OrderedHash }
+    - else
+      tr: td colspan=8
+        = fa_icon 'ellipsis-h', class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"
+        = link_to t('.more_nodes'), console_nodes_path
 - else
   - nodes.each do |node|
     = render partial: "node_row", locals: { node: node, tree: nodes.class == ActiveSupport::OrderedHash }

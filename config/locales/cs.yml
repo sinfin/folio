@@ -28,6 +28,8 @@ cs:
           unpublished: Jen rozpracované
           all_tags: Všechny tagy
           all_types: Všechny typy
+        nodes_table:
+          more_nodes: další stránky
         node_row:
           new:
             confirm: Chcete přeložit stránku do %{language}?

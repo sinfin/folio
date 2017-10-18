@@ -22,5 +22,28 @@ module Folio
       end
       for_select
     end
+
+    def arrange_nodes_with_limit(nodes, limit)
+      arranged = ActiveSupport::OrderedHash.new
+      min_depth = Float::INFINITY
+      index = Hash.new { |h, k| h[k] = ActiveSupport::OrderedHash.new }
+
+      nodes.each do |node|
+
+        children = index[node.id]
+        index[node.parent_id][node] = children
+
+        depth = node.depth
+        if depth < min_depth
+          min_depth = depth
+          arranged.clear
+        end
+
+        break if !node.root? && index[node.parent_id].count >= limit
+
+        arranged[node] = children if depth == min_depth
+      end
+      arranged
+    end
   end
 end
