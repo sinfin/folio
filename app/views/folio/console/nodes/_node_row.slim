@@ -13,7 +13,7 @@ tr
       - else
         li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: "inactive", rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
 
-  td = node.type
+  td = t("node_names.#{node.type}")
   td = featured_icon node.featured
   / td = node.ancestry
   td = on_off_icon node.published
