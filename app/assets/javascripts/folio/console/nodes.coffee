@@ -1,6 +1,6 @@
 $ ->
-  $(document).on 'change', '.atom-type-select', ->
-    $t = $(this)
+  selectRightForm = (element) ->
+    $t = $(element)
     form = $t.find(':selected').data('form')
     $content = $t.closest('.nested-fields').find('.atom-content')
     switch form
@@ -17,6 +17,13 @@ $ ->
           $textarea.redactor('core.destroy')
       when 'none'
         $content.hide()
+
+
+  $(document).on 'cocoon:after-insert', (e, insertedItem) ->
+    selectRightForm($(this).find('select.atom-type-select'))
+
+  $(document).on 'change', '.atom-type-select', ->
+    selectRightForm(this)
 
   $('#paginate-images a').on 'ajax:success', (e, data, status, json) ->
     # pagination

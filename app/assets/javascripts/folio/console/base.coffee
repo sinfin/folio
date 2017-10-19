@@ -13,10 +13,6 @@
 #= require ./redactor-init
 #= require ./redactor-imagemanager
 
-$ ->
-  # disable auto discover
-  Dropzone.autoDiscover = false
-
 #= require ./nodes
 #= require ./files
 
@@ -45,5 +41,3 @@ $ ->
   $(document).on 'cocoon:after-insert', (e, insertedItem) ->
     pos = +$(insertedItem).prevAll(".nested-fields:first").find('.position').val()
     $(insertedItem).find('.position').val(pos + 1)
-    $(insertedItem).find('.redactor').each ->
-      $(this).redactor()
