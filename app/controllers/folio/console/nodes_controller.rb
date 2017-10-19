@@ -17,8 +17,8 @@ module Folio
         filter(filter_params).
         page(current_page)
       else
-        @limit = 3
-        @nodes = Folio::Node.original.arrange(order: 'position asc, created_at desc')
+        @limit = 5
+        @nodes = Folio::Node.original.arrange(order: 'position desc, created_at desc')
       end
     end
 
@@ -35,7 +35,9 @@ module Folio
     end
 
     def create
-      @node = Folio::Node.create(node_params)
+      # set type first beacuse of @node.additional_params
+      @node = Folio::Node.new(type: params[:type])
+      @node.update(node_params)
       respond_with @node, location: console_nodes_path
     end
 

@@ -4,7 +4,7 @@
     - i += 1
     - if node.root? || i <= @limit
       = render partial: "node_row", locals: { node: node, children: children, tree: nodes.class == ActiveSupport::OrderedHash }
-    - else
+    - elsif i == @limit + 1
       tr: td colspan=8
         = fa_icon 'ellipsis-v', class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"
         = link_to t('.more_nodes'), console_nodes_path(by_parent: node.parent.id)

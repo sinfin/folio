@@ -30,6 +30,8 @@ module Folio
     validates :locale, inclusion: I18n.available_locales.map { |l| l.to_s }
 
     # Callbacks
+    before_save :set_position
+
     before_validation do
       # FIXME: breaks without a parent
       self.site = parent.site if site.nil?
@@ -43,9 +45,8 @@ module Folio
 
     # Scopes
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
-    scope :ordered,  -> { order('position asc, created_at desc') }
+    scope :ordered,  -> { order('position desc, created_at desc') }
     scope :featured,  -> { where(featured: true) }
-    scope :ordered,   -> { order(position: :asc) }
     scope :published, -> {
       ordered
         .where('published', true)
@@ -183,6 +184,15 @@ module Folio
         translation
       end
     end
+
+    private
+      # before_create
+      def set_position
+        if self.position.nil?
+          last = self.siblings.ordered.first
+          self.position = !last.nil? ? last.position + 1 : 0
+        end
+      end
   end
 end
 
