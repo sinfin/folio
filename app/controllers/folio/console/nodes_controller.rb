@@ -6,7 +6,9 @@ module Folio
   class Console::NodesController < Console::BaseController
     include Console::NodesHelper
 
-    before_action :find_node, except: [:index, :create, :new]
+    respond_to :json, only: :set_position
+
+    before_action :find_node, except: [:index, :create, :new, :set_position]
     before_action :find_files, only: [:new, :edit]
 
     def index
@@ -51,6 +53,11 @@ module Folio
       respond_with @node, location: console_nodes_path
     end
 
+    def set_position
+      Folio::Node.update(set_position_params.keys, set_position_params.values)
+      render json: { success: 'success', status_code: '200' }
+    end
+
   private
     def find_node
       @node = Folio::Node.friendly.find(params[:id])
@@ -93,6 +100,10 @@ module Folio
                                                           :_destroy])
       p.delete(:password) unless p[:password].present?
       p
+    end
+
+    def set_position_params
+      params.require(:node)
     end
   end
 end

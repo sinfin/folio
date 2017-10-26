@@ -22,7 +22,9 @@ Folio::Engine.routes.draw do
   namespace :console do
     root to: 'nodes#index'
     resources :dashboard, only: :index
-    resources :nodes, except: [:show]
+    resources :nodes, except: [:show] do
+      post 'set_position', on: :collection
+    end
     resources :menus, except: [:show]
     resources :files, except: [:show]
     resources :leads, only: %i[index edit update destroy]

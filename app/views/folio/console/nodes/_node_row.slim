@@ -1,10 +1,17 @@
-tr
+tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   td
     - if tree
-      = fa_icon node.console_caret_icon, class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"
+      = fa_icon node.console_caret_icon, class: 'mr-2', style: "margin-left:#{node.depth * 2}rem"
     = link_to node.title, edit_console_node_path(node.id)
     - unless tree
       li.small == node_breadcrumbs(node.ancestors)
+  td
+    = hidden_field_tag 'node[id]', node.id
+    = hidden_field_tag 'node[position]', node.position
+    .btn-group role="group" style="margin-left:#{node.depth * 2}rem"
+      .btn.btn-sm.btn-outline-secondary.node.position-up = icon 'arrow-up'
+      .btn.btn-sm.btn-outline-secondary.node.position-down = icon 'arrow-down'
+
   td
     ul
     - node.site.locales.each do |locale|

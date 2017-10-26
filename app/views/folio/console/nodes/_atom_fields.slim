@@ -3,8 +3,8 @@
     .col-sm-6
       = f.input :type, collection: atom_types_for_select, include_blank: false, input_html: { class: 'atom-type-select' }
     .col-sm-6.text-right
-      .btn.btn-outline-secondary.ml-2.position-up = icon 'arrow-up'
-      .btn.btn-outline-secondary.ml-2.position-down = icon 'arrow-down'
+      .btn.btn-outline-secondary.ml-2.atom.position-up = icon 'arrow-up'
+      .btn.btn-outline-secondary.ml-2.atom.position-down = icon 'arrow-down'
       = f.hidden_field :position, class: 'position'
     .col-sm-12
       - if f.object.class.form != :none
