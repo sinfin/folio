@@ -27,10 +27,16 @@ $ ->
     that_node_children = that_node.nextAll("tr[data-parent='#{that_node_id}']")
     this_node.after(that_node)
 
-    this_node_children.each ->
-      this_node.after($(this))
-    that_node_children.each ->
-      that_node.after($(this))
+    last_row = this_node
+    moveChildrenRows(this_node, this_node_children)
+    moveChildrenRows(that_node, that_node_children)
+
+  moveChildrenRows = (node, children) ->
+    last_row = node
+    children.each ->
+      $t = $(this)
+      last_row.after($t)
+      last_row = $t
 
   $(document).on 'change', '#filter-form', ->
     $(this).submit()

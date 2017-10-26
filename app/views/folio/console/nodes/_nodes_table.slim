@@ -3,11 +3,12 @@
   - nodes.map do |node, children|
     - i += 1
     - if node.root? || i <= @limit
-      = render partial: "node_row", locals: { node: node, children: children, tree: nodes.class == ActiveSupport::OrderedHash }
+      = render partial: "node_row", locals: { node: node, children: children, tree: true, sortable: true }
     - elsif i == @limit + 1
-      tr: td colspan=8
-        = fa_icon 'ellipsis-v', class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"
-        = link_to t('.more_nodes'), console_nodes_path(by_parent: node.parent.id)
+      tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
+        td colspan=8
+          = fa_icon 'ellipsis-v', class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"
+          = link_to t('.more_nodes'), console_nodes_path(by_parent: node.parent.id)
 - else
   - nodes.each do |node|
-    = render partial: "node_row", locals: { node: node, tree: nodes.class == ActiveSupport::OrderedHash }
+    = render partial: "node_row", locals: { node: node, tree: false, sortable: false }
