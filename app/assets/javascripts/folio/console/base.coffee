@@ -45,7 +45,8 @@ $ ->
     $this_node = $(this).closest('tr')
     $that_node = $this_node.prevAll("tr[data-parent='#{$this_node.data('parent')}'][data-depth='#{$this_node.data('depth')}']:first")
 
-    return if !$that_node
+    return if $that_node.length == 0
+
 
     pos = Number($this_node.find('input#node_position').val())
     data = {}
@@ -64,7 +65,7 @@ $ ->
     $this_node = $(this).closest('tr')
     $that_node = $this_node.nextAll("tr[data-parent='#{$this_node.data('parent')}'][data-depth='#{$this_node.data('depth')}']:first")
 
-    return if !$that_node
+    return if $that_node.length == 0
 
     pos = Number($that_node.find('input#node_position').val())
     data = {}

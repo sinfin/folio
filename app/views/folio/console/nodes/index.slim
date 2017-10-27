@@ -1,21 +1,24 @@
 .row
-  .col-md-4
+  .col.mr-auto
     h1
       = icon('file-text-o')
       '
       = t('.title')
-  .col-md
+  .col-auto
     = filter_form({}) do
-      .row
-        .col
+      .form-row
+        - if @filtered
+          .col-auto
+            = link_to fa_icon('times'), console_nodes_path,class: 'btn btn-danger', role: 'button'
+        .col-auto
           = custom_options_for_select(Folio::Node, :by_parent,[[t('.all_parents'), nil]] + @roots.map { |r| [r.title, r.id] })
-        .col
+        .col-auto
           = tag_filter_select Folio::Node
-        .col
+        .col-auto
           = custom_options_for_select(Folio::Node,:by_published,[[t('.all_nodes'), nil], [t('.published'), 'published'], [t('.unpublished'), 'unpublished']])
-        .col
+        .col-auto
           = custom_options_for_select(Folio::Node,:by_type,[[t('.all_types'), nil],[t('.page'), 'page'],[t('.category'), 'category']])
-        .col
+        .col-auto
           = query_field t('.query')
 
 

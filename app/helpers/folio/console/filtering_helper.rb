@@ -3,7 +3,7 @@
 module Folio
   module Console::FilteringHelper
     def filter_form(url = {}, opts = {}, &block)
-      opts.reverse_merge!(id: 'filter-form', class: 'form', method: :get)
+      opts.reverse_merge!(id: 'filter-form', class: 'form-inline', method: :get)
       form_tag(url, opts, &block)
     end
 

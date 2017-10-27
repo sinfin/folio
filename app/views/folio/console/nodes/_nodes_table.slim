@@ -2,9 +2,15 @@
   - i = 0
   - nodes.map do |node, children|
     - i += 1
-    - if node.root? || i <= @limit
-      = render partial: "node_row", locals: { node: node, children: children, tree: true, sortable: true }
-    - elsif i == @limit + 1
+
+    - if @limit.nil?
+      / show all children for node
+      = render partial: "node_row", locals: { node: node, children: children, tree: true, sortable: nodes.count > 1, limited: false}
+    - elsif node.root? || i <= @limit
+      / standart node row
+      = render partial: "node_row", locals: { node: node, children: children, tree: true, sortable: nodes.count > 1, limited: !node.root? && nodes.count > @limit }
+    - elsif (@limit && i == @limit + 1)
+      / more nodes link row
       tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
         td colspan=8
           = fa_icon 'ellipsis-v', class: 'mr-2', style: "margin-left:#{node.ancestors.count * 2}rem"

@@ -12,12 +12,17 @@ module Folio
     before_action :find_files, only: [:new, :edit]
 
     def index
-      if %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
+      if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
+        parent = Folio::Node.find(params[:by_parent])
+        @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
+        @filtered = true
+      elsif %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
         @nodes = Folio::Node.
         original.
         ordered.
         filter(filter_params).
         page(current_page)
+        @filtered = true
       else
         @limit = 5
         @nodes = Folio::Node.original.arrange(order: 'position desc, created_at desc')
