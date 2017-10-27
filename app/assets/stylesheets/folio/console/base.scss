@@ -18,8 +18,13 @@ body {
 .card.active {
   border-color: $blue !important;
 }
+
 tr.active {
   background-color: $gray-300 !important;
+}
+
+.table.align-middle > tbody > tr > td {
+    vertical-align: middle;
 }
 
 .dropzone {

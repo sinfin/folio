@@ -18,12 +18,11 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
           = fa_icon 'arrow-up', class: 'mr-1'
           = fa_icon 'arrow-down'
   td
-    ul
     - node.site.locales.each do |locale|
       - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
-        li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), edit_console_node_path(node.node_translations.find_by(locale: locale).id)
+        = link_to locale_to_label(locale, short: true), edit_console_node_path(node.node_translations.find_by(locale: locale).id), class: 'mr-2'
       - else
-        li style="display: inline; margin-right: 1em;"= link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: "inactive", rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
+        = link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: 'inactive mr-2', rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
 
   td = t("node_names.#{node.type}")
   td = featured_icon node.featured

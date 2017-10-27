@@ -2,7 +2,7 @@
 
 class Folio::Category < Folio::Node
   def console_caret_icon
-    'bars'
+    'folder-open-o'
   end
 
   def self.partial
