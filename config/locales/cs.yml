@@ -65,6 +65,9 @@ cs:
           title: Leads
         show:
           title: Lead
+      visits:
+        index:
+          title: Visits
       really_delete: Jste si jist, že chcete smazat %{title}?
 
     site:

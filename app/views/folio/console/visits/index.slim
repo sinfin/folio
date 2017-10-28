@@ -1,0 +1,34 @@
+.row
+  .col.mr-auto
+    h1
+      = icon('mouse-pointer')
+      '
+      = t('.title')
+  .col-auto
+    = filter_form({}) do
+      .form-row
+        - if @filtered
+          .col-auto
+            = link_to fa_icon('times'), console_nodes_path,class: 'btn btn-danger', role: 'button'
+        .col-auto
+          = query_field t('folio.console.query')
+
+
+.table-responsive
+  table.table.table-striped.align-middle
+    thead
+      tr
+      th = t('.id')
+      th = t('.started_at')
+      th = t('.events')
+      th = t('.account')
+      th = t('.referrer')
+      th = t('.landing_page')
+      th = t('.utm_source')
+      th = t('.utm_medium')
+      th = t('.utm_campaign')
+      th = t('.utm_content')
+      th = t('.utm_term')
+
+    tbody
+      = render partial: "visit", collection: @visits

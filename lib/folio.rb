@@ -26,6 +26,7 @@ require 'dropzonejs-rails'
 require 'countries'
 require 'breadcrumbs_on_rails'
 require 'rails-assets-selectize'
+require 'ahoy_matey'
 
 module Folio
   class Engine < ::Rails::Engine

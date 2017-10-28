@@ -29,7 +29,7 @@ module Folio
       "##{dom_id(record)}"
     end
 
-    def panel(title = nil, opts = {}, &block)
+    def card(title = nil, opts = {}, &block)
       vars = { title: title }
 
       if opts.delete(:table)
@@ -39,7 +39,7 @@ module Folio
       end
 
       vars[:opts] = opts
-      render partial: 'admin/partials/panel', locals: vars
+      render partial: 'folio/console/partials/card', locals: vars
     end
 
     def dropdown(links, class_name: 'btn btn-light btn-sm')

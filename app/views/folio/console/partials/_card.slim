@@ -1,0 +1,10 @@
+.card class=(opts[:class] || 'panel-default')
+  - if title.present?
+    .card-header = title
+
+  - if defined?(body)
+    .card-body
+      = body
+
+  - if defined?(table)
+    = table

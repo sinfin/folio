@@ -1,0 +1,14 @@
+.row
+  .col-md-5
+    = card t('.visit'), table: true do
+      = render 'folio/console/partials/ahoy', visit: @visit
+
+  .col-md-7
+    = card t('.user_navigation'), table: true do
+      table.table
+        - @visit.ahoy_events.ordered.each_with_index do |event, index|
+          tr
+            td = event_attributes_tooltip(event)
+            td = index
+            td = event.properties["page"]
+            td = event.name

@@ -31,6 +31,7 @@ Folio::Engine.routes.draw do
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
     resources :sites
+    resources :visits, only: %i[index show]
   end
 
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do

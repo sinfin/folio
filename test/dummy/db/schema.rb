@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171010093615) do
+ActiveRecord::Schema.define(version: 20171027131623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ahoy_events", force: :cascade do |t|
+    t.integer "visit_id"
+    t.bigint "account_id"
+    t.string "name"
+    t.jsonb "properties"
+    t.datetime "time"
+    t.index ["account_id"], name: "index_ahoy_events_on_account_id"
+    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
+    t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
+  end
 
   create_table "folio_accounts", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -199,6 +210,39 @@ ActiveRecord::Schema.define(version: 20171010093615) do
     t.string "name"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "visits", force: :cascade do |t|
+    t.string "visit_token"
+    t.string "visitor_token"
+    t.string "ip"
+    t.text "user_agent"
+    t.text "referrer"
+    t.text "landing_page"
+    t.bigint "site_id"
+    t.bigint "account_id"
+    t.string "referring_domain"
+    t.string "search_keyword"
+    t.string "browser"
+    t.string "os"
+    t.string "device_type"
+    t.integer "screen_height"
+    t.integer "screen_width"
+    t.string "country"
+    t.string "region"
+    t.string "city"
+    t.string "postal_code"
+    t.decimal "latitude"
+    t.decimal "longitude"
+    t.string "utm_source"
+    t.string "utm_medium"
+    t.string "utm_term"
+    t.string "utm_content"
+    t.string "utm_campaign"
+    t.datetime "started_at"
+    t.index ["account_id"], name: "index_visits_on_account_id"
+    t.index ["site_id"], name: "index_visits_on_site_id"
+    t.index ["visit_token"], name: "index_visits_on_visit_token", unique: true
   end
 
 end
