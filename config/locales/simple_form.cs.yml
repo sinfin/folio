@@ -1,0 +1,23 @@
+cs:
+  simple_form:
+    "yes": 'Ano'
+    "no": 'Ne'
+    required:
+      text: 'povinný údaj'
+      mark: '*'
+      # You can uncomment the line below if you need to overwrite the whole required html.
+      # When using html, text and mark won't be used.
+      # html: '<abbr title="required">*</abbr>'
+    error_notification:
+      default_message: "Prosím doplňte chybějící povinné údaje."
+
+    labels:
+      defaults:
+        title: Titul
+        locale: Překlad
+        code: Kód
+        type: Typ
+        parent_id: Nadřazená stránka
+        perex: Perex
+        content: Obsah
+        tag_list: Tagy
