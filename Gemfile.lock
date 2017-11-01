@@ -413,6 +413,7 @@ DEPENDENCIES
   guard-coffeelint
   guard-rubocop
   pry-rails
+  rails-assets-jquery (= 3.2.1)
   rubocop-rails
   sqlite3
 
