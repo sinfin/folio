@@ -15,5 +15,3 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
-
- gem 'rails-assets-jquery', '3.2.1'

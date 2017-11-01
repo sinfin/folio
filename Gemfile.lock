@@ -30,7 +30,8 @@ PATH
       pg
       pg_search
       rails (~> 5.1.2)
-      rails-assets-selectize
+      rails-assets-jquery (~> 3.2.1)
+      rails-assets-selectize (~> 0.12.4)
       responders
       sass-rails
       simple_form
@@ -413,7 +414,6 @@ DEPENDENCIES
   guard-coffeelint
   guard-rubocop
   pry-rails
-  rails-assets-jquery (= 3.2.1)
   rubocop-rails
   sqlite3
 
