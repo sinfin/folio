@@ -28,6 +28,7 @@ module Folio
     validates :title, :slug, :locale, presence: true
     validates :slug, uniqueness: { scope: [:site_id, :locale] }
     validates :locale, inclusion: I18n.available_locales.map { |l| l.to_s }
+    validate :allowed_type, if: :has_parent?
 
     # Callbacks
     before_save :set_position
@@ -133,6 +134,10 @@ module Folio
       false
     end
 
+    def self.allowed_child_type
+      nil
+    end
+
     def cast
       self
     end
@@ -191,6 +196,14 @@ module Folio
         if self.position.nil?
           last = self.siblings.ordered.first
           self.position = !last.nil? ? last.position + 1 : 0
+        end
+      end
+
+      # custom Validations
+      def allowed_type
+        return if parent.class.allowed_child_type.nil?
+        if self.type != parent.class.allowed_child_type && self.type != 'Folio::NodeTranslation'
+          errors.add(:type, 'is not allowed')
         end
       end
   end
