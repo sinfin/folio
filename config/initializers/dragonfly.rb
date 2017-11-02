@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dragonfly'
+require 'dragonfly/s3_data_store'
 
 Dragonfly.logger = Rails.logger
 Rails.application.middleware.use Dragonfly::Middleware
