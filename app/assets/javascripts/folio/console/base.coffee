@@ -16,6 +16,8 @@
 #= require ./nodes
 #= require ./files
 
+#= require ./main_app
+
 $ ->
   switchNodes = (this_node, that_node) ->
     pos = this_node.find('input#node_position').val()
