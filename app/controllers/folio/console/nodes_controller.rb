@@ -44,6 +44,8 @@ module Folio
 
         redirect_to edit_console_node_path(@node.id)
       end
+
+      after_new
     end
 
     def create
@@ -69,6 +71,9 @@ module Folio
     end
 
   private
+    def after_new
+    end
+
     def find_node
       @node = Folio::Node.friendly.find(params[:id])
     end
