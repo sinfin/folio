@@ -3,7 +3,12 @@
 module Folio
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      source_root File.expand_path('../../../templates', __FILE__)
+
+      # FIXME: Folio fail in production env because this require
+      begin
+        source_root File.expand_path('../../../templates', __FILE__)
+      rescue
+      end
 
       desc 'Creates folio initializer, routes and copy locale files to your application.'
       # class_option :orm
