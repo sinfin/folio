@@ -9,6 +9,12 @@ module Folio
       Rails.application.config.exceptions_app = self.routes
     end
 
+    config.to_prepare do
+      Dir.glob(Rails.root + 'app/decorators/**/*_decorator*.rb').each do |c|
+        require_dependency(c)
+      end
+    end
+
     config.autoload_paths << self.root.join('lib')
     config.eager_load_paths << self.root.join('lib')
     config.assets.paths << self.root.join('app/cells')
