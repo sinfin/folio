@@ -8,9 +8,9 @@ module Folio
 
     paginates_per 11
 
-    VALID_FORMATS = %i{jpeg jpg png bmp svg gif}
+    VALID_FORMATS = %w{image/jpeg image/png image/bmp image/gif}
 
-    validates_property :format, of: :file, in: VALID_FORMATS,
+    validates_property :mime_type, of: :file, in: VALID_FORMATS,
                        case_sensitive: false,
                        message: I18n.t('dragonfly.invalid_format', formats: VALID_FORMATS.join(', ')),
                        if: :file_changed?
