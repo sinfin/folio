@@ -16,18 +16,19 @@ cs:
 
     console:
       back: Zpět
-      query: Vyhledávání...
+      filters:
+        query: Vyhledávání...
+        all_tags: Všechny tagy
       nodes:
         index:
           title: Stránky
           translations: Překlady
           type: Typ
-          query: Vyhledávání
+        filters:
           all_nodes: Všechny nody
           all_parents: Všechny kategorie
           published: Jen publikované
           unpublished: Jen rozpracované
-          all_tags: Všechny tagy
           all_types: Všechny typy
         nodes_table:
           more_nodes: další stránky

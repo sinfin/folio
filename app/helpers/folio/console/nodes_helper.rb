@@ -15,6 +15,11 @@ module Folio
       end
     end
 
+    def new_child_node_button(parent)
+      new_button new_console_node_path(parent: parent.id),
+        label: t("node_names.#{node.class.allowed_child_type || 'Folio::Node'}")
+    end
+
     def node_types_for_select(node)
       for_select = []
       if node.parent && node.parent.class.allowed_child_type

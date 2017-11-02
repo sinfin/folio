@@ -23,7 +23,7 @@ module Folio
     end
 
     def tag_filter_select(model)
-      opts = [[I18n.t('folio.console.nodes.index.all_tags'), nil]] + model.tag_counts.map(&:name)
+      opts = [[I18n.t('folio.console.filters.all_tags'), nil]] + model.tag_counts.map(&:name)
 
       custom_options_for_select(model, :by_tag, opts)
     end
