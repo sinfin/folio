@@ -31,8 +31,12 @@ module Folio
 
     def new
       if params[:node].blank? || params[:node][:original_id].blank?
-        parent = Folio::Node.find(params[:parent]) if params[:parent].present?
-        @node = Folio::Node.new(parent: parent, type: parent.class.allowed_child_type)
+        if params[:parent].present?
+          parent = Folio::Node.find(params[:parent])
+          @node = Folio::Node.new(parent: parent, type: parent.class.allowed_child_type)
+        else
+          @node = Folio::Node.new
+        end
       else
         original = Folio::Node.find(params[:node][:original_id])
 
