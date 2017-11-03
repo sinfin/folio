@@ -35,7 +35,7 @@
           td = account.email
           td = account.role
           td = account.sign_in_count
-          td = time_ago_in_words account.last_sign_in_at
+          td = time_ago_in_words account.last_sign_in_at unless account.last_sign_in_at.nil?
           td = l account.created_at, format: :short
           td = t account.is_active.to_s
           td.text-right = edit_button account, edit_console_account_path(account.id)
