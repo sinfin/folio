@@ -7,7 +7,10 @@ fieldset
     .col-sm
       = f.input :locale, disabled: true
     .col-sm
-      = f.input :type, collection: node_types_for_select(f.object), include_blank: false
+      - if f.object.type == 'Folio::NodeTranslation'
+        = f.input :type, collection: [[t('node_names.Folio::NodeTranslation'), 'Folio::NodeTranslation']], disabled: true
+      - else
+        = f.input :type, collection: node_types_for_select(f.object), include_blank: false
     .col-sm
       = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id, disabled: params[:parent].present?
     .col-sm
