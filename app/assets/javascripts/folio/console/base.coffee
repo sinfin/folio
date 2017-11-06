@@ -16,7 +16,7 @@
 #= require ./nodes
 #= require ./files
 
-#= require ./main_app
+#= require folio/console/main_app
 
 $ ->
   switchNodes = (this_node, that_node) ->
