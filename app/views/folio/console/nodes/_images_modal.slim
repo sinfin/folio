@@ -19,7 +19,7 @@
             .col-sm-6.col-md-3.col-image
               a.card.bg-light.mb-2.select-file
                 = image_tag '', class: 'card-img img-thumbnail'
-
+          - @images = Folio::Image.page(1)
           - if @images.present?
             - @images.each do |image|
               .col-sm-6.col-md-3.col-image

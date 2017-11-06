@@ -23,6 +23,7 @@
                 tr#document-dropzone-template.hidden.select-file.template
                   td name='file_name'
                   td name='file_size'
+                - @documents = Folio::Document.page(1)
                 - @documents.each do |document|
                   tr.select-file data-file-id=document.id data-file-filesize=number_to_human_size(document.file_size) data-file-filename=document.file_name
                     td name='file_name' = document.file_name

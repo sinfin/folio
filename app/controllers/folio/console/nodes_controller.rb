@@ -50,7 +50,7 @@ module Folio
 
     def create
       # set type first beacuse of @node.additional_params
-      @node = Folio::Node.new(type: params[:type])
+      @node = Folio::Node.new(type: params[:node][:type])
       @node.update(node_params)
       respond_with @node, location: console_nodes_path
     end
@@ -79,8 +79,8 @@ module Folio
     end
 
     def find_files
-      @images = Folio::Image.page(1)
-      @documents = Folio::Document.page(1)
+      # FIXME
+      # moved to modals
     end
 
     def filter_params
@@ -113,6 +113,7 @@ module Folio
                                                           :content,
                                                           :position,
                                                           :_destroy])
+      p.delete(:slug) unless p[:slug].present?
       p.delete(:password) unless p[:password].present?
       p
     end
