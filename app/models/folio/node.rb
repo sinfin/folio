@@ -11,7 +11,7 @@ module Folio
     # Relations
     has_ancestry
     belongs_to :site, class_name: 'Folio::Site'
-    friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale]
+    friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale, :ancestry]
 
     has_many :file_placements, -> { ordered }, class_name: 'Folio::FilePlacement', as: :placement, dependent: :destroy
     has_many :files, through: :file_placements
@@ -26,7 +26,7 @@ module Folio
 
     # Validations
     validates :title, :slug, :locale, presence: true
-    validates :slug, uniqueness: { scope: [:site_id, :locale] }
+    validates :slug, uniqueness: { scope: [:site_id, :locale, :ancestry] }
     validates :locale, inclusion: I18n.available_locales.map { |l| l.to_s }
     validate :allowed_type, if: :has_parent?
 
