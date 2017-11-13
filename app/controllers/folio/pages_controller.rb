@@ -18,7 +18,7 @@ module Folio
         @page = @roots.published.friendly.find path.shift
         path.each do |p|
           @page = @page.children.published.friendly.find p
-          add_breadcrumb @page.title, nested_page_url(@page)
+          add_breadcrumb @page.title, nested_page_path(@page)
         end
         # # If an old id or a numeric id was used to find the record, then
         # # the request path will not match the post_path, and we should do
