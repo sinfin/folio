@@ -10,10 +10,16 @@ module Folio
 
     VALID_FORMATS = %w{image/jpeg image/png image/bmp image/gif}
 
+    # Validations
     validates_property :mime_type, of: :file, in: VALID_FORMATS,
                        case_sensitive: false,
                        message: I18n.t('dragonfly.invalid_format', formats: VALID_FORMATS.join(', ')),
                        if: :file_changed?
+
+    # Callbacks
+    before_destroy do
+      DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
+    end
   end
 end
 
