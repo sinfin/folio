@@ -6,7 +6,7 @@ module Folio
   class Console::NodesController < Console::BaseController
     include Console::NodesHelper
 
-    respond_to :json, only: :set_position
+    respond_to :json, only: %i[update set_position]
 
     before_action :find_node, except: [:index, :create, :new, :set_position]
     before_action :find_files, only: [:new, :edit]

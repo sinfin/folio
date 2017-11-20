@@ -7,6 +7,18 @@ module Folio
       [i, title].compact.join(' ').html_safe
     end
 
+    def featured_button(bool)
+      button_tag(class: 'btn btn-sm btn-transparent node') do
+        featured_icon(bool)
+      end
+    end
+
+    def published_button(bool)
+      button_tag(class: 'btn btn-sm btn-transparent node') do
+        on_off_icon(bool)
+      end
+    end
+
     def new_button(path, opts = { label: 'New' })
       ico = icon 'plus', opts.delete(:label)
 

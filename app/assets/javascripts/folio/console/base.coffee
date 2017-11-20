@@ -4,7 +4,6 @@
 #= require bootstrap-sprockets
 #= require dropzone
 
-
 #= require cocoon
 #= require redactor
 
@@ -13,6 +12,7 @@
 #= require ./redactor-init
 #= require ./redactor-imagemanager
 
+#= require ./nodes_table
 #= require ./nodes
 #= require ./files
 

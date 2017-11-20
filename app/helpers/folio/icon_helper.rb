@@ -6,6 +6,8 @@ module Folio::IconHelper
   def featured_icon(bool)
     if bool
       fa_icon('star')
+    else
+      fa_icon('star-o')
     end
   end
 

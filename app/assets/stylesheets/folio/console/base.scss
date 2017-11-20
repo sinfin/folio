@@ -19,6 +19,19 @@ body {
   border-color: $blue !important;
 }
 
+.btn-transparent {
+  color: #111;
+  background-color: transparent;
+  border-color: transparent;
+  &:hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+  }
+  &:focus {
+    box-shadow: none;
+  }
+}
+
 tr.active {
   background-color: $gray-300 !important;
 }

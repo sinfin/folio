@@ -1,4 +1,5 @@
 tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
+  = hidden_field_tag 'node[id]', node.id
   td
     - if tree
       = fa_icon node.console_caret_icon, class: 'mr-2', style: "margin-left:#{node.depth * 2}rem"
@@ -25,9 +26,15 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
         = link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: 'inactive mr-2', rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
 
   td = t("node_names.#{node.type}")
-  td = featured_icon node.featured
+  td
+    = form_with(model: node, scope: :node, url: console_node_path(node.id, format: :json), class: 'featured') do |f|
+      = f.hidden_field :featured, value: !node.featured
+      = featured_button(node.featured)
   / td = node.ancestry
-  td = on_off_icon node.published
+  td
+    = form_with(model: node, scope: :node, url: console_node_path(node.id, format: :json), class: 'published') do |f|
+      = f.hidden_field :published, value: !node.published
+      = published_button(node.published)
   td
     - if node.published_at.present?
       = l(node.published_at, format: :short)
