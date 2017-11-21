@@ -15,8 +15,8 @@ module Folio
 
     has_many :file_placements, -> { ordered }, class_name: 'Folio::FilePlacement', as: :placement, dependent: :destroy
     has_many :files, through: :file_placements
-    has_many :images, source: :file, through: :file_placements
-    has_many :documents, source: :file, through: :file_placements
+    has_many :images, source: :file, class_name: 'Folio::Image', through: :file_placements
+    has_many :documents, source: :file, class_name: 'Folio::Document', through: :file_placements
 
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
     has_many :atoms, -> { order(:position) }, class_name: 'Folio::Atom', dependent: :destroy
