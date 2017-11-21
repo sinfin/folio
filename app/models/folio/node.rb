@@ -32,6 +32,7 @@ module Folio
 
     # Callbacks
     before_save :set_position
+    before_save :publish_now, if: :published_changed?
 
     before_validation do
       # FIXME: breaks without a parent
@@ -191,6 +192,11 @@ module Folio
     end
 
     private
+      # before_save
+      def publish_now
+        self.published_at = Time.now if published? && published_at.nil?
+      end
+
       # before_create
       def set_position
         if self.position.nil?
