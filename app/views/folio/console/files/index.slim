@@ -36,7 +36,6 @@ ul.nav.nav-tabs
                 li.list-group-item
                   - image.tag_list.each do |tag|
                     span.badge.badge-secondary = tag
-                li.list-group-item Vestibulum at eros
                 li.list-group-item = "#{image.file_width} × #{image.file_height}px"
                 li.list-group-item = number_to_human_size image.file_size
                 li.list-group-item
