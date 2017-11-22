@@ -9,6 +9,7 @@
 
 #= require folio/console/tagsinput/tagsinput
 
+#= require ./dropzone-init
 #= require ./redactor-init
 #= require ./redactor-imagemanager
 

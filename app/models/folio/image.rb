@@ -6,7 +6,7 @@ module Folio
   class Image < Folio::File
     include Thumbnails
 
-    paginates_per 11
+    paginates_per 36
 
     VALID_FORMATS = %w{jpeg png bmp gif}
 

@@ -28,7 +28,7 @@ ul.nav.nav-tabs
       .row
         - @files.each do |image|
           .col-xs-6.col-sm-4.col-md-2
-            .card
+            .card.mb-2
               = link_to edit_console_file_path(image) do
                 = image_tag image.thumb('250x250#').url, class: 'img-responsive card-img-top'
               ul.list-group.list-group-flush
@@ -43,7 +43,7 @@ ul.nav.nav-tabs
                   span.mr-2 = link_to icon('download'), image.file.url
                   = link_to icon('trash'), console_file_path(image), method: :delete,  data: { confirm: t('folio.console.really_delete', title: image.file_name) }
 
-        .col-xs-12
+        .col-12
           = paginate @files
 
   - if params['type'] == 'document'
