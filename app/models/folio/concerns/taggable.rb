@@ -7,9 +7,7 @@ module Folio
     included do
       acts_as_taggable
 
-      # https://github.com/mbleigh/acts-as-taggable-on/issues/808
-      # scope :by_tag, -> (tag) { tagged_with(tag) }
-      scope :by_tag, -> (tag) { joins(:tags).where(tags: { name: tag }) }
+      scope :by_tag, -> (tag) { tagged_with(tag) }
     end
   end
 end
