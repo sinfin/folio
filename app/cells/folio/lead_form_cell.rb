@@ -15,5 +15,10 @@ module Folio
       return options[:note] if options[:note]
       model.note if model
     end
+
+    def message
+      return options[:message] if options[:message]
+      t('.message')
+    end
   end
 end
