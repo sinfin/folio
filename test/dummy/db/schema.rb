@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171027131623) do
+ActiveRecord::Schema.define(version: 20171127140402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "ahoy_events", force: :cascade do |t|
     t.integer "visit_id"
-    t.bigint "account_id"
+    t.integer "folio_account_id"
     t.string "name"
     t.jsonb "properties"
     t.datetime "time"
-    t.index ["account_id"], name: "index_ahoy_events_on_account_id"
+    t.index ["folio_account_id", "name"], name: "index_ahoy_events_on_folio_account_id_and_name"
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
   end
@@ -163,6 +163,8 @@ ActiveRecord::Schema.define(version: 20171027131623) do
     t.datetime "updated_at", null: false
     t.string "google_analytics_tracking_code"
     t.string "facebook_pixel_code"
+    t.json "social_links"
+    t.text "address"
     t.index ["domain"], name: "index_folio_sites_on_domain"
   end
 
