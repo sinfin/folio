@@ -1,4 +1,11 @@
 cs:
+  head:
+    title:
+      prefix: Folio
+      separator: –
+      default: Default
+  domain:
+    short: dummy.folio
   'true': Ano
   'false': Ne
   time:
