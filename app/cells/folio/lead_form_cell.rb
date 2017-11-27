@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio
-  class LeadFormCell < FolioCell
+  class LeadFormCell < SavingFolioCell
     include SimpleForm::ActionViewExtensions::FormHelper
     include Engine.routes.url_helpers
 
@@ -21,6 +21,10 @@ module Folio
     def message
       return options[:message] if options[:message]
       t('.message')
+    end
+
+    def remember_option_keys
+      [:note, :message]
     end
   end
 end

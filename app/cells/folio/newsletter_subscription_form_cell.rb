@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 module Folio
-  class NewsletterSubscriptionFormCell < FolioCell
+  class NewsletterSubscriptionFormCell < SavingFolioCell
     include SimpleForm::ActionViewExtensions::FormHelper
     include Engine.routes.url_helpers
-    include ERB::Util
 
     def newsletter_subscription
       @newsletter_subscription ||= (model || NewsletterSubscription.new)
@@ -30,12 +29,8 @@ module Folio
       base
     end
 
-    def hidden_options
-      [:placeholder, :submit_text, :message].map do |opt|
-        value = options[opt]
-        next unless value
-        %{<input type="hidden" name="cell_options[#{opt}]" value="#{html_escape(value)}">}
-      end.compact.join('')
+    def remember_option_keys
+      [:placeholder, :submit_text, :message]
     end
   end
 end

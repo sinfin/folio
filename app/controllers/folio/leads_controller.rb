@@ -10,13 +10,22 @@ module Folio
 
       LeadMailer.notification_email(@lead).deliver_later if success
 
-      render html: cell('folio/lead_form', @lead)
+      render html: cell('folio/lead_form', @lead, cell_options_params)
     end
 
     private
 
       def lead_params
         params.require(:lead).permit(:name, :email, :phone, :note)
+      end
+
+      def cell_options_params
+        cell_options = params[:cell_options]
+        if cell_options
+          cell_options.permit(:note, :message)
+        else
+          nil
+        end
       end
   end
 end
