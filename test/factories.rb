@@ -7,6 +7,8 @@ FactoryGirl.define do
   factory :site, class: Folio::Site do
     title { Faker::Lorem.word }
     domain { Faker::Internet.domain_name }
+    social_links { { 'facebook' => Faker::Internet.url('facebook.com') } }
+    address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
   end
 
   factory :node, class: Folio::Node do
