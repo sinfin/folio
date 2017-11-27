@@ -5,7 +5,7 @@ module Folio
     protect_from_forgery with: :exception
 
     before_action do
-      @site = Folio::Site.first
+      @site = Site.first
 
       I18n.locale = params[:locale] || @site.locale
       @roots = @site.nodes.where(locale: I18n.locale).roots.ordered

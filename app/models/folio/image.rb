@@ -3,7 +3,7 @@
 require_dependency 'folio/concerns/thumbnails'
 
 module Folio
-  class Image < Folio::File
+  class Image < File
     include Thumbnails
 
     paginates_per 36

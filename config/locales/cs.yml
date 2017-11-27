@@ -107,6 +107,11 @@ cs:
       note_placeholder: ''
       message: Děkujeme za zaslání Vaší zprávy!
 
+    newsletter_subscription_form:
+      email: E-mail
+      submit: Odeslat
+      message: Odesláno!
+
   errors:
     attributes:
       email:

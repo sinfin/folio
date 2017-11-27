@@ -38,6 +38,7 @@ Folio::Engine.routes.draw do
     resources :categories, only: %i[index show]
     # resources :pages, only: %i[index show]
     resources :leads, only: %i[create]
+    resources :newsletter_subscriptions, only: %i[create]
 
     get '/*path', to: 'pages#show', as: 'page'
   end

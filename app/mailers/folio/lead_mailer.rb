@@ -6,7 +6,7 @@ module Folio
 
     def notification_email(lead)
       @lead = lead
-      site = Folio::Site.last
+      site = Site.last
       mail(to: site.email,
            subject: "#{site.title} lead",
            from: lead.email) do |format|

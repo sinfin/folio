@@ -4,7 +4,7 @@ require_dependency 'folio/application_controller'
 
 module Folio
   class PagesController < BaseController
-    include Folio::UrlHelper
+    include UrlHelper
 
     before_action :find_page
 

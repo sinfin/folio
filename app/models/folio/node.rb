@@ -165,7 +165,7 @@ module Folio
       ActiveRecord::Base.transaction do
         translation = self.dup
         translation.locale = locale
-        translation.becomes!(Folio::NodeTranslation)
+        translation.becomes!(NodeTranslation)
         translation.original_id = self.id
         translation.published = false
 
