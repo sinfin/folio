@@ -2,21 +2,19 @@
 
 require_dependency 'folio/concerns/thumbnails'
 
-module Folio
-  class Image < File
-    include Thumbnails
+class Folio::Image < Folio::File
+  include Folio::Thumbnails
 
-    paginates_per 36
+  paginates_per 36
 
-    VALID_FORMATS = %w{jpeg png bmp gif}
+  VALID_FORMATS = %w{jpeg png bmp gif}
 
-    # Validations
-    validates_property :format, of: :file, in: VALID_FORMATS
+  # Validations
+  validates_property :format, of: :file, in: VALID_FORMATS
 
-    # Callbacks
-    before_destroy do
-      DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
-    end
+  # Callbacks
+  before_destroy do
+    DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
   end
 end
 
