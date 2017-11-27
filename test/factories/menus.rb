@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   factory :menu, class: Folio::Menu::Header do
     factory :menu_with_menu_items do

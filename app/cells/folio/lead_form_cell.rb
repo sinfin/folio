@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Folio
   class LeadFormCell < FolioCell
     include SimpleForm::ActionViewExtensions::FormHelper

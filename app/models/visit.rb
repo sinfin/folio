@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Visit < Folio::ApplicationRecord
   # Relations
   has_many :ahoy_events, class_name: 'Ahoy::Event'

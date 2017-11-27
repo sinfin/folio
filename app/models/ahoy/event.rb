@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Ahoy
   class Event < ActiveRecord::Base
     include Ahoy::Properties

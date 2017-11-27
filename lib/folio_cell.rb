@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FolioCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
