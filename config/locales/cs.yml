@@ -98,7 +98,14 @@ cs:
       submit: Odeslat
       note: Zpráva
       note_placeholder: ''
-      message: Děkujeme za zaslání vaší zprávy!
+      message: Děkujeme za zaslání Vaší zprávy!
+
+  errors:
+    attributes:
+      email:
+        invalid: Zadejte prosíme platný e-mail!
+      note:
+        blank: Napište prosíme zprávu!
 
   atom_names:
     'Folio::Atom::Text': Text
