@@ -98,7 +98,7 @@ $ ->
       $copy.find("[name='file_name']").html($file.data('file-filename'))
       $copy.find("[name='file_size']").html($file.data('file-filesize'))
       $copy.find("[name='size']").html($file.data('file-size'))
-      $copy.appendTo($target)
+      $copy.prependTo($target)
       index_counter++
 
   $(document).on 'hidden.bs.modal', '.modal', (event) ->

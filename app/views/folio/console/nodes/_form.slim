@@ -54,8 +54,8 @@ fieldset#atoms
 fieldset
   h2 = t('.gallery.title')
   .row#file-placements-images data-fp-index=f.object.file_placements.count
-    = f.simple_fields_for :file_placements, f.object.file_placements.with_image do |fp|
-      .col-xs-12.col-sm.col-md-4
+    = f.simple_fields_for :file_placements, f.object.file_placements.with_image.ordered do |fp|
+      .col-12.col-sm.col-md-4.col-lg-3
         .card
           = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive card-img-top'
           ul.list-group.list-group-flush
@@ -65,7 +65,7 @@ fieldset
             li.list-group-item = fp.input :_destroy, as: :boolean
 
     = f.simple_fields_for :file_placements, Folio::FilePlacement.new, child_index: "{{i}}", defaults: { disabled: true } do |fp|
-      .col-xs-12.col-sm.col-md-4.nested-field.file-placement-new hidden=""
+      .col-12.col-sm.col-md-4.col-lg-3.nested-field.file-placement-new hidden=""
         .card
           = image_tag '', class: 'img-responsive card-img-top'
           ul.list-group.list-group-flush
@@ -73,7 +73,7 @@ fieldset
             li.list-group-item name='size'
             li.list-group-item name='file_size'
             li.list-group-item: button.btn.btn-default.remove-file-placement type='button' = t('remove')
-          = fp.association :file, as: :hidden
+          = fp.input_field :file_id, as: :hidden
     .col-12
       a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#images-modal'
         = t('.gallery.add')
@@ -86,7 +86,7 @@ fieldset
       th = t('caption')
       th colspan='2' = t('file_size')
     tbody#file-placements-documents data-fp-index=f.object.file_placements.count
-      = f.simple_fields_for :file_placements, f.object.file_placements.with_document do |fp|
+      = f.simple_fields_for :file_placements, f.object.file_placements.with_document.ordered do |fp|
         tr
           td = fp.object.file.file_name
           td = fp.input :caption, label: false
