@@ -2,7 +2,8 @@
 
 module Folio
   class Atom < ApplicationRecord
-    belongs_to :node
+    belongs_to :placement, polymorphic: true
+    alias_attribute :node, :placement
 
     has_many :file_placements, -> { ordered }, class_name: 'Folio::FilePlacement', as: :placement, dependent: :destroy
     has_many :files, through: :file_placements

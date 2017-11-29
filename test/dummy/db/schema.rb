@@ -10,18 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171127140402) do
+ActiveRecord::Schema.define(version: 20171129121532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "ahoy_events", force: :cascade do |t|
     t.integer "visit_id"
-    t.integer "folio_account_id"
+    t.bigint "account_id"
     t.string "name"
     t.jsonb "properties"
     t.datetime "time"
-    t.index ["folio_account_id", "name"], name: "index_ahoy_events_on_folio_account_id_and_name"
+    t.index ["account_id"], name: "index_ahoy_events_on_account_id"
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
   end
@@ -49,12 +49,13 @@ ActiveRecord::Schema.define(version: 20171127140402) do
 
   create_table "folio_atoms", force: :cascade do |t|
     t.string "type"
-    t.bigint "node_id"
     t.text "content"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["node_id"], name: "index_folio_atoms_on_node_id"
+    t.string "placement_type"
+    t.bigint "placement_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
   create_table "folio_file_placements", force: :cascade do |t|
