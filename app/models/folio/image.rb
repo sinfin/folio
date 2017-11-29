@@ -14,7 +14,7 @@ class Folio::Image < Folio::File
 
   # Callbacks
   before_destroy do
-    DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
+    Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
   end
 end
 
