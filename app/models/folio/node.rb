@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/concerns/taggable'
-require_dependency 'folio/concerns/has_atoms'
-require_dependency 'folio/concerns/has_attachments'
-
 module Folio
   class Node < ApplicationRecord
     extend FriendlyId

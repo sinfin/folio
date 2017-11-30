@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/concerns/thumbnails'
-
 class Folio::Image < Folio::File
   include Folio::Thumbnails
 

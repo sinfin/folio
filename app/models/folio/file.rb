@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/concerns/taggable'
-
 module Folio
   class File < ApplicationRecord
     include Taggable
