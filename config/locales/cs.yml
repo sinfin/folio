@@ -127,3 +127,8 @@ cs:
     'Folio::Category': Kategorie
     'Folio::Page': Stránka
     'Folio::NodeTranslation': Překlad
+
+  cookie_consent:
+    dismiss: OK
+    link: Více informací
+    message: Při poskytování služeb nám pomáhají soubory cookie. Používáním naších služeb vyjadřujete souhlas s naším používáním souborů cookie.

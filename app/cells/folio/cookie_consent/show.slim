@@ -1,0 +1,22 @@
+script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"
+
+javascript:
+  window.addEventListener("load", function(){
+  window.cookieconsent.initialise({
+    "palette": {
+      "popup": {
+        "background": "#000000",
+        "text": "#ffffff"
+      },
+      "button": {
+        "background": "#ffffff",
+        "text": "#000000"
+      }
+    },
+    "position": "#{position}",
+    "content": {
+      "message": "#{I18n.t('cookie_consent.message')}",
+      "dismiss": "#{I18n.t('cookie_consent.dismiss')}",
+      "link": "#{I18n.t('cookie_consent.link')}"
+    }
+  })});

@@ -94,3 +94,8 @@ en:
     'Folio::Category': Category
     'Folio::Page': Page
     'Folio::NodeTranslation': Translation
+
+  cookie_consent:
+    dismiss: OK
+    link: Learn more
+    message: This website uses cookies to ensure you get the best experience on our website.
