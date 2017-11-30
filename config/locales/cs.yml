@@ -2,7 +2,7 @@ cs:
   head:
     title:
       prefix: Folio
-      separator: –
+      separator: "|"
       default: Default
   domain:
     short: dummy.folio
