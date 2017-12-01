@@ -38,7 +38,7 @@ module Folio
 
     # Scopes
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
-    scope :ordered,  -> { order('position desc, created_at desc') }
+    scope :ordered,  -> { order('position ASC, created_at ASC') }
     scope :featured,  -> { where(featured: true) }
     scope :published, -> {
       ordered
