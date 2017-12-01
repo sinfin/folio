@@ -7,7 +7,7 @@ module Folio
     include Engine.routes.url_helpers
 
     setup do
-      @lead = create(:lead)
+      @lead = create(:folio_lead)
     end
 
     test 'should get index' do

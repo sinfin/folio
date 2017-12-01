@@ -6,7 +6,7 @@ require_relative 'base_controller_test'
 module Folio
   class Console::MenusControllerTest < Folio::Console::BaseControllerTest
     setup do
-      @menu = create(:menu_with_menu_items)
+      @menu = create(:folio_menu_with_menu_items)
     end
 
     test 'should get index' do

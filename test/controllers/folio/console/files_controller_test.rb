@@ -6,7 +6,7 @@ require_relative 'base_controller_test'
 module Folio
   class Console::FilesControllerTest < Folio::Console::BaseControllerTest
     setup do
-      @image = create(:image)
+      @image = create(:folio_image)
     end
 
     test 'should get index' do

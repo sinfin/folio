@@ -12,7 +12,7 @@
 #   end
 
 #   test 'shows success message' do
-#     html = cell('folio/lead_form', create(:lead)).(:show)
+#     html = cell('folio/lead_form', create(:folio_lead)).(:show)
 #     assert html.has_css?('.folio-lead-form-submitted')
 #   end
 

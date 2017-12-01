@@ -8,7 +8,7 @@ module Folio
     include Engine.routes.url_helpers
 
     setup do
-      @node = create(:node)
+      @node = create(:folio_node)
     end
 
     test 'should get index' do
