@@ -26,6 +26,9 @@ FactoryGirl.define do
     end
   end
 
+  factory :folio_category, parent: :folio_node, class: Folio::Category
+  factory :folio_page, parent: :folio_node, class: Folio::Page
+
   factory :folio_atom, class: Folio::Atom do
     content { Faker::Lorem.paragraph }
     association :node, factory: :folio_node
