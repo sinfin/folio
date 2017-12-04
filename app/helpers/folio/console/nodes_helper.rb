@@ -29,7 +29,7 @@ module Folio
         ]
       else
         get_subclasses(Folio::Node).flatten.each do |type|
-          for_select << [t("node_names.#{type}"), type] if type.partial
+          for_select << [t("node_names.#{type}"), type] if type.view_name
         end
       end
       for_select
