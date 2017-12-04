@@ -36,3 +36,43 @@ class Visit < Folio::ApplicationRecord
     title
   end
 end
+
+# == Schema Information
+#
+# Table name: visits
+#
+#  id               :integer          not null, primary key
+#  visit_token      :string
+#  visitor_token    :string
+#  ip               :string
+#  user_agent       :text
+#  referrer         :text
+#  landing_page     :text
+#  site_id          :integer
+#  account_id       :integer
+#  referring_domain :string
+#  search_keyword   :string
+#  browser          :string
+#  os               :string
+#  device_type      :string
+#  screen_height    :integer
+#  screen_width     :integer
+#  country          :string
+#  region           :string
+#  city             :string
+#  postal_code      :string
+#  latitude         :decimal(, )
+#  longitude        :decimal(, )
+#  utm_source       :string
+#  utm_medium       :string
+#  utm_term         :string
+#  utm_content      :string
+#  utm_campaign     :string
+#  started_at       :datetime
+#
+# Indexes
+#
+#  index_visits_on_account_id   (account_id)
+#  index_visits_on_site_id      (site_id)
+#  index_visits_on_visit_token  (visit_token) UNIQUE
+#

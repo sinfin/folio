@@ -5,7 +5,7 @@ require_dependency 'folio/application_controller'
 module Folio
   class LeadsController < ApplicationController
     def create
-      @lead = Lead.new(lead_params)
+      @lead = Lead.new(lead_params.merge(url: request.referrer))
       success = @lead.save
 
       LeadMailer.notification_email(@lead).deliver_later if success
@@ -22,7 +22,7 @@ module Folio
       def cell_options_params
         cell_options = params[:cell_options]
         if cell_options
-          cell_options.permit(:note, :message)
+          cell_options.permit(:note, :message, :name)
         else
           nil
         end

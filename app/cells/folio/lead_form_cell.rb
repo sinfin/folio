@@ -24,7 +24,7 @@ module Folio
     end
 
     def remember_option_keys
-      [:note, :message]
+      [:note, :message, :name]
     end
   end
 end

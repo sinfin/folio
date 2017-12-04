@@ -12,3 +12,21 @@ module Ahoy
     scope :ordered, -> { order(time: :asc) }
   end
 end
+
+# == Schema Information
+#
+# Table name: ahoy_events
+#
+#  id         :integer          not null, primary key
+#  visit_id   :integer
+#  account_id :integer
+#  name       :string
+#  properties :jsonb
+#  time       :datetime
+#
+# Indexes
+#
+#  index_ahoy_events_on_account_id         (account_id)
+#  index_ahoy_events_on_name_and_time      (name,time)
+#  index_ahoy_events_on_visit_id_and_name  (visit_id,name)
+#

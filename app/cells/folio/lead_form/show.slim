@@ -2,9 +2,15 @@
   = simple_form_for lead, url: leads_path, html: { class: 'folio-lead-form' } do |f|
     = hidden_options
 
+    - if options[:name]
+      .row
+        .col-sm
+          = f.input :name, label: t('.name')
+
     .row
       .col-sm
         = f.input :email, label: t('.email')
+
       .col-sm
         = f.input :phone, label: t('.phone')
 

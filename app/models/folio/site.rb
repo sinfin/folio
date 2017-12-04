@@ -41,6 +41,8 @@ end
 #  updated_at                     :datetime         not null
 #  google_analytics_tracking_code :string
 #  facebook_pixel_code            :string
+#  social_links                   :json
+#  address                        :text
 #
 # Indexes
 #

@@ -9,6 +9,8 @@ FactoryGirl.define do
     domain { Faker::Internet.domain_name }
     social_links { { 'facebook' => Faker::Internet.url('facebook.com') } }
     address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
+    phone { Faker::PhoneNumber.phone_number }
+    locale :cs
   end
 
   factory :folio_node, class: Folio::Node do

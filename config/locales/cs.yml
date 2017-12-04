@@ -101,6 +101,7 @@ cs:
 
     lead_form:
       email: E-mail
+      name: Jméno
       phone: Telefon
       submit: Odeslat
       note: Zpráva

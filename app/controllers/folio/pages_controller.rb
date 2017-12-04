@@ -10,7 +10,7 @@ module Folio
 
     def show
       if @page.class.view_name
-        render @page.class.view_name and return
+        render(@page.class.view_name) && (return)
       end
     end
 
