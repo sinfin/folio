@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-module Folio
-  class Document < File
-    paginates_per 16
-  end
+class Folio::Document < Folio::File
+  paginates_per 16
 end
 
 # == Schema Information

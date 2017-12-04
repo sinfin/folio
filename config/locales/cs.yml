@@ -22,6 +22,9 @@ cs:
         es: španělština
 
     console:
+      partials:
+        auth_links:
+          logout: Odhlásit
       back: Zpět
       filters:
         query: Vyhledávání...
@@ -31,12 +34,16 @@ cs:
           title: Stránky
           translations: Překlady
           type: Typ
+          featured: Featured
+          published: Publikované
         filters:
           all_nodes: Všechny nody
           all_parents: Všechny kategorie
           published: Jen publikované
           unpublished: Jen rozpracované
           all_types: Všechny typy
+          page: Stránka
+          category: Kategorie
         nodes_table:
           more_nodes: další stránky
         node_row:
@@ -65,9 +72,17 @@ cs:
       files:
         index:
           title: Soubory
+          images: Obrázky
+          documents: Dokumenty
+          id: Id
+          file_name: Název
+          file_size: Velikost
+          tag_list: Tagy
+          file_download: Download
       menus:
         index:
           title: Menu
+          type: Druh
       leads:
         index:
           title: Leads
@@ -133,3 +148,15 @@ cs:
     dismiss: OK
     link: Více informací
     message: Při poskytování služeb nám pomáhají soubory cookie. Používáním naších služeb vyjadřujete souhlas s naším používáním souborů cookie.
+
+  layouts:
+    folio:
+      console:
+        header:
+          nodes: Stránky
+          menus: Menu
+          files: Soubory
+          newsletter_subscriptions: Odběry newsletteru
+          leads: Formuláře
+          visits: Návštěvy
+          users: Uživatelé
