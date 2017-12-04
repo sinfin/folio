@@ -23,6 +23,11 @@ module Folio
       t('.message')
     end
 
+    def button_class
+      return options[:button_class] if options[:button_class]
+      'btn'
+    end
+
     def wrap_class
       base = 'folio-newsletter-subscription-form-wrap'
       base += ' folio-newsletter-subscription-form-submitted' if submitted
@@ -30,7 +35,7 @@ module Folio
     end
 
     def remember_option_keys
-      [:placeholder, :submit_text, :message]
+      [:placeholder, :submit_text, :message, :button_class]
     end
   end
 end

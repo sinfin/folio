@@ -8,7 +8,11 @@ module Folio
 
     before_action :find_page
 
-    def show; end
+    def show
+      if @page.class.view_name
+        render @page.class.view_name and return
+      end
+    end
 
     private
 

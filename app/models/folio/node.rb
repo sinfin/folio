@@ -122,7 +122,7 @@ module Folio
       false
     end
 
-    def self.partial
+    def self.view_name
       false
     end
 

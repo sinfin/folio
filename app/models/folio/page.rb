@@ -5,7 +5,7 @@ class Folio::Page < Folio::Node
     'file-text-o'
   end
 
-  def self.partial
+  def self.view_name
     'folio/pages/show'
   end
 end
