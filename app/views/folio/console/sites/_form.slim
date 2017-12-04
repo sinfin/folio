@@ -11,12 +11,12 @@
     = f.input :google_analytics_tracking_code
     = f.input :facebook_pixel_code
     = f.input :facebook_pixel_code
-    
+
     = f.input :phone
     = f.input :email
     = f.input :address, as: :text
 
+    = render 'additional_form_fields', f: f
+
     = link_to t('console.folio.back'), console_nodes_path, class: 'btn btn-secondary mr-2'
     = f.button :submit
-    
-  

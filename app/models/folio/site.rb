@@ -14,7 +14,12 @@ module Folio
       "#{scheme}://#{self.domain}"
     end
 
+    def self.additional_params
+      []
+    end
+
     private
+
       def scheme
         'http'
       end

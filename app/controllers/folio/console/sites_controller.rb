@@ -25,7 +25,8 @@ module Folio
                                    :phone,
                                    :email,
                                    :address,
-                                   locales: []
+                                   *@site.class.additional_params,
+                                   locales: [],
                                   )
     end
   end
