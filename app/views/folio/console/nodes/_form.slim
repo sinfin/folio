@@ -72,7 +72,7 @@ fieldset
             li.list-group-item = fp.input :caption
             li.list-group-item name='size'
             li.list-group-item name='file_size'
-            li.list-group-item: button.btn.btn-default.remove-file-placement type='button' = t('remove')
+            li.list-group-item: button.btn.btn-default.remove-file-placement type='button' = t('.remove')
           = fp.input_field :file_id, as: :hidden
     .col-12
       a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#images-modal'
@@ -82,9 +82,9 @@ fieldset
   h2 = t('.documents.title')
   table.table
     thead
-      th = t('file_name')
-      th = t('caption')
-      th colspan='2' = t('file_size')
+      th = t('.file_name')
+      th = t('.caption')
+      th colspan='2' = t('.file_size')
     tbody#file-placements-documents data-fp-index=f.object.file_placements.count
       = f.simple_fields_for :file_placements, f.object.file_placements.with_document.ordered do |fp|
         tr
@@ -100,10 +100,10 @@ fieldset
           td = fp.input :caption, label: false
           td name='file_size'
           td
-            button.btn.btn-default.remove-file-placement type='button' = t('remove')
+            button.btn.btn-default.remove-file-placement type='button' = t('.remove')
             = fp.association :file, as: :hidden
   a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#documents-modal'
     = t('.documents.add')
 
-= link_to t('console.folio.back'), console_nodes_path, class: 'btn btn-secondary mr-2'
+= link_to t('folio.console.back'), console_nodes_path, class: 'btn btn-secondary mr-2'
 = f.button :submit

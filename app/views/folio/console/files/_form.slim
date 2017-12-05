@@ -7,7 +7,7 @@
 
     == cell('folio/console/tagsinput', f)
 
-    = link_to t('console.folio.back'), console_files_path, class: 'btn btn-secondary'
+    = link_to t('folio.console.back'), console_files_path, class: 'btn btn-secondary'
     = f.button :submit
   .col-sm-6
     - if f.object.instance_of? Folio::Image
