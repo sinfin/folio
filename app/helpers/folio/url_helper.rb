@@ -15,14 +15,5 @@ module Folio
       original = request.original_fullpath
       !original.match(/^#{path}(\/.*|\?.*)?$/).blank?
     end
-
-    def nested_page_path(page)
-      path = [page]
-      while page.parent
-        path.unshift page.parent.translate
-        page = page.parent
-      end
-      page_path(path)
-    end
   end
 end

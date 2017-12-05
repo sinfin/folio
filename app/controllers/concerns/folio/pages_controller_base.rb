@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio
-  module PagesControllerBsae
+  module PagesControllerBase
     extend ActiveSupport::Concern
 
     included do
@@ -22,11 +22,11 @@ module Folio
         path = params[:path].split('/')
 
         @page = @roots.published.friendly.find path.shift
-        add_breadcrumb @page.title, nested_page_path(@page)
+        add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
 
         path.each do |p|
           @page = @page.children.published.friendly.find p
-          add_breadcrumb @page.title, nested_page_path(@page)
+          add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
         end
 
         # # If an old id or a numeric id was used to find the record, then
