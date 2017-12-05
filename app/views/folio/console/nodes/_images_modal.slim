@@ -19,7 +19,6 @@
             .col-sm-6.col-md-3.col-image
               a.card.bg-light.mb-2.select-file
                 = image_tag '', class: 'card-img img-thumbnail'
-          - @images = Folio::Image.all.page(1).per(11)
           - if @images.present?
             - @images.each do |image|
               .col-sm-6.col-md-3.col-image
@@ -29,7 +28,8 @@
 
         .row
           .col-sm-12
-            #paginate-images = paginate @images, remote: true, params: {controller: 'files', action: 'index', type: 'image', format: :json, id: nil}, theme: 'remote'
+            #paginate-images
+              = render 'modal_pagination', files: @images, type: 'image'
 
       .modal-footer
         button.btn.btn-secondary data-dismiss="modal" type="button"  Close

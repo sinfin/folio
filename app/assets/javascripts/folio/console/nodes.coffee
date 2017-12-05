@@ -1,4 +1,21 @@
 $ ->
+  setPagination = (li, page, total_pages) ->
+    if page >= 6
+      li.prevAll("li.disabled").show()
+    else
+      li.prevAll("li.disabled").hide()
+    if page >= total_pages - 4
+      li.nextAll("li.disabled").hide()
+    else
+      li.nextAll("li.disabled").show()
+
+    li.nextAll("li:not(.disabled)")
+      .add(li.prevAll(':not(.disabled)'))
+      .hide()
+    li.nextAll("li:not(.disabled)").slice(0, 4)
+      .add(li.prevAll("li:not(.disabled)").slice(0, 4))
+      .show();
+
   selectRightForm = (element) ->
     $t = $(element)
     form = $t.find(':selected').data('form')
@@ -29,15 +46,23 @@ $ ->
     # pagination
     $t = $(this)
     $li = $t.parent()
-    $li.parent().find('li.active').removeClass('active')
+    $ul = $li.parent()
+
+    # pagination
+    $ul.find('li.active').removeClass('active')
     $li.addClass('active')
 
+    page = $li.data('page')
+    total_pages = $ul.find('li:not(.disabled)').length
+    setPagination($li, page, total_pages)
+
+    # change images
     $t.closest('.modal-body').find('.row > .col-image')
       .each (index) ->
         $template = $(this)
         image = data[index]
         if image
-          $template.find('a.thumbnail.select-file')
+          $template.find('a.card.select-file')
             .data('file-id', image.id)
             .data('file-filesize', image.file_size)
             .data('file-size', image.size)
@@ -53,8 +78,15 @@ $ ->
     # pagination
     $t = $(this)
     $li = $t.parent()
-    $li.parent().find('li.active').removeClass('active')
+    $ul = $li.parent()
+
+    # pagination
+    $ul.find('li.active').removeClass('active')
     $li.addClass('active')
+
+    page = $li.data('page')
+    total_pages = $ul.find('li:not(.disabled)').length
+    setPagination($li, page, total_pages)
 
     $t.closest('.modal-body').find('tr.select-file:not(.template)')
       .each (index) ->

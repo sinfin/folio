@@ -9,7 +9,7 @@ module Folio
     respond_to :json, only: %i[update set_position]
 
     before_action :find_node, except: [:index, :create, :new, :set_position]
-    before_action :find_files, only: [:new, :edit]
+    before_action :find_files, only: [:new, :edit, :create, :update]
 
     def index
       if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
@@ -79,8 +79,8 @@ module Folio
     end
 
     def find_files
-      # FIXME
-      # moved to modals
+      @images = Folio::Image.all.page(1).per(11)
+      @documents = Folio::Image.all.page(1).per(11)
     end
 
     def filter_params
