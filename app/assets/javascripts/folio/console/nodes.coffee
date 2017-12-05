@@ -14,7 +14,7 @@ $ ->
       .hide()
     li.nextAll("li:not(.disabled)").slice(0, 4)
       .add(li.prevAll("li:not(.disabled)").slice(0, 4))
-      .show();
+      .show()
 
   selectRightForm = (element) ->
     $t = $(element)
@@ -37,7 +37,7 @@ $ ->
 
 
   $(document).on 'cocoon:after-insert', (e, insertedItem) ->
-    selectRightForm($(this).find('select.atom-type-select'))
+    selectRightForm($(insertedItem).find('select.atom-type-select'))
 
   $(document).on 'change', '.atom-type-select', ->
     selectRightForm(this)
@@ -124,21 +124,49 @@ $ ->
       $copy.find('input').each () ->
         $input = $(this)
         $input.prop('disabled', false)
-        $input.attr('id', $input.attr('id').replace(/{{i}}/, "#{index_counter}"))
-        $input.attr('name', $input.attr('name').replace(/{{i}}/, "#{index_counter}"))
-        $input.val($file.data('file-id')) if $input.attr('type') == 'hidden'
+        $input.attr('id', $input.attr('id')
+          .replace(/{{i}}/, "#{index_counter}"))
+        $input.attr('name', $input.attr('name')
+          .replace(/{{i}}/, "#{index_counter}"))
+        if $input.attr('type') == 'hidden'
+          $input.val($file.data('file-id'))
       $copy.find("[name='file_name']").html($file.data('file-filename'))
       $copy.find("[name='file_size']").html($file.data('file-filesize'))
       $copy.find("[name='size']").html($file.data('file-size'))
       $copy.prependTo($target)
       index_counter++
 
+      # FIXME
+      $target.find('.remove-after').hide()
+
+  $(document).on 'show.bs.modal', '#images-modal', (event) ->
+    $button = $(event.relatedTarget)
+    $(this).data('target', $button.closest('.row'))
+
   $(document).on 'hidden.bs.modal', '.modal', (event) ->
     $(this).closest('.modal').find('.select-file.active').removeClass('active')
 
-  $(document).on 'click', '.remove-file-placement', ->
+  $(document).on 'click', '.remove', (event) ->
+    event.preventDefault()
+    $(this).closest('.nested-field').nextAll('.remove-after:first').show()
     $(this).closest('.nested-field').remove()
     index_counter--
+
+  $(document).on 'click', '.btn.destroy', (event) ->
+    event.preventDefault()
+    $button = $(this)
+    $button.find('input[type="hidden"]:first').val(1)
+    $button.closest('.nested-fields').fadeOut(500)
+
+  $(document).on 'click', '.btn.destroy-image', (e) ->
+    e.preventDefault()
+    $button = $(this)
+    $button.find('input[type="hidden"]:first').val(1)
+    $button.closest('.nested-fields').fadeOut(500)
+    $parent = $button.closest('.nested-fields')
+    $parent.fadeOut(500, ->
+      $parent.nextAll('.remove-after:first').show(500)
+    )
 
   # images modal dropzone
   template = document.querySelector('#image-dropzone-template')
@@ -170,8 +198,12 @@ $ ->
         if file.thumbnailUrl
           $template.find('img').attr('src', file.thumbnailUrl)
 
-        $('#image-dropzone-template').parent().children('.col-image:last-child').remove()
-        $('#image-dropzone-template').after($template)
+        $('#image-dropzone-template')
+          .parent()
+          .children('.col-image:last-child')
+          .remove()
+        $('#image-dropzone-template')
+          .after($template)
         return file
       error: (file, message) ->
         $('#dropzone-error').removeClass('hidden')

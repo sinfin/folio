@@ -2,13 +2,10 @@
 
 module Folio
   class Atom < ApplicationRecord
+    include HasAttachments
+
     belongs_to :placement, polymorphic: true
     alias_attribute :node, :placement
-
-    has_many :file_placements, -> { ordered }, class_name: 'Folio::FilePlacement', as: :placement, dependent: :destroy
-    has_many :files, through: :file_placements
-    has_many :images, source: :file, through: :file_placements
-    has_many :documents, source: :file, through: :file_placements
 
     scope :ordered, -> { order(position: :asc) }
 

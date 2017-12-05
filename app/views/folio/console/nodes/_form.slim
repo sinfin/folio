@@ -72,7 +72,7 @@ fieldset
             li.list-group-item = fp.input :caption
             li.list-group-item name='size'
             li.list-group-item name='file_size'
-            li.list-group-item: button.btn.btn-default.remove-file-placement type='button' = t('.remove')
+            li.list-group-item: a.btn.btn-danger.remove href='#' role='button' = t('.remove')
           = fp.input_field :file_id, as: :hidden
     .col-12
       a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#images-modal'
@@ -100,7 +100,7 @@ fieldset
           td = fp.input :caption, label: false
           td name='file_size'
           td
-            button.btn.btn-default.remove-file-placement type='button' = t('.remove')
+            a.btn.btn-danger.remove href='#' role='button' = t('.remove')
             = fp.association :file, as: :hidden
   a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#documents-modal'
     = t('.documents.add')

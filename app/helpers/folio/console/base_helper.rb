@@ -48,6 +48,15 @@ module Folio
       link_to(ico, path, opts).html_safe
     end
 
+    def destroy_button(f, label)
+      link_to '#', class: 'btn btn-danger destroy', role: 'button' do
+        [
+          label,
+          f.hidden_field(:_destroy, value: 0)
+        ].join('').html_safe
+      end
+    end
+
     def locale_to_label(locale, short: false)
       c = ISO3166::Country.new(Folio::LANGUAGES[locale.to_sym])
 
