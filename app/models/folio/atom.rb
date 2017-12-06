@@ -4,8 +4,20 @@ module Folio
   class Atom < ApplicationRecord
     include HasAttachments
 
+    # override in subclasses
+    ALLOWED_MODEL_TYPE = nil
+
+    before_validation do
+      write_attribute(:model_type, 'Artworx::Item') if model_type.nil?
+    end
+
     belongs_to :placement, polymorphic: true
     alias_attribute :node, :placement
+    belongs_to :model, polymorphic: true, optional: true
+
+    accepts_nested_attributes_for :model, allow_destroy: true
+
+    validate :model_type_is_allowed, if: :model_id?
 
     scope :ordered, -> { order(position: :asc) }
 
@@ -25,6 +37,28 @@ module Folio
     def self.form
       false
     end
+
+    # def model_type
+    #   self.class::ALLOWED_MODEL_TYPE
+    # end
+
+    def resource_for_select
+      if self.class::ALLOWED_MODEL_TYPE
+        scopes_for_select_options Object.const_get(self.class::ALLOWED_MODEL_TYPE).all
+      end
+    end
+
+    # override in subclasses
+    def scopes_for_select_options(resource)
+      resource
+    end
+
+    private
+      def model_type_is_allowed
+        if model_type != self.class::ALLOWED_MODEL_TYPE
+          errors.add(:model, 'associated model class not allowed')
+        end
+      end
   end
 end
 

@@ -111,6 +111,7 @@ module Folio
                                                      :_destroy],
                         atoms_attributes: [:id,
                                            :type,
+                                           :model_id,
                                            :content,
                                            :position,
                                            :_destroy,

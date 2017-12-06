@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171204122646) do
+ActiveRecord::Schema.define(version: 20171206084353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,9 @@ ActiveRecord::Schema.define(version: 20171204122646) do
     t.datetime "updated_at", null: false
     t.string "placement_type"
     t.bigint "placement_id"
+    t.string "model_type"
+    t.bigint "model_id"
+    t.index ["model_type", "model_id"], name: "index_folio_atoms_on_model_type_and_model_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 

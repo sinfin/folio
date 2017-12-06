@@ -42,6 +42,11 @@ $ ->
   $(document).on 'change', '.atom-type-select', ->
     selectRightForm(this)
 
+  $(document).on 'change', '.atom-model-select', ->
+    $t = $(this)
+    $textarea = $t.closest('.nested-fields').find('textarea')
+    $textarea.redactor('code.set', $t.find(':selected').data('content'))
+
   $('#paginate-images a').on 'ajax:success', (e, data, status, json) ->
     # pagination
     $t = $(this)
