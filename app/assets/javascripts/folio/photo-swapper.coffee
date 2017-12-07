@@ -12,7 +12,7 @@ window.makeFolioPhotoSwapper = (options) ->
 
     $main.html($img.clone().data('index', index))
 
-  $(document).on 'click', options.main, ->
+  $(document).on 'click', "#{options.main} img", ->
     $img = $(this)
     index = $img.data('index') or 0
 
