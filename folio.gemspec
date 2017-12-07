@@ -52,6 +52,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-selectize', '~> 0.12.4'
   s.add_dependency 'ahoy_matey'
   s.add_dependency 'rails-assets-jquery', '~> 3.2.1'
+  s.add_dependency 'rails-assets-photoswipe'
 
 
   s.add_dependency 'dragonfly'

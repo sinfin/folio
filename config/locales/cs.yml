@@ -14,6 +14,10 @@ cs:
   dragonfly:
     invalid_format: Nepodporovaný formát
   folio:
+    partials:
+      photoswipe:
+        error: '<div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>'
+
     locale:
       languages:
         cs: čeština
