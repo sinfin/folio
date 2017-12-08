@@ -25,7 +25,7 @@
 
     .col-sm-3
       label = t('.image')
-      .row.atom-image data-fp-index=f.object.file_placements.count
+      .row.atom-image
         = f.simple_fields_for :file_placements, f.object.file_placements.with_image do |fp|
           .col-12.nested-fields
             .card

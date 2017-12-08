@@ -114,15 +114,13 @@ $ ->
     else
       $image.addClass('active')
 
-  index_counter = undefined
-
   $(document).on 'click', '.save-modal', ->
     $modal = $(this).closest('.modal')
     $target = $($modal.data('target'))
     $modal.find('.select-file.active').each () ->
       $file = $(this)
       $copy = $target.find('.file-placement-new').clone()
-      index_counter = index_counter || $target.data('fp-index')
+      index_counter = $target.find('.nested-field:not(.file-placement-new)').length
 
       $copy.removeClass('file-placement-new').removeAttr('id hidden')
       $copy.find('img').attr('src', $file.find('img').attr('src'))
@@ -130,7 +128,7 @@ $ ->
         $input = $(this)
         $input.prop('disabled', false)
         $input.attr('id', $input.attr('id')
-          .replace(/{{i}}/, "#{index_counter}"))
+          .replace(/__i__/, "#{index_counter}"))
         $input.attr('name', $input.attr('name')
           .replace(/{{i}}/, "#{index_counter}"))
         if $input.attr('type') == 'hidden'
@@ -139,7 +137,6 @@ $ ->
       $copy.find("[name='file_size']").html($file.data('file-filesize'))
       $copy.find("[name='size']").html($file.data('file-size'))
       $copy.prependTo($target)
-      index_counter++
 
       # FIXME
       $target.find('.remove-after').hide()
@@ -155,7 +152,6 @@ $ ->
     event.preventDefault()
     $(this).closest('.nested-field').nextAll('.remove-after:first').show()
     $(this).closest('.nested-field').remove()
-    index_counter--
 
   $(document).on 'click', '.btn.destroy', (event) ->
     event.preventDefault()
@@ -180,7 +176,6 @@ $ ->
       maxFilesize: 10 # MB
       resizeMethod: 'crop'
       paramName: 'file[file]'
-      # FIXME: enlarge smaller images?
       thumbnailWidth: 250
       thumbnailHeight: 250
       previewTemplate: template.innerHTML
