@@ -18,8 +18,21 @@ $ ->
 
   selectRightForm = (element) ->
     $t = $(element)
+    klass = $t.val()
     form = $t.find(':selected').data('form')
-    $content = $t.closest('.nested-fields').find('.atom-content')
+    $fields = $t.closest('.nested-fields')
+
+    $selects = $fields.find(".atom-model-select:not(.disabled[data-class='#{klass}'])")
+    $selects.addClass('disabled').prop('disabled', true)
+    $selects.parent().addClass('disabled')
+    $selects.parent().hide()
+
+    $selects = $fields.find(".atom-model-select.disabled[data-class='#{klass}']")
+    $selects.removeClass('disabled').prop('disabled', false)
+    $selects.parent().removeClass('disabled')
+    $selects.parent().show()
+
+    $content = $fields.find('.atom-content')
     switch form
       when 'redactor'
         $content.show()

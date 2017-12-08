@@ -10,14 +10,9 @@
 
     .col-sm-9
       - if f.object.class.form != :none
-        - if f.object.class::ALLOWED_MODEL_TYPE.present?
-          = f.association :model,
-            collection: atom_model_collection_for_select(f.object),
-            include_blank: false,
-            input_html: { class: 'atom-model-select' }
-        = f.input :content,
-          wrapper_html: { class: 'atom-content' },
-          input_html: { class: "#{f.object.class.form == :redactor ? 'redactor' : '' }" }
+        = atom_model_field(f)
+        = atom_content_field(f)
+
       - if f.object.id
         == destroy_button(f, t('.remove'))
       - else

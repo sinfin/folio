@@ -99,6 +99,7 @@ en:
 
   atom_names:
     'Folio::Atom::Text': Text
+    'Folio::Atom::PageReference': Page Reference
 
   node_names:
     'Folio::Node': Node

@@ -69,6 +69,7 @@ cs:
 
   atom_names:
     'Folio::Atom::Text': Text
+    'Folio::Atom::PageReference': Odkaz
 
   node_names:
     'Folio::Node': Node

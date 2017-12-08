@@ -8,7 +8,9 @@ module Folio
     ALLOWED_MODEL_TYPE = nil
 
     before_validation do
-      write_attribute(:model_type, 'Artworx::Item') if model_type.nil?
+      if model_type.nil? && self.class::ALLOWED_MODEL_TYPE.present?
+        write_attribute(:model_type, self.class::ALLOWED_MODEL_TYPE)
+      end
     end
 
     belongs_to :placement, polymorphic: true
@@ -37,10 +39,6 @@ module Folio
     def self.form
       false
     end
-
-    # def model_type
-    #   self.class::ALLOWED_MODEL_TYPE
-    # end
 
     def resource_for_select
       if self.class::ALLOWED_MODEL_TYPE
