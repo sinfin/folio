@@ -35,7 +35,7 @@ module Folio
     end
 
     def atom_content_field(f)
-      active = %i[text redactor].include? f.object.class.form
+      active = %i[string redactor].include? f.object.class.form
       f.input :content,
         wrapper_html: {
           class: 'atom-content',
