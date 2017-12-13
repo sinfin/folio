@@ -76,6 +76,10 @@ en:
     errors:
       show:
         back_to_home: back to the homepage
+        error_400:
+          text_line_1: Bad Request.
+          text_line_2: Request cannot be fulfilled due to bad syntax.
+          title: '400'
         error_404:
           text_line_1: The page you are looking for does not exist.
           text_line_2: You entered a wrong URL or the page was moved.
