@@ -133,7 +133,7 @@ $ ->
     $modal.find('.select-file.active').each () ->
       $file = $(this)
       $copy = $target.find('.file-placement-new').clone()
-      index_counter = $target.find('.nested-field:not(.file-placement-new)').length
+      index_counter = Date.now()
 
       $copy.removeClass('file-placement-new').removeAttr('id hidden')
       $copy.find('img').attr('src', $file.find('img').attr('src'))
@@ -203,7 +203,7 @@ $ ->
       success: (file, response) ->
         file.previewElement = Dropzone.createElement(@options.previewTemplate)
         $template = $(file.previewElement)
-        $template.find('a.thumbnail.select-file')
+        $template.find('a.card.select-file')
           .addClass('active')
           .data('file-id', response.id)
           .data('file-filesize', response.file_size)
