@@ -80,7 +80,7 @@ module Folio
 
     def find_files
       @images = Folio::Image.all.page(1).per(11)
-      @documents = Folio::Image.all.page(1).per(11)
+      @documents = Folio::Documents.all.page(1).per(11)
     end
 
     def filter_params
@@ -108,6 +108,7 @@ module Folio
                         file_placements_attributes: [:id,
                                                      :caption,
                                                      :file_id,
+                                                     :position,
                                                      :_destroy],
                         atoms_attributes: [:id,
                                            :type,

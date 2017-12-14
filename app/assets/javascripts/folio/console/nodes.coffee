@@ -48,7 +48,6 @@ $ ->
       when 'none'
         $content.hide()
 
-
   $(document).on 'cocoon:after-insert', (e, insertedItem) ->
     selectRightForm($(insertedItem).find('select.atom-type-select'))
 
@@ -134,6 +133,8 @@ $ ->
       $file = $(this)
       $copy = $target.find('.file-placement-new').clone()
       index_counter = Date.now()
+      $last = $target.children('.nested-fields:not(.file-placement-new)').last()
+      position = Number($last.find('input.position').val()) + 1
 
       $copy.removeClass('file-placement-new').removeAttr('id hidden')
       $copy.find('img').attr('src', $file.find('img').attr('src'))
@@ -145,11 +146,14 @@ $ ->
         $input.attr('name', $input.attr('name')
           .replace(/{{i}}/, "#{index_counter}"))
         if $input.attr('type') == 'hidden'
-          $input.val($file.data('file-id'))
+          if $input.hasClass('position')
+            $input.val(position)
+          else
+            $input.val($file.data('file-id'))
       $copy.find("[name='file_name']").html($file.data('file-filename'))
       $copy.find("[name='file_size']").html($file.data('file-filesize'))
       $copy.find("[name='size']").html($file.data('file-size'))
-      $copy.prependTo($target)
+      $last.after($copy)
 
       # FIXME
       $target.find('.remove-after').hide()
@@ -163,8 +167,8 @@ $ ->
 
   $(document).on 'click', '.remove', (event) ->
     event.preventDefault()
-    $(this).closest('.nested-field').nextAll('.remove-after:first').show()
-    $(this).closest('.nested-field').remove()
+    $(this).closest('.nested-fields').nextAll('.remove-after:first').show()
+    $(this).closest('.nested-fields').remove()
 
   $(document).on 'click', '.btn.destroy', (event) ->
     event.preventDefault()
@@ -181,6 +185,26 @@ $ ->
     $parent.fadeOut(500, ->
       $parent.nextAll('.remove-after:first').show(500)
     )
+
+  $(document).on 'click', '.btn.image.position-up', ->
+    $this_image = $(this).closest('.nested-fields')
+    $that_image = $this_image.prevAll('.nested-fields:first')
+
+    this_pos = $this_image.find('.position').val()
+    that_pos = $that_image.find('.position').val()
+    $that_image.find('.position').val(this_pos)
+    $this_image.find('.position').val(that_pos)
+    $this_image.after($that_image)
+
+  $(document).on 'click', '.btn.image.position-down', ->
+    $this_image = $(this).closest('.nested-fields')
+    $that_image = $this_image.nextAll(".nested-fields:first")
+
+    that_pos = $that_image.find('.position').val()
+    this_pos = $this_image.find('.position').val()
+    $this_image.find('.position').val(that_pos)
+    $that_image.find('.position').val(this_pos)
+    $that_image.after($this_image)
 
   # images modal dropzone
   template = document.querySelector('#image-dropzone-template')
