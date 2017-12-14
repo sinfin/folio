@@ -7,7 +7,7 @@ module Folio
     dragonfly_accessor :file
 
     # Relations
-    has_many :file_placements, class_name: 'Folio::FilePlacement'
+    has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
 
     # Validations
     validates :file, :type, presence: true
