@@ -120,8 +120,7 @@ module Folio
                                                                         :file_id,
                                                                         :_destroy],
                                            ])
-      p.delete(:slug) unless p[:slug].present?
-      p.delete(:password) unless p[:password].present?
+      p[:slug] = nil unless p[:slug].present?
       p
     end
 
