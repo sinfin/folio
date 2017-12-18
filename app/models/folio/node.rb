@@ -126,7 +126,7 @@ module Folio
       false
     end
 
-    def self.allowed_child_type
+    def self.allowed_child_types
       nil
     end
 
@@ -198,8 +198,10 @@ module Folio
 
       # custom Validations
       def allowed_type
-        return if parent.class.allowed_child_type.nil?
-        if self.type != parent.class.allowed_child_type && self.type != 'Folio::NodeTranslation'
+        return if self.type == 'Folio::NodeTranslation'
+        return if parent.class.allowed_child_types.nil?
+
+        if parent.class.allowed_child_types.exclude? self.type
           errors.add(:type, 'is not allowed')
         end
       end

@@ -134,7 +134,10 @@ $ ->
       $copy = $target.find('.file-placement-new').clone()
       index_counter = Date.now()
       $last = $target.children('.nested-fields:not(.file-placement-new)').last()
-      position = Number($last.find('input.position').val()) + 1
+      if $last.length
+        position = Number($last.find('input.position').val()) + 1
+      else
+        position = 0
 
       $copy.removeClass('file-placement-new').removeAttr('id hidden')
       $copy.find('img').attr('src', $file.find('img').attr('src'))
@@ -153,7 +156,10 @@ $ ->
       $copy.find("[name='file_name']").html($file.data('file-filename'))
       $copy.find("[name='file_size']").html($file.data('file-filesize'))
       $copy.find("[name='size']").html($file.data('file-size'))
-      $last.after($copy)
+      if $last.length
+        $last.after($copy)
+      else
+        $copy.prependTo($target)
 
       # FIXME
       $target.find('.remove-after').hide()

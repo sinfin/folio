@@ -17,16 +17,18 @@ module Folio
 
     def new_child_node_button(parent)
       new_button new_console_node_path(parent: parent.id),
-        label: t("node_names.#{parent.class.allowed_child_type || 'Folio::Node'}")
+        label: t("node_names.Folio::Node")
     end
 
     def node_types_for_select(node)
       for_select = []
-      if node.parent && node.parent.class.allowed_child_type
-        for_select << [
-          t("node_names.#{node.parent.class.allowed_child_type}"),
-          node.parent.class.allowed_child_type
-        ]
+      if node && !node.class.allowed_child_types.nil?
+        node.class.allowed_child_types.each do |type|
+          for_select << [
+             t("node_names.#{type}"),
+             type.to_s
+          ]
+        end
       else
         get_subclasses(Folio::Node).flatten.each do |type|
           for_select << [t("node_names.#{type}"), type] if type.view_name

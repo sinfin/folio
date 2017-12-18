@@ -10,7 +10,7 @@ fieldset
       - if f.object.type == 'Folio::NodeTranslation'
         = f.input :type, collection: [[t('node_names.Folio::NodeTranslation'), 'Folio::NodeTranslation']], readonly: true
       - else
-        = f.input :type, collection: node_types_for_select(f.object), include_blank: false
+        = f.input :type, collection: node_types_for_select(f.object.parent), include_blank: false
     .col-sm
       = f.input :parent_id, collection: Folio::Node.arrange_as_array, label_method: :name_depth, value_method: :id, readonly: params[:parent].present?
     .col-sm
@@ -71,7 +71,7 @@ fieldset
                   = fp.input_field :position, as: :hidden, class: 'position'
 
     = f.simple_fields_for :file_placements, Folio::FilePlacement.new, child_index: "{{i}}", defaults: { disabled: true } do |fp|
-      .col-12.col-sm.col-md-4.col-lg-3.nested-fields.file-placement-new hidden=""
+      .col-12.col-sm.col-md-4.col-lg-3.mb-3.nested-fields.file-placement-new hidden=""
         .card
           = image_tag '', class: 'img-responsive card-img-top'
           ul.list-group.list-group-flush

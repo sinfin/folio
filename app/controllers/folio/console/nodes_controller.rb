@@ -31,12 +31,8 @@ module Folio
 
     def new
       if params[:node].blank? || params[:node][:original_id].blank?
-        if params[:parent].present?
-          parent = Folio::Node.find(params[:parent])
-          @node = Folio::Node.new(parent: parent, type: parent.class.allowed_child_type)
-        else
-          @node = Folio::Node.new
-        end
+        parent = Folio::Node.find(params[:parent]) if params[:parent].present?
+        @node = Folio::Node.new(parent: parent, type: params[:type])
       else
         original = Folio::Node.find(params[:node][:original_id])
 
@@ -80,7 +76,7 @@ module Folio
 
     def find_files
       @images = Folio::Image.all.page(1).per(11)
-      @documents = Folio::Documents.all.page(1).per(11)
+      @documents = Folio::Document.all.page(1).per(11)
     end
 
     def filter_params
