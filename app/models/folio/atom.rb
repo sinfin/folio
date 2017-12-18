@@ -13,7 +13,7 @@ module Folio
       end
     end
 
-    belongs_to :placement, polymorphic: true
+    belongs_to :placement, polymorphic: true, optional: true
     alias_attribute :node, :placement
     belongs_to :model, polymorphic: true, optional: true
 
