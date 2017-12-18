@@ -45,4 +45,30 @@ FactoryGirl.define do
     phone { Faker::PhoneNumber.phone_number }
     note { Faker::Lorem.paragraph }
   end
+  
+  factory :folio_admin_account, class: Folio::Account do
+    email 'test@test.com'
+    password '123456'
+    role :superuser
+    first_name 'Test'
+    last_name 'Dummy'
+  end
+  
+  factory :folio_menu, class: Folio::Menu::Header do
+    factory :folio_menu_with_menu_items do
+      transient do
+        posts_count 3
+      end
+
+      after(:create) do |menu, evaluator|
+        create_list(:folio_menu_item, evaluator.posts_count, menu: menu)
+      end
+    end
+  end
+
+  factory :folio_menu_item, class: Folio::MenuItem do
+    association :node, factory: :folio_node
+    title { Faker::Lorem.word }
+    position 0
+  end
 end
