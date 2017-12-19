@@ -35,13 +35,13 @@
             / a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#images-modal'
             /   = t('.change_image')
         = f.simple_fields_for :file_placements, Folio::FilePlacement.new, child_index: "{{i}}", defaults: { disabled: true } do |fp|
-          .col-12.nested-field.file-placement-new hidden=""
+          .col-12.nested-fields.file-placement-new hidden=""
             .card
               = image_tag '', class: 'img-responsive card-img-top'
               ul.list-group.list-group-flush
                 li.list-group-item name='size'
                 li.list-group-item name='file_size'
-                li.list-group-item: a.btn.btn-danger.remove href='#' role='button' = t('.remove')
+                li.list-group-item: a.btn.btn-danger.remove href='#' role='button' = t('.image.remove')
               = fp.input_field :file_id, as: :hidden
         .col-12.remove-after style=('display:none' if f.object.file_placements.with_image.present?)
           .card.bg-light.mb-2

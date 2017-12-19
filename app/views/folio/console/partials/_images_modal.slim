@@ -2,7 +2,7 @@
   .modal-dialog.modal-lg role="document"
     .modal-content
       .modal-header
-        h5.modal-title = t('images')
+        h5.modal-title = t('.images')
         button.close aria-label="Close" data-dismiss="modal" type="button"
           span aria-hidden="true"  &times;
       .modal-body
@@ -11,16 +11,14 @@
             .alert.alert-danger role="alert"
           .col-sm-6.col-md-3
             .card.bg-light.mb-2
-              = simple_form_for(Folio::Image.new, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone', id: 'new_image'}) do |f|
-                = f.input :type, as: :hidden
-                .fallback
-                  = link_to 'Add new files', new_console_file_path
+              #dropzone-new-image.dropzone
+              
           #image-dropzone-template hidden=''
             .col-sm-6.col-md-3.col-image
               a.card.bg-light.mb-2.select-file
                 = image_tag '', class: 'card-img img-thumbnail'
-          - if @images.present?
-            - @images.each do |image|
+          - if images.present?
+            - images.each do |image|
               .col-sm-6.col-md-3.col-image
 
                   a.card.bg-light.mb-2.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
@@ -29,7 +27,7 @@
         .row
           .col-sm-12
             #paginate-images
-              = render 'modal_pagination', files: @images, type: 'image'
+              = render 'folio/console/partials/modal_pagination', files: images, type: 'image'
 
       .modal-footer
         button.btn.btn-secondary data-dismiss="modal" type="button"  Close

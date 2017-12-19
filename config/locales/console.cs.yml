@@ -40,9 +40,6 @@ cs:
           file_size: Velikost
           caption: popisek
           additional_form_fields: Další pole
-          gallery:
-            title: Galerie
-            add: Přidat obrázek
           documents:
             title: Dokumenty
             add: Přidat dokument
@@ -50,6 +47,9 @@ cs:
             title: Atomy
             add: Přidat atom
         atom_fields:
+          image: Obrázek
+          no_image: Bez obrázku
+          add_image: Přidat obrázek
           remove: Odebrat atom
           remove_image: Odebrat obrázek
 
@@ -84,5 +84,11 @@ cs:
       visits:
         index:
           title: Visits
+      
+      partials:
+        images_fieldset:
+          title: Galerie
+          add: Přidat obrázek
+          remove: Odebrat
 
       really_delete: Jste si jist, že chcete smazat %{title}?

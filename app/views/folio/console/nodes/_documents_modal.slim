@@ -29,7 +29,7 @@
                     td name='file_size' = number_to_human_size document.file_size
           .col-sm-12
             #paginate-documents
-              = render 'modal_pagination', files: @documents, type: 'document'
+              = render 'folio/console/partials/modal_pagination', files: @documents, type: 'document'
 
       .modal-footer
         button.btn.btn-secondary data-dismiss="modal" type="button"  Close

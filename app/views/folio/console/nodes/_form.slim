@@ -51,45 +51,7 @@ fieldset#atoms
   .links
     = link_to_add_association t('.node.add_atom'), f, :atoms, class: 'btn btn-success'
 
-fieldset
-  h2 = t('.gallery.title')
-  .row#file-placements-images
-    = f.simple_fields_for :file_placements, f.object.file_placements.with_image.ordered do |fp|
-      .col-12.col-sm.col-md-4.col-lg-3.mb-3.nested-fields
-        .card
-          = image_tag fp.object.file.file.thumb('250x250#').url, class: 'img-responsive card-img-top'
-          ul.list-group.list-group-flush
-            li.list-group-item = fp.input :caption
-            li.list-group-item = "#{fp.object.file.file_width} × #{fp.object.file.file_height}px"
-            li.list-group-item = number_to_human_size fp.object.file.file_size
-            li.list-group-item
-              .row
-                .col = fp.input :_destroy, as: :boolean
-                .col.text-right
-                  .btn.btn-outline-secondary.ml-2.image.position-up = icon 'arrow-left'
-                  .btn.btn-outline-secondary.ml-2.image.position-down = icon 'arrow-right'
-                  = fp.input_field :position, as: :hidden, class: 'position'
-
-    = f.simple_fields_for :file_placements, Folio::FilePlacement.new, child_index: "{{i}}", defaults: { disabled: true } do |fp|
-      .col-12.col-sm.col-md-4.col-lg-3.mb-3.nested-fields.file-placement-new hidden=""
-        .card
-          = image_tag '', class: 'img-responsive card-img-top'
-          ul.list-group.list-group-flush
-            li.list-group-item = fp.input :caption
-            li.list-group-item name='size'
-            li.list-group-item name='file_size'
-            li.list-group-item
-              .row
-                .col
-                  a.btn.btn-danger.remove href='#' role='button' = t('.remove')
-                .col.text-right
-                  .btn.btn-outline-secondary.ml-2.image.position-up = icon 'arrow-left'
-                  .btn.btn-outline-secondary.ml-2.image.position-down = icon 'arrow-right'
-                  = fp.input_field :position, as: :hidden, class: 'position'
-          = fp.input_field :file_id, as: :hidden
-    .col-12
-      a.btn.btn-success href='#' role='button' data-toggle='modal' data-target='#images-modal'
-        = t('.gallery.add')
+= render 'folio/console/partials/images_fieldset', f: f, images: @images
 
 fieldset
   h2 = t('.documents.title')
