@@ -59,12 +59,16 @@ fieldset
     thead
       th = t('.file_name')
       th = t('.caption')
+      - if Folio::FilePlacement.tags_for_select.present?
+        th = t('.tag')
       th colspan='2' = t('.file_size')
     tbody#file-placements-documents
       = f.simple_fields_for :file_placements, f.object.file_placements.with_document.ordered do |fp|
         tr.nested-fields
           td = fp.object.file.file_name
           td = fp.input :caption, label: false
+          - if Folio::FilePlacement.tags_for_select.present?
+            td = fp.input :tag_list, as: :select, collection: Folio::FilePlacement.options_for_tag_select, label: false
           td = number_to_human_size fp.object.file.file_size
           td
             = fp.input :_destroy, as: :boolean

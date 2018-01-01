@@ -2,14 +2,47 @@
 
 module Folio
   class FilePlacement < ApplicationRecord
+    include Taggable
+
     # Relations
     belongs_to :file, class_name: 'Folio::File'
     belongs_to :placement, polymorphic: true
+
+    # only one tag allowed
+    validate :allowed_tag
 
     # Scopes
     scope :with_image,    -> { joins(:file).where("folio_files.type = 'Folio::Image'") }
     scope :with_document, -> { joins(:file).where("folio_files.type = 'Folio::Document'") }
     scope :ordered,       -> { order(position: :asc) }
+
+    # Override in main app
+    def self.tags_for_select
+      []
+    end
+
+    def self.options_for_tag_select
+      self.tags_for_select.map do |tag|
+        [I18n.t("folio.file_placement.tags.#{tag}"), tag]
+      end
+    end
+
+    # FIXME acts as taggable bug: tag_list_changed? doesn't work :(
+    def tag_list=(values)
+      updated_at_will_change! if self.file.type == 'Folio::Document'
+      super(values)
+    end
+
+    private
+      def allowed_tag
+        if self.tag_list.present?
+          errors.add(:model, 'only one tag is allowed') if self.tag_list.count != 1
+
+          if Folio::FilePlacement.tags_for_select.exclude?(self.tag_list.first)
+            errors.add(:model, 'is not included in tags_for_select list')
+          end
+        end
+      end
   end
 end
 

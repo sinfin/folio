@@ -36,9 +36,10 @@ cs:
             title: Obsah
             add_atom: Přidat atom
           remove: odebrat
-          file_name: název souboru
+          file_name: Název souboru
           file_size: Velikost
-          caption: popisek
+          caption: Popisek
+          tag: Tag
           additional_form_fields: Další pole
           documents:
             title: Dokumenty

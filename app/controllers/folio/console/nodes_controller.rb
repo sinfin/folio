@@ -103,6 +103,7 @@ module Folio
                         *@node.additional_params,
                         file_placements_attributes: [:id,
                                                      :caption,
+                                                     :tag_list,
                                                      :file_id,
                                                      :position,
                                                      :_destroy],
