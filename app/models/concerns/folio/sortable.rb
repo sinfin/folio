@@ -4,25 +4,22 @@ module Folio
   module Sortable
     extend ActiveSupport::Concern
 
-    module ClassMethods
-      # FIXME: whitelist columns
-      # TODO: prefer scopes
-      def user_sort(column, descending)
-        if column
-          method = "order_by_#{column}"
-          direction = descending ? :desc : :asc
+    included do
+      def self.sortable_by(*args)
+        if args.map { |a| !a.is_a? Symbol }.any?
+          raise ArgumentError.new('Only symbols are allowed')
+        end
 
-          if respond_to?(method)
-            order("coalesce(#{column}, -1) #{direction}")
+        args.each do |column|
+          if self.columns_hash[column.to_s].type == :integer
+            scope :"sort_by_#{column}", -> (direction = :asc) {
+              order("coalesce(#{column}, -1) #{direction}")
+            }
           else
-            if column =~ /at|order_number$/
+            scope :"sort_by_#{column}", -> (direction = :asc) {
               order(column => direction)
-            else
-              order("coalesce(#{column}, 0) #{direction}")
-            end
+            }
           end
-        else
-          where(nil)
         end
       end
     end
