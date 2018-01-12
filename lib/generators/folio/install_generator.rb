@@ -65,13 +65,13 @@ module Folio
           'app/assets/stylesheets/application.sass',
           'app/assets/stylesheets/modules/.keep',
           'app/assets/stylesheets/modules/_turbolinks.sass',
-          'app/controllers/application_controller.rb'
-          'app/controllers/pages_controller.rb'
+          'app/controllers/application_controller.rb',
+          'app/controllers/pages_controller.rb',
           'bin/bower',
           'config/secrets.yml',
           'config/initializers/assets.rb',
           'config/initializers/folio.rb',
-          'config/routes.rb'
+          'config/routes.rb',
           'lib/application_cell.rb',
           'vendor/assets/bower_components/.keep',
           'test/test_helper.rb',
