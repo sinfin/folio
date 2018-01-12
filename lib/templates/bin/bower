@@ -1,0 +1,2 @@
+#!/bin/bash
+( cd vendor/assets || exit; bower "$@" )

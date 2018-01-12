@@ -1,0 +1,51 @@
+=mq-xs
+  @media screen and (max-width: breakpoint-max(xs))
+    @content
+
+=mq-sm
+  @media screen and (max-width: breakpoint-max(sm))
+    @content
+
+=mq-sm-only
+  @media screen and (max-width: breakpoint-max(sm)) and (min-width: breakpoint-min(sm))
+    @content
+
+=mq-sm-up
+  @media screen and (min-width: breakpoint-min(sm))
+    @content
+
+=mq-md
+  @media screen and (max-width: breakpoint-max(md))
+    @content
+
+=mq-md-only
+  @media screen and (max-width: breakpoint-max(md)) and (min-width: breakpoint-min(md))
+    @content
+
+=mq-md-up
+  @media screen and (min-width: breakpoint-min(md))
+    @content
+
+=mq-lg
+  @media screen and (max-width: breakpoint-max(lg))
+    @content
+
+=mq-lg-only
+  @media screen and (max-width: breakpoint-max(lg)) and (min-width: breakpoint-min(lg))
+    @content
+
+=mq-lg-up
+  @media screen and (min-width: breakpoint-min(lg))
+    @content
+
+=mq-xl-up
+  @media screen and (min-width: breakpoint-min(xl))
+    @content
+
+=mq-mobile-menu
+  +mq-md
+    @content
+
+=mq-desktop-menu
+  +mq-lg-up
+    @content

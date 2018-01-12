@@ -1,0 +1,4 @@
+<% base = Rails.root.join('app/cells') %>
+<% Dir.glob("#{base}/**/*.sass").each do |file| %>
+@import '<%= file.gsub("#{base}/", '') %>';
+<% end %>

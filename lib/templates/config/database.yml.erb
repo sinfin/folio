@@ -1,0 +1,29 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  database: <%= project_name %>_development
+
+test:
+  <<: *default
+  database: <%= project_name %>_test
+
+staging:
+  <<: *default
+  database: <%= project_name %>_staging
+
+production:
+  username: <%= ENV['DB_USER'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  adapter: postgresql
+  host: <%= ENV['DB_HOST'] %>
+  port: 5432
+  database: <%= project_name %>_production
+  encoding: utf8
+  collation: cs_CZ.UTF8
+  min_messages: warning
+  pool: 10
+  timeout: 3000
