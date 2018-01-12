@@ -3,18 +3,6 @@ h1
   '
   = t('.title')
 
-/ = filter_form({}, class: 'form-horizontal') do
-  .form-group
-    .col-md-2
-      = query_field t('folio.console.filters.query')
-    .col-md-2
-      = tag_filter_select Folio::Menu
-    .col-md-2
-      = custom_options_for_select(Folio::Menu,:by_published,[[t('.all_nodes'), nil], [t('.published'), 'published'], [t('.unpublished'), 'unpublished']])
-    .col-md-2
-      = custom_options_for_select(Folio::Menu,:by_type,[[t('.all_types'), nil],[t('.page'), 'page'],[t('.category'), 'category']])
-
-
 .table-responsive
   table.table.table-striped.align-middle
     thead
@@ -29,6 +17,3 @@ h1
           td = menu.type
           td.text-right = edit_button menu, edit_console_menu_path(menu.id)
           td.text-right = delete_button menu, console_menu_path(menu.id)
-
-
-      / = paginate @accounts

@@ -18,5 +18,7 @@
 
     = render 'additional_form_fields', f: f
 
-    = link_to t('folio.console.back'), console_nodes_path, class: 'btn btn-secondary mr-2'
+    = link_to t('folio.console.back'), \
+              console_nodes_path, \
+              class: 'btn btn-secondary mr-2'
     = f.button :submit

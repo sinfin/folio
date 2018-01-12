@@ -7,6 +7,6 @@ $ ->
       imageUploadParam: 'file[file]'
       imageUploadForms: "input[name='authenticity_token']"
       imageUploadFields:
-            'file[type]': 'Folio::Image'
+        'file[type]': 'Folio::Image'
       imageUpload: '/console/files.json'
       imageManagerJson: '/console/files.json?type=image'

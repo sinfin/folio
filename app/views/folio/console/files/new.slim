@@ -1,9 +1,15 @@
 .row
   .col-sm-12
-    = simple_form_for(@file, as: :file, url: console_files_path, html: { multiple: true, class: 'form-vertical dropzone' }) do |f|
+    = simple_form_for(@file, as: :file, \
+                             url: console_files_path, \
+                             html: { \
+                               multiple: true, \
+                               class: 'form-vertical dropzone' \
+                             }) do |f|
       = f.input :type, as: :hidden
+
       .fallback
         = f.file_field :file
-            
         = f.submit
+
     = link_to "back", console_files_path

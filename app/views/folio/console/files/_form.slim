@@ -1,14 +1,18 @@
 .row
   .col-sm-6
     = f.input :type, as: :hidden
-    -if f.object.file.present?
+    - if f.object.file.present?
       = link_to f.object.file_name, f.object.file.url
     = f.input :file, as: :file
 
     == cell('folio/console/tagsinput', f)
 
-    = link_to t('folio.console.back'), console_files_path, class: 'btn btn-secondary'
+    = link_to t('folio.console.back'), \
+              console_files_path, \
+              class: 'btn btn-secondary'
     = f.button :submit
+
   .col-sm-6
     - if f.object.instance_of? Folio::Image
-      = image_tag f.object.file.thumb('500x500').url, class: 'img-responsive thumbnail'
+      = image_tag f.object.file.thumb('500x500').url, \
+                  class: 'img-responsive thumbnail'

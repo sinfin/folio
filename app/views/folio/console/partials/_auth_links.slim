@@ -1,4 +1,5 @@
-/ li
-  = link_to t('.profile'), ''
 li.nav-item
-  = link_to t('.logout', user: current_admin.email), destroy_account_session_path, method: :delete, class: 'nav-link'
+  = link_to t('.logout', user: current_admin.email), \
+            destroy_account_session_path, \
+            method: :delete, \
+            class: 'nav-link'

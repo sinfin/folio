@@ -3,10 +3,14 @@
     h1 = @node.title
   .col-sm-12
     ul.nav.nav-tabs
-      = nav_item_link_to locale_to_label(@node.original.locale), edit_console_node_path(@node.original.id)
+      = nav_item_link_to(locale_to_label(@node.original.locale), \
+                         edit_console_node_path(@node.original.id))
       - @node.translations.find_each do |translation|
-        = nav_item_link_to locale_to_label(translation.locale), edit_console_node_path(translation.id)
+        = nav_item_link_to(locale_to_label(translation.locale), \
+                           edit_console_node_path(translation.id))
 
-= simple_form_for(@node, as: :node, url: console_node_path(@node.id), html: { class: 'form-vertical' }) do |f|
+= simple_form_for(@node, as: :node, \
+                         url: console_node_path(@node.id), \
+                         html: { class: 'form-vertical' }) do |f|
   = render 'form', f: f
 = render 'documents_modal'

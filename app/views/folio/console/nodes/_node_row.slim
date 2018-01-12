@@ -2,7 +2,9 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   = hidden_field_tag 'node[id]', node.id
   td
     - if tree
-      = fa_icon node.console_caret_icon, class: 'mr-2', style: "margin-left:#{node.depth * 2}rem"
+      = fa_icon node.console_caret_icon, \
+                class: 'mr-2', \
+                style: "margin-left:#{node.depth * 2}rem"
     = link_to node.title, edit_console_node_path(node.id)
     - unless tree
       li.small == node_breadcrumbs(node.ancestors)
@@ -12,28 +14,49 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
         = hidden_field_tag 'node[id]', node.id
         = hidden_field_tag 'node[position]', node.position
         .btn-group role="group" style="margin-left:#{node.depth * 2}rem"
-          .btn.btn-sm.btn-outline-secondary.node.position-up = fa_icon 'arrow-up'
-          .btn.btn-sm.btn-outline-secondary.node.position-down = fa_icon 'arrow-down'
+          .btn.btn-sm.btn-outline-secondary.node.position-up
+            = fa_icon 'arrow-up'
+          .btn.btn-sm.btn-outline-secondary.node.position-down
+            = fa_icon 'arrow-down'
       - else
-        = link_to console_nodes_path(by_parent: node.parent.id), class: 'btn btn-sm btn-outline-secondary node position-up', role: 'button' do
+        = link_to console_nodes_path(by_parent: node.parent.id), \
+                  class: 'btn btn-sm btn-outline-secondary node position-up', \
+                  role: 'button' do
           = fa_icon 'arrow-up', class: 'mr-1'
           = fa_icon 'arrow-down'
   td
     - node.site.locales.each do |locale|
       - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
-        = link_to locale_to_label(locale, short: true), edit_console_node_path(node.node_translations.find_by(locale: locale).id), class: 'mr-2'
+        - translation_id = node.node_translations.find_by(locale: locale).id
+        - path = edit_console_node_path(translation_id)
+        = link_to locale_to_label(locale, short: true), \
+                  path, \
+                  class: 'mr-2'
       - else
-        = link_to locale_to_label(locale, short: true), new_console_node_path('node[locale]': locale, 'node[original_id]': node.id), class: 'inactive mr-2', rel: :nofollow, data: { confirm: t('.new.confirm', language: locale)}
+        - path = new_console_node_path('node[locale]': locale, \
+                                       'node[original_id]': node.id)
+        = link_to locale_to_label(locale, short: true), \
+                  path, \
+                  class: 'inactive mr-2', \
+                  rel: :nofollow, \
+                  data: { confirm: t('.new.confirm', language: locale)}
 
   td = t("node_names.#{node.type}")
   td
-    = form_with(model: node, scope: :node, url: console_node_path(node.id, format: :json), class: 'featured') do |f|
-      = f.hidden_field :featured, value: !node.featured, data: { attribute: 'featured'}
+    = form_with(model: node, \
+                scope: :node, \
+                url: console_node_path(node.id, format: :json), \
+                class: 'featured') do |f|
+      = f.hidden_field :featured, value: !node.featured, \
+                                  data: { attribute: 'featured'}
       = featured_button(node.featured)
   / td = node.ancestry
   td
-    = form_with(model: node, scope: :node, url: console_node_path(node.id, format: :json), class: 'published') do |f|
-      = f.hidden_field :published, value: !node.published, data: { attribute: 'published'}
+    = form_with(model: node, scope: :node, \
+                             url: console_node_path(node.id, format: :json), \
+                             class: 'published') do |f|
+      = f.hidden_field :published, value: !node.published, \
+                                   data: { attribute: 'published'}
       = published_button(node.published)
   td
     - if node.published_at.present?

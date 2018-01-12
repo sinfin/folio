@@ -3,7 +3,9 @@ html lang=I18n.locale
   head
     = render partial: 'layouts/folio/head'
 
-  body class=(flash.present? ? 'cms-with-flash-messages' : 'cms-no-flash-messages')
+  body[
+    class=(flash.present? ? 'cms-with-flash-messages' : 'cms-no-flash-messages')
+  ]
 
     = render partial: "folio/partials/header"
 
@@ -11,10 +13,6 @@ html lang=I18n.locale
 
     = render partial: "folio/partials/footer"
 
-
     = javascript_include_tag 'folio/application'
 
     = yield :javascripts
-
-
-    / = partial 'partials/cookie_consent'

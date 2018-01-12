@@ -17,7 +17,7 @@ module Folio
 
     def new_child_node_button(parent)
       new_button new_console_node_path(parent: parent.id),
-        label: t("node_names.Folio::Node")
+        label: t('node_names.Folio::Node')
     end
 
     def node_types_for_select(node)

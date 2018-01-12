@@ -45,7 +45,7 @@ FactoryGirl.define do
     phone { Faker::PhoneNumber.phone_number }
     note { Faker::Lorem.paragraph }
   end
-  
+
   factory :folio_admin_account, class: Folio::Account do
     email 'test@test.com'
     password '123456'
@@ -53,7 +53,7 @@ FactoryGirl.define do
     first_name 'Test'
     last_name 'Dummy'
   end
-  
+
   factory :folio_menu, class: Folio::Menu::Header do
     factory :folio_menu_with_menu_items do
       transient do

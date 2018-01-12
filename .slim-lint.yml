@@ -1,3 +1,6 @@
 linters:
   RuboCop:
     enabled: false
+
+exclude:
+  - 'app/cells/folio/cookie_consent/show.slim' # long URL in script tag

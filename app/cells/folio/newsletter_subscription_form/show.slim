@@ -1,6 +1,10 @@
 div class=wrap_class
-  = simple_form_for newsletter_subscription, url: newsletter_subscriptions_path, html: { class: 'folio-newsletter-subscription-form' } do |f|
-    = f.input :email, label: t('.email'), input_html: { placeholder: options[:placeholder] }
+  = simple_form_for newsletter_subscription, \
+                    url: newsletter_subscriptions_path, \
+                    html: { class: 'folio-newsletter-subscription-form' } do |f|
+
+    = f.input :email, label: t('.email'), \
+                      input_html: { placeholder: options[:placeholder] }
 
     = hidden_options
 

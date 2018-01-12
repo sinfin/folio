@@ -1,4 +1,11 @@
-#images-modal.modal.fade aria-hidden="true" aria-labelledby="images-modal" role="dialog" tabindex="-1" data-file-placement-id="0" data-target="#file-placements-images"
+#images-modal.modal.fade[
+  aria-hidden="true"
+  aria-labelledby="images-modal"
+  role="dialog"
+  tabindex="-1"
+  data-file-placement-id="0"
+  data-target="#file-placements-images"
+]
   .modal-dialog.modal-lg role="document"
     .modal-content
       .modal-header
@@ -12,7 +19,7 @@
           .col-sm-6.col-md-3
             .card.bg-light.mb-2
               #dropzone-new-image.dropzone
-              
+
           #image-dropzone-template hidden=''
             .col-sm-6.col-md-3.col-image
               a.card.bg-light.mb-2.select-file
@@ -20,15 +27,22 @@
           - if images.present?
             - images.each do |image|
               .col-sm-6.col-md-3.col-image
-
-                  a.card.bg-light.mb-2.select-file data-file-id=image.id data-file-filesize=number_to_human_size(image.file_size) data-file-size="#{image.file_width} × #{image.file_height}px"
-                    = image_tag image.file.thumb('250x250#').url, class: 'card-img img-thumbnail'
+                - size = "#{image.file_width} × #{image.file_height}px"
+                a.card.bg-light.mb-2.select-file[
+                  data-file-id=image.id
+                  data-file-filesize=number_to_human_size(image.file_size)
+                  data-file-size=size
+                ]
+                  = image_tag image.file.thumb('250x250#').url, \
+                              class: 'card-img img-thumbnail'
 
         .row
           .col-sm-12
             #paginate-images
-              = render 'folio/console/partials/modal_pagination', files: images, type: 'image'
+              = render 'folio/console/partials/modal_pagination', \
+                       files: images, \
+                       type: 'image'
 
       .modal-footer
-        button.btn.btn-secondary data-dismiss="modal" type="button"  Close
-        button.btn.btn-success.save-modal data-dismiss="modal" type="button"  Add
+        button.btn.btn-secondary data-dismiss="modal" type="button" Close
+        button.btn.btn-success.save-modal data-dismiss="modal" type="button" Add
