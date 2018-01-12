@@ -16,7 +16,7 @@ module Folio
         gem 'cells-slim'
         gem 'route_translator'
         gem 'breadcrumbs_on_rails'
-        gem 'pg'
+        gem 'pg', version: '~> 0.21.0'
 
         gem_group :development do
           gem 'rbnacl', version: '< 5.0'
