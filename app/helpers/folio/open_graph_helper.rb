@@ -11,7 +11,11 @@ module Folio
     end
 
     def og_image
-      @og_image || image_url('fb-share.jpg')
+      begin
+        @og_image || image_url('fb-share.jpg')
+      rescue Sprockets::Rails::Helper::AssetNotFound
+        nil
+      end
     end
 
     def og_image_width
