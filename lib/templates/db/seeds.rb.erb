@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+Folio::Account.destroy_all
+Folio::Atom.destroy_all
+Folio::Node.destroy_all
+Folio::Site.destroy_all
+
+paragraph = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+
+def unsplash_pic(square = false)
+  image = Folio::Image.new
+  image.file_url = 'https://unsplash.it/2560/#{square ? 2560 : 1440}/?random'
+  image.save!
+  image
+end
+
+Folio::Account.create!(email: 'test@test.test',\
+                       password: 'test@test.test',
+                       role: :superuser,
+                       first_name: 'Test',
+                       last_name: 'Dummy')
+
+site = Folio::Site.new(title: '<%= project_name %>',
+                       domain: '<%= project_name %>.localhost',
+                       locale: 'cs',
+                       locales: [],
+                       email: 'foo@bar.baz',
+                       phone: '+420 123 456 789',
+                       social_links: {
+                         facebook: 'https://www.facebook.com/<%= project_name %>/',
+                         google_map: 'https://www.google.com/maps',
+                       },
+                       address: "foo 123\n123 45 bar")
+site.save!

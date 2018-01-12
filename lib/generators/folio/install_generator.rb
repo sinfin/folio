@@ -29,19 +29,32 @@ module Folio
           gem 'rubocop-rails'
           gem 'guard-rubocop'
           gem 'guard-coffeelint'
+          gem 'guard-slimlint'
           gem 'faker'
           gem 'factory_girl_rails', version: '~> 4.8.0'
           gem 'annotate'
         end
       end
 
+      def rm_original_assets
+        [
+          'app/assets/stylesheets/application.css',
+          'app/views/layouts/application.html.erb',
+        ].each do |path|
+          full_path = Rails.root.join(path)
+          File.delete(full_path) if File.exist?(full_path)
+        end
+      end
+
       def copy_templates
         [
           '.env.sample',
+          'app/views/layouts/application.slim',
           'bin/sprites',
           'config/sitemap.rb',
           'config/schedule.rb',
           'config/database.yml',
+          'db/seeds.rb',
           'vendor/assets/bower.json',
         ].each { |f| template "#{f}.erb", f }
 
@@ -67,6 +80,9 @@ module Folio
           'app/assets/stylesheets/modules/_turbolinks.sass',
           'app/controllers/application_controller.rb',
           'app/controllers/pages_controller.rb',
+          'app/controllers/home_controller.rb',
+          'app/views/home/index.slim',
+          'app/views/pages/show.slim',
           'bin/bower',
           'config/secrets.yml',
           'config/initializers/assets.rb',
@@ -74,7 +90,11 @@ module Folio
           'config/routes.rb',
           'lib/application_cell.rb',
           'vendor/assets/bower_components/.keep',
+          'vendor/assets/redactor/redactor.css',
+          'vendor/assets/redactor/redactor.js',
+          'test/factories.rb',
           'test/test_helper.rb',
+          'test/controllers/home_controller_test.rb',
         ].each { |f| copy_file f, f }
       end
 
