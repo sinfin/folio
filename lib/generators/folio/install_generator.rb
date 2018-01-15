@@ -115,6 +115,15 @@ module Folio
         route "mount Folio::Engine => '/'"
       end
 
+      def chmod_files
+        [
+          'bin/bower',
+          'bin/sprites'
+        ].each do |file|
+          File.chmod(775, Rails.root.join(file))
+        end
+      end
+
       private
 
         def project_name
