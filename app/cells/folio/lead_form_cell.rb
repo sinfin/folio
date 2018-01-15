@@ -18,13 +18,18 @@ module Folio
       model.note if model
     end
 
+    def note_label
+      return options[:note_label] if options[:note_label]
+      t('.note') if model
+    end
+
     def message
       return options[:message] if options[:message]
       t('.message')
     end
 
     def remember_option_keys
-      [:note, :message, :name]
+      [:note, :message, :name, :note_label]
     end
   end
 end

@@ -22,7 +22,7 @@ module Folio
       def cell_options_params
         cell_options = params[:cell_options]
         if cell_options
-          cell_options.permit(:note, :message, :name)
+          cell_options.permit(:note, :message, :name, :note_label)
         else
           nil
         end
