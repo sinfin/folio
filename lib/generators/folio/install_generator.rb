@@ -42,7 +42,7 @@ module Folio
           'app/views/layouts/application.html.erb',
         ].each do |path|
           full_path = Rails.root.join(path)
-          File.delete(full_path) if File.exist?(full_path)
+          File.delete(full_path) if File.exists?(full_path)
         end
       end
 
@@ -96,6 +96,8 @@ module Folio
           'test/test_helper.rb',
           'test/controllers/home_controller_test.rb',
         ].each { |f| copy_file f, f }
+
+        copy_file Folio::Engine.root.join('.ruby-version'), '.ruby-version'
       end
 
       def application_settings
@@ -120,7 +122,7 @@ module Folio
           'bin/bower',
           'bin/sprites'
         ].each do |file|
-          File.chmod(775, Rails.root.join(file))
+          File.chmod(0775, Rails.root.join(file))
         end
       end
 
