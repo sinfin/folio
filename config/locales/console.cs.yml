@@ -107,3 +107,6 @@ cs:
       newsletter_subscriptions:
         index:
           title: Odběry newsletteru
+
+      footer:
+        text: Administrace webu %{site_name}.

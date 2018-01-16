@@ -10,10 +10,11 @@ html lang=I18n.locale
 
     = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
 
-    .container-fluid
-      = yield
+    .folio-console-layout-main
+      .container-fluid
+        = yield
 
-    = render partial: 'layouts/folio/console/footer'
+    == cell('folio/console/footer', @site)
 
     = javascript_include_tag 'folio/console/base'
     = yield :javascripts

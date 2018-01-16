@@ -1,9 +1,7 @@
 .row
   .col-6
-    h1
-      = icon('envelope-o')
-      '
-      = t('.title')
+    h1 = t('.title')
+
   .col
     = filter_form(console_newsletter_subscriptions_path) do
       .form-row

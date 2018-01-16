@@ -1,9 +1,7 @@
 .row
   .col.mr-auto
-    h1
-      = icon('file-text-o')
-      '
-      = t('.title')
+    h1 = t('.title')
+
   .col-auto
     = filter_form({}) do
       = render partial: 'filters'

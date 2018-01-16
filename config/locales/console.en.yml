@@ -32,3 +32,6 @@ en:
       newsletter_subscriptions:
         index:
           title: Newsletter subscriptions
+
+      footer:
+        text: Administration console for %{site_name}.

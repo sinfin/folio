@@ -4,8 +4,11 @@ module Folio
   class Console::SitesController < Console::BaseController
     # before_action :find_site
 
+    def index
+      redirect_to console_root_path
+    end
+
     def edit
-      add_breadcrumb(@site.title, console_site_path(@site))
     end
 
     def update

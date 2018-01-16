@@ -1,5 +1,8 @@
 nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-  a.navbar-brand href=console_dashboard_index_path = @site.title
+  a.navbar-brand href=console_dashboard_index_path
+    i.fa.fa-lock.fa-mr
+    = @site.title
+
   button.navbar-toggler[
     aria-controls="navbarSupportedContent"
     aria-expanded="false"
@@ -27,7 +30,9 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       li.divider role="separator"
 
     ul.nav.navbar-nav.navbar-right
-      li.nav-item = link_to t('folio.site.settings.title'), \
-                            edit_console_site_path(@site), \
-                            class: 'nav-link'
+      li.nav-item
+        = link_to edit_console_site_path(@site), class: 'nav-link'
+          i.fa.fa-cogs.fa-mr
+          = t('folio.site.settings.title')
+
       = render 'folio/console/partials/auth_links'
