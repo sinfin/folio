@@ -11,8 +11,7 @@ html lang=I18n.locale
     = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
 
     .folio-console-layout-main
-      .container-fluid
-        = yield
+      = yield
 
     == cell('folio/console/footer', @site)
 

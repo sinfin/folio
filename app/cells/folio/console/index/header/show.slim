@@ -1,0 +1,24 @@
+.folio-console-index-header.row.align-items-center
+  .col
+    h1 = model
+
+  .col
+    = form
+      .input-group
+        = input
+
+        - if controller.params[:by_query].present?
+          .input-group-append
+            button.btn.btn-outline.text-danger[
+              type="submit"
+              data-target=".folio-console-by-query"
+              data-change-value=""
+            ]
+              .fa.fa-close
+
+        .input-group-append
+          button.btn.btn-outline type="submit"
+            .fa.fa-search
+
+      - [:by_parent, :by_published, :by_type, :by_tag].each do |key|
+        = hidden_field_tag key, controller.params[key]

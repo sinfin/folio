@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+class Folio::Console::Index::HeaderCell < FolioCell
+  def input
+    text_field_tag :by_query, controller.params[:by_query],
+                   class: 'form-control folio-console-by-query',
+                   placeholder: t('.by_query')
+  end
+
+  def form(&block)
+    opts = {
+      method: :get,
+      'data-auto-submit': true,
+    }
+    form_tag(controller.request.url, opts, &block)
+  end
+end

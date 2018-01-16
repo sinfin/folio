@@ -10,17 +10,17 @@ module Folio
     before_action :find_files, only: [:new, :edit, :create, :update]
 
     def index
-      if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
-        parent = Node.find(params[:by_parent])
-        @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
-        @filtered = true
-      elsif %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
-        @nodes = Node.
-        original.
-        ordered.
-        filter(filter_params).
-        page(current_page)
-        @filtered = true
+      if params[:by_parent].present?
+        if misc_filtering?
+          begin
+            @nodes = Node.original.ordered.filter(filter_params).page(current_page)
+          rescue ActiveRecord::RecordNotFound
+            @nodes = []
+          end
+        else
+          parent = Node.find(params[:by_parent])
+          @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
+        end
       else
         @limit = 5
         @nodes = Node.original.arrange(order: 'position desc, created_at desc')
@@ -65,6 +65,7 @@ module Folio
     end
 
   private
+
     def after_new
     end
 
@@ -121,6 +122,10 @@ module Folio
 
     def set_position_params
       params.require(:node)
+    end
+
+    def misc_filtering?
+      %i[by_query by_published by_type by_tag].any? { |by| params[by].present? }
     end
   end
 end

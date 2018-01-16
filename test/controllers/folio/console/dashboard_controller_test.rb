@@ -9,11 +9,11 @@ module Folio
 
     test 'should or should not get index' do
       get console_root_url
-      assert_response :success
+      assert_redirected_to console_nodes_path
 
       sign_out @admin
       get console_root_url
-      assert_response :redirect
+      assert_redirected_to new_account_session_path
     end
   end
 end

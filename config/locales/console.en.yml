@@ -35,3 +35,18 @@ en:
 
       footer:
         text: Administration console for %{site_name}.
+
+      index:
+        header:
+          by_query: Filter...
+
+        filters:
+          title: Filters
+          cancel: Cancel filters
+          all_nodes: All nodes
+          all_parents: All categories
+          published: Published only
+          unpublished: Unpublished only
+          all_types: All types
+          page: Page
+          category: Category

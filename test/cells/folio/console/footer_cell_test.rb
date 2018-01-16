@@ -2,9 +2,11 @@
 
 require 'test_helper'
 
-class Console::FooterCellTest < Cell::TestCase
+class Folio::Console::FooterCellTest < Cell::TestCase
   test 'show' do
-    html = cell('footer').(:show)
-    assert html.match /<p>/
+    site = create(:folio_site)
+
+    html = cell('folio/console/footer', site).(:show)
+    assert html.has_css?('.folio-console-footer')
   end
 end

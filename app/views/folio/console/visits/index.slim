@@ -5,12 +5,6 @@
   .col-auto
     = filter_form({}) do
       .form-row
-        - if @filtered
-          .col-auto
-            = link_to fa_icon('times'), \
-                      console_nodes_path, \
-                      class: 'btn btn-danger', \
-                      role: 'button'
         .col-auto
           = query_field t('folio.console.filters.query')
 

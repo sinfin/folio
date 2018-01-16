@@ -9,3 +9,26 @@ body
 
 .folio-console-layout-main
   flex: 1 1 auto
+  padding: $grid-gutter-half
+  display: flex
+  flex-direction: column
+
+  .breadcrumb + &
+    margin-top: -1rem
+
+.folio-console-layout-with-sidebar
+  display: flex
+  align-items: stretch
+  flex: 1 1 auto
+
+.folio-console-layout-content
+  flex: 1 1 100%
+
+.folio-console-layout-sidebar
+  flex: 0 0 20vw
+  margin-top: -$grid-gutter-half
+  margin-bottom: -$grid-gutter-half
+  margin-right: -$grid-gutter-half
+  margin-left: $grid-gutter-width
+  padding: $grid-gutter-half
+  background: $gray-100

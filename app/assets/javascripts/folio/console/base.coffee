@@ -7,6 +7,8 @@
 #= require cocoon
 #= require redactor
 
+#= require folio/console/_data-auto-submit
+#= require folio/console/_data-change-value
 #= require folio/console/tagsinput/tagsinput
 
 #= require ./dropzone-init
@@ -22,7 +24,7 @@
 $ ->
   $(document).on 'change', '#filter-form', ->
     $(this).submit()
-      
+
   switchRows = (this_node, that_node) ->
     pos = this_node.find('input#node_position').val()
     that_node.find('input#node_position').val(pos)
@@ -37,22 +39,22 @@ $ ->
       moveChildrenRows(this_node, this_node_children)
     if that_node_children
       moveChildrenRows(that_node, that_node_children)
-      
+
   moveChildrenRows = (node, children) ->
     last_row = node
     children.each ->
       $t = $(this)
       last_row.after($t)
       last_row = $t
-  
+
   switchModelPositions = (this_row, that_row, url) ->
     return if that_row.length == 0
-    
+
     pos = Number(this_row.find('input#model_position').val())
     data = {}
     data[this_row.find('input#model_id').val()] = { position: pos - 1 }
     data[that_row.find('input#model_id').val()] = { position: pos }
-    
+
     $.ajax
       type: "POST"
       url: url
@@ -60,25 +62,25 @@ $ ->
       success: (e) ->
         switchRows(this_row, that_row, url)
         return
-        
+
   $(document).on 'click', '.btn.custom-model.position-up', ->
     $button = $(this)
     $this_row = $button.closest('tr')
     $that_row = $this_row.prevAll("tr:first")
     url = $button.data('url')
-    
+
     switchModelPositions($this_row, $that_row, url)
 
-        
+
   $(document).on 'click', '.btn.custom-model.position-down', ->
     $button = $(this)
     $this_row = $button.closest('tr')
     $that_row = $this_row.nextAll("tr:first")
     url = $button.data('url')
-    
+
     switchModelPositions($that_row, $this_row, url)
-    
-    
+
+
   $(document).on 'click', '.btn.node.position-up', ->
     $this_node = $(this).closest('tr')
     $that_node = $this_node.prevAll("tr[data-parent='#{$this_node.data('parent')}'][data-depth='#{$this_node.data('depth')}']:first")

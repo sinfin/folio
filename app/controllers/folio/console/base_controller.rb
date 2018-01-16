@@ -61,5 +61,5 @@ module Folio
       end
 
       helper_method :filter_params
-    end
   end
+end
