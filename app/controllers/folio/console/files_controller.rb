@@ -37,7 +37,7 @@ module Folio
     end
 
     def create
-      @file = Folio::File.create(file_params)
+      @file = File.create(file_params)
       respond_with @file, location: console_files_path
     end
 
@@ -53,7 +53,7 @@ module Folio
 
   private
     def find_file
-      @file = Folio::File.find(params[:id])
+      @file = File.find(params[:id])
     end
 
     def filter_params

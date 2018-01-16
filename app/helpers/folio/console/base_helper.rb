@@ -58,7 +58,7 @@ module Folio
     end
 
     def locale_to_label(locale, short: false)
-      c = ISO3166::Country.new(Folio::LANGUAGES[locale.to_sym])
+      c = ISO3166::Country.new(LANGUAGES[locale.to_sym])
 
       if short
         "#{locale} #{c.try(:emoji_flag)}"

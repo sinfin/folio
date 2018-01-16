@@ -20,7 +20,7 @@ module Folio
     private
 
       def find_subscription
-        @subscription = Folio::NewsletterSubscription.find(params[:id])
+        @subscription = NewsletterSubscription.find(params[:id])
       end
   end
 end

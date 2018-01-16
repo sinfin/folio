@@ -4,7 +4,7 @@ require 'test_helper'
 require_relative 'base_controller_test'
 
 module Folio
-  class Console::NodesControllerTest < Folio::Console::BaseControllerTest
+  class Console::NodesControllerTest < Console::BaseControllerTest
     include Engine.routes.url_helpers
 
     setup do

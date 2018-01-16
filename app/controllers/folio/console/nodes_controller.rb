@@ -11,11 +11,11 @@ module Folio
 
     def index
       if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
-        parent = Folio::Node.find(params[:by_parent])
+        parent = Node.find(params[:by_parent])
         @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
         @filtered = true
       elsif %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
-        @nodes = Folio::Node.
+        @nodes = Node.
         original.
         ordered.
         filter(filter_params).
@@ -23,16 +23,16 @@ module Folio
         @filtered = true
       else
         @limit = 5
-        @nodes = Folio::Node.original.arrange(order: 'position desc, created_at desc')
+        @nodes = Node.original.arrange(order: 'position desc, created_at desc')
       end
     end
 
     def new
       if params[:node].blank? || params[:node][:original_id].blank?
-        parent = Folio::Node.find(params[:parent]) if params[:parent].present?
-        @node = Folio::Node.new(parent: parent, type: params[:type])
+        parent = Node.find(params[:parent]) if params[:parent].present?
+        @node = Node.new(parent: parent, type: params[:type])
       else
-        original = Folio::Node.find(params[:node][:original_id])
+        original = Node.find(params[:node][:original_id])
 
         @node = original.translate!(params[:node][:locale])
 
@@ -44,7 +44,7 @@ module Folio
 
     def create
       # set type first beacuse of @node.additional_params
-      @node = Folio::Node.new(type: params[:node][:type])
+      @node = Node.new(type: params[:node][:type])
       @node.update(node_params)
       respond_with @node, location: console_nodes_path
     end
@@ -60,7 +60,7 @@ module Folio
     end
 
     def set_position
-      Folio::Node.update(set_position_params.keys, set_position_params.values)
+      Node.update(set_position_params.keys, set_position_params.values)
       render json: { success: 'success', status_code: '200' }
     end
 
@@ -69,12 +69,12 @@ module Folio
     end
 
     def find_node
-      @node = Folio::Node.friendly.find(params[:id])
+      @node = Node.friendly.find(params[:id])
     end
 
     def find_files
-      @images = Folio::Image.all.page(1).per(11)
-      @documents = Folio::Document.all.page(1).per(11)
+      @images = Image.all.page(1).per(11)
+      @documents = Document.all.page(1).per(11)
     end
 
     def filter_params

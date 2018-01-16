@@ -4,7 +4,7 @@ require 'test_helper'
 require_relative 'base_controller_test'
 
 module Folio
-  class Console::MenusControllerTest < Folio::Console::BaseControllerTest
+  class Console::MenusControllerTest < Console::BaseControllerTest
     setup do
       @menu = create(:folio_menu_with_menu_items)
     end

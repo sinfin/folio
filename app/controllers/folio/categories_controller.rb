@@ -9,7 +9,7 @@ module Folio
     private
 
       def find_category
-        @category = Folio::Category.friendly.find params[:id]
+        @category = Category.friendly.find params[:id]
 
         # If an old id or a numeric id was used to find the record, then
         # the request path will not match the post_path, and we should do

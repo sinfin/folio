@@ -4,7 +4,7 @@ require 'test_helper'
 require_relative 'base_controller_test'
 
 module Folio
-  class Console::DashboardControllerTest < Folio::Console::BaseControllerTest
+  class Console::DashboardControllerTest < Console::BaseControllerTest
     include Engine.routes.url_helpers
 
     test 'should or should not get index' do

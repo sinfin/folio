@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Folio
-  class Console::NewsletterSubscriptionsControllerTest < Folio::Console::BaseControllerTest
+  class Console::NewsletterSubscriptionsControllerTest < Console::BaseControllerTest
     include Engine.routes.url_helpers
 
     test 'should get index' do

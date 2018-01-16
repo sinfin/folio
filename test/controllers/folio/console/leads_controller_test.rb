@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Folio
-  class Console::LeadsControllerTest < Folio::Console::BaseControllerTest
+  class Console::LeadsControllerTest < Console::BaseControllerTest
     include Engine.routes.url_helpers
 
     setup do
