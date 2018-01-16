@@ -6,6 +6,8 @@ html lang=I18n.locale
   body
     = render partial: 'layouts/folio/console/header' unless @devise
 
+    == cell('folio/console/flash', flash)
+
     .container-fluid
       = yield
 

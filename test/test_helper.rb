@@ -3,13 +3,13 @@
 require File.expand_path('../../test/dummy/config/environment.rb', __FILE__)
 ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../test/dummy/db/migrate', __FILE__)]
 ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
-require 'factory_girl_rails'
+
 require 'rails/test_help'
-require 'pry'
-# require 'cells'
-# require 'cells-rails'
-# require 'cells-slim'
-# require 'cell/test_case'
+require 'factory_girl_rails'
+require 'capybara'
+require 'cells'
+require 'cells-rails'
+require 'cells-slim'
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.

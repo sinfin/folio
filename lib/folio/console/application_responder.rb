@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ApplicationResponder < ActionController::Responder
+class Folio::Console::ApplicationResponder < ActionController::Responder
   include Responders::FlashResponder
   include Responders::HttpCacheResponder
 

@@ -30,7 +30,7 @@ module Folio
           ]
         end
       else
-        get_subclasses(Folio::Node).flatten.each do |type|
+        get_subclasses(Node).flatten.each do |type|
           for_select << [t("node_names.#{type}"), type] if type.view_name
         end
       end

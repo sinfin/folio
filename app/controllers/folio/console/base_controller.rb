@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require 'folio/application_responder'
-
 module Folio
   class Console::BaseController < ApplicationController
     before_action :authenticate_account!
     # TODO: before_action :authorize_account!
 
     layout 'folio/console/application'
-    self.responder = ApplicationResponder
+    self.responder = Console::ApplicationResponder
     respond_to :html
 
     # rescue_from CanCan::AccessDenied do |exception|
