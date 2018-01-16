@@ -3,7 +3,11 @@ en:
     console:
       breadcrumbs:
         root: Console
-        new: New
+        actions:
+          new: New
+          edit: Edit
+          delete: Delete
+          add: Add
 
       sites:
         index:

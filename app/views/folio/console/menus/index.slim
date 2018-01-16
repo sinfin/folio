@@ -1,16 +1,16 @@
-h1 = t('.title')
+== cell('folio/console/index/header', new_console_menu_path)
 
 .table-responsive
-  table.table.table-striped.align-middle
+  table.table.table-striped
     thead
       tr
         th = t(".type")
-        th.text-right colspan=2
-          = new_button new_console_menu_path
+        th
 
     tbody
       - @menus.each do |menu|
         tr
           td = menu.type
-          td.text-right = edit_button menu, edit_console_menu_path(menu.id)
-          td.text-right = delete_button menu, console_menu_path(menu.id)
+          td
+            = edit_button menu, edit_console_menu_path(menu.id)
+            = delete_button menu, console_menu_path(menu.id)

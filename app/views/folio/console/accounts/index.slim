@@ -1,17 +1,7 @@
-.row
-  .col
-    h1 = t('.title')
-
-  .col-md-5
-    = filter_form do
-      .row
-        .col-sm
-          = active_account_select
-        .col-sm
-          = query_field t('folio.console.filters.query')
+== cell('folio/console/index/header', new_console_account_path)
 
 .table-responsive
-  table.table.table-striped.align-middle
+  table.table.table-striped
     thead
       tr
         th = Folio::Account.human_attribute_name(:full_name)
@@ -22,8 +12,7 @@
         / th = Folio::Account.human_attribute_name(:last_sign_in_ip)
         th = Folio::Account.human_attribute_name(:created_at)
         th = Folio::Account.human_attribute_name(:is_active)
-        th.text-right colspan=2
-          = new_button new_console_account_path
+        th
 
     tbody
       - @accounts.each do |account|
@@ -37,9 +26,8 @@
               = time_ago_in_words account.last_sign_in_at
           td = l account.created_at, format: :short
           td = t account.is_active.to_s
-          td.text-right
+          td
             = edit_button account, edit_console_account_path(account.id)
-          td.text-right
             = delete_button account, console_account_path(account.id)
 
 = paginate @accounts

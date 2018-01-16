@@ -1,15 +1,7 @@
-.row
-  .col.mr-auto
-    h1 = t('.title')
-
-  .col-auto
-    = filter_form({}) do
-      .form-row
-        .col-auto
-          = query_field t('folio.console.filters.query')
+== cell('folio/console/index/header')
 
 .table-responsive
-  table.table.table-striped.align-middle
+  table.table.table-striped
     thead
       tr
       th = t('.id')

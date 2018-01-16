@@ -1,8 +1,8 @@
 .folio-console-index-header.row.align-items-center
   .col
-    h1 = model
+    h1 = title
 
-  .col
+  .col.folio-console-index-header-right
     = form
       .input-group
         = input
@@ -22,3 +22,8 @@
 
       - [:by_parent, :by_published, :by_type, :by_tag].each do |key|
         = hidden_field_tag key, controller.params[key]
+
+    - if model
+        a.btn.btn-success href=model
+          i.fa.fa-plus.fa-mr
+          = t('folio.console.breadcrumbs.actions.add')

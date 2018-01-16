@@ -1,9 +1,9 @@
 .folio-console-layout-with-sidebar
   .folio-console-layout-content
-    == cell('folio/console/index/header', t('.title'))
+    == cell('folio/console/index/header', new_console_node_path)
 
     .table-responsive
-      table.table.table-striped.align-middle
+      table.table.table-striped.table-hover
         thead
           tr
             th colspan=2 = t(".title")
@@ -11,8 +11,7 @@
             th = t(".type")
             th = t(".featured")
             th colspan=2 = t(".published")
-            th.text-right colspan=3
-              = new_button new_console_node_path
+            th
 
         tbody
           = render partial: "nodes_table", locals: { nodes: @nodes }

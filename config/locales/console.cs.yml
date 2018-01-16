@@ -5,7 +5,9 @@ cs:
         root: Administrace
         actions:
           new: Nový/á
-          edit: Úprava
+          edit: Upravit
+          delete: Smazat
+          add: Přidat
 
       partials:
         auth_links:

@@ -62,11 +62,12 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
     - if node.published_at.present?
       = l(node.published_at, format: :short)
 
-  td.text-right
+  td
     - if node.kind_of? Folio::Category
       = new_child_node_button(node)
-  td.text-right = edit_button node, edit_console_node_path(node.id)
-  td.text-right = delete_button node, console_node_path(node.id)
+
+    = edit_button node, edit_console_node_path(node.id)
+    = delete_button node, console_node_path(node.id)
 
 - if tree
   = render partial: "nodes_table", locals: { nodes: children }

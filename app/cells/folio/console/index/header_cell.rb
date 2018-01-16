@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::HeaderCell < FolioCell
+  def title
+    controller.t('.title')
+  end
+
   def input
     text_field_tag :by_query, controller.params[:by_query],
                    class: 'form-control folio-console-by-query',
