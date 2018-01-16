@@ -3,6 +3,7 @@ en:
     console:
       breadcrumbs:
         root: Console
+        new: New
 
       sites:
         index:

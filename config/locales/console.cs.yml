@@ -3,6 +3,9 @@ cs:
     console:
       breadcrumbs:
         root: Administrace
+        actions:
+          new: Nový/á
+          edit: Úprava
 
       partials:
         auth_links:

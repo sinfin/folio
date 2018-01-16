@@ -3,8 +3,6 @@
 module Folio
   class Console::SitesController < Console::BaseController
     # before_action :find_site
-    add_breadcrumb(I18n.t('folio.console.sites.index.title'),
-                   :console_sites_path)
 
     def edit
       add_breadcrumb(@site.title, console_site_path(@site))

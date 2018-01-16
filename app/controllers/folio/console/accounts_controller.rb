@@ -4,9 +4,6 @@ module Folio
   class Console::AccountsController < Console::BaseController
     load_and_authorize_resource :account, class: 'Folio::Account'
 
-    add_breadcrumb(I18n.t('folio.console.accounts.index.title'),
-                   :console_accounts_path)
-
     def index
       params[:by_is_active] = true if params[:by_is_active].nil?
       @accounts = @accounts.

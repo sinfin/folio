@@ -2,15 +2,14 @@
 
 module Folio
   class Console::BaseController < ApplicationController
+    include Console::AutoBreadcrumbs
+
     before_action :authenticate_account!
     # TODO: before_action :authorize_account!
 
     layout 'folio/console/application'
     self.responder = Console::ApplicationResponder
     respond_to :html
-
-    add_breadcrumb(I18n.t('folio.console.breadcrumbs.root'),
-                   :console_root_path)
 
     # rescue_from CanCan::AccessDenied do |exception|
     #   redirect_to dashboard_path, alert: exception.message
@@ -62,5 +61,5 @@ module Folio
       end
 
       helper_method :filter_params
+    end
   end
-end

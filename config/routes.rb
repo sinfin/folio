@@ -21,7 +21,7 @@ Folio::Engine.routes.draw do
   match '/500', to: 'errors#page500', via: :all
 
   namespace :console do
-    root to: 'nodes#index'
+    root to: 'dashboard#index'
     resources :dashboard, only: :index
     resources :nodes, except: [:show] do
       post 'set_position', on: :collection
