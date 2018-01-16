@@ -1,0 +1,47 @@
+@import 'bootstrap-variables'
+@import 'bootstrap'
+@import 'bootstrap-overrides'
+
+@import 'font-awesome'
+@import 'redactor'
+@import 'dropzone/dropzone'
+@import 'cells'
+
+body
+  margin-top: 65px
+
+.select-file
+  cursor: pointer
+
+.card.active
+  border-color: $blue !important
+
+.btn-transparent
+  color: #111
+  background-color: transparent
+  border-color: transparent
+  &:hover
+    background-color: #e2e6ea
+    border-color: #dae0e5
+
+  &:focus
+    box-shadow: none
+
+tr.active
+  background-color: $gray-300 !important
+
+.table.align-middle > tbody > tr > td
+    vertical-align: middle
+
+.dropzone
+  border: 0
+
+a.inactive
+  color: grey
+  border-bottom: 1px dotted grey
+
+.badge
+  margin-left: 0.2rem
+
+[class^="icon-"].icon-fixed-width, [class*=" icon-"].icon-fixed-width
+  text-align: center
