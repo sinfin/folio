@@ -56,7 +56,8 @@ class Folio::Console::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcru
     item_tag = @options.fetch(:tag, :li)
 
     @context.content_tag(item_tag, class: ['breadcrumb-item', ('active' if current)]) do
-      @context.link_to_unless_current(name, path, element.options)
+      opts = element.options.merge(class: 'text-dark')
+      @context.link_to_unless_current(name, path, opts)
     end
   end
 
