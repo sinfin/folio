@@ -15,8 +15,13 @@
         margin-top: 0
 
 .alert
-  .fa
-    margin-right: 10px
+  margin: 0
+  padding-left: 1rem
+  border-left: 0
+  border-right: 0
+
+  .breadcrumb + &
+    margin-top: -1rem
 
 .table
   thead th, tbody td
@@ -28,3 +33,9 @@
 
       .btn + .btn
         margin-left: 1ch
+
+.breadcrumb
+  border-top-left-radius: $border-radius-lg
+  border-top-right-radius: $border-radius-lg
+  border-bottom-left-radius: 0
+  border-bottom-right-radius: 0

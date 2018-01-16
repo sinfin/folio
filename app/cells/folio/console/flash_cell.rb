@@ -21,10 +21,10 @@ class Folio::Console::FlashCell < FolioCell
   end
 
   FA_ICONS = {
-    success: 'fa fa-check-circle',
-    error: 'fa fa-times-circle',
-    alert: 'fa fa-times-circle',
-    notice: 'fa fa-info-circle'
+    success: 'fa fa-mr fa-check-circle',
+    error: 'fa fa-mr fa-times-circle',
+    alert: 'fa fa-mr fa-times-circle',
+    notice: 'fa fa-mr fa-info-circle'
   }.freeze
 
   def fa_icon_for(msg_type)

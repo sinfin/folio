@@ -3,14 +3,14 @@ html.bg-dark lang=I18n.locale
   head
     = render partial: 'layouts/folio/console/head'
 
-  body
+  body.bg-dark
     = render partial: 'layouts/folio/console/header' unless @devise
 
+    = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
     == cell('folio/console/flash', flash)
 
-    = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
-
     .folio-console-layout-main
+
       = yield
 
     == cell('folio/console/footer', @site)
