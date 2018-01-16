@@ -2,8 +2,6 @@
 
 require 'folio/application_responder'
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::BaseController < ApplicationController
     before_action :authenticate_account!

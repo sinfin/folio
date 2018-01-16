@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::AccountsController < Console::BaseController
     load_and_authorize_resource :account, class: 'Folio::Account'

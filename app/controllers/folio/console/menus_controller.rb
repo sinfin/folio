@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::MenusController < Console::BaseController
     before_action :find_menu, except: [:index, :create, :new]

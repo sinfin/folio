@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::LeadsController < Folio::Console::BaseController
     load_and_authorize_resource :lead, class: 'Folio::Lead'
