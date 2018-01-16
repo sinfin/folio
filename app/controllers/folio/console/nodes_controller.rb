@@ -9,6 +9,9 @@ module Folio
     before_action :find_node, except: [:index, :create, :new, :set_position]
     before_action :find_files, only: [:new, :edit, :create, :update]
 
+    add_breadcrumb(I18n.t('folio.console.nodes.index.title'),
+                   :console_nodes_path)
+
     def index
       if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
         parent = Node.find(params[:by_parent])

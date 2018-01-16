@@ -1,6 +1,9 @@
 cs:
   folio:
     console:
+      breadcrumbs:
+        root: Administrace
+
       partials:
         auth_links:
           logout: Odhlásit
@@ -78,14 +81,14 @@ cs:
 
       leads:
         index:
-          title: Leads
+          title: Formuláře
         show:
-          title: Lead
+          title: Formulář
 
       visits:
         index:
           title: Visits
-      
+
       partials:
         images_fieldset:
           title: Galerie
@@ -93,3 +96,11 @@ cs:
           remove: Odebrat
 
       really_delete: Jste si jist, že chcete smazat %{title}?
+
+      sites:
+        index:
+          title: Weby
+
+      newsletter_subscriptions:
+        index:
+          title: Odběry newsletteru

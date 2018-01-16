@@ -1,0 +1,33 @@
+en:
+  folio:
+    console:
+      breadcrumbs:
+        root: Console
+
+      sites:
+        index:
+          title: Sites
+
+      visits:
+        index:
+          title: Visits
+
+      accounts:
+        index:
+          title: Accounts
+
+      files:
+        index:
+          title: Files
+
+      leads:
+        index:
+          title: Leads
+
+      menus:
+        index:
+          title: Menus
+
+      newsletter_subscriptions:
+        index:
+          title: Newsletter subscriptions

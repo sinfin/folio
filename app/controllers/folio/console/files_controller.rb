@@ -5,6 +5,9 @@ module Folio
     before_action :find_file, except: [:index, :create, :new]
     respond_to :json, only: [:index, :create]
 
+    add_breadcrumb(I18n.t('folio.console.files.index.title'),
+                   :console_files_path)
+
     def index
       if params[:type] == 'document'
         @files = Document.all

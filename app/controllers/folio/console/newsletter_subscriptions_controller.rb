@@ -3,6 +3,10 @@
 module Folio
   class Console::NewsletterSubscriptionsController < Console::BaseController
     before_action :find_subscription, except: :index
+
+    add_breadcrumb(I18n.t('folio.console.newsletter_subscriptions.index.title'),
+                   :console_newsletter_subscriptions_path)
+
     def index
       if params[:by_query].present?
         @subscriptions = NewsletterSubscription.filter(filter_params)

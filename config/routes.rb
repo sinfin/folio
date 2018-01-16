@@ -41,5 +41,4 @@ Folio::Engine.routes.draw do
     resources :leads, only: %i[create]
     resources :newsletter_subscriptions, only: %i[create]
   end
-
 end

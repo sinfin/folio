@@ -4,6 +4,9 @@ module Folio
   class Console::MenusController < Console::BaseController
     before_action :find_menu, except: [:index, :create, :new]
 
+    add_breadcrumb(I18n.t('folio.console.menus.index.title'),
+                   :console_menus_path)
+
     def index
       @menus = Menu.all
     end

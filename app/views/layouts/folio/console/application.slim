@@ -8,6 +8,8 @@ html lang=I18n.locale
 
     == cell('folio/console/flash', flash)
 
+    = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
+
     .container-fluid
       = yield
 

@@ -9,6 +9,9 @@ module Folio
     self.responder = Console::ApplicationResponder
     respond_to :html
 
+    add_breadcrumb(I18n.t('folio.console.breadcrumbs.root'),
+                   :console_root_path)
+
     # rescue_from CanCan::AccessDenied do |exception|
     #   redirect_to dashboard_path, alert: exception.message
     # end
