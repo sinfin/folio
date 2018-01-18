@@ -8,13 +8,13 @@ module Folio
 
     respond_to :json, only: %i[update set_position]
 
-    before_action :find_node, except: [:index, :create, :new, :set_position]
+    before_action :find_node, except: [:index, :create, :new, :set_positions]
     before_action :find_files, only: [:new, :edit, :create, :update]
 
     def index
       if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
         parent = Folio::Node.find(params[:by_parent])
-        @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
+        @nodes = parent.subtree.original.arrange(order: 'position ASC, created_at ASC')
         @filtered = true
       elsif %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
         @nodes = Folio::Node.
@@ -25,7 +25,7 @@ module Folio
         @filtered = true
       else
         @limit = 5
-        @nodes = Folio::Node.original.arrange(order: 'position desc, created_at desc')
+        @nodes = Folio::Node.original.arrange(order: 'position ASC, created_at ASC')
       end
     end
 
@@ -61,8 +61,10 @@ module Folio
       respond_with @node, location: console_nodes_path
     end
 
-    def set_position
-      Folio::Node.update(set_position_params.keys, set_position_params.values)
+    def set_positions
+      params.require(:ids).each do |id, values|
+        Folio::Node.find(id).update(values.permit(:position))
+      end
       render json: { success: 'success', status_code: '200' }
     end
 

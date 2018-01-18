@@ -24,7 +24,7 @@ Folio::Engine.routes.draw do
     root to: 'nodes#index'
     resources :dashboard, only: :index
     resources :nodes, except: [:show] do
-      post 'set_position', on: :collection
+      post 'set_positions', on: :collection
     end
     resources :menus, except: [:show]
     resources :files, except: [:show]

@@ -191,7 +191,7 @@ module Folio
       # before_create
       def set_position
         if self.position.nil?
-          last = self.siblings.ordered.first
+          last = self.siblings.ordered.last
           self.position = !last.nil? ? last.position + 1 : 0
         end
       end
