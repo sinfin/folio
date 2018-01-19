@@ -30,18 +30,13 @@ fieldset
 
   .row
     .col-sm
-      = f.input :meta_title
-    .col-sm
-      = f.input :meta_description, as: :text
+      label = t('.settings')
+
+      = f.input :featured
+      = f.input :published
+      = f.input :published_at
+
     .col-sm
       == cell('folio/console/tagsinput', f)
-
-  .row
-    .col-sm
-      = f.input :featured
-
-    .col-sm
-      = f.input :published
-
-    .col-sm
-      = f.input :published_at
+      = f.input :meta_title
+      = f.input :meta_description, as: :text

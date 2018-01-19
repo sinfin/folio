@@ -35,6 +35,7 @@ cs:
           node:
             title: Obsah
             add_atom: Přidat atom
+            settings: Nastavení
           remove: odebrat
           file_name: Název souboru
           file_size: Velikost
@@ -60,8 +61,6 @@ cs:
       accounts:
         index:
           title: Uživatelé
-          edit: Upravit
-          query: Vyhledávání uživatelů
 
       files:
         index:

@@ -54,3 +54,42 @@ en:
           all_types: All types
           page: Page
           category: Category
+
+      nodes:
+        index:
+          title: Pages
+          translations: Translations
+          type: Type
+          featured: Featured
+          published: Published
+        nodes_table:
+          more_nodes: more pages
+        node_row:
+          new:
+            confirm: Do you want to translate the page to %{language}?
+        form:
+          node:
+            title: Content
+            add_atom: Add atom
+            settings: Settings
+          remove: remove
+          file_name: File name
+          file_size: File size
+          caption: Caption
+          tag: Tag
+          additional_form_fields: More fields
+          documents:
+            add: Add document
+          atoms:
+            add: Add atom
+          tabs:
+            node: Content
+            atoms: Atoms
+            gallery: Gallery
+            documents: Documents
+        atom_fields:
+          image: Image
+          no_image: No image
+          add_image: Add image
+          remove: Remove atom
+          remove_image: Remove image
