@@ -39,6 +39,6 @@ module Folio
     cs: 'CZ',
     de: 'DE',
     es: 'ES',
-    en: 'US'
+    en: 'GB'
   }
 end

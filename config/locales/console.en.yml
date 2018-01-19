@@ -64,9 +64,11 @@ en:
           published: Published
         nodes_table:
           more_nodes: more pages
-        node_row:
-          new:
-            confirm: Do you want to translate the page to %{language}?
+        translations:
+          confirm: Do you want to translate the page to %{language}?
+          confirm_cs: Do you want to translate the page to Czech?
+          confirm_en: Do you want to translate the page to English?
+          confirm_de: Do you want to translate the page to German?
         form:
           node:
             title: Content

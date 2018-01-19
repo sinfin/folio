@@ -11,6 +11,7 @@ FactoryGirl.define do
     address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
     phone { Faker::PhoneNumber.phone_number }
     locale :cs
+    locales [:cs]
   end
 
   factory :folio_node, class: Folio::Node do

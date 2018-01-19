@@ -25,21 +25,7 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
           = fa_icon 'arrow-up', class: 'mr-1'
           = fa_icon 'arrow-down'
   td
-    - node.site.locales.each do |locale|
-      - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
-        - translation_id = node.node_translations.find_by(locale: locale).id
-        - path = edit_console_node_path(translation_id)
-        = link_to locale_to_label(locale, short: true), \
-                  path, \
-                  class: 'mr-2'
-      - else
-        - path = new_console_node_path('node[locale]': locale, \
-                                       'node[original_id]': node.id)
-        = link_to locale_to_label(locale, short: true), \
-                  path, \
-                  class: 'inactive mr-2', \
-                  rel: :nofollow, \
-                  data: { confirm: t('.new.confirm', language: locale)}
+    == cell('folio/console/nodes/translations', node, hide_original: true)
 
   td = t("node_names.#{node.type}")
   td

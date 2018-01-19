@@ -10,7 +10,7 @@ Folio::Account.destroy_all
 site = Folio::Site.create!(title: 'Sinfin.digital',
                            domain: 'sinfin.localhost',
                            locale: 'cs',
-                           locales: ['en', 'de'],
+                           locales: ['cs', 'en', 'de'],
                            email: 'info@sinfin.cz',
                            phone: '+420 123 456 789')
 

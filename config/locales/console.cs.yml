@@ -28,9 +28,11 @@ cs:
           published: Publikované
         nodes_table:
           more_nodes: další stránky
-        node_row:
-          new:
-            confirm: Chcete přeložit stránku do %{language}?
+        translations:
+          confirm: Chcete přeložit stránku do %{language}?
+          confirm_cs: Chcete přeložit stránku do češtiny?
+          confirm_en: Chcete přeložit stránku do angličtiny?
+          confirm_de: Chcete přeložit stránku do němčiny?
         form:
           node:
             title: Obsah
