@@ -15,11 +15,6 @@ body
   display: flex
   flex-direction: column
   background: white
-  border-bottom-left-radius: $border-radius-lg
-  border-bottom-right-radius: $border-radius-lg
-
-  .breadcrumb + &
-    margin-top: -1rem
 
 .folio-console-layout-with-sidebar
   display: flex
@@ -37,4 +32,11 @@ body
   margin-left: $grid-gutter-width
   padding: $grid-gutter-half
   background: $gray-100
-  border-bottom-right-radius: $border-radius-lg
+
++mq-wide-layout
+  .folio-console-layout-main
+    border-bottom-left-radius: $border-radius-lg
+    border-bottom-right-radius: $border-radius-lg
+
+  .folio-console-layout-sidebar
+    border-bottom-right-radius: $border-radius-lg

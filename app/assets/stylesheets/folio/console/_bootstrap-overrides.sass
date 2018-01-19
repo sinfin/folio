@@ -35,7 +35,10 @@
         margin-left: 1ch
 
 .breadcrumb
-  border-top-left-radius: $border-radius-lg
-  border-top-right-radius: $border-radius-lg
-  border-bottom-left-radius: 0
-  border-bottom-right-radius: 0
+  border-radius: 0
+  margin-bottom: 0
+
++mq-wide-layout
+  .breadcrumb
+    border-top-left-radius: $border-radius-lg
+    border-top-right-radius: $border-radius-lg

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::HeaderCell < FolioCell
+  HIDDEN_FIELDS = [:by_parent, :by_published, :by_type, :by_tag].freeze
+
   def title
     controller.t('.title')
   end

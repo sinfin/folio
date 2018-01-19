@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::FlashCell < FolioCell
-  def show
-    if model.blank?
-      ''
-    else
-      render
-    end
-  end
-
   BOOTSTRAP_CLASSES = {
     success: 'alert-success',
     error: 'alert-danger',

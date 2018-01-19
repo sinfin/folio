@@ -20,10 +20,10 @@
           button.btn.btn-outline type="submit"
             .fa.fa-search
 
-      - [:by_parent, :by_published, :by_type, :by_tag].each do |key|
+      - HIDDEN_FIELDS.each do |key|
         = hidden_field_tag key, controller.params[key]
 
-    - if model
+    - if model.present?
         a.btn.btn-success href=model
           i.fa.fa-plus.fa-mr
           = t('folio.console.breadcrumbs.actions.add')

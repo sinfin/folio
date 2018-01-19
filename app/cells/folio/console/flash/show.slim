@@ -1,10 +1,12 @@
-- model.each do |msg_type, message|
-  .alert.alert-dismissible.fade.show[
-    class=bootstrap_class_for(msg_type)
-    role="alert"
-  ]
-    button.close data-dismiss="alert"
-      span &times;
+.folio-console-flash-wrap
+  - if model.present?
+    - model.each do |msg_type, message|
+      .alert.alert-dismissible.fade.show[
+        class=bootstrap_class_for(msg_type)
+        role="alert"
+      ]
+        button.close data-dismiss="alert"
+          span &times;
 
-    i class=fa_icon_for(msg_type)
-    = message
+        i class=fa_icon_for(msg_type)
+        = message
