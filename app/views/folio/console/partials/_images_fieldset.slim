@@ -1,5 +1,4 @@
 fieldset
-  h2 = t('.title')
   .row#file-placements-images
     = f.simple_fields_for :file_placements, \
                           f.object.file_placements.with_image.ordered do |fp|

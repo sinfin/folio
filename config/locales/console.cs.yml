@@ -42,11 +42,14 @@ cs:
           tag: Tag
           additional_form_fields: Další pole
           documents:
-            title: Dokumenty
             add: Přidat dokument
           atoms:
-            title: Atomy
             add: Přidat atom
+          tabs:
+            node: Obsah
+            atoms: Atomy
+            gallery: Galerie
+            documents: Dokumenty
         atom_fields:
           image: Obrázek
           no_image: Bez obrázku
@@ -88,7 +91,6 @@ cs:
 
       partials:
         images_fieldset:
-          title: Galerie
           add: Přidat obrázek
           remove: Odebrat
 
