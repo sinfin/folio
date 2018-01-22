@@ -119,7 +119,6 @@ module Folio
                                                                         :file_id,
                                                                         :_destroy],
                                            ])
-      p[:slug] = nil unless p[:slug].present?
       p
     end
 
