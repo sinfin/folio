@@ -44,7 +44,7 @@ module Folio
       ordered
         .where('published', true)
         .where('published_at IS NOT NULL')
-        .where('published_at <= ?', Time.now)
+        .where('published_at <= ?', Time.now.change(sec: 0))
     }
     scope :unpublished, -> {
       nodes = Folio::Node.arel_table
