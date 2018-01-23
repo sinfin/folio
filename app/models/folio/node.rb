@@ -33,7 +33,7 @@ module Folio
 
     # Multi-search
     include PgSearch
-    multisearchable against: [ :title, :perex ], if: :searchable?
+    multisearchable against: [ :title, :perex ], if: :searchable?, ignoring: :accents
     # pg_search_scope :search, against: [:title, :name], using: { tsearch: { prefix: true } }
 
     # Scopes
