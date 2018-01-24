@@ -12,7 +12,7 @@ module Folio
 
     def og_image
       begin
-        @og_image || image_url('fb-share.jpg')
+        @og_image || image_url('/fb-share.jpg')
       rescue Sprockets::Rails::Helper::AssetNotFound
         nil
       end
