@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { getImages } from 'ducks/images'
-import Loader from 'components/Loader'
+
+import MultiSelect from 'containers/MultiSelect'
 
 import AppWrap from './AppWrap'
 import './index.css'
@@ -12,26 +13,27 @@ class App extends Component {
     this.props.dispatch(getImages())
   }
 
-  renderContent () {
-    const { images } = this.props
-    if (images.loading) return <Loader />
+  renderMode () {
+    const { mode } = this.props.app
+
+    if (mode === 'multi-select') {
+      return <MultiSelect />
+    }
 
     return (
-      <div>
-        {images.records.map((image) => (
-          <img src={image.thumb} key={image.id} />
-        ))}
+      <div className='alert alert-danger'>
+        Unknown mode: {mode}
       </div>
     )
   }
 
-  render() {
-    return <AppWrap>{this.renderContent()}</AppWrap>
+  render () {
+    return <AppWrap>{this.renderMode()}</AppWrap>
   }
 }
 
 const mapStateToProps = (state) => ({
-  images: state.get('images').toJS()
+  app: state.get('app').toJS()
 })
 
 function mapDispatchToProps (dispatch) {

@@ -38,6 +38,19 @@
   border-radius: 0
   margin-bottom: 0
 
+.card-active
+  border: 0
+
+  .card-header
+    background: $success
+    color: white
+
+  .card-body
+    background: rgba($success, 0.2)
+
+.card + .card
+  margin-top: $grid-gutter-width
+
 +mq-wide-layout
   .breadcrumb
     border-top-left-radius: $border-radius-lg

@@ -12,7 +12,10 @@
     = render 'folio/console/nodes/form/atoms', f: f
 
   .tab-pane.active id="tab-gallery"
-    #folio-react-images
+    .folio-react-wrap[
+      data-selected=f.object.images.map(&:id)
+      data-mode='multi-select'
+    ]
     / = render 'folio/console/partials/images_fieldset', f: f, images: @images
 
   .tab-pane id="tab-documents"
