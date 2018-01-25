@@ -72,7 +72,6 @@ en:
         form:
           node:
             title: Content
-            add_atom: Add atom
             settings: Settings
           remove: remove
           file_name: File name

@@ -36,7 +36,6 @@ cs:
         form:
           node:
             title: Obsah
-            add_atom: Přidat atom
             settings: Nastavení
           remove: odebrat
           file_name: Název souboru
