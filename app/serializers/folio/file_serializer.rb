@@ -2,26 +2,23 @@
 
 module Folio
   class FileSerializer < ActiveModel::Serializer
-    attributes :id, :file_size, :file_name
-
-    attribute :size, if: :image?
-    attribute :thumb, if: :image?
-    attribute :url, if: :image?
+    attributes :id, :file_size, :file_name, :type,
+               :thumb, :size, :url
 
     def thumb
-      object.thumb('250x250#').url
+      object.thumb('250x250#').url if image?
     end
 
     def url
-      object.file.url
+      object.file.url if image?
+    end
+
+    def size
+      "#{object.file_width} × #{object.file_height}px" if image?
     end
 
     def file_size
       ActiveSupport::NumberHelper.number_to_human_size(object.file_size)
-    end
-
-    def size
-      "#{object.file_width} × #{object.file_height}px"
     end
 
     def image?

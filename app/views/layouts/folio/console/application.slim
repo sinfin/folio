@@ -16,4 +16,8 @@ html.bg-dark lang=I18n.locale
     == cell('folio/console/footer', @site)
 
     = javascript_include_tag 'folio/console/base'
+
+    - if ENV['REACT_DEV']
+      = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
+
     = yield :javascripts

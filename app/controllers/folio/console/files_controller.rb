@@ -2,24 +2,17 @@
 
 module Folio
   class Console::FilesController < Console::BaseController
+    before_action :find_files, only: [:index]
     before_action :find_file, except: [:index, :create, :new]
     respond_to :json, only: [:index, :create]
 
     def index
-      if params[:type] == 'document'
-        @files = Document.all
-      else
-        @files = Image.all
-      end
-
       if !params[:by_tag].blank?
         @files = @files.filter(filter_params)
       end
 
-      @files = @files.page(current_page)
-
-      if request.format == :json
-        @files = @files.per(11)
+      if request.format == :html
+        @files = @files.page(current_page)
       end
 
       respond_with(@files) do |format|
@@ -37,7 +30,7 @@ module Folio
     end
 
     def create
-      @file = File.create(file_params)
+      @file = ::Folio::File.create(file_params)
       respond_with @file, location: console_files_path
     end
 
@@ -52,8 +45,9 @@ module Folio
     end
 
   private
+
     def find_file
-      @file = File.find(params[:id])
+      @file = ::Folio::File.find(params[:id])
     end
 
     def filter_params
@@ -63,6 +57,19 @@ module Folio
 
     def file_params
       params.require(:file).permit(:file, :tag_list, :type)
+    end
+
+    def find_files
+      case params[:type]
+      when 'document'
+        @files = Document.all
+
+      when 'image'
+        @files = Image.all
+
+      else
+        @files = ::Folio::File.all
+      end
     end
   end
 end

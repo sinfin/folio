@@ -27,8 +27,11 @@ ul.nav.nav-tabs
           .col-xs-6.col-sm-4.col-md-2
             .card.mb-2
               = link_to edit_console_file_path(image) do
-                = image_tag image.thumb('250x250#').url, \
-                            class: 'img-responsive card-img-top'
+                - if image.respond_to?(:thumb)
+                  = image_tag image.thumb('250x250#').url, \
+                              class: 'img-responsive card-img-top'
+                - else
+                  = image.file_name
               ul.list-group.list-group-flush
                 li.list-group-item = image.file.name
                 li.list-group-item
