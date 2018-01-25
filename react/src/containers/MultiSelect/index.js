@@ -1,15 +1,38 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 
 import {
   imagesSelector,
   selectImage,
   unselectImage,
+  onSortEnd,
 } from 'ducks/images'
 
 import Image from 'components/Image'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
+
+const SortableList = SortableContainer(({ items, dispatch }) => {
+  return (
+    <div>
+      {items.map((image, index) => (
+        <SortableItem key={image.id} index={index} image={image} dispatch={dispatch} />
+      ))}
+    </div>
+  )
+})
+
+const SortableItem = SortableElement(({ image, dispatch }) => {
+  return (
+    <Image
+      image={image}
+      key={image.id}
+      onClick={() => dispatch(unselectImage(image))}
+      selected
+    />
+  )
+})
 
 class MultiSelect extends Component {
   render() {
@@ -22,14 +45,12 @@ class MultiSelect extends Component {
           highlighted
           header='Selected'
         >
-          {images.selected.map((image) => (
-            <Image
-              image={image}
-              key={image.id}
-              onClick={() => dispatch(unselectImage(image))}
-              selected
-            />
-          ))}
+          <SortableList
+            items={images.selected}
+            onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
+            dispatch={dispatch}
+            axis='xy'
+          />
         </Card>
 
         <Card

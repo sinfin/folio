@@ -3,6 +3,7 @@ import { apiGet } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { takeLatest, call, put } from 'redux-saga/effects'
 import { find, filter } from 'lodash'
+import { arrayMove } from 'react-sortable-hoc'
 
 // Constants
 
@@ -11,6 +12,7 @@ const GET_IMAGES = 'images/GET_IMAGES'
 const GET_IMAGES_SUCCESS = 'images/GET_IMAGES_SUCCESS'
 const SELECT_IMAGE = 'images/SELECT_IMAGE'
 const UNSELECT_IMAGE = 'images/UNSELECT_IMAGE'
+const ON_SORT_END = 'images/ON_SORT_END'
 
 const IMAGES_URL = '/console/files?type=image'
 
@@ -34,6 +36,10 @@ export function selectImage (image) {
 
 export function unselectImage (image) {
   return { type: UNSELECT_IMAGE, image }
+}
+
+export function onSortEnd (oldIndex, newIndex) {
+  return { type: ON_SORT_END, oldIndex, newIndex }
 }
 
 // Sagas
@@ -112,6 +118,14 @@ function imagesReducer (state = initialState, action) {
       return state.updateIn(['selected'], (selected) => (
         selected.filterNot((id) => id === action.image.id)
       ))
+
+    case ON_SORT_END: {
+      return state.updateIn(['selected'], (selected) => (
+        fromJS(
+          arrayMove(selected.toJS(), action.oldIndex, action.newIndex)
+        )
+      ))
+    }
 
     default:
       return state
