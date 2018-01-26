@@ -65,13 +65,15 @@ export const imagesSagas = [
 
 export const imagesSelector = (state) => {
   const base = state.get('images').toJS()
+  let file_ids = []
 
-  const selected = base.selected.map((id) => (
-    find(base.records, { id })
-  ))
+  const selected = base.selected.map((sel) => {
+    file_ids.push(sel.file_id)
+    return find(base.records, { file_id: sel.file_id })
+  })
 
   const selectable = filter(base.records, (image) => (
-    base.selected.indexOf(image.id) === -1
+    file_ids.indexOf(image.file_id) === -1
   ))
 
   return {
@@ -97,12 +99,28 @@ function imagesReducer (state = initialState, action) {
     case GET_IMAGES:
       return state.set('loading', true)
 
-    case GET_IMAGES_SUCCESS:
+    case GET_IMAGES_SUCCESS: {
+      const selected = state.get('selected').toJS()
+      const records = action.records.map((record) => {
+        const sel = find(selected, { file_id: record.id })
+        let id = ''
+        const file_id = record.id
+
+        if (sel) id = sel.id
+
+        return {
+          ...record,
+          id,
+          file_id,
+        }
+      })
+
       return state.merge({
         loading: false,
         loaded: true,
-        records: action.records,
+        records,
       })
+    }
 
     case PREFILL_SELECTED:
       return state.merge({
@@ -111,12 +129,15 @@ function imagesReducer (state = initialState, action) {
 
     case SELECT_IMAGE:
       return state.updateIn(['selected'], (selected) => (
-        selected.push(action.image.id)
+        selected.push(fromJS({
+          id: action.image.id,
+          file_id: action.image.file_id,
+        }))
       ))
 
     case UNSELECT_IMAGE:
       return state.updateIn(['selected'], (selected) => (
-        selected.filterNot((id) => id === action.image.id)
+        selected.filter((sel) => sel.get('file_id') !== action.image.file_id)
       ))
 
     case ON_SORT_END: {

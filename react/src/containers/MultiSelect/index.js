@@ -17,18 +17,25 @@ const SortableList = SortableContainer(({ items, dispatch }) => {
   return (
     <div>
       {items.map((image, index) => (
-        <SortableItem key={image.id} index={index} image={image} dispatch={dispatch} />
+        <SortableItem
+          key={image.file_id}
+          index={index}
+          image={image}
+          dispatch={dispatch}
+          position={index}
+        />
       ))}
     </div>
   )
 })
 
-const SortableItem = SortableElement(({ image, dispatch }) => {
+const SortableItem = SortableElement(({ image, position, dispatch }) => {
   return (
     <Image
       image={image}
-      key={image.id}
+      key={image.file_id}
       onClick={() => dispatch(unselectImage(image))}
+      position={position}
       selected
     />
   )
@@ -50,6 +57,7 @@ class MultiSelect extends Component {
             onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
             dispatch={dispatch}
             axis='xy'
+            distance={5}
           />
         </Card>
 
@@ -60,7 +68,7 @@ class MultiSelect extends Component {
           {images.selectable.map((image) => (
             <Image
               image={image}
-              key={image.id}
+              key={image.file_id}
               onClick={() => dispatch(selectImage(image))}
               selected={false}
             />

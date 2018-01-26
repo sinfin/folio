@@ -7,6 +7,16 @@ Folio::Node.destroy_all
 Folio::Site.destroy_all
 Folio::Account.destroy_all
 
+def unsplash_pic(square = false)
+  image = Folio::Image.new
+  scale = 0.5 + rand / 2
+  image.file_url = "https://picsum.photos/#{scale * 2560}/#{square ? scale * 2560 : scale * 1440}/?random"
+  image.save!
+  image
+end
+
+2.times { unsplash_pic }
+
 site = Folio::Site.create!(title: 'Sinfin.digital',
                            domain: 'sinfin.localhost',
                            locale: 'cs',
@@ -17,6 +27,7 @@ site = Folio::Site.create!(title: 'Sinfin.digital',
 about = Folio::Page.create!(title: 'O nás',
                             site: site,
                             published: true)
+3.times { about.images << unsplash_pic }
 
 reference = Folio::Category.create!(title: 'Reference',
                                     site: site,

@@ -14,40 +14,43 @@ import reducers from './reducers'
 import sagas from './sagas'
 import registerServiceWorker from './registerServiceWorker'
 
-const sagaMiddleware = createSagaMiddleware()
-
-const store = createStore(reducers, fromJS({}), applyMiddleware(sagaMiddleware))
-
 const DOM_ROOT = document.querySelector('.folio-react-wrap')
-const DOM_DATA = [
-  {
-    key: 'mode',
-    action: setMode,
-    asJson: false,
-  },
-  {
-    key: 'selected',
-    action: prefillSelected,
-    asJson: true,
-  },
-]
-DOM_DATA.forEach(({ key, action, asJson }) => {
-  let data = DOM_ROOT.dataset[key] || null
-  if (data) {
-    if (asJson) data = JSON.parse(data)
-    store.dispatch(action(data))
-  }
-})
 
-sagas.forEach((saga) => sagaMiddleware.run(saga))
+if (DOM_ROOT) {
+  const sagaMiddleware = createSagaMiddleware()
 
-store.runSaga = sagaMiddleware.run
-store.asyncReducers = {} // Async reducer registry
+  const store = createStore(reducers, fromJS({}), applyMiddleware(sagaMiddleware))
 
-ReactDOM.render((
-  <Provider store={store}>
-    <App />
-  </Provider>
-), DOM_ROOT)
+  const DOM_DATA = [
+    {
+      key: 'mode',
+      action: setMode,
+      asJson: false,
+    },
+    {
+      key: 'selected',
+      action: prefillSelected,
+      asJson: true,
+    },
+  ]
+  DOM_DATA.forEach(({ key, action, asJson }) => {
+    let data = DOM_ROOT.dataset[key] || null
+    if (data) {
+      if (asJson) data = JSON.parse(data)
+      store.dispatch(action(data))
+    }
+  })
 
-registerServiceWorker()
+  sagas.forEach((saga) => sagaMiddleware.run(saga))
+
+  store.runSaga = sagaMiddleware.run
+  store.asyncReducers = {} // Async reducer registry
+
+  ReactDOM.render((
+    <Provider store={store}>
+      <App />
+    </Provider>
+  ), DOM_ROOT)
+
+  registerServiceWorker()
+}

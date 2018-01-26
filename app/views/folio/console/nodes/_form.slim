@@ -13,7 +13,7 @@
 
   .tab-pane.active id="tab-gallery"
     .folio-react-wrap[
-      data-selected=f.object.images.map(&:id)
+      data-selected=(f.object.file_placements.ordered.with_image.map { |fp| { id: fp.id, file_id: fp.file.id } }).to_json
       data-mode='multi-select'
     ]
     / = render 'folio/console/partials/images_fieldset', f: f, images: @images

@@ -35,7 +35,7 @@ const IconsWrap = styled.div`
   height: 100%;
   opacity: 0;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.75);
   padding: 10px;
   display: flex;
   align-items: center;
@@ -48,12 +48,15 @@ const IconsWrap = styled.div`
   }
 `
 
-function Image ({ image, selected, onClick }) {
+function Image ({ image, selected, position, onClick }) {
+  const inputPrefix = `node[file_placements_attributes][${image.file_id}]`
+
   return (
     <OuterWrap onClick={onClick}>
-      {selected && (
-        <input type='hidden' name='node[files][]' value={image.id} />
-      )}
+      <input type='hidden' name={`${inputPrefix}[id]`} value={image.id} />
+      <input type='hidden' name={`${inputPrefix}[file_id]`} value={image.file_id} />
+      <input type='hidden' name={`${inputPrefix}[position]`} value={position} />
+      <input type='hidden' name={`${inputPrefix}[_destroy]`} value={selected ? 0 : 1} />
 
       <ImageWrap>
         <img src={image.thumb} alt={image.file_name} />
