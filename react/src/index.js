@@ -10,7 +10,6 @@ import { setMode } from 'ducks/app'
 import { prefillSelected } from 'ducks/files'
 import { setUploadsUrl, setUploadsType } from 'ducks/uploads'
 
-import './index.css'
 import reducers from './reducers'
 import sagas from './sagas'
 import registerServiceWorker from './registerServiceWorker'

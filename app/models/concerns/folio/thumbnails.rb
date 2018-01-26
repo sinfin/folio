@@ -93,7 +93,7 @@ module Folio
 
         hex = dominant_color[/#\S+/]
         rgb = hex.scan(/../).map { |color| color.to_i(16) }
-        dark = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2] < 151
+        dark = rgb.sum > 3 * 255 / 2.0
 
         self.additional_data ||= {
           dominant_color: hex,

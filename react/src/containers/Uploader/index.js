@@ -14,6 +14,11 @@ import {
   error,
 } from 'ducks/uploads'
 
+const date = new Date
+let month = date.getMonth() + 1
+if (month < 10) month = `0${month}`
+const DATE_TAG = [date.getFullYear(), month].join('/')
+
 const StyledDropzone = styled(DropzoneComponent)`
   .dz-default.dz-message {
     display: none;
@@ -48,6 +53,7 @@ class MultiSelect extends Component {
       clickable: '.folio-console-dropzone-trigger',
       params: {
         'file[type]': this.props.uploads.type,
+        'file[tag_list]': DATE_TAG,
       }
     }
   }

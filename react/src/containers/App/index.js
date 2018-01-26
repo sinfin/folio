@@ -6,7 +6,6 @@ import { getFiles } from 'ducks/files'
 import MultiSelect from 'containers/MultiSelect'
 
 import AppWrap from './AppWrap'
-import './index.css'
 
 class App extends Component {
   componentWillMount () {

@@ -68,6 +68,11 @@ export const filesSagas = [
 
 // Selectors
 
+export const allFilesSelector = (state) => {
+  const base = state.get('files').toJS()
+  return base.records
+}
+
 export const filesSelector = (state) => {
   const base = state.get('files').toJS()
   let file_ids = []
