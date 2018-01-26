@@ -39,6 +39,10 @@ FactoryGirl.define do
 
   factory :folio_image, class: Folio::Image do
     file Folio::Engine.root.join('test/fixtures/folio/test.gif')
+
+    trait :black do
+      file Folio::Engine.root.join('test/fixtures/folio/test-black.gif')
+    end
   end
 
   factory :folio_lead, class: Folio::Lead do
