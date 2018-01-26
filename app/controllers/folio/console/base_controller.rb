@@ -36,12 +36,6 @@ module Folio
         @current_ability ||= ConsoleAbility.new(current_admin)
       end
 
-      def current_admin
-        current_account
-      end
-
-      helper_method :current_admin
-
       def query
         @query ||= params[:by_query]
       end

@@ -65,6 +65,7 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   td.text-right
     - if node.kind_of? Folio::Category
       = new_child_node_button(node)
+  td.text-right = node_preview_button node
   td.text-right = edit_button node, edit_console_node_path(node.id)
   td.text-right = delete_button node, console_node_path(node.id)
 

@@ -20,6 +20,15 @@ module Folio
         label: t('node_names.Folio::Node')
     end
 
+    def node_preview_button(node, opts = { label: 'Preview' })
+      ico = icon 'eye', opts.delete(:label)
+      path = nested_page_path(node, add_parents: true)
+
+      opts.reverse_merge!(class: 'btn btn-info pull-right', target: :_blank)
+
+      link_to(ico, path, opts).html_safe
+    end
+
     def node_types_for_select(node)
       for_select = []
       if node && !node.class.allowed_child_types.nil?

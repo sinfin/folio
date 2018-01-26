@@ -21,11 +21,15 @@ module Folio
       def find_page
         path = params[:path].split('/')
 
-        @page = @roots.published.friendly.find path.shift
+        @page = @roots
+        @page = @page.published unless admin_preview?
+        @page = @page.friendly.find path.shift
         add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
 
         path.each do |p|
-          @page = @page.children.published.friendly.find p
+          @page = @page.children
+          @page = @page.published unless admin_preview?
+          @page = @page.friendly.find p
           add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
         end
 
@@ -36,6 +40,10 @@ module Folio
         #   return redirect_to @page, status: :moved_permanently
         # end
         #
+      end
+
+      def admin_preview?
+        current_admin.present?
       end
   end
 end

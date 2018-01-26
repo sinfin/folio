@@ -7,6 +7,7 @@ module Folio
     included do
       protect_from_forgery with: :exception
 
+      helper_method :current_admin
       helper_method :nested_page_path
 
       before_action do
@@ -15,6 +16,10 @@ module Folio
         I18n.locale = params[:locale] || @site.locale
         @roots = @site.nodes.where(locale: I18n.locale).roots.ordered
       end
+    end
+
+    def current_admin
+      current_account
     end
 
     def default_url_options(options = {})
