@@ -56,7 +56,7 @@ export function File ({ file, selected, position, onClick }) {
   const inputPrefix = `node[file_placements_attributes][${file.file_id}]`
 
   return (
-    <OuterWrap onClick={onClick}>
+    <OuterWrap onClick={selected ? null : onClick}>
       <input type='hidden' name={`${inputPrefix}[id]`} value={file.id} />
       <input type='hidden' name={`${inputPrefix}[file_id]`} value={file.file_id} />
       <input type='hidden' name={`${inputPrefix}[position]`} value={position} />
@@ -72,7 +72,7 @@ export function File ({ file, selected, position, onClick }) {
 
       <IconsWrap pointer={!selected}>
         {selected ? (
-          <i className='fa fa-times-circle text-danger'></i>
+          <i className='fa fa-times-circle text-danger' onClick={onClick}></i>
         ) : (
           <i className='fa fa-arrow-circle-up text-success'></i>
         )}

@@ -90,6 +90,7 @@ class FileFilter extends Component {
             value={filters.tags}
             onChange={(tags) => dispatch(setFilter('tags', tags.map((tag) => tag.value)))}
             options={this.tagsOptions()}
+            placeholder='Tags'
             multi
           />
         </div>
