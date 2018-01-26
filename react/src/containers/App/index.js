@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { getImages } from 'ducks/images'
+import { getFiles } from 'ducks/files'
 
 import MultiSelect from 'containers/MultiSelect'
 
@@ -10,7 +10,7 @@ import './index.css'
 
 class App extends Component {
   componentWillMount () {
-    this.props.dispatch(getImages())
+    this.props.dispatch(getFiles())
   }
 
   renderMode () {

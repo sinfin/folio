@@ -3,24 +3,24 @@ import { connect } from 'react-redux'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 
 import {
-  imagesSelector,
-  selectImage,
-  unselectImage,
+  filesSelector,
+  selectFile,
+  unselectFile,
   onSortEnd,
-} from 'ducks/images'
+} from 'ducks/files'
 
-import Image from 'components/Image'
+import File from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
 const SortableList = SortableContainer(({ items, dispatch }) => {
   return (
     <div>
-      {items.map((image, index) => (
+      {items.map((file, index) => (
         <SortableItem
-          key={image.file_id}
+          key={file.file_id}
           index={index}
-          image={image}
+          file={file}
           dispatch={dispatch}
           position={index}
         />
@@ -29,12 +29,12 @@ const SortableList = SortableContainer(({ items, dispatch }) => {
   )
 })
 
-const SortableItem = SortableElement(({ image, position, dispatch }) => {
+const SortableItem = SortableElement(({ file, position, dispatch }) => {
   return (
-    <Image
-      image={image}
-      key={image.file_id}
-      onClick={() => dispatch(unselectImage(image))}
+    <File
+      file={file}
+      key={file.file_id}
+      onClick={() => dispatch(unselectFile(file))}
       position={position}
       selected
     />
@@ -43,8 +43,8 @@ const SortableItem = SortableElement(({ image, position, dispatch }) => {
 
 class MultiSelect extends Component {
   render() {
-    const { images, dispatch } = this.props
-    if (images.loading) return <Loader />
+    const { files, dispatch } = this.props
+    if (files.loading) return <Loader />
 
     return (
       <div>
@@ -53,7 +53,7 @@ class MultiSelect extends Component {
           header='Selected'
         >
           <SortableList
-            items={images.selected}
+            items={files.selected}
             onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
             dispatch={dispatch}
             axis='xy'
@@ -65,11 +65,11 @@ class MultiSelect extends Component {
           header='Available'
           filters='filter?'
         >
-          {images.selectable.map((image) => (
-            <Image
-              image={image}
-              key={image.file_id}
-              onClick={() => dispatch(selectImage(image))}
+          {files.selectable.map((file) => (
+            <File
+              file={file}
+              key={file.file_id}
+              onClick={() => dispatch(selectFile(file))}
               selected={false}
             />
           ))}
@@ -80,7 +80,7 @@ class MultiSelect extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  images: imagesSelector(state),
+  files: filesSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

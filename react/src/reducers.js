@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux-immutable'
 
 import appReducer from 'ducks/app'
-import imagesReducer from 'ducks/images'
+import filesReducer from 'ducks/files'
 
 export default combineReducers({
   app: appReducer,
-  images: imagesReducer,
+  files: filesReducer,
 })

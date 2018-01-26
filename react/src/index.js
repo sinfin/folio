@@ -7,7 +7,7 @@ import { fromJS } from 'immutable'
 
 import App from 'containers/App'
 import { setMode } from 'ducks/app'
-import { prefillSelected } from 'ducks/images'
+import { prefillSelected } from 'ducks/files'
 
 import './index.css'
 import reducers from './reducers'

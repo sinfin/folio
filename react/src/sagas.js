@@ -1,4 +1,4 @@
-import { imagesSagas } from 'ducks/images'
+import { filesSagas } from 'ducks/files'
 import { concat } from 'lodash'
 
-export default concat(imagesSagas)
+export default concat(filesSagas)

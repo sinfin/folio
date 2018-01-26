@@ -7,14 +7,14 @@ import { arrayMove } from 'react-sortable-hoc'
 
 // Constants
 
-const PREFILL_SELECTED = 'images/PREFILL_SELECTED'
-const GET_IMAGES = 'images/GET_IMAGES'
-const GET_IMAGES_SUCCESS = 'images/GET_IMAGES_SUCCESS'
-const SELECT_IMAGE = 'images/SELECT_IMAGE'
-const UNSELECT_IMAGE = 'images/UNSELECT_IMAGE'
-const ON_SORT_END = 'images/ON_SORT_END'
+const PREFILL_SELECTED = 'files/PREFILL_SELECTED'
+const GET_FILES = 'files/GET_FILES'
+const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
+const SELECT_FILE = 'files/SELECT_FILE'
+const UNSELECT_FILE = 'files/UNSELECT_FILE'
+const ON_SORT_END = 'files/ON_SORT_END'
 
-const IMAGES_URL = '/console/files?type=image'
+const FILES_URL = '/console/files?type=file'
 
 // Actions
 
@@ -22,20 +22,20 @@ export function prefillSelected (selected) {
   return { type: PREFILL_SELECTED, selected }
 }
 
-export function getImages () {
-  return { type: GET_IMAGES }
+export function getFiles () {
+  return { type: GET_FILES }
 }
 
-export function getImagesSuccess (records) {
-  return { type: GET_IMAGES_SUCCESS, records }
+export function getFilesSuccess (records) {
+  return { type: GET_FILES_SUCCESS, records }
 }
 
-export function selectImage (image) {
-  return { type: SELECT_IMAGE, image }
+export function selectFile (file) {
+  return { type: SELECT_FILE, file }
 }
 
-export function unselectImage (image) {
-  return { type: UNSELECT_IMAGE, image }
+export function unselectFile (file) {
+  return { type: UNSELECT_FILE, file }
 }
 
 export function onSortEnd (oldIndex, newIndex) {
@@ -44,27 +44,27 @@ export function onSortEnd (oldIndex, newIndex) {
 
 // Sagas
 
-function * getImagesPerform (action) {
+function * getFilesPerform (action) {
   try {
-    const records = yield call(apiGet, IMAGES_URL)
-    yield put(getImagesSuccess(records))
+    const records = yield call(apiGet, FILES_URL)
+    yield put(getFilesSuccess(records))
   } catch (e) {
     flashError(e.message)
   }
 }
 
-function * getImagesSaga (): Generator<*, *, *> {
-  yield takeLatest(GET_IMAGES, getImagesPerform)
+function * getFilesSaga (): Generator<*, *, *> {
+  yield takeLatest(GET_FILES, getFilesPerform)
 }
 
-export const imagesSagas = [
-  getImagesSaga,
+export const filesSagas = [
+  getFilesSaga,
 ]
 
 // Selectors
 
-export const imagesSelector = (state) => {
-  const base = state.get('images').toJS()
+export const filesSelector = (state) => {
+  const base = state.get('files').toJS()
   let file_ids = []
 
   const selected = base.selected.map((sel) => {
@@ -72,8 +72,8 @@ export const imagesSelector = (state) => {
     return find(base.records, { file_id: sel.file_id })
   })
 
-  const selectable = filter(base.records, (image) => (
-    file_ids.indexOf(image.file_id) === -1
+  const selectable = filter(base.records, (file) => (
+    file_ids.indexOf(file.file_id) === -1
   ))
 
   return {
@@ -94,12 +94,12 @@ const initialState = fromJS({
 
 // Reducer
 
-function imagesReducer (state = initialState, action) {
+function filesReducer (state = initialState, action) {
   switch (action.type) {
-    case GET_IMAGES:
+    case GET_FILES:
       return state.set('loading', true)
 
-    case GET_IMAGES_SUCCESS: {
+    case GET_FILES_SUCCESS: {
       const selected = state.get('selected').toJS()
       const records = action.records.map((record) => {
         const sel = find(selected, { file_id: record.id })
@@ -127,17 +127,17 @@ function imagesReducer (state = initialState, action) {
         selected: action.selected,
       })
 
-    case SELECT_IMAGE:
+    case SELECT_FILE:
       return state.updateIn(['selected'], (selected) => (
         selected.push(fromJS({
-          id: action.image.id,
-          file_id: action.image.file_id,
+          id: action.file.id,
+          file_id: action.file.file_id,
         }))
       ))
 
-    case UNSELECT_IMAGE:
+    case UNSELECT_FILE:
       return state.updateIn(['selected'], (selected) => (
-        selected.filter((sel) => sel.get('file_id') !== action.image.file_id)
+        selected.filter((sel) => sel.get('file_id') !== action.file.file_id)
       ))
 
     case ON_SORT_END: {
@@ -153,4 +153,4 @@ function imagesReducer (state = initialState, action) {
   }
 }
 
-export default imagesReducer
+export default filesReducer
