@@ -8,6 +8,7 @@ import { fromJS } from 'immutable'
 import App from 'containers/App'
 import { setMode } from 'ducks/app'
 import { prefillSelected } from 'ducks/files'
+import { setUploadsUrl, setUploadsType } from 'ducks/uploads'
 
 import './index.css'
 import reducers from './reducers'
@@ -31,6 +32,16 @@ if (DOM_ROOT) {
       key: 'selected',
       action: prefillSelected,
       asJson: true,
+    },
+    {
+      key: 'uploadUrl',
+      action: setUploadsUrl,
+      asJson: false,
+    },
+    {
+      key: 'uploadType',
+      action: setUploadsType,
+      asJson: false,
     },
   ]
   DOM_DATA.forEach(({ key, action, asJson }) => {

@@ -13,8 +13,9 @@ const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
 const SELECT_FILE = 'files/SELECT_FILE'
 const UNSELECT_FILE = 'files/UNSELECT_FILE'
 const ON_SORT_END = 'files/ON_SORT_END'
+const UPLOADED_FILE = 'files/UPLOADED_FILE'
 
-const FILES_URL = '/console/files?type=file'
+const FILES_URL = '/console/files?type=image'
 
 // Actions
 
@@ -40,6 +41,10 @@ export function unselectFile (file) {
 
 export function onSortEnd (oldIndex, newIndex) {
   return { type: ON_SORT_END, oldIndex, newIndex }
+}
+
+export function uploadedFile (file) {
+  return { type: UPLOADED_FILE, file }
 }
 
 // Sagas
@@ -145,6 +150,12 @@ function filesReducer (state = initialState, action) {
         fromJS(
           arrayMove(selected.toJS(), action.oldIndex, action.newIndex)
         )
+      ))
+    }
+
+    case UPLOADED_FILE: {
+      return state.updateIn(['records'], (records) => (
+        records.push(fromJS(action.file))
       ))
     }
 

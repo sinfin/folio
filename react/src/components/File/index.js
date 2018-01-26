@@ -21,7 +21,7 @@ const ImageWrap = styled.div`
   z-index: 1;
 
   img {
-    max-width: 100%;
+    width: 100%;
     max-height: 100%;
     display: block;
   }
@@ -33,7 +33,6 @@ const IconsWrap = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0;
   z-index: 2;
   background: rgba(255, 255, 255, 0.75);
   padding: 10px;
@@ -42,13 +41,14 @@ const IconsWrap = styled.div`
   justify-content: center;
   font-size: 30px;
   cursor: pointer;
+  opacity: ${(props) => props.visible ? 1 : 0};
 
   &:hover {
     opacity: 1;
   }
 `
 
-function File ({ file, selected, position, onClick }) {
+export function File ({ file, selected, position, onClick }) {
   const inputPrefix = `node[file_placements_attributes][${file.file_id}]`
 
   return (
@@ -68,6 +68,20 @@ function File ({ file, selected, position, onClick }) {
         ) : (
           <i className='fa fa-arrow-circle-up text-success'></i>
         )}
+      </IconsWrap>
+    </OuterWrap>
+  )
+}
+
+export function UploadingFile ({ upload }) {
+  return (
+    <OuterWrap>
+      <ImageWrap>
+        {upload.thumb && <img src={upload.thumb} alt='' />}
+      </ImageWrap>
+
+      <IconsWrap visible>
+        <i className='fa fa-upload'></i>
       </IconsWrap>
     </OuterWrap>
   )

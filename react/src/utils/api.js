@@ -1,9 +1,13 @@
 const meta = document.querySelector('meta[name="csrf-token"]')
 
+export const CSRF = meta ? {
+  'X-CSRF-Token': meta.getAttribute('content'),
+} : {}
+
 const HEADERS = {
+  ...CSRF,
   'Accept': 'application/json',
   'Content-Type': 'application/json',
-  'X-CSRF-Token': meta ? meta.getAttribute('content') : undefined,
 }
 
 const fallbackMessage = (response) => `${response.status}: ${response.statusText}`

@@ -9,7 +9,10 @@ import {
   onSortEnd,
 } from 'ducks/files'
 
-import File from 'components/File'
+import { uploadsSelector } from 'ducks/uploads'
+
+import Uploader from 'containers/Uploader'
+import { File, UploadingFile } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
@@ -43,11 +46,11 @@ const SortableItem = SortableElement(({ file, position, dispatch }) => {
 
 class MultiSelect extends Component {
   render() {
-    const { files, dispatch } = this.props
+    const { files, uploads, dispatch } = this.props
     if (files.loading) return <Loader />
 
     return (
-      <div>
+      <Uploader>
         <Card
           highlighted
           header='Selected'
@@ -73,14 +76,21 @@ class MultiSelect extends Component {
               selected={false}
             />
           ))}
+          {uploads.records.map((upload, index) => (
+            <UploadingFile
+              upload={upload}
+              key={upload.id}
+            />
+          ))}
         </Card>
-      </div>
+      </Uploader>
     )
   }
 }
 
 const mapStateToProps = (state) => ({
   files: filesSelector(state),
+  uploads: uploadsSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {
