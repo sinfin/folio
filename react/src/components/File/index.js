@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import LazyLoad from 'react-lazyload'
 
 const OuterWrap = styled.div`
   width: 150px;
@@ -19,6 +20,7 @@ const ImageWrap = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1;
+  ${(props) => props.background ? `background: ${props.background};` : ''}
 
   img {
     width: 100%;
@@ -37,11 +39,13 @@ const IconsWrap = styled.div`
   background: rgba(255, 255, 255, 0.75);
   padding: 10px;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   font-size: 30px;
-  cursor: pointer;
   opacity: ${(props) => props.visible ? 1 : 0};
+
+  ${(props) => props.pointer ? 'cursor: pointer !important;' : 'i { cursor: pointer !important; }'}
 
   &:hover {
     opacity: 1;
@@ -58,13 +62,17 @@ export function File ({ file, selected, position, onClick }) {
       <input type='hidden' name={`${inputPrefix}[position]`} value={position} />
       <input type='hidden' name={`${inputPrefix}[_destroy]`} value={selected ? 0 : 1} />
 
-      <ImageWrap>
-        {file.thumb && <img src={file.thumb} alt={file.file_name} />}
+      <ImageWrap background={file.dominant_color}>
+        {file.thumb && (
+          <LazyLoad height={150} once>
+            <img src={file.thumb} alt={file.file_name} />
+          </LazyLoad>
+        )}
       </ImageWrap>
 
-      <IconsWrap>
+      <IconsWrap pointer={!selected}>
         {selected ? (
-          <i className='fa fa-arrow-circle-down text-danger'></i>
+          <i className='fa fa-times-circle text-danger'></i>
         ) : (
           <i className='fa fa-arrow-circle-up text-success'></i>
         )}
@@ -81,7 +89,17 @@ export function UploadingFile ({ upload }) {
       </ImageWrap>
 
       <IconsWrap visible>
-        <i className='fa fa-upload'></i>
+        <i className='fa fa-upload folio-console-animation-pulsing'></i>
+      </IconsWrap>
+    </OuterWrap>
+  )
+}
+
+export function DropzoneTrigger ({ upload }) {
+  return (
+    <OuterWrap className='folio-console-dropzone-trigger bg-secondary'>
+      <IconsWrap visible pointer>
+        <i className='fa fa-plus-circle'></i>
       </IconsWrap>
     </OuterWrap>
   )

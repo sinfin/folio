@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+import { forceCheck } from 'react-lazyload'
 
 import {
-  filesSelector,
   selectFile,
   unselectFile,
   onSortEnd,
 } from 'ducks/files'
-
 import { uploadsSelector } from 'ducks/uploads'
+import { filteredFilesSelector } from 'ducks/filters'
 
+import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
-import { File, UploadingFile } from 'components/File'
+import { File, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
@@ -45,6 +46,12 @@ const SortableItem = SortableElement(({ file, position, dispatch }) => {
 })
 
 class MultiSelect extends Component {
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.files.selectable.length !== this.props.files.selectable.length) {
+      forceCheck()
+    }
+  }
+
   render() {
     const { files, uploads, dispatch } = this.props
     if (files.loading) return <Loader />
@@ -66,7 +73,7 @@ class MultiSelect extends Component {
 
         <Card
           header='Available'
-          filters='filter?'
+          filters={<FileFilter />}
         >
           {files.selectable.map((file) => (
             <File
@@ -82,6 +89,8 @@ class MultiSelect extends Component {
               key={upload.id}
             />
           ))}
+
+          <DropzoneTrigger />
         </Card>
       </Uploader>
     )
@@ -89,7 +98,7 @@ class MultiSelect extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  files: filesSelector(state),
+  files: filteredFilesSelector(state),
   uploads: uploadsSelector(state),
 })
 

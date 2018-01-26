@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import DropzoneComponent from 'react-dropzone-component'
+import styled from 'styled-components'
 
 import { CSRF } from 'utils/api'
 
@@ -12,6 +13,12 @@ import {
   success,
   error,
 } from 'ducks/uploads'
+
+const StyledDropzone = styled(DropzoneComponent)`
+  .dz-default.dz-message {
+    display: none;
+  }
+`
 
 class MultiSelect extends Component {
   eventHandlers () {
@@ -38,6 +45,7 @@ class MultiSelect extends Component {
       headers: CSRF,
       paramName: 'file[file]',
       previewTemplate: '<span></span>',
+      clickable: '.folio-console-dropzone-trigger',
       params: {
         'file[type]': this.props.uploads.type,
       }
@@ -49,13 +57,13 @@ class MultiSelect extends Component {
     if (!uploads.url || !uploads.type) return <Loader />
 
     return (
-      <DropzoneComponent
+      <StyledDropzone
         config={this.config()}
         djsConfig={this.djsConfig()}
         eventHandlers={this.eventHandlers()}
       >
         {this.props.children}
-      </DropzoneComponent>
+      </StyledDropzone>
     )
   }
 }
