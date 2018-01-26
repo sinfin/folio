@@ -14,9 +14,7 @@ import reducers from './reducers'
 import sagas from './sagas'
 import registerServiceWorker from './registerServiceWorker'
 
-const DOM_ROOT = document.querySelector('.folio-react-wrap')
-
-if (DOM_ROOT) {
+window.folioConsoleInitReact = (domRoot) => {
   const sagaMiddleware = createSagaMiddleware()
 
   const store = createStore(reducers, fromJS({}), applyMiddleware(sagaMiddleware))
@@ -44,7 +42,7 @@ if (DOM_ROOT) {
     },
   ]
   DOM_DATA.forEach(({ key, action, asJson }) => {
-    let data = DOM_ROOT.dataset[key] || null
+    let data = domRoot.dataset[key] || null
     if (data) {
       if (asJson) data = JSON.parse(data)
       store.dispatch(action(data))
@@ -60,7 +58,13 @@ if (DOM_ROOT) {
     <Provider store={store}>
       <App />
     </Provider>
-  ), DOM_ROOT)
+  ), domRoot)
 
   registerServiceWorker()
+}
+
+const DOM_ROOTS = document.querySelectorAll('.folio-react-wrap')
+
+for (let i = 0; i < DOM_ROOTS.length; ++i) {
+  window.folioConsoleInitReact(DOM_ROOTS[i])
 }

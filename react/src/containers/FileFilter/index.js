@@ -13,6 +13,13 @@ import {
 } from 'ducks/filters'
 
 const Wrap = styled.div`
+  position: relative;
+  z-index: 2;
+
+  .redactor-modal-tab & {
+    padding-bottom: 30px;
+  }
+
   .form-group {
     margin-right: 30px;
   }
@@ -51,10 +58,10 @@ class FileFilter extends Component {
   }
 
   render() {
-    const { filters, tags, dispatch } = this.props
+    const { filters, dispatch, margined } = this.props
 
     return (
-      <Wrap className='form-inline'>
+      <Wrap className='form-inline' margined={margined}>
         <div className='form-group'>
           <input
             className='form-control'

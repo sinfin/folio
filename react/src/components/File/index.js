@@ -52,7 +52,7 @@ const IconsWrap = styled.div`
   }
 `
 
-export function File ({ file, selected, position, onClick }) {
+export function File ({ file, selected, position, onClick, singleSelect }) {
   const inputPrefix = `node[file_placements_attributes][${file.file_id}]`
 
   return (
@@ -64,7 +64,7 @@ export function File ({ file, selected, position, onClick }) {
 
       <ImageWrap background={file.dominant_color}>
         {file.thumb && (
-          <LazyLoad height={150} once>
+          <LazyLoad height={150} once overflow={singleSelect}>
             <img src={file.thumb} alt={file.file_name} />
           </LazyLoad>
         )}
@@ -74,7 +74,11 @@ export function File ({ file, selected, position, onClick }) {
         {selected ? (
           <i className='fa fa-times-circle text-danger' onClick={onClick}></i>
         ) : (
-          <i className='fa fa-arrow-circle-up text-success'></i>
+          singleSelect ? (
+            <i className='fa fa-check-circle text-primary'></i>
+          ) : (
+            <i className='fa fa-arrow-circle-up text-success'></i>
+          )
         )}
       </IconsWrap>
     </OuterWrap>

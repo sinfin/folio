@@ -14,7 +14,7 @@ import {
   error,
 } from 'ducks/uploads'
 
-const date = new Date
+const date = new Date()
 let month = date.getMonth() + 1
 if (month < 10) month = `0${month}`
 const DATE_TAG = [date.getFullYear(), month].join('/')

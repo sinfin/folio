@@ -4,6 +4,6 @@ ul.nav.nav-tabs
       a.nav-link[
         data-toggle="tab"
         href="#tab-#{key}"
-        class=(key == :gallery ? 'active' : nil)
+        class=(i.zero? ? 'active' : nil)
       ]
         = t(".#{key}")
