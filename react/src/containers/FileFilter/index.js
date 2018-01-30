@@ -12,6 +12,8 @@ import {
   resetFilters,
 } from 'ducks/filters'
 
+import { fileTypeSelector } from 'ducks/app'
+
 const Wrap = styled.div`
   position: relative;
   z-index: 2;
@@ -58,7 +60,7 @@ class FileFilter extends Component {
   }
 
   render() {
-    const { filters, dispatch, margined } = this.props
+    const { filters, dispatch, margined, fileType } = this.props
 
     return (
       <Wrap className='form-inline' margined={margined}>
@@ -71,25 +73,27 @@ class FileFilter extends Component {
           />
         </div>
 
-        <div className='form-group'>
-          <div className='btn-group'>
-            <button
-              type='button'
-              className={this.booleanButton(filters.dark === false)}
-              onClick={() => dispatch(setFilter('dark', filters.dark === false ? null : false))}
-            >
-              <i className='fa fa-sun-o'></i>
-            </button>
+        {fileType === 'Folio::Image' && (
+          <div className='form-group'>
+            <div className='btn-group'>
+              <button
+                type='button'
+                className={this.booleanButton(filters.dark === false)}
+                onClick={() => dispatch(setFilter('dark', filters.dark === false ? null : false))}
+              >
+                <i className='fa fa-sun-o'></i>
+              </button>
 
-            <button
-              type='button'
-              className={this.booleanButton(filters.dark === true)}
-              onClick={() => dispatch(setFilter('dark', filters.dark === true ? null : true))}
-            >
-              <i className='fa fa-moon-o'></i>
-            </button>
+              <button
+                type='button'
+                className={this.booleanButton(filters.dark === true)}
+                onClick={() => dispatch(setFilter('dark', filters.dark === true ? null : true))}
+              >
+                <i className='fa fa-moon-o'></i>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className='form-group'>
           <Select
@@ -121,6 +125,7 @@ class FileFilter extends Component {
 const mapStateToProps = (state) => ({
   filters: filtersSelector(state),
   tags: tagsSelector(state),
+  fileType: fileTypeSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

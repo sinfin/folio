@@ -6,9 +6,8 @@ import createSagaMiddleware from 'redux-saga'
 import { fromJS } from 'immutable'
 
 import App from 'containers/App'
-import { setMode } from 'ducks/app'
+import { setMode, setFileType } from 'ducks/app'
 import { prefillSelected } from 'ducks/files'
-import { setUploadsUrl, setUploadsType } from 'ducks/uploads'
 
 import reducers from './reducers'
 import sagas from './sagas'
@@ -31,13 +30,8 @@ window.folioConsoleInitReact = (domRoot) => {
       asJson: true,
     },
     {
-      key: 'uploadUrl',
-      action: setUploadsUrl,
-      asJson: false,
-    },
-    {
-      key: 'uploadType',
-      action: setUploadsType,
+      key: 'fileType',
+      action: setFileType,
       asJson: false,
     },
   ]

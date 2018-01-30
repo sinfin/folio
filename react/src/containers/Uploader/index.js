@@ -7,12 +7,12 @@ import { CSRF } from 'utils/api'
 
 import Loader from 'components/Loader'
 import {
-  uploadsSelector,
   addedFile,
   thumbnail,
   success,
   error,
 } from 'ducks/uploads'
+import { fileTypeSelector } from 'ducks/app'
 
 const date = new Date()
 let month = date.getMonth() + 1
@@ -41,7 +41,7 @@ class MultiSelect extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: this.props.uploads.url,
+      postUrl: '/console/files',
     }
   }
 
@@ -52,15 +52,15 @@ class MultiSelect extends Component {
       previewTemplate: '<span></span>',
       clickable: '.folio-console-dropzone-trigger',
       params: {
-        'file[type]': this.props.uploads.type,
+        'file[type]': this.props.fileType,
         'file[tag_list]': DATE_TAG,
       }
     }
   }
 
   render() {
-    const { uploads } = this.props
-    if (!uploads.url || !uploads.type) return <Loader />
+    const { fileType } = this.props
+    if (!fileType) return <Loader />
 
     return (
       <StyledDropzone
@@ -75,7 +75,7 @@ class MultiSelect extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  uploads: uploadsSelector(state),
+  fileType: fileTypeSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

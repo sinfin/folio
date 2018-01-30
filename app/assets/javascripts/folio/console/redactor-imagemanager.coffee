@@ -15,6 +15,7 @@ $.Redactor.prototype.imagemanager = ->
         class="redactor-modal-tab redactor-modal-bootstrap"
         data-title="Choose"
         data-mode="single-select"
+        data-file-type="Folio::Image"
       >
       </div>
     """)

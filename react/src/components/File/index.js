@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import LazyLoad from 'react-lazyload'
+
+import ThumbOrInfo from './ThumbOrInfo'
 
 const OuterWrap = styled.div`
   width: 150px;
@@ -63,11 +64,7 @@ export function File ({ file, selected, position, onClick, singleSelect }) {
       <input type='hidden' name={`${inputPrefix}[_destroy]`} value={selected ? 0 : 1} />
 
       <ImageWrap background={file.dominant_color}>
-        {file.thumb && (
-          <LazyLoad height={150} once overflow={singleSelect}>
-            <img src={file.thumb} alt={file.file_name} />
-          </LazyLoad>
-        )}
+        <ThumbOrInfo file={file} singleSelect={singleSelect} />
       </ImageWrap>
 
       <IconsWrap pointer={!selected}>

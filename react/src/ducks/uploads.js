@@ -6,8 +6,6 @@ import { uploadedFile } from 'ducks/files'
 
 // Constants
 
-const SET_UPLOADS_URL = 'uploads/SET_UPLOADS_URL'
-const SET_UPLOADS_TYPE = 'uploads/SET_UPLOADS_TYPE'
 const ADDED_FILE = 'uploads/ADDED_FILE'
 const THUMBNAIL = 'uploads/THUMBNAIL'
 const SUCCESS = 'uploads/SUCCESS'
@@ -17,14 +15,6 @@ const REMOVE = 'uploads/REMOVE'
 const idFromFile = (file) => [file.name, file.lastModified].join('-=-')
 
 // Actions
-
-export function setUploadsUrl (url) {
-  return { type: SET_UPLOADS_URL, url }
-}
-
-export function setUploadsType (uploadsType) {
-  return { type: SET_UPLOADS_TYPE, uploadsType }
-}
 
 export function addedFile (file) {
   return { type: ADDED_FILE, file }
@@ -92,11 +82,14 @@ export const uploadSelector = (id) => (state) => {
   return base.records[id]
 }
 
+export const uploadTypeSelector = (state) => {
+  const base = state.get('uploads').toJS()
+  return base.type
+}
+
 // State
 
 const initialState = fromJS({
-  url: null,
-  type: '',
   records: {},
 })
 
@@ -106,12 +99,6 @@ function uploadsReducer (state = initialState, action) {
   const id = action.file ? idFromFile(action.file) : null
 
   switch (action.type) {
-    case SET_UPLOADS_URL:
-      return state.set('url', action.url)
-
-    case SET_UPLOADS_TYPE:
-      return state.set('type', action.uploadsType)
-
     case ADDED_FILE:
       return state.mergeIn(['records'], {
         [id]: {

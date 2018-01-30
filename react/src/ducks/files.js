@@ -1,9 +1,11 @@
 import { fromJS } from 'immutable'
 import { apiGet } from 'utils/api'
 import { flashError } from 'utils/flash'
-import { takeLatest, call, put } from 'redux-saga/effects'
+import { takeLatest, call, put, select } from 'redux-saga/effects'
 import { find, filter } from 'lodash'
 import { arrayMove } from 'react-sortable-hoc'
+
+import { fileTypeSelector } from 'ducks/app'
 
 // Constants
 
@@ -14,8 +16,6 @@ const SELECT_FILE = 'files/SELECT_FILE'
 const UNSELECT_FILE = 'files/UNSELECT_FILE'
 const ON_SORT_END = 'files/ON_SORT_END'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
-
-const FILES_URL = '/console/files?type=image'
 
 // Actions
 
@@ -51,7 +51,9 @@ export function uploadedFile (file) {
 
 function * getFilesPerform (action) {
   try {
-    const records = yield call(apiGet, FILES_URL)
+    const fileType = yield select(fileTypeSelector)
+    const filesUrl = fileType === 'Folio::Document' ? '/console/files?type=document' : '/console/files?type=image'
+    const records = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(records))
   } catch (e) {
     flashError(e.message)
@@ -98,6 +100,7 @@ export const filesSelector = (state) => {
 const initialState = fromJS({
   loading: false,
   loaded: false,
+  filesUrl: '/console/files',
   records: [],
   selected: [],
 })

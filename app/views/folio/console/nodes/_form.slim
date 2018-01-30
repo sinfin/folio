@@ -12,16 +12,10 @@
     = render 'folio/console/nodes/form/atoms', f: f
 
   .tab-pane id="tab-gallery"
-    .folio-react-wrap[
-      data-selected=(f.object.file_placements.ordered.with_image.map { |fp| { id: fp.id, file_id: fp.file.id } }).to_json
-      data-upload-url=console_files_path
-      data-upload-type='Folio::Image'
-      data-mode='multi-select'
-    ]
-    / = render 'folio/console/partials/images_fieldset', f: f, images: @images
+    = react_images f.object.file_placements
 
   .tab-pane id="tab-documents"
-    = render 'folio/console/nodes/form/documents', f: f
+    = react_documents f.object.file_placements
 
 = f.button :submit
 
