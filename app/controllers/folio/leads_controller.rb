@@ -24,7 +24,7 @@ module Folio
         if cell_options
           cell_options.permit(:note, :message, :name, :note_label)
         else
-          nil
+          {}
         end
       end
   end
