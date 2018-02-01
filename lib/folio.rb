@@ -32,7 +32,12 @@ require 'ahoy_matey'
 
 module Folio
   class Engine < ::Rails::Engine
-    config.assets.precompile += %w[folio/console/base.css folio/console/base.js]
+    config.assets.precompile += %w[
+      folio/console/base.css
+      folio/console/base.js
+      folio/console/react/main.js
+      folio/console/react/main.css
+    ]
   end
 
   LANGUAGES = {

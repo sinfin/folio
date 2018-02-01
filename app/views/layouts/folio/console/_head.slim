@@ -9,4 +9,7 @@ meta[
 ]
 
 = stylesheet_link_tag 'folio/console/base', media: 'all'
+- unless ENV['REACT_DEV']
+  = stylesheet_link_tag 'folio/console/react/main', media: 'all'
+
 = csrf_meta_tags

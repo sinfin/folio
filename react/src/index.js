@@ -11,7 +11,7 @@ import { prefillSelected } from 'ducks/files'
 
 import reducers from './reducers'
 import sagas from './sagas'
-import registerServiceWorker from './registerServiceWorker'
+// import registerServiceWorker from './registerServiceWorker'
 
 window.folioConsoleInitReact = (domRoot) => {
   const sagaMiddleware = createSagaMiddleware()
@@ -54,7 +54,7 @@ window.folioConsoleInitReact = (domRoot) => {
     </Provider>
   ), domRoot)
 
-  registerServiceWorker()
+  // registerServiceWorker()
 }
 
 const DOM_ROOTS = document.querySelectorAll('.folio-react-wrap')

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+rootDir="$( dirname "$0" )/.."
+echo "$PWD"
+
+(
+  cd "$rootDir/react" || exit
+
+  case "$1" in
+    build )
+      npm run build
+      cp build/static/js/main*.js ../app/assets/javascripts/folio/console/react/main.js
+      cp build/static/css/main*.css ../app/assets/stylesheets/folio/console/react/main.scss
+      ;;
+
+    serve )
+      npm run start
+      ;;
+
+    * )
+      npm run "$@"
+      ;;
+  esac
+)

@@ -19,5 +19,7 @@ html.bg-dark lang=I18n.locale
 
     - if ENV['REACT_DEV']
       = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
+    - else
+      = javascript_include_tag 'folio/console/react/main'
 
     = yield :javascripts
