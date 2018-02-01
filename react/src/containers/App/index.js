@@ -6,6 +6,7 @@ import { getFiles } from 'ducks/files'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
+import IndexMode from 'containers/IndexMode'
 
 import AppWrap from './AppWrap'
 
@@ -24,6 +25,10 @@ class App extends Component {
 
     if (mode === 'single-select') {
       return <SingleSelect />
+    }
+
+    if (mode === 'index') {
+      return <IndexMode />
     }
 
     return (

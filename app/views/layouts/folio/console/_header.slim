@@ -18,7 +18,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
 
       = nav_item_link_to t('.nodes'), console_nodes_path
       = nav_item_link_to t('.menus'), console_menus_path
-      = nav_item_link_to t('.files'), console_files_path
+      = nav_item_link_to t('.images'), console_files_path(type: :image)
+      = nav_item_link_to t('.documents'), console_files_path(type: :document)
       = nav_item_link_to t('.newsletter_subscriptions'), \
                          console_newsletter_subscriptions_path
       = nav_item_link_to t('.leads'), console_leads_path

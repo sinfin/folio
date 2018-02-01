@@ -65,7 +65,6 @@ cs:
 
       files:
         index:
-          title: Soubory
           images: Obrázky
           documents: Dokumenty
           id: Id

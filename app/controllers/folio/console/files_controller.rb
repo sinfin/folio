@@ -11,10 +11,6 @@ module Folio
         @files = @files.filter(filter_params)
       end
 
-      if request.format == :html
-        @files = @files.page(current_page)
-      end
-
       respond_with(@files) do |format|
         format.html
         format.json { render json: @files }

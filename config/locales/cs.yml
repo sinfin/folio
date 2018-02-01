@@ -92,7 +92,8 @@ cs:
         header:
           nodes: Stránky
           menus: Menu
-          files: Soubory
+          documents: Soubory
+          images: Obrázky
           newsletter_subscriptions: Odběry newsletteru
           leads: Formuláře
           visits: Návštěvy
