@@ -23,7 +23,7 @@
       - HIDDEN_FIELDS.each do |key|
         = hidden_field_tag key, controller.params[key]
 
-    - if model.present?
-        a.btn.btn-success href=model
+    - if options[:new_path].present?
+        a.btn.btn-success href=options[:new_path]
           i.fa.fa-plus.fa-mr
           = t('folio.console.breadcrumbs.actions.add')

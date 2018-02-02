@@ -9,7 +9,11 @@ module Folio
     def atom_types_for_select
       for_select = []
       get_subclasses(Atom).flatten.each do |type|
-        for_select << [t("atom_names.#{type}"), type, { 'data-form' => type.form }] if type.form
+        if type.form
+          for_select << [type.model_name.human,
+                         type,
+                         { 'data-form' => type.form }]
+        end
       end
       for_select
     end

@@ -1,0 +1,75 @@
+---
+en:
+  activerecord:
+    models:
+      folio/account:
+        one: Account
+        other: Accounts
+
+      folio/atom:
+        one: Atom
+        other: Atoms
+
+      folio/atom/page_reference:
+        one: Link
+        other: Links
+
+      folio/atom/text:
+        one: Text
+        other: Texts
+
+      folio/category:
+        one: Category
+        other: Categories
+
+      folio/document:
+        one: Document
+        other: Documents
+
+      folio/file:
+        one: File
+        other: Files
+
+      folio/image:
+        one: Image
+        other: Images
+
+      folio/lead:
+        one: Lead
+        other: Leads
+
+      folio/menu_item:
+        one: Link
+        other: Links
+
+      folio/menu:
+        one: Menu
+        other: Menus
+
+      folio/newsletter_subscription:
+        one: Newsletter subscription
+        other: Newsletter subscriptions
+
+      folio/node:
+        one: Page
+        other: Pages
+
+      folio/node_translation:
+        one: Translation
+        other: Translations
+
+      folio/page:
+        one: Page
+        other: Pages
+
+      folio/site:
+        one: Site
+        other: Sites
+
+      tag:
+        one: Tag
+        other: Tags
+
+      visit:
+        one: Visit
+        other: Visits

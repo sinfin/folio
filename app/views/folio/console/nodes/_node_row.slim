@@ -27,7 +27,7 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   td
     == cell('folio/console/nodes/translations', node, hide_original: true)
 
-  td = t("node_names.#{node.type}")
+  td = node.model_name.human
   td
     = form_with(model: node, \
                 scope: :node, \

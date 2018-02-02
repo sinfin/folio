@@ -16,8 +16,8 @@ module Folio
     end
 
     def new_child_node_button(parent)
-      new_button new_console_node_path(parent: parent.id),
-        label: t('node_names.Folio::Node')
+      new_button(new_console_node_path(parent: parent.id),
+                 label: Folio::Node.model_name.human)
     end
 
     def node_types_for_select(node)
@@ -25,13 +25,13 @@ module Folio
       if node && !node.class.allowed_child_types.nil?
         node.class.allowed_child_types.each do |type|
           for_select << [
-             t("node_names.#{type}"),
+             type.model_name.human,
              type.to_s
           ]
         end
       else
         get_subclasses(Node).flatten.each do |type|
-          for_select << [t("node_names.#{type}"), type] if type.view_name
+          for_select << [type.model_name.human, type] if type.view_name
         end
       end
       for_select

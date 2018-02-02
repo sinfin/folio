@@ -1,0 +1,75 @@
+---
+cs:
+  activerecord:
+    models:
+      folio/account:
+        one: Uživatel
+        other: Uživatelé
+
+      folio/atom:
+        one: Atom
+        other: Atomy
+
+      folio/atom/page_reference:
+        one: Odkaz
+        other: Odkazy
+
+      folio/atom/text:
+        one: Text
+        other: Texty
+
+      folio/category:
+        one: Kategorie
+        other: Kategorie
+
+      folio/document:
+        one: Soubor
+        other: Soubory
+
+      folio/file:
+        one: Soubor
+        other: Soubory
+
+      folio/image:
+        one: Obrázek
+        other: Obrázky
+
+      folio/lead:
+        one: Formulář
+        other: Formuláře
+
+      folio/menu_item:
+        one: Odkaz
+        other: Odkazy
+
+      folio/menu:
+        one: Menu
+        other: Menu
+
+      folio/newsletter_subscription:
+        one: Odběr newsletteru
+        other: Odběry newsletteru
+
+      folio/node:
+        one: Stránka
+        other: Stránky
+
+      folio/node_translation:
+        one: Překlad
+        other: Překlady
+
+      folio/page:
+        one: Stránka
+        other: Stránky
+
+      folio/site:
+        one: Web
+        other: Weby
+
+      tag:
+        one: Tag
+        other: Tagy
+
+      visit:
+        one: Návštěva
+        other: Návštěvy

@@ -2,7 +2,9 @@
 
 module Folio
   module Console::BootstrapHelper
-    def nav_item_link_to(title, path, opts = {}, active = false, &block)
+    def nav_item_link_to(model, path, opts = {}, active = false, &block)
+      title = model.model_name.human(count: 2)
+
       klass = 'nav-item'
       klass += ' active' if active || current_page?(path)
 

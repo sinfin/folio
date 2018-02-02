@@ -5,7 +5,7 @@ fieldset
     .col-sm
       - if f.object.type == 'Folio::NodeTranslation'
         - collection = [ \
-          [t('node_names.Folio::NodeTranslation'), 'Folio::NodeTranslation'] \
+          [Folio::NodeTranslation.model_name.human, 'Folio::NodeTranslation'] \
         ]
         = f.input :type, collection: collection, readonly: true
       - else
