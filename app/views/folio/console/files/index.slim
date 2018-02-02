@@ -5,7 +5,8 @@
     - else
       = t('.images')
 
+- type = (params[:type] == 'document' ? 'Folio::Document' : 'Folio::Image')
 .folio-react-wrap[
-  data-file-type=(params[:type] == 'document' ? 'Folio::Document' : 'Folio::Image')
+  data-file-type=type
   data-mode='index'
 ]
