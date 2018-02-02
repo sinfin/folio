@@ -4,6 +4,18 @@ class Folio::Console::Nodes::TranslationsCell < FolioCell
   include Folio::Console::FlagHelper
   include ActionView::Helpers::UrlHelper
 
+  def show
+    if multi_language_site
+      render
+    else
+      nil
+    end
+  end
+
+  def multi_language_site
+    (model.site.locales - [model.locale]).length > 0
+  end
+
   def ul_class
     return 'nav nav-pills' if options[:as_pills]
     'folio-console-nodes-translations-inline'
