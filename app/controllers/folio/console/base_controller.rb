@@ -64,5 +64,33 @@ module Folio
       def add_root_breadcrumb
         add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
       end
+
+      def atoms_strong_params
+        [{
+          atoms_attributes: [:id,
+                             :type,
+                             :model_id,
+                             :title,
+                             :content,
+                             :position,
+                             :_destroy,
+                             file_placements_attributes: [:id,
+                                                          :file_id,
+                                                          :_destroy],
+                            ]
+        }]
+      end
+
+      def file_placements_strong_params
+        [{
+          file_placements_attributes: [:id,
+                                       :caption,
+                                       :tag_list,
+                                       :file_id,
+                                       :position,
+                                       :_destroy]
+
+        }]
+      end
   end
 end

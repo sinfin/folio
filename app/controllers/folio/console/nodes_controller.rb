@@ -101,22 +101,8 @@ module Folio
                         :parent_id,
                         :original_id,
                         *@node.additional_params,
-                        file_placements_attributes: [:id,
-                                                     :caption,
-                                                     :tag_list,
-                                                     :file_id,
-                                                     :position,
-                                                     :_destroy],
-                        atoms_attributes: [:id,
-                                           :type,
-                                           :model_id,
-                                           :content,
-                                           :position,
-                                           :_destroy,
-                                           file_placements_attributes: [:id,
-                                                                        :file_id,
-                                                                        :_destroy],
-                                           ])
+                        *atoms_strong_params,
+                        *file_placements_strong_params)
       p[:slug] = nil unless p[:slug].present?
       p
     end

@@ -13,6 +13,7 @@
     .col-sm-9
       - if f.object.class.form != :none
         = atom_model_field(f)
+        = f.input :title
         = atom_content_field(f)
 
       - if f.object.id
