@@ -114,6 +114,16 @@ module Folio
         end
       end
 
+      def gemfile_rails_assets
+        return if File.readlines(Rails.root.join('config/application.rb')).grep('rails-assets.org').any?
+
+        inject_into_file 'Gemfile', after: "source 'https://rubygems.org'" do <<-'RUBY'
+
+source 'https://rails-assets.org'
+        RUBY
+        end
+      end
+
       def setup_routes
         route "mount Folio::Engine => '/'"
       end
