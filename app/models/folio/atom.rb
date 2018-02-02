@@ -22,6 +22,7 @@ module Folio
     validate :model_type_is_allowed, if: :model_id?
 
     scope :ordered, -> { order(position: :asc) }
+    scope :by_type, -> (type) { where(type: type.to_s) }
 
     def cell_name
       nil
