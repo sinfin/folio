@@ -87,6 +87,7 @@ module Folio
           'config/secrets.yml',
           'config/initializers/assets.rb',
           'config/initializers/folio.rb',
+          'config/initializers/raven.rb',
           'config/routes.rb',
           'lib/application_cell.rb',
           'vendor/assets/bower_components/.keep',
