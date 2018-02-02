@@ -13,6 +13,12 @@ cs:
         auth_links:
           logout: Odhlásit
 
+        tabs:
+          content: Obsah
+          atoms: Atomy
+          gallery: Galerie
+          documents: Dokumenty
+
       back: Zpět
 
       filters:
@@ -47,11 +53,6 @@ cs:
             add: Přidat dokument
           atoms:
             add: Přidat atom
-          tabs:
-            node: Obsah
-            atoms: Atomy
-            gallery: Galerie
-            documents: Dokumenty
         atom_fields:
           image: Obrázek
           no_image: Bez obrázku
@@ -87,11 +88,6 @@ cs:
       visits:
         index:
           title: Visits
-
-      partials:
-        images_fieldset:
-          add: Přidat obrázek
-          remove: Odebrat
 
       really_delete: Jste si jist, že chcete smazat %{title}?
 

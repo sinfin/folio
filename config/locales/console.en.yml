@@ -9,6 +9,16 @@ en:
           delete: Delete
           add: Add
 
+      partials:
+        auth_links:
+          logout: Log out
+
+        tabs:
+          content: Content
+          atoms: Atoms
+          gallery: Gallery
+          documents: Documents
+
       sites:
         index:
           title: Sites
@@ -83,11 +93,6 @@ en:
             add: Add document
           atoms:
             add: Add atom
-          tabs:
-            node: Content
-            atoms: Atoms
-            gallery: Gallery
-            documents: Documents
         atom_fields:
           image: Image
           no_image: No image

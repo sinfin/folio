@@ -1,20 +1,20 @@
-= render 'folio/console/nodes/form/tabs'
+= tabs [:content, :atoms, :gallery, :documents]
 
 = f.error_notification
 
 .tab-content
-  .tab-pane.active id="tab-node"
+  = tab :content
     = render 'folio/console/nodes/form/node', f: f
 
     = render 'additional_form_fields', f: f
 
-  .tab-pane id="tab-atoms"
+  = tab :atoms
     = render 'folio/console/nodes/form/atoms', f: f
 
-  .tab-pane id="tab-gallery"
+  = tab :gallery
     = react_images f.object.file_placements
 
-  .tab-pane id="tab-documents"
+  = tab :documents
     = react_documents f.object.file_placements
 
 = f.button :submit

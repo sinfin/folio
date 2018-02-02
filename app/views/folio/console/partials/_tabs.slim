@@ -1,9 +1,9 @@
 ul.nav.nav-tabs
-  - [:node, :atoms, :gallery, :documents].each_with_index do |key, i|
+  - keys.each_with_index do |key, i|
     li.nav-item
       a.nav-link[
         data-toggle="tab"
         href="#tab-#{key}"
-        class=(i.zero? ? 'active' : nil)
+        class=(key == :content ? 'active' : nil)
       ]
         = t(".#{key}")
