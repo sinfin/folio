@@ -6,7 +6,9 @@ html.bg-dark lang=I18n.locale
   body.bg-dark
     = render partial: 'layouts/folio/console/header' unless @devise
 
-    = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
+    - if @breadcrumbs.present?
+      - add_action_breadcrumb
+      = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
     == cell('folio/console/flash', flash)
 
     .folio-console-layout-main

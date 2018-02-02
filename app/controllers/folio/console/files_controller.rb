@@ -4,6 +4,10 @@ module Folio
   class Console::FilesController < Console::BaseController
     before_action :find_files, only: [:index]
     before_action :find_file, except: [:index, :create, :new]
+    before_action do
+      add_breadcrumb (params[:type] == 'image' ? Image : File).model_name.human(count: 2),
+                     console_files_path(type: params[:type])
+    end
     respond_to :json, only: [:index, :create]
 
     def index

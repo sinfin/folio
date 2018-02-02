@@ -3,6 +3,7 @@
 module Folio
   class Console::MenusController < Console::BaseController
     before_action :find_menu, except: [:index, :create, :new]
+    add_breadcrumb Menu.model_name.human(count: 2), :console_menus_path
 
     def index
       @menus = Menu.all

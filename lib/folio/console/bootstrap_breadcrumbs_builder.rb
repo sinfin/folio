@@ -49,15 +49,24 @@ class Folio::Console::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcru
 
   def render_element(element)
     name = compute_name(element)
-    path = compute_path(element)
 
-    current = @context.current_page?(path)
+    if element.path.present?
+      path = compute_path(element)
+      current = @context.current_page?(path)
+    else
+      path = nil
+      current = true
+    end
 
     item_tag = @options.fetch(:tag, :li)
 
     @context.content_tag(item_tag, class: ['breadcrumb-item', ('active' if current)]) do
       opts = element.options.merge(class: 'text-dark')
-      @context.link_to_unless_current(name, path, opts)
+      if current
+        name
+      else
+        @context.link_to(name, path, opts)
+      end
     end
   end
 

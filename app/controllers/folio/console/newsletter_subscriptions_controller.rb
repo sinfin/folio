@@ -3,6 +3,8 @@
 module Folio
   class Console::NewsletterSubscriptionsController < Console::BaseController
     before_action :find_subscription, except: :index
+    add_breadcrumb(NewsletterSubscription.model_name.human(count: 2),
+                   :console_newsletter_subscriptions_path)
 
     def index
       if params[:by_query].present?

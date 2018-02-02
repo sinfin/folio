@@ -2,9 +2,8 @@
 
 module Folio
   class Console::BaseController < ApplicationController
-    include Console::AutoBreadcrumbs
-
     before_action :authenticate_account!
+    before_action :add_root_breadcrumb
     # TODO: before_action :authorize_account!
 
     layout 'folio/console/application'
@@ -61,5 +60,9 @@ module Folio
       end
 
       helper_method :filter_params
+
+      def add_root_breadcrumb
+        add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
+      end
   end
 end

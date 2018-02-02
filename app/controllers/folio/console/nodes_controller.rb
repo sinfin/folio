@@ -8,6 +8,7 @@ module Folio
 
     before_action :find_node, except: [:index, :create, :new, :set_position]
     before_action :find_files, only: [:new, :edit, :create, :update]
+    add_breadcrumb Node.model_name.human(count: 2), :console_nodes_path
 
     def index
       if params[:by_parent].present?

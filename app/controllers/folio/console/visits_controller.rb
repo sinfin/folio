@@ -3,6 +3,7 @@
 module Folio
   class Console::VisitsController < Console::BaseController
     load_and_authorize_resource
+    add_breadcrumb Visit.model_name.human(count: 2), :console_visits_path
 
     def index
       @visits = @visits.filter(filter_params) if params[:by_query].present?

@@ -20,5 +20,11 @@ module Folio
         on_off_icon(bool)
       end
     end
+
+    def add_action_breadcrumb
+      return if action_name == 'index'
+      name = action_name == 'update' ? 'edit' : action_name
+      add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.#{name}")
+    end
   end
 end
