@@ -6,4 +6,7 @@ $ ->
     $wrap.addClass('folio-lead-form-submitting')
 
     $.post($form.attr('action'), $form.serialize())
-      .always((response) -> $wrap.replaceWith(response))
+      .always (response) ->
+        $response = $(response)
+        $wrap.replaceWith($response)
+        $response.trigger('submitted.folio')
