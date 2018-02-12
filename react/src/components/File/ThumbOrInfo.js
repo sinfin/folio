@@ -6,6 +6,11 @@ const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 0;
+
+  strong {
+    max-width: 100%;
+  }
 
   i {
     margin-bottom: 10px;
