@@ -60,6 +60,23 @@
 .card + .card
   margin-top: $grid-gutter-width
 
+.modal-lg
+  .modal-body
+    position: relative
+    z-index: 1
+
+  .close
+    position: absolute
+    top: 5px
+    right: 0
+    padding: 18px
+    z-index: 2
+
+@include media-breakpoint-up(lg)
+  .modal-lg
+    width: 100vw
+    max-width: 1000px
+
 +mq-wide-layout
   .breadcrumb
     border-top-left-radius: $border-radius-lg

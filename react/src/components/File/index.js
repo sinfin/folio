@@ -54,11 +54,11 @@ const IconsWrap = styled.div`
 `
 
 export function File ({ file, selected, position, onClick, singleSelect }) {
-  const inputPrefix = `node[file_placements_attributes][${file.file_id}]`
+  const inputPrefix = `node[file_placements_attributes][]`
 
   return (
     <OuterWrap onClick={selected ? null : onClick}>
-      <input type='hidden' name={`${inputPrefix}[id]`} value={file.id} />
+      {file.id && <input type='hidden' name={`${inputPrefix}[id]`} value={file.id} />}
       <input type='hidden' name={`${inputPrefix}[file_id]`} value={file.file_id} />
       <input type='hidden' name={`${inputPrefix}[position]`} value={position} />
       <input type='hidden' name={`${inputPrefix}[_destroy]`} value={selected ? 0 : 1} />

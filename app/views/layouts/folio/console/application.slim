@@ -17,6 +17,14 @@ html.bg-dark lang=I18n.locale
 
     == cell('folio/console/footer', @site)
 
+    .modal.folio-console-react-images-modal.fade
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-body
+            = react_images_modal
+
+          button type="button" class="close" data-dismiss="modal" &times;
+
     = javascript_include_tag 'folio/console/base'
 
     - if ENV['REACT_DEV']

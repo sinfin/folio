@@ -10,6 +10,16 @@ module Folio
       react_files('Folio::Document', selected_placements.try(:with_document))
     end
 
+    def react_images_modal
+      if ['new', 'edit', 'create', 'update'].include?(action_name)
+        content_tag(:div, nil,
+          'class': 'folio-react-wrap',
+          'data-file-type': 'Folio::Image',
+          'data-mode': 'modal-select',
+        )
+      end
+    end
+
     def react_files(type, selected_placements)
       if selected_placements.present?
         placements = selected_placements.ordered.map do |fp|

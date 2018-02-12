@@ -11,7 +11,7 @@ import Loader from 'components/Loader'
 import SingleSelectWrap from './SingleSelectWrap'
 import SingleSelectScroll from './SingleSelectScroll'
 
-class MultiSelect extends Component {
+class SingleSelect extends Component {
   componentWillReceiveProps (nextProps) {
     if (nextProps.files.selectable.length !== this.props.files.selectable.length) {
       forceCheck()
@@ -19,7 +19,9 @@ class MultiSelect extends Component {
   }
 
   selectFile (file) {
-    if (window.folioConsoleInsertImage) {
+    if (this.props.selectFile) {
+      this.props.selectFile(file)
+    } else if (window.folioConsoleInsertImage) {
       window.folioConsoleInsertImage(file)
     }
   }
@@ -52,4 +54,4 @@ const mapStateToProps = (state) => ({
   files: filteredFilesSelector(state),
 })
 
-export default connect(mapStateToProps, null)(MultiSelect)
+export default connect(mapStateToProps, null)(SingleSelect)

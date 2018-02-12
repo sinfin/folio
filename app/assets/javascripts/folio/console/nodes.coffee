@@ -185,7 +185,9 @@ $ ->
   $(document).on 'click', '.btn.destroy-image', (e) ->
     e.preventDefault()
     $button = $(this)
-    $button.find('input[type="hidden"]:first').val(1)
+    $button.find('input[type="hidden"]').filter(->
+      $(this).attr('name').indexOf('_destroy') isnt -1
+    ).val(1)
     $button.closest('.nested-fields').fadeOut(500)
     $parent = $button.closest('.nested-fields')
     $parent.fadeOut(500, ->

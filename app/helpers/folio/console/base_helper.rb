@@ -23,8 +23,21 @@ module Folio
 
     def add_action_breadcrumb
       return if action_name == 'index'
-      name = action_name == 'update' ? 'edit' : action_name
+      name = add_action_breadcrumb_name
       add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.#{name}")
     end
+
+    private
+
+      def add_action_breadcrumb_name
+        case action_name
+        when 'update'
+          'edit'
+        when 'create'
+          'new'
+        else
+          action_name
+        end
+      end
   end
 end
