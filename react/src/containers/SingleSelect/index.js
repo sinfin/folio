@@ -5,6 +5,7 @@ import { forceCheck } from 'react-lazyload'
 import { filteredFilesSelector } from 'ducks/filters'
 
 import FileFilter from 'containers/FileFilter'
+import Uploader from 'containers/Uploader'
 import { File } from 'components/File'
 import Loader from 'components/Loader'
 
@@ -35,15 +36,17 @@ class SingleSelect extends Component {
         <FileFilter />
 
         <SingleSelectScroll>
-          {files.selectable.map((file) => (
-            <File
-              file={file}
-              key={file.file_id}
-              onClick={() => this.selectFile(file)}
-              selected={false}
-              singleSelect
-            />
-          ))}
+          <Uploader showUploading>
+            {files.selectable.map((file) => (
+              <File
+                file={file}
+                key={file.file_id}
+                onClick={() => this.selectFile(file)}
+                selected={false}
+                singleSelect
+              />
+            ))}
+          </Uploader>
         </SingleSelectScroll>
       </SingleSelectWrap>
     )

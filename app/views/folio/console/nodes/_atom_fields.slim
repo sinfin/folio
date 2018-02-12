@@ -1,4 +1,4 @@
-.nested-fields
+.nested-fields.card
   .card-body
     .row
       .col-sm-7
@@ -9,11 +9,14 @@
                              input_html: { class: 'atom-type-select' }
 
           .col-sm-4
-            .btn.btn-outline-secondary.ml-2.atom.position-up
-              = icon 'arrow-up'
-            .btn.btn-outline-secondary.ml-2.atom.position-down
-              = icon 'arrow-down'
-            = f.hidden_field :position, class: 'position'
+            .form-group
+              label.control-label = t('.position')
+              div
+                .btn.btn-outline-secondary.atom.position-up
+                  = icon 'arrow-up'
+                .btn.btn-outline-secondary.ml-2.atom.position-down
+                  = icon 'arrow-down'
+                = f.hidden_field :position, class: 'position'
 
         - if f.object.class.form != :none
           = atom_model_field(f)
@@ -25,30 +28,20 @@
         - else
           = link_to_remove_association t('.remove'), f, class: 'btn btn-danger'
 
-      .col-sm-3
-        label = t('.image')
+      .col-sm-5
+        label = t('.images')
 
-        = f.simple_fields_for :file_placements, \
-                              f.object.file_placements.with_image do |fp|
-          .nested-fields
-            = image_tag fp.object.file.file.thumb('250x250#').url, \
-                        class: 'img-responsive card-img-top'
-            = link_to '#', \
-                      class: 'btn btn-danger destroy-image', \
-                      role: 'button' do
-              = t('.remove_image')
+        .folio-console-nested-fields-with-images
+          = f.simple_fields_for :file_placements, \
+                                f.object.file_placements.with_image do |fp|
+            .nested-fields
+              = image_tag fp.object.file.file.thumb('250x250#').url
+              .folio-console-hover-destroy
+                i.fa.fa-times-circle data-destroy-association=true
+
               = fp.hidden_field :_destroy, value: 0
               = fp.hidden_field :file_id
               = fp.hidden_field :id
-
-        / = f.simple_fields_for :file_placements, \
-        /                       Folio::FilePlacement.new, \
-        /                       defaults: { disabled: true } do |fp|
-        /   .nested-fields.file-placement-new hidden=""
-        /     = image_tag '', class: 'img-responsive card-img-top'
-        /     = fp.hidden_field :file_id
-        /     a.btn.btn-danger.remove href='#' role='button'
-        /       = t('.image.remove')
 
         button.btn.btn-success.folio-console-add-image type='button'
           = t('.add_image')

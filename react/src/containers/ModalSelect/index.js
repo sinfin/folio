@@ -25,32 +25,38 @@ class ModalSelect extends Component {
     if (!$) return
 
     const $el = $(this.state.el)
+    const $fields = $el.siblings('.folio-console-nested-fields-with-images')
 
-    const $last = $el.siblings('.nested-fields').last()
+    const $last = $fields.find('.nested-fields').last()
     let position = 0
 
     if ($last.length) {
       position = Number($last.find('input').filter(function () {
         return $(this).attr('name').indexOf('position') !== -1
       }).val()) + 1
+
       if (Number.isNaN(position)) {
         position = 0
       }
     }
 
-    const name = $el.parents('.nested-fields').find('input[type="hidden"]').attr('name')
-    const prefix = `${name.match(/\w+\[\w+\]\[\w+\]/)}[file_placements_attributes][]`
+    const name = $el.closest('.nested-fields').find('input[type="hidden"]').attr('name')
+    const prefix = `${name.match(/\w+\[\w+\]\[\w+\]/)}[file_placements_attributes][${Date.now()}]`
+
     const $newFile = $(`
       <div class="nested-fields">
-        <img class="img-responsive" src=${file.thumb} alt="" />
-        <a href="#" class="btn btn-danger destroy-image">&times;</a>
+        <img src=${file.thumb} alt="" />
+        <div class="folio-console-hover-destroy">
+          <i class="fa fa-times-circle" data-destroy-association=""></i>
+        </div>
+
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.file_id}" />
         <input type="hidden" name="${prefix}[position]" value="${position}" />
       </div>
     `)
 
-    $newFile.insertBefore($el)
+    $fields.append($newFile)
 
     $(MODAL_SELECTOR).modal('hide')
   }

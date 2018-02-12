@@ -182,18 +182,6 @@ $ ->
     $button.find('input[type="hidden"]:first').val(1)
     $button.closest('.nested-fields').fadeOut(500)
 
-  $(document).on 'click', '.btn.destroy-image', (e) ->
-    e.preventDefault()
-    $button = $(this)
-    $button.find('input[type="hidden"]').filter(->
-      $(this).attr('name').indexOf('_destroy') isnt -1
-    ).val(1)
-    $button.closest('.nested-fields').fadeOut(500)
-    $parent = $button.closest('.nested-fields')
-    $parent.fadeOut(500, ->
-      $parent.nextAll('.remove-after:first').show(500)
-    )
-
   $(document).on 'click', '.btn.image.position-up', ->
     $this_image = $(this).closest('.nested-fields')
     $that_image = $this_image.prevAll('.nested-fields:first')

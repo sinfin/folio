@@ -94,8 +94,6 @@ en:
           atoms:
             add: Add atom
         atom_fields:
-          image: Image
-          no_image: No image
+          images: Images
           add_image: Add image
           remove: Remove atom
-          remove_image: Remove image

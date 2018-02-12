@@ -5,12 +5,14 @@ import styled from 'styled-components'
 
 import { CSRF } from 'utils/api'
 
+import { UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import {
   addedFile,
   thumbnail,
   success,
   error,
+  uploadsSelector,
 } from 'ducks/uploads'
 import { fileTypeSelector } from 'ducks/app'
 
@@ -69,6 +71,16 @@ class MultiSelect extends Component {
         eventHandlers={this.eventHandlers()}
       >
         {this.props.children}
+
+        {this.props.showUploading && (
+          this.props.uploads.records.map((upload, index) => (
+            <UploadingFile
+              upload={upload}
+              key={upload.id}
+            />
+          ))
+        )}
+        {this.props.showUploading && <DropzoneTrigger />}
       </StyledDropzone>
     )
   }
@@ -76,6 +88,7 @@ class MultiSelect extends Component {
 
 const mapStateToProps = (state) => ({
   fileType: fileTypeSelector(state),
+  uploads: uploadsSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {
