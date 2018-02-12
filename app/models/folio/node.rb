@@ -207,7 +207,7 @@ module Folio
         return if self.type == 'Folio::NodeTranslation'
         return if parent.class.allowed_child_types.nil?
 
-        if parent.class.allowed_child_types.exclude? self.type
+        if parent.class.allowed_child_types.exclude? self.class
           errors.add(:type, 'is not allowed')
         end
       end
