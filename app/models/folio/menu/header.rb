@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio
-  class Menu::Header < Folio::Menu
+  class Menu::Header < Menu
   end
 end
 

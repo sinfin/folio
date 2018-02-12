@@ -8,14 +8,18 @@ module Folio
   module Console::AtomsHelper
     def atom_types_for_select
       for_select = []
-      get_subclasses(Folio::Atom).flatten.each do |type|
-        for_select << [t("atom_names.#{type}"), type, { 'data-form' => type.form }] if type.form
+      get_subclasses(Atom).flatten.each do |type|
+        if type.form
+          for_select << [type.model_name.human,
+                         type,
+                         { 'data-form' => type.form }]
+        end
       end
       for_select
     end
 
     def atom_model_field(f)
-      selects = get_subclasses(Folio::Atom).flatten.map do |type|
+      selects = get_subclasses(Atom).flatten.map do |type|
         if type::ALLOWED_MODEL_TYPE.present?
           active = type == f.object.class
           f.association :model,

@@ -1,0 +1,42 @@
+html
+  height: 100%
+  overflow-y: scroll
+
+body
+  display: flex
+  flex-direction: column
+  min-height: 100%
+  max-width: 1600px
+  margin: 0 auto
+
+.folio-console-layout-main
+  flex: 1 1 auto
+  padding: $grid-gutter-half
+  display: flex
+  flex-direction: column
+  background: white
+
+.folio-console-layout-with-sidebar
+  display: flex
+  align-items: stretch
+  flex: 1 1 auto
+
+.folio-console-layout-content
+  flex: 1 1 100%
+
+.folio-console-layout-sidebar
+  flex: 0 0 270px
+  margin-top: -$grid-gutter-half
+  margin-bottom: -$grid-gutter-half
+  margin-right: -$grid-gutter-half
+  margin-left: $grid-gutter-width
+  padding: $grid-gutter-half
+  background: $gray-100
+
++mq-wide-layout
+  .folio-console-layout-main
+    border-bottom-left-radius: $border-radius-lg
+    border-bottom-right-radius: $border-radius-lg
+
+  .folio-console-layout-sidebar
+    border-bottom-right-radius: $border-radius-lg

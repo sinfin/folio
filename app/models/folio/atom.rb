@@ -13,7 +13,10 @@ module Folio
       end
     end
 
-    belongs_to :placement, polymorphic: true, optional: true
+    belongs_to :placement,
+               polymorphic: true,
+               # so that validations work https://stackoverflow.com/a/39114379/910868
+               optional: true
     alias_attribute :node, :placement
     belongs_to :model, polymorphic: true, optional: true
 
@@ -22,6 +25,7 @@ module Folio
     validate :model_type_is_allowed, if: :model_id?
 
     scope :ordered, -> { order(position: :asc) }
+    scope :by_type, -> (type) { where(type: type.to_s) }
 
     def cell_name
       nil

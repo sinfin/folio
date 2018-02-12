@@ -13,3 +13,70 @@
 
       &:first-child
         margin-top: 0
+
+.alert
+  margin: 0
+  padding-left: 1rem
+  border-left: 0
+  border-right: 0
+
+  .breadcrumb + &
+    margin-top: -1rem
+
+.table
+  thead th, tbody td
+    vertical-align: middle
+
+  tr
+    td:last-child
+      text-align: right
+
+      .btn + .btn
+        margin-left: 1ch
+
+.breadcrumb
+  border-radius: 0
+  margin-bottom: 0
+
+.card
+  margin-bottom: $grid-gutter-width
+
+  .card-body
+    position: relative
+    z-index: 1
+
+  .list-group
+    position: relative
+    z-index: 2
+
+.card-active
+  border: 0
+
+  .card-header
+    background: $success
+    color: white
+
+  .card-body
+    background: rgba($success, 0.2)
+
+.modal-lg
+  .modal-body
+    position: relative
+    z-index: 1
+
+  .close
+    position: absolute
+    top: 5px
+    right: 0
+    padding: 18px
+    z-index: 2
+
+@include media-breakpoint-up(lg)
+  .modal-lg
+    width: 100vw
+    max-width: 1000px
+
++mq-wide-layout
+  .breadcrumb
+    border-top-left-radius: $border-radius-lg
+    border-top-right-radius: $border-radius-lg

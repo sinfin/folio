@@ -1,0 +1,29 @@
+.folio-console-index-header.row.align-items-center
+  .col
+    h1 = title
+
+  .col.folio-console-index-header-right
+    = form
+      .input-group
+        = input
+
+        - if controller.params[:by_query].present?
+          .input-group-append
+            button.btn.btn-outline.text-danger[
+              type="submit"
+              data-target=".folio-console-by-query"
+              data-change-value=""
+            ]
+              .fa.fa-close
+
+        .input-group-append
+          button.btn.btn-outline type="submit"
+            .fa.fa-search
+
+      - HIDDEN_FIELDS.each do |key|
+        = hidden_field_tag key, controller.params[key]
+
+    - if options[:new_path].present?
+        a.btn.btn-success href=options[:new_path]
+          i.fa.fa-plus.fa-mr
+          = t('folio.console.breadcrumbs.actions.add')

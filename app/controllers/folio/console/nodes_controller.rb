@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::NodesController < Console::BaseController
     include Console::NodesHelper
@@ -10,31 +8,32 @@ module Folio
 
     before_action :find_node, except: [:index, :create, :new, :set_positions]
     before_action :find_files, only: [:new, :edit, :create, :update]
+    add_breadcrumb Node.model_name.human(count: 2), :console_nodes_path
 
     def index
-      if params[:by_parent].present? && %i[by_query by_published by_type by_tag].map { |by| params[by].blank? }.all?
-        parent = Folio::Node.find(params[:by_parent])
-        @nodes = parent.subtree.original.arrange(order: 'position ASC, created_at ASC')
-        @filtered = true
-      elsif %i[by_query by_published by_type by_tag by_parent].map { |by| params[by].present? }.any?
-        @nodes = Folio::Node.
-        original.
-        ordered.
-        filter(filter_params).
-        page(current_page)
-        @filtered = true
+      if params[:by_parent].present?
+        if misc_filtering?
+          begin
+            @nodes = Node.original.ordered.filter(filter_params).page(current_page)
+          rescue ActiveRecord::RecordNotFound
+            @nodes = []
+          end
+        else
+          parent = Node.find(params[:by_parent])
+          @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
+        end
       else
         @limit = 5
-        @nodes = Folio::Node.original.arrange(order: 'position ASC, created_at ASC')
+        @nodes = Node.original.arrange(order: 'position desc, created_at desc')
       end
     end
 
     def new
       if params[:node].blank? || params[:node][:original_id].blank?
-        parent = Folio::Node.find(params[:parent]) if params[:parent].present?
-        @node = Folio::Node.new(parent: parent, type: params[:type])
+        parent = Node.find(params[:parent]) if params[:parent].present?
+        @node = Node.new(parent: parent, type: params[:type])
       else
-        original = Folio::Node.find(params[:node][:original_id])
+        original = Node.find(params[:node][:original_id])
 
         @node = original.translate!(params[:node][:locale])
 
@@ -46,7 +45,7 @@ module Folio
 
     def create
       # set type first beacuse of @node.additional_params
-      @node = Folio::Node.new(type: params[:node][:type])
+      @node = Node.new(type: params[:node][:type])
       @node.update(node_params)
       respond_with @node, location: console_nodes_path
     end
@@ -61,24 +60,23 @@ module Folio
       respond_with @node, location: console_nodes_path
     end
 
-    def set_positions
-      params.require(:ids).each do |id, values|
-        Folio::Node.find(id).update(values.permit(:position))
-      end
+    def set_position
+      Node.update(set_position_params.keys, set_position_params.values)
       render json: { success: 'success', status_code: '200' }
     end
 
   private
+
     def after_new
     end
 
     def find_node
-      @node = Folio::Node.friendly.find(params[:id])
+      @node = Node.friendly.find(params[:id])
     end
 
     def find_files
-      @images = Folio::Image.all.page(1).per(11)
-      @documents = Folio::Document.all.page(1).per(11)
+      @images = Image.all.page(1).per(11)
+      @documents = Document.all.page(1).per(11)
     end
 
     def filter_params
@@ -103,27 +101,18 @@ module Folio
                         :parent_id,
                         :original_id,
                         *@node.additional_params,
-                        file_placements_attributes: [:id,
-                                                     :caption,
-                                                     :tag_list,
-                                                     :file_id,
-                                                     :position,
-                                                     :_destroy],
-                        atoms_attributes: [:id,
-                                           :type,
-                                           :model_id,
-                                           :content,
-                                           :position,
-                                           :_destroy,
-                                           file_placements_attributes: [:id,
-                                                                        :file_id,
-                                                                        :_destroy],
-                                           ])
+                        *atoms_strong_params,
+                        *file_placements_strong_params)
+      p[:slug] = nil unless p[:slug].present?
       p
     end
 
     def set_position_params
       params.require(:node)
+    end
+
+    def misc_filtering?
+      %i[by_query by_published by_type by_tag].any? { |by| params[by].present? }
     end
   end
 end

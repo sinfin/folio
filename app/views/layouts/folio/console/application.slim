@@ -1,15 +1,35 @@
 doctype html
-html lang=I18n.locale
+html.bg-dark lang=I18n.locale
   head
     = render partial: 'layouts/folio/console/head'
 
-  body
+  body.bg-dark
     = render partial: 'layouts/folio/console/header' unless @devise
 
-    .container-fluid
+    - if @breadcrumbs.present?
+      - add_action_breadcrumb
+      = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
+    == cell('folio/console/flash', flash)
+
+    .folio-console-layout-main
+
       = yield
 
-    = render partial: 'layouts/folio/console/footer'
+    == cell('folio/console/footer', @site)
+
+    .modal.folio-console-react-images-modal.fade
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-body
+            = react_images_modal
+
+          button type="button" class="close" data-dismiss="modal" &times;
 
     = javascript_include_tag 'folio/console/base'
+
+    - if ENV['REACT_DEV']
+      = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
+    - else
+      = javascript_include_tag 'folio/console/react/main'
+
     = yield :javascripts

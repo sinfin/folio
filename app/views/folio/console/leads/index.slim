@@ -1,17 +1,7 @@
-.row
-  .col-6
-    h1
-      = icon('phone')
-      '
-      = t('.title')
-  .col
-    = filter_form(console_leads_path) do
-      .form-row
-        .col-6.ml-auto
-          = query_field t('folio.console.query')
+== cell('folio/console/index/header', Folio::Lead)
 
 .table-responsive
-  table.table.table-striped.align-middle
+  table.table.table-striped
     thead
       tr
         th = t(".email")

@@ -1,0 +1,27 @@
+{
+  "name": "images",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "immutable": "^3.8.2",
+    "lodash": "^4.17.4",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-dropzone-component": "^3.1.0",
+    "react-lazyload": "^2.3.0",
+    "react-redux": "^5.0.6",
+    "react-scripts": "1.1.0",
+    "react-select": "^1.2.1",
+    "react-sortable-hoc": "^0.6.8",
+    "redux": "^3.7.2",
+    "redux-immutable": "^4.0.0",
+    "redux-saga": "^0.16.0",
+    "styled-components": "^3.0.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

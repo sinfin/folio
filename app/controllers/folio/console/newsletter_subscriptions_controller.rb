@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::NewsletterSubscriptionsController < Console::BaseController
     before_action :find_subscription, except: :index
+    add_breadcrumb(NewsletterSubscription.model_name.human(count: 2),
+                   :console_newsletter_subscriptions_path)
+
     def index
       if params[:by_query].present?
         @subscriptions = NewsletterSubscription.filter(filter_params)
@@ -22,7 +23,7 @@ module Folio
     private
 
       def find_subscription
-        @subscription = Folio::NewsletterSubscription.find(params[:id])
+        @subscription = NewsletterSubscription.find(params[:id])
       end
   end
 end

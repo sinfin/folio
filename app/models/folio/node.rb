@@ -27,7 +27,13 @@ module Folio
 
     before_validation do
       # FIXME: breaks without a parent
-      self.site = parent.site if site.nil?
+      if site.nil?
+        if parent.blank?
+          self.site = Site.first
+        else
+          self.site = parent.site
+        end
+      end
       self.locale = site.locale if locale.nil?
     end
 

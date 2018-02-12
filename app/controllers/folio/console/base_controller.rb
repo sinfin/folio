@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-require 'folio/application_responder'
-
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::BaseController < ApplicationController
     before_action :authenticate_account!
-    #TODO: before_action :authorize_account!
+    before_action :add_root_breadcrumb
+    # TODO: before_action :authorize_account!
 
     layout 'folio/console/application'
-    self.responder = ApplicationResponder
+    self.responder = Console::ApplicationResponder
     respond_to :html
 
     # rescue_from CanCan::AccessDenied do |exception|
@@ -57,5 +54,34 @@ module Folio
       end
 
       helper_method :filter_params
+
+      def add_root_breadcrumb
+        add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
+      end
+
+      def file_placements_strong_params
+        [{
+          file_placements_attributes: [:id,
+                                       :caption,
+                                       :tag_list,
+                                       :file_id,
+                                       :position,
+                                       :_destroy]
+
+        }]
+      end
+
+      def atoms_strong_params
+        [{
+          atoms_attributes: [:id,
+                             :type,
+                             :model_id,
+                             :title,
+                             :content,
+                             :position,
+                             :_destroy,
+                             *file_placements_strong_params]
+        }]
+      end
   end
 end

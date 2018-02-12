@@ -6,7 +6,10 @@ module Folio
 
     # Relations
     belongs_to :file, class_name: 'Folio::File'
-    belongs_to :placement, polymorphic: true
+    belongs_to :placement,
+               polymorphic: true,
+               # so that validations work https://stackoverflow.com/a/39114379/910868
+               optional: true
 
     # only one tag allowed
     validate :allowed_tag

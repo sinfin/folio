@@ -1,0 +1,9 @@
+ul.nav.nav-tabs
+  - keys.each_with_index do |key, i|
+    li.nav-item
+      a.nav-link[
+        data-toggle="tab"
+        href="#tab-#{key}"
+        class=(key == :content ? 'active' : nil)
+      ]
+        = t(".#{key}")

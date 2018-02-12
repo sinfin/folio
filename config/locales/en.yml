@@ -101,16 +101,6 @@ en:
       note_placeholder: ''
       message: Thanks for your message!
 
-  atom_names:
-    'Folio::Atom::Text': Text
-    'Folio::Atom::PageReference': Page Reference
-
-  node_names:
-    'Folio::Node': Node
-    'Folio::Category': Category
-    'Folio::Page': Page
-    'Folio::NodeTranslation': Translation
-
   cookie_consent:
     dismiss: OK
     link: Learn more

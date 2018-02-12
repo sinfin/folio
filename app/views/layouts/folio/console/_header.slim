@@ -1,5 +1,8 @@
-nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
-  a.navbar-brand href=console_dashboard_index_path = @site.title
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  a.navbar-brand href=console_dashboard_index_path
+    i.fa.fa-lock.fa-mr
+    = @site.title
+
   button.navbar-toggler[
     aria-controls="navbarSupportedContent"
     aria-expanded="false"
@@ -13,21 +16,24 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
   #navbar.navbar-collapse.collapse
     ul.navbar-nav.mr-auto
 
-      = nav_item_link_to t('.nodes'), console_nodes_path
-      = nav_item_link_to t('.menus'), console_menus_path
-      = nav_item_link_to t('.files'), console_files_path
-      = nav_item_link_to t('.newsletter_subscriptions'), \
+      = nav_item_link_to Folio::Node, console_nodes_path
+      = nav_item_link_to Folio::Menu, console_menus_path
+      = nav_item_link_to Folio::Image, console_files_path(type: :image)
+      = nav_item_link_to Folio::Document, console_files_path(type: :document)
+      = nav_item_link_to Folio::NewsletterSubscription, \
                          console_newsletter_subscriptions_path
-      = nav_item_link_to t('.leads'), console_leads_path
-      = nav_item_link_to t('.visits'), console_visits_path
-      = nav_item_link_to t('.users'), console_accounts_path
+      = nav_item_link_to Folio::Lead, console_leads_path
+      = nav_item_link_to Visit, console_visits_path
+      = nav_item_link_to Folio::Account, console_accounts_path
 
       = render 'folio/console/partials/additional_menu_items'
 
       li.divider role="separator"
 
     ul.nav.navbar-nav.navbar-right
-      li.nav-item = link_to t('folio.site.settings.title'), \
-                            edit_console_site_path(@site), \
-                            class: 'nav-link'
+      li.nav-item
+        = link_to edit_console_site_path(@site), class: 'nav-link'
+          i.fa.fa-cogs.fa-mr
+          = t('folio.site.settings.title')
+
       = render 'folio/console/partials/auth_links'

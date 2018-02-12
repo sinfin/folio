@@ -16,15 +16,15 @@ module Folio
     end
 
     def new_child_node_button(parent)
-      new_button new_console_node_path(parent: parent.id),
-        label: t('node_names.Folio::Node')
+      new_button(new_console_node_path(parent: parent.id),
+                 label: Folio::Node.model_name.human)
     end
 
-    def node_preview_button(node, opts = { label: 'Preview' })
-      ico = icon 'eye', opts.delete(:label)
+    def node_preview_button(node, opts = {})
+      ico = icon 'eye'
       path = nested_page_path(node, add_parents: true)
 
-      opts.reverse_merge!(class: 'btn btn-info pull-right', target: :_blank)
+      opts.reverse_merge!(class: 'btn btn-info', target: :_blank)
 
       link_to(ico, path, opts).html_safe
     end
@@ -34,13 +34,13 @@ module Folio
       if node && !node.class.allowed_child_types.nil?
         node.class.allowed_child_types.each do |type|
           for_select << [
-             t("node_names.#{type}"),
+             type.model_name.human,
              type.to_s
           ]
         end
       else
-        get_subclasses(Folio::Node).flatten.each do |type|
-          for_select << [t("node_names.#{type}"), type] if type.view_name
+        get_subclasses(Node).flatten.each do |type|
+          for_select << [type.model_name.human, type] if type.view_name
         end
       end
       for_select

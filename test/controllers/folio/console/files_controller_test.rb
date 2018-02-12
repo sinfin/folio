@@ -4,7 +4,7 @@ require 'test_helper'
 require_relative 'base_controller_test'
 
 module Folio
-  class Console::FilesControllerTest < Folio::Console::BaseControllerTest
+  class Console::FilesControllerTest < Console::BaseControllerTest
     setup do
       @image = create(:folio_image)
     end

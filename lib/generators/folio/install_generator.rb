@@ -16,6 +16,7 @@ module Folio
         gem 'cells-slim'
         gem 'route_translator'
         gem 'breadcrumbs_on_rails'
+        gem 'raven'
         gem 'pg', version: '~> 0.21.0'
 
         gem_group :development do
@@ -91,6 +92,8 @@ module Folio
           'config/secrets.yml',
           'config/initializers/assets.rb',
           'config/initializers/folio.rb',
+          'config/initializers/raven.rb',
+          'config/initializers/smtp.rb',
           'config/routes.rb',
           'lib/application_cell.rb',
           'vendor/assets/bower_components/.keep',
@@ -113,6 +116,16 @@ module Folio
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
+        RUBY
+        end
+      end
+
+      def gemfile_rails_assets
+        return if File.readlines(Rails.root.join('config/application.rb')).grep('rails-assets.org').any?
+
+        inject_into_file 'Gemfile', after: "source 'https://rubygems.org'" do <<-'RUBY'
+
+source 'https://rails-assets.org'
         RUBY
         end
       end

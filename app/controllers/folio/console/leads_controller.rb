@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
-  class Console::LeadsController < Folio::Console::BaseController
+  class Console::LeadsController < Console::BaseController
     load_and_authorize_resource :lead, class: 'Folio::Lead'
+    add_breadcrumb Lead.model_name.human(count: 2), :console_leads_path
 
     def index
       @leads = @leads.filter(filter_params) if params[:by_query].present?

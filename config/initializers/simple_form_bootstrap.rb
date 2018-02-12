@@ -3,7 +3,7 @@
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
   config.error_notification_class = 'alert alert-danger'
-  config.button_class = 'btn btn-default'
+  config.button_class = 'btn btn-primary'
   config.boolean_label_class = nil
 
   config.wrappers :vertical_form, tag: 'div', class: 'form-group', error_class: 'text-danger has-danger' do |b|
@@ -38,8 +38,9 @@ SimpleForm.setup do |config|
     b.use :html5
     b.optional :readonly
 
-    b.wrapper tag: 'div', class: 'checkbox' do |ba|
-      ba.use :label_input
+    b.wrapper tag: 'div', class: 'form-check' do |ba|
+      ba.use :input, class: 'form-check-input'
+      ba.use :label, class: 'form-check-label'
     end
 
     b.use :error, wrap_with: { tag: 'small', class: 'form-text' }

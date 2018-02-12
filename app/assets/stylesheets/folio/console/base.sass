@@ -1,0 +1,57 @@
+=mq-wide-layout
+  @media screen and (min-width: 1600px)
+    @content
+
+@import 'bootstrap-variables'
+@import 'bootstrap'
+@import '../bootstrap-media-queries'
+@import 'bootstrap-overrides'
+
+@import 'font-awesome'
+@import 'redactor'
+@import 'redactor-overrides'
+@import 'cells'
+
+$grid-gutter-half: $grid-gutter-width / 2
+
+.select-file
+  cursor: pointer
+
+.card.active
+  border-color: $blue !important
+
+.btn-transparent
+  color: #111
+  background-color: transparent
+  border-color: transparent
+  &:hover
+    background-color: #e2e6ea
+    border-color: #dae0e5
+
+  &:focus
+    box-shadow: none
+
+tr.active
+  background-color: $gray-300 !important
+
+.dropzone
+  border: 0
+
+a.inactive
+  color: grey
+  border-bottom: 1px dotted grey
+
+.badge
+  margin-left: 0.2rem
+
+[class^="icon-"].icon-fixed-width, [class*=" icon-"].icon-fixed-width
+  text-align: center
+
+@import '../loader'
+@import '../animations/pulsing'
+@import 'modules/font-awesome'
+@import 'modules/layout'
+@import 'modules/simple-form'
+@import 'modules/flags'
+@import 'modules/hover-destroy'
+@import 'modules/nested-fields-image'

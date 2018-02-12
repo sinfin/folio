@@ -11,6 +11,7 @@ FactoryGirl.define do
     address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
     phone { Faker::PhoneNumber.phone_number }
     locale :cs
+    locales [:cs]
   end
 
   factory :folio_node, class: Folio::Node do
@@ -38,6 +39,10 @@ FactoryGirl.define do
 
   factory :folio_image, class: Folio::Image do
     file Folio::Engine.root.join('test/fixtures/folio/test.gif')
+
+    trait :black do
+      file Folio::Engine.root.join('test/fixtures/folio/test-black.gif')
+    end
   end
 
   factory :folio_lead, class: Folio::Lead do

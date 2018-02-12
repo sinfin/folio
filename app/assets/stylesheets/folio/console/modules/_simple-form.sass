@@ -1,0 +1,23 @@
+.simple_form
+  input.btn
+    + a
+      @extend .btn
+      @extend .btn-outline-secondary
+      margin-left: 1ch
+
+  .tab-content
+    margin-bottom: $grid-gutter-width
+
+  .form-group.datetime
+    .form-inline
+      +clearfix
+      visibility: collapse
+      display: block
+
+      select
+        float: left
+        visibility: visible
+        margin: 0 1ch 1ch 0
+
+        &:nth-child(4)
+          clear: left

@@ -1,5 +1,6 @@
 li.nav-item
-  = link_to t('.logout', user: current_admin.email), \
-            destroy_account_session_path, \
+  = link_to destroy_account_session_path, \
             method: :delete, \
             class: 'nav-link'
+    i.fa.fa-sign-out.fa-mr
+    = t('.logout', user: current_admin.email)

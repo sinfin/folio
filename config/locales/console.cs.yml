@@ -1,9 +1,23 @@
 cs:
   folio:
     console:
+      breadcrumbs:
+        root: Administrace
+        actions:
+          new: Nový/á
+          edit: Upravit
+          delete: Smazat
+          add: Přidat
+
       partials:
         auth_links:
           logout: Odhlásit
+
+        tabs:
+          content: Obsah
+          atoms: Atomy
+          gallery: Galerie
+          documents: Dokumenty
 
       back: Zpět
 
@@ -18,23 +32,17 @@ cs:
           type: Typ
           featured: Featured
           published: Publikované
-        filters:
-          all_nodes: Všechny nody
-          all_parents: Všechny kategorie
-          published: Jen publikované
-          unpublished: Jen rozpracované
-          all_types: Všechny typy
-          page: Stránka
-          category: Kategorie
         nodes_table:
           more_nodes: další stránky
-        node_row:
-          new:
-            confirm: Chcete přeložit stránku do %{language}?
+        translations:
+          confirm: Chcete přeložit stránku do %{language}?
+          confirm_cs: Chcete přeložit stránku do češtiny?
+          confirm_en: Chcete přeložit stránku do angličtiny?
+          confirm_de: Chcete přeložit stránku do němčiny?
         form:
           node:
             title: Obsah
-            add_atom: Přidat atom
+            settings: Nastavení
           remove: odebrat
           file_name: Název souboru
           file_size: Velikost
@@ -42,27 +50,20 @@ cs:
           tag: Tag
           additional_form_fields: Další pole
           documents:
-            title: Dokumenty
             add: Přidat dokument
           atoms:
-            title: Atomy
             add: Přidat atom
         atom_fields:
-          image: Obrázek
-          no_image: Bez obrázku
+          images: Obrázky
           add_image: Přidat obrázek
           remove: Odebrat atom
-          remove_image: Odebrat obrázek
 
       accounts:
         index:
           title: Uživatelé
-          edit: Upravit
-          query: Vyhledávání uživatelů
 
       files:
         index:
-          title: Soubory
           images: Obrázky
           documents: Dokumenty
           id: Id
@@ -78,18 +79,39 @@ cs:
 
       leads:
         index:
-          title: Leads
+          title: Formuláře
         show:
-          title: Lead
+          title: Formulář
 
       visits:
         index:
           title: Visits
-      
-      partials:
-        images_fieldset:
-          title: Galerie
-          add: Přidat obrázek
-          remove: Odebrat
 
       really_delete: Jste si jist, že chcete smazat %{title}?
+
+      sites:
+        index:
+          title: Weby
+
+      newsletter_subscriptions:
+        index:
+          title: Odběry newsletteru
+
+      footer:
+        text: Administrace webu %{site_name}.
+
+      index:
+        header:
+          by_query: Filtrovat...
+
+        filters:
+          title: Filtry
+          cancel: Zrušit filtry
+          all_nodes: Všechny nody
+          all_parents: Všechny kategorie
+          published: Jen publikované
+          unpublished: Jen rozpracované
+          all_types: Všechny typy
+          page: Stránka
+          category: Kategorie
+

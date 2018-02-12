@@ -1,115 +1,21 @@
-fieldset
-  h2 =t('.node.title')
+= tabs [:content, :atoms, :gallery, :documents]
 
-  = f.error_notification
+= f.error_notification
 
-  .row
-    .col-sm
-      = f.input :locale, disabled: true
-    .col-sm
-      - if f.object.type == 'Folio::NodeTranslation'
-        - collection = [ \
-          [t('node_names.Folio::NodeTranslation'), 'Folio::NodeTranslation'] \
-        ]
-        = f.input :type, collection: collection, readonly: true
-      - else
-        = f.input :type, collection: node_types_for_select(f.object.parent), \
-                         include_blank: false
-    .col-sm
-      = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
-                            label_method: :name_depth, \
-                            value_method: :id, \
-                            readonly: params[:parent].present?
-    .col-sm
-      = f.input :code
+.tab-content
+  = tab :content
+    = render 'folio/console/nodes/form/node', f: f
 
-  .row
-    .col-sm
-      = f.input :title
-    .col-sm
-      = f.input :slug
+    = render 'additional_form_fields', f: f
 
-  = f.input :perex
-  = f.input :content, input_html: { class: 'redactor' }
+  = tab :atoms
+    = render 'folio/console/nodes/form/atoms', f: f
 
-  .row
-    .col-sm
-      = f.input :meta_title
-    .col-sm
-      = f.input :meta_description, as: :text
-    .col-sm
-      == cell('folio/console/tagsinput', f)
+  = tab :gallery
+    = react_images f.object.file_placements
 
-  .row
-    .col-sm
-      = f.input :featured
-    .col-sm
-      = f.input :published
-    .col-sm
-      = f.input :published_at
-
-= render 'additional_form_fields', f: f
-
-fieldset#atoms
-  h2 = t('.atoms.title')
-
-  = f.simple_fields_for :atoms do |atom|
-    = render 'atom_fields', f: atom
-  .links
-    = link_to_add_association t('.node.add_atom'), \
-                              f, \
-                              :atoms, \
-                              class: 'btn btn-success'
-
-= render 'folio/console/partials/images_fieldset', f: f, images: @images
-
-fieldset
-  h2 = t('.documents.title')
-  table.table
-    thead
-      th = t('.file_name')
-      th = t('.caption')
-      - if Folio::FilePlacement.tags_for_select.present?
-        th = t('.tag')
-      th colspan='2' = t('.file_size')
-    tbody#file-placements-documents
-      - placements = f.object.file_placements.with_document.ordered
-      = f.simple_fields_for :file_placements, placements do |fp|
-        tr.nested-fields
-          td = fp.object.file.file_name
-          td = fp.input :caption, label: false
-          - if Folio::FilePlacement.tags_for_select.present?
-            - collection = Folio::FilePlacement.options_for_tag_select
-            td = fp.input :tag_list, as: :select, \
-                                     collection: collection, \
-                                     label: false
-          td = number_to_human_size fp.object.file.file_size
-          td
-            = fp.input :_destroy, as: :boolean
-            = fp.association :file, as: :hidden
-
-      = f.simple_fields_for :file_placements, Folio::FilePlacement.new, \
-                                              child_index: "{{i}}", \
-                                              defaults: { \
-                                                disabled: true \
-                                              } do |fp|
-        tr.nested-fields.file-placement-new hidden=''
-          td name='file_name'
-          td = fp.input :caption, label: false
-          td name='file_size'
-          td
-            a.btn.btn-danger.remove href='#' role='button' = t('.remove')
-            = fp.association :file, as: :hidden
-  a.btn.btn-success[
-    href='#'
-    role='button'
-    data-toggle='modal'
-    data-target='#documents-modal'
-  ]
-    = t('.documents.add')
-
-= link_to t('folio.console.back'), \
-          console_nodes_path, \
-          class: 'btn btn-secondary mr-2'
+  = tab :documents
+    = react_documents f.object.file_placements
 
 = f.button :submit
+= link_to t('folio.console.back'), console_nodes_path

@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class Console::MenusController < Console::BaseController
     before_action :find_menu, except: [:index, :create, :new]
+    add_breadcrumb Menu.model_name.human(count: 2), :console_menus_path
 
     def index
-      @menus = Folio::Menu.all
+      @menus = Menu.all
     end
 
     def new
-      @menu = Folio::Menu.new()
+      @menu = Menu.new()
     end
 
     def create
-      @menu = Folio::Menu.create(menu_params)
+      @menu = Menu.create(menu_params)
       respond_with @menu, location: console_menus_path
     end
 
@@ -31,7 +30,7 @@ module Folio
 
   private
     def find_menu
-      @menu = Folio::Menu.find(params[:id])
+      @menu = Menu.find(params[:id])
     end
 
     def filter_params
@@ -39,7 +38,11 @@ module Folio
     end
 
     def menu_params
-      p = params.require(:menu).permit(:type, menu_items_attributes: [:id, :type, :title, :rails_path, :node_id, :position, :_destroy])
+      params.require(:menu).permit(
+        :type,
+        menu_items_attributes: [:id, :type, :title, :rails_path, :node_id,
+                                :position, :_destroy]
+      )
     end
   end
 end

@@ -25,23 +25,9 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
           = fa_icon 'arrow-up', class: 'mr-1'
           = fa_icon 'arrow-down'
   td
-    - node.site.locales.each do |locale|
-      - if node.site.nodes.where(original_id: node.id, locale: locale).exists?
-        - translation_id = node.node_translations.find_by(locale: locale).id
-        - path = edit_console_node_path(translation_id)
-        = link_to locale_to_label(locale, short: true), \
-                  path, \
-                  class: 'mr-2'
-      - else
-        - path = new_console_node_path('node[locale]': locale, \
-                                       'node[original_id]': node.id)
-        = link_to locale_to_label(locale, short: true), \
-                  path, \
-                  class: 'inactive mr-2', \
-                  rel: :nofollow, \
-                  data: { confirm: t('.new.confirm', language: locale)}
+    == cell('folio/console/nodes/translations', node, hide_original: true)
 
-  td = t("node_names.#{node.type}")
+  td = node.model_name.human
   td
     = form_with(model: node, \
                 scope: :node, \
@@ -62,12 +48,13 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
     - if node.published_at.present?
       = l(node.published_at, format: :short)
 
-  td.text-right
+  td
     - if node.kind_of? Folio::Category
       = new_child_node_button(node)
-  td.text-right = node_preview_button node
-  td.text-right = edit_button node, edit_console_node_path(node.id)
-  td.text-right = delete_button node, console_node_path(node.id)
+
+    = node_preview_button node
+    = edit_button node, edit_console_node_path(node.id)
+    = delete_button node, console_node_path(node.id)
 
 - if tree
   = render partial: "nodes_table", locals: { nodes: children }

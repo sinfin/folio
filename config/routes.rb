@@ -21,7 +21,7 @@ Folio::Engine.routes.draw do
   match '/500', to: 'errors#page500', via: :all
 
   namespace :console do
-    root to: 'nodes#index'
+    root to: 'dashboard#index'
     resources :dashboard, only: :index
     resources :nodes, except: [:show] do
       post 'set_positions', on: :collection
@@ -37,9 +37,7 @@ Folio::Engine.routes.draw do
 
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
     resources :categories, only: %i[index show]
-    # resources :pages, only: %i[index show]
     resources :leads, only: %i[create]
     resources :newsletter_subscriptions, only: %i[create]
   end
-
 end

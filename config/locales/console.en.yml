@@ -1,0 +1,99 @@
+en:
+  folio:
+    console:
+      breadcrumbs:
+        root: Console
+        actions:
+          new: New
+          edit: Edit
+          delete: Delete
+          add: Add
+
+      partials:
+        auth_links:
+          logout: Log out
+
+        tabs:
+          content: Content
+          atoms: Atoms
+          gallery: Gallery
+          documents: Documents
+
+      sites:
+        index:
+          title: Sites
+
+      visits:
+        index:
+          title: Visits
+
+      accounts:
+        index:
+          title: Accounts
+
+      files:
+        index:
+          title: Files
+
+      leads:
+        index:
+          title: Leads
+
+      menus:
+        index:
+          title: Menus
+
+      newsletter_subscriptions:
+        index:
+          title: Newsletter subscriptions
+
+      footer:
+        text: Administration console for %{site_name}.
+
+      index:
+        header:
+          by_query: Filter...
+
+        filters:
+          title: Filters
+          cancel: Cancel filters
+          all_nodes: All nodes
+          all_parents: All categories
+          published: Published only
+          unpublished: Unpublished only
+          all_types: All types
+          page: Page
+          category: Category
+
+      nodes:
+        index:
+          title: Pages
+          translations: Translations
+          type: Type
+          featured: Featured
+          published: Published
+        nodes_table:
+          more_nodes: more pages
+        translations:
+          confirm: Do you want to translate the page to %{language}?
+          confirm_cs: Do you want to translate the page to Czech?
+          confirm_en: Do you want to translate the page to English?
+          confirm_de: Do you want to translate the page to German?
+        form:
+          node:
+            title: Content
+            settings: Settings
+          remove: remove
+          file_name: File name
+          file_size: File size
+          caption: Caption
+          tag: Tag
+          additional_form_fields: More fields
+          documents:
+            add: Add document
+          atoms:
+            add: Add atom
+        atom_fields:
+          images: Images
+          add_image: Add image
+          remove: Remove atom

@@ -71,16 +71,6 @@ cs:
       note:
         blank: Napište prosíme zprávu!
 
-  atom_names:
-    'Folio::Atom::Text': Text
-    'Folio::Atom::PageReference': Odkaz
-
-  node_names:
-    'Folio::Node': Node
-    'Folio::Category': Kategorie
-    'Folio::Page': Stránka
-    'Folio::NodeTranslation': Překlad
-
   cookie_consent:
     dismiss: OK
     link: Více informací
@@ -92,7 +82,8 @@ cs:
         header:
           nodes: Stránky
           menus: Menu
-          files: Soubory
+          documents: Soubory
+          images: Obrázky
           newsletter_subscriptions: Odběry newsletteru
           leads: Formuláře
           visits: Návštěvy
