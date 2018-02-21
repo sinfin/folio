@@ -7,6 +7,7 @@ module Folio
     include PgSearch
     include HasAtoms
     include HasAttachments
+    include Publishable::WithDate
 
     # Relations
     has_ancestry
@@ -46,21 +47,6 @@ module Folio
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
     scope :ordered,  -> { order('position ASC, created_at ASC') }
     scope :featured,  -> { where(featured: true) }
-    scope :published, -> {
-      ordered
-        .where('published', true)
-        .where('published_at IS NOT NULL')
-        .where('published_at <= ?', Time.now.change(sec: 0))
-    }
-    scope :unpublished, -> {
-      nodes = Folio::Node.arel_table
-      ordered
-        .where(
-          nodes[:published].eq(false)
-          .or(nodes[:published_at].eq(nil))
-          .or(nodes[:published_at].gt(Time.now))
-        )
-    }
 
     scope :by_query, -> (q) {
       if q.present?
