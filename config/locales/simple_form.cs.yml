@@ -15,6 +15,7 @@ cs:
       defaults:
         title: Titul
         locale: Překlad
+        site: Stránka
         code: Kód
         type: Typ
         parent_id: Nadřazená stránka

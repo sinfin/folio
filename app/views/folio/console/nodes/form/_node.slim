@@ -1,7 +1,9 @@
 fieldset
   .row
-    .col-sm
+    .col-sm-1
       = f.input :locale, disabled: true
+    .col-sm-2
+      = f.input :site, collection: Folio::Site.all, include_blank: false
     .col-sm
       - if f.object.type == 'Folio::NodeTranslation'
         - collection = [ \
