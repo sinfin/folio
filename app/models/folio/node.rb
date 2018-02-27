@@ -19,7 +19,7 @@ module Folio
     # Validations
     validates :title, :slug, :locale, presence: true
     validates :slug, uniqueness: { scope: [:site_id, :locale, :ancestry] }
-    validates :locale, inclusion: I18n.available_locales.map { |l| l.to_s }
+    validates :locale, inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
     validate :allowed_type, if: :has_parent?
 
     # Callbacks
