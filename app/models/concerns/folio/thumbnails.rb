@@ -71,6 +71,7 @@ module Folio
 
       def set_mime_type
         return unless file.present?
+        return unless respond_to?(:mime_type)
         self.mime_type = file.mime_type
       end
 
