@@ -12,5 +12,9 @@ module Folio
 
       accepts_nested_attributes_for :file_placements, allow_destroy: true
     end
+
+    def cover
+      images.first if images.size > 0
+    end
   end
 end
