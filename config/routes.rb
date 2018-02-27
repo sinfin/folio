@@ -35,6 +35,8 @@ Folio::Engine.routes.draw do
     resources :visits, only: %i[index show]
   end
 
+  get '/admin' => redirect('/console')
+
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
     resources :categories, only: %i[index show]
     resources :leads, only: %i[create]
