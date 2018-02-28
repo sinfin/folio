@@ -14,7 +14,7 @@ module Folio
     end
 
     def cover
-      images.ordered.first if images.size > 0
+      images.first if images.size > 0
     end
   end
 end
