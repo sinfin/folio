@@ -46,6 +46,17 @@ module Folio
       for_select
     end
 
+    def render_additional_form_fields(f)
+      types = f.object.parent.class.allowed_child_types
+      types.map do |type|
+        unless type.additional_params.blank?
+          content_tag :fieldset, data: { type: type.to_s } do
+            render 'folio/console/nodes/additional_form_fields', f: f, params: type.additional_params
+          end
+        end
+      end.join('').html_safe
+    end
+
     def arrange_nodes_with_limit(nodes, limit)
       arranged = ActiveSupport::OrderedHash.new
       min_depth = Float::INFINITY

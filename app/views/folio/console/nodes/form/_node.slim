@@ -13,6 +13,7 @@ fieldset
       - else
         = f.input :type, collection: node_types_for_select(f.object.parent), \
                          include_blank: false
+                        
     .col-sm
       = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
                             label_method: :name_depth, \

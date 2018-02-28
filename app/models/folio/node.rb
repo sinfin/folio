@@ -93,9 +93,10 @@ module Folio
       arr
     end
 
-    def additional_params
+    def self.additional_params
       []
     end
+    delegate :additional_params, to: :class
 
     def to_label
       self.title

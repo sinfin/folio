@@ -51,6 +51,12 @@ $ ->
   $(document).on 'cocoon:after-insert', (e, insertedItem) ->
     selectRightForm($(insertedItem).find('select.atom-type-select'))
 
+  $(document).on 'change', '#node_type', ->
+    type = this.value
+    $fields = $('#node-additional-form-fields')
+    $fields.find("fieldset[data-type='#{type}']").show()
+    $fields.find("fieldset:not([data-type='#{type}'])").hide()
+    
   $(document).on 'change', '.atom-type-select', ->
     selectRightForm(this)
 
