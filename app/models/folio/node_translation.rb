@@ -16,7 +16,8 @@ class Folio::NodeTranslation < Folio::Node
 
   # Casting ActiveRecord class to an original Node class
   def cast
-    self.becomes(self.node_original.class)
+    klass = self.node_original.class.to_s
+    self.becomes(klass.constantize)
   end
 
   def translate(locale = I18n.locale)
