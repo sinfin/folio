@@ -6,6 +6,7 @@ class Folio::NodeTranslation < Folio::Node
 
   # Validations
   validates :locale, uniqueness: { scope: [:original_id] }
+  validates :node_original, presence: true
 
   # Scopes
   delegate :parent, to: :node_original
@@ -15,12 +16,7 @@ class Folio::NodeTranslation < Folio::Node
 
   # Casting ActiveRecord class to an original Node class
   def cast
-    o = node_original
-    casted = self.becomes(o.class)
-    casted.define_singleton_method(:original) do
-      o
-    end
-    casted
+    self.becomes(node_original.class)
   end
 
   def translate(locale = I18n.locale)

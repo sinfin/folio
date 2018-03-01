@@ -127,8 +127,14 @@ module Folio
       self
     end
 
+    # FIXME: quick fix to make it work on production
+    belongs_to :node_original, class_name: 'Folio::Node', foreign_key: :original_id, optional: true
     def original
-      self
+      if self.type == 'Node::Translation'
+        self.node_original
+      else
+        self
+      end
     end
 
     def translations
