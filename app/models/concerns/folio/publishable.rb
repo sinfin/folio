@@ -16,11 +16,11 @@ module Folio
 
       included do
         scope :published, -> {
-          where('published = ? OR (published_at IS NOT NULL AND published_at <= ?)', true, Time.now.change(sec: 0))
+          where('published = ? AND (published_at IS NOT NULL AND published_at <= ?)', true, Time.now.change(sec: 0))
         }
 
         scope :unpublished, -> {
-          where('(published != ? OR published IS NULL) AND (published_at IS NULL OR published_at > ?)', true, Time.now.change(sec: 0))
+          where('(published != ? OR published IS NULL) OR (published_at IS NULL OR published_at > ?)', true, Time.now.change(sec: 0))
         }
       end
     end
