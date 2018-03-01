@@ -17,7 +17,16 @@ class Folio::NodeTranslation < Folio::Node
   # Casting ActiveRecord class to an original Node class
   def cast
     klass = self.node_original.class.to_s
-    self.becomes(klass.constantize)
+    new_instance = self.becomes(klass.constantize)
+
+    Raven.capture_message("Debug node #{@self.class}",
+    logger: 'logger',
+    extra: {
+      from_class: klass,
+      to_class: new_instance
+    })
+
+    new_instance
   end
 
   def translate(locale = I18n.locale)
