@@ -9,16 +9,18 @@ fieldset
         - collection = [ \
           [Folio::NodeTranslation.model_name.human, 'Folio::NodeTranslation'] \
         ]
-        = f.input :type, collection: collection, readonly: true
+        = f.input :type, collection: collection, readonly: true, disabled: true
       - else
         = f.input :type, collection: node_types_for_select(f.object.parent), \
                          include_blank: false
-                        
+
     .col-sm
       = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
                             label_method: :name_depth, \
                             value_method: :id, \
-                            readonly: params[:parent].present?
+                            readonly: params[:parent].present?, \
+                            disabled: params[:parent].present?
+
     .col-sm
       = f.input :code
 
