@@ -31,7 +31,7 @@ module Folio
 
     def node_types_for_select(node)
       for_select = []
-      if node && !node.class.allowed_child_types.nil?
+      if node.present? && node.class.allowed_child_types.present?
         node.class.allowed_child_types.each do |type|
           for_select << [
              type.model_name.human,
@@ -47,7 +47,12 @@ module Folio
     end
 
     def render_additional_form_fields(f)
-      types = f.object.parent.class.allowed_child_types
+      if f.object.parent.present?
+        types = f.object.parent.class.allowed_child_types
+      else
+        types = get_subclasses(Node).flatten
+      end
+
       types.map do |type|
         unless type.additional_params.blank?
           content_tag :fieldset, data: { type: type.to_s } do
