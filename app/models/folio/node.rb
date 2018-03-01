@@ -83,7 +83,7 @@ module Folio
     }
 
     def self.arrange_as_array(options = {}, hash = nil)
-      hash ||= arrange(options)
+      hash ||= original.arrange(options)
 
       arr = []
       hash.each do |node, children|
@@ -120,7 +120,7 @@ module Folio
     end
 
     def self.allowed_child_types
-      nil
+      []
     end
 
     def cast
