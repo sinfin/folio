@@ -13,19 +13,14 @@ module Folio
       assert_equal(1, Node.unpublished.count)
 
       node.update!(published: true)
-      assert_equal(1, Node.published.count)
-      assert_equal(0, Node.unpublished.count)
-    end
-
-    test 'published_at' do
-      assert_equal(0, Node.published.count)
-      assert_equal(0, Node.unpublished.count)
-
-      node = create(:folio_node)
       assert_equal(0, Node.published.count)
       assert_equal(1, Node.unpublished.count)
 
-      node.update!(published_at: 1.day.ago)
+      node.update!(published: false, published_at: 1.hour.ago)
+      assert_equal(0, Node.published.count)
+      assert_equal(1, Node.unpublished.count)
+
+      node.update!(published: true, published_at: 1.hour.ago)
       assert_equal(1, Node.published.count)
       assert_equal(0, Node.unpublished.count)
     end
