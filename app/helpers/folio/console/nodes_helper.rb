@@ -52,14 +52,23 @@ module Folio
       else
         types = get_subclasses(Node).flatten
       end
-
-      types.map do |type|
+      original_type = f.object.class
+      fields = types.map do |type|
         unless type.additional_params.blank?
-          content_tag :fieldset, data: { type: type.to_s } do
-            render 'folio/console/nodes/additional_form_fields', f: f, params: type.additional_params
+          f.object = f.object.becomes(type)
+          disabled = type != original_type
+          content_tag :fieldset, data: { type: type.to_s }, style: ('display:none' if disabled) do
+            render 'folio/console/nodes/additional_form_fields',
+              f: f,
+              additional_params: type.additional_params,
+              disabled: disabled
           end
         end
       end.join('').html_safe
+
+      f.object = f.object.becomes(original_type)
+
+      fields
     end
 
     def arrange_nodes_with_limit(nodes, limit)

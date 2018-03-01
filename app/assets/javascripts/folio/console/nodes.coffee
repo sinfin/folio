@@ -54,8 +54,12 @@ $ ->
   $(document).on 'change', '#node_type', ->
     type = this.value
     $fields = $('#node-additional-form-fields')
-    $fields.find("fieldset[data-type='#{type}']").show()
-    $fields.find("fieldset:not([data-type='#{type}'])").hide()
+    $fields.find("fieldset[data-type='#{type}']")
+      .show()
+      .find('input, select').prop('disabled', false)
+    $fields.find("fieldset:not([data-type='#{type}'])")
+      .hide()
+      .find('input, select').prop('disabled', 'disabled');
     
   $(document).on 'change', '.atom-type-select', ->
     selectRightForm(this)
