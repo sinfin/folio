@@ -124,7 +124,11 @@ module Folio
     end
 
     def cast
-      self
+      if self.type == 'Folio::NodeTranslation'
+        self.becomes(self.node_original.type.constantize)
+      else
+        self
+      end
     end
 
     # FIXME: quick fix to make it work on production
