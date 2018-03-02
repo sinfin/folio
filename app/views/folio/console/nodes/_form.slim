@@ -1,16 +1,13 @@
-= tabs [:content, :atoms, :gallery, :documents]
+= tabs [:content, :gallery, :documents]
 
 = f.error_notification
 
 .tab-content
   = tab :content
     = render 'folio/console/nodes/form/node', f: f
-    
+
     #node-additional-form-fields
       = render_additional_form_fields f
-
-  = tab :atoms
-    = render 'folio/console/nodes/form/atoms', f: f
 
   = tab :gallery
     = react_images f.object.file_placements

@@ -33,6 +33,8 @@ fieldset
   = f.input :perex
   = f.input :content, input_html: { class: 'redactor' }
 
+  = render 'folio/console/nodes/form/atoms', f: f
+
   .row
     .col-sm
       label = t('.settings')
