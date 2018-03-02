@@ -23,4 +23,5 @@ $.Redactor.prototype.imagemanager = ->
     folioConsoleInitReact($box[0])
 
     window.folioConsoleInsertImage = (image) =>
-      @image.insert(image)
+      json = Object.assign {}, image, id: image.file_id
+      @image.insert(json)
