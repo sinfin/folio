@@ -7,6 +7,8 @@
 #= require cocoon
 #= require redactor
 
+#= require ./redactor-imagemanager
+
 #= require folio/console/_data-auto-submit
 #= require folio/console/_data-change-value
 #= require folio/console/_data-destroy-association
@@ -15,7 +17,6 @@
 
 #= require ./dropzone-init
 #= require ./redactor-init
-#= require ./redactor-imagemanager
 
 #= require ./nodes_table
 #= require ./nodes

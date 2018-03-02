@@ -34,7 +34,7 @@ class MultiSelect extends Component {
     return {
       addedfile: (file) => dispatch(addedFile(file)),
       thumbnail: (file, dataUrl) => dispatch(thumbnail(file, dataUrl)),
-      success: (file, response) => dispatch(success(file, response)),
+      success: (file, response) => dispatch(success(file, response.file)),
       error: (file, message) => dispatch(error(file, message)),
     }
   }
@@ -50,7 +50,7 @@ class MultiSelect extends Component {
   djsConfig () {
     return {
       headers: CSRF,
-      paramName: 'file[file]',
+      paramName: 'file[file][]',
       previewTemplate: '<span></span>',
       clickable: '.folio-console-dropzone-trigger',
       params: {

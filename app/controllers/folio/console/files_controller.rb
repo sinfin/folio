@@ -30,8 +30,9 @@ module Folio
     end
 
     def create
-      @file = ::Folio::File.create(file_params)
-      respond_with @file, location: console_files_path
+      @file = ::Folio::File.create!(file_params)
+      render json: { file: FileSerializer.new(@file) },
+             location: console_files_path
     end
 
     def update
@@ -56,7 +57,10 @@ module Folio
 
 
     def file_params
-      params.require(:file).permit(:file, :tag_list, :type)
+      # redactor 3 ¯\_(ツ)_/¯
+      p = params.require(:file).permit(:tag_list, :type, file: [])
+      p[:file] = p[:file].first
+      p
     end
 
     def find_files

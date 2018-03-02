@@ -1,14 +1,23 @@
-$.Redactor.prototype.imagemanager = ->
-  langs:
+$R.add 'plugin', 'imagemanager',
+  translations:
+    cs:
+      choose: 'Vybrat'
     en:
-      upload: 'Upload'
       choose: 'Choose'
 
-  init: ->
-    return unless @opts.imageManagerJson
-    @modal.addCallback 'image', @imagemanager.load
+  init: (app) ->
+    @app = app
+    @lang = app.lang
+    @opts = app.opts
+    return
 
-  load: ->
+  onmodal:
+    image:
+      open: ($modal, $form) ->
+        @_load $modal
+        return
+
+  _load: ($modal) ->
     $box = $("""
       <div
         style="height: 300px; display: none;"
@@ -19,9 +28,12 @@ $.Redactor.prototype.imagemanager = ->
       >
       </div>
     """)
-    @modal.getModal().append($box)
+    $modal.getBody().append($box)
     folioConsoleInitReact($box[0])
 
     window.folioConsoleInsertImage = (image) =>
       json = Object.assign {}, image, id: image.file_id
-      @image.insert(json)
+      @_insert(json)
+
+  _insert: (data) ->
+    @app.api 'module.image.insert', image: data

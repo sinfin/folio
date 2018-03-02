@@ -39,12 +39,12 @@ $ ->
         $textarea = $content.find('textarea')
         # check if redactor is active
         if $textarea.is(':visible')
-          $textarea.redactor()
+          window.folioConsoleInitRedactor($textarea[0])
       when 'string'
         $content.show()
         $textarea = $content.find('textarea')
         unless $textarea.is(':visible')
-          $textarea.redactor('core.destroy')
+          window.folioConsoleDestroyRedactor($textarea[0])
       when 'none'
         $content.hide()
 
@@ -60,14 +60,15 @@ $ ->
     $fields.find("fieldset:not([data-type='#{type}'])")
       .hide()
       .find('input, select').prop('disabled', 'disabled');
-    
+
   $(document).on 'change', '.atom-type-select', ->
     selectRightForm(this)
 
   $(document).on 'change', '.atom-model-select', ->
     $t = $(this)
     $textarea = $t.closest('.nested-fields').find('textarea')
-    $textarea.redactor('code.set', $t.find(':selected').data('content'))
+    content = $t.find(':selected').data('content')
+    window.folioConsoleRedactorSetContent($textarea[0], content)
 
   $('#paginate-images a').on 'ajax:success', (e, data, status, json) ->
     # pagination

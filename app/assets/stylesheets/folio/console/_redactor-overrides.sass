@@ -1,14 +1,16 @@
-#redactor-modal-box
+#redactor-modal
   display: flex
   align-items: center
   justify-content: center
 
-#redactor-modal
+.redactor-modal
   width: 100vw !important
-  max-width: 1000px
+  max-width: 970px !important
   margin: 0 !important
+  left: auto !important
+  top: auto !important
 
-  #redactor-modal-body
+  .redactor-modal-body
     overflow: hidden
 
   .redactor-modal-tab
@@ -17,3 +19,6 @@
   .redactor-modal-bootstrap
     @import 'bootstrap'
     @import 'bootstrap-overrides'
+
+.redactor-styles img
+  max-height: 300px
