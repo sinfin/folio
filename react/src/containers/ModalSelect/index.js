@@ -45,7 +45,7 @@ class ModalSelect extends Component {
 
     const $newFile = $(`
       <div class="nested-fields">
-        <img src=${file.thumb} alt="" />
+        <img src=${window.encodeURI(file.thumb)} alt="" />
         <div class="folio-console-hover-destroy">
           <i class="fa fa-times-circle" data-destroy-association=""></i>
         </div>
