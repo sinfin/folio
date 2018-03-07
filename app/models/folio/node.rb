@@ -134,7 +134,7 @@ module Folio
     # FIXME: quick fix to make it work on production
     belongs_to :node_original, class_name: 'Folio::Node', foreign_key: :original_id, optional: true
     def original
-      if self.type == 'Node::Translation'
+      if self.type == 'Folio::NodeTranslation'
         self.node_original
       else
         self
