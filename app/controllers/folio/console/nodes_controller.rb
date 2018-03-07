@@ -47,12 +47,12 @@ module Folio
       # set type first beacuse of @node.additional_params
       @node = Node.new(type: params[:node][:type])
       @node.update(node_params)
-      respond_with @node, location: console_nodes_path
+      respond_with @node, location: edit_console_node_path
     end
 
     def update
       @node.update(node_params)
-      respond_with @node, location: console_nodes_path
+      respond_with @node, location: edit_console_node_path
     end
 
     def destroy
