@@ -8,6 +8,10 @@ class Folio::Category < Folio::Node
   def self.view_name
     'folio/pages/show'
   end
+
+  def self.allowed_child_types
+    nil
+  end
 end
 
 # == Schema Information

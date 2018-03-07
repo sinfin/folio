@@ -53,6 +53,7 @@ module Folio
         types = get_subclasses(Node).flatten
       end
       original_type = f.object.class
+      return nil if types.blank?
       fields = types.map do |type|
         unless type.additional_params.blank?
           f.object = f.object.becomes(type)
