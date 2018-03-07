@@ -10,7 +10,6 @@ class Folio::NodeTranslation < Folio::Node
 
   # Scopes
   delegate :parent, to: :node_original
-  delegate :children, to: :node_original
   delegate :original, to: :node_original
   delegate :translations, to: :node_original
 
