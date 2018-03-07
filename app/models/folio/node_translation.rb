@@ -12,6 +12,7 @@ class Folio::NodeTranslation < Folio::Node
   delegate :parent, to: :node_original
   delegate :original, to: :node_original
   delegate :translations, to: :node_original
+  delegate :additional_params, to: :node_original
 
   def translate(locale = I18n.locale)
     if locale == self.locale.to_sym

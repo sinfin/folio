@@ -47,29 +47,42 @@ module Folio
     end
 
     def render_additional_form_fields(f)
-      if f.object.parent.present?
-        types = f.object.parent.class.allowed_child_types
-      else
-        types = get_subclasses(Node).flatten
-      end
-      original_type = f.object.class
-      return nil if types.blank?
-      fields = types.map do |type|
-        unless type.additional_params.blank?
-          f.object = f.object.becomes(type)
-          disabled = type != original_type
-          content_tag :fieldset, data: { type: type.to_s }, style: ('display:none' if disabled) do
-            render 'folio/console/nodes/additional_form_fields',
-              f: f,
-              additional_params: type.additional_params,
-              disabled: disabled
-          end
+      if f.object.type == 'Folio::NodeTranslation'
+        # render node original class additional form fields
+        f.object = f.object.cast
+        content_tag :fieldset, data: { type: 'Folio::NodeTranslation' } do
+          render 'folio/console/nodes/additional_form_fields',
+            f: f,
+            additional_params: f.object.class.additional_params,
+            disabled: false
         end
-      end.join('').html_safe
+      else
+        if f.object.parent.present?
+          types = f.object.parent.class.allowed_child_types
+        else
+          types = get_subclasses(Node).flatten
+        end
+        original_type = f.object.class
 
-      f.object = f.object.becomes(original_type)
+        return nil if types.blank?
 
-      fields
+        fields = types.map do |type|
+          unless type.additional_params.blank?
+            f.object = f.object.becomes(type)
+            disabled = type != original_type
+            content_tag :fieldset, data: { type: type.to_s }, style: ('display:none' if disabled) do
+              render 'folio/console/nodes/additional_form_fields',
+                f: f,
+                additional_params: type.additional_params,
+                disabled: disabled
+            end
+          end
+        end.join('').html_safe
+
+        f.object = f.object.becomes(original_type)
+
+        fields
+      end
     end
 
     def arrange_nodes_with_limit(nodes, limit)
