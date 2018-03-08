@@ -18,6 +18,13 @@ FactoryGirl.define do
     locale :cs
     title { Faker::Lorem.word }
     association :site, factory: :folio_site
+    published true
+    published_at { 1.day.ago }
+
+    trait :unpublished do
+      published false
+      published_at nil
+    end
 
     factory :folio_node_with_atoms do
       transient do

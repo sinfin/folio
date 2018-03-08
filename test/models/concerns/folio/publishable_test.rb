@@ -8,7 +8,7 @@ module Folio
       assert_equal(0, Node.published.count)
       assert_equal(0, Node.unpublished.count)
 
-      node = create(:folio_node)
+      node = create(:folio_node, :unpublished)
       assert_equal(0, Node.published.count)
       assert_equal(1, Node.unpublished.count)
 
