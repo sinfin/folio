@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 if Rails.env.development?
-  Dir["#{Folio::Engine.root}/app/models/folio/atom/**/*.rb", 'app/models/atom/**/*.rb'].each do |file|
+  Dir[
+    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
+    Rails.root.join('app/models/**/atom/**/*.rb')
+  ].each do |file|
     require_dependency file
   end
 end
