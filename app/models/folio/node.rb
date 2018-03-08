@@ -120,7 +120,7 @@ module Folio
     end
 
     def self.allowed_child_types
-      []
+      nil
     end
 
     def cast
