@@ -100,7 +100,7 @@ module Folio
                         :locale,
                         :parent_id,
                         :original_id,
-                        *@node.additional_params,
+                        *additional_strong_params(@node),
                         *atoms_strong_params,
                         *file_placements_strong_params)
       p[:slug] = nil unless p[:slug].present?

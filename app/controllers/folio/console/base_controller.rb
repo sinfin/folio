@@ -83,5 +83,13 @@ module Folio
                              *file_placements_strong_params]
         }]
       end
+
+      def additional_strong_params(node)
+        if node.class == Folio::NodeTranslation
+          node.node_original.additional_params
+        else
+          node.additional_params
+        end
+      end
   end
 end
