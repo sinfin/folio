@@ -125,7 +125,7 @@ module Folio
 
     def cast
       if self.type == 'Folio::NodeTranslation'
-        self.becomes(self.node_original.type.constantize)
+        self.becomes(self.node_original.class)
       else
         self
       end
