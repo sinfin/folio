@@ -6,6 +6,10 @@ module Folio
       def self.form
         :redactor
       end
+
+      def cell_name
+        'folio/atom/text'
+      end
     end
   end
 end
