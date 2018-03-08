@@ -3,7 +3,9 @@
 module Folio
   module AtomsHelper
     def render_atoms(atoms, only: [], except: [])
-      atoms.ordered.map do |atom|
+      ordered = atoms.respond_to?(:ordered) ? atoms.ordered : atoms
+
+      ordered.map do |atom|
         next if only.present? && !only.include?(atom.class)
         next if except.present? && except.include?(atom.class)
 

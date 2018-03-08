@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
-def get_subclasses(node)
-  [node] + node.subclasses.map { |subclass| get_subclasses(subclass) }
-end
-
 module Folio
   module Console::AtomsHelper
     def atom_types_for_select
       for_select = []
-      get_subclasses(Atom).flatten.each do |type|
+      ::Folio::Atom.types.each do |type|
         if type.form
           for_select << [type.model_name.human,
                          type,
@@ -19,7 +15,7 @@ module Folio
     end
 
     def atom_model_field(f)
-      selects = get_subclasses(Atom).flatten.map do |type|
+      selects = ::Folio::Atom.types.map do |type|
         if type::ALLOWED_MODEL_TYPE.present?
           active = type == f.object.class
           f.association :model,

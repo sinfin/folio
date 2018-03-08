@@ -2,7 +2,7 @@
 
 require 'faker'
 
-Folio::Atom.destroy_all
+Folio::Atom::Base.destroy_all
 Folio::Node.destroy_all
 Folio::Site.destroy_all
 Folio::Account.destroy_all

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module Folio
-  class Atom::Text < Atom
-    def self.form
-      :redactor
+  module Atom
+    class Text < Base
+      def self.form
+        :redactor
+      end
     end
   end
 end
