@@ -10,7 +10,7 @@ module Folio
       assert_equal translation.atoms.count, 3
 
       translation.update(published: true, published_at: 1.minute.ago)
-      assert node.translate(:en) == translation
+      assert_equal translation, node.translate(:en)
     end
   end
 end
