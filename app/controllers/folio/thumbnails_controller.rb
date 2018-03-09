@@ -14,6 +14,9 @@ module Folio
         image = Image.find(params[:image_id])
         thumb = image.existing_thumb(params[:size].gsub('___', '#'))
         thumb_url = thumb.url if thumb
+
+        puts "Waiting for image #{image.id} for #{Time.now - start_time}" if Rails.env.development?
+
         break if thumb_url
         raise ThumbnailTimeout if (Time.now - start_time) > 60
         sleep TIMEOUT
