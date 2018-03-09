@@ -6,9 +6,10 @@ require 'mini_magick'
 module Folio
   module Thumbnails
     extend ActiveSupport::Concern
-    include Rails.application.routes.url_helpers
 
     included do
+      delegate :url_helpers, to: 'Rails.application.routes'
+
       serialize :thumbnail_sizes, Hash
       before_validation :reset_thumbnails
 
@@ -28,9 +29,9 @@ module Folio
         if file.mime_type =~ /svg/
           url = file.url
         else
-          return false if sync
+          return false if sync # Return false if we are waiting for generated thumbnail
           GenerateThumbnailJob.perform_later(self, w_x_h)
-          url = thumbnail_path(self, size: w_x_h)
+          url = url_helpers.thumbnail_path(self, size: w_x_h)
         end
         sizes = w_x_h.split('x')
         OpenStruct.new(

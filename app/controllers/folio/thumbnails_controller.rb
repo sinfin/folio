@@ -14,7 +14,7 @@ module Folio
         thumb_url = Folio::Image.find(params[:id]).thumb(params[:size], true)
         break if thumb_url
         raise Folio::ThumbnailTimeout if (Time.now - start_time) > 60
-        sleep 3
+        sleep 5
       rescue Folio::ThumbnailTimeout
         render nothing: true, status: 408
       end while !thumb_url
