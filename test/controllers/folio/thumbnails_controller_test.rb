@@ -4,10 +4,14 @@ require 'test_helper'
 
 module Folio
   class ThumbnailsControllerTest < ActionDispatch::IntegrationTest
-    include Engine.routes.url_helpers
+    def setup
+      create(:folio_site)
+    end
 
-    # test "the truth" do
-    #   assert true
-    # end
+    test 'the truth' do
+      image = create(:folio_image)
+      get image.thumb('200x200').url
+      assert_response(:found)
+    end
   end
 end

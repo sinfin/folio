@@ -7,9 +7,9 @@ module Folio
   module Thumbnails
     extend ActiveSupport::Concern
 
-    included do
-      delegate :url_helpers, to: 'Rails.application.routes'
+    THUMBNAIL_ROUTE = '/thumbnail'.freeze
 
+    included do
       serialize :thumbnail_sizes, Hash
       before_validation :reset_thumbnails
 
@@ -19,29 +19,43 @@ module Folio
 
     # User w_x_h = 400x250# or similar
     #
-    def thumb(w_x_h, sync = false)
+    def thumb(w_x_h)
       fail_for_non_images
-      if thumbnail_sizes[w_x_h]
-        ret = OpenStruct.new(thumbnail_sizes[w_x_h])
-        ret.url = Dragonfly.app.remote_url_for(ret.uid)
-        ret
-      else
-        if file.mime_type =~ /svg/
-          url = file.url
-        else
-          return false if sync # Return false if we are waiting for generated thumbnail
-          GenerateThumbnailJob.perform_later(self, w_x_h)
-          url = url_helpers.thumbnail_path(self, size: w_x_h)
-        end
-        sizes = w_x_h.split('x')
-        OpenStruct.new(
-          uid: nil,
-          signature: nil,
-          url: url,
-          width: sizes[0].to_i,
-          height: sizes[1].to_i
-        )
-      end
+
+      return existing_struct(w_x_h) if thumbnail_sizes[w_x_h]
+      return file.url if file.mime_type =~ /svg/
+
+      GenerateThumbnailJob.perform_later(self, w_x_h)
+      url = [
+        THUMBNAIL_ROUTE,
+        self.id,
+        w_x_h.gsub('#', '___'),
+      ].join('/')
+
+      width, height = w_x_h.scan(/\d+/).map(&:to_i)
+
+      OpenStruct.new(
+        uid: nil,
+        signature: nil,
+        url: url,
+        width: width,
+        height: height,
+      )
+    end
+
+    def existing_thumb(w_x_h)
+      fail_for_non_images
+
+      return existing_struct(w_x_h) if thumbnail_sizes[w_x_h]
+      return file.url if file.mime_type =~ /svg/
+
+      nil
+    end
+
+    def existing_struct(w_x_h)
+      ret = OpenStruct.new(thumbnail_sizes[w_x_h])
+      ret.url = Dragonfly.app.remote_url_for(ret.uid)
+      ret
     end
 
     def landscape?

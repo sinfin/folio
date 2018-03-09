@@ -12,8 +12,8 @@ Folio::Engine.routes.draw do
   get 'errors/internal_server_error'
 
   devise_for :accounts, class_name: 'Folio::Account', module: :devise
+  get "#{Folio::Thumbnails::THUMBNAIL_ROUTE}/:image_id/:size", to: 'thumbnails#show', as: :thumbnail
 
-  resources :thumbnails, only: [:show]
   root to: 'home#index', as: :home
 
   match '/400', to: 'errors#page400', via: :all

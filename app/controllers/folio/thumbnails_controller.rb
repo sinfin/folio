@@ -1,25 +1,28 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/application_controller'
-
 module Folio
   class ThumbnailTimeout < StandardError; end
 
   class ThumbnailsController < ApplicationController
+    TIMEOUT = Rails.env.test? ? 0.5 : 5
+
     def show
       thumb_url = nil
       start_time = Time.now
 
       begin
-        thumb_url = Folio::Image.find(params[:id]).thumb(params[:size], true)
+        image = Image.find(params[:image_id])
+        thumb = image.existing_thumb(params[:size].gsub('___', '#'))
+        thumb_url = thumb.url if thumb
         break if thumb_url
-        raise Folio::ThumbnailTimeout if (Time.now - start_time) > 60
-        sleep 5
-      rescue Folio::ThumbnailTimeout
-        render nothing: true, status: 408
+        raise ThumbnailTimeout if (Time.now - start_time) > 60
+        sleep TIMEOUT
       end while !thumb_url
 
       redirect_to thumb_url
+
+    rescue ThumbnailTimeout
+      render nothing: true, status: 408
     end
   end
 end
