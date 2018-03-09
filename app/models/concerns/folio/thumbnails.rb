@@ -6,6 +6,7 @@ require 'mini_magick'
 module Folio
   module Thumbnails
     extend ActiveSupport::Concern
+    include Rails.application.routes.url_helpers
 
     included do
       serialize :thumbnail_sizes, Hash
