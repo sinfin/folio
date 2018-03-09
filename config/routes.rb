@@ -13,6 +13,7 @@ Folio::Engine.routes.draw do
 
   devise_for :accounts, class_name: 'Folio::Account', module: :devise
 
+  resources :thumbnails, only: [:show]
   root to: 'home#index', as: :home
 
   match '/400', to: 'errors#page400', via: :all

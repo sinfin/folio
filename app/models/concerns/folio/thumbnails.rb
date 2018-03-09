@@ -17,7 +17,7 @@ module Folio
 
     # User w_x_h = 400x250# or similar
     #
-    def thumb(w_x_h)
+    def thumb(w_x_h, sync = false)
       fail_for_non_images
       if thumbnail_sizes[w_x_h]
         ret = OpenStruct.new(thumbnail_sizes[w_x_h])
@@ -27,8 +27,9 @@ module Folio
         if file.mime_type =~ /svg/
           url = file.url
         else
+          return false if sync
           GenerateThumbnailJob.perform_later(self, w_x_h)
-          url = "http://dummyimage.com/#{w_x_h}/FFF/000.png&text=Generating…"
+          url = thumbnail_path(self, size: w_x_h)
         end
         sizes = w_x_h.split('x')
         OpenStruct.new(
