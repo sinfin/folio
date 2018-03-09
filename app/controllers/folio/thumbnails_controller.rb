@@ -5,6 +5,7 @@ module Folio
 
   class ThumbnailsController < ApplicationController
     TIMEOUT = Rails.env.test? ? 0.5 : 5
+    TIME_LIMIT = 60.freeze
 
     def show
       thumb_url = nil
@@ -18,14 +19,14 @@ module Folio
         puts "Waiting for image #{image.id} for #{Time.now - start_time}" if Rails.env.development?
 
         break if thumb_url
-        raise ThumbnailTimeout if (Time.now - start_time) > 60
+        raise ThumbnailTimeout if (Time.now - start_time) > TIME_LIMIT
         sleep TIMEOUT
       end while !thumb_url
 
       redirect_to thumb_url
 
     rescue ThumbnailTimeout
-      render nothing: true, status: 408
+      head 408
     end
   end
 end
