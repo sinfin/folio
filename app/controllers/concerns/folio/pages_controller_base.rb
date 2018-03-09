@@ -11,8 +11,8 @@ module Folio
     end
 
     def show
-      if @page.class.view_name
-        render(@page.class.view_name) && (return)
+      if @page.original.class.view_name
+        render(@page.original.class.view_name) && (return)
       end
     end
 
@@ -27,7 +27,7 @@ module Folio
         add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
 
         path.each do |p|
-          @page = @page.children
+          @page = @page.children.with_locale(I18n.locale)
           @page = @page.published unless admin_preview?
           @page = @page.friendly.find p
           add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
