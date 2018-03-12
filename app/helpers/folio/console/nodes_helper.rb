@@ -17,7 +17,7 @@ module Folio
 
     def new_child_node_button(parent)
       new_button(new_console_node_path(parent: parent.id),
-                 label: Folio::Node.model_name.human)
+                 label: Node.model_name.human)
     end
 
     def node_preview_button(node, opts = {})
