@@ -47,6 +47,7 @@ module Folio
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
     scope :ordered,  -> { order('position ASC, created_at ASC') }
     scope :featured,  -> { where(featured: true) }
+    scope :with_locale, -> (locale) { where(locale: locale)   }
 
     scope :by_query, -> (q) {
       if q.present?

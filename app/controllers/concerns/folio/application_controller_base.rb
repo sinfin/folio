@@ -14,7 +14,7 @@ module Folio
         @site = Site.first
 
         I18n.locale = params[:locale] || @site.locale
-        @roots = @site.nodes.where(locale: I18n.locale).roots.ordered
+        @roots = @site.nodes.with_locale(I18n.locale).roots.ordered
       end
     end
 
