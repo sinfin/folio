@@ -13,6 +13,9 @@ module Folio
 
       before_save :set_mime_type
       before_save :set_additional_data
+      before_destroy do
+        Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
+      end
     end
 
     # User w_x_h = 400x250# or similar

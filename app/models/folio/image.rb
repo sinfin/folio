@@ -9,11 +9,6 @@ class Folio::Image < Folio::File
 
   # Validations
   validates_property :format, of: :file, in: VALID_FORMATS
-
-  # Callbacks
-  before_destroy do
-    Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
-  end
 end
 
 # == Schema Information
