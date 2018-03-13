@@ -8,6 +8,7 @@ module Folio
     extend ActiveSupport::Concern
 
     THUMBNAIL_ROUTE = '/thumbnail'.freeze
+    MAX_WORKING_TIME = 10.minutes.to_i
 
     included do
       serialize :thumbnail_sizes, Hash
@@ -22,10 +23,21 @@ module Folio
     def thumb(w_x_h)
       fail_for_non_images
 
-      return existing_struct(w_x_h) if thumbnail_sizes[w_x_h]
-      return file.url if file.mime_type =~ /svg/
+      return file.url if mime_type =~ /svg/
+      thumb = thumbnail_sizes[w_x_h]
 
-      GenerateThumbnailJob.perform_later(self, w_x_h)
+      if thumb
+        if thumb[:working_since]
+          if (Time.now.to_i - thumb[:working_since]) < MAX_WORKING_TIME
+            return OpenStruct.new(thumb)
+          else
+            # run another GenerateThumbnailJob, continue
+          end
+        else
+          return existing_thumb(thumb)
+        end
+      end
+
       url = [
         THUMBNAIL_ROUTE,
         self.id,
@@ -34,26 +46,24 @@ module Folio
 
       width, height = w_x_h.scan(/\d+/).map(&:to_i)
 
-      OpenStruct.new(
+      working_thumb = {
         uid: nil,
         signature: nil,
         url: url,
         width: width,
         height: height,
-      )
+        working_since: Time.now.to_i,
+      }
+      self.thumbnail_sizes[w_x_h] = working_thumb
+      self.save!
+
+      GenerateThumbnailJob.perform_later(self, w_x_h)
+
+      OpenStruct.new(working_thumb)
     end
 
-    def existing_thumb(w_x_h)
-      fail_for_non_images
-
-      return existing_struct(w_x_h) if thumbnail_sizes[w_x_h]
-      return file.url if file.mime_type =~ /svg/
-
-      nil
-    end
-
-    def existing_struct(w_x_h)
-      ret = OpenStruct.new(thumbnail_sizes[w_x_h])
+    def existing_thumb(thumb)
+      ret = OpenStruct.new(thumb)
       ret.url = Dragonfly.app.remote_url_for(ret.uid)
       ret
     end
@@ -68,18 +78,6 @@ module Folio
       def reset_thumbnails
         fail_for_non_images
         self.thumbnail_sizes = {} if file_uid_changed?
-      end
-
-      def compute_sizes(size)
-        fail_for_non_images
-        thumbnail = file.thumb(size, format: :jpg).encode('jpg', '-quality 90')
-        {
-          uid: thumbnail.store,
-          signature: thumbnail.signature,
-          url: thumbnail.url,
-          width: thumbnail.width,
-          height: thumbnail.height
-        }
       end
 
       def fail_for_non_images

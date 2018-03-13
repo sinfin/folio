@@ -11,7 +11,7 @@ module Folio
     test 'the truth' do
       image = create(:folio_image)
       get image.thumb('200x200').url
-      assert_response(:found)
+      assert_response(202)
     end
   end
 end

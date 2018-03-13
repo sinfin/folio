@@ -14,6 +14,7 @@
 #= require folio/console/_data-destroy-association
 #= require folio/console/_bootstrap-tabs-lazyload
 #= require folio/console/tagsinput/tagsinput
+#= require folio/thumbnail-loader
 
 #= require ./dropzone-init
 #= require ./redactor-init
