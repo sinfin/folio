@@ -22,8 +22,11 @@ module Folio
     end
 
     private
+
       def sanitize_filename
-        self.file.name = self.file.name.split('.').map(&:parameterize).join('.')
+        # file name can be blank when assigning via file_url
+        return if file.name.blank?
+        self.file.name = file.name.split('.').map(&:parameterize).join('.')
       end
   end
 end
