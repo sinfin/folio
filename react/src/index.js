@@ -7,7 +7,7 @@ import { fromJS } from 'immutable'
 
 import App from 'containers/App'
 import { setMode, setFileType } from 'ducks/app'
-import { prefillSelected } from 'ducks/files'
+import { prefillSelected, setAttachmentable } from 'ducks/files'
 
 import reducers from './reducers'
 import sagas from './sagas'
@@ -32,6 +32,11 @@ window.folioConsoleInitReact = (domRoot) => {
     {
       key: 'fileType',
       action: setFileType,
+      asJson: false,
+    },
+    {
+      key: 'attachmentable',
+      action: setAttachmentable,
       asJson: false,
     },
   ]

@@ -39,6 +39,7 @@ class SingleSelect extends Component {
           <Uploader showUploading>
             {files.selectable.map((file) => (
               <File
+                attachmentable={files.attachmentable}
                 file={file}
                 key={file.file_id}
                 onClick={() => this.selectFile(file)}
