@@ -22,7 +22,21 @@ $ rails generate folio:install
 ```
 
 ## Contributing
-Contribution directions go here.
+
+Clone & setup
+
+```
+git clone git@github.com:sinfin/folio.git
+cd folio
+bundle install
+bin/rails db:setup
+```
+
+Run
+
+```
+bin/rails s
+```
 
 ## License
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
