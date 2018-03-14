@@ -40,8 +40,16 @@ class ModalSelect extends Component {
       }
     }
 
-    const name = $el.closest('.nested-fields').find('input[type="hidden"]').attr('name')
-    const prefix = `${name.match(/\w+\[\w+\]\[\w+\]/)}[file_placements_attributes][${Date.now()}]`
+    const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]')
+    let name
+    if ($nestedInput.length) {
+      name = $nestedInput.attr('name').match(/\w+\[\w+\]\[\w+\]/)
+    } else {
+      const $genericInput = $el.closest('form').find('.form-control[name*="["]').first()
+      name = $genericInput.attr('name').split('[')[0]
+    }
+
+    const prefix = `${name}[file_placements_attributes][${Date.now()}]`
 
     const $newFile = $(`
       <div class="nested-fields">
