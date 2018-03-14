@@ -7,7 +7,7 @@ module Folio
     included do
       include UrlHelper
 
-      before_action :find_page
+      before_action :find_page, :add_meta
     end
 
     def show
@@ -40,6 +40,11 @@ module Folio
         #   return redirect_to @page, status: :moved_permanently
         # end
         #
+      end
+
+      def add_meta
+        @title = @page.title
+        @description = @page.perex
       end
 
       def admin_preview?
