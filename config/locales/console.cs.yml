@@ -18,6 +18,11 @@ cs:
           gallery: Galerie
           documents: Dokumenty
 
+        react_image_select:
+          title_multi: Obrázky
+          title_single: Obrázek
+          add: Přidat obrázek
+
       back: Zpět
 
       filters:
@@ -53,8 +58,6 @@ cs:
           atoms:
             add: Přidat atom
         atom_fields:
-          images: Obrázky
-          add_image: Přidat obrázek
           remove: Odebrat atom
 
       accounts:

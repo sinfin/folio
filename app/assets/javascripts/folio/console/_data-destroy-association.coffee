@@ -7,3 +7,4 @@ $(document).on 'click', '[data-destroy-association]', (e) ->
   ).val(1)
 
   $fields.attr('hidden', true)
+  $this.closest('[data-cocoon-single-nested]').trigger('single-nested-change')

@@ -12,6 +12,7 @@
 #= require folio/console/_data-auto-submit
 #= require folio/console/_data-change-value
 #= require folio/console/_data-destroy-association
+#= require folio/console/_data-cocoon-single-nested
 #= require folio/console/_bootstrap-tabs-lazyload
 #= require folio/console/tagsinput/tagsinput
 

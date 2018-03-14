@@ -18,6 +18,11 @@ en:
           gallery: Gallery
           documents: Documents
 
+        react_image_select:
+          title_multi: Images
+          title_single: Image
+          add: Add Image
+
       sites:
         index:
           title: Sites

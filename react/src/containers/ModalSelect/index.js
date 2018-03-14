@@ -57,6 +57,7 @@ class ModalSelect extends Component {
     `)
 
     $fields.append($newFile)
+    $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
 
     $(MODAL_SELECTOR).modal('hide')
   }

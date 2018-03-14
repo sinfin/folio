@@ -25,7 +25,6 @@ export function prefillSelected (selected) {
 }
 
 export function setAttachmentable (attachmentable) {
-  console.log(attachmentable)
   return { type: SET_ATTACHMENTABLE, attachmentable }
 }
 

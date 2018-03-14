@@ -42,5 +42,10 @@ module Folio
         'data-attachmentable': attachmentable,
       )
     end
+
+    def react_image_select(f, multi: false)
+      render partial: 'folio/console/partials/react_image_select',
+             locals: { f: f, multi: multi }
+    end
   end
 end
