@@ -1,11 +1,14 @@
 en:
   head:
     title:
-      prefix: Folio
+      affix: Folio
       separator: "|"
       default: Default
+    description: ''
+
   domain:
     short: dummy.folio
+
   'true': Yes
   'false': No
   time:
