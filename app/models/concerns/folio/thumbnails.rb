@@ -56,18 +56,6 @@ module Folio
         self.thumbnail_sizes = {} if file_uid_changed?
       end
 
-      def compute_sizes(size)
-        fail_for_non_images
-        thumbnail = file.thumb(size, format: :jpg).encode('jpg', '-quality 90')
-        {
-          uid: thumbnail.store,
-          signature: thumbnail.signature,
-          url: thumbnail.url,
-          width: thumbnail.width,
-          height: thumbnail.height
-        }
-      end
-
       def fail_for_non_images
         fail 'You can only thumbnail images.' unless has_attribute? 'thumbnail_sizes'
       end
