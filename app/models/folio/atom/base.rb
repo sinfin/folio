@@ -34,6 +34,10 @@ module Folio
         nil
       end
 
+      def cell_options
+        nil
+      end
+
       def partial_name
         model_name.element
       end

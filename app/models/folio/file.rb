@@ -4,7 +4,9 @@ module Folio
   class File < ApplicationRecord
     include Taggable
 
-    dragonfly_accessor :file
+    dragonfly_accessor :file do
+      after_assign :sanitize_filename
+    end
 
     # Relations
     has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
@@ -18,6 +20,14 @@ module Folio
     def title
       file_name
     end
+
+    private
+
+      def sanitize_filename
+        # file name can be blank when assigning via file_url
+        return if file.name.blank?
+        self.file.name = file.name.split('.').map(&:parameterize).join('.')
+      end
   end
 end
 

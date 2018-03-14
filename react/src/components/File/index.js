@@ -30,8 +30,8 @@ const ImageWrap = styled.div`
   }
 `
 
-export function File ({ file, selected, position, onClick, singleSelect }) {
-  const inputPrefix = `node[file_placements_attributes][]`
+export function File ({ attachmentable, file, selected, position, onClick, singleSelect }) {
+  const inputPrefix = `${attachmentable || 'node'}[file_placements_attributes][]`
 
   return (
     <OuterWrap onClick={selected ? null : onClick}>

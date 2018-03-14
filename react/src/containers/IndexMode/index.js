@@ -29,6 +29,7 @@ class IndexMode extends Component {
         >
           {files.selectable.map((file) => (
             <File
+              attachmentable={files.attachmentable}
               file={file}
               key={file.file_id}
               onClick={console.log}

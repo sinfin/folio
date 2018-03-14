@@ -3,10 +3,15 @@
 module Folio
   module ApplicationHelper
     def public_page_title
-      [
-        @title.presence || I18n.t('head.title.default'),
-        I18n.t('head.title.prefix')
-      ].compact.join(" #{I18n.t('head.title.separator')} ")
+      title = @title.presence || I18n.t('head.title.default')
+      if title.present?
+        [
+          title,
+          I18n.t('head.title.base'),
+        ].join(" #{I18n.t('head.title.separator')} ")
+      else
+        I18n.t('head.title.base')
+      end
     end
 
     def public_page_description

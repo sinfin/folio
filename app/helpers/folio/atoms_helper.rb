@@ -10,7 +10,7 @@ module Folio
         next if except.present? && except.include?(atom.class)
 
         if atom.cell_name
-          cell(atom.cell_name, atom.data)
+          cell(atom.cell_name, atom.data, atom.cell_options.presence || {})
         else
           render "folio/atoms/#{atom.partial_name}", data: atom.data
         end

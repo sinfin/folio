@@ -17,12 +17,13 @@ import { File, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
-const SortableList = SortableContainer(({ items, dispatch }) => {
+const SortableList = SortableContainer(({ attachmentable, items, dispatch }) => {
   return (
     <div>
       {items.map((file, index) => (
         <SortableItem
           key={file.file_id}
+          attachmentable={attachmentable}
           index={index}
           file={file}
           dispatch={dispatch}
@@ -33,13 +34,14 @@ const SortableList = SortableContainer(({ items, dispatch }) => {
   )
 })
 
-const SortableItem = SortableElement(({ file, position, dispatch }) => {
+const SortableItem = SortableElement(({ file, position, dispatch, attachmentable }) => {
   return (
     <File
       file={file}
       key={file.file_id}
       onClick={() => dispatch(unselectFile(file))}
       position={position}
+      attachmentable={attachmentable}
       selected
     />
   )
@@ -64,6 +66,7 @@ class MultiSelect extends Component {
         >
           <SortableList
             items={files.selected}
+            attachmentable={files.attachmentable}
             onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
             dispatch={dispatch}
             axis='xy'

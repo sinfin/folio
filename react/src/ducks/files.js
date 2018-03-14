@@ -16,11 +16,17 @@ const SELECT_FILE = 'files/SELECT_FILE'
 const UNSELECT_FILE = 'files/UNSELECT_FILE'
 const ON_SORT_END = 'files/ON_SORT_END'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
+const SET_ATTACHMENTABLE = 'files/SET_ATTACHMENTABLE'
 
 // Actions
 
 export function prefillSelected (selected) {
   return { type: PREFILL_SELECTED, selected }
+}
+
+export function setAttachmentable (attachmentable) {
+  console.log(attachmentable)
+  return { type: SET_ATTACHMENTABLE, attachmentable }
 }
 
 export function getFiles () {
@@ -90,6 +96,7 @@ export const filesSelector = (state) => {
 
   return {
     loading: base.loading,
+    attachmentable: base.attachmentable,
     selected,
     selectable,
   }
@@ -103,6 +110,7 @@ const initialState = fromJS({
   filesUrl: '/console/files',
   records: [],
   selected: [],
+  attachmentable: 'node',
 })
 
 // Reducer
@@ -134,6 +142,9 @@ function filesReducer (state = initialState, action) {
         records,
       })
     }
+
+    case SET_ATTACHMENTABLE:
+      return state.set('attachmentable', action.attachmentable)
 
     case PREFILL_SELECTED:
       return state.merge({

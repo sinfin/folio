@@ -1,13 +1,17 @@
 cs:
   head:
     title:
-      prefix: Folio
+      base: Folio
       separator: "|"
-      default: Default
+      default: ''
+    description: ''
+
   domain:
     short: dummy.folio
+
   'true': Ano
   'false': Ne
+
   time:
     formats:
       short: "%d %b %Y, %H:%m"
