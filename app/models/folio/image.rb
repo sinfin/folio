@@ -6,10 +6,10 @@ class Folio::Image < Folio::File
 
   paginates_per 36
 
-  VALID_FORMATS = %w{jpeg png bmp gif}
+  VALID_EXTENSIONS = %w{jpg jpeg png bmp gif}
 
   # Validations
-  validates_property :format, of: :file, in: VALID_FORMATS
+  validates_property :ext, of: :file, in: VALID_EXTENSIONS
 end
 
 # == Schema Information
