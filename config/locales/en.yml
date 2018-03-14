@@ -1,9 +1,9 @@
 en:
   head:
     title:
-      affix: Folio
+      base: Folio
       separator: "|"
-      default: Default
+      default: ''
     description: ''
 
   domain:
@@ -11,6 +11,7 @@ en:
 
   'true': Yes
   'false': No
+
   time:
     formats:
       short: "%d %b %Y, %H:%m"
