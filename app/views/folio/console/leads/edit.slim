@@ -7,8 +7,7 @@
 
   .col-6
     = simple_form_for(@lead, as: :lead, \
-                             url: console_lead_path(@lead.id), \
-                             html: { class: 'form-vertical' }) do |f|
+                             url: console_lead_path(@lead.id)) do |f|
       = f.input :email
       = f.input :phone
       = f.input :note

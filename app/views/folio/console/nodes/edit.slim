@@ -1,7 +1,6 @@
 == cell('folio/console/form/header', @node, translations: true)
 
 = simple_form_for(@node, as: :node, \
-                         url: console_node_path(@node.id), \
-                         html: { class: 'form-vertical' }) do |f|
+                         url: console_node_path(@node.id)) do |f|
   = render 'form', f: f
 = render 'documents_modal'
