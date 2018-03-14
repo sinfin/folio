@@ -16,7 +16,9 @@ module Folio
       def compute_sizes(image, size)
         return if image.thumbnail_sizes[size]
 
-        thumbnail = image.file.thumb(size, format: :jpg).encode('jpg', '-quality 90')
+        thumbnail = image.file
+                         .thumb(size, 'format' => :jpg, 'frame' => 0)
+                         .encode('jpg', '-quality 90')
         {
           uid: thumbnail.store,
           signature: thumbnail.signature,
