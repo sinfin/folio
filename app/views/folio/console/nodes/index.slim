@@ -18,5 +18,8 @@
         tbody
           = render partial: "nodes_table", locals: { nodes: @nodes }
 
+    - unless @nodes.class == ActiveSupport::OrderedHash
+      = paginate @nodes
+
   .folio-console-layout-sidebar
     == cell('folio/console/index/filters', index_filters)
