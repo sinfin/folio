@@ -70,8 +70,6 @@ module Folio
       end
     }
 
-    scope :by_parent, -> (parent) { children_of(parent) }
-
     scope :by_type, -> (type) {
       case type
       when 'page'
