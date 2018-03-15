@@ -39,9 +39,9 @@ module Folio
     end
 
     # Multi-search
-    include PgSearch
-    multisearchable against: [ :title, :perex ], if: :searchable?, ignoring: :accents
-    # pg_search_scope :search, against: [:title, :name], using: { tsearch: { prefix: true } }
+    multisearchable against: [ :title, :perex, :content ],
+                    if: :searchable?,
+                    ignoring: :accents
 
     # Scopes
     scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
@@ -115,7 +115,7 @@ module Folio
 
     # override in subclasses
     def searchable?
-      false
+      true
     end
 
     def self.view_name
