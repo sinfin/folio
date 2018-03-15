@@ -12,6 +12,6 @@ FolioCable.folio_thumbnails = FolioCable.cable.subscriptions.create 'FolioThumbn
     $('.folio-thumbnail-background').each ->
       $this = $(this)
       bg = $this.css('background-image')
-      if bg.match(temporary_url)
+      if bg.indexOf(temporary_url) isnt -1
         $this.css('background-image', "url('#{url}')")
         $this.removeClass('folio-thumbnail-background')
