@@ -8,7 +8,7 @@ module Folio
     module Base
       extend ActiveSupport::Concern
 
-      VALID_EXT = %w{jpeg jpg png bmp gif pdf}
+      VALID_MIME_TYPES = %w{image/jpeg image/png image/bmp image/gif application/pdf}
 
       included do
         serialize :thumbnail_sizes, Hash
@@ -59,7 +59,7 @@ module Folio
         end
 
         def fail_for_non_images
-          fail 'You can only thumbnail images or pdf.' unless VALID_EXT.include? self.file.ext
+          fail 'You can only thumbnail images.' unless has_attribute? 'thumbnail_sizes'
         end
 
         def set_mime_type
