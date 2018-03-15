@@ -20,6 +20,19 @@ $grid-gutter-half: $grid-gutter-width / 2
 .card.active
   border-color: $blue !important
 
+.btn-primary
+  background-color: $purple
+  border-color:  $purple
+  &:hover
+    background-color: $indigo
+    border-color:  $indigo
+
+.nav-pills
+  .nav-item
+    .nav-link.active
+      background-color: $gray-500
+      border-radius: 0
+
 .btn-transparent
   color: #111
   background-color: transparent
@@ -28,6 +41,13 @@ $grid-gutter-half: $grid-gutter-width / 2
     background-color: #e2e6ea
     border-color: #dae0e5
 
+.btn-outline
+  color: #111
+  background-color: transparent
+  border-color: $gray-400
+  &:hover
+    background-color: #e2e6ea
+    border-color: #dae0e5
   &:focus
     box-shadow: none
 
