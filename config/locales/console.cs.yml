@@ -36,6 +36,15 @@ cs:
           type: Typ
           featured: Featured
           published: Publikované
+          filters:
+            all_nodes: Všechny nody
+            all_parents: Všechny kategorie
+            published: Jen publikované
+            unpublished: Jen rozpracované
+            all_types: Všechny typy
+            page: Stránka
+            category: Kategorie
+
         nodes_table:
           more_nodes: další stránky
         translations:
@@ -109,11 +118,4 @@ cs:
         filters:
           title: Filtry
           cancel: Zrušit filtry
-          all_nodes: Všechny nody
-          all_parents: Všechny kategorie
-          published: Jen publikované
-          unpublished: Jen rozpracované
-          all_types: Všechny typy
-          page: Stránka
-          category: Kategorie
-
+          all: Všechny

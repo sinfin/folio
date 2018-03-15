@@ -18,5 +18,4 @@
           = render partial: "nodes_table", locals: { nodes: @nodes }
 
   .folio-console-layout-sidebar
-    == cell('folio/console/index/filters', \
-            [:by_parent, :by_published, :by_type])
+    == cell('folio/console/index/filters', index_filters)

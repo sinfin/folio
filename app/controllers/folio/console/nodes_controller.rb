@@ -114,5 +114,25 @@ module Folio
     def misc_filtering?
       %i[by_query by_published by_type by_tag].any? { |by| params[by].present? }
     end
+
+    def index_filters
+      {
+        by_parent: [
+          [t('.filters.all_parents'), nil],
+        ] + Folio::Node.original.roots.map { |n| [n.title, n.id] },
+        by_published: [
+          [t('.filters.all_nodes'), nil],
+          [t('.filters.published'), 'published'],
+          [t('.filters.unpublished'), 'unpublished'],
+        ],
+        by_type: [
+          [t('.filters.all_types'), nil],
+          [t('.filters.page'), 'page'],
+          [t('.filters.category'), 'category'],
+        ],
+      }
+    end
+
+    helper_method :index_filters
   end
 end
