@@ -17,6 +17,7 @@ const UNSELECT_FILE = 'files/UNSELECT_FILE'
 const ON_SORT_END = 'files/ON_SORT_END'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
 const SET_ATTACHMENTABLE = 'files/SET_ATTACHMENTABLE'
+const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
 
 // Actions
 
@@ -50,6 +51,10 @@ export function onSortEnd (oldIndex, newIndex) {
 
 export function uploadedFile (file) {
   return { type: UPLOADED_FILE, file }
+}
+
+export function thumbnailGenerated (temporary_url, url) {
+  return { type: THUMBNAIL_GENERATED, temporary_url, url }
 }
 
 // Sagas
@@ -175,6 +180,22 @@ function filesReducer (state = initialState, action) {
       return state.updateIn(['records'], (records) => (
         records.push(fromJS(action.file))
       ))
+    }
+
+    case THUMBNAIL_GENERATED: {
+      return state
+        .updateIn(['records'], (records) => (
+          records.map((record) => {
+            if (record.get('thumb') !== action.temporary_url) return record
+            return record.set('thumb', action.url)
+          })
+        ))
+        .updateIn(['selected'], (selected) => (
+          selected.map((record) => {
+            if (record.get('thumb') !== action.temporary_url) return record
+            return record.set('thumb', action.url)
+          })
+        ))
     }
 
     default:

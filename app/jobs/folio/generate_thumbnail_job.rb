@@ -8,7 +8,12 @@ module Folio
       return if image.thumbnail_sizes[size]
 
       image.thumbnail_sizes[size] = compute_sizes(image, size)
-      image.update_attributes(thumbnail_sizes: image.thumbnail_sizes)
+      image.update!(thumbnail_sizes: image.thumbnail_sizes)
+
+      ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
+        temporary_url: URI.encode(image.temporary_url(size)),
+        url: URI.encode(image.thumbnail_sizes[size][:url])
+      )
     end
 
     private

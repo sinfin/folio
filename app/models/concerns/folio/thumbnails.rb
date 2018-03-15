@@ -31,7 +31,7 @@ module Folio
           url = file.url
         else
           GenerateThumbnailJob.perform_later(self, w_x_h)
-          url = "http://dummyimage.com/#{w_x_h}/FFF/000.png&text=Generating…"
+          url = temporary_url(w_x_h)
         end
         sizes = w_x_h.split('x')
         OpenStruct.new(
@@ -47,6 +47,11 @@ module Folio
     def landscape?
       fail_for_non_images
       file.present? && file.width >= file.height
+    end
+
+    def temporary_url(w_x_h)
+      size = w_x_h.match(/\d+x\d+/)[0]
+      "http://dummyimage.com/#{size}/FFF/000.png?image=#{id}&text=Generating…"
     end
 
     private
