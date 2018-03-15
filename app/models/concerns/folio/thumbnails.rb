@@ -27,7 +27,7 @@ module Folio
         ret.url = Dragonfly.app.remote_url_for(ret.uid)
         ret
       else
-        if file.mime_type =~ /svg/
+        if mime_type =~ /svg/
           url = file.url
         else
           GenerateThumbnailJob.perform_later(self, w_x_h)
