@@ -3,7 +3,7 @@ $(document).on 'click', '[data-change-value]', (e) ->
   target = $this.data('target')
 
   if target is '*'
-    $targets = $this.closest('form').find('input')
+    $targets = $this.closest('form').find('input, select')
   else
     $targets = $(target)
 

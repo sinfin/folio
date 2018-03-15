@@ -1,7 +1,8 @@
 .folio-console-layout-with-sidebar
   .folio-console-layout-content
     == cell('folio/console/index/header', Folio::Node, \
-                                          new_path: new_console_node_path)
+                                          new_path: new_console_node_path, \
+                                          hidden_fields: index_filters.keys)
 
     .table-responsive
       table.table.table-striped.table-hover
