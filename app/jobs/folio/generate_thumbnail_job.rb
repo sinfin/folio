@@ -12,6 +12,7 @@ module Folio
 
       ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
         temporary_url: URI.encode(image.temporary_url(size)),
+        temporary_s3_url: URI.encode(image.temporary_s3_url(size)),
         url: URI.encode(image.thumbnail_sizes[size][:url])
       )
     end
