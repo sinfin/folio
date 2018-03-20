@@ -10,6 +10,9 @@
   .breadcrumb + &
     margin-top: -1rem
 
+  form &
+    margin: 1em 0
+
 .table
   thead th, tbody td
     vertical-align: middle
@@ -59,15 +62,16 @@
     z-index: 2
 
 .btn-primary
-  background-color: $purple
-  border-color:  $purple
+  &, &:disabled
+    background-color: $purple
+    border-color:  $purple
 
-  +hover-focus-active
-    background-color: $indigo !important
-    border-color:  $indigo !important
+    +hover-focus-active
+      background-color: $indigo !important
+      border-color:  $indigo !important
 
-  &:focus, &:focus:active
-    box-shadow: 0 0 0 0.2rem rgba($indigo, 0.3) !important
+    &:focus, &:focus:active
+      box-shadow: 0 0 0 0.2rem rgba($indigo, 0.3) !important
 
 .nav-pills
   .nav-item
