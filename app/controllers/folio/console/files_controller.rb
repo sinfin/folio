@@ -6,16 +6,10 @@ module Folio
     before_action :find_file, except: [:index, :create]
 
     before_action do
-      if @file.present?
-        type = @file.is_a?(Image) ? 'image' : 'document'
-      else
-        type = params[:type]
-      end
-
-      klass = type == 'image' ? Image : ::Folio::File
+      klass = smart_type_param == 'image' ? Image : ::Folio::File
 
       add_breadcrumb klass.model_name.human(count: 2),
-                     console_files_path(type: type)
+                     smart_index_path
     end
 
     respond_to :json, only: [:index, :create]
@@ -34,17 +28,17 @@ module Folio
     def create
       @file = ::Folio::File.create!(file_params)
       render json: { file: FileSerializer.new(@file) },
-             location: console_files_path
+             location: smart_index_path
     end
 
     def update
       @file.update(file_params)
-      respond_with @file, location: console_files_path
+      respond_with @file, location: smart_index_path
     end
 
     def destroy
       @file.destroy
-      respond_with @file, location: console_files_path
+      respond_with @file, location: smart_index_path
     end
 
   private
@@ -78,6 +72,20 @@ module Folio
       else
         @files = ::Folio::File.all
       end
+    end
+
+    def smart_type_param
+      if @file.present?
+        type = @file.is_a?(Image) ? 'image' : 'document'
+      else
+        type = params[:type]
+      end
+
+      type
+    end
+
+    def smart_index_path
+      console_files_path(type: smart_type_param)
     end
   end
 end

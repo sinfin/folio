@@ -22,11 +22,15 @@ module Folio
       link_to(ico, path, opts)
     end
 
-    def delete_button(record, path, opts = {})
+    def delete_button(record, path, opts = {}, text: false)
       name = record.try(:full_title) || record.title
       question = t('folio.console.really_delete', title: name)
 
-      ico = icon 'trash'
+      if text
+        content = t('folio.console.delete')
+      else
+        content = icon 'trash'
+      end
 
       opts.reverse_merge!(
         'data-confirm': question,
@@ -35,7 +39,7 @@ module Folio
         title: t('folio.console.breadcrumbs.actions.delete')
       )
 
-      link_to(ico, path, opts)
+      link_to(content, path, opts)
     end
 
     def destroy_button(f, label)

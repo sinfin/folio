@@ -43,3 +43,5 @@ h1 = @file.file_name.presence || @file.class.model_name.human
     = link_to t('folio.console.back'), console_files_path
   - else
     = link_to t('folio.console.back'), console_files_path(type: :document)
+
+  = delete_button(@file, console_file_path(@file), text: true)

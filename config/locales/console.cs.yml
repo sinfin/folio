@@ -99,6 +99,7 @@ cs:
           title: Visits
 
       really_delete: Jste si jist, že chcete smazat %{title}?
+      delete: Smazat
 
       sites:
         index:
