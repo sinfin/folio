@@ -7,6 +7,8 @@ class Visit < Folio::ApplicationRecord
   belongs_to :account, class_name: 'Folio::Account', optional: true
 
   # Scopes
+  default_scope -> { order(started_at: :desc) }
+
   scope :with_account_id, -> (id) {
     where(account_id: id)
   }
