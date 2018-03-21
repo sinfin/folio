@@ -1,1 +1,3 @@
-h1 new
+= simple_form_for(@menu, as: :menu,
+                         url: console_menus_path) do |f|
+  = render 'form', f: f

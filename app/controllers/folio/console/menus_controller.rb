@@ -10,7 +10,7 @@ module Folio
     end
 
     def new
-      @menu = Menu.new()
+      @menu = Menu.new
     end
 
     def create

@@ -1,19 +1,17 @@
-.row
-  .col-sm-12
-    h2 =t('.menu.title')
+h1 = Folio::Menu.model_name.human
 
-    = f.error_notification
+= f.error_notification
 
-    = f.input :type, collection: Folio::Menu.subclasses, include_blank: false
+= f.input :type, collection: Folio::Menu.subclasses, include_blank: false
 
-    h2 = t('.menu_items.title')
-    #menu_items.mb-3
-      = f.simple_fields_for :menu_items do |menu_item|
-        = render 'menu_item_fields', f: menu_item
-      .links
-        = link_to_add_association t('.menu.add_menu_item'),
-                                  f,
-                                  :menu_items,
-                                  class: 'btn btn-success'
+h2 = t('.menu_items.title')
+#menu_items.mb-3
+  = f.simple_fields_for :menu_items do |menu_item|
+    = render 'menu_item_fields', f: menu_item
+  .links
+    = link_to_add_association t('.menu.add_menu_item'),
+                              f,
+                              :menu_items,
+                              class: 'btn btn-success'
 
-    = f.button :submit
+= f.button :submit
