@@ -81,6 +81,9 @@ en:
 
         nodes_table:
           more_nodes: more pages
+        node_row:
+          preview: Preview
+          add_child_node: Add subpage
         translations:
           confirm: Do you want to translate the page to %{language}?
           confirm_cs: Do you want to translate the page to Czech?

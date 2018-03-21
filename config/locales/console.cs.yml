@@ -47,6 +47,9 @@ cs:
 
         nodes_table:
           more_nodes: další stránky
+        node_row:
+          preview: Náhled
+          add_child_node: Přidat podstránku
         translations:
           confirm: Chcete přeložit stránku do %{language}?
           confirm_cs: Chcete přeložit stránku do češtiny?

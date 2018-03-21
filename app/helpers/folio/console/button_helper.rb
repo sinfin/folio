@@ -14,7 +14,10 @@ module Folio
     def edit_button(record, path, opts = {})
       ico = icon 'edit'
 
-      opts.reverse_merge!(class: 'btn btn-secondary')
+      opts.reverse_merge!(
+        class: 'btn btn-secondary',
+        title: t('folio.console.breadcrumbs.actions.edit')
+      )
 
       link_to(ico, path, opts)
     end
@@ -25,9 +28,12 @@ module Folio
 
       ico = icon 'trash'
 
-      opts.reverse_merge!('data-confirm': question,
-                          method: :delete,
-                          class: 'btn btn-danger')
+      opts.reverse_merge!(
+        'data-confirm': question,
+        method: :delete,
+        class: 'btn btn-danger',
+        title: t('folio.console.breadcrumbs.actions.delete')
+      )
 
       link_to(ico, path, opts)
     end

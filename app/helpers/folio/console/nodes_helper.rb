@@ -12,15 +12,23 @@ module Folio
     end
 
     def new_child_node_button(parent)
-      new_button(new_console_node_path(parent: parent.id),
-                 label: Node.model_name.human)
+      new_button(
+        new_console_node_path(parent: parent.id),
+        label: Node.model_name.human,
+        title: t('folio.console.nodes.node_row.add_child_node')
+      )
     end
 
     def node_preview_button(node, opts = {})
       ico = icon 'eye'
       path = nested_page_path(node, add_parents: true)
 
-      opts.reverse_merge!(class: 'btn btn-info', target: :_blank)
+
+      opts.reverse_merge!(
+        class: 'btn btn-info',
+        target: :_blank,
+        title: t('folio.console.nodes.node_row.preview')
+      )
 
       link_to(ico, path, opts).html_safe
     end
