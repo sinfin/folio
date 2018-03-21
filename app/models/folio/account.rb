@@ -12,6 +12,9 @@ module Folio
     validates :role, inclusion: ROLES
     validates :first_name, :last_name, presence: true
 
+    # Scopes
+    default_scope { order(created_at: :desc) }
+
     scope :by_query, -> (q) {
       if q.present?
         args = ["%#{q}%"] * 2

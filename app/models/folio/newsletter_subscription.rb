@@ -10,6 +10,7 @@ module Folio
                         with: /[^@]+@[^@]+/ # modified devise regex
 
     # Scopes
+    default_scope { order(created_at: :desc) }
     scope :by_query, -> (q) {
         if q.present?
           where('email ILIKE ?', "%#{q}%")

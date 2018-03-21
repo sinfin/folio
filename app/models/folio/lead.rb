@@ -6,6 +6,9 @@ module Folio
     validates_format_of :email, with: /[^@]+@[^@]+/ # modified devise regex
     validates :email, :note, presence: true
 
+    # Scopes
+    default_scope { order(created_at: :desc) }
+
     def title
       email
     end

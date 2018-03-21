@@ -8,9 +8,8 @@ module Folio
     def index
       params[:by_is_active] = true if params[:by_is_active].nil?
       @accounts = @accounts.
-                      order(:created_at).
-                      filter(filter_params).
-                      page(current_page)
+                    filter(filter_params).
+                    page(current_page)
       respond_with @accounts
     end
 
