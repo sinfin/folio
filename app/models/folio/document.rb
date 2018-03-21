@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Document < Folio::File
-  include Folio::Thumbnails::Base
+  include Folio::Thumbnails
 
   paginates_per 16
 end
