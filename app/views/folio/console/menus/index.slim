@@ -11,7 +11,7 @@
     tbody
       - @menus.each do |menu|
         tr
-          td = menu.type
+          td = menu.class.model_name.human
           td
             = edit_button menu, edit_console_menu_path(menu.id)
             = delete_button menu, console_menu_path(menu.id)

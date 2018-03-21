@@ -46,6 +46,10 @@ cs:
         one: Menu
         other: Menu
 
+      folio/menu/page:
+        one: Menu
+        other: Menu
+
       folio/newsletter_subscription:
         one: Odběr newsletteru
         other: Odběry newsletteru

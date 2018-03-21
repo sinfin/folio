@@ -70,7 +70,7 @@ FactoryGirl.define do
     last_name 'Dummy'
   end
 
-  factory :folio_menu, class: Folio::Menu::Header do
+  factory :folio_menu, class: Folio::Menu::Page do
     factory :folio_menu_with_menu_items do
       transient do
         posts_count 3

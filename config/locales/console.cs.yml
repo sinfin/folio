@@ -90,6 +90,8 @@ cs:
         index:
           title: Menu
           type: Druh
+        menu_item_fields:
+          remove: Odebrat
 
       leads:
         index:

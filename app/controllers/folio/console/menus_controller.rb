@@ -40,8 +40,10 @@ module Folio
     def menu_params
       params.require(:menu).permit(
         :type,
-        menu_items_attributes: [:id, :type, :title, :rails_path, :node_id,
-                                :position, :_destroy]
+        menu_items_attributes: [:id,
+                                :title,
+                                :node_id,
+                                :_destroy]
       )
     end
   end

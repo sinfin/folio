@@ -2,7 +2,7 @@ h1 = Folio::Menu.model_name.human
 
 = f.error_notification
 
-= f.input :type, collection: Folio::Menu.subclasses, include_blank: false
+= f.input :type, collection: menu_types_for_select, include_blank: false
 
 h2 = t('.menu_items.title')
 #menu_items.mb-3
@@ -15,3 +15,4 @@ h2 = t('.menu_items.title')
                               class: 'btn btn-success'
 
 = f.button :submit
+= link_to t('folio.console.back'), console_menus_path
