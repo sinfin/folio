@@ -9,7 +9,7 @@ module Folio
                :dominant_color, :edit_path
 
     def thumb
-      URI.encode(object.thumb('250x250#').url) if image?
+      URI.encode(object.thumb('250x250').url) if image?
     end
 
     def url
