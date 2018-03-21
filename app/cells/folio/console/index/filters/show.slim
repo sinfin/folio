@@ -1,7 +1,7 @@
 = form
   strong.folio-console-index-filters-title = t('.title')
 
-  - model.each do |key|
+  - model.keys.each do |key|
     .form-group
       = select key
 

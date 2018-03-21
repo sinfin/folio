@@ -10,6 +10,9 @@
   .breadcrumb + &
     margin-top: -1rem
 
+  form &
+    margin: 1em 0
+
 .table
   thead th, tbody td
     vertical-align: middle
@@ -57,6 +60,24 @@
     right: 0
     padding: 18px
     z-index: 2
+
+.btn-primary
+  &, &:disabled
+    background-color: $purple
+    border-color:  $purple
+
+    +hover-focus-active
+      background-color: $indigo !important
+      border-color:  $indigo !important
+
+    &:focus, &:focus:active
+      box-shadow: 0 0 0 0.2rem rgba($indigo, 0.3) !important
+
+.nav-pills
+  .nav-item
+    .nav-link.active
+      background-color: $gray-500
+      border-radius: 0
 
 @include media-breakpoint-up(lg)
   .modal-lg

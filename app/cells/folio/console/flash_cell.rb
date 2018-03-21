@@ -5,7 +5,7 @@ class Folio::Console::FlashCell < FolioCell
     success: 'alert-success',
     error: 'alert-danger',
     alert: 'alert-warning',
-    notice: 'alert-info'
+    notice: 'alert-success'
   }.freeze
 
   def bootstrap_class_for(msg_type)

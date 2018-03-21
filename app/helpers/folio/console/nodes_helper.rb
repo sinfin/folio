@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-def get_subclasses(node)
-  [node] + node.subclasses.map { |subclass| get_subclasses(subclass) }
-end
-
 module Folio
   module Console::NodesHelper
     def node_breadcrumbs(ancestors)
@@ -39,7 +35,7 @@ module Folio
           ]
         end
       else
-        get_subclasses(Node).flatten.each do |type|
+        Node.get_subclasses.each do |type|
           for_select << [type.model_name.human, type] if type.view_name
         end
       end
@@ -60,7 +56,7 @@ module Folio
         if f.object.parent.present?
           types = f.object.parent.class.allowed_child_types
         else
-          types = get_subclasses(Node).flatten
+          types = Node.get_subclasses
         end
         original_type = f.object.class
 

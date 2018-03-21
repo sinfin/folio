@@ -7,7 +7,7 @@ module Folio
                :dominant_color, :dark
 
     def thumb
-      object.thumb('250x250#').url if image?
+      URI.encode(object.thumb('250x250#').url) if image?
     end
 
     def url

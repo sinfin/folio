@@ -7,6 +7,7 @@ rootDir="$( dirname "$0" )/../.."
 (
   cd "$rootDir/react" || exit
   cp build/static/js/main*.js ../app/assets/javascripts/folio/console/react/main.js
+  cp build/static/js/main*.js.map ../app/assets/javascripts/folio/console/react/main.js.map
   cp build/static/css/main*.css ../app/assets/stylesheets/folio/console/react/main.scss
 
   echo -e "${GREEN}Copied build to rails assets folder. $NO_COLOR"

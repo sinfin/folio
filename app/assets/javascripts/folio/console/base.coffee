@@ -9,6 +9,7 @@
 
 #= require ./redactor-imagemanager
 
+#= require folio/cable
 #= require folio/console/_data-auto-submit
 #= require folio/console/_data-change-value
 #= require folio/console/_data-destroy-association

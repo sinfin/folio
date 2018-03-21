@@ -20,8 +20,9 @@
           button.btn.btn-outline type="submit"
             .fa.fa-search
 
-      - HIDDEN_FIELDS.each do |key|
-        = hidden_field_tag key, controller.params[key]
+      - if options[:hidden_fields]
+        - options[:hidden_fields].each do |key|
+          = hidden_field_tag key, controller.params[key]
 
     - if options[:new_path].present?
         a.btn.btn-success href=options[:new_path]

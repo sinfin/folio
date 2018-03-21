@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 
-import { getFiles } from 'ducks/files'
+import { getFiles, thumbnailGenerated } from 'ducks/files'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
@@ -14,7 +14,20 @@ import AppWrap from './AppWrap'
 class App extends Component {
   componentWillMount () {
     this.props.dispatch(getFiles())
+    this.listenOnActionCable()
     window.addEventListener('checkLazyload', forceCheck)
+  }
+
+  listenOnActionCable () {
+    if (!window.FolioCable) return
+    this.cableSubscription = window.FolioCable.cable.subscriptions.create('FolioThumbnailsChannel', {
+      received: (data) => {
+        if (!data) return
+        const { temporary_url, url } = data
+        if (!temporary_url || !url) return
+        this.props.dispatch(thumbnailGenerated(temporary_url, url))
+      }
+    })
   }
 
   renderMode () {

@@ -11,16 +11,16 @@ module Folio
     add_breadcrumb Node.model_name.human(count: 2), :console_nodes_path
 
     def index
-      if params[:by_parent].present?
-        if misc_filtering?
-          begin
-            @nodes = Node.original.ordered.filter(filter_params).page(current_page)
-          rescue ActiveRecord::RecordNotFound
-            @nodes = []
-          end
-        else
+      if misc_filtering?
+        if params[:by_parent].present?
           parent = Node.find(params[:by_parent])
-          @nodes = parent.subtree.original.arrange(order: 'position desc, created_at desc')
+          @nodes = parent.subtree.original
+                         .filter(filter_params)
+                         .arrange(order: 'position desc, created_at desc')
+        else
+          @nodes = Node.original
+                       .ordered.filter(filter_params)
+                       .page(current_page)
         end
       else
         @limit = 5
@@ -47,12 +47,12 @@ module Folio
       # set type first beacuse of @node.additional_params
       @node = Node.new(type: params[:node][:type])
       success = @node.update(node_params)
-      respond_with @node, location: success ? edit_console_node_path : console_nodes_path
+      respond_with @node, location: success ? edit_console_node_path(@node) : console_nodes_path
     end
 
     def update
       @node.update(node_params)
-      respond_with @node, location: edit_console_node_path
+      respond_with @node, location: edit_console_node_path(@node)
     end
 
     def destroy
@@ -80,7 +80,7 @@ module Folio
     end
 
     def filter_params
-      params.permit(:by_query, :by_published, :by_type, :by_tag, :by_parent)
+      params.permit(:by_query, :by_published, :by_type, :by_tag)
     end
 
     def node_params
@@ -112,7 +112,27 @@ module Folio
     end
 
     def misc_filtering?
-      %i[by_query by_published by_type by_tag].any? { |by| params[by].present? }
+      %i[by_parent by_query by_published by_type by_tag].any? { |by| params[by].present? }
     end
+
+    def index_filters
+      {
+        by_parent: [
+          [t('.filters.all_parents'), nil],
+        ] + Folio::Node.original.roots.map { |n| [n.title, n.id] },
+        by_published: [
+          [t('.filters.all_nodes'), nil],
+          [t('.filters.published'), 'published'],
+          [t('.filters.unpublished'), 'unpublished'],
+        ],
+        by_type: [
+          [t('.filters.all_types'), nil],
+          [t('.filters.page'), 'page'],
+          [t('.filters.category'), 'category'],
+        ],
+      }
+    end
+
+    helper_method :index_filters
   end
 end

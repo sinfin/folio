@@ -61,13 +61,7 @@ en:
         filters:
           title: Filters
           cancel: Cancel filters
-          all_nodes: All nodes
-          all_parents: All categories
-          published: Published only
-          unpublished: Unpublished only
-          all_types: All types
-          page: Page
-          category: Category
+          all: All
 
       nodes:
         index:
@@ -76,6 +70,15 @@ en:
           type: Type
           featured: Featured
           published: Published
+          filters:
+            all_nodes: All nodes
+            all_parents: All categories
+            published: Published only
+            unpublished: Unpublished only
+            all_types: All types
+            page: Page
+            category: Category
+
         nodes_table:
           more_nodes: more pages
         translations:

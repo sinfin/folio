@@ -1,7 +1,8 @@
 .folio-console-layout-with-sidebar
   .folio-console-layout-content
     == cell('folio/console/index/header', Folio::Node, \
-                                          new_path: new_console_node_path)
+                                          new_path: new_console_node_path, \
+                                          hidden_fields: index_filters.keys)
 
     .table-responsive
       table.table.table-striped.table-hover
@@ -17,6 +18,8 @@
         tbody
           = render partial: "nodes_table", locals: { nodes: @nodes }
 
+    - unless @nodes.class == ActiveSupport::OrderedHash
+      = paginate @nodes
+
   .folio-console-layout-sidebar
-    == cell('folio/console/index/filters', \
-            [:by_parent, :by_published, :by_type])
+    == cell('folio/console/index/filters', index_filters)

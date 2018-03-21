@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Image < Folio::File
-  include Folio::Thumbnails::Base
   include Folio::Thumbnails::Image
 
   paginates_per 36

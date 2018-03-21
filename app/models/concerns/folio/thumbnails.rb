@@ -8,8 +8,6 @@ module Folio
     module Base
       extend ActiveSupport::Concern
 
-      VALID_MIME_TYPES = %w{image/jpeg image/png image/bmp image/gif application/pdf}
-
       included do
         serialize :thumbnail_sizes, Hash
         before_validation :reset_thumbnails
@@ -29,11 +27,11 @@ module Folio
           ret.url = Dragonfly.app.remote_url_for(ret.uid)
           ret
         else
-          if file.mime_type =~ /svg/
+          if mime_type =~ /svg/
             url = file.url
           else
             GenerateThumbnailJob.perform_later(self, w_x_h)
-            url = "http://dummyimage.com/#{w_x_h}/FFF/000.png&text=Generating…"
+            url = temporary_url(w_x_h)
           end
           sizes = w_x_h.split('x')
           OpenStruct.new(
@@ -46,9 +44,14 @@ module Folio
         end
       end
 
-      def landscape?
-        fail_for_non_images
-        file.present? && file.width >= file.height
+      def temporary_url(w_x_h)
+        size = w_x_h.match(/\d+x?\d+/)[0]
+        "http://doader.com/#{size}?image=#{id}"
+      end
+
+      def temporary_s3_url(w_x_h)
+        size = w_x_h.match(/\d+x?\d+/)[0]
+        "https://doader.s3.amazonaws.com/#{size}?image=#{id}"
       end
 
       private
@@ -71,9 +74,15 @@ module Folio
 
     module Image
       extend ActiveSupport::Concern
+      include Base
 
       included do
         before_save :set_additional_data
+      end
+
+      def landscape?
+        fail_for_non_images
+        file.present? && file.width >= file.height
       end
 
       private

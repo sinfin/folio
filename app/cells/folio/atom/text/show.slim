@@ -1,1 +1,5 @@
 = simple_format model.content
+
+- if model.images.present?
+  - model.images.each do |img|
+    = image(img)
