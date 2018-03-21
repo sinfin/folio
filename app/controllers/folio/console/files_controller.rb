@@ -3,11 +3,21 @@
 module Folio
   class Console::FilesController < Console::BaseController
     before_action :find_files, only: [:index]
-    before_action :find_file, except: [:index, :create, :new]
+    before_action :find_file, except: [:index, :create]
+
     before_action do
-      add_breadcrumb (params[:type] == 'image' ? Image : File).model_name.human(count: 2),
-                     console_files_path(type: params[:type])
+      if @file.present?
+        type = @file.is_a?(Image) ? 'image' : 'document'
+      else
+        type = params[:type]
+      end
+
+      klass = type == 'image' ? Image : ::Folio::File
+
+      add_breadcrumb klass.model_name.human(count: 2),
+                     console_files_path(type: type)
     end
+
     respond_to :json, only: [:index, :create]
 
     def index
@@ -18,14 +28,6 @@ module Folio
       respond_with(@files) do |format|
         format.html
         format.json { render json: @files }
-      end
-    end
-
-    def new
-      if params[:file_type] == 'image'
-        @file = Image.new
-      else
-        @file = Document.new
       end
     end
 
@@ -57,9 +59,11 @@ module Folio
 
 
     def file_params
-      # redactor 3 ¯\_(ツ)_/¯
       p = params.require(:file).permit(:tag_list, :type, file: [])
-      p[:file] = p[:file].first
+      # redactor 3 ¯\_(ツ)_/¯
+      if p[:file].is_a?(Array)
+        p[:file] = p[:file].first
+      end
       p
     end
 

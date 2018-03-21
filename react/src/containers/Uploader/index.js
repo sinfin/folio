@@ -70,8 +70,7 @@ class MultiSelect extends Component {
         djsConfig={this.djsConfig()}
         eventHandlers={this.eventHandlers()}
       >
-        {this.props.children}
-
+        {this.props.showUploading && <DropzoneTrigger />}
         {this.props.showUploading && (
           this.props.uploads.records.map((upload, index) => (
             <UploadingFile
@@ -80,7 +79,7 @@ class MultiSelect extends Component {
             />
           ))
         )}
-        {this.props.showUploading && <DropzoneTrigger />}
+        {this.props.children}
       </StyledDropzone>
     )
   }

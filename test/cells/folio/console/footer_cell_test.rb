@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class Folio::Console::FooterCellTest < Cell::TestCase
+class Folio::Console::FooterCellTest < Folio::Console::CellTest
   test 'show' do
     site = create(:folio_site)
 

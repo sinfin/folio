@@ -1,6 +1,45 @@
-.row
-  .col-sm-12
-    h1 = @file.file_name
-    = simple_form_for(@file, as: :file, \
-                             url: console_file_path(@file.id)) do |f|
-      = render 'form', f: f
+h1 = @file.file_name.presence || @file.class.model_name.human
+
+= simple_form_for(@file, as: :file, \
+                         url: console_file_path(@file.id)) do |f|
+  fieldset
+    .row
+      - if f.object.is_a?(Folio::Image)
+        .col
+          = image_tag f.object.file.thumb('500x500').url
+
+          br
+          br
+
+          = link_to f.object.file.url, target: '_blank', download: true
+            i.fa.fa-download<>
+            = t('.download_original')
+
+      .col
+        - unless f.object.is_a?(Folio::Image)
+          = link_to f.object.file.url, target: '_blank', download: true
+            i.fa.fa-download<>
+            = t('.download')
+
+            br
+            br
+
+        == cell('folio/console/tagsinput', f)
+
+        - if f.object.is_a?(Folio::Image)
+          h2 = f.object.class.human_attribute_name(:thumbnail_sizes)
+
+          ul
+            - f.object.thumbnail_sizes.each do |key, size|
+              li
+                a href=size[:url] target='_blank'
+                  = key
+
+        == cell('folio/console/file_placement_list', f.object)
+
+  = f.button :submit
+
+  - if f.object.is_a?(Folio::Image)
+    = link_to t('folio.console.back'), console_files_path
+  - else
+    = link_to t('folio.console.back'), console_files_path(type: :document)

@@ -78,6 +78,15 @@ class MultiSelect extends Component {
           header='Available'
           filters={<FileFilter />}
         >
+          <DropzoneTrigger />
+
+          {uploads.records.map((upload, index) => (
+            <UploadingFile
+              upload={upload}
+              key={upload.id}
+            />
+          ))}
+
           {files.selectable.map((file) => (
             <File
               file={file}
@@ -86,14 +95,6 @@ class MultiSelect extends Component {
               selected={false}
             />
           ))}
-          {uploads.records.map((upload, index) => (
-            <UploadingFile
-              upload={upload}
-              key={upload.id}
-            />
-          ))}
-
-          <DropzoneTrigger />
         </Card>
       </Uploader>
     )

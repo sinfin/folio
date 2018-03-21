@@ -45,10 +45,6 @@ export const filteredFilesSelector = (state) => {
   files.selectable.forEach((file) => {
     let valid = true
 
-    if (valid && filters.dark !== null) {
-      valid = file.dark === null || file.dark === filters.dark
-    }
-
     if (valid && filters.name) {
       valid = new RegExp(filters.name, 'i').test(file.file_name)
     }
@@ -85,7 +81,6 @@ export const tagsSelector = (state) => {
 
 const initialState = fromJS({
   name: '',
-  dark: null,
   tags: [],
 })
 

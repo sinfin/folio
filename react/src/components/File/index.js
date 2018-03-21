@@ -3,13 +3,16 @@ import styled from 'styled-components'
 
 import ThumbOrInfo from './ThumbOrInfo'
 
-const OuterWrap = styled.div`
+const OUTER_STYLE = `
   width: 150px;
   height: 150px;
   position: relative;
   display: inline-block;
   margin: 15px;
 `
+
+const OuterWrap = styled.div`${OUTER_STYLE}`
+const OuterLinkWrap = styled.a`${OUTER_STYLE}`
 
 const ImageWrap = styled.div`
   position: absolute;
@@ -56,6 +59,16 @@ export function File ({ attachmentable, file, selected, position, onClick, singl
         )}
       </div>
     </OuterWrap>
+  )
+}
+
+export function LinkFile ({ file }) {
+  return (
+    <OuterLinkWrap href={file.edit_path}>
+      <ImageWrap background={file.dominant_color}>
+        <ThumbOrInfo file={file} />
+      </ImageWrap>
+    </OuterLinkWrap>
   )
 }
 

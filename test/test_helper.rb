@@ -21,6 +21,10 @@ class Cell::TestCase
   include ::FactoryGirl::Syntax::Methods
 end
 
+class Folio::Console::CellTest < Cell::TestCase
+  controller Folio::Console::BaseController
+end
+
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL

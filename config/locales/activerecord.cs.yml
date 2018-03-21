@@ -1,6 +1,11 @@
 ---
 cs:
   activerecord:
+    attributes:
+      folio/image:
+        thumbnail_sizes: Vygenerované verze
+        file_placements: Použití
+
     models:
       folio/account:
         one: Uživatel

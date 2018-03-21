@@ -14,11 +14,6 @@ module Folio
       assert_response :success
     end
 
-    test 'should get new' do
-      get new_console_file_url
-      assert_response :success
-    end
-
     test 'should get edit' do
       get edit_console_file_url(@image)
       assert_response :success

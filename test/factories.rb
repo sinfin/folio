@@ -44,6 +44,11 @@ FactoryGirl.define do
     association :node, factory: :folio_node
   end
 
+  factory :folio_file_placement, class: Folio::FilePlacement do
+    association :file, factory: :folio_document
+    association :placement, factory: :folio_page
+  end
+
   factory :folio_image, class: Folio::Image do
     file Folio::Engine.root.join('test/fixtures/folio/test.gif')
 

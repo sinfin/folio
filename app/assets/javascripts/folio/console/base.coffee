@@ -22,7 +22,6 @@
 
 #= require ./nodes_table
 #= require ./nodes
-#= require ./files
 
 #= require folio/console/main_app
 

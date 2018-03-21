@@ -7,7 +7,7 @@ import { filteredFilesSelector } from 'ducks/filters'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
-import { File, UploadingFile, DropzoneTrigger } from 'components/File'
+import { LinkFile, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
@@ -27,15 +27,8 @@ class IndexMode extends Component {
         <Card
           filters={<FileFilter />}
         >
-          {files.selectable.map((file) => (
-            <File
-              attachmentable={files.attachmentable}
-              file={file}
-              key={file.file_id}
-              onClick={console.log}
-              selected={false}
-            />
-          ))}
+          <DropzoneTrigger />
+
           {uploads.records.map((upload, index) => (
             <UploadingFile
               upload={upload}
@@ -43,7 +36,9 @@ class IndexMode extends Component {
             />
           ))}
 
-          <DropzoneTrigger />
+          {files.selectable.map((file) => (
+            <LinkFile file={file} key={file.file_id} />
+          ))}
         </Card>
       </Uploader>
     )

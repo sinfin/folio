@@ -1,9 +1,9 @@
 .folio-console-index-header
   h1
     - if params[:type] == 'document'
-      = t('.documents')
+      = Folio::File.model_name.human(count: 2)
     - else
-      = t('.images')
+      = Folio::Image.model_name.human(count: 2)
 
 - type = (params[:type] == 'document' ? 'Folio::Document' : 'Folio::Image')
 .folio-react-wrap[

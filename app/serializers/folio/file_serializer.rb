@@ -2,9 +2,11 @@
 
 module Folio
   class FileSerializer < ActiveModel::Serializer
+    include Engine.routes.url_helpers
+
     attributes :id, :file_size, :file_name, :type,
                :thumb, :size, :url, :tags,
-               :dominant_color, :dark
+               :dominant_color, :edit_path
 
     def thumb
       URI.encode(object.thumb('250x250#').url) if image?
@@ -26,20 +28,16 @@ module Folio
       end
     end
 
-    def dark
-      if image?
-        if object.additional_data
-          object.additional_data['dark']
-        end
-      end
-    end
-
     def image?
       object.type == 'Folio::Image'
     end
 
     def tags
       object.tag_list
+    end
+
+    def edit_path
+      edit_console_file_path(object)
     end
   end
 end
