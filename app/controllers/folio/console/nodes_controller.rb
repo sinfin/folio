@@ -16,7 +16,7 @@ module Folio
           parent = Node.find(params[:by_parent])
           @nodes = parent.subtree.original
                          .filter(filter_params)
-                         .arrange(order: 'position desc, created_at desc')
+                         .arrange(order: 'position asc, created_at asc')
         else
           @nodes = Node.original
                        .ordered.filter(filter_params)
@@ -24,7 +24,7 @@ module Folio
         end
       else
         @limit = 5
-        @nodes = Node.original.arrange(order: 'position desc, created_at desc')
+        @nodes = Node.original.arrange(order: 'position asc, created_at asc')
       end
     end
 
