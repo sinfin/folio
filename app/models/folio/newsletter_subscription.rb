@@ -12,13 +12,12 @@ module Folio
     # Scopes
     default_scope { order(created_at: :desc) }
     scope :by_query, -> (q) {
-        if q.present?
-          where('email ILIKE ?', "%#{q}%")
-          # search_node(args)
-        else
-          where(nil)
-        end
-      }
+      if q.present?
+        where('email ILIKE ?', "%#{q}%")
+      else
+        where(nil)
+      end
+    }
 
     def title
       email
