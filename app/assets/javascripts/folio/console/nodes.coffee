@@ -22,15 +22,17 @@ $ ->
     form = $t.find(':selected').data('form')
     $fields = $t.closest('.nested-fields')
 
-    $selects = $fields.find(".atom-model-select:not(.disabled[data-class='#{klass}'])")
-    $selects.addClass('disabled').prop('disabled', true)
-    $selects.parent().addClass('disabled')
-    $selects.parent().hide()
+    $modelSelects = $fields
+      .find(".atom-model-select:not(.disabled[data-class='#{klass}'])")
+    $modelSelects.addClass('disabled').prop('disabled', true)
+    $modelSelects.parent().addClass('disabled')
+    $modelSelects.parent().hide()
 
-    $selects = $fields.find(".atom-model-select.disabled[data-class='#{klass}']")
-    $selects.removeClass('disabled').prop('disabled', false)
-    $selects.parent().removeClass('disabled')
-    $selects.parent().show()
+    $modelSelects = $fields
+      .find(".atom-model-select.disabled[data-class='#{klass}']")
+    $modelSelects.removeClass('disabled').prop('disabled', false)
+    $modelSelects.parent().removeClass('disabled')
+    $modelSelects.parent().show()
 
     $content = $fields.find('.atom-content')
     switch form
@@ -47,7 +49,10 @@ $ ->
           window.folioConsoleDestroyRedactor($textarea[0])
       when 'none'
         $content.hide()
-
+    
+    if $modelSelects.length > 0
+      $modelSelects.trigger('change')
+        
   $(document).on 'cocoon:after-insert', (e, insertedItem) ->
     selectRightForm($(insertedItem).find('select.atom-type-select'))
 
@@ -59,16 +64,18 @@ $ ->
       .find('input, select').prop('disabled', false)
     $fields.find("fieldset:not([data-type='#{type}'])")
       .hide()
-      .find('input, select').prop('disabled', 'disabled');
+      .find('input, select').prop('disabled', 'disabled')
 
   $(document).on 'change', '.atom-type-select', ->
     selectRightForm(this)
 
   $(document).on 'change', '.atom-model-select', ->
     $t = $(this)
-    $textarea = $t.closest('.nested-fields').find('textarea')
+    $textarea = $t.closest('.nested-fields')
+                  .find('.node_atoms_content textarea')
     content = $t.find(':selected').data('content')
-    window.folioConsoleRedactorSetContent($textarea[0], content)
+    if content
+      window.folioConsoleRedactorSetContent($textarea[0], content)
 
   $('#paginate-images a').on 'ajax:success', (e, data, status, json) ->
     # pagination
