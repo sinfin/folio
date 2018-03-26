@@ -25,6 +25,20 @@ module Folio
         thumbnail = image.file
                          .thumb(size, 'format' => :jpg, 'frame' => 0)
                          .encode('jpg', "-quality #{quality}")
+
+        if `which jpegtran`.blank?
+          msg = 'Missing jpegtran binary. Thumbnail not optimized.'
+          Raven.capture_message msg
+          logger.error msg
+        else
+          shell(
+            'jpegtran',
+            '-optimize',
+            '-outfile', thumbnail.path,
+            thumbnail.path
+          )
+        end
+
         {
           uid: thumbnail.store,
           signature: thumbnail.signature,
@@ -33,6 +47,16 @@ module Folio
           height: thumbnail.height,
           quality: quality
         }
+      end
+
+      def shell(*command)
+        cmd = command.join(' ')
+
+        _stdout, _stderr, status = Open3.capture3(*command)
+
+        unless status == 0
+          fail "Failed: '#{cmd}' failed with '#{stderr.chomp}'. Stdout: '#{stdout.chomp}'."
+        end
       end
   end
 end
