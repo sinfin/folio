@@ -3,6 +3,7 @@
 module Folio
   class FilePlacement < ApplicationRecord
     include Taggable
+    include PregenerateThumbnails
 
     # Relations
     belongs_to :file, class_name: 'Folio::File'
@@ -37,6 +38,7 @@ module Folio
     end
 
     private
+
       def allowed_tag
         if self.tag_list.present?
           errors.add(:model, 'only one tag is allowed') if self.tag_list.count != 1

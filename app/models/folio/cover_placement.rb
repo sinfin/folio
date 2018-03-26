@@ -2,6 +2,8 @@
 
 module Folio
   class CoverPlacement < ApplicationRecord
+    include PregenerateThumbnails
+
     # Relations
     belongs_to :file,
                class_name: 'Folio::File',

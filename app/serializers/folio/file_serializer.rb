@@ -8,8 +8,10 @@ module Folio
                :thumb, :size, :url, :tags,
                :dominant_color, :edit_path
 
+    ADMIN_THUMBNAIL_SIZE = '250x250'
+
     def thumb
-      URI.encode(object.thumb('250x250').url) if image?
+      URI.encode(object.thumb(ADMIN_THUMBNAIL_SIZE).url) if image?
     end
 
     def url
