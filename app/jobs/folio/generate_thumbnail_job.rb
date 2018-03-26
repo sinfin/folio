@@ -7,7 +7,7 @@ module Folio
     def perform(image, size, quality)
       return if image.thumbnail_sizes[size]
 
-      image.thumbnail_sizes[size] = compute_sizes(image, size)
+      image.thumbnail_sizes[size] = compute_sizes(image, size, quality)
       image.update!(thumbnail_sizes: image.thumbnail_sizes)
 
       ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
@@ -19,7 +19,7 @@ module Folio
 
     private
 
-      def compute_sizes(image, size)
+      def compute_sizes(image, size, quality)
         return if image.thumbnail_sizes[size]
 
         thumbnail = image.file
