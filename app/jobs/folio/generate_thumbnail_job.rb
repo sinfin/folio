@@ -4,7 +4,7 @@ module Folio
   class GenerateThumbnailJob < ApplicationJob
     queue_as :default
 
-    def perform(image, size)
+    def perform(image, size, quality)
       return if image.thumbnail_sizes[size]
 
       image.thumbnail_sizes[size] = compute_sizes(image, size)
@@ -24,13 +24,14 @@ module Folio
 
         thumbnail = image.file
                          .thumb(size, 'format' => :jpg, 'frame' => 0)
-                         .encode('jpg', '-quality 90')
+                         .encode('jpg', "-quality #{quality}")
         {
           uid: thumbnail.store,
           signature: thumbnail.signature,
           url: thumbnail.url,
           width: thumbnail.width,
-          height: thumbnail.height
+          height: thumbnail.height,
+          quality: quality
         }
       end
   end

@@ -22,7 +22,7 @@ module Folio
 
     # User w_x_h = 400x250# or similar
     #
-    def thumb(w_x_h)
+    def thumb(w_x_h, quality: 90)
       fail_for_non_images
       if thumbnail_sizes[w_x_h]
         ret = OpenStruct.new(thumbnail_sizes[w_x_h])
@@ -32,7 +32,7 @@ module Folio
         if mime_type =~ /svg/
           url = file.url
         else
-          GenerateThumbnailJob.perform_later(self, w_x_h)
+          GenerateThumbnailJob.perform_later(self, w_x_h, quality)
           url = temporary_url(w_x_h)
         end
         sizes = w_x_h.split('x')
@@ -41,7 +41,8 @@ module Folio
           signature: nil,
           url: url,
           width: sizes[0].to_i,
-          height: sizes[1].to_i
+          height: sizes[1].to_i,
+          quality: quality
         )
       end
     end
