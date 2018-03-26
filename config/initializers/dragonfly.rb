@@ -15,6 +15,16 @@ end
 Dragonfly.app.configure do
   plugin :imagemagick
 
+  processor :cmyk_to_srgb do |content, *args|
+    if `identify '#{content.file.path}'` =~ /CMYK/
+      content.shell_update escape: false do |old_path, new_path|
+        cmyk_icc = "#{Folio::Engine.root}/data/icc_profiles/PSOuncoated_v3_FOGRA52.icc"
+        srgb_icc = "#{Folio::Engine.root}/data/icc_profiles/sRGB_v4_ICC_preference.icc"
+        "convert -profile #{cmyk_icc} '#{old_path}' -profile #{srgb_icc} -colorspace sRGB '#{new_path}'"
+      end
+    end
+  end
+
   processor :jpegoptim do |content, *args|
     if `which jpegtran`.blank?
       msg = 'Missing jpegtran binary. Thumbnail not optimized.'

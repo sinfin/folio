@@ -24,6 +24,7 @@ module Folio
 
         thumbnail = image.file
                          .thumb(size, 'format' => :jpg, 'frame' => 0)
+                         .cmyk_to_srgb
                          .encode('jpg', "-quality #{quality}")
                          .jpegoptim
 
