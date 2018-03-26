@@ -15,11 +15,23 @@ end
 Dragonfly.app.configure do
   plugin :imagemagick
 
+  processor :jpegoptim do |content, *args|
+    if `which jpegtran`.blank?
+      msg = 'Missing jpegtran binary. Thumbnail not optimized.'
+      Raven.capture_message msg
+      content
+    else
+      content.shell_update do |old_path, new_path|
+        "jpegtran -optimize -outfile #{new_path} #{old_path}"  # The command sent to the command line
+      end
+    end
+  end
+
   secret Rails.application.secrets.dragonfly_secret
 
   url_format '/media/:job/:sha/:name'
 
-  if Rails.env.development? || Rails.env.test?
+  if Rails.env.test? || (Rails.env.development? && !ENV['DEV_DRAGONFLY'])
     datastore :file,
               root_path: Rails.root.join('public/system/dragonfly', Rails.env),
               server_root: Rails.root.join('public')

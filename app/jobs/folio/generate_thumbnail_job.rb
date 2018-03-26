@@ -25,19 +25,7 @@ module Folio
         thumbnail = image.file
                          .thumb(size, 'format' => :jpg, 'frame' => 0)
                          .encode('jpg', "-quality #{quality}")
-
-        if `which jpegtran`.blank?
-          msg = 'Missing jpegtran binary. Thumbnail not optimized.'
-          Raven.capture_message msg
-          logger.error msg
-        else
-          shell(
-            'jpegtran',
-            '-optimize',
-            '-outfile', thumbnail.path,
-            thumbnail.path
-          )
-        end
+                         .jpegoptim
 
         {
           uid: thumbnail.store,
