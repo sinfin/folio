@@ -1,49 +1,45 @@
 fieldset
-  .row
-    .col-sm-1
-      = f.input :locale, disabled: true
-    .col-sm-2
-      = f.input :site, collection: Folio::Site.all, include_blank: false
-    .col-sm
-      - if f.object.type == 'Folio::NodeTranslation'
-        - collection = [ \
-          [Folio::NodeTranslation.model_name.human, 'Folio::NodeTranslation'] \
-        ]
-        = f.input :type, collection: collection, readonly: true, disabled: true
-      - else
-        = f.input :type, collection: node_types_for_select(f.object.parent), \
-                         include_blank: false
+  .flex-row
+    .col.flex-col-grow
+      .row
+        .col-sm-1
+          = f.input :locale, disabled: true
+        .col-sm-2
+          = f.input :site, collection: Folio::Site.all, include_blank: false
+        .col-sm
+          = node_type_select(f)
+        .col-sm
+          = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
+                                label_method: :name_depth, \
+                                value_method: :id, \
+                                readonly: params[:parent].present?, \
+                                disabled: params[:parent].present?
 
-    .col-sm
-      = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
-                            label_method: :name_depth, \
-                            value_method: :id, \
-                            readonly: params[:parent].present?, \
-                            disabled: params[:parent].present?
+        .col-sm
+          = f.input :code
 
-    .col-sm
-      = f.input :code
+      .row
+        .col-sm
+          = f.input :title
+        .col-sm
+          = f.input :slug
 
-  .row
-    .col-sm
-      = f.input :title
-    .col-sm
-      = f.input :slug
+    .col
+      = react_image_select(f, cover: true)
 
   = f.input :perex
   = f.input :content, input_html: { class: 'redactor' }
 
   = render 'folio/console/nodes/form/atoms', f: f
-
   .row
-    .col-sm
+    .col
       label = t('.settings')
 
       = f.input :featured
       = f.input :published
       = f.input :published_at
 
-    .col-sm
+    .col
       == cell('folio/console/tagsinput', f)
       = f.input :meta_title
       = f.input :meta_description, as: :text

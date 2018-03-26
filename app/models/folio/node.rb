@@ -181,6 +181,11 @@ module Folio
           translation.file_placements << fp.dup
         end
 
+        # Files
+        if self.cover_placement.present?
+          translation.cover_placement = self.cover_placement.dup
+        end
+
         # TODO: Atoms
         self.atoms.find_each do |atom|
           atom_translation = atom.dup

@@ -1,17 +1,21 @@
-- has_images = f.object.file_placements.with_image.exists?
-
 .folio-console-react-image-select[
   class=(multi ? 'folio-console-multi' : 'folio-console-single')
-  class=(has_images ? 'folio-console-has-nested' : nil)
+  class=(exists ? 'folio-console-has-nested' : nil)
   data-cocoon-single-nested=(multi ? nil : true)
 ]
-  label = multi ? t('.title_multi') : t('.title_single')
+  label
+    - if cover
+      = t('.title_cover')
+    - else
+      = multi ? t('.title_multi') : t('.title_single')
 
-  .folio-console-nested-fields-with-images
-    = f.simple_fields_for :file_placements, \
-                          f.object.file_placements.with_image do |fp|
+  .folio-console-nested-fields-with-images[
+    data-placement-type=key
+  ]
+    = f.simple_fields_for key, \
+                          images do |fp|
       .nested-fields
-        = image_tag fp.object.file.file.thumb('250x250#').url
+        = image_tag fp.object.file.file.thumb('250x250').url
 
         .folio-console-hover-destroy
           i.fa.fa-times-circle data-destroy-association=true

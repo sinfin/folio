@@ -28,13 +28,14 @@ end
 #  file_uid        :string
 #  file_name       :string
 #  type            :string
-#  thumbnail_sizes :text             default("--- {}\n")
+#  thumbnail_sizes :text             default({})
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  file_width      :integer
 #  file_height     :integer
 #  file_size       :integer
 #  mime_type       :string(255)
+#  additional_data :json
 #
 # Indexes
 #

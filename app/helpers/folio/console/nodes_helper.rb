@@ -34,6 +34,12 @@ module Folio
     end
 
     def node_types_for_select(node)
+      if node.is_a?(NodeTranslation)
+        return [
+          [Folio::NodeTranslation.model_name.human, 'Folio::NodeTranslation']
+        ]
+      end
+
       for_select = []
       if node.present? && node.class.allowed_child_types.present?
         node.class.allowed_child_types.each do |type|
@@ -48,6 +54,17 @@ module Folio
         end
       end
       for_select
+    end
+
+    def node_type_select(f)
+      if f.object.is_a?(NodeTranslation)
+        f.input :type, collection: node_types_for_select(f.object),
+                       readonly: true,
+                       disabled: true
+      else
+        f.input :type, collection: node_types_for_select(f.object.parent),
+                       include_blank: false
+      end
     end
 
     def render_additional_form_fields(f)

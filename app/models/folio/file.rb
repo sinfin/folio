@@ -46,6 +46,7 @@ end
 #  file_height     :integer
 #  file_size       :integer
 #  mime_type       :string(255)
+#  additional_data :json
 #
 # Indexes
 #

@@ -21,6 +21,7 @@ cs:
         react_image_select:
           title_multi: Obrázky
           title_single: Obrázek
+          title_cover: Hlavní obrázek
           add: Přidat obrázek
 
       back: Zpět

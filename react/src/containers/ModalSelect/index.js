@@ -49,7 +49,10 @@ class ModalSelect extends Component {
       name = $genericInput.attr('name').split('[')[0]
     }
 
-    const prefix = `${name}[file_placements_attributes][${Date.now()}]`
+    const placementType = $fields.data('placement-type')
+    const isCover = placementType.match('cover')
+    const affix = isCover ? '' : `[${Date.now()}]`
+    const prefix = `${name}[${placementType}_attributes]${affix}`
 
     const $newFile = $(`
       <div class="nested-fields">
@@ -60,7 +63,7 @@ class ModalSelect extends Component {
 
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.file_id}" />
-        <input type="hidden" name="${prefix}[position]" value="${position}" />
+        ${isCover ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
       </div>
     `)
 

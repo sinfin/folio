@@ -94,8 +94,12 @@ end
 #  updated_at     :datetime         not null
 #  placement_type :string
 #  placement_id   :integer
+#  model_type     :string
+#  model_id       :integer
+#  title          :string
 #
 # Indexes
 #
+#  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
 #  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
 #
