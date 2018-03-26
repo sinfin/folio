@@ -56,8 +56,8 @@ cs:
         other: Menu
 
       folio/newsletter_subscription:
-        one: Odběr newsletteru
-        other: Odběry newsletteru
+        one: Newsletter
+        other: Newsletter
 
       folio/node:
         one: Stránka
