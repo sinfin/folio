@@ -18,7 +18,8 @@ Dragonfly.app.configure do
   processor :jpegoptim do |content, *args|
     if `which jpegtran`.blank?
       msg = 'Missing jpegtran binary. Thumbnail not optimized.'
-      Raven.capture_message msg
+      Raven.capture_message msg if defined?(Raven)
+      logger.error msg if defined?(logger)
       content
     else
       content.shell_update do |old_path, new_path|
