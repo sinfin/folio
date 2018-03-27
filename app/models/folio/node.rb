@@ -39,7 +39,7 @@ module Folio
     end
 
     # Multi-search
-    multisearchable against: [ :title, :perex, :content ],
+    multisearchable against: [ :title, :perex, :content, :atom_contents ],
                     if: :searchable?,
                     ignoring: :accents
 
@@ -223,6 +223,11 @@ module Folio
         if parent.class.allowed_child_types.exclude? self.class
           errors.add(:type, 'is not allowed')
         end
+      end
+
+      # https://github.com/Casecommons/pg_search/issues/34
+      def atom_contents
+        atoms.map { |a| [a.title, a.content] }.flatten.compact.join(' ')
       end
   end
 end

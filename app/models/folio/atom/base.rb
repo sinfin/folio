@@ -4,7 +4,6 @@ module Folio
   module Atom
     class Base < ApplicationRecord
       include HasAttachments
-      include PgSearch
 
       self.table_name = 'folio_atoms'
 
@@ -19,6 +18,7 @@ module Folio
 
       belongs_to :placement,
                  polymorphic: true,
+                 touch: true,
                  # so that validations work https://stackoverflow.com/a/39114379/910868
                  optional: true
       alias_attribute :node, :placement
@@ -30,10 +30,6 @@ module Folio
 
       scope :ordered, -> { order(position: :asc) }
       scope :by_type, -> (type) { where(type: type.to_s) }
-
-      multisearchable against: [ :title, :content ],
-                      if: :searchable?,
-                      ignoring: :accents
 
       def cell_name
         nil
@@ -65,10 +61,6 @@ module Folio
       # override in subclasses
       def scopes_for_select_options(resource)
         resource
-      end
-
-      def searchable?
-        placement && placement.searchable?
       end
 
       private
