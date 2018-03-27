@@ -1,2 +1,0 @@
-#= require ahoy
-ahoy.trackAll()
