@@ -115,7 +115,7 @@ module Folio
 
     # override in subclasses
     def searchable?
-      true
+      published?
     end
 
     def self.view_name

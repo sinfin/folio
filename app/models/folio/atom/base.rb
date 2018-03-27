@@ -68,7 +68,7 @@ module Folio
       end
 
       def searchable?
-        true
+        placement && placement.searchable?
       end
 
       private

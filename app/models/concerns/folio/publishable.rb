@@ -9,6 +9,10 @@ module Folio
         scope :published, -> { where(published: true) }
         scope :unpublished, -> { where('published != ? OR published IS NULL', true) }
       end
+
+      def published?
+        published.present?
+      end
     end
 
     module WithDate
@@ -22,6 +26,12 @@ module Folio
         scope :unpublished, -> {
           where('(published != ? OR published IS NULL) OR (published_at IS NULL OR published_at > ?)', true, Time.now.change(sec: 0))
         }
+      end
+
+      def published?
+        published.present? &&
+        published_at &&
+        published_at <= Time.now.change(sec: 0)
       end
     end
   end
