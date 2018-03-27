@@ -42,7 +42,7 @@ Dragonfly.app.configure do
 
   url_format '/media/:job/:sha/:name'
 
-  if Rails.env.test? || (Rails.env.development? && !ENV['DEV_DRAGONFLY'])
+  if Rails.env.test? || (Rails.env.development? && !ENV['DEV_S3_DRAGONFLY'])
     datastore :file,
               root_path: Rails.root.join('public/system/dragonfly', Rails.env),
               server_root: Rails.root.join('public')
