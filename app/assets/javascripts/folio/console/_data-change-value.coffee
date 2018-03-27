@@ -8,3 +8,6 @@ $(document).on 'click', '[data-change-value]', (e) ->
     $targets = $(target)
 
   $targets.val($this.data('change-value'))
+
+  if $this.data('change-value-submit')?
+    $this.closest('form').submit()
