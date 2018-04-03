@@ -97,6 +97,7 @@ module Folio
           'config/initializers/smtp.rb',
           'config/routes.rb',
           'lib/application_cell.rb',
+          'lib/tasks/auto_annotate_models.rake',
           'vendor/assets/bower_components/.keep',
           'vendor/assets/redactor/redactor.css',
           'vendor/assets/redactor/redactor.js',
