@@ -22,3 +22,5 @@ cs:
         perex: Perex
         content: Obsah
         tag_list: Tagy
+      lead:
+        note: Zpráva
