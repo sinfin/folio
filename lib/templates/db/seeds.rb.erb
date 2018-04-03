@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 Folio::Account.destroy_all
-Folio::Atom.destroy_all
+Folio::Atom::Base.destroy_all
 Folio::Node.destroy_all
 Folio::Site.destroy_all
-
-paragraph = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 
 def unsplash_pic(square = false)
   image = Folio::Image.new
