@@ -34,6 +34,7 @@ module Folio
           gem 'faker'
           gem 'factory_girl_rails', version: '~> 4.8.0'
           gem 'annotate'
+          gem 'slack-notifier'
 
           gem 'capistrano-rails', require: false
           gem 'capistrano-sinfin', git: 'git@bitbucket.org:Sinfin/capistrano-sinfin.git', branch: 'master'
@@ -101,7 +102,6 @@ module Folio
           'vendor/assets/redactor/redactor.js',
           'test/factories.rb',
           'test/test_helper.rb',
-          'test/controllers/home_controller_test.rb',
         ].each { |f| copy_file f, f }
 
         copy_file Folio::Engine.root.join('.ruby-version'), '.ruby-version'
