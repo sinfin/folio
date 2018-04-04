@@ -104,8 +104,6 @@ module Folio
           'vendor/assets/bower_components/.keep',
           'vendor/assets/redactor/redactor.css',
           'vendor/assets/redactor/redactor.js',
-          'test/factories.rb',
-          'test/test_helper.rb',
         ].each { |f| copy_file f, f }
 
         copy_file Folio::Engine.root.join('.ruby-version'), '.ruby-version'
