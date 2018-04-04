@@ -2,17 +2,10 @@ doctype html
 html lang=I18n.locale
   head
     = render partial: 'layouts/folio/head'
+    = render partial: 'layouts/folio/favicon'
 
-  body[
-    class=(flash.present? ? 'cms-with-flash-messages' : 'cms-no-flash-messages')
-  ]
+    == cell('folio/cookie_consent')
+    == cell('folio/browser_update')
 
-    = render partial: "folio/partials/header"
-
+  body
     = yield
-
-    = render partial: "folio/partials/footer"
-
-    = javascript_include_tag 'folio/application'
-
-    = yield :javascripts
