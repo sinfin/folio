@@ -42,10 +42,13 @@ module Folio
         end
       end
 
-      def rm_original_assets
+      def rm_rails_new_stuff
         [
           'app/assets/stylesheets/application.css',
           'app/views/layouts/application.html.erb',
+          'public/404.html',
+          'public/422.html',
+          'public/500.html',
         ].each do |path|
           full_path = Rails.root.join(path)
           File.delete(full_path) if File.exists?(full_path)
