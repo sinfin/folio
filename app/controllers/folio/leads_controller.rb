@@ -2,6 +2,8 @@
 
 module Folio
   class LeadsController < ApplicationController
+    invisible_captcha, only: :create
+    
     def create
       @lead = Lead.new(lead_params.merge(url: request.referrer))
       success = @lead.save

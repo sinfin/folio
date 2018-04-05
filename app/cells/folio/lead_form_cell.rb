@@ -2,6 +2,7 @@
 
 module Folio
   class LeadFormCell < SavingFolioCell
+    include InvisibleCaptcha::ViewHelpers
     include SimpleForm::ActionViewExtensions::FormHelper
     include Engine.routes.url_helpers
 
