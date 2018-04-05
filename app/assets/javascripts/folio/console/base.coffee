@@ -15,7 +15,9 @@
 #= require folio/console/_data-destroy-association
 #= require folio/console/_data-cocoon-single-nested
 #= require folio/console/_bootstrap-tabs-lazyload
+#= require folio/console/_cocoon-set-position
 #= require folio/console/tagsinput/tagsinput
+#= require folio/console/nested_model_controls/nested_model_controls
 
 #= require ./dropzone-init
 #= require ./redactor-init
@@ -97,27 +99,3 @@ $ ->
 
     url = '/console/nodes/set_positions.json'
     switchModelPositions($that_node, $this_node, url, 'node')
-
-  $(document).on 'click', '.btn.atom.position-up', ->
-    $this_atom = $(this).closest('.nested-fields')
-    $that_atom = $this_atom.prevAll('.nested-fields:first')
-
-    pos = $this_atom.find('.position').val()
-    $that_atom.find('.position').val(pos)
-    $this_atom.find('.position').val(pos - 1)
-    $this_atom.after($that_atom)
-
-  $(document).on 'click', '.btn.atom.position-down', ->
-    $this_atom = $(this).closest('.nested-fields')
-    $that_atom = $this_atom.nextAll(".nested-fields:first")
-
-    pos = $that_atom.find('.position').val()
-    $this_atom.find('.position').val(pos)
-    $that_atom.find('.position').val(pos - 1)
-    $that_atom.after($this_atom)
-
-  $(document).on 'cocoon:after-insert', (e, insertedItem) ->
-    pos = +$(insertedItem).prevAll(".nested-fields:first")
-                          .find('.position')
-                          .val()
-    $(insertedItem).find('.position').val(pos + 1)

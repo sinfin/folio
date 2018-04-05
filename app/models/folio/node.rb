@@ -73,17 +73,13 @@ module Folio
     scope :by_type, -> (type) {
       case type
       when 'page'
-        where(type: Folio::Page.get_subclasses.map(&:to_s))
+        where(type: Folio::Page.recursive_subclasses.map(&:to_s))
       when 'category'
-        where(type: Folio::Category.get_subclasses.map(&:to_s))
+        where(type: Folio::Category.recursive_subclasses.map(&:to_s))
       else
         where(nil)
       end
     }
-
-    def self.get_subclasses
-      [self] + self.subclasses.map { |subclass| subclass.get_subclasses }.flatten
-    end
 
     def self.arrange_as_array(options = {}, hash = nil)
       hash ||= original.arrange(options)

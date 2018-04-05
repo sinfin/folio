@@ -3,17 +3,30 @@
 module Folio
   class Menu < ApplicationRecord
     # Relations
-    has_many :menu_items
+    has_many :menu_items, -> { order(:position) }, dependent: :destroy
     accepts_nested_attributes_for :menu_items, allow_destroy: true,
-                                                 reject_if: :all_blank
+                                               reject_if: :all_blank
 
     # Validations
-    validates :type, presence: true
+    validates :type, :locale,
+              presence: true
 
     alias_attribute :items, :menu_items
 
     def title
-      type
+      model_name.human
+    end
+
+    def available_targets
+      Folio::Node.where(locale: locale)
+    end
+
+    def self.allowed_menu_item_classes
+      MenuItem.recursive_subclasses
+    end
+
+    def self.allowed_menu_item_classes_for_select
+      type_collection_for_select(self.allowed_menu_item_classes)
     end
   end
 end
@@ -32,6 +45,7 @@ end
 #  type       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  locale     :string
 #
 # Indexes
 #

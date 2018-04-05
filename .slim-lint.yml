@@ -4,3 +4,4 @@ linters:
 
 exclude:
   - 'app/cells/folio/cookie_consent/show.slim' # long URL in script tag
+  - 'app/views/folio/console/menus/_form.slim'

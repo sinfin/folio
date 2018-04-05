@@ -1,0 +1,37 @@
+.form-group.folio-console-nested-model-controls-form-group
+  - if options[:label]
+    label.control-label.d-block
+      = options[:label] == true ? '&nbsp;' : options[:label]
+
+  - if handle_position?
+    .btn-group[
+      class=(handle_destroy? ? 'mr-3' : nil)
+    ]
+      button.btn.btn-outline-secondary[
+        class="folio-console-nested-model-position-button"
+        data-direction="up"
+        type="button"
+      ]
+        i.fa.fa-arrow-up
+
+      button.btn.btn-outline-secondary[
+        class="folio-console-nested-model-position-button"
+        data-direction="down"
+        type="button"
+      ]
+        i.fa.fa-arrow-down
+
+      = f.hidden_field :position, \
+                       class: 'folio-console-nested-model-position-input'
+
+  - if handle_destroy?
+    - if f.object.id
+      button.btn.btn-danger[
+        type="button"
+        class="folio-console-nested-model-destroy-button"
+      ]
+        = t('.destroy')
+      = f.hidden_field :_destroy, value: 0
+
+    - else
+      = link_to_remove_association t('.destroy'), f, class: 'btn btn-danger'

@@ -39,11 +39,13 @@ Folio::Page.create!(title: 'Vyvolej.to', parent: reference, published: true)
 Folio::Page.create!(title: 'Hidden', parent: reference, published: false)
 Folio::Page.create!(title: 'DAM', parent: reference, published: true)
 
-menu = Folio::Menu::Page.create!
+menu = Folio::Menu::Page.create!(locale: :cs)
+
 Folio::MenuItem.create!(menu: menu,
                         title: 'Reference',
                         node: reference,
                         position: 0)
+
 Folio::MenuItem.create!(menu: menu,
                         title: 'About',
                         node: about,

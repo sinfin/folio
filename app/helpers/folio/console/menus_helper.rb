@@ -2,10 +2,30 @@
 
 module Folio
   module Console::MenusHelper
-    def menu_types_for_select
-      Menu.subclasses.map do |type|
-        [type.model_name.human, type]
+    def menu_targets_for_select(menu)
+      # STI hack
+      menu.available_targets.map do |record|
+        label = [
+          record.class.model_name.human,
+          record.title,
+        ].join(' / ')
+
+        value = [
+          record.type,
+          record.id
+        ].join(::Folio::Console::MenusController::TYPE_ID_DELIMITER)
+
+        [label, value]
       end
+    end
+
+    def menu_target_value(menu_item)
+      return nil if menu_item.target.blank?
+
+      [
+        menu_item.target_type,
+        menu_item.target_id
+      ].join(::Folio::Console::MenusController::TYPE_ID_DELIMITER)
     end
   end
 end
