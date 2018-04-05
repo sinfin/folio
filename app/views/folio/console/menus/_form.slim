@@ -10,9 +10,9 @@ h1 = Folio::Menu.model_name.human
 - else
   = f.input :locale, disabled: true
 
-  h2 = t('.menu_items.title')
+  h2 = Folio::MenuItem.model_name.human(count: 2)
 
-  #menu_items
+  fieldset#menu_items
     = f.simple_fields_for :menu_items do |menu_item|
       = render 'menu_item_fields', f: menu_item, available_targets: menu_targets_for_select(f.object)
 

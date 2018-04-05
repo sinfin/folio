@@ -70,8 +70,6 @@ cs:
             add: Přidat dokument
           atoms:
             add: Přidat atom
-        atom_fields:
-          remove: Odebrat atom
 
       accounts:
         index:
@@ -88,6 +86,7 @@ cs:
           type: Druh
         menu_item_fields:
           remove: Odebrat
+        add_menu_item: Přidat odkaz
 
       leads:
         index:
@@ -121,3 +120,6 @@ cs:
           title: Filtry
           cancel: Zrušit filtry
           all: Všechny
+
+      nested_model_controls:
+        destroy: Odebrat

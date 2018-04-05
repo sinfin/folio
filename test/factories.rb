@@ -80,11 +80,11 @@ FactoryGirl.define do
 
     factory :folio_menu_with_menu_items do
       transient do
-        posts_count 3
+        items_count 3
       end
 
       after(:create) do |menu, evaluator|
-        create_list(:folio_menu_item, evaluator.posts_count, menu: menu)
+        create_list(:folio_menu_item, evaluator.items_count, menu: menu)
       end
     end
   end

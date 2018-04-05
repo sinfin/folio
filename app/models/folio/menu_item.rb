@@ -11,7 +11,6 @@ module Folio
     scope :ordered, -> { order(position: :asc) }
 
     # Validations
-    validates :title, presence: true
     validate :validate_target_and_menu_locales
 
     private

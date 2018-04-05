@@ -2,31 +2,16 @@
   .card-body
     .row
       .col-sm-7
-        .row
-          .col-sm-8
-            = f.input :type, collection: atom_types_for_select, \
-                             include_blank: false, \
-                             input_html: { class: 'atom-type-select' }
-
-          .col-sm-4
-            .form-group
-              label.control-label = t('.position')
-              div
-                .btn.btn-outline-secondary.atom.position-up
-                  = icon 'arrow-up'
-                .btn.btn-outline-secondary.ml-2.atom.position-down
-                  = icon 'arrow-down'
-                = f.hidden_field :position, class: 'position'
+        = f.input :type, collection: atom_types_for_select, \
+                         include_blank: false, \
+                         input_html: { class: 'atom-type-select' }
 
         - if f.object.class.form != :none
           = atom_model_field(f)
           = f.input :title
           = atom_content_field(f)
 
-        - if f.object.id
-          == destroy_button(f, t('.remove'))
-        - else
-          = link_to_remove_association t('.remove'), f, class: 'btn btn-danger'
+        == cell('folio/console/nested_model_controls', f)
 
       .col-sm-5
         = react_image_select(f)

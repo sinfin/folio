@@ -1,16 +1,20 @@
 .nested-fields
   .row
     .col
-      = f.input :title
-
-    .col
       = f.input :target, collection: available_targets, selected: menu_target_value(f.object)
 
-    .col.text-right
-      .btn.btn-outline-secondary.ml-2.position-up = icon 'arrow-up'
-      .btn.btn-outline-secondary.ml-2.position-down = icon 'arrow-down'
+    .col
+      = f.input :title
 
-      - if f.object.id
-        = f.input :_destroy, as: :boolean
-      - else
-        = link_to_remove_association t('.remove'), f, class: 'btn btn-danger'
+    .col.text-right
+      .form-group
+        label.control-label &nbsp;
+
+        div
+          .btn.btn-outline-secondary.mr-2.position-up = icon 'arrow-up'
+          .btn.btn-outline-secondary.mr-2.position-down = icon 'arrow-down'
+
+          - if f.object.id
+            == destroy_button(f, t('.remove'))
+          - else
+            = link_to_remove_association t('.remove'), f, class: 'btn btn-danger'

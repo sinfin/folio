@@ -41,14 +41,5 @@ module Folio
 
       link_to(content, path, opts)
     end
-
-    def destroy_button(f, label)
-      link_to '#', class: 'btn btn-danger destroy', role: 'button' do
-        [
-          label,
-          f.hidden_field(:_destroy, value: 0)
-        ].join('').html_safe
-      end
-    end
   end
 end
