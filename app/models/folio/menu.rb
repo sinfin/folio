@@ -20,6 +20,14 @@ module Folio
     def available_targets
       Folio::Node.where(locale: locale)
     end
+
+    def self.allowed_menu_item_classes
+      MenuItem.recursive_subclasses
+    end
+
+    def self.allowed_menu_item_classes_for_select
+      type_collection_for_select(self.allowed_menu_item_classes)
+    end
   end
 end
 

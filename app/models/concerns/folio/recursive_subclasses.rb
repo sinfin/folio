@@ -15,7 +15,13 @@ module Folio
       end
 
       def recursive_subclasses_for_select(include_self: true)
-        recursive_subclasses(include_self: include_self).map do |type|
+        type_collection_for_select(
+          recursive_subclasses(include_self: include_self)
+        )
+      end
+
+      def type_collection_for_select(type_collection)
+        type_collection.map do |type|
           [type.model_name.human, type]
         end
       end

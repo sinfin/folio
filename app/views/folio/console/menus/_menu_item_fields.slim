@@ -1,14 +1,19 @@
+- allowed_classes = menu.class.allowed_menu_item_classes_for_select
+
 .nested-fields.card
   .card-body
     .row
       .col
-        = f.input :target, collection: available_targets, \
+        = f.input :target, collection: menu_targets_for_select(menu), \
                            selected: menu_target_value(f.object)
 
-      .col
-        = f.input :type, \
-                  collection: f.object.class.recursive_subclasses_for_select, \
-                  include_blank: false
+      - if allowed_classes.length == 1
+        = f.hidden_field :type, value: allowed_classes.first.last
+      - else
+        .col
+          = f.input :type, \
+                    collection: allowed_classes, \
+                    include_blank: false
 
       .col
         = f.input :title, hint: t('.title_hint')

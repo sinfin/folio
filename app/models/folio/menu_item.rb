@@ -12,12 +12,19 @@ module Folio
 
     # Validations
     validate :validate_target_and_menu_locales
+    validate :validate_menu_allowed_types
 
     private
 
       def validate_target_and_menu_locales
         if target && target.locale && target.locale != menu.locale
           errors.add(:target, :invalid)
+        end
+      end
+
+      def validate_menu_allowed_types
+        if menu.class.allowed_menu_item_classes.exclude?(self.class)
+          errors.add(:type, :invalid)
         end
       end
   end

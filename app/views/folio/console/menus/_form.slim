@@ -6,27 +6,25 @@ h1
 
 = f.error_notification
 
-= f.input :type, collection: f.object.class.recursive_subclasses_for_select, \
-                 include_blank: false
-
 - if f.object.new_record?
+  = f.input :type, collection: f.object.class.recursive_subclasses_for_select(include_self: false), \
+                   include_blank: false
+
   = f.input :locale, collection: @site.locales, include_blank: false
 
 - else
-  = f.input :locale, disabled: true
-
   h2 = Folio::MenuItem.model_name.human(count: 2)
 
   fieldset#menu_items
     = f.simple_fields_for :menu_items do |menu_item|
-      = render 'menu_item_fields', f: menu_item, available_targets: menu_targets_for_select(f.object)
+      = render 'menu_item_fields', f: menu_item, menu: f.object
 
     .links
       = link_to_add_association t('.add_menu_item'), \
                                 f, \
                                 :menu_items, \
                                 class: 'btn btn-success', \
-                                render_options: { locals: { available_targets: menu_targets_for_select(f.object) } }
+                                render_options: { locals: { menu: f.object } }
 
 = f.button :submit
 = link_to t('folio.console.back'), console_menus_path

@@ -19,6 +19,20 @@ module Folio
       cs_menu.items << item
       refute cs_menu.save
     end
+
+    class StrictMenu < Menu
+      def self.allowed_menu_item_classes
+        []
+      end
+    end
+
+    test 'respects menu allowed types' do
+      strict_menu = StrictMenu.create!(locale: :cs)
+      assert strict_menu
+
+      item = build(:folio_menu_item, menu: strict_menu)
+      refute item.valid?
+    end
   end
 end
 
