@@ -5,13 +5,17 @@ module Folio
     def menu_targets_for_select(menu)
       # STI hack
       menu.available_targets.map do |record|
-        [
+        label = [
+          record.class.model_name.human,
           record.title,
-          [
-            record.type,
-            record.id
-          ].join(::Folio::Console::MenusController::TYPE_ID_DELIMITER)
-        ]
+        ].join(' / ')
+
+        value = [
+          record.type,
+          record.id
+        ].join(::Folio::Console::MenusController::TYPE_ID_DELIMITER)
+
+        [label, value]
       end
     end
 
