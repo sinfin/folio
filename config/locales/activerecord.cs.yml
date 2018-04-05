@@ -6,6 +6,14 @@ cs:
         thumbnail_sizes: Vygenerované verze
         file_placements: Použití
 
+      folio/menu:
+        locale: Verze
+        type: Druh
+
+      folio/menu_item:
+        target: Odkaz
+        type: Druh
+
     models:
       folio/account:
         one: Uživatel

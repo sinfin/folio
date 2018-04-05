@@ -86,7 +86,10 @@ cs:
           type: Druh
         menu_item_fields:
           remove: Odebrat
-        add_menu_item: Přidat odkaz
+        form:
+          add_menu_item: Přidat odkaz
+        menu_item_fields:
+          title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
 
       leads:
         index:

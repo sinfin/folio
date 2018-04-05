@@ -5,13 +5,17 @@
   table.table.table-striped
     thead
       tr
-        th = t(".type")
+        th = Folio::Menu.human_attribute_name(:type)
+        th = Folio::Menu.human_attribute_name(:locale)
+        th = Folio::MenuItem.model_name.human(count: 2)
         th
 
     tbody
       - @menus.each do |menu|
         tr
           td = menu.class.model_name.human
+          td = country_flag(menu.locale)
+          td = menu.menu_items.count
           td
             = edit_button menu, edit_console_menu_path(menu.id)
             = delete_button menu, console_menu_path(menu.id)

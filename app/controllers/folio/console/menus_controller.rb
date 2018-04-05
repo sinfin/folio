@@ -48,15 +48,17 @@ module Folio
                                   :title,
                                   :target,
                                   :position,
+                                  :type,
                                   :_destroy]
         ).tap do |obj|
           # STI hack
-
-          obj[:menu_items_attributes].each do |key, value|
-            type, id = value[:target].split(TYPE_ID_DELIMITER)
-            obj[:menu_items_attributes][key][:target_type] = type
-            obj[:menu_items_attributes][key][:target_id] = id
-            obj[:menu_items_attributes][key].delete(:target)
+          if obj[:menu_items_attributes]
+            obj[:menu_items_attributes].each do |key, value|
+              type, id = value[:target].split(TYPE_ID_DELIMITER)
+              obj[:menu_items_attributes][key][:target_type] = type
+              obj[:menu_items_attributes][key][:target_id] = id
+              obj[:menu_items_attributes][key].delete(:target)
+            end
           end
 
           obj

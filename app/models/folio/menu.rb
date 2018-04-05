@@ -14,7 +14,7 @@ module Folio
     alias_attribute :items, :menu_items
 
     def title
-      type
+      model_name.human
     end
 
     def available_targets
