@@ -7,14 +7,4 @@
       = f.input :title
 
     .col.text-right
-      .form-group
-        label.control-label &nbsp;
-
-        div
-          .btn.btn-outline-secondary.mr-2.position-up = icon 'arrow-up'
-          .btn.btn-outline-secondary.mr-2.position-down = icon 'arrow-down'
-
-          - if f.object.id
-            == destroy_button(f, t('.remove'))
-          - else
-            = link_to_remove_association t('.remove'), f, class: 'btn btn-danger'
+      == cell('folio/console/nested_model_controls', f, label: true)

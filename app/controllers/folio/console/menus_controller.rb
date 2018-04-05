@@ -47,6 +47,7 @@ module Folio
           menu_items_attributes: [:id,
                                   :title,
                                   :target,
+                                  :position,
                                   :_destroy]
         ).tap do |obj|
           # STI hack

@@ -1,10 +1,12 @@
 .form-group.folio-console-nested-model-controls-form-group
   - if options[:label]
-    label.control-label = options[:label]
-    br
+    label.control-label.d-block
+      = options[:label] == true ? '&nbsp;' : options[:label]
 
   - if handle_position?
-    .btn-group
+    .btn-group[
+      class=(handle_destroy? ? 'mr-3' : nil)
+    ]
       button.btn.btn-outline-secondary[
         class="folio-console-nested-model-position-button"
         data-direction="up"
@@ -27,7 +29,6 @@
       button.btn.btn-danger[
         type="button"
         class="folio-console-nested-model-destroy-button"
-        class=(handle_position? ? 'ml-3' : nil)
       ]
         = t('.destroy')
       = f.hidden_field :_destroy, value: 0
