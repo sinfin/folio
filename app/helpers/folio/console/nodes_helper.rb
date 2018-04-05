@@ -49,7 +49,7 @@ module Folio
           ]
         end
       else
-        Node.get_subclasses.each do |type|
+        Node.recursive_subclasses.each do |type|
           for_select << [type.model_name.human, type] if type.view_name
         end
       end
@@ -81,7 +81,7 @@ module Folio
         if f.object.parent.present?
           types = f.object.parent.class.allowed_child_types
         else
-          types = Node.get_subclasses
+          types = Node.recursive_subclasses
         end
         original_type = f.object.class
 

@@ -4,7 +4,7 @@ module Folio
   module Console::AtomsHelper
     def atom_types_for_select
       for_select = []
-      ::Folio::Atom.types.each do |type|
+      Atom.types.each do |type|
         if type.form
           for_select << [type.model_name.human,
                          type,
@@ -15,7 +15,7 @@ module Folio
     end
 
     def atom_model_field(f)
-      selects = ::Folio::Atom.types.map do |type|
+      selects = Atom.types.map do |type|
         if type::ALLOWED_MODEL_TYPE.present?
           active = type == f.object.class
           f.association :model,
