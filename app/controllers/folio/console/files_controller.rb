@@ -28,12 +28,12 @@ module Folio
     def create
       @file = ::Folio::File.create!(file_params)
       render json: { file: FileSerializer.new(@file) },
-             location: smart_index_path
+             location: edit_console_file_path(@file)
     end
 
     def update
       @file.update(file_params)
-      respond_with @file, location: smart_index_path
+      respond_with @file, location: edit_console_file_path(@file)
     end
 
     def destroy
@@ -53,7 +53,7 @@ module Folio
 
 
     def file_params
-      p = params.require(:file).permit(:tag_list, :type, file: [])
+      p = params.require(:file).permit(:tag_list, :type, :file, file: [])
       # redactor 3 ¯\_(ツ)_/¯
       if p[:file].is_a?(Array)
         p[:file] = p[:file].first

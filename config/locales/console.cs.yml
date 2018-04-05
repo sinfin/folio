@@ -79,6 +79,7 @@ cs:
         edit:
           download: Stáhnout
           download_original: Stáhnout originál
+          file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
 
       menus:
         index:

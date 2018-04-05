@@ -24,6 +24,10 @@ h1 = @file.file_name.presence || @file.class.model_name.human
             br
             br
 
+        = f.input :file, as: :file, \
+                         hint: t('.file_hint'), \
+                         input_html: { class: 'form-control' }
+
         == cell('folio/console/tagsinput', f)
 
         - if f.object.is_a?(Folio::Image)

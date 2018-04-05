@@ -24,3 +24,5 @@ cs:
         tag_list: Tagy
       lead:
         note: Zpráva
+      file:
+        file: Změna souboru
