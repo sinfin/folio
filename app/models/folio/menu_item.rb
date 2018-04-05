@@ -30,6 +30,13 @@ module Folio
   end
 end
 
+if Rails.env.development?
+  Dir["#{Folio::Engine.root}/app/models/folio/menu_item/*.rb",
+      'app/models/menu_item/*.rb'].each do |file|
+    require_dependency file
+  end
+end
+
 # == Schema Information
 #
 # Table name: folio_menu_items
