@@ -3,17 +3,22 @@
 module Folio
   class Menu < ApplicationRecord
     # Relations
-    has_many :menu_items
+    has_many :menu_items, dependent: :destroy
     accepts_nested_attributes_for :menu_items, allow_destroy: true,
-                                                 reject_if: :all_blank
+                                               reject_if: :all_blank
 
     # Validations
-    validates :type, presence: true
+    validates :type, :locale,
+              presence: true
 
     alias_attribute :items, :menu_items
 
     def title
       type
+    end
+
+    def available_targets
+      Folio::Node.where(locale: locale)
     end
   end
 end
@@ -32,6 +37,7 @@ end
 #  type       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  locale     :string
 #
 # Indexes
 #

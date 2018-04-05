@@ -4,7 +4,7 @@
       = f.input :title
 
     .col
-      = f.input :node_id, collection: Folio::Node.original
+      = f.input :target, collection: available_targets, selected: menu_target_value(f.object)
 
     .col.text-right
       .btn.btn-outline-secondary.ml-2.position-up = icon 'arrow-up'

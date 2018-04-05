@@ -76,6 +76,8 @@ FactoryGirl.define do
   end
 
   factory :folio_menu, class: Folio::Menu::Page do
+    locale :cs
+
     factory :folio_menu_with_menu_items do
       transient do
         posts_count 3
@@ -88,7 +90,7 @@ FactoryGirl.define do
   end
 
   factory :folio_menu_item, class: Folio::MenuItem do
-    association :node, factory: :folio_node
+    association :target, factory: :folio_node
     title { Faker::Lorem.word }
     position 0
   end

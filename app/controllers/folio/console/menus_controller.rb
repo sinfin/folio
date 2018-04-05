@@ -5,6 +5,8 @@ module Folio
     before_action :find_menu, except: [:index, :create, :new]
     add_breadcrumb Menu.model_name.human(count: 2), :console_menus_path
 
+    TYPE_ID_DELIMITER = ' - '
+
     def index
       @menus = Menu.all
     end
@@ -15,12 +17,12 @@ module Folio
 
     def create
       @menu = Menu.create(menu_params)
-      respond_with @menu, location: console_menus_path
+      respond_with @menu, location: edit_console_menu_path(@menu)
     end
 
     def update
       @menu.update(menu_params)
-      respond_with @menu, location: console_menus_path
+      respond_with @menu, location: edit_console_menu_path(@menu)
     end
 
     def destroy
@@ -28,23 +30,36 @@ module Folio
       respond_with @menu, location: console_menus_path
     end
 
-  private
-    def find_menu
-      @menu = Menu.find(params[:id])
-    end
+    private
 
-    def filter_params
-      # params.permit(:by_query, :by_published, :by_type, :by_tag)
-    end
+      def find_menu
+        @menu = Menu.find(params[:id])
+      end
 
-    def menu_params
-      params.require(:menu).permit(
-        :type,
-        menu_items_attributes: [:id,
-                                :title,
-                                :node_id,
-                                :_destroy]
-      )
-    end
+      def filter_params
+        # params.permit(:by_query, :by_published, :by_type, :by_tag)
+      end
+
+      def menu_params
+        params.require(:menu).permit(
+          :type,
+          :locale,
+          menu_items_attributes: [:id,
+                                  :title,
+                                  :target,
+                                  :_destroy]
+        ).tap do |obj|
+          # STI hack
+
+          obj[:menu_items_attributes].each do |key, value|
+            type, id = value[:target].split(TYPE_ID_DELIMITER)
+            obj[:menu_items_attributes][key][:target_type] = type
+            obj[:menu_items_attributes][key][:target_id] = id
+            obj[:menu_items_attributes][key].delete(:target)
+          end
+
+          obj
+        end
+      end
   end
 end

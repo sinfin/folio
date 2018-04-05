@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180326080614) do
+ActiveRecord::Schema.define(version: 20180405051950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,7 +111,6 @@ ActiveRecord::Schema.define(version: 20180326080614) do
 
   create_table "folio_menu_items", force: :cascade do |t|
     t.bigint "menu_id"
-    t.bigint "node_id"
     t.string "type"
     t.string "ancestry"
     t.string "title"
@@ -119,9 +118,11 @@ ActiveRecord::Schema.define(version: 20180326080614) do
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "target_type"
+    t.bigint "target_id"
     t.index ["ancestry"], name: "index_folio_menu_items_on_ancestry"
     t.index ["menu_id"], name: "index_folio_menu_items_on_menu_id"
-    t.index ["node_id"], name: "index_folio_menu_items_on_node_id"
+    t.index ["target_type", "target_id"], name: "index_folio_menu_items_on_target_type_and_target_id"
     t.index ["type"], name: "index_folio_menu_items_on_type"
   end
 
@@ -129,6 +130,7 @@ ActiveRecord::Schema.define(version: 20180326080614) do
     t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "locale"
     t.index ["type"], name: "index_folio_menus_on_type"
   end
 
