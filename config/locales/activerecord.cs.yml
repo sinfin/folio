@@ -31,6 +31,10 @@ cs:
         one: Text
         other: Texty
 
+      folio/atom/image:
+        one: Obrázek
+        other: Obrázky
+
       folio/category:
         one: Kategorie
         other: Kategorie

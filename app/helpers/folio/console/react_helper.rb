@@ -44,25 +44,8 @@ module Folio
     end
 
     def react_image_select(f, multi: false, cover: false)
-      if cover
-        images = f.object.cover_placement
-        key = :cover_placement
-        exists = images.present?
-      else
-        images = f.object.file_placements.with_image
-        key = :file_placements
-        exists = images.exists?
-      end
-
-      render partial: 'folio/console/partials/react_image_select',
-             locals: {
-               f: f,
-               multi: multi,
-               key: key,
-               images: images,
-               exists: exists,
-               cover: cover,
-             }
+      raw cell('folio/console/react_image_select', f, multi: multi,
+                                                      cover: cover)
     end
   end
 end

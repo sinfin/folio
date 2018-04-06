@@ -9,6 +9,9 @@
 
 #= require ./redactor-imagemanager
 
+#= require ./dropzone-init
+#= require ./redactor-init
+
 #= require folio/cable
 #= require folio/console/_data-auto-submit
 #= require folio/console/_data-change-value
@@ -16,11 +19,9 @@
 #= require folio/console/_data-cocoon-single-nested
 #= require folio/console/_bootstrap-tabs-lazyload
 #= require folio/console/_cocoon-set-position
+#= require folio/console/atom_form_fields/atom_form_fields
 #= require folio/console/tagsinput/tagsinput
 #= require folio/console/nested_model_controls/nested_model_controls
-
-#= require ./dropzone-init
-#= require ./redactor-init
 
 #= require ./nodes_table
 #= require ./nodes

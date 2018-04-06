@@ -18,12 +18,6 @@ cs:
           gallery: Galerie
           documents: Dokumenty
 
-        react_image_select:
-          title_multi: Obrázky
-          title_single: Obrázek
-          title_cover: Hlavní obrázek
-          add: Přidat obrázek
-
       back: Zpět
 
       filters:
@@ -124,6 +118,12 @@ cs:
           title: Filtry
           cancel: Zrušit filtry
           all: Všechny
+
+      react_image_select:
+        title_multi: Obrázky
+        title_single: Obrázek
+        title_cover: Hlavní obrázek
+        add: Přidat obrázek
 
       nested_model_controls:
         destroy: Odebrat

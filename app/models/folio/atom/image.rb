@@ -2,16 +2,16 @@
 
 module Folio
   module Atom
-    class Text < Base
+    class Image < Base
       STRUCTURE = {
-        content: :redactor,
+        content: nil,
         title: nil,
-        images: nil,
+        images: :single,
         model: nil,
       }
 
       def cell_name
-        'folio/atom/text'
+        'folio/atom/image'
       end
     end
   end

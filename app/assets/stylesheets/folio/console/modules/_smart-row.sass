@@ -1,0 +1,21 @@
+.folio-console-smart-row
+  display: flex
+
+.folio-console-smart-col
+  flex: 1 1 100%
+  margin-bottom: $grid-gutter-width
+
+aside.folio-console-smart-col
+  flex: 0 0 auto
+
++mq-sm-up
+  aside.folio-console-smart-col
+    &:first-child
+      margin-right: $grid-gutter-width
+
+    &:last-child
+      margin-left: $grid-gutter-width
+
++mq-xs
+  .folio-console-smart-row
+    flex-direction: column

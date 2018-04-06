@@ -5,6 +5,20 @@ module Folio
     class Base < ApplicationRecord
       include HasAttachments
 
+      # hash consisting of :content, :title, :images, :model
+      #
+      # example:
+      #
+      # {
+      #   content: nil, # one of nil, :string, :redactor
+      #   title: nil,   # one of nil, :string
+      #   images: nil,  # one of nil, :single, :multi
+      #   model: nil,   # nil / array of allowed model classes
+      # }
+      #
+      # nil for Base as we don't want in in forms
+      STRUCTURE = nil
+
       self.table_name = 'folio_atoms'
 
       # override in subclasses
@@ -45,11 +59,6 @@ module Folio
 
       def data
         self
-      end
-
-      # override in subclasses
-      def self.form
-        false
       end
 
       def resource_for_select
