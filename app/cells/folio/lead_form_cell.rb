@@ -2,6 +2,7 @@
 
 module Folio
   class LeadFormCell < SavingFolioCell
+    include InvisibleCaptcha::ViewHelpers
     include SimpleForm::ActionViewExtensions::FormHelper
     include Engine.routes.url_helpers
 
@@ -31,5 +32,13 @@ module Folio
     def remember_option_keys
       [:note, :message, :name, :note_label]
     end
+
+    private
+
+      # fix content_tag
+      # https://github.com/trailblazer/cells-slim/issues/14
+      def tag_builder
+        super.tap { |builder| builder.class_eval { include Cell::Slim::Rails } }
+      end
   end
 end
