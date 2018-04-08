@@ -15,11 +15,9 @@ module Folio
 
       self.table_name = 'folio_atoms'
 
-      before_validation do
-        if model_type.nil? && self.class::STRUCTURE[:model].present?
-          write_attribute(:model_type, self.class::STRUCTURE[:model])
-        end
-      end
+      before_validation :set_model_type
+      before_save :unset_extra_attrs, if: :type_changed?
+      after_save :unlink_extra_files, if: :saved_change_to_type?
 
       belongs_to :placement,
                  polymorphic: true,
@@ -72,9 +70,49 @@ module Folio
 
       private
 
+        def klass
+          # as type can be changed
+          self.type.constantize
+        end
+
         def model_type_is_allowed
-          if model && model.class != self.class::STRUCTURE[:model]
+          if model &&
+             klass::STRUCTURE[:model].present? &&
+             model.class != klass::STRUCTURE[:model]
             errors.add(:model_type, :invalid)
+          end
+        end
+
+        def set_model_type
+          if model_id.present? &&
+             model_type.nil? &&
+             klass::STRUCTURE[:model].present?
+            write_attribute(:model_type, klass::STRUCTURE[:model])
+          end
+        end
+
+        def unset_extra_attrs
+          if klass::STRUCTURE[:model].blank? && model.present?
+            self.model_id = nil
+            self.model_type = nil
+          end
+
+          if klass::STRUCTURE[:title].blank? && title.present?
+            self.title = nil
+          end
+
+          if klass::STRUCTURE[:content].blank? && content.present?
+            self.content = nil
+          end
+        end
+
+        def unlink_extra_files
+          if klass::STRUCTURE[:images] != :single
+            self.cover_placement.destroy! if cover_placement.present?
+          end
+
+          if klass::STRUCTURE[:images] != :multi
+            self.file_placements.each(&:destroy!) if file_placements.exists?
           end
         end
     end

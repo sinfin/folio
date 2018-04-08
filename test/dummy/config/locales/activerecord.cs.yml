@@ -1,6 +1,10 @@
 cs:
   activerecord:
     models:
+      atom/gallery:
+        one: Galerie
+        other: Galerie
+
       atom/page_reference:
         one: Odkaz na stránku
         other: Odkazy na stránky
