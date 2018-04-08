@@ -16,17 +16,16 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
   end
 
   def atom_types_for_select
-    for_select = []
-    Folio::Atom.types.each do |type|
-      unless type == Folio::Atom::Base
-        for_select << [type.model_name.human,
-                       type,
-                       {
-                         'data-atom-structure' => type.structure_as_json,
-                       }]
-      end
-    end
-    for_select
+    Folio::Atom.types.map do |type|
+      next if type == Folio::Atom::Base
+      [
+        type.model_name.human,
+        type,
+        {
+          'data-atom-structure' => type.structure_as_json,
+        }
+      ]
+    end.compact.sort_by(&:first)
   end
 
   def content_field

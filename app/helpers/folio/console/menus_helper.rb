@@ -16,7 +16,7 @@ module Folio
         ].join(::Folio::Console::MenusController::TYPE_ID_DELIMITER)
 
         [label, value]
-      end
+      end.sort_by(&:first)
     end
 
     def menu_target_value(menu_item)
