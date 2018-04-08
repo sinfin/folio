@@ -18,11 +18,6 @@ en:
           gallery: Gallery
           documents: Documents
 
-        react_image_select:
-          title_multi: Images
-          title_single: Image
-          add: Add Image
-
       sites:
         index:
           title: Sites
@@ -107,3 +102,9 @@ en:
           images: Images
           add_image: Add image
           remove: Remove atom
+
+      react_image_select:
+        title_multi: Images
+        title_single: Image
+        title_cover: Main image
+        add: Add Image

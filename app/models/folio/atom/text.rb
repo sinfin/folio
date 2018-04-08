@@ -3,9 +3,12 @@
 module Folio
   module Atom
     class Text < Base
-      def self.form
-        :redactor
-      end
+      STRUCTURE = {
+        content: :redactor,
+        title: nil,
+        images: nil,
+        model: nil,
+      }
 
       def cell_name
         'folio/atom/text'

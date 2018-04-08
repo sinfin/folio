@@ -1,20 +1,16 @@
 .form-group[
   class='folio-console-react-image-select'
-  class=(multi ? 'folio-console-multi' : 'folio-console-single')
+  class=(options[:multi] ? 'folio-console-multi' : 'folio-console-single')
   class=(exists ? 'folio-console-has-nested' : nil)
-  data-cocoon-single-nested=(multi ? nil : true)
+  data-cocoon-single-nested=(options[:multi] ? nil : true)
 ]
   label
-    - if cover
-      = t('.title_cover')
-    - else
-      = multi ? t('.title_multi') : t('.title_single')
+    = title
 
   .folio-console-nested-fields-with-images[
     data-placement-type=key
   ]
-    = f.simple_fields_for key, \
-                          images do |fp|
+    = html_safe_fields_for do |fp|
       .nested-fields
         = image_tag fp.object.file.file.thumb('250x250').url
 

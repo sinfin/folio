@@ -23,10 +23,6 @@ cs:
         one: Atom
         other: Atomy
 
-      folio/atom/page_reference:
-        one: Odkaz
-        other: Odkazy
-
       folio/atom/text:
         one: Text
         other: Texty

@@ -5,16 +5,19 @@ module Folio
     class Base < ApplicationRecord
       include HasAttachments
 
+      # hash consisting of :content, :title, :images, :model
+      STRUCTURE = {
+        content: nil, # one of nil, :string, :redactor
+        title: nil,   # one of nil, :string
+        images: nil,  # one of nil, :single, :multi
+        model: nil,   # nil or a model class
+      }
+
       self.table_name = 'folio_atoms'
 
-      # override in subclasses
-      ALLOWED_MODEL_TYPE = nil
-
-      before_validation do
-        if model_type.nil? && self.class::ALLOWED_MODEL_TYPE.present?
-          write_attribute(:model_type, self.class::ALLOWED_MODEL_TYPE)
-        end
-      end
+      before_validation :set_model_type
+      before_save :unset_extra_attrs, if: :type_changed?
+      after_save :unlink_extra_files, if: :saved_change_to_type?
 
       belongs_to :placement,
                  polymorphic: true,
@@ -47,27 +50,69 @@ module Folio
         self
       end
 
-      # override in subclasses
-      def self.form
-        false
-      end
-
-      def resource_for_select
-        if self.class::ALLOWED_MODEL_TYPE
-          scopes_for_select_options Object.const_get(self.class::ALLOWED_MODEL_TYPE).all
-        end
+      def self.resource_for_select
+        return nil if self::STRUCTURE[:model].blank?
+        self::STRUCTURE[:model].all
       end
 
       # override in subclasses
-      def scopes_for_select_options(resource)
+      def self.scopes_for_select_options(resource)
         resource
+      end
+
+      def self.structure_as_json
+        self::STRUCTURE.dup.tap do |structure|
+          if structure[:model].present?
+            structure[:model] = structure[:model].to_s
+          end
+        end.to_json
       end
 
       private
 
+        def klass
+          # as type can be changed
+          self.type.constantize
+        end
+
         def model_type_is_allowed
-          if model_type != self.class::ALLOWED_MODEL_TYPE
-            errors.add(:model, 'associated model class not allowed')
+          if model &&
+             klass::STRUCTURE[:model].present? &&
+             model.class != klass::STRUCTURE[:model]
+            errors.add(:model_type, :invalid)
+          end
+        end
+
+        def set_model_type
+          if model_id.present? &&
+             model_type.nil? &&
+             klass::STRUCTURE[:model].present?
+            write_attribute(:model_type, klass::STRUCTURE[:model])
+          end
+        end
+
+        def unset_extra_attrs
+          if klass::STRUCTURE[:model].blank? && model.present?
+            self.model_id = nil
+            self.model_type = nil
+          end
+
+          if klass::STRUCTURE[:title].blank? && title.present?
+            self.title = nil
+          end
+
+          if klass::STRUCTURE[:content].blank? && content.present?
+            self.content = nil
+          end
+        end
+
+        def unlink_extra_files
+          if klass::STRUCTURE[:images] != :single
+            self.cover_placement.destroy! if cover_placement.present?
+          end
+
+          if klass::STRUCTURE[:images] != :multi
+            self.file_placements.each(&:destroy!) if file_placements.exists?
           end
         end
     end

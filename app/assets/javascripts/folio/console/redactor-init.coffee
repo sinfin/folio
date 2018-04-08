@@ -7,6 +7,10 @@ OPTIONS =
   imageUpload: '/console/files.json'
   imageManagerJson: '/console/files.json?type=image'
 
+  # autoparseImages: false
+  # buttonsHide: ['file', 'image']
+
+
 window.folioConsoleInitRedactor = (node) -> $R(node, OPTIONS)
 window.folioConsoleDestroyRedactor = (node) -> $R(node, 'destroy')
 window.folioConsoleRedactorSetContent = (node, content) ->
