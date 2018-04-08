@@ -10,7 +10,7 @@ module Folio
 
     # https://github.com/comfy/active_link_to/blob/master/lib/active_link_to/active_link_to.rb
     def is_link_active?(path)
-      path = Addressable::URI::parse(path).path
+      path = Addressable::URI.parse(path).path
       path = Regexp.escape(path).chomp('/')
       original = request.original_fullpath
       !original.match(/^#{path}(\/.*|\?.*)?$/).blank?
