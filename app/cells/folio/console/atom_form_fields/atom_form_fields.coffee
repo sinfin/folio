@@ -14,7 +14,8 @@ atomFormBySelect = ($element) ->
       $content.removeAttr('hidden')
       # check if redactor is active
       unless $textarea.hasClass('redactor')
-        window.folioConsoleInitRedactor($textarea[0])
+        # disable content images on atoms with images/cover
+        window.folioConsoleInitRedactor $textarea[0], noImages: structure.images
 
     when 'string'
       hideWrap = false
