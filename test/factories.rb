@@ -44,6 +44,10 @@ FactoryGirl.define do
     association :node, factory: :folio_node
   end
 
+  factory :folio_image_atom, class: Folio::Atom::Image do
+    association :cover, factory: :folio_image
+  end
+
   factory :folio_file_placement, class: Folio::FilePlacement do
     association :file, factory: :folio_document
     association :placement, factory: :folio_page

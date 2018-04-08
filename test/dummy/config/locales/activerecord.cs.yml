@@ -1,0 +1,6 @@
+cs:
+  activerecord:
+    models:
+      atom/page_reference:
+        one: Odkaz na stránku
+        other: Odkazy na stránky

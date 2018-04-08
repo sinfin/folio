@@ -85,10 +85,12 @@ module Folio
           atoms_attributes: [:id,
                              :type,
                              :model_id,
+                             :model_type,
                              :title,
                              :content,
                              :position,
                              :_destroy,
+                             *cover_placement_strong_params,
                              *file_placements_strong_params]
         }]
       end

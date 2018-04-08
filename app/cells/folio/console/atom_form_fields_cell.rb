@@ -11,19 +11,18 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
     model.object
   end
 
-  def supports_images?
-    atom.class.images != :none
+  def structure
+    atom.class::STRUCTURE
   end
 
   def atom_types_for_select
     for_select = []
     Folio::Atom.types.each do |type|
-      if type.form
+      unless type == Folio::Atom::Base
         for_select << [type.model_name.human,
                        type,
                        {
-                         'data-console-form' => type.form,
-                         'data-images' => type.images,
+                         'data-atom-structure' => type.structure_as_json,
                        }]
       end
     end
@@ -31,28 +30,34 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
   end
 
   def content_field
-    form = f.object.class::STRUCTURE[:content]
+    form = structure[:content]
     active = %i[string redactor].include?(form)
 
     f.input :content,
       disabled: !active,
-      wrapper_html: { hidden: !active },
+      wrapper_html: {
+        hidden: !active,
+        class: 'folio-console-atom-content',
+      },
       input_html: { class: 'folio-console-atom-textarea' }
   end
 
   def title_field
-    form = f.object.class::STRUCTURE[:title]
-    active = (form == :string)
+    title = structure[:title]
+    active = (title == :string)
 
     f.input :title,
       disabled: !active,
-      wrapper_html: { hidden: !active }
+      wrapper_html: {
+        hidden: !active,
+        class: 'folio-console-atom-title',
+      }
   end
 
   def model_field
     selects = Folio::Atom.types.map do |type|
-      models = type::STRUCTURE[:model]
-      if models.present?
+      m = type::STRUCTURE[:model]
+      if m.present?
         active = (type == f.object.class)
         f.association :model,
           collection: atom_model_collection_for_select(f.object.becomes(type)),
@@ -69,9 +74,9 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
   end
 
   def atom_model_collection_for_select(atom)
-    atom.resource_for_select.map do |model|
+    atom.class.resource_for_select.map do |model|
       [
-        model.to_label,
+        model.try(:to_label) || model.try(:title) || model.model_name.human,
         model.id,
         { 'data-content': model.try(:to_content) }
       ]

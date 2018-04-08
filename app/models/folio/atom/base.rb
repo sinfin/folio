@@ -6,27 +6,18 @@ module Folio
       include HasAttachments
 
       # hash consisting of :content, :title, :images, :model
-      #
-      # example:
-      #
-      # {
-      #   content: nil, # one of nil, :string, :redactor
-      #   title: nil,   # one of nil, :string
-      #   images: nil,  # one of nil, :single, :multi
-      #   model: nil,   # nil / array of allowed model classes
-      # }
-      #
-      # nil for Base as we don't want in in forms
-      STRUCTURE = nil
+      STRUCTURE = {
+        content: nil, # one of nil, :string, :redactor
+        title: nil,   # one of nil, :string
+        images: nil,  # one of nil, :single, :multi
+        model: nil,   # nil or a model class
+      }
 
       self.table_name = 'folio_atoms'
 
-      # override in subclasses
-      ALLOWED_MODEL_TYPE = nil
-
       before_validation do
-        if model_type.nil? && self.class::ALLOWED_MODEL_TYPE.present?
-          write_attribute(:model_type, self.class::ALLOWED_MODEL_TYPE)
+        if model_type.nil? && self.class::STRUCTURE[:model].present?
+          write_attribute(:model_type, self.class::STRUCTURE[:model])
         end
       end
 
@@ -61,22 +52,29 @@ module Folio
         self
       end
 
-      def resource_for_select
-        if self.class::ALLOWED_MODEL_TYPE
-          scopes_for_select_options Object.const_get(self.class::ALLOWED_MODEL_TYPE).all
-        end
+      def self.resource_for_select
+        return nil if self::STRUCTURE[:model].blank?
+        self::STRUCTURE[:model].all
       end
 
       # override in subclasses
-      def scopes_for_select_options(resource)
+      def self.scopes_for_select_options(resource)
         resource
+      end
+
+      def self.structure_as_json
+        self::STRUCTURE.dup.tap do |structure|
+          if structure[:model].present?
+            structure[:model] = structure[:model].to_s
+          end
+        end.to_json
       end
 
       private
 
         def model_type_is_allowed
-          if model_type != self.class::ALLOWED_MODEL_TYPE
-            errors.add(:model, 'associated model class not allowed')
+          if model && model.class != self.class::STRUCTURE[:model]
+            errors.add(:model_type, :invalid)
           end
         end
     end

@@ -2,28 +2,29 @@
   class="folio-console-atom-form-fields"
 ]
   .card-body
+    = f.input :type, collection: atom_types_for_select, \
+                     include_blank: false, \
+                     input_html: { class: 'folio-console-atom-type-select' }
+
     .folio-console-smart-row
       .folio-console-smart-col
-        = f.input :type, collection: atom_types_for_select, \
-                         include_blank: false, \
-                         input_html: { class: 'folio-console-atom-type-select' }
-
-        = model_field
+        .folio-console-atom-model
+          = model_field
         = title_field
         = content_field
-
-        == cell('folio/console/nested_model_controls', f)
 
       aside.folio-console-smart-col[
         class="folio-console-atom-images"
         class="folio-console-atom-images-single"
-        hidden=(atom.class.images == :single ? nil : '')
+        hidden=(structure[:images] == :single ? nil : '')
       ]
         = react_image_select(f, cover: true)
 
       aside.folio-console-smart-col[
         class="folio-console-atom-images"
         class="folio-console-atom-images-multi"
-        hidden=(atom.class.images == :multi ? nil : '')
+        hidden=(structure[:images] == :multi ? nil : '')
       ]
         = react_image_select(f, multi: true)
+
+    == cell('folio/console/nested_model_controls', f)
