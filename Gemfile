@@ -13,6 +13,10 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
+group :test do
+  gem 'minitest', '5.10.3'
+end
+
 group :development do
   gem 'puma'
 end
