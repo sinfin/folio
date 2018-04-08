@@ -10,11 +10,15 @@ aside.folio-console-smart-col
 
 +mq-sm-up
   aside.folio-console-smart-col
-    &:first-child
-      margin-right: $grid-gutter-width
+    margin-right: $grid-gutter-width
 
-    &:last-child
+    div.folio-console-smart-col ~ &
+      margin-right: 0
       margin-left: $grid-gutter-width
+
+    div.folio-console-smart-col[hidden] ~ &
+      margin-left: 0
+      margin-bottom: 0
 
 +mq-xs
   .folio-console-smart-row

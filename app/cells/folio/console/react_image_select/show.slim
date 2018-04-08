@@ -5,10 +5,7 @@
   data-cocoon-single-nested=(options[:multi] ? nil : true)
 ]
   label
-    - if options[:cover]
-      = t('.title_cover')
-    - else
-      = options[:multi] ? t('.title_multi') : t('.title_single')
+    = title
 
   .folio-console-nested-fields-with-images[
     data-placement-type=key

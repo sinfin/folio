@@ -9,6 +9,22 @@ class Folio::Console::ReactImageSelectCell < FolioCell
     model
   end
 
+  def title
+    if options[:cover]
+      if model.is_a?(Folio::Atom::Base)
+        t('.title_single')
+      else
+        t('.title_cover')
+      end
+    else
+      if options[:multi]
+        t('.title_multi')
+      else
+        t('.title_single')
+      end
+    end
+  end
+
   def images
     if options[:cover]
       f.object.cover_placement
