@@ -2,14 +2,12 @@
 #= require jquery_ujs
 #= require popper
 #= require bootstrap-sprockets
-#= require dropzone
 
 #= require cocoon
 #= require redactor
 
 #= require ./redactor-imagemanager
 
-#= require ./dropzone-init
 #= require ./redactor-init
 
 #= require folio/cable
@@ -24,7 +22,6 @@
 #= require folio/console/nested_model_controls/nested_model_controls
 
 #= require ./nodes_table
-#= require ./nodes
 
 #= require folio/console/main_app
 
