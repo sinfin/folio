@@ -1,6 +1,10 @@
 cs:
   activerecord:
     models:
+      atom/content_free:
+        one: Bez obsahu
+        other: Bez obsahu
+
       atom/gallery:
         one: Galerie
         other: Galerie
