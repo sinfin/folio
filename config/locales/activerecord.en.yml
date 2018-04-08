@@ -1,6 +1,19 @@
 ---
 en:
   activerecord:
+    attributes:
+      folio/image:
+        thumbnail_sizes: Generated versions
+        file_placements: Placements
+
+      folio/menu:
+        locale: Version
+        type: Type
+
+      folio/menu_item:
+        target: Link
+        type: Type
+
     models:
       folio/account:
         one: Account
@@ -9,10 +22,6 @@ en:
       folio/atom:
         one: Atom
         other: Atoms
-
-      folio/atom/page_reference:
-        one: Link
-        other: Links
 
       folio/atom/text:
         one: Text
@@ -43,6 +52,10 @@ en:
         other: Links
 
       folio/menu:
+        one: Menu
+        other: Menus
+
+      folio/menu/page:
         one: Menu
         other: Menus
 
