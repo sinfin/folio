@@ -2,9 +2,10 @@
 
 module Folio
   class LeadsController < ApplicationController
-    invisible_captcha only: :create
+    invisible_captcha only: :create, on_timestamp_spam: :on_timestamp_spam
 
     def create
+      on_timestamp_spam
       @lead = Lead.new(lead_params.merge(url: request.referrer))
       success = @lead.save
 
@@ -26,6 +27,10 @@ module Folio
         else
           {}
         end
+      end
+
+      def on_timestamp_spam
+        send(200)
       end
   end
 end
