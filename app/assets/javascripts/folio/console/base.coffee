@@ -20,6 +20,7 @@
 #= require folio/console/atom_form_fields/atom_form_fields
 #= require folio/console/tagsinput/tagsinput
 #= require folio/console/nested_model_controls/nested_model_controls
+#= require folio/console/boolean_toggle/boolean_toggle
 
 #= require ./nodes_table
 

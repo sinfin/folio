@@ -27,23 +27,15 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   td
     == cell('folio/console/nodes/translations', node, hide_original: true)
 
-  td = node.model_name.human
   td
-    = form_with(model: node, \
-                scope: :node, \
-                url: console_node_path(node.id, format: :json), \
-                class: 'featured') do |f|
-      = f.hidden_field :featured, value: !node.featured, \
-                                  data: { attribute: 'featured'}
-      = featured_button(node.featured)
-  / td = node.ancestry
+    = node.model_name.human
+
   td
-    = form_with(model: node, scope: :node, \
-                             url: console_node_path(node.id, format: :json), \
-                             class: 'published') do |f|
-      = f.hidden_field :published, value: !node.published, \
-                                   data: { attribute: 'published'}
-      = published_button(node.published)
+    = featured_toggle node, as: :node
+
+  td
+    = published_toggle node, as: :node
+
   td
     - if node.published_at.present?
       = l(node.published_at, format: :short)

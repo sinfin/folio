@@ -43,12 +43,12 @@ menu = Folio::Menu::Page.create!(locale: :cs)
 
 Folio::MenuItem.create!(menu: menu,
                         title: 'Reference',
-                        node: reference,
+                        target: reference,
                         position: 0)
 
 Folio::MenuItem.create!(menu: menu,
                         title: 'About',
-                        node: about,
+                        target: about,
                         position: 1)
 
 Folio::Account.create!(email: 'test@test.test',

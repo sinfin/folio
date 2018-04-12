@@ -19,4 +19,4 @@
         = f.input :title, hint: t('.title_hint')
 
       .col.text-right
-        == cell('folio/console/nested_model_controls', f, label: true)
+        = nested_model_controls f, label: true
