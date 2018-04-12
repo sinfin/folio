@@ -178,7 +178,7 @@ function filesReducer (state = initialState, action) {
 
     case UPLOADED_FILE: {
       return state.updateIn(['records'], (records) => (
-        records.push(fromJS(action.file))
+        records.insert(0, fromJS(action.file))
       ))
     }
 
