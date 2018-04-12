@@ -15,7 +15,7 @@ module Folio
     validates :file, :type, presence: true
 
     # Scopes
-    default_scope { order(updated_at: :desc) }
+    scope :ordered, -> { order(updated_at: :desc) }
 
     def title
       file_name

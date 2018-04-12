@@ -64,13 +64,13 @@ module Folio
     def find_files
       case params[:type]
       when 'document'
-        @files = Document.all
+        @files = Document.ordered
 
       when 'image'
-        @files = Image.all
+        @files = Image.ordered
 
       else
-        @files = ::Folio::File.all
+        @files = ::Folio::File.ordered
       end
     end
 

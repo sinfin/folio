@@ -10,13 +10,16 @@ module Folio
                                  as: :placement,
                                  dependent: :destroy
 
-      has_many :files, through: :file_placements
+      has_many :files, -> { order('folio_file_placements.position ASC') },
+                       through: :file_placements
 
-      has_many :images, source: :file,
+      has_many :images, -> { order('folio_file_placements.position ASC') },
+                        source: :file,
                         class_name: 'Folio::Image',
                         through: :file_placements
 
-      has_many :documents, source: :file,
+      has_many :documents, -> { order('folio_file_placements.position ASC') },
+                           source: :file,
                            class_name: 'Folio::Document',
                            through: :file_placements
 
