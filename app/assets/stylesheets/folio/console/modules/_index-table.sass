@@ -1,12 +1,16 @@
 .folio-console-index-table
   @extend .table-responsive
+  margin-bottom: $form-group-margin-bottom
 
   table
     @extend .table
     @extend .table-striped
     @extend .table-hover
-
+    margin: 0
     white-space: nowrap
 
   .folio-console-index-td-full
     width: 100%
+
+  + h2, + .h2
+    margin-top: (( 1.5 * $form-group-margin-bottom ))
