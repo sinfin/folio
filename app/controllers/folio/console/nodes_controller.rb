@@ -25,7 +25,7 @@ module Folio
                        .page(current_page)
         end
       else
-        @limit = 5
+        @limit = self.class.index_children_limit
         @nodes = Node.original.arrange(order: 'position asc, created_at asc')
       end
     end
@@ -63,6 +63,10 @@ module Folio
     end
 
   private
+
+    def self.index_children_limit
+      5
+    end
 
     def after_new
     end
