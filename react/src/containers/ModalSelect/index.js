@@ -16,6 +16,7 @@ class ModalSelect extends Component {
 
     $(document).on('click', selector, (e) => {
       this.setState({ el: e.target })
+      this.props.loadFiles()
       this.jQueryModal().modal('show')
     })
   }

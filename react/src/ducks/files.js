@@ -62,9 +62,12 @@ export function thumbnailGenerated (temporary_url, url) {
 function * getFilesPerform (action) {
   try {
     const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/files?type=document' : '/console/files?type=image'
-    const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(records))
+    const filesLoaded = yield select(filesLoadedSelector)
+    if (!filesLoaded) {
+      const filesUrl = fileType === 'Folio::Document' ? '/console/files?type=document' : '/console/files?type=image'
+      const records = yield call(apiGet, filesUrl)
+      yield put(getFilesSuccess(records))
+    }
   } catch (e) {
     flashError(e.message)
   }
@@ -79,6 +82,10 @@ export const filesSagas = [
 ]
 
 // Selectors
+
+export const filesLoadedSelector = (state) => {
+  return state.getIn(['files', 'loaded'])
+}
 
 export const allFilesSelector = (state) => {
   const base = state.get('files').toJS()

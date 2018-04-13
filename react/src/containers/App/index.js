@@ -13,9 +13,15 @@ import AppWrap from './AppWrap'
 
 class App extends Component {
   componentWillMount () {
-    this.props.dispatch(getFiles())
+    if (this.shouldAutoLoadFiles()) {
+      this.loadFiles()
+    }
     this.listenOnActionCable()
     window.addEventListener('checkLazyload', forceCheck)
+  }
+
+  loadFiles = () => {
+    this.props.dispatch(getFiles())
   }
 
   listenOnActionCable () {
@@ -28,6 +34,10 @@ class App extends Component {
         this.props.dispatch(thumbnailGenerated(temporary_url, url))
       }
     })
+  }
+
+  shouldAutoLoadFiles () {
+    return this.props.app.mode !== 'modal-select'
   }
 
   renderMode () {
@@ -46,7 +56,7 @@ class App extends Component {
     }
 
     if (mode === 'modal-select') {
-      return <ModalSelect fileType={fileType} />
+      return <ModalSelect fileType={fileType} loadFiles={this.loadFiles} />
     }
 
     return (
