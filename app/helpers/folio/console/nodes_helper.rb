@@ -49,8 +49,8 @@ module Folio
           ]
         end
       else
-        Node.recursive_subclasses.each do |type|
-          for_select << [type.model_name.human, type] if type.view_name
+        Node.recursive_subclasses(include_self: false).each do |type|
+          for_select << [type.model_name.human, type]
         end
       end
       for_select
