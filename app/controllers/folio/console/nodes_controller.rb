@@ -3,8 +3,10 @@
 module Folio
   class Console::NodesController < Console::BaseController
     include Console::NodesHelper
+    include Console::SetPositions
+    handles_set_positions_for Node
 
-    respond_to :json, only: %i[update set_positions]
+    respond_to :json, only: %i[update]
 
     before_action :find_node, except: [:index, :create, :new, :set_positions]
     before_action :find_files, only: [:new, :edit, :create, :update]
@@ -58,14 +60,6 @@ module Folio
     def destroy
       @node.destroy
       respond_with @node, location: console_nodes_path
-    end
-
-    def set_positions
-      if Node.update(set_position_params.keys, set_position_params.values)
-        render json: {}
-      else
-        head 406
-      end
     end
 
   private
