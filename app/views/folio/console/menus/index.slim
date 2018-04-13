@@ -1,8 +1,8 @@
 == cell('folio/console/index/header', Folio::Menu, \
                                       new_path: new_console_menu_path)
 
-.table-responsive
-  table.table.table-striped
+.folio-console-index-table
+  table
     thead
       tr
         th = Folio::Menu.human_attribute_name(:type)

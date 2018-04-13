@@ -1,12 +1,12 @@
 tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
-  = hidden_field_tag 'node[id]', node.id
-
   td
     - if tree
       = fa_icon node.console_caret_icon, \
                 class: 'mr-2', \
                 style: "margin-left:#{node.depth * 2}rem"
-    = link_to node.title, edit_console_node_path(node.id)
+
+    = link_to(truncate(node.title), edit_console_node_path(node.id))
+
     - unless tree
       li.small == node_breadcrumbs(node.ancestors)
 
@@ -30,8 +30,7 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
     = published_toggle node, as: :node
 
   td
-    - if node.published_at.present?
-      = l(node.published_at, format: :short)
+    = l(node.published_at, format: :short) if node.published_at.present?
 
   td
     - if node.kind_of? Folio::Category
