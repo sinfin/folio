@@ -26,6 +26,14 @@ html.bg-dark lang=I18n.locale
 
           button type="button" class="close" data-dismiss="modal" &times;
 
+    .modal.folio-console-react-documents-modal.fade
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-body
+            = react_documents_modal
+
+          button type="button" class="close" data-dismiss="modal" &times;
+
     = javascript_include_tag 'folio/console/base'
 
     - if ENV['REACT_DEV']

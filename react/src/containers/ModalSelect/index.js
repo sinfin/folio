@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 
 import SingleSelect from 'containers/SingleSelect'
-
-const MODAL_SELECTOR = '.folio-console-react-images-modal'
+import truncate from 'utils/truncate';
 
 class ModalSelect extends Component {
   state = {
@@ -10,13 +9,38 @@ class ModalSelect extends Component {
   }
 
   componentWillMount () {
-    let $ = window.jQuery
+    const $ = window.jQuery
     if (!$) return
 
-    $(document).on('click', '.folio-console-add-image', (e) => {
+    const selector = this.selectingDocument() ? '.folio-console-add-document' : '.folio-console-add-image'
+
+    $(document).on('click', selector, (e) => {
       this.setState({ el: e.target })
-      $(MODAL_SELECTOR).modal('show')
+      this.jQueryModal().modal('show')
     })
+  }
+
+  selectingDocument () {
+    return this.props.fileType === 'Folio::Document'
+  }
+
+  jQueryModal () {
+    const $ = window.jQuery
+    const selector = this.selectingDocument() ? '.folio-console-react-documents-modal' : '.folio-console-react-images-modal'
+    return $(selector)
+  }
+
+  fileTemplate (file) {
+    if (this.selectingDocument()) {
+      return `
+        <div class="folio-console-document-thumbnail">
+          <i class="fa fa-file-o"></i>
+          <strong>${truncate(file.file_name)}</strong>
+        </div>
+      `
+    } else {
+      return `<img src=${window.encodeURI(file.thumb)} alt="" />`
+    }
   }
 
   selectFile = (file) => {
@@ -25,7 +49,7 @@ class ModalSelect extends Component {
     if (!$) return
 
     const $el = $(this.state.el)
-    const $fields = $el.siblings('.folio-console-nested-fields-with-images')
+    const $fields = $el.siblings('.folio-console-nested-fields-with-files')
 
     const $last = $fields.find('.nested-fields').last()
     let position = 0
@@ -56,7 +80,8 @@ class ModalSelect extends Component {
 
     const $newFile = $(`
       <div class="nested-fields">
-        <img src=${window.encodeURI(file.thumb)} alt="" />
+        ${this.fileTemplate(file)}
+
         <div class="folio-console-hover-destroy">
           <i class="fa fa-times-circle" data-destroy-association=""></i>
         </div>
@@ -70,7 +95,7 @@ class ModalSelect extends Component {
     $fields.append($newFile)
     $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
 
-    $(MODAL_SELECTOR).modal('hide')
+    this.jQueryModal().modal('hide')
   }
 
   render () {

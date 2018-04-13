@@ -31,7 +31,7 @@ class App extends Component {
   }
 
   renderMode () {
-    const { mode } = this.props.app
+    const { mode, fileType } = this.props.app
 
     if (mode === 'multi-select') {
       return <MultiSelect />
@@ -46,7 +46,7 @@ class App extends Component {
     }
 
     if (mode === 'modal-select') {
-      return <ModalSelect />
+      return <ModalSelect fileType={fileType} />
     }
 
     return (

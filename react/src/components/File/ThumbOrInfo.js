@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import LazyLoad from 'react-lazyload'
 
+import truncate from 'utils/truncate';
+
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,7 +33,7 @@ function ThumbOrInfo ({ file, singleSelect }) {
     <Wrap>
       <i className='fa fa-file-o' />
 
-      <strong>{file.file_name}</strong>
+      <strong>{truncate(file.file_name)}</strong>
     </Wrap>
   )
 }

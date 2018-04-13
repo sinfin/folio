@@ -1,31 +1,9 @@
 # frozen_string_literal: true
 
-class Folio::Console::ReactImageSelectCell < FolioCell
-  def show
-    render
-  end
+class Folio::Console::ReactImageSelectCell < Folio::Console::ReactSelectCell
+  BASE = :image
 
-  def f
-    model
-  end
-
-  def title
-    if options[:cover]
-      if model.is_a?(Folio::Atom::Base)
-        t('.title_single')
-      else
-        t('.title_cover')
-      end
-    else
-      if options[:multi]
-        t('.title_multi')
-      else
-        t('.title_single')
-      end
-    end
-  end
-
-  def images
+  def file_placements
     if options[:cover]
       f.object.cover_placement
     else
@@ -43,15 +21,9 @@ class Folio::Console::ReactImageSelectCell < FolioCell
 
   def exists
     if options[:cover]
-      images.present?
+      file_placements.present?
     else
-      images.exists?
-    end
-  end
-
-  def html_safe_fields_for(&block)
-    f.simple_fields_for key, images do |subfields|
-      (yield subfields).html_safe
+      file_placements.exists?
     end
   end
 end

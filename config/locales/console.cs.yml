@@ -125,5 +125,10 @@ cs:
         title_cover: Hlavní obrázek
         add: Přidat obrázek
 
+      react_document_select:
+        title_multi: Soubory
+        title_single: Soubor
+        add: Přidat soubor
+
       nested_model_controls:
         destroy: Odebrat

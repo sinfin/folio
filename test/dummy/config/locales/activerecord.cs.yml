@@ -12,3 +12,11 @@ cs:
       atom/page_reference:
         one: Odkaz na stránku
         other: Odkazy na stránky
+
+      atom/single_document:
+        one: Soubor
+        other: Soubory
+
+      atom/single_image:
+        one: Obrázek
+        other: Obrázky

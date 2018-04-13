@@ -70,6 +70,18 @@ atomFormBySelect = ($element) ->
     else
       $images.attr('hidden', true)
 
+  $documents = $fields.find('.folio-console-atom-documents')
+
+  switch structure.documents
+    when 'single'
+      $documents.filter('.folio-console-atom-documents-single').removeAttr('hidden')
+      $documents.not('.folio-console-atom-documents-single').attr('hidden', true)
+    when 'multi'
+      $documents.filter('.folio-console-atom-documents-multi').removeAttr('hidden')
+      $documents.not('.folio-console-atom-documents-multi').attr('hidden', true)
+    else
+      $documents.attr('hidden', true)
+
   if hideWrap
     $wrap.attr('hidden', true)
   else

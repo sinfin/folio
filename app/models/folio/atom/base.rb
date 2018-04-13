@@ -5,12 +5,12 @@ module Folio
     class Base < ApplicationRecord
       include HasAttachments
 
-      # hash consisting of :content, :title, :images, :model
       STRUCTURE = {
-        content: nil, # one of nil, :string, :redactor
-        title: nil,   # one of nil, :string
-        images: nil,  # one of nil, :single, :multi
-        model: nil,   # nil or a model class
+        content: nil,   # one of nil, :string, :redactor
+        title: nil,     # one of nil, :string
+        images: nil,    # one of nil, :single, :multi
+        documents: nil, # one of nil, :single, :multi
+        model: nil,     # nil or a model class
       }
 
       self.table_name = 'folio_atoms'
@@ -48,6 +48,10 @@ module Folio
 
       def data
         self
+      end
+
+      def document
+        documents.first if klass::STRUCTURE[:documents] === :single
       end
 
       def self.resource_for_select
@@ -112,7 +116,15 @@ module Folio
           end
 
           if klass::STRUCTURE[:images] != :multi
-            self.file_placements.each(&:destroy!) if file_placements.exists?
+            if file_placements.with_image.exists?
+              self.file_placements.with_image.each(&:destroy!)
+            end
+          end
+
+          if klass::STRUCTURE[:documents].nil?
+            if file_placements.with_document.exists?
+              self.file_placements.with_document.each(&:destroy!)
+            end
           end
         end
     end

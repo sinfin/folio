@@ -1,0 +1,10 @@
+= html_safe_fields_for do |fp|
+  .nested-fields
+    = image_tag fp.object.file.file.thumb('250x250').url
+
+    .folio-console-hover-destroy
+      i.fa.fa-times-circle data-destroy-association=true
+
+    = fp.hidden_field :_destroy, value: 0
+    = fp.hidden_field :file_id
+    = fp.hidden_field :id
