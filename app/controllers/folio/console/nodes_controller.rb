@@ -111,10 +111,6 @@ module Folio
       p
     end
 
-    def set_position_params
-      params.require(:positions)
-    end
-
     def misc_filtering?
       %i[by_parent by_query by_published by_type by_tag].any? { |by| params[by].present? }
     end

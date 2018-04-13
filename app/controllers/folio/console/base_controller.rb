@@ -102,5 +102,9 @@ module Folio
           node.additional_params
         end
       end
+
+      def set_position_params
+        params.require(:positions)
+      end
   end
 end
