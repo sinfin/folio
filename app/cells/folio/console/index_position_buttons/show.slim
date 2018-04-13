@@ -1,0 +1,26 @@
+= hidden_field_tag :position, model.position, class: 'folio-console-input-position'
+= hidden_field_tag :id, model.id, class: 'folio-console-input-id'
+
+/ style="margin-left:#{node.depth * 2}rem"
+
+.btn-group[
+  role="group"
+  class="folio-console-index-position-button-group"
+]
+  button.btn.btn-sm.btn-outline-secondary[
+    class="folio-console-index-position-button"
+    type="button"
+    data-direction="up"
+    data-url=url
+  ]
+    i.fa.fa-arrow-up
+
+  button.btn.btn-sm.btn-outline-secondary[
+    class="folio-console-index-position-button"
+    type="button"
+    data-direction="down"
+    data-url=url
+  ]
+    i.fa.fa-arrow-down
+
+  span.folio-loader.folio-loader-small.folio-loader-transparent

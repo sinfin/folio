@@ -11,9 +11,7 @@ fieldset
         .col-sm
           = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
                                 label_method: :name_depth, \
-                                value_method: :id, \
-                                readonly: params[:parent].present?, \
-                                disabled: params[:parent].present?
+                                value_method: :id
 
         .col-sm
           = f.input :code

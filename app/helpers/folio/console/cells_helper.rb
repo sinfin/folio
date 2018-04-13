@@ -14,5 +14,10 @@ module Folio
     def nested_model_controls(model, options = {})
       cell('folio/console/nested_model_controls', model, options).show.html_safe
     end
+
+    def index_position_buttons(model, options = {})
+      cell('folio/console/index_position_buttons', model,
+                                                   options).show.html_safe
+    end
   end
 end

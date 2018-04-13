@@ -4,7 +4,7 @@ module Folio
   class Console::NodesController < Console::BaseController
     include Console::NodesHelper
 
-    respond_to :json, only: %i[update set_position]
+    respond_to :json, only: %i[update set_positions]
 
     before_action :find_node, except: [:index, :create, :new, :set_positions]
     before_action :find_files, only: [:new, :edit, :create, :update]
@@ -46,7 +46,7 @@ module Folio
     def create
       # set type first beacuse of @node.additional_params
       @node = Node.new(type: params[:node][:type])
-      success = @node.update(node_params)
+      @node.update(node_params)
       respond_with @node, location: edit_console_node_path(@node.id)
     end
 
@@ -60,9 +60,12 @@ module Folio
       respond_with @node, location: console_nodes_path
     end
 
-    def set_position
-      Node.update(set_position_params.keys, set_position_params.values)
-      render json: { success: 'success', status_code: '200' }
+    def set_positions
+      if Node.update(set_position_params.keys, set_position_params.values)
+        render json: {}
+      else
+        head 406
+      end
     end
 
   private
@@ -109,7 +112,7 @@ module Folio
     end
 
     def set_position_params
-      params.require(:node)
+      params.require(:positions)
     end
 
     def misc_filtering?

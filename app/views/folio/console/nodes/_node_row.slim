@@ -1,5 +1,6 @@
 tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   = hidden_field_tag 'node[id]', node.id
+
   td
     - if tree
       = fa_icon node.console_caret_icon, \
@@ -8,22 +9,14 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
     = link_to node.title, edit_console_node_path(node.id)
     - unless tree
       li.small == node_breadcrumbs(node.ancestors)
+
   td
     - if sortable
-      - if !limited
-        = hidden_field_tag 'node[id]', node.id
-        = hidden_field_tag 'node[position]', node.position
-        .btn-group role="group" style="margin-left:#{node.depth * 2}rem"
-          .btn.btn-sm.btn-outline-secondary.node.position-up
-            = fa_icon 'arrow-up'
-          .btn.btn-sm.btn-outline-secondary.node.position-down
-            = fa_icon 'arrow-down'
+      - if limited
+        = index_position_buttons(node, as: :nodes, limited: console_nodes_path(by_parent: node.parent.id))
       - else
-        = link_to console_nodes_path(by_parent: node.parent.id), \
-                  class: 'btn btn-sm btn-outline-secondary node position-up', \
-                  role: 'button' do
-          = fa_icon 'arrow-up', class: 'mr-1'
-          = fa_icon 'arrow-down'
+        = index_position_buttons(node, as: :nodes)
+
   td
     == cell('folio/console/nodes/translations', node, hide_original: true)
 

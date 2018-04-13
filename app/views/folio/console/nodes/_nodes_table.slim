@@ -25,10 +25,7 @@
 
     - elsif (@limit && i == @limit + 1)
       / more nodes link row
-      tr[
-        data-depth=node.depth
-        data-parent=(node.parent ? node.parent.id : :root)
-      ]
+      tr
         td colspan=10
           = fa_icon 'ellipsis-v', \
                     class: 'mr-2', \
