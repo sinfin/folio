@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { forceCheck } from 'react-lazyload'
 
 import { uploadsSelector } from 'ducks/uploads'
 import { filteredFilesSelector } from 'ducks/filters'
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
@@ -11,13 +11,7 @@ import { LinkFile, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
-class IndexMode extends Component {
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.files.selectable.length !== this.props.files.selectable.length) {
-      forceCheck()
-    }
-  }
-
+class IndexMode extends LazyLoadCheckingComponent {
   render() {
     const { files, uploads } = this.props
     if (files.loading) return <Loader />

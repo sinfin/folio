@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
-import { forceCheck } from 'react-lazyload'
 
 import { filteredFilesSelector } from 'ducks/filters'
 
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import { File } from 'components/File'
@@ -12,13 +12,7 @@ import Loader from 'components/Loader'
 import SingleSelectWrap from './SingleSelectWrap'
 import SingleSelectScroll from './SingleSelectScroll'
 
-class SingleSelect extends Component {
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.files.selectable.length !== this.props.files.selectable.length) {
-      forceCheck()
-    }
-  }
-
+class SingleSelect extends LazyLoadCheckingComponent {
   selectFile (file) {
     if (this.props.selectFile) {
       this.props.selectFile(file)

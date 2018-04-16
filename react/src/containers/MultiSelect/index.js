@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { SortableContainer, SortableElement } from 'react-sortable-hoc'
-import { forceCheck } from 'react-lazyload'
 
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 import {
   selectFile,
   unselectFile,
@@ -47,13 +47,7 @@ const SortableItem = SortableElement(({ file, position, dispatch, attachmentable
   )
 })
 
-class MultiSelect extends Component {
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.files.selectable.length !== this.props.files.selectable.length) {
-      forceCheck()
-    }
-  }
-
+class MultiSelect extends LazyLoadCheckingComponent {
   render() {
     const { files, uploads, dispatch } = this.props
     if (files.loading) return <Loader />
