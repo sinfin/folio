@@ -75,7 +75,7 @@ module Folio
         def model_type_is_allowed
           if model &&
              klass::STRUCTURE[:model].present? &&
-             klass::STRUCTURE[:model].exclude?(model.class)
+             klass::STRUCTURE[:model].none? { |m| model.is_a?(m) }
             errors.add(:model_type, :invalid)
           end
         end
