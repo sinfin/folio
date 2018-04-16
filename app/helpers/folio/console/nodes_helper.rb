@@ -40,20 +40,15 @@ module Folio
         ]
       end
 
-      for_select = []
       if node.present? && node.class.allowed_child_types.present?
-        node.class.allowed_child_types.each do |type|
-          for_select << [
-             type.model_name.human,
-             type.to_s
-          ]
+        node.class.allowed_child_types.map do |type|
+          [type.model_name.human, type]
         end
       else
-        Node.recursive_subclasses(include_self: false).each do |type|
-          for_select << [type.model_name.human, type]
+        Node.recursive_subclasses(include_self: false).map do |type|
+          [type.model_name.human, type]
         end
       end
-      for_select
     end
 
     def node_type_select(f)
