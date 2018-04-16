@@ -35,6 +35,7 @@ module Folio
           gem 'factory_girl_rails', version: '~> 4.8.0'
           gem 'annotate'
           gem 'slack-notifier'
+          gem 'letter_opener'
 
           gem 'capistrano-rails', require: false
           gem 'capistrano-sinfin', git: 'git@bitbucket.org:Sinfin/capistrano-sinfin.git', branch: 'master'
@@ -118,6 +119,14 @@ module Folio
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
+        RUBY
+        end
+      end
+
+      def development_settings
+        inject_into_file 'config/environments/development.rb', after: "config.action_mailer.raise_delivery_errors = false\n" do <<-'RUBY'
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
         RUBY
         end
       end
