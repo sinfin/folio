@@ -5,8 +5,6 @@ module Folio
     before_action :find_menu, except: [:index, :create, :new]
     add_breadcrumb Menu.model_name.human(count: 2), :console_menus_path
 
-    TYPE_ID_DELIMITER = ' - '
-
     def index
       @menus = Menu.all
     end
@@ -41,7 +39,7 @@ module Folio
       end
 
       def menu_params
-        params.require(:menu).permit(
+        sti_menu_items params.require(:menu).permit(
           :type,
           :locale,
           menu_items_attributes: [:id,
@@ -50,19 +48,11 @@ module Folio
                                   :position,
                                   :type,
                                   :_destroy]
-        ).tap do |obj|
-          # STI hack
-          if obj[:menu_items_attributes]
-            obj[:menu_items_attributes].each do |key, value|
-              type, id = value[:target].split(TYPE_ID_DELIMITER)
-              obj[:menu_items_attributes][key][:target_type] = type
-              obj[:menu_items_attributes][key][:target_id] = id
-              obj[:menu_items_attributes][key].delete(:target)
-            end
-          end
+        )
+      end
 
-          obj
-        end
+      def sti_menu_items(params)
+        sti_hack(params, :menu_items_attributes, :target)
       end
   end
 end

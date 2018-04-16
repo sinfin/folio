@@ -1,3 +1,6 @@
+stripHtml = (html) ->
+  $("<div/>").html(html).text()
+
 atomFormBySelect = ($element) ->
   klass = $element.val()
   structure = $element.find(':selected').data('atom-structure')
@@ -13,20 +16,22 @@ atomFormBySelect = ($element) ->
       hideWrap = false
       $content.removeAttr('hidden')
       # check if redactor is active
-      unless $textarea.hasClass('redactor')
+      unless $textarea.hasClass('redactor-source')
         # disable content images on atoms with images/cover
         window.folioConsoleInitRedactor $textarea[0], noImages: structure.images
 
     when 'string'
       hideWrap = false
       $content.removeAttr('hidden')
-      if $textarea.hasClass('redactor')
+      if $textarea.hasClass('redactor-source')
+        html = window.folioConsoleRedactorGetContent($textarea[0])
         window.folioConsoleDestroyRedactor($textarea[0])
+        $textarea.val(stripHtml(html))
       $textarea.prop('disabled', false)
 
     else
       $content.attr('hidden', true)
-      if $textarea.hasClass('redactor')
+      if $textarea.hasClass('redactor-source')
         window.folioConsoleDestroyRedactor($textarea[0])
       $textarea.prop('disabled', true)
 
@@ -48,15 +53,18 @@ atomFormBySelect = ($element) ->
     $model.removeAttr('hidden')
     $selects = $model.find('.folio-console-atom-model-select')
     $activeSelects = $selects.filter("""[data-class="#{klass}"]""")
-    $activeSelects
-      .prop('disabled', false)
-      .closest('.form-group')
-      .removeAttr('hidden')
+
     $selects
       .not($activeSelects)
       .attr('disabled', true)
       .closest('.form-group')
       .attr('hidden', true)
+
+    $activeSelects
+      .prop('disabled', false)
+      .closest('.form-group')
+      .removeAttr('hidden')
+      .each -> atomModelContentPrefill($(this))
   else
     $model.attr('hidden', true)
 
@@ -89,8 +97,18 @@ atomFormBySelect = ($element) ->
   else
     $wrap.removeAttr('hidden')
 
-  # if $modelSelects.length > 0
-  #   $modelSelects.trigger('change')
+atomModelContentPrefill = ($modelSelect) ->
+  content = $modelSelect.find(':selected').data('content')
+
+  if content
+    $textarea = $modelSelect.closest('.nested-fields').find('.folio-console-atom-textarea')
+
+    if $textarea.hasClass('redactor-source')
+      window.folioConsoleRedactorSetContent($textarea[0], content)
+    else
+      # empty = $textarea.val().replace(/\s/g, '').length is 0
+      # $textarea.val(content) if empty
+      $textarea.val(content)
 
 $(document).on 'cocoon:after-insert', '#atoms', (e, insertedItem) ->
   atomFormBySelect($(insertedItem).find('.folio-console-atom-type-select'))
@@ -98,13 +116,7 @@ $(document).on 'cocoon:after-insert', '#atoms', (e, insertedItem) ->
 $(document).on 'change', '.folio-console-atom-type-select', ->
   atomFormBySelect($(this))
 
+$(document).on 'change', '.folio-console-atom-model-select', ->
+  atomModelContentPrefill($(this))
+
 $('.folio-console-atom-type-select').each -> atomFormBySelect($(this))
-
-# $(document).on 'change', '.atom-model-select', ->
-#   $t = $(this)
-#   $textarea = $t.closest('.nested-fields')
-#                 .find('.node_atoms_content textarea')
-#   content = $t.find(':selected').data('content')
-#   if content
-#     window.folioConsoleRedactorSetContent($textarea[0], content)
-

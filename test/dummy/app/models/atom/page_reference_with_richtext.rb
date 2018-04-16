@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Atom
-  class PageReference < Folio::Atom::Base
+  class PageReferenceWithRichtext < Folio::Atom::Base
     STRUCTURE = {
+      content: :redactor,
       model: [Folio::Page],
     }
   end

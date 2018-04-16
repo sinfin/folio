@@ -10,12 +10,11 @@ module Folio
         title: nil,     # one of nil, :string
         images: nil,    # one of nil, :single, :multi
         documents: nil, # one of nil, :single, :multi
-        model: nil,     # nil or a model class
+        model: nil,     # nil or an array of model classes
       }
 
       self.table_name = 'folio_atoms'
 
-      before_validation :set_model_type
       before_save :unset_extra_attrs, if: :type_changed?
       after_save :unlink_extra_files, if: :saved_change_to_type?
 
@@ -54,14 +53,8 @@ module Folio
         documents.first if klass::STRUCTURE[:documents] === :single
       end
 
-      def self.resource_for_select
-        return nil if self::STRUCTURE[:model].blank?
-        self::STRUCTURE[:model].all
-      end
-
-      # override in subclasses
-      def self.scopes_for_select_options(resource)
-        resource
+      def self.scoped_model_resource(resource)
+        resource.all
       end
 
       def self.structure_as_json
@@ -82,16 +75,8 @@ module Folio
         def model_type_is_allowed
           if model &&
              klass::STRUCTURE[:model].present? &&
-             model.class != klass::STRUCTURE[:model]
+             klass::STRUCTURE[:model].exclude?(model.class)
             errors.add(:model_type, :invalid)
-          end
-        end
-
-        def set_model_type
-          if model_id.present? &&
-             model_type.nil? &&
-             klass::STRUCTURE[:model].present?
-            write_attribute(:model_type, klass::STRUCTURE[:model])
           end
         end
 

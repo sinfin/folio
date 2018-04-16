@@ -106,7 +106,7 @@ module Folio
                         *file_placements_strong_params,
                         *cover_placement_strong_params)
       p[:slug] = nil unless p[:slug].present?
-      p
+      sti_atoms(p)
     end
 
     def misc_filtering?

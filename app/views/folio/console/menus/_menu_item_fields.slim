@@ -4,8 +4,8 @@
   .card-body
     .row
       .col
-        = f.input :target, collection: menu_targets_for_select(menu), \
-                           selected: menu_target_value(f.object)
+        = f.input :target, collection: sti_records_for_select(menu.available_targets), \
+                           selected: sti_record_select_value(f.object, :target)
 
       - if allowed_classes.length == 1
         = f.hidden_field :type, value: allowed_classes.first.last

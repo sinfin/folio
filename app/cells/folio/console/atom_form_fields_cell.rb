@@ -2,6 +2,7 @@
 
 class Folio::Console::AtomFormFieldsCell < FolioCell
   include Folio::Console::ReactHelper
+  include Folio::Console::StiHelper
 
   def f
     model
@@ -58,8 +59,10 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
       m = type::STRUCTURE[:model]
       if m.present?
         active = (type == f.object.class)
-        f.association :model,
-          collection: atom_model_collection_for_select(f.object.becomes(type)),
+        became = f.object.becomes(type)
+        f.input :model,
+          collection: atom_model_collection_for_select(became),
+          selected: sti_record_select_value(became, :model),
           include_blank: false,
           disabled: !active,
           wrapper_html: { hidden: !active },
@@ -73,12 +76,14 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
   end
 
   def atom_model_collection_for_select(atom)
-    atom.class.resource_for_select.map do |model|
-      [
-        model.try(:to_label) || model.try(:title) || model.model_name.human,
-        model.id,
-        { 'data-content': model.try(:to_content) }
-      ]
-    end
+    klass = atom.class
+    show_model_names = klass::STRUCTURE[:model].size > 1
+
+    klass::STRUCTURE[:model].map do |model_class|
+      sti_records_for_select(klass.scoped_model_resource(model_class),
+                             show_model_names: show_model_names,
+                             add_content: true)
+
+    end.flatten(1)
   end
 end

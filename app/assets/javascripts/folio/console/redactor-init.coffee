@@ -15,10 +15,16 @@ window.folioConsoleInitRedactor = (node, options = {}) ->
   opts = if options.noImages then NO_IMAGES_OPTIONS else OPTIONS
   $R(node, opts)
 
-window.folioConsoleDestroyRedactor = (node) -> $R(node, 'destroy')
+window.folioConsoleDestroyRedactor = (node) ->
+  $R(node, 'destroy')
+
 window.folioConsoleRedactorSetContent = (node, content) ->
-  $R(node, 'source.setCode', content)
-window.folioConsoleRedactor = (node, args...) -> $R(node, args...)
+  R = $R(node)
+  R.source.setCode content
+
+window.folioConsoleRedactorGetContent = (node) ->
+  R = $R(node)
+  R.source.getCode()
 
 $ ->
   $wrap = $('.redactor')

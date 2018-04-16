@@ -10,4 +10,4 @@ $(document).on 'cocoon:after-insert', (e, insertedItem) ->
               .find(INPUT_SELECTOR)
               .val()
 
-  $input.val(parseInt(pos) + 1)
+  $input.val((parseInt(pos) or 0) + 1)

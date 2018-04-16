@@ -13,6 +13,18 @@ cs:
         one: Odkaz na stránku
         other: Odkazy na stránky
 
+      atom/page_or_category_reference:
+        one: Odkaz na stránku/kategorii
+        other: Odkazy na stránky/kategorie
+
+      atom/page_reference_with_text:
+        one: Odkaz na stránku s textem
+        other: Odkazy na stránky s textem
+
+      atom/page_reference_with_richtext:
+        one: Odkaz na stránku s redactorem
+        other: Odkazy na stránky s redactorem
+
       atom/single_document:
         one: Soubor
         other: Soubory

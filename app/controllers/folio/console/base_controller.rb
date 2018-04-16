@@ -10,6 +10,8 @@ module Folio
     self.responder = Console::ApplicationResponder
     respond_to :html
 
+    TYPE_ID_DELIMITER = ' - '
+
     # rescue_from CanCan::AccessDenied do |exception|
     #   redirect_to dashboard_path, alert: exception.message
     # end
@@ -84,6 +86,7 @@ module Folio
         [{
           atoms_attributes: [:id,
                              :type,
+                             :model,
                              :model_id,
                              :model_type,
                              :title,
@@ -100,6 +103,29 @@ module Folio
           node.node_original.additional_params
         else
           node.additional_params
+        end
+      end
+
+      def sti_atoms(params)
+        sti_hack(params, :atoms_attributes, :model)
+      end
+
+      def sti_hack(params, nested_name, relation_name)
+        params.tap do |obj|
+          # STI hack
+          if obj[nested_name]
+            relation_type = "#{relation_name}_type".to_sym
+            relation_id = "#{relation_name}_id".to_sym
+
+            obj[nested_name].each do |key, value|
+              type, id = value[relation_name].split(TYPE_ID_DELIMITER)
+              obj[nested_name][key][relation_type] = type
+              obj[nested_name][key][relation_id] = id
+              obj[nested_name][key].delete(relation_name)
+            end
+          end
+
+          obj
         end
       end
   end
