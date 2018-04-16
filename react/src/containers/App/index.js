@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 
-import { getFiles, thumbnailGenerated } from 'ducks/files'
+import { getFiles, thumbnailGenerated, filesLoadedSelector } from 'ducks/files'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
@@ -21,7 +21,9 @@ class App extends Component {
   }
 
   loadFiles = () => {
-    this.props.dispatch(getFiles())
+    if (!this.props.filesLoaded) {
+      this.props.dispatch(getFiles())
+    }
   }
 
   listenOnActionCable () {
@@ -72,7 +74,8 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  app: state.get('app').toJS()
+  app: state.get('app').toJS(),
+  filesLoaded: filesLoadedSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {
