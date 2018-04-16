@@ -27,12 +27,13 @@ end
 #
 # Table name: folio_leads
 #
-#  id         :integer          not null, primary key
-#  email      :string
-#  phone      :string
-#  note       :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  name       :string
-#  url        :string
+#  id              :integer          not null, primary key
+#  email           :string
+#  phone           :string
+#  note            :text
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  name            :string
+#  url             :string
+#  additional_data :json
 #

@@ -7,7 +7,15 @@ module Folio
     include Engine.routes.url_helpers
 
     def lead
-      @lead ||= (model || Lead.new)
+      @lead ||= (model || new_lead)
+    end
+
+    def new_lead
+      if options[:additional_data]
+        Lead.new(additional_data: options[:additional_data])
+      else
+        Lead.new
+      end
     end
 
     def submitted
@@ -31,6 +39,13 @@ module Folio
 
     def remember_option_keys
       [:note, :message, :name, :note_label]
+    end
+
+    def additional_data_input(f)
+      f.input(:additional_data, as: :hidden,
+                                input_html: {
+                                  value: lead.additional_data.try(:to_json)
+                                })
     end
 
     private

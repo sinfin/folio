@@ -7,6 +7,7 @@ module Folio
     def create
       @lead = Lead.new(lead_params.merge(url: request.referrer))
       success = @lead.save
+      require 'pry'; binding.pry
 
       LeadMailer.notification_email(@lead).deliver_later if success
 
@@ -16,7 +17,14 @@ module Folio
     private
 
       def lead_params
-        params.require(:lead).permit(:name, :email, :phone, :note)
+        params.require(:lead).permit(:name, :email, :phone, :note,
+                                     :additional_data).tap do |obj|
+          if obj[:additional_data].present?
+            obj[:additional_data] = JSON.parse(obj[:additional_data])
+          else
+            obj[:additional_data] = nil
+          end
+        end
       end
 
       def cell_options_params
