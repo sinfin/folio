@@ -14,7 +14,7 @@ module Folio
         ].compact.join(' / ')
 
         value = [
-          record.type,
+          record.try(:type) || record.class.to_s,
           record.id
         ].join(Console::BaseController::TYPE_ID_DELIMITER)
 
