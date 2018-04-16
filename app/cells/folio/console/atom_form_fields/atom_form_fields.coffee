@@ -20,11 +20,13 @@ atomFormBySelect = ($element) ->
     when 'string'
       hideWrap = false
       $content.removeAttr('hidden')
+      $textarea.prop('disabled', false)
       if $textarea.hasClass('redactor')
         window.folioConsoleDestroyRedactor($textarea[0])
 
     else
       $content.attr('hidden', true)
+      $textarea.prop('disabled', true)
       if $textarea.hasClass('redactor')
         window.folioConsoleDestroyRedactor($textarea[0])
 

@@ -20,3 +20,7 @@ cs:
       atom/single_image:
         one: Obrázek
         other: Obrázky
+
+      atom/string_content:
+        one: Plain-text obsah
+        other: Plain-text obsahy
