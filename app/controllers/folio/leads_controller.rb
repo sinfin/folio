@@ -7,7 +7,6 @@ module Folio
     def create
       @lead = Lead.new(lead_params.merge(url: request.referrer))
       success = @lead.save
-      require 'pry'; binding.pry
 
       LeadMailer.notification_email(@lead).deliver_later if success
 
