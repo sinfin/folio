@@ -1,8 +1,8 @@
 #= require selectize/standalone/selectize
 
-makeItems = (string) ->
+makeItems = (separator, string) ->
   if string
-    string.split(' ')
+    string.split(separator)
   else
     []
 
@@ -13,12 +13,22 @@ $ ->
 
   $inputs.each ->
     $this = $(this)
+
+    if $this.data('allow-create')
+      createOption = (input) -> { value: input }
+    else
+      createOption = false
+
+    if $this.data('comma-separated')
+      separator = /,\s*/
+    else
+      separator = ' '
+
     $this.selectize
       delimiter: ','
       persist: false
       labelField: 'value'
       searchField: 'value'
-      items: makeItems($this.val())
-      options: makeItems($this.data('tags')).map((tag) -> { value: tag })
-      create: (input) ->
-        { value: input }
+      items: makeItems(separator, $this.val())
+      options: makeItems(separator, $this.data('tags')).map((tag) -> { value: tag })
+      create: createOption
