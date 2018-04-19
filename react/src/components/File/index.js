@@ -35,13 +35,14 @@ const ImageWrap = styled.div`
 
 export function File ({ attachmentable, file, selected, position, onClick, singleSelect }) {
   const inputPrefix = `${attachmentable || 'node'}[file_placements_attributes][]`
+  const disabled = !selected && !file.id
 
   return (
     <OuterWrap onClick={selected ? null : onClick}>
       {file.id && <input type='hidden' name={`${inputPrefix}[id]`} value={file.id} />}
-      <input type='hidden' name={`${inputPrefix}[file_id]`} value={file.file_id} />
-      <input type='hidden' name={`${inputPrefix}[position]`} value={position} />
-      <input type='hidden' name={`${inputPrefix}[_destroy]`} value={selected ? 0 : 1} />
+      <input disabled={disabled} type='hidden' name={`${inputPrefix}[file_id]`} value={file.file_id} />
+      <input disabled={disabled} type='hidden' name={`${inputPrefix}[position]`} value={position} />
+      <input disabled={disabled} type='hidden' name={`${inputPrefix}[_destroy]`} value={selected ? 0 : 1} />
 
       <ImageWrap background={file.dominant_color}>
         <ThumbOrInfo file={file} singleSelect={singleSelect} />
