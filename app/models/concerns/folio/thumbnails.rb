@@ -20,6 +20,12 @@ module Folio
       end
     end
 
+    class_methods do
+      def immediate_thumbnails
+        false
+      end
+    end
+
     # User w_x_h = 400x250# or similar
     #
     def thumb(w_x_h, quality: 90)
@@ -32,8 +38,15 @@ module Folio
         if mime_type =~ /svg/
           url = file.url
         else
-          GenerateThumbnailJob.perform_later(self, w_x_h, quality)
-          url = temporary_url(w_x_h)
+          if self.class.immediate_thumbnails
+            image = GenerateThumbnailJob.perform_now(self, w_x_h, quality)
+            ret = OpenStruct.new(image.thumbnail_sizes[w_x_h])
+            ret.url = Dragonfly.app.remote_url_for(ret.uid)
+            return ret
+          else
+            GenerateThumbnailJob.perform_later(self, w_x_h, quality)
+            url = temporary_url(w_x_h)
+          end
         end
         sizes = w_x_h.split('x')
         OpenStruct.new(

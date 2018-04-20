@@ -15,6 +15,8 @@ module Folio
         temporary_s3_url: URI.encode(image.temporary_s3_url(size)),
         url: URI.encode(image.thumbnail_sizes[size][:url])
       )
+
+      image
     end
 
     private
