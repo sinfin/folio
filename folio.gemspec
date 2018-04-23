@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'dragonfly-s3_data_store'
 
   s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'devise-bootstrapped'
+  s.add_development_dependency 'devise-i18n'
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'pry-rails'
   s.add_development_dependency 'rubocop-rails'
@@ -71,4 +71,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency 'annotate'
   s.add_development_dependency 'capybara'
+  s.add_development_dependency 'letter_opener'
 end

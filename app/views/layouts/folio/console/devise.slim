@@ -1,0 +1,20 @@
+doctype html
+html.bg-dark lang=I18n.locale
+  head
+    = render partial: 'layouts/folio/console/head'
+
+  body.bg-dark.folio-console-devise
+    == cell('folio/console/flash', flash)
+
+    .folio-console-layout-main-devise
+      .folio-console-layout-main-devise-inner
+        = yield
+
+    == cell('folio/console/footer', @site)
+
+    = javascript_include_tag 'folio/console/base'
+
+    = yield :javascripts
+
+    coffee:
+      $('input[type="email"]').first().focus()

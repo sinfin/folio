@@ -10,6 +10,11 @@ module Folio
     end
 
     config.to_prepare do
+      Devise::SessionsController.layout 'folio/console/devise'
+      Devise::ConfirmationsController.layout 'folio/console/devise'
+      Devise::UnlocksController.layout 'folio/console/devise'
+      Devise::PasswordsController.layout 'folio/console/devise'
+
       Dir.glob(Rails.root + 'app/decorators/**/*_decorator*.rb').each do |c|
         require_dependency(c)
       end

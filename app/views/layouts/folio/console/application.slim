@@ -4,7 +4,7 @@ html.bg-dark lang=I18n.locale
     = render partial: 'layouts/folio/console/head'
 
   body.bg-dark
-    = render partial: 'layouts/folio/console/header' unless @devise
+    = render partial: 'layouts/folio/console/header'
 
     - if @breadcrumbs.present?
       - add_action_breadcrumb

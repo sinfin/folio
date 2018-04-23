@@ -1,0 +1,63 @@
+.folio-console-devise
+  text-align: center
+
+  h2
+    margin-top: 0
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"]
+    @extend .form-control
+
+  .actions input
+    @extend .btn
+    @extend .btn-block
+    @extend .btn-primary
+
+  .field,
+  .actions
+    @extend .form-group
+
+    em
+      margin-bottom: 0.5rem
+
+  .field
+    text-align: left
+
+    br
+      display: none
+
+  input[name="account[remember_me]"]
+    &, ~ input, ~ label
+      display: none
+
+.folio-console-layout-main-devise
+  display: flex
+  flex-direction: column
+
+.folio-console-layout-main-devise-inner
+  background: white
+  padding: $grid-gutter-width
+
+  .row
+    margin: 0
+    padding: 0
+
+    .col-sm-4
+      padding: 0
+      flex: 1 1 auto
+      max-width: none
+
++mq-md-up
+  .folio-console-layout-main-devise
+    flex: 1 1 auto
+    align-items: center
+    justify-content: center
+
+  .folio-console-layout-main-devise-inner
+    min-width: 350px
+    border-radius: $border-radius
+
++mq-sm
+  .folio-console-layout-main-devise-inner
+    width: 100%

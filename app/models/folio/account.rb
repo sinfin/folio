@@ -48,6 +48,10 @@ module Folio
       end
     end
 
+    def remember_me
+      super.nil? ? '1' : super
+    end
+
     alias :to_label :full_name
     alias :title :full_name
 
