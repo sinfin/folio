@@ -18,13 +18,13 @@ module Folio
         gem 'breadcrumbs_on_rails'
         gem 'sentry-raven'
         gem 'pg', version: '~> 0.21.0'
+        gem 'devise-i18n'
 
         gem_group :development do
           gem 'rbnacl', version: '< 5.0'
           gem 'rbnacl-libsodium'
           gem 'bcrypt_pbkdf', version: '< 2.0'
 
-          gem 'devise-bootstrapped'
           gem 'byebug'
           gem 'pry-rails'
           gem 'rubocop-rails'

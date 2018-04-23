@@ -1,0 +1,27 @@
+cs:
+  activerecord:
+    attributes:
+      folio/account:
+        confirmation_sent_at: Potvrzení zasláno
+        confirmation_token: Potvrzovací token
+        confirmed_at: Potvrzeno
+        created_at: Vytvořeno
+        current_password: Současné heslo
+        current_sign_in_at: Současné přihlášení
+        current_sign_in_ip: Současné přihlášení z IP
+        email: E-mail
+        encrypted_password: Zašifrované heslo
+        failed_attempts: Chybných pokusů
+        last_sign_in_at: Poslední přihlášení
+        last_sign_in_ip: Poslední přihlášení z IP
+        locked_at: Uzamčeno
+        password: Heslo
+        password_confirmation: Potvrzení hesla
+        remember_created_at: Zapamatování vytvořeno
+        remember_me: Zapamatuj si mě
+        reset_password_sent_at: Obnova hesla poslána
+        reset_password_token: Token obnovy hesla
+        sign_in_count: Počet přihlášení
+        unconfirmed_email: Nepotvrzený e-mail
+        unlock_token: Odemykací token
+        updated_at: Upraveno
