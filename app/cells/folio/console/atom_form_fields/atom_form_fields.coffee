@@ -15,6 +15,7 @@ atomFormBySelect = ($element) ->
     when 'redactor'
       hideWrap = false
       $content.removeAttr('hidden')
+      $textarea.prop('disabled', false)
       # check if redactor is active
       unless $textarea.hasClass('redactor-source')
         # disable content images on atoms with images/cover

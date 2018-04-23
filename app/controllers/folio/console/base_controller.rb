@@ -118,6 +118,7 @@ module Folio
             relation_id = "#{relation_name}_id".to_sym
 
             obj[nested_name].each do |key, value|
+              next if value[relation_name].nil?
               type, id = value[relation_name].split(TYPE_ID_DELIMITER)
               obj[nested_name][key][relation_type] = type
               obj[nested_name][key][relation_id] = id
