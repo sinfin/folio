@@ -1,0 +1,54 @@
+<% module_namespacing do -%>
+module Folio
+  class Console::<%= controller_class_name %>Controller < Console::BaseController
+    include Console::SetPositions
+    handles_set_positions_for ::<%= class_name %>
+
+    respond_to :json, only: %i[update]
+
+    before_action :set_<%= singular_table_name %>, only: [:edit, :update, :destroy]
+    before_action {
+      add_breadcrumb(::<%= class_name %>.model_name.human(count: 2),
+                     <%= index_resource_name %>)
+    }
+
+
+    def index
+      @<%= plural_table_name %> = ::<%= orm_class.all(class_name) %>
+    end
+
+    def new
+      @<%= singular_table_name %> = ::<%= orm_class.build(class_name) %>
+    end
+
+    def edit
+    end
+
+    def create
+      @<%= singular_table_name %> = ::<%= class_name %>.create(<%= singular_table_name %>_params)
+      respond_with @<%= singular_table_name %>, location: <%= index_resource_name %>
+    end
+
+    def update
+      @<%= singular_table_name %> = ::<%= class_name %>.update(<%= singular_table_name %>_params)
+      respond_with @<%= singular_table_name %>, location: <%= index_resource_name %>
+    end
+
+    def destroy
+      @<%= orm_instance.destroy %>
+      respond_with @<%= singular_table_name %>, location: <%= index_resource_name %>
+    end
+
+    private
+
+      def <%= "#{singular_table_name}_params" %>
+        <%- if attributes_names.empty? -%>
+        params.fetch(:<%= singular_table_name %>, {})
+        <%- else -%>
+        params.require(:<%= singular_table_name %>)
+              .permit(<%= attributes_names.map { |name| ":#{name}" }.join(",\n") %>)
+        <%- end -%>
+      end
+  end
+end
+<% end -%>
