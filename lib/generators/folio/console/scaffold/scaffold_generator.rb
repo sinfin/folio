@@ -8,7 +8,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   hook_for :orm, as: :scaffold
   hook_for :form_builder, as: :scaffold
 
-
   def copy_view_files
     available_views.each do |view|
       filename = filename_with_extensions(view).gsub('.html', '')
@@ -45,6 +44,24 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     edit_resource_name
   end
 
+  def positionable?
+    attributes_names.include?('position')
+  end
+
+  def has_attachmentable?
+    class_name.constantize.respond_to?(:cover_placement)
+  end
+
+  def form_tabs
+    base = [:content]
+    base << :gallery if has_attachmentable?
+    base
+  end
+
+  def index_scope
+    positionable? ? '.ordered' : ''
+  end
+
   protected
 
     def available_views
@@ -53,5 +70,14 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
     def handler
       :slim
+    end
+
+    def attributes_names
+      super.presence || fallback_attributes_names
+    end
+
+    def fallback_attributes_names
+      klass = class_name.constantize
+      klass.attribute_names - ['id', 'created_at', 'updated_at']
     end
 end

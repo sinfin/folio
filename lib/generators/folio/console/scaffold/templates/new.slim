@@ -1,2 +1,4 @@
-= simple_form_for(@<%= singular_table_name %>, url: <%= index_resource_name %>) do |f|
+= simple_form_for(@<%= singular_table_name %>, \
+                  url: <%= index_resource_name %>, \
+                  as: :<%= singular_table_name %>) do |f|
   = render 'form', f: f

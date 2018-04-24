@@ -9,6 +9,7 @@ module Folio
     layout 'folio/console/application'
     self.responder = Console::ApplicationResponder
     respond_to :html
+    respond_to :json, only: %i[update]
 
     TYPE_ID_DELIMITER = ' - '
 
