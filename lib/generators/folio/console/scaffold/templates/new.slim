@@ -1,5 +1,2 @@
-h1 New <%= singular_table_name %>
-
-== render 'form'
-
-= link_to 'Back', <%= index_helper %>_path
+= simple_form_for(@<%= singular_table_name %>, url: <%= index_resource_name %>) do |f|
+  = render 'form', f: f

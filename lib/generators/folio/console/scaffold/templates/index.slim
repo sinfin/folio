@@ -1,25 +1,10 @@
-h1 Listing <%= plural_table_name %>
+== cell('folio/console/index/header',
+        <%= class_name %>,
+        new_path: <%= new_resource_name %>)
 
-table
-  thead
-    tr
-<% attributes.each do |attribute| -%>
-      th <%= attribute.human_name %>
-<% end -%>
-      th
-      th
-      th
+.folio-console-index-table
+  table
+    tbody
+      = render partial: "<%= singular_table_name %>", collection: @<%= plural_table_name %>
 
-  tbody
-    - @<%= plural_table_name %>.each do |<%= singular_table_name %>|
-      tr
-<% attributes.each do |attribute| -%>
-        td = <%= singular_table_name %>.<%= attribute.name %>
-<% end -%>
-        td = link_to 'Show', <%= singular_table_name %>
-        td = link_to 'Edit', edit_<%= singular_table_name %>_path(<%= singular_table_name %>)
-        td = link_to 'Destroy', <%= singular_table_name %>, data: { confirm: 'Are you sure?' }, method: :delete
-
-br
-
-= link_to 'New <%= human_name %>', new_<%= singular_table_name %>_path
+= paginate @<%= plural_table_name %>

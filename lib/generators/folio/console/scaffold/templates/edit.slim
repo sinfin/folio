@@ -1,8 +1,4 @@
-h1 Editing <%= singular_table_name %>
+== cell('folio/console/form/header', @<%= singular_table_name %>, translations: false)
 
-== render 'form'
-
-=> link_to 'Show', @<%= singular_table_name %>
-'|
-=< link_to 'Back', <%= index_helper %>_path
-
+= simple_form_for(@<%= singular_table_name %>, url: <%= update_resource_name %>) do |f|
+  = render 'form', f: f

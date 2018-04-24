@@ -8,11 +8,13 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   hook_for :orm, as: :scaffold
   hook_for :form_builder, as: :scaffold
 
+
   def copy_view_files
     available_views.each do |view|
       filename = filename_with_extensions(view).gsub('.html', '')
       template "#{view}.slim", File.join('app', 'views', 'folio', 'console', controller_file_path, filename)
     end
+    template "_table_row.slim", File.join('app', 'views', 'folio', 'console', controller_file_path, "_#{singular_table_name}.slim")
   end
 
   def copy_controller
@@ -23,8 +25,24 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     "main_app.console_#{plural_table_name}_path"
   end
 
-  def redirect_resource_name
+  def update_resource_name
+    "main_app.console_#{singular_table_name}_path(@#{singular_table_name}.id)"
+  end
+
+  def delete_resource_name_no_at
+    "main_app.console_#{singular_table_name}_path(#{singular_table_name}.id)"
+  end
+
+  def new_resource_name
+    "main_app.new_console_#{singular_table_name}_path"
+  end
+
+  def edit_resource_name
     "main_app.edit_console_#{singular_table_name}_path"
+  end
+
+  def redirect_resource_name
+    edit_resource_name
   end
 
   protected
