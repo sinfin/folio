@@ -117,6 +117,14 @@ module Folio
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib')
 
+    config.exceptions_app = self.routes
+
+    config.generators do |g|
+      g.stylesheets false
+      g.javascripts false
+      g.helper false
+    end
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
         RUBY

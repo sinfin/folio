@@ -20,6 +20,12 @@ module Folio
       end
     end
 
+    config.generators do |g|
+      g.stylesheets false
+      g.javascripts false
+      g.helper false
+    end
+
     config.autoload_paths << self.root.join('lib')
     config.eager_load_paths << self.root.join('lib')
     config.assets.paths << self.root.join('app/cells')
