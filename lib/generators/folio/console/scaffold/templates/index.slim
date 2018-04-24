@@ -1,0 +1,10 @@
+== cell('folio/console/index/header',
+        <%= class_name %>,
+        new_path: <%= new_resource_name %>)
+
+.folio-console-index-table
+  table
+    tbody
+      = render partial: "<%= singular_table_name %>", collection: @<%= plural_table_name %>
+
+= paginate @<%= plural_table_name %>

@@ -1,0 +1,19 @@
+= tabs <%= form_tabs %>
+
+= f.error_notification
+
+.tab-content
+  = tab :content
+    <%- if has_attachmentable? -%>
+    = react_image_select(f, cover: true)
+    <%- end -%>
+    <%- attributes_names.each do |attribute_name| -%>
+    = f.input :<%= attribute_name %>
+    <%- end -%>
+  <%- if has_attachmentable? -%>
+  = tab :gallery
+    = react_images(f.object.file_placements, attachmentable: '<%= singular_table_name %>')
+  <%- end -%>
+
+= f.button :submit
+= link_to t('folio.console.back'), <%= index_resource_name %>

@@ -1,0 +1,63 @@
+<% module_namespacing do -%>
+module Folio
+  class Console::<%= controller_class_name %>Controller < Console::BaseController
+    <%- if positionable? -%>
+    include Console::SetPositions
+    handles_set_positions_for ::<%= class_name %>
+    <%- end -%>
+    before_action :find_<%= singular_table_name %>, except: [:index, :create, :new, :set_positions]
+    before_action {
+      add_breadcrumb(::<%= class_name %>.model_name.human(count: 2),
+                     <%= index_resource_name %>)
+    }
+
+
+    def index
+      @<%= plural_table_name %> = ::<%= class_name %><%= index_scope %>
+      @<%= plural_table_name %> = @<%= plural_table_name %>.filter(filter_params) if filter_params.present?
+      @<%= plural_table_name %> = @<%= plural_table_name %>.page(current_page)
+    end
+
+    def new
+      @<%= singular_table_name %> = ::<%= orm_class.build(class_name) %>
+    end
+
+    def edit
+    end
+
+    def create
+      @<%= singular_table_name %> = ::<%= class_name %>.create(<%= singular_table_name %>_params)
+      respond_with @<%= singular_table_name %>, location: <%= redirect_resource_name %>(@<%= singular_table_name %>.id)
+    end
+
+    def update
+      @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
+      respond_with @<%= singular_table_name %>, location: <%= redirect_resource_name %>(@<%= singular_table_name %>.id)
+    end
+
+    def destroy
+      @<%= orm_instance.destroy %>
+      respond_with @<%= singular_table_name %>, location: <%= index_resource_name %>
+    end
+
+    private
+
+      def find_<%= singular_table_name %>
+        @<%= singular_table_name %> = <%= class_name %>.find(params[:id])
+      end
+
+      def <%= "#{singular_table_name}_params" %>
+        <%- if attributes_names.empty? -%>
+        params.fetch(:<%= singular_table_name %>, {})
+        <%- else -%>
+        params.require(:<%= singular_table_name %>)
+              .permit(<%= attributes_names.map { |name| ":#{name}" }.join(",\n                      ") %>)
+        <%- end -%>
+      end
+
+      def filter_params
+        params.permit(:by_query)
+      end
+  end
+end
+<% end -%>

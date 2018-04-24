@@ -113,6 +113,10 @@ GEM
     autoprefixer-rails (8.2.0)
       execjs
     bcrypt (3.1.11)
+    better_errors (2.4.0)
+      coderay (>= 1.0.0)
+      erubi (>= 1.0.0)
+      rack (>= 0.9.0)
     bootstrap (4.0.0)
       autoprefixer-rails (>= 6.0.3)
       popper_js (>= 1.12.9, < 2)
@@ -446,6 +450,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate
+  better_errors
   byebug
   capybara
   devise-i18n
