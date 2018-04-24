@@ -68,6 +68,20 @@ module Folio
           'vendor/assets/bower.json',
         ].each { |f| template "#{f}.erb", f }
 
+        [
+          'test/factories.rb',
+          'test/test_helper.rb',
+          'app/controllers/application_controller.rb',
+          'app/controllers/pages_controller.rb',
+          'app/controllers/home_controller.rb',
+          'config/initializers/assets.rb',
+          'config/initializers/folio.rb',
+          'config/initializers/raven.rb',
+          'config/initializers/smtp.rb',
+          'config/routes.rb',
+          'lib/application_cell.rb',
+        ].each { |f| template "#{f}.tt", f }
+
         template '.env.sample.erb', '.env'
       end
 
@@ -88,25 +102,14 @@ module Folio
           'app/assets/stylesheets/application.sass',
           'app/assets/stylesheets/modules/.keep',
           'app/assets/stylesheets/modules/_turbolinks.sass',
-          'app/controllers/application_controller.rb',
-          'app/controllers/pages_controller.rb',
-          'app/controllers/home_controller.rb',
           'app/views/home/index.slim',
           'app/views/pages/show.slim',
           'bin/bower',
           'config/secrets.yml',
-          'config/initializers/assets.rb',
-          'config/initializers/folio.rb',
-          'config/initializers/raven.rb',
-          'config/initializers/smtp.rb',
-          'config/routes.rb',
-          'lib/application_cell.rb',
           'lib/tasks/auto_annotate_models.rake',
           'vendor/assets/bower_components/.keep',
           'vendor/assets/redactor/redactor.css',
           'vendor/assets/redactor/redactor.js',
-          'test/factories.rb',
-          'test/test_helper.rb',
         ].each { |f| copy_file f, f }
 
         copy_file Folio::Engine.root.join('.ruby-version'), '.ruby-version'
