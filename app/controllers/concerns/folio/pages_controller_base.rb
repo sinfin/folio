@@ -21,7 +21,7 @@ module Folio
       def find_page
         path = params[:path].split('/')
 
-        @page = @roots
+        @page = page_roots
         @page = @page.published unless admin_preview?
         @page = @page.friendly.find path.shift
         add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)

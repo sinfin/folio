@@ -18,6 +18,10 @@ module Folio
       []
     end
 
+    def self.current
+      self.last
+    end
+
     private
 
       def scheme

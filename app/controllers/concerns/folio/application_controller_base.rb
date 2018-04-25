@@ -9,12 +9,11 @@ module Folio
 
       helper_method :current_admin
       helper_method :nested_page_path
+      helper_method :page_roots
 
       before_action do
-        @site = Site.first
-
+        @site = Site.current
         I18n.locale = params[:locale] || @site.locale
-        @roots = @site.nodes.with_locale(I18n.locale).roots.ordered
       end
     end
 
@@ -49,6 +48,10 @@ module Folio
           page = page.parent
         end
         main_app.page_path path.map(&:slug).join('/'), params: params
+      end
+
+      def page_roots
+        @page_roots ||= @site.nodes.with_locale(I18n.locale).roots.ordered
       end
   end
 end
