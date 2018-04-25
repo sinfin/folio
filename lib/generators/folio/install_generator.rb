@@ -104,6 +104,7 @@ module Folio
           'app/assets/stylesheets/modules/_turbolinks.sass',
           'app/views/home/index.slim',
           'app/views/pages/show.slim',
+          'app/views/folio/console/partials/_additional_menu_items.slim',
           'bin/bower',
           'config/secrets.yml',
           'lib/tasks/auto_annotate_models.rake',
