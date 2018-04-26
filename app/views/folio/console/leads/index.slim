@@ -6,7 +6,8 @@
       tr
         th = t(".email")
         th = t(".phone")
-        th colspan=3 = t(".created_at")
+        th = t(".created_at")
+        th
 
     tbody
       = render partial: "lead", collection: @leads

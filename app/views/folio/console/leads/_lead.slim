@@ -2,5 +2,6 @@ tr
   td = lead.email
   td = lead.phone
   td = l lead.created_at
-  td = edit_button lead, edit_console_lead_path(lead.id)
-  td = delete_button lead, console_lead_path(lead.id)
+  td
+     = edit_button lead, edit_console_lead_path(lead.id)
+     = delete_button lead, console_lead_path(lead.id)
