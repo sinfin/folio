@@ -95,3 +95,4 @@ cs:
 
   all: Všechny
   all_models: Všechny %{model}
+  without_model: Bez %{model}
