@@ -109,3 +109,6 @@ en:
     dismiss: OK
     link: Learn more
     message: This website uses cookies to ensure you get the best experience on our website.
+
+  all: All
+  all_models: All %{model}

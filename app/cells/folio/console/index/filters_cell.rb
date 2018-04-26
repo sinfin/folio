@@ -17,8 +17,8 @@ class Folio::Console::Index::FiltersCell < FolioCell
 
   def select(key)
     select_tag key, select_options(key),
-               class: 'form-control',
-               include_blank: false
+               include_blank: false,
+               class: 'form-control'
   end
 
   def select_options(key)

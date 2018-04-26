@@ -92,3 +92,6 @@ cs:
           leads: Formuláře
           visits: Návštěvy
           users: Uživatelé
+
+  all: Všechny
+  all_models: Všechny %{model}

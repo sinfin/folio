@@ -56,8 +56,14 @@ module Folio
       end
 
       def filter_params
-        params.permit(:by_query)
+        params.permit(:by_query, *index_filters.keys)
       end
+
+      def index_filters
+        {}
+      end
+
+      helper_method :index_filters
   end
 end
 <% end -%>
