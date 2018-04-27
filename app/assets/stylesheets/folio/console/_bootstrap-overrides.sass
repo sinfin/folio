@@ -17,12 +17,11 @@
   thead th, tbody td
     vertical-align: middle
 
-  tr
-    td:last-child
-      text-align: right
+  .td-full
+    width: 100%
 
-      .btn + .btn
-        margin-left: 1ch
+  .form-group
+    margin-bottom: 0
 
 .breadcrumb
   border-radius: 0
@@ -91,6 +90,9 @@
 
   > .flex-col-grow
     flex: 1 1 auto
+
+select.form-control
+  max-width: 100%
 
 @include media-breakpoint-up(lg)
   .modal-lg
