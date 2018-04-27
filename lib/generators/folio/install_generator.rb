@@ -40,6 +40,7 @@ module Folio
           gem 'capistrano-rails', require: false
           gem 'capistrano-sinfin', git: 'git@bitbucket.org:Sinfin/capistrano-sinfin.git', branch: 'master'
           gem 'capistrano-serviceman', github: 'Sinfin/capistrano-serviceman', branch: 'master'
+          gem 'rack-mini-profiler', require: false
         end
       end
 

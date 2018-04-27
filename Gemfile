@@ -19,6 +19,7 @@ end
 
 group :development do
   gem 'puma'
+  gem 'rack-mini-profiler', require: false
 end
 
 # To use a debugger

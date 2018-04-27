@@ -331,6 +331,8 @@ GEM
     rack (2.0.4)
     rack-attack (5.2.0)
       rack
+    rack-mini-profiler (1.0.0)
+      rack (>= 1.2.0)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
     rails (5.1.6)
@@ -464,6 +466,7 @@ DEPENDENCIES
   minitest (= 5.10.3)
   pry-rails
   puma
+  rack-mini-profiler
   rubocop-rails
   sqlite3
 
