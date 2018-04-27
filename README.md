@@ -21,6 +21,14 @@ Or install it yourself as:
 $ rails generate folio:install
 ```
 
+## Scaffolding
+
+Easily scaffold console controller and views for existing models.
+
+```bash
+$ rails generate folio:console:scaffold ModelName
+```
+
 ## Contributing
 
 Clone & setup
