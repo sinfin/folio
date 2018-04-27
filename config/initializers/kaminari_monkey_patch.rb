@@ -6,12 +6,11 @@
 Rails.application.config.to_prepare do
   Kaminari::Helpers::Tag.class_eval do
     def page_url_for(page)
-      arguments = @params.merge(@param_name => (page <= 1 ? nil : page), :only_path => true)
-      begin
-        @template.url_for arguments
-      rescue
-        @template.main_app.url_for arguments
-      end
+      params = params_for(page)
+      params[:only_path] = true
+      @template.url_for params
+    rescue ActionController::UrlGenerationError
+      @template.main_app.url_for params
     end
   end
 end
