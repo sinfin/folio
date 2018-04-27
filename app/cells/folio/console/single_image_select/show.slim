@@ -1,0 +1,19 @@
+.form-group[
+  class="folio-console-single-image-select"
+  class=wrap_class
+]
+  = f.input file_attr, as: :file, input_html: { class: 'form-control folio-console-single-image-select-file' }
+  = f.input remove_file_attr, as: :hidden, value: nil, input_html: { class: 'folio-console-single-image-select-destroy' }
+
+  .folio-console-single-image-select-image
+    - if image.present?
+      img src=image_src
+
+    .folio-console-hover-destroy
+      i.fa.fa-times-circle
+
+  button.btn.btn-success[
+    type="button"
+    class="folio-console-single-image-select-button"
+  ]
+    = t('.add')

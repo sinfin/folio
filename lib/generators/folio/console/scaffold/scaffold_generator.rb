@@ -13,7 +13,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       filename = filename_with_extensions(view).gsub('.html', '')
       template "#{view}.slim", File.join('app', 'views', 'folio', 'console', controller_file_path, filename)
     end
-    template "_table_row.slim", File.join('app', 'views', 'folio', 'console', controller_file_path, "_#{singular_table_name}.slim")
+    template '_table_row.slim', File.join('app', 'views', 'folio', 'console', controller_file_path, "_#{singular_table_name}.slim")
   end
 
   def copy_controller

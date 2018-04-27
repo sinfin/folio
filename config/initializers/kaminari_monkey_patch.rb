@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Please see https://github.com/amatsuda/kaminari/pull/322 for an explanation.
 # This fixes an issue when using Kaminari with engines/main_app.
 

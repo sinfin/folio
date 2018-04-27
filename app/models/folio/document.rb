@@ -2,8 +2,6 @@
 
 class Folio::Document < Folio::File
   include Folio::Thumbnails
-
-  paginates_per 16
 end
 
 # == Schema Information

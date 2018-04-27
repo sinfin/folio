@@ -22,6 +22,7 @@
 #= require folio/console/nested_model_controls/nested_model_controls
 #= require folio/console/boolean_toggle/boolean_toggle
 #= require folio/console/index_position_buttons/index_position_buttons
+#= require folio/console/single_image_select/single_image_select
 
 #= require ./nodes_table
 

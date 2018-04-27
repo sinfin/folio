@@ -3,8 +3,6 @@
 class Folio::Image < Folio::File
   include Folio::Thumbnails
 
-  paginates_per 36
-
   VALID_FORMATS = %w{jpeg png bmp gif}
 
   # Validations

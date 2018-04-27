@@ -19,5 +19,11 @@ module Folio
       cell('folio/console/index_position_buttons', model,
                                                    options).show.html_safe
     end
+
+    def single_image_select(f, attr_name = :file)
+      cell('folio/console/single_image_select',
+           f,
+           attr_name: attr_name).show.html_safe
+    end
   end
 end

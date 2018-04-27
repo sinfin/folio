@@ -132,3 +132,7 @@ cs:
 
       nested_model_controls:
         destroy: Odebrat
+
+      single_image_select:
+        add: Přidat obrázek
+        label: Obrázek
