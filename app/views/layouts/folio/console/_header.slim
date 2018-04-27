@@ -15,6 +15,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
 
   #navbar.navbar-collapse.collapse
     ul.navbar-nav.mr-auto
+      = render 'folio/console/partials/prepended_menu_items'
 
       = nav_item_link_to Folio::Node, console_nodes_path
       = nav_item_link_to Folio::Menu, console_menus_path
@@ -26,7 +27,7 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       = nav_item_link_to Visit, console_visits_path
       = nav_item_link_to Folio::Account, console_accounts_path
 
-      = render 'folio/console/partials/additional_menu_items'
+      = render 'folio/console/partials/appended_menu_items'
 
       li.divider role="separator"
 
