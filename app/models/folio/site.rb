@@ -19,7 +19,7 @@ module Folio
     end
 
     def self.current
-      self.last
+      self.first
     end
 
     private
