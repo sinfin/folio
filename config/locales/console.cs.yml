@@ -8,6 +8,7 @@ cs:
           edit: Upravit
           delete: Smazat
           add: Přidat
+          show: Zobrazit
 
       partials:
         auth_links:

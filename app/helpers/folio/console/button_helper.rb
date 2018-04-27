@@ -22,6 +22,12 @@ module Folio
       link_to(ico, path, opts)
     end
 
+    def custom_icon_button(path, icon_name = 'eye', opts = {})
+      opts.reverse_merge!(class: "btn btn-#{opts[:color] || 'info'}")
+
+      link_to(icon(icon_name), path, opts).html_safe
+    end
+
     def delete_button(record, path, opts = {}, text: false)
       name = record.try(:full_title) || record.title
       question = t('folio.console.really_delete', title: name)

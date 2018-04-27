@@ -8,6 +8,7 @@ en:
           edit: Edit
           delete: Delete
           add: Add
+          show: Show
 
       partials:
         auth_links:

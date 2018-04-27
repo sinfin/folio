@@ -9,10 +9,14 @@ module Folio
       [i, title].compact.join(' ').html_safe
     end
 
-    def add_action_breadcrumb
+    def add_action_breadcrumb(title = false)
       return if action_name == 'index'
-      name = add_action_breadcrumb_name
-      add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.#{name}")
+      if title
+        add_breadcrumb title
+      else
+        name = add_action_breadcrumb_name
+        add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.#{name}")
+      end
     end
 
     private

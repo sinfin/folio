@@ -20,17 +20,11 @@ module Folio
     end
 
     def node_preview_button(node, opts = {})
-      ico = icon 'eye'
       path = nested_page_path(node, add_parents: true)
-
-
-      opts.reverse_merge!(
-        class: 'btn btn-info',
-        target: :_blank,
-        title: t('folio.console.nodes.node_row.preview')
-      )
-
-      link_to(ico, path, opts).html_safe
+      custom_icon_button(path,
+                         'eye',
+                         title: t('folio.console.nodes.node_row.preview'),
+                         target: :_blank)
     end
 
     def node_types_for_select(node)
