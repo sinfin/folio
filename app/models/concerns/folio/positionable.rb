@@ -9,7 +9,7 @@ module Folio
       validates :position, presence: true
 
       # Scopes
-      scope :ordered,   -> { order('position asc, created_at desc') }
+      scope :ordered, -> { order(position: :asc, created_at: :desc) }
 
       # Callbacks
       before_validation :set_position
