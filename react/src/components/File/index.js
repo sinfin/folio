@@ -27,7 +27,7 @@ const ImageWrap = styled.div`
   ${(props) => props.background ? `background: ${props.background};` : ''}
 
   img {
-    width: 100%;
+    max-width: 100%;
     max-height: 100%;
     display: block;
   }
