@@ -19,6 +19,7 @@ module Folio
         gem 'sentry-raven'
         gem 'pg', version: '~> 0.21.0'
         gem 'devise-i18n'
+        gem 'rails-assets-photoswipe'
 
         gem_group :test do
           gem 'capybara', '~> 3.0'

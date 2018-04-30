@@ -3,6 +3,7 @@
 module Folio
   class File < ApplicationRecord
     include Taggable
+    include SanitizeFilename
 
     paginates_per nil
     max_paginates_per nil
@@ -13,6 +14,7 @@ module Folio
 
     # Relations
     has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
+    has_many :placements, through: :file_placements
 
     # Validations
     validates :file, :type, presence: true
@@ -23,14 +25,6 @@ module Folio
     def title
       file_name
     end
-
-    private
-
-      def sanitize_filename
-        # file name can be blank when assigning via file_url
-        return if file.name.blank?
-        self.file.name = file.name.split('.').map(&:parameterize).join('.')
-      end
   end
 end
 
