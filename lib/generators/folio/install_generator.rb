@@ -20,12 +20,16 @@ module Folio
         gem 'pg', version: '~> 0.21.0'
         gem 'devise-i18n'
 
+        gem_group :test do
+          gem 'capybara', '~> 3.0'
+          gem 'selenium-webdriver'
+        end
+
         gem_group :development do
           gem 'rbnacl', version: '< 5.0'
           gem 'rbnacl-libsodium'
           gem 'bcrypt_pbkdf', version: '< 2.0'
 
-          gem 'byebug'
           gem 'pry-rails'
           gem 'rubocop-rails'
           gem 'guard-rubocop'
