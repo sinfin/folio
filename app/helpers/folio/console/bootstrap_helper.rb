@@ -5,11 +5,13 @@ module Folio
     def nav_item_link_to(model, path, opts = {}, active = false, &block)
       title = model.model_name.human(count: 2)
 
+      active_or_subpath = request.fullpath.start_with?(path.split('?').first)
+
       klass = 'nav-item'
-      klass += ' active' if active || current_page?(path)
+      klass += ' active' if active || active_or_subpath
 
       opts[:class] = opts[:class].to_s + ' nav-link'
-      opts[:class] += ' active'  if active || current_page?(path)
+      opts[:class] += ' active'  if active || active_or_subpath
 
       if block_given?
         content_tag :li, class: klass do
