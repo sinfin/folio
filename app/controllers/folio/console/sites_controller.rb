@@ -23,6 +23,7 @@ module Folio
 
       def site_params
         params.require(:site).permit(:title,
+                                     :description,
                                      :domain,
                                      :locale,
                                      :google_analytics_tracking_code,

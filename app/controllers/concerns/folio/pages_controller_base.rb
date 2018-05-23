@@ -45,6 +45,8 @@ module Folio
       def add_meta
         @title = @page.title
         @description = @page.perex
+        @og_title = @title
+        @og_description = @description
       end
 
       def admin_preview?

@@ -14,6 +14,16 @@ en:
         target: Link
         type: Type
 
+      folio/site:
+        description: Description
+        domain: Domain
+        locales: Languages
+        phone: Phone
+        email: E-mail
+        address: Address
+        google_analytics_tracking_code: Google analytics - tracking code
+        facebook_pixel_code: Facebook pixel - code
+
     models:
       folio/account:
         one: Account

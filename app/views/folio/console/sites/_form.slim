@@ -5,6 +5,7 @@
     = f.error_notification
 
     = f.input :title
+    = f.input :description, as: :text
     = f.input :domain
     = f.input :locale
     = f.input :locales, as: :check_boxes, collection: ['cs', 'en', 'de', 'es']

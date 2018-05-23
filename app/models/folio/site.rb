@@ -47,6 +47,7 @@ end
 #  facebook_pixel_code            :string
 #  social_links                   :json
 #  address                        :text
+#  description                    :text
 #
 # Indexes
 #

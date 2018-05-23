@@ -14,6 +14,16 @@ cs:
         target: Odkaz
         type: Druh
 
+      folio/site:
+        description: Popisek
+        domain: Doména
+        locales: Jazyky
+        phone: Telefon
+        email: E-mail
+        address: Adresa
+        google_analytics_tracking_code: Google analytics - trackovací kód
+        facebook_pixel_code: Facebook pixel - kód
+
     models:
       folio/account:
         one: Uživatel

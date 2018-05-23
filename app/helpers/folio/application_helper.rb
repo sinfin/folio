@@ -15,7 +15,9 @@ module Folio
     end
 
     def public_page_description
-      text = @description.presence || I18n.t('head.description')
+      text = @description.presence ||
+             Site.current.description.presence ||
+             I18n.t('head.description')
       truncate(strip_tags(text), length: 300)
     end
   end

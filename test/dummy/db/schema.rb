@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180416150457) do
+ActiveRecord::Schema.define(version: 20180523091007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,6 +186,7 @@ ActiveRecord::Schema.define(version: 20180416150457) do
     t.string "facebook_pixel_code"
     t.json "social_links"
     t.text "address"
+    t.text "description"
     t.index ["domain"], name: "index_folio_sites_on_domain"
   end
 
