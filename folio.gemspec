@@ -67,10 +67,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rubocop'
   s.add_development_dependency 'guard-coffeelint'
   s.add_development_dependency 'guard-slimlint'
-  s.add_development_dependency 'faker'
-  s.add_development_dependency 'factory_girl_rails'
   s.add_development_dependency 'annotate'
-  s.add_development_dependency 'capybara'
   s.add_development_dependency 'letter_opener'
   s.add_development_dependency 'better_errors'
 end
