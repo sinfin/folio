@@ -14,7 +14,7 @@ test:
   <<: *default
 # TODO - use BUILD_TAG or similar on Jenkins
 # https://wiki.jenkins-ci.org/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-JenkinsSetEnvironmentVariables
-  database: folio_<%= "test#{ENV['GIT_BRANCH']}#{ENV['BUILD_NUMBER']}".presence || 'test' %>
+  database: folio_<%= "test_#{ENV['GIT_BRANCH']}".presence || 'test' %>
   pool: 2
 
 staging:
