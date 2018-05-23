@@ -16,7 +16,7 @@ gem 'therubyracer', platforms: :ruby
 
 group :test do
   gem 'minitest', '5.10.3'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
   gem 'faker'

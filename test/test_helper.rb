@@ -5,12 +5,15 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path('../../test/dummy/db
 ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
 
 require 'rails/test_help'
-require 'factory_girl_rails'
 require 'capybara/rails'
 require 'capybara/minitest'
 require 'cells'
 require 'cells-rails'
 require 'cells-slim'
+require 'factory_bot_rails'
+
+FactoryBot.definition_file_paths << File.join(File.dirname(__FILE__), 'factories')
+FactoryBot.find_definitions
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
@@ -18,7 +21,7 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 class Cell::TestCase
   controller ApplicationController
-  include ::FactoryGirl::Syntax::Methods
+  include ::FactoryBot::Syntax::Methods
 end
 
 class Folio::Console::CellTest < Cell::TestCase
@@ -45,5 +48,5 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActionDispatch::IntegrationTest.fixture_path = ActiveSupport::TestCase.fixture_path
   ActiveSupport::TestCase.file_fixture_path = ActiveSupport::TestCase.fixture_path + '/files'
   ActiveSupport::TestCase.fixtures :all
-  ActiveSupport::TestCase.include FactoryGirl::Syntax::Methods
+  ActiveSupport::TestCase.include FactoryBot::Syntax::Methods
 end

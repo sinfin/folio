@@ -3,7 +3,7 @@
 require 'faker'
 I18n.reload!
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :folio_site, class: Folio::Site do
     title { Faker::Lorem.word }
     domain { Faker::Internet.domain_name }

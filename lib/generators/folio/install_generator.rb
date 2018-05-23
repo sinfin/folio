@@ -37,7 +37,7 @@ module Folio
           gem 'guard-coffeelint'
           gem 'guard-slimlint'
           gem 'faker'
-          gem 'factory_girl_rails', version: '~> 4.8.0'
+          gem 'factory_bot_rails'
           gem 'annotate'
           gem 'slack-notifier'
           gem 'letter_opener'
