@@ -38,7 +38,7 @@ module Folio
     end
 
     def remember_option_keys
-      [:note, :message, :name, :note_label]
+      LeadsController::REMEMBER_OPTION_KEYS
     end
 
     def additional_data_input(f)

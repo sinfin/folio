@@ -4,6 +4,14 @@ module Folio
   class LeadsController < ApplicationController
     invisible_captcha only: :create, on_timestamp_spam: :spam
 
+    REMEMBER_OPTION_KEYS = [
+      :note,
+      :message,
+      :name,
+      :note_label,
+      :above_submit_content,
+    ]
+
     def create
       @lead = Lead.new(lead_params.merge(url: request.referrer))
       success = @lead.save
@@ -29,7 +37,7 @@ module Folio
       def cell_options_params
         cell_options = params[:cell_options]
         if cell_options
-          cell_options.permit(:note, :message, :name, :note_label)
+          cell_options.permit(*REMEMBER_OPTION_KEYS)
         else
           {}
         end
