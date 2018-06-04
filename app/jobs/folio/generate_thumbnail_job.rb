@@ -24,11 +24,17 @@ module Folio
       def compute_sizes(image, size, quality)
         return if image.thumbnail_sizes[size]
 
-        thumbnail = image.file
-                         .thumb(size, 'format' => :jpg, 'frame' => 0)
-                         .cmyk_to_srgb
-                         .encode('jpg', "-quality #{quality}")
-                         .jpegoptim
+        if Rails.application.config.folio_dragonfly_keep_png &&
+           image.try(:mime_type) =~ /png/
+          thumbnail = image.file
+                           .thumb(size)
+        else
+          thumbnail = image.file
+                           .thumb(size, 'format' => :jpg, 'frame' => 0)
+                           .cmyk_to_srgb
+                           .encode('jpg', "-quality #{quality}")
+                           .jpegoptim
+        end
 
         {
           uid: thumbnail.store,

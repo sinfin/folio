@@ -39,6 +39,8 @@ module Folio
       folio/console/react/main.js
       folio/console/react/main.css
     ]
+
+    config.folio_dragonfly_keep_png = false
   end
 
   LANGUAGES = {
