@@ -62,7 +62,7 @@ module Folio
 
     def temporary_url(w_x_h)
       size = w_x_h.match(/\d+x?\d+/)[0]
-      "http://doader.com/#{size}?image=#{id}"
+      "https://doader.com/#{size}?image=#{id}"
     end
 
     def temporary_s3_url(w_x_h)
