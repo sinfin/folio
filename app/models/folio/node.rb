@@ -122,6 +122,10 @@ module Folio
       nil
     end
 
+    def self.console_selectable?
+      to_s != 'Folio::Node'
+    end
+
     def cast
       if self.type == 'Folio::NodeTranslation'
         self.becomes(self.node_original.class)
