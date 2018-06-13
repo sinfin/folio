@@ -20,7 +20,7 @@ module Folio
         if new_record?
           errors.add(:type, :invalid) if self.class.exists?
         else
-          errors.add(:type, :invalid) if self.class.not(id: id).exists?
+          errors.add(:type, :invalid) if self.class.where.not(id: id).exists?
         end
       end
   end

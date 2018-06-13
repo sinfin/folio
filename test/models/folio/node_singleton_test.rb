@@ -21,6 +21,8 @@ module Folio
 
       refute FirstSingleton.console_selectable?
       assert_equal('foo', FirstSingleton.instance.title)
+      assert FirstSingleton.instance.update!(title: 'oof'), 'can update'
+      assert_equal('oof', FirstSingleton.instance.title), 'can update'
 
       assert_raises(ActiveRecord::RecordInvalid) do
         FirstSingleton.create!(title: 'bar')
