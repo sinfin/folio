@@ -21,11 +21,6 @@ module Folio
         gem 'devise-i18n'
         gem 'rails-assets-photoswipe'
 
-        gem_group :test do
-          gem 'capybara', '~> 3.0'
-          gem 'selenium-webdriver'
-        end
-
         gem_group :development do
           gem 'rbnacl', version: '< 5.0'
           gem 'rbnacl-libsodium'

@@ -5,5 +5,5 @@ I18n.reload!
 
 require_relative Folio::Engine.root.join('test/factories')
 
-FactoryGirl.define do
+FactoryBot.define do
 end
