@@ -65,6 +65,14 @@ module Folio
         end.to_json
       end
 
+      def self.molecule
+        nil
+      end
+
+      def self.molecule_cell_name
+        molecule.try(:cell_name)
+      end
+
       private
 
         def klass
