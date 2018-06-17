@@ -7,6 +7,7 @@ atomFormBySelect = ($element) ->
   $fields = $element.closest('.nested-fields')
   $wrap = $fields.find('.folio-console-smart-col').first()
   hideWrap = true
+  klassFilter = """[data-class="#{klass}"]"""
 
   $content = $fields.find('.folio-console-atom-content')
   $textarea = $content.find('.folio-console-atom-textarea')
@@ -49,11 +50,16 @@ atomFormBySelect = ($element) ->
 
   $model = $fields.find('.folio-console-atom-model')
 
+  $fields.find('.folio-console-atom-hint')
+         .attr('hidden', true)
+         .filter(klassFilter)
+         .removeAttr('hidden')
+
   if structure.model
     hideWrap = false
     $model.removeAttr('hidden')
     $selects = $model.find('.folio-console-atom-model-select')
-    $activeSelects = $selects.filter("""[data-class="#{klass}"]""")
+    $activeSelects = $selects.filter(klassFilter)
 
     $selects
       .not($activeSelects)

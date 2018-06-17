@@ -16,8 +16,12 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
     atom.class::STRUCTURE
   end
 
+  def atom_types
+    Folio::Atom.types
+  end
+
   def atom_types_for_select
-    Folio::Atom.types.map do |type|
+    atom_types.map do |type|
       next if type == Folio::Atom::Base
       [
         type.model_name.human,
@@ -35,6 +39,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
 
     f.input :content,
       disabled: !active,
+      hint: render(:content_hint).html_safe,
       wrapper_html: {
         hidden: !active,
         class: 'folio-console-atom-content',
@@ -48,6 +53,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
 
     f.input :title,
       disabled: !active,
+      hint: render(:title_hint).html_safe,
       wrapper_html: {
         hidden: !active,
         class: 'folio-console-atom-title',
@@ -55,7 +61,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
   end
 
   def model_field
-    selects = Folio::Atom.types.map do |type|
+    selects = atom_types.map do |type|
       m = type::STRUCTURE[:model]
       if m.present?
         active = (type == f.object.class)

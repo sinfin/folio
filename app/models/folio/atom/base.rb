@@ -73,6 +73,13 @@ module Folio
         molecule.try(:cell_name)
       end
 
+      def self.form_hints
+        {
+          title: nil,
+          content: nil,
+        }
+      end
+
       private
 
         def klass

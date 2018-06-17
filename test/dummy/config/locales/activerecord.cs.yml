@@ -36,3 +36,7 @@ cs:
       atom/string_content:
         one: Plain-text obsah
         other: Plain-text obsahy
+
+      atom/with_hint:
+        one: Text s nápovědou
+        other: Texty s nápovědou
