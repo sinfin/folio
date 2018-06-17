@@ -16,6 +16,7 @@ module Folio
     end
 
     private
+
       def set_position
         if self.position.nil?
           last_record = self.class.ordered.last

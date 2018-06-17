@@ -4,6 +4,7 @@ module Folio
   module Atom
     class Base < ApplicationRecord
       include HasAttachments
+      include Positionable
 
       STRUCTURE = {
         content: nil,   # one of nil, :string, :redactor
@@ -30,7 +31,6 @@ module Folio
 
       validate :model_type_is_allowed, if: :model_id?
 
-      scope :ordered, -> { order(position: :asc) }
       scope :by_type, -> (type) { where(type: type.to_s) }
 
       def cell_name
@@ -125,6 +125,22 @@ module Folio
             if file_placements.with_document.exists?
               self.file_placements.with_document.each(&:destroy!)
             end
+          end
+        end
+
+        def set_position
+          if self.position.nil? && self.placement.present?
+            last_atom = self.placement.atoms.last
+
+            if last_atom.present?
+              last_position = last_atom.position.presence || 0
+            else
+              last_position = 0
+            end
+
+            self.position = last_position + 1
+          else
+            super
           end
         end
     end
