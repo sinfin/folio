@@ -5,7 +5,12 @@
     .row
       .col
         = f.input :target, collection: sti_records_for_select(menu.available_targets), \
-                           selected: sti_record_select_value(f.object, :target)
+                           selected: sti_record_select_value(f.object, :target), \
+                           include_blank: true
+
+      - if menu.class.rails_paths.present?
+        .col
+          = f.input :rails_path, collection: menu.class.rails_paths
 
       - if allowed_classes.length == 1
         = f.hidden_field :type, value: allowed_classes.first.last

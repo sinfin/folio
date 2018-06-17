@@ -47,6 +47,7 @@ module Folio
                                   :target,
                                   :position,
                                   :type,
+                                  :rails_path,
                                   :_destroy]
         )
       end

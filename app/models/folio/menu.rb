@@ -21,6 +21,10 @@ module Folio
       Folio::Node.where(locale: locale)
     end
 
+    def self.rails_paths
+      {}
+    end
+
     def self.allowed_menu_item_classes
       MenuItem.recursive_subclasses
     end

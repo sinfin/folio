@@ -14,6 +14,13 @@ module Folio
     validate :validate_target_and_menu_locales
     validate :validate_menu_allowed_types
 
+    def to_label
+      return title if title.present?
+      return target.try(:title) || target.try(:to_label) if target.present?
+      return menu.class.rails_paths[rails_path.to_sym] if rails_path.present?
+      self.class.human_name
+    end
+
     private
 
       def validate_target_and_menu_locales
