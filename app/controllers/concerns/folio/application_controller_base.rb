@@ -7,6 +7,8 @@ module Folio
     included do
       protect_from_forgery with: :exception
 
+      layout 'folio/application'
+
       helper_method :current_admin
       helper_method :nested_page_path
       helper_method :page_roots

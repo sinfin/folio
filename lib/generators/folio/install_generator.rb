@@ -60,7 +60,7 @@ module Folio
       def copy_templates
         [
           '.env.sample',
-          'app/views/layouts/application.slim',
+          'app/views/layouts/folio/application.slim',
           'bin/sprites',
           'config/sitemap.rb',
           'config/schedule.rb',
