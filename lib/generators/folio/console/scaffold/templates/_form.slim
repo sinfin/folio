@@ -7,9 +7,7 @@
     <%- if has_attachmentable? -%>
     = react_image_select(f, cover: true)
     <%- end -%>
-    <%- attributes_names.each do |attribute_name| -%>
-    = f.input :<%= attribute_name %>
-    <%- end -%>
+    <%= attribute_inputs %>
   <%- if has_attachmentable? -%>
   = tab :gallery
     = react_images(f.object.file_placements, attachmentable: '<%= singular_table_name %>')

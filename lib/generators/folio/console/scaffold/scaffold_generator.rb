@@ -59,7 +59,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   end
 
   def index_scope
-    positionable? ? '.ordered' : ''
+    positionable? ? '.ordered' : '.order(id: :desc)'
   end
 
   protected
@@ -79,5 +79,17 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     def fallback_attributes_names
       klass = class_name.constantize
       klass.attribute_names - ['id', 'created_at', 'updated_at', 'position']
+    end
+
+    def attribute_inputs
+      attributes_names.map { |name| attribute_input(name) }.join("\n")
+    end
+
+    def attribute_input(name)
+      if name =~ /_id$/
+        "= f.association :#{name.gsub(/_id$/, '')}"
+      else
+        "= f.input :#{name}"
+      end
     end
 end

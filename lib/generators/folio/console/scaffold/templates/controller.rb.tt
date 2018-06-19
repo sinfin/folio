@@ -14,7 +14,7 @@ module Folio
     def index
       @<%= plural_table_name %> = ::<%= class_name %><%= index_scope %>
       @<%= plural_table_name %> = @<%= plural_table_name %>.filter(filter_params) if filter_params.present?
-      @<%= plural_table_name %> = @<%= plural_table_name %>.<%= positionable? ? 'ordered.' : '' %>page(current_page)
+      @<%= plural_table_name %> = @<%= plural_table_name %>.page(current_page)
     end
 
     def new

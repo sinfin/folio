@@ -1,6 +1,6 @@
 fieldset#atoms
   = f.simple_fields_for :atoms do |atom|
-    = render 'atom_fields', f: atom
+    = render partial: 'atom_fields', locals: { f: atom }
 
   .links
     = link_to_add_association t('.add'), \
