@@ -1,0 +1,43 @@
+.folio-console-single-file-select
+  .form-group
+    margin-bottom: 0
+
+  .form-control
+    display: none
+
+.folio-console-single-file-select-video
+  .btn-danger
+    display: none
+
+  video
+    width: 500px
+    max-width: 100%
+    display: block
+    margin-bottom: $grid-gutter-width
+
+    ~ .btn-danger
+      display: block
+
+.folio-console-single-file-select-image
+  position: relative
+  width: 150px
+  height: 150px
+  align-items: center
+  justify-content: center
+  background: $gray-200
+  display: none
+
+  img
+    max-width: 100%
+    max-height: 100%
+
+.folio-console-single-file-select
+  &.folio-console-has-file
+    .form-control
+      display: none
+
+    .folio-console-single-file-select-image
+      display: flex
+
+    .folio-console-single-file-select-button
+      display: none

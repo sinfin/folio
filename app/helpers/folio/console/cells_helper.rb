@@ -21,9 +21,16 @@ module Folio
     end
 
     def single_image_select(f, attr_name = :file)
-      cell('folio/console/single_image_select',
-           f,
-           attr_name: attr_name).show.html_safe
+      single_file_select(f, attr_name, as: :image)
+    end
+
+    def single_video_select(f, attr_name = :file)
+      single_file_select(f, attr_name, as: :video)
+    end
+
+    def single_file_select(f, attr_name = :file, as: :file)
+      cell('folio/console/single_file_select', f, attr_name: attr_name,
+                                                  as: as).show.html_safe
     end
   end
 end

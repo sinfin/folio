@@ -109,3 +109,8 @@ en:
         title_single: Image
         title_cover: Main image
         add: Add Image
+
+      single_file_select:
+        add_image: Add image
+        add_video: Add video
+        remove_video: Remove video

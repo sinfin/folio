@@ -134,6 +134,7 @@ cs:
       nested_model_controls:
         destroy: Odebrat
 
-      single_image_select:
-        add: Přidat obrázek
-        label: Obrázek
+      single_file_select:
+        add_image: Přidat obrázek
+        add_video: Přidat video
+        remove_video: Odebrat video
