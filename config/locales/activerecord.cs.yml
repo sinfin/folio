@@ -27,72 +27,90 @@ cs:
     models:
       folio/account:
         one: Uživatel
-        other: Uživatelé
+        few: Uživatelé
+        other: Uživatelů
 
       folio/atom:
         one: Atom
-        other: Atomy
+        few: Atomy
+        other: Atomů
 
       folio/atom/text:
         one: Text
-        other: Texty
+        few: Texty
+        other: Textů
 
       folio/category:
         one: Kategorie
-        other: Kategorie
+        few: Kategorie
+        other: Kategorií
 
       folio/document:
         one: Soubor
-        other: Soubory
+        few: Soubory
+        other: Souborů
 
       folio/file:
         one: Soubor
-        other: Soubory
+        few: Soubory
+        other: Souborů
 
       folio/image:
         one: Obrázek
-        other: Obrázky
+        few: Obrázky
+        other: Obrázků
 
       folio/lead:
         one: Formulář
-        other: Formuláře
+        few: Formuláře
+        other: Formulářů
 
       folio/menu_item:
         one: Odkaz
-        other: Odkazy
+        few: Odkazy
+        other: Odkazů
 
       folio/menu:
         one: Menu
+        few: Menu
         other: Menu
 
       folio/menu/page:
         one: Menu
+        few: Menu
         other: Menu
 
       folio/newsletter_subscription:
         one: Newsletter
-        other: Newsletter
+        few: Newslettery
+        other: Newsletterů
 
       folio/node:
         one: Stránka
-        other: Stránky
+        few: Stránky
+        other: Stránek
 
       folio/node_translation:
         one: Překlad
-        other: Překlady
+        few: Překlady
+        other: Překladů
 
       folio/page:
         one: Stránka
-        other: Stránky
+        few: Stránky
+        other: Stránek
 
       folio/site:
         one: Web
-        other: Weby
+        few: Weby
+        other: Webů
 
       tag:
         one: Tag
-        other: Tagy
+        few: Tagy
+        other: Tagů
 
       visit:
         one: Návštěva
-        other: Návštěvy
+        few: Návštěvy
+        other: Návštěv

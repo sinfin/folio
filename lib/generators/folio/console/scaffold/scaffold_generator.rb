@@ -78,6 +78,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
     def fallback_attributes_names
       klass = class_name.constantize
-      klass.attribute_names - ['id', 'created_at', 'updated_at']
+      klass.attribute_names - ['id', 'created_at', 'updated_at', 'position']
     end
 end
