@@ -14,7 +14,7 @@ module Folio
       helper_method :page_roots
 
       before_action do
-        @site = Site.current
+        @site = Site.instance
         I18n.locale = params[:locale] || @site.locale
       end
     end
@@ -54,6 +54,15 @@ module Folio
 
       def page_roots
         @page_roots ||= @site.nodes.with_locale(I18n.locale).roots.ordered
+      end
+
+      def set_meta_variables(instance, title: :title, image: :cover, description: :perex)
+        if image = instance.send(image).presence
+          @og_image = image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
+        end
+
+        @og_title = @title = instance.send(title)
+        @og_description = @description = instance.send(description).presence
       end
   end
 end

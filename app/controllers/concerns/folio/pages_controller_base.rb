@@ -43,13 +43,7 @@ module Folio
       end
 
       def add_meta
-        @title = @page.title
-        @description = @page.perex
-        @og_title = @title
-        @og_description = @description
-        if @page.cover.present?
-          @og_image = @page.cover.thumb(OG_IMAGE_DIMENSIONS).url
-        end
+        set_meta_variables(@page)
       end
 
       def admin_preview?

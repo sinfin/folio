@@ -1,7 +1,6 @@
 en:
   head:
     title:
-      base: Folio
       separator: "|"
       default: ''
     description: ''
