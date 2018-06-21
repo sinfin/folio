@@ -3,7 +3,7 @@
 module Folio
   class Lead < ApplicationRecord
     # Validations
-    validates_format_of :email, with: /[^@]+@[^@]+/ # modified devise regex
+    validates_format_of :email, with: ::Folio::EMAIL_REGEXP
     validates :email, :note, presence: true
 
     # Scopes

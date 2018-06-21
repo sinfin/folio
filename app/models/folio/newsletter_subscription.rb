@@ -4,10 +4,8 @@ module Folio
   class NewsletterSubscription < ApplicationRecord
     include Filterable
 
-
     # Validations
-    validates_format_of :email,
-                        with: /[^@]+@[^@]+/ # modified devise regex
+    validates_format_of :email, with: ::Folio::EMAIL_REGEXP
 
     # Scopes
     default_scope { order(created_at: :desc) }

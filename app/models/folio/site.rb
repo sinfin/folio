@@ -9,6 +9,7 @@ module Folio
     # Validations
     validates :title, presence: true
     validates :domain, uniqueness: true
+    validates_format_of :email, with: ::Folio::EMAIL_REGEXP
 
     class MissingError < StandardError; end
 

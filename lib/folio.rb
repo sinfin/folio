@@ -51,5 +51,6 @@ module Folio
     en: 'GB'
   }
 
+  EMAIL_REGEXP = /[^@]+@[^@]+/
   OG_IMAGE_DIMENSIONS = '1200x630#'
 end
