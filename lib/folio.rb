@@ -49,4 +49,6 @@ module Folio
     es: 'ES',
     en: 'GB'
   }
+
+  OG_IMAGE_DIMENSIONS = '1200x630#'
 end

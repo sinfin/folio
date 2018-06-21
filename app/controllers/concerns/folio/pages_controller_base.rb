@@ -47,7 +47,9 @@ module Folio
         @description = @page.perex
         @og_title = @title
         @og_description = @description
-        @og_image = @page.cover.thumb('1200x630#').url if @page.cover.present?
+        if @page.cover.present?
+          @og_image = @page.cover.thumb(OG_IMAGE_DIMENSIONS).url
+        end
       end
 
       def admin_preview?
