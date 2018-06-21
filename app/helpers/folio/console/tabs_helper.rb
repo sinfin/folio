@@ -6,8 +6,8 @@ module Folio
       render 'folio/console/partials/tabs', keys: keys
     end
 
-    def tab(key, &block)
-      content_tag(:div, class: "tab-pane #{key == :content ? 'active' : ''}",
+    def tab(key, active: false, &block)
+      content_tag(:div, class: "tab-pane #{active || key == :content ? 'active' : ''}",
                         id: "tab-#{key}",
                         &block)
     end

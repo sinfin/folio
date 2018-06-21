@@ -2,8 +2,6 @@
 
 module Folio
   class Console::SitesController < Console::BaseController
-    # before_action :find_site
-
     def index
       redirect_to console_root_path
     end
@@ -17,9 +15,6 @@ module Folio
     end
 
     private
-      # def find_site
-      #   @site = @site
-      # end
 
       def site_params
         params.require(:site).permit(:title,
@@ -33,7 +28,7 @@ module Folio
                                      :address,
                                      *@site.class.additional_params,
                                      locales: [],
-                                    )
+                                     social_links: Site.social_link_sites)
       end
   end
 end

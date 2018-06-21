@@ -10,6 +10,8 @@ module Folio
     validates :title, presence: true
     validates :domain, uniqueness: true
 
+    class MissingError < StandardError; end
+
     def url
       "#{scheme}://#{self.domain}"
     end
@@ -18,9 +20,18 @@ module Folio
       []
     end
 
-    def self.current
-      self.first
+    def self.instance
+      first.presence || fail(MissingError, self.class.to_s)
     end
+
+    def self.current
+      self.instance
+    end
+
+    def self.social_link_sites
+      # class method > constant as one might want to override it
+      %i[facebook instagram twitter appstore google_play pinterest]
+   end
 
     private
 

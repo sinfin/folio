@@ -30,6 +30,7 @@ require 'breadcrumbs_on_rails'
 require 'rails-assets-selectize'
 require 'ahoy_matey'
 require 'invisible_captcha'
+require 'rails-i18n'
 
 module Folio
   class Engine < ::Rails::Engine

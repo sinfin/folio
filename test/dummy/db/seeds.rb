@@ -22,7 +22,12 @@ site = Folio::Site.create!(title: 'Sinfin.digital',
                            locale: 'cs',
                            locales: ['cs', 'en', 'de'],
                            email: 'info@sinfin.cz',
-                           phone: '+420 123 456 789')
+                           phone: '+420 123 456 789',
+                           social_links: {
+                            facebook: 'https://www.facebook.com/',
+                            instagram: 'https://www.instagram.com/',
+                            twitter: 'https://www.twitter.com/',
+                           })
 
 about = Folio::Page.create!(title: 'O nás',
                             site: site,
