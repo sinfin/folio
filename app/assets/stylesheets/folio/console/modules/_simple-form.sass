@@ -22,6 +22,14 @@
   .tab-content
     margin-bottom: $grid-gutter-width
 
+  .has-danger-blink
+    .form-control
+      box-shadow: 0 0 10px 2px $red
+
+  .text-danger
+    .form-text ~ .form-text
+      color: $body-color
+
   .form-group.datetime
     .form-inline
       +clearfix
@@ -49,3 +57,18 @@
         margin-bottom: 0
         display: flex
         align-items: center
+
+  .alert-danger
+    cursor: pointer
+    display: flex
+    align-items: center
+
+    &:after
+      @extend .btn
+      @extend .btn-sm
+      @extend .btn-danger
+      content: 'Fix'
+      margin-left: $grid-gutter-half
+
+      html[lang="cs"] &
+        content: 'Opravit'

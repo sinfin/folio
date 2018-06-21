@@ -65,8 +65,6 @@ cs:
           additional_form_fields: Další pole
           documents:
             add: Přidat dokument
-          atoms:
-            add: Přidat atom
 
       accounts:
         index:
@@ -140,3 +138,7 @@ cs:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
+
+      base:
+        atoms:
+          add: Přidat atom
