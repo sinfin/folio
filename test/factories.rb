@@ -7,6 +7,7 @@ FactoryBot.define do
   factory :folio_site, class: Folio::Site do
     title { Faker::Lorem.word }
     domain { Faker::Internet.domain_name }
+    email { Faker::Internet.email }
     social_links { { 'facebook' => Faker::Internet.url('facebook.com') } }
     address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
     phone { Faker::PhoneNumber.phone_number }
