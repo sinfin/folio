@@ -1,3 +1,15 @@
+=sm-danger-btn-style
+  display: inline-block
+  font-weight: $btn-font-weight
+  text-align: center
+  white-space: nowrap
+  vertical-align: middle
+  user-select: none
+  border: $btn-border-width solid transparent
+  +button-size($btn-padding-y-sm, $btn-padding-x-sm, $font-size-sm, $btn-line-height-sm, $btn-border-radius-sm)
+  +transition($btn-transition)
+  +button-variant($danger, $danger)
+
 .simple_form
   fieldset
     margin: 0 0 $fieldset-margin
@@ -64,11 +76,9 @@
     align-items: center
 
     &:after
-      @extend .btn
-      @extend .btn-sm
-      @extend .btn-danger
       content: 'Fix'
       margin-left: $grid-gutter-half
+      +sm-danger-btn-style
 
       html[lang="cs"] &
         content: 'Opravit'

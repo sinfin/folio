@@ -1,9 +1,9 @@
-= tabs [:settings, :ff, :site_social_links]
+= tabs [:content, :settings, :site_social_links]
 
 = f.error_notification
 
 .tab-content
-  = tab :ff
+  = tab :content
     = f.input :title
     = f.input :description, as: :text
 
@@ -13,7 +13,7 @@
 
     = render 'additional_form_fields', f: f
 
-  = tab :settings, active: true
+  = tab :settings
     = f.input :domain
     = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
                                           checked: f.object.locales
