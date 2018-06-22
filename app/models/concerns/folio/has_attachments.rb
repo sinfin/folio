@@ -31,6 +31,10 @@ module Folio
 
       accepts_nested_attributes_for :file_placements, allow_destroy: true
       accepts_nested_attributes_for :cover_placement, allow_destroy: true
+
+      scope :with_cover, -> { joins(:cover) }
+      scope :with_images, -> { joins(:images) }
+      scope :with_documents, -> { joins(:documents) }
     end
   end
 end
