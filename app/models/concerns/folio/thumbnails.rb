@@ -36,7 +36,7 @@ module Folio
         ret
       else
         if mime_type =~ /svg/
-          url = file.url
+          url = file.remote_url
         else
           if self.class.immediate_thumbnails
             image = GenerateThumbnailJob.perform_now(self, w_x_h, quality)

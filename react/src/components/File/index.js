@@ -9,6 +9,7 @@ const OUTER_STYLE = `
   position: relative;
   display: inline-block;
   margin: 15px;
+  background: #dadcde;
 `
 
 const OuterWrap = styled.div`${OUTER_STYLE}`
