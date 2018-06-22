@@ -78,11 +78,15 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
     def fallback_attributes_names
       klass = class_name.constantize
-      klass.attribute_names - ['id', 'created_at', 'updated_at', 'position']
+      klass.attribute_names - ['id', 'created_at', 'updated_at']
+    end
+
+    def form_attribute_names
+      attributes_names - ['position']
     end
 
     def attribute_inputs
-      attributes_names.map { |name| attribute_input(name) }.join("\n")
+      form_attribute_names.map { |name| attribute_input(name) }.join("\n")
     end
 
     def attribute_input(name)

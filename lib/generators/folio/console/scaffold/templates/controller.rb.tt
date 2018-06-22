@@ -46,11 +46,11 @@ module Folio
       end
 
       def <%= "#{singular_table_name}_params" %>
-        <%- if attributes_names.empty? -%>
+        <%- if form_attribute_names.empty? -%>
         params.fetch(:<%= singular_table_name %>, {})
         <%- else -%>
         params.require(:<%= singular_table_name %>)
-              .permit(<%= attributes_names.map { |name| ":#{name}" }.join(",\n                      ") %>)
+              .permit(<%= form_attribute_names.map { |name| ":#{name}" }.join(",\n                      ") %>)
         <%- end -%>
       end
 
