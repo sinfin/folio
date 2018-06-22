@@ -16,7 +16,7 @@ class Folio::Console::BooleanToggleCell < FolioCell
   end
 
   def attr
-    self.class::ATTRIBUTE
+    options[:attr] || self.class::ATTRIBUTE
   end
 
   def attr_name
