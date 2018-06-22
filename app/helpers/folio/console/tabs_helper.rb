@@ -3,7 +3,9 @@
 module Folio
   module Console::TabsHelper
     def tabs(keys)
-      render 'folio/console/partials/tabs', keys: keys
+      if keys.present? && keys.size > 1
+        render 'folio/console/partials/tabs', keys: keys
+      end
     end
 
     def tab(key, active: false, &block)
