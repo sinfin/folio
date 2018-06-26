@@ -2,7 +2,7 @@
 
 module Folio
   module CstypoHelper
-    CSTYPO_REGEXP = /\b([szkvaiou%]\b) /i
+    CSTYPO_REGEXP = /(?<![<\/])\b([szkvaiou%]\b) /i
 
     def cstypo(string)
       if I18n.locale == :cs
