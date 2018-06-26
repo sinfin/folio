@@ -9,8 +9,11 @@
                            include_blank: true
 
       - if menu.class.rails_paths.present?
+        - paths = menu.class.rails_paths.stringify_keys.to_a.map(&:reverse)
         .col
-          = f.input :rails_path, collection: menu.class.rails_paths
+          = f.input :rails_path, collection: paths, \
+                                 selected: f.object.rails_path, \
+                                 include_blank: true
 
       - if allowed_classes.length == 1
         = f.hidden_field :type, value: allowed_classes.first.last

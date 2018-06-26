@@ -31,7 +31,7 @@ module Folio
 
     def self.social_link_sites
       # class method > constant as one might want to override it
-      %i[facebook instagram twitter appstore google_play pinterest]
+      %i[facebook instagram twitter appstore google_play pinterest messenger]
    end
 
     private
