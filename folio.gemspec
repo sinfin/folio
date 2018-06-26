@@ -56,6 +56,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-jquery', '~> 3.2.1'
   s.add_dependency 'rails-assets-photoswipe'
   s.add_dependency 'rails-i18n'
+  s.add_dependency 'state_machines-activerecord'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'

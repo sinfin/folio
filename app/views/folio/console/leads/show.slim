@@ -1,0 +1,50 @@
+h1 = Folio::Lead.model_name.human
+
+table.table
+  tbody
+    tr
+      td = Folio::Lead.human_attribute_name(:name)
+      td = @lead.name.presence || t('.blank')
+
+    tr
+      td = Folio::Lead.human_attribute_name(:state)
+      td
+        = t(".state_#{@lead.state}")
+
+        br
+        br
+
+        - if @lead.handled?
+          = link_to t('.unhandle'), \
+                    unhandle_console_lead_path(@lead), \
+                    method: :post, \
+                    class: 'btn btn-danger'
+        - else
+          = link_to t('.handle'), \
+                    handle_console_lead_path(@lead), \
+                    method: :post, \
+                    class: 'btn btn-success'
+
+    tr
+      td = Folio::Lead.human_attribute_name(:email)
+      td
+        - if @lead.email.present?
+          = mail_to(@lead.email, @lead.email)
+        - else
+          = t('.blank')
+
+    tr
+      td = Folio::Lead.human_attribute_name(:phone)
+      td
+        - if @lead.phone.present?
+          = link_to(@lead.phone, "tel:#{@lead.phone}") if @lead.phone.present?
+        - else
+          = t('.blank')
+
+    tr
+      td = Folio::Lead.human_attribute_name(:note)
+      td = @lead.note.presence || t('.blank')
+
+    tr
+      td = Folio::Lead.human_attribute_name(:url)
+      td = link_to(@lead.url, @lead.url)

@@ -31,6 +31,8 @@ require 'rails-assets-selectize'
 require 'ahoy_matey'
 require 'invisible_captcha'
 require 'rails-i18n'
+require 'state_machines'
+require 'state_machines-activerecord'
 
 module Folio
   class Engine < ::Rails::Engine

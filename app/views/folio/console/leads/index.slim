@@ -1,15 +1,18 @@
 == cell('folio/console/index/header', Folio::Lead)
 
-.folio-console-index-table
-  table
-    thead
-      tr
-        th = t(".email")
-        th = t(".phone")
-        th = t(".created_at")
-        th
+- if leads = @leads.not_handled.presence
+  h2 = t('.not_handled')
 
-    tbody
-      = render partial: "lead", collection: @leads
+  .folio-console-index-table
+    table
+      tbody
+        = render partial: 'lead', collection: leads
 
-= paginate @leads
+- if leads = @leads.handled.presence
+  h2 style="opacity: 0.5;"
+    = t('.handled')
+
+  .folio-console-index-table style="opacity: 0.5;"
+    table
+      tbody
+        = render partial: 'lead', collection: leads

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180523091007) do
+ActiveRecord::Schema.define(version: 20180626144220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20180523091007) do
     t.string "name"
     t.string "url"
     t.json "additional_data"
+    t.string "state", default: "submitted"
   end
 
   create_table "folio_menu_items", force: :cascade do |t|

@@ -19,9 +19,21 @@ module Folio
         where(nil)
       end
     }
+    scope :handled, -> { with_state(:handled) }
+    scope :not_handled, -> { with_state(:submitted) }
+
+    state_machine initial: :submitted do
+      event :handle do
+        transition submitted: :handled
+      end
+
+      event :unhandle do
+        transition handled: :submitted
+      end
+    end
 
     def title
-      email
+      email.presence || phone.presence || self.class.model_name.human
     end
 
     private

@@ -28,7 +28,12 @@ Folio::Engine.routes.draw do
     end
     resources :menus, except: [:show]
     resources :files, except: [:show, :new]
-    resources :leads, only: %i[index edit update destroy]
+    resources :leads, only: %i[index show update destroy] do
+      member do
+        post :handle
+        post :unhandle
+      end
+    end
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
     resources :sites

@@ -1,7 +1,18 @@
 tr
-  td = lead.email
-  td = lead.phone
-  td = l lead.created_at
   td
-     = edit_button lead, edit_console_lead_path(lead.id)
+    a href=console_lead_path(lead)
+      = lead.title
+
+  td
+    = l lead.created_at, format: :long
+
+  td
+     - if lead.handled?
+       = link_to unhandle_console_lead_path(lead), method: :post, class: 'btn btn-danger'
+        i.fa.fa-close
+     - else
+       = link_to handle_console_lead_path(lead), method: :post, class: 'btn btn-success'
+        i.fa.fa-check
+
+     = custom_icon_button console_lead_path(lead.id)
      = delete_button lead, console_lead_path(lead.id)

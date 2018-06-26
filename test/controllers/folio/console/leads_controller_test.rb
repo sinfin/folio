@@ -15,8 +15,8 @@ module Folio
       assert_response :success
     end
 
-    test 'should get edit' do
-      get edit_console_lead_url(@lead)
+    test 'should get show' do
+      get console_lead_url(@lead)
       assert_response :success
     end
   end

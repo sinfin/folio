@@ -79,19 +79,6 @@ cs:
     link: Více informací
     message: Při poskytování služeb nám pomáhají soubory cookie. Používáním naších služeb vyjadřujete souhlas s naším používáním souborů cookie.
 
-  layouts:
-    folio:
-      console:
-        header:
-          nodes: Stránky
-          menus: Menu
-          documents: Soubory
-          images: Obrázky
-          newsletter_subscriptions: Odběry newsletteru
-          leads: Formuláře
-          visits: Návštěvy
-          users: Uživatelé
-
   all: Všechny
   all_models: Všechny %{model}
   without_model: Bez %{model}

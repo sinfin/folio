@@ -24,6 +24,14 @@ cs:
         google_analytics_tracking_code: Google analytics - trackovací kód
         facebook_pixel_code: Facebook pixel - kód
 
+      folio/lead:
+        state: Stav
+        email: E-mail
+        phone: Telefon
+        note: Zpráva
+        url: URL
+        name: Jméno
+
     models:
       folio/account:
         one: Uživatel

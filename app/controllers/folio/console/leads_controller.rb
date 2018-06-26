@@ -7,7 +7,6 @@ module Folio
 
     def index
       @leads = @leads.filter(filter_params) if params[:by_query].present?
-      @leads = @leads.page(current_page)
       respond_with @leads, location: console_leads_path
     end
 
@@ -20,6 +19,20 @@ module Folio
     def destroy
       @lead.destroy
       respond_with @lead, location: console_leads_path
+    end
+
+    def show
+      respond_with @lead, location: console_leads_path
+    end
+
+    def handle
+      @lead.handle!
+      redirect_back fallback_location: console_leads_path
+    end
+
+    def unhandle
+      @lead.unhandle!
+      redirect_back fallback_location: console_leads_path
     end
 
     private

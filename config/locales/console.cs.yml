@@ -89,9 +89,15 @@ cs:
 
       leads:
         index:
-          title: Formuláře
+          handled: Vyřízené
+          not_handled: Nevyřízené
+
         show:
-          title: Formulář
+          state_handled: Vyřízený
+          state_submitted: Nevyřízený
+          handle: Vyřídit
+          unhandle: Označit jako nevyřízený
+          blank: '-- nevyplněno --'
 
       visits:
         index:
