@@ -22,17 +22,21 @@ module Folio
         gem 'rails-i18n'
         gem 'rails-assets-photoswipe'
 
+        gem_group :development, :test do
+          gem 'faker', require: false
+        end
+
         gem_group :development do
           gem 'rbnacl', version: '< 5.0'
           gem 'rbnacl-libsodium'
           gem 'bcrypt_pbkdf', version: '< 2.0'
+          gem 'ed25519'
 
           gem 'pry-rails'
           gem 'rubocop-rails'
           gem 'guard-rubocop'
           gem 'guard-coffeelint'
           gem 'guard-slimlint'
-          gem 'faker'
           gem 'factory_bot_rails'
           gem 'annotate'
           gem 'slack-notifier'
