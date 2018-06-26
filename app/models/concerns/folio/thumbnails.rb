@@ -7,7 +7,7 @@ module Folio
   module Thumbnails
     extend ActiveSupport::Concern
 
-    IMAGE_MIME_TYPES = %w[image/png image/jpeg image/gif image/bmp]
+    IMAGE_MIME_TYPES = %w[image/png image/jpeg image/gif image/bmp image/svg image/svg+xml]
 
     included do
       serialize :thumbnail_sizes, Hash
@@ -35,8 +35,10 @@ module Folio
         ret.url = Dragonfly.app.remote_url_for(ret.uid)
         ret
       else
-        if mime_type =~ /svg/
+        if svg?
           url = file.remote_url
+          width = file_width
+          height = file_height
         else
           if self.class.immediate_thumbnails
             image = GenerateThumbnailJob.perform_now(self, w_x_h, quality)
@@ -47,14 +49,14 @@ module Folio
             GenerateThumbnailJob.perform_later(self, w_x_h, quality)
             url = temporary_url(w_x_h)
           end
+          width, height = w_x_h.split('x').map(&:to_i)
         end
-        sizes = w_x_h.split('x')
         OpenStruct.new(
           uid: nil,
           signature: nil,
           url: url,
-          width: sizes[0].to_i,
-          height: sizes[1].to_i,
+          width: width,
+          height: height,
           quality: quality
         )
       end
@@ -75,6 +77,10 @@ module Folio
       file.present? && file.width >= file.height
     end
 
+    def svg?
+      mime_type =~ /svg/
+    end
+
     private
 
       def reset_thumbnails
@@ -83,7 +89,7 @@ module Folio
       end
 
       def fail_for_non_images
-        fail 'You can only thumbnail images.' unless has_attribute? 'thumbnail_sizes'
+        fail 'You can only thumbnail images.' unless has_attribute?('thumbnail_sizes')
       end
 
       def set_mime_type
@@ -100,6 +106,7 @@ module Folio
         return unless file.present?
         return unless new_record?
         return unless self.respond_to?(:additional_data)
+        return if svg?
 
         dominant_color = ::MiniMagick::Tool::Convert.new do |convert|
           convert.merge! [

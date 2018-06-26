@@ -3,7 +3,7 @@
 class Folio::Image < Folio::File
   include Folio::Thumbnails
 
-  VALID_FORMATS = %w{jpeg png bmp gif}
+  VALID_FORMATS = %w{jpeg png bmp gif svg}
 
   # Validations
   validates_property :format, of: :file, in: VALID_FORMATS

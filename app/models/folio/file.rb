@@ -13,11 +13,13 @@ module Folio
     end
 
     # Relations
-    has_many :file_placements, class_name: 'Folio::FilePlacement', dependent: :destroy
+    has_many :file_placements, class_name: 'Folio::FilePlacement',
+                               dependent: :destroy
     has_many :placements, through: :file_placements
 
     # Validations
-    validates :file, :type, presence: true
+    validates :file, :type,
+              presence: true
 
     # Scopes
     scope :ordered, -> { order(updated_at: :desc) }
