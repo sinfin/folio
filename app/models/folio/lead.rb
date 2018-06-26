@@ -3,8 +3,11 @@
 module Folio
   class Lead < ApplicationRecord
     # Validations
-    validates_format_of :email, with: ::Folio::EMAIL_REGEXP
-    validates :email, :note, presence: true
+    validates_format_of :email, with: ::Folio::EMAIL_REGEXP,
+                                unless: :skip_email_validation?
+    validates :note,
+              presence: true,
+              unless: :skip_note_validation?
 
     # Scopes
     default_scope { order(created_at: :desc) }
@@ -20,6 +23,16 @@ module Folio
     def title
       email
     end
+
+    private
+
+      def skip_email_validation?
+        false
+      end
+
+      def skip_note_validation?
+        false
+      end
   end
 end
 
