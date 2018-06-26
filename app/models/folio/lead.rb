@@ -61,4 +61,5 @@ end
 #  name            :string
 #  url             :string
 #  additional_data :json
+#  state           :string           default("submitted")
 #

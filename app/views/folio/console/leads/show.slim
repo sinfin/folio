@@ -48,3 +48,15 @@ table.table
     tr
       td = Folio::Lead.human_attribute_name(:url)
       td = link_to(@lead.url, @lead.url)
+
+    - if @lead.additional_data.present?
+      - @lead.additional_data.each do |key, value|
+        tr
+          td = Folio::Lead.human_attribute_name(key)
+          td
+            - if value == true
+              = t('true')
+            - elsif value == false
+              = t('false')
+            - else
+              = value
