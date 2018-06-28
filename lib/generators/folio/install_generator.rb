@@ -79,6 +79,7 @@ module Folio
           'test/test_helper.rb',
           'app/controllers/application_controller.rb',
           'app/controllers/pages_controller.rb',
+          'app/controllers/errors_controller.rb',
           'app/controllers/home_controller.rb',
           'config/initializers/assets.rb',
           'config/initializers/raven.rb',
