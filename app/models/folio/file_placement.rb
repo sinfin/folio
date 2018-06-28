@@ -10,7 +10,8 @@ module Folio
     belongs_to :placement,
                polymorphic: true,
                # so that validations work https://stackoverflow.com/a/39114379/910868
-               optional: true
+               optional: true,
+               touch: true
 
     # only one tag allowed
     validate :allowed_tag

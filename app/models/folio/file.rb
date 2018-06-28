@@ -24,9 +24,17 @@ module Folio
     # Scopes
     scope :ordered, -> { order(updated_at: :desc) }
 
+    after_save :touch_placements
+
     def title
       file_name
     end
+
+    private
+
+      def touch_placements
+        file_placements.each(&:touch)
+      end
   end
 end
 

@@ -4,9 +4,24 @@ require 'test_helper'
 
 module Folio
   class FileTest < ActiveSupport::TestCase
-    # test "the truth" do
-    #   assert true
-    # end
+    class ImmediateImage < Folio::Image
+      def self.immediate_thumbnails
+        true
+      end
+    end
+
+    test 'touches placements and their models' do
+      node = create(:folio_node)
+      updated_at = node.updated_at
+
+      image = ImmediateImage.create!(file: Folio::Engine.root.join('test/fixtures/folio/test.gif'))
+      node.images << image
+      assert node.reload.updated_at > updated_at
+
+      updated_at = node.updated_at
+      assert image.reload.thumb('150x150').url
+      assert node.reload.updated_at > updated_at
+    end
   end
 end
 
