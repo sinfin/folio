@@ -1,4 +1,4 @@
-<% if Rails.env.production? && !@site.google_analytics_tracking_code.blank? %>
+<% if (Rails.env.production? && @site.google_analytics_tracking_code.present?) || ENV['DEV_GOOGLE_ANALYTICS'] %>
 <!-- Google Analytics -->
 <script type="text/javascript">
   // Google Analytics
