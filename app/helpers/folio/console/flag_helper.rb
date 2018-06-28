@@ -27,7 +27,7 @@ module Folio
 
     def flag_checkboxes
       I18n.available_locales.map do |locale|
-        [country_flag(locale).html_safe, locale]
+        [country_flag(locale), locale]
       end
     end
   end
