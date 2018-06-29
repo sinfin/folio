@@ -16,6 +16,8 @@ module Folio
     has_many :file_placements, class_name: 'Folio::FilePlacement',
                                dependent: :destroy
     has_many :placements, through: :file_placements
+    has_one :cover_placement, class_name: 'Folio::CoverPlacement',
+                              dependent: :destroy
 
     # Validations
     validates :file, :type,
@@ -34,6 +36,7 @@ module Folio
 
       def touch_placements
         file_placements.each(&:touch)
+        cover_placement.try(:touch)
       end
   end
 end
