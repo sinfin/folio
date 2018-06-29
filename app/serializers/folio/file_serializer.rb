@@ -31,7 +31,7 @@ module Folio
     end
 
     def image?
-      object.type == 'Folio::Image'
+      object.is_a?(Image)
     end
 
     def tags
@@ -39,7 +39,11 @@ module Folio
     end
 
     def edit_path
-      edit_console_file_path(object)
+      if image?
+        edit_console_image_path(object)
+      else
+        edit_console_document_path(object)
+      end
     end
   end
 end

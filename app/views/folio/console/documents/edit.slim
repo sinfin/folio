@@ -1,0 +1,30 @@
+h1 = @file.file_name.presence || @file.class.model_name.human
+
+= simple_form_for(@file, as: :file, \
+                         url: console_document_path(@file.id)) do |f|
+  fieldset
+    .row
+      .col
+        = link_to f.object.file.url, target: '_blank', download: true
+          i.fa.fa-download<>
+          = t('.download')
+
+        br
+        br
+
+        = f.input :file, as: :file, \
+                         hint: t('.file_hint'), \
+                         input_html: { class: 'form-control' }
+
+        == cell('folio/console/tagsinput', f)
+
+        == cell('folio/console/file_placement_list', f.object)
+
+  = f.button :submit
+
+  - if f.object.is_a?(Folio::Image)
+    = link_to t('folio.console.back'), console_documents_path
+  - else
+    = link_to t('folio.console.back'), console_documents_path(type: :document)
+
+  = delete_button(@file, console_document_path(@file), text: true)

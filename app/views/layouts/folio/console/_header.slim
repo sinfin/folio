@@ -19,8 +19,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
 
       = nav_item_link_to Folio::Node, console_nodes_path
       = nav_item_link_to Folio::Menu, console_menus_path
-      = nav_item_link_to Folio::Image, console_files_path(type: :image)
-      = nav_item_link_to Folio::Document, console_files_path(type: :document)
+      = nav_item_link_to Folio::Image, console_images_path
+      = nav_item_link_to Folio::Document, console_documents_path
       = nav_item_link_to Folio::NewsletterSubscription, \
                          console_newsletter_subscriptions_path
       = nav_item_link_to Folio::Lead, console_leads_path

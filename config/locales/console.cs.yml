@@ -70,9 +70,13 @@ cs:
         index:
           title: Uživatelé
 
-      files:
+      documents:
         edit:
           download: Stáhnout
+          file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
+
+      images:
+        edit:
           download_original: Stáhnout originál
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
 

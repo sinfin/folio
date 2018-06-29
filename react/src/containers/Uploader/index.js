@@ -43,7 +43,7 @@ class MultiSelect extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: '/console/files',
+      postUrl: this.props.fileType === 'Folio::Document' ? '/console/documents' : '/console/images',
     }
   }
 

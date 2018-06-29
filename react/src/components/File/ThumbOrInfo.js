@@ -12,6 +12,11 @@ const Wrap = styled.div`
 
   strong {
     max-width: 100%;
+    word-break: break-all;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: center;
+    display: block;
   }
 
   i {
