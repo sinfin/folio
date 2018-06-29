@@ -12,7 +12,8 @@ module Folio
                polymorphic: true,
                # so that validations work
                # see https://stackoverflow.com/a/39114379/910868
-               optional: true
+               optional: true,
+               touch: true
   end
 end
 
