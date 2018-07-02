@@ -26,4 +26,10 @@ class Folio::Console::ReactImageSelectCell < Folio::Console::ReactSelectCell
       file_placements.exists?
     end
   end
+
+  def image(fp)
+    if fp.object && fp.object.file
+      image_tag(fp.object.file.thumb('250x250').url)
+    end
+  end
 end

@@ -10,6 +10,6 @@ class Folio::Console::PublishedToggleCellTest < Folio::Console::CellTest
 
     node = create(:folio_node, published: false)
     html = cell('folio/console/published_toggle', node, as: :node).(:show)
-    refute html.find_css('input').attr('checked')
+    assert_not html.find_css('input').attr('checked')
   end
 end

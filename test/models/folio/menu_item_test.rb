@@ -15,9 +15,9 @@ module Folio
       assert cs_menu.save
 
       item = build(:folio_menu_item, target: en_node, menu: cs_menu)
-      refute item.valid?
+      assert_not item.valid?
       cs_menu.items << item
-      refute cs_menu.save
+      assert_not cs_menu.save
     end
 
     class StrictMenu < Menu
@@ -31,7 +31,7 @@ module Folio
       assert strict_menu
 
       item = build(:folio_menu_item, menu: strict_menu)
-      refute item.valid?
+      assert_not item.valid?
     end
   end
 end

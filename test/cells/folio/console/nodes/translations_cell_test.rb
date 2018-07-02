@@ -8,7 +8,7 @@ class Folio::Console::Nodes::TranslationsCellTest < Cell::TestCase
   test 'hide with single locale' do
     node = create(:folio_node)
     html = cell('folio/console/nodes/translations', node).(:show)
-    refute html.has_css?('.folio-console-nodes-translations')
+    assert_not html.has_css?('.folio-console-nodes-translations')
   end
 
   test 'show with mulitple locales' do

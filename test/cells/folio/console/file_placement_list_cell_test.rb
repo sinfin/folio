@@ -5,7 +5,7 @@ require 'test_helper'
 class Folio::Console::FilePlacementListCellTest < Folio::Console::CellTest
   test 'hide for none' do
     html = cell('folio/console/file_placement_list', create(:folio_node)).(:show)
-    refute html.has_css?('h2')
+    assert_not html.has_css?('h2')
   end
 
   test 'show' do
