@@ -3,6 +3,12 @@
     h1 = title
 
   .col.folio-console-index-header-right
+    - if options[:csv_path]
+      .folio-console-index-header-csv
+        a.btn.btn-warning href=options[:csv_path]
+          i.fa.fa-download<>
+          ' CSV
+
     - if options[:no_filter]
       form
     - else

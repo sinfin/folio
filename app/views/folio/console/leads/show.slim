@@ -9,7 +9,7 @@ table.table
     tr
       td = Folio::Lead.human_attribute_name(:state)
       td
-        = t(".state_#{@lead.state}")
+        = @lead.human_state_name
 
         br
         br

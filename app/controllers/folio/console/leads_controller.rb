@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 module Folio
   class Console::LeadsController < Console::BaseController
     load_and_authorize_resource :lead, class: 'Folio::Lead'
@@ -7,7 +9,19 @@ module Folio
 
     def index
       @leads = @leads.filter(filter_params) if params[:by_query].present?
-      respond_with @leads, location: console_leads_path
+
+      respond_with(@leads, location: console_leads_path) do |format|
+        format.html
+        format.csv do
+          data = ::CSV.generate(headers: true) do |csv|
+            csv << Lead.csv_attribute_names.map { |a| Lead.human_attribute_name(a) }
+            @leads.each { |lead| csv << lead.csv_attributes }
+          end
+          filename = "#{Lead.model_name.human(count: 2)}-#{Date.today}.csv".split('.').map(&:parameterize).join('.')
+
+          send_data data, filename: filename
+        end
+      end
     end
 
     def update

@@ -36,6 +36,21 @@ module Folio
       email.presence || phone.presence || self.class.model_name.human
     end
 
+    def self.csv_attribute_names
+      %i[id email phone note created_at name url state]
+    end
+
+    def csv_attributes
+      self.class.csv_attribute_names.map do |attr|
+        case attr
+        when :state
+          human_state_name
+        else
+          send(attr)
+        end
+      end
+    end
+
     private
 
       def skip_email_validation?

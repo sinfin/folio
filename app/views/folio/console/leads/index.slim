@@ -1,4 +1,4 @@
-== cell('folio/console/index/header', Folio::Lead)
+== cell('folio/console/index/header', Folio::Lead, csv_path: console_leads_path(format: :csv))
 
 - if leads = @leads.not_handled.presence
   h2 = t('.not_handled')

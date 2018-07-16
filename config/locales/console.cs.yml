@@ -97,8 +97,6 @@ cs:
           not_handled: Nevyřízené
 
         show:
-          state_handled: Vyřízený
-          state_submitted: Nevyřízený
           handle: Vyřídit
           unhandle: Označit jako nevyřízený
           blank: '-- nevyplněno --'
