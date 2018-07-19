@@ -49,7 +49,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   end
 
   def has_attachmentable?
-    class_name.constantize.respond_to?(:cover_placement)
+    class_name.constantize.method_defined?(:cover_placement)
   end
 
   def form_tabs
