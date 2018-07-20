@@ -81,6 +81,16 @@ module Folio
       mime_type =~ /svg/
     end
 
+    def gif?
+      mime_type =~ /gif/
+    end
+
+    def animated_gif?
+      return false unless gif?
+      return false unless self.respond_to?(:additional_data)
+      additional_data['animated'].presence || false
+    end
+
     private
 
       def reset_thumbnails
@@ -108,6 +118,15 @@ module Folio
         return unless self.respond_to?(:additional_data)
         return if svg?
 
+        if gif?
+          identify = ::MiniMagick::Tool::Identify.new do |i|
+            i << file.path
+          end
+          animated = identify.split("\n").size > 1
+          self.additional_data ||= {}
+          self.additional_data.merge!(animated: animated)
+        end
+
         dominant_color = ::MiniMagick::Tool::Convert.new do |convert|
           convert.merge! [
             file.path,
@@ -124,10 +143,12 @@ module Folio
         rgb = hex.scan(/../).map { |color| color.to_i(16) }
         dark = rgb.sum < 3 * 255 / 2.0
 
-        self.additional_data ||= {
+        self.additional_data ||= {}
+
+        self.additional_data.merge!(
           dominant_color: hex,
           dark: dark,
-        }
+        )
       end
   end
 end

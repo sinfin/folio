@@ -38,6 +38,14 @@ Dragonfly.app.configure do
     end
   end
 
+  processor :animated_gif_resize do |content, raw_size, *args|
+    fail 'Missing gifsicle binary.' if `which gifsicle`.blank?
+    size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
+    content.shell_update do |old_path, new_path|
+      "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"  # The command sent to the command line
+    end
+  end
+
   secret Rails.application.secrets.dragonfly_secret
 
   url_format '/media/:job/:sha/:name'

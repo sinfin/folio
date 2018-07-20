@@ -29,6 +29,9 @@ module Folio
            image.try(:mime_type) =~ /png/
           thumbnail = image.file
                            .thumb(size)
+        elsif image.animated_gif?
+          thumbnail = image.file
+                           .animated_gif_resize(size)
         else
           thumbnail = image.file
                            .thumb(size, 'format' => :jpg, 'frame' => 0)
