@@ -8,12 +8,5 @@ h1 = Visit.model_name.human
           th = Visit.human_attribute_name(k)
           td = v
 
-  .col-md-7
-    = card t('.user_navigation'), table: true do
-      table.table
-        - @visit.ahoy_events.ordered.each_with_index do |event, index|
-          tr
-            td = event_attributes_tooltip(event)
-            td = index
-            td = event.properties['page']
-            td = event.name
+  .col-md-6.offset-md-1
+    == cell('folio/console/ahoy_events', @visit.ahoy_events.ordered)

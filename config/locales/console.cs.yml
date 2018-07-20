@@ -105,9 +105,6 @@ cs:
         index:
           title: Visits
 
-        show:
-          user_navigation: Aktivita
-
       really_delete: Jste si jist, že chcete smazat %{title}?
       delete: Smazat
 

@@ -49,6 +49,14 @@ table.table
       td = Folio::Lead.human_attribute_name(:url)
       td = link_to(@lead.url, @lead.url)
 
+    tr
+      td = Visit.model_name.human
+      td
+        - if @lead.visit.present?
+          = link_to(@lead.visit.id, console_visit_path(@lead.visit.id))
+        - else
+          ' -
+
     - if @lead.additional_data.present?
       - @lead.additional_data.each do |key, value|
         tr

@@ -14,6 +14,7 @@ cs:
   time:
     formats:
       short: "%d %b %Y, %H:%m"
+      short_with_seconds: "%d %b %Y, %H:%m:%S"
   dragonfly:
     invalid_format: Nepodporovaný formát
   folio:
