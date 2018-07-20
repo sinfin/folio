@@ -1,12 +1,13 @@
 .folio-console-ahoy-events
-  table.table
+  table.table.table-bordered
     - model.each do |event|
       tr
-        th.text-nowrap
+        td.table-active colspan="2"
           = l(event.time, format: :short_with_seconds)
+      tr
+        td
           i.fa class=icon_class(event.name)
           = event.name
         td
-          pre
-            code
-              = JSON.pretty_generate event.properties
+          code
+            pre = JSON.pretty_generate event.properties
