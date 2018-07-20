@@ -30,7 +30,7 @@ module Folio
     def node_types_for_select(node)
       if node.is_a?(NodeTranslation)
         return [
-          [Folio::NodeTranslation.model_name.human, 'Folio::NodeTranslation']
+          [NodeTranslation.model_name.human, 'Folio::NodeTranslation']
         ]
       end
 

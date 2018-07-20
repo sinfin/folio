@@ -18,7 +18,7 @@ module Folio
     end
 
     def available_targets
-      Folio::Node.where(locale: locale)
+      Node.where(locale: locale)
     end
 
     def self.rails_paths

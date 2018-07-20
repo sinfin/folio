@@ -117,7 +117,7 @@ module Folio
       {
         by_parent: [
           [t('.filters.all_parents'), nil],
-        ] + Folio::Node.original.roots.map { |n| [n.title, n.id] },
+        ] + Node.original.roots.map { |n| [n.title, n.id] },
         by_published: [
           [t('.filters.all_nodes'), nil],
           [t('.filters.published'), 'published'],

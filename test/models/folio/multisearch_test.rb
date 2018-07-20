@@ -26,7 +26,7 @@ module Folio
       node.atoms.first.update!(content: 'lorem')
       node.atoms.second.update!(content: 'ipsum')
 
-      PgSearch::Multisearch.rebuild(Folio::Node)
+      PgSearch::Multisearch.rebuild(Node)
 
       search = PgSearch.multisearch('lorem')
       assert_equal(1, search.size)

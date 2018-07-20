@@ -4,11 +4,11 @@ require 'test_helper'
 
 module Folio
   class NodeSingletonTest < ActiveSupport::TestCase
-    class FirstSingleton < Folio::NodeSingleton; end
-    class SecondSingleton < Folio::NodeSingleton; end
+    class FirstSingleton < NodeSingleton; end
+    class SecondSingleton < NodeSingleton; end
 
     test 'fails when no instance is present' do
-      assert_raises(Folio::NodeSingleton::MissingError) do
+      assert_raises(NodeSingleton::MissingError) do
         FirstSingleton.instance
       end
     end

@@ -16,7 +16,7 @@ module Folio
       before_save :set_mime_type
       before_save :set_additional_data, if: :mime_type_image?
       before_destroy do
-        Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
+        ::Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
       end
     end
 

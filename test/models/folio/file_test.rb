@@ -4,7 +4,7 @@ require 'test_helper'
 
 module Folio
   class FileTest < ActiveSupport::TestCase
-    class ImmediateImage < Folio::Image
+    class ImmediateImage < Image
       def self.immediate_thumbnails
         true
       end
@@ -14,7 +14,7 @@ module Folio
       node = create(:folio_node)
       updated_at = node.updated_at
 
-      image = ImmediateImage.create!(file: Folio::Engine.root.join('test/fixtures/folio/test.gif'))
+      image = ImmediateImage.create!(file: Engine.root.join('test/fixtures/folio/test.gif'))
       node.images << image
       assert node.reload.updated_at > updated_at
 
@@ -26,7 +26,7 @@ module Folio
     test 'touches node through atoms' do
       node = create(:folio_node)
       atom = ::Atom::SingleImage.create!(node: node)
-      image = ImmediateImage.create!(file: Folio::Engine.root.join('test/fixtures/folio/test.gif'))
+      image = ImmediateImage.create!(file: Engine.root.join('test/fixtures/folio/test.gif'))
       atom.cover = image
 
       atom_updated_at = atom.reload.updated_at

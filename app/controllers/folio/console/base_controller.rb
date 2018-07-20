@@ -100,7 +100,7 @@ module Folio
       end
 
       def additional_strong_params(node)
-        if node.class == Folio::NodeTranslation
+        if node.class == NodeTranslation
           node.node_original.additional_params
         else
           node.additional_params

@@ -9,7 +9,7 @@ module Folio
       without = create(:folio_node)
 
       with.cover = create(:folio_image)
-      assert_equal([with], Folio::Node.with_cover)
+      assert_equal([with], Node.with_cover)
     end
 
     test 'with_images scope' do
@@ -20,7 +20,7 @@ module Folio
       with.images << image
       without.cover = image
 
-      assert_equal([with], Folio::Node.with_images)
+      assert_equal([with], Node.with_images)
     end
 
     test 'with_documents scope' do
@@ -29,7 +29,7 @@ module Folio
 
       with.documents << create(:folio_document)
 
-      assert_equal([with], Folio::Node.with_documents)
+      assert_equal([with], Node.with_documents)
     end
   end
 end
