@@ -13,7 +13,8 @@ module Folio
     ]
 
     def create
-      @lead = Lead.new(lead_params.merge(url: request.referrer))
+      @lead = Lead.new(lead_params.merge(url: request.referrer,
+                                         visit: current_visit))
       success = @lead.save
 
       LeadMailer.notification_email(@lead).deliver_later if success

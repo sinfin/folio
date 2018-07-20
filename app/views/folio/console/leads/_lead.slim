@@ -4,6 +4,10 @@ tr
       = lead.title
 
   td
+    - if lead.visit.present?
+      = link_to(Visit.model_name.human, console_visit_path(lead.visit.id))
+
+  td
     = l lead.created_at, format: :long
 
   td

@@ -2,6 +2,8 @@
 
 module Folio
   class Lead < ApplicationRecord
+    belongs_to :visit, optional: true
+
     # Validations
     validates_format_of :email, with: ::Folio::EMAIL_REGEXP,
                                 unless: :skip_email_validation?
@@ -77,4 +79,9 @@ end
 #  url             :string
 #  additional_data :json
 #  state           :string           default("submitted")
+#  visit_id        :integer
+#
+# Indexes
+#
+#  index_folio_leads_on_visit_id  (visit_id)
 #

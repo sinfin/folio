@@ -43,15 +43,15 @@ end
 #
 # Table name: visits
 #
-#  id               :integer          not null, primary key
+#  id               :bigint(8)        not null, primary key
 #  visit_token      :string
 #  visitor_token    :string
 #  ip               :string
 #  user_agent       :text
 #  referrer         :text
 #  landing_page     :text
-#  site_id          :integer
-#  account_id       :integer
+#  site_id          :bigint(8)
+#  account_id       :bigint(8)
 #  referring_domain :string
 #  search_keyword   :string
 #  browser          :string

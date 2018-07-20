@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180626144220) do
+ActiveRecord::Schema.define(version: 20180720052343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(version: 20180626144220) do
     t.string "url"
     t.json "additional_data"
     t.string "state", default: "submitted"
+    t.bigint "visit_id"
+    t.index ["visit_id"], name: "index_folio_leads_on_visit_id"
   end
 
   create_table "folio_menu_items", force: :cascade do |t|
