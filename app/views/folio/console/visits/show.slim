@@ -1,7 +1,12 @@
+h1 = Visit.model_name.human
+
 .row
   .col-md-5
-    = card t('.visit'), table: true do
-      = render 'folio/console/partials/ahoy', visit: @visit
+    table.table
+      - @visit.attributes.each do |k, v|
+        tr
+          th = Visit.human_attribute_name(k)
+          td = v
 
   .col-md-7
     = card t('.user_navigation'), table: true do
@@ -10,5 +15,5 @@
           tr
             td = event_attributes_tooltip(event)
             td = index
-            td = event.properties["page"]
+            td = event.properties['page']
             td = event.name

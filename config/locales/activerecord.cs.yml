@@ -33,6 +33,18 @@ cs:
         name: Jméno
         created_at: Odesláno
 
+      visit:
+        id: Id
+        started_at: Začátek
+        events: Události
+        referrer: Referrer
+        landing_page: Landing page
+        utm_source: UTM source
+        utm_medium: UTM medium
+        utm_campaign: UTM campaign
+        utm_content: UTM content
+        utm_term: UTM term
+
     models:
       folio/account:
         one: Uživatel

@@ -4,17 +4,17 @@
   table
     thead
       tr
-      th = t('.id')
-      th = t('.started_at')
-      th = t('.events')
-      th = t('.account')
-      th = t('.referrer')
-      th = t('.landing_page')
-      th = t('.utm_source')
-      th = t('.utm_medium')
-      th = t('.utm_campaign')
-      th = t('.utm_content')
-      th = t('.utm_term')
+        th = Visit.human_attribute_name(:id)
+        th = Visit.human_attribute_name(:started_at)
+        th = Visit.human_attribute_name(:events)
+        th = Visit.human_attribute_name(:referrer)
+        th = Visit.human_attribute_name(:landing_page)
+        th = Visit.human_attribute_name(:utm_source)
+        th = Visit.human_attribute_name(:utm_medium)
+        th = Visit.human_attribute_name(:utm_campaign)
+        th = Visit.human_attribute_name(:utm_content)
+        th = Visit.human_attribute_name(:utm_term)
+        th
 
     tbody
       = render partial: "visit", collection: @visits

@@ -1,10 +1,7 @@
 tr
   td = link_to visit.id, console_visit_path(visit.id)
-  td = l visit.started_at
+  td = l(visit.started_at, format: :short)
   td = visit.ahoy_events.size
-  td
-    - if visit.account
-      = link_to visit.account.to_label, console_account_path(visit.account.id)
   td
     - if visit.referring_domain
       = link_to visit.referring_domain, visit.referrer, target: :blank
@@ -17,3 +14,5 @@ tr
   td = visit.utm_campaign
   td = visit.utm_content
   td = visit.utm_term
+
+  td = custom_icon_button console_visit_path(visit.id)
