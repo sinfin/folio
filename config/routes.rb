@@ -30,6 +30,9 @@ Folio::Engine.routes.draw do
     resources :images, except: [:show, :new]
     resources :documents, except: [:show, :new]
     resources :leads, only: %i[index show update destroy] do
+      collection do
+        post :mass_handle
+      end
       member do
         post :handle
         post :unhandle

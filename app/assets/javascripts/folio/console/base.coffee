@@ -24,6 +24,7 @@
 #= require folio/console/boolean_toggle/boolean_toggle
 #= require folio/console/index_position_buttons/index_position_buttons
 #= require folio/console/single_file_select/single_file_select
+#= require folio/console/index/checkboxes/checkboxes
 
 #= require ./nodes_table
 

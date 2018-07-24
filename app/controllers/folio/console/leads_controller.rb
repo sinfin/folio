@@ -8,6 +8,7 @@ module Folio
     add_breadcrumb Lead.model_name.human(count: 2), :console_leads_path
 
     def index
+      @leads = @leads.includes(:visit)
       @leads = @leads.filter(filter_params) if params[:by_query].present?
 
       respond_with(@leads, location: console_leads_path) do |format|
@@ -41,12 +42,22 @@ module Folio
 
     def handle
       @lead.handle!
+      flash.notice = t('.success')
       redirect_back fallback_location: console_leads_path
     end
 
     def unhandle
       @lead.unhandle!
+      flash.notice = t('.success')
       redirect_back fallback_location: console_leads_path
+    end
+
+    def mass_handle
+      @leads = Lead.not_handled.where(id: params.require(:leads)).update_all(
+        state: 'handled'
+      )
+      flash.notice = t('.success')
+      respond_with @leads, location: console_leads_path
     end
 
     private

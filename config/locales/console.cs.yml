@@ -101,6 +101,15 @@ cs:
           unhandle: Označit jako nevyřízený
           blank: '-- nevyplněno --'
 
+        mass_handle:
+          success: 'Formuláře vyřízeny'
+
+        handle:
+          success: 'Formulář vyřízen'
+
+        unhandle:
+          success: 'Formulář označen za nevyřízený'
+
       visits:
         index:
           title: Visits
@@ -127,6 +136,12 @@ cs:
           title: Filtry
           cancel: Zrušit filtry
           all: Všechny
+
+        checkboxes:
+          check_all: Vybrat vše
+          uncheck_all: Odvybrat vše
+          handle_selected: Vyřídit vybrané
+          toggle: Hromadný výběr
 
       react_image_select:
         title_multi: Obrázky

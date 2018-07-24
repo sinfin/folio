@@ -1,4 +1,12 @@
 tr
+  td.folio-console-index-checkboxes-td
+    input[
+      type="checkbox"
+      name="leads[]"
+      value=lead.id
+      class="folio-console-index-checkboxes-checkbox"
+    ]
+
   td
     a href=console_lead_path(lead)
       = lead.title
@@ -12,10 +20,14 @@ tr
 
   td
      - if lead.handled?
-       = link_to unhandle_console_lead_path(lead), method: :post, class: 'btn btn-danger'
+       = link_to unhandle_console_lead_path(lead), \
+                 method: :post, \
+                 class: 'btn btn-danger'
         i.fa.fa-close
      - else
-       = link_to handle_console_lead_path(lead), method: :post, class: 'btn btn-success'
+       = link_to handle_console_lead_path(lead), \
+                 method: :post, \
+                 class: 'btn btn-success'
         i.fa.fa-check
 
      = custom_icon_button console_lead_path(lead.id)
