@@ -6,7 +6,6 @@ module Folio
     add_breadcrumb Account.model_name.human(count: 2), :console_accounts_path
 
     def index
-      params[:by_is_active] = true if params[:by_is_active].nil?
       @accounts = @accounts.
                     filter(filter_params).
                     page(current_page)
