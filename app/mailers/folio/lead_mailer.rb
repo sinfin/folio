@@ -5,11 +5,15 @@ module Folio
     layout false
 
     def self.email_to(_lead)
-      Site.last.email
+      Site.instance.email
     end
 
     def self.email_subject(_lead)
-      "#{Site.last.title} lead"
+      "#{Site.instance.title} lead"
+    end
+
+    def self.email_from(lead)
+      lead.email.presence || Site.instance.email
     end
 
     def notification_email(lead)

@@ -6,7 +6,7 @@ module Folio
 
     def notification_email(newsletter_subscription)
       @newsletter_subscription = newsletter_subscription
-      site = Site.last
+      site = Site.instance
       mail(to: site.email,
            subject: "#{site.title} newsletter subscription",
            from: newsletter_subscription.email) do |format|

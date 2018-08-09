@@ -47,7 +47,6 @@ Folio::Engine.routes.draw do
   get '/admin' => redirect('/console')
 
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
-    resources :categories, only: %i[index show]
     resources :leads, only: %i[create]
     resources :newsletter_subscriptions, only: %i[create]
   end
