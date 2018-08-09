@@ -20,7 +20,7 @@ module Folio
       @lead = lead
       mail(to: self.class.email_to(lead),
            subject: self.class.email_subject(lead),
-           from: lead.email) do |format|
+           from: self.class.email_from(lead)) do |format|
         format.text
       end
     end
