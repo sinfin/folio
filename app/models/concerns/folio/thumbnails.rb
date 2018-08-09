@@ -30,7 +30,7 @@ module Folio
     #
     def thumb(w_x_h, quality: 90)
       fail_for_non_images
-      if thumbnail_sizes[w_x_h]
+      if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
         ret = OpenStruct.new(thumbnail_sizes[w_x_h])
         ret.url = Dragonfly.app.remote_url_for(ret.uid)
         ret

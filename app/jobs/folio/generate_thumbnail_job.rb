@@ -5,7 +5,7 @@ module Folio
     queue_as :default
 
     def perform(image, size, quality)
-      return if image.thumbnail_sizes[size]
+      return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
       return if image.mime_type =~ /svg/
 
       image.thumbnail_sizes[size] = compute_sizes(image, size, quality)
@@ -23,7 +23,7 @@ module Folio
     private
 
       def compute_sizes(image, size, quality)
-        return if image.thumbnail_sizes[size]
+        return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
 
         if Rails.application.config.folio_dragonfly_keep_png &&
            image.try(:mime_type) =~ /png/
