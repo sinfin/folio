@@ -34,4 +34,5 @@ meta name="twitter:card" content="summary"
 = csrf_meta_tags
 = render partial: 'layouts/folio/analytics'
 
-= javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload',
+                                        defer: true
