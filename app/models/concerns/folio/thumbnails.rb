@@ -95,7 +95,7 @@ module Folio
 
       def reset_thumbnails
         fail_for_non_images
-        
+
         if file_uid_changed?
           ::Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
           self.thumbnail_sizes = {}

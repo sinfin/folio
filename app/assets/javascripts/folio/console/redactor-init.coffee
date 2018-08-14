@@ -4,8 +4,8 @@ OPTIONS =
   imageData:
     elements: 'input[name="authenticity_token"]'
     'file[type]': 'Folio::Image'
-  imageUpload: '/console/files.json'
-  imageManagerJson: '/console/files.json?type=image'
+  imageUpload: '/console/images.json'
+  imageManagerJson: '/console/images.json'
 
 NO_IMAGES_OPTIONS =
   plugins: []
