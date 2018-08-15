@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import DropzoneComponent from 'react-dropzone-component'
 import styled from 'styled-components'
+import { uniqueId } from 'lodash';
 
 import { CSRF } from 'utils/api'
 
@@ -27,7 +28,9 @@ const StyledDropzone = styled(DropzoneComponent)`
   }
 `
 
-class MultiSelect extends Component {
+class Uploader extends Component {
+  state = { uploaderClassName: uniqueId('folio-console-uploader-') }
+
   eventHandlers () {
     const { dispatch } = this.props
 
@@ -52,7 +55,7 @@ class MultiSelect extends Component {
       headers: CSRF,
       paramName: 'file[file][]',
       previewTemplate: '<span></span>',
-      clickable: '.folio-console-dropzone-trigger',
+      clickable: `.${this.state.uploaderClassName} .folio-console-dropzone-trigger`,
       params: {
         'file[type]': this.props.fileType,
         'file[tag_list]': DATE_TAG,
@@ -69,6 +72,7 @@ class MultiSelect extends Component {
         config={this.config()}
         djsConfig={this.djsConfig()}
         eventHandlers={this.eventHandlers()}
+        className={this.state.uploaderClassName}
       >
         {this.props.showUploading && <DropzoneTrigger />}
         {this.props.showUploading && (
@@ -94,4 +98,4 @@ function mapDispatchToProps (dispatch) {
   return { dispatch }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MultiSelect)
+export default connect(mapStateToProps, mapDispatchToProps)(Uploader)
