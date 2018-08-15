@@ -22,11 +22,6 @@ module Folio
     end
 
     private
-
-      def set_locale
-        I18n.locale = :en
-      end
-
       # TODO: authorize account
       # def authorize_admin_user!
       #   authorize! :manage, :all

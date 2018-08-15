@@ -20,7 +20,7 @@ Folio::Engine.routes.draw do
   match '/422', to: 'errors#page422', via: :all
   match '/500', to: 'errors#page500', via: :all
 
-  namespace :console do
+  namespace :console, locale: :cs do
     root to: 'dashboard#index'
     resources :dashboard, only: :index
     resources :nodes, except: [:show] do
