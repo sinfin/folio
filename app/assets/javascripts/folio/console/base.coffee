@@ -7,7 +7,7 @@
 #= require redactor
 
 #= require ./redactor-imagemanager
-
+#= require ./redactor-video
 #= require ./redactor-init
 
 #= require folio/cable

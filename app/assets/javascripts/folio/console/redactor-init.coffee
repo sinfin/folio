@@ -1,5 +1,5 @@
 OPTIONS =
-  plugins: ['imagemanager']
+  plugins: ['imagemanager', 'video']
   imageUploadParam: 'file[file]'
   imageData:
     elements: 'input[name="authenticity_token"]'
