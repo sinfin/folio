@@ -126,7 +126,7 @@ module Folio
       def application_settings
         return if File.readlines(Rails.root.join('config/application.rb')).grep("Rails.root.join('lib')").any?
 
-        inject_into_file 'config/application.rb', after: "# -- all .rb files in that directory are automatically loaded.\n" do <<-'RUBY'
+        inject_into_file 'config/application.rb', after: /config\.load_defaults.+\n/ do <<-'RUBY'
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib')
 

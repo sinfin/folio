@@ -21,6 +21,20 @@ SimpleForm.setup do |config|
     b.use :hint,  wrap_with: { tag: 'small', class: 'form-text' }
   end
 
+  config.wrappers :bare_input, tag: 'div', class: '', error_class: 'text-danger has-danger' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.optional :maxlength
+    b.optional :minlength
+    b.optional :pattern
+    b.optional :min_max
+    b.optional :readonly
+
+    b.use :input, class: 'form-control'
+    b.use :error, wrap_with: { tag: 'small', class: 'form-text' }
+    b.use :hint,  wrap_with: { tag: 'small', class: 'form-text' }
+  end
+
   config.wrappers :vertical_file_input, tag: 'div', class: 'form-group', error_class: 'text-danger has-danger' do |b|
     b.use :html5
     b.use :placeholder
