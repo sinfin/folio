@@ -7,6 +7,7 @@ module Folio
     include PgSearch
     include HasAtoms
     include HasAttachments
+    include ReferencedFromMenuItems
     include Publishable::WithDate
 
     # Relations
