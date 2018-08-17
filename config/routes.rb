@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-begin
-  Folio::Engine.routes.default_url_options[:host] = Folio::Site.first.url if ActiveRecord::Base.connection.table_exists? 'folio_sites'
-rescue NoMethodError
-
-end
-
 Folio::Engine.routes.draw do
   get 'errors/not_found'
 
