@@ -12,9 +12,7 @@ development:
 
 test:
   <<: *default
-# TODO - use BUILD_TAG or similar on Jenkins
-# https://wiki.jenkins-ci.org/display/JENKINS/Building+a+software+project#Buildingasoftwareproject-JenkinsSetEnvironmentVariables
-  database: folio_<%= ENV['GIT_BRANCH'].present? ? "test_#{ENV['GIT_BRANCH'].parameterize}" : 'test' %>
+  database: folio_test
   pool: 2
 
 staging:
