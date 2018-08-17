@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails', '~> 5.2.1'
   s.add_dependency 'pg', '~> 0.21.0'
   s.add_dependency 'pg_search'
-  s.add_dependency 'friendly_id', '~> 5.1.0'
+  s.add_dependency 'friendly_id', '~> 5.2.4'
   s.add_dependency 'ancestry'
   s.add_dependency 'carrierwave'
   s.add_dependency 'mini_magick'
