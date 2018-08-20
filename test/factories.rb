@@ -11,25 +11,25 @@ FactoryBot.define do
     social_links { { 'facebook' => Faker::Internet.url('facebook.com') } }
     address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
     phone { Faker::PhoneNumber.phone_number }
-    locale :cs
-    locales [:cs]
+    locale { :cs }
+    locales { [:cs] }
   end
 
   factory :folio_node, class: Folio::Node do
-    locale :cs
+    locale { :cs }
     title { Faker::Lorem.word }
     association :site, factory: :folio_site
-    published true
+    published { true }
     published_at { 1.day.ago }
 
     trait :unpublished do
-      published false
-      published_at nil
+      published { false }
+      published_at { nil }
     end
 
     factory :folio_node_with_atoms do
       transient do
-        atoms_count 3
+        atoms_count { 3 }
       end
       after(:create) do |node, evaluator|
         node.atoms = create_list(:folio_atom, evaluator.atoms_count)
@@ -51,15 +51,15 @@ FactoryBot.define do
   end
 
   factory :folio_image, class: Folio::Image do
-    file Folio::Engine.root.join('test/fixtures/folio/test.gif')
+    file { Folio::Engine.root.join('test/fixtures/folio/test.gif') }
 
     trait :black do
-      file Folio::Engine.root.join('test/fixtures/folio/test-black.gif')
+      file { Folio::Engine.root.join('test/fixtures/folio/test-black.gif') }
     end
   end
 
   factory :folio_document, class: Folio::Document do
-    file Folio::Engine.root.join('test/fixtures/folio/test.gif')
+    file { Folio::Engine.root.join('test/fixtures/folio/test.gif') }
   end
 
   factory :folio_lead, class: Folio::Lead do
@@ -69,19 +69,19 @@ FactoryBot.define do
   end
 
   factory :folio_admin_account, class: Folio::Account do
-    email 'test@test.com'
-    password '123456'
-    role :superuser
-    first_name 'Test'
-    last_name 'Dummy'
+    email { 'test@test.com' }
+    password { '123456' }
+    role { :superuser }
+    first_name { 'Test' }
+    last_name { 'Dummy' }
   end
 
   factory :folio_menu, class: Folio::Menu::Page do
-    locale :cs
+    locale { :cs }
 
     factory :folio_menu_with_menu_items do
       transient do
-        items_count 3
+        items_count { 3 }
       end
 
       after(:create) do |menu, evaluator|
@@ -93,6 +93,6 @@ FactoryBot.define do
   factory :folio_menu_item, class: Folio::MenuItem do
     association :target, factory: :folio_node
     title { Faker::Lorem.word }
-    position 0
+    position { 0 }
   end
 end
