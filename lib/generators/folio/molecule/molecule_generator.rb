@@ -6,7 +6,7 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
   def cell
     template 'cell.rb.tt', "app/cells/molecule/#{plural_route_name}_cell.rb"
     template 'cell_test.rb.tt', "test/cells/molecule/#{plural_route_name}_cell_test.rb"
-    template 'cell.slim.tt', "app/cells/molecule/#{plural_route_name}_cell/show.slim"
+    template 'cell.slim.tt', "app/cells/molecule/#{plural_route_name}/show.slim"
   end
 
   def update_atom

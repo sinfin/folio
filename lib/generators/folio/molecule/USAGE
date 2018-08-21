@@ -6,7 +6,7 @@ Example:
 
     This will create:
         app/cells/molecule/some_things_cell.rb
-        app/cells/molecule/some_things_cell/show.slim
+        app/cells/molecule/some_things/show.slim
         test/cells/molecule/some_things_cell_test.rb
 
     and update (if present):

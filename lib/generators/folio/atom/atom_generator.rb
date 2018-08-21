@@ -9,8 +9,8 @@ class Folio::AtomGenerator < Rails::Generators::NamedBase
 
   def cell
     template 'cell.rb.tt', "app/cells/atom/#{file_name}_cell.rb"
+    template 'cell.slim.tt', "app/cells/atom/#{file_name}/show.slim"
     template 'cell_test.rb.tt', "test/cells/atom/#{file_name}_cell_test.rb"
-    template 'cell.slim.tt', "test/cells/atom/#{file_name}_cell/show.slim"
   end
 
   private
