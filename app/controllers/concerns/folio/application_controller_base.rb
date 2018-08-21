@@ -28,13 +28,22 @@ module Folio
     end
 
     def nested_page_path(page_or_parts, add_parents: false, params: {})
+      params_with_locale = params.merge(
+        locale: page_or_parts.try(:locale) || I18n.locale
+      )
+
       if add_parents
-        nested_page_path_with_parents(page_or_parts, params: params)
+        nested_page_path_with_parents(page_or_parts,
+                                      params: params_with_locale)
       else
         if page_or_parts.respond_to?(:slug)
-          main_app.page_path page_or_parts.slug, params: params
+          main_app.page_path(params_with_locale.merge(
+            path: page_or_parts.slug
+          ))
         elsif page_or_parts.is_a?(Array)
-          main_app.page_path page_or_parts.map(&:slug).join('/'), params: params
+          main_app.page_path(params_with_locale.merge(
+            path: page_or_parts.map(&:slug).join('/')
+          ))
         else
           fail 'Unknown nested_page_path target'
         end
@@ -49,7 +58,9 @@ module Folio
           path.unshift page.parent.translate
           page = page.parent
         end
-        main_app.page_path path.map(&:slug).join('/'), params: params
+        main_app.page_path(params.merge(
+          path: path.map(&:slug).join('/')
+        ))
       end
 
       def page_roots
