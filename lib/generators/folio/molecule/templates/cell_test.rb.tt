@@ -9,6 +9,6 @@ class Molecule::<%= molecule_name %>CellTest < Cell::TestCase
     end
 
     html = cell('molecule/<%= plural_table_name %>', atoms).(:show)
-    assert html
+    assert_equal 2, html.find_all('.s-atom-<%= dashed_model_resource_name %>').size
   end
 end

@@ -34,6 +34,10 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
       plural_table_name.gsub('_', '-')
     end
 
+    def dashed_model_resource_name
+      model_resource_name.gsub('_', '-')
+    end
+
     def molecule_name
       plural_name.camelize
     end
