@@ -37,16 +37,14 @@ module Folio
                                       params: params_with_locale)
       else
         if page_or_parts.respond_to?(:slug)
-          main_app.page_path(params_with_locale.merge(
-            path: page_or_parts.slug
-          ))
+          path = page_or_parts.slug
         elsif page_or_parts.is_a?(Array)
-          main_app.page_path(params_with_locale.merge(
-            path: page_or_parts.map(&:slug).join('/')
-          ))
+          path = page_or_parts.map(&:slug).join('/')
         else
           fail 'Unknown nested_page_path target'
         end
+
+        main_app.page_path(params_with_locale.merge(path: path))
       end
     end
 
@@ -59,7 +57,7 @@ module Folio
           page = page.parent
         end
         main_app.page_path(params.merge(
-          path: path.map(&:slug).join('/')
+                             path: path.map(&:slug).join('/')
         ))
       end
 
