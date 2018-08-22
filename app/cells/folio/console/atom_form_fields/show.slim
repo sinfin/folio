@@ -6,18 +6,25 @@
                        input_html: { class: 'folio-console-atom-type-select' }
 
       .folio-console-smart-row
-        .folio-console-smart-col
-          .folio-console-atom-model
-            = model_field
-          = title_field
-          = content_field
-
-        aside.folio-console-smart-col.folio-console-smart-col--left[
+        aside.folio-console-smart-col[
           class="folio-console-atom-images"
           class="folio-console-atom-images-single"
           hidden=(structure[:images] == :single ? nil : '')
         ]
           = react_image_select(f, cover: true)
+
+        aside.folio-console-smart-col[
+          class="folio-console-atom-documents"
+          class="folio-console-atom-documents-single"
+          hidden=(structure[:documents] == :single ? nil : '')
+        ]
+          = react_document_select(f, multi: false)
+
+        .folio-console-smart-col
+          .folio-console-atom-model
+            = model_field
+          = title_field
+          = content_field
 
         aside.folio-console-smart-col.folio-console-smart-col--spread[
           class="folio-console-atom-images"
@@ -25,13 +32,6 @@
           hidden=(structure[:images] == :multi ? nil : '')
         ]
           = react_image_select(f, multi: true)
-
-        aside.folio-console-smart-col.folio-console-smart-col--left[
-          class="folio-console-atom-documents"
-          class="folio-console-atom-documents-single"
-          hidden=(structure[:documents] == :single ? nil : '')
-        ]
-          = react_document_select(f, multi: false)
 
         aside.folio-console-smart-col.folio-console-smart-col--spread[
           class="folio-console-atom-documents"

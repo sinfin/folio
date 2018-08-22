@@ -6,6 +6,10 @@ cs:
         is_active: Aktivní
         full_name: Jméno
 
+      folio/atom/base:
+        title: Titulek
+        content: Obsah
+
       folio/image:
         thumbnail_sizes: Vygenerované verze
         file_placements: Použití

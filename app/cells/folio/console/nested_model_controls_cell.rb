@@ -25,9 +25,11 @@ class Folio::Console::NestedModelControlsCell < FolioCell
     if options[:vertical]
       'btn-group-vertical'
     else
-      class_names << 'btn-group'
-      class_names << 'mr-3' if handle_destroy?
-      class_names.join(' ')
+      if handle_destroy?
+        'btn-group mr-3'
+      else
+        'btn-group'
+      end
     end
   end
 
@@ -37,5 +39,9 @@ class Folio::Console::NestedModelControlsCell < FolioCell
     else
       t('.destroy')
     end
+  end
+
+  def destroy_button_class_name
+    'btn btn-danger folio-console-nested-model-destroy-button'
   end
 end
