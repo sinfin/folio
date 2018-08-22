@@ -11,7 +11,11 @@ class Folio::Console::IndexPositionButtonsCell < FolioCell
 
   def guessed_url
     path = "set_positions_console_#{as}_path"
-    controller.try(path, format: :json) ||
-    controller.main_app.public_send(path, format: :json)
+
+    if Folio::Engine.routes.routes.map(&:name).include?(path)
+      controller.send(path)
+    else
+      controller.main_app.public_send(path)
+    end
   end
 end
