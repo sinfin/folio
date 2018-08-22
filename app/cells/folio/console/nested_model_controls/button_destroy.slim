@@ -1,0 +1,10 @@
+- if f.object.id
+  button.btn.btn-danger[
+    type="button"
+    class="folio-console-nested-model-destroy-button"
+  ]
+    = destroy_label
+  = f.hidden_field :_destroy, value: 0
+
+- else
+  = link_to_remove_association destroy_label, f, class: 'btn btn-danger'

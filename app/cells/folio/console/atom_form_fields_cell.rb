@@ -44,7 +44,10 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
         hidden: !active,
         class: 'folio-console-atom-content',
       },
-      input_html: { class: 'folio-console-atom-textarea' }
+      input_html: {
+        class: 'folio-console-atom-textarea',
+        placeholder: Folio::Atom::Base.human_attribute_name(:content),
+      }
   end
 
   def title_field
@@ -54,6 +57,9 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
     f.input :title,
       disabled: !active,
       hint: render(:title_hint).html_safe,
+      input_html: {
+        placeholder: Folio::Atom::Base.human_attribute_name(:title),
+      },
       wrapper_html: {
         hidden: !active,
         class: 'folio-console-atom-title',

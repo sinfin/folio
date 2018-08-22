@@ -1,18 +1,25 @@
 .folio-console-smart-row
   display: flex
   flex-wrap: wrap
+  align-items: center
 
 .folio-console-smart-col
-  flex: 1 1 100%
+  flex: 1 1 auto
   min-width: 50%
   margin-bottom: $grid-gutter-width
+  order: 2
 
 aside.folio-console-smart-col
   flex: 0 0 auto
+  order: 3
+  min-width: 0
 
-  &.folio-console-atom-images-multi,
-  &.folio-console-atom-documents-multi
+  &.folio-console-smart-col--spread
     flex: 1 0 100%
+    min-width: 100%
+
+  &.folio-console-smart-col--left
+    order: 1
 
 +mq-sm-up
   aside.folio-console-smart-col
@@ -22,10 +29,13 @@ aside.folio-console-smart-col
       margin-right: 0
       margin-left: $grid-gutter-width
 
-      &.folio-console-atom-images-multi,
-      &.folio-console-atom-documents-multi
+      &.folio-console-smart-col--spread
         margin-left: 0
         margin-top: (( - $grid-gutter-width ))
+
+      &.folio-console-smart-col--left
+        margin-left: 0
+        margin-right: $grid-gutter-width
 
     div.folio-console-smart-col[hidden] ~ &
       margin-left: 0

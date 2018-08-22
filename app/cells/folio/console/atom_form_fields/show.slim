@@ -1,44 +1,43 @@
-.nested-fields.card[
-  class="folio-console-atom-form-fields"
-]
-  .card-body
-    = f.input :type, collection: atom_types_for_select, \
-                     include_blank: false, \
-                     input_html: { class: 'folio-console-atom-type-select' }
+.nested-fields.folio-console-atom-form-fields.folio-console--compact
+  .card
+    .card-body
+      = f.input :type, collection: atom_types_for_select, \
+                       include_blank: false, \
+                       input_html: { class: 'folio-console-atom-type-select' }
 
-    .folio-console-smart-row
-      .folio-console-smart-col
-        .folio-console-atom-model
-          = model_field
-        = title_field
-        = content_field
+      .folio-console-smart-row
+        .folio-console-smart-col
+          .folio-console-atom-model
+            = model_field
+          = title_field
+          = content_field
 
-      aside.folio-console-smart-col[
-        class="folio-console-atom-images"
-        class="folio-console-atom-images-single"
-        hidden=(structure[:images] == :single ? nil : '')
-      ]
-        = react_image_select(f, cover: true)
+        aside.folio-console-smart-col.folio-console-smart-col--left[
+          class="folio-console-atom-images"
+          class="folio-console-atom-images-single"
+          hidden=(structure[:images] == :single ? nil : '')
+        ]
+          = react_image_select(f, cover: true)
 
-      aside.folio-console-smart-col[
-        class="folio-console-atom-images"
-        class="folio-console-atom-images-multi"
-        hidden=(structure[:images] == :multi ? nil : '')
-      ]
-        = react_image_select(f, multi: true)
+        aside.folio-console-smart-col.folio-console-smart-col--spread[
+          class="folio-console-atom-images"
+          class="folio-console-atom-images-multi"
+          hidden=(structure[:images] == :multi ? nil : '')
+        ]
+          = react_image_select(f, multi: true)
 
-      aside.folio-console-smart-col[
-        class="folio-console-atom-documents"
-        class="folio-console-atom-documents-single"
-        hidden=(structure[:documents] == :single ? nil : '')
-      ]
-        = react_document_select(f, multi: false)
+        aside.folio-console-smart-col.folio-console-smart-col--left[
+          class="folio-console-atom-documents"
+          class="folio-console-atom-documents-single"
+          hidden=(structure[:documents] == :single ? nil : '')
+        ]
+          = react_document_select(f, multi: false)
 
-      aside.folio-console-smart-col[
-        class="folio-console-atom-documents"
-        class="folio-console-atom-documents-multi"
-        hidden=(structure[:documents] == :multi ? nil : '')
-      ]
-        = react_document_select(f, multi: true)
+        aside.folio-console-smart-col.folio-console-smart-col--spread[
+          class="folio-console-atom-documents"
+          class="folio-console-atom-documents-multi"
+          hidden=(structure[:documents] == :multi ? nil : '')
+        ]
+          = react_document_select(f, multi: true)
 
-    == cell('folio/console/nested_model_controls', f)
+  == cell('folio/console/nested_model_controls', f, vertical: true)

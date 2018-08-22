@@ -6,10 +6,12 @@ OPTIONS =
     'file[type]': 'Folio::Image'
   imageUpload: '/console/images.json'
   imageManagerJson: '/console/images.json'
+  toolbarFixed: false
 
 NO_IMAGES_OPTIONS =
   plugins: []
   buttonsHide: ['file', 'image']
+  toolbarFixed: false
 
 window.folioConsoleInitRedactor = (node, options = {}) ->
   opts = if options.noImages then NO_IMAGES_OPTIONS else OPTIONS
