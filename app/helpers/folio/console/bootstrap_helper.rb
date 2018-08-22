@@ -2,8 +2,12 @@
 
 module Folio
   module Console::BootstrapHelper
-    def nav_item_link_to(model, path, opts = {}, active = false, &block)
-      title = model.model_name.human(count: 2)
+    def nav_item_link_to(model_or_string, path, opts = {}, active = false, &block)
+      if model_or_string.class.name == "String"
+        title = model_or_string
+      else
+        title = model_or_string.model_name.human(count: 2)
+      end
 
       active_or_subpath = request.fullpath.start_with?(path.split('?').first)
 
