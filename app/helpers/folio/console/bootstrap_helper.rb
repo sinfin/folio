@@ -3,7 +3,7 @@
 module Folio
   module Console::BootstrapHelper
     def nav_item_link_to(model_or_string, path, opts = {}, active = false, &block)
-      if model_or_string.class.name == "String"
+      if model_or_string.class.name == 'String'
         title = model_or_string
       else
         title = model_or_string.model_name.human(count: 2)

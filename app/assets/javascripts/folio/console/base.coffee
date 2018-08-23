@@ -16,6 +16,7 @@
 #= require folio/console/_data-destroy-association
 #= require folio/console/_data-cocoon-single-nested
 #= require folio/console/_bootstrap-tabs-lazyload
+#= require folio/console/_modal-lazyload
 #= require folio/console/_cocoon-set-position
 #= require folio/console/_simple-form-error-scrollto
 #= require folio/console/atom_form_fields/atom_form_fields
