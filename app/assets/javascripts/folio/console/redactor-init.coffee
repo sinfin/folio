@@ -1,4 +1,4 @@
-OPTIONS =
+ADVANCED_OPTIONS =
   plugins: ['imagemanager', 'video']
   imageUploadParam: 'file[file]'
   imageData:
@@ -8,13 +8,13 @@ OPTIONS =
   imageManagerJson: '/console/images.json'
   toolbarFixed: false
 
-NO_IMAGES_OPTIONS =
+OPTIONS =
   plugins: []
   buttonsHide: ['file', 'image']
   toolbarFixed: false
 
 window.folioConsoleInitRedactor = (node, options = {}) ->
-  opts = if options.noImages then NO_IMAGES_OPTIONS else OPTIONS
+  opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
   $R(node, opts)
 
 window.folioConsoleDestroyRedactor = (node) ->
@@ -32,4 +32,4 @@ $ ->
   $wrap = $('.redactor')
   return if $wrap.length is 0
   $wrap.each ->
-    window.folioConsoleInitRedactor(this)
+    window.folioConsoleInitRedactor(this, advanced: @classList.contains('redactor--advanced'))

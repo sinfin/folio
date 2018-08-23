@@ -36,4 +36,10 @@ class Folio::Console::ReactSelectCell < FolioCell
   def render_fields
     render(:fields)
   end
+
+  def form_errors
+    if f.object.errors.include?(key)
+      f.object.errors[key]
+    end
+  end
 end

@@ -10,7 +10,7 @@ class Atom::<%= class_name %> < Folio::Atom::Base
   }
 
   def cell_name
-    'atom/<%= model_resource_name %>'
+    'atom/<%= file_name %>'
   end
 end
 
