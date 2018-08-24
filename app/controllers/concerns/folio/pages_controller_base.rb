@@ -12,7 +12,9 @@ module Folio
 
     def show
       if @page.original.class.view_name
-        render(@page.original.class.view_name) && (return)
+        render @page.original.class.view_name
+      else
+        render 'folio/pages/show'
       end
     end
 
