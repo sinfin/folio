@@ -1,0 +1,14 @@
+- show = action == :show
+
+h1
+  - unless menu.new_record?
+    span.mr-3 = country_flag(menu.locale)
+
+  = menu.class.model_name.human
+
+- unless menu.new_record?
+  .mb-3.mt-3
+    a.btn.btn-warning[
+      href=(show ? edit_console_menu_path(menu) : console_menu_path(menu))
+    ]
+      = t(show ? '.edit_link' : '.show_link')

@@ -84,12 +84,16 @@ cs:
         index:
           title: Menu
           type: Druh
-        menu_item_fields:
-          remove: Odebrat
         form:
           add_menu_item: Přidat odkaz
         menu_item_fields:
           title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
+          remove: Odebrat
+        detail_heading:
+          edit_link: Upravit odkazy
+          show_link: Upravit stromovou strukturu
+        show:
+          title: Stromová struktura
 
       leads:
         index:

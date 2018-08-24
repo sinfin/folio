@@ -17,5 +17,6 @@
           td = country_flag(menu.locale)
           td = menu.menu_items.count
           td
+            = custom_icon_button console_menu_path(menu.id), 'list'
             = edit_button menu, edit_console_menu_path(menu.id)
             = delete_button menu, console_menu_path(menu.id)

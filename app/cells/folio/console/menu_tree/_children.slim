@@ -1,0 +1,13 @@
+- if model[:items].present?
+  ol.folio-console-menu-items-structure[
+    data-update-url=model[:url]
+    data-id=model[:menu].id
+    class=(model[:root] ? 'folio-console-menu-items-structure--root' : nil)
+  ]
+    - model[:items].each do |item|
+      == cell('folio/console/menu_tree', { \
+                menu: model[:menu], \
+                item: item, \
+                items: item.children.ordered, \
+                url: model[:url], \
+             })

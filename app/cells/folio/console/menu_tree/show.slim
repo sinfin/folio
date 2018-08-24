@@ -1,0 +1,9 @@
+- if model[:item]
+  li.nested-fields id="item_#{model[:item].id}"
+    .nested-fields-inner
+      span.a = model[:item].to_label
+
+    = render(:_children)
+
+- else
+  = render(:_children)
