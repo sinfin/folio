@@ -26,12 +26,34 @@ module Folio
       end
     end
 
+    class MenuWithRailsPaths < Menu
+      def self.rails_paths
+        {
+          root_path: 'foo',
+        }
+      end
+    end
+
     test 'respects menu allowed types' do
       strict_menu = StrictMenu.create!(locale: :cs)
       assert strict_menu
 
       item = build(:folio_menu_item, menu: strict_menu)
       assert_not item.valid?
+    end
+
+    test 'respects menu available targets and rails_paths' do
+      menu = MenuWithRailsPaths.create!(locale: :cs)
+
+      assert create(:folio_menu_item, menu: menu, rails_path: 'root_path')
+
+      assert_raises(ActiveRecord::RecordInvalid) do
+        create(:folio_menu_item, menu: menu, target: menu)
+      end
+
+      assert_raises(ActiveRecord::RecordInvalid) do
+        create(:folio_menu_item, menu: menu, rails_path: 'nope_path')
+      end
     end
   end
 end
