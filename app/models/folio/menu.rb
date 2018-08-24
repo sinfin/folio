@@ -37,6 +37,8 @@ module Folio
       type_collection_for_select(self.allowed_menu_item_classes)
     end
 
+    # Used for UI/controllers only
+    # no model validations as that would get complex fast
     def self.max_nesting_depth
       1
     end

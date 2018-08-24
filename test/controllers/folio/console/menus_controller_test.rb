@@ -31,7 +31,7 @@ module Folio
     end
 
     test 'should get show for nestable' do
-      @menu = NestableMenu.create!(locale: :cs)
+      @menu = ::Menu::Nestable.create!(locale: :cs)
       get console_menu_url(@menu)
       assert_response :ok
     end

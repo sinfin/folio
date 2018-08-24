@@ -7,6 +7,7 @@ Folio::Node.destroy_all
 Folio::Site.destroy_all
 Folio::Account.destroy_all
 Folio::Lead.destroy_all
+Folio::Menu.destroy_all
 
 def unsplash_pic(square = false)
   image = Folio::Image.new
@@ -62,6 +63,20 @@ Folio::Account.create!(email: 'test@test.test',
                        role: :superuser,
                        first_name: 'Test',
                        last_name: 'Dummy')
+
+nestable_menu = Menu::Nestable.create!(locale: :cs)
+Folio::MenuItem.create!(menu: nestable_menu,
+                        title: 'Reference',
+                        target: reference,
+                        position: 0)
+wrap = Folio::MenuItem.create!(menu: nestable_menu,
+                               title: 'Wrap',
+                               position: 1)
+[reference, about].each do |target|
+  Folio::MenuItem.create!(menu: nestable_menu,
+                          target: target,
+                          parent: wrap)
+end
 
 about_en = about.translate!(:en)
 about_en.update(title: 'About', published: true)
