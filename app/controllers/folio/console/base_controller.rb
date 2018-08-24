@@ -11,7 +11,7 @@ module Folio
     respond_to :html
     respond_to :json, only: %i[update]
 
-    TYPE_ID_DELIMITER = ' - '
+    TYPE_ID_DELIMITER = ' -=- '
 
     # rescue_from CanCan::AccessDenied do |exception|
     #   redirect_to dashboard_path, alert: exception.message

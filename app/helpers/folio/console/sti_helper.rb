@@ -27,14 +27,12 @@ module Folio
     end
 
     def sti_record_select_value(record, relation_name)
-      return nil if record.send(relation_name).blank?
-
-      relation_type = "#{relation_name}_type".to_sym
-      relation_id = "#{relation_name}_id".to_sym
+      related_model = record.send(relation_name)
+      return nil if related_model.blank?
 
       [
-        record.send(relation_type),
-        record.send(relation_id)
+        related_model.class.to_s,
+        related_model.id,
       ].join(Console::BaseController::TYPE_ID_DELIMITER)
     end
   end

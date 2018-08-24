@@ -15,6 +15,8 @@ module Folio
     validate :validate_menu_allowed_types
     validate :validate_menu_available_targets_and_paths
 
+    before_validation :nullify_empty_rails_path
+
     def to_label
       return title if title.present?
       return target.try(:title) || target.try(:to_label) if target.present?
@@ -45,6 +47,12 @@ module Folio
         end
         if rails_path && menu.class.rails_paths.keys.exclude?(rails_path.to_sym)
           errors.add(:rails_path, :invalid)
+        end
+      end
+
+      def nullify_empty_rails_path
+        if rails_path.is_a?(String) && rails_path.blank?
+          self.rails_path = nil
         end
       end
   end
