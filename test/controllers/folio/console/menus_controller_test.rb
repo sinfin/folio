@@ -23,5 +23,17 @@ module Folio
       get edit_console_menu_url(@menu)
       assert_response :success
     end
+
+    test 'should not get show for non-nestable' do
+      assert_raises(ActionController::MethodNotAllowed) do
+        get console_menu_url(@menu)
+      end
+    end
+
+    test 'should get show for nestable' do
+      @menu = NestableMenu.create!(locale: :cs)
+      get console_menu_url(@menu)
+      assert_response :ok
+    end
   end
 end

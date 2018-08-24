@@ -1,0 +1,12 @@
+{
+  "name": "folio",
+  "authors": [
+    "Sinfin <info@sinfin.cz>"
+  ],
+  "version": "0.0.0",
+  "dependencies": {
+    "ilikenwf-nested-sortable": "^2.0",
+    "jquery-ui": "^1.12.1"
+  },
+  "devDependencies": {}
+}

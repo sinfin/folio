@@ -1,0 +1,12 @@
+- if model[:item]
+  li.nested-fields id="item_#{model[:item].id}"
+    .nested-fields-inner
+      = model[:item].to_label
+
+      .folio-console-menu-items-structure__handle
+        i.fa.fa-arrows
+
+    = render(:_children)
+
+- else
+  = render(:_children)

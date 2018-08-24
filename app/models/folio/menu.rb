@@ -21,6 +21,10 @@ module Folio
       Node.where(locale: locale)
     end
 
+    def supports_nesting?
+      self.class.max_nesting_depth > 1
+    end
+
     def self.rails_paths
       {}
     end
@@ -31,6 +35,10 @@ module Folio
 
     def self.allowed_menu_item_classes_for_select
       type_collection_for_select(self.allowed_menu_item_classes)
+    end
+
+    def self.max_nesting_depth
+      1
     end
   end
 end

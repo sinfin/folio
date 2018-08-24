@@ -1,0 +1,42 @@
+.folio-console-menu-items-structure
+  &, ol
+    +unlist
+    margin-top: 10px
+
+  ol
+    padding-left: 1.5em
+    margin-bottom: 0
+
+  .nested-fields
+    margin: 0 0 10px
+
+  ol ol .nested-fields
+    margin: 10px 0
+
+  .nested-fields-inner,
+  .ui-sortable-placeholder
+    background: $breadcrumb-bg
+    border: 1px solid $card-border-color
+    border-radius: $border-radius
+    min-height: 50px
+
+  .nested-fields-inner
+    padding: 5px $grid-gutter-half
+    position: relative
+    display: flex
+    align-items: center
+
+  .ui-sortable-placeholder
+    visibility: visible !important
+    opacity: 0.3
+
+.folio-console-menu-items-structure--root
+  width: 100%
+  max-width: 600px
+  padding-left: 0
+
+.folio-console-menu-items-structure__handle
+  cursor: move
+  font-size: 20px
+  margin-left: auto
+  padding-left: $grid-gutter-half
