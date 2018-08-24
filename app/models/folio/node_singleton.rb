@@ -2,27 +2,7 @@
 
 module Folio
   class NodeSingleton < Node
-    validate :validate_singularity
-
-    class MissingError < StandardError; end
-
-    def self.instance
-      first.presence || fail(MissingError, self.class.to_s)
-    end
-
-    def self.console_selectable?
-      to_s != 'Folio::NodeSingleton' && !exists?
-    end
-
-    private
-
-      def validate_singularity
-        if new_record?
-          errors.add(:type, :invalid) if self.class.exists?
-        else
-          errors.add(:type, :invalid) if self.class.where.not(id: id).exists?
-        end
-      end
+    include ::Folio::Singleton
   end
 end
 
