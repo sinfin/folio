@@ -6,10 +6,16 @@ module Folio
       title = @title.presence || I18n.t('head.title.default')
 
       if title.present?
-        [
+        base = [
           title,
           Site.instance.title,
-        ].join(" #{I18n.t('head.title.separator')} ")
+        ]
+
+        if Rails.application.config.folio_public_page_title_reversed
+          base.reverse!
+        end
+
+        base.join(" #{I18n.t('head.title.separator')} ")
       else
         Site.instance.title
       end

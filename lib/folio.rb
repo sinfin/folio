@@ -44,6 +44,7 @@ module Folio
     ]
 
     config.folio_dragonfly_keep_png = false
+    config.folio_public_page_title_reversed = false
   end
 
   LANGUAGES = {
