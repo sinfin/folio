@@ -7,5 +7,6 @@ module Folio
     include Filterable
     include Sortable
     include RecursiveSubclasses
+    include NillifyBlanks
   end
 end

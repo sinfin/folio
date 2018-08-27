@@ -81,6 +81,7 @@ module Folio
           'app/controllers/pages_controller.rb',
           'app/controllers/folio/errors_controller.rb',
           'app/controllers/home_controller.rb',
+          'app/models/application_record.rb',
           'config/initializers/assets.rb',
           'config/initializers/raven.rb',
           'config/initializers/smtp.rb',
