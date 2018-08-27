@@ -5,7 +5,7 @@ atomFormBySelect = ($element) ->
   klass = $element.val()
   structure = $element.find(':selected').data('atom-structure')
   $fields = $element.closest('.nested-fields')
-  $wrap = $fields.find('.folio-console-smart-col').first()
+  $wrap = $fields.find('.folio-console-atom-main-fields').first()
   hideWrap = true
   klassFilter = """[data-class="#{klass}"]"""
 
