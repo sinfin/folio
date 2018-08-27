@@ -25,7 +25,10 @@ module Folio
     private
 
       def lead_params
-        params.require(:lead).permit(:name, :email, :phone, :note,
+        params.require(:lead).permit(:name,
+                                     :email,
+                                     :phone,
+                                     :note,
                                      :additional_data).tap do |obj|
           if obj[:additional_data].present?
             obj[:additional_data] = JSON.parse(obj[:additional_data])
