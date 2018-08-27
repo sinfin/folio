@@ -130,7 +130,7 @@ module Folio
 
         def set_position
           if self.position.nil? && self.placement.present?
-            last_atom = self.placement.atoms.last
+            last_atom = self.placement.reload.atoms.last
 
             if last_atom.present?
               last_position = last_atom.position.presence || 0
