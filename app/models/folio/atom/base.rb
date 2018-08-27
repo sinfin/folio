@@ -7,9 +7,9 @@ module Folio
       include Positionable
 
       STRUCTURE = {
-        content: nil,   # one of nil, :string, :redactor
         title: nil,     # one of nil, :string
         perex: nil,     # one of nil, :string
+        content: nil,   # one of nil, :string, :redactor
         images: nil,    # one of nil, :single, :multi
         documents: nil, # one of nil, :single, :multi
         model: nil,     # one of nil, an array of model classes - e.g. [Folie::Node, My::Model]
@@ -78,6 +78,14 @@ module Folio
         {
           title: nil,
           content: nil,
+        }
+      end
+
+      def self.form_placeholders
+        {
+          title: self.human_attribute_name(:title),
+          perex: self.human_attribute_name(:perex),
+          content: self.human_attribute_name(:content),
         }
       end
 

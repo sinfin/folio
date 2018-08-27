@@ -30,7 +30,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
           'data-atom-structure' => type.structure_as_json,
         }
       ]
-    end.compact.sort_by(&:first)
+    end.compact.sort_by { |name, _type, _data| I18n.transliterate(name) }
   end
 
   def content_field
@@ -113,5 +113,13 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
                              add_content: true)
 
     end.flatten(1)
+  end
+
+  def placeholders
+    base_placeholders = Folio::Atom::Base.form_placeholders
+
+    atom_types.map do |type|
+      [type.to_s, base_placeholders.merge(type.form_placeholders)]
+    end.to_h.to_json
   end
 end

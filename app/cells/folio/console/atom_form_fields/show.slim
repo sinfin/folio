@@ -1,4 +1,6 @@
-.nested-fields.folio-console-atom-form-fields.folio-console--compact
+.nested-fields.folio-console-atom-form-fields.folio-console--compact[
+  data-placeholders=(ERB::Util.html_escape placeholders)
+]
   .card
     .card-body
       = f.input :type, collection: atom_types_for_select, \

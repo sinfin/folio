@@ -9,12 +9,15 @@ atomFormBySelect = ($element) ->
   hideWrap = true
   klassFilter = """[data-class="#{klass}"]"""
 
+  placeholders = $fields.data('placeholders')[klass]
+
   $content = $fields.find('.folio-console-atom-content')
   $textarea = $content.find('.folio-console-atom-textarea')
 
   switch structure.content
     when 'redactor'
       hideWrap = false
+      $content.find('.form-control').attr('placeholder', placeholders.content)
       $content.removeAttr('hidden')
       $textarea.prop('disabled', false)
       # check if redactor is active
@@ -24,6 +27,7 @@ atomFormBySelect = ($element) ->
 
     when 'string'
       hideWrap = false
+      $content.find('.form-control').attr('placeholder', placeholders.content)
       $content.removeAttr('hidden')
       if $textarea.hasClass('redactor-source')
         html = window.folioConsoleRedactorGetContent($textarea[0])
@@ -43,7 +47,9 @@ atomFormBySelect = ($element) ->
     when 'string'
       hideWrap = false
       $title.removeAttr('hidden')
-      $title.find('.form-control').prop('disabled', false)
+      $title.find('.form-control')
+        .attr('placeholder', placeholders.title)
+        .prop('disabled', false)
     else
       $title.attr('hidden', true)
       $title.find('.form-control').prop('disabled', true)
@@ -54,17 +60,20 @@ atomFormBySelect = ($element) ->
     when 'string'
       hideWrap = false
       $perex.removeAttr('hidden')
-      $perex.find('.form-control').prop('disabled', false)
+      $perex.find('.form-control')
+        .attr('placeholder', placeholders.perex)
+        .prop('disabled', false)
     else
       $perex.attr('hidden', true)
       $perex.find('.form-control').prop('disabled', true)
 
   $model = $fields.find('.folio-console-atom-model')
 
-  $fields.find('.folio-console-atom-hint')
-         .attr('hidden', true)
-         .filter(klassFilter)
-         .removeAttr('hidden')
+  $fields
+    .find('.folio-console-atom-hint')
+    .attr('hidden', true)
+    .filter(klassFilter)
+    .removeAttr('hidden')
 
   if structure.model
     hideWrap = false
