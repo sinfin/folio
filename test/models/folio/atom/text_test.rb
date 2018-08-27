@@ -9,7 +9,7 @@ module Folio
 
       test 'renders' do
         atom = create(:folio_atom, title: 'foo',
-                                   content: 'bar',
+                                   content: '<p>bar</p>',
                                    placement: create(:folio_page, title: 'cat'))
         visit page_path(atom.placement, locale: :cs)
         assert_equal('cat', page.find('h1').text)

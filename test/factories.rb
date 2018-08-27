@@ -31,6 +31,7 @@ FactoryBot.define do
       transient do
         atoms_count { 3 }
       end
+
       after(:create) do |node, evaluator|
         node.atoms = create_list(:folio_atom, evaluator.atoms_count)
       end
@@ -41,7 +42,7 @@ FactoryBot.define do
   factory :folio_page, parent: :folio_node, class: Folio::Page
 
   factory :folio_atom, class: Folio::Atom::Text do
-    content { Faker::Lorem.paragraph }
+    content { "<p>#{Faker::Lorem.paragraph}</p>" }
     association :node, factory: :folio_node
   end
 
