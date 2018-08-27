@@ -22,7 +22,7 @@ Folio::Account.create!(email: 'test@test.test',\
 site = Folio::Site.new(title: '<%= project_name %>',
                        domain: '<%= project_name %>.localhost',
                        locale: 'cs',
-                       locales: [],
+                       locales: ['cs'],
                        email: 'foo@bar.baz',
                        phone: '+420 123 456 789',
                        social_links: {
