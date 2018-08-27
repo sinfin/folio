@@ -32,6 +32,10 @@ module Folio
       file_name
     end
 
+    def file_extension
+      Mime::Type.lookup(mime_type).symbol
+    end
+
     private
 
       def touch_placements

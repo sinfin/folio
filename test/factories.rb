@@ -59,7 +59,7 @@ FactoryBot.define do
   end
 
   factory :folio_document, class: Folio::Document do
-    file { Folio::Engine.root.join('test/fixtures/folio/test.gif') }
+    file { Folio::Engine.root.join('test/fixtures/folio/empty.pdf') }
   end
 
   factory :folio_lead, class: Folio::Lead do
