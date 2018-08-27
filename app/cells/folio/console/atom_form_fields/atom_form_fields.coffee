@@ -48,6 +48,17 @@ atomFormBySelect = ($element) ->
       $title.attr('hidden', true)
       $title.find('.form-control').prop('disabled', true)
 
+  $perex = $fields.find('.folio-console-atom-perex')
+
+  switch structure.perex
+    when 'string'
+      hideWrap = false
+      $perex.removeAttr('hidden')
+      $perex.find('.form-control').prop('disabled', false)
+    else
+      $perex.attr('hidden', true)
+      $perex.find('.form-control').prop('disabled', true)
+
   $model = $fields.find('.folio-console-atom-model')
 
   $fields.find('.folio-console-atom-hint')

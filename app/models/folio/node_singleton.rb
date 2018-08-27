@@ -10,7 +10,7 @@ end
 #
 # Table name: folio_nodes
 #
-#  id               :integer          not null, primary key
+#  id               :bigint(8)        not null, primary key
 #  site_id          :integer
 #  title            :string
 #  slug             :string

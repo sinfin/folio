@@ -2,10 +2,11 @@
 
 class Atom::<%= class_name %> < Folio::Atom::Base
   STRUCTURE = {
-    content: nil,
-    title: nil,
-    images: nil,
-    documents: nil,
+    content: :string,
+    title: :string,
+    perex: :string,
+    images: :single,
+    documents: :single,
     model: nil,
   }
 
@@ -29,6 +30,7 @@ end
 #  model_type     :string
 #  model_id       :bigint(8)
 #  title          :string
+#  perex          :text
 #
 # Indexes
 #

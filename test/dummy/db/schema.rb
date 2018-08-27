@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180720052343) do
+ActiveRecord::Schema.define(version: 2018_08_27_192606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 20180720052343) do
     t.string "model_type"
     t.bigint "model_id"
     t.string "title"
+    t.text "perex"
     t.index ["model_type", "model_id"], name: "index_folio_atoms_on_model_type_and_model_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end

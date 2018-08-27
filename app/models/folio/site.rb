@@ -46,7 +46,7 @@ end
 #
 # Table name: folio_sites
 #
-#  id                             :integer          not null, primary key
+#  id                             :bigint(8)        not null, primary key
 #  title                          :string
 #  domain                         :string
 #  email                          :string

@@ -9,6 +9,7 @@ cs:
       folio/atom/base:
         title: Titulek
         content: Obsah
+        perex: Perex
 
       folio/image:
         thumbnail_sizes: Vygenerované verze

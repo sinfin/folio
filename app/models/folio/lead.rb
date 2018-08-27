@@ -69,7 +69,7 @@ end
 #
 # Table name: folio_leads
 #
-#  id              :integer          not null, primary key
+#  id              :bigint(8)        not null, primary key
 #  email           :string
 #  phone           :string
 #  note            :text
@@ -79,7 +79,7 @@ end
 #  url             :string
 #  additional_data :json
 #  state           :string           default("submitted")
-#  visit_id        :integer
+#  visit_id        :bigint(8)
 #
 # Indexes
 #

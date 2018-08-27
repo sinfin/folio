@@ -66,6 +66,22 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
       }
   end
 
+  def perex_field
+    perex = structure[:perex]
+    active = (perex == :string)
+
+    f.input :perex,
+      disabled: !active,
+      hint: render(:perex_hint).html_safe,
+      input_html: {
+        placeholder: Folio::Atom::Base.human_attribute_name(:perex),
+      },
+      wrapper_html: {
+        hidden: !active,
+        class: 'folio-console-atom-perex',
+      }
+  end
+
   def model_field
     selects = atom_types.map do |type|
       m = type::STRUCTURE[:model]

@@ -49,7 +49,7 @@ end
 #
 # Table name: folio_files
 #
-#  id              :integer          not null, primary key
+#  id              :bigint(8)        not null, primary key
 #  file_uid        :string
 #  file_name       :string
 #  type            :string
@@ -58,7 +58,7 @@ end
 #  updated_at      :datetime         not null
 #  file_width      :integer
 #  file_height     :integer
-#  file_size       :integer
+#  file_size       :bigint(8)
 #  mime_type       :string(255)
 #  additional_data :json
 #

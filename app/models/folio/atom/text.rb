@@ -21,17 +21,18 @@ end
 #
 # Table name: folio_atoms
 #
-#  id             :integer          not null, primary key
+#  id             :bigint(8)        not null, primary key
 #  type           :string
 #  content        :text
 #  position       :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  placement_type :string
-#  placement_id   :integer
+#  placement_id   :bigint(8)
 #  model_type     :string
-#  model_id       :integer
+#  model_id       :bigint(8)
 #  title          :string
+#  perex          :text
 #
 # Indexes
 #

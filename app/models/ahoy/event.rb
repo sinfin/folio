@@ -17,9 +17,9 @@ end
 #
 # Table name: ahoy_events
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  visit_id   :integer
-#  account_id :integer
+#  account_id :bigint(8)
 #  name       :string
 #  properties :jsonb
 #  time       :datetime

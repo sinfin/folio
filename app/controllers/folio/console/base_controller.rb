@@ -87,6 +87,7 @@ module Folio
                              :model_type,
                              :title,
                              :content,
+                             :perex,
                              :position,
                              :_destroy,
                              *cover_placement_strong_params,

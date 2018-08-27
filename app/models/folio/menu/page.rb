@@ -9,7 +9,7 @@ end
 #
 # Table name: folio_menus
 #
-#  id         :integer          not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  type       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

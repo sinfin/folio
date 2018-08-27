@@ -69,8 +69,8 @@ end
 #
 # Table name: folio_menu_items
 #
-#  id          :integer          not null, primary key
-#  menu_id     :integer
+#  id          :bigint(8)        not null, primary key
+#  menu_id     :bigint(8)
 #  type        :string
 #  ancestry    :string
 #  title       :string
@@ -79,7 +79,7 @@ end
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  target_type :string
-#  target_id   :integer
+#  target_id   :bigint(8)
 #
 # Indexes
 #
