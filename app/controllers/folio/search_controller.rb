@@ -6,8 +6,8 @@ module Folio
 
     def show
       super
-      @title = t('search.title', query: @query)
-      add_breadcrumb @title
+      @public_page_title = t('search.title', query: @query)
+      add_breadcrumb @public_page_title
     end
   end
 end

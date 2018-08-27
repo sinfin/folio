@@ -2,14 +2,6 @@
 
 module Folio
   module OpenGraphHelper
-    def og_title
-      @og_title.presence || public_page_title
-    end
-
-    def og_description
-      @og_description.presence || public_page_description
-    end
-
     def og_image
       begin
         return @og_image if @og_image.present?

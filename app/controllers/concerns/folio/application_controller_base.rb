@@ -56,13 +56,26 @@ module Folio
         @page_roots ||= @site.nodes.with_locale(I18n.locale).roots.ordered
       end
 
-      def set_meta_variables(instance, title: :title, image: :cover, description: :perex)
-        if image = instance.send(image).presence
+      def set_meta_variables(instance, mappings = {})
+        m = {
+          title: :title,
+          image: :cover,
+          description: :perex,
+          meta_title: :meta_title,
+          meta_description: :meta_description,
+        }.merge(mappings)
+
+        if image = instance.try(m[:image]).presence
           @og_image = image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
         end
 
-        @og_title = @title = instance.send(title)
-        @og_description = @description = instance.send(description).presence
+        title = instance.try(m[:title]).presence
+        og_title = instance.try(m[:meta_title]).presence
+        @public_page_title = og_title || title
+
+        description = instance.try(m[:description]).presence
+        og_description = instance.try(m[:meta_description]).presence
+        @public_page_description = og_description || description
       end
   end
 end
