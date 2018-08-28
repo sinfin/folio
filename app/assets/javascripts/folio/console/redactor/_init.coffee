@@ -1,5 +1,5 @@
 ADVANCED_OPTIONS =
-  plugins: ['imagemanager', 'video']
+  plugins: ['imagemanager', 'video', 'table']
   imageUploadParam: 'file[file]'
   imageData:
     elements: 'input[name="authenticity_token"]'
@@ -7,11 +7,13 @@ ADVANCED_OPTIONS =
   imageUpload: '/console/images.json'
   imageManagerJson: '/console/images.json'
   toolbarFixed: false
+  lang: document.documentElement.lang
 
 OPTIONS =
-  plugins: []
+  plugins: ['video', 'table']
   buttonsHide: ['file', 'image']
   toolbarFixed: false
+  lang: document.documentElement.lang
 
 window.folioConsoleInitRedactor = (node, options = {}) ->
   opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS

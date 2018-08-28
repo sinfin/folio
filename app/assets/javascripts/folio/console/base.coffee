@@ -13,9 +13,11 @@
 #= require cocoon
 #= require redactor
 
-#= require ./redactor-imagemanager
-#= require ./redactor-video
-#= require ./redactor-init
+#= require ./redactor/_cs
+#= require ./redactor/_imagemanager
+#= require ./redactor/_video
+#= require ./redactor/_table
+#= require ./redactor/_init
 
 #= require folio/cable
 #= require folio/console/_flash
