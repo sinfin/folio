@@ -10,12 +10,8 @@ class Atom::<%= class_name %> < Folio::Atom::Base
     model: nil,
   }
 
-  def cell_name
-    'atom/<%= file_name %>'
-  end
-
   def self.molecule_cell_name
-    'molecule/#{plural_table_name}'
+    'molecule/<%= plural_table_name %>'
   end
 end
 
