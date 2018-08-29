@@ -1,5 +1,5 @@
 ADVANCED_OPTIONS =
-  plugins: ['imagemanager', 'video', 'table']
+  plugins: ['imagemanager', 'video', 'table', 'button']
   imageUploadParam: 'file[file]'
   imageData:
     elements: 'input[name="authenticity_token"]'
@@ -10,7 +10,7 @@ ADVANCED_OPTIONS =
   lang: document.documentElement.lang
 
 OPTIONS =
-  plugins: ['video', 'table']
+  plugins: ['video', 'table', 'button']
   buttonsHide: ['file', 'image']
   toolbarFixed: false
   lang: document.documentElement.lang

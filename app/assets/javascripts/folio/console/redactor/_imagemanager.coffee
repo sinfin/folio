@@ -9,13 +9,11 @@ $R.add 'plugin', 'imagemanager',
     @app = app
     @lang = app.lang
     @opts = app.opts
-    return
 
   onmodal:
     image:
       open: ($modal, $form) ->
         @_load $modal
-        return
 
   _load: ($modal) ->
     $box = $("""
