@@ -32,7 +32,9 @@ module Folio
 
       test 'model_type validation' do
         lead = create(:folio_lead)
-        atom = ::Atom::PageReference.new(model: lead)
+
+        atom = build(:folio_atom, type: ::Atom::PageReference,
+                                  model: lead)
         assert_not atom.valid?
         assert_equal([I18n.t('errors.messages.invalid')],
                      atom.errors[:model_type])

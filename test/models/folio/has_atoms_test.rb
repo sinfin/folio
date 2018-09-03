@@ -32,20 +32,20 @@ module Folio
       assert_equal([], node.atoms)
       assert_equal([], node.atoms_in_molecules)
 
-      atom_1 = create(:folio_atom, node: node, position: 1)
+      atom_1 = create_atom(position: 1, placement: node)
       node.reload
 
       assert_equal([atom_1], node.atoms.to_a)
       assert_equal([[nil, [atom_1]]], node.atoms_in_molecules)
 
-      test_atom_1 = TestAtom.create!(title: 'foo',
-                                     position: 2,
-                                     node: node)
-      test_atom_2 = TestAtom.create!(title: 'bar',
-                                     position: 3,
-                                     node: node)
+      test_atom_1 = create_atom(TestAtom, title: 'foo',
+                                          position: 2,
+                                          placement: node)
+      test_atom_2 = create_atom(TestAtom, title: 'bar',
+                                          position: 3,
+                                          placement: node)
 
-      atom_2 = create(:folio_atom, node: node, position: 4)
+      atom_2 = create(:folio_atom, placement: node, position: 4)
 
       node.reload
 
@@ -57,12 +57,12 @@ module Folio
         [nil, [atom_2]],
       ], node.atoms_in_molecules)
 
-      name_atom_1 = TestMoleculeNameAtom.create!(title: 'foo',
-                                                 node: node,
-                                                 position: 5)
-      name_atom_2 = TestMoleculeNameAtom.create!(title: 'bar',
-                                                 node: node,
-                                                 position: 6)
+      name_atom_1 = create_atom(TestMoleculeNameAtom, title: 'foo',
+                                                      placement: node,
+                                                      position: 5)
+      name_atom_2 = create_atom(TestMoleculeNameAtom, title: 'bar',
+                                                      placement: node,
+                                                      position: 6)
 
       node.reload
 

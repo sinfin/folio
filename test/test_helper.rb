@@ -11,6 +11,7 @@ require 'cells'
 require 'cells-rails'
 require 'cells-slim'
 require 'factory_bot_rails'
+require 'create_atom_helper'
 
 FactoryBot.definition_file_paths << File.join(File.dirname(__FILE__), 'factories')
 FactoryBot.find_definitions
@@ -21,7 +22,7 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 class Cell::TestCase
   controller ApplicationController
-  include ::FactoryBot::Syntax::Methods
+  include FactoryBot::Syntax::Methods
 end
 
 class Folio::Console::CellTest < Cell::TestCase

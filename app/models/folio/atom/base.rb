@@ -23,8 +23,7 @@ module Folio
       belongs_to :placement,
                  polymorphic: true,
                  touch: true,
-                 # so that validations work https://stackoverflow.com/a/39114379/910868
-                 optional: true
+                 required: true
       alias_attribute :node, :placement
       belongs_to :model, polymorphic: true, optional: true
 
@@ -137,20 +136,8 @@ module Folio
           end
         end
 
-        def set_position
-          if self.position.nil? && self.placement.present?
-            last_atom = self.placement.reload.atoms.last
-
-            if last_atom.present?
-              last_position = last_atom.position.presence || 0
-            else
-              last_position = 0
-            end
-
-            self.position = last_position + 1
-          else
-            super
-          end
+        def positionable_last_record
+          placement.presence && placement.reload.atoms.last
         end
     end
   end

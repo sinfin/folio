@@ -42,8 +42,9 @@ FactoryBot.define do
   factory :folio_page, parent: :folio_node, class: Folio::Page
 
   factory :folio_atom, class: Folio::Atom::Text do
+    type { 'Folio::Atom::Text' }
+    association :placement, factory: :folio_node
     content { "<p>#{Faker::Lorem.paragraph}</p>" }
-    association :node, factory: :folio_node
   end
 
   factory :folio_file_placement, class: Folio::FilePlacement do
