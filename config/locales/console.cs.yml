@@ -1,8 +1,6 @@
 cs:
   folio:
     console:
-      add: Přidat
-
       breadcrumbs:
         root: Administrace
         actions:
@@ -22,6 +20,9 @@ cs:
           documents: Dokumenty
           settings: Nastavení
           site_social_links: Odkazy
+
+        simple_fields_for:
+          add: Přidat %{relation}
 
       back: Zpět
 

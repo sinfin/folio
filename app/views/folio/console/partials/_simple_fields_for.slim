@@ -3,7 +3,9 @@ fieldset id=relation
     = render "#{relation.to_s.singularize}_fields", f: g
 
   .links
-    = link_to_add_association t('folio.console.add'), \
+    - klass = f.object.send(relation).klass
+    - name = klass.model_name.human(count: 1).mb_chars.downcase
+    = link_to_add_association t('.add', relation: name), \
                               f, \
                               relation, \
                               class: 'btn btn-success'
