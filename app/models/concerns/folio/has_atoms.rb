@@ -5,10 +5,10 @@ module Folio
     extend ActiveSupport::Concern
 
     included do
-      has_many :atoms, -> { order(:position) }, class_name: 'Folio::Atom::Base',
-                                                as: :placement,
-                                                inverse_of: :placement,
-                                                dependent: :destroy
+      has_many :atoms, -> { ordered }, class_name: 'Folio::Atom::Base',
+                                       as: :placement,
+                                       inverse_of: :placement,
+                                       dependent: :destroy
 
       accepts_nested_attributes_for :atoms, reject_if: :all_blank,
                                             allow_destroy: true
