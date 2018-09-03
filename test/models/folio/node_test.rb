@@ -12,6 +12,14 @@ module Folio
       translation.update(published: true, published_at: 1.minute.ago)
       assert_equal translation, node.translate(:en)
     end
+
+    test 'ancestry touch' do
+      parent = create(:folio_node)
+      updated_at = parent.updated_at
+
+      create(:folio_node, parent: parent)
+      assert updated_at < parent.reload.updated_at
+    end
   end
 end
 

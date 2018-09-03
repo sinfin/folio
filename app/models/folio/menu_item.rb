@@ -3,7 +3,7 @@
 module Folio
   class MenuItem < ApplicationRecord
     # Relations
-    has_ancestry orphan_strategy: :adopt
+    has_ancestry orphan_strategy: :adopt, touch: true
     belongs_to :menu, touch: true, required: true
     belongs_to :target, optional: true, polymorphic: true
 

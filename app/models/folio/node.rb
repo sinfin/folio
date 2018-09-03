@@ -11,7 +11,7 @@ module Folio
     include Publishable::WithDate
 
     # Relations
-    has_ancestry
+    has_ancestry touch: true
     belongs_to :site, class_name: 'Folio::Site'
     friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale, :ancestry]
 
