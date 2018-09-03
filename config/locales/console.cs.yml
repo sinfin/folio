@@ -1,6 +1,8 @@
 cs:
   folio:
     console:
+      add: Přidat
+
       breadcrumbs:
         root: Administrace
         actions:

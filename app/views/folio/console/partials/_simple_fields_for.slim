@@ -1,0 +1,9 @@
+fieldset id=relation
+  = f.simple_fields_for relation do |g|
+    = render "#{relation.to_s.singularize}_fields", f: g
+
+  .links
+    = link_to_add_association t('folio.console.add'), \
+                              f, \
+                              relation, \
+                              class: 'btn btn-success'
