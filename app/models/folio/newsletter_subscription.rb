@@ -4,6 +4,8 @@ module Folio
   class NewsletterSubscription < ApplicationRecord
     include Filterable
 
+    belongs_to :visit, optional: true
+
     # Validations
     validates_format_of :email, with: ::Folio::EMAIL_REGEXP
 

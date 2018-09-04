@@ -23,7 +23,7 @@ module Folio
         if cell_options
           cell_options.permit(:placeholder, :submit_text, :message, :button_class)
         else
-          nil
+          {}
         end
       end
   end
