@@ -31,4 +31,9 @@ end
 #  email      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  visit_id   :bigint(8)
+#
+# Indexes
+#
+#  index_folio_newsletter_subscriptions_on_visit_id  (visit_id)
 #
