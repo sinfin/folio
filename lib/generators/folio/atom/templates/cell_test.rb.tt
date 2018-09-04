@@ -4,7 +4,7 @@ require 'test_helper'
 
 class Atom::<%= class_name %>CellTest < Cell::TestCase
   test 'show' do
-    atom = Atom::<%= class_name %>.create!
+    atom = create_atom(Atom::<%= class_name %>)
     html = cell('atom/<%= model_resource_name %>', atom.data).(:show)
     assert html
   end
