@@ -17,4 +17,7 @@ FolioCable.folio_thumbnails = FolioCable.cable.subscriptions.create 'FolioThumbn
           $this.css('background-image', "url('#{url}')")
           $this.removeClass('folio-thumbnail-background')
 
-      $("[data-lightbox-src='#{temp_url}']").attr('data-lightbox-src', url)
+      $("[data-lightbox-src='#{temp_url}']")
+        .attr('data-lightbox-src', url)
+        .attr('data-lightbox-width', data.width)
+        .attr('data-lightbox-height', data.height)
