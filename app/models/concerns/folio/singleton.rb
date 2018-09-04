@@ -20,6 +20,10 @@ module Folio
       end
     end
 
+    def singleton?
+      true
+    end
+
     private
 
       def validate_singularity

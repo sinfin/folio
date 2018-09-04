@@ -35,22 +35,28 @@ module Folio
       end
 
       if node.present? && node.class.allowed_child_types.present?
-        node.class.allowed_child_types.map do |klass|
+        types = node.class.allowed_child_types.map do |klass|
           if klass.console_selectable? || node.instance_of?(klass)
             [klass.model_name.human, klass]
           end
         end.compact
       else
-        Node.recursive_subclasses(include_self: false).map do |klass|
+        types = Node.recursive_subclasses(include_self: false).map do |klass|
           if klass.console_selectable? || node.instance_of?(klass)
             [klass.model_name.human, klass]
           end
         end.compact
       end
+
+      types << [node.class.model_name.human, node.class]
+
+      types.uniq
     end
 
     def node_type_select(f)
-      if f.object.is_a?(NodeTranslation)
+      readonly = f.object.is_a?(NodeTranslation) || f.object.respond_to?(:singleton?)
+
+      if readonly && !f.object.new_record?
         f.input :type, collection: node_types_for_select(f.object),
                        readonly: true,
                        disabled: true
