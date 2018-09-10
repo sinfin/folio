@@ -51,7 +51,7 @@ module Folio
       end
 
       def page_roots
-        @page_roots ||= @site.nodes.with_locale(I18n.locale).roots.ordered
+        @page_roots ||= Node.with_locale(I18n.locale).roots.ordered
       end
 
       def set_meta_variables(instance, title: :title, image: :cover, description: :perex)

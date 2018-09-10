@@ -4,8 +4,6 @@ fieldset
       .row
         .col-sm-1
           = f.input :locale, disabled: true
-        .col-sm-2
-          = f.input :site, collection: Folio::Site.all, include_blank: false
         .col-sm
           = node_type_select(f)
         .col-sm

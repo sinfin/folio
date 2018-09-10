@@ -8,6 +8,8 @@ module Folio
       include Engine.routes.url_helpers
 
       test 'renders' do
+        create(:folio_site)
+
         atom = create(:folio_atom, title: 'foo',
                                    content: '<p>bar</p>',
                                    placement: create(:folio_page, title: 'cat'))

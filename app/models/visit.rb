@@ -3,7 +3,6 @@
 class Visit < Folio::ApplicationRecord
   # Relations
   has_many :ahoy_events, class_name: 'Ahoy::Event'
-  belongs_to :site, class_name: 'Folio::Site'
   belongs_to :account, class_name: 'Folio::Account', optional: true
 
   # Scopes

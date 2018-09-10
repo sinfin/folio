@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_04_113845) do
+ActiveRecord::Schema.define(version: 2018_09_10_082930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,7 +148,6 @@ ActiveRecord::Schema.define(version: 2018_09_04_113845) do
   end
 
   create_table "folio_nodes", force: :cascade do |t|
-    t.integer "site_id"
     t.string "title"
     t.string "slug"
     t.text "perex"
@@ -174,7 +173,6 @@ ActiveRecord::Schema.define(version: 2018_09_04_113845) do
     t.index ["position"], name: "index_folio_nodes_on_position"
     t.index ["published"], name: "index_folio_nodes_on_published"
     t.index ["published_at"], name: "index_folio_nodes_on_published_at"
-    t.index ["site_id"], name: "index_folio_nodes_on_site_id"
     t.index ["slug"], name: "index_folio_nodes_on_slug"
     t.index ["type"], name: "index_folio_nodes_on_type"
   end
@@ -249,7 +247,6 @@ ActiveRecord::Schema.define(version: 2018_09_04_113845) do
     t.text "user_agent"
     t.text "referrer"
     t.text "landing_page"
-    t.bigint "site_id"
     t.bigint "account_id"
     t.string "referring_domain"
     t.string "search_keyword"
@@ -271,7 +268,6 @@ ActiveRecord::Schema.define(version: 2018_09_04_113845) do
     t.string "utm_campaign"
     t.datetime "started_at"
     t.index ["account_id"], name: "index_visits_on_account_id"
-    t.index ["site_id"], name: "index_visits_on_site_id"
     t.index ["visit_token"], name: "index_visits_on_visit_token", unique: true
   end
 

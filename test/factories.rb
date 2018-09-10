@@ -18,7 +18,6 @@ FactoryBot.define do
   factory :folio_node, class: Folio::Node do
     locale { :cs }
     title { Faker::Lorem.word }
-    association :site, factory: :folio_site
     published { true }
     published_at { 1.day.ago }
 

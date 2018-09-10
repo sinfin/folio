@@ -4,7 +4,7 @@
       li.nav-item
         = edit_link(model)
 
-    - model.site.locales.each do |locale|
+    - locales.each do |locale|
       - next if locale.to_s == model.locale
       - translation = model.node_translations.find_by(locale: locale)
 

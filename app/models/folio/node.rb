@@ -12,14 +12,13 @@ module Folio
 
     # Relations
     has_ancestry
-    belongs_to :site, class_name: 'Folio::Site'
-    friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale, :ancestry]
+    friendly_id :title, use: %i[slugged scoped history], scope: [:locale, :ancestry]
 
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
 
     # Validations
     validates :title, :slug, :locale, presence: true
-    validates :slug, uniqueness: { scope: [:site_id, :locale, :ancestry] }
+    validates :slug, uniqueness: { scope: [:locale, :ancestry] }
     validates :locale, inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
     validate :allowed_type, if: :has_parent?
 
@@ -28,15 +27,7 @@ module Folio
     before_save :publish_now, if: :published_changed?
 
     before_validation do
-      # FIXME: breaks without a parent
-      if site.nil?
-        if parent.blank?
-          self.site = Site.first
-        else
-          self.site = parent.site
-        end
-      end
-      self.locale = site.locale if locale.nil?
+      self.locale = Site.instance.locale if locale.nil?
     end
 
     # Multi-search

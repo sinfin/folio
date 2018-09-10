@@ -7,6 +7,7 @@ module Folio
     include Engine.routes.url_helpers
 
     setup do
+      create(:folio_site)
       @category = create(:folio_category)
       @page = create(:folio_page, parent: @category)
 

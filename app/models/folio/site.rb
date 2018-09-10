@@ -2,43 +2,21 @@
 
 module Folio
   class Site < ApplicationRecord
-    # Relations
-    has_many :nodes, class_name: 'Folio::Node'
-    has_many :visits
+    include ::Folio::Singleton
 
     # Validations
     validates :title, presence: true
     validates :domain, uniqueness: true
     validates_format_of :email, with: ::Folio::EMAIL_REGEXP
 
-    class MissingError < StandardError; end
-
-    def url
-      "#{scheme}://#{self.domain}"
-    end
-
     def self.additional_params
       []
-    end
-
-    def self.instance
-      first.presence || fail(MissingError, self.class.to_s)
-    end
-
-    def self.current
-      self.instance
     end
 
     def self.social_link_sites
       # class method > constant as one might want to override it
       %i[facebook instagram twitter appstore google_play pinterest messenger]
    end
-
-    private
-
-      def scheme
-        'http'
-      end
   end
 end
 
