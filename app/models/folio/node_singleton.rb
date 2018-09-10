@@ -11,7 +11,6 @@ end
 # Table name: folio_nodes
 #
 #  id               :bigint(8)        not null, primary key
-#  site_id          :integer
 #  title            :string
 #  slug             :string
 #  perex            :text
@@ -40,7 +39,6 @@ end
 #  index_folio_nodes_on_position      (position)
 #  index_folio_nodes_on_published     (published)
 #  index_folio_nodes_on_published_at  (published_at)
-#  index_folio_nodes_on_site_id       (site_id)
 #  index_folio_nodes_on_slug          (slug)
 #  index_folio_nodes_on_type          (type)
 #

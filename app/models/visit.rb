@@ -49,7 +49,6 @@ end
 #  user_agent       :text
 #  referrer         :text
 #  landing_page     :text
-#  site_id          :bigint(8)
 #  account_id       :bigint(8)
 #  referring_domain :string
 #  search_keyword   :string
@@ -74,6 +73,5 @@ end
 # Indexes
 #
 #  index_visits_on_account_id   (account_id)
-#  index_visits_on_site_id      (site_id)
 #  index_visits_on_visit_token  (visit_token) UNIQUE
 #
