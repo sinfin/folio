@@ -137,7 +137,13 @@ module Folio
         end
 
         def positionable_last_record
-          placement.presence && placement.reload.atoms.last
+          if placement.present?
+            if placement.new_record?
+              placement.atoms.last
+            else
+              placement.reload.atoms.last
+            end
+          end
         end
     end
   end

@@ -17,7 +17,8 @@ module Folio
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
 
     # Validations
-    validates :title, :slug, :locale, presence: true
+    validates :title, :slug, :locale,
+              presence: true
     validates :slug, uniqueness: { scope: [:locale, :ancestry] }
     validates :locale, inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
     validate :allowed_type, if: :has_parent?
@@ -27,7 +28,13 @@ module Folio
     before_save :publish_now, if: :published_changed?
 
     before_validation do
-      self.locale = Site.instance.locale if locale.nil?
+      if locale.nil?
+        if Site.exists?
+          self.locale = Site.instance.locale
+        else
+          self.locale = I18n.locale
+        end
+      end
     end
 
     # Multi-search
