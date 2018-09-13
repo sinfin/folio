@@ -6,8 +6,11 @@ module Folio
 
     module ClassMethods
       def recursive_subclasses(include_self: true)
-        subs = subclasses.map { |sub| sub.recursive_subclasses }.flatten
-        if include_self
+        subs = subclasses.map do |sub|
+          sub.recursive_subclasses if sub.try(:console_selectable?) != false
+        end.flatten.compact
+
+        if include_self && self.try(:console_selectable?) != false
           [self] + subs
         else
           subs

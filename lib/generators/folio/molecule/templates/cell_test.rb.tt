@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+
+class Molecule::<%= molecule_name %>CellTest < Cell::TestCase
+  test 'show' do
+    atoms = Array.new(2) do
+      create_atom(Atom::<%= class_name %>)
+    end
+
+    html = cell('molecule/<%= plural_table_name %>', atoms).(:show)
+    assert_equal 2, html.find_all('.<%= molecule_class_name %>__atom').size
+  end
+end

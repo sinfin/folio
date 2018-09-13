@@ -12,14 +12,14 @@ module Folio
 
     # Relations
     has_ancestry touch: true
-    belongs_to :site, class_name: 'Folio::Site'
-    friendly_id :title, use: %i[slugged scoped history], scope: [:site, :locale, :ancestry]
+    friendly_id :title, use: %i[slugged scoped history], scope: [:locale, :ancestry]
 
     has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
 
     # Validations
-    validates :title, :slug, :locale, presence: true
-    validates :slug, uniqueness: { scope: [:site_id, :locale, :ancestry] }
+    validates :title, :slug, :locale,
+              presence: true
+    validates :slug, uniqueness: { scope: [:locale, :ancestry] }
     validates :locale, inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
     validate :allowed_type, if: :has_parent?
 
@@ -28,15 +28,13 @@ module Folio
     before_save :publish_now, if: :published_changed?
 
     before_validation do
-      # FIXME: breaks without a parent
-      if site.nil?
-        if parent.blank?
-          self.site = Site.first
+      if locale.nil?
+        if Site.exists?
+          self.locale = Site.instance.locale
         else
-          self.site = parent.site
+          self.locale = I18n.locale
         end
       end
-      self.locale = site.locale if locale.nil?
     end
 
     # Multi-search
@@ -49,16 +47,6 @@ module Folio
     scope :ordered,  -> { order(position: :asc, created_at: :asc) }
     scope :featured,  -> { where(featured: true) }
     scope :with_locale, -> (locale) { where(locale: locale)   }
-
-    scope :by_query, -> (q) {
-      if q.present?
-        args = ["%#{q}%"] * 3
-        where('title ILIKE ? OR perex ILIKE ? OR content ILIKE ?', *args)
-        # search_node(args)
-      else
-        where(nil)
-      end
-    }
 
     scope :by_published, -> (state) {
       case state
@@ -243,8 +231,7 @@ end
 #
 # Table name: folio_nodes
 #
-#  id               :integer          not null, primary key
-#  site_id          :integer
+#  id               :bigint(8)        not null, primary key
 #  title            :string
 #  slug             :string
 #  perex            :text
@@ -273,7 +260,6 @@ end
 #  index_folio_nodes_on_position      (position)
 #  index_folio_nodes_on_published     (published)
 #  index_folio_nodes_on_published_at  (published_at)
-#  index_folio_nodes_on_site_id       (site_id)
 #  index_folio_nodes_on_slug          (slug)
 #  index_folio_nodes_on_type          (type)
 #

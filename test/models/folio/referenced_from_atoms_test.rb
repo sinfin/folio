@@ -14,7 +14,7 @@ module Folio
 
     test 'deletes reference atoms' do
       menu = MenuWithAtoms.create!(locale: :cs)
-      TestAtom.create!(model: menu)
+      create_atom(TestAtom, model: menu)
       assert_equal(1, Atom::Base.count)
 
       assert menu.destroy!

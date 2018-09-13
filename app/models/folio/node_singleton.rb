@@ -2,27 +2,7 @@
 
 module Folio
   class NodeSingleton < Node
-    validate :validate_singularity
-
-    class MissingError < StandardError; end
-
-    def self.instance
-      first.presence || fail(MissingError, self.class.to_s)
-    end
-
-    def self.console_selectable?
-      to_s != 'Folio::NodeSingleton' && !exists?
-    end
-
-    private
-
-      def validate_singularity
-        if new_record?
-          errors.add(:type, :invalid) if self.class.exists?
-        else
-          errors.add(:type, :invalid) if self.class.where.not(id: id).exists?
-        end
-      end
+    include ::Folio::Singleton
   end
 end
 
@@ -30,8 +10,7 @@ end
 #
 # Table name: folio_nodes
 #
-#  id               :integer          not null, primary key
-#  site_id          :integer
+#  id               :bigint(8)        not null, primary key
 #  title            :string
 #  slug             :string
 #  perex            :text
@@ -60,7 +39,6 @@ end
 #  index_folio_nodes_on_position      (position)
 #  index_folio_nodes_on_published     (published)
 #  index_folio_nodes_on_published_at  (published_at)
-#  index_folio_nodes_on_site_id       (site_id)
 #  index_folio_nodes_on_slug          (slug)
 #  index_folio_nodes_on_type          (type)
 #

@@ -1,0 +1,13 @@
+Description:
+    Explain the generator
+
+Example:
+    rails generate molecule SomeThing
+
+    This will create:
+        app/cells/molecule/some_things_cell.rb
+        app/cells/molecule/some_things/show.slim
+        test/cells/molecule/some_things_cell_test.rb
+
+    and update (if present):
+        app/models/atom/some_thing.rb

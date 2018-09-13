@@ -23,21 +23,19 @@ module Folio
       current_account
     end
 
-    def default_url_options(options = {})
-      { locale: I18n.locale }.merge options
-    end
-
     def nested_page_path(page_or_parts, add_parents: false, params: {})
       if add_parents
         nested_page_path_with_parents(page_or_parts, params: params)
       else
         if page_or_parts.respond_to?(:slug)
-          main_app.page_path page_or_parts.slug, params: params
+          path = page_or_parts.slug
         elsif page_or_parts.is_a?(Array)
-          main_app.page_path page_or_parts.map(&:slug).join('/'), params: params
+          path = page_or_parts.map(&:slug).join('/')
         else
           fail 'Unknown nested_page_path target'
         end
+
+        main_app.page_path(params.merge(path: path))
       end
     end
 
@@ -49,11 +47,11 @@ module Folio
           path.unshift page.parent.translate
           page = page.parent
         end
-        main_app.page_path path.map(&:slug).join('/'), params: params
+        main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
       end
 
       def page_roots
-        @page_roots ||= @site.nodes.with_locale(I18n.locale).roots.ordered
+        @page_roots ||= Node.with_locale(I18n.locale).roots.ordered
       end
 
       def set_meta_variables(instance, mappings = {})

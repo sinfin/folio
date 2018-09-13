@@ -40,3 +40,5 @@ cs:
       atom/with_hint:
         one: Text s nápovědou
         other: Texty s nápovědou
+
+      menu/nestable: Víceúrovňové menu

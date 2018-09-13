@@ -21,7 +21,7 @@ module Folio
     end
 
     def og_site_name
-      @og_site_name.presence || t('domain.short')
+      Site.instance.domain
     end
 
     def og_url

@@ -30,7 +30,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
           'data-atom-structure' => type.structure_as_json,
         }
       ]
-    end.compact.sort_by(&:first)
+    end.compact.sort_by { |name, _type, _data| I18n.transliterate(name) }
   end
 
   def content_field
@@ -44,7 +44,10 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
         hidden: !active,
         class: 'folio-console-atom-content',
       },
-      input_html: { class: 'folio-console-atom-textarea' }
+      input_html: {
+        class: 'folio-console-atom-textarea',
+        placeholder: Folio::Atom::Base.human_attribute_name(:content),
+      }
   end
 
   def title_field
@@ -54,9 +57,28 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
     f.input :title,
       disabled: !active,
       hint: render(:title_hint).html_safe,
+      input_html: {
+        placeholder: Folio::Atom::Base.human_attribute_name(:title),
+      },
       wrapper_html: {
         hidden: !active,
         class: 'folio-console-atom-title',
+      }
+  end
+
+  def perex_field
+    perex = structure[:perex]
+    active = (perex == :string)
+
+    f.input :perex,
+      disabled: !active,
+      hint: render(:perex_hint).html_safe,
+      input_html: {
+        placeholder: Folio::Atom::Base.human_attribute_name(:perex),
+      },
+      wrapper_html: {
+        hidden: !active,
+        class: 'folio-console-atom-perex',
       }
   end
 
@@ -69,7 +91,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
         f.input :model,
           collection: atom_model_collection_for_select(became),
           selected: sti_record_select_value(became, :model),
-          include_blank: false,
+          include_blank: true,
           disabled: !active,
           wrapper_html: { hidden: !active },
           input_html: {
@@ -91,5 +113,13 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
                              add_content: true)
 
     end.flatten(1)
+  end
+
+  def placeholders
+    base_placeholders = Folio::Atom::Base.form_placeholders
+
+    atom_types.map do |type|
+      [type.to_s, base_placeholders.merge(type.form_placeholders)]
+    end.to_h.to_json
   end
 end

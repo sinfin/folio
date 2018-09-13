@@ -18,10 +18,10 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'rails', '~> 5.1.2'
+  s.add_dependency 'rails', '~> 5.2.1'
   s.add_dependency 'pg', '~> 0.21.0'
   s.add_dependency 'pg_search'
-  s.add_dependency 'friendly_id', '~> 5.1.0'
+  s.add_dependency 'friendly_id', '~> 5.2.4'
   s.add_dependency 'ancestry'
   s.add_dependency 'carrierwave'
   s.add_dependency 'mini_magick'
@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cocoon'
   s.add_dependency 'devise'
   s.add_dependency 'cancancan', '~> 2.0'
-  s.add_dependency 'bootstrap', '~> 4.0.0.beta'
+  s.add_dependency 'bootstrap', '~> 4.1'
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'kaminari'
@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mailchimp-api'
   s.add_dependency 'invisible_captcha'
   s.add_dependency 'countries'
-  s.add_dependency 'acts-as-taggable-on', '~> 5.0'
+  s.add_dependency 'acts-as-taggable-on', '~> 6.0'
   s.add_dependency 'breadcrumbs_on_rails'
   s.add_dependency 'cells'
   s.add_dependency 'cells-rails'

@@ -4,6 +4,11 @@ InvisibleCaptcha.setup do |config|
   # config.honeypots           << ['more', 'fake', 'attribute', 'names']
   # config.visual_honeypots    = false
   config.timestamp_threshold = 2
+
+  if Rails.env.test?
+    config.timestamp_enabled = false
+  end
+
   # config.timestamp_enabled   = true
   # config.injectable_styles   = false
 

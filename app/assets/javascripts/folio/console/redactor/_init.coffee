@@ -1,18 +1,22 @@
-OPTIONS =
-  plugins: ['imagemanager', 'video']
+ADVANCED_OPTIONS =
+  plugins: ['imagemanager', 'video', 'table', 'button']
   imageUploadParam: 'file[file]'
   imageData:
     elements: 'input[name="authenticity_token"]'
     'file[type]': 'Folio::Image'
   imageUpload: '/console/images.json'
   imageManagerJson: '/console/images.json'
+  toolbarFixed: false
+  lang: document.documentElement.lang
 
-NO_IMAGES_OPTIONS =
-  plugins: []
+OPTIONS =
+  plugins: ['video', 'table', 'button']
   buttonsHide: ['file', 'image']
+  toolbarFixed: false
+  lang: document.documentElement.lang
 
 window.folioConsoleInitRedactor = (node, options = {}) ->
-  opts = if options.noImages then NO_IMAGES_OPTIONS else OPTIONS
+  opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
   $R(node, opts)
 
 window.folioConsoleDestroyRedactor = (node) ->
@@ -30,4 +34,4 @@ $ ->
   $wrap = $('.redactor')
   return if $wrap.length is 0
   $wrap.each ->
-    window.folioConsoleInitRedactor(this)
+    window.folioConsoleInitRedactor(this, advanced: @classList.contains('redactor--advanced'))

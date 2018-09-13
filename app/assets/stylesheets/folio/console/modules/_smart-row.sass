@@ -1,31 +1,33 @@
 .folio-console-smart-row
   display: flex
-  flex-wrap: wrap
+
+  &.folio-console-smart-row--wrap
+    flex-wrap: wrap
 
 .folio-console-smart-col
-  flex: 1 1 100%
+  flex: 1 1 auto
   min-width: 50%
-  margin-bottom: $grid-gutter-width
+  margin-bottom: $spacer
 
 aside.folio-console-smart-col
   flex: 0 0 auto
+  min-width: 0
 
-  &.folio-console-atom-images-multi,
-  &.folio-console-atom-documents-multi
+  &.folio-console-smart-col--spread
     flex: 1 0 100%
+    min-width: 100%
 
 +mq-sm-up
   aside.folio-console-smart-col
-    margin-right: $grid-gutter-width
+    margin-right: $spacer
 
     div.folio-console-smart-col ~ &
       margin-right: 0
-      margin-left: $grid-gutter-width
+      margin-left: $spacer
 
-      &.folio-console-atom-images-multi,
-      &.folio-console-atom-documents-multi
+      &.folio-console-smart-col--spread
         margin-left: 0
-        margin-top: (( - $grid-gutter-width ))
+        margin-top: (( - $spacer ))
 
     div.folio-console-smart-col[hidden] ~ &
       margin-left: 0

@@ -5,13 +5,6 @@ class Ahoy::Store < Ahoy::Stores::ActiveRecordTokenStore
   Ahoy.track_visits_immediately = true
   Ahoy.quiet = false
 
-  def track_visit(options)
-    super do |visit|
-      # FIXME
-      @site = Folio::Site.first
-      visit.site = @site
-    end
-  end
   # def track_event(name, properties, options)
   # end
   #

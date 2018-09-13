@@ -33,7 +33,7 @@ module Folio
     def new
       if params[:node].blank? || params[:node][:original_id].blank?
         parent = Node.find(params[:parent]) if params[:parent].present?
-        @node = Node.new(parent: parent, type: params[:type])
+        @node = Page.new(parent: parent, type: params[:type])
       else
         original = Node.find(params[:node][:original_id])
 
@@ -49,7 +49,11 @@ module Folio
       # set type first beacuse of @node.additional_params
       @node = Node.new(type: params[:node][:type])
       @node.update(node_params)
-      respond_with @node, location: edit_console_node_path(@node.id)
+      if @node.new_record?
+        respond_with @node, location: new_console_node_path
+      else
+        respond_with @node, location: edit_console_node_path(@node.id)
+      end
     end
 
     def update

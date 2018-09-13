@@ -3,7 +3,8 @@
 module Folio
   class NewsletterSubscriptionsController < ApplicationController
     def create
-      @newsletter_subscription = NewsletterSubscription.new(newsletter_subscription_params)
+      attrs = newsletter_subscription_params.merge(visit: current_visit)
+      @newsletter_subscription = NewsletterSubscription.new(attrs)
       success = @newsletter_subscription.save
 
       NewsletterSubscriptionMailer.notification_email(@newsletter_subscription).deliver_later if success
@@ -22,7 +23,7 @@ module Folio
         if cell_options
           cell_options.permit(:placeholder, :submit_text, :message, :button_class)
         else
-          nil
+          {}
         end
       end
   end

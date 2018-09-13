@@ -13,5 +13,4 @@
     = react_images(f.object.file_placements, attachmentable: '<%= singular_table_name %>')
   <%- end -%>
 
-= f.button :submit
-= link_to t('folio.console.back'), <%= index_resource_name %>
+= form_footer f, <%= index_resource_name %>

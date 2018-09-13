@@ -5,9 +5,6 @@ cs:
       default: ''
     description: ''
 
-  domain:
-    short: dummy.folio
-
   'true': Ano
   'false': Ne
 

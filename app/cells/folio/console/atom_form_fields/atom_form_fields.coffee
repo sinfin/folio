@@ -5,9 +5,11 @@ atomFormBySelect = ($element) ->
   klass = $element.val()
   structure = $element.find(':selected').data('atom-structure')
   $fields = $element.closest('.nested-fields')
-  $wrap = $fields.find('.folio-console-smart-col').first()
+  $wrap = $fields.find('.folio-console-atom-main-fields').first()
   hideWrap = true
   klassFilter = """[data-class="#{klass}"]"""
+
+  placeholders = $fields.data('placeholders')[klass]
 
   $content = $fields.find('.folio-console-atom-content')
   $textarea = $content.find('.folio-console-atom-textarea')
@@ -15,15 +17,17 @@ atomFormBySelect = ($element) ->
   switch structure.content
     when 'redactor'
       hideWrap = false
+      $content.find('.form-control').attr('placeholder', placeholders.content)
       $content.removeAttr('hidden')
       $textarea.prop('disabled', false)
       # check if redactor is active
       unless $textarea.hasClass('redactor-source')
         # disable content images on atoms with images/cover
-        window.folioConsoleInitRedactor $textarea[0], noImages: structure.images
+        window.folioConsoleInitRedactor $textarea[0], basic: structure.images
 
     when 'string'
       hideWrap = false
+      $content.find('.form-control').attr('placeholder', placeholders.content)
       $content.removeAttr('hidden')
       if $textarea.hasClass('redactor-source')
         html = window.folioConsoleRedactorGetContent($textarea[0])
@@ -43,17 +47,33 @@ atomFormBySelect = ($element) ->
     when 'string'
       hideWrap = false
       $title.removeAttr('hidden')
-      $title.find('.form-control').prop('disabled', false)
+      $title.find('.form-control')
+        .attr('placeholder', placeholders.title)
+        .prop('disabled', false)
     else
       $title.attr('hidden', true)
       $title.find('.form-control').prop('disabled', true)
 
+  $perex = $fields.find('.folio-console-atom-perex')
+
+  switch structure.perex
+    when 'string'
+      hideWrap = false
+      $perex.removeAttr('hidden')
+      $perex.find('.form-control')
+        .attr('placeholder', placeholders.perex)
+        .prop('disabled', false)
+    else
+      $perex.attr('hidden', true)
+      $perex.find('.form-control').prop('disabled', true)
+
   $model = $fields.find('.folio-console-atom-model')
 
-  $fields.find('.folio-console-atom-hint')
-         .attr('hidden', true)
-         .filter(klassFilter)
-         .removeAttr('hidden')
+  $fields
+    .find('.folio-console-atom-hint')
+    .attr('hidden', true)
+    .filter(klassFilter)
+    .removeAttr('hidden')
 
   if structure.model
     hideWrap = false
@@ -125,5 +145,13 @@ $(document).on 'change', '.folio-console-atom-type-select', ->
 
 $(document).on 'change', '.folio-console-atom-model-select', ->
   atomModelContentPrefill($(this))
+
+$(document).on 'focus', '.folio-console-atom-form-fields .form-control', ->
+  $wrap = $(this).closest('.folio-console-atom-form-fields')
+  $wrap.addClass('folio-console-atom-form-fields--focused')
+
+$(document).on 'blur', '.folio-console-atom-form-fields .form-control', ->
+  $wrap = $(this).closest('.folio-console-atom-form-fields')
+  $wrap.removeClass('folio-console-atom-form-fields--focused')
 
 $('.folio-console-atom-type-select').each -> atomFormBySelect($(this))

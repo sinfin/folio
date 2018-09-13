@@ -32,5 +32,9 @@ module Folio
       cell('folio/console/single_file_select', f, attr_name: attr_name,
                                                   as: as).show.html_safe
     end
+
+    def form_footer(f, back_path = nil)
+      cell('folio/console/form_footer', f, back_path: back_path).show.html_safe
+    end
   end
 end

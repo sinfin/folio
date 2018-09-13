@@ -5,15 +5,15 @@ class Folio::Console::Nodes::TranslationsCell < FolioCell
   include ActionView::Helpers::UrlHelper
 
   def show
-    if multi_language_site
-      render
-    else
-      nil
-    end
+    render if multi_language_site
   end
 
   def multi_language_site
-    (model.site.locales - [model.locale]).length > 0
+    (locales - [model.locale]).length > 0
+  end
+
+  def locales
+    Folio::Site.instance.locales
   end
 
   def ul_class

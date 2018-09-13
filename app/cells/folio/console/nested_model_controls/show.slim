@@ -1,37 +1,23 @@
-.form-group.folio-console-nested-model-controls-form-group
+.form-group.folio-console-nested-model-controls-form-group class=class_name
   - if options[:label]
     label.control-label.d-block
       = options[:label] == true ? '&nbsp;' : options[:label]
 
   - if handle_position?
-    .btn-group[
-      class=(handle_destroy? ? 'mr-3' : nil)
-    ]
-      button.btn.btn-outline-secondary[
-        class="folio-console-nested-model-position-button"
-        data-direction="up"
-        type="button"
-      ]
-        i.fa.fa-arrow-up
-
-      button.btn.btn-outline-secondary[
-        class="folio-console-nested-model-position-button"
-        data-direction="down"
-        type="button"
-      ]
-        i.fa.fa-arrow-down
+    div class=btn_group_class_name
+      - %w(up down).each do |direction|
+        button.btn.btn-outline-secondary[
+          class="folio-console-nested-model-position-button"
+          data-direction=direction
+          type="button"
+        ]
+          i.fa class="fa-arrow-#{direction}"
 
       = f.hidden_field :position, \
                        class: 'folio-console-nested-model-position-input'
 
-  - if handle_destroy?
-    - if f.object.id
-      button.btn.btn-danger[
-        type="button"
-        class="folio-console-nested-model-destroy-button"
-      ]
-        = t('.destroy')
-      = f.hidden_field :_destroy, value: 0
+      - if handle_destroy? && options[:vertical]
+        = render(:button_destroy)
 
-    - else
-      = link_to_remove_association t('.destroy'), f, class: 'btn btn-danger'
+  - if handle_destroy? && !options[:vertical]
+    = render(:button_destroy)

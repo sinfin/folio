@@ -28,4 +28,9 @@ class Folio::Console::FilePlacementListCell < FolioCell
       model_name
     end
   end
+
+  def atom_placement(fp)
+    return nil unless fp.placement.is_a?(Folio::Atom::Base)
+    fp.placement.placement.presence
+  end
 end

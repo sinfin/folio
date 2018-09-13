@@ -28,6 +28,21 @@ module Folio
       respond_with @menu, location: console_menus_path
     end
 
+    def show
+      fail ActionController::MethodNotAllowed unless @menu.supports_nesting?
+    end
+
+    def tree_sort
+      @menu.transaction do
+        params.require(:sortable).each do |index, menu_item|
+          next if menu_item[:id].blank?
+          @menu.menu_items.find(menu_item[:id])
+                          .update!(parent_id: menu_item[:parent_id],
+                                   position: index)
+        end
+      end
+    end
+
     private
 
       def find_menu

@@ -1,9 +1,3 @@
-h1
-  - unless f.object.new_record?
-    span.mr-3 = country_flag(f.object.locale)
-
-  = f.object.class.model_name.human
-
 = f.error_notification
 
 - if f.object.new_record?
@@ -26,5 +20,4 @@ h1
                                 class: 'btn btn-success', \
                                 render_options: { locals: { menu: f.object } }
 
-= f.button :submit
-= link_to t('folio.console.back'), console_menus_path
+= form_footer f, console_menus_path

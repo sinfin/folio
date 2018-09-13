@@ -1,0 +1,43 @@
+.folio-console-atom-form-fields
+  margin-left: - $grid-gutter-half
+  margin-right: - $grid-gutter-half
+  padding: 0.5rem (( $grid-gutter-width + 39px )) 0.5rem $grid-gutter-half
+  position: relative
+  transition: background-color .3s
+
+  label
+    display: none
+
+  .card
+    margin-bottom: 0
+    transition: box-shadow .3s
+
+  .card-body
+    padding-bottom: (( $card-spacer-x - 1rem ))
+    min-height: 114px
+
+  .folio-console-nested-model-controls-form-group
+    position: absolute
+    top: 0.5rem
+    right: $grid-gutter-half
+    opacity: 0.1
+    transition: opacity .3s
+
+  .folio-console-smart-col
+    margin-bottom: 0
+
+  &:hover,
+  &.folio-console-atom-form-fields--focused
+    background-color: rgba($info, 0.15)
+
+    .folio-console-nested-model-controls-form-group
+      opacity: 1
+
+    .card
+      box-shadow: 0 0 10px -1px $info
+
+  ~ .links
+    padding-top: 0.5rem
+
+.folio-console-atom-type-select
+  background: rgba($blue, 0.1)

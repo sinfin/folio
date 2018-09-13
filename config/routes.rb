@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-begin
-  Folio::Engine.routes.default_url_options[:host] = Folio::Site.first.url if ActiveRecord::Base.connection.table_exists? 'folio_sites'
-rescue NoMethodError
-
-end
-
 Folio::Engine.routes.draw do
   get 'errors/not_found'
 
@@ -26,7 +20,9 @@ Folio::Engine.routes.draw do
     resources :nodes, except: [:show] do
       post :set_positions, on: :collection
     end
-    resources :menus, except: [:show]
+    resources :menus do
+      post :tree_sort, on: :member
+    end
     resources :images, except: [:show, :new]
     resources :documents, except: [:show, :new]
     resources :leads, only: %i[index show update destroy] do
@@ -46,8 +42,6 @@ Folio::Engine.routes.draw do
 
   get '/admin' => redirect('/console')
 
-  scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
-    resources :leads, only: %i[create]
-    resources :newsletter_subscriptions, only: %i[create]
-  end
+  resources :leads, only: %i[create]
+  resources :newsletter_subscriptions, only: %i[create]
 end

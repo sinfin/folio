@@ -7,11 +7,12 @@ module Folio
       include Positionable
 
       STRUCTURE = {
-        content: nil,   # one of nil, :string, :redactor
         title: nil,     # one of nil, :string
+        perex: nil,     # one of nil, :string
+        content: nil,   # one of nil, :string, :redactor
         images: nil,    # one of nil, :single, :multi
         documents: nil, # one of nil, :single, :multi
-        model: nil,     # nil or an array of model classes
+        model: nil,     # one of nil, an array of model classes - e.g. [Folie::Node, My::Model]
       }
 
       self.table_name = 'folio_atoms'
@@ -22,8 +23,7 @@ module Folio
       belongs_to :placement,
                  polymorphic: true,
                  touch: true,
-                 # so that validations work https://stackoverflow.com/a/39114379/910868
-                 optional: true
+                 required: true
       alias_attribute :node, :placement
       belongs_to :model, polymorphic: true, optional: true
 
@@ -80,6 +80,14 @@ module Folio
         }
       end
 
+      def self.form_placeholders
+        {
+          title: self.human_attribute_name(:title),
+          perex: self.human_attribute_name(:perex),
+          content: self.human_attribute_name(:content),
+        }
+      end
+
       private
 
         def klass
@@ -128,19 +136,13 @@ module Folio
           end
         end
 
-        def set_position
-          if self.position.nil? && self.placement.present?
-            last_atom = self.placement.atoms.last
-
-            if last_atom.present?
-              last_position = last_atom.position.presence || 0
+        def positionable_last_record
+          if placement.present?
+            if placement.new_record?
+              placement.atoms.last
             else
-              last_position = 0
+              placement.reload.atoms.last
             end
-
-            self.position = last_position + 1
-          else
-            super
           end
         end
     end
@@ -151,17 +153,18 @@ end
 #
 # Table name: folio_atoms
 #
-#  id             :integer          not null, primary key
+#  id             :bigint(8)        not null, primary key
 #  type           :string
 #  content        :text
 #  position       :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  placement_type :string
-#  placement_id   :integer
+#  placement_id   :bigint(8)
 #  model_type     :string
-#  model_id       :integer
+#  model_id       :bigint(8)
 #  title          :string
+#  perex          :text
 #
 # Indexes
 #

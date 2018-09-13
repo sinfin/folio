@@ -10,7 +10,10 @@ $ ->
       id = $tab.attr('id')
       $('.nav-tabs .nav-link').filter(-> @href.split('#').pop() is id).click()
 
-    $('html, body').animate scrollTop: $field.offset().top - 16, ->
+    offset = $field.offset().top
+    offset = $field.closest('.card').offset().top if offset is 0
+
+    $('html, body').animate scrollTop: offset - 16, ->
       $field.addClass('has-danger-blink')
       setTimeout (->
         $field.removeClass('has-danger-blink')

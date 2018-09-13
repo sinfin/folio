@@ -21,6 +21,9 @@ cs:
           settings: Nastavení
           site_social_links: Odkazy
 
+        simple_fields_for:
+          add: Přidat %{relation}
+
       back: Zpět
 
       filters:
@@ -84,12 +87,16 @@ cs:
         index:
           title: Menu
           type: Druh
-        menu_item_fields:
-          remove: Odebrat
         form:
           add_menu_item: Přidat odkaz
         menu_item_fields:
           title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
+          remove: Odebrat
+        detail_heading:
+          edit_link: Upravit odkazy
+          show_link: Upravit stromovou strukturu
+        show:
+          title: Stromová struktura
 
       leads:
         index:
@@ -165,3 +172,11 @@ cs:
       base:
         atoms:
           add: Přidat atom
+
+      menu_tree:
+        success: Stromová struktura upravena
+        error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
+
+      form_footer:
+        submit: Uložit
+        back: Zpět

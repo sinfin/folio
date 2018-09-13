@@ -19,16 +19,20 @@ module Folio
 
       def set_position
         if self.position.nil?
-          last_record = self.class.ordered.last
-
-          if last_record.present?
-            last_position = last_record.position.presence || 0
-          else
-            last_position = 0
-          end
-
-          self.position = last_position + 1
+          self.position = positionable_last_position + 1
         end
+      end
+
+      def positionable_last_position
+        if positionable_last_record.present?
+          last_position = positionable_last_record.position.presence || 0
+        else
+          last_position = 0
+        end
+      end
+
+      def positionable_last_record
+        self.class.ordered.last
       end
   end
 end

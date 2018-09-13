@@ -13,6 +13,9 @@ module Folio
     # Validations
     validate :validate_target_and_menu_locales
     validate :validate_menu_allowed_types
+    validate :validate_menu_available_targets_and_paths
+
+    before_validation :nullify_empty_rails_path
 
     def to_label
       return title if title.present?
@@ -24,7 +27,10 @@ module Folio
     private
 
       def validate_target_and_menu_locales
-        if target && target.locale && target.locale != menu.locale
+        if target &&
+           target.respond_to?(:locale) &&
+           target.locale &&
+           target.locale != menu.locale
           errors.add(:target, :invalid)
         end
       end
@@ -32,6 +38,21 @@ module Folio
       def validate_menu_allowed_types
         if menu.class.allowed_menu_item_classes.exclude?(self.class)
           errors.add(:type, :invalid)
+        end
+      end
+
+      def validate_menu_available_targets_and_paths
+        if target && menu.available_targets.exclude?(target)
+          errors.add(:target, :invalid)
+        end
+        if rails_path && menu.class.rails_paths.keys.exclude?(rails_path.to_sym)
+          errors.add(:rails_path, :invalid)
+        end
+      end
+
+      def nullify_empty_rails_path
+        if rails_path.is_a?(String) && rails_path.blank?
+          self.rails_path = nil
         end
       end
   end
@@ -48,8 +69,8 @@ end
 #
 # Table name: folio_menu_items
 #
-#  id          :integer          not null, primary key
-#  menu_id     :integer
+#  id          :bigint(8)        not null, primary key
+#  menu_id     :bigint(8)
 #  type        :string
 #  ancestry    :string
 #  title       :string
@@ -58,7 +79,7 @@ end
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  target_type :string
-#  target_id   :integer
+#  target_id   :bigint(8)
 #
 # Indexes
 #

@@ -1,0 +1,7 @@
+.<%= classname_prefix %>-molecule.<%= molecule_class_name %>
+  .container
+    ul.<%= molecule_class_name %>__inner
+      - model.each do |atom|
+        li.<%= molecule_class_name %>__atom
+          .<%= molecule_class_name %>__atom-inner
+            = atom.title

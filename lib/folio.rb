@@ -2,6 +2,7 @@
 
 require 'kaminari'
 
+require 'dotenv-rails'
 require 'folio/engine'
 require 'friendly_id'
 require 'ancestry'

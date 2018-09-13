@@ -72,6 +72,9 @@
     &:focus, &:focus:active
       box-shadow: 0 0 0 0.2rem rgba($indigo, 0.3) !important
 
+.btn-outline-secondary
+  background-color: white
+
 .nav-pills
   .nav-item
     .nav-link.active
@@ -93,6 +96,10 @@
 
 select.form-control
   max-width: 100%
+
+.form-control
+  &::placeholder
+    color: $input-placeholder-color
 
 @include media-breakpoint-up(lg)
   .modal-lg
