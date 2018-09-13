@@ -176,3 +176,7 @@ cs:
       menu_tree:
         success: Stromová struktura upravena
         error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
+
+      form_footer:
+        submit: Uložit
+        back: Zpět

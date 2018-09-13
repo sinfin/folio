@@ -32,13 +32,11 @@ site = Folio::Site.create!(title: 'Sinfin.digital',
                            })
 
 about = Folio::Page.create!(title: 'O nás',
-                            site: site,
                             published: true)
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
 
 reference = Folio::Category.create!(title: 'Reference',
-                                    site: site,
                                     published: true,
                                     published_at: 1.day.ago)
 Folio::Page.create!(title: 'Smart Cities', parent: reference, published: true)

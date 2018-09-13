@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-09-13
+### Changed
+- forms utilize the `form_footer` helper
+
 ## 2018-09-10
 ### Removed
 - removed `Site.current` and make it use `Folio::Singleton`

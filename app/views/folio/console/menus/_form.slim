@@ -20,5 +20,4 @@
                                 class: 'btn btn-success', \
                                 render_options: { locals: { menu: f.object } }
 
-= f.button :submit
-= link_to t('folio.console.back'), console_menus_path
+= form_footer f, console_menus_path
