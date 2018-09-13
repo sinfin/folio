@@ -91,7 +91,7 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
         f.input :model,
           collection: atom_model_collection_for_select(became),
           selected: sti_record_select_value(became, :model),
-          include_blank: false,
+          include_blank: true,
           disabled: !active,
           wrapper_html: { hidden: !active },
           input_html: {
