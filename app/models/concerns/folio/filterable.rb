@@ -10,6 +10,20 @@ module Folio
   module Filterable
     extend ActiveSupport::Concern
 
+    included do
+      scope :by_query, -> (q) {
+        if q.present?
+          attrs = self.attribute_names & %w[title name]
+          args = ["%#{q}%"] * attrs.size
+
+          conditions = attrs.map { |a| "unaccent(#{a}) ILIKE unaccent(?)" }
+          where(conditions.join(' OR '), *args)
+        else
+          where(nil)
+        end
+      }
+    end
+
     module ClassMethods
       # Call the class methods with the same name as the keys in <tt>filtering_params</tt>
       # with their associated values. Most useful for calling named scopes from

@@ -48,16 +48,6 @@ module Folio
     scope :featured,  -> { where(featured: true) }
     scope :with_locale, -> (locale) { where(locale: locale)   }
 
-    scope :by_query, -> (q) {
-      if q.present?
-        args = ["%#{q}%"] * 3
-        where('title ILIKE ? OR perex ILIKE ? OR content ILIKE ?', *args)
-        # search_node(args)
-      else
-        where(nil)
-      end
-    }
-
     scope :by_published, -> (state) {
       case state
       when 'published'
