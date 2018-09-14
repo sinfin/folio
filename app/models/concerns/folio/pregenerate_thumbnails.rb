@@ -12,6 +12,8 @@ module Folio
     private
 
       def pregenerate_thumbnails
+        return unless file.respond_to?(:thumb)
+
         # admin thumbnail
         file.thumb(::Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE)
 

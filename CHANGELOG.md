@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-09-14
+### Removed
+- removed `Thumbnails` concern from `Document`
+
 ## 2018-09-13
 ### Changed
 - forms utilize the `form_footer` helper

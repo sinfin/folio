@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Document < Folio::File
-  include Folio::Thumbnails
 end
 
 # == Schema Information
