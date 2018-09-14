@@ -13,7 +13,6 @@ module Folio
       serialize :thumbnail_sizes, Hash
       before_validation :reset_thumbnails
 
-      before_save :set_mime_type
       before_save :set_additional_data, if: :mime_type_image?
       before_destroy do
         ::Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
@@ -104,12 +103,6 @@ module Folio
 
       def fail_for_non_images
         fail 'You can only thumbnail images.' unless has_attribute?('thumbnail_sizes')
-      end
-
-      def set_mime_type
-        return unless file.present?
-        return unless respond_to?(:mime_type)
-        self.mime_type = file.mime_type
       end
 
       def mime_type_image?

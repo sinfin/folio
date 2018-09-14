@@ -26,6 +26,7 @@ module Folio
     # Scopes
     scope :ordered, -> { order(updated_at: :desc) }
 
+    before_save :set_mime_type
     after_save :touch_placements
 
     def title
@@ -41,6 +42,12 @@ module Folio
       def touch_placements
         file_placements.each(&:touch)
         cover_placement.try(:touch)
+      end
+
+      def set_mime_type
+        return unless file.present?
+        return unless respond_to?(:mime_type)
+        self.mime_type = file.mime_type
       end
   end
 end
