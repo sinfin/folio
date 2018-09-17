@@ -4,11 +4,13 @@
 module Folio
   module Console::CellsHelper
     def featured_toggle(model, options = {})
-      cell('folio/console/featured_toggle', model, options).show.html_safe
+      cell('folio/console/featured_toggle', model, options).show
+                                                           .try(:html_safe)
     end
 
     def published_toggle(model, options = {})
-      cell('folio/console/published_toggle', model, options).show.html_safe
+      cell('folio/console/published_toggle', model, options).show
+                                                            .try(:html_safe)
     end
 
     def nested_model_controls(model, options = {})
