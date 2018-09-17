@@ -27,6 +27,8 @@ fieldset
   = f.input :content, input_html: { class: 'redactor redactor--advanced' }
 
   = console_form_atoms f
+  
+  hr
 
   .row
     .col
@@ -34,9 +36,12 @@ fieldset
 
       = f.input :featured
       = f.input :published
+      / FIXME: Wrapped time fields and hidden hint text.
       = f.input :published_at
 
     .col
+      label = t('.meta')
+      
       == cell('folio/console/tagsinput', f)
       = f.input :meta_title
       = f.input :meta_description, as: :text

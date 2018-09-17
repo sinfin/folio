@@ -38,11 +38,11 @@ cs:
           featured: Featured
           published: Publikované
           filters:
-            all_nodes: Všechny nody
+            all_nodes: Viditelné i neviditelné
             all_parents: Všechny kategorie
             published: Jen publikované
             unpublished: Jen rozpracované
-            all_types: Všechny typy
+            all_types: Všechny typy obsahu
             page: Stránka
             category: Kategorie
 
@@ -59,7 +59,8 @@ cs:
         form:
           node:
             title: Obsah
-            settings: Nastavení
+            settings: Nastavení pro zveřejnění
+            meta: Nastavení metadat
           remove: odebrat
           file_name: Název souboru
           file_size: Velikost
@@ -171,7 +172,7 @@ cs:
 
       base:
         atoms:
-          add: Přidat atom
+          add: Přidat kapitolu
 
       menu_tree:
         success: Stromová struktura upravena

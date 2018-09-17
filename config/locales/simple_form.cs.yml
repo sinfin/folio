@@ -9,11 +9,12 @@ cs:
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'
     error_notification:
-      default_message: "Prosím doplňte chybějící povinné údaje."
+      default_message: "Doplňte chybějící povinné údaje, prosím."
 
     labels:
       defaults:
-        title: Titul
+        title: Název stránky
+        slug: Varianta názvu stránky pro odkazy
         locale: Překlad
         site: Stránka
         code: Kód
@@ -21,8 +22,38 @@ cs:
         parent_id: Nadřazená stránka
         perex: Perex
         content: Obsah
-        tag_list: Tagy
+        tag_list: Klíčová slova
+        featured: Zvýraznit
+        published: Zveřejnit
+        published_at: Zveřejnit k datu
+        meta_title: Alternativní titulek (SEO - Meta Title)
+        meta_description: Alternativní popis (SEO - Meta Description)
       lead:
         note: Zpráva
       file:
         file: Změna souboru
+    hints:
+      defaults:
+        title: Titulek stránky tak, jak bude zobrazen na webu.
+        slug: Ponechte prázdné pro automatické vyplnění. Povoleny jsou jen znaky <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong>. Po změně funguje i původní varianta.
+        locale: Jazyková verze.
+        code: Nepovinný údaj. Využívá se, pokud je potřeba najít stránku vždy pod stejným označením nehledě na titulek a odkaz.
+        type: Typ obsahu, případně název grafické šablony pro zobrazení na webu.
+        parent_id: Pokud je web sestaven do stromové struktury, zde nastavíte nadřazenou stránku / kategorii.
+        perex: Stručný popis obsahu stránky. Slouží jako úvodní odstavec na stránce a popis při vylistování více stránek (např. v kategoriích). Také je využit při vyhledávání na webu a ve vyhledávačích.
+        content: Hlavní obsah stránky. Pokud potřebujete doplnit další strukturovaný obsah, je možné pokračovat níže přidáváním tzv. <strong>Kapitol</strong>.
+        tag_list: Seznam klíčových slov oddělených čárkou. Slouží pro rychlejší vyhledávání nebo kategorizaci a zobrazování obsahu na webu.
+        featured: Bývá využito pro zobrazení stránky na homepage nebo v jiných výběrech.
+        published: Po zaškrtnutí volby zveřejnit je stránka určena k publikování na webu k datu vyplněnému níže.
+        published_at: Při uvedení data v budoucnu bude stránka po zvolenou dobu skryta.
+        meta_title: Nepovinný údaj. Tato varianta titulku se může objevit v pojmenování stránky ve vyhledávačích. Důležité pro SEO.
+        meta_description: Nepovinný údaj. Tato varianta perexu se může objevit v popisu stránky ve vyhledávačích. Důležité pro SEO.
+    placeholders:
+      defaults:
+        title: "Např.: Nabídka našich služeb"
+        slug: "Např.: nabidka-nasich-sluzeb"
+        perex: "Jeden, nebo více odstavců neformátovaného textu oddělených prázdným řádkem."
+        content: "Textový článek s možností formátování, vkládání obrázků, tabulek apod."
+        tag_list: "Např.: služby, nabídka"
+        meta_title: "Např.: Nabídka specializovaných služeb"
+        meta_description: "Alternativní popis obsahu stránky doporučujeme napsat tak, aby se vše podstatné vešlo do 250 znaků textu."
