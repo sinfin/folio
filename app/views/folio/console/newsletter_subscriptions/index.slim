@@ -4,8 +4,8 @@
   table
     thead
       tr
-        th = t(".email")
-        th colspan=2 = t(".created_at")
+        th = Folio::NewsletterSubscription.human_attribute_name(:email)
+        th colspan=2 = Folio::NewsletterSubscription.human_attribute_name(:created_at)
 
     tbody
       = render partial: "newsletter_subscription", collection: @subscriptions

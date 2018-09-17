@@ -6,8 +6,26 @@ cs:
         is_active: Aktivní
         full_name: Jméno
 
+      folio/node:
+        title: Název stránky
+        slug: Varianta názvu stránky pro odkazy
+        locale: Překlad
+        site: Stránka
+        code: Kód
+        type: Šablona / obsah
+        parent_id: Nadřazená stránka
+        perex: Perex
+        content: Obsah
+        tag_list: Klíčová slova
+        featured: Zvýrazněno
+        published: Zveřejněno
+        published_at: Zveřejněno k datu
+        meta_title: Alternativní titulek (SEO - Meta Title)
+        meta_description: Alternativní popis (SEO - Meta Description)
+        translations: Překlady
+
       folio/atom/base:
-        title: Titulek
+        title: Název
         content: Obsah
         perex: Perex
 
@@ -16,8 +34,8 @@ cs:
         file_placements: Použití
 
       folio/menu:
-        locale: Verze
-        type: Druh
+        locale: Jazyková verze
+        type: Název nabídky
 
       folio/menu_item:
         target: Odkaz
@@ -42,6 +60,16 @@ cs:
         name: Jméno
         created_at: Odesláno
 
+      folio/newsletter_subscription:
+        email: E-mailová adresa
+        created_at: Zapsána dne
+
+      folio/account:
+        role: Uživatelská role
+        first_name: Křestní jméno
+        last_name: Příjmení
+        is_active: Aktivní
+
       visit:
         id: Id
         started_at: Začátek
@@ -61,9 +89,9 @@ cs:
         other: Uživatelů
 
       folio/atom:
-        one: Atom
-        few: Atomy
-        other: Atomů
+        one: Kapitola
+        few: Kapitoly
+        other: Kapitol
 
       folio/atom/text:
         one: Text
