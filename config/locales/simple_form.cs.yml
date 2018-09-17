@@ -18,7 +18,7 @@ cs:
         locale: Překlad
         site: Stránka
         code: Kód
-        type: Typ
+        type: Šablona / obsah
         parent_id: Nadřazená stránka
         perex: Perex
         content: Obsah
