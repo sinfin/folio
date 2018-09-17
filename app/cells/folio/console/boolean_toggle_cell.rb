@@ -39,11 +39,9 @@ class Folio::Console::BooleanToggleCell < FolioCell
     "fa-#{self.class::ICON_OFF}"
   end
 
-  def model_url
-    options[:url] || "console_#{as}_path"
-  end
-
   def url
+    return options[:url] if options[:url].present?
+    model_url = "console_#{as}_path"
     controller.public_send(model_url, model.id, format: :json)
   rescue ActionController::UrlGenerationError
     controller.main_app.public_send(model_url, model.id, format: :json)
