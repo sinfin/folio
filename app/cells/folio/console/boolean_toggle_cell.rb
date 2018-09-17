@@ -5,6 +5,10 @@ class Folio::Console::BooleanToggleCell < FolioCell
   ICON_ON = 'toggle-on'
   ICON_OFF = 'toggle-off'
 
+  def show
+    render if url.present?
+  end
+
   def form(&block)
     form_with(model: model, as: options[:as], url: url) do
       yield(block)
@@ -40,7 +44,10 @@ class Folio::Console::BooleanToggleCell < FolioCell
   end
 
   def url
-    controller.try(model_url, model.id, format: :json) ||
+    controller.public_send(model_url, model.id, format: :json)
+  rescue ActionController::UrlGenerationError
     controller.main_app.public_send(model_url, model.id, format: :json)
+  rescue StandardError
+    nil
   end
 end

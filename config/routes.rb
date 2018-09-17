@@ -40,8 +40,6 @@ Folio::Engine.routes.draw do
     resources :visits, only: %i[index show]
   end
 
-  get '/admin' => redirect('/console')
-
   resources :leads, only: %i[create]
   resources :newsletter_subscriptions, only: %i[create]
 end
