@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 ## 2018-09-13
 ### Changed
 - forms utilize the `form_footer` helper
+- `Folio::Atom::Text` has `content: :redactor`
 
 ## 2018-09-10
 ### Removed
