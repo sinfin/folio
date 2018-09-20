@@ -17,6 +17,9 @@ aside.folio-console-smart-col
     flex: 1 0 100%
     min-width: 100%
 
+  &.folio-console-smart-col--wrap
+    flex: 0 0 100%
+
 +mq-sm-up
   aside.folio-console-smart-col
     margin-right: $spacer
@@ -25,7 +28,8 @@ aside.folio-console-smart-col
       margin-right: 0
       margin-left: $spacer
 
-      &.folio-console-smart-col--spread
+      &.folio-console-smart-col--spread,
+      &.folio-console-smart-col--wrap
         margin-left: 0
         margin-top: (( - $spacer ))
 

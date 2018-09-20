@@ -7,7 +7,7 @@
                        include_blank: false, \
                        input_html: { class: 'folio-console-atom-type-select' }
 
-      .folio-console-smart-row
+      .folio-console-smart-row.folio-console-smart-row--wrap
         aside.folio-console-smart-col[
           class="folio-console-atom-images"
           class="folio-console-atom-images-single"
@@ -29,14 +29,14 @@
           = perex_field
           = content_field
 
-        aside.folio-console-smart-col.folio-console-smart-col--spread[
+        aside.folio-console-smart-col.folio-console-smart-col--wrap[
           class="folio-console-atom-images"
           class="folio-console-atom-images-multi"
           hidden=(structure[:images] == :multi ? nil : '')
         ]
           = react_image_select(f, multi: true)
 
-        aside.folio-console-smart-col.folio-console-smart-col--spread[
+        aside.folio-console-smart-col.folio-console-smart-col--wrap[
           class="folio-console-atom-documents"
           class="folio-console-atom-documents-multi"
           hidden=(structure[:documents] == :multi ? nil : '')
