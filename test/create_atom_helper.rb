@@ -19,9 +19,9 @@ def create_atom(klass = Folio::Atom::Base,
     title: title ||
            (fill_attrs.include?(:title) ? 'Title' : nil),
     perex: perex ||
-           (fill_attrs.include?(:title) ? 'Perex' : nil),
+           (fill_attrs.include?(:perex) ? 'Perex' : nil),
     content: content ||
-             (fill_attrs.include?(:title) ? 'Content' : nil),
+             (fill_attrs.include?(:content) ? 'Content' : nil),
     model: model ||
            (fill_attrs.include?(:model) ? create(:folio_node) : nil),
     cover: cover ||
