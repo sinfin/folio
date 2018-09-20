@@ -14,8 +14,15 @@ module Folio
     end
 
     def self.social_link_sites
-      # class method > constant as one might want to override it
-      %i[facebook instagram twitter appstore google_play pinterest messenger]
+      # class method is better than a constant as one might want to override it
+      %i[facebook
+         instagram
+         twitter
+         youtube
+         appstore
+         google_play
+         pinterest
+         messenger]
    end
   end
 end
