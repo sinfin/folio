@@ -8,12 +8,14 @@ ADVANCED_OPTIONS =
   imageManagerJson: '/console/images.json'
   toolbarFixed: false
   lang: document.documentElement.lang
+  formatting: ['p', 'h2', 'h3', 'h4']
 
 OPTIONS =
   plugins: ['video', 'table', 'button']
   buttonsHide: ['file', 'image']
   toolbarFixed: false
   lang: document.documentElement.lang
+  formatting: ['p', 'h2', 'h3', 'h4']
 
 window.folioConsoleInitRedactor = (node, options = {}) ->
   opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
