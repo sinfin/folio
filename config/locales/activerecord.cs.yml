@@ -3,6 +3,7 @@ cs:
   attributes:
     code: Kód
     content: Obsah
+    cover_placement: Obrázek
     description: Popisek
     email: E-mail
     featured: Zvýrazněno
