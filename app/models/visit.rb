@@ -36,6 +36,10 @@ class Visit < Folio::ApplicationRecord
   def to_label
     title
   end
+
+  def self.clears_page_cache_on_save?
+    false
+  end
 end
 
 # == Schema Information

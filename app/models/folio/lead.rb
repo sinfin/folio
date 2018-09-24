@@ -42,6 +42,10 @@ module Folio
       %i[id email phone note created_at name url state]
     end
 
+    def self.clears_page_cache_on_save?
+      false
+    end
+
     def csv_attributes
       self.class.csv_attribute_names.map do |attr|
         case attr

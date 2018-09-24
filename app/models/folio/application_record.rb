@@ -4,9 +4,10 @@ module Folio
   class ApplicationRecord < ActiveRecord::Base
     self.abstract_class = true
 
+    include ClearsPageCache
     include Filterable
-    include Sortable
-    include RecursiveSubclasses
     include NillifyBlanks
+    include RecursiveSubclasses
+    include Sortable
   end
 end

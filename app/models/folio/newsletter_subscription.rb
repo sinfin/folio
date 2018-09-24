@@ -22,6 +22,10 @@ module Folio
     def title
       email
     end
+
+    def self.clears_page_cache_on_save?
+      false
+    end
   end
 end
 
