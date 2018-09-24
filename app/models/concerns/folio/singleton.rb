@@ -4,7 +4,7 @@ module Folio
   module Singleton
     extend ActiveSupport::Concern
 
-    class MissingError < StandardError; end
+    class MissingError < ActiveRecord::RecordNotFound; end
 
     included do
       validate :validate_singularity
