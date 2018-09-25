@@ -46,6 +46,10 @@ Dragonfly.app.configure do
     end
   end
 
+  processor :add_png_background do |content, size, *args|
+    content.process! :convert, "-background white -alpha remove"
+  end
+
   secret Rails.application.secrets.dragonfly_secret
 
   url_format '/media/:job/:sha/:name'

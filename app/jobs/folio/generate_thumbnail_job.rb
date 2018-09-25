@@ -27,10 +27,17 @@ module Folio
       def compute_sizes(image, size, quality)
         return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
 
-        if Rails.application.config.folio_dragonfly_keep_png &&
-           image.try(:mime_type) =~ /png/
-          thumbnail = image.file
-                           .thumb(size)
+        if image.try(:mime_type) =~ /png/
+          if Rails.application.config.folio_dragonfly_keep_png
+            thumbnail = image.file
+                             .thumb(size, 'format' => :png, 'frame' => 0)
+          else
+            thumbnail = image.file
+                             .add_png_background(size)
+                             .thumb(size, 'format' => :jpg, 'frame' => 0)
+                             .encode('jpg', "-quality #{quality}")
+                             .jpegoptim
+         end
         elsif image.animated_gif?
           thumbnail = image.file
                            .animated_gif_resize(size)
