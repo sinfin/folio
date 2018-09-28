@@ -1,5 +1,4 @@
 == cell('folio/console/form/header', @site)
 
-= simple_form_for(@site, as: :site, \
-                         url: console_site_path(@site.id)) do |f|
+= simple_form_for(@site, as: :site, url: console_site_path) do |f|
   = render 'form', f: f

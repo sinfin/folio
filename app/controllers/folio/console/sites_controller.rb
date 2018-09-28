@@ -11,7 +11,7 @@ module Folio
 
     def update
       @site.update(site_params)
-      respond_with @site, location: edit_console_site_path(@site)
+      respond_with @site, location: edit_console_site_path
     end
 
     private
