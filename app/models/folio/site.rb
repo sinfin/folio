@@ -4,6 +4,8 @@ module Folio
   class Site < ApplicationRecord
     include ::Folio::Singleton
 
+    after_commit :clear_fragment_cache!
+
     # Validations
     validates :title, presence: true
     validates :domain, uniqueness: true
@@ -23,7 +25,11 @@ module Folio
          google_play
          pinterest
          messenger]
-   end
+    end
+
+    def clear_fragment_cache!
+      Rails.cache.clear
+    end
   end
 end
 
