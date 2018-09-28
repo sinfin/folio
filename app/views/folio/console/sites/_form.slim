@@ -13,6 +13,8 @@
 
     = render 'additional_form_fields', f: f
 
+    = f.input :turbo_mode
+
   = tab :settings
     = f.input :domain
     = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \

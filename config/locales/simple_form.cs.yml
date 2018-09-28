@@ -31,6 +31,9 @@ cs:
         meta_title: Nepovinný údaj. Tato varianta titulku se může objevit v stránky ve vyhledávačích. Důležité pro SEO.
         meta_description: Nepovinný údaj. Tato varianta perexu se může objevit v popisu ve vyhledávačích. Důležité pro SEO.
 
+      site:
+        turbo_mode: Vypne trackování návštěv, čímž se výrazně omezí zátěž serveru v období vysoké návštěvnosti.
+
       node:
         code: Nepovinný údaj. Využívá se, pokud je potřeba najít stránku vždy pod stejným označením nehledě na titulek a odkaz.
         parent_id: Pokud je web sestaven do stromové struktury, zde nastavíte nadřazenou stránku / kategorii.

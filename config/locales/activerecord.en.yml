@@ -23,6 +23,7 @@ en:
         address: Address
         google_analytics_tracking_code: Google analytics - tracking code
         facebook_pixel_code: Facebook pixel - code
+        turbo_mode: Turbo mode
 
     models:
       folio/account:

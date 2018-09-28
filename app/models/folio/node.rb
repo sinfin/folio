@@ -12,16 +12,22 @@ module Folio
 
     # Relations
     has_ancestry touch: true
-    friendly_id :title, use: %i[slugged scoped history], scope: [:locale, :ancestry]
+    friendly_id :title, use: %i[slugged scoped history],
+                        scope: [:locale, :ancestry]
 
-    has_many :node_translations, class_name: 'Folio::NodeTranslation', foreign_key: :original_id, dependent: :destroy
+    has_many :node_translations, class_name: 'Folio::NodeTranslation',
+                                 foreign_key: :original_id,
+                                 dependent: :destroy
 
     # Validations
     validates :title, :slug, :locale,
               presence: true
-    validates :slug, uniqueness: { scope: [:locale, :ancestry] }
-    validates :locale, inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
-    validate :allowed_type, if: :has_parent?
+    validates :slug,
+              uniqueness: { scope: [:locale, :ancestry] }
+    validates :locale,
+              inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
+    validate :validate_allowed_type,
+             if: :has_parent?
 
     # Callbacks
     before_save :set_position
@@ -205,7 +211,7 @@ module Folio
       end
 
       # custom Validations
-      def allowed_type
+      def validate_allowed_type
         return if self.type == 'Folio::NodeTranslation'
         return if parent.nil? || parent.class.allowed_child_types.nil?
 

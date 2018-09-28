@@ -36,8 +36,8 @@ Folio::Engine.routes.draw do
     end
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
-    resources :sites
     resources :visits, only: %i[index show]
+    resource :site
   end
 
   resources :leads, only: %i[create]

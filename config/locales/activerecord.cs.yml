@@ -59,6 +59,7 @@ cs:
         address: Adresa
         google_analytics_tracking_code: Google analytics - trackovací kód
         facebook_pixel_code: Facebook pixel - kód
+        turbo_mode: Kritický režim
 
       folio/lead:
         state: Stav

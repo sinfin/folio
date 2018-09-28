@@ -36,3 +36,7 @@ meta name="twitter:card" content="summary"
 
 = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload',
                                         defer: true
+
+- unless @site.turbo_mode?
+  = javascript_include_tag 'non_turbo', 'data-turbolinks-track' => 'reload',
+                                        defer: true

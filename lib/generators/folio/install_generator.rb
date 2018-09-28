@@ -102,6 +102,7 @@ module Folio
           'app/assets/images/sprites@1x/.keep',
           'app/assets/images/sprites@2x/.keep',
           'app/assets/javascripts/application.js',
+          'app/assets/javascripts/non_turbo.js',
           'app/assets/stylesheets/_cells.scss.erb',
           'app/assets/stylesheets/_custom_bootstrap.sass',
           'app/assets/stylesheets/_print.sass',

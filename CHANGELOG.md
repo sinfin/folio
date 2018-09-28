@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 - `:file` dragonfly by default, add `DEV_S3_DRAGONFLY` flag
 
 ## 2018-09-14
+### Changed
+- added `turbo_mode` to `Site` - splitting JS files into `application.js` and `non_turbo.js` is advised
+- changed `resources` -> `resource` for `Site` in console
+
+## 2018-09-14
 ### Removed
 - removed `Thumbnails` concern from `Document`
 

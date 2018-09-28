@@ -7,9 +7,14 @@ module Folio
     after_commit :clear_fragment_cache!
 
     # Validations
-    validates :title, presence: true
-    validates :domain, uniqueness: true
-    validates_format_of :email, with: ::Folio::EMAIL_REGEXP
+    validates :title, :locale, :locales,
+              presence: true
+
+    validates :domain,
+              uniqueness: true
+
+    validates_format_of :email,
+                        with: ::Folio::EMAIL_REGEXP
 
     def self.additional_params
       []
@@ -27,9 +32,11 @@ module Folio
          messenger]
     end
 
-    def clear_fragment_cache!
-      Rails.cache.clear
-    end
+    private
+
+      def clear_fragment_cache!
+        Rails.cache.clear
+      end
   end
 end
 
@@ -51,6 +58,7 @@ end
 #  social_links                   :json
 #  address                        :text
 #  description                    :text
+#  turbo_mode                     :boolean          default(FALSE)
 #
 # Indexes
 #
