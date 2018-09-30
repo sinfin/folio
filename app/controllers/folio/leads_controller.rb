@@ -2,7 +2,7 @@
 
 module Folio
   class LeadsController < ApplicationController
-    invisible_captcha only: :create, on_timestamp_spam: :spam
+    # invisible_captcha only: :create, on_timestamp_spam: :spam
 
     REMEMBER_OPTION_KEYS = [
       :note,
