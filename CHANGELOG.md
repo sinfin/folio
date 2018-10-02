@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-10-02
+### Changed
+- `:file` dragonfly by default, add `DEV_S3_DRAGONFLY` flag
+
 ## 2018-09-14
 ### Removed
 - removed `Thumbnails` concern from `Document`
