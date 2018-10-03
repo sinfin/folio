@@ -13,7 +13,10 @@ module Folio
       return unless Rails.application.config.action_controller.perform_caching
       cache_dir = Rails.application.config.action_controller.page_cache_directory
       return if cache_dir.blank? || !::File.exist?(cache_dir)
-      Dir.mktmpdir { |tmp_dir| FileUtils.mv cache_dir, tmp_dir }
+      Dir.mktmpdir do |tmp_dir|
+        FileUtils.mv cache_dir, tmp_dir
+        FileUtils.rmdir tmp_dir
+      end
     end
 
     module ClassMethods
