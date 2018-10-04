@@ -47,7 +47,7 @@ Dragonfly.app.configure do
   end
 
   processor :add_png_background do |content, size, *args|
-    content.process! :convert, "-background white -alpha remove"
+    content.process! :convert, '-background white -alpha remove'
   end
 
   secret Rails.application.secrets.dragonfly_secret

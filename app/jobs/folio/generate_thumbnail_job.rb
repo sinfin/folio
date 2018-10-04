@@ -37,7 +37,7 @@ module Folio
                              .thumb(size, 'format' => :jpg, 'frame' => 0)
                              .encode('jpg', "-quality #{quality}")
                              .jpegoptim
-         end
+          end
         elsif image.animated_gif?
           thumbnail = image.file
                            .animated_gif_resize(size)
