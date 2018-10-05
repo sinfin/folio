@@ -133,6 +133,8 @@ module Folio
 
     config.exceptions_app = self.routes
 
+    config.time_zone = 'Prague'
+
     config.generators do |g|
       g.stylesheets false
       g.javascripts false
