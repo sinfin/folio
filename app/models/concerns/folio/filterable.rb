@@ -16,7 +16,7 @@ module Folio
           attrs = self.attribute_names & %w[title name]
           args = ["%#{q}%"] * attrs.size
 
-          conditions = attrs.map { |a| "unaccent(#{a}) ILIKE unaccent(?)" }
+          conditions = attrs.map { |a| "unaccent(#{table_name}.#{a}) ILIKE unaccent(?)" }
           where(conditions.join(' OR '), *args)
         else
           where(nil)
