@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-10-12
+### Added
+- Page caching via `actionpack-page_caching`
+
 ## 2018-10-02
 ### Changed
 - `:file` dragonfly by default, add `DEV_S3_DRAGONFLY` flag

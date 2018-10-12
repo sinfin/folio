@@ -3,13 +3,11 @@
 InvisibleCaptcha.setup do |config|
   # config.honeypots           << ['more', 'fake', 'attribute', 'names']
   # config.visual_honeypots    = false
-  config.timestamp_threshold = 2
+  # config.timestamp_threshold = 2
 
-  if Rails.env.test?
-    config.timestamp_enabled = false
-  end
+  # disable timestamp because of page caching
+  config.timestamp_enabled = false
 
-  # config.timestamp_enabled   = true
   # config.injectable_styles   = false
 
   # Leave these unset if you want to use I18n (see below)
