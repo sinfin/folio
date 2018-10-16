@@ -1,4 +1,7 @@
-.folio-lead-form-wrap class=(submitted ? 'folio-lead-form-submitted' : nil)
+.folio-lead-form-wrap[
+  class=(submitted ? 'folio-lead-form-submitted' : nil)
+  data-failure=t('.failure')
+]
   = simple_form_for lead, url: leads_path, \
                           html: { class: 'folio-lead-form' } do |f|
     = hidden_options

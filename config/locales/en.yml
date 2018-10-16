@@ -103,6 +103,7 @@ en:
       note: Message
       note_placeholder: ''
       message: Thanks for your message!
+      failure: Failed to send the message. Please try again later.
 
   cookie_consent:
     dismiss: OK

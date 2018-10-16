@@ -59,6 +59,7 @@ cs:
       note: Zpráva
       note_placeholder: ''
       message: Děkujeme za zaslání Vaší zprávy!
+      failure: Zprávu se nepodařilo odeslat. Zkuste to prosíme později.
 
     newsletter_subscription_form:
       email: E-mail

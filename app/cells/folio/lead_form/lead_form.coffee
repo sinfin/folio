@@ -6,7 +6,7 @@ $ ->
     $wrap.addClass('folio-lead-form-submitting')
 
     $.post($form.attr('action'), $form.serialize())
-      .always (response) ->
+      .then (response) ->
         $response = $(response)
         $wrap.replaceWith($response)
         $response.trigger('folio:submitted')
@@ -14,3 +14,7 @@ $ ->
           $response.trigger('folio:success')
         else
           $response.trigger('folio:failure')
+
+      .catch ->
+        $wrap.removeClass('folio-lead-form-submitting')
+        alert($wrap.data('failure'))
