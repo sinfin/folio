@@ -12,7 +12,7 @@ module Folio
 
       def nillify_blanks
         attributes.each do |column, value|
-          if value.blank? && !value.nil?
+          if value.blank? && !value.nil? && value != false
             self[column] = nil
           end
         end
