@@ -43,5 +43,19 @@ module Folio
         get page_url(@category_en, locale: :cs)
       end
     end
+
+    test 'slug/slug' do
+      @category.update!(slug: 'slug', title: 'category')
+      @page.update!(slug: 'slug', title: 'page')
+      get '/cs/slug'
+      assert_response :success
+      html = Nokogiri::HTML(response.body)
+      assert_equal('category', html.css('h1')[0].text)
+
+      get '/cs/slug/slug'
+      assert_response :success
+      html = Nokogiri::HTML(response.body)
+      assert_equal('page', html.css('h1')[0].text)
+    end
   end
 end
