@@ -79,3 +79,8 @@ end
 about_en = about.translate!(:en)
 about_en.update(title: 'About', published: true)
 about.translate!(:de)
+
+Folio::Lead.create!(name: 'Test lead',
+                    email: 'test@lead.test',
+                    note: 'Hello',
+                    additional_data: { test: 'test', boolean: false })

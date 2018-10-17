@@ -1,0 +1,11 @@
+- if lead.additional_data.present?
+  - lead.additional_data.each do |key, value|
+    tr
+      td = Folio::Lead.human_attribute_name(key)
+      td
+        - if value == true
+          = t('true')
+        - elsif value == false
+          = t('false')
+        - else
+          = value

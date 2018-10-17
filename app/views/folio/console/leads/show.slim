@@ -3,10 +3,6 @@ h1 = Folio::Lead.model_name.human
 table.table
   tbody
     tr
-      td = Folio::Lead.human_attribute_name(:name)
-      td = @lead.name.presence || t('.blank')
-
-    tr
       td = Folio::Lead.human_attribute_name(:state)
       td
         = @lead.human_state_name
@@ -24,6 +20,10 @@ table.table
                     handle_console_lead_path(@lead), \
                     method: :post, \
                     class: 'btn btn-success'
+
+    tr
+      td = Folio::Lead.human_attribute_name(:name)
+      td = @lead.name.presence || t('.blank')
 
     tr
       td = Folio::Lead.human_attribute_name(:email)
@@ -57,14 +57,4 @@ table.table
         - else
           ' -
 
-    - if @lead.additional_data.present?
-      - @lead.additional_data.each do |key, value|
-        tr
-          td = Folio::Lead.human_attribute_name(key)
-          td
-            - if value == true
-              = t('true')
-            - elsif value == false
-              = t('false')
-            - else
-              = value
+    = render partial: 'folio/console/leads/additional_data', locals: { lead: @lead }
