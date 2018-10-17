@@ -16,5 +16,6 @@ $ ->
           $response.trigger('folio:failure')
 
       .catch ->
-        $wrap.removeClass('folio-lead-form-submitting')
         alert($wrap.data('failure'))
+        $wrap.find('input[type="submit"]').prop('disabled', false)
+        $wrap.removeClass('folio-lead-form-submitting')
