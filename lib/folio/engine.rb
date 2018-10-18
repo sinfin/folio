@@ -26,13 +26,10 @@ module Folio
       g.helper false
     end
 
-    begin
-      config.autoload_paths << self.root.join('lib')
-      config.eager_load_paths << self.root.join('lib')
-      config.assets.paths << self.root.join('app/cells')
-      config.assets.paths << self.root.join('vendor/assets/bower_components')
-    rescue RuntimeError
-    end
+    config.autoload_paths << self.root.join('lib')
+    config.eager_load_paths << self.root.join('lib')
+    config.assets.paths << self.root.join('app/cells')
+    config.assets.paths << self.root.join('vendor/assets/bower_components')
 
     initializer :append_migrations do |app|
       unless app.root.to_s.match root.to_s
