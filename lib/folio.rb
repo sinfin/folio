@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
+require_dependency 'folio/engine'
+
+# TODO: rm the require
+
 require 'kaminari'
 
 require 'dotenv-rails'
-require 'folio/engine'
 require 'friendly_id'
 require 'ancestry'
 require 'devise'
@@ -36,18 +39,6 @@ require 'state_machines'
 require 'state_machines-activerecord'
 
 module Folio
-  class Engine < ::Rails::Engine
-    config.assets.precompile += %w[
-      folio/console/base.css
-      folio/console/base.js
-      folio/console/react/main.js
-      folio/console/react/main.css
-    ]
-
-    config.folio_dragonfly_keep_png = false
-    config.folio_public_page_title_reversed = false
-  end
-
   LANGUAGES = {
     cs: 'CZ',
     de: 'DE',

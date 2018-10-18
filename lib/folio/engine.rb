@@ -30,6 +30,15 @@ module Folio
     config.eager_load_paths << self.root.join('lib')
     config.assets.paths << self.root.join('app/cells')
     config.assets.paths << self.root.join('vendor/assets/bower_components')
+    config.assets.precompile += %w[
+      folio/console/base.css
+      folio/console/base.js
+      folio/console/react/main.js
+      folio/console/react/main.css
+    ]
+
+    config.folio_dragonfly_keep_png = false
+    config.folio_public_page_title_reversed = false
 
     initializer :append_migrations do |app|
       unless app.root.to_s.match root.to_s
