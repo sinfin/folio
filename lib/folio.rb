@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_dependency 'folio/engine'
+require 'folio/engine'
 
 # TODO: rm the require
 
