@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-class Ahoy::Store < Ahoy::Stores::ActiveRecordTokenStore
-  Ahoy.geocode = :async
-  Ahoy.track_visits_immediately = true
-  Ahoy.quiet = false
-
-  # def track_event(name, properties, options)
-  # end
-  #
-  # def current_visit
-  # end
+class Ahoy::Store < Ahoy::DatabaseStore
+  def visit_model
+    Visit
+  end
 end
+
+Ahoy.api = true
+Ahoy.geocode = :async
+Ahoy.quiet = true
+Ahoy.server_side_visits = :when_needed

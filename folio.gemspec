@@ -52,7 +52,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cells-rails'
   s.add_dependency 'cells-slim'
   s.add_dependency 'rails-assets-selectize', '~> 0.12.4'
-  s.add_dependency 'ahoy_matey', '~> 1'
+  s.add_dependency 'ahoy_matey', '~> 2'
   s.add_dependency 'rails-assets-jquery', '~> 3.2.1'
   s.add_dependency 'rails-assets-photoswipe'
   s.add_dependency 'rails-i18n'
