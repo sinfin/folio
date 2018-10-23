@@ -15,7 +15,17 @@ module Folio
       def index
         respond_with(@files) do |format|
           format.html
-          format.json { render json: @files }
+          format.json do
+            cache_key = [self.class.to_s, ::Folio::File.maximum(:updated_at)]
+
+            files_json = Rails.cache.fetch(cache_key, expires_in: 1.day) do
+              @files.map do |file|
+                ::Folio::FileSerializer.new(file).serializable_hash
+              end.to_json
+            end
+
+            render plain: files_json
+          end
         end
       end
 

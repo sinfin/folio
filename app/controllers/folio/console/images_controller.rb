@@ -15,7 +15,7 @@ module Folio
         cache_key = ['folio', 'console', 'images', Image.maximum(:updated_at)]
 
         @files = Rails.cache.fetch(cache_key, expires_in: 1.day) do
-          Image.ordered.includes(:taggings).includes(:tags)
+          Image.ordered.includes(:tags).all
         end
       end
   end
