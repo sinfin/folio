@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import Select from 'react-select'
-import 'react-select/dist/react-select.css'
+import selectStyles from './selectStyles'
 
 import {
   filtersSelector,
@@ -24,26 +24,32 @@ const Wrap = styled.div`
     margin-right: 30px;
   }
 
-  .Select {
-    min-width: 280px;
-  }
+  .form-group--react-select {
+    flex: 0 0 250px;
 
-  .Select-control {
-    border-radius: 0;
-  }
-
-  .Select-control, .Select-input {
-    height: 35px;
-  }
-
-  .Select-placeholder, .Select--single > .Select-control .Select-value {
-    line-height: 35px;
+    > div {
+      width: 250px;
+    }
   }
 `
 
 class FileFilter extends Component {
   onNameChange = (e) => {
-    this.props.dispatch(setFilter('name', e.target.value))
+    this.props.dispatch(
+      setFilter('name', e.target.value)
+    )
+  }
+
+  onTagsChange = (tags) => {
+    this.props.dispatch(
+      setFilter('tags', tags.map((tag) => tag.value))
+    )
+  }
+
+  onReset = () => {
+    this.props.dispatch(
+      resetFilters()
+    )
   }
 
   booleanButton (bool) {
@@ -54,15 +60,15 @@ class FileFilter extends Component {
     }
   }
 
-  tagsOptions () {
-    return this.props.tags.map((tag) => ({
+  formatTags (tags) {
+    return tags.map((tag) => ({
       value: tag,
       label: tag,
     }))
   }
 
   render() {
-    const { filters, dispatch, margined } = this.props
+    const { filters, margined } = this.props
 
     return (
       <Wrap className='form-inline' margined={margined}>
@@ -75,14 +81,17 @@ class FileFilter extends Component {
           />
         </div>
 
-        <div className='form-group'>
+        <div className='form-group form-group--react-select'>
           <Select
             name="form-field-name"
-            value={filters.tags}
-            onChange={(tags) => dispatch(setFilter('tags', tags.map((tag) => tag.value)))}
-            options={this.tagsOptions()}
+            value={this.formatTags(filters.tags)}
+            onChange={this.onTagsChange}
+            options={this.formatTags(this.props.tags)}
             placeholder='Tags'
-            multi
+            className='react-select-container'
+            classNamePrefix='react-select'
+            styles={selectStyles}
+            isMulti
           />
         </div>
 
@@ -91,7 +100,7 @@ class FileFilter extends Component {
             <button
               type='button'
               className='btn btn-danger'
-              onClick={() => dispatch(resetFilters())}
+              onClick={this.onReset}
             >
               <i className='fa fa-times'></i>
             </button>

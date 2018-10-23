@@ -38,7 +38,10 @@ html.bg-dark lang=I18n.locale
 
     - if ENV['REACT_DEV']
       = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
+      = javascript_include_tag 'http://localhost:3001/static/js/0.chunk.js'
+      = javascript_include_tag 'http://localhost:3001/static/js/1.chunk.js'
+      = javascript_include_tag 'http://localhost:3001/static/js/main.chunk.js'
     - else
-      = javascript_include_tag 'folio/console/react/main'
+      = javascript_include_tag 'folio/console/react'
 
     = yield :javascripts
