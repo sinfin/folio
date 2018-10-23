@@ -35,7 +35,7 @@ module Folio
     end
 
     def tags
-      object.tag_list
+      object.tags.collect(&:name)
     end
 
     def edit_path

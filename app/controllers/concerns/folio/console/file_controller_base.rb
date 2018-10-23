@@ -13,10 +13,6 @@ module Folio
       end
 
       def index
-        if !params[:by_tag].blank?
-          @files = @files.filter(filter_params)
-        end
-
         respond_with(@files) do |format|
           format.html
           format.json { render json: @files }
@@ -47,11 +43,6 @@ module Folio
         def find_file
           @file = ::Folio::File.find(params[:id])
         end
-
-        def filter_params
-          params.permit(:by_tag)
-        end
-
 
         def file_params
           p = params.require(:file).permit(:tag_list, :type, :file, file: [])

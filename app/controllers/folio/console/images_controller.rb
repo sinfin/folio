@@ -12,7 +12,11 @@ module Folio
       end
 
       def find_files
-        @files = Image.ordered
+        cache_key = ['folio', 'console', 'images', Image.maximum(:updated_at)]
+
+        @files = Rails.cache.fetch(cache_key, expires_in: 1.day) do
+          Image.ordered.includes(:taggings).includes(:tags)
+        end
       end
   end
 end
