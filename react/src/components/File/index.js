@@ -15,7 +15,9 @@ const OUTER_STYLE = `
 const OuterWrap = styled.div`${OUTER_STYLE}`
 const OuterLinkWrap = styled.a`${OUTER_STYLE}`
 
-const ImageWrap = styled.div`
+const ImageWrap = styled.div.attrs({
+  style: ({ background }) => ({ background }),
+})`
   position: absolute;
   top: 0;
   left: 0;
@@ -25,7 +27,6 @@ const ImageWrap = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1;
-  ${(props) => props.background ? `background: ${props.background};` : ''}
 
   img {
     max-width: 100%;

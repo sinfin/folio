@@ -8,6 +8,7 @@ Folio::Site.destroy_all
 Folio::Account.destroy_all
 Folio::Lead.destroy_all
 Folio::Menu.destroy_all
+Folio::File.destroy_all
 
 def unsplash_pic(square = false)
   image = Folio::Image.new
