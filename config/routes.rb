@@ -40,6 +40,7 @@ Folio::Engine.routes.draw do
     resource :site
   end
 
+  resource :csrf, only: %i[show], controller: :csrf
   resources :leads, only: %i[create]
   resources :newsletter_subscriptions, only: %i[create]
 end

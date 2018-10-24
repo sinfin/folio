@@ -1,13 +1,23 @@
+#= require folio/csrf
+
 $ ->
+  $(document).one 'focus', '.folio-newsletter-subscription-form', ->
+    window.folioFreshCsrfToken.preloadToken()
+
   $(document).on 'submit', '.folio-newsletter-subscription-form', (e) ->
     e.preventDefault()
-    $form = $(this)
-    $wrap = $form.parent()
-    data = {}
-    for input in $form.serializeArray()
-      data[input.name] = input.value
+    return if window.folioFreshCsrfToken.loading
 
+    $form = $(this)
+    return if $form.hasClass('folio-newsletter-subscription-form-submitting')
+
+    $wrap = $form.parent()
     $form.addClass('folio-newsletter-subscription-form-submitting')
 
-    $.post($form.attr('action'), data)
-      .always((response) -> $wrap.replaceWith(response))
+    window.folioFreshCsrfToken.withToken (token) ->
+      $form
+        .find("input[name=\"#{window.folioFreshCsrfToken.tokenParam}\"]")
+        .val(token)
+
+      $.post($form.attr('action'), $form.serialize())
+        .always((response) -> $wrap.replaceWith(response))
