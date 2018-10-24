@@ -20,3 +20,7 @@ window.folioFreshCsrfToken =
     return if @loading
     return if @value
     @getToken()
+
+$ ->
+  $(document).one 'focus', 'form', ->
+    window.folioFreshCsrfToken.preloadToken()

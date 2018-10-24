@@ -1,9 +1,6 @@
 #= require folio/csrf
 
 $ ->
-  $(document).one 'focus', '.folio-lead-form', ->
-    window.folioFreshCsrfToken.preloadToken()
-
   $(document).on 'submit', '.folio-lead-form', (e) ->
     e.preventDefault()
     return if window.folioFreshCsrfToken.loading
