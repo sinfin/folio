@@ -18,7 +18,10 @@ module Folio
                      Document.maximum(:updated_at)]
 
         @files = Rails.cache.fetch(cache_key, expires_in: 1.day) do
-          Document.ordered.includes(:tags).all
+          Document.ordered
+                  .includes(:tags)
+                  .includes(:file_placements)
+                  .all
         end
       end
   end

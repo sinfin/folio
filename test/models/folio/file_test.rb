@@ -25,14 +25,13 @@ module Folio
 
     test 'touches node through atoms' do
       node = create(:folio_node)
-      atom = create_atom(::Atom::SingleImage, placement: node)
       image = ImmediateImage.create!(file: Engine.root.join('test/fixtures/folio/test.gif'))
-      atom.cover = image
+      atom = create_atom(::Atom::SingleImage, placement: node, cover: image)
 
       atom_updated_at = atom.reload.updated_at
       node_updated_at = node.reload.updated_at
 
-      assert image.thumb('150x150').url
+      assert image.reload.thumb('150x150').url
       assert atom.reload.updated_at > atom_updated_at
       assert node.reload.updated_at > node_updated_at
     end

@@ -6,7 +6,7 @@ module Folio
 
     attributes :id, :file_size, :file_name, :type,
                :thumb, :size, :url, :tags,
-               :dominant_color, :edit_path
+               :dominant_color, :edit_path, :placements
 
     ADMIN_THUMBNAIL_SIZE = '250x250'
 
@@ -44,6 +44,26 @@ module Folio
       else
         edit_console_document_path(object)
       end
+    end
+
+    def placements
+      titles = []
+      keys = %i[file_placements]
+      keys << :cover_placements if image?
+
+      keys.each do |key|
+        object.send(key).each do |fp|
+          title = fp.placement.try(:title) || fp.placement.try(:name)
+          next if title.blank?
+
+          model_name = fp.placement.class.model_name.human
+          joined = [model_name, title].join(' - ')
+
+          titles << joined unless titles.include?(joined)
+        end
+      end
+
+      titles
     end
   end
 end
