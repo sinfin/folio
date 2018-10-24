@@ -75,5 +75,14 @@ module Folio
         og_description = instance.try(m[:meta_description]).presence
         @public_page_description = og_description || description
       end
+
+      def force_correct_path(correct_path)
+        # If an old id or a numeric id was used to find the record, then
+        # the request path will not match the post_path, and we should do
+        # a 301 redirect that uses the current friendly id.
+        if request.path != correct_path
+          redirect_to(correct_path, status: :moved_permanently)
+        end
+      end
   end
 end

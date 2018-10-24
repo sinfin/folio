@@ -57,5 +57,19 @@ module Folio
       html = Nokogiri::HTML(response.body)
       assert_equal('page', html.css('h1')[0].text)
     end
+
+    test 'slug change -> redirect' do
+      @page.update!(parent: nil)
+      old_slug = @page.slug
+
+      get page_path(path: old_slug, locale: :cs)
+      assert_response :success
+
+      new_slug = "#{old_slug}-changed"
+      @page.update!(slug: new_slug)
+
+      get page_path(path: old_slug, locale: :cs)
+      assert_redirected_to page_path(path: new_slug, locale: :cs)
+    end
   end
 end

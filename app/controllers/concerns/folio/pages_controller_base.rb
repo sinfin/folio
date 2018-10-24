@@ -35,13 +35,7 @@ module Folio
           add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
         end
 
-        # # If an old id or a numeric id was used to find the record, then
-        # # the request path will not match the post_path, and we should do
-        # # a 301 redirect that uses the current friendly id.
-        # if request.path != page_path(@page)
-        #   return redirect_to @page, status: :moved_permanently
-        # end
-        #
+        force_correct_path(nested_page_path(@page, add_parents: true))
       end
 
       def add_meta
