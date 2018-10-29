@@ -14,9 +14,7 @@ module Folio
       before_validation :reset_thumbnails
 
       before_save :set_additional_data, if: :mime_type_image?
-      before_destroy do
-        ::Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
-      end
+      before_destroy :delete_thumbnails
     end
 
     class_methods do
@@ -95,7 +93,13 @@ module Folio
       def reset_thumbnails
         fail_for_non_images
 
-        if file_uid_changed?
+        delete_thumbnails if file_uid_changed?
+      end
+
+      def delete_thumbnails
+        fail_for_non_images
+
+        if self.thumbnail_sizes.present?
           ::Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
           self.thumbnail_sizes = {}
         end
