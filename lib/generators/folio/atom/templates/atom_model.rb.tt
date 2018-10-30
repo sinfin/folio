@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Atom::<%= class_name %> < Folio::Atom::Base
+class <%= global_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     perex: :string,
@@ -11,7 +11,7 @@ class Atom::<%= class_name %> < Folio::Atom::Base
   }
 
   def cell_name
-    'atom/<%= file_name %>'
+    '<%= atom_cell_name %>'
   end
 end
 

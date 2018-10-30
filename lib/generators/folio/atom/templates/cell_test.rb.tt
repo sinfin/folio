@@ -2,10 +2,10 @@
 
 require 'test_helper'
 
-class Atom::<%= class_name %>CellTest < Cell::TestCase
+class <%= global_namespace %>::Atom::<%= class_name %>CellTest < Cell::TestCase
   test 'show' do
-    atom = create_atom(Atom::<%= class_name %>)
-    html = cell('atom/<%= model_resource_name %>', atom.data).(:show)
+    atom = create_atom(<%= global_namespace %>::Atom::<%= class_name %>)
+    html = cell('<%= atom_cell_name %>', atom.data).(:show)
     assert html
   end
 end

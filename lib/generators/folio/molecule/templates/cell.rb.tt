@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class Molecule::<%= molecule_name %>Cell < ApplicationCell
+class <%= global_namespace %>::Molecule::<%= molecule_name %>Cell < ApplicationCell
 end
