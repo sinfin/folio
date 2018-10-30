@@ -52,13 +52,18 @@ class window.FolioLightbox
     $(document).off "click.#{@eventIdentifier}", @full_selector
     @$pswp = null
 
-window.makeFolioLightbox = (selector) ->
+window.makeFolioLightbox = (selector, opts = {}) ->
   window.folioLightboxInstances ?= []
 
   $(document).on 'turbolinks:load', ->
     $wrap = $(selector)
     return if $wrap.length is 0
-    window.folioLightboxInstances.push(new window.FolioLightbox(selector))
+    if opts.individual
+      $wrap.each ->
+        subSelector = ".#{@className.replace(/\s+/, '.')}"
+        window.folioLightboxInstances.push(new window.FolioLightbox(subSelector))
+    else
+      window.folioLightboxInstances.push(new window.FolioLightbox(selector))
 
   $(document).on 'turbolinks:before-cache', ->
     return unless window.folioLightboxInstances.length > 0
