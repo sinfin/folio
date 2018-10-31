@@ -74,9 +74,11 @@ module Folio
       end
 
       def self.form_hints
+        prefix = "simple_form.hints.#{name.underscore}"
         {
-          title: nil,
-          content: nil,
+          title: I18n.t("#{prefix}.title", default: nil),
+          perex: I18n.t("#{prefix}.perex", default: nil),
+          content: I18n.t("#{prefix}.content", default: nil),
         }
       end
 
