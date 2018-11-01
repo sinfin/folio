@@ -32,4 +32,8 @@ class Folio::Console::ReactImageSelectCell < Folio::Console::ReactSelectCell
       image_tag(fp.object.file.thumb('250x250').url)
     end
   end
+
+  def has_one?
+    options[:cover]
+  end
 end

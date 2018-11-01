@@ -12,6 +12,8 @@ class Folio::Console::ReactSelectCell < FolioCell
   end
 
   def title
+    return options[:title] if options[:title].present?
+
     if options[:cover]
       if model.is_a?(Folio::Atom::Base)
         t('.title_single')
@@ -29,7 +31,7 @@ class Folio::Console::ReactSelectCell < FolioCell
 
   def html_safe_fields_for(&block)
     f.simple_fields_for key, file_placements do |subfields|
-      (yield subfields).html_safe
+      (yield subfields).html_safe if subfields.object.present?
     end
   end
 
@@ -41,5 +43,9 @@ class Folio::Console::ReactSelectCell < FolioCell
     if f.object.errors.include?(key)
       f.object.errors[key]
     end
+  end
+
+  def has_one?
+    false
   end
 end

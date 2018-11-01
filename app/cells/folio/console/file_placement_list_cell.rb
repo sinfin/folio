@@ -31,6 +31,7 @@ class Folio::Console::FilePlacementListCell < FolioCell
 
   def atom_placement(fp)
     return nil unless fp.placement.is_a?(Folio::Atom::Base)
-    fp.placement.placement.presence
+    atom = fp.placement
+    atom.placement.presence
   end
 end

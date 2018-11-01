@@ -162,6 +162,10 @@ cs:
         title_single: Soubor
         add: Přidat soubor
 
+      react_has_one_document_select:
+        title_single: Soubor
+        add: Přidat soubor
+
       nested_model_controls:
         destroy: Odebrat
 

@@ -31,5 +31,24 @@ module Folio
 
       assert_equal([with], Node.with_documents)
     end
+
+    test 'has_one_document_placement' do
+      class MyPlacement < FilePlacement
+      end
+
+      class MyNode < Node
+        include HasAttachments
+        has_one_document_placement :my_file, placement: 'MyPlacement'
+      end
+
+      assert_equal(0, MyPlacement.count)
+      document = create(:folio_document)
+
+      my_node = MyNode.create!(title: 'MyNode',
+                               my_placement_attributes: { file: document })
+
+      assert_equal(1, MyPlacement.count)
+      assert_equal(document, my_node.my_file)
+    end
   end
 end

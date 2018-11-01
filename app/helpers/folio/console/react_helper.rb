@@ -40,13 +40,22 @@ module Folio
       )
     end
 
-    def react_image_select(f, multi: false, cover: false)
+    def react_image_select(f, multi: false, cover: false, key: nil, title: nil)
       raw cell('folio/console/react_image_select', f, multi: multi,
-                                                      cover: cover)
+                                                      cover: cover,
+                                                      key: key,
+                                                      title: title)
     end
 
-    def react_document_select(f, multi: false)
-      raw cell('folio/console/react_document_select', f, multi: multi)
+    def react_document_select(f, multi: false, key: nil, title: nil)
+      raw cell('folio/console/react_document_select', f, multi: multi,
+                                                         key: key,
+                                                         title: title)
+    end
+
+    def react_has_one_document_select(f, key: nil, title: nil)
+      raw cell('folio/console/react_has_one_document_select', f, key: key,
+                                                                 title: title)
     end
 
     private

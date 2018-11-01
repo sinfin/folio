@@ -36,5 +36,23 @@ module Folio
       scope :with_images, -> { joins(:images) }
       scope :with_documents, -> { joins(:documents) }
     end
+
+    class_methods do
+      def has_one_document_placement(target, placement: )
+        placement_key = placement.demodulize.underscore.to_sym
+
+        has_one placement_key,
+                class_name: placement,
+                dependent: :destroy,
+                foreign_key: :placement_id
+
+        has_one target,
+                source: :file,
+                class_name: 'Folio::Document',
+                through: placement_key
+
+        accepts_nested_attributes_for placement_key, allow_destroy: true
+      end
+    end
   end
 end

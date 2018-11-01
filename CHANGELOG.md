@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-11-01
+### Added
+- FilePlacement STI
+- HasAttachments `has_one_document_placement`
+
 ## 2018-10-12
 ### Added
 - Page caching via `actionpack-page_caching`

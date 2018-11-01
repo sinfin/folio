@@ -75,8 +75,8 @@ class ModalSelect extends Component {
     }
 
     const placementType = $fields.data('placement-type')
-    const isCover = placementType.match('cover')
-    const affix = isCover ? '' : `[${Date.now()}]`
+    const hasOne = $fields.data('has-one')
+    const affix = hasOne ? '' : `[${Date.now()}]`
     const prefix = `${name}[${placementType}_attributes]${affix}`
 
     const $newFile = $(`
@@ -89,7 +89,7 @@ class ModalSelect extends Component {
 
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.file_id}" />
-        ${isCover ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
+        ${hasOne ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
       </div>
     `)
 

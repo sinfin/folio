@@ -73,6 +73,7 @@ module Folio
                                        :tag_list,
                                        :file_id,
                                        :position,
+                                       :type,
                                        :_destroy]
 
         }]
