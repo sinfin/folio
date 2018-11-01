@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'faker'
-I18n.reload!
-
 FactoryBot.define do
   factory :folio_site, class: Folio::Site do
     title { 'Folio' }
