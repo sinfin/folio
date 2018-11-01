@@ -39,6 +39,7 @@ FactoryBot.define do
 
   factory :folio_category, parent: :folio_node, class: Folio::Category
   factory :folio_page, parent: :folio_node, class: Folio::Page
+  factory :folio_page_cookies, parent: :folio_page, class: Folio::Page::Cookies
 
   factory :folio_atom, class: Folio::Atom::Text do
     type { 'Folio::Atom::Text' }
