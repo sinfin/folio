@@ -4,9 +4,10 @@
   .card-body
     .row
       .col
-        = f.input :target, collection: sti_records_for_select(menu.available_targets), \
-                           selected: sti_record_select_value(f.object, :target), \
-                           include_blank: true
+        = f.input :target, \
+                  collection: sti_records_for_select(menu.available_targets), \
+                  selected: sti_record_select_value(f.object, :target), \
+                  include_blank: true
 
       - if menu.class.rails_paths.present?
         - paths = menu.class.rails_paths.stringify_keys.to_a.map(&:reverse)

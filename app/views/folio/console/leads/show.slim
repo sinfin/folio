@@ -57,4 +57,5 @@ table.table
         - else
           ' -
 
-    = render partial: 'folio/console/leads/additional_data', locals: { lead: @lead }
+    = render(partial: 'folio/console/leads/additional_data', \
+             locals: { lead: @lead })

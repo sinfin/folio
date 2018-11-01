@@ -20,6 +20,5 @@ h1 = @file.file_name.presence || @file.class.model_name.human
 
         == cell('folio/console/file_placement_list', f.object)
 
-
   = form_footer f, console_documents_path
   = delete_button(@file, console_document_path(@file), text: true)

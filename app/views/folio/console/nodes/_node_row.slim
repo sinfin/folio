@@ -13,7 +13,8 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
   td
     - if sortable
       - if limited
-        = index_position_buttons(node, as: :nodes, limited: console_nodes_path(by_parent: node.parent.id))
+        - limited_path = console_nodes_path(by_parent: node.parent.id)
+        = index_position_buttons(node, as: :nodes, limited: limited_path)
       - else
         = index_position_buttons(node, as: :nodes)
 

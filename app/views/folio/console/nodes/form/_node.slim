@@ -27,7 +27,7 @@ fieldset
   = f.input :content, input_html: { class: 'redactor redactor--advanced' }
 
   = console_form_atoms f
-  
+
   hr
 
   .row
@@ -41,7 +41,7 @@ fieldset
 
     .col
       label = t('.meta')
-      
+
       == cell('folio/console/tagsinput', f)
       = f.input :meta_title
       = f.input :meta_description, as: :text

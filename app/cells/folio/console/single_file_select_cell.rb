@@ -27,4 +27,12 @@ class Folio::Console::SingleFileSelectCell < FolioCell
       "folio-console-single-file-select-as-#{options[:as]}"
     ].compact.join(' ')
   end
+
+  def file_class
+    'form-control folio-console-single-file-select-file'
+  end
+
+  def destroy_class
+    'folio-console-single-file-select-destroy'
+  end
 end

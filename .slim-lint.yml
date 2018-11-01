@@ -1,3 +1,6 @@
 linters:
   RuboCop:
     enabled: false
+
+exclude:
+  - 'lib/generators/folio/console/scaffold/templates/*'
