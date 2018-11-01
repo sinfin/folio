@@ -5,19 +5,19 @@ I18n.reload!
 
 FactoryBot.define do
   factory :folio_site, class: Folio::Site do
-    title { Faker::Lorem.word }
-    domain { Faker::Internet.domain_name }
-    email { Faker::Internet.email }
-    social_links { { 'facebook' => Faker::Internet.url('facebook.com') } }
-    address { [Faker::Address.street_address, Faker::Address.city].join("\n") }
-    phone { Faker::PhoneNumber.phone_number }
+    title { 'Folio' }
+    sequence(:domain) { |n| "folio-#{n}.com" }
+    email { 'folio@folio.folio' }
+    social_links { { 'facebook' => 'http://www.facebook.com/folio' } }
+    address { "90682 Folio Square\nFolio" }
+    phone { '+420 123456789' }
     locale { :cs }
     locales { [:cs] }
   end
 
   factory :folio_node, class: Folio::Node do
     locale { :cs }
-    title { Faker::Lorem.word }
+    sequence(:title) { |n| "Folio node #{n}" }
     published { true }
     published_at { 1.day.ago }
 
@@ -44,7 +44,7 @@ FactoryBot.define do
   factory :folio_atom, class: Folio::Atom::Text do
     type { 'Folio::Atom::Text' }
     association :placement, factory: :folio_node
-    content { "<p>#{Faker::Lorem.paragraph}</p>" }
+    content { '<p>Officiis perferendis commodi. Asperiores quas et. Veniam qui est.</p>' }
   end
 
   factory :folio_file_placement, class: Folio::FilePlacement do
@@ -65,9 +65,9 @@ FactoryBot.define do
   end
 
   factory :folio_lead, class: Folio::Lead do
-    email { Faker::Internet.email }
-    phone { Faker::PhoneNumber.phone_number }
-    note { Faker::Lorem.paragraph }
+    email { 'folio@folio.folio' }
+    phone { '+420 123456789' }
+    note { 'Officiis perferendis commodi.' }
   end
 
   factory :folio_admin_account, class: Folio::Account do
@@ -94,7 +94,7 @@ FactoryBot.define do
 
   factory :folio_menu_item, class: Folio::MenuItem do
     association :target, factory: :folio_node
-    title { Faker::Lorem.word }
+    title { 'MenuItem' }
     position { 0 }
   end
 end
