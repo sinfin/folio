@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 - FilePlacement STI
 - HasAttachments `has_one_document_placement`
+### Removed
+- cookie consent
 
 ## 2018-10-12
 ### Added

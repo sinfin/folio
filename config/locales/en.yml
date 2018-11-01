@@ -105,11 +105,6 @@ en:
       message: Thanks for your message!
       failure: Failed to send the message. Please try again later.
 
-  cookie_consent:
-    dismiss: OK
-    link: Learn more
-    message: This website uses cookies to ensure you get the best experience on our website.
-
   all: All
   all_models: All %{model}
   without_model: Without %{model}

@@ -38,7 +38,7 @@ module Folio
     end
 
     class_methods do
-      def has_one_document_placement(target, placement: )
+      def has_one_document_placement(target, placement:)
         placement_key = placement.demodulize.underscore.to_sym
 
         has_one placement_key,
