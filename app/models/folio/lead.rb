@@ -2,6 +2,8 @@
 
 module Folio
   class Lead < ApplicationRecord
+    attr_accessor :verified_captcha
+
     belongs_to :visit, optional: true
 
     # Validations
@@ -11,8 +13,9 @@ module Folio
               presence: true,
               unless: :skip_note_validation?
 
+    validate :validate_verified_captcha
+
     # Scopes
-    default_scope { order(created_at: :desc) }
     scope :by_query, -> (q) {
       if q.present?
         args = ["%#{q}%"] * 2
@@ -23,6 +26,7 @@ module Folio
     }
     scope :handled, -> { with_state(:handled) }
     scope :not_handled, -> { with_state(:submitted) }
+    scope :ordered, -> { order(created_at: :desc) }
 
     state_machine initial: :submitted do
       event :handle do
@@ -65,6 +69,12 @@ module Folio
 
       def skip_note_validation?
         false
+      end
+
+      def validate_verified_captcha
+        return if verified_captcha == true
+        return if verified_captcha.nil?
+        errors.add(:verified_captcha, :invalid)
       end
   end
 end

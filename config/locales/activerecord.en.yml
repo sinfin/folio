@@ -97,3 +97,10 @@ en:
       visit:
         one: Visit
         other: Visits
+
+    errors:
+      models:
+        folio/lead:
+          attributes:
+            verified_captcha:
+              invalid: Invalid verification

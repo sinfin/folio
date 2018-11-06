@@ -37,6 +37,7 @@ PATH
       rails-assets-photoswipe
       rails-assets-selectize (~> 0.12.4)
       rails-i18n
+      recaptcha
       responders
       sass-rails
       simple_form
@@ -74,7 +75,7 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_model_serializers (0.10.7)
+    active_model_serializers (0.10.8)
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
@@ -111,14 +112,14 @@ GEM
       request_store
       safely_block (>= 0.2.1)
       user_agent_parser
-    ancestry (3.0.2)
+    ancestry (3.0.4)
       activerecord (>= 3.2.0)
     annotate (2.7.4)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
     arel (9.0.0)
     ast (2.4.0)
-    autoprefixer-rails (9.2.1)
+    autoprefixer-rails (9.3.1)
       execjs
     bcrypt (3.1.12)
     better_errors (2.4.0)
@@ -319,7 +320,7 @@ GEM
     mini_racer (0.2.0)
       libv8 (>= 6.3)
     minitest (5.10.3)
-    money (6.13.0)
+    money (6.13.1)
       i18n (>= 0.6.4, <= 2)
     multi_json (1.13.1)
     nenv (0.3.0)
@@ -378,7 +379,7 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
-    rails-i18n (5.1.1)
+    rails-i18n (5.1.2)
       i18n (>= 0.7, < 2)
       railties (>= 5.0, < 6)
     railties (5.2.1)
@@ -392,6 +393,8 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    recaptcha (4.13.0)
+      json
     referer-parser (0.3.0)
     request_store (1.4.1)
       rack (>= 1.4)
@@ -455,7 +458,7 @@ GEM
     state_machines-activemodel (0.5.1)
       activemodel (>= 4.1, < 6.0)
       state_machines (>= 0.5.0)
-    state_machines-activerecord (0.5.1)
+    state_machines-activerecord (0.5.2)
       activerecord (>= 4.1, < 6.0)
       state_machines-activemodel (>= 0.5.0)
     sysexits (1.2.0)
@@ -505,4 +508,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.16.4
+   1.17.1

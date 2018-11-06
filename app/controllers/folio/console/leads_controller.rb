@@ -8,7 +8,7 @@ module Folio
     add_breadcrumb Lead.model_name.human(count: 2), :console_leads_path
 
     def index
-      @leads = @leads.includes(:visit)
+      @leads = @leads.ordered.includes(:visit)
       @leads = @leads.filter(filter_params) if params[:by_query].present?
 
       respond_with(@leads, location: console_leads_path) do |format|

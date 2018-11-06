@@ -37,6 +37,7 @@ require 'invisible_captcha'
 require 'rails-i18n'
 require 'state_machines'
 require 'state_machines-activerecord'
+require 'recaptcha'
 
 module Folio
   LANGUAGES = {

@@ -185,6 +185,13 @@ cs:
         few: Návštěvy
         other: Návštěv
 
+    errors:
+      models:
+        folio/lead:
+          attributes:
+            verified_captcha:
+              invalid: Neplatné potvrzení
+
     state_machines:
       folio/lead:
         state:

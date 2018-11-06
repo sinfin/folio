@@ -2,8 +2,6 @@
 
 module Folio
   class LeadsController < ApplicationController
-    invisible_captcha only: :create
-
     REMEMBER_OPTION_KEYS = [
       :note,
       :message,
@@ -13,8 +11,11 @@ module Folio
     ]
 
     def create
-      @lead = Lead.new(lead_params.merge(url: request.referrer,
-                                         visit: current_visit))
+      lead = Lead.new(lead_params.merge(url: request.referrer,
+                                        visit: current_visit))
+
+      @lead = check_recaptcha_if_needed(lead)
+
       success = @lead.save
 
       LeadMailer.notification_email(@lead).deliver_later if success
@@ -45,6 +46,15 @@ module Folio
         else
           {}
         end
+      end
+
+      def check_recaptcha_if_needed(lead)
+        if ENV['RECAPTCHA_SITE_KEY'].present? &&
+           ENV['RECAPTCHA_SECRET_KEY'].present?
+          lead.verified_captcha = verify_recaptcha(model: lead)
+        end
+
+        lead
       end
   end
 end

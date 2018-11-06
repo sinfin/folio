@@ -5,7 +5,6 @@
   = simple_form_for lead, url: leads_path, \
                           html: { class: 'folio-lead-form' } do |f|
     = hidden_options
-    = invisible_captcha autocomplete: "off"
 
     = additional_data_input(f)
 

@@ -20,6 +20,11 @@ $ ->
         .then (response) ->
           $response = $(response)
           $wrap.replaceWith($response)
+
+          $recaptcha = $response.find('.g-recaptcha')
+          if grecaptcha and $recaptcha.length
+            grecaptcha.render $recaptcha[0]
+
           $response.trigger('folio:submitted')
           if $response.find('.folio-lead-form-message').length
             $response.trigger('folio:success')

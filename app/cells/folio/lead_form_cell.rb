@@ -5,6 +5,7 @@ module Folio
     include InvisibleCaptcha::ViewHelpers
     include SimpleForm::ActionViewExtensions::FormHelper
     include Engine.routes.url_helpers
+    include ::Recaptcha::ClientHelper
 
     def lead
       @lead ||= (model || new_lead)

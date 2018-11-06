@@ -18,7 +18,7 @@
         tbody
           = render partial: "nodes_table", locals: { nodes: @nodes }
 
-    - unless @nodes.class == ActiveSupport::OrderedHash
+    - if @nodes.respond_to?(:total_pages)
       = paginate @nodes
 
   .folio-console-layout-sidebar
