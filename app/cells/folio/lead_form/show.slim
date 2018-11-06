@@ -28,6 +28,12 @@
 
     == options[:above_submit_content] if options[:above_submit_content].present?
 
+    - if ENV['RECAPTCHA_SITE_KEY'].present? && \
+         ENV['RECAPTCHA_SECRET_KEY'].present?
+      .folio-lead-form__recaptcha.form-group
+        = recaptcha_tags(script: false)
+        = f.error :verified_captcha, class: 'text-danger'
+
     = f.button :submit, t('.submit')
 
   - if submitted
