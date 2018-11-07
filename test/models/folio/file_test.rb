@@ -4,34 +4,28 @@ require 'test_helper'
 
 module Folio
   class FileTest < ActiveSupport::TestCase
-    class ImmediateImage < Image
-      def self.immediate_thumbnails
-        true
-      end
-    end
-
     test 'touches placements and their models' do
       node = create(:folio_node)
       updated_at = node.updated_at
 
-      image = ImmediateImage.create!(file: Engine.root.join('test/fixtures/folio/test.gif'))
+      image = create(:folio_image)
       node.images << image
       assert node.reload.updated_at > updated_at
 
       updated_at = node.updated_at
-      assert image.reload.thumb('150x150').url
+      assert image.reload.update!(tag_list: 'foo')
       assert node.reload.updated_at > updated_at
     end
 
     test 'touches node through atoms' do
       node = create(:folio_node)
-      image = ImmediateImage.create!(file: Engine.root.join('test/fixtures/folio/test.gif'))
+      image = create(:folio_image)
       atom = create_atom(::Atom::SingleImage, placement: node, cover: image)
 
       atom_updated_at = atom.reload.updated_at
       node_updated_at = node.reload.updated_at
 
-      assert image.reload.thumb('150x150').url
+      assert image.reload.update!(tag_list: 'foo')
       assert atom.reload.updated_at > atom_updated_at
       assert node.reload.updated_at > node_updated_at
     end

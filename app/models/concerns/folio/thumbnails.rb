@@ -27,6 +27,8 @@ module Folio
     #
     def thumb(w_x_h, quality: 90)
       fail_for_non_images
+      return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test?
+
       if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
         ret = OpenStruct.new(thumbnail_sizes[w_x_h])
         ret.url = Dragonfly.app.remote_url_for(ret.uid)
@@ -57,6 +59,19 @@ module Folio
           quality: quality
         )
       end
+    end
+
+    def thumb_in_test_env(w_x_h, quality: 90)
+      width, height = w_x_h.split('x').map(&:to_i)
+
+      OpenStruct.new(
+        uid: nil,
+        signature: nil,
+        url: temporary_url(w_x_h),
+        width: width,
+        height: height,
+        quality: quality
+      )
     end
 
     def temporary_url(w_x_h)

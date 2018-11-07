@@ -12,6 +12,7 @@ module Folio
     private
 
       def pregenerate_thumbnails
+        return if Rails.env.test?
         return unless file.respond_to?(:thumb)
 
         # admin thumbnail
