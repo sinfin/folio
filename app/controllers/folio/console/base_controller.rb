@@ -86,11 +86,9 @@ module Folio
                              :model,
                              :model_id,
                              :model_type,
-                             :title,
-                             :content,
-                             :perex,
                              :position,
                              :_destroy,
+                             *Atom.text_fields,
                              *cover_placement_strong_params,
                              *file_placements_strong_params]
         }]
