@@ -14,5 +14,33 @@ module Folio
     def self.types
       Base.recursive_subclasses
     end
+
+    def self.translations
+      @translations ||= begin
+        if Folio::Atom::Base.column_names.include?('title')
+          nil
+        else
+          Folio::Atom::Base.column_names
+                           .grep(/title_/)
+                           .map { |t| t.gsub(/title_/, '') }
+        end
+      end
+    end
+
+    def self.text_fields
+      @text_fields ||= begin
+        if Folio::Atom::Base.column_names.include?('title')
+          [:title, :content, :perex]
+        else
+          text_fields = []
+          Folio::Atom::Base.column_names.each do |column|
+            if column =~ /\A(title|content|perex)_/
+              text_fields << column.to_sym
+            end
+          end
+          text_fields
+        end
+      end
+    end
   end
 end

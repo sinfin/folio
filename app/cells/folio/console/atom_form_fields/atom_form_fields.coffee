@@ -23,16 +23,18 @@ atomFormBySelect = ($element) ->
       # check if redactor is active
       unless $textarea.hasClass('redactor-source')
         # disable content images on atoms with images/cover
-        window.folioConsoleInitRedactor $textarea[0], basic: structure.images
+        $textarea.each ->
+          window.folioConsoleInitRedactor this, basic: structure.images
 
     when 'string'
       hideWrap = false
       $content.find('.form-control').attr('placeholder', placeholders.content)
       $content.removeAttr('hidden')
       if $textarea.hasClass('redactor-source')
-        html = window.folioConsoleRedactorGetContent($textarea[0])
-        window.folioConsoleDestroyRedactor($textarea[0])
-        $textarea.val(stripHtml(html))
+        $textarea.each ->
+          html = window.folioConsoleRedactorGetContent(this)
+          window.folioConsoleDestroyRedactor(this)
+          $(this).val(stripHtml(html))
       $textarea.prop('disabled', false)
 
     else

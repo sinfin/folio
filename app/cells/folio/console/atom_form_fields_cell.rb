@@ -33,52 +33,48 @@ class Folio::Console::AtomFormFieldsCell < FolioCell
     end.compact.sort_by { |name, _type, _data| I18n.transliterate(name) }
   end
 
-  def content_field
-    form = structure[:content]
-    active = %i[string redactor].include?(form)
-
-    f.input :content,
-      disabled: !active,
-      hint: render(:content_hint).html_safe,
-      wrapper_html: {
-        hidden: !active,
-        class: 'folio-console-atom-content',
-      },
-      input_html: {
-        class: 'folio-console-atom-textarea',
-        placeholder: Folio::Atom::Base.human_attribute_name(:content),
-      }
-  end
-
   def title_field
-    title = structure[:title]
-    active = (title == :string)
-
-    f.input :title,
-      disabled: !active,
-      hint: render(:title_hint).html_safe,
-      input_html: {
-        placeholder: Folio::Atom::Base.human_attribute_name(:title),
-      },
-      wrapper_html: {
-        hidden: !active,
-        class: 'folio-console-atom-title',
-      }
+    common_fields(:title)
   end
 
   def perex_field
-    perex = structure[:perex]
-    active = (perex == :string)
+    common_fields(:perex, textarea: true)
+  end
 
-    f.input :perex,
+  def content_field
+    common_fields(:content, textarea: true)
+  end
+
+  def common_fields(attr, textarea: true)
+    if Folio::Atom.translations.present?
+      fields = Folio::Atom.translations.map do |locale|
+        field = common_field(attr, textarea: textarea, flag: locale)
+        "<div class=\"col-md\">#{field}</div>"
+      end
+
+      "<div class=\"row\">#{fields.join('')}</div>"
+    else
+      common_field(attr, textarea: textarea)
+    end
+  end
+
+  def common_field(attr, textarea: false, flag: nil)
+    active = %i[string redactor].include?(structure[attr])
+    hint = "#{attr}_hint".to_sym
+    input_name = flag ? [attr, flag].join('_') : attr
+
+    f.input input_name,
       disabled: !active,
-      hint: render(:perex_hint).html_safe,
+      hint: render(hint).html_safe,
       input_html: {
-        placeholder: Folio::Atom::Base.human_attribute_name(:perex),
+        placeholder: Folio::Atom::Base.human_attribute_name(attr),
+        class: textarea ? 'folio-console-atom-textarea' : nil,
       },
+      flag: flag,
+      wrapper: flag ? :with_flag : nil,
       wrapper_html: {
         hidden: !active,
-        class: 'folio-console-atom-perex',
+        class: "folio-console-atom-#{attr}",
       }
   end
 
