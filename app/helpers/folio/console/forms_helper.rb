@@ -10,5 +10,9 @@ module Folio
       render partial: 'folio/console/partials/simple_fields_for',
              locals: { f: f, relation: relation }
     end
+
+    def translated_inputs(f, key, *args)
+      cell('folio/console/translated_inputs', f: f, key: key, args: args).show.html_safe
+    end
   end
 end

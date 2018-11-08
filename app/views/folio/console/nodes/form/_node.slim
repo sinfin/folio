@@ -16,15 +16,16 @@ fieldset
 
       .row
         .col-sm
-          = f.input :title
+          == translated_inputs f, :title
         .col-sm
           = f.input :slug
 
     .col
       = react_cover_select(f)
 
-  = f.input :perex
-  = f.input :content, input_html: { class: 'redactor redactor--advanced' }
+  == translated_inputs f, :perex
+  == translated_inputs f, :content, \
+                          input_html: { class: 'redactor redactor--advanced' }
 
   = console_form_atoms f
 

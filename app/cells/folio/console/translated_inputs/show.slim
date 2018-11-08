@@ -1,0 +1,13 @@
+- if translations.present?
+  .folio-console-translated-inputs
+    = f.label key
+
+    .row
+      - translations.each do |locale|
+        .col-md
+          = f.input "#{key}_#{locale}".to_sym, *args_with_locale(locale)
+
+    = f.hint key
+
+- else
+  = f.input key, *args

@@ -21,8 +21,8 @@ module Folio
           nil
         else
           Folio::Atom::Base.column_names
-                           .grep(/title_/)
-                           .map { |t| t.gsub(/title_/, '') }
+                           .grep(/\Atitle_/)
+                           .map { |t| t.gsub(/\Atitle_/, '') }
         end
       end
     end
