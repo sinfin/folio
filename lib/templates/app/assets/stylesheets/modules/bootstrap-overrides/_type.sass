@@ -1,0 +1,32 @@
+@import 'mixins/type'
+
+html, body
+  font-size: 16px
+  line-height: $line-height-base
+  -webkit-font-smoothing: antialiased
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6
+  display: block
+  letter-spacing: $headings-letter-spacing
+
+h1, .h1
+  margin: $h1-margin-top 0 $h1-margin-bottom
+
+h2, .h2
+  margin: $h2-margin-top 0 $h2-margin-bottom
+
+h3, .h3
+  margin: $h3-margin-top 0 $h3-margin-bottom
+
+h4, .h4,
+h5, .h5,
+h6, .h6
+  margin: $headings-margin-top 0 $headings-margin-bottom
+
+small
+  font-size: $font-size-sm

@@ -1,8 +1,10 @@
 @import 'custom_bootstrap'
+@import 'fonts'
 @import 'sprites'
 @import 'folio/bootstrap-media-queries'
 @import 'folio/utilities'
 @import 'modules/turbolinks'
+@import 'modules/bootstrap-overrides'
 
 html
   font-size: 16px
@@ -15,6 +17,9 @@ body
   min-height: 100%
   display: flex
   flex-direction: column
+
+[data-lightbox-src]
+  cursor: zoom-in
 
 @import 'cells'
 @import 'folio/lead_form/lead_form'
