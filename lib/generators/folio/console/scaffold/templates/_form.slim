@@ -5,12 +5,12 @@
 .tab-content
   = tab :content
     <%- if has_attachmentable? -%>
-    = react_image_select(f, cover: true)
+    = react_cover_select(f)
     <%- end -%>
     <%= attribute_inputs %>
   <%- if has_attachmentable? -%>
   = tab :gallery
-    = react_images(f.object.file_placements, attachmentable: '<%= singular_table_name %>')
+    = react_images(f.object.image_placements, attachmentable: '<%= singular_table_name %>')
   <%- end -%>
 
 = form_footer f, <%= index_resource_name %>

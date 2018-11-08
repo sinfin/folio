@@ -13,7 +13,7 @@
           class="folio-console-atom-images-single"
           hidden=(structure[:images] == :single ? nil : '')
         ]
-          = react_image_select(f, cover: true)
+          = react_image_select(f)
 
         aside.folio-console-smart-col[
           class="folio-console-atom-documents"
@@ -34,7 +34,7 @@
           class="folio-console-atom-images-multi"
           hidden=(structure[:images] == :multi ? nil : '')
         ]
-          = react_image_select(f, multi: true)
+          = react_images_select(f)
 
         aside.folio-console-smart-col.folio-console-smart-col--wrap[
           class="folio-console-atom-documents"

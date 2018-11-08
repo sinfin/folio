@@ -21,7 +21,7 @@ fieldset
           = f.input :slug
 
     .col
-      = react_image_select(f, cover: true)
+      = react_cover_select(f)
 
   = f.input :perex
   = f.input :content, input_html: { class: 'redactor redactor--advanced' }

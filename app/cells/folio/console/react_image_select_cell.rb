@@ -7,7 +7,7 @@ class Folio::Console::ReactImageSelectCell < Folio::Console::ReactSelectCell
     if options[:cover]
       f.object.cover_placement
     else
-      f.object.file_placements.with_image
+      f.object.image_placements
     end
   end
 
@@ -15,7 +15,7 @@ class Folio::Console::ReactImageSelectCell < Folio::Console::ReactSelectCell
     if options[:cover]
       :cover_placement
     else
-      :file_placements
+      :image_placements
     end
   end
 

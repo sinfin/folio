@@ -4,11 +4,11 @@ class Folio::Console::ReactDocumentSelectCell < Folio::Console::ReactSelectCell
   BASE = :document
 
   def file_placements
-    f.object.send(key).with_document
+    f.object.send(key)
   end
 
   def key
-    options[:key].presence || :file_placements
+    options[:key].presence || :document_placements
   end
 
   def exists

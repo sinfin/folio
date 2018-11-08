@@ -4,13 +4,13 @@ module Folio
   module Console::ReactHelper
     def react_images(selected_placements = nil, attachmentable: nil)
       react_files('Folio::Image',
-                  selected_placements.try(:with_image),
+                  selected_placements,
                   attachmentable: attachmentable)
     end
 
     def react_documents(selected_placements = nil, attachmentable: nil)
       react_files('Folio::Document',
-                  selected_placements.try(:with_document),
+                  selected_placements,
                   attachmentable: attachmentable)
     end
 
@@ -43,6 +43,20 @@ module Folio
     def react_image_select(f, multi: false, cover: false, key: nil, title: nil)
       raw cell('folio/console/react_image_select', f, multi: multi,
                                                       cover: cover,
+                                                      key: key,
+                                                      title: title)
+    end
+
+    def react_cover_select(f, key: nil, title: nil)
+      raw cell('folio/console/react_image_select', f, multi: false,
+                                                      cover: true,
+                                                      key: key,
+                                                      title: title)
+    end
+
+    def react_images_select(f, key: nil, title: nil)
+      raw cell('folio/console/react_image_select', f, multi: true,
+                                                      cover: false,
                                                       key: key,
                                                       title: title)
     end

@@ -4,41 +4,22 @@ require 'test_helper'
 
 module Folio
   class HasAttachmentsTest < ActiveSupport::TestCase
-    test 'with_cover scope' do
-      with = create(:folio_node)
-      without = create(:folio_node)
-
-      with.cover = create(:folio_image)
-      assert_equal([with], Node.with_cover)
-    end
-
-    test 'with_images scope' do
-      with = create(:folio_node)
-      without = create(:folio_node)
-
-      image = create(:folio_image)
-      with.images << image
-      without.cover = image
-
-      assert_equal([with], Node.with_images)
-    end
-
-    test 'with_documents scope' do
-      with = create(:folio_node)
-      without = create(:folio_node)
-
-      with.documents << create(:folio_document)
-
-      assert_equal([with], Node.with_documents)
-    end
-
     test 'has_one_document_placement' do
-      class MyPlacement < FilePlacement
+      class MyPlacement < FilePlacement::Base
+        belongs_to :file, class_name: 'Folio::Document'
+        belongs_to :placement,
+                   polymorphic: true,
+                   inverse_of: :my_placement,
+                   required: true,
+                   touch: true
       end
 
       class MyNode < Node
         include HasAttachments
-        has_one_document_placement :my_file, placement: 'MyPlacement'
+        has_one_placement :my_file,
+                          :my_placement,
+                          class_name: 'Folio::Document',
+                          placement: 'MyPlacement'
       end
 
       assert_equal(0, MyPlacement.count)

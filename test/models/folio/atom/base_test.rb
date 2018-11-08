@@ -13,7 +13,7 @@ module Folio
         image = create(:folio_image)
 
         assert atom.update!(type: 'Atom::Gallery',
-                            file_placements_attributes: [{
+                            image_placements_attributes: [{
                               file_id: image.id,
                             }])
 

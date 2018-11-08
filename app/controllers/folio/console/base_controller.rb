@@ -57,25 +57,19 @@ module Folio
         add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
       end
 
-      def cover_placement_strong_params
-        [{
-          cover_placement_attributes: [:id,
-                                       :file_id,
-                                       :_destroy]
-
-        }]
-      end
-
       def file_placements_strong_params
-        [{
-          file_placements_attributes: [:id,
-                                       :caption,
-                                       :tag_list,
-                                       :file_id,
-                                       :position,
-                                       :type,
-                                       :_destroy]
+        commons = [:id,
+                   :caption,
+                   :tag_list,
+                   :file_id,
+                   :position,
+                   :type,
+                   :_destroy]
 
+        [{
+          cover_placement_attributes: commons,
+          document_placements_attributes: commons,
+          image_placements_attributes: commons,
         }]
       end
 

@@ -107,8 +107,7 @@ module Folio
                         :original_id,
                         *additional_strong_params(@node),
                         *atoms_strong_params,
-                        *file_placements_strong_params,
-                        *cover_placement_strong_params)
+                        *file_placements_strong_params)
       p[:slug] = nil unless p[:slug].present?
       sti_atoms(p)
     end

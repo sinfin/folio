@@ -13,18 +13,16 @@ module Folio
     end
 
     # Relations
-    has_many :file_placements, class_name: 'Folio::FilePlacement',
+    has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
                                dependent: :destroy
     has_many :placements, through: :file_placements
-    has_many :cover_placements, class_name: 'Folio::CoverPlacement',
-                                dependent: :destroy
 
     # Validations
     validates :file, :type,
               presence: true
 
     # Scopes
-    scope :ordered, -> { order(updated_at: :desc) }
+    scope :ordered, -> { order(position: :asc) }
 
     before_save :set_mime_type
     after_save :touch_placements
@@ -41,7 +39,6 @@ module Folio
 
       def touch_placements
         file_placements.each(&:touch)
-        cover_placements.each(&:touch)
       end
 
       def set_mime_type

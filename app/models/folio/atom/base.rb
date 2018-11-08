@@ -126,14 +126,14 @@ module Folio
           end
 
           if klass::STRUCTURE[:images] != :multi
-            if file_placements.with_image.exists?
-              self.file_placements.with_image.each(&:destroy!)
+            if image_placements.exists?
+              self.image_placements.each(&:destroy!)
             end
           end
 
           if klass::STRUCTURE[:documents].nil?
-            if file_placements.with_document.exists?
-              self.file_placements.with_document.each(&:destroy!)
+            if document_placements.exists?
+              self.document_placements.each(&:destroy!)
             end
           end
         end
