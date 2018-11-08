@@ -71,6 +71,8 @@ module Folio
           'config/sitemap.rb',
           'config/schedule.rb',
           'config/database.yml',
+          'config/locales/activerecord.cs.yml',
+          'config/locales/activerecord.en.yml',
           'db/seeds.rb',
           'vendor/assets/bower.json',
         ].each { |f| template "#{f}.erb", f }
@@ -111,6 +113,9 @@ module Folio
           'app/assets/stylesheets/application.sass',
           'app/assets/stylesheets/modules/.keep',
           'app/assets/stylesheets/modules/_turbolinks.sass',
+          'app/assets/stylesheets/modules/_bootstrap-overrides.sass',
+          'app/assets/stylesheets/modules/bootstrap-overrides/_type.sass',
+          'app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass',
           'app/views/home/index.slim',
           'app/views/pages/show.slim',
           'app/views/folio/console/partials/_appended_menu_items.slim',
