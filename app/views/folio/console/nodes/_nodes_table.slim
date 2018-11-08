@@ -1,4 +1,4 @@
-- if nodes.class == ActiveSupport::OrderedHash
+- if nodes.is_a?(ActiveSupport::OrderedHash) || nodes.is_a?(Hash)
   - i = 0
   - nodes.map do |node, children|
     - i += 1
