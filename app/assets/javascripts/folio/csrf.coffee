@@ -22,5 +22,5 @@ window.folioFreshCsrfToken =
     @getToken()
 
 $ ->
-  $(document).one 'focus', 'form', ->
+  $(document).one 'focus touchstart', 'form', ->
     window.folioFreshCsrfToken.preloadToken()

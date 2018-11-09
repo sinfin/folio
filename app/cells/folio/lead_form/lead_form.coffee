@@ -1,37 +1,39 @@
 #= require folio/csrf
 
-$ ->
-  $(document).on 'submit', '.folio-lead-form', (e) ->
-    e.preventDefault()
-    return if window.folioFreshCsrfToken.loading
+enableSubmit = ->
+  $('.folio-lead-form__submit .btn').prop('disabled', false)
 
-    $form = $(this)
-    $wrap = $form.parent()
-    return if $wrap.hasClass('folio-lead-form-submitting')
+$(document).on 'submit', '.folio-lead-form', (e) ->
+  e.preventDefault()
+  return enableSubmit() if window.folioFreshCsrfToken.loading
 
-    $wrap.addClass('folio-lead-form-submitting')
+  $form = $(this)
+  $wrap = $form.parent()
+  return enableSubmit() if $wrap.hasClass('folio-lead-form-submitting')
 
-    window.folioFreshCsrfToken.withToken (token) ->
-      $form
-        .find("input[name=\"#{window.folioFreshCsrfToken.tokenParam}\"]")
-        .val(token)
+  $wrap.addClass('folio-lead-form-submitting')
 
-      $.post($form.attr('action'), $form.serialize())
-        .then (response) ->
-          $response = $(response)
-          $wrap.replaceWith($response)
+  window.folioFreshCsrfToken.withToken (token) ->
+    $form
+      .find("input[name=\"#{window.folioFreshCsrfToken.tokenParam}\"]")
+      .val(token)
 
-          $recaptcha = $response.find('.g-recaptcha')
-          if grecaptcha? and $recaptcha.length
-            grecaptcha.render $recaptcha[0]
+    $.post($form.attr('action'), $form.serialize())
+      .then (response) ->
+        $response = $(response)
+        $wrap.replaceWith($response)
 
-          $response.trigger('folio:submitted')
-          if $response.find('.folio-lead-form-message').length
-            $response.trigger('folio:success')
-          else
-            $response.trigger('folio:failure')
+        $recaptcha = $response.find('.g-recaptcha')
+        if grecaptcha? and $recaptcha.length
+          grecaptcha.render $recaptcha[0]
 
-        .catch ->
-          alert($wrap.data('failure'))
-          $wrap.find('input[type="submit"]').prop('disabled', false)
-          $wrap.removeClass('folio-lead-form-submitting')
+        $response.trigger('folio:submitted')
+        if $response.find('.folio-lead-form-message').length
+          $response.trigger('folio:success')
+        else
+          $response.trigger('folio:failure')
+
+      .catch ->
+        alert($wrap.data('failure'))
+        $wrap.find('input[type="submit"]').prop('disabled', false)
+        $wrap.removeClass('folio-lead-form-submitting')
