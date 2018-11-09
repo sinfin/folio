@@ -1,4 +1,5 @@
 $folio-loader-background: rgba(255, 255, 255, 0.8) !default
+$folio-loader-foreground: black !default
 
 @keyframes load8
   0%
@@ -27,10 +28,10 @@ $folio-loader-background: rgba(255, 255, 255, 0.8) !default
     margin: -1.5em
     font-size: 10px
     text-indent: -9999em
-    border-top: 0.45em solid rgba(0, 0, 0, 0.2)
-    border-right: 0.45em solid rgba(0, 0, 0, 0.2)
-    border-bottom: 0.45em solid rgba(0, 0, 0, 0.2)
-    border-left: 0.45em solid black
+    border-top: 0.45em solid rgba($folio-loader-foreground, .2)
+    border-right: 0.45em solid rgba($folio-loader-foreground, .2)
+    border-bottom: 0.45em solid rgba($folio-loader-foreground, .2)
+    border-left: 0.45em solid $folio-loader-foreground
     transform: translateZ(0)
     animation: load8 1.1s infinite linear
     position: absolute
