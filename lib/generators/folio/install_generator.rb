@@ -22,6 +22,11 @@ module Folio
         gem 'rails-i18n'
         gem 'rails-assets-photoswipe'
         gem 'actionpack-page_caching'
+        gem 'mini_racer'
+
+        gem_group :test do
+          gem 'factory_bot_rails'
+        end
 
         gem_group :development, :test do
           gem 'faker', require: false
@@ -38,7 +43,6 @@ module Folio
           gem 'guard-rubocop'
           gem 'guard-coffeelint'
           gem 'guard-slimlint'
-          gem 'factory_bot_rails'
           gem 'annotate'
           gem 'slack-notifier'
           gem 'letter_opener'
