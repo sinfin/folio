@@ -34,7 +34,8 @@
         = recaptcha_tags(script: false)
         = f.error :verified_captcha, class: 'text-danger'
 
-    = f.button :submit, t('.submit')
+    .folio-lead-form__submit
+      = f.button :submit, t('.submit')
 
   - if submitted
     .folio-lead-form-message
