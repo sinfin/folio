@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_08_075333) do
+ActiveRecord::Schema.define(version: 2018_11_09_082100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 2018_11_08_075333) do
     t.text "perex"
     t.text "content"
     t.string "meta_title", limit: 512
-    t.string "meta_description", limit: 1024
+    t.text "meta_description"
     t.string "code"
     t.string "ancestry"
     t.string "type"
