@@ -18,7 +18,7 @@ end
 #  perex            :text
 #  content          :text
 #  meta_title       :string(512)
-#  meta_description :string(1024)
+#  meta_description :text
 #  code             :string
 #  ancestry         :string
 #  type             :string
