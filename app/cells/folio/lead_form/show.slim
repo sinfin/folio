@@ -9,18 +9,18 @@
     = additional_data_input(f)
 
     - if options[:name]
-      .row
+      .row.folio-lead-form__name-row
         .col-sm
           = f.input :name, label: t('.name')
 
-    .row
+    .row.folio-lead-form__email-phone-row
       .col-sm
         = f.input :email, as: :email, label: t('.email')
 
       .col-sm
         = f.input :phone, label: t('.phone')
 
-    .row
+    .row.folio-lead-form__note-row
       .col-sm
         = f.input :note, label: note_label, \
                          placeholder: t('.note_placeholder'), \
