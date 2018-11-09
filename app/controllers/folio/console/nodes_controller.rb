@@ -105,11 +105,27 @@ module Folio
                         :locale,
                         :parent_id,
                         :original_id,
+                        *traco_params,
                         *additional_strong_params(@node),
                         *atoms_strong_params,
                         *file_placements_strong_params)
       p[:slug] = nil unless p[:slug].present?
       sti_atoms(p)
+    end
+
+    def traco_params
+      if ::Rails.application.config.folio_using_traco
+        I18n.available_locales.map do |locale|
+          %i[title
+             slug
+             perex
+             content
+             meta_title
+             meta_description].map { |p| "#{p}_#{locale}".to_sym }
+        end.flatten
+      else
+        []
+      end
     end
 
     def misc_filtering?

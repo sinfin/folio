@@ -18,8 +18,9 @@ tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
       - else
         = index_position_buttons(node, as: :nodes)
 
-  td
-    == cell('folio/console/nodes/translations', node, hide_original: true)
+  - unless ::Rails.application.config.folio_using_traco
+    td
+      == cell('folio/console/nodes/translations', node, hide_original: true)
 
   td
     = node.model_name.human

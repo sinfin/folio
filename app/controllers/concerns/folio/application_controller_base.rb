@@ -51,7 +51,13 @@ module Folio
       end
 
       def page_roots
-        @page_roots ||= Node.with_locale(I18n.locale).roots.ordered
+        @page_roots ||= begin
+          if ::Rails.application.config.folio_using_traco
+            Node.roots.ordered
+          else
+            Node.with_locale(I18n.locale).roots.ordered
+          end
+        end
       end
 
       def set_meta_variables(instance, mappings = {})

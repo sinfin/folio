@@ -14,7 +14,15 @@ FactoryBot.define do
 
   factory :folio_node, class: Folio::Node do
     locale { :cs }
-    sequence(:title) { |n| "Folio node #{n}" }
+    if ::Rails.application.config.folio_using_traco
+      I18n.available_locales.each do |locale|
+        sequence("title_#{locale}".to_sym) { |n| "Folio node #{n}" }
+        sequence("slug_#{locale}".to_sym) { |n| "folio-node-#{n}" }
+      end
+    else
+      sequence(:title) { |n| "Folio node #{n}" }
+      sequence(:slug) { |n| "folio-node-#{n}" }
+    end
     published { true }
     published_at { 1.day.ago }
 

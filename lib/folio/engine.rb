@@ -39,6 +39,7 @@ module Folio
 
     config.folio_dragonfly_keep_png = false
     config.folio_public_page_title_reversed = false
+    config.folio_using_traco = false
 
     initializer :append_migrations do |app|
       unless app.root.to_s.match root.to_s

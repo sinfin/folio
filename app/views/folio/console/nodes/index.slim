@@ -9,7 +9,9 @@
         thead
           tr
             th colspan=2 = Folio::Node.human_attribute_name(:title)
-            th = Folio::Node.human_attribute_name(:translations)
+            - unless ::Rails.application.config.folio_using_traco
+              th = Folio::Node.human_attribute_name(:translations)
+
             th = Folio::Node.human_attribute_name(:type)
             th = Folio::Node.human_attribute_name(:featured)
             th colspan=2 = Folio::Node.human_attribute_name(:published)

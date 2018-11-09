@@ -32,5 +32,16 @@ def create_atom(klass = Folio::Atom::Base,
                (fill_attrs.include?(:documents) ? create_list(:folio_document, 1) : nil),
   }.compact
 
+  if ::Rails.application.config.folio_using_traco
+    ::Folio::Atom.text_fields.each do |field|
+      locales = I18n.available_locales.join('|')
+      raw_field = field.to_s.gsub(/_(#{locales})/, '').to_sym
+      attrs[field] = attrs[raw_field]
+    end
+    attrs[:title] = nil
+    attrs[:perex] = nil
+    attrs[:content] = nil
+  end
+
   klass.create!(attrs)
 end

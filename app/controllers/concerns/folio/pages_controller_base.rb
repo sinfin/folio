@@ -29,7 +29,7 @@ module Folio
         add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
 
         path.each do |path_part|
-          children = @page.children.with_locale(I18n.locale)
+          children = filter_pages_by_locale(@page.children)
           children = children.published unless admin_preview?
           @page = children.friendly.find path_part
           add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
@@ -44,6 +44,14 @@ module Folio
 
       def admin_preview?
         current_admin.present?
+      end
+
+      def filter_pages_by_locale(pages)
+        if ::Rails.application.config.folio_using_traco
+          pages
+        else
+          pages.with_locale(I18n.locale)
+        end
       end
   end
 end

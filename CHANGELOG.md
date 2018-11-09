@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-11-09
+### Added
+- Added proper `traco` support with `Rails.application.config.folio_using_traco`
+
 ## 2018-11-08
 ### Added
 - Added support for `traco`-translated atoms and nodes.
