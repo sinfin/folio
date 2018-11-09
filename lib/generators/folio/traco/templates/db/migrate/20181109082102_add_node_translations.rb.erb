@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+class AddNodeTranslations < ActiveRecord::Migration[5.2]
+  def change
+    rename_column :folio_nodes, :title, :title_<%= I18n.default_locale %>
+    rename_column :folio_nodes, :perex, :perex_<%= I18n.default_locale %>
+    rename_column :folio_nodes, :content, :content_<%= I18n.default_locale %>
+    rename_column :folio_nodes, :slug, :slug_<%= I18n.default_locale %>
+    rename_column :folio_nodes, :meta_title, :meta_title_<%= I18n.default_locale %>
+    rename_column :folio_nodes, :meta_description, :meta_description_<%= I18n.default_locale %>
+
+    <%- (I18n.available_locales - [I18n.default_locale]).each do |locale| -%>
+    add_column :folio_nodes, :title_<%= locale %>, :string
+    add_column :folio_nodes, :perex_<%= locale %>, :text
+    add_column :folio_nodes, :content_<%= locale %>, :text
+    add_column :folio_nodes, :slug_<%= locale %>, :string, index: true
+    add_column :folio_nodes, :meta_title_<%= locale %>, :string
+    add_column :folio_nodes, :meta_description_<%= locale %>, :text
+    <%- end -%>
+  end
+end

@@ -1,0 +1,5 @@
+Description:
+    Prepares the application for traco usage with folio
+
+Example:
+    rails generate folio:traco
