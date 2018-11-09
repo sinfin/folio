@@ -12,20 +12,38 @@ module Folio
 
     # Relations
     has_ancestry touch: true
-    friendly_id :title, use: %i[slugged scoped history],
-                        scope: [:locale, :ancestry]
 
     has_many :node_translations, class_name: 'Folio::NodeTranslation',
                                  foreign_key: :original_id,
                                  dependent: :destroy
 
-    # Validations
-    validates :title, :slug, :locale,
-              presence: true
-    validates :slug,
-              uniqueness: { scope: [:locale, :ancestry] }
-    validates :locale,
-              inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
+    if ::Rails.application.config.folio_using_traco
+      friendly_id :title, use: %i[slugged scoped history simple_i18n],
+                          scope: [:ancestry]
+
+      translates :title, :perex, :content, :slug, :meta_title, :meta_description
+
+      I18n.available_locales.each do |locale|
+        validates "title_#{locale}".to_sym, "slug_#{locale}".to_sym,
+                  presence: true
+
+        validates "slug_#{locale}".to_sym,
+                  uniqueness: { scope: [:ancestry] }
+      end
+    else
+      friendly_id :title, use: %i[slugged scoped history],
+                          scope: [:locale, :ancestry]
+
+      validates :title,
+                presence: true
+      validates :locale,
+                presence: true,
+                inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
+      validates :slug,
+                presence: true,
+                uniqueness: { scope: [:locale, :ancestry] }
+    end
+
     validate :validate_allowed_type,
              if: :has_parent?
 
@@ -197,6 +215,7 @@ module Folio
     end
 
     private
+
       # before_save
       def publish_now
         self.published_at = Time.now if published? && published_at.nil?

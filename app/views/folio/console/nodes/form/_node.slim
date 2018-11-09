@@ -18,7 +18,7 @@ fieldset
         .col-sm
           == translated_inputs f, :title
         .col-sm
-          = f.input :slug
+          == translated_inputs f, :slug
 
     .col
       = react_image_select(f, cover: true)
@@ -44,5 +44,5 @@ fieldset
       label = t('.meta')
 
       == cell('folio/console/tagsinput', f)
-      = f.input :meta_title
-      = f.input :meta_description, as: :text
+      = translated_inputs f, :meta_title
+      = translated_inputs f, :meta_description

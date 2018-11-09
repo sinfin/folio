@@ -15,13 +15,10 @@ class Folio::Console::TranslatedInputsCell < FolioCell
 
   def translations
     @translations ||= begin
-      if f.object.class.column_names.include?(key.to_s)
-        nil
+      if ::Rails.application.config.folio_using_traco
+        I18n.available_locales
       else
-        f.object.class
-                .column_names
-                .grep(/\A#{key}_\w+/)
-                .map { |t| t.gsub(/\A#{key}_/, '') }
+        nil
       end
     end
   end
