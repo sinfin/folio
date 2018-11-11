@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
       sed -i 's|def cell_name|def self.cell_name|g' $file
     done
   ```
+  If there were `documents: :single` atoms (now `document: true`), run `rake folio:upgrade:atom_document_placements` as well
 
 - Changed console react helpers:
   - Changed `react_image_select(f)` -> `react_picker(f, :cover_placement)`
