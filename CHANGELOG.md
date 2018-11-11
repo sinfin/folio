@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 ## 2018-11-11
 ### Changed
 - Changed `Atom` structure, see `app/models/folio/atom/base.rb`
+  - To migrate the models, you can use the following script. Note that you might have to update views as well!
+  ```
+    for file in $( find app/models/atom/ -type f -name *.rb ); do
+      sed -i 's|documents: :single|document: true|g' $file
+      sed -i 's|documents: :multi|documents: true|g' $file
+      sed -i 's|images: :single|cover: true|g' $file
+      sed -i 's|images: :multi|images: true|g' $file
+    done
+  ```
+
+- Changed console react helpers:
+  - Changed `react_image_select(f)` -> `react_picker(f, :cover_placement)`
+  - Changed `react_images_select(f)` -> `react_picker(f, :image_placements)`
+  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :single_document_placement, file_type: 'Folio::Document')`
+  - Changed `react_document_select(f, multi: true)` -> `react_picker(f, :document_placements, file_type: 'Folio::Document')`
 
 ## 2018-11-09
 ### Added
