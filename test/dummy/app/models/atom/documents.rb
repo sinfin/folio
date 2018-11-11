@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Atom
-  class Gallery < Folio::Atom::Base
+  class Documents < Folio::Atom::Base
     STRUCTURE = {
-      images: true,
+      documents: true,
     }
   end
 end

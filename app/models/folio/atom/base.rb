@@ -8,10 +8,12 @@ module Folio
 
       STRUCTURE = {
         title: nil,     # one of nil, :string
-        perex: nil,     # one of nil, :string
+        perex: nil,     # one of nil, :string, :redactor
         content: nil,   # one of nil, :string, :redactor
-        images: nil,    # one of nil, :single, :multi
-        documents: nil, # one of nil, :single, :multi
+        cover: nil,     # one of nil, true
+        images: nil,    # one of nil, true
+        document: nil,  # one of nil, true
+        documents: nil, # one of nil, true
         model: nil,     # one of nil, an array of model classes - e.g. [Folie::Node, My::Model]
       }
 
@@ -121,19 +123,23 @@ module Folio
         end
 
         def unlink_extra_files
-          if klass::STRUCTURE[:images] != :single
+          if klass::STRUCTURE[:cover].nil?
             self.cover_placement.destroy! if cover_placement.present?
           end
 
-          if klass::STRUCTURE[:images] != :multi
-            if file_placements.with_image.exists?
-              self.file_placements.with_image.each(&:destroy!)
+          if klass::STRUCTURE[:images].nil?
+            if image_placements.exists?
+              self.image_placements.each(&:destroy!)
             end
           end
 
           if klass::STRUCTURE[:documents].nil?
-            if file_placements.with_document.exists?
-              self.file_placements.with_document.each(&:destroy!)
+            if document_placements.exists?
+              if klass::STRUCTURE[:document].nil?
+                self.document_placements.each(&:destroy!)
+              else
+                self.document_placements.offset(1).each(&:destroy!)
+              end
             end
           end
         end

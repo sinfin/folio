@@ -1,0 +1,25 @@
+.form-group[
+  class=class_name
+  data-alt-prompt=t('folio.console.alt_prompt')
+  data-file-title-prompt=t('folio.console.file_title_prompt')
+]
+  label.folio-console-react-picker__label
+    = title
+
+  .folio-console-react-picker__files[
+    data-placement-key=placement_key
+    data-cocoon-single-nested=single?
+    class=(picked? ? 'folio-console-has-nested': nil)
+  ]
+    = render_fields
+
+  .folio-console-react-picker__button
+    button.btn.btn-success[
+      type="button"
+      class="folio-console-add-#{file_type_slug}"
+    ]
+      = t('.add')
+
+  - if form_errors
+    .folio-console-react-picker__errors
+      small.form-text == form_errors.join(' <br> ')

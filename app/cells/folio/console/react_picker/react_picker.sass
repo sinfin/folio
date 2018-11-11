@@ -1,0 +1,38 @@
+.folio-console-react-picker
+  &--single
+    min-width: 150px
+
+    .folio-console-has-nested ~ .folio-console-react-picker__button
+      display: none
+
+  &--multi
+    .folio-console-react-picker__button
+      margin-top: $grid-gutter-width
+
+      .folio-console--compact &
+        margin-top: 0
+
+  &--error
+    color: $danger
+
+.folio-console-react-picker__files
+  margin: -$grid-gutter-half
+  display: flex
+  flex-wrap: wrap
+  min-width: 150px
+
+  &[data-cocoon-single-nested]
+    display: none
+
+    &.folio-console-has-nested
+      display: flex
+
+  .folio-console--compact &
+    margin-top: 1rem
+    margin-bottom: 0
+
+  .folio-console-react-picker--single &
+    margin: 0
+
+    .nested-fields
+      margin: 0

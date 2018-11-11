@@ -19,7 +19,7 @@ class Folio::Console::FilePlacementListCell < FolioCell
   end
 
   def title(fp)
-    t = fp.placement.try(:title)
+    t = fp.placement.try(:to_label) || fp.placement.try(:title)
     model_name = fp.placement.class.model_name.human
 
     if t.present?

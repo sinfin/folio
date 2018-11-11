@@ -52,7 +52,7 @@ FactoryBot.define do
     content { '<p>Officiis perferendis commodi. Asperiores quas et. Veniam qui est.</p>' }
   end
 
-  factory :folio_file_placement, class: Folio::FilePlacement do
+  factory :folio_document_placement, class: Folio::FilePlacement::Document do
     association :file, factory: :folio_document
     association :placement, factory: :folio_page
   end

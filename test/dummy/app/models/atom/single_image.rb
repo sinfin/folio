@@ -3,7 +3,10 @@
 module Atom
   class SingleImage < Folio::Atom::Base
     STRUCTURE = {
-      images: :single,
+      cover: true,
     }
+
+    validates :cover_placement,
+              presence: true
   end
 end

@@ -9,7 +9,7 @@ class Folio::Console::FilePlacementListCellTest < Folio::Console::CellTest
   end
 
   test 'show' do
-    placement = create(:folio_file_placement)
+    placement = create(:folio_document_placement)
     page = placement.placement
     html = cell('folio/console/file_placement_list', page).(:show)
     assert html.has_css?('h2')

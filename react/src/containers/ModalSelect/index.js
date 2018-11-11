@@ -31,16 +31,33 @@ class ModalSelect extends Component {
     return $(selector)
   }
 
-  fileTemplate (file) {
+  fileTemplate (file, prefix) {
     if (this.selectingDocument()) {
       return `
-        <div class="folio-console-document-thumbnail">
-          <i class="fa fa-file-o"></i>
-          <strong>${truncate(file.file_name)}</strong>
+        <div class="folio-console-thumbnail__inner">
+          <i class="folio-console-thumbnail__fa-icon fa fa-file-o"></i>
+          <strong class="folio-console-thumbnail__title">${truncate(file.file_name)}</strong>
+          <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.file_name}" />
+          <div class="folio-console-hover-destroy">
+            <i class="fa fa-edit folio-console-thumbnail__title-edit"></i>
+            <i class="fa fa-times-circle" data-destroy-association></i>
+          </div>
         </div>
       `
     } else {
-      return `<img src=${window.encodeURI(file.thumb)} alt="" />`
+      return `
+        <div class="folio-console-thumbnail__inner">
+          <div class="folio-console-thumbnail__img-wrap">
+            <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.thumb)} alt="" />
+            <div class="folio-console-hover-destroy">
+              <i class="fa fa-times-circle" data-destroy-association></i>
+            </div>
+          </div>
+        </div>
+
+        <input type="hidden" name="${prefix}[alt]" value="" />
+        <small class="folio-console-thumbnail__alt">alt:</small>
+      `
     }
   }
 
@@ -50,7 +67,8 @@ class ModalSelect extends Component {
     if (!$) return
 
     const $el = $(this.state.el)
-    const $fields = $el.siblings('.folio-console-nested-fields-with-files')
+    const $wrap = $el.closest('.folio-console-react-picker')
+    const $fields = $wrap.find('.folio-console-react-picker__files')
 
     const $last = $fields.find('.nested-fields').last()
     let position = 0
@@ -74,22 +92,17 @@ class ModalSelect extends Component {
       name = $genericInput.attr('name').split('[')[0]
     }
 
-    const placementType = $fields.data('placement-type')
-    const hasOne = $fields.data('has-one')
+    const placementKey = $fields.data('placement-key')
+    const hasOne = typeof $fields.data('cocoon-single-nested') !== 'undefined'
     const affix = hasOne ? '' : `[${Date.now()}]`
-    const prefix = `${name}[${placementType}_attributes]${affix}`
+    const prefix = `${name}[${placementKey}_attributes]${affix}`
 
     const $newFile = $(`
-      <div class="nested-fields">
-        ${this.fileTemplate(file)}
-
-        <div class="folio-console-hover-destroy">
-          <i class="fa fa-times-circle" data-destroy-association=""></i>
-        </div>
-
+      <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingDocument() ? 'document' : 'image'}">
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.file_id}" />
         ${hasOne ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
+        ${this.fileTemplate(file, prefix)}
       </div>
     `)
 

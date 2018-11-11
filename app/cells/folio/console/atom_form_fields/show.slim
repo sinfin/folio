@@ -9,18 +9,19 @@
 
       .folio-console-smart-row.folio-console-smart-row--wrap
         aside.folio-console-smart-col[
-          class="folio-console-atom-images"
-          class="folio-console-atom-images-single"
-          hidden=(structure[:images] == :single ? nil : '')
+          class="folio-console-atom-fields"
+          class="folio-console-atom-fields--cover"
+          hidden=(structure[:cover] ? nil : '')
         ]
-          = react_image_select(f, cover: true)
+          = react_picker(f, :cover_placement)
 
         aside.folio-console-smart-col[
-          class="folio-console-atom-documents"
-          class="folio-console-atom-documents-single"
-          hidden=(structure[:documents] == :single ? nil : '')
+          class="folio-console-atom-fields"
+          class="folio-console-atom-fields--document"
+          hidden=(structure[:document] ? nil : '')
         ]
-          = react_document_select(f, multi: false)
+          = react_picker(f, :document_placement, \
+                            file_type: 'Folio::Document')
 
         .folio-console-smart-col.folio-console-atom-main-fields
           .folio-console-atom-model
@@ -31,17 +32,18 @@
           = content_field
 
         aside.folio-console-smart-col.folio-console-smart-col--wrap[
-          class="folio-console-atom-images"
-          class="folio-console-atom-images-multi"
-          hidden=(structure[:images] == :multi ? nil : '')
+          class="folio-console-atom-fields"
+          class="folio-console-atom-fields--images"
+          hidden=(structure[:images] ? nil : '')
         ]
-          = react_image_select(f, multi: true)
+          = react_picker(f, :image_placements)
 
         aside.folio-console-smart-col.folio-console-smart-col--wrap[
-          class="folio-console-atom-documents"
-          class="folio-console-atom-documents-multi"
-          hidden=(structure[:documents] == :multi ? nil : '')
+          class="folio-console-atom-fields"
+          class="folio-console-atom-fields--documents"
+          hidden=(structure[:documents] ? nil : '')
         ]
-          = react_document_select(f, multi: true)
+          = react_picker(f, :document_placements, \
+                            file_type: 'Folio::Document')
 
   == cell('folio/console/nested_model_controls', f, vertical: true)

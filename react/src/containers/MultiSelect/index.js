@@ -8,6 +8,7 @@ import {
   unselectFile,
   onSortEnd,
 } from 'ducks/files'
+import { placementTypeSelector } from 'ducks/app'
 import { uploadsSelector } from 'ducks/uploads'
 import { filteredFilesSelector } from 'ducks/filters'
 
@@ -17,13 +18,14 @@ import { File, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
-const SortableList = SortableContainer(({ attachmentable, items, dispatch }) => {
+const SortableList = SortableContainer(({ attachmentable, placementType, items, dispatch }) => {
   return (
     <div>
       {items.map((file, index) => (
         <SortableItem
           key={file.file_id}
           attachmentable={attachmentable}
+          placementType={placementType}
           index={index}
           file={file}
           dispatch={dispatch}
@@ -34,7 +36,7 @@ const SortableList = SortableContainer(({ attachmentable, items, dispatch }) => 
   )
 })
 
-const SortableItem = SortableElement(({ file, position, dispatch, attachmentable }) => {
+const SortableItem = SortableElement(({ file, position, dispatch, attachmentable, placementType }) => {
   return (
     <File
       file={file}
@@ -42,6 +44,7 @@ const SortableItem = SortableElement(({ file, position, dispatch, attachmentable
       onClick={() => dispatch(unselectFile(file))}
       position={position}
       attachmentable={attachmentable}
+      placementType={placementType}
       selected
     />
   )
@@ -49,7 +52,7 @@ const SortableItem = SortableElement(({ file, position, dispatch, attachmentable
 
 class MultiSelect extends LazyLoadCheckingComponent {
   render() {
-    const { files, uploads, dispatch } = this.props
+    const { files, uploads, dispatch, placementType } = this.props
     if (files.loading) return <Loader />
 
     return (
@@ -61,6 +64,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
           <SortableList
             items={files.selected}
             attachmentable={files.attachmentable}
+            placementType={placementType}
             onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
             dispatch={dispatch}
             axis='xy'
@@ -87,6 +91,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
               key={file.file_id}
               onClick={() => dispatch(selectFile(file))}
               attachmentable={files.attachmentable}
+              placementType={placementType}
               selected={false}
             />
           ))}
@@ -99,6 +104,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
 const mapStateToProps = (state) => ({
   files: filteredFilesSelector(state),
   uploads: uploadsSelector(state),
+  placementType: placementTypeSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

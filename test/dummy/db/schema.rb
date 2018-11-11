@@ -63,27 +63,19 @@ ActiveRecord::Schema.define(version: 2018_11_09_082100) do
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
-  create_table "folio_cover_placements", force: :cascade do |t|
-    t.string "placement_type"
-    t.bigint "placement_id"
-    t.bigint "file_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["file_id"], name: "index_folio_cover_placements_on_file_id"
-    t.index ["placement_type", "placement_id"], name: "index_folio_cover_placements_on_placement_type_and_placement_id"
-  end
-
   create_table "folio_file_placements", force: :cascade do |t|
     t.string "placement_type"
     t.bigint "placement_id"
     t.bigint "file_id"
-    t.string "caption"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
+    t.text "title"
+    t.string "alt"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
+    t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
   create_table "folio_files", force: :cascade do |t|
