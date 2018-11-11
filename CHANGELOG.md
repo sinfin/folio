@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## 2018-11-11
+### Added
+- Added image `alt` and document `title` fields.
+
 ### Changed
 - Changed `Atom` structure, see `app/models/folio/atom/base.rb`
   - To migrate the models, you can use the following script. Note that you might have to update views as well!

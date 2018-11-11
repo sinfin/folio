@@ -10,13 +10,11 @@
       = fp.hidden_field :file_id
       = fp.hidden_field :id
 
-      - title = fp.object.title.presence || fp.object.file.file_name
-
       .folio-console-thumbnail__inner
         i.folio-console-thumbnail__fa-icon class="fa fa-file-o"
-        strong.folio-console-thumbnail__title = truncate(title)
+        strong.folio-console-thumbnail__title = truncate(fp.object.to_label)
 
-        = fp.hidden_field :title, value: title, \
+        = fp.hidden_field :title, value: fp.object.to_label, \
                                   'data-file-name' => fp.object.file.file_name
 
         .folio-console-hover-destroy

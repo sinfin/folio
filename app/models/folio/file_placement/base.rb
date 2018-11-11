@@ -10,6 +10,10 @@ module Folio
 
     validates :type,
               presence: true
+
+    def to_label
+      title.presence || file.file_name
+    end
   end
 end
 
