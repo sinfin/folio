@@ -14,7 +14,6 @@ module Folio
 
     # Relations
     has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
-                               inverse_of: :file,
                                dependent: :destroy
     has_many :placements, through: :file_placements
 
@@ -23,7 +22,7 @@ module Folio
               presence: true
 
     # Scopes
-    scope :ordered, -> { order(position: :asc) }
+    scope :ordered, -> { order(created_at: :desc) }
 
     before_save :set_mime_type
     after_save :touch_placements

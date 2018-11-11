@@ -18,7 +18,6 @@ module Folio
           Image.ordered
                .includes(:tags)
                .includes(:file_placements)
-               .includes(:cover_placements)
                .all
         end
       end

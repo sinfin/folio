@@ -4,12 +4,13 @@ module Folio
   class FilePlacement::Cover < FilePlacement::Base
     include PregenerateThumbnails
 
-    belongs_to :file, class_name: 'Folio::Image'
-    belongs_to :placement,
-               polymorphic: true,
-               inverse_of: :cover_placement,
-               required: true,
-               touch: true
+    belongs_to :file, class_name: 'Folio::Image',
+                      inverse_of: :file_placements
+
+    belongs_to :placement, polymorphic: true,
+                           inverse_of: :cover_placement,
+                           required: true,
+                           touch: true
   end
 end
 

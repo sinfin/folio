@@ -54,6 +54,9 @@ module Folio
           @file = ::Folio::File.find(params[:id])
         end
 
+        def find_files
+        end
+
         def file_params
           p = params.require(:file).permit(:tag_list, :type, :file, file: [])
           # redactor 3 ¯\_(ツ)_/¯
@@ -64,7 +67,6 @@ module Folio
         end
 
         def index_path
-          @files = ::Folio::File.ordered
         end
 
         def edit_path(file)
