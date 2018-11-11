@@ -7,7 +7,7 @@ import createSagaMiddleware from 'redux-saga'
 import { fromJS } from 'immutable'
 
 import App from 'containers/App'
-import { setMode, setFileType } from 'ducks/app'
+import { setMode, setFileType, setPlacementType } from 'ducks/app'
 import { prefillSelected, setAttachmentable } from 'ducks/files'
 
 import reducers from './reducers'
@@ -38,6 +38,11 @@ window.folioConsoleInitReact = (domRoot) => {
     {
       key: 'attachmentable',
       action: setAttachmentable,
+      asJson: false,
+    },
+    {
+      key: 'placementType',
+      action: setPlacementType,
       asJson: false,
     },
   ]

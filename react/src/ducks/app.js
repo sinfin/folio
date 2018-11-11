@@ -4,6 +4,7 @@ import { fromJS } from 'immutable'
 
 const SET_MODE = 'app/SET_MODE'
 const SET_FILE_TYPE = 'app/SET_FILE_TYPE'
+const SET_PLACEMENT_TYPE = 'app/SET_PLACEMENT_TYPE'
 
 // Actions
 
@@ -15,15 +16,21 @@ export function setFileType (fileType) {
   return { type: SET_FILE_TYPE, fileType }
 }
 
+export function setPlacementType (placementType) {
+  return { type: SET_PLACEMENT_TYPE, placementType }
+}
+
 // Selectors
 
 export const fileTypeSelector = (state) => state.getIn(['app', 'fileType'])
+export const placementTypeSelector = (state) => state.getIn(['app', 'placementType'])
 
 // State
 
 const initialState = fromJS({
   mode: null,
   fileType: 'Folio::Image',
+  placementType: 'file_placements',
 })
 
 // Reducer
@@ -35,6 +42,9 @@ function appReducer (state = initialState, action) {
 
     case SET_FILE_TYPE:
       return state.set('fileType', action.fileType)
+
+    case SET_PLACEMENT_TYPE:
+      return state.set('placementType', action.placementType)
 
     default:
       return state

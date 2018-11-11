@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { filteredFilesSelector } from 'ducks/filters'
+import { placementTypeSelector } from 'ducks/app'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 import FileFilter from 'containers/FileFilter'
@@ -22,7 +23,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
   }
 
   render () {
-    const { files } = this.props
+    const { files, placementType } = this.props
     if (files.loading) return <Loader />
 
     return (
@@ -34,6 +35,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
             {files.selectable.map((file) => (
               <File
                 attachmentable={files.attachmentable}
+                placementType={placementType}
                 file={file}
                 key={file.file_id}
                 onClick={() => this.selectFile(file)}
@@ -50,6 +52,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
 
 const mapStateToProps = (state) => ({
   files: filteredFilesSelector(state),
+  placementType: placementTypeSelector(state),
 })
 
 export default connect(mapStateToProps, null)(SingleSelect)

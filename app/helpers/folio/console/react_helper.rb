@@ -2,27 +2,33 @@
 
 module Folio
   module Console::ReactHelper
-    def react_images(selected_placements = nil, attachmentable: nil)
+    def react_images(selected_placements = nil,
+                     attachmentable: 'node',
+                     type: :image_placements)
       react_files('Folio::Image',
                   selected_placements,
-                  attachmentable: attachmentable)
+                  attachmentable: attachmentable,
+                  type: type)
     end
 
-    def react_documents(selected_placements = nil, attachmentable: nil)
+    def react_documents(selected_placements = nil,
+                        attachmentable: 'node',
+                        type: :document_placements)
       react_files('Folio::Document',
                   selected_placements,
-                  attachmentable: attachmentable)
+                  attachmentable: attachmentable,
+                  type: type)
     end
 
-    def react_images_modal(attachmentable: 'node')
-      react_modal_for 'Folio::Image', attachmentable: attachmentable
+    def react_images_modal
+      react_modal_for 'Folio::Image'
     end
 
-    def react_documents_modal(attachmentable: 'node')
-      react_modal_for 'Folio::Document', attachmentable: attachmentable
+    def react_documents_modal
+      react_modal_for 'Folio::Document'
     end
 
-    def react_files(type, selected_placements, attachmentable: 'node')
+    def react_files(file_type, selected_placements, attachmentable:, type:)
       if selected_placements.present?
         placements = selected_placements.ordered.map do |fp|
           { id: fp.id, file_id: fp.file.id }
@@ -34,9 +40,10 @@ module Folio
       content_tag(:div, nil,
         'class': 'folio-react-wrap',
         'data-selected': placements,
-        'data-file-type': type,
+        'data-file-type': file_type,
         'data-mode': 'multi-select',
         'data-attachmentable': attachmentable,
+        'data-placement-type': type,
       )
     end
 
@@ -74,13 +81,12 @@ module Folio
 
     private
 
-      def react_modal_for(file_type, attachmentable: 'node')
+      def react_modal_for(file_type)
         if ['new', 'edit', 'create', 'update'].include?(action_name)
           content_tag(:div, nil,
             'class': 'folio-react-wrap',
             'data-file-type': file_type,
             'data-mode': 'modal-select',
-            'data-attachmentable': attachmentable,
           )
         end
       end

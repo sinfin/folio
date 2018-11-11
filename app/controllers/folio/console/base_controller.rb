@@ -83,7 +83,6 @@ module Folio
                              :position,
                              :_destroy,
                              *Atom.text_fields,
-                             *cover_placement_strong_params,
                              *file_placements_strong_params]
         }]
       end
