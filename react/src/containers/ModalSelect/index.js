@@ -35,9 +35,13 @@ class ModalSelect extends Component {
     if (this.selectingDocument()) {
       return `
         <div class="folio-console-thumbnail__inner">
-          <i class="fa fa-file-o"></i>
-          <strong>${truncate(file.file_name)}</strong>
-          ${this.hoverDestroy()}
+          <i class="folio-console-thumbnail__fa-icon fa fa-file-o"></i>
+          <strong class="folio-console-thumbnail__title">${truncate(file.file_name)}</strong>
+          <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.file_name}" />
+          <div class="folio-console-hover-destroy">
+            <i class="fa fa-edit folio-console-thumbnail__title-edit"></i>
+            <i class="fa fa-times-circle" data-destroy-association></i>
+          </div>
         </div>
       `
     } else {
@@ -45,7 +49,9 @@ class ModalSelect extends Component {
         <div class="folio-console-thumbnail__inner">
           <div class="folio-console-thumbnail__img-wrap">
             <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.thumb)} alt="" />
-            ${this.hoverDestroy()}
+            <div class="folio-console-hover-destroy">
+              <i class="fa fa-times-circle" data-destroy-association></i>
+            </div>
           </div>
         </div>
 
@@ -53,14 +59,6 @@ class ModalSelect extends Component {
         <small class="folio-console-thumbnail__alt">alt:</small>
       `
     }
-  }
-
-  hoverDestroy () {
-    return `
-      <div class="folio-console-hover-destroy">
-        <i class="fa fa-times-circle" data-destroy-association=""></i>
-      </div>
-    `
   }
 
   selectFile = (file) => {
