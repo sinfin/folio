@@ -18,14 +18,6 @@ class Folio::Console::ReactPickerCell < FolioCell
       f.object.class.human_attribute_name(placement_key)
   end
 
-  # def single_nested?
-  #   true
-  # end
-
-  # def has_one?
-  #   true
-  # end
-
   def form_errors
     if f.object.errors.include?(placement_key)
       f.object.errors[placement_key]
@@ -36,17 +28,13 @@ class Folio::Console::ReactPickerCell < FolioCell
     render("_#{file_type_slug}_fields")
   end
 
-  # class='folio-console-react-file-select'
-  # class=(options[:multi] ? 'folio-console-multi' : 'folio-console-single')
-  # class=(exists ? 'folio-console-has-nested' : nil)
-  # class=(form_errors ? 'text-danger has-danger' : nil)
-
   def image(fp)
     if fp.object && fp.object.file
-      image_tag(fp.object
-                  .file
-                  .thumb(::Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE)
-                  .url)
+      url = fp.object
+              .file
+              .thumb(::Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE)
+              .url
+      image_tag(url, class: 'folio-console-thumbnail__img')
     end
   end
 

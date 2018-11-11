@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 - Changed console react helpers:
   - Changed `react_image_select(f)` -> `react_picker(f, :cover_placement)`
   - Changed `react_images_select(f)` -> `react_picker(f, :image_placements)`
-  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :single_document_placement, file_type: 'Folio::Document')`
+  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :document_placement, file_type: 'Folio::Document')`
   - Changed `react_document_select(f, multi: true)` -> `react_picker(f, :document_placements, file_type: 'Folio::Document')`
 
 ## 2018-11-09

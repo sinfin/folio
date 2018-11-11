@@ -1,6 +1,8 @@
 en:
   folio:
     console:
+      alt_prompt: Alternative image caption
+
       breadcrumbs:
         root: Console
         actions:

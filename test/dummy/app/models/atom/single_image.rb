@@ -5,5 +5,8 @@ module Atom
     STRUCTURE = {
       cover: true,
     }
+
+    validates :cover_placement,
+              presence: true
   end
 end

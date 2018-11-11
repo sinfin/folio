@@ -1,6 +1,8 @@
 cs:
   folio:
     console:
+      alt_prompt: Alternativní popisek obrázku
+
       breadcrumbs:
         root: Administrace
         actions:

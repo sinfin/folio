@@ -30,7 +30,7 @@ module Folio
                         placement: 'Folio::FilePlacement::Cover')
 
       has_one_placement(:document,
-                        :single_document_placement,
+                        :document_placement,
                         class_name: 'Folio::Document',
                         placement: 'Folio::FilePlacement::SingleDocument')
     end

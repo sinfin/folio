@@ -2,14 +2,17 @@
   - if fp.object.marked_for_destruction?
     = fp.hidden_field :_destroy, value: 1
   - else
-    .nested-fields
-      .folio-console-document-thumbnail
-        i.fa.fa-file-o
-        strong = truncate(fp.object.file.file_name)
-
-      .folio-console-hover-destroy
-        i.fa.fa-times-circle data-destroy-association=true
-
+    .nested-fields[
+      class="folio-console-thumbnail"
+      class="folio-console-thumbnail--document"
+    ]
       = fp.hidden_field :_destroy, value: 0
       = fp.hidden_field :file_id
       = fp.hidden_field :id
+
+      .folio-console-thumbnail__inner
+        i.folio-console-thumbnail__fa-icon class="fa fa-file-o"
+        strong = truncate(fp.object.file.file_name)
+
+        .folio-console-hover-destroy
+          i.fa.fa-times-circle data-destroy-association=true

@@ -31,17 +31,36 @@ class ModalSelect extends Component {
     return $(selector)
   }
 
-  fileTemplate (file) {
+  fileTemplate (file, prefix) {
     if (this.selectingDocument()) {
       return `
-        <div class="folio-console-document-thumbnail">
+        <div class="folio-console-thumbnail__inner">
           <i class="fa fa-file-o"></i>
           <strong>${truncate(file.file_name)}</strong>
+          ${this.hoverDestroy()}
         </div>
       `
     } else {
-      return `<img src=${window.encodeURI(file.thumb)} alt="" />`
+      return `
+        <div class="folio-console-thumbnail__inner">
+          <div class="folio-console-thumbnail__img-wrap">
+            <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.thumb)} alt="" />
+            ${this.hoverDestroy()}
+          </div>
+        </div>
+
+        <input type="hidden" name="${prefix}[alt]" value="" />
+        <small class="folio-console-thumbnail__alt">alt:</small>
+      `
     }
+  }
+
+  hoverDestroy () {
+    return `
+      <div class="folio-console-hover-destroy">
+        <i class="fa fa-times-circle" data-destroy-association=""></i>
+      </div>
+    `
   }
 
   selectFile = (file) => {
@@ -81,16 +100,11 @@ class ModalSelect extends Component {
     const prefix = `${name}[${placementKey}_attributes]${affix}`
 
     const $newFile = $(`
-      <div class="nested-fields">
-        ${this.fileTemplate(file)}
-
-        <div class="folio-console-hover-destroy">
-          <i class="fa fa-times-circle" data-destroy-association=""></i>
-        </div>
-
+      <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingDocument() ? 'document' : 'image'}">
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.file_id}" />
         ${hasOne ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
+        ${this.fileTemplate(file, prefix)}
       </div>
     `)
 
