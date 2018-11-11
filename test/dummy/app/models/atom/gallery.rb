@@ -3,7 +3,7 @@
 module Atom
   class Gallery < Folio::Atom::Base
     STRUCTURE = {
-      images: :multi,
+      images: true,
     }
   end
 end

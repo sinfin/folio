@@ -3,7 +3,7 @@
 module Atom
   class SingleImage < Folio::Atom::Base
     STRUCTURE = {
-      images: :single,
+      cover: true,
     }
   end
 end

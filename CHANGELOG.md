@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-11-11
+### Changed
+- Changed `Atom` structure, see `app/models/folio/atom/base.rb`
+
 ## 2018-11-09
 ### Added
 - Added proper `traco` support with `Rails.application.config.folio_using_traco`

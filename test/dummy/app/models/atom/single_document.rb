@@ -3,7 +3,7 @@
 module Atom
   class SingleDocument < Folio::Atom::Base
     STRUCTURE = {
-      documents: :single,
+      document: true,
     }
   end
 end
