@@ -91,6 +91,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
               key={file.file_id}
               onClick={() => dispatch(selectFile(file))}
               attachmentable={files.attachmentable}
+              placementType={placementType}
               selected={false}
             />
           ))}

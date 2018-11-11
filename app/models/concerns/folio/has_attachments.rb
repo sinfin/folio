@@ -28,6 +28,11 @@ module Folio
                         :cover_placement,
                         class_name: 'Folio::Image',
                         placement: 'Folio::FilePlacement::Cover')
+
+      has_one_placement(:document,
+                        :single_document_placement,
+                        class_name: 'Folio::Document',
+                        placement: 'Folio::FilePlacement::SingleDocument')
     end
 
     class_methods do

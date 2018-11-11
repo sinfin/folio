@@ -9,10 +9,10 @@
     #node-additional-form-fields
       = render_additional_form_fields f
 
-  / = tab :gallery
-  /   = react_images f.object.image_placements
+  = tab :gallery
+    = react_images f.object.image_placements
 
-  / = tab :documents
-  /   = react_documents f.object.document_placements
+  = tab :documents
+    = react_documents f.object.document_placements
 
 = form_footer f, console_nodes_path
