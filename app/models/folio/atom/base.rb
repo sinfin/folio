@@ -35,7 +35,7 @@ module Folio
 
       scope :by_type, -> (type) { where(type: type.to_s) }
 
-      def cell_name
+      def self.cell_name
         nil
       end
 

@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
       sed -i 's|documents: :multi|documents: true|g' $file
       sed -i 's|images: :single|cover: true|g' $file
       sed -i 's|images: :multi|images: true|g' $file
+      sed -i 's|def cell_name|def self.cell_name|g' $file
     done
   ```
 

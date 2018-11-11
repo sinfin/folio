@@ -10,7 +10,7 @@ class <%= global_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
     model: nil,
   }
 
-  def cell_name
+  def self.cell_name
     '<%= atom_cell_name %>'
   end
 end

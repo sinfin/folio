@@ -3,7 +3,7 @@
 module Folio
   module Molecule
     class Base
-      def cell_name
+      def self.cell_name
         nil
       end
 

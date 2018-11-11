@@ -10,7 +10,7 @@ module Folio
         model: nil,
       }
 
-      def cell_name
+      def self.cell_name
         'folio/atom/text'
       end
     end
