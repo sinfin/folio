@@ -1,8 +1,6 @@
 class AddFilePlacementSti < ActiveRecord::Migration[5.2]
   def up
-    add_column :folio_file_placements, :type, :string, index: true
-
-    Folio::FilePlacement.update_all(type: 'Folio::FilePlacement')
+    add_column :folio_file_placements, :type, :string
   end
 
   def down

@@ -14,6 +14,7 @@ module Folio
 
     # Relations
     has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
+                               inverse_of: :file,
                                dependent: :destroy
     has_many :placements, through: :file_placements
 
