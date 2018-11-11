@@ -68,6 +68,7 @@ module Folio
 
         [{
           cover_placement_attributes: commons,
+          single_document_placement_attributes: commons,
           document_placements_attributes: commons,
           image_placements_attributes: commons,
         }]

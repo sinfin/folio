@@ -104,16 +104,5 @@ en:
           add_image: Add image
           remove: Remove atom
 
-      react_image_select:
-        title_multi: Images
-        title_single: Image
-        title_cover: Main image
-        add: Add Image
-
-      single_file_select:
-        add_image: Add image
-        add_video: Add video
-        remove_video: Remove video
-
       react_picker:
         add: Add

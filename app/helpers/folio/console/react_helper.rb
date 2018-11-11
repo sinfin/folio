@@ -26,31 +26,6 @@ module Folio
                                                 file_type: file_type)
     end
 
-    def react_cover_select(f, key: nil, title: nil)
-      raw cell('folio/console/react_image_select', f, multi: false,
-                                                      cover: true,
-                                                      key: key,
-                                                      title: title)
-    end
-
-    def react_images_select(f, key: nil, title: nil)
-      raw cell('folio/console/react_image_select', f, multi: true,
-                                                      cover: false,
-                                                      key: key,
-                                                      title: title)
-    end
-
-    def react_document_select(f, multi: false, key: nil, title: nil)
-      raw cell('folio/console/react_document_select', f, multi: multi,
-                                                         key: key,
-                                                         title: title)
-    end
-
-    def react_has_one_document_select(f, key: nil, title: nil)
-      raw cell('folio/console/react_has_one_document_select', f, key: key,
-                                                                 title: title)
-    end
-
     def react_modal_for(file_type)
       if ['new', 'edit', 'create', 'update'].include?(action_name)
         content_tag(:div, nil,

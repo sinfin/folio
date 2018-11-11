@@ -5,7 +5,7 @@
 .tab-content
   = tab :content
     <%- if has_attachmentable? -%>
-    = react_cover_select(f)
+    = react_picker(f, :cover_placement)
     <%- end -%>
     <%= attribute_inputs %>
   <%- if has_attachmentable? -%>

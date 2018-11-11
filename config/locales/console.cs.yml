@@ -151,21 +151,6 @@ cs:
           handle_selected: Vyřídit vybrané
           toggle: Hromadný výběr
 
-      react_image_select:
-        title_multi: Obrázky
-        title_single: Obrázek
-        title_cover: Hlavní obrázek
-        add: Přidat obrázek
-
-      react_document_select:
-        title_multi: Soubory
-        title_single: Soubor
-        add: Přidat soubor
-
-      react_has_one_document_select:
-        title_single: Soubor
-        add: Přidat soubor
-
       react_picker:
         add: Přidat
 

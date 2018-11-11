@@ -5,6 +5,10 @@ cs:
         one: Bez obsahu
         other: Bez obsahu
 
+      atom/documents:
+        one: Soubory
+        other: Soubory
+
       atom/gallery:
         one: Galerie
         other: Galerie
