@@ -2,6 +2,7 @@ en:
   folio:
     console:
       alt_prompt: Alternative image caption
+      file_title_prompt: Displayed file name
 
       breadcrumbs:
         root: Console

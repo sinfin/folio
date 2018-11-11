@@ -2,6 +2,7 @@ cs:
   folio:
     console:
       alt_prompt: Alternativní popisek obrázku
+      file_title_prompt: Název souboru
 
       breadcrumbs:
         root: Administrace

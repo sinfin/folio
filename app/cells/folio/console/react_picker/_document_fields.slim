@@ -10,9 +10,15 @@
       = fp.hidden_field :file_id
       = fp.hidden_field :id
 
+      - title = fp.object.title.presence || fp.object.file.file_name
+
       .folio-console-thumbnail__inner
         i.folio-console-thumbnail__fa-icon class="fa fa-file-o"
-        strong = truncate(fp.object.file.file_name)
+        strong.folio-console-thumbnail__title = truncate(title)
+
+        = fp.hidden_field :title, value: title, \
+                                  'data-file-name' => fp.object.file.file_name
 
         .folio-console-hover-destroy
+          i.fa.fa-edit.folio-console-thumbnail__title-edit
           i.fa.fa-times-circle data-destroy-association=true
