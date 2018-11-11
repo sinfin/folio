@@ -51,10 +51,6 @@ module Folio
         self
       end
 
-      def document
-        documents.first if klass::STRUCTURE[:documents] === :single
-      end
-
       def self.scoped_model_resource(resource)
         resource.all
       end

@@ -7,6 +7,7 @@ module Folio
                       required: true
 
     belongs_to :placement, polymorphic: true,
+                           inverse_of: :document_placement,
                            required: true,
                            touch: true
   end

@@ -10,6 +10,7 @@ def create_atom(klass = Folio::Atom::Base,
               model: nil,
               cover: nil,
               images: nil,
+              document: nil,
               documents: nil)
 
   attrs = {
@@ -28,6 +29,8 @@ def create_atom(klass = Folio::Atom::Base,
            (fill_attrs.include?(:cover) ? create(:folio_image) : nil),
     images: images ||
             (fill_attrs.include?(:images) ? create_list(:folio_image, 1) : nil),
+    document: document ||
+              (fill_attrs.include?(:document) ? create(:folio_document) : nil),
     documents: documents ||
                (fill_attrs.include?(:documents) ? create_list(:folio_document, 1) : nil),
   }.compact
