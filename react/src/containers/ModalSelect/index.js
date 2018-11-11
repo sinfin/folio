@@ -50,7 +50,8 @@ class ModalSelect extends Component {
     if (!$) return
 
     const $el = $(this.state.el)
-    const $fields = $el.siblings('.folio-console-nested-fields-with-files')
+    const $wrap = $el.closest('.folio-console-react-picker')
+    const $fields = $wrap.find('.folio-console-react-picker__files')
 
     const $last = $fields.find('.nested-fields').last()
     let position = 0
@@ -74,10 +75,10 @@ class ModalSelect extends Component {
       name = $genericInput.attr('name').split('[')[0]
     }
 
-    const placementType = $fields.data('placement-type')
-    const hasOne = $fields.data('has-one')
+    const placementKey = $fields.data('placement-key')
+    const hasOne = typeof $fields.data('cocoon-single-nested') !== 'undefined'
     const affix = hasOne ? '' : `[${Date.now()}]`
-    const prefix = `${name}[${placementType}_attributes]${affix}`
+    const prefix = `${name}[${placementKey}_attributes]${affix}`
 
     const $newFile = $(`
       <div class="nested-fields">

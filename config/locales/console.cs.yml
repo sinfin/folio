@@ -166,6 +166,9 @@ cs:
         title_single: Soubor
         add: Přidat soubor
 
+      react_picker:
+        add: Přidat
+
       nested_model_controls:
         destroy: Odebrat
 

@@ -114,3 +114,6 @@ en:
         add_image: Add image
         add_video: Add video
         remove_video: Remove video
+
+      react_picker:
+        add: Add

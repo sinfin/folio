@@ -20,38 +20,10 @@ module Folio
                   type: type)
     end
 
-    def react_images_modal
-      react_modal_for 'Folio::Image'
-    end
-
-    def react_documents_modal
-      react_modal_for 'Folio::Document'
-    end
-
-    def react_files(file_type, selected_placements, attachmentable:, type:)
-      if selected_placements.present?
-        placements = selected_placements.ordered.map do |fp|
-          { id: fp.id, file_id: fp.file.id }
-        end.to_json
-      else
-        placements = nil
-      end
-
-      content_tag(:div, nil,
-        'class': 'folio-react-wrap',
-        'data-selected': placements,
-        'data-file-type': file_type,
-        'data-mode': 'multi-select',
-        'data-attachmentable': attachmentable,
-        'data-placement-type': type,
-      )
-    end
-
-    def react_image_select(f, multi: false, cover: false, key: nil, title: nil)
-      raw cell('folio/console/react_image_select', f, multi: multi,
-                                                      cover: cover,
-                                                      key: key,
-                                                      title: title)
+    def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil)
+      raw cell('folio/console/react_picker', f, placement_key: placement_key,
+                                                title: title,
+                                                file_type: file_type)
     end
 
     def react_cover_select(f, key: nil, title: nil)
@@ -79,16 +51,35 @@ module Folio
                                                                  title: title)
     end
 
+    def react_modal_for(file_type)
+      if ['new', 'edit', 'create', 'update'].include?(action_name)
+        content_tag(:div, nil,
+          'class': 'folio-react-wrap',
+          'data-file-type': file_type,
+          'data-mode': 'modal-select',
+        )
+      end
+    end
+
     private
 
-      def react_modal_for(file_type)
-        if ['new', 'edit', 'create', 'update'].include?(action_name)
-          content_tag(:div, nil,
-            'class': 'folio-react-wrap',
-            'data-file-type': file_type,
-            'data-mode': 'modal-select',
-          )
+      def react_files(file_type, selected_placements, attachmentable:, type:)
+        if selected_placements.present?
+          placements = selected_placements.ordered.map do |fp|
+            { id: fp.id, file_id: fp.file.id }
+          end.to_json
+        else
+          placements = nil
         end
+
+        content_tag(:div, nil,
+          'class': 'folio-react-wrap',
+          'data-selected': placements,
+          'data-file-type': file_type,
+          'data-mode': 'multi-select',
+          'data-attachmentable': attachmentable,
+          'data-placement-type': type,
+        )
       end
   end
 end

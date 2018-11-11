@@ -13,14 +13,14 @@
           class="folio-console-atom-images-single"
           hidden=(structure[:images] == :single ? nil : '')
         ]
-          = react_image_select(f)
+          = react_picker(f, :cover_placement)
 
         aside.folio-console-smart-col[
           class="folio-console-atom-documents"
           class="folio-console-atom-documents-single"
           hidden=(structure[:documents] == :single ? nil : '')
         ]
-          = react_document_select(f, multi: false)
+          / = react_document_select(f, multi: false)
 
         .folio-console-smart-col.folio-console-atom-main-fields
           .folio-console-atom-model
@@ -35,13 +35,13 @@
           class="folio-console-atom-images-multi"
           hidden=(structure[:images] == :multi ? nil : '')
         ]
-          = react_images_select(f)
+          / = react_images_select(f)
 
         aside.folio-console-smart-col.folio-console-smart-col--wrap[
           class="folio-console-atom-documents"
           class="folio-console-atom-documents-multi"
           hidden=(structure[:documents] == :multi ? nil : '')
         ]
-          = react_document_select(f, multi: true)
+          / = react_document_select(f, multi: true)
 
   == cell('folio/console/nested_model_controls', f, vertical: true)

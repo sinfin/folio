@@ -29,12 +29,6 @@ class Folio::Console::ReactSelectCell < FolioCell
     end
   end
 
-  def html_safe_fields_for(&block)
-    f.simple_fields_for key, file_placements do |subfields|
-      (yield subfields).html_safe if subfields.object.present?
-    end
-  end
-
   def render_fields
     render(:fields)
   end
