@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 - Changed `Atom` structure, see `app/models/folio/atom/base.rb`
   - To migrate the models, you can use the following script. Note that you might have to update views as well!
   ```
-    for file in $( find app/models/atom/ -type f -name *.rb ); do
+    for file in $( find app/models/**/atom/ -type f -name *.rb ); do
       sed -i 's|documents: :single|document: true|g' $file
       sed -i 's|documents: :multi|documents: true|g' $file
       sed -i 's|images: :single|cover: true|g' $file
