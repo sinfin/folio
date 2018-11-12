@@ -7,6 +7,9 @@ require 'capybara/rails'
 require 'capybara/minitest'
 require Folio::Engine.root.join('test/create_atom_helper')
 
+FactoryBot.definition_file_paths << File.join(File.dirname(__FILE__), 'factories')
+FactoryBot.find_definitions
+
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all

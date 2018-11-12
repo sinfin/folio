@@ -25,7 +25,7 @@ module Folio
         gem 'mini_racer'
 
         gem_group :test do
-          gem 'factory_bot_rails'
+          gem 'factory_bot'
         end
 
         gem_group :development, :test do
