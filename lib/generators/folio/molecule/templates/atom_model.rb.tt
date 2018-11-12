@@ -5,8 +5,10 @@ class <%= global_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
     title: :string,
     perex: :string,
     content: :string,
-    images: :single,
-    documents: :single,
+    cover: true,
+    images: true,
+    document: true,
+    documents: true,
     model: nil,
   }
 
