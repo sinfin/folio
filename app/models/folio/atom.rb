@@ -30,5 +30,24 @@ module Folio
         end
       end
     end
+
+    def self.atoms_in_molecules(atoms)
+      molecules = []
+
+      atoms.each_with_index do |atom, index|
+        molecule = atom.class.molecule.presence ||
+                   atom.class.molecule_cell_name.presence
+
+        if index != 0 && molecule == molecules.last.first
+          # same kind of molecule
+          molecules.last.last << atom
+        else
+          # different kind of molecule
+          molecules << [molecule, [atom]]
+        end
+      end
+
+      molecules
+    end
   end
 end
