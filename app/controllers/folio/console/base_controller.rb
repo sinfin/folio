@@ -57,6 +57,10 @@ module Folio
         add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
       end
 
+      def additional_file_placements_strong_params_keys
+        []
+      end
+
       def file_placements_strong_params
         commons = [:id,
                    :title,
@@ -67,12 +71,18 @@ module Folio
                    :type,
                    :_destroy]
 
-        [{
-          cover_placement_attributes: commons,
-          document_placement_attributes: commons,
-          document_placements_attributes: commons,
-          image_placements_attributes: commons,
-        }]
+        hash = {}
+
+        (additional_file_placements_strong_params_keys + %i[
+          cover_placement_attributes
+          document_placement_attributes
+          document_placements_attributes
+          image_placements_attributes
+        ]).each do |key|
+          hash[key] = commons
+        end
+
+        [ hash ]
       end
 
       def atoms_strong_params
