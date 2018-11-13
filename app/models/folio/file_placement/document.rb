@@ -2,13 +2,7 @@
 
 module Folio
   class FilePlacement::Document < FilePlacement::Base
-    belongs_to :file, class_name: 'Folio::Document',
-                      inverse_of: :file_placements,
-                      required: true
-
-    belongs_to :placement, polymorphic: true,
-                           required: true,
-                           touch: true
+    folio_document_placement
   end
 end
 

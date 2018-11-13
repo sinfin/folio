@@ -18,7 +18,6 @@ module Folio
         include HasAttachments
         has_one_placement :my_file,
                           :my_placement,
-                          class_name: 'Folio::Document',
                           placement: 'MyPlacement'
       end
 

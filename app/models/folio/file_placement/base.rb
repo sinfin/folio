@@ -14,6 +14,26 @@ module Folio
     def to_label
       title.presence || file.file_name
     end
+
+    def self.folio_file_placement(class_name, name = nil)
+      belongs_to :file, class_name: class_name,
+                        inverse_of: :file_placements,
+                        required: true
+
+      belongs_to :placement, polymorphic: true,
+                             inverse_of: name,
+                             required: true,
+                             touch: true
+    end
+
+    def self.folio_image_placement(name = nil)
+      include PregenerateThumbnails
+      folio_file_placement('Folio::Image', name)
+    end
+
+    def self.folio_document_placement(name = nil)
+      folio_file_placement('Folio::Document', name)
+    end
   end
 end
 
