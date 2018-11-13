@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_09_082100) do
+ActiveRecord::Schema.define(version: 2018_11_13_115843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "unaccent"
 
   create_table "ahoy_events", force: :cascade do |t|
     t.integer "visit_id"
