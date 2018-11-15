@@ -3,20 +3,20 @@
 #= require photoswipe/photoswipe-ui-default
 
 class window.FolioLightbox
-  constructor: (selector, additionalSelector = false) ->
+  constructor: (selector, additionalSelector = false, data = null) ->
     @selector = selector
     if additionalSelector
       @full_selector = "#{selector}, #{additionalSelector}"
     else
       @full_selector = selector
     @eventIdentifier = "folioLightbox"
-    @bind()
+    @bind(data)
 
   pswp: ->
     @$pswp ||= $('.pswp')
     @$pswp
 
-  bind: ->
+  bind: (data) ->
     $(document).on "click.#{@eventIdentifier}", @full_selector, (e) =>
       e.preventDefault()
       $img = $(e.target)
@@ -28,7 +28,7 @@ class window.FolioLightbox
         history: false
         errorMsg: @pswp().data('error-msg')
 
-      @photoSwipe = new PhotoSwipe(@pswp()[0], PhotoSwipeUI_Default, @items(), options)
+      @photoSwipe = new PhotoSwipe(@pswp()[0], PhotoSwipeUI_Default, data || @items(), options)
       @photoSwipe.init()
 
   items: ->
@@ -65,6 +65,13 @@ window.makeFolioLightbox = (selector, opts = {}) ->
           subSelector = "#{subSelector} #{opts.itemSelector}"
 
         window.folioLightboxInstances.push(new window.FolioLightbox(subSelector))
+    else if opts.fromData
+      $items.each ->
+        window.folioLightboxInstances.push(
+          new window.FolioLightbox(selector,
+                                   false,
+                                   $(this).data('lightbox-image-data'))
+        )
     else
       window.folioLightboxInstances.push(new window.FolioLightbox(selector))
 
