@@ -29,6 +29,7 @@ module Folio
     def self.folio_image_placement(name = nil)
       include PregenerateThumbnails
       folio_file_placement('Folio::Image', name)
+      self.class_eval { alias :image :file }
     end
 
     def self.folio_document_placement(name = nil)
