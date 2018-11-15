@@ -56,11 +56,14 @@ window.makeFolioLightbox = (selector, opts = {}) ->
   window.folioLightboxInstances ?= []
 
   $(document).on 'turbolinks:load', ->
-    $wrap = $(selector)
-    return if $wrap.length is 0
+    $items = $(selector)
+    return if $items.length is 0
     if opts.individual
-      $wrap.each ->
-        subSelector = ".#{@className.replace(/\s+/, '.')}"
+      $items.each ->
+        subSelector = ".#{@className.replace(/\s+/g, '.')}"
+        if opts.itemSelector
+          subSelector = "#{subSelector} #{opts.itemSelector}"
+
         window.folioLightboxInstances.push(new window.FolioLightbox(subSelector))
     else
       window.folioLightboxInstances.push(new window.FolioLightbox(selector))
