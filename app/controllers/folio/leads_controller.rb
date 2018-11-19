@@ -7,6 +7,7 @@ module Folio
       :message,
       :name,
       :note_label,
+      :note_rows,
       :above_submit_content,
     ]
 

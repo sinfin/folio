@@ -57,7 +57,6 @@ cs:
       phone: Telefon
       submit: Odeslat
       note: Zpráva
-      note_placeholder: ''
       message: Děkujeme za zaslání Vaší zprávy!
       failure: Zprávu se nepodařilo odeslat. Zkuste to prosíme později.
 

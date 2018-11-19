@@ -38,6 +38,11 @@ module Folio
       t('.message')
     end
 
+    def note_rows
+      return options[:note_rows] if options[:note_rows]
+      3
+    end
+
     def remember_option_keys
       LeadsController::REMEMBER_OPTION_KEYS
     end

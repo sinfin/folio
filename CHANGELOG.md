@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-11-19
+### Changed
+- Changed `Lead` - `skip_email_validation?` to public
+
 ## 2018-11-11
 ### Added
 - Added image `alt` and document `title` fields.

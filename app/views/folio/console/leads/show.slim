@@ -29,7 +29,10 @@ table.table
       td = Folio::Lead.human_attribute_name(:email)
       td
         - if @lead.email.present?
-          = mail_to(@lead.email, @lead.email)
+          - if @lead.skip_email_validation?
+            = @lead.email
+          - else
+            = mail_to(@lead.email, @lead.email)
         - else
           = t('.blank')
 

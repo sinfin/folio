@@ -61,11 +61,11 @@ module Folio
       end
     end
 
-    private
+    def skip_email_validation?
+      false
+    end
 
-      def skip_email_validation?
-        false
-      end
+    private
 
       def skip_note_validation?
         false
