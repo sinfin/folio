@@ -31,6 +31,7 @@
 #= require folio/console/_modal-lazyload
 #= require folio/console/_cocoon-set-position
 #= require folio/console/_simple-form-error-scrollto
+#= require folio/console/_tabs
 #= require folio/console/atom_form_fields/atom_form_fields
 #= require folio/console/tagsinput/tagsinput
 #= require folio/console/nested_model_controls/nested_model_controls
