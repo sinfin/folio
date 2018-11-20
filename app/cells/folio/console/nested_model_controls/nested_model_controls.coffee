@@ -20,5 +20,7 @@ $(document).on 'click', '.folio-console-nested-model-position-button', ->
 
 $(document).on 'click', '.folio-console-nested-model-destroy-button', ->
   $button = $(this)
+  unless window.confirm(window.FolioConsole.translations.removePrompt)
+    return $button.blur()
   $button.siblings('input[type="hidden"]').val(1)
   $button.closest('.nested-fields').hide(0)

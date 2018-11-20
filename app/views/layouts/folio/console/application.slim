@@ -1,3 +1,5 @@
+- add_action_breadcrumb(@breadcrumb_title) if @breadcrumbs.present?
+
 doctype html
 html.bg-dark lang=I18n.locale
   head
@@ -7,7 +9,6 @@ html.bg-dark lang=I18n.locale
     = render partial: 'layouts/folio/console/header'
 
     - if @breadcrumbs.present?
-      - add_action_breadcrumb(@breadcrumb_title)
       = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
 
     == cell('folio/console/flash', flash)

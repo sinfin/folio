@@ -21,6 +21,7 @@
 #= require ./redactor/_init
 
 #= require folio/cable
+#= require folio/console/_translations
 #= require folio/console/_flash
 #= require folio/console/_data-auto-submit
 #= require folio/console/_data-change-value

@@ -3,6 +3,7 @@ cs:
     console:
       alt_prompt: Alternativní popisek obrázku
       file_title_prompt: Název souboru
+      remove_confirmation: Odebrat?
 
       breadcrumbs:
         root: Administrace

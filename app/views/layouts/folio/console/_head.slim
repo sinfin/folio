@@ -1,7 +1,11 @@
 meta charset="utf-8"
 meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
 
-title Sinfin Folio Console
+
+- if @breadcrumbs.present? && name = @breadcrumbs[1..-1].map(&:name).join(' / ')
+  title #{name} | #{Folio::Site.instance.title} Folio Console
+- else
+  title #{Folio::Site.instance.title} Folio Console
 
 meta[
   name="viewport"

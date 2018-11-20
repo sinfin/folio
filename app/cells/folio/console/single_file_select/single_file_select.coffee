@@ -1,5 +1,7 @@
 $(document).on 'click', '.folio-console-single-file-select .folio-console-hover-destroy, .folio-console-single-file-select .btn-danger', ->
   $this = $(this)
+  unless window.confirm(window.FolioConsole.translations.removePrompt)
+    return $this.blur()
   $wrap = $this.closest('.folio-console-single-file-select')
   $wrap.find('.folio-console-single-file-select-destroy').val(1)
   $wrap.find('img, video').remove()

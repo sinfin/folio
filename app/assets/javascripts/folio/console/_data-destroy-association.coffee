@@ -1,5 +1,9 @@
 $(document).on 'click', '[data-destroy-association]', (e) ->
   $this = $(this)
+
+  unless window.confirm(window.FolioConsole.translations.removePrompt)
+    return $this.blur()
+
   $fields = $this.closest('.nested-fields')
 
   $fields.find('input').filter(->
