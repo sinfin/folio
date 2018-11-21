@@ -17,6 +17,8 @@ import {
 } from 'ducks/uploads'
 import { fileTypeSelector } from 'ducks/app'
 
+import { DROPZONE_TRIGGER_CLASSNAME } from './constants';
+
 const date = new Date()
 let month = date.getMonth() + 1
 if (month < 10) month = `0${month}`
@@ -55,7 +57,7 @@ class Uploader extends Component {
       headers: CSRF,
       paramName: 'file[file][]',
       previewTemplate: '<span></span>',
-      clickable: `.${this.state.uploaderClassName} .folio-console-dropzone-trigger`,
+      clickable: `.${this.state.uploaderClassName} .${DROPZONE_TRIGGER_CLASSNAME}`,
       params: {
         'file[type]': this.props.fileType,
         'file[tag_list]': DATE_TAG,

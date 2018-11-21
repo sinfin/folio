@@ -10,8 +10,8 @@ import Uploader from 'containers/Uploader'
 import { File } from 'components/File'
 import Loader from 'components/Loader'
 
-import SingleSelectWrap from './SingleSelectWrap'
-import SingleSelectScroll from './SingleSelectScroll'
+import SingleSelectWrap from './styled/SingleSelectWrap'
+import SingleSelectScroll from './styled/SingleSelectScroll'
 
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile (file) {

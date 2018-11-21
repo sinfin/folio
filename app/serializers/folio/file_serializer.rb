@@ -3,11 +3,12 @@
 module Folio
   class FileSerializer < ActiveModel::Serializer
     include Engine.routes.url_helpers
+    include ActionView::Helpers::NumberHelper
 
     # TODO: add :placement once React is ready for it
     attributes :id, :file_size, :file_name, :type,
                :thumb, :size, :url, :tags,
-               :dominant_color, :edit_path
+               :dominant_color, :edit_path, :extension
 
     ADMIN_THUMBNAIL_SIZE = '250x250'
 
@@ -65,6 +66,14 @@ module Folio
       end
 
       titles
+    end
+
+    def extension
+      Mime::Type.lookup(object.file.mime_type).symbol.to_s.upcase
+    end
+
+    def file_size
+      number_to_human_size(object.file_size)
     end
   end
 end

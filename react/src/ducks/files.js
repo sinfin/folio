@@ -5,6 +5,10 @@ import { find, filter } from 'lodash'
 import { arrayMove } from 'react-sortable-hoc'
 
 import { fileTypeSelector } from 'ducks/app'
+import { filteredFilesSelector } from 'ducks/filters'
+import { uploadsSelector } from 'ducks/uploads'
+
+import { File, UploadingFile } from 'components/File'
 
 // Constants
 
@@ -79,6 +83,10 @@ export const filesSagas = [
 
 // Selectors
 
+export const filesLoadingSelector = (state) => {
+  return state.files.loading
+}
+
 export const filesLoadedSelector = (state) => {
   return state.files.loaded
 }
@@ -106,6 +114,27 @@ export const filesSelector = (state) => {
     selected,
     selectable,
   }
+}
+
+export const filesForListSelector = (state, FileComponent) => {
+  const filteredFiles = filteredFilesSelector(state).selectable.map((file) => {
+    return { key: file.file_id, file }
+  })
+
+  const uploads = uploadsSelector(state).records.map((upload, index) => {
+    return { key: upload.id, upload }
+  })
+
+  return [
+    {
+      Component: UploadingFile,
+      files: uploads,
+    },
+    {
+      Component: FileComponent || File,
+      files: filteredFiles,
+    },
+  ]
 }
 
 // State
