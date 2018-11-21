@@ -3,13 +3,15 @@ import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 
 import { getFiles, thumbnailGenerated, filesLoadedSelector } from 'ducks/files'
+import { openModal } from 'ducks/modal'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
 import ModalSelect from 'containers/ModalSelect'
+import Modal, { ModalContext } from 'containers/Modal'
 
-import AppWrap from './AppWrap'
+import AppWrap from './styled/AppWrap'
 
 class App extends Component {
   componentWillMount () {
@@ -24,6 +26,10 @@ class App extends Component {
     if (!this.props.filesLoaded) {
       this.props.dispatch(getFiles())
     }
+  }
+
+  openModal = (file) => {
+    this.props.dispatch(openModal(file))
   }
 
   listenOnActionCable () {
@@ -69,7 +75,15 @@ class App extends Component {
   }
 
   render () {
-    return <AppWrap>{this.renderMode()}</AppWrap>
+    return (
+      <AppWrap>
+        <ModalContext.Provider value={this.openModal}>
+          {this.renderMode()}
+        </ModalContext.Provider>
+
+        <Modal />
+      </AppWrap>
+    )
   }
 }
 

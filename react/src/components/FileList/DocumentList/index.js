@@ -5,7 +5,7 @@ import Document from 'components/File/Document';
 
 const DocumentList = ({ files, fileTypeIsImage, dropzoneTrigger, link }) => (
   <div className='folio-console-file-table-wrap'>
-    <table className='table folio-console-file-table'>
+    <table className='table table-hover folio-console-file-table'>
       <tbody>
         {files.map(({ Component, files }) => {
           return files.map(({ key, ...file }) => (

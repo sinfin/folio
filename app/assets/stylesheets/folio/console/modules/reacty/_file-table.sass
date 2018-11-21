@@ -6,12 +6,18 @@
   .card-body &
     margin-bottom: 0
 
+    td
+      &:first-child
+        border-left: 1px solid $border-color
+      &:last-child
+        border-right: 1px solid $border-color
+
   .folio-console-dropzone-trigger-td
     padding: 0
 
   .folio-console-dropzone-trigger
     +unbutton
-    background: #e9ecef
+    background: $table-hover-bg
     width: 100%
     display: block
     text-align: center

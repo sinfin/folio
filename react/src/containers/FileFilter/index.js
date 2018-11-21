@@ -16,8 +16,7 @@ import {
 
 import { fileTypeIsImageSelector } from 'ducks/app'
 
-import Select from 'react-select'
-import selectStyles from './selectStyles'
+import TagsInput from 'components/TagsInput';
 
 import Wrap from './styled/Wrap';
 import DisplayButtons from './DisplayButtons';
@@ -30,9 +29,7 @@ class FileFilter extends Component {
   }
 
   onTagsChange = (tags) => {
-    this.props.dispatch(
-      setFilter('tags', tags.map((tag) => tag.value))
-    )
+    this.props.dispatch(setFilter('tags', tags))
   }
 
   onReset = () => {
@@ -53,13 +50,6 @@ class FileFilter extends Component {
     }
   }
 
-  formatTags (tags) {
-    return tags.map((tag) => ({
-      value: tag,
-      label: tag,
-    }))
-  }
-
   render() {
     const { filters, margined, display, fileTypeIsImage } = this.props
 
@@ -75,16 +65,11 @@ class FileFilter extends Component {
         </div>
 
         <div className='form-group form-group--react-select'>
-          <Select
-            name="form-field-name"
-            value={this.formatTags(filters.tags)}
-            onChange={this.onTagsChange}
-            options={this.formatTags(this.props.tags)}
-            placeholder='Tags'
-            className='react-select-container'
-            classNamePrefix='react-select'
-            styles={selectStyles}
-            isMulti
+          <TagsInput
+            options={this.props.tags}
+            value={filters.tags}
+            onTagsChange={this.onTagsChange}
+            notCreatable
           />
         </div>
 

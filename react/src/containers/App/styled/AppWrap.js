@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const AppWrap = styled.div`
+export default styled.div`
   min-height: 400px;
   position: relative;
 
@@ -8,5 +8,3 @@ const AppWrap = styled.div`
     height: 100%;
   }
 `
-
-export default AppWrap
