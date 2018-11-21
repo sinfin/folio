@@ -1,6 +1,6 @@
-import { apiGet } from 'utils/api'
+import { apiGet, apiPut } from 'utils/api'
 import { flashError } from 'utils/flash'
-import { takeLatest, call, put, select } from 'redux-saga/effects'
+import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { find, filter } from 'lodash'
 import { arrayMove } from 'react-sortable-hoc'
 
@@ -21,6 +21,9 @@ const ON_SORT_END = 'files/ON_SORT_END'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
 const SET_ATTACHMENTABLE = 'files/SET_ATTACHMENTABLE'
 const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
+const UPDATE_FILE = 'files/UPDATE_FILE'
+const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
+const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 
 // Actions
 
@@ -60,6 +63,18 @@ export function thumbnailGenerated (temporary_url, url) {
   return { type: THUMBNAIL_GENERATED, temporary_url, url }
 }
 
+export function updateFile (file, attributes) {
+  return { type: UPDATE_FILE, file, attributes }
+}
+
+export function updateFileSuccess (file, response) {
+  return { type: UPDATE_FILE_SUCCESS, file, response }
+}
+
+export function updateFileFailure (file) {
+  return { type: UPDATE_FILE_FAILURE, file }
+}
+
 // Sagas
 
 function * getFilesPerform (action) {
@@ -77,8 +92,26 @@ function * getFilesSaga (): Generator<*, *, *> {
   yield takeLatest(GET_FILES, getFilesPerform)
 }
 
+function * updateFilePerform (action) {
+  try {
+    const { file, attributes } = action
+    const fileType = yield select(fileTypeSelector)
+    const filesUrl = fileType === 'Folio::Document' ? '/console/documents' : '/console/images'
+    const response = yield call(apiPut, `${filesUrl}/${file.file_id}`, { file: attributes })
+    yield put(updateFileSuccess(action.file, response.file))
+  } catch (e) {
+    flashError(e.message)
+    yield put(updateFileFailure(action.file))
+  }
+}
+
+function * updateFileSaga (): Generator<*, *, *> {
+  yield takeEvery(UPDATE_FILE, updateFilePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
+  updateFileSaga,
 ]
 
 // Selectors
@@ -150,6 +183,20 @@ const initialState = {
 
 // Reducer
 
+const addFileId = (state, record) => {
+  const sel = find(state.selected, { file_id: record.id })
+  let id = ''
+  const file_id = record.id
+
+  if (sel) id = sel.id
+
+  return {
+    ...record,
+    id,
+    file_id,
+  }
+}
+
 function filesReducer (state = initialState, action) {
   switch (action.type) {
     case GET_FILES:
@@ -158,28 +205,13 @@ function filesReducer (state = initialState, action) {
         loading: true,
       }
 
-    case GET_FILES_SUCCESS: {
-      const records = action.records.map((record) => {
-        const sel = find(state.selected, { file_id: record.id })
-        let id = ''
-        const file_id = record.id
-
-        if (sel) id = sel.id
-
-        return {
-          ...record,
-          id,
-          file_id,
-        }
-      })
-
+    case GET_FILES_SUCCESS:
       return {
         ...state,
-        records,
+        records: action.records.map((record) => addFileId(state, record)),
         loading: false,
         loaded: true,
       }
-    }
 
     case SET_ATTACHMENTABLE:
       return {
@@ -222,7 +254,7 @@ function filesReducer (state = initialState, action) {
 
     case THUMBNAIL_GENERATED: {
       const mapper = (record) => {
-        if (record.thumb !== action.temporary_url) return record
+        if (record.thumb !== action.temporary_url) return { ...record }
         return {
           ...record,
           thumb: action.url,
@@ -235,6 +267,46 @@ function filesReducer (state = initialState, action) {
         selected: state.selected.map(mapper),
       }
     }
+
+    case UPDATE_FILE:
+      return {
+        ...state,
+        records: state.records.map((record) => {
+          if (record.file_id === action.file.file_id) {
+            return {
+              ...record,
+              ...action.attributes,
+              updating: true,
+            }
+          } else {
+            return { ...record }
+          }
+        }),
+      }
+
+    case UPDATE_FILE_SUCCESS:
+      return {
+        ...state,
+        records: state.records.map((record) => {
+          if (record.file_id === action.response.id) {
+            return addFileId(state, action.response)
+          } else {
+            return { ...record }
+          }
+        }),
+      }
+
+    case UPDATE_FILE_FAILURE:
+      return {
+        ...state,
+        records: state.records.map((record) => {
+          if (record.id === action.file.id) {
+            return { ...record }
+          } else {
+            return { ...action.file }
+          }
+        }),
+      }
 
     default:
       return state

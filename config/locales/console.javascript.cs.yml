@@ -1,0 +1,10 @@
+cs:
+  folio:
+    console:
+      javascript:
+        finalizing: Dokončuji
+        save: Uložit
+        cancel: Zrušit
+        noTags: Žádná klíčová slova
+        tagUsed: Klíčové slovo je již použité
+        create: Vytvořit

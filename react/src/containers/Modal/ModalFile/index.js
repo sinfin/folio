@@ -1,12 +1,12 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import TagsInput from 'components/TagsInput';
 
-export default ({ modal, onTagsChange, cancelModal, saveModal }) => (
+export default ({ modal, onTagsChange, cancelModal, saveModal, tags }) => (
   <div className='modal-content'>
     <div className='modal-header'>
       <strong className='modal-title'>{modal.file.file_name}</strong>
-      <button type='button' className='close'>×</button>
+      <button type='button' className='close' onClick={cancelModal}>×</button>
     </div>
 
     <div className='modal-body'>
@@ -17,7 +17,7 @@ export default ({ modal, onTagsChange, cancelModal, saveModal }) => (
 
         <TagsInput
           value={modal.newTags || modal.file.tags}
-          options={modal.file.tags}
+          options={tags}
           onTagsChange={onTagsChange}
         />
 

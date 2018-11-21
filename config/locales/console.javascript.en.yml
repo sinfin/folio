@@ -1,0 +1,10 @@
+en:
+  folio:
+    console:
+      javascript:
+        finalizing: Finalizing
+        save: Save
+        cancel: Cancel
+        noTags: No tags
+        tagUsed: Tag is used already
+        create: Create

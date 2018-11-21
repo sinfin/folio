@@ -7,6 +7,8 @@ cs:
       finalizing: Dokončuji
       save: Uložit
       cancel: Zrušit
+      noTags: Žádná klíčová slova
+      create: Vytvořit
 
       breadcrumbs:
         root: Administrace

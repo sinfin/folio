@@ -3,13 +3,15 @@ import { connect } from 'react-redux'
 
 import ReactModal from 'react-modal'
 
+import { updateFile } from 'ducks/files';
+
 import {
-  openModal,
-  saveModal,
   cancelModal,
   changeModalTags,
   modalSelector,
 } from 'ducks/modal';
+
+import { tagsSelector } from 'ducks/filters'
 
 import ModalFile from './ModalFile';
 
@@ -27,7 +29,13 @@ class Modal extends Component {
   }
 
   saveModal = () => {
-    this.props.dispatch(saveModal())
+    const { modal } = this.props
+
+    const attributes = {
+      tags: modal.newTags,
+    }
+    this.props.dispatch(updateFile(modal.file, attributes))
+    this.props.dispatch(cancelModal())
   }
 
   cancelModal = () => {
@@ -35,7 +43,7 @@ class Modal extends Component {
   }
 
   render() {
-    const { modal } = this.props
+    const { modal, tags } = this.props
 
     return (
       <ReactModal
@@ -49,6 +57,7 @@ class Modal extends Component {
             onTagsChange={this.onTagsChange}
             saveModal={this.saveModal}
             cancelModal={this.cancelModal}
+            tags={tags}
           />
         )}
       </ReactModal>
@@ -58,6 +67,7 @@ class Modal extends Component {
 
 const mapStateToProps = (state) => ({
   modal: modalSelector(state),
+  tags: tagsSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

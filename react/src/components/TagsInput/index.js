@@ -5,6 +5,15 @@ import CreatableSelect from 'react-select/lib/Creatable'
 import selectStyles from './selectStyles'
 import formatTags from './formatTags';
 
+const makeNoOptionsMessage = (values) => ({ inputValue }) => {
+  if (values.indexOf(inputValue) === -1) {
+    return window.FolioConsole.translations.noTags
+  } else {
+    return window.FolioConsole.translations.tagUsed
+  }
+}
+const formatCreateLabel = (input) => `${window.FolioConsole.translations.create} "${input}"`
+
 class TagsInput extends React.Component {
   onChange = (tags) => {
     this.props.onTagsChange(tags.map((tag) => tag.value))
@@ -25,6 +34,8 @@ class TagsInput extends React.Component {
         value={formatTags(this.props.value)}
         options={formatTags(this.props.options)}
         autoFocus={!this.props.noAutofocus}
+        noOptionsMessage={makeNoOptionsMessage(this.props.value)}
+        formatCreateLabel={formatCreateLabel}
         isMulti
       />
     )

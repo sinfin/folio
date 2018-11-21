@@ -58,11 +58,20 @@ module Folio
         end
 
         def file_params
-          p = params.require(:file).permit(:tag_list, :type, :file, file: [])
+          p = params.require(:file).permit(:tag_list,
+                                           :type,
+                                           :file,
+                                           file: [],
+                                           tags: [])
           # redactor 3 ¯\_(ツ)_/¯
           if p[:file].is_a?(Array)
             p[:file] = p[:file].first
           end
+
+          if p[:tags].present? && p[:tag_list].blank?
+            p[:tag_list] = p.delete(:tags).join(',')
+          end
+
           p
         end
 

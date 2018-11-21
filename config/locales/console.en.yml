@@ -7,6 +7,8 @@ en:
       finalizing: Finalizing
       save: Save
       cancel: Cancel
+      noTags: No tags
+      create: Create
 
       breadcrumbs:
         root: Console
