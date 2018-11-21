@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux-immutable'
+import { combineReducers } from 'redux'
 
 import appReducer from 'ducks/app'
 import filesReducer from 'ducks/files'

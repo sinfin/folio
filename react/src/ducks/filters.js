@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import { isEqual } from 'lodash'
 
 import {
@@ -28,8 +27,8 @@ export function resetFilters () {
 // Selectors
 
 export const filtersSelector = (state) => {
-  const filters = state.get('filters').toJS()
-  const active = !isEqual(filters, initialState.toJS())
+  const filters = state.filters
+  const active = !isEqual(filters, initialState)
 
   return {
     ...filters,
@@ -79,17 +78,20 @@ export const tagsSelector = (state) => {
 
 // State
 
-const initialState = fromJS({
+const initialState = {
   name: '',
   tags: [],
-})
+}
 
 // Reducer
 
 function filtersReducer (state = initialState, action) {
   switch (action.type) {
     case SET_FILTER:
-      return state.set(action.filter, action.value)
+      return {
+        ...state,
+        [action.filter]: action.value,
+      }
 
     case RESET_FILTERS:
       return initialState

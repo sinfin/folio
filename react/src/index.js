@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { fromJS } from 'immutable'
 
 import App from 'containers/App'
 import { setMode, setFileType, setPlacementType } from 'ducks/app'
@@ -17,7 +16,7 @@ import sagas from './sagas'
 window.folioConsoleInitReact = (domRoot) => {
   const sagaMiddleware = createSagaMiddleware()
 
-  const store = createStore(reducers, fromJS({}), applyMiddleware(sagaMiddleware))
+  const store = createStore(reducers, {}, applyMiddleware(sagaMiddleware))
 
   const DOM_DATA = [
     {

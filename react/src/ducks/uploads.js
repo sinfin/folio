@@ -1,6 +1,6 @@
-import { fromJS } from 'immutable'
 import { flashError } from 'utils/flash'
 import { takeLatest, call, select, put } from 'redux-saga/effects'
+import { omit } from 'lodash'
 
 import { uploadedFile } from 'ducks/files'
 
@@ -70,7 +70,7 @@ export const uploadsSagas = [
 // Selectors
 
 export const uploadsSelector = (state) => {
-  const base = state.get('uploads').toJS()
+  const base = state.uploads
   return {
     ...base,
     records: Object.values(base.records),
@@ -78,20 +78,20 @@ export const uploadsSelector = (state) => {
 }
 
 export const uploadSelector = (id) => (state) => {
-  const base = state.get('uploads').toJS()
+  const base = state.uploads
   return base.records[id]
 }
 
 export const uploadTypeSelector = (state) => {
-  const base = state.get('uploads').toJS()
+  const base = state.uploads
   return base.type
 }
 
 // State
 
-const initialState = fromJS({
+const initialState = {
   records: {},
-})
+}
 
 // Reducer
 
@@ -100,22 +100,36 @@ function uploadsReducer (state = initialState, action) {
 
   switch (action.type) {
     case ADDED_FILE:
-      return state.mergeIn(['records'], {
-        [id]: {
-          id,
-          file: action.file,
-          thumb: null,
-        },
-      })
+      return {
+        ...state,
+        records: {
+          ...state.records,
+          [id]: {
+            id,
+            file: action.file,
+            thumb: null,
+          },
+        }
+      }
 
     case THUMBNAIL:
-      return state.mergeIn(['records', id], {
-        thumb: action.dataUrl,
-      })
+      return {
+        ...state,
+        records: {
+          ...state.records,
+          [id]: {
+            ...state.records[id],
+            thumb: action.dataUrl,
+          },
+        }
+      }
 
     case REMOVE:
     case ERROR: {
-      return state.removeIn(['records', id])
+      return {
+        ...state,
+        records: omit(state.records, [id]),
+      }
     }
 
     default:

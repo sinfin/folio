@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import { apiGet } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { takeLatest, call, put, select } from 'redux-saga/effects'
@@ -81,16 +80,15 @@ export const filesSagas = [
 // Selectors
 
 export const filesLoadedSelector = (state) => {
-  return state.getIn(['files', 'loaded'])
+  return state.files.loaded
 }
 
 export const allFilesSelector = (state) => {
-  const base = state.get('files').toJS()
-  return base.records
+  return state.files.records
 }
 
 export const filesSelector = (state) => {
-  const base = state.get('files').toJS()
+  const base = state.files
   let file_ids = []
 
   const selected = base.selected.map((sel) => {
@@ -112,26 +110,28 @@ export const filesSelector = (state) => {
 
 // State
 
-const initialState = fromJS({
+const initialState = {
   loading: false,
   loaded: false,
   filesUrl: '/console/files',
   records: [],
   selected: [],
   attachmentable: 'node',
-})
+}
 
 // Reducer
 
 function filesReducer (state = initialState, action) {
   switch (action.type) {
     case GET_FILES:
-      return state.set('loading', true)
+      return {
+        ...state,
+        loading: true,
+      }
 
     case GET_FILES_SUCCESS: {
-      const selected = state.get('selected').toJS()
       const records = action.records.map((record) => {
-        const sel = find(selected, { file_id: record.id })
+        const sel = find(state.selected, { file_id: record.id })
         let id = ''
         const file_id = record.id
 
@@ -144,62 +144,67 @@ function filesReducer (state = initialState, action) {
         }
       })
 
-      return state.merge({
+      return {
+        ...state,
+        records,
         loading: false,
         loaded: true,
-        records,
-      })
+      }
     }
 
     case SET_ATTACHMENTABLE:
-      return state.set('attachmentable', action.attachmentable)
+      return {
+        ...state,
+        attachmentable: action.attachmentable,
+      }
 
     case PREFILL_SELECTED:
-      return state.merge({
+      return {
+        ...state,
         selected: action.selected,
-      })
+      }
 
     case SELECT_FILE:
-      return state.updateIn(['selected'], (selected) => (
-        selected.push(fromJS({
-          id: action.file.id,
-          file_id: action.file.file_id,
-        }))
-      ))
+      return {
+        ...state,
+        selected: [
+          ...state.selected,
+          { id: action.file.id, file_id: action.file.file_id },
+        ]
+      }
 
     case UNSELECT_FILE:
-      return state.updateIn(['selected'], (selected) => (
-        selected.filter((sel) => sel.get('file_id') !== action.file.file_id)
-      ))
+      return {
+        ...state,
+        selected: state.selected.filter((sel) => sel.file_id !== action.file.file_id)
+      }
 
-    case ON_SORT_END: {
-      return state.updateIn(['selected'], (selected) => (
-        fromJS(
-          arrayMove(selected.toJS(), action.oldIndex, action.newIndex)
-        )
-      ))
-    }
+    case ON_SORT_END:
+      return {
+        ...state,
+        selected: arrayMove(state.selected, action.oldIndex, action.newIndex)
+      }
 
-    case UPLOADED_FILE: {
-      return state.updateIn(['records'], (records) => (
-        records.insert(0, fromJS(action.file))
-      ))
-    }
+    case UPLOADED_FILE:
+      return {
+        ...state,
+        records: [action.file, ...state.records]
+      }
 
     case THUMBNAIL_GENERATED: {
-      return state
-        .updateIn(['records'], (records) => (
-          records.map((record) => {
-            if (record.get('thumb') !== action.temporary_url) return record
-            return record.set('thumb', action.url)
-          })
-        ))
-        .updateIn(['selected'], (selected) => (
-          selected.map((record) => {
-            if (record.get('thumb') !== action.temporary_url) return record
-            return record.set('thumb', action.url)
-          })
-        ))
+      const mapper = (record) => {
+        if (record.thumb !== action.temporary_url) return record
+        return {
+          ...record,
+          thumb: action.url,
+        }
+      }
+
+      return {
+        ...state,
+        records: state.records.map(mapper),
+        selected: state.selected.map(mapper),
+      }
     }
 
     default:

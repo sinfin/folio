@@ -74,7 +74,7 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  app: state.get('app').toJS(),
+  app: state.app,
   filesLoaded: filesLoadedSelector(state),
 })
 

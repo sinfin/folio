@@ -24,7 +24,7 @@ export function setThumbsDisplay () {
 // Selectors
 
 export const displaySelector = (state) => {
-  return state.get('display')
+  return state.display
 }
 
 // State
