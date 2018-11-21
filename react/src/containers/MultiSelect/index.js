@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 import {
@@ -18,37 +17,7 @@ import { File, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 
-const SortableList = SortableContainer(({ attachmentable, placementType, items, dispatch }) => {
-  return (
-    <div>
-      {items.map((file, index) => (
-        <SortableItem
-          key={file.file_id}
-          attachmentable={attachmentable}
-          placementType={placementType}
-          index={index}
-          file={file}
-          dispatch={dispatch}
-          position={index}
-        />
-      ))}
-    </div>
-  )
-})
-
-const SortableItem = SortableElement(({ file, position, dispatch, attachmentable, placementType }) => {
-  return (
-    <File
-      file={file}
-      key={file.file_id}
-      onClick={() => dispatch(unselectFile(file))}
-      position={position}
-      attachmentable={attachmentable}
-      placementType={placementType}
-      selected
-    />
-  )
-})
+import SortableList from './SortableList';
 
 class MultiSelect extends LazyLoadCheckingComponent {
   render() {
@@ -66,6 +35,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
             attachmentable={files.attachmentable}
             placementType={placementType}
             onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
+            onClick={(file) => dispatch(unselectFile(file))}
             dispatch={dispatch}
             axis='xy'
             distance={5}

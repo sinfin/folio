@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
-
-import Select from 'react-select'
-import selectStyles from './selectStyles'
 
 import {
   filtersSelector,
@@ -12,26 +8,17 @@ import {
   resetFilters,
 } from 'ducks/filters'
 
-const Wrap = styled.div`
-  position: relative;
-  z-index: 2;
+import {
+  setCardsDisplay,
+  setThumbsDisplay,
+  displaySelector,
+} from 'ducks/display'
 
-  .redactor-modal-tab & {
-    padding-bottom: 30px;
-  }
+import Select from 'react-select'
+import selectStyles from './selectStyles'
 
-  .form-group {
-    margin-right: 30px;
-  }
-
-  .form-group--react-select {
-    flex: 0 0 250px;
-
-    > div {
-      width: 250px;
-    }
-  }
-`
+import Wrap from './styled/Wrap';
+import DisplayButtons from './DisplayButtons';
 
 class FileFilter extends Component {
   onNameChange = (e) => {
@@ -52,6 +39,10 @@ class FileFilter extends Component {
     )
   }
 
+  setCardsDisplay = (e) => { this.props.dispatch(setCardsDisplay()) }
+
+  setThumbsDisplay = (e) => { this.props.dispatch(setThumbsDisplay()) }
+
   booleanButton (bool) {
     if (bool) {
       return 'btn btn-primary'
@@ -68,7 +59,7 @@ class FileFilter extends Component {
   }
 
   render() {
-    const { filters, margined } = this.props
+    const { filters, margined, display } = this.props
 
     return (
       <Wrap className='form-inline' margined={margined}>
@@ -106,6 +97,12 @@ class FileFilter extends Component {
             </button>
           </div>
         )}
+
+        <DisplayButtons
+          display={display}
+          setCardsDisplay={this.setCardsDisplay}
+          setThumbsDisplay={this.setThumbsDisplay}
+        />
       </Wrap>
     )
   }
@@ -114,6 +111,7 @@ class FileFilter extends Component {
 const mapStateToProps = (state) => ({
   filters: filtersSelector(state),
   tags: tagsSelector(state),
+  display: displaySelector(state),
 })
 
 function mapDispatchToProps (dispatch) {
