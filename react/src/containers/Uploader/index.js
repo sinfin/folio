@@ -13,6 +13,7 @@ import {
   thumbnail,
   success,
   error,
+  progress,
   uploadsSelector,
 } from 'ducks/uploads'
 import { fileTypeSelector } from 'ducks/app'
@@ -41,6 +42,7 @@ class Uploader extends Component {
       thumbnail: (file, dataUrl) => dispatch(thumbnail(file, dataUrl)),
       success: (file, response) => dispatch(success(file, response.file)),
       error: (file, message) => dispatch(error(file, message)),
+      uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
     }
   }
 

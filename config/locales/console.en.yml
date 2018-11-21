@@ -4,6 +4,7 @@ en:
       alt_prompt: Alternative image caption
       file_title_prompt: Displayed file name
       remove_confirmation: Remove?
+      finalizing: Finalizing
 
       breadcrumbs:
         root: Console

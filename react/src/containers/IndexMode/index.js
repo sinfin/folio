@@ -25,6 +25,7 @@ class IndexMode extends LazyLoadCheckingComponent {
           <FileList
             files={this.props.filesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}
+            link
             dropzoneTrigger
           />
         </Card>

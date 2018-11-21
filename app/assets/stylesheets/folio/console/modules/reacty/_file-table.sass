@@ -1,4 +1,11 @@
+.folio-console-file-table-wrap
+  position: relative
+  overflow-x: auto
+
 .folio-console-file-table
+  .card-body &
+    margin-bottom: 0
+
   .folio-console-dropzone-trigger-td
     padding: 0
 
@@ -11,10 +18,39 @@
 
     .fa
       font-size: 20px
-      line-height: 44px
+      line-height: 45px
 
 .folio-console-file-table__td
   white-space: nowrap
 
 .folio-console-file-table__td--first
   width: 100%
+
+.folio-console-file-table__upload-progress
+  position: absolute
+  width: 100%
+  height: 46px
+  transform: translate(-0.75rem, -0.75rem)
+  display: block
+  z-index: 2
+  text-align: center
+
+.folio-console-file-table__upload-progress-inner
+  position: relative
+  z-index: 2
+  line-height: 46px
+  font-weight: $font-weight-bold
+  color: $green
+  font-size: 18px
+  opacity: 0.5
+
+.folio-console-file-table__upload-progress-slider
+  display: block
+  background: $green
+  height: 100%
+  position: absolute
+  top: 0
+  left: 0
+  transition: width .1s
+  z-index: 1
+  opacity: 0.25

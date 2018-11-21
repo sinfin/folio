@@ -11,6 +11,7 @@ const THUMBNAIL = 'uploads/THUMBNAIL'
 const SUCCESS = 'uploads/SUCCESS'
 const ERROR = 'uploads/ERROR'
 const REMOVE = 'uploads/REMOVE'
+const PROGRESS = 'uploads/PROGRESS'
 
 const idFromFile = (file) => [file.name, file.lastModified].join('-=-')
 
@@ -34,6 +35,10 @@ export function remove (file) {
 
 export function error (file, error) {
   return { type: ERROR, file, error }
+}
+
+export function progress (file, percentage) {
+  return { type: PROGRESS, file, percentage }
 }
 
 // Sagas
@@ -107,7 +112,12 @@ function uploadsReducer (state = initialState, action) {
           [id]: {
             id,
             file: action.file,
+            file_size: action.file.size,
+            file_name: action.file.name,
+            extension: action.file.type.split('/').pop().toUpperCase(),
+            tags: [],
             thumb: null,
+            progress: 0,
           },
         }
       }
@@ -120,6 +130,18 @@ function uploadsReducer (state = initialState, action) {
           [id]: {
             ...state.records[id],
             thumb: action.dataUrl,
+          },
+        }
+      }
+
+    case PROGRESS:
+      return {
+        ...state,
+        records: {
+          ...state.records,
+          [id]: {
+            ...state.records[id],
+            progress: action.percentage,
           },
         }
       }

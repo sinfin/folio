@@ -121,8 +121,8 @@ export const filesForListSelector = (state, FileComponent) => {
     return { key: file.file_id, file }
   })
 
-  const uploads = uploadsSelector(state).records.map((upload, index) => {
-    return { key: upload.id, upload }
+  const uploads = uploadsSelector(state).records.map((file, index) => {
+    return { key: file.id, file }
   })
 
   return [

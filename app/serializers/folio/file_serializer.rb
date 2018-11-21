@@ -3,7 +3,6 @@
 module Folio
   class FileSerializer < ActiveModel::Serializer
     include Engine.routes.url_helpers
-    include ActionView::Helpers::NumberHelper
 
     # TODO: add :placement once React is ready for it
     attributes :id, :file_size, :file_name, :type,
@@ -70,10 +69,6 @@ module Folio
 
     def extension
       Mime::Type.lookup(object.file.mime_type).symbol.to_s.upcase
-    end
-
-    def file_size
-      number_to_human_size(object.file_size)
     end
   end
 end
