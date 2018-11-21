@@ -17,17 +17,17 @@ atomFormBySelect = ($element) ->
   presence.push window.folioConsoleAtom.switchStringField
     structure: structure.title
     $field: $fields.find('.folio-console-atom-title')
-    placeholders: placeholders
+    placeholder: placeholders.title
 
   presence.push window.folioConsoleAtom.switchRedactorField
     structure: structure.content
     $field: $fields.find('.folio-console-atom-content')
-    placeholders: placeholders
+    placeholder: placeholders.content
 
   presence.push window.folioConsoleAtom.switchRedactorField
     structure: structure.perex
     $field: $fields.find('.folio-console-atom-perex')
-    placeholders: placeholders
+    placeholder: placeholders.perex
 
   presence.push window.folioConsoleAtom.switchModelField
     structure: structure.model

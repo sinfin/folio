@@ -1,12 +1,12 @@
 window.folioConsoleAtom ?= {}
 
-window.folioConsoleAtom.switchStringField = ({ structure, $field, placeholders }) ->
+window.folioConsoleAtom.switchStringField = ({ structure, $field, placeholder }) ->
   switch structure
     when 'string'
       present = true
       $field.removeAttr('hidden')
       $field.find('.form-control')
-        .attr('placeholder', placeholders.title)
+        .attr('placeholder', placeholder)
         .prop('disabled', false)
     else
       present = false

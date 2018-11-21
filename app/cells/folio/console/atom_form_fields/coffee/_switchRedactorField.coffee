@@ -3,13 +3,13 @@ window.folioConsoleAtom ?= {}
 stripHtml = (html) ->
   $("<div/>").html(html).text()
 
-window.folioConsoleAtom.switchRedactorField = ({ structure, $field, placeholders }) ->
+window.folioConsoleAtom.switchRedactorField = ({ structure, $field, placeholder }) ->
   $textarea = $field.find('.folio-console-atom-textarea')
 
   switch structure
     when 'redactor'
       present = true
-      $field.find('.form-control').attr('placeholder', placeholders.content)
+      $field.find('.form-control').attr('placeholder', placeholder)
       $field.removeAttr('hidden')
       $textarea.prop('disabled', false)
       # check if redactor is active
@@ -19,7 +19,7 @@ window.folioConsoleAtom.switchRedactorField = ({ structure, $field, placeholders
 
     when 'string'
       present = true
-      $field.find('.form-control').attr('placeholder', placeholders.content)
+      $field.find('.form-control').attr('placeholder', placeholder)
       $field.removeAttr('hidden')
       if $textarea.hasClass('redactor-source')
         $textarea.each ->
