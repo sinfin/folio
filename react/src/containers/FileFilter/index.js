@@ -69,6 +69,7 @@ class FileFilter extends Component {
             options={this.props.tags}
             value={filters.tags}
             onTagsChange={this.onTagsChange}
+            noAutofocus
             notCreatable
           />
         </div>

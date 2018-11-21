@@ -24,6 +24,7 @@ class TagsInput extends React.Component {
         onChange={this.onChange}
         value={formatTags(this.props.value)}
         options={formatTags(this.props.options)}
+        autoFocus={!this.props.noAutofocus}
         isMulti
       />
     )

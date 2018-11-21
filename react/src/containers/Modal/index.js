@@ -26,6 +26,14 @@ class Modal extends Component {
     this.props.dispatch(changeModalTags(tags))
   }
 
+  saveModal = () => {
+    this.props.dispatch(saveModal())
+  }
+
+  cancelModal = () => {
+    this.props.dispatch(cancelModal())
+  }
+
   render() {
     const { modal } = this.props
 
@@ -35,7 +43,14 @@ class Modal extends Component {
         onRequestClose={this.cancelModal}
         className='ReactModal'
       >
-        {modal.file && <ModalFile modal={modal} onTagsChange={this.onTagsChange} />}
+        {modal.file && (
+          <ModalFile
+            modal={modal}
+            onTagsChange={this.onTagsChange}
+            saveModal={this.saveModal}
+            cancelModal={this.cancelModal}
+          />
+        )}
       </ReactModal>
     )
   }

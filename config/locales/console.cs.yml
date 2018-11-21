@@ -5,6 +5,8 @@ cs:
       file_title_prompt: Název souboru
       remove_confirmation: Odebrat?
       finalizing: Dokončuji
+      save: Uložit
+      cancel: Zrušit
 
       breadcrumbs:
         root: Administrace
