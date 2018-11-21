@@ -14,6 +14,8 @@ import {
   displaySelector,
 } from 'ducks/display'
 
+import { fileTypeIsImageSelector } from 'ducks/app'
+
 import Select from 'react-select'
 import selectStyles from './selectStyles'
 
@@ -59,7 +61,7 @@ class FileFilter extends Component {
   }
 
   render() {
-    const { filters, margined, display } = this.props
+    const { filters, margined, display, fileTypeIsImage } = this.props
 
     return (
       <Wrap className='form-inline' margined={margined}>
@@ -98,11 +100,13 @@ class FileFilter extends Component {
           </div>
         )}
 
-        <DisplayButtons
-          display={display}
-          setCardsDisplay={this.setCardsDisplay}
-          setThumbsDisplay={this.setThumbsDisplay}
-        />
+        {fileTypeIsImage && (
+          <DisplayButtons
+            display={display}
+            setCardsDisplay={this.setCardsDisplay}
+            setThumbsDisplay={this.setThumbsDisplay}
+          />
+        )}
       </Wrap>
     )
   }
@@ -112,6 +116,7 @@ const mapStateToProps = (state) => ({
   filters: filtersSelector(state),
   tags: tagsSelector(state),
   display: displaySelector(state),
+  fileTypeIsImage: fileTypeIsImageSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

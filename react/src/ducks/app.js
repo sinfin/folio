@@ -21,6 +21,7 @@ export function setPlacementType (placementType) {
 // Selectors
 
 export const fileTypeSelector = (state) => state.app.fileType
+export const fileTypeIsImageSelector = (state) => state.app.fileType == 'Folio::Image'
 export const placementTypeSelector = (state) => state.app.placementType
 
 // State
