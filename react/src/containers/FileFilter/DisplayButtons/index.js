@@ -22,14 +22,14 @@ const DisplayButton = ({ active, onClick, icon }) => (
 const DisplayButtons = ({ display, setCardsDisplay, setThumbsDisplay }) => (
   <Wrap className='btn-group'>
     <DisplayButton
-      active={display === DISPLAY_THUMBS}
-      onClick={setThumbsDisplay}
-      icon='fa fa-th-large'
-    />
-    <DisplayButton
       active={display === DISPLAY_CARDS}
       onClick={setCardsDisplay}
       icon='fa fa-th-list'
+    />
+    <DisplayButton
+      active={display === DISPLAY_THUMBS}
+      onClick={setThumbsDisplay}
+      icon='fa fa-th-large'
     />
   </Wrap>
 )

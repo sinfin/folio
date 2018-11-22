@@ -4,7 +4,7 @@ import LazyLoad from 'react-lazyload'
 import FileUploadProgress from 'components/FileUploadProgress';
 import FileThumbnailHover from './FileThumbnailHover';
 
-const FileThumbnail = ({ file, link, overflowingParent, onClick }) => {
+const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) => {
   const Tag = link ? 'a' : 'div'
 
   return (
@@ -25,7 +25,12 @@ const FileThumbnail = ({ file, link, overflowingParent, onClick }) => {
       </div>
 
       <FileUploadProgress progress={file.progress} />
-      <FileThumbnailHover progress={file.progress} onClick={onClick} file={file} />
+      <FileThumbnailHover
+        progress={file.progress}
+        onClick={onClick}
+        file={file}
+        selecting={selecting}
+      />
     </Tag>
   )
 }

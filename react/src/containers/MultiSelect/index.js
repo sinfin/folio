@@ -56,6 +56,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
             fileTypeIsImage={this.props.fileTypeIsImage}
             displayAsThumbs={this.props.displayAsThumbs}
             onClick={this.selectFile}
+            selecting='multiple'
             dropzoneTrigger
           />
         </Card>

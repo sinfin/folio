@@ -37,6 +37,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
               fileTypeIsImage={this.props.fileTypeIsImage}
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.selectFile}
+              selecting='single'
               overflowingParent
               dropzoneTrigger
             />

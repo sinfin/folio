@@ -3,7 +3,7 @@ import React from 'react'
 import DropzoneTrigger from './DropzoneTrigger';
 import FileThumbnail from './FileThumbnail';
 
-const FileThumbnailList = ({ files, dropzoneTrigger, link, overflowingParent, onClick }) => (
+const FileThumbnailList = ({ files, dropzoneTrigger, link, overflowingParent, onClick, selecting }) => (
   <div className="folio-console-file-list">
     {dropzoneTrigger  && <DropzoneTrigger />}
 
@@ -14,6 +14,7 @@ const FileThumbnailList = ({ files, dropzoneTrigger, link, overflowingParent, on
         link={link}
         overflowingParent={overflowingParent}
         onClick={onClick}
+        selecting={selecting}
       />
     ))}
   </div>
