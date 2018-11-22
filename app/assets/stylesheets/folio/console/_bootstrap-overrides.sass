@@ -48,6 +48,9 @@
   .card-body
     background: rgba($success, 0.2)
 
+.modal-dialog
+  min-width: 320px
+
 .modal-lg
   .modal-body
     position: relative
@@ -101,10 +104,9 @@ select.form-control
   &::placeholder
     color: $input-placeholder-color
 
-@include media-breakpoint-up(lg)
-  .modal-lg
-    width: 100vw
-    max-width: 1000px
++mq-md
+  .modal-dialog
+    max-width: 100%
 
 +mq-wide-layout
   .breadcrumb

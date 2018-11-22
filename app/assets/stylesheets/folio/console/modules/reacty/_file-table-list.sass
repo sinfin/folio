@@ -2,10 +2,15 @@
   position: relative
   overflow-x: auto
 
-.folio-console-file-table
-  .card-body &
-    margin-bottom: 0
+  .modal-body &
+    margin-left: -7.5px
+    margin-right: -7.5px
+    margin-bottom: - $modal-inner-padding
 
+.folio-console-file-table
+  margin-bottom: 0
+
+  .card-body &
     td
       &:first-child
         border-left: 1px solid $border-color
@@ -24,6 +29,9 @@
 
 .folio-console-file-table__td
   white-space: nowrap
+
+  .table-hover &
+    cursor: pointer
 
 .folio-console-file-table__td--main
   width: 100%

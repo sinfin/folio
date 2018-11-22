@@ -6,17 +6,23 @@ import Tags from 'components/Tags'
 
 import FileUploadProgress from 'components/FileUploadProgress';
 
-const FileTableRow = ({ file, link, fileTypeIsImage }) => {
+const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick }) => {
   return (
-    <tr className='folio-console-file-table__tr'>
+    <tr className='folio-console-file-table__tr' onClick={onClick ? () => onClick(file) : undefined}>
       {fileTypeIsImage && (
         <td className='folio-console-file-table__td folio-console-file-table__td--image'>
           <FileUploadProgress progress={file.progress} />
 
           <div className='folio-console-file-table__img-wrap'>
             {file.thumb && (
-              <a href={file.source_image} target='_blank' className='folio-console-file-table__img-a' rel='noopener noreferrer'>
-                <LazyLoad height={50} once overflow={false}>
+              <a
+                href={file.source_image}
+                target='_blank'
+                className='folio-console-file-table__img-a'
+                rel='noopener noreferrer'
+                onClick={(e) => e.stopPropagation()}
+              >
+                <LazyLoad height={50} once overflow={overflowingParent}>
                   <img src={file.thumb} className='folio-console-file-table__img' alt='' />
                 </LazyLoad>
               </a>
@@ -29,7 +35,12 @@ const FileTableRow = ({ file, link, fileTypeIsImage }) => {
         {fileTypeIsImage ? null : <FileUploadProgress progress={file.progress} />}
 
         {link ? (
-          <a href={file.edit_path}>{file.file_name}</a>
+          <a
+            href={file.edit_path}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {file.file_name}
+          </a>
         ) : file.file_name}
       </td>
       <td className='folio-console-file-table__td'>

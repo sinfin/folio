@@ -1,12 +1,12 @@
 import styled from 'styled-components'
 
 const SingleSelectScroll = styled.div`
-  overflow-y: auto;
   position: relative;
   z-index: 1;
 
-  .redactor-modal-tab & {
-    margin: 0 -15px;
+  .modal-body & {
+    margin: 0 -15px -15px;
+    padding: 15px 7.5px;
   }
 `
 

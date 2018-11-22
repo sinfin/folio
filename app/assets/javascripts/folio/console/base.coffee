@@ -29,6 +29,7 @@
 #= require folio/console/_data-cocoon-single-nested
 #= require folio/console/_bootstrap-tabs-lazyload
 #= require folio/console/_modal-lazyload
+#= require folio/console/_modal-html-scroll
 #= require folio/console/_cocoon-set-position
 #= require folio/console/_simple-form-error-scrollto
 #= require folio/console/_tabs

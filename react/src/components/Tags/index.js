@@ -6,11 +6,16 @@ import { ModalContext } from 'containers/Modal';
 class Tags extends React.Component {
   static contextType = ModalContext
 
+  onClick = (e) => {
+    e.stopPropagation()
+    this.context(this.props.file)
+  }
+
   render () {
-    const { file } = this.props
+    const { file, disabled } = this.props
 
     return (
-      <TagsWrap onClick={() => this.context(file)}>
+      <TagsWrap onClick={this.onClick}>
         {file.tags.map((tag) => (
           <span key={tag} className='badge badge-secondary'>{tag}</span>
         ))}
