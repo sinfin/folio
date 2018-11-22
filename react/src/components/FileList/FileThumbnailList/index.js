@@ -7,9 +7,9 @@ const FileThumbnailList = ({ files, dropzoneTrigger, link, overflowingParent, on
   <div className="folio-console-file-list">
     {dropzoneTrigger  && <DropzoneTrigger />}
 
-    {files.map(({ key, ...file }) => (
+    {files.map((file) => (
       <FileThumbnail
-        key={key}
+        key={file.id}
         link={link}
         overflowingParent={overflowingParent}
         onClick={onClick}

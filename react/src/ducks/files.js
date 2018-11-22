@@ -7,17 +7,13 @@ import { arrayMove } from 'react-sortable-hoc'
 import { fileTypeSelector } from 'ducks/app'
 import { filteredFilesSelector } from 'ducks/filters'
 import { uploadsSelector } from 'ducks/uploads'
+import { selectedFileIdsSelector } from 'ducks/filePlacements'
 
 // Constants
 
-const PREFILL_SELECTED = 'files/PREFILL_SELECTED'
 const GET_FILES = 'files/GET_FILES'
 const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
-const SELECT_FILE = 'files/SELECT_FILE'
-const UNSELECT_FILE = 'files/UNSELECT_FILE'
-const ON_SORT_END = 'files/ON_SORT_END'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
-const SET_ATTACHMENTABLE = 'files/SET_ATTACHMENTABLE'
 const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
 const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
@@ -25,32 +21,12 @@ const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 
 // Actions
 
-export function prefillSelected (selected) {
-  return { type: PREFILL_SELECTED, selected }
-}
-
-export function setAttachmentable (attachmentable) {
-  return { type: SET_ATTACHMENTABLE, attachmentable }
-}
-
 export function getFiles () {
   return { type: GET_FILES }
 }
 
 export function getFilesSuccess (records) {
   return { type: GET_FILES_SUCCESS, records }
-}
-
-export function selectFile (file) {
-  return { type: SELECT_FILE, file }
-}
-
-export function unselectFile (file) {
-  return { type: UNSELECT_FILE, file }
-}
-
-export function onSortEnd (oldIndex, newIndex) {
-  return { type: ON_SORT_END, oldIndex, newIndex }
 }
 
 export function uploadedFile (file) {
@@ -95,7 +71,7 @@ function * updateFilePerform (action) {
     const { file, attributes } = action
     const fileType = yield select(fileTypeSelector)
     const filesUrl = fileType === 'Folio::Document' ? '/console/documents' : '/console/images'
-    const response = yield call(apiPut, `${filesUrl}/${file.file_id}`, { file: attributes })
+    const response = yield call(apiPut, `${filesUrl}/${file.id}`, { file: attributes })
     yield put(updateFileSuccess(action.file, response.file))
   } catch (e) {
     flashError(e.message)
@@ -122,43 +98,22 @@ export const filesLoadedSelector = (state) => {
   return state.files.loaded
 }
 
-export const allFilesSelector = (state) => {
+export const filesSelector = (state) => {
   return state.files.records
 }
 
-export const filesSelector = (state) => {
-  const base = state.files
-  let file_ids = []
-
-  const selected = base.selected.map((sel) => {
-    file_ids.push(sel.file_id)
-    return find(base.records, { file_id: sel.file_id })
-  })
-
-  const selectable = filter(base.records, (file) => (
-    file_ids.indexOf(file.file_id) === -1
-  ))
-
-  return {
-    loading: base.loading,
-    attachmentable: base.attachmentable,
-    selected,
-    selectable,
-  }
+export const filesForListSelector = (state) => {
+  return [
+    ...uploadsSelector(state).records,
+    ...filteredFilesSelector(state),
+  ]
 }
 
-export const filesForListSelector = (state) => {
-  let files = []
+export const unselectedFilesForListSelector = (state) => {
+  const all = filesForListSelector(state)
+  const selectedIds = selectedFileIdsSelector(state)
 
-  uploadsSelector(state).records.forEach((file, index) => {
-    files.push({ key: file.id, file })
-  })
-
-  filteredFilesSelector(state).selectable.forEach((file) => {
-    files.push({ key: file.file_id, file })
-  })
-
-  return files
+  return filter(all, (file) => selectedIds.indexOf(file.id) === -1)
 }
 
 // State
@@ -168,25 +123,9 @@ const initialState = {
   loaded: false,
   filesUrl: '/console/files',
   records: [],
-  selected: [],
-  attachmentable: 'node',
 }
 
 // Reducer
-
-const addFileId = (state, record) => {
-  const sel = find(state.selected, { file_id: record.id })
-  let id = ''
-  const file_id = record.id
-
-  if (sel) id = sel.id
-
-  return {
-    ...record,
-    id,
-    file_id,
-  }
-}
 
 function filesReducer (state = initialState, action) {
   switch (action.type) {
@@ -199,42 +138,9 @@ function filesReducer (state = initialState, action) {
     case GET_FILES_SUCCESS:
       return {
         ...state,
-        records: action.records.map((record) => addFileId(state, record)),
+        records: action.records,
         loading: false,
         loaded: true,
-      }
-
-    case SET_ATTACHMENTABLE:
-      return {
-        ...state,
-        attachmentable: action.attachmentable,
-      }
-
-    case PREFILL_SELECTED:
-      return {
-        ...state,
-        selected: action.selected,
-      }
-
-    case SELECT_FILE:
-      return {
-        ...state,
-        selected: [
-          ...state.selected,
-          { id: action.file.id, file_id: action.file.file_id },
-        ]
-      }
-
-    case UNSELECT_FILE:
-      return {
-        ...state,
-        selected: state.selected.filter((sel) => sel.file_id !== action.file.file_id)
-      }
-
-    case ON_SORT_END:
-      return {
-        ...state,
-        selected: arrayMove(state.selected, action.oldIndex, action.newIndex)
       }
 
     case UPLOADED_FILE:
@@ -263,7 +169,7 @@ function filesReducer (state = initialState, action) {
       return {
         ...state,
         records: state.records.map((record) => {
-          if (record.file_id === action.file.file_id) {
+          if (record.id === action.file.id) {
             return {
               ...record,
               ...action.attributes,
@@ -279,8 +185,8 @@ function filesReducer (state = initialState, action) {
       return {
         ...state,
         records: state.records.map((record) => {
-          if (record.file_id === action.response.id) {
-            return addFileId(state, action.response)
+          if (record.id === action.response.id) {
+            return action.response
           } else {
             return { ...record }
           }

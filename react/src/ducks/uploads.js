@@ -57,8 +57,6 @@ function * uploadedFilePerform (action) {
   yield put(remove(action.file))
   yield put(uploadedFile({
     ...action.response,
-    id: '',
-    file_id: action.response.id,
     thumb: upload.thumb,
   }))
 }

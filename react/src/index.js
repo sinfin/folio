@@ -6,8 +6,8 @@ import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 
 import App from 'containers/App'
-import { setMode, setFileType, setPlacementType } from 'ducks/app'
-import { prefillSelected, setAttachmentable } from 'ducks/files'
+import { setMode, setFileType } from 'ducks/app'
+import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
 
 import reducers from './reducers'
 import sagas from './sagas'
@@ -25,8 +25,8 @@ window.folioConsoleInitReact = (domRoot) => {
       asJson: false,
     },
     {
-      key: 'selected',
-      action: prefillSelected,
+      key: 'originalPlacements',
+      action: setOriginalPlacements,
       asJson: true,
     },
     {

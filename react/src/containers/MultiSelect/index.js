@@ -3,14 +3,16 @@ import { connect } from 'react-redux'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 import {
+  filesLoadingSelector,
+  unselectedFilesForListSelector,
+} from 'ducks/files'
+import {
   selectFile,
   unselectFile,
   onSortEnd,
-  filesLoadingSelector,
-  filesForListSelector,
-} from 'ducks/files'
-import { placementTypeSelector, fileTypeIsImageSelector } from 'ducks/app'
-import { filteredFilesSelector } from 'ducks/filters'
+  filePlacementsSelector,
+} from 'ducks/filePlacements'
+import { fileTypeIsImageSelector } from 'ducks/app'
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import FileFilter from 'containers/FileFilter'
@@ -22,15 +24,16 @@ import FileList from 'components/FileList'
 import FilePlacementList from 'components/FilePlacementList';
 
 class MultiSelect extends LazyLoadCheckingComponent {
-  selectFile = (file) => {
-    this.props.dispatch(selectFile(file))
-  }
+  selectFile = (file) => this.props.dispatch(selectFile(file))
+
+  unselectFile = (file) => this.props.dispatch(unselectFile(file))
+
+  onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
 
   render() {
-    const { files, dispatch, placementType, fileTypeIsImage } = this.props
-    if (files.loading) return <Loader />
+    if (this.props.filesLoading) return <Loader />
 
-    const headerKey = fileTypeIsImage ? 'Images' : 'Documents'
+    const headerKey = this.props.fileTypeIsImage ? 'Images' : 'Documents'
 
     return (
       <Uploader>
@@ -39,11 +42,9 @@ class MultiSelect extends LazyLoadCheckingComponent {
           header={window.FolioConsole.translations[`selected${headerKey}`]}
         >
           <FilePlacementList
-            items={files.selected}
-            attachmentable={files.attachmentable}
-            placementType={placementType}
-            onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
-            onClick={(file) => dispatch(unselectFile(file))}
+            filePlacements={this.props.filePlacements}
+            onSortEnd={this.onSortEnd}
+            onClick={this.unselectFile}
           />
         </Card>
 
@@ -52,7 +53,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
           filters={<FileFilter />}
         >
           <FileList
-            files={this.props.filesForList}
+            files={this.props.unselectedFilesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}
             displayAsThumbs={this.props.displayAsThumbs}
             onClick={this.selectFile}
@@ -65,10 +66,9 @@ class MultiSelect extends LazyLoadCheckingComponent {
 }
 
 const mapStateToProps = (state) => ({
-  files: filteredFilesSelector(state),
-  placementType: placementTypeSelector(state),
+  filePlacements: filePlacementsSelector(state),
   filesLoading: filesLoadingSelector(state),
-  filesForList: filesForListSelector(state),
+  unselectedFilesForList: unselectedFilesForListSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
   displayAsThumbs: displayAsThumbsSelector(state),
 })

@@ -4,19 +4,17 @@ import { SortableContainer } from 'react-sortable-hoc'
 import FilePlacementSortableItem from '../FilePlacementSortableItem';
 
 const FilePlacementSortableList = SortableContainer(({
-  attachmentable,
-  placementType,
-  items,
+  filePlacements,
   onClick,
 }) => (
   <div>
-    {items.map((file, index) => (
+    {filePlacements.selected.map((filePlacement, index) => (
       <FilePlacementSortableItem
-        key={file.file_id}
-        attachmentable={attachmentable}
-        placementType={placementType}
+        key={[filePlacement.file_id, filePlacement.id].join('-')}
+        attachmentable={filePlacements.attachmentable}
+        placementType={filePlacements.placementType}
         index={index}
-        file={file}
+        filePlacement={filePlacement}
         onClick={onClick}
         position={index}
       />

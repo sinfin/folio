@@ -7,14 +7,14 @@ const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, overflow
   <div className='folio-console-file-table-wrap'>
     <table className={`table folio-console-file-table ${onClick ? 'table-hover' : ''}`}>
       <tbody>
-        {files.map(({ key, ...file }) => (
+        {files.map((file) => (
           <FileTableRow
-            key={key}
+            key={file.id}
+            file={file}
             link={link}
             fileTypeIsImage={fileTypeIsImage}
             overflowingParent={overflowingParent}
             onClick={onClick}
-            {...file}
           />
         ))}
 

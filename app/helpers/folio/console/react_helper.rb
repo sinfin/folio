@@ -41,7 +41,12 @@ module Folio
       def react_files(file_type, selected_placements, attachmentable:, type:)
         if selected_placements.present?
           placements = selected_placements.ordered.map do |fp|
-            { id: fp.id, file_id: fp.file.id }
+            {
+              id: fp.id,
+              file_id: fp.file.id,
+              alt: fp.alt,
+              title: fp.title,
+            }
           end.to_json
         else
           placements = nil
@@ -49,7 +54,7 @@ module Folio
 
         content_tag(:div, nil,
           'class': 'folio-react-wrap',
-          'data-selected': placements,
+          'data-original-placements': placements,
           'data-file-type': file_type,
           'data-mode': 'multi-select',
           'data-attachmentable': attachmentable,

@@ -3,7 +3,10 @@ import { forceCheck } from 'react-lazyload'
 
 class LazyLoadCheckingComponent extends Component {
   componentDidUpdate (pastProps) {
-    if (pastProps.filesForList.length !== this.props.filesForList.length) {
+    const past = (pastProps.filesForList || pastProps.unselectedFilesForList)
+    const present = (this.props.filesForList || this.props.unselectedFilesForList)
+
+    if (past.length !== present.length) {
       forceCheck()
     }
   }

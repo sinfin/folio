@@ -100,7 +100,7 @@ class ModalSelect extends Component {
     const $newFile = $(`
       <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingDocument() ? 'document' : 'image'}">
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
-        <input type="hidden" name="${prefix}[file_id]" value="${file.file_id}" />
+        <input type="hidden" name="${prefix}[file_id]" value="${file.id}" />
         ${hasOne ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
         ${this.fileTemplate(file, prefix)}
       </div>

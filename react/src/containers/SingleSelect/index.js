@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { placementTypeSelector, fileTypeIsImageSelector } from 'ducks/app'
+import { fileTypeIsImageSelector } from 'ducks/app'
 import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 
@@ -40,19 +40,6 @@ class SingleSelect extends LazyLoadCheckingComponent {
               overflowingParent
               dropzoneTrigger
             />
-{/*
-            {files.selectable.map((file) => (
-              <File
-                attachmentable={files.attachmentable}
-                placementType={placementType}
-                file={file}
-                key={file.file_id}
-                onClick={() => this.selectFile(file)}
-                selected={false}
-                singleSelect
-              />
-            ))}
-*/}
           </Uploader>
         </SingleSelectScroll>
       </SingleSelectWrap>
@@ -61,7 +48,6 @@ class SingleSelect extends LazyLoadCheckingComponent {
 }
 
 const mapStateToProps = (state) => ({
-  placementType: placementTypeSelector(state),
   filesLoading: filesLoadingSelector(state),
   filesForList: filesForListSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),

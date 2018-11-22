@@ -1,9 +1,6 @@
 import { isEqual } from 'lodash'
 
-import {
-  allFilesSelector,
-  filesSelector,
-} from 'ducks/files'
+import { filesSelector } from 'ducks/files'
 
 // Constants
 
@@ -39,9 +36,9 @@ export const filtersSelector = (state) => {
 export const filteredFilesSelector = (state) => {
   const files = filesSelector(state)
   const filters = filtersSelector(state)
-  let selectable = []
+  let filtered = []
 
-  files.selectable.forEach((file) => {
+  files.forEach((file) => {
     let valid = true
 
     if (valid && filters.name) {
@@ -58,17 +55,14 @@ export const filteredFilesSelector = (state) => {
       }
     }
 
-    if (valid) selectable.push(file)
+    if (valid) filtered.push(file)
   })
 
-  return {
-    ...files,
-    selectable,
-  }
+  return filtered
 }
 
 export const tagsSelector = (state) => {
-  const files = allFilesSelector(state)
+  const files = filesSelector(state)
   let tags = []
   files.forEach((file) => file.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
