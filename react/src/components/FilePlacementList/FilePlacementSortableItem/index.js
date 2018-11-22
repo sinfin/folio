@@ -29,6 +29,28 @@ class FilePlacement extends React.Component {
     this.setState({ ...this.state, alt: e.target.value })
   }
 
+  unselect = () => {
+    this.props.unselectFilePlacement(this.props.filePlacement)
+  }
+
+  moveUp = () => {
+    if (!this.props.isFirst) {
+      this.props.move({
+        oldIndex: this.props.position,
+        newIndex: this.props.position - 1,
+      })
+    }
+  }
+
+  moveDown = () => {
+    if (!this.props.isLast) {
+      this.props.move({
+        oldIndex: this.props.position,
+        newIndex: this.props.position + 1,
+      })
+    }
+  }
+
   render () {
     const {
       filePlacement,
@@ -76,7 +98,9 @@ class FilePlacement extends React.Component {
         )}
 
         <NestedModelControls
-          remove={() => unselectFilePlacement(filePlacement)}
+          remove={this.unselect}
+          moveUp={this.moveUp}
+          moveDown={this.moveDown}
         />
 
         <HiddenInputs
@@ -85,6 +109,10 @@ class FilePlacement extends React.Component {
           placementType={placementType}
           position={position}
         />
+
+        <div className='folio-console-file-placement__handle'>
+          <i className='fa fa-arrows' />
+        </div>
       </div>
     )
   }

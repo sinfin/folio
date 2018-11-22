@@ -7,6 +7,7 @@ const FilePlacementSortableList = SortableContainer(({
   filePlacements,
   unselectFilePlacement,
   fileTypeIsImage,
+  move,
 }) => (
   <div className='folio-console-file-placement-list'>
     {filePlacements.selected.map((filePlacement, index) => (
@@ -19,6 +20,9 @@ const FilePlacementSortableList = SortableContainer(({
         unselectFilePlacement={unselectFilePlacement}
         position={index}
         fileTypeIsImage={fileTypeIsImage}
+        move={move}
+        isFirst={index === 0}
+        isLast={index === filePlacement.length - 1}
       />
     ))}
   </div>

@@ -1,11 +1,11 @@
 .folio-console-file-placement-list
-  margin-top: - $grid-gutter-half
-  margin-bottom: - $grid-gutter-half
+  margin: - $grid-gutter-half
 
 .folio-console-file-placement
   display: flex
   align-items: center
-  margin: $grid-gutter-half 0
+  padding: (( $grid-gutter-half / 2 )) 0 (( $grid-gutter-half / 2 )) $grid-gutter-half
+  transition: background .2s ease-in-out
 
   .folio-console-nested-model-controls
     margin-left: auto
@@ -22,6 +22,10 @@
       border-color: transparent
       box-shadow: none
 
+    .form-control::placeholder
+      color: rgba($input-color, .4)
+      opacity: 1
+
     .form-text
       position: absolute
       top: 100%
@@ -29,6 +33,7 @@
       width: 100%
       opacity: 0
       transition: $transition-base
+      padding: 0 calc(#{$input-padding-x} + 1px)
 
     .form-control:focus + .form-text
       opacity: 1
@@ -59,3 +64,21 @@
 .folio-console-file-placement__alt
   .form-control
     text-align: right
+
+.folio-console-file-placement__handle
+  opacity: 0.1
+  transition: $transition-base
+  padding: $grid-gutter-half
+  flex: 0 0 auto
+  cursor: move
+
+  .folio-console-file-placement:hover &
+    opacity: 1
+
+body > .folio-console-file-placement
+  background: rgba($white, .5)
+  z-index: 9999
+
+  .folio-console-file-placement__handle,
+  .folio-console-nested-model-controls
+    opacity: 1

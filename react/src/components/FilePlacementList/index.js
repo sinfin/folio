@@ -8,6 +8,7 @@ const FilePlacementList = (props) => (
     <FilePlacementSortableList
       axis='xy'
       distance={5}
+      move={props.onSortEnd}
       {...props}
     />
 
