@@ -23,9 +23,13 @@ import FileList from 'components/FileList'
 import FilePlacementList from 'components/FilePlacementList';
 
 class MultiSelect extends LazyLoadCheckingComponent {
-  selectFile = (file) => this.props.dispatch(selectFile(file))
+  selectFile = (file) => {
+    this.props.dispatch(selectFile(file))
+  }
 
-  unselectFilePlacement = (file) => this.props.dispatch(unselectFilePlacement(file))
+  unselectFilePlacement = (filePlacements) => {
+    this.props.dispatch(unselectFilePlacement(filePlacements))
+  }
 
   onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
 
@@ -44,6 +48,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
             filePlacements={this.props.filePlacements}
             onSortEnd={this.onSortEnd}
             unselectFilePlacement={this.unselectFilePlacement}
+            fileTypeIsImage={this.props.fileTypeIsImage}
           />
         </Card>
 

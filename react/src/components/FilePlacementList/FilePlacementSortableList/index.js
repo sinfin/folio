@@ -6,8 +6,9 @@ import FilePlacementSortableItem from '../FilePlacementSortableItem';
 const FilePlacementSortableList = SortableContainer(({
   filePlacements,
   unselectFilePlacement,
+  fileTypeIsImage,
 }) => (
-  <div>
+  <div className='folio-console-file-placement-list'>
     {filePlacements.selected.map((filePlacement, index) => (
       <FilePlacementSortableItem
         key={[filePlacement.file_id, filePlacement.id].join('-')}
@@ -17,6 +18,7 @@ const FilePlacementSortableList = SortableContainer(({
         filePlacement={filePlacement}
         unselectFilePlacement={unselectFilePlacement}
         position={index}
+        fileTypeIsImage={fileTypeIsImage}
       />
     ))}
   </div>

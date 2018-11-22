@@ -1,0 +1,48 @@
+.folio-console-file-placement-list
+  margin-top: - $grid-gutter-half
+  margin-bottom: - $grid-gutter-half
+
+.folio-console-file-placement
+  display: flex
+  align-items: center
+  margin: $grid-gutter-half 0
+
+  .folio-console-nested-model-controls
+    margin-left: auto
+    opacity: 0.1
+    transition: $transition-base
+
+  .form-group
+    margin-bottom: 0
+    margin-right: $grid-gutter-width
+
+    .form-control:not(:focus)
+      background: transparent
+      border-color: transparent
+      box-shadow: none
+
+  &:hover
+    .folio-console-nested-model-controls
+      opacity: 1
+
+.folio-console-file-placement__img-wrap
+  display: flex
+  width: 75px
+  height: 75px
+  align-items: center
+  justify-content: center
+  margin-right: $grid-gutter-half
+  cursor: zoom-in
+  background: rgba(darken($success, 10%), 0.2)
+
+.folio-console-file-placement__img
+  max-width: 75px
+  max-height: 75px
+  display: block
+
+.folio-console-file-placement__title
+  flex: 1 1 auto
+
+.folio-console-file-placement__alt
+  .form-control
+    text-align: right

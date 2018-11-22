@@ -6,7 +6,6 @@ import { uniqueId } from 'lodash';
 
 import { CSRF } from 'utils/api'
 
-import { UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import {
   addedFile,
@@ -81,15 +80,6 @@ class Uploader extends Component {
         eventHandlers={this.eventHandlers()}
         className={this.state.uploaderClassName}
       >
-        {this.props.showUploading && <DropzoneTrigger />}
-        {this.props.showUploading && (
-          this.props.uploads.records.map((upload, index) => (
-            <UploadingFile
-              upload={upload}
-              key={upload.id}
-            />
-          ))
-        )}
         {this.props.children}
       </StyledDropzone>
     )
