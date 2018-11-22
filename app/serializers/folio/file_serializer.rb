@@ -6,13 +6,17 @@ module Folio
 
     # TODO: add :placement once React is ready for it
     attributes :id, :file_size, :file_name, :type,
-               :thumb, :size, :url, :tags,
+               :thumb, :size, :url, :tags, :source_image,
                :dominant_color, :edit_path, :extension
 
     ADMIN_THUMBNAIL_SIZE = '250x250'
 
     def thumb
       URI.encode(object.thumb(ADMIN_THUMBNAIL_SIZE).url) if image?
+    end
+
+    def source_image
+      URI.encode(object.file.remote_url) if image?
     end
 
     def url
