@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FileTableRowProgress = ({ progress }) => {
+const FileUploadProgress = ({ progress }) => {
   if (typeof progress === 'undefined') return null
 
   let message
@@ -12,17 +12,17 @@ const FileTableRowProgress = ({ progress }) => {
   }
 
   return (
-    <span className="folio-console-file-table__upload-progress">
+    <span className='folio-console-file-upload-progress'>
       <span
-        className="folio-console-file-table__upload-progress-slider"
+        className='folio-console-file-upload-progress__slider'
         style={{ width: `${progress || 0}%` }}
       />
 
-      <span className="folio-console-file-table__upload-progress-inner">
+      <span className='folio-console-file-upload-progress__inner'>
         {message}
       </span>
     </span>
   )
 }
 
-export default FileTableRowProgress
+export default FileUploadProgress

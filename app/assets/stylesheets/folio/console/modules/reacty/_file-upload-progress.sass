@@ -1,0 +1,56 @@
+.folio-console-file-upload-progress
+  position: absolute
+  width: 100%
+  display: block
+  z-index: 2
+  text-align: center
+
+.folio-console-file-upload-progress__inner
+  position: relative
+  z-index: 2
+  font-weight: $font-weight-bold
+  color: $green
+  font-size: 18px
+  opacity: 0.5
+
+.folio-console-file-upload-progress__slider
+  display: block
+  background: $green
+  height: 100%
+  position: absolute
+  top: 0
+  left: 0
+  transition: width .1s
+  z-index: 1
+  opacity: 0.25
+
+.folio-console-file-table
+  .folio-console-file-upload-progress
+    height: 46px
+    transform: translate(-0.75rem, -0.75rem)
+
+  .folio-console-file-upload-progress__inner
+    line-height: 46px
+
+  .folio-console-file-table__td--image
+    .folio-console-file-upload-progress
+      height: 75px
+
+    .folio-console-file-upload-progress__inner
+      line-height: 75px
+
+.folio-console-file-list__file
+  .folio-console-file-upload-progress
+    height: 100%
+    top: 0
+    left: 0
+    display: flex
+    align-items: center
+    justify-content: center
+
+  .folio-console-file-upload-progress__inner
+    color: $white
+    opacity: 1
+
+  .folio-console-file-upload-progress__slider
+    opacity: 0.75

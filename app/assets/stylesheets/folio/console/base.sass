@@ -18,6 +18,10 @@ $grid-gutter-half: $grid-gutter-width / 2
 
 $grid-gutter-half: $grid-gutter-width / 2
 
+html,
+body
+  min-width: 320px
+
 h2, .h2
   margin: $form-group-margin-bottom 0
 
@@ -75,5 +79,7 @@ a.inactive
 @import 'modules/index-table'
 @import 'modules/thumbnail'
 @import 'modules/react/modal'
-@import 'modules/reacty/file-list'
-@import 'modules/reacty/file-table'
+@import 'modules/reacty/dropzone-trigger'
+@import 'modules/reacty/file-thumbnail-list'
+@import 'modules/reacty/file-table-list'
+@import 'modules/reacty/file-upload-progress'

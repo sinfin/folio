@@ -60,6 +60,9 @@ class Uploader extends Component {
       paramName: 'file[file][]',
       previewTemplate: '<span></span>',
       clickable: `.${this.state.uploaderClassName} .${DROPZONE_TRIGGER_CLASSNAME}`,
+      thumbnailMethod: 'contain',
+      thumbnailWidth: 150,
+      thumbnailHeight: 150,
       params: {
         'file[type]': this.props.fileType,
         'file[tag_list]': DATE_TAG,

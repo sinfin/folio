@@ -7,16 +7,14 @@ const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage }) => (
   <div className='folio-console-file-table-wrap'>
     <table className='table table-hover folio-console-file-table'>
       <tbody>
-        {files.map(({ Component, files }) => {
-          return files.map(({ key, ...file }) => (
-            <FileTableRow
-              key={key}
-              link={link}
-              fileTypeIsImage={fileTypeIsImage}
-              {...file}
-            />
-          ))
-        })}
+        {files.map(({ key, ...file }) => (
+          <FileTableRow
+            key={key}
+            link={link}
+            fileTypeIsImage={fileTypeIsImage}
+            {...file}
+          />
+        ))}
 
         {dropzoneTrigger && <DropzoneTrigger colSpan={fileTypeIsImage ? 5 : 4} />}
       </tbody>

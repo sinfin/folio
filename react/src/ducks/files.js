@@ -149,25 +149,18 @@ export const filesSelector = (state) => {
   }
 }
 
-export const filesForListSelector = (state, FileComponent) => {
-  const filteredFiles = filteredFilesSelector(state).selectable.map((file) => {
-    return { key: file.file_id, file }
-  })
+export const filesForListSelector = (state) => {
+  let files = []
 
   const uploads = uploadsSelector(state).records.map((file, index) => {
-    return { key: file.id, file }
+    files.push({ key: file.id, file })
   })
 
-  return [
-    {
-      Component: UploadingFile,
-      files: uploads,
-    },
-    {
-      Component: FileComponent || File,
-      files: filteredFiles,
-    },
-  ]
+  const filteredFiles = filteredFilesSelector(state).selectable.map((file) => {
+    files.push({ key: file.file_id, file })
+  })
+
+  return files
 }
 
 // State
