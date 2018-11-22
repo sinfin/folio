@@ -11,7 +11,11 @@ const FileThumbnail = ({ file, link }) => {
       <div className='folio-console-file-list__img-wrap' style={{ background: file.dominant_color }}>
         {file.thumb && (
           <LazyLoad height={150} once overflow={false}>
-            <img src={file.thumb} className='folio-console-file-list__img' />
+            <img
+              src={file.thumb}
+              className='folio-console-file-list__img'
+              alt={file.file_name}
+            />
           </LazyLoad>
         )}
       </div>

@@ -15,9 +15,9 @@ const FileTableRow = ({ file, link, fileTypeIsImage }) => {
 
           <div className='folio-console-file-table__img-wrap'>
             {file.thumb && (
-              <a href={file.source_image} target='_blank' className='folio-console-file-table__img-a'>
+              <a href={file.source_image} target='_blank' className='folio-console-file-table__img-a' rel='noopener noreferrer'>
                 <LazyLoad height={50} once overflow={false}>
-                  <img src={file.thumb} className='folio-console-file-table__img' />
+                  <img src={file.thumb} className='folio-console-file-table__img' alt='' />
                 </LazyLoad>
               </a>
             )}

@@ -8,8 +8,6 @@ import { fileTypeSelector } from 'ducks/app'
 import { filteredFilesSelector } from 'ducks/filters'
 import { uploadsSelector } from 'ducks/uploads'
 
-import { File, UploadingFile } from 'components/File'
-
 // Constants
 
 const PREFILL_SELECTED = 'files/PREFILL_SELECTED'
@@ -152,11 +150,11 @@ export const filesSelector = (state) => {
 export const filesForListSelector = (state) => {
   let files = []
 
-  const uploads = uploadsSelector(state).records.map((file, index) => {
+  uploadsSelector(state).records.forEach((file, index) => {
     files.push({ key: file.id, file })
   })
 
-  const filteredFiles = filteredFilesSelector(state).selectable.map((file) => {
+  filteredFilesSelector(state).selectable.forEach((file) => {
     files.push({ key: file.file_id, file })
   })
 
