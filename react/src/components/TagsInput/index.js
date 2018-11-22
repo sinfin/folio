@@ -15,8 +15,22 @@ const makeNoOptionsMessage = (values) => ({ inputValue }) => {
 const formatCreateLabel = (input) => `${window.FolioConsole.translations.create} "${input}"`
 
 class TagsInput extends React.Component {
+  constructor (props) {
+    super(props)
+    this.selectRef = React.createRef()
+  }
+
   onChange = (tags) => {
     this.props.onTagsChange(tags.map((tag) => tag.value))
+  }
+
+  onKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      const { state } = this.selectRef.current
+      if (!state.menuIsOpen && state.inputValue === '') {
+        this.props.submit()
+      }
+    }
   }
 
   render () {
@@ -36,6 +50,9 @@ class TagsInput extends React.Component {
         autoFocus={!this.props.noAutofocus}
         noOptionsMessage={makeNoOptionsMessage(this.props.value)}
         formatCreateLabel={formatCreateLabel}
+        onKeyDown={this.props.submit ? this.onKeyDown : null}
+        closeMenuOnSelect={!!this.props.submit}
+        ref={this.selectRef}
         isMulti
       />
     )

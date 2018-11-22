@@ -19,6 +19,7 @@ export default ({ modal, onTagsChange, cancelModal, saveModal, tags }) => (
           value={modal.newTags || modal.file.tags}
           options={tags}
           onTagsChange={onTagsChange}
+          submit={saveModal}
         />
 
         <small className='form-text'>
