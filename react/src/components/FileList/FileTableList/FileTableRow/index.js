@@ -3,12 +3,13 @@ import React from 'react'
 import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'components/Tags'
 
-import DocumentProgress from './DocumentProgress';
+import FileTableRowProgress from './FileTableRowProgress';
 
-const Document = ({ file, link }) => (
+const FileTableRow = ({ file, link }) => {
+  return (
   <tr className="folio-console-file-table__tr">
     <td className="folio-console-file-table__td folio-console-file-table__td--first">
-      <DocumentProgress progress={file.progress} />
+      <FileTableRowProgress progress={file.progress} />
 
       {link ? (
         <a href={file.edit_path}>{file.file_name}</a>
@@ -20,6 +21,6 @@ const Document = ({ file, link }) => (
     <td className="folio-console-file-table__td">{numberToHumanSize(file.file_size)}</td>
     <td className="folio-console-file-table__td">{file.extension}</td>
   </tr>
-)
+)}
 
-export default Document
+export default FileTableRow

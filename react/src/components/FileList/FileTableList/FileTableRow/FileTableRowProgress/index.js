@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Progress = ({ progress }) => {
+const FileTableRowProgress = ({ progress }) => {
   if (typeof progress === 'undefined') return null
 
   let message
@@ -25,4 +25,4 @@ const Progress = ({ progress }) => {
   )
 }
 
-export default Progress
+export default FileTableRowProgress

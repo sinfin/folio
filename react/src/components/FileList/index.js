@@ -1,6 +1,12 @@
-import DocumentList from './DocumentList'
-import ImageList from './ImageList'
+import FileTableList from './FileTableList'
+import FileThumbnailList from './FileThumbnailList'
 
-const FileList = (props) => props.fileTypeIsImage ? ImageList(props) : DocumentList(props)
+const FileList = (props) => {
+  if (props.fileTypeIsImage && props.displayAsThumbs) {
+    return FileThumbnailList(props)
+  } else {
+    return FileTableList(props)
+  }
+}
 
 export default FileList

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { DropzoneTrigger } from 'components/File';
 
-const ImageList = ({ files, fileTypeIsImage, dropzoneTrigger }) => (
+const FileThumbnailList = ({ files, dropzoneTrigger }) => (
   <div className="folio-console-file-list">
     {dropzoneTrigger  && <DropzoneTrigger />}
 
@@ -14,4 +14,4 @@ const ImageList = ({ files, fileTypeIsImage, dropzoneTrigger }) => (
   </div>
 )
 
-export default ImageList
+export default FileThumbnailList

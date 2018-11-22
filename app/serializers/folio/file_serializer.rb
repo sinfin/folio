@@ -70,6 +70,11 @@ module Folio
     def extension
       Mime::Type.lookup(object.file.mime_type).symbol.to_s.upcase
     end
+
+    def file_name
+      object.file_name.presence ||
+      "#{object.class.model_name.human} ##{object.id}"
+    end
   end
 end
 

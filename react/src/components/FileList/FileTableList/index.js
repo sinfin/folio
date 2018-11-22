@@ -1,15 +1,15 @@
 import React from 'react'
 
 import DropzoneTrigger from './DropzoneTrigger';
-import Document from 'components/File/Document';
+import FileTableRow from './FileTableRow';
 
-const DocumentList = ({ files, fileTypeIsImage, dropzoneTrigger, link }) => (
+const FileTableList = ({ files, dropzoneTrigger, link }) => (
   <div className='folio-console-file-table-wrap'>
     <table className='table table-hover folio-console-file-table'>
       <tbody>
         {files.map(({ Component, files }) => {
           return files.map(({ key, ...file }) => (
-            <Document
+            <FileTableRow
               key={key}
               link={link}
               {...file}
@@ -23,4 +23,4 @@ const DocumentList = ({ files, fileTypeIsImage, dropzoneTrigger, link }) => (
   </div>
 )
 
-export default DocumentList
+export default FileTableList

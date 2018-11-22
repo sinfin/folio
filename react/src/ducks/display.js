@@ -27,6 +27,10 @@ export const displaySelector = (state) => {
   return state.display
 }
 
+export const displayAsThumbsSelector = (state) => {
+  return state.display === DISPLAY_THUMBS
+}
+
 // State
 
 const initialState = localStorage.getItem(LOCALSTORAGE_DISPLAY_KEY) || DISPLAY_THUMBS
@@ -37,10 +41,10 @@ function displayReducer (state = initialState, action) {
   switch (action.type) {
     case SET_DISPLAY: {
       switch (action.display) {
-        case DISPLAY_CARDS:
+        case DISPLAY_THUMBS:
           return action.display
         default:
-          return DISPLAY_THUMBS
+          return DISPLAY_CARDS
       }
     }
 

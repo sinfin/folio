@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { fileTypeIsImageSelector } from 'ducks/app'
 import { uploadsSelector } from 'ducks/uploads'
 import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
+import { displayAsThumbsSelector } from 'ducks/display'
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 
 import FileFilter from 'containers/FileFilter'
@@ -25,6 +26,7 @@ class IndexMode extends LazyLoadCheckingComponent {
           <FileList
             files={this.props.filesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}
+            displayAsThumbs={this.props.displayAsThumbs}
             link
             dropzoneTrigger
           />
@@ -39,6 +41,7 @@ const mapStateToProps = (state) => ({
   filesForList: filesForListSelector(state, LinkFile),
   uploads: uploadsSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
+  displayAsThumbs: displayAsThumbsSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {
