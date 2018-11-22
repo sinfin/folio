@@ -12,3 +12,4 @@ en:
         selectedDocuments: Selected documents
         availableImages: Available images
         selectedImages: Selected images
+        fileTitleHint: File title as displayed on the web (fallback to file name).

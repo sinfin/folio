@@ -59,6 +59,7 @@ class FilePlacement extends React.Component {
             value={this.state.title}
             onChange={this.onTitleChange}
             name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
+            hint={window.FolioConsole.translations.fileTitleHint}
           />
         </div>
 
@@ -69,6 +70,7 @@ class FilePlacement extends React.Component {
               value={this.state.alt}
               onChange={this.onAltChange}
               name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
+              hint={window.FolioConsole.translations.altHint}
             />
           </div>
         )}

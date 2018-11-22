@@ -30,6 +30,7 @@ cs:
         published_at: Při uvedení data v budoucnu bude obsah do zvoleného data skrytý.
         meta_title: Nepovinný údaj. Tato varianta titulku se může objevit v stránky ve vyhledávačích. Důležité pro SEO.
         meta_description: Nepovinný údaj. Tato varianta perexu se může objevit v popisu ve vyhledávačích. Důležité pro SEO.
+        alt: Alternativní text obrázku. Zobrazuje se v případě nenačtení obrázku.
 
       site:
         turbo_mode: Vypne trackování návštěv, čímž se výrazně omezí zátěž serveru v období vysoké návštěvnosti.

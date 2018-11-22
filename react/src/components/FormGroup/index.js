@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FormGroup = ({ value, onChange, label, placeholder, name }) => (
+const FormGroup = ({ value, onChange, label, placeholder, name, hint }) => (
   <div className='form-group'>
     {label && <label className='control-label'>{label}</label>}
 
@@ -12,6 +12,8 @@ const FormGroup = ({ value, onChange, label, placeholder, name }) => (
       name={name}
       type='text'
     />
+
+    {hint && <small className='form-text'>{hint}</small>}
   </div>
 )
 

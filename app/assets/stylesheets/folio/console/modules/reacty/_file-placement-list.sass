@@ -15,11 +15,23 @@
   .form-group
     margin-bottom: 0
     margin-right: $grid-gutter-width
+    position: relative
 
     .form-control:not(:focus)
       background: transparent
       border-color: transparent
       box-shadow: none
+
+    .form-text
+      position: absolute
+      top: 100%
+      left: 0
+      width: 100%
+      opacity: 0
+      transition: $transition-base
+
+    .form-control:focus + .form-text
+      opacity: 1
 
   &:hover
     .folio-console-nested-model-controls
@@ -27,6 +39,7 @@
 
 .folio-console-file-placement__img-wrap
   display: flex
+  flex: 0 0 75px
   width: 75px
   height: 75px
   align-items: center
