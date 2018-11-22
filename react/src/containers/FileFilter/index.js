@@ -74,8 +74,11 @@ class FileFilter extends Component {
           />
         </div>
 
+        <div className='form-group'>
+        </div>
+
         {filters.active && (
-          <div className='form-group'>
+          <div className='form-group form-group--reset'>
             <button
               type='button'
               className='btn btn-danger'

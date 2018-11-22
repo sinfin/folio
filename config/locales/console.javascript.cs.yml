@@ -5,8 +5,8 @@ cs:
         finalizing: Dokončuji
         save: Uložit
         cancel: Zrušit
-        noTags: Žádná klíčová slova
-        tagUsed: Klíčové slovo je již použité
+        noResults: Žádné výsledky
+        used: Již použité
         create: Vytvořit
         availableDocuments: Dostupné dokumenty
         selectedDocuments: Vybrané dokumenty

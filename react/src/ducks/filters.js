@@ -55,6 +55,10 @@ export const filteredFilesSelector = (state) => {
       }
     }
 
+    if (valid && filters.placement) {
+      valid = file.placements.indexOf(filters.placement) !== -1
+    }
+
     if (valid) filtered.push(file)
   })
 

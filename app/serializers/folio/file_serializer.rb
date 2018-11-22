@@ -7,7 +7,8 @@ module Folio
     # TODO: add :placement once React is ready for it
     attributes :id, :file_size, :file_name, :type,
                :thumb, :size, :url, :tags, :source_image,
-               :dominant_color, :edit_path, :extension
+               :dominant_color, :edit_path, :extension,
+               :placements
 
     ADMIN_THUMBNAIL_SIZE = '250x250'
 
@@ -53,19 +54,17 @@ module Folio
 
     def placements
       titles = []
-      keys = %i[file_placements]
-      keys << :cover_placements if image?
 
-      keys.each do |key|
-        object.send(key).each do |fp|
-          title = fp.placement.try(:title) || fp.placement.try(:name)
-          next if title.blank?
+      object.file_placements.each do |fp|
+        title = fp.placement.try(:to_label) ||
+                fp.placement.try(:title) ||
+                fp.placement.try(:name)
+        next if title.blank?
 
-          model_name = fp.placement.class.model_name.human
-          joined = [model_name, title].join(' - ')
+        model_name = fp.placement.class.model_name.human
+        joined = [model_name, title].join(' - ')
 
-          titles << joined unless titles.include?(joined)
-        end
+        titles << joined unless titles.include?(joined)
       end
 
       titles

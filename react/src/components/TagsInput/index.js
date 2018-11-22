@@ -1,18 +1,6 @@
 import React from 'react'
-import Select from 'react-select'
-import CreatableSelect from 'react-select/lib/Creatable'
 
-import selectStyles from './selectStyles'
-import formatTags from './formatTags';
-
-const makeNoOptionsMessage = (values) => ({ inputValue }) => {
-  if (values.indexOf(inputValue) === -1) {
-    return window.FolioConsole.translations.noTags
-  } else {
-    return window.FolioConsole.translations.tagUsed
-  }
-}
-const formatCreateLabel = (input) => `${window.FolioConsole.translations.create} "${input}"`
+import Select from 'components/Select';
 
 class TagsInput extends React.Component {
   constructor (props) {
@@ -21,38 +9,34 @@ class TagsInput extends React.Component {
   }
 
   onChange = (tags) => {
-    this.props.onTagsChange(tags.map((tag) => tag.value))
+    console.log(tags)
+    this.props.onTagsChange(tags)
   }
 
   onKeyDown = (e) => {
     if (e.key === 'Enter') {
       const { state } = this.selectRef.current
-      if (!state.menuIsOpen && state.inputValue === '') {
+      if (this.props.submit && !state.menuIsOpen && state.inputValue === '') {
         this.props.submit()
+      } else if (state.inputValue !== '' && this.props.notCreatable) {
+        e.preventDefault()
+        e.stopPropagation()
       }
     }
   }
 
   render () {
-    let SelectComponent = CreatableSelect
-    if (this.props.notCreatable) SelectComponent = Select
-
     return (
-      <SelectComponent
-        name="form-field-name"
+      <Select
         placeholder={window.FolioConsole.translations.tagsLabel}
-        className='react-select-container'
-        classNamePrefix='react-select'
-        styles={selectStyles}
         onChange={this.onChange}
-        value={formatTags(this.props.value)}
-        options={formatTags(this.props.options)}
         autoFocus={!this.props.noAutofocus}
-        noOptionsMessage={makeNoOptionsMessage(this.props.value)}
-        formatCreateLabel={formatCreateLabel}
-        onKeyDown={this.props.submit ? this.onKeyDown : null}
+        onKeyDown={this.onKeyDown}
         closeMenuOnSelect={!!this.props.submit}
-        ref={this.selectRef}
+        innerRef={this.selectRef}
+        createable={!this.props.notCreatable}
+        value={this.props.value}
+        options={this.props.options}
         isMulti
       />
     )

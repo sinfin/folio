@@ -9,7 +9,7 @@ const Wrap = styled.div`
   }
 
   .form-group {
-    margin-right: 30px;
+    margin-right: 15px;
   }
 
   .form-group--react-select {
@@ -17,6 +17,14 @@ const Wrap = styled.div`
 
     > div {
       width: 250px;
+    }
+  }
+
+  .form-group--reset {
+    margin-left: auto;
+
+    + .btn-group {
+      margin-left: 0;
     }
   }
 `

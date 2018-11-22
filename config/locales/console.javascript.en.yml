@@ -5,8 +5,8 @@ en:
         finalizing: Finalizing
         save: Save
         cancel: Cancel
-        noTags: No tags
-        tagUsed: Tag is used already
+        noResults: No results
+        used: Used already
         create: Create
         availableDocuments: Available documents
         selectedDocuments: Selected documents

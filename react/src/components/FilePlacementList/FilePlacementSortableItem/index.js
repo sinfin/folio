@@ -57,7 +57,6 @@ class FilePlacement extends React.Component {
       attachmentable,
       placementType,
       position,
-      unselectFilePlacement,
       fileTypeIsImage,
     } = this.props
 
