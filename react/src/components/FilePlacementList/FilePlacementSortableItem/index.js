@@ -3,25 +3,25 @@ import { SortableElement } from 'react-sortable-hoc'
 
 import filePlacementInputName from '../utils/filePlacementInputName';
 
-const FilePlacement = ({ filePlacement, attachmentable, placementType, position, selected }) => (
-  <div>
+const FilePlacement = ({ filePlacement, attachmentable, placementType, position, unselectFilePlacement }) => (
+  <div onClick={() => unselectFilePlacement(filePlacement)}>
     {filePlacement.file.file_name}
 
-    {filePlacement.id && (
-      <input
-        type='hidden'
-        name={filePlacementInputName('id', attachmentable, placementType)}
-        value={filePlacement.id}
-      />
-    )}
     <input
       type='hidden'
-      name={filePlacementInputName('file_id', attachmentable, placementType)}
+      name={filePlacementInputName('id', filePlacement, attachmentable, placementType)}
+      value={filePlacement.id || ''}
+    />
+
+    <input
+      type='hidden'
+      name={filePlacementInputName('file_id', filePlacement, attachmentable, placementType)}
       value={filePlacement.file_id}
     />
+
     <input
       type='hidden'
-      name={filePlacementInputName('position', attachmentable, placementType)}
+      name={filePlacementInputName('position', filePlacement, attachmentable, placementType)}
       value={position}
     />
   </div>

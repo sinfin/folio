@@ -5,7 +5,7 @@ import FilePlacementSortableItem from '../FilePlacementSortableItem';
 
 const FilePlacementSortableList = SortableContainer(({
   filePlacements,
-  onClick,
+  unselectFilePlacement,
 }) => (
   <div>
     {filePlacements.selected.map((filePlacement, index) => (
@@ -15,7 +15,7 @@ const FilePlacementSortableList = SortableContainer(({
         placementType={filePlacements.placementType}
         index={index}
         filePlacement={filePlacement}
-        onClick={onClick}
+        unselectFilePlacement={unselectFilePlacement}
         position={index}
       />
     ))}

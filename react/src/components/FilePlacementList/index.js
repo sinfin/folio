@@ -15,12 +15,12 @@ const FilePlacementList = (props) => (
       <div key={filePlacement.id}>
         <input
           type='hidden'
-          name={filePlacementInputName('id', props.filePlacements.attachmentable, props.filePlacements.placementType)}
+          name={filePlacementInputName('id', filePlacement, props.filePlacements.attachmentable, props.filePlacements.placementType)}
           value={filePlacement.id}
         />
         <input
           type='hidden'
-          name={filePlacementInputName('_destroy', props.filePlacements.attachmentable, props.filePlacements.placementType)}
+          name={filePlacementInputName('_destroy', filePlacement, props.filePlacements.attachmentable, props.filePlacements.placementType)}
           value='1'
         />
       </div>

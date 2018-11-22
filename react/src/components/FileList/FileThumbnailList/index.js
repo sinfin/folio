@@ -10,10 +10,10 @@ const FileThumbnailList = ({ files, dropzoneTrigger, link, overflowingParent, on
     {files.map((file) => (
       <FileThumbnail
         key={file.id}
+        file={file}
         link={link}
         overflowingParent={overflowingParent}
         onClick={onClick}
-        {...file}
       />
     ))}
   </div>

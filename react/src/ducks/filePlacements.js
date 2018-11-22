@@ -7,7 +7,7 @@ import { filesSelector } from 'ducks/files'
 
 const SET_ORIGINAL_PLACEMENTS = 'filePlacements/SET_ORIGINAL_PLACEMENTS'
 const SELECT_FILE = 'filePlacements/SELECT_FILE'
-const UNSELECT_FILE = 'filePlacements/UNSELECT_FILE'
+const UNSELECT_FILE_PLACEMENT = 'filePlacements/UNSELECT_FILE_PLACEMENT'
 const ON_SORT_END = 'filePlacements/ON_SORT_END'
 const SET_ATTACHMENTABLE = 'filePlacements/SET_ATTACHMENTABLE'
 const SET_PLACEMENT_TYPE = 'filePlacements/SET_PLACEMENT_TYPE'
@@ -26,8 +26,8 @@ export function selectFile (file) {
   return { type: SELECT_FILE, file }
 }
 
-export function unselectFile (file) {
-  return { type: UNSELECT_FILE, file }
+export function unselectFilePlacement (filePlacement) {
+  return { type: UNSELECT_FILE_PLACEMENT, filePlacement }
 }
 
 export function onSortEnd (oldIndex, newIndex) {
@@ -51,7 +51,7 @@ export const filePlacementsSelector = (state) => {
   let selectedIds = []
 
   const selected = base.selected.map((filePlacement) => {
-    selectedIds.push(filePlacement.file_id)
+    selectedIds.push(filePlacement.id)
     const file = find(files, { id: filePlacement.file_id })
     return {
       ...filePlacement,
@@ -60,7 +60,7 @@ export const filePlacementsSelector = (state) => {
   })
 
   const deleted = filter(base.original, (filePlacement) => (
-    selectedIds.indexOf(filePlacement.file_id) === -1
+    selectedIds.indexOf(filePlacement.id) === -1
   ))
 
   return {
@@ -102,14 +102,14 @@ function filePlacementsReducer (state = initialState, action) {
         ...state,
         selected: [
           ...state.selected,
-          { id: null, file_id: action.file.id },
+          { id: null, file_id: action.file.id, selectedAt: Date.now() },
         ]
       }
 
-    case UNSELECT_FILE:
+    case UNSELECT_FILE_PLACEMENT:
       return {
         ...state,
-        selected: state.selected.filter((filePlacement) => filePlacement.file_id !== action.file.id)
+        selected: state.selected.filter((filePlacement) => filePlacement.file_id !== action.filePlacement.file_id),
       }
 
     case ON_SORT_END:

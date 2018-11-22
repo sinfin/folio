@@ -1,8 +1,7 @@
 import { apiGet, apiPut } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
-import { find, filter } from 'lodash'
-import { arrayMove } from 'react-sortable-hoc'
+import { filter } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
 import { filteredFilesSelector } from 'ducks/filters'

@@ -8,7 +8,7 @@ import {
 } from 'ducks/files'
 import {
   selectFile,
-  unselectFile,
+  unselectFilePlacement,
   onSortEnd,
   filePlacementsSelector,
 } from 'ducks/filePlacements'
@@ -17,7 +17,6 @@ import { displayAsThumbsSelector } from 'ducks/display'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
-import { File, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
@@ -26,7 +25,7 @@ import FilePlacementList from 'components/FilePlacementList';
 class MultiSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => this.props.dispatch(selectFile(file))
 
-  unselectFile = (file) => this.props.dispatch(unselectFile(file))
+  unselectFilePlacement = (file) => this.props.dispatch(unselectFilePlacement(file))
 
   onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
 
@@ -44,7 +43,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
           <FilePlacementList
             filePlacements={this.props.filePlacements}
             onSortEnd={this.onSortEnd}
-            onClick={this.unselectFile}
+            unselectFilePlacement={this.unselectFilePlacement}
           />
         </Card>
 
