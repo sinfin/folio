@@ -6,65 +6,58 @@ import {
   selectFile,
   unselectFile,
   onSortEnd,
+  filesLoadingSelector,
+  filesForListSelector,
 } from 'ducks/files'
-import { placementTypeSelector } from 'ducks/app'
-import { uploadsSelector } from 'ducks/uploads'
+import { placementTypeSelector, fileTypeIsImageSelector } from 'ducks/app'
 import { filteredFilesSelector } from 'ducks/filters'
+import { displayAsThumbsSelector } from 'ducks/display'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import { File, UploadingFile, DropzoneTrigger } from 'components/File'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
-
-import SortableList from './SortableList';
+import FileList from 'components/FileList'
+import FilePlacementList from 'components/FilePlacementList';
 
 class MultiSelect extends LazyLoadCheckingComponent {
+  selectFile = (file) => {
+    this.props.dispatch(selectFile(file))
+  }
+
   render() {
-    const { files, uploads, dispatch, placementType } = this.props
+    const { files, dispatch, placementType, fileTypeIsImage } = this.props
     if (files.loading) return <Loader />
+
+    const headerKey = fileTypeIsImage ? 'Images' : 'Documents'
 
     return (
       <Uploader>
         <Card
           highlighted
-          header='Selected'
+          header={window.FolioConsole.translations[`selected${headerKey}`]}
         >
-          <SortableList
+          <FilePlacementList
             items={files.selected}
             attachmentable={files.attachmentable}
             placementType={placementType}
             onSortEnd={({ oldIndex, newIndex }) => dispatch(onSortEnd(oldIndex, newIndex))}
             onClick={(file) => dispatch(unselectFile(file))}
-            dispatch={dispatch}
-            axis='xy'
-            distance={5}
           />
         </Card>
 
         <Card
-          header='Available'
+          header={window.FolioConsole.translations[`available${headerKey}`]}
           filters={<FileFilter />}
         >
-          <DropzoneTrigger />
-
-          {uploads.records.map((upload, index) => (
-            <UploadingFile
-              upload={upload}
-              key={upload.id}
-            />
-          ))}
-
-          {files.selectable.map((file) => (
-            <File
-              file={file}
-              key={file.file_id}
-              onClick={() => dispatch(selectFile(file))}
-              attachmentable={files.attachmentable}
-              placementType={placementType}
-              selected={false}
-            />
-          ))}
+          <FileList
+            files={this.props.filesForList}
+            fileTypeIsImage={this.props.fileTypeIsImage}
+            displayAsThumbs={this.props.displayAsThumbs}
+            onClick={this.selectFile}
+            dropzoneTrigger
+          />
         </Card>
       </Uploader>
     )
@@ -73,8 +66,11 @@ class MultiSelect extends LazyLoadCheckingComponent {
 
 const mapStateToProps = (state) => ({
   files: filteredFilesSelector(state),
-  uploads: uploadsSelector(state),
   placementType: placementTypeSelector(state),
+  filesLoading: filesLoadingSelector(state),
+  filesForList: filesForListSelector(state),
+  fileTypeIsImage: fileTypeIsImageSelector(state),
+  displayAsThumbs: displayAsThumbsSelector(state),
 })
 
 function mapDispatchToProps (dispatch) {

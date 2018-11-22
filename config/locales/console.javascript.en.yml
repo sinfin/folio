@@ -8,3 +8,7 @@ en:
         noTags: No tags
         tagUsed: Tag is used already
         create: Create
+        availableDocuments: Available documents
+        selectedDocuments: Selected documents
+        availableImages: Available images
+        selectedImages: Selected images
