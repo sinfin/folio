@@ -11,9 +11,7 @@ import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
-
-import SingleSelectWrap from './styled/SingleSelectWrap'
-import SingleSelectScroll from './styled/SingleSelectScroll'
+import ModalScroll from 'components/ModalScroll';
 
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
@@ -28,25 +26,21 @@ class SingleSelect extends LazyLoadCheckingComponent {
     if (this.props.filesLoading) return <Loader />
 
     return (
-      <SingleSelectWrap>
-        <FileFilter />
+      <ModalScroll fixed={<FileFilter />}>
+        <Uploader>
+          <UploadTagger />
 
-        <SingleSelectScroll>
-          <Uploader>
-            <UploadTagger />
-
-            <FileList
-              files={this.props.filesForList}
-              fileTypeIsImage={this.props.fileTypeIsImage}
-              displayAsThumbs={this.props.displayAsThumbs}
-              onClick={this.selectFile}
-              selecting='single'
-              overflowingParent
-              dropzoneTrigger
-            />
-          </Uploader>
-        </SingleSelectScroll>
-      </SingleSelectWrap>
+          <FileList
+            files={this.props.filesForList}
+            fileTypeIsImage={this.props.fileTypeIsImage}
+            displayAsThumbs={this.props.displayAsThumbs}
+            onClick={this.selectFile}
+            selecting='single'
+            overflowingParent
+            dropzoneTrigger
+          />
+        </Uploader>
+      </ModalScroll>
     )
   }
 }

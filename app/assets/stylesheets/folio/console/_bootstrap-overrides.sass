@@ -1,3 +1,5 @@
+@import './bootstrap-overrides/modal'
+
 .nav-tabs
   margin-bottom: $nav-tabs-margin
 
@@ -48,21 +50,6 @@
   .card-body
     background: rgba($success, 0.2)
 
-.modal-dialog
-  min-width: 320px
-
-.modal-lg
-  .modal-body
-    position: relative
-    z-index: 1
-
-  .close
-    position: absolute
-    top: 5px
-    right: 0
-    padding: 18px
-    z-index: 2
-
 .btn-primary
   &, &:disabled
     background-color: $purple
@@ -103,10 +90,6 @@ select.form-control
 .form-control
   &::placeholder
     color: $input-placeholder-color
-
-+mq-md
-  .modal-dialog
-    max-width: 100%
 
 +mq-wide-layout
   .breadcrumb

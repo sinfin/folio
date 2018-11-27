@@ -1,8 +1,5 @@
-#
-# can be removed once https://github.com/jasonslyvia/react-lazyload/pull/174 is merged
-#
-$modals = $('.folio-console-react-images-modal, .folio-console-react-documents-modal')
+$modals = $('.folio-console-react-modal')
 
 if $modals.length
-  $modals.on 'shown.bs.modal scroll', ->
+  $modals.on 'shown.bs.modal', ->
     window.dispatchEvent new Event('checkLazyload')

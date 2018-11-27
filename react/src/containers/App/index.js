@@ -76,7 +76,7 @@ class App extends Component {
 
   render () {
     return (
-      <AppWrap>
+      <AppWrap className='folio-react-app'>
         <ModalContext.Provider value={this.openModal}>
           {this.renderMode()}
         </ModalContext.Provider>

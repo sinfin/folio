@@ -20,7 +20,7 @@ const DisplayButton = ({ active, onClick, icon }) => (
 )
 
 const DisplayButtons = ({ display, setCardsDisplay, setThumbsDisplay }) => (
-  <Wrap className='btn-group'>
+  <Wrap className='btn-group folio-console-react-display-controls'>
     <DisplayButton
       active={display === DISPLAY_CARDS}
       onClick={setCardsDisplay}

@@ -10,6 +10,6 @@ export default styled.div`
   }
 
   .modal-body & {
-    margin-right: 30px;
+    margin-right: 45px;
   }
 `

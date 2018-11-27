@@ -1,0 +1,65 @@
+.folio-console-react-modal
+  .modal-open &
+    overflow: hidden
+
+  .modal-dialog
+    min-width: 320px
+    height: calc(100% - 3.5rem)
+
+    .modal-content,
+    .modal-body,
+    .folio-react-wrap,
+    .folio-react-app
+      height: 100%
+
+  .modal-body
+    position: relative
+    z-index: 1
+
+  .close
+    position: absolute
+    top: 5px
+    right: 0
+    padding: 18px
+    z-index: 2
+
+  +mq-md
+    .modal-dialog
+      max-width: 100%
+
+.folio-console-modal__scroll-wrap
+  height: 100%
+  display: flex
+  flex-direction: column
+
+.folio-console-modal__scroll-fixed
+  flex: 0 0 auto
+  position: relative
+  z-index: 2
+
+.folio-console-modal__scroll-inner
+  +border-bottom-radius($modal-content-border-radius)
+  flex: 1 1 auto
+  position: relative
+  z-index: 1
+  overflow-y: auto
+  overflow-x: hidden
+  margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
+  padding: 0 $modal-inner-padding $modal-inner-padding
+
++mq-xs
+  .folio-console-react-modal
+    .modal-body
+      padding-top: 4rem
+
+    .close
+      height: 3rem
+      top: 0
+
+    .folio-console-react-display-controls
+      position: absolute
+      top: $modal-inner-padding
+      left: $modal-inner-padding
+
+  .folio-console-modal__scroll-fixed
+    position: static
