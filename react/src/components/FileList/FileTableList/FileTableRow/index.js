@@ -7,8 +7,17 @@ import Tags from 'components/Tags'
 import FileUploadProgress from 'components/FileUploadProgress';
 
 const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick }) => {
+  let className = 'folio-console-file-table__tr'
+
+  if (file.freshlyUploaded) {
+    className = 'folio-console-file-table__tr folio-console-file-table__tr--fresh'
+  }
+
   return (
-    <tr className='folio-console-file-table__tr' onClick={onClick ? () => onClick(file) : undefined}>
+    <tr
+      className={className}
+      onClick={onClick ? () => onClick(file) : undefined}
+    >
       {fileTypeIsImage && (
         <td className='folio-console-file-table__td folio-console-file-table__td--image'>
           <FileUploadProgress progress={file.progress} />

@@ -1,8 +1,10 @@
 import { flashError } from 'utils/flash'
-import { takeLatest, call, select, put } from 'redux-saga/effects'
-import { omit } from 'lodash'
+import { takeLatest, takeEvery, call, select, put } from 'redux-saga/effects'
+import { omit, without } from 'lodash'
 
-import { uploadedFile } from 'ducks/files'
+import { apiPost } from 'utils/api'
+import { uploadedFile, updatedFiles } from 'ducks/files'
+import { fileTypeSelector } from 'ducks/app'
 
 // Constants
 
@@ -10,10 +12,14 @@ const ADDED_FILE = 'uploads/ADDED_FILE'
 const THUMBNAIL = 'uploads/THUMBNAIL'
 const SUCCESS = 'uploads/SUCCESS'
 const ERROR = 'uploads/ERROR'
-const REMOVE = 'uploads/REMOVE'
+const FINISHED_UPLOAD = 'uploads/FINISHED_UPLOAD'
 const PROGRESS = 'uploads/PROGRESS'
+const SET_UPLOAD_TAGS = 'uploads/SET_UPLOAD_TAGS'
+const CLEAR_UPLOADED_IDS = 'uploads/CLEAR_UPLOADED_IDS'
 
-const idFromFile = (file) => [file.name, file.lastModified].join('-=-')
+const idFromFile = (file) => {
+  return [file.name, file.lastModified, file.size].join('|')
+}
 
 // Actions
 
@@ -29,8 +35,8 @@ export function success (file, response) {
   return { type: SUCCESS, file, response }
 }
 
-export function remove (file) {
-  return { type: REMOVE, file }
+export function finishedUpload (file, uploadedFileId) {
+  return { type: FINISHED_UPLOAD, file, uploadedFileId }
 }
 
 export function error (file, error) {
@@ -39,6 +45,14 @@ export function error (file, error) {
 
 export function progress (file, percentage) {
   return { type: PROGRESS, file, percentage }
+}
+
+export function setUploadTags (tags) {
+  return { type: SET_UPLOAD_TAGS, tags }
+}
+
+export function clearUploadedIds (ids) {
+  return { type: CLEAR_UPLOADED_IDS, ids }
 }
 
 // Sagas
@@ -54,10 +68,10 @@ function * uploadsErrorSaga (): Generator<*, *, *> {
 function * uploadedFilePerform (action) {
   const id = idFromFile(action.file)
   const upload = yield select(uploadSelector(id))
-  yield put(remove(action.file))
+  yield put(finishedUpload(action.file, action.response.id))
   yield put(uploadedFile({
     ...action.response,
-    thumb: upload.thumb,
+    thumb: upload.thumb || action.response.thumb,
   }))
 }
 
@@ -65,19 +79,31 @@ function * uploadedFileSaga (): Generator<*, *, *> {
   yield takeLatest(SUCCESS, uploadedFilePerform)
 }
 
+function * setUploadTagsPerform (action) {
+  const { uploadedIds, uploadTags } = yield select(uploadsSelector)
+  if (uploadedIds.length) {
+    const fileType = yield select(fileTypeSelector)
+    const url = fileType === 'Folio::Document' ? '/console/documents/tag' : '/console/images/tag'
+    const response = yield call(apiPost, url, { file_ids: uploadedIds, tags: uploadTags })
+    yield put(updatedFiles(response))
+    yield put(clearUploadedIds(uploadedIds))
+  }
+}
+
+function * setUploadTagsSaga (): Generator<*, *, *> {
+  yield takeEvery(SET_UPLOAD_TAGS, setUploadTagsPerform)
+}
+
 export const uploadsSagas = [
   uploadsErrorSaga,
   uploadedFileSaga,
+  setUploadTagsSaga,
 ]
 
 // Selectors
 
 export const uploadsSelector = (state) => {
-  const base = state.uploads
-  return {
-    ...base,
-    records: Object.values(base.records),
-  }
+  return state.uploads
 }
 
 export const uploadSelector = (id) => (state) => {
@@ -85,15 +111,16 @@ export const uploadSelector = (id) => (state) => {
   return base.records[id]
 }
 
-export const uploadTypeSelector = (state) => {
-  const base = state.uploads
-  return base.type
-}
-
 // State
+
+const date = new Date()
+const defaultTag = `${date.getFullYear()}/${date.getMonth() + 1}`
 
 const initialState = {
   records: {},
+  showTagger: false,
+  uploadTags: [defaultTag],
+  uploadedIds: [],
 }
 
 // Reducer
@@ -105,6 +132,8 @@ function uploadsReducer (state = initialState, action) {
     case ADDED_FILE:
       return {
         ...state,
+        didUpload: true,
+        showTagger: true,
         records: {
           ...state.records,
           [id]: {
@@ -113,14 +142,16 @@ function uploadsReducer (state = initialState, action) {
             file_size: action.file.size,
             file_name: action.file.name,
             extension: action.file.type.split('/').pop().toUpperCase(),
-            tags: [],
+            tags: state.uploadTags,
             thumb: null,
             progress: 0,
           },
         }
       }
 
-    case THUMBNAIL:
+    case THUMBNAIL: {
+      if (!state.records[id]) return state
+
       return {
         ...state,
         records: {
@@ -131,6 +162,7 @@ function uploadsReducer (state = initialState, action) {
           },
         }
       }
+    }
 
     case PROGRESS:
       return {
@@ -144,13 +176,31 @@ function uploadsReducer (state = initialState, action) {
         }
       }
 
-    case REMOVE:
-    case ERROR: {
+    case FINISHED_UPLOAD:
+      return {
+        ...state,
+        records: omit(state.records, [id]),
+        uploadedIds: [...state.uploadedIds, action.uploadedFileId]
+      }
+
+    case ERROR:
       return {
         ...state,
         records: omit(state.records, [id]),
       }
-    }
+
+    case SET_UPLOAD_TAGS:
+      return {
+        ...state,
+        uploadTags: action.tags,
+        showTagger: false,
+      }
+
+    case CLEAR_UPLOADED_IDS:
+      return {
+        ...state,
+        uploadedIds: without(state.uploadedIds, ...action.ids)
+      }
 
     default:
       return state

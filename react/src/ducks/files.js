@@ -1,7 +1,7 @@
 import { apiGet, apiPut } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
-import { filter } from 'lodash'
+import { filter, find } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
 import { filteredFilesSelector } from 'ducks/filters'
@@ -17,6 +17,7 @@ const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
 const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
+const UPDATED_FILES = 'files/UPDATED_FILES'
 
 // Actions
 
@@ -34,6 +35,10 @@ export function uploadedFile (file) {
 
 export function thumbnailGenerated (temporary_url, url) {
   return { type: THUMBNAIL_GENERATED, temporary_url, url }
+}
+
+export function updatedFiles (files) {
+  return { type: UPDATED_FILES, files }
 }
 
 export function updateFile (file, attributes) {
@@ -102,9 +107,24 @@ export const filesSelector = (state) => {
 }
 
 export const filesForListSelector = (state) => {
+  const uploads = uploadsSelector(state)
+  let files
+
+  if (uploads.uploadedIds.length) {
+    files = filteredFilesSelector(state).map((file) => {
+      if (uploads.uploadedIds.indexOf(file.id) === -1) {
+        return file
+      } else {
+        return { ...file, freshlyUploaded: true }
+      }
+    })
+  } else {
+    files = filteredFilesSelector(state)
+  }
+
   return [
-    ...uploadsSelector(state).records,
-    ...filteredFilesSelector(state),
+    ...Object.values(uploads.records),
+    ...files,
   ]
 }
 
@@ -149,18 +169,15 @@ function filesReducer (state = initialState, action) {
       }
 
     case THUMBNAIL_GENERATED: {
-      const mapper = (record) => {
-        if (record.thumb !== action.temporary_url) return { ...record }
-        return {
-          ...record,
-          thumb: action.url,
-        }
-      }
-
       return {
         ...state,
-        records: state.records.map(mapper),
-        selected: state.selected.map(mapper),
+        records: state.records.map((record) => {
+          if (record.thumb !== action.temporary_url) return record
+          return {
+            ...record,
+            thumb: action.url,
+          }
+        }),
       }
     }
 
@@ -175,7 +192,7 @@ function filesReducer (state = initialState, action) {
               updating: true,
             }
           } else {
-            return { ...record }
+            return record
           }
         }),
       }
@@ -187,7 +204,7 @@ function filesReducer (state = initialState, action) {
           if (record.id === action.response.id) {
             return action.response
           } else {
-            return { ...record }
+            return record
           }
         }),
       }
@@ -197,10 +214,19 @@ function filesReducer (state = initialState, action) {
         ...state,
         records: state.records.map((record) => {
           if (record.id === action.file.id) {
-            return { ...record }
+            return record
           } else {
             return { ...action.file }
           }
+        }),
+      }
+
+    case UPDATED_FILES:
+      return {
+        ...state,
+        records: state.records.map((record) => {
+          const found = find(action.files, { id: record.id })
+          return found || record
         }),
       }
 

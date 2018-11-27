@@ -8,6 +8,7 @@ import { displayAsThumbsSelector } from 'ducks/display'
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
+import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
 
@@ -32,6 +33,8 @@ class SingleSelect extends LazyLoadCheckingComponent {
 
         <SingleSelectScroll>
           <Uploader>
+            <UploadTagger />
+
             <FileList
               files={this.props.filesForList}
               fileTypeIsImage={this.props.fileTypeIsImage}

@@ -14,3 +14,4 @@ en:
         selectedImages: Selected images
         fileTitleHint: File title as displayed on the web (fallback to file name).
         placementsLabel: Usage
+        newUploadTags: Tags for new files

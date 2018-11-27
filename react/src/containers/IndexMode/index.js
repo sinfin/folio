@@ -8,6 +8,7 @@ import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
+import UploadTagger from 'containers/UploadTagger'
 import FileList from 'components/FileList'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
@@ -21,6 +22,8 @@ class IndexMode extends LazyLoadCheckingComponent {
         <Card
           filters={<FileFilter />}
         >
+          <UploadTagger />
+
           <FileList
             files={this.props.filesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}

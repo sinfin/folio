@@ -45,5 +45,19 @@ module Folio
       delete console_image_url(image)
       assert_equal(0, Image.count)
     end
+
+    test 'tag' do
+      images = create_list(:folio_image, 2)
+      assert_equal([], images.first.tag_list)
+      assert_equal([], images.second.tag_list)
+
+      post tag_console_images_path, params: {
+        file_ids: images.pluck(:id),
+        tags: ['a', 'b'],
+      }
+
+      assert_equal(['a', 'b'], images.first.reload.tag_list.sort)
+      assert_equal(['a', 'b'], images.second.reload.tag_list.sort)
+    end
   end
 end

@@ -7,7 +7,7 @@ module Folio
 
       included do
         before_action :find_files, only: [:index]
-        before_action :find_file, except: [:index, :create]
+        before_action :find_file, except: [:index, :create, :tag]
 
         respond_to :json, only: [:index, :create]
       end
@@ -46,6 +46,23 @@ module Folio
       def destroy
         @file.destroy
         respond_with @file, location: index_path
+      end
+
+      def tag
+        tag_params = params.permit(file_ids: [],
+                                   tags: [])
+
+        @files = Folio::File.where(id: tag_params[:file_ids])
+
+        Folio::File.transaction do
+          @files.each { |f| f.update!(tag_list: tag_params[:tags]) }
+        end
+
+        json = @files.map do |file|
+          ::Folio::FileSerializer.new(file).serializable_hash
+        end.to_json
+
+        render plain: json
       end
 
       private

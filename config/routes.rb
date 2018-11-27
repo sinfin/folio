@@ -23,8 +23,12 @@ Folio::Engine.routes.draw do
     resources :menus do
       post :tree_sort, on: :member
     end
-    resources :images, except: [:show, :new]
-    resources :documents, except: [:show, :new]
+    resources :images, except: [:show, :new] do
+      collection { post :tag }
+    end
+    resources :documents, except: [:show, :new] do
+      collection { post :tag }
+    end
     resources :leads, only: %i[index show update destroy] do
       collection do
         post :mass_handle

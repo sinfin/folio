@@ -22,7 +22,6 @@ import { DROPZONE_TRIGGER_CLASSNAME } from './constants';
 const date = new Date()
 let month = date.getMonth() + 1
 if (month < 10) month = `0${month}`
-const DATE_TAG = [date.getFullYear(), month].join('/')
 
 const StyledDropzone = styled(DropzoneComponent)`
   .dz-default.dz-message {
@@ -64,7 +63,7 @@ class Uploader extends Component {
       thumbnailHeight: 150,
       params: {
         'file[type]': this.props.fileType,
-        'file[tag_list]': DATE_TAG,
+        'file[tag_list]': this.props.uploads.uploadTags.join(','),
       }
     }
   }

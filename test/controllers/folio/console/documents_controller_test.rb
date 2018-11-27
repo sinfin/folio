@@ -45,5 +45,19 @@ module Folio
       delete console_document_url(document)
       assert_equal(0, Document.count)
     end
+
+    test 'tag' do
+      documents = create_list(:folio_document, 2)
+      assert_equal([], documents.first.tag_list)
+      assert_equal([], documents.second.tag_list)
+
+      post tag_console_documents_path, params: {
+        file_ids: documents.pluck(:id),
+        tags: ['a', 'b'],
+      }
+
+      assert_equal(['a', 'b'], documents.first.reload.tag_list.sort)
+      assert_equal(['a', 'b'], documents.second.reload.tag_list.sort)
+    end
   end
 end

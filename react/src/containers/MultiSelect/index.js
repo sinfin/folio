@@ -17,6 +17,7 @@ import { displayAsThumbsSelector } from 'ducks/display'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
+import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
@@ -56,6 +57,8 @@ class MultiSelect extends LazyLoadCheckingComponent {
           header={window.FolioConsole.translations[`available${headerKey}`]}
           filters={<FileFilter />}
         >
+          <UploadTagger />
+
           <FileList
             files={this.props.unselectedFilesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}
