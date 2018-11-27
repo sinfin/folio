@@ -17,6 +17,8 @@ class Tags extends React.Component {
         {this.props.file.tags.map((tag) => (
           <span key={tag} className='badge badge-secondary'>{tag}</span>
         ))}
+
+        <span className='badge badge-success'>+</span>
       </TagsWrap>
     )
   }
