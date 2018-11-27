@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { fileTypeIsImageSelector } from 'ducks/app'
@@ -22,14 +22,23 @@ class SingleSelect extends LazyLoadCheckingComponent {
     }
   }
 
+  renderFixed () {
+    return (
+      <Fragment>
+        <FileFilter />
+        <UploadTagger />
+      </Fragment>
+    )
+  }
+
   render () {
     if (this.props.filesLoading) return <Loader />
 
     return (
-      <ModalScroll fixed={<FileFilter />}>
+      <ModalScroll
+        fixed={this.renderFixed()}
+      >
         <Uploader>
-          <UploadTagger />
-
           <FileList
             files={this.props.filesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}

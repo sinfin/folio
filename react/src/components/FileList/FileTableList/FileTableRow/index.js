@@ -14,12 +14,12 @@ const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick 
   }
 
   return (
-    <tr
+    <div
       className={className}
       onClick={onClick ? () => onClick(file) : undefined}
     >
       {fileTypeIsImage && (
-        <td className='folio-console-file-table__td folio-console-file-table__td--image'>
+        <div className='folio-console-file-table__td folio-console-file-table__td--image'>
           <FileUploadProgress progress={file.progress} />
 
           <div className='folio-console-file-table__img-wrap'>
@@ -37,10 +37,10 @@ const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick 
               </a>
             )}
           </div>
-        </td>
+        </div>
       )}
 
-      <td className='folio-console-file-table__td folio-console-file-table__td--main'>
+      <div className='folio-console-file-table__td folio-console-file-table__td--main'>
         {fileTypeIsImage ? null : <FileUploadProgress progress={file.progress} />}
 
         {link ? (
@@ -51,13 +51,13 @@ const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick 
             {file.file_name}
           </a>
         ) : file.file_name}
-      </td>
-      <td className='folio-console-file-table__td'>
+      </div>
+      <div className='folio-console-file-table__td folio-console-file-table__td--tags'>
         <Tags file={file} />
-      </td>
-      <td className='folio-console-file-table__td'>{numberToHumanSize(file.file_size)}</td>
-      <td className='folio-console-file-table__td'>{file.extension}</td>
-    </tr>
+      </div>
+      <div className='folio-console-file-table__td folio-console-file-table__td--size'>{numberToHumanSize(file.file_size)}</div>
+      <div className='folio-console-file-table__td folio-console-file-table__td--extension'>{file.extension}</div>
+    </div>
   )
 }
 
