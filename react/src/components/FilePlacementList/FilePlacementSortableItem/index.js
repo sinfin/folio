@@ -60,8 +60,15 @@ class FilePlacement extends React.Component {
       fileTypeIsImage,
     } = this.props
 
+    let className
+    if (fileTypeIsImage) {
+      className = 'folio-console-file-placement folio-console-file-placement--image'
+    } else {
+      className = 'folio-console-file-placement folio-console-file-placement--document'
+    }
+
     return (
-      <div className='folio-console-file-placement'>
+      <div className={className}>
         {fileTypeIsImage && (
           <a
             className='folio-console-file-placement__img-wrap'
@@ -74,27 +81,29 @@ class FilePlacement extends React.Component {
           </a>
         )}
 
-        <div className='folio-console-file-placement__title'>
-          <FormGroup
-            placeholder={filePlacement.file.file_name}
-            value={this.state.title}
-            onChange={this.onTitleChange}
-            name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
-            hint={window.FolioConsole.translations.fileTitleHint}
-          />
-        </div>
-
-        {fileTypeIsImage && (
-          <div className='folio-console-file-placement__alt'>
+        <div className='folio-console-file-placement__inputs'>
+          <div className='folio-console-file-placement__title'>
             <FormGroup
-              placeholder='alt'
-              value={this.state.alt}
-              onChange={this.onAltChange}
-              name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
-              hint={window.FolioConsole.translations.altHint}
+              placeholder={filePlacement.file.file_name}
+              value={this.state.title}
+              onChange={this.onTitleChange}
+              name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
+              hint={window.FolioConsole.translations.fileTitleHint}
             />
           </div>
-        )}
+
+          {fileTypeIsImage && (
+            <div className='folio-console-file-placement__alt'>
+              <FormGroup
+                placeholder='alt'
+                value={this.state.alt}
+                onChange={this.onAltChange}
+                name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
+                hint={window.FolioConsole.translations.altHint}
+              />
+            </div>
+          )}
+        </div>
 
         <NestedModelControls
           remove={this.unselect}

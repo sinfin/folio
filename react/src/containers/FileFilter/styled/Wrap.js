@@ -28,7 +28,7 @@ const Wrap = styled.div`
   .form-group--reset {
     margin-left: auto;
 
-    + .btn-group {
+    + .folio-console-react-display-controls {
       margin-left: 0;
     }
   }
@@ -38,6 +38,13 @@ const Wrap = styled.div`
     align-items: stretch;
 
     .form-group--reset {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .folio-console-react-display-controls,
+    .form-group--reset + .folio-console-react-display-controls {
+      margin-left: auto;
       margin-right: auto;
     }
   }

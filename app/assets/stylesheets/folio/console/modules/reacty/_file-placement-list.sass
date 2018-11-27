@@ -82,3 +82,59 @@ body > .folio-console-file-placement
   .folio-console-file-placement__handle,
   .folio-console-nested-model-controls
     opacity: 1
+
+.folio-console-file-placement__inputs
+  flex: 1 1 auto
+  display: flex
+
++mq-md-only
+  .folio-console-file-placement__alt
+    max-width: 150px
+
+  .folio-console-file-placement .folio-console-file-placement__alt .form-group .form-text
+    left: 50%
+    width: auto
+    white-space: nowrap
+    transform: translate(-50%, 0)
+    padding: 0
+
+  .folio-console-file-placement .folio-console-file-placement__title .form-group .form-text
+    width: auto
+    white-space: nowrap
+    padding-right: 0
+
++mq-sm
+  .folio-console-file-placement
+    border: 1px solid $border-color
+
+  .folio-console-file-placement--image
+    flex-wrap: wrap
+
+    & + &
+      border-top: 1px solid $success
+
+    .folio-console-file-placement__img-wrap
+      order: 1
+
+    .folio-console-nested-model-controls
+      order: 2
+
+    .folio-console-file-placement__handle
+      order: 3
+
+    .folio-console-file-placement__inputs
+      order: 4
+      margin-top: $grid-gutter-half / 2
+      display: block
+      padding-right: $grid-gutter-half
+
+      .form-group
+        margin-right: 0
+
+    .folio-console-file-placement__alt
+      .form-control
+        text-align: left
+
++mq-xs
+  .folio-console-file-placement--document .folio-console-nested-model-controls .btn-group
+    display: none
