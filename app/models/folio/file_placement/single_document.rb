@@ -2,7 +2,7 @@
 
 module Folio
   class FilePlacement::SingleDocument < FilePlacement::Base
-    folio_image_placement :document_placement
+    folio_document_placement :document_placement
   end
 end
 
