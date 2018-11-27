@@ -5,29 +5,22 @@ require 'test_helper'
 module Folio
   class HasAttachmentsTest < ActiveSupport::TestCase
     test 'has_one_document_placement' do
-      class MyPlacement < FilePlacement::Base
-        belongs_to :file, class_name: 'Folio::Document'
-        belongs_to :placement,
-                   polymorphic: true,
-                   inverse_of: :my_placement,
-                   required: true,
-                   touch: true
+      class MyFilePlacement < FilePlacement::Base
+        folio_document_placement :my_file_placement
       end
 
       class MyNode < Node
-        include HasAttachments
         has_one_placement :my_file,
-                          :my_placement,
-                          placement: 'MyPlacement'
+                          placement: 'Folio::HasAttachmentsTest::MyFilePlacement'
       end
 
-      assert_equal(0, MyPlacement.count)
+      assert_equal(0, MyFilePlacement.count)
       document = create(:folio_document)
 
       my_node = MyNode.create!(title: 'MyNode',
-                               my_placement_attributes: { file: document })
+                               my_file_placement_attributes: { file: document })
 
-      assert_equal(1, MyPlacement.count)
+      assert_equal(1, MyFilePlacement.count)
       assert_equal(document, my_node.my_file)
     end
   end

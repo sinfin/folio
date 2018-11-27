@@ -15,24 +15,26 @@ module Folio
                through: :file_placements
 
       has_many_placements(:images,
-                          :image_placements,
+                          placements_key: :image_placements,
                           placement: 'Folio::FilePlacement::Image')
 
       has_many_placements(:documents,
-                          :document_placements,
+                          placements_key: :document_placements,
                           placement: 'Folio::FilePlacement::Document')
 
       has_one_placement(:cover,
-                        :cover_placement,
+                        placement_key: :cover_placement,
                         placement: 'Folio::FilePlacement::Cover')
 
       has_one_placement(:document,
-                        :document_placement,
+                        placement_key: :document_placement,
                         placement: 'Folio::FilePlacement::SingleDocument')
     end
 
     class_methods do
-      def has_many_placements(targets, placements_key, placement:)
+      def has_many_placements(targets, placement:, placements_key: nil)
+        placements_key ||= "#{targets.singularize}_placements".to_sym
+
         has_many placements_key,
                  class_name: placement,
                  as: :placement,
@@ -47,7 +49,9 @@ module Folio
         accepts_nested_attributes_for placements_key, allow_destroy: true
       end
 
-      def has_one_placement(target, placement_key, placement:)
+      def has_one_placement(target, placement:, placement_key: nil)
+        placement_key ||= "#{target}_placement".to_sym
+
         has_one placement_key,
                 class_name: placement,
                 as: :placement,
