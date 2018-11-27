@@ -6,7 +6,7 @@ import ReactModal from 'react-modal'
 import { updateFile } from 'ducks/files';
 
 import {
-  cancelModal,
+  closeModal,
   changeModalTags,
   modalSelector,
 } from 'ducks/modal';
@@ -20,8 +20,8 @@ export const ModalContext = React.createContext(() => {})
 ReactModal.setAppElement('body')
 
 class Modal extends Component {
-  cancelModal = () => {
-    this.props.dispatch(cancelModal())
+  closeModal = () => {
+    this.props.dispatch(closeModal())
   }
 
   onTagsChange = (tags) => {
@@ -32,14 +32,14 @@ class Modal extends Component {
     const { modal } = this.props
 
     const attributes = {
-      tags: modal.newTags,
+      tags: modal.newTags || [],
     }
     this.props.dispatch(updateFile(modal.file, attributes))
-    this.props.dispatch(cancelModal())
+    this.props.dispatch(closeModal())
   }
 
-  cancelModal = () => {
-    this.props.dispatch(cancelModal())
+  closeModal = () => {
+    this.props.dispatch(closeModal())
   }
 
   render() {
@@ -48,7 +48,7 @@ class Modal extends Component {
     return (
       <ReactModal
         isOpen={modal.file !== null}
-        onRequestClose={this.cancelModal}
+        onRequestClose={this.closeModal}
         className='ReactModal'
       >
         {modal.file && (
@@ -56,7 +56,7 @@ class Modal extends Component {
             modal={modal}
             onTagsChange={this.onTagsChange}
             saveModal={this.saveModal}
-            cancelModal={this.cancelModal}
+            closeModal={this.closeModal}
             tags={tags}
           />
         )}

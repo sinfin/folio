@@ -2,11 +2,11 @@ import React from 'react'
 
 import TagsInput from 'components/TagsInput'
 
-export default ({ modal, onTagsChange, cancelModal, saveModal, tags }) => (
+export default ({ modal, onTagsChange, closeModal, saveModal, tags }) => (
   <div className='modal-content'>
     <div className='modal-header'>
       <strong className='modal-title'>{modal.file.file_name}</strong>
-      <button type='button' className='close' onClick={cancelModal}>×</button>
+      <button type='button' className='close' onClick={closeModal}>×</button>
     </div>
 
     <div className='modal-body'>
@@ -29,7 +29,7 @@ export default ({ modal, onTagsChange, cancelModal, saveModal, tags }) => (
     </div>
 
     <div className='modal-footer'>
-      <button type='button' className='btn btn-secondary' onClick={cancelModal}>
+      <button type='button' className='btn btn-secondary' onClick={closeModal}>
         {window.FolioConsole.translations.cancel}
       </button>
 

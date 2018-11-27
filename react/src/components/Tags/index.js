@@ -18,7 +18,9 @@ class Tags extends React.Component {
           <span key={tag} className='badge badge-secondary'>{tag}</span>
         ))}
 
-        <span className='badge badge-success'>+</span>
+        {this.props.file.tags.length === 0 && (
+          <span className='badge badge-success'>+</span>
+        )}
       </TagsWrap>
     )
   }

@@ -1,8 +1,7 @@
 // Constants
 
 const OPEN_MODAL = 'app/OPEN_MODAL'
-const SAVE_MODAL = 'app/SAVE_MODAL'
-const CANCEL_MODAL = 'app/CANCEL_MODAL'
+const CLOSE_MODAL = 'app/CLOSE_MODAL'
 const CHANGE_MODAL_TAGS = 'app/CHANGE_MODAL_TAGS'
 
 // Actions
@@ -11,12 +10,8 @@ export function openModal (file) {
   return { type: OPEN_MODAL, file }
 }
 
-export function saveModal (file) {
-  return { type: SAVE_MODAL, file }
-}
-
-export function cancelModal () {
-  return { type: CANCEL_MODAL }
+export function closeModal () {
+  return { type: CLOSE_MODAL }
 }
 
 export function changeModalTags (tags) {
@@ -44,7 +39,7 @@ function modalReducer (state = initialState, action) {
         file: action.file,
       }
 
-    case CANCEL_MODAL:
+    case CLOSE_MODAL:
       return initialState
 
     case CHANGE_MODAL_TAGS:
