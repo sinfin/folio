@@ -1,4 +1,7 @@
-tr data-depth=node.depth data-parent=(node.parent ? node.parent.id : :root)
+tr[
+  data-depth=(tree ? node.depth : nil)
+  data-parent=(node.parent ? node.parent.id : :root)
+]
   td
     - if tree
       = fa_icon node.console_caret_icon, \
