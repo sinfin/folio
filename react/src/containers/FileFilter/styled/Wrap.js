@@ -3,20 +3,22 @@ import styled from 'styled-components'
 const Wrap = styled.div`
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: -7.5px -15px;
 
   .redactor-modal-tab & {
     padding-bottom: 30px;
   }
 
   .form-group {
-    margin-right: 15px;
+    margin: 7.5px;
   }
 
   .form-group--react-select {
-    flex: 0 0 250px;
-
-    > div {
-      width: 250px;
+    &, > div {
+      min-width: 250px;
     }
   }
 
@@ -26,6 +28,11 @@ const Wrap = styled.div`
     + .btn-group {
       margin-left: 0;
     }
+  }
+
+  @media screen and (max-width: 576px) {
+    flex-direction: column;
+    align-items: stretch;
   }
 `
 

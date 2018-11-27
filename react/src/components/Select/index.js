@@ -14,7 +14,7 @@ class Select extends React.Component {
     if (this.props.isMulti) {
       return this.props.onChange(value.map((item) => item.value))
     } else {
-      return this.props.onChange(value.value)
+      return this.props.onChange(value ? value.value : null)
     }
   }
 
@@ -23,7 +23,7 @@ class Select extends React.Component {
     let SelectComponent = CreatableSelect
     if (!createable) SelectComponent = ReactSelect
 
-    let formattedValue
+    let formattedValue = null
     if (value) {
       formattedValue = this.props.isMulti ? formatOptions(value) : formatOption(value)
     }

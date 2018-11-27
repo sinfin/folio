@@ -74,11 +74,21 @@ export const tagsSelector = (state) => {
   return tags
 }
 
+export const placementsSelector = (state) => {
+  const files = filesSelector(state)
+  let placements = []
+  files.forEach((file) => file.placements.forEach((placement) => {
+    if (placements.indexOf(placement) === -1) placements.push(placement)
+  }))
+  return placements
+}
+
 // State
 
 const initialState = {
   name: '',
   tags: [],
+  placement: null,
 }
 
 // Reducer

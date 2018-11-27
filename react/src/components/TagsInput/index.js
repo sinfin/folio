@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Select from 'components/Select';
+import Select from 'components/Select'
 
 class TagsInput extends React.Component {
   constructor (props) {
@@ -9,7 +9,6 @@ class TagsInput extends React.Component {
   }
 
   onChange = (tags) => {
-    console.log(tags)
     this.props.onTagsChange(tags)
   }
 

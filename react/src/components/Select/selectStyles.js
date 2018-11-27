@@ -18,6 +18,14 @@ export default {
     ...base,
     padding: '6px',
   }),
+  clearIndicator: (base) => ({
+    ...base,
+    padding: '6px',
+  }),
+  placeholder: (base) => ({
+    ...base,
+    color: '#bfc4c4',
+  }),
   option: (base, state) => ({
     ...base,
     backgroundColor: state.isFocused ? '#c7e4f4' : base.backgroundColor,

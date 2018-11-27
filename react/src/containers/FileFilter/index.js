@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import {
   filtersSelector,
   tagsSelector,
+  placementsSelector,
   setFilter,
   resetFilters,
 } from 'ducks/filters'
@@ -16,10 +17,11 @@ import {
 
 import { fileTypeIsImageSelector } from 'ducks/app'
 
-import TagsInput from 'components/TagsInput';
+import TagsInput from 'components/TagsInput'
+import Select from 'components/Select'
 
-import Wrap from './styled/Wrap';
-import DisplayButtons from './DisplayButtons';
+import Wrap from './styled/Wrap'
+import DisplayButtons from './DisplayButtons'
 
 class FileFilter extends Component {
   onNameChange = (e) => {
@@ -30,6 +32,10 @@ class FileFilter extends Component {
 
   onTagsChange = (tags) => {
     this.props.dispatch(setFilter('tags', tags))
+  }
+
+  onPlacementChange = (placement) => {
+    this.props.dispatch(setFilter('placement', placement))
   }
 
   onReset = () => {
@@ -54,7 +60,7 @@ class FileFilter extends Component {
     const { filters, margined, display, fileTypeIsImage } = this.props
 
     return (
-      <Wrap className='form-inline' margined={margined}>
+      <Wrap margined={margined}>
         <div className='form-group'>
           <input
             className='form-control'
@@ -74,7 +80,15 @@ class FileFilter extends Component {
           />
         </div>
 
-        <div className='form-group'>
+        <div className='form-group form-group--react-select'>
+          <Select
+            options={this.props.placements}
+            value={filters.placement}
+            onChange={this.onPlacementChange}
+            defaultValue={null}
+            placeholder={window.FolioConsole.translations.placementsLabel}
+            isClearable
+          />
         </div>
 
         {filters.active && (
@@ -104,6 +118,7 @@ class FileFilter extends Component {
 const mapStateToProps = (state) => ({
   filters: filtersSelector(state),
   tags: tagsSelector(state),
+  placements: placementsSelector(state),
   display: displaySelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
 })
