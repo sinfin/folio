@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## 2018-11-19
+### Added
+- Added `app/assets/stylesheets/folio/console/_additional_console_styles.sass`.
+
+## 2018-11-19
 ### Changed
 - Changed `Lead` - `skip_email_validation?` to public
 
