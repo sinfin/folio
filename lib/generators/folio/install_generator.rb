@@ -118,7 +118,7 @@ module Folio
           'app/assets/stylesheets/_sprites.scss',
           'app/assets/stylesheets/_variables.sass',
           'app/assets/stylesheets/application.sass',
-          'app/assets/stylesheets/folio/console/_additional_console_styles.sass',
+          'app/assets/stylesheets/folio/console/_main_app.sass',
           'app/assets/stylesheets/modules/.keep',
           'app/assets/stylesheets/modules/_turbolinks.sass',
           'app/assets/stylesheets/modules/_bootstrap-overrides.sass',
