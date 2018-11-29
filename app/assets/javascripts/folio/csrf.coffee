@@ -21,6 +21,10 @@ window.folioFreshCsrfToken =
     return if @value
     @getToken()
 
+$(document).on 'turbolinks:load', ->
+  return unless window.folioFreshCsrfToken.value
+  $('meta[name="csrf-token"]').prop('content', window.folioFreshCsrfToken.value)
+
 $ ->
   $(document).one 'focus touchstart', 'form', ->
     window.folioFreshCsrfToken.preloadToken()
