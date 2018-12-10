@@ -27,6 +27,7 @@ module Folio
                                      :email,
                                      :address,
                                      *@site.class.additional_params,
+                                     *file_placements_strong_params,
                                      locales: [],
                                      social_links: Site.social_link_sites)
       end
