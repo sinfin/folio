@@ -6,20 +6,19 @@ module Folio
       extend ActiveSupport::Concern
 
       included do
-        before_action :find_files, only: [:index]
         before_action :find_file, except: [:index, :create, :tag]
 
         respond_to :json, only: [:index, :create]
       end
 
       def index
-        respond_with(@files) do |format|
+        respond_to do |format|
           format.html
           format.json do
             cache_key = [self.class.to_s, ::Folio::File.maximum(:updated_at)]
 
             files_json = Rails.cache.fetch(cache_key, expires_in: 1.day) do
-              @files.map do |file|
+              find_files.map do |file|
                 ::Folio::FileSerializer.new(file).serializable_hash
               end.to_json
             end

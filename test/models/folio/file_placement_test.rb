@@ -16,6 +16,7 @@ module Folio
 
       # works
       assert_equal('foo', node.cover_placement.placement_title)
+      assert_equal('Folio::Node', node.cover_placement.placement_title_type)
 
       # updates through touch
       node.update!(title: 'bar')
@@ -24,6 +25,9 @@ module Folio
       # works for atoms
       atom = create_atom(MyAtom, :cover, placement: node)
       assert_equal('bar', atom.cover_placement.placement_title)
+      assert_equal('Folio::Node',
+                   atom.cover_placement.placement_title_type,
+                   "Uses atom's placement type")
     end
   end
 end

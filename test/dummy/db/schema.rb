@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.text "title"
     t.string "alt"
     t.string "placement_title"
+    t.string "placement_title_type"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"

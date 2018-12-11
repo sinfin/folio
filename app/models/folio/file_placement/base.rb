@@ -11,8 +11,8 @@ module Folio
     validates :type,
               presence: true
 
-    after_save :extract_placement_title
-    after_touch :extract_placement_title
+    after_save :extract_placement_title_and_type
+    after_touch :extract_placement_title_and_type
 
     def to_label
       title.presence || file.file_name
@@ -41,7 +41,7 @@ module Folio
 
     private
 
-      def extract_placement_title
+      def extract_placement_title_and_type
         if placement.present?
           if placement.class < Atom::Base
             source = placement.placement
@@ -53,7 +53,10 @@ module Folio
                   source.try(:title) ||
                   source.try(:name)
 
-          update_column(:placement_title, title) if title.present?
+          if title.present?
+            update_column(:placement_title, title)
+            update_column(:placement_title_type, source.class.to_s)
+          end
         end
       end
   end
@@ -63,17 +66,18 @@ end
 #
 # Table name: folio_file_placements
 #
-#  id              :bigint(8)        not null, primary key
-#  placement_type  :string
-#  placement_id    :bigint(8)
-#  file_id         :bigint(8)
-#  position        :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  type            :string
-#  title           :text
-#  alt             :string
-#  placement_title :string
+#  id                   :bigint(8)        not null, primary key
+#  placement_type       :string
+#  placement_id         :bigint(8)
+#  file_id              :bigint(8)
+#  position             :integer
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  type                 :string
+#  title                :text
+#  alt                  :string
+#  placement_title      :string
+#  placement_title_type :string
 #
 # Indexes
 #

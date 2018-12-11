@@ -56,7 +56,7 @@ module Folio
       titles = []
 
       object.file_placements.each do |fp|
-        type = fp.placement_type
+        type = fp.placement_title_type.presence || fp.placement_type
         title = fp.placement_title
         next if type.blank? || title.blank?
 
