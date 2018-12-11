@@ -4,14 +4,26 @@ require 'test_helper'
 
 module Folio
   class FilePlacementTest < ActiveSupport::TestCase
-    test "the truth" do
+    class MyAtom < ::Folio::Atom::Base
+      STRUCTURE = {
+        cover: true,
+      }
+    end
+
+    test 'placement_title' do
       node = create(:folio_node, title: 'foo')
       node.cover = create(:folio_image)
 
+      # works
       assert_equal('foo', node.cover_placement.placement_title)
 
+      # updates through touch
       node.update!(title: 'bar')
       assert_equal('bar', node.cover_placement.reload.placement_title)
+
+      # works for atoms
+      atom = create_atom(MyAtom, :cover, placement: node)
+      assert_equal('bar', atom.cover_placement.placement_title)
     end
   end
 end

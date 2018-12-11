@@ -43,9 +43,15 @@ module Folio
 
       def extract_placement_title
         if placement.present?
-          title = placement.try(:to_label) ||
-                  placement.try(:title) ||
-                  placement.try(:name)
+          if placement.class < Atom::Base
+            source = placement.placement
+          else
+            source = placement
+          end
+
+          title = source.try(:to_label) ||
+                  source.try(:title) ||
+                  source.try(:name)
 
           update_column(:placement_title, title) if title.present?
         end
