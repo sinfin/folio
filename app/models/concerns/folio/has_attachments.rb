@@ -33,7 +33,7 @@ module Folio
 
     class_methods do
       def has_many_placements(targets, placement:, placements_key: nil)
-        placements_key ||= "#{targets.singularize}_placements".to_sym
+        placements_key ||= "#{targets.to_s.singularize}_placements".to_sym
 
         has_many placements_key,
                  class_name: placement,
