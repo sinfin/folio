@@ -72,7 +72,7 @@ module Folio
     end
 
     def extension
-      Mime::Type.lookup(object.file.mime_type).symbol.to_s.upcase
+      Mime::Type.lookup(object.mime_type).symbol.to_s.upcase
     end
 
     def file_name
