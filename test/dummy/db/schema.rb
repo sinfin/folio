@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_13_115843) do
+ActiveRecord::Schema.define(version: 2018_12_11_084231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,7 @@ ActiveRecord::Schema.define(version: 2018_11_13_115843) do
     t.string "type"
     t.text "title"
     t.string "alt"
+    t.string "placement_title"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"

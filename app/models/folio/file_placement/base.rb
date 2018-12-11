@@ -11,6 +11,9 @@ module Folio
     validates :type,
               presence: true
 
+    after_save :extract_placement_title
+    after_touch :extract_placement_title
+
     def to_label
       title.presence || file.file_name
     end
@@ -35,6 +38,18 @@ module Folio
     def self.folio_document_placement(name = nil)
       folio_file_placement('Folio::Document', name)
     end
+
+    private
+
+      def extract_placement_title
+        if placement.present?
+          title = placement.try(:to_label) ||
+                  placement.try(:title) ||
+                  placement.try(:name)
+
+          update_column(:placement_title, title) if title.present?
+        end
+      end
   end
 end
 
@@ -42,16 +57,17 @@ end
 #
 # Table name: folio_file_placements
 #
-#  id             :bigint(8)        not null, primary key
-#  placement_type :string
-#  placement_id   :bigint(8)
-#  file_id        :bigint(8)
-#  position       :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  type           :string
-#  title          :text
-#  alt            :string
+#  id              :bigint(8)        not null, primary key
+#  placement_type  :string
+#  placement_id    :bigint(8)
+#  file_id         :bigint(8)
+#  position        :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  type            :string
+#  title           :text
+#  alt             :string
+#  placement_title :string
 #
 # Indexes
 #

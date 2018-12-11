@@ -56,13 +56,14 @@ module Folio
       titles = []
 
       object.file_placements.each do |fp|
-        title = fp.placement.try(:to_label) ||
-                fp.placement.try(:title) ||
-                fp.placement.try(:name)
-        next if title.blank?
+        type = fp.placement_type
+        title = fp.placement_title
+        next if type.blank? || title.blank?
 
-        model_name = fp.placement.class.model_name.human
-        joined = [model_name, title].join(' - ')
+        klass = type.safe_constantize
+        next if klass.blank?
+
+        joined = [klass.model_name.human, title].join(' - ')
 
         titles << joined unless titles.include?(joined)
       end

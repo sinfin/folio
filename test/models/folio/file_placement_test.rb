@@ -4,9 +4,15 @@ require 'test_helper'
 
 module Folio
   class FilePlacementTest < ActiveSupport::TestCase
-    # test "the truth" do
-    #   assert true
-    # end
+    test "the truth" do
+      node = create(:folio_node, title: 'foo')
+      node.cover = create(:folio_image)
+
+      assert_equal('foo', node.cover_placement.placement_title)
+
+      node.update!(title: 'bar')
+      assert_equal('bar', node.cover_placement.reload.placement_title)
+    end
   end
 end
 
