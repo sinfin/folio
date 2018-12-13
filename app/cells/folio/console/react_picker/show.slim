@@ -14,9 +14,10 @@
     = render_fields
 
   .folio-console-react-picker__button
-    button.btn.btn-success[
+    button.btn[
       type="button"
       class="folio-console-add-#{file_type_slug}"
+      class=(single? ? 'btn-success' : 'btn-secondary')
     ]
       - if single?
         = t('.add')
