@@ -6,7 +6,8 @@ class Folio::Console::ReactPickerCell < FolioCell
   end
 
   def file_type_slug
-    options[:file_type].demodulize.downcase
+    base = options[:file_type].demodulize.downcase
+    single? ? base : base.pluralize
   end
 
   def placement_key

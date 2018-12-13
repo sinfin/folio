@@ -26,12 +26,14 @@ module Folio
                                                 file_type: file_type)
     end
 
-    def react_modal_for(file_type)
+    def react_modal_for(file_type, single: true)
       if ['new', 'edit', 'create', 'update'].include?(action_name)
+        mode = single ? 'modal-single-select' : 'modal-multi-select'
+
         content_tag(:div, nil,
           'class': 'folio-react-wrap',
           'data-file-type': file_type,
-          'data-mode': 'modal-select',
+          'data-mode': mode,
         )
       end
     end

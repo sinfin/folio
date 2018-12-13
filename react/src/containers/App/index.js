@@ -45,7 +45,7 @@ class App extends Component {
   }
 
   shouldAutoLoadFiles () {
-    return this.props.app.mode !== 'modal-select'
+    return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'modal-multi-select'
   }
 
   renderMode () {
@@ -63,8 +63,12 @@ class App extends Component {
       return <IndexMode />
     }
 
-    if (mode === 'modal-select') {
-      return <ModalSelect fileType={fileType} loadFiles={this.loadFiles} />
+    if (mode === 'modal-single-select') {
+      return <ModalSelect fileType={fileType} loadFiles={this.loadFiles} multi={false} />
+    }
+
+    if (mode === 'modal-multi-select') {
+      return <ModalSelect fileType={fileType} loadFiles={this.loadFiles} multi={true} />
     }
 
     return (

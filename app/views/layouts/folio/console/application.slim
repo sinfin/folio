@@ -20,13 +20,17 @@ html.bg-dark lang=I18n.locale
     == cell('folio/console/footer', @site)
 
     - %w[Folio::Image Folio::Document].each do |klass|
-      .modal.folio-console-react-modal.fade data-klass=klass
-        .modal-dialog.modal-lg
-          .modal-content
-            .modal-body
-              = react_modal_for klass
+      - [true, false].each do |single|
+        .modal.folio-console-react-modal.fade[
+          data-klass=klass
+          data-multi=(single ? 'false' : 'true')
+        ]
+          .modal-dialog.modal-lg
+            .modal-content
+              .modal-body
+                = react_modal_for(klass, single: single)
 
-            button type="button" class="close" data-dismiss="modal" &times;
+              button type="button" class="close" data-dismiss="modal" &times;
 
     = javascript_include_tag 'folio/console/base'
 

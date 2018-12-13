@@ -12,7 +12,12 @@ class ModalSelect extends Component {
     const $ = window.jQuery
     if (!$) return
 
-    const selector = this.selectingDocument() ? '.folio-console-add-document' : '.folio-console-add-image'
+    let selector
+    if (this.selectingDocument()) {
+      selector = this.props.multi ? '.folio-console-add-documents' : '.folio-console-add-document'
+    } else {
+      selector = this.props.multi ? '.folio-console-add-images' : '.folio-console-add-image'
+    }
 
     $(document).on('click', selector, (e) => {
       this.setState({ el: e.target })
@@ -27,7 +32,9 @@ class ModalSelect extends Component {
 
   jQueryModal () {
     const $ = window.jQuery
-    return $('.folio-console-react-modal').filter(`[data-klass="${this.props.fileType}"]`)
+    return $('.folio-console-react-modal')
+      .filter(`[data-klass="${this.props.fileType}"]`)
+      .filter(`[data-multi="${String(this.props.multi)}"]`)
   }
 
   fileTemplate (file, prefix) {
