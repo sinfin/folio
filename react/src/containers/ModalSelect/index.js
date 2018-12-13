@@ -32,6 +32,18 @@ class ModalSelect extends Component {
     throw new Error('Not implemented')
   }
 
+  inputName ($el) {
+    const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]')
+    let name
+    if ($nestedInput.length) {
+      name = $nestedInput.attr('name').match(/\w+\[\w+\]\[\w+\]/)
+    } else {
+      const $genericInput = $el.closest('form').find('.form-control[name*="["]').first()
+      name = $genericInput.attr('name').split('[')[0]
+    }
+    return name
+  }
+
   render () {
     return null
   }

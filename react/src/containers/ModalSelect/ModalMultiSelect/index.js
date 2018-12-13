@@ -15,16 +15,8 @@ class ModalMultiSelect extends ModalSelect {
     const $ = window.jQuery
     const $el = $(this.state.el)
     const $wrap = $el.closest('.folio-console-react-picker').find('.folio-console-react-picker__files')
-    const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]')
 
-    let name
-    if ($nestedInput.length) {
-      name = $nestedInput.attr('name').match(/\w+\[\w+\]\[\w+\]/)
-    } else {
-      const $genericInput = $el.closest('form').find('.form-control[name*="["]').first()
-      name = $genericInput.attr('name').split('[')[0]
-    }
-
+    const name = this.inputName($el)
     const placementKey = $wrap.data('placement-key')
     const date = Date.now()
     let i = 0

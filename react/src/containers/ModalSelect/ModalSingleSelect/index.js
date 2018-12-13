@@ -56,38 +56,14 @@ class ModalSingleSelect extends ModalSelect {
     const $wrap = $el.closest('.folio-console-react-picker')
     const $fields = $wrap.find('.folio-console-react-picker__files')
 
-    const $last = $fields.find('.nested-fields').last()
-    let position = 0
-
-    if ($last.length) {
-      position = Number($last.find('input').filter(function () {
-        return $(this).attr('name').indexOf('position') !== -1
-      }).val()) + 1
-
-      if (Number.isNaN(position)) {
-        position = 0
-      }
-    }
-
-    const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]')
-    let name
-    if ($nestedInput.length) {
-      name = $nestedInput.attr('name').match(/\w+\[\w+\]\[\w+\]/)
-    } else {
-      const $genericInput = $el.closest('form').find('.form-control[name*="["]').first()
-      name = $genericInput.attr('name').split('[')[0]
-    }
-
+    const name = this.inputName($el)
     const placementKey = $fields.data('placement-key')
-    const hasOne = typeof $fields.data('cocoon-single-nested') !== 'undefined'
-    const affix = hasOne ? '' : `[${Date.now()}]`
-    const prefix = `${name}[${placementKey}_attributes]${affix}`
+    const prefix = `${name}[${placementKey}_attributes]`
 
     const $newFile = $(`
       <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingDocument() ? 'document' : 'image'}">
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.id}" />
-        ${hasOne ? '' : `<input type="hidden" name="${prefix}[position]" value="${position}" />`}
         ${this.fileTemplate(file, prefix)}
       </div>
     `)
