@@ -52,7 +52,7 @@ class Folio::Console::ReactPickerCell < FolioCell
   private
 
     def single?
-      placement_key !~ /_placements/ ? true : nil
+      placement_key !~ /_placements/
     end
 
     def picked?

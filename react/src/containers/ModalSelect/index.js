@@ -27,8 +27,7 @@ class ModalSelect extends Component {
 
   jQueryModal () {
     const $ = window.jQuery
-    const selector = this.selectingDocument() ? '.folio-console-react-documents-modal' : '.folio-console-react-images-modal'
-    return $(selector)
+    return $('.folio-console-react-modal').filter(`[data-klass="${this.props.fileType}"]`)
   }
 
   fileTemplate (file, prefix) {
