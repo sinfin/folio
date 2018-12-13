@@ -1,18 +1,24 @@
 import React from 'react'
 import { forceCheck } from 'react-lazyload'
 
-function ModalScroll ({ children, fixed }) {
+function ModalScroll ({ children, header, footer }) {
   return (
     <div className='folio-console-modal__scroll-wrap'>
-      {fixed && (
+      {header && (
         <div className='folio-console-modal__scroll-fixed'>
-          {fixed}
+          {header}
         </div>
       )}
 
       <div className='folio-console-modal__scroll-inner' onScroll={forceCheck}>
         {children}
       </div>
+
+      {footer && (
+        <div className='folio-console-modal__scroll-fixed modal-footer'>
+          {footer}
+        </div>
+      )}
     </div>
   )
 }

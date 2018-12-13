@@ -9,6 +9,7 @@ en:
       cancel: Cancel
       noTags: No tags
       create: Create
+      gallery_management: Gallery management
 
       breadcrumbs:
         root: Console

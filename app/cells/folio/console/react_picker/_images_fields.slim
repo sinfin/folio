@@ -1,22 +1,17 @@
-= html_safe_fields_for f, placement_key do |fp|
-  - if fp.object.marked_for_destruction?
-    = fp.hidden_field :_destroy, value: 1
-  - else
-    .nested-fields[
-      class="folio-console-thumbnail"
-      class="folio-console-thumbnail--image"
-    ]
-      = fp.hidden_field :_destroy, value: 0
-      = fp.hidden_field :file_id
+.folio-console-file-list
+  = html_safe_fields_for f, placement_key do |fp|
+    - if fp.object.marked_for_destruction?
       = fp.hidden_field :id
+      = fp.hidden_field :_destroy, value: 1
 
-      .folio-console-thumbnail__inner
-        .folio-console-thumbnail__img-wrap
-          = image(fp)
+    - else
+      .folio-console-file-list__file
+        .folio-console-file-list__img-wrap
+          = image(fp, 'folio-console-file-list__img')
 
-          .folio-console-hover-destroy
-            i.fa.fa-times-circle data-destroy-association=true
-
-      = fp.hidden_field :alt
-      small.folio-console-thumbnail__alt
-        ' alt: #{fp.object.alt}
+        = fp.hidden_field :id
+        = fp.hidden_field :alt
+        = fp.hidden_field :title
+        = fp.hidden_field :file_id
+        = fp.hidden_field :position
+        = fp.hidden_field :_destroy, value: 0

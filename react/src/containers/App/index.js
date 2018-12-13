@@ -8,7 +8,8 @@ import { openModal } from 'ducks/modal'
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
-import ModalSelect from 'containers/ModalSelect'
+import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
+import ModalMultiSelect from 'containers/ModalSelect/ModalMultiSelect'
 import Modal, { ModalContext } from 'containers/Modal'
 
 import AppWrap from './styled/AppWrap'
@@ -64,11 +65,21 @@ class App extends Component {
     }
 
     if (mode === 'modal-single-select') {
-      return <ModalSelect fileType={fileType} loadFiles={this.loadFiles} multi={false} />
+      return (
+        <ModalSingleSelect
+          fileType={fileType}
+          loadFiles={this.loadFiles}
+        />
+      )
     }
 
     if (mode === 'modal-multi-select') {
-      return <ModalSelect fileType={fileType} loadFiles={this.loadFiles} multi={true} />
+      return (
+        <ModalMultiSelect
+          fileType={fileType}
+          loadFiles={this.loadFiles}
+        />
+      )
     }
 
     return (

@@ -9,6 +9,7 @@ cs:
       cancel: Zrušit
       noTags: Žádná klíčová slova
       create: Vytvořit
+      gallery_management: Správa galerie
 
       breadcrumbs:
         root: Administrace

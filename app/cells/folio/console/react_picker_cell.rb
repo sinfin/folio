@@ -29,13 +29,13 @@ class Folio::Console::ReactPickerCell < FolioCell
     render("_#{file_type_slug}_fields")
   end
 
-  def image(fp)
+  def image(fp, class_name = '')
     if fp.object && fp.object.file
       url = fp.object
               .file
               .thumb(::Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE)
               .url
-      image_tag(url, class: 'folio-console-thumbnail__img')
+      image_tag(url, class: "folio-console-thumbnail__img #{class_name}")
     end
   end
 

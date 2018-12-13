@@ -22,7 +22,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
     }
   }
 
-  renderFixed () {
+  renderHeader () {
     return (
       <Fragment>
         <FileFilter />
@@ -36,7 +36,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
 
     return (
       <ModalScroll
-        fixed={this.renderFixed()}
+        header={this.renderHeader()}
       >
         <Uploader>
           <FileList
