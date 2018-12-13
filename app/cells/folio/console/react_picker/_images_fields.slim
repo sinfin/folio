@@ -1,7 +1,6 @@
 .folio-console-file-list
-  = html_safe_fields_for f, placement_key, f.object.send(placement_key).ordered do |fp|
+  = html_safe_fields_for f, placement_key do |fp|
     - if fp.object.marked_for_destruction?
-      = fp.hidden_field :id
       = fp.hidden_field :_destroy, value: 1
 
     - else

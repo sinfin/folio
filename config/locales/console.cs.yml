@@ -10,6 +10,7 @@ cs:
       noTags: Žádná klíčová slova
       create: Vytvořit
       gallery_management: Správa galerie
+      documents_management: Správa dokumentů
 
       breadcrumbs:
         root: Administrace

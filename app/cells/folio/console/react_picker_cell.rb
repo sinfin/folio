@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::ReactPickerCell < FolioCell
+  include ActionView::Helpers::NumberHelper
+
   def f
     model
   end

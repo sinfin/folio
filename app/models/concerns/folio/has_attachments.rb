@@ -38,6 +38,7 @@ module Folio
         placements_key ||= "#{targets.to_s.singularize}_placements".to_sym
 
         has_many placements_key,
+                 -> { ordered },
                  class_name: placement,
                  as: :placement,
                  inverse_of: :placement,

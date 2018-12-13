@@ -10,6 +10,8 @@ import {
   selectFile,
   unselectFilePlacement,
   onSortEnd,
+  changeTitle,
+  changeAlt,
   filePlacementsSelector,
 } from 'ducks/filePlacements'
 import { fileTypeIsImageSelector } from 'ducks/app'
@@ -33,6 +35,8 @@ class MultiSelect extends LazyLoadCheckingComponent {
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
+  onTitleChange = (filePlacement, title) => this.props.dispatch(changeTitle(filePlacement, title))
+  onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(filePlacement, alt))
 
   render() {
     if (this.props.filesLoading) return <Loader />
@@ -48,6 +52,8 @@ class MultiSelect extends LazyLoadCheckingComponent {
           <FilePlacementList
             filePlacements={this.props.filePlacements}
             onSortEnd={this.onSortEnd}
+            onAltChange={this.onAltChange}
+            onTitleChange={this.onTitleChange}
             unselectFilePlacement={this.unselectFilePlacement}
             fileTypeIsImage={this.props.fileTypeIsImage}
           />

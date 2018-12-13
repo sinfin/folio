@@ -1,22 +1,22 @@
-= html_safe_fields_for f, placement_key do |fp|
-  - if fp.object.marked_for_destruction?
-    = fp.hidden_field :_destroy, value: 1
-  - else
-    .nested-fields[
-      class="folio-console-thumbnail"
-      class="folio-console-thumbnail--document"
-    ]
-      = fp.hidden_field :_destroy, value: 0
-      = fp.hidden_field :file_id
-      = fp.hidden_field :id
+.folio-console-file-table-wrap
+  .folio-console-file-table.folio-console-file-table--document
+    .folio-console-file-table__tbody
+      = html_safe_fields_for f, placement_key do |fp|
+        - if fp.object.marked_for_destruction?
+          = fp.hidden_field :_destroy, value: 1
+        - else
+          .folio-console-file-table__tr
+            = fp.hidden_field :_destroy, value: 0
+            = fp.hidden_field :file_id
+            = fp.hidden_field :title
+            = fp.hidden_field :alt
+            = fp.hidden_field :id
 
-      .folio-console-thumbnail__inner
-        i.folio-console-thumbnail__fa-icon class="fa fa-file-o"
-        strong.folio-console-thumbnail__title = truncate(fp.object.to_label)
+            .folio-console-file-table__td.folio-console-file-table__td--main
+              = fp.object.to_label
 
-        = fp.hidden_field :title, value: fp.object.to_label, \
-                                  'data-file-name' => fp.object.file.file_name
+            .folio-console-file-table__td.folio-console-file-table__td--size
+              = number_to_human_size(fp.object.file.file_size)
 
-        .folio-console-hover-destroy
-          i.fa.fa-edit.folio-console-thumbnail__title-edit
-          i.fa.fa-times-circle data-destroy-association=true
+            .folio-console-file-table__td.folio-console-file-table__td--extension
+              = fp.object.file.file_extension.to_s.upcase

@@ -28,7 +28,7 @@ $(document).on 'click', '.folio-console-thumbnail__title-edit', (e) ->
 
     $wrap.find('.folio-console-thumbnail__title').text(truncatedTitle)
 
-$(document).on 'click', '.folio-console-react-picker .folio-console-file-list__file', (e) ->
+$(document).on 'click', '.folio-console-react-picker .folio-console-file-list__file, .folio-console-react-picker .folio-console-file-table', (e) ->
   e.preventDefault()
   $(this)
     .closest('.folio-console-react-picker')

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FormGroup = ({ value, onChange, label, placeholder, name, hint }) => (
+const FormGroup = ({ value, onChange, onBlur, label, placeholder, name, hint }) => (
   <div className='form-group'>
     {label && <label className='control-label'>{label}</label>}
 
@@ -8,6 +8,7 @@ const FormGroup = ({ value, onChange, label, placeholder, name, hint }) => (
       className='form-control'
       value={value || ''}
       onChange={onChange}
+      onBlur={onBlur}
       placeholder={placeholder}
       name={name}
       type='text'

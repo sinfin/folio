@@ -21,7 +21,10 @@
       - if single?
         = t('.add')
       - else
-        = t('folio.console.gallery_management')
+        - if options[:file_type] == 'Folio::Document'
+          = t('folio.console.documents_management')
+        - else
+          = t('folio.console.gallery_management')
 
   - if form_errors
     .folio-console-react-picker__errors

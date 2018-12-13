@@ -10,6 +10,7 @@ en:
       noTags: No tags
       create: Create
       gallery_management: Gallery management
+      documents_management: Documents management
 
       breadcrumbs:
         root: Console

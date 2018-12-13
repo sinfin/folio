@@ -18,6 +18,8 @@ const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, overflow
 
   return (
     <div className='folio-console-file-table-wrap'>
+      {dropzoneTrigger && <DropzoneTrigger colSpan={fileTypeIsImage ? 5 : 4} />}
+
       <div className={classNames.join(' ')}>
         <div className='folio-console-file-table__tbody'>
           {files.map((file) => (
@@ -32,8 +34,6 @@ const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, overflow
           ))}
         </div>
       </div>
-
-      {dropzoneTrigger && <DropzoneTrigger colSpan={fileTypeIsImage ? 5 : 4} />}
     </div>
   )
 }

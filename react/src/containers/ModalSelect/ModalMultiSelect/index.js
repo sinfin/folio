@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import MultiSelect from 'containers/MultiSelect'
 import ModalScroll from 'components/ModalScroll';
 import { setOriginalPlacements, filePlacementsSelector } from 'ducks/filePlacements'
+import numberToHumanSize from 'utils/numberToHumanSize'
 
 import ModalSelect from '../';
 import getPlacementField from './utils/getPlacementField';
@@ -11,6 +12,7 @@ import hiddenFieldHtml from './utils/hiddenFieldHtml';
 
 class ModalMultiSelect extends ModalSelect {
   save = () => {
+    const $ = window.jQuery
     const $el = $(this.state.el)
     const $wrap = $el.closest('.folio-console-react-picker').find('.folio-console-react-picker__files')
     const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]')
@@ -30,21 +32,7 @@ class ModalMultiSelect extends ModalSelect {
     const selected = this.props.filePlacements.selected.map((placement) => {
       i++
       const prefix = `${name}[${placementKey}_attributes][${date + i}]`
-
-      return `
-        <div class="folio-console-file-list__file">
-          <div class="folio-console-file-list__img-wrap">
-            <img class="folio-console-thumbnail__img folio-console-file-list__img" src="${window.encodeURI(placement.file.thumb)}">
-          </div>
-
-          ${hiddenFieldHtml(prefix, 'id', placement.id)}
-          ${hiddenFieldHtml(prefix, 'alt', placement.alt)}
-          ${hiddenFieldHtml(prefix, 'title', placement.title)}
-          ${hiddenFieldHtml(prefix, 'file_id', placement.file_id)}
-          ${hiddenFieldHtml(prefix, 'position', i)}
-          ${hiddenFieldHtml(prefix, '_destroy', 0)}
-        </div>
-      `
+      return this.htmlForPlacement(placement, prefix, i)
     })
 
     const deleted = this.props.filePlacements.deleted.map((placement, i) => {
@@ -57,14 +45,62 @@ class ModalMultiSelect extends ModalSelect {
       `
     })
 
-    $wrap.html(`
-      <div class="folio-console-file-list">
-        ${selected.join('')}
-        ${deleted.join('')}
-      </div>
-    `)
+    $wrap.html(this.htmlForPlacements(selected, deleted))
 
     this.close()
+  }
+
+  htmlForPlacement = (placement, prefix, i) => {
+    const hiddenFields = [
+      hiddenFieldHtml(prefix, 'id', placement.id),
+      hiddenFieldHtml(prefix, 'alt', placement.alt),
+      hiddenFieldHtml(prefix, 'title', placement.title),
+      hiddenFieldHtml(prefix, 'file_id', placement.file_id),
+      hiddenFieldHtml(prefix, 'position', i),
+      hiddenFieldHtml(prefix, '_destroy', 0),
+    ].join('')
+
+    if (this.selectingDocument()) {
+      return `
+        <div class="folio-console-file-table__tr">
+          <div class="folio-console-file-table__td folio-console-file-table__td--main">${placement.title || placement.file.file_name}</div>
+          <div class="folio-console-file-table__td folio-console-file-table__td--size">${numberToHumanSize(placement.file.file_size)}</div>
+          <div class="folio-console-file-table__td folio-console-file-table__td--extension">${placement.file.extension}</div>
+          ${hiddenFields}
+        </div>
+      `
+    } else {
+      return `
+        <div class="folio-console-file-list__file">
+          <div class="folio-console-file-list__img-wrap">
+            <img class="folio-console-thumbnail__img folio-console-file-list__img" src="${window.encodeURI(placement.file.thumb)}">
+          </div>
+          ${hiddenFields}
+        </div>
+      `
+    }
+  }
+
+  htmlForPlacements = (selected, deleted) => {
+    if (this.selectingDocument()) {
+      return `
+        <div class="folio-console-file-table-wrap">
+          <div class="folio-console-file-table folio-console-file-table--document">
+            <div class="folio-console-file-table__tbody">
+              ${selected.join('')}
+              ${deleted.join('')}
+            </div>
+          </div>
+        </div>
+      `
+    } else {
+      return `
+        <div class="folio-console-file-list">
+          ${selected.join('')}
+          ${deleted.join('')}
+        </div>
+      `
+    }
   }
 
   close = () => {
@@ -88,7 +124,7 @@ class ModalMultiSelect extends ModalSelect {
 
     let placements = []
 
-    $wrap.find('.folio-console-file-list__file').each((i, el) => {
+    $wrap.find('.folio-console-file-list__file, .folio-console-file-table__tr').each((_i, el) => {
       const $fields = $(el).find('input[type="hidden"]')
       placements.push({
         id: Number(getPlacementField($fields, 'id')),
@@ -103,7 +139,8 @@ class ModalMultiSelect extends ModalSelect {
   }
 
   renderHeader () {
-    return <h4 className='modal-title'>{window.FolioConsole.translations.galleryManagement}</h4>
+    const key = this.selectingDocument() ? 'documentsManagement' : 'galleryManagement'
+    return <h4 className='modal-title'>{window.FolioConsole.translations[key]}</h4>
   }
 
   renderFooter () {

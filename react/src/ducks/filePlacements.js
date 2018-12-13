@@ -11,6 +11,8 @@ const UNSELECT_FILE_PLACEMENT = 'filePlacements/UNSELECT_FILE_PLACEMENT'
 const ON_SORT_END = 'filePlacements/ON_SORT_END'
 const SET_ATTACHMENTABLE = 'filePlacements/SET_ATTACHMENTABLE'
 const SET_PLACEMENT_TYPE = 'filePlacements/SET_PLACEMENT_TYPE'
+const CHANGE_TITLE = 'filePlacements/CHANGE_TITLE'
+const CHANGE_ALT = 'filePlacements/CHANGE_ALT'
 
 // Actions
 
@@ -36,6 +38,14 @@ export function onSortEnd (oldIndex, newIndex) {
 
 export function setPlacementType (placementType) {
   return { type: SET_PLACEMENT_TYPE, placementType }
+}
+
+export function changeTitle (filePlacement, title) {
+  return { type: CHANGE_TITLE, filePlacement, title }
+}
+
+export function changeAlt (filePlacement, alt) {
+  return { type: CHANGE_ALT, filePlacement, alt }
 }
 
 // Selectors
@@ -122,6 +132,36 @@ function filePlacementsReducer (state = initialState, action) {
       return {
         ...state,
         placementType: action.placementType,
+      }
+
+    case CHANGE_TITLE:
+      return {
+        ...state,
+        selected: state.selected.map((filePlacement) => {
+          if (filePlacement.file_id === action.filePlacement.file_id) {
+            return {
+              ...filePlacement,
+              title: action.title,
+            }
+          } else {
+            return filePlacement
+          }
+        }),
+      }
+
+    case CHANGE_ALT:
+      return {
+        ...state,
+        selected: state.selected.map((filePlacement) => {
+          if (filePlacement.file_id === action.filePlacement.file_id) {
+            return {
+              ...filePlacement,
+              alt: action.alt,
+            }
+          } else {
+            return filePlacement
+          }
+        }),
       }
 
     default:

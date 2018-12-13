@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export default styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 15px;
 
   .react-select-container {
     flex: 1 1 auto;

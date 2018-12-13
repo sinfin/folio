@@ -29,6 +29,14 @@ class FilePlacement extends React.Component {
     this.setState({ ...this.state, alt: e.target.value })
   }
 
+  onTitleBlur = (e) => {
+    this.props.onTitleChange(this.props.filePlacement, e.target.value)
+  }
+
+  onAltBlur = (e) => {
+    this.props.onAltChange(this.props.filePlacement, e.target.value)
+  }
+
   unselect = () => {
     this.props.unselectFilePlacement(this.props.filePlacement)
   }
@@ -87,6 +95,7 @@ class FilePlacement extends React.Component {
               placeholder={filePlacement.file.file_name}
               value={this.state.title}
               onChange={this.onTitleChange}
+              onBlur={this.onTitleBlur}
               name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
               hint={window.FolioConsole.translations.fileTitleHint}
             />
@@ -98,6 +107,7 @@ class FilePlacement extends React.Component {
                 placeholder='alt'
                 value={this.state.alt}
                 onChange={this.onAltChange}
+                onBlur={this.onAltBlur}
                 name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
                 hint={window.FolioConsole.translations.altHint}
               />

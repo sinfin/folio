@@ -7,6 +7,8 @@ const FilePlacementSortableList = SortableContainer(({
   filePlacements,
   unselectFilePlacement,
   fileTypeIsImage,
+  onTitleChange,
+  onAltChange,
   move,
 }) => (
   <div className='folio-console-file-placement-list'>
@@ -18,6 +20,8 @@ const FilePlacementSortableList = SortableContainer(({
         index={index}
         filePlacement={filePlacement}
         unselectFilePlacement={unselectFilePlacement}
+        onTitleChange={onTitleChange}
+        onAltChange={onAltChange}
         position={index}
         fileTypeIsImage={fileTypeIsImage}
         move={move}
