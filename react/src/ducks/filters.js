@@ -71,7 +71,11 @@ export const tagsSelector = (state) => {
   files.forEach((file) => file.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
   }))
-  return tags
+  return tags.sort((a, b) => {
+    const lowerA = a.toLowerCase()
+    const lowerB = b.toLowerCase()
+    return lowerA > lowerB ? 1 : lowerB > lowerA ? -1 : 0;
+  })
 }
 
 export const placementsSelector = (state) => {

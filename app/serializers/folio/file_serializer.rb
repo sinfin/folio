@@ -41,7 +41,7 @@ module Folio
     end
 
     def tags
-      object.tags.collect(&:name)
+      object.tags.collect(&:name).sort
     end
 
     def edit_path
