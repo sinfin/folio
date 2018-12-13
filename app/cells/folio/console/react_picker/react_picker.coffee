@@ -27,3 +27,10 @@ $(document).on 'click', '.folio-console-thumbnail__title-edit', (e) ->
       truncatedTitle = title
 
     $wrap.find('.folio-console-thumbnail__title').text(truncatedTitle)
+
+$(document).on 'click', '.folio-console-react-picker .folio-console-file-list__file', (e) ->
+  e.preventDefault()
+  $(this)
+    .closest('.folio-console-react-picker')
+    .find('.folio-console-react-picker__button .btn')
+    .click()

@@ -18,7 +18,10 @@
       type="button"
       class="folio-console-add-#{file_type_slug}"
     ]
-      = t('.add')
+      - if single?
+        = t('.add')
+      - else
+        = t('folio.console.gallery_management')
 
   - if form_errors
     .folio-console-react-picker__errors

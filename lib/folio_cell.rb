@@ -11,8 +11,8 @@ class FolioCell < Cell::ViewModel
     controller.send(:protect_against_forgery?)
   end
 
-  def html_safe_fields_for(f, key, &block)
-    f.simple_fields_for key do |subfields|
+  def html_safe_fields_for(f, key, objects = nil, &block)
+    f.simple_fields_for key, objects do |subfields|
       (yield subfields).html_safe
     end
   end
