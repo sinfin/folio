@@ -1,0 +1,11 @@
+Description:
+    Explain the generator
+
+Example:
+    rails generate folio:cell SomeThing
+
+    This will create:
+        app/models/project_namespace/some_thing.rb
+        app/cells/project_namespace/some_thing_cell.rb
+        app/cells/project_namespace/some_thing/show.slim
+        test/cells/project_namespace/some_thing_cell_test.rb
