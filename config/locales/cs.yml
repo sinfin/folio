@@ -61,7 +61,6 @@ cs:
       failure: Zprávu se nepodařilo odeslat. Zkuste to prosíme později.
 
     newsletter_subscription_form:
-      email: E-mail
       submit: Odeslat
       message: Odesláno!
 

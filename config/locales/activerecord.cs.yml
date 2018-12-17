@@ -192,6 +192,11 @@ cs:
             verified_captcha:
               invalid: Neplatné potvrzení
 
+        folio/newsletter_subscription:
+          attributes:
+            email:
+              invalid: Neplatná e-mailová adresa
+
     state_machines:
       folio/lead:
         state:

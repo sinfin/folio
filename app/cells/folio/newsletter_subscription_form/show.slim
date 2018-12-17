@@ -4,7 +4,6 @@ div class=wrap_class
                     html: { class: 'folio-newsletter-subscription-form' } do |f|
 
     = f.input :email, as: :email, \
-                      label: t('.email'), \
                       input_html: { placeholder: options[:placeholder] }
 
     = hidden_options

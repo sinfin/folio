@@ -14,17 +14,17 @@ module Folio
     end
 
     def submit_text
-      return options[:submit_text] if options[:submit_text]
+      return options[:submit_text] unless options[:submit_text].nil?
       t('.submit')
     end
 
     def message
-      return options[:message] if options[:message]
+      return options[:message] unless options[:message].nil?
       t('.message')
     end
 
     def button_class
-      return options[:button_class] if options[:button_class]
+      return options[:button_class] unless options[:button_class].nil?
       'btn'
     end
 

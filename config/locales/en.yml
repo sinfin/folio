@@ -105,6 +105,10 @@ en:
       message: Thanks for your message!
       failure: Failed to send the message. Please try again later.
 
+    newsletter_subscription_form:
+      submit: Submit
+      message: Submitted!
+
   all: All
   all_models: All %{model}
   without_model: Without %{model}

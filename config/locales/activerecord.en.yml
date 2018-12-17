@@ -1,5 +1,27 @@
 ---
 en:
+  attributes:
+    code: Code
+    content: Content
+    cover_placement: Image
+    description: Description
+    email: E-mail
+    featured: Features
+    first_name: First name
+    is_active: Active
+    last_name: Last name
+    locale: Translation
+    meta_description: SEO - Meta Description
+    meta_title: SEO - Meta Title
+    name: Name
+    perex: Perex
+    phone: Phone
+    published: Published
+    published_at: Published at
+    slug: Slug
+    tag_list: Keywords
+    title: Title
+
   activerecord:
     attributes:
       folio/image:
@@ -104,3 +126,8 @@ en:
           attributes:
             verified_captcha:
               invalid: Invalid verification
+
+        folio/newsletter_subscription:
+          attributes:
+            email:
+              invalid: Invalid e-mail address
