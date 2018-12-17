@@ -50,21 +50,12 @@ module Folio
       render partial: 'folio/console/partials/card', locals: vars
     end
 
-    def dropdown(links, class_name: 'btn btn-light btn-sm')
-      if links.empty?
-        nil
-      elsif links.size == 1
-        main = links.first
-        opts = main.opts.reverse_merge(class: class_name)
-        link_to main.title, main.url, opts
-      else
-        main = links.shift
-        render partial: 'admin/partials/dropdown', locals: {
-          class_name: class_name,
-          main: main,
-          links: links
-        }
-      end
+    def dropdown(title, links, class_name: 'btn btn-secondary', menu_align: :right)
+      cell('folio/console/dropdown', title: title,
+                                     links: links,
+                                     class_name: class_name,
+                                     menu_align: menu_align).show
+                                                            .try(:html_safe)
     end
 
     def progress_bar(value, text = nil)

@@ -1,0 +1,13 @@
+.dropdown
+  button.dropdown-toggle [
+    class=class_name
+    aria-expanded="false"
+    aria-haspopup="true"
+    data-toggle="dropdown"
+    type="button"
+  ]
+    = title
+    ' 
+  .dropdown-menu class=('dropdown-menu-right' if menu_align == :right)
+    - links.each do |link|
+      = link_to link[:title], link[:url], class: 'dropdown-item'
