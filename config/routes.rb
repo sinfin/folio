@@ -9,11 +9,6 @@ Folio::Engine.routes.draw do
 
   root to: 'home#index', as: :home
 
-  match '/400', to: 'errors#page400', via: :all
-  match '/404', to: 'errors#page404', via: :all
-  match '/422', to: 'errors#page422', via: :all
-  match '/500', to: 'errors#page500', via: :all
-
   namespace :console, locale: :cs do
     root to: 'dashboard#index'
     resources :dashboard, only: :index

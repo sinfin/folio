@@ -7,13 +7,13 @@
 @import 'modules/bootstrap-overrides'
 
 html
-  font-size: 16px
-
-html, body
   height: 100%
   min-width: 320px
+  overflow-y: scroll
 
 body
+  height: 100%
+  min-width: 320px
   min-height: 100%
   display: flex
   flex-direction: column
@@ -23,6 +23,7 @@ body
 
 @import 'cells'
 @import 'folio/lead_form/lead_form'
+@import 'folio/newsletter_subscription_form/newsletter_subscription_form'
 @import 'folio/lightbox'
 
 @media print
