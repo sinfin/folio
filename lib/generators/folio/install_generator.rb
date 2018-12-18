@@ -125,7 +125,7 @@ module Folio
           'app/assets/stylesheets/modules/bootstrap-overrides/_type.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass',
           'app/views/home/index.slim',
-          'app/views/pages/show.slim',
+          'app/views/folio/pages/show.slim',
           'app/views/folio/console/partials/_appended_menu_items.slim',
           'app/views/folio/console/partials/_prepended_menu_items.slim',
           'bin/bower',
