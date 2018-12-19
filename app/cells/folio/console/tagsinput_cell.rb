@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::TagsinputCell < FolioCell
+class Folio::Console::TagsinputCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
   def separator

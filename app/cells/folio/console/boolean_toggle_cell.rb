@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::BooleanToggleCell < FolioCell
+class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   ATTRIBUTE = :published
   ICON_ON = 'toggle-on'
   ICON_OFF = 'toggle-off'

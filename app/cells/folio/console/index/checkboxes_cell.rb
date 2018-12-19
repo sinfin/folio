@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Index::CheckboxesCell < FolioCell
+class Folio::Console::Index::CheckboxesCell < Folio::ConsoleCell
   def show
     render
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SavingFolioCell < FolioCell
+class SavingFolioCell < Folio::ApplicationCell
   include ERB::Util
 
   def hidden_options

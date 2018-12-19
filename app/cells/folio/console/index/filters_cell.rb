@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Index::FiltersCell < FolioCell
+class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   include ActionView::Helpers::FormOptionsHelper
 
   def form(&block)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::FlashCell < FolioCell
+class Folio::Console::FlashCell < Folio::ConsoleCell
   BOOTSTRAP_CLASSES = {
     success: 'alert-success',
     error: 'alert-danger',

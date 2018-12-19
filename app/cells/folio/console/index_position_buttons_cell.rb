@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::IndexPositionButtonsCell < FolioCell
+class Folio::Console::IndexPositionButtonsCell < Folio::ConsoleCell
   def url
     options[:url] || guessed_url
   end

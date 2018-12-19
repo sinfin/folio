@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-12-19
+### Changed
+- Changed `FolioCell` to `Folio::ApplicationCell` and `Folio::ConsoleCell`
+
 ## 2018-12-18
 ### Changed
 - Changed `exceptions_app` workflow. Errors are no longer displayed by Folio. Projects should have their own `ErrorsController` which includes `Folio::ErrorsControllerBase` to run the error pages in the `main_app` context.

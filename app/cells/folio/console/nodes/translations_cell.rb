@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Nodes::TranslationsCell < FolioCell
+class Folio::Console::Nodes::TranslationsCell < Folio::ConsoleCell
   include Folio::Console::FlagHelper
   include ActionView::Helpers::UrlHelper
 

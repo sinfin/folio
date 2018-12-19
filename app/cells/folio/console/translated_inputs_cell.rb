@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::TranslatedInputsCell < FolioCell
+class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
   def f
     model[:f]
   end

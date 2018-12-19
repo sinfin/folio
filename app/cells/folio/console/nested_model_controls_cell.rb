@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::NestedModelControlsCell < FolioCell
+class Folio::Console::NestedModelControlsCell < Folio::ConsoleCell
   include Cocoon::ViewHelpers
 
   def f

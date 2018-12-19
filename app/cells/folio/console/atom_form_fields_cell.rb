@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::AtomFormFieldsCell < FolioCell
+class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
   include Folio::Console::ReactHelper
   include Folio::Console::StiHelper
 

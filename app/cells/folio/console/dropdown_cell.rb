@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::DropdownCell < FolioCell
+class Folio::Console::DropdownCell < Folio::ConsoleCell
   include Folio::Console::BootstrapHelper
 
   def show

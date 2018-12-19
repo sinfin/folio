@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Index::HeaderCell < FolioCell
+class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def title
     model.model_name.human(count: 2)
   end

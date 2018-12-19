@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FolioCell < Cell::ViewModel
+class Folio::ApplicationCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
 
@@ -11,9 +11,16 @@ class FolioCell < Cell::ViewModel
     controller.send(:protect_against_forgery?)
   end
 
-  def html_safe_fields_for(f, key, &block)
-    f.simple_fields_for key do |subfields|
-      (yield subfields).html_safe
+  def self.class_name(base, *keys)
+    define_method :class_name do
+      class_names = [base]
+      class_names << options[:class_name] if options[:class_name]
+
+      keys.each do |key|
+        class_names << "#{base}--#{key.to_s.gsub('_', '-')}" if options[key]
+      end
+
+      class_names.join(' ')
     end
   end
 end

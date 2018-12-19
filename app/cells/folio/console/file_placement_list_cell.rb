@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::FilePlacementListCell < FolioCell
+class Folio::Console::FilePlacementListCell < Folio::ConsoleCell
   def show
     return nil if model.blank?
     return nil if model.file_placements.blank?

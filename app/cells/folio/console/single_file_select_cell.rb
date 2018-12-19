@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::SingleFileSelectCell < FolioCell
+class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
   def f
     model
   end

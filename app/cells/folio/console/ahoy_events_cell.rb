@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::AhoyEventsCell < FolioCell
+class Folio::Console::AhoyEventsCell < Folio::ConsoleCell
   def icon_class(event_name)
     case event_name
     when '$view'
