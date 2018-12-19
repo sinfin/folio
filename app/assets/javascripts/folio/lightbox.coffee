@@ -44,7 +44,7 @@ class window.FolioLightbox
       src: $el.data('lightbox-src')
       w: parseInt($el.data('lightbox-width'))
       h: parseInt($el.data('lightbox-height'))
-    item.title = $el.next('figcaption').text()
+    item.title = $el.data('lightbox-title') or $el.next('figcaption').text()
     item
 
   destroy: ->
