@@ -42,7 +42,8 @@
 .folio-console-atom-type-select
   background: rgba($blue, 0.1)
 
-.folio-console-smart-col.folio-console-atom-main-fields
-  aside.folio-console-smart-col:not([hidden]) ~ &
-    max-width: calc(100% - 166px)
-    flex-basis: calc(100% - 166px)
++media-breakpoint-up(md)
+  .folio-console-smart-col.folio-console-atom-main-fields
+    aside.folio-console-smart-col:not([hidden]) ~ &
+      max-width: calc(100% - 166px)
+      flex-basis: calc(100% - 166px)

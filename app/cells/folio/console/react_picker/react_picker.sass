@@ -6,11 +6,19 @@
       display: none
 
   &--multi
+    padding: 1rem
+    background: #f7f7f7
+    border-radius: $border-radius
+    margin-top: 1rem
+
     .folio-console-react-picker__button
       margin-top: $grid-gutter-half
 
-      .folio-console--compact &
-        margin-top: 0
+    .folio-console-file-table__td--main
+      padding-left: 0
+
+    .folio-console-file-table__td:last-child
+      padding-right: 0
 
   &--error
     color: $danger
@@ -26,12 +34,6 @@
     &.folio-console-has-nested
       display: flex
 
-  .folio-console--compact &
-    margin-top: 1rem
-    margin-bottom: 0
-
   .folio-console-react-picker--single &
-    margin: 0
-
     .nested-fields
       margin: 0

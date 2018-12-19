@@ -1,5 +1,8 @@
 fieldset
-  .flex-row
+  .flex-row.flex-row--md.flex-row--reverse
+    .col
+      = react_picker(f, :cover_placement)
+
     .col.flex-col-grow
       .row
         .col-sm-1
@@ -19,9 +22,6 @@ fieldset
           == translated_inputs f, :title
         .col-sm
           == translated_inputs f, :slug
-
-    .col
-      = react_picker(f, :cover_placement)
 
   == translated_inputs f, :perex
   == translated_inputs f, :content, \

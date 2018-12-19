@@ -76,6 +76,9 @@
   flex-direction: row
   margin: 0 (( - $grid-gutter-width / 2 ))
 
+  &--reverse
+    flex-direction: row-reverse !important
+
   > .col
     padding: 0 (( $grid-gutter-width / 2 ))
     flex: 0 0 auto
@@ -83,6 +86,10 @@
 
   > .flex-col-grow
     flex: 1 1 auto
+
++media-breakpoint-down(sm)
+  .flex-row--md
+    display: block
 
 select.form-control
   max-width: 100%
