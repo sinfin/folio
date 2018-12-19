@@ -2,7 +2,7 @@ $ ->
   $formAlert = $('.simple_form .alert-danger')
   return unless $formAlert.length
   $formAlert.on 'click', ->
-    $field = $formAlert.closest('form').find('.form-group.has-danger').first()
+    $field = $formAlert.closest('form').find('.form-group.has-danger, .folio-console-react-picker--error').first()
     return unless $field.length
     $tab = $field.closest('.tab-pane')
 
@@ -10,8 +10,11 @@ $ ->
       id = $tab.attr('id')
       $('.nav-tabs .nav-link').filter(-> @href.split('#').pop() is id).click()
 
-    offset = $field.offset().top
-    offset = $field.closest('.card').offset().top if offset is 0
+    $card = $field.closest('.card')
+    if $card.length
+      offset = $card.offset().top
+    else
+      offset = $field.offset().top
 
     $('html, body').animate scrollTop: offset - 16, ->
       $field.addClass('has-danger-blink')
