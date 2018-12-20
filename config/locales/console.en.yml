@@ -29,46 +29,17 @@ en:
           content: Content
           gallery: Gallery
           documents: Documents
-
-      sites:
-        index:
-          title: Sites
-
-      visits:
-        index:
-          title: Visits
-
-      accounts:
-        index:
-          title: Accounts
-
-      files:
-        index:
-          title: Files
-
-      leads:
-        index:
-          title: Leads
-
-      menus:
-        index:
-          title: Menus
-
-      newsletter_subscriptions:
-        index:
-          title: Newsletter subscriptions
+          settings: Settings
+          site_social_links: Links
 
       footer:
         text: Administration console for %{site_name}.
 
-      index:
-        header:
-          by_query: Filter...
+      back: Zpět
 
-        filters:
-          title: Filters
-          cancel: Cancel filters
-          all: All
+      filters:
+        query: Vyhledávání...
+        all_tags: Všechny tagy
 
       nodes:
         index:
@@ -117,3 +88,23 @@ en:
 
       react_picker:
         add: Add
+
+      nested_model_controls:
+        destroy: Remove
+
+      single_file_select:
+        add_image: Add image
+        add_video: Add video
+        remove_video: Remove video
+
+      base:
+        atoms:
+          add: Add chapter
+
+      menu_tree:
+        success: Tree structure updated
+        error: 'Failed to update tree structure: %{msg}'
+
+      form_footer:
+        submit: Submit
+        back: Back

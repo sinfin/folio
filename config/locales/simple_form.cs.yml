@@ -2,20 +2,16 @@ cs:
   simple_form:
     "yes": 'Ano'
     "no": 'Ne'
+
     required:
       text: 'povinný údaj'
       mark: '*'
       # You can uncomment the line below if you need to overwrite the whole required html.
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'
+
     error_notification:
       default_message: "Doplňte chybějící povinné údaje, prosím."
-
-    labels:
-      lead:
-        note: Zpráva
-      file:
-        file: Změna souboru
 
     hints:
       defaults:
