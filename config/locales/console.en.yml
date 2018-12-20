@@ -1,110 +1,97 @@
+---
 en:
   folio:
     console:
       alt_prompt: Alternative image caption
-      file_title_prompt: Displayed file name
-      remove_confirmation: Remove?
-      finalizing: Finalizing
-      save: Save
-      cancel: Cancel
-      noTags: No tags
-      create: Create
-      gallery_management: Gallery management
-      documents_management: Documents management
-
+      back: Zpět
+      base:
+        atoms:
+          add: Add chapter
       breadcrumbs:
-        root: Console
         actions:
-          new: New
-          edit: Edit
-          delete: Delete
           add: Add
+          delete: Delete
+          edit: Edit
+          new: New
           show: Show
-
-      partials:
-        auth_links:
-          logout: Log out
-
-        tabs:
-          content: Content
-          gallery: Gallery
-          documents: Documents
-          settings: Settings
-          site_social_links: Links
-
+        root: Console
+      cancel: Cancel
+      create: Create
+      documents_management: Documents management
+      file_title_prompt: Displayed file name
+      filters:
+        all_tags: Všechny tagy
+        query: Vyhledávání...
+      finalizing: Finalizing
       footer:
         text: Administration console for %{site_name}.
-
-      back: Zpět
-
-      filters:
-        query: Vyhledávání...
-        all_tags: Všechny tagy
-
+      form_footer:
+        back: Back
+        submit: Submit
+      gallery_management: Gallery management
+      menu_tree:
+        error: 'Failed to update tree structure: %{msg}'
+        success: Tree structure updated
+      nested_model_controls:
+        destroy: Remove
+      noTags: No tags
       nodes:
+        atom_fields:
+          add_image: Add image
+          images: Images
+          remove: Remove atom
+        form:
+          additional_form_fields: More fields
+          atoms:
+            add: Add atom
+          caption: Caption
+          documents:
+            add: Add document
+          file_name: File name
+          file_size: File size
+          node:
+            settings: Settings
+            title: Content
+          remove: remove
+          tag: Tag
         index:
-          title: Pages
-          translations: Translations
-          type: Type
           featured: Featured
-          published: Published
           filters:
             all_nodes: All nodes
             all_parents: All categories
+            all_types: All types
+            category: Category
+            page: Page
             published: Published only
             unpublished: Unpublished only
-            all_types: All types
-            page: Page
-            category: Category
-
+          published: Published
+          title: Pages
+          translations: Translations
+          type: Type
+        node_row:
+          add_child_node: Add subpage
+          preview: Preview
         nodes_table:
           more_nodes: more pages
-        node_row:
-          preview: Preview
-          add_child_node: Add subpage
         translations:
           confirm: Do you want to translate the page to %{language}?
           confirm_cs: Do you want to translate the page to Czech?
-          confirm_en: Do you want to translate the page to English?
           confirm_de: Do you want to translate the page to German?
-        form:
-          node:
-            title: Content
-            settings: Settings
-          remove: remove
-          file_name: File name
-          file_size: File size
-          caption: Caption
-          tag: Tag
-          additional_form_fields: More fields
-          documents:
-            add: Add document
-          atoms:
-            add: Add atom
-        atom_fields:
-          images: Images
-          add_image: Add image
-          remove: Remove atom
-
+          confirm_en: Do you want to translate the page to English?
+      partials:
+        auth_links:
+          logout: Log out
+        tabs:
+          content: Content
+          documents: Documents
+          gallery: Gallery
+          settings: Settings
+          site_social_links: Links
       react_picker:
         add: Add
-
-      nested_model_controls:
-        destroy: Remove
-
+      remove_confirmation: Remove?
+      save: Save
       single_file_select:
         add_image: Add image
         add_video: Add video
         remove_video: Remove video
-
-      base:
-        atoms:
-          add: Add chapter
-
-      menu_tree:
-        success: Tree structure updated
-        error: 'Failed to update tree structure: %{msg}'
-
-      form_footer:
-        submit: Submit
-        back: Back

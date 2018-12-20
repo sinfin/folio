@@ -1,3 +1,4 @@
+---
 cs:
   helpers:
     page_entries_info:
@@ -6,9 +7,9 @@ cs:
       one_page:
         display_entries:
           few: Zobrazuji <b>%{count}</b> %{entry_name}
-          zero: "Žádná položka nenalezena"
           one: Zobrazuji <b>%{count}</b> %{entry_name}
           other: Zobrazuji <b>%{count}</b> %{entry_name}
+          zero: Žádná položka nenalezena
   views:
     pagination:
       first: "&laquo; První"

@@ -1,5 +1,91 @@
 ---
 en:
+  activerecord:
+    attributes:
+      folio/image:
+        file_placements: Placements
+        thumbnail_sizes: Generated versions
+      folio/menu:
+        locale: Version
+        type: Type
+      folio/menu_item:
+        target: Link
+        type: Type
+      folio/site:
+        address: Address
+        description: Description
+        domain: Domain
+        email: E-mail
+        facebook_pixel_code: Facebook pixel - code
+        google_analytics_tracking_code: Google analytics - tracking code
+        locales: Languages
+        phone: Phone
+        turbo_mode: Turbo mode
+    errors:
+      models:
+        folio/lead:
+          attributes:
+            verified_captcha:
+              invalid: Invalid verification
+        folio/newsletter_subscription:
+          attributes:
+            email:
+              invalid: Invalid e-mail address
+    models:
+      folio/account:
+        one: Account
+        other: Accounts
+      folio/atom:
+        one: Atom
+        other: Atoms
+      folio/atom/text:
+        one: Text
+        other: Texts
+      folio/category:
+        one: Category
+        other: Categories
+      folio/document:
+        one: Document
+        other: Documents
+      folio/file:
+        one: File
+        other: Files
+      folio/image:
+        one: Image
+        other: Images
+      folio/lead:
+        one: Lead
+        other: Leads
+      folio/menu:
+        one: Menu
+        other: Menus
+      folio/menu/page:
+        one: Menu
+        other: Menus
+      folio/menu_item:
+        one: Link
+        other: Links
+      folio/newsletter_subscription:
+        one: Newsletter subscription
+        other: Newsletter subscriptions
+      folio/node:
+        one: Page
+        other: Pages
+      folio/node_translation:
+        one: Translation
+        other: Translations
+      folio/page:
+        one: Page
+        other: Pages
+      folio/site:
+        one: Site
+        other: Sites
+      tag:
+        one: Tag
+        other: Tags
+      visit:
+        one: Visit
+        other: Visits
   attributes:
     code: Code
     content: Content
@@ -21,113 +107,3 @@ en:
     slug: Slug
     tag_list: Keywords
     title: Title
-
-  activerecord:
-    attributes:
-      folio/image:
-        thumbnail_sizes: Generated versions
-        file_placements: Placements
-
-      folio/menu:
-        locale: Version
-        type: Type
-
-      folio/menu_item:
-        target: Link
-        type: Type
-
-      folio/site:
-        description: Description
-        domain: Domain
-        locales: Languages
-        phone: Phone
-        email: E-mail
-        address: Address
-        google_analytics_tracking_code: Google analytics - tracking code
-        facebook_pixel_code: Facebook pixel - code
-        turbo_mode: Turbo mode
-
-    models:
-      folio/account:
-        one: Account
-        other: Accounts
-
-      folio/atom:
-        one: Atom
-        other: Atoms
-
-      folio/atom/text:
-        one: Text
-        other: Texts
-
-      folio/category:
-        one: Category
-        other: Categories
-
-      folio/document:
-        one: Document
-        other: Documents
-
-      folio/file:
-        one: File
-        other: Files
-
-      folio/image:
-        one: Image
-        other: Images
-
-      folio/lead:
-        one: Lead
-        other: Leads
-
-      folio/menu_item:
-        one: Link
-        other: Links
-
-      folio/menu:
-        one: Menu
-        other: Menus
-
-      folio/menu/page:
-        one: Menu
-        other: Menus
-
-      folio/newsletter_subscription:
-        one: Newsletter subscription
-        other: Newsletter subscriptions
-
-      folio/node:
-        one: Page
-        other: Pages
-
-      folio/node_translation:
-        one: Translation
-        other: Translations
-
-      folio/page:
-        one: Page
-        other: Pages
-
-      folio/site:
-        one: Site
-        other: Sites
-
-      tag:
-        one: Tag
-        other: Tags
-
-      visit:
-        one: Visit
-        other: Visits
-
-    errors:
-      models:
-        folio/lead:
-          attributes:
-            verified_captcha:
-              invalid: Invalid verification
-
-        folio/newsletter_subscription:
-          attributes:
-            email:
-              invalid: Invalid e-mail address

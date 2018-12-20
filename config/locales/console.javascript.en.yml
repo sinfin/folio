@@ -1,17 +1,18 @@
+---
 en:
   folio:
     console:
       javascript:
-        finalizing: Finalizing
-        save: Save
-        cancel: Cancel
-        noResults: No results
-        used: Used already
-        create: Create
         availableDocuments: Available documents
-        selectedDocuments: Selected documents
         availableImages: Available images
-        selectedImages: Selected images
+        cancel: Cancel
+        create: Create
         fileTitleHint: File title as displayed on the web (fallback to file name).
-        placementsLabel: Usage
+        finalizing: Finalizing
         newUploadTags: Tags for new files
+        noResults: No results
+        placementsLabel: Usage
+        save: Save
+        selectedDocuments: Selected documents
+        selectedImages: Selected images
+        used: Used already

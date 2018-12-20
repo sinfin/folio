@@ -1,81 +1,48 @@
+---
 en:
-  head:
-    title:
-      separator: "|"
-      default: ''
-    description: ''
-
+  all: All
   domain:
     short: dummy.folio
-
-  'true': Yes
-  'false': No
-
-  time:
-    formats:
-      short: "%d %b %Y, %H:%m"
   dragonfly:
     invalid_format: Invalid format
+  'false': false
   folio:
-    partials:
-      photoswipe:
-        error: '<div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>'
-
-    locale:
-      languages:
-        cs: czech
-        de: german
-        en: english
-        es: spanish
-
     console:
-      query: Search...
-      nodes:
-        index:
-          title: Nodes
-          translations: Translations
-          type: Type
-          query: Fulltext search
-          all_nodes: All nodes
-          published: Published only
-          unpublished: Drafts only
-          all_tags: All tags
-          all_types: All types
-        node_row:
-          new:
-            confirm: Do you want to translate the page to %{language}?
-        form:
-          node:
-            title: Content
-          gallery:
-            title: Gallery
-          documents:
-            title: Documents
-          atoms:
-            title: Atoms
       accounts:
         index:
-          title: Accounts
           edit: Edit
           query: Accounts serach
+          title: Accounts
       files:
         index:
           title: Files
-      menus:
-        index:
-          title: Menu
       leads:
         index:
           title: Leads
         show:
           title: Lead
+      menus:
+        index:
+          title: Menu
+      nodes:
+        form:
+          atoms:
+            title: Atoms
+          documents:
+            title: Documents
+          gallery:
+            title: Gallery
+        index:
+          all_nodes: All nodes
+          all_tags: All tags
+          all_types: All types
+          query: Fulltext search
+          unpublished: Drafts only
+        node_row:
+          new:
+            confirm: Do you want to translate the page to %{language}?
+      query: Search...
       really_delete: Are you sure that you want delete %{title}?
-
-    site:
-      settings:
-        title: Settings
-        title_long: Settings for site %{site}
-
     errors:
       show:
         back_to_home: back to the homepage
@@ -95,20 +62,36 @@ en:
           text_line_1: We're sorry, but something's broken down.
           text_line_2: Try the homepage or return later.
           title: '500'
-
     lead_form:
       email: E-mail
-      phone: Phone
-      submit: Submit
+      failure: Failed to send the message. Please try again later.
+      message: Thanks for your message!
       note: Message
       note_placeholder: ''
-      message: Thanks for your message!
-      failure: Failed to send the message. Please try again later.
-
-    newsletter_subscription_form:
+      phone: Phone
       submit: Submit
+    locale:
+      languages:
+        cs: czech
+        de: german
+        en: english
+        es: spanish
+    newsletter_subscription_form:
       message: Submitted!
-
-  all: All
-  all_models: All %{model}
-  without_model: Without %{model}
+      submit: Submit
+    partials:
+      photoswipe:
+        error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
+    site:
+      settings:
+        title: Settings
+        title_long: Settings for site %{site}
+  head:
+    description: ''
+    title:
+      default: ''
+      separator: "|"
+  time:
+    formats:
+      short: "%d %b %Y, %H:%m"
+  'true': true

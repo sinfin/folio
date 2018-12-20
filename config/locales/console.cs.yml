@@ -1,186 +1,156 @@
+---
 cs:
   folio:
     console:
-      alt_prompt: Alternativní popisek obrázku
-      file_title_prompt: Název souboru
-      remove_confirmation: Odebrat?
-      finalizing: Dokončuji
-      save: Uložit
-      cancel: Zrušit
-      noTags: Žádná klíčová slova
-      create: Vytvořit
-      gallery_management: Správa galerie
-      documents_management: Správa dokumentů
-
-      breadcrumbs:
-        root: Administrace
-        actions:
-          new: Vytvořit
-          edit: Upravit
-          delete: Smazat
-          add: Přidat
-          show: Zobrazit
-
-      partials:
-        auth_links:
-          logout: Odhlásit
-
-        tabs:
-          content: Obsah
-          gallery: Galerie
-          documents: Dokumenty
-          settings: Nastavení
-          site_social_links: Odkazy
-
-        simple_fields_for:
-          add: Přidat %{relation}
-
-      back: Zpět
-
-      filters:
-        query: Vyhledávání...
-        all_tags: Všechny tagy
-
-      nodes:
-        index:
-          title: Stránky
-          translations: Překlady
-          type: Typ
-          featured: Featured
-          published: Publikované
-          filters:
-            all_nodes: Viditelné i neviditelné
-            all_parents: Všechny kategorie
-            published: Jen publikované
-            unpublished: Jen rozpracované
-            all_types: Všechny typy obsahu
-            page: Stránka
-            category: Kategorie
-
-        nodes_table:
-          more_nodes: další stránky
-        node_row:
-          preview: Náhled
-          add_child_node: Přidat podstránku
-        translations:
-          confirm: Chcete přeložit stránku do %{language}?
-          confirm_cs: Chcete přeložit stránku do češtiny?
-          confirm_en: Chcete přeložit stránku do angličtiny?
-          confirm_de: Chcete přeložit stránku do němčiny?
-        form:
-          node:
-            title: Obsah
-            settings: Nastavení pro zveřejnění
-            meta: Nastavení metadat
-          remove: odebrat
-          file_name: Název souboru
-          file_size: Velikost
-          caption: Popisek
-          tag: Tag
-          additional_form_fields: Další pole
-          documents:
-            add: Přidat dokument
-
       accounts:
         index:
           title: Uživatelé
-
+      alt_prompt: Alternativní popisek obrázku
+      back: Zpět
+      base:
+        atoms:
+          add: Přidat kapitolu
+      breadcrumbs:
+        actions:
+          add: Přidat
+          delete: Smazat
+          edit: Upravit
+          new: Vytvořit
+          show: Zobrazit
+        root: Administrace
+      cancel: Zrušit
+      create: Vytvořit
+      delete: Smazat
       documents:
         edit:
           download: Stáhnout
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
-
+      documents_management: Správa dokumentů
+      file_title_prompt: Název souboru
+      filters:
+        all_tags: Všechny tagy
+        query: Vyhledávání...
+      finalizing: Dokončuji
+      footer:
+        text: Administrace webu %{site_name}.
+      form_footer:
+        back: Zpět
+        submit: Uložit
+      gallery_management: Správa galerie
       images:
         edit:
           download_original: Stáhnout originál
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
-
-      menus:
-        index:
-          title: Menu
-          type: Druh
-        form:
-          add_menu_item: Přidat odkaz
-        menu_item_fields:
-          title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
-          remove: Odebrat
-        detail_heading:
-          edit_link: Upravit odkazy
-          show_link: Upravit stromovou strukturu
-        show:
-          title: Stromová struktura
-
+      index:
+        checkboxes:
+          check_all: Vybrat vše
+          handle_selected: Vyřídit vybrané
+          toggle: Hromadný výběr
+          uncheck_all: Odvybrat vše
+        filters:
+          all: Všechny
+          cancel: Zrušit filtry
+          title: Filtry
+        header:
+          by_query: Filtrovat...
       leads:
+        handle:
+          success: Formulář vyřízen
         index:
           handled: Vyřízené
           not_handled: Nevyřízené
-
+        mass_handle:
+          success: Formuláře vyřízeny
         show:
+          blank: "-- nevyplněno --"
           handle: Vyřídit
           unhandle: Označit jako nevyřízený
-          blank: '-- nevyplněno --'
-
-        mass_handle:
-          success: 'Formuláře vyřízeny'
-
-        handle:
-          success: 'Formulář vyřízen'
-
         unhandle:
-          success: 'Formulář označen za nevyřízený'
-
-      visits:
+          success: Formulář označen za nevyřízený
+      menu_tree:
+        error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
+        success: Stromová struktura upravena
+      menus:
+        detail_heading:
+          edit_link: Upravit odkazy
+          show_link: Upravit stromovou strukturu
+        form:
+          add_menu_item: Přidat odkaz
         index:
-          title: Visits
-
-      really_delete: Jste si jist, že chcete smazat %{title}?
-      delete: Smazat
-
-      sites:
-        index:
-          title: Weby
-
+          title: Menu
+          type: Druh
+        menu_item_fields:
+          remove: Odebrat
+          title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
+        show:
+          title: Stromová struktura
+      nested_model_controls:
+        destroy: Odebrat
       newsletter_subscriptions:
         index:
           title: Odběry newsletteru
-
-      footer:
-        text: Administrace webu %{site_name}.
-
-      index:
-        header:
-          by_query: Filtrovat...
-
-        filters:
-          title: Filtry
-          cancel: Zrušit filtry
-          all: Všechny
-
-        checkboxes:
-          check_all: Vybrat vše
-          uncheck_all: Odvybrat vše
-          handle_selected: Vyřídit vybrané
-          toggle: Hromadný výběr
-
+      noTags: Žádná klíčová slova
+      nodes:
+        form:
+          additional_form_fields: Další pole
+          caption: Popisek
+          documents:
+            add: Přidat dokument
+          file_name: Název souboru
+          file_size: Velikost
+          node:
+            meta: Nastavení metadat
+            settings: Nastavení pro zveřejnění
+            title: Obsah
+          remove: odebrat
+          tag: Tag
+        index:
+          featured: Featured
+          filters:
+            all_nodes: Viditelné i neviditelné
+            all_parents: Všechny kategorie
+            all_types: Všechny typy obsahu
+            category: Kategorie
+            page: Stránka
+            published: Jen publikované
+            unpublished: Jen rozpracované
+          published: Publikované
+          title: Stránky
+          translations: Překlady
+          type: Typ
+        node_row:
+          add_child_node: Přidat podstránku
+          preview: Náhled
+        nodes_table:
+          more_nodes: další stránky
+        translations:
+          confirm: Chcete přeložit stránku do %{language}?
+          confirm_cs: Chcete přeložit stránku do češtiny?
+          confirm_de: Chcete přeložit stránku do němčiny?
+          confirm_en: Chcete přeložit stránku do angličtiny?
+      partials:
+        auth_links:
+          logout: Odhlásit
+        simple_fields_for:
+          add: Přidat %{relation}
+        tabs:
+          content: Obsah
+          documents: Dokumenty
+          gallery: Galerie
+          settings: Nastavení
+          site_social_links: Odkazy
       react_picker:
         add: Přidat
-
-      nested_model_controls:
-        destroy: Odebrat
-
+      really_delete: Jste si jist, že chcete smazat %{title}?
+      remove_confirmation: Odebrat?
+      save: Uložit
       single_file_select:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
-
-      base:
-        atoms:
-          add: Přidat kapitolu
-
-      menu_tree:
-        success: Stromová struktura upravena
-        error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
-
-      form_footer:
-        submit: Uložit
-        back: Zpět
+      sites:
+        index:
+          title: Weby
+      visits:
+        index:
+          title: Visits

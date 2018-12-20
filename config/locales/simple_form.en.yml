@@ -1,46 +1,38 @@
+---
 en:
   simple_form:
-    "yes": 'Yes'
-    "no": 'No'
-
-    required:
-      text: 'required'
-      mark: '*'
-      # You can uncomment the line below if you need to overwrite the whole required html.
-      # When using html, text and mark won't be used.
-      # html: '<abbr title="required">*</abbr>'
-
     error_notification:
-      default_message: "Please review the problems below:"
-
+      default_message: 'Please review the problems below:'
     hints:
       defaults:
-        title: Title as displayed on the website
-        slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong> characters are accepted. Changing it doesn't break old URLs.
-        locale: Language variant
-        perex: Brief description of the content. Used as an opening paragraph on the page and description when multiple pages are listed. It is also used by search engines.
+        alt: Image alternative text. Displayed on image loading failure.
         content: Main content. If you need to add more structured content, you canadd <strong>chapters</strong> bellow.
-        tag_list: A comma-separated list of keywords. Used for faster searching/categorization and content display.
         featured: Used to display a page on the homepage or other selections.
+        locale: Language variant
+        meta_description: SEO, Optional. This description appears on a search engine page.
+        meta_title: SEO, Optional. This title may appear on a search engine page.
+        perex: Brief description of the content. Used as an opening paragraph on the page and description when multiple pages are listed. It is also used by search engines.
         published: Publish on the web at the date below.
         published_at: Content will be visible since the selected date.
-        meta_title: SEO, Optional. This title may appear on a search engine page.
-        meta_description: SEO, Optional. This description appears on a search engine page.
-        alt: Image alternative text. Displayed on image loading failure.
-
-      site:
-        turbo_mode: Turns off visit tracking which reduces the server-load.
-
+        slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong> characters are accepted. Changing it doesn't break old URLs.
+        tag_list: A comma-separated list of keywords. Used for faster searching/categorization and content display.
+        title: Title as displayed on the website
       node:
         code: Optional internal node specification.
         parent_id: If using tree structure, parent page/category is selected here.
-
+      site:
+        turbo_mode: Turns off visit tracking which reduces the server-load.
+    'no': 'No'
     placeholders:
       defaults:
-        title: "e.g.: Our team"
-        slug: "e.g.: our-team"
-        perex: "One or more paragraphs of unformatted text, sepearated by a blank line."
-        content: "Formatted text with images, tables, etc."
-        tag_list: "e.g.: services, offer"
-        meta_title: "e.g.: Our team"
-        meta_description: "Recommended size is under 250 characters."
+        content: Formatted text with images, tables, etc.
+        meta_description: Recommended size is under 250 characters.
+        meta_title: 'e.g.: Our team'
+        perex: One or more paragraphs of unformatted text, sepearated by a blank line.
+        slug: 'e.g.: our-team'
+        tag_list: 'e.g.: services, offer'
+        title: 'e.g.: Our team'
+    required:
+      mark: "*"
+      text: required
+    'yes': 'Yes'

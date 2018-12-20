@@ -1,5 +1,151 @@
 ---
 cs:
+  activerecord:
+    attributes:
+      folio/account:
+        role: Uživatelská role
+      folio/atom/base:
+        content: Obsah
+        perex: Perex
+        title: Název
+      folio/image:
+        file_placements: Použití
+        thumbnail_sizes: Vygenerované verze
+      folio/lead:
+        created_at: Odesláno
+        email: E-mail
+        name: Jméno
+        note: Zpráva
+        phone: Telefon
+        state: Stav
+        url: URL
+      folio/menu:
+        locale: Jazyková verze
+        type: Název nabídky
+      folio/menu_item:
+        target: Odkaz
+        type: Druh
+      folio/newsletter_subscription:
+        created_at: Zapsána dne
+        email: E-mailová adresa
+      folio/node:
+        code: Kód
+        parent_id: Nadřazená stránka
+        slug: Varianta názvu stránky pro odkazy
+        title: Název stránky
+        translations: Překlady
+        type: Šablona / obsah
+      folio/site:
+        address: Adresa
+        domain: Doména
+        facebook_pixel_code: Facebook pixel - kód
+        google_analytics_tracking_code: Google analytics - trackovací kód
+        locales: Jazyky
+        turbo_mode: Kritický režim
+      visit:
+        events: Události
+        id: Id
+        landing_page: Landing page
+        referrer: Referrer
+        started_at: Začátek
+        utm_campaign: UTM campaign
+        utm_content: UTM content
+        utm_medium: UTM medium
+        utm_source: UTM source
+        utm_term: UTM term
+    errors:
+      models:
+        folio/lead:
+          attributes:
+            verified_captcha:
+              invalid: Neplatné potvrzení
+        folio/newsletter_subscription:
+          attributes:
+            email:
+              invalid: Neplatná e-mailová adresa
+    models:
+      folio/account:
+        few: Uživatelé
+        one: Uživatel
+        other: Uživatelů
+      folio/atom:
+        few: Kapitoly
+        one: Kapitola
+        other: Kapitol
+      folio/atom/text:
+        few: Texty
+        one: Text
+        other: Textů
+      folio/category:
+        few: Kategorie
+        one: Kategorie
+        other: Kategorií
+      folio/document:
+        few: Soubory
+        one: Soubor
+        other: Souborů
+      folio/file:
+        few: Soubory
+        one: Soubor
+        other: Souborů
+      folio/image:
+        few: Obrázky
+        one: Obrázek
+        other: Obrázků
+      folio/lead:
+        few: Formuláře
+        one: Formulář
+        other: Formulářů
+      folio/menu:
+        few: Menu
+        one: Menu
+        other: Menu
+      folio/menu/page:
+        few: Menu
+        one: Menu
+        other: Menu
+      folio/menu_item:
+        few: Odkazy
+        one: Odkaz
+        other: Odkazů
+      folio/newsletter_subscription:
+        few: Newslettery
+        one: Newsletter
+        other: Newsletterů
+      folio/node:
+        few: Stránky
+        one: Stránka
+        other: Stránek
+      folio/node_translation:
+        few: Překlady
+        one: Překlad
+        other: Překladů
+      folio/page:
+        few: Stránky
+        one: Stránka
+        other: Stránek
+      folio/page/cookies:
+        few: Používání cookies
+        one: Používání cookies
+        other: Používání cookies
+      folio/site:
+        few: Weby
+        one: Web
+        other: Webů
+      tag:
+        few: Tagy
+        one: Tag
+        other: Tagů
+      visit:
+        few: Návštěvy
+        one: Návštěva
+        other: Návštěv
+    state_machines:
+      folio/lead:
+        state:
+          states:
+            handled: Vyřízený
+            submitted: Nevyřízený
   attributes:
     code: Kód
     content: Obsah
@@ -21,185 +167,3 @@ cs:
     slug: Varianta názvu pro odkazy
     tag_list: Klíčová slova
     title: Název
-
-  activerecord:
-    attributes:
-      folio/account:
-        is_active: Aktivní
-        full_name: Jméno
-
-      folio/node:
-        title: Název stránky
-        slug: Varianta názvu stránky pro odkazy
-        code: Kód
-        type: Šablona / obsah
-        parent_id: Nadřazená stránka
-        translations: Překlady
-
-      folio/atom/base:
-        title: Název
-        content: Obsah
-        perex: Perex
-
-      folio/image:
-        thumbnail_sizes: Vygenerované verze
-        file_placements: Použití
-
-      folio/menu:
-        locale: Jazyková verze
-        type: Název nabídky
-
-      folio/menu_item:
-        target: Odkaz
-        type: Druh
-
-      folio/site:
-        domain: Doména
-        locales: Jazyky
-        address: Adresa
-        google_analytics_tracking_code: Google analytics - trackovací kód
-        facebook_pixel_code: Facebook pixel - kód
-        turbo_mode: Kritický režim
-
-      folio/lead:
-        state: Stav
-        email: E-mail
-        phone: Telefon
-        note: Zpráva
-        url: URL
-        name: Jméno
-        created_at: Odesláno
-
-      folio/newsletter_subscription:
-        email: E-mailová adresa
-        created_at: Zapsána dne
-
-      folio/account:
-        role: Uživatelská role
-
-      visit:
-        id: Id
-        started_at: Začátek
-        events: Události
-        referrer: Referrer
-        landing_page: Landing page
-        utm_source: UTM source
-        utm_medium: UTM medium
-        utm_campaign: UTM campaign
-        utm_content: UTM content
-        utm_term: UTM term
-
-    models:
-      folio/account:
-        one: Uživatel
-        few: Uživatelé
-        other: Uživatelů
-
-      folio/atom:
-        one: Kapitola
-        few: Kapitoly
-        other: Kapitol
-
-      folio/atom/text:
-        one: Text
-        few: Texty
-        other: Textů
-
-      folio/category:
-        one: Kategorie
-        few: Kategorie
-        other: Kategorií
-
-      folio/document:
-        one: Soubor
-        few: Soubory
-        other: Souborů
-
-      folio/file:
-        one: Soubor
-        few: Soubory
-        other: Souborů
-
-      folio/image:
-        one: Obrázek
-        few: Obrázky
-        other: Obrázků
-
-      folio/lead:
-        one: Formulář
-        few: Formuláře
-        other: Formulářů
-
-      folio/menu_item:
-        one: Odkaz
-        few: Odkazy
-        other: Odkazů
-
-      folio/menu:
-        one: Menu
-        few: Menu
-        other: Menu
-
-      folio/menu/page:
-        one: Menu
-        few: Menu
-        other: Menu
-
-      folio/newsletter_subscription:
-        one: Newsletter
-        few: Newslettery
-        other: Newsletterů
-
-      folio/node:
-        one: Stránka
-        few: Stránky
-        other: Stránek
-
-      folio/node_translation:
-        one: Překlad
-        few: Překlady
-        other: Překladů
-
-      folio/page:
-        one: Stránka
-        few: Stránky
-        other: Stránek
-
-      folio/page/cookies:
-        one: Používání cookies
-        few: Používání cookies
-        other: Používání cookies
-
-      folio/site:
-        one: Web
-        few: Weby
-        other: Webů
-
-      tag:
-        one: Tag
-        few: Tagy
-        other: Tagů
-
-      visit:
-        one: Návštěva
-        few: Návštěvy
-        other: Návštěv
-
-    errors:
-      models:
-        folio/lead:
-          attributes:
-            verified_captcha:
-              invalid: Neplatné potvrzení
-
-        folio/newsletter_subscription:
-          attributes:
-            email:
-              invalid: Neplatná e-mailová adresa
-
-    state_machines:
-      folio/lead:
-        state:
-          states:
-            submitted: Nevyřízený
-            handled: Vyřízený

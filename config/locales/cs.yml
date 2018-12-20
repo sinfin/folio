@@ -1,36 +1,16 @@
+---
 cs:
-  head:
-    title:
-      separator: "|"
-      default: ''
-    description: ''
-
-  'true': Ano
-  'false': Ne
-
-  time:
-    formats:
-      short: "%d %b %Y, %H:%m"
-      short_with_seconds: "%d %b %Y, %H:%m:%S"
+  all: Všechny
   dragonfly:
     invalid_format: Nepodporovaný formát
+  errors:
+    attributes:
+      email:
+        invalid: Zadejte prosíme platný e-mail!
+      note:
+        blank: Napište prosíme zprávu!
+  'false': Ne
   folio:
-    partials:
-      photoswipe:
-        error: '<div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>'
-
-    locale:
-      languages:
-        cs: čeština
-        de: němčina
-        en: angličtina
-        es: španělština
-
-    site:
-      settings:
-        title: Nastavení
-        title_long: Nastavení stránky %{site}
-
     errors:
       show:
         back_to_home: zpět na homepage
@@ -50,27 +30,36 @@ cs:
           text_line_1: Omlouváme se, ale něco se rozbilo.
           text_line_2: Zkuste přejít na homepage, nebo se vraťte později.
           title: '500'
-
     lead_form:
       email: E-mail
+      failure: Zprávu se nepodařilo odeslat. Zkuste to prosíme později.
+      message: Děkujeme za zaslání Vaší zprávy!
       name: Jméno
+      note: Zpráva
       phone: Telefon
       submit: Odeslat
-      note: Zpráva
-      message: Děkujeme za zaslání Vaší zprávy!
-      failure: Zprávu se nepodařilo odeslat. Zkuste to prosíme později.
-
+    locale:
+      languages:
+        cs: čeština
+        de: němčina
+        en: angličtina
+        es: španělština
     newsletter_subscription_form:
-      submit: Odeslat
       message: Odesláno!
-
-  errors:
-    attributes:
-      email:
-        invalid: Zadejte prosíme platný e-mail!
-      note:
-        blank: Napište prosíme zprávu!
-
-  all: Všechny
-  all_models: Všechny %{model}
-  without_model: Bez %{model}
+      submit: Odeslat
+    partials:
+      photoswipe:
+        error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
+    site:
+      settings:
+        title: Nastavení
+        title_long: Nastavení stránky %{site}
+  head:
+    description: ''
+    title:
+      default: ''
+      separator: "|"
+  time:
+    formats:
+      short_with_seconds: "%d %b %Y, %H:%m:%S"
+  'true': Ano

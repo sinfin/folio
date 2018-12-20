@@ -1,12 +1,13 @@
-cs: &default
+---
+cs:
   flash:
     actions:
       create:
-        notice: '%{resource_name} vytvořen(a).'
-        alert: '%{resource_name} nelze vytvořit.'
-      update:
-        notice: '%{resource_name} upraven(a).'
-        alert: '%{resource_name} nelze upravit.'
+        alert: "%{resource_name} nelze vytvořit."
+        notice: "%{resource_name} vytvořen(a)."
       destroy:
-        notice: '%{resource_name} smazán(a).'
-        alert: '%{resource_name} nelze smazat.'
+        alert: "%{resource_name} nelze smazat."
+        notice: "%{resource_name} smazán(a)."
+      update:
+        alert: "%{resource_name} nelze upravit."
+        notice: "%{resource_name} upraven(a)."

@@ -1,17 +1,18 @@
+---
 cs:
   folio:
     console:
       javascript:
-        finalizing: Dokončuji
-        save: Uložit
-        cancel: Zrušit
-        noResults: Žádné výsledky
-        used: Již použité
-        create: Vytvořit
         availableDocuments: Dostupné dokumenty
-        selectedDocuments: Vybrané dokumenty
         availableImages: Dostupné obrázky
-        selectedImages: Vybrané obrázky
+        cancel: Zrušit
+        create: Vytvořit
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
-        placementsLabel: Použití
+        finalizing: Dokončuji
         newUploadTags: Štítky pro nové soubory
+        noResults: Žádné výsledky
+        placementsLabel: Použití
+        save: Uložit
+        selectedDocuments: Vybrané dokumenty
+        selectedImages: Vybrané obrázky
+        used: Již použité
