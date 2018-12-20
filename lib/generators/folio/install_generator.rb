@@ -158,6 +158,8 @@ module Folio
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
+
+    config.folio_console_locale = I18n.default_locale
         RUBY
         end
       end

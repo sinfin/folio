@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2018-12-20
+### Added
+- Added `folio_console_locale` config key, fixed missing translations
+
 ## 2018-12-19
 ### Changed
 - Changed `FolioCell` to `Folio::ApplicationCell` and `Folio::ConsoleCell`
