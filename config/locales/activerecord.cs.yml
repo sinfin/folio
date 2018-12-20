@@ -13,12 +13,7 @@ cs:
         thumbnail_sizes: Vygenerované verze
       folio/lead:
         created_at: Odesláno
-        email: E-mail
-        name: Jméno
         note: Zpráva
-        phone: Telefon
-        state: Stav
-        url: URL
       folio/menu:
         locale: Jazyková verze
         type: Název nabídky
@@ -31,7 +26,6 @@ cs:
       folio/node:
         code: Kód
         parent_id: Nadřazená stránka
-        slug: Varianta názvu stránky pro odkazy
         title: Název stránky
         translations: Překlady
         type: Šablona / obsah
@@ -147,6 +141,7 @@ cs:
             handled: Vyřízený
             submitted: Nevyřízený
   attributes:
+    aasm_state: Stav
     code: Kód
     content: Obsah
     cover_placement: Obrázek
@@ -165,5 +160,7 @@ cs:
     published: Zveřejněno
     published_at: Zveřejněno k datu
     slug: Varianta názvu pro odkazy
+    state: Stav
     tag_list: Klíčová slova
     title: Název
+    url: URL

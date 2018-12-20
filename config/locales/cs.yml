@@ -3,12 +3,6 @@ cs:
   all: Všechny
   dragonfly:
     invalid_format: Nepodporovaný formát
-  errors:
-    attributes:
-      email:
-        invalid: Zadejte prosíme platný e-mail!
-      note:
-        blank: Napište prosíme zprávu!
   'false': Ne
   folio:
     errors:

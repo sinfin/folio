@@ -1,48 +1,10 @@
 ---
 en:
   all: All
-  domain:
-    short: dummy.folio
   dragonfly:
     invalid_format: Invalid format
   'false': false
   folio:
-    console:
-      accounts:
-        index:
-          edit: Edit
-          query: Accounts serach
-          title: Accounts
-      files:
-        index:
-          title: Files
-      leads:
-        index:
-          title: Leads
-        show:
-          title: Lead
-      menus:
-        index:
-          title: Menu
-      nodes:
-        form:
-          atoms:
-            title: Atoms
-          documents:
-            title: Documents
-          gallery:
-            title: Gallery
-        index:
-          all_nodes: All nodes
-          all_tags: All tags
-          all_types: All types
-          query: Fulltext search
-          unpublished: Drafts only
-        node_row:
-          new:
-            confirm: Do you want to translate the page to %{language}?
-      query: Search...
-      really_delete: Are you sure that you want delete %{title}?
     errors:
       show:
         back_to_home: back to the homepage
@@ -66,8 +28,8 @@ en:
       email: E-mail
       failure: Failed to send the message. Please try again later.
       message: Thanks for your message!
+      name: Name
       note: Message
-      note_placeholder: ''
       phone: Phone
       submit: Submit
     locale:
@@ -93,5 +55,5 @@ en:
       separator: "|"
   time:
     formats:
-      short: "%d %b %Y, %H:%m"
+      short_with_seconds: "%d %b %Y, %H:%m:%S"
   'true': true

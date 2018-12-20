@@ -17,6 +17,11 @@ en:
         root: Console
       cancel: Cancel
       create: Create
+      delete: Remove
+      documents:
+        edit:
+          download: Download
+          file_hint: Do not input anything to keep the original file.
       documents_management: Documents management
       file_title_prompt: Displayed file name
       filters:
@@ -29,27 +34,61 @@ en:
         back: Back
         submit: Submit
       gallery_management: Gallery management
+      images:
+        edit:
+          download_original: Download original
+          file_hint: Do not input anything to keep the original file.
+      index:
+        checkboxes:
+          check_all: Check all
+          handle_selected: Handle selected
+          uncheck_all: Uncheck all
+        filters:
+          all: All
+          cancel: Cancel filters
+          title: Filtering
+        header:
+          by_query: Filter...
+      leads:
+        handle:
+          success: Lead form handled
+        index:
+          handled: Handled
+          not_handled: Not handled
+        mass_handle:
+          success: Lead forms handled
+        show:
+          blank: "-- blank --"
+          handle: Handle
+          unhandle: Set as not handled
+        unhandle:
+          success: Lead form set as not handled
       menu_tree:
         error: 'Failed to update tree structure: %{msg}'
         success: Tree structure updated
+      menus:
+        detail_heading:
+          edit_link: Edit links
+          show_link: Edit tree structure
+        form:
+          add_menu_item: Add menu item
+        menu_item_fields:
+          title_hint: Optional. If left blank, the title of the target is shown.
+        show:
+          title: Tree structure
       nested_model_controls:
         destroy: Remove
       noTags: No tags
       nodes:
-        atom_fields:
-          add_image: Add image
-          images: Images
-          remove: Remove atom
         form:
           additional_form_fields: More fields
-          atoms:
-            add: Add atom
           caption: Caption
           documents:
             add: Add document
           file_name: File name
           file_size: File size
           node:
+            meta: Meta settings
             settings: Settings
             title: Content
           remove: remove
@@ -89,6 +128,7 @@ en:
           site_social_links: Links
       react_picker:
         add: Add
+      really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
       save: Save
       single_file_select:

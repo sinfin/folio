@@ -2,25 +2,51 @@
 en:
   activerecord:
     attributes:
+      folio/account:
+        role: Role
+      folio/atom/base:
+        content: Content
+        perex: Perex
+        title: Title
       folio/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
+      folio/lead:
+        created_at: Sent at
+        note: Message
       folio/menu:
         locale: Version
         type: Type
       folio/menu_item:
         target: Link
         type: Type
+      folio/newsletter_subscription:
+        created_at: Subscribed at
+        email: E-mail address
+      folio/node:
+        code: Code
+        parent_id: Parent node
+        title: Page title
+        translations: Translations
+        type: Layout / content
       folio/site:
         address: Address
-        description: Description
         domain: Domain
-        email: E-mail
         facebook_pixel_code: Facebook pixel - code
         google_analytics_tracking_code: Google analytics - tracking code
         locales: Languages
-        phone: Phone
         turbo_mode: Turbo mode
+      visit:
+        events: Events
+        id: Id
+        landing_page: Landing page
+        referrer: Referrer
+        started_at: Started at
+        utm_campaign: UTM campaign
+        utm_content: UTM content
+        utm_medium: UTM medium
+        utm_source: UTM source
+        utm_term: UTM term
     errors:
       models:
         folio/lead:
@@ -77,6 +103,10 @@ en:
       folio/page:
         one: Page
         other: Pages
+      folio/page/cookies:
+        few: Cookies
+        one: Cookies
+        other: Cookies
       folio/site:
         one: Site
         other: Sites
@@ -86,7 +116,14 @@ en:
       visit:
         one: Visit
         other: Visits
+    state_machines:
+      folio/lead:
+        state:
+          states:
+            handled: Handled
+            submitted: Submitted
   attributes:
+    aasm_state: State
     code: Code
     content: Content
     cover_placement: Image
@@ -105,5 +142,7 @@ en:
     published: Published
     published_at: Published at
     slug: Slug
+    state: State
     tag_list: Keywords
     title: Title
+    url: URL

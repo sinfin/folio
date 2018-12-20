@@ -2,9 +2,6 @@
 cs:
   folio:
     console:
-      accounts:
-        index:
-          title: Uživatelé
       alt_prompt: Alternativní popisek obrázku
       back: Zpět
       base:
@@ -45,7 +42,6 @@ cs:
         checkboxes:
           check_all: Vybrat vše
           handle_selected: Vyřídit vybrané
-          toggle: Hromadný výběr
           uncheck_all: Odvybrat vše
         filters:
           all: Všechny
@@ -76,19 +72,12 @@ cs:
           show_link: Upravit stromovou strukturu
         form:
           add_menu_item: Přidat odkaz
-        index:
-          title: Menu
-          type: Druh
         menu_item_fields:
-          remove: Odebrat
           title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
         show:
           title: Stromová struktura
       nested_model_controls:
         destroy: Odebrat
-      newsletter_subscriptions:
-        index:
-          title: Odběry newsletteru
       noTags: Žádná klíčová slova
       nodes:
         form:
@@ -131,8 +120,6 @@ cs:
       partials:
         auth_links:
           logout: Odhlásit
-        simple_fields_for:
-          add: Přidat %{relation}
         tabs:
           content: Obsah
           documents: Dokumenty
@@ -141,16 +128,10 @@ cs:
           site_social_links: Odkazy
       react_picker:
         add: Přidat
-      really_delete: Jste si jist, že chcete smazat %{title}?
+      really_delete: Jste si jist, že chcete smazat "%{title}"?
       remove_confirmation: Odebrat?
       save: Uložit
       single_file_select:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
-      sites:
-        index:
-          title: Weby
-      visits:
-        index:
-          title: Visits
