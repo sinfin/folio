@@ -11,13 +11,17 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   def copy_view_files
     available_views.each do |view|
       filename = filename_with_extensions(view).gsub('.html', '')
-      template "#{view}.slim", File.join('app', 'views', 'folio', 'console', controller_file_path, filename)
+      template "#{view}.slim", File.join('app/views/folio/console', controller_file_path, filename)
     end
-    template '_table_row.slim', File.join('app', 'views', 'folio', 'console', controller_file_path, "_#{singular_table_name}.slim")
+    template '_table_row.slim', File.join('app/views/folio/console', controller_file_path, "_#{singular_table_name}.slim")
   end
 
   def copy_controller
-    template 'controller.rb.tt', File.join('app', 'controllers', 'folio', 'console', "#{controller_file_path}_controller.rb")
+    template 'controller.rb.tt', File.join('app/controllers/folio/console', "#{controller_file_path}_controller.rb")
+  end
+
+  def copy_controller_test
+    template 'controller_test.rb.tt', File.join('test/controllers/folio/console', "#{controller_file_path}_controller_test.rb")
   end
 
   def index_resource_name

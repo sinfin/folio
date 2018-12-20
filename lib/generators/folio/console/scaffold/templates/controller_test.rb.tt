@@ -1,0 +1,25 @@
+# frozen_string_literal: true
+
+require 'test_helper'
+
+<% module_namespacing do -%>
+module Folio
+  class Console::<%= controller_class_name %>ControllerTest < Console::BaseControllerTest
+    test 'index' do
+      get <%= index_resource_name.gsub('main_app.', '') %>
+      assert_response :success
+    end
+
+    test 'new' do
+      get <%= new_resource_name.gsub('main_app.', '') %>
+      assert_response :success
+    end
+
+    test 'edit' do
+      @<%= singular_table_name %> = create(:<%= singular_table_name %>)
+      get <%= edit_resource_name.gsub('main_app.', '') %>(@<%= singular_table_name %>.id)
+      assert_response :success
+    end
+  end
+end
+<% end -%>
