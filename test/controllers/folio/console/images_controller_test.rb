@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require_relative 'base_controller_test'
 
 module Folio
   class Console::ImagesControllerTest < Console::BaseControllerTest
