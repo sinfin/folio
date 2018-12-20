@@ -25,6 +25,7 @@ end
 group :development do
   gem 'puma'
   gem 'rack-mini-profiler', require: false
+  gem 'i18n-tasks'
 end
 
 # To use a debugger
