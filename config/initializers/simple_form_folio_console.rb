@@ -4,6 +4,10 @@ Dir["#{Folio::Engine.root}/lib/folio/console/simple_form_components/*.rb"].each 
   require_dependency file
 end
 
+Dir["#{Folio::Engine.root}/lib/folio/console/simple_form_inputs/*.rb"].each do |file|
+  require_dependency file
+end
+
 SimpleForm.setup do |config|
   config.wrappers :with_flag, tag: 'div', class: 'form-group form-group--with-flag', error_class: 'text-danger has-danger' do |b|
     b.use :html5

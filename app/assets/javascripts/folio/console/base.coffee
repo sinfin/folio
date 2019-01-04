@@ -2,6 +2,8 @@
 #= require jquery_ujs
 #= require popper
 #= require bootstrap-sprockets
+#= require bootstrap-datepicker/core
+#= require bootstrap-datepicker/locales/bootstrap-datepicker.cs.js
 
 #= require jquery-ui/ui/data
 #= require jquery-ui/ui/scroll-parent
@@ -26,6 +28,7 @@
 #= require folio/console/_data-change-value
 #= require folio/console/_data-destroy-association
 #= require folio/console/_data-cocoon-single-nested
+#= require folio/console/_date-picker-input
 #= require folio/console/_bootstrap-tabs-lazyload
 #= require folio/console/_modal-lazyload
 #= require folio/console/_modal-html-scroll

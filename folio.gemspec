@@ -40,6 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'font-awesome-rails'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'dropzonejs-rails'
+  s.add_dependency 'bootstrap-datepicker-rails'
   s.add_dependency 'sitemap_generator'
   s.add_dependency 'whenever'
   s.add_dependency 'dotenv-rails'

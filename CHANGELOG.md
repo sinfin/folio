@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-01-04
+### Added
+- Added `date_picker` simple form input
+
 ## 2018-12-20
 ### Added
 - Added `folio_console_locale` config key, fixed missing translations
