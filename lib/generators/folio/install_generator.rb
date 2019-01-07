@@ -26,6 +26,7 @@ module Folio
 
         gem_group :test do
           gem 'factory_bot'
+          gem 'rack_session_access'
         end
 
         gem_group :development, :test do
@@ -174,6 +175,12 @@ module Folio
             'config.action_mailer.delivery_method = :letter_opener',
             'config.action_mailer.perform_deliveries = true',
           ].join("\n  ")
+        end
+      end
+
+      def test_settings
+        inject_into_file 'config/environments/test.rb', before: '# Raises error for missing translations' do
+          "config.middleware.use RackSessionAccess::Middleware\n\n  "
         end
       end
 

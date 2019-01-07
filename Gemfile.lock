@@ -364,6 +364,9 @@ GEM
       rack (>= 1.2.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
+    rack_session_access (0.2.0)
+      builder (>= 2.0.0)
+      rack (>= 1.0.0)
     rails (5.2.1)
       actioncable (= 5.2.1)
       actionmailer (= 5.2.1)
@@ -517,6 +520,7 @@ DEPENDENCIES
   pry-rails
   puma
   rack-mini-profiler
+  rack_session_access
   rubocop-rails
   selenium-webdriver
   sqlite3
