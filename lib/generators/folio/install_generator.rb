@@ -154,6 +154,7 @@ module Folio
       g.stylesheets false
       g.javascripts false
       g.helper false
+      g.test_framework :test_unit, fixture: false
     end
 
     I18n.available_locales = [:cs, :en]
