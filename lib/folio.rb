@@ -44,8 +44,10 @@ module Folio
   LANGUAGES = {
     cs: 'CZ',
     de: 'DE',
+    pl: 'PL',
     es: 'ES',
-    en: 'GB'
+    en: 'GB',
+    en_US: 'US'
   }
 
   EMAIL_REGEXP = /[^@]+@[^@]+/

@@ -1,47 +1,45 @@
 # frozen_string_literal: true
 
-module Folio
-  class Menu < ApplicationRecord
-    # Relations
-    has_many :menu_items, -> { ordered }, dependent: :destroy
-    accepts_nested_attributes_for :menu_items, allow_destroy: true,
-                                               reject_if: :all_blank
+class Folio::Menu < Folio::ApplicationRecord
+  # Relations
+  has_many :menu_items, -> { ordered }, dependent: :destroy
+  accepts_nested_attributes_for :menu_items, allow_destroy: true,
+                                             reject_if: :all_blank
 
-    # Validations
-    validates :type, :locale,
-              presence: true
+  # Validations
+  validates :type, :locale,
+            presence: true
 
-    alias_attribute :items, :menu_items
+  alias_attribute :items, :menu_items
 
-    def title
-      model_name.human
-    end
+  def title
+    model_name.human
+  end
 
-    def available_targets
-      Node.where(locale: locale)
-    end
+  def available_targets
+    Folio::Node.where(locale: locale)
+  end
 
-    def supports_nesting?
-      self.class.max_nesting_depth > 1
-    end
+  def supports_nesting?
+    self.class.max_nesting_depth > 1
+  end
 
-    def self.rails_paths
-      {}
-    end
+  def self.rails_paths
+    {}
+  end
 
-    def self.allowed_menu_item_classes
-      MenuItem.recursive_subclasses
-    end
+  def self.allowed_menu_item_classes
+    Folio::MenuItem.recursive_subclasses
+  end
 
-    def self.allowed_menu_item_classes_for_select
-      type_collection_for_select(self.allowed_menu_item_classes)
-    end
+  def self.allowed_menu_item_classes_for_select
+    type_collection_for_select(self.allowed_menu_item_classes)
+  end
 
-    # Used for UI/controllers only
-    # no model validations as that would get complex fast
-    def self.max_nesting_depth
-      1
-    end
+  # Used for UI/controllers only
+  # no model validations as that would get complex fast
+  def self.max_nesting_depth
+    1
   end
 end
 

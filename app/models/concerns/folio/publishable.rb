@@ -1,38 +1,36 @@
 # frozen_string_literal: true
 
-module Folio
-  module Publishable
-    module Basic
-      extend ActiveSupport::Concern
+module Folio::Publishable
+  module Basic
+    extend ActiveSupport::Concern
 
-      included do
-        scope :published, -> { where(published: true) }
-        scope :unpublished, -> { where('published != ? OR published IS NULL', true) }
-      end
-
-      def published?
-        published.present?
-      end
+    included do
+      scope :published, -> { where(published: true) }
+      scope :unpublished, -> { where('published != ? OR published IS NULL', true) }
     end
 
-    module WithDate
-      extend ActiveSupport::Concern
+    def published?
+      published.present?
+    end
+  end
 
-      included do
-        scope :published, -> {
-          where('published = ? AND (published_at IS NOT NULL AND published_at <= ?)', true, Time.now.change(sec: 0))
-        }
+  module WithDate
+    extend ActiveSupport::Concern
 
-        scope :unpublished, -> {
-          where('(published != ? OR published IS NULL) OR (published_at IS NULL OR published_at > ?)', true, Time.now.change(sec: 0))
-        }
-      end
+    included do
+      scope :published, -> {
+        where('published = ? AND (published_at IS NOT NULL AND published_at <= ?)', true, Time.now.change(sec: 0))
+      }
 
-      def published?
-        published.present? &&
-        published_at &&
-        published_at <= Time.now.change(sec: 0)
-      end
+      scope :unpublished, -> {
+        where('(published != ? OR published IS NULL) OR (published_at IS NULL OR published_at > ?)', true, Time.now.change(sec: 0))
+      }
+    end
+
+    def published?
+      published.present? &&
+      published_at &&
+      published_at <= Time.now.change(sec: 0)
     end
   end
 end

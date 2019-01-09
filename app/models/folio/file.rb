@@ -1,52 +1,50 @@
 # frozen_string_literal: true
 
-module Folio
-  class File < ApplicationRecord
-    include Taggable
-    include SanitizeFilename
+class Folio::File < Folio::ApplicationRecord
+  include Folio::Taggable
+  include Folio::SanitizeFilename
 
-    paginates_per nil
-    max_paginates_per nil
+  paginates_per nil
+  max_paginates_per nil
 
-    dragonfly_accessor :file do
-      after_assign :sanitize_filename
-    end
-
-    # Relations
-    has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
-                               dependent: :destroy
-    has_many :placements, through: :file_placements
-
-    # Validations
-    validates :file, :type,
-              presence: true
-
-    # Scopes
-    scope :ordered, -> { order(created_at: :desc) }
-
-    before_save :set_mime_type
-    after_save :touch_placements
-
-    def title
-      file_name
-    end
-
-    def file_extension
-      Mime::Type.lookup(mime_type).symbol
-    end
-
-    private
-
-      def touch_placements
-        file_placements.each(&:touch)
-      end
-
-      def set_mime_type
-        return unless file.present?
-        return unless respond_to?(:mime_type)
-        self.mime_type = file.mime_type
-      end
+  dragonfly_accessor :file do
+    after_assign :sanitize_filename
   end
+
+  # Relations
+  has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
+                             dependent: :destroy
+  has_many :placements, through: :file_placements
+
+  # Validations
+  validates :file, :type,
+            presence: true
+
+  # Scopes
+  scope :ordered, -> { order(created_at: :desc) }
+
+  before_save :set_mime_type
+  after_save :touch_placements
+
+  def title
+    file_name
+  end
+
+  def file_extension
+    Mime::Type.lookup(mime_type).symbol
+  end
+
+  private
+
+    def touch_placements
+      file_placements.each(&:touch)
+    end
+
+    def set_mime_type
+      return unless file.present?
+      return unless respond_to?(:mime_type)
+      self.mime_type = file.mime_type
+    end
 end
 
 # == Schema Information

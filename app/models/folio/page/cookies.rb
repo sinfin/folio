@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Page::Cookies < Folio::Page
-  include ::Folio::Singleton
+  include Folio::Singleton
 
   def console_caret_icon
     'info-circle'

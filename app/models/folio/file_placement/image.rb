@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-module Folio
-  class FilePlacement::Image < FilePlacement::Base
-    folio_image_placement
-  end
+class Folio::FilePlacement::Image < Folio::FilePlacement::Base
+  folio_image_placement
 end
 
 # == Schema Information

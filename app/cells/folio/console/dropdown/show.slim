@@ -7,7 +7,7 @@
     type="button"
   ]
     = title
-    ' 
+    '
   .dropdown-menu class=('dropdown-menu-right' if menu_align == :right)
     - links.each do |link|
       = link_to link[:title], link[:url], class: 'dropdown-item'
