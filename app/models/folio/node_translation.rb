@@ -19,7 +19,7 @@ class Folio::NodeTranslation < Folio::Node
     elsif node_original.node_translations.where(locale: locale).exists?
       self.node_translations.find_by(locale: locale).cast
     else
-      node_original.cast
+      nil
     end
   end
 end

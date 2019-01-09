@@ -174,7 +174,7 @@ class Folio::Node < Folio::ApplicationRecord
     elsif self.node_translations.published.where(locale: locale).exists?
       self.node_translations.find_by(locale: locale).cast
     else
-      cast
+      nil
     end
   end
 
@@ -211,6 +211,14 @@ class Folio::Node < Folio::ApplicationRecord
 
       translation
     end
+  end
+
+  def only_published
+    self if published?
+  end
+
+  def translation?
+    type == 'Folio::NodeTranslation'
   end
 
   private
