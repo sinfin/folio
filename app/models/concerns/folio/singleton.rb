@@ -10,8 +10,12 @@ module Folio::Singleton
   end
 
   class_methods do
-    def instance
-      self.first.presence || fail(MissingError, self.class.to_s)
+    def instance(fail_on_missing: true)
+      self.first.presence || (fail_on_missing ? fail_on_missing_instance : nil)
+    end
+
+    def fail_on_missing_instance
+      fail(MissingError, self.to_s)
     end
 
     def console_selectable?
