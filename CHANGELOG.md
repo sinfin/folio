@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 2019-01-14
 ### Changed
 - Changed `bootstrap/` to `folio-bootstrap/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`
+- Changed `filter` in `Folio::Filterable` to `filter_by_params`
 
 ## 2019-01-09
 ### Changed

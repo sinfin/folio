@@ -28,7 +28,7 @@ module Folio::Filterable
     # with their associated values. Most useful for calling named scopes from
     # URL params. Make sure you don't pass stuff directly from the web without
     # whitelisting only the params you care about first!
-    def filter(filtering_params)
+    def filter_by_params(filtering_params)
       results = self.where(nil) # create an anonymous scope
       filtering_params.each do |key, value|
         next if [ :sort, :desc ].include?(key.to_sym)
