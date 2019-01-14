@@ -15,4 +15,5 @@
   = tab :documents
     = react_documents f.object.document_placements
 
-= form_footer f, console_nodes_path
+- destroy = f.object.translation? ? console_node_path(f.object.id) : nil
+= form_footer f, console_nodes_path, destroy: destroy

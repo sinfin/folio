@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
-module Folio
-  module Atom
-    class Text < Base
-      STRUCTURE = {
-        content: :redactor,
-        title: nil,
-        images: nil,
-        model: nil,
-      }
+class Folio::Atom::Text < Folio::Atom::Base
+  STRUCTURE = {
+    content: :redactor,
+    title: nil,
+    images: nil,
+    model: nil,
+  }
 
-      def self.cell_name
-        'folio/atom/text'
-      end
-    end
+  def self.cell_name
+    'folio/atom/text'
   end
 end
 

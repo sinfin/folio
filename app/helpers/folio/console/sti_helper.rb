@@ -4,7 +4,8 @@ module Folio
   module Console::StiHelper
     def sti_records_for_select(records, show_model_names: true, add_content: false)
       records.map do |record|
-        record_name = record.try(:to_label) ||
+        record_name = record.try(:to_console_label) ||
+                      record.try(:to_label) ||
                       record.try(:title) ||
                       record.model_name.human
 

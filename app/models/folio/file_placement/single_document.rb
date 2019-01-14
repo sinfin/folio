@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-module Folio
-  class FilePlacement::SingleDocument < FilePlacement::Base
-    folio_document_placement :document_placement
-  end
+class Folio::FilePlacement::SingleDocument < Folio::FilePlacement::Base
+  folio_document_placement :document_placement
 end
 
 # == Schema Information

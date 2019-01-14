@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-module Folio
-  class Menu::Page < Menu
-  end
+class Folio::Menu::Page < Folio::Menu
 end
 
 # == Schema Information

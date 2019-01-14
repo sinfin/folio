@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio
-  class Console::BaseController < ApplicationController
+  class Console::BaseController < ::Folio::ApplicationController
     before_action :authenticate_account!
     before_action :add_root_breadcrumb
     # TODO: before_action :authorize_account!

@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-01-09
+### Changed
+- Changed `Node.translate` and `NodeTranslation.translate` to return `nil` for missing locale (instead of the original).
+
 ## 2019-01-04
 ### Added
 - Added `date_picker` simple form input

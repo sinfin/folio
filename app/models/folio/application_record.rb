@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-module Folio
-  class ApplicationRecord < ActiveRecord::Base
-    self.abstract_class = true
+class Folio::ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
 
-    include ClearsPageCache
-    include Filterable
-    include NillifyBlanks
-    include RecursiveSubclasses
-    include Sortable
-  end
+  include Folio::ClearsPageCache
+  include Folio::Filterable
+  include Folio::NillifyBlanks
+  include Folio::RecursiveSubclasses
+  include Folio::Sortable
 end

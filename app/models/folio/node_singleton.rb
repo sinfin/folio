@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-module Folio
-  class NodeSingleton < Node
-    include ::Folio::Singleton
-  end
+class Folio::NodeSingleton < Folio::Node
+  include Folio::Singleton
 end
 
 # == Schema Information

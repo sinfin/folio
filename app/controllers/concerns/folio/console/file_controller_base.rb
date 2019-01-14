@@ -19,7 +19,7 @@ module Folio
 
             files_json = Rails.cache.fetch(cache_key, expires_in: 1.day) do
               find_files.map do |file|
-                ::Folio::FileSerializer.new(file).serializable_hash
+                ::Folio::FileSerializer.new(file, root: false).serializable_hash
               end.to_json
             end
 
@@ -30,7 +30,7 @@ module Folio
 
       def create
         @file = ::Folio::File.create!(file_params)
-        render json: { file: FileSerializer.new(@file) },
+        render json: ::Folio::FileSerializer.new(@file),
                location: edit_path(@file)
       end
 
@@ -38,7 +38,7 @@ module Folio
         @file.update(file_params)
         respond_with(@file, location: index_path) do |format|
           format.html
-          format.json { render json: { file: FileSerializer.new(@file) } }
+          format.json { render json: ::Folio::FileSerializer.new(@file) }
         end
       end
 
@@ -58,7 +58,7 @@ module Folio
         end
 
         json = @files.map do |file|
-          ::Folio::FileSerializer.new(file).serializable_hash
+          ::Folio::FileSerializer.new(file, root: false).serializable_hash
         end.to_json
 
         render plain: json

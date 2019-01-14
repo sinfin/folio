@@ -24,6 +24,8 @@ module Folio
     end
 
     def nested_page_path(page_or_parts, add_parents: false, params: {})
+      return nil unless main_app.respond_to?(:page_path)
+
       if add_parents
         nested_page_path_with_parents(page_or_parts, params: params)
       else

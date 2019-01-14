@@ -1,43 +1,41 @@
 # frozen_string_literal: true
 
-module Folio
-  class Site < ApplicationRecord
-    include ::Folio::Singleton
+class Folio::Site < Folio::ApplicationRecord
+  include Folio::Singleton
 
-    after_commit :clear_fragment_cache!
+  after_commit :clear_fragment_cache!
 
-    # Validations
-    validates :title, :locale, :locales,
-              presence: true
+  # Validations
+  validates :title, :locale, :locales,
+            presence: true
 
-    validates :domain,
-              uniqueness: true
+  validates :domain,
+            uniqueness: true
 
-    validates_format_of :email,
-                        with: ::Folio::EMAIL_REGEXP
+  validates_format_of :email,
+                      with: Folio::EMAIL_REGEXP
 
-    def self.additional_params
-      []
-    end
-
-    def self.social_link_sites
-      # class method is better than a constant as one might want to override it
-      %i[facebook
-         instagram
-         twitter
-         youtube
-         appstore
-         google_play
-         pinterest
-         messenger]
-    end
-
-    private
-
-      def clear_fragment_cache!
-        Rails.cache.clear
-      end
+  def self.additional_params
+    []
   end
+
+  def self.social_link_sites
+    # class method is better than a constant as one might want to override it
+    %i[facebook
+       instagram
+       twitter
+       youtube
+       appstore
+       google_play
+       pinterest
+       messenger]
+  end
+
+  private
+
+    def clear_fragment_cache!
+      Rails.cache.clear
+    end
 end
 
 # == Schema Information
