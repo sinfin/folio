@@ -12,11 +12,20 @@
             = fp.hidden_field :alt
             = fp.hidden_field :id
 
-            .folio-console-file-table__td.folio-console-file-table__td--main
+            div[
+              class="folio-console-file-table__td"
+              class="folio-console-file-table__td--main"
+            ]
               = fp.object.to_label
 
-            .folio-console-file-table__td.folio-console-file-table__td--size
+            div[
+              class="folio-console-file-table__td"
+              class="folio-console-file-table__td--size"
+            ]
               = number_to_human_size(fp.object.file.file_size)
 
-            .folio-console-file-table__td.folio-console-file-table__td--extension
+            div[
+              class="folio-console-file-table__td"
+              class="folio-console-file-table__td--extension"
+            ]
               = fp.object.file.file_extension.to_s.upcase
