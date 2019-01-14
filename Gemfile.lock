@@ -423,9 +423,9 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    rubocop-rails (1.5.0)
+    rubocop-rails_config (0.4.2)
       railties (>= 3.0)
-      rubocop (~> 0.53)
+      rubocop (~> 0.58)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
@@ -521,7 +521,7 @@ DEPENDENCIES
   puma
   rack-mini-profiler
   rack_session_access
-  rubocop-rails
+  rubocop-rails_config
   selenium-webdriver
   sqlite3
 

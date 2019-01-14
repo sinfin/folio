@@ -68,7 +68,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'devise-i18n'
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'pry-rails'
-  s.add_development_dependency 'rubocop-rails'
+  s.add_development_dependency 'rubocop-rails_config'
   s.add_development_dependency 'guard-rubocop'
   s.add_development_dependency 'guard-coffeelint'
   s.add_development_dependency 'guard-slimlint'
