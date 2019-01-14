@@ -5,8 +5,10 @@
   ],
   "version": "0.0.0",
   "dependencies": {
+    "folio-bootstrap": "https://github.com/twbs/bootstrap.git",
     "ilikenwf-nested-sortable": "^2.0",
-    "jquery-ui": "^1.12.1"
+    "jquery-ui": "^1.12.1",
+    "bootstrap-datepicker": "^1.8.0"
   },
   "devDependencies": {}
 }

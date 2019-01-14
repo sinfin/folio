@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-01-14
+### Changed
+- Changed `bootstrap/` to `folio-bootstrap/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`
+
 ## 2019-01-09
 ### Changed
 - Changed `Node.translate` and `NodeTranslation.translate` to return `nil` for missing locale (instead of the original).

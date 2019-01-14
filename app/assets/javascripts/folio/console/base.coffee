@@ -1,9 +1,8 @@
 #= require jquery
 #= require jquery_ujs
-#= require popper
-#= require bootstrap-sprockets
-#= require bootstrap-datepicker/core
-#= require bootstrap-datepicker/locales/bootstrap-datepicker.cs.js
+#= require folio-bootstrap/dist/js/bootstrap
+#= require bootstrap-datepicker/dist/js/bootstrap-datepicker
+#= require bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min
 
 #= require jquery-ui/ui/data
 #= require jquery-ui/ui/scroll-parent
