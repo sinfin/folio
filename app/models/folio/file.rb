@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'open3'
+
 class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::SanitizeFilename
+  include Folio::MimeTypeDetection
 
   paginates_per nil
   max_paginates_per nil
@@ -43,7 +46,7 @@ class Folio::File < Folio::ApplicationRecord
     def set_mime_type
       return unless file.present?
       return unless respond_to?(:mime_type)
-      self.mime_type = file.mime_type
+      self.mime_type = get_mime_type(file)
     end
 end
 
