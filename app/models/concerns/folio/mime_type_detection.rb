@@ -3,13 +3,11 @@
 module Folio::MimeTypeDetection
   extend ActiveSupport::Concern
 
+  include Folio::Shell
+
   private
 
     def get_mime_type(file)
-      stdout, _status = Open3.capture2('file',
-                                       '--brief',
-                                       '--mime-type',
-                                       file.path)
-      stdout.chomp
+      shell('file', '--brief', '--mime-type', file.path)
     end
 end

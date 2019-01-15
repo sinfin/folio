@@ -12,9 +12,9 @@ module Folio
       image.update!(thumbnail_sizes: image.thumbnail_sizes)
 
       ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
-        temporary_url: URI.encode(image.temporary_url(size)),
-        temporary_s3_url: URI.encode(image.temporary_s3_url(size)),
-        url: URI.encode(image.thumbnail_sizes[size][:url]),
+        temporary_url: CGI.escape(image.temporary_url(size)),
+        temporary_s3_url: CGI.escape(image.temporary_s3_url(size)),
+        url: CGI.escape(image.thumbnail_sizes[size][:url]),
         width: image.thumbnail_sizes[size][:width],
         height: image.thumbnail_sizes[size][:height]
       )
@@ -27,13 +27,13 @@ module Folio
       def compute_sizes(image, size, quality)
         return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
 
-        if image.try(:mime_type) =~ /png/
+        if /png/.match?(image.try(:mime_type))
           if Rails.application.config.folio_dragonfly_keep_png
             thumbnail = image.file
                              .thumb(size, 'format' => :png, 'frame' => 0)
           else
             thumbnail = image.file
-                             .add_png_background(size)
+                             .add_white_background
                              .thumb(size, 'format' => :jpg, 'frame' => 0)
                              .encode('jpg', "-quality #{quality}")
                              .jpegoptim
@@ -41,6 +41,12 @@ module Folio
         elsif image.animated_gif?
           thumbnail = image.file
                            .animated_gif_resize(size)
+        elsif /pdf/.match?(image.try(:mime_type))
+          thumbnail = image.file
+                           .add_white_background
+                           .thumb(size, 'format' => :jpg, 'frame' => 0)
+                           .encode('jpg', "-quality #{quality}")
+                           .jpegoptim
         else
           thumbnail = image.file
                            .thumb(size, 'format' => :jpg, 'frame' => 0)
@@ -57,16 +63,6 @@ module Folio
           height: thumbnail.height,
           quality: quality
         }
-      end
-
-      def shell(*command)
-        cmd = command.join(' ')
-
-        _stdout, _stderr, status = Open3.capture3(*command)
-
-        unless status == 0
-          fail "Failed: '#{cmd}' failed with '#{stderr.chomp}'. Stdout: '#{stdout.chomp}'."
-        end
       end
   end
 end

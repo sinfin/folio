@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 require 'mini_magick'
@@ -139,7 +138,7 @@ module Folio::Thumbnails
         end
         animated = identify.split("\n").size > 1
         self.additional_data ||= {}
-        self.additional_data.merge!(animated: animated)
+        self.additional_data[:animated] = animated
       end
 
       dominant_color = MiniMagick::Tool::Convert.new do |convert|

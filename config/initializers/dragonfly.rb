@@ -2,6 +2,7 @@
 
 require 'dragonfly'
 require 'dragonfly/s3_data_store'
+require 'open3'
 
 Dragonfly.logger = Rails.logger
 Rails.application.middleware.use Dragonfly::Middleware
@@ -12,11 +13,23 @@ if defined?(ActiveRecord::Base)
   ActiveRecord::Base.extend Dragonfly::Model::Validations
 end
 
+def shell(*command)
+  cmd = command.join(' ')
+
+  stdout, stderr, status = Open3.capture3(*command)
+
+  if status == 0
+    stdout.chomp
+  else
+    fail "Failed: '#{cmd}' failed with '#{stderr.chomp}'. Stdout: '#{stdout.chomp}'."
+  end
+end
+
 Dragonfly.app.configure do
   plugin :imagemagick
 
   processor :cmyk_to_srgb do |content, *args|
-    if `identify '#{content.file.path}'` =~ /CMYK/
+    if /CMYK/.match?(shell('identify', content.file.path))
       content.shell_update escape: false do |old_path, new_path|
         cmyk_icc = "#{Folio::Engine.root}/data/icc_profiles/PSOuncoated_v3_FOGRA52.icc"
         srgb_icc = "#{Folio::Engine.root}/data/icc_profiles/sRGB_v4_ICC_preference.icc"
@@ -25,8 +38,12 @@ Dragonfly.app.configure do
     end
   end
 
+  processor :flatten do |content, *args|
+    content.process! :convert, '-flatten'
+  end
+
   processor :jpegoptim do |content, *args|
-    if `which jpegtran`.blank?
+    if shell('which', 'jpegtran').blank?
       msg = 'Missing jpegtran binary. Thumbnail not optimized.'
       Raven.capture_message msg if defined?(Raven)
       logger.error msg if defined?(logger)
@@ -39,14 +56,14 @@ Dragonfly.app.configure do
   end
 
   processor :animated_gif_resize do |content, raw_size, *args|
-    fail 'Missing gifsicle binary.' if `which gifsicle`.blank?
+    fail 'Missing gifsicle binary.' if shell('which', 'gifsicle').blank?
     size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
     content.shell_update do |old_path, new_path|
       "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"  # The command sent to the command line
     end
   end
 
-  processor :add_png_background do |content, size, *args|
+  processor :add_white_background do |content, *args|
     content.process! :convert, '-background white -alpha remove'
   end
 
