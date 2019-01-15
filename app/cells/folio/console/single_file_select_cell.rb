@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
+  include ActionView::Helpers::NumberHelper
+
   def f
     model
   end
@@ -10,7 +12,7 @@ class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
   end
 
   def remove_file_attr
-    options[:remove_file_attr].presence || '_destroy'
+    options[:remove_file_attr].presence || "remove_#{file_attr}"
   end
 
   def file
@@ -22,10 +24,7 @@ class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
   end
 
   def wrap_class
-    [
-      file.present? ? 'folio-console-has-file' : nil,
-      "folio-console-single-file-select-as-#{options[:as]}"
-    ].compact.join(' ')
+    'folio-console-single-file-select--has-file' if filled?
   end
 
   def file_class
@@ -33,6 +32,10 @@ class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
   end
 
   def destroy_class
-    'folio-console-single-file-select-destroy'
+    'folio-console-single-file-select__destroy'
+  end
+
+  def filled?
+    f.object.present? && f.object.file.present?
   end
 end

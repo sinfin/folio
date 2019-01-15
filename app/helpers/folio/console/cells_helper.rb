@@ -30,6 +30,10 @@ module Folio
       single_file_select(f, attr_name, as: :video)
     end
 
+    def single_document_select(f, attr_name = :file)
+      single_file_select(f, attr_name, as: :document)
+    end
+
     def single_file_select(f, attr_name = :file, as: :file)
       cell('folio/console/single_file_select', f, attr_name: attr_name,
                                                   as: as).show.html_safe

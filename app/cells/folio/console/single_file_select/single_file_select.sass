@@ -5,18 +5,11 @@
   .form-control
     display: none
 
-.folio-console-single-file-select-video
-  .btn-danger
-    display: none
-
+.folio-console-single-file-select__video
   video
     width: 500px
     max-width: 100%
     display: block
-    margin-bottom: $grid-gutter-width
-
-    ~ .btn-danger
-      display: block
 
 .folio-console-single-file-select-image
   position: relative
@@ -31,13 +24,15 @@
     max-width: 100%
     max-height: 100%
 
-.folio-console-single-file-select
-  &.folio-console-has-file
-    .form-control
+.folio-console-single-file-select__button
+  &--change,
+  &--remove
+    display: none
+
+  .folio-console-single-file-select--has-file &
+    &--add
       display: none
 
-    .folio-console-single-file-select-image
-      display: flex
-
-    .folio-console-single-file-select-button
-      display: none
+    &--change,
+    &--remove
+      display: inline-block
