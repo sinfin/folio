@@ -40,7 +40,7 @@ module Folio
           gem 'ed25519'
 
           gem 'pry-rails'
-          gem 'rubocop-rails'
+          gem 'rubocop-rails_config'
           gem 'guard-rubocop'
           gem 'guard-coffeelint'
           gem 'guard-slimlint'
@@ -115,6 +115,7 @@ module Folio
           'app/assets/javascripts/non_turbo.js',
           'app/assets/stylesheets/_cells.scss.erb',
           'app/assets/stylesheets/_custom_bootstrap.sass',
+          'app/assets/stylesheets/_fonts.scss',
           'app/assets/stylesheets/_print.sass',
           'app/assets/stylesheets/_sprites.scss',
           'app/assets/stylesheets/_variables.sass',
