@@ -17,13 +17,15 @@ class Folio::Node < Folio::ApplicationRecord
                                dependent: :destroy
 
   if Rails.application.config.folio_using_traco
+    include Folio::TracoSluggable
+
     friendly_id :title, use: %i[slugged scoped history simple_i18n],
                         scope: [:ancestry]
 
     translates :title, :perex, :content, :slug, :meta_title, :meta_description
 
     I18n.available_locales.each do |locale|
-      validates "title_#{locale}".to_sym, "slug_#{locale}".to_sym,
+      validates "title_#{locale}".to_sym,
                 presence: true
 
       validates "slug_#{locale}".to_sym,

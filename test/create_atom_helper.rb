@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 def create_atom(klass = Folio::Atom::Base,
-              *fill_attrs,
-              position: nil,
-              placement: nil,
-              title: nil,
-              perex: nil,
-              content: nil,
-              model: nil,
-              cover: nil,
-              images: nil,
-              document: nil,
-              documents: nil)
+                *fill_attrs,
+                position: nil,
+                placement: nil,
+                title: nil,
+                perex: nil,
+                content: nil,
+                model: nil,
+                cover: nil,
+                images: nil,
+                document: nil,
+                documents: nil)
 
   attrs = {
     type: klass.to_s,
@@ -41,9 +41,9 @@ def create_atom(klass = Folio::Atom::Base,
       raw_field = field.to_s.gsub(/_(#{locales})/, '').to_sym
       attrs[field] = attrs[raw_field]
     end
-    attrs[:title] = nil
-    attrs[:perex] = nil
-    attrs[:content] = nil
+    attrs.delete :title
+    attrs.delete :perex
+    attrs.delete :content
   end
 
   klass.create!(attrs)
