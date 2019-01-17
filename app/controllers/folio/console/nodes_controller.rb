@@ -17,11 +17,12 @@ module Folio
         if params[:by_parent].present?
           parent = Node.find(params[:by_parent])
           @nodes = parent.subtree.original
-                         .filter(filter_params)
+                         .filter_by_params(filter_params)
                          .arrange(order: 'position asc, created_at asc')
         else
           @nodes = Node.original
-                       .ordered.filter(filter_params)
+                       .ordered
+                       .filter_by_params(filter_params)
                        .page(current_page)
         end
       else

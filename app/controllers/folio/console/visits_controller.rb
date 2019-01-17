@@ -5,7 +5,7 @@ class Folio::Console::VisitsController < Folio::Console::BaseController
   add_breadcrumb Visit.model_name.human(count: 2), :console_visits_path
 
   def index
-    @visits = @visits.filter(filter_params) if params[:by_query].present?
+    @visits = @visits.filter_by_params(filter_params) if params[:by_query].present?
     @visits = @visits.page(current_page)
   end
 

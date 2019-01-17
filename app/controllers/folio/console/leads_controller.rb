@@ -9,7 +9,7 @@ module Folio
 
     def index
       @leads = @leads.ordered.includes(:visit)
-      @leads = @leads.filter(filter_params) if params[:by_query].present?
+      @leads = @leads.filter_by_params(filter_params) if params[:by_query].present?
 
       respond_with(@leads, location: console_leads_path) do |format|
         format.html
