@@ -62,6 +62,11 @@ FactoryBot.define do
     association :placement, factory: :folio_page
   end
 
+  factory :folio_cover_placement, class: Folio::FilePlacement::Cover do
+    association :file, factory: :folio_image
+    association :placement, factory: :folio_page
+  end
+
   factory :folio_image, class: Folio::Image do
     file { Folio::Engine.root.join('test/fixtures/folio/test.gif') }
 

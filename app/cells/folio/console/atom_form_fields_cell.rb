@@ -103,12 +103,11 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
     klass = atom.class
     show_model_names = klass::STRUCTURE[:model].size > 1
 
-    klass::STRUCTURE[:model].map do |model_class|
+    klass::STRUCTURE[:model].flat_map do |model_class|
       sti_records_for_select(klass.scoped_model_resource(model_class),
                              show_model_names: show_model_names,
                              add_content: true)
-
-    end.flatten(1)
+    end
   end
 
   def placeholders

@@ -94,7 +94,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def attribute_input(name)
-      if name =~ /_id$/
+      if /_id$/.match?(name)
         "= f.association :#{name.gsub(/_id$/, '')}"
       else
         "= f.input :#{name}"

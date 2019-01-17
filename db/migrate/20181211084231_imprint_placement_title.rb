@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImprintPlacementTitle < ActiveRecord::Migration[5.2]
   def change
     add_column :folio_file_placements, :placement_title, :string

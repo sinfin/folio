@@ -3,13 +3,11 @@
 module Folio
   module OpenGraphHelper
     def og_image
-      begin
-        return @og_image if @og_image.present?
-        path = defined?(og_image_fallback) ? og_image_fallback : '/fb-share.png'
-        image_url(path, host: request.base_url)
-      rescue Sprockets::Rails::Helper::AssetNotFound
-        nil
-      end
+      return @og_image if @og_image.present?
+      path = defined?(og_image_fallback) ? og_image_fallback : '/fb-share.png'
+      image_url(path, host: request.base_url)
+    rescue Sprockets::Rails::Helper::AssetNotFound
+      nil
     end
 
     def og_image_width

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExtendMenu < ActiveRecord::Migration[5.1]
   def change
     add_column :folio_menus, :locale, :string

@@ -22,11 +22,9 @@ class Visit < Folio::ApplicationRecord
   }
 
   def landing_page_path
-    begin
-      URI.parse(landing_page).path
-    rescue URI::InvalidURIError
-      "[ERROR] #{landing_page}"
-    end
+    URI.parse(landing_page).path
+  rescue URI::InvalidURIError
+    "[ERROR] #{landing_page}"
   end
 
   def title

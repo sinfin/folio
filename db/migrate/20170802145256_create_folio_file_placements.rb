@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFolioFilePlacements < ActiveRecord::Migration[5.1]
   def change
     create_table :folio_file_placements do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MakeAtomsPolymorphic < ActiveRecord::Migration[5.1]
   def up
     add_reference :folio_atoms, :placement, polymorphic: true

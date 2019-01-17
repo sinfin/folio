@@ -111,7 +111,6 @@ module Folio
       index = Hash.new { |h, k| h[k] = ActiveSupport::OrderedHash.new }
 
       nodes.each do |node|
-
         children = index[node.id]
         index[node.parent_id][node] = children
 

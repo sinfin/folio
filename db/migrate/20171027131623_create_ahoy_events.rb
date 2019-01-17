@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateAhoyEvents < ActiveRecord::Migration[5.1]
   def change
     unless table_exists?(:ahoy_events)

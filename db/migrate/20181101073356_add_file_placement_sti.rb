@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFilePlacementSti < ActiveRecord::Migration[5.2]
   def up
     add_column :folio_file_placements, :type, :string

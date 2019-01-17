@@ -5,7 +5,6 @@ require 'sitemap_generator'
 
 SitemapGenerator::Sitemap.default_host = Folio::Site.first.url
 SitemapGenerator::Sitemap.create do
-
   Folio::Node.published.each do |node|
     case node.type
     when 'Folio::Page'

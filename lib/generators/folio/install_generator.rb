@@ -67,7 +67,7 @@ module Folio
           'public/500.html',
         ].each do |path|
           full_path = Rails.root.join(path)
-          File.delete(full_path) if File.exists?(full_path)
+          File.delete(full_path) if File.exist?(full_path)
         end
       end
 
@@ -189,7 +189,6 @@ module Folio
         return if File.readlines(Rails.root.join('config/application.rb')).grep('rails-assets.org').any?
 
         inject_into_file 'Gemfile', after: "source 'https://rubygems.org'" do <<-'RUBY'
-
 source 'https://rails-assets.org'
         RUBY
         end

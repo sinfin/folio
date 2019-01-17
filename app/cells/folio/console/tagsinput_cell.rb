@@ -28,7 +28,7 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
       class: 'folio-tagsinput',
       'data-tags': values.join(separator),
       'data-allow-create': allow_creation,
-      'data-comma-separated': (separator =~ /,\s*/ ? 'true' : nil),
+      'data-comma-separated': (/,\s*/.match?(separator) ? 'true' : nil),
       value: value,
     }
   end

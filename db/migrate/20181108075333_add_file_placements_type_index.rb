@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFilePlacementsTypeIndex < ActiveRecord::Migration[5.2]
   def change
     unless index_exists?(:folio_file_placements, :type)

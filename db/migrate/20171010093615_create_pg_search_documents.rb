@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePgSearchDocuments < ActiveRecord::Migration[5.1]
   def self.up
     say_with_time('Creating table for pg_search multisearch') do

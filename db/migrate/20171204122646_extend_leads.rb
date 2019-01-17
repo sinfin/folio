@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExtendLeads < ActiveRecord::Migration[5.1]
   def change
     add_column :folio_leads, :name, :string

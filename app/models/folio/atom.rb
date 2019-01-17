@@ -10,7 +10,7 @@ module Folio::Atom
       if Rails.application.config.folio_using_traco
         text_fields = []
         Folio::Atom::Base.column_names.each do |column|
-          if column =~ /\A(title|content|perex)_/
+          if /\A(title|content|perex)_/.match?(column)
             text_fields << column.to_sym
           end
         end
