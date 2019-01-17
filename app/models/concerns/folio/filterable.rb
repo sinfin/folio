@@ -4,7 +4,7 @@
 #
 # Call scopes directly from your URL params:
 #
-#     @products = Product.filter(params.slice(:status, :location,:starts_with))
+#     @products = Product.filter_by_params(params.slice(:status, :location,:starts_with))
 #
 module Folio::Filterable
   extend ActiveSupport::Concern
