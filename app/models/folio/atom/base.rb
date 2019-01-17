@@ -121,6 +121,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       else
         attrs = %i[title content perex]
       end
+
+      attrs.each do |attr|
+        if klass::STRUCTURE[attr].blank? && self[attr].present?
+          self[attr] = nil
+        end
+      end
     end
 
     def unlink_extra_files
