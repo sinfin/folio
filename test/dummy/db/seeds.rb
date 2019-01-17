@@ -20,17 +20,17 @@ end
 
 2.times { unsplash_pic }
 
-site = Folio::Site.create!(title: 'Sinfin.digital',
-                           domain: 'sinfin.localhost',
-                           locale: 'cs',
-                           locales: ['cs', 'en', 'de'],
-                           email: 'info@sinfin.cz',
-                           phone: '+420 123 456 789',
-                           social_links: {
-                            facebook: 'https://www.facebook.com/',
-                            instagram: 'https://www.instagram.com/',
-                            twitter: 'https://www.twitter.com/',
-                           })
+Folio::Site.create!(title: 'Sinfin.digital',
+                    domain: 'sinfin.localhost',
+                    locale: 'cs',
+                    locales: ['cs', 'en', 'de'],
+                    email: 'info@sinfin.cz',
+                    phone: '+420 123 456 789',
+                    social_links: {
+                      facebook: 'https://www.facebook.com/',
+                      instagram: 'https://www.instagram.com/',
+                      twitter: 'https://www.twitter.com/',
+                    })
 
 about = Folio::Page.create!(title: 'O nás',
                             published: true)

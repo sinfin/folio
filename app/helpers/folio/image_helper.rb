@@ -3,8 +3,8 @@
 module Folio
   module ImageHelper
     def img_tag_retina(normal, retina, html_options = {})
-      escaped_normal = URI.encode(normal)
-      escaped_retina = URI.encode(retina)
+      escaped_normal = CGI.escape(normal)
+      escaped_retina = CGI.escape(retina)
       html_options[:srcset] = "#{escaped_normal} 1x, #{escaped_retina} 2x"
       image_tag escaped_normal, html_options
     end

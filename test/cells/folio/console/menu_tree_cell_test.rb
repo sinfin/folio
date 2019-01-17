@@ -8,7 +8,7 @@ class Folio::Console::MenuTreeCellTest < Folio::Console::CellTest
     2.times { create(:folio_menu_item, menu: menu) }
     root = create(:folio_menu_item, menu: menu)
     son = create(:folio_menu_item, menu: menu, parent: root)
-    grandson = create(:folio_menu_item, menu: menu, parent: son)
+    create(:folio_menu_item, menu: menu, parent: son)
 
     html = cell('folio/console/menu_tree',
       menu: menu,

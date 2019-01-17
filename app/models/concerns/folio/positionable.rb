@@ -24,9 +24,9 @@ module Folio::Positionable
 
     def positionable_last_position
       if positionable_last_record.present?
-        last_position = positionable_last_record.position.presence || 0
+        positionable_last_record.position.presence || 0
       else
-        last_position = 0
+        0
       end
     end
 

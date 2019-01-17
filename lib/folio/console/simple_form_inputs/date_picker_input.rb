@@ -5,7 +5,6 @@ class DatePickerInput < SimpleForm::Inputs::StringInput
     value = @builder.object.public_send(attribute_name) || Date.today
     input_html_options[:value] = case value
                                  when Date, Time, DateTime
-                                   format = options[:format] || :medium
                                    value.strftime('%d/%m/%Y')
                                  else
                                    value.to_s
