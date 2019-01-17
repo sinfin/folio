@@ -67,6 +67,13 @@ class Folio::Node < Folio::ApplicationRecord
                   if: :searchable?,
                   ignoring: :accents
 
+  pg_search_scope :simple_pg_search,
+                  against: %i[title perex content],
+                  associated_against: {
+                    atoms: %i[title perex content],
+                    file_placements: %i[title alt],
+                  }
+
   # Scopes
   scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }
@@ -250,7 +257,7 @@ class Folio::Node < Folio::ApplicationRecord
 
     # https://github.com/Casecommons/pg_search/issues/34
     def atom_contents
-      atoms.map { |a| [a.title, a.content] }.flatten.compact.join(' ')
+      atoms.map { |a| [a.title, a.perex, a.content] }.flatten.compact.join(' ')
     end
 end
 
