@@ -13,11 +13,11 @@ module Folio
     ADMIN_THUMBNAIL_SIZE = '250x250'
 
     def thumb
-      CGI.escape(object.thumb(ADMIN_THUMBNAIL_SIZE).url) if image?
+      object.thumb(ADMIN_THUMBNAIL_SIZE).url if image?
     end
 
     def source_image
-      CGI.escape(object.file.remote_url) if image?
+      object.file.remote_url if image?
     end
 
     def url

@@ -12,9 +12,9 @@ module Folio
       image.update!(thumbnail_sizes: image.thumbnail_sizes)
 
       ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
-        temporary_url: CGI.escape(image.temporary_url(size)),
-        temporary_s3_url: CGI.escape(image.temporary_s3_url(size)),
-        url: CGI.escape(image.thumbnail_sizes[size][:url]),
+        temporary_url: image.temporary_url(size),
+        temporary_s3_url: image.temporary_s3_url(size),
+        url: image.thumbnail_sizes[size][:url],
         width: image.thumbnail_sizes[size][:width],
         height: image.thumbnail_sizes[size][:height]
       )

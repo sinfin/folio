@@ -111,20 +111,20 @@ class Folio::Atom::Base < Folio::ApplicationRecord
         self.model_type = nil
       end
 
-      if Rails.application.config.folio_using_traco
-        attrs = []
-        I18n.available_locales.each do |locale|
-          attrs << "title_#{locale}".to_sym
-          attrs << "content_#{locale}".to_sym
-          attrs << "perex_#{locale}".to_sym
-        end
-      else
-        attrs = %i[title content perex]
-      end
+      attrs = %i[title content perex]
 
       attrs.each do |attr|
-        if klass::STRUCTURE[attr].blank? && self[attr].present?
-          self[attr] = nil
+        if Rails.application.config.folio_using_traco
+          I18n.available_locales.each do |locale|
+            i18n_attr = "#{attr}_#{locale}".to_sym
+            if klass::STRUCTURE[attr].blank? && self[i18n_attr].present?
+              self[i18n_attr] = nil
+            end
+          end
+        else
+          if klass::STRUCTURE[attr].blank? && self[attr].present?
+            self[attr] = nil
+          end
         end
       end
     end
