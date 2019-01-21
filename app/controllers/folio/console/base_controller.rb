@@ -37,12 +37,6 @@ module Folio
 
       helper_method :query
 
-      def sidebar_size
-        3
-      end
-
-      helper_method :sidebar_size
-
       def current_page
         params.permit(:page)[:page].to_i || 1
       end
