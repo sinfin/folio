@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-01-21
+### Changed
+- Switched to `pagy` from `kaminari` - to update, modify custom controllers (views are shown automatically):
+```ruby
+@results = Model.all.page(params[:page].to_i || 1)
+# change to
+@pagy, @results = pagy(Model.all)
+```
+
 ## 2019-01-14
 ### Changed
 - Changed `bootstrap/` to `folio-bootstrap/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`

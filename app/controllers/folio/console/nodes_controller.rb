@@ -9,7 +9,6 @@ module Folio
     respond_to :json, only: %i[update]
 
     before_action :find_node, except: [:index, :create, :new, :set_positions]
-    before_action :find_files, only: [:new, :edit, :create, :update]
     add_breadcrumb Node.model_name.human(count: 2), :console_nodes_path
 
     def index
@@ -20,10 +19,10 @@ module Folio
                          .filter_by_params(filter_params)
                          .arrange(order: 'position asc, created_at asc')
         else
-          @nodes = Node.original
-                       .ordered
-                       .filter_by_params(filter_params)
-                       .page(current_page)
+          nodes = Node.original
+                      .ordered
+                      .filter_by_params(filter_params)
+          @pagy, @nodes = pagy(nodes)
         end
       else
         @limit = self.class.index_children_limit
@@ -78,11 +77,6 @@ module Folio
 
     def find_node
       @node = Node.friendly.find(params[:id])
-    end
-
-    def find_files
-      @images = Image.all.page(1).per(11)
-      @documents = Document.all.page(1).per(11)
     end
 
     def filter_params

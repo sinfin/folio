@@ -1,128 +1,124 @@
 # frozen_string_literal: true
 
-module Folio
-  class Console::BaseController < ::Folio::ApplicationController
-    before_action :authenticate_account!
-    before_action :add_root_breadcrumb
-    # TODO: before_action :authorize_account!
+class Folio::Console::BaseController < Folio::ApplicationController
+  include Pagy::Backend
 
-    layout 'folio/console/application'
-    self.responder = Console::ApplicationResponder
-    respond_to :html
-    respond_to :json, only: %i[update]
+  before_action :authenticate_account!
+  before_action :add_root_breadcrumb
+  # TODO: before_action :authorize_account!
 
-    TYPE_ID_DELIMITER = ' -=- '
+  layout 'folio/console/application'
+  self.responder = Folio::Console::ApplicationResponder
+  respond_to :html
+  respond_to :json, only: %i[update]
 
-    # rescue_from CanCan::AccessDenied do |exception|
-    #   redirect_to dashboard_path, alert: exception.message
+  TYPE_ID_DELIMITER = ' -=- '
+
+  # rescue_from CanCan::AccessDenied do |exception|
+  #   redirect_to dashboard_path, alert: exception.message
+  # end
+
+  def index
+    redirect_to console_dashboard_path
+  end
+
+  private
+    # TODO: authorize account
+    # def authorize_admin_user!
+    #   authorize! :manage, :all
     # end
 
-    def index
-      redirect_to console_dashboard_path
+    def current_ability
+      @current_ability ||= Folio::ConsoleAbility.new(current_admin)
     end
 
-    private
-      # TODO: authorize account
-      # def authorize_admin_user!
-      #   authorize! :manage, :all
-      # end
+    def query
+      @query ||= params[:by_query]
+    end
 
-      def current_ability
-        @current_ability ||= ConsoleAbility.new(current_admin)
+    helper_method :query
+
+    def filter_params
+      params.permit(:by_query)
+    end
+
+    helper_method :filter_params
+
+    def add_root_breadcrumb
+      add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
+    end
+
+    def additional_file_placements_strong_params_keys
+      []
+    end
+
+    def file_placements_strong_params
+      commons = [:id,
+                 :title,
+                 :alt,
+                 :tag_list,
+                 :file_id,
+                 :position,
+                 :type,
+                 :_destroy]
+
+      hash = {}
+
+      (additional_file_placements_strong_params_keys + %i[
+        cover_placement_attributes
+        document_placement_attributes
+        document_placements_attributes
+        image_placements_attributes
+      ]).each do |key|
+        hash[key] = commons
       end
 
-      def query
-        @query ||= params[:by_query]
+      [ hash ]
+    end
+
+    def atoms_strong_params
+      [{
+        atoms_attributes: [:id,
+                           :type,
+                           :model,
+                           :model_id,
+                           :model_type,
+                           :position,
+                           :_destroy,
+                           *Folio::Atom.text_fields,
+                           *file_placements_strong_params]
+      }]
+    end
+
+    def additional_strong_params(node)
+      if node.class == Folio::NodeTranslation
+        node.node_original.additional_params
+      else
+        node.additional_params
       end
+    end
 
-      helper_method :query
+    def sti_atoms(params)
+      sti_hack(params, :atoms_attributes, :model)
+    end
 
-      def current_page
-        params.permit(:page)[:page].to_i || 1
-      end
+    def sti_hack(params, nested_name, relation_name)
+      params.tap do |obj|
+        # STI hack
+        if obj[nested_name]
+          relation_type = "#{relation_name}_type".to_sym
+          relation_id = "#{relation_name}_id".to_sym
 
-      def filter_params
-        params.permit(:by_query)
-      end
-
-      helper_method :filter_params
-
-      def add_root_breadcrumb
-        add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
-      end
-
-      def additional_file_placements_strong_params_keys
-        []
-      end
-
-      def file_placements_strong_params
-        commons = [:id,
-                   :title,
-                   :alt,
-                   :tag_list,
-                   :file_id,
-                   :position,
-                   :type,
-                   :_destroy]
-
-        hash = {}
-
-        (additional_file_placements_strong_params_keys + %i[
-          cover_placement_attributes
-          document_placement_attributes
-          document_placements_attributes
-          image_placements_attributes
-        ]).each do |key|
-          hash[key] = commons
-        end
-
-        [ hash ]
-      end
-
-      def atoms_strong_params
-        [{
-          atoms_attributes: [:id,
-                             :type,
-                             :model,
-                             :model_id,
-                             :model_type,
-                             :position,
-                             :_destroy,
-                             *Atom.text_fields,
-                             *file_placements_strong_params]
-        }]
-      end
-
-      def additional_strong_params(node)
-        if node.class == NodeTranslation
-          node.node_original.additional_params
-        else
-          node.additional_params
-        end
-      end
-
-      def sti_atoms(params)
-        sti_hack(params, :atoms_attributes, :model)
-      end
-
-      def sti_hack(params, nested_name, relation_name)
-        params.tap do |obj|
-          # STI hack
-          if obj[nested_name]
-            relation_type = "#{relation_name}_type".to_sym
-            relation_id = "#{relation_name}_id".to_sym
-
-            obj[nested_name].each do |key, value|
-              next if value[relation_name].nil?
-              type, id = value[relation_name].split(TYPE_ID_DELIMITER)
-              obj[nested_name][key][relation_type] = type
-              obj[nested_name][key][relation_id] = id
-              obj[nested_name][key].delete(relation_name)
-            end
+          obj[nested_name].each do |key, value|
+            next if value[relation_name].nil?
+            type, id = value[relation_name].split(TYPE_ID_DELIMITER)
+            obj[nested_name][key][relation_type] = type
+            obj[nested_name][key][relation_id] = id
+            obj[nested_name][key].delete(relation_name)
           end
-
-          obj
         end
+
+        obj
       end
-  end
+    end
 end

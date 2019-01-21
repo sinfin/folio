@@ -6,7 +6,7 @@ class Folio::Console::VisitsController < Folio::Console::BaseController
 
   def index
     @visits = @visits.filter_by_params(filter_params) if params[:by_query].present?
-    @visits = @visits.page(current_page)
+    @pagy, @visits = pagy(@visits)
   end
 
   def show

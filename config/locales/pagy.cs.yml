@@ -1,0 +1,20 @@
+cs:
+  pagy:
+    nav:
+      prev: předchozí
+      next: další
+      gap: "&hellip;"
+    info:
+      single_page:
+        zero: "Žádný %{item_name} nenalezen"
+        one: "Zobrazuji <b>1</b> %{item_name}"
+        other: "Zobrazuji <b>všech %{count}</b> %{item_name}"
+      multiple_pages: "Zobrazuji %{item_name} <b>%{from}-%{to}</b> z <b>%{count}</b> celkem"
+      item_name:
+        zero: "výsledek"
+        one: "výsledek"
+        few: "výsledky"
+        other: "výsledků"
+    compact:
+      page: Stránka
+      of: z

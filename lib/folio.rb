@@ -4,8 +4,6 @@ require 'folio/engine'
 
 # TODO: rm the require
 
-require 'kaminari'
-
 require 'dotenv-rails'
 require 'friendly_id'
 require 'ancestry'
@@ -24,7 +22,7 @@ require 'slim'
 require 'sass-rails'
 require 'simple_form'
 require 'cocoon'
-require 'kaminari'
+require 'pagy'
 require 'font-awesome-rails'
 require 'jquery-rails'
 require 'dropzonejs-rails'

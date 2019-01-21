@@ -4,9 +4,13 @@ module Folio
   module SearchControllerBase
     extend ActiveSupport::Concern
 
+    included do
+      include Pagy::Backend
+    end
+
     def show
       @query = ActionController::Base.helpers.sanitize(params[:q].to_s)
-      @results = PgSearch.multisearch(@query).page(params[:page].to_i || 1)
+      @pagy, @results = pagy(PgSearch.multisearch(@query))
     end
   end
 end

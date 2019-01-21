@@ -7,9 +7,6 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::SanitizeFilename
   include Folio::MimeTypeDetection
 
-  paginates_per nil
-  max_paginates_per nil
-
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end

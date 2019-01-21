@@ -6,8 +6,7 @@ module Folio
     add_breadcrumb Account.model_name.human(count: 2), :console_accounts_path
 
     def index
-      @accounts = @accounts.filter_by_params(filter_params)
-                           .page(current_page)
+      @pagy, @accounts = pagy(@accounts.filter_by_params(filter_params))
       respond_with @accounts
     end
 

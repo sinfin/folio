@@ -20,8 +20,5 @@
         tbody
           = render partial: "nodes_table", locals: { nodes: @nodes }
 
-    - if @nodes.respond_to?(:total_pages)
-      = paginate @nodes
-
   .folio-console-layout-sidebar
     == cell('folio/console/index/filters', index_filters)

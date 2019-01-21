@@ -8,11 +8,11 @@ module Folio
 
     def index
       if params[:by_query].present?
-        @subscriptions = NewsletterSubscription.filter_by_params(filter_params)
+        subscriptions = NewsletterSubscription.filter_by_params(filter_params)
       else
-        @subscriptions = NewsletterSubscription.all
+        subscriptions = NewsletterSubscription.all
       end
-      @subscriptions = @subscriptions.page(current_page)
+      @pagy, @subscriptions = pagy(subscriptions)
     end
 
     def destroy
