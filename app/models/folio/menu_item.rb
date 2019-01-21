@@ -26,6 +26,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
   private
 
     def validate_target_and_menu_locales
+      return if Rails.application.config.folio_using_traco
       if target &&
          target.respond_to?(:locale) &&
          target.locale &&

@@ -17,7 +17,11 @@ class Folio::Menu < Folio::ApplicationRecord
   end
 
   def available_targets
-    Folio::Node.where(locale: locale)
+    if Rails.application.config.folio_using_traco
+      Folio::Node.all
+    else
+      Folio::Node.where(locale: locale)
+    end
   end
 
   def supports_nesting?
