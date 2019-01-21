@@ -29,5 +29,9 @@ module Folio
         truncate(strip_tags(text), length: 300)
       end
     end
+
+    def public_page_canonical_url
+      @public_page_canonical_url.presence
+    end
   end
 end
