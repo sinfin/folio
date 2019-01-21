@@ -5,6 +5,8 @@ module Folio
     extend ActiveSupport::Concern
 
     included do
+      include Pagy::Backend
+
       protect_from_forgery with: :exception
 
       layout 'folio/application'
