@@ -27,7 +27,7 @@ bower_components/folio-bootstrap/*
 bower_components/folio-bootstrap/dist/*
 !bower_components/folio-bootstrap/dist/js
 bower_components/folio-bootstrap/dist/js/*
-!bower_components/folio-bootstrap/dist/js/bootstrap.js
+!bower_components/folio-bootstrap/dist/js/bootstrap.bundle.js
 bower_components/folio-bootstrap/js/*
 !bower_components/folio-bootstrap/js/dist
 

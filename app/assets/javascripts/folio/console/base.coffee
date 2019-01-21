@@ -1,6 +1,6 @@
 #= require jquery
 #= require jquery_ujs
-#= require folio-bootstrap/dist/js/bootstrap
+#= require folio-bootstrap/dist/js/bootstrap.bundle
 #= require bootstrap-datepicker/dist/js/bootstrap-datepicker
 #= require bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min
 
