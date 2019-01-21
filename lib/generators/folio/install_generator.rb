@@ -185,6 +185,12 @@ module Folio
         end
       end
 
+      def production_settings
+        inject_into_file 'config/environments/production.rb', after: /config\.action_controller\.perform_caching\s*=\s*true/ do
+          "\n  config.action_controller.page_cache_directory = Rails.root.join('public', 'cached_pages')"
+        end
+      end
+
       def gemfile_rails_assets
         return if File.readlines(Rails.root.join('config/application.rb')).grep('rails-assets.org').any?
 
