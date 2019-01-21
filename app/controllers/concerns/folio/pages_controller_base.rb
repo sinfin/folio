@@ -23,15 +23,16 @@ module Folio
       def find_page
         path = params[:path].split('/')
 
-        pages = page_roots
-        pages = pages.published unless admin_preview?
-        @page = pages.friendly.find path.shift
+        @page = page_roots.published_or_admin(admin_preview?)
+                          .friendly
+                          .find(path.shift)
         add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
 
         path.each do |path_part|
           children = filter_pages_by_locale(@page.children)
-          children = children.published unless admin_preview?
-          @page = children.friendly.find path_part
+          @page = children.published_or_admin(admin_preview?)
+                          .friendly
+                          .find(path_part)
           add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
         end
 

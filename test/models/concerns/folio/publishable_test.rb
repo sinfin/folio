@@ -4,25 +4,42 @@ require 'test_helper'
 
 module Folio
   class PublishableTest < ActiveSupport::TestCase
-    test 'published' do
+    test 'published, published_or_admin' do
       assert_equal(0, Node.published.count)
       assert_equal(0, Node.unpublished.count)
+      assert_equal(0, Node.published_or_admin(true).count)
+      assert_equal(0, Node.published_or_admin(false).count)
 
       node = create(:folio_node, :unpublished)
       assert_equal(0, Node.published.count)
       assert_equal(1, Node.unpublished.count)
+      assert_equal(1, Node.unpublished.count)
+      assert_equal(1, Node.published_or_admin(true).count)
+      assert_equal(0, Node.published_or_admin(false).count)
 
       node.update!(published: true)
       assert_equal(0, Node.published.count)
       assert_equal(1, Node.unpublished.count)
+      assert_equal(1, Node.published_or_admin(true).count)
+      assert_equal(0, Node.published_or_admin(false).count)
 
       node.update!(published: false, published_at: 1.hour.ago)
       assert_equal(0, Node.published.count)
       assert_equal(1, Node.unpublished.count)
+      assert_equal(1, Node.published_or_admin(true).count)
+      assert_equal(0, Node.published_or_admin(false).count)
 
       node.update!(published: true, published_at: 1.hour.ago)
       assert_equal(1, Node.published.count)
       assert_equal(0, Node.unpublished.count)
+      assert_equal(1, Node.published_or_admin(true).count)
+      assert_equal(1, Node.published_or_admin(false).count)
+
+      node.update!(published: true, published_at: 1.hour.from_now)
+      assert_equal(0, Node.published.count)
+      assert_equal(1, Node.unpublished.count)
+      assert_equal(1, Node.published_or_admin(true).count)
+      assert_equal(0, Node.published_or_admin(false).count)
     end
   end
 end
