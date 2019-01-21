@@ -7,7 +7,9 @@ module Folio::Publishable
     included do
       scope :published, -> { where(published: true) }
       scope :published_or_admin, -> (admin) { admin ? all : published }
-      scope :unpublished, -> { where('published != ? OR published IS NULL', true) }
+      scope :unpublished, -> { where("#{table_name}.published != ? OR "\
+                                     "#{table_name}.published IS NULL",
+                                     true) }
     end
 
     def published?
@@ -20,13 +22,19 @@ module Folio::Publishable
 
     included do
       scope :published, -> {
-        where('published = ? AND (published_at IS NOT NULL AND published_at <= ?)', true, Time.now.change(sec: 0))
+        where("#{table_name}.published = ? AND "\
+              "(#{table_name}.published_at IS NOT NULL AND #{table_name}.published_at <= ?)",
+              true,
+              Time.now.change(sec: 0))
       }
 
       scope :published_or_admin, -> (admin) { admin ? all : published }
 
       scope :unpublished, -> {
-        where('(published != ? OR published IS NULL) OR (published_at IS NULL OR published_at > ?)', true, Time.now.change(sec: 0))
+        where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
+              "(#{table_name}.published_at IS NULL OR #{table_name}.published_at > ?)",
+              true,
+              Time.now.change(sec: 0))
       }
     end
 
