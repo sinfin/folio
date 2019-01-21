@@ -48,6 +48,8 @@ en:
       settings:
         title: Settings
         title_long: Settings for site %{site}
+    publishable_hint:
+      hint: Until publishing, this page is visible to logged in administrators only.
   head:
     description: ''
     title:

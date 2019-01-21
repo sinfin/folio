@@ -48,6 +48,8 @@ cs:
       settings:
         title: Nastavení
         title_long: Nastavení stránky %{site}
+    publishable_hint:
+      hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
   head:
     description: ''
     title:
