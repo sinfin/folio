@@ -78,7 +78,6 @@ window.makeFolioLightbox = (selector, opts = {}) ->
   $(document).on 'turbolinks:before-cache', ->
     return unless window.folioLightboxInstances.length > 0
 
-    for instance in window.folioLightboxInstances
-      instance.destroy()
+    instance.destroy() for instance in window.folioLightboxInstances
 
     window.folioLightboxInstances = []

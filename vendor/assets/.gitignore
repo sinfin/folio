@@ -36,3 +36,9 @@ bower_components/bootstrap-datepicker/*
 !bower_components/bootstrap-datepicker/dist
 
 !bower_components/popper.js
+
+!bower_components/vanilla-lazyload
+bower_components/vanilla-lazyload/*
+!bower_components/vanilla-lazyload/dist
+bower_components/vanilla-lazyload/dist/*
+!bower_components/vanilla-lazyload/dist/lazyload.js

@@ -9,7 +9,8 @@
     "ilikenwf-nested-sortable": "^2.0",
     "jquery-ui": "^1.12.1",
     "bootstrap-datepicker": "^1.8.0",
-    "popper.js": "https://unpkg.com/popper.js"
+    "popper.js": "https://unpkg.com/popper.js",
+    "vanilla-lazyload": "^10.19.0"
   },
   "devDependencies": {}
 }

@@ -1,24 +1,75 @@
 # frozen_string_literal: true
 
-module Folio
-  module ImageHelper
-    def img_tag_retina(normal, retina, html_options = {})
-      html_options[:srcset] = "#{normal} 1x, #{retina} 2x"
-      image_tag normal, html_options
+module Folio::ImageHelper
+  def img_tag_retina(normal, retina, options = {})
+    retina_multiplier = options.delete(:retina_multiplier) || 2
+    options[:srcset] = "#{normal} 1x, #{retina} #{retina_multiplier}x"
+    image_tag normal, options
+  end
+
+  def img_tag_retina_static(path, options = {})
+    split_path = path.split('.')
+    retina_path = split_path.first(split_path.size - 1).join('.') + '@2x.' + split_path.last
+
+    normal = image_path(path)
+    retina = image_path(retina_path)
+
+    img_tag_retina normal, retina, options
+  end
+
+  def dummy_image_url(variant)
+    "http://dummyimage.com/#{variant}/FFF/000.png&text=TODO: Vybrat a nahrát v consoli"
+  end
+
+  def image_from(placement, normal_variant, options = {})
+    retina_multiplier = options.delete(:retina_multiplier) || 2
+    retina_variant = normal_variant.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+    normal = placement.file.thumb(normal_variant).url
+    retina = placement.file.thumb(retina_variant).url
+
+    img_tag_retina(normal,
+                   retina,
+                   options.reverse_merge(
+                     alt: placement.alt,
+                     title: placement.title,
+                     retina_multiplier: retina_multiplier,
+                   ))
+  end
+
+  def lazy_image(normal, retina = nil, options = {})
+    retina_multiplier = options.delete(:retina_multiplier) || 2
+    lazyload_class = options.delete(:lazyload_class) || 'folio-lazyload'
+
+    if retina
+      options['data-srcset'] = "#{normal} 1x, #{retina} #{retina_multiplier}x"
+    else
+      options['data-src'] = normal
     end
 
-    def img_tag_retina_static(path, html_options = {})
-      split_path = path.split('.')
-      retina_path = split_path.first(split_path.size - 1).join('.') + '@2x.' + split_path.last
-
-      normal = image_path(path)
-      retina = image_path(retina_path)
-
-      img_tag_retina normal, retina, html_options
+    if options[:alt].present?
+      options['data-alt'] = options.delete(:alt)
     end
 
-    def dummy_image_url(variant)
-      "http://dummyimage.com/#{variant}/FFF/000.png&text=TODO: Vybrat a nahrát v consoli"
-    end
+    options[:class] = "#{lazyload_class} #{options[:class] || ''}"
+    options[:style] = "visibility: hidden; #{options[:style] || ''}"
+
+    image_tag '', options
+  end
+
+  def lazy_image_from(placement, normal_variant, options = {})
+    retina_multiplier = options.delete(:retina_multiplier) || 2
+    retina_variant = normal_variant.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+    normal = placement.file.thumb(normal_variant).url
+    retina = placement.file.thumb(retina_variant).url
+
+    lazy_image(normal,
+               retina,
+               options.reverse_merge(
+                 alt: placement.alt,
+                 title: placement.title,
+                 retina_multiplier: retina_multiplier,
+               ))
   end
 end

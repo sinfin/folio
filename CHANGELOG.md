@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-01-22
+### Added
+- Lazyload functionality, better image helpers - `image_from`, `lazy_image` and `lazy_image_from`.
+
 ## 2019-01-21
 ### Changed
 - Switched to `pagy` from `kaminari` - to update, modify custom controllers (views are shown automatically):
