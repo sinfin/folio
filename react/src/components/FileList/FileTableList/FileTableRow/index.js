@@ -8,15 +8,18 @@ import FileUploadProgress from 'components/FileUploadProgress';
 
 const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick }) => {
   let className = 'folio-console-file-table__tr'
+  const persistedOnClick = !file.uploading && onClick
 
   if (file.freshlyUploaded) {
     className = 'folio-console-file-table__tr folio-console-file-table__tr--fresh'
+  } else if (file.uploading) {
+    className = 'folio-console-file-table__tr folio-console-file-table__tr--uploading'
   }
 
   return (
     <div
       className={className}
-      onClick={onClick ? () => onClick(file) : undefined}
+      onClick={persistedOnClick ? () => onClick(file) : undefined}
     >
       {fileTypeIsImage && (
         <div className='folio-console-file-table__td folio-console-file-table__td--image'>

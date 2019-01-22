@@ -37,11 +37,13 @@
   opacity: 0
   transition: $transition-base
   background: rgba($white, 0.66)
-  cursor: pointer
   font-size: $hover-fa-font-size
   display: flex
   align-items: center
   justify-content: center
+
+  .folio-console-file-list__file:not(.folio-console-file-list__file--uploading) &
+    cursor: pointer
 
   .fa-times-circle
     color: $danger

@@ -7,9 +7,12 @@ import FileThumbnailHover from './FileThumbnailHover';
 const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) => {
   const Tag = link ? 'a' : 'div'
   let className = 'folio-console-file-list__file'
+  const persistedOnClick = !file.uploading && onClick
 
   if (file.freshlyUploaded) {
     className = 'folio-console-file-list__file folio-console-file-list__file--fresh'
+  } else if (file.uploading) {
+    className = 'folio-console-file-list__file folio-console-file-list__file--uploading'
   }
 
   return (
@@ -32,7 +35,7 @@ const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) =>
       <FileUploadProgress progress={file.progress} />
       <FileThumbnailHover
         progress={file.progress}
-        onClick={onClick}
+        onClick={persistedOnClick}
         file={file}
         selecting={selecting}
       />

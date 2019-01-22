@@ -123,7 +123,7 @@ export const filesForListSelector = (state) => {
   }
 
   return [
-    ...Object.values(uploads.records),
+    ...Object.values(uploads.records).map((upload) => ({ ...upload, uploading: true })),
     ...files,
   ]
 }

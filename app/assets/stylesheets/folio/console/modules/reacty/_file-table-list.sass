@@ -31,10 +31,11 @@
     background: #d3eaf6
 
 .folio-console-file-table--hover
-  .folio-console-file-table__td
-    cursor: pointer
+  .folio-console-file-table__tr:not(.folio-console-file-table__tr--uploading)
+    .folio-console-file-table__td
+      cursor: pointer
 
-  .folio-console-file-table__tr:hover .folio-console-file-table__td
+  .folio-console-file-table__tr:not(.folio-console-file-table__tr--uploading):hover .folio-console-file-table__td
     background: $table-hover-bg
 
 .folio-console-file-table__td--main
