@@ -19,6 +19,7 @@
 #= require ./redactor/_video
 #= require ./redactor/_table
 #= require ./redactor/_button
+#= require ./redactor/_definedlinks
 #= require ./redactor/_init
 
 #= require folio/cable

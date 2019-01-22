@@ -12,16 +12,16 @@ Folio::Engine.routes.draw do
   namespace :console, locale: Rails.application.config.folio_console_locale do
     root to: 'dashboard#index'
     resources :dashboard, only: :index
-    resources :nodes, except: [:show] do
+    resources :nodes, except: %i[show] do
       post :set_positions, on: :collection
     end
     resources :menus do
       post :tree_sort, on: :member
     end
-    resources :images, except: [:show, :new] do
+    resources :images, except: %i[show new] do
       collection { post :tag }
     end
-    resources :documents, except: [:show, :new] do
+    resources :documents, except: %i[show new] do
       collection { post :tag }
     end
     resources :leads, only: %i[index show update destroy] do
@@ -36,6 +36,7 @@ Folio::Engine.routes.draw do
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
     resources :visits, only: %i[index show]
+    resources :links, only: %i[index]
     resource :site
   end
 
