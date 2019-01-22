@@ -1,9 +1,23 @@
 import React from 'react'
 
 import { DROPZONE_TRIGGER_CLASSNAME } from 'containers/Uploader/constants'
+import { UploaderContext } from 'containers/Uploader'
 
-export default () => (
-  <div className={`folio-console-file-list__dropzone-trigger ${DROPZONE_TRIGGER_CLASSNAME}`}>
-    <i className='fa fa-plus-circle'></i>
-  </div>
-)
+class DropzoneTrigger extends React.PureComponent {
+  static contextType = UploaderContext
+
+  onClick = () => { this.context() }
+
+  render () {
+    return (
+      <div
+        className={`folio-console-file-list__dropzone-trigger ${DROPZONE_TRIGGER_CLASSNAME}`}
+        onClick={this.onClick}
+      >
+        <i className='fa fa-plus-circle'></i>
+      </div>
+    )
+  }
+}
+
+export default DropzoneTrigger

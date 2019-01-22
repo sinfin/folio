@@ -1,7 +1,7 @@
 import React from 'react'
 
-import TagsWrap from './styled/TagsWrap';
-import { ModalContext } from 'containers/Modal';
+import TagsWrap from './styled/TagsWrap'
+import { ModalContext } from 'containers/Modal'
 
 class Tags extends React.Component {
   static contextType = ModalContext

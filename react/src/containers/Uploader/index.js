@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import DropzoneComponent from 'react-dropzone-component'
 import styled from 'styled-components'
-import { uniqueId } from 'lodash';
+import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
 
@@ -17,7 +17,7 @@ import {
 } from 'ducks/uploads'
 import { fileTypeSelector } from 'ducks/app'
 
-import { DROPZONE_TRIGGER_CLASSNAME } from './constants';
+import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
 
 const date = new Date()
 let month = date.getMonth() + 1
@@ -27,10 +27,20 @@ const StyledDropzone = styled(DropzoneComponent)`
   .dz-default.dz-message {
     display: none;
   }
+
+  .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME} {
+    position: absolute;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
 `
+
+export const UploaderContext = React.createContext(() => {})
 
 class Uploader extends Component {
   state = { uploaderClassName: uniqueId('folio-console-uploader-') }
+  dropzone = null
 
   eventHandlers () {
     const { dispatch } = this.props
@@ -41,6 +51,7 @@ class Uploader extends Component {
       success: (file, response) => dispatch(success(file, response.file)),
       error: (file, message) => dispatch(error(file, message)),
       uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
+      init: (dropzone) => this.dropzone = dropzone
     }
   }
 
@@ -57,7 +68,7 @@ class Uploader extends Component {
       headers: CSRF,
       paramName: 'file[file][]',
       previewTemplate: '<span></span>',
-      clickable: `.${this.state.uploaderClassName} .${DROPZONE_TRIGGER_CLASSNAME}`,
+      clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
       thumbnailMethod: 'contain',
       thumbnailWidth: 150,
       thumbnailHeight: 150,
@@ -68,19 +79,30 @@ class Uploader extends Component {
     }
   }
 
+  triggerFileInput = () => {
+    this.dropzone.hiddenFileInput.click()
+  }
+
+  componentWillUnmount() {
+    this.dropzone = null
+  }
+
   render() {
     const { fileType } = this.props
     if (!fileType) return <Loader />
 
     return (
-      <StyledDropzone
-        config={this.config()}
-        djsConfig={this.djsConfig()}
-        eventHandlers={this.eventHandlers()}
-        className={this.state.uploaderClassName}
-      >
-        {this.props.children}
-      </StyledDropzone>
+      <UploaderContext.Provider value={this.triggerFileInput}>
+        <StyledDropzone
+          config={this.config()}
+          djsConfig={this.djsConfig()}
+          eventHandlers={this.eventHandlers()}
+          className={this.state.uploaderClassName}
+        >
+          {this.props.children}
+          <span className={HIDDEN_DROPZONE_TRIGGER_CLASSNAME} />
+        </StyledDropzone>
+      </UploaderContext.Provider>
     )
   }
 }
