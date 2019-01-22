@@ -4,16 +4,11 @@ class Folio::Console::LinksController < Folio::Console::BaseController
   respond_to :json, only: [:index]
 
   def index
-    links = Folio::Node.find_each.map do |node|
-      {
-        name: name(node),
-        url: nested_page_path(node, add_parents: true),
-      }
-    end
+    links = []
 
-    additional_links.each do |collection, url_proc|
-      collection.find_each do |item|
-        links << { name: name(item), url: url_proc.call(item) }
+    node_links.merge(additional_links).each do |klass, url_proc|
+      klass.find_each do |item|
+        links << { name: record_label(item), url: url_proc.call(item) }
       end
     end
 
@@ -22,11 +17,20 @@ class Folio::Console::LinksController < Folio::Console::BaseController
 
   private
 
-    def additional_links
-      []
+    def node_links
+      {
+        Folio::Node => Proc.new { |node| nested_page_path(node, add_parents: true) }
+      }
     end
 
-    def name(link)
-      "#{link.class.model_name.human} - #{link.try(:to_label)}"
+    def additional_links
+      # {
+      #   Klass => Proc.new { |instance| main_app.klass_path(instance) },
+      # }
+      {}
+    end
+
+    def record_label(record)
+      "#{record.class.model_name.human} - #{record.try(:to_label)}"
     end
 end

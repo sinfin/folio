@@ -10,7 +10,7 @@ class Folio::Console::LinksControllerTest < Folio::Console::BaseControllerTest
       get console_links_path
       assert_equal([], JSON.parse(response.body))
 
-      create(:folio_page, title: 'Foo', slug: 'foo')
+      page = create(:folio_page, title: 'Foo', slug: 'foo')
       get console_links_path
       assert_equal([{ 'name' => 'Stránka - Foo', 'url' => '/cs/foo' }],
                    JSON.parse(response.body))
@@ -25,12 +25,16 @@ class Folio::Console::LinksControllerTest < Folio::Console::BaseControllerTest
         private
 
           def additional_links
-            [{ name: 'A - test', url: 'url' }]
+            {
+              Folio::MenuItem => Proc.new { |node| 'url' }
+            }
           end
       end
 
+      create(:folio_menu_item, title: 'Test', target: page)
+
       get console_links_path
-      assert_equal([{ 'name' => 'A - test', 'url' => 'url' },
+      assert_equal([{ 'name' => 'Odkaz - Test', 'url' => 'url' },
                     { 'name' => 'Stránka - Bar', 'url' => '/cs/bar' },
                     { 'name' => 'Stránka - Foo', 'url' => '/cs/foo' }],
                    JSON.parse(response.body))

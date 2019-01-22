@@ -108,6 +108,7 @@ FactoryBot.define do
   end
 
   factory :folio_menu_item, class: Folio::MenuItem do
+    association :menu, factory: :folio_menu
     association :target, factory: :folio_node
     title { 'MenuItem' }
     position { 0 }
