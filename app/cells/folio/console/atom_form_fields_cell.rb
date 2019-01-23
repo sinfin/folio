@@ -117,4 +117,8 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
       [type.to_s, base_placeholders.merge(type.form_placeholders)]
     end.to_h.to_json
   end
+
+  def default_atom_type
+    'Folio::Atom::Text'
+  end
 end

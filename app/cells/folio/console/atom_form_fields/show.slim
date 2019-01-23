@@ -4,6 +4,7 @@
   .card
     .card-body
       = f.input :type, collection: atom_types_for_select, \
+                       selected: f.object.type || default_atom_type, \
                        include_blank: false, \
                        input_html: { class: 'folio-console-atom-type-select' }
 
