@@ -3,6 +3,7 @@ en:
   folio:
     console:
       javascript:
+        add: Add
         availableDocuments: Available documents
         availableImages: Available images
         cancel: Cancel

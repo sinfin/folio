@@ -1,10 +1,5 @@
-bower_components/*
-
-!bower_components/ilikenwf-nested-sortable
 bower_components/ilikenwf-nested-sortable/*
 !bower_components/ilikenwf-nested-sortable/jquery.mjs.nestedSortable.js
-
-!bower_components/jquery-ui
 
 bower_components/jquery-ui/*
 !bower_components/jquery-ui/ui
@@ -19,7 +14,6 @@ bower_components/jquery-ui/ui/widgets/*
 !bower_components/jquery-ui/ui/widgets/mouse.js
 !bower_components/jquery-ui/ui/widgets/sortable.js
 
-!bower_components/folio-bootstrap
 bower_components/folio-bootstrap/*
 !bower_components/folio-bootstrap/dist
 !bower_components/folio-bootstrap/js
@@ -31,13 +25,9 @@ bower_components/folio-bootstrap/dist/js/*
 bower_components/folio-bootstrap/js/*
 !bower_components/folio-bootstrap/js/dist
 
-!bower_components/bootstrap-datepicker
 bower_components/bootstrap-datepicker/*
 !bower_components/bootstrap-datepicker/dist
 
-!bower_components/popper.js
-
-!bower_components/vanilla-lazyload
 bower_components/vanilla-lazyload/*
 !bower_components/vanilla-lazyload/dist
 bower_components/vanilla-lazyload/dist/*

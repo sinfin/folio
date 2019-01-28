@@ -15,7 +15,7 @@ cs:
         published: Po zaškrtnutí volby zveřejnit je obsah určen k publikování na webu k datu vyplněnému níže.
         published_at: Při uvedení data v budoucnu bude obsah do zvoleného data skrytý.
         slug: Ponechte prázdné pro automatické vyplnění. Povoleny jsou jen znaky <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong>. Po změně funguje i původní varianta.
-        tag_list: Seznam klíčových slov oddělených čárkou. Slouží pro rychlejší vyhledávání nebo kategorizaci a zobrazování obsahu na webu.
+        tag_list: Seznam klíčových slov sloužící pro rychlejší vyhledávání nebo kategorizaci a zobrazování obsahu na webu.
         title: Titulek tak, jak bude zobrazen na webu.
       node:
         code: Nepovinný údaj. Využívá se, pokud je potřeba najít stránku vždy pod stejným označením nehledě na titulek a odkaz.

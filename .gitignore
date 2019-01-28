@@ -10,3 +10,5 @@ test/dummy/.env
 test/dummy/public/system/dragonfly
 test/dummy/vendor/assets/redactor/*.css
 test/dummy/vendor/assets/redactor/*.js
+
+/vendor/assets/bower_components/jquery/

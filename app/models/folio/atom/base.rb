@@ -57,12 +57,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     resource.all
   end
 
-  def self.structure_as_json
+  def self.structure_as_safe_hash
     self::STRUCTURE.dup.tap do |structure|
-      if structure[:model].present?
-        structure[:model] = structure[:model].to_s
-      end
-    end.to_json
+      structure[:model] = structure[:model].map(&:to_s) if structure[:model].present?
+    end
   end
 
   def self.molecule

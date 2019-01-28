@@ -9,15 +9,19 @@ window.folioConsoleAtom.switchModelField = ({ structure, $field, klassFilter }) 
 
     $selects
       .not($activeSelects)
-      .attr('disabled', true)
+      .each -> @selectize?.destroy()
+      .prop('disabled', true)
       .closest('.form-group')
       .attr('hidden', true)
 
     $activeSelects
       .prop('disabled', false)
+      .each ->
+        $this = $(this)
+        window.folioConsoleAtom.atomModelContentPrefill($this)
+        window.folioConsoleBindSelectize($this)
       .closest('.form-group')
       .removeAttr('hidden')
-      .each -> window.folioConsoleAtom.atomModelContentPrefill($(this))
   else
     present = false
     $field.attr('hidden', true)

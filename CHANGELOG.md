@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-01-28
+### Changed
+- Changed `folio/console/tagsinput` usage. See source.
+
 ## 2019-01-22
 ### Added
 - Lazyload functionality, better image helpers - `image_from`, `lazy_image` and `lazy_image_from`.

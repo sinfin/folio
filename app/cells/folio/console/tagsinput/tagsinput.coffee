@@ -1,34 +1,38 @@
-#= require selectize/standalone/selectize
+optionMapper = (str) -> { value: str }
 
-makeItems = (separator, string) ->
+makeItems = (string) ->
   if string
-    string.split(separator)
+    string.split(', ').map(optionMapper)
   else
     []
 
 $ ->
-  $inputs = $('.folio-tagsinput').not('.folio-bound')
+  $inputs = $('.folio-console-tagsinput').not('.folio-console-selectize--bound')
   return if $inputs.length is 0
-  $inputs.addClass('folio-bound').removeClass('form-control')
 
   $inputs.each ->
     $this = $(this)
+    $formGroup = $this.closest('.form-group')
 
-    if $this.data('allow-create')
-      createOption = (input) -> { value: input }
+    if $formGroup.data('allow-create')
+      createOption = optionMapper
     else
       createOption = false
 
-    if $this.data('comma-separated')
-      separator = /,\s*/
-    else
-      separator = ' '
-
     $this.selectize
-      delimiter: ','
-      persist: false
+      dropdownParent: 'body'
       labelField: 'value'
       searchField: 'value'
-      items: makeItems(separator, $this.val())
-      options: makeItems(separator, $this.data('tags')).map((tag) -> { value: tag })
+      delimiter: ', '
+      plugins: ['remove_button']
       create: createOption
+      options: makeItems($formGroup.data('collection'))
+      maxOptions: 50000
+      render:
+        option_create: (data, escape) ->
+          """
+            <div class="create">
+              #{window.FolioConsole.translations.add}
+              <strong>#{escape(data.input)}</strong>&hellip;
+            </div>
+          """

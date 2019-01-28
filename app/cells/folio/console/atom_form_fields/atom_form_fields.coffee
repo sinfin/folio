@@ -5,13 +5,14 @@
 #= require ./coffee/_switchFileFields
 
 atomFormBySelect = ($element) ->
+  window.folioConsoleBindSelectize($element) unless $element.hasClass('selectized')
   klass = $element.val()
-  structure = $element.find(':selected').data('atom-structure')
   $fields = $element.closest('.nested-fields')
   $wrap = $fields.find('.folio-console-atom-main-fields').first()
   presence = []
   klassFilter = """[data-class="#{klass}"]"""
 
+  structure = $fields.data('structures')[klass]
   placeholders = $fields.data('placeholders')[klass]
 
   presence.push window.folioConsoleAtom.switchStringField
@@ -49,21 +50,22 @@ atomFormBySelect = ($element) ->
   else
     $wrap.removeAttr('hidden')
 
-$(document).on 'cocoon:after-insert', '#atoms', (e, insertedItem) ->
-  atomFormBySelect($(insertedItem).find('.folio-console-atom-type-select'))
+$(document)
+  .on 'cocoon:after-insert', '#atoms', (e, insertedItem) ->
+    atomFormBySelect($(insertedItem).find('.folio-console-atom-type-select'))
 
-$(document).on 'change', '.folio-console-atom-type-select', ->
-  atomFormBySelect($(this))
+  .on 'change', '.folio-console-atom-type-select', ->
+    atomFormBySelect($(this))
 
-$(document).on 'change', '.folio-console-atom-model-select', ->
-  window.folioConsoleAtom.atomModelContentPrefill($(this))
+  .on 'change', '.folio-console-atom-model-select', ->
+    window.folioConsoleAtom.atomModelContentPrefill($(this))
 
-$(document).on 'focus', '.folio-console-atom-form-fields .form-control', ->
-  $wrap = $(this).closest('.folio-console-atom-form-fields')
-  $wrap.addClass('folio-console-atom-form-fields--focused')
+  .on 'focus', '.folio-console-atom-form-fields .form-control', ->
+    $wrap = $(this).closest('.folio-console-atom-form-fields')
+    $wrap.addClass('folio-console-atom-form-fields--focused')
 
-$(document).on 'blur', '.folio-console-atom-form-fields .form-control', ->
-  $wrap = $(this).closest('.folio-console-atom-form-fields')
-  $wrap.removeClass('folio-console-atom-form-fields--focused')
+  .on 'blur', '.folio-console-atom-form-fields .form-control', ->
+    $wrap = $(this).closest('.folio-console-atom-form-fields')
+    $wrap.removeClass('folio-console-atom-form-fields--focused')
 
 $('.folio-console-atom-type-select').each -> atomFormBySelect($(this))

@@ -24,6 +24,7 @@ module Folio
     config.autoload_paths << self.root.join('lib')
     config.eager_load_paths << self.root.join('lib')
     config.assets.paths << self.root.join('app/cells')
+    config.assets.paths << self.root.join('vendor/assets/javascripts')
     config.assets.paths << self.root.join('vendor/assets/bower_components')
     config.assets.precompile += %w[
       folio/console/base.css

@@ -12,7 +12,9 @@ class Folio::Console::LinksController < Folio::Console::BaseController
       end
     end
 
-    render json: links.sort_by { |link| link[:name] }, root: false
+    sorted_links = links.sort_by { |link| I18n.transliterate(link[:name]) }
+
+    render json: sorted_links, root: false
   end
 
   private

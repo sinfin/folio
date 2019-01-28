@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/selectize.bootstrap4.css">
+	<title>Selectize Bootstrap 4</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" href="#">Selectize Bs4 Example</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarNav">
+	</div>
+</nav>
+
+<div class="container mt-4">
+	<div class="row justify-content-center">
+		<div class="col-lg-8">
+			<form>
+				<div class="form-group">
+					<div class="input-group input-group-lg">
+						<div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                       select 1
+                                    </span>
+						</div>
+						<select class="form-control single-select" id="passenger">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+						
+						<div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        select 2
+                                    </span>
+						</div>
+						<select class="form-control single-select" id="baggage">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script src="js/jquery/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/selectize/standalone/selectize.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$('.single-select').selectize({
+			create: false,
+		});
+	});
+</script>
+</body>
+</html>

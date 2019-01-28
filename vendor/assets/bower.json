@@ -10,7 +10,9 @@
     "jquery-ui": "^1.12.1",
     "bootstrap-datepicker": "^1.8.0",
     "popper.js": "https://unpkg.com/popper.js",
-    "vanilla-lazyload": "^10.19.0"
+    "vanilla-lazyload": "^10.19.0",
+    "selectize": "^0.12.6",
+    "selectize-bootstrap-4-style": "^1.0.1"
   },
   "devDependencies": {}
 }

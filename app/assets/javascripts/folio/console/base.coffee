@@ -10,6 +10,8 @@
 #= require jquery-ui/ui/widgets/mouse
 #= require jquery-ui/ui/widgets/sortable
 #= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
+#= require selectize/dist/js/standalone/selectize
+#= require selectize-typing-mode
 
 #= require cocoon
 #= require redactor
@@ -33,6 +35,7 @@
 #= require folio/console/_modal-lazyload
 #= require folio/console/_modal-html-scroll
 #= require folio/console/_cocoon-set-position
+#= require folio/console/_selectize
 #= require folio/console/_simple-form-error-scrollto
 #= require folio/console/_tabs
 #= require folio/console/atom_form_fields/atom_form_fields

@@ -26,9 +26,6 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
       [
         type.model_name.human,
         type,
-        {
-          'data-atom-structure' => type.structure_as_json,
-        }
       ]
     end.compact.sort_by { |name, _type, _data| I18n.transliterate(name) }
   end
@@ -91,7 +88,7 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
           disabled: !active,
           wrapper_html: { hidden: !active },
           input_html: {
-            class: 'folio-console-atom-model-select',
+            class: 'folio-console-atom-model-select folio-console-selectize--manual',
             data: { class: type.to_s }
           }
       end
@@ -115,6 +112,12 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
 
     atom_types.map do |type|
       [type.to_s, base_placeholders.merge(type.form_placeholders)]
+    end.to_h.to_json
+  end
+
+  def structures
+    atom_types.map do |type|
+      [type.to_s, type.structure_as_safe_hash]
     end.to_h.to_json
   end
 

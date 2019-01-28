@@ -3,6 +3,7 @@ cs:
   folio:
     console:
       javascript:
+        add: Přidat
         availableDocuments: Dostupné dokumenty
         availableImages: Dostupné obrázky
         cancel: Zrušit
