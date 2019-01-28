@@ -5,6 +5,7 @@ inherit_gem:
 AllCops:
   TargetRubyVersion: 2.4.1
   Exclude:
+    - 'db/schema.rb'
     - 'test/dummy/db/schema.rb'
 
 Style/StringLiterals:
