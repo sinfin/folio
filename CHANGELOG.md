@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## 2019-01-28
+### Added
+- Added `folio_console_dashboard_redirect` config
+
 ### Changed
 - Changed `folio/console/tagsinput` usage. See source.
 - Dropped rails-assets source from Gemfile, using bower for photoswipe.
