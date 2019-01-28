@@ -50,7 +50,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'cells-rails'
   s.add_dependency 'cells-slim'
   s.add_dependency 'ahoy_matey', '~> 2'
-  s.add_dependency 'rails-assets-photoswipe'
   s.add_dependency 'rails-i18n'
   s.add_dependency 'state_machines-activerecord'
   s.add_dependency 'actionpack-page_caching'

@@ -20,7 +20,6 @@ module Folio
         gem 'pg', version: '~> 0.21.0'
         gem 'devise-i18n'
         gem 'rails-i18n'
-        gem 'rails-assets-photoswipe'
         gem 'actionpack-page_caching'
         gem 'mini_racer'
 
@@ -188,15 +187,6 @@ module Folio
       def production_settings
         inject_into_file 'config/environments/production.rb', after: /config\.action_controller\.perform_caching\s*=\s*true/ do
           "\n  config.action_controller.page_cache_directory = Rails.root.join('public', 'cached_pages')"
-        end
-      end
-
-      def gemfile_rails_assets
-        return if File.readlines(Rails.root.join('config/application.rb')).grep('rails-assets.org').any?
-
-        inject_into_file 'Gemfile', after: "source 'https://rubygems.org'" do <<-'RUBY'
-source 'https://rails-assets.org'
-        RUBY
         end
       end
 

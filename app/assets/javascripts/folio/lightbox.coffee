@@ -1,6 +1,6 @@
 #= require jquery3
-#= require photoswipe/photoswipe
-#= require photoswipe/photoswipe-ui-default
+#= require photoswipe/dist/photoswipe
+#= require photoswipe/dist/photoswipe-ui-default
 
 class window.FolioLightbox
   constructor: (selector, additionalSelector = false, data = null) ->

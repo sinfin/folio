@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 2019-01-28
 ### Changed
 - Changed `folio/console/tagsinput` usage. See source.
+- Dropped rails-assets source from Gemfile, using bower for photoswipe.
 
 ## 2019-01-22
 ### Added
