@@ -35,6 +35,8 @@ require 'state_machines'
 require 'state_machines-activerecord'
 require 'recaptcha'
 
+require 'folio/console/simple_form_inputs/date_time_input'
+
 module Folio
   LANGUAGES = {
     cs: 'CZ',

@@ -1,11 +1,21 @@
 CONFIG =
-  format: 'dd/mm/yyyy',
-  language: 'cs'
+  language: document.documentElement.lang
+  sideBySide: true
+
+DATE_CONFIG = $.extend {}, CONFIG, format: 'LT'
 
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 
-$ ->
-  $(DATE_INPUT_SELECTOR).datepicker CONFIG
-  
+bindDatePicker = ($elements) ->
+  $elements.each ->
+    $this = $(this)
+    $this.attr('data-target', "##{@id}")
+    if $this.hasClass('folio-console-date-picker--date')
+      $this.datetimepicker(DATE_CONFIG)
+    else
+      $this.datetimepicker(CONFIG)
+
+$ -> bindDatePicker($(DATE_INPUT_SELECTOR))
+
 $(document).on 'cocoon:after-insert', (e, insertedItem) ->
-  insertedItem.find(DATE_INPUT_SELECTOR).datepicker CONFIG
+  bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))

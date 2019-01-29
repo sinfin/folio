@@ -25,10 +25,11 @@ bower_components/folio-bootstrap/dist/js/*
 bower_components/folio-bootstrap/js/*
 !bower_components/folio-bootstrap/js/dist
 
-bower_components/bootstrap-datepicker/*
-!bower_components/bootstrap-datepicker/dist
-
 bower_components/vanilla-lazyload/*
 !bower_components/vanilla-lazyload/dist
 bower_components/vanilla-lazyload/dist/*
 !bower_components/vanilla-lazyload/dist/lazyload.js
+
+bower_components/jquery
+bower_components/tempusdominus-bs4/docs
+bower_components/moment/src

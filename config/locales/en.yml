@@ -57,5 +57,6 @@ en:
       separator: "|"
   time:
     formats:
-      short_with_seconds: "%d %b %Y, %H:%m:%S"
+      short_with_seconds: "%d %m %Y, %H:%M:%S"
+      short: "%d %m %Y %H:%M"
   'true': true

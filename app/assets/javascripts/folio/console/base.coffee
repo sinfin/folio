@@ -1,8 +1,9 @@
 #= require jquery
 #= require jquery_ujs
 #= require folio-bootstrap/dist/js/bootstrap.bundle
-#= require bootstrap-datepicker/dist/js/bootstrap-datepicker
-#= require bootstrap-datepicker/dist/locales/bootstrap-datepicker.cs.min
+#= require moment/min/moment.min
+#= require moment/locale/cs
+#= require tempusdominus-bs4/build/js/tempusdominus-bootstrap-4
 
 #= require jquery-ui/ui/data
 #= require jquery-ui/ui/scroll-parent
