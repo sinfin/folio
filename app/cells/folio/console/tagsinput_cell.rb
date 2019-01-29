@@ -9,15 +9,33 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
   end
 
   def selected
-    options[:selected] || model.object.tag_list
+    options[:selected] || model.object.send(list_attribute_name)
+  end
+
+  def list_attribute_name
+    if options[:tag_context]
+      "#{options[:tag_context].to_s.singularize}_list"
+    else
+      :tag_list
+    end
+  end
+
+  def tag_collection
+    if options[:tag_context]
+      base = ActsAsTaggableOn::Tag.for_context(:topics)
+    else
+      base = ActsAsTaggableOn::Tag.all
+    end
+
+    base.order(name: :asc).pluck(:name)
   end
 
   def name
-    options[:name] || :tag_list
+    options[:name] || list_attribute_name
   end
 
   def collection
-    options[:collection] || ActsAsTaggableOn::Tag.pluck(:name)
+    options[:collection] || tag_collection
   end
 
   def allow_creation
