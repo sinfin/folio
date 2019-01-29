@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## 2019-01-29
+### Added
+- Added autocomplete input `f.input :field, as: :autocomplete, collection: ['foo', 'bar']`
+
 ### Changed
 - Changed datetime fields to use date picker by default, removed `date_picker` input.
 

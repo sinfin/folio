@@ -15,7 +15,15 @@ bindDatePicker = ($elements) ->
     else
       $this.datetimepicker(CONFIG)
 
-$ -> bindDatePicker($(DATE_INPUT_SELECTOR))
+unbindDatePicker = ($elements) ->
+  $elements.datetimepicker('destroy')
 
-$(document).on 'cocoon:after-insert', (e, insertedItem) ->
-  bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))
+$(document)
+  .on 'ready', ->
+    bindDatePicker($(DATE_INPUT_SELECTOR))
+
+  .on 'cocoon:after-insert', (e, insertedItem) ->
+    bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))
+
+  .on 'cocoon:before-remove', (e, item) ->
+    unbindDatePicker(item.find(DATE_INPUT_SELECTOR))
