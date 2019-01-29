@@ -10,7 +10,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def form(&block)
-    form_with(model: model, as: options[:as], url: url) do
+    form_with(model: model, as: as, url: url) do
       yield(block)
     end
   end
@@ -42,6 +42,8 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   def url
     return options[:url] if options[:url].present?
     model_url = "console_#{as}_path"
+    public_send(model_url, model.id, format: :json)
+  rescue NoMethodError
     controller.public_send(model_url, model.id, format: :json)
   rescue ActionController::UrlGenerationError
     controller.main_app.public_send(model_url, model.id, format: :json)

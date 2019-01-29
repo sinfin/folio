@@ -22,6 +22,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
     redirect_to console_dashboard_path
   end
 
+  def default_url_options
+    {
+      locale: Rails.application.config.folio_console_locale,
+    }
+  end
+
   private
     # TODO: authorize account
     # def authorize_admin_user!
