@@ -58,7 +58,7 @@ export function updateFileFailure (file) {
 function * getFilesPerform (action) {
   try {
     const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/documents' : '/console/images'
+    const filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
     const records = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(records))
   } catch (e) {
@@ -74,7 +74,7 @@ function * updateFilePerform (action) {
   try {
     const { file, attributes } = action
     const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/documents' : '/console/images'
+    const filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
     const response = yield call(apiPut, `${filesUrl}/${file.id}`, { file: attributes })
     yield put(updateFileSuccess(action.file, response.file))
   } catch (e) {
@@ -140,7 +140,7 @@ export const unselectedFilesForListSelector = (state) => {
 const initialState = {
   loading: false,
   loaded: false,
-  filesUrl: '/console/files',
+  filesUrl: '/console/files.json',
   records: [],
 }
 
