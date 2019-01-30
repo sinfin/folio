@@ -2,13 +2,16 @@
 
 SimpleForm::Inputs::DateTimeInput.class_eval do
   def input(wrapper_options = nil)
-    value = @builder.object.public_send(attribute_name) || Time.zone.now
-    input_html_options[:value] = I18n.l(value, format: :short)
+    value = @builder.object.public_send(attribute_name)
+    if value.present?
+      input_html_options[:value] = I18n.l(value, format: :console_short)
+    end
 
     input_html_options[:class] ||= []
     input_html_options[:class] << 'folio-console-date-picker'
 
-    if value.is_a?(Date)
+    type = @builder.object.class.type_for_attribute(attribute_name).type
+    if type == :date
       input_html_options[:class] << 'folio-console-date-picker--date'
     else
       input_html_options[:class] << 'folio-console-date-picker--date-time'

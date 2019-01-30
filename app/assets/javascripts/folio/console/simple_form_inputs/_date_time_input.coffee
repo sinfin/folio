@@ -2,7 +2,7 @@ CONFIG =
   language: document.documentElement.lang
   sideBySide: true
 
-DATE_CONFIG = $.extend {}, CONFIG, format: 'LT'
+DATE_CONFIG = $.extend {}, CONFIG, format: 'D. M. YYYY'
 
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 

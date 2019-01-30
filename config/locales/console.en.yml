@@ -135,3 +135,9 @@ en:
         add_image: Add image
         add_video: Add video
         remove_video: Remove video
+  date:
+    formats:
+      console_short: "%d. %m. %Y"
+  time:
+    formats:
+      console_short: "%d. %m. %Y %H:%M"
