@@ -60,6 +60,10 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     class_name.constantize.method_defined?(:cover_placement)
   end
 
+  def has_atoms?
+    class_name.constantize.method_defined?(:atoms)
+  end
+
   def form_tabs
     base = [:content]
     base << :gallery if has_attachmentable?

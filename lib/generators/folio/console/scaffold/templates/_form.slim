@@ -8,6 +8,9 @@
     = react_picker(f, :cover_placement)
     <%- end -%>
     <%= attribute_inputs %>
+    <%- if has_atoms? -%>
+    = console_form_atoms f
+    <%- end -%>
   <%- if has_attachmentable? -%>
   = tab :gallery
     = react_images(f.object.image_placements, attachmentable: '<%= singular_table_name %>')
