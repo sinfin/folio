@@ -12,7 +12,7 @@ ADVANCED_OPTIONS =
   formatting: ['p', 'h2', 'h3', 'h4']
 
 OPTIONS =
-  plugins: ['video', 'table', 'button', 'definedlinks']
+  plugins: ['table', 'button', 'definedlinks']
   buttonsHide: ['file', 'image']
   toolbarFixed: false
   definedlinks: '/console/links.json'
@@ -20,6 +20,7 @@ OPTIONS =
   formatting: ['p', 'h2', 'h3', 'h4']
 
 window.folioConsoleInitRedactor = (node, options = {}) ->
+  return if node.classList.contains('redactor-source')
   opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
   $R(node, opts)
 
@@ -33,9 +34,3 @@ window.folioConsoleRedactorSetContent = (node, content) ->
 window.folioConsoleRedactorGetContent = (node) ->
   R = $R(node)
   R.source.getCode()
-
-$ ->
-  $wrap = $('.redactor')
-  return if $wrap.length is 0
-  $wrap.each ->
-    window.folioConsoleInitRedactor(this, advanced: @classList.contains('redactor--advanced'))

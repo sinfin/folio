@@ -46,6 +46,7 @@
 
 #= require folio/console/simple_form_inputs/_autocomplete_input
 #= require folio/console/simple_form_inputs/_date_time_input
+#= require folio/console/simple_form_inputs/_redactor_input
 
 #= require ./nodes_table
 

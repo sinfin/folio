@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Changed atoms `STRUCTURE[:model]` to use class names (strings), not actual classes.
+- Changed redactor fields syntax - dont use redactor class, use `as: :redactor` instead.
 
 ## 2019-01-29
 ### Added

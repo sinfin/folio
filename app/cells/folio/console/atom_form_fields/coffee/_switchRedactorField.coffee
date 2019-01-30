@@ -15,7 +15,7 @@ window.folioConsoleAtom.switchRedactorField = ({ structure, $field, placeholder 
       # check if redactor is active
       unless $textarea.hasClass('redactor-source')
         $textarea.each ->
-          window.folioConsoleInitRedactor this, basic: true
+          window.folioConsoleInitRedactor(this)
 
     when 'string'
       present = true
