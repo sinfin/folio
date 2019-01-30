@@ -6,6 +6,7 @@ tr
   td = index_position_buttons <%= singular_table_name %>
   <%- end -%>
   td
+    = view_button(<%= view_resource_name %>(<%= singular_table_name %>))
     = edit_button(<%= singular_table_name %>, \
                   <%= redirect_resource_name %>(<%= singular_table_name %>.id))
     = delete_button(<%= singular_table_name %>, \

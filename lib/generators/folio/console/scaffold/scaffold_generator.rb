@@ -44,6 +44,10 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     "main_app.edit_console_#{singular_table_name}_path"
   end
 
+  def view_resource_name
+    "main_app.#{singular_table_name}_path"
+  end
+
   def redirect_resource_name
     edit_resource_name
   end

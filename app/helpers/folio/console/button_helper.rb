@@ -22,6 +22,17 @@ module Folio
       link_to(ico, path, opts)
     end
 
+    def view_button(path, opts = {})
+      ico = icon('eye')
+
+      opts.reverse_merge!(
+        class: 'btn btn-info',
+        target: '_blank',
+      )
+
+      link_to(ico, path, opts)
+    end
+
     def custom_icon_button(path, icon_name = 'eye', opts = {})
       opts.reverse_merge!(class: "btn btn-#{opts[:color] || 'info'}")
 
