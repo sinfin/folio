@@ -21,7 +21,7 @@ bindAutocomplete = ($elements) ->
       source: $this.data('autocomplete')
 
 unbindAutocomplete = ($elements) ->
-  $element.autocomplete('destroy')
+  $elements.autocomplete('destroy')
 
 $(document)
   .on 'ready', ->
