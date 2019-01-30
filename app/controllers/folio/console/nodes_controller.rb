@@ -20,7 +20,6 @@ module Folio
                          .arrange(order: 'position asc, created_at asc')
         else
           nodes = Node.original
-                      .ordered
                       .filter_by_params(filter_params)
           @pagy, @nodes = pagy(nodes)
         end

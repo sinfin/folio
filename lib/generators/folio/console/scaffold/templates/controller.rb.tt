@@ -11,10 +11,12 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
   }
 
   def index
-    <%= plural_table_name %> = <%= class_name %><%= index_scope %>
+    <%= plural_table_name %> = <%= class_name %>.all
     <%- if filterable? -%>
     if filter_params.present?
       <%= plural_table_name %> = <%= plural_table_name %>.filter_by_params(filter_params)
+    else
+      <%= plural_table_name %> = <%= plural_table_name %>.<%= index_scope %>
     end
     <%- end -%>
     @pagy, @<%= plural_table_name %> = pagy(<%= plural_table_name %>)
