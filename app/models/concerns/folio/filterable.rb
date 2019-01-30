@@ -8,20 +8,7 @@
 #
 module Folio::Filterable
   extend ActiveSupport::Concern
-
-  included do
-    scope :by_query, -> (q) {
-      if q.present?
-        attrs = self.attribute_names & %w[title name]
-        args = ["%#{q}%"] * attrs.size
-
-        conditions = attrs.map { |a| "unaccent(#{table_name}.#{a}) ILIKE unaccent(?)" }
-        where(conditions.join(' OR '), *args)
-      else
-        where(nil)
-      end
-    }
-  end
+  include PgSearch
 
   module ClassMethods
     # Call the class methods with the same name as the keys in <tt>filtering_params</tt>

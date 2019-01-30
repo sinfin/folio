@@ -12,7 +12,11 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
 
   def index
     <%= plural_table_name %> = <%= class_name %><%= index_scope %>
-    <%= plural_table_name %> = <%= plural_table_name %>.filter(filter_params) if filter_params.present?
+    <%- if filterable? -%>
+    if filter_params.present?
+      <%= plural_table_name %> = <%= plural_table_name %>.filter_by_params(filter_params)
+    end
+    <%- end -%>
     @pagy, @<%= plural_table_name %> = pagy(<%= plural_table_name %>)
   end
 
@@ -52,15 +56,5 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
             .permit(<%= form_attribute_names.map { |name| ":#{name}" }.join(",\n                    ") %>)
       <%- end -%>
     end
-
-    def filter_params
-      params.permit(:by_query, *index_filters.keys)
-    end
-
-    def index_filters
-      {}
-    end
-
-    helper_method :index_filters
 end
 <% end -%>

@@ -15,17 +15,13 @@ class Folio::Lead < Folio::ApplicationRecord
   validate :validate_verified_captcha
 
   # Scopes
-  scope :by_query, -> (q) {
-    if q.present?
-      args = ["%#{q}%"] * 2
-      where('email ILIKE ? OR note ILIKE ?', *args)
-    else
-      where(nil)
-    end
-  }
   scope :handled, -> { with_state(:handled) }
   scope :not_handled, -> { with_state(:submitted) }
   scope :ordered, -> { order(created_at: :desc) }
+
+  pg_search_scope :by_query,
+                  against: %i[email name phone],
+                  ignoring: :accents
 
   state_machine initial: :submitted do
     event :handle do

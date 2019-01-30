@@ -39,10 +39,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
     helper_method :query
 
     def filter_params
-      params.permit(:by_query)
+      params.permit(:by_query, *index_filters.keys)
+    end
+
+    def index_filters
+      {}
     end
 
     helper_method :filter_params
+    helper_method :index_filters
 
     def add_root_breadcrumb
       add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path

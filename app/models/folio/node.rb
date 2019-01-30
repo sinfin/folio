@@ -62,18 +62,6 @@ class Folio::Node < Folio::ApplicationRecord
     end
   end
 
-  # Multi-search
-  multisearchable against: [ :title, :perex, :content, :atom_contents ],
-                  if: :searchable?,
-                  ignoring: :accents
-
-  pg_search_scope :simple_pg_search,
-                  against: %i[title perex content],
-                  associated_against: {
-                    atoms: %i[title perex content],
-                    file_placements: %i[title alt],
-                  }
-
   # Scopes
   scope :original,  -> { where.not(type: 'Folio::NodeTranslation') }
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }
@@ -101,6 +89,41 @@ class Folio::Node < Folio::ApplicationRecord
       where(nil)
     end
   }
+
+  # Multi-search
+  multisearchable against: [ :title, :perex, :content, :atom_contents ],
+                  if: :searchable?,
+                  ignoring: :accents
+
+  pg_search_scope :by_query,
+                  against: begin
+                    if Rails.application.config.folio_using_traco
+                      weighted = {}
+                      self.column_names.each do |column|
+                        if /\A(title|content|perex)_/.match?(column)
+                          if /title/.match?(column)
+                            weighted[column] = 'A'
+                          elsif /perex/.match?(column)
+                            weighted[column] = 'B'
+                          else
+                            weighted[column] = 'C'
+                          end
+                        end
+                      end
+                      weighted
+                    else
+                      {
+                        title: 'A',
+                        perex: 'B',
+                        content: 'C',
+                      }
+                    end
+                  end,
+                  associated_against: {
+                    atoms: Folio::Atom.text_fields,
+                    file_placements: %i[title alt],
+                  },
+                  ignoring: :accents
 
   def self.arrange_as_array(options = {}, hash = nil)
     hash ||= original.arrange(options)

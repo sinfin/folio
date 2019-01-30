@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
-  include Folio::Filterable
-
   belongs_to :visit, optional: true
 
   # Validations
@@ -10,13 +8,10 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
 
   # Scopes
   default_scope { order(created_at: :desc) }
-  scope :by_query, -> (q) {
-    if q.present?
-      where('email ILIKE ?', "%#{q}%")
-    else
-      where(nil)
-    end
-  }
+
+  pg_search_scope :by_query,
+                  against: %i[email],
+                  ignoring: :accents
 
   def title
     email

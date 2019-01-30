@@ -14,14 +14,9 @@ class Folio::Account < Folio::ApplicationRecord
   # Scopes
   default_scope { order(created_at: :desc) }
 
-  scope :by_query, -> (q) {
-    if q.present?
-      args = ["%#{q}%"] * 2
-      where('first_name ILIKE ? OR last_name ILIKE ?', *args)
-    else
-      where(nil)
-    end
-  }
+  pg_search_scope :by_query,
+                  against: %i[first_name last_name email],
+                  ignoring: :accents
 
   scope :by_is_active, -> (b) {
     unless b.nil?
