@@ -12,7 +12,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     images: nil,    # one of nil, true
     document: nil,  # one of nil, true
     documents: nil, # one of nil, true
-    model: nil,     # one of nil, an array of model classes - e.g. [Folie::Node, My::Model]
+    model: nil,     # one of nil, an array of model class names - e.g. %w[Folie::Node My::Model]
   }
 
   self.table_name = 'folio_atoms'
@@ -58,9 +58,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def self.structure_as_safe_hash
-    self::STRUCTURE.dup.tap do |structure|
-      structure[:model] = structure[:model].map(&:to_s) if structure[:model].present?
-    end
+    self::STRUCTURE.dup
   end
 
   def self.molecule
@@ -98,7 +96,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     def model_type_is_allowed
       if model &&
          klass::STRUCTURE[:model].present? &&
-         klass::STRUCTURE[:model].none? { |m| model.is_a?(m) }
+         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.safe_constantize) }
         errors.add(:model_type, :invalid)
       end
     end

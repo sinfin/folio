@@ -4,7 +4,7 @@ module Atom
   class PageReferenceWithText < Folio::Atom::Base
     STRUCTURE = {
       content: :string,
-      model: [Folio::Page],
+      model: %w[Folio::Page],
     }
   end
 end

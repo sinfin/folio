@@ -77,8 +77,7 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
 
   def model_field
     selects = atom_types.map do |type|
-      m = type::STRUCTURE[:model]
-      if m.present?
+      if type::STRUCTURE[:model].present?
         active = (type == f.object.class)
         became = f.object.becomes(type)
         f.input :model,
@@ -100,7 +99,8 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
     klass = atom.class
     show_model_names = klass::STRUCTURE[:model].size > 1
 
-    klass::STRUCTURE[:model].flat_map do |model_class|
+    klass::STRUCTURE[:model].flat_map do |model_class_name|
+      model_class = model_class_name.safe_constantize
       sti_records_for_select(klass.scoped_model_resource(model_class),
                              show_model_names: show_model_names,
                              add_content: true)

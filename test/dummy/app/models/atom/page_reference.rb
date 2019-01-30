@@ -3,7 +3,7 @@
 module Atom
   class PageReference < Folio::Atom::Base
     STRUCTURE = {
-      model: [Folio::Page],
+      model: %w[Folio::Page],
     }
   end
 end

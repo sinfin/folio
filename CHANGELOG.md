@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Removed default `by_query` scope from `Folio::Filterable` - use custom `PgSearch` instead!
 
+### Changed
+- Changed atoms `STRUCTURE[:model]` to use class names (strings), not actual classes.
+
 ## 2019-01-29
 ### Added
 - Added autocomplete input `f.input :field, as: :autocomplete, collection: ['foo', 'bar']`

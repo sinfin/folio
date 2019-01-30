@@ -9,7 +9,7 @@ module Folio
     end
 
     class TestAtom < Atom::Base
-      STRUCTURE = { model: [MenuWithAtoms] }
+      STRUCTURE = { model: [MenuWithAtoms.to_s] }
     end
 
     test 'deletes reference atoms' do
