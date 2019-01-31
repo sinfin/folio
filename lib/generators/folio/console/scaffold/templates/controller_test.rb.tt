@@ -28,8 +28,8 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
     post <%= test_index_resource_path %>, params: {
       <%= singular_table_name %>: params,
     }
+    assert_equal(1, <%= class_name %>.count, 'Creates record')
     assert_redirected_to <%= test_index_resource_path %>
-    assert_equal(1, <%= class_name %>.count)
   end
 
   test 'update' do
