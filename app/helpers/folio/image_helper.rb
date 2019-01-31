@@ -41,10 +41,9 @@ module Folio::ImageHelper
     retina_multiplier = options.delete(:retina_multiplier) || 2
     lazyload_class = options.delete(:lazyload_class) || 'folio-lazyload'
 
+    options['data-src'] = normal
     if retina
       options['data-srcset'] = "#{normal} 1x, #{retina} #{retina_multiplier}x"
-    else
-      options['data-src'] = normal
     end
 
     if options[:alt].present?
