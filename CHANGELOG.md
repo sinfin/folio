@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## 2019-01-30
+### Changed
+- Changed autocomplete syntax to simply `autocomplete: true` or `autocomplete: ['a', 'b']` on string inputs.
+
+## 2019-01-30
 ### Removed
 - Removed default `by_query` scope from `Folio::Filterable` - use custom `PgSearch` instead!
 

@@ -1,4 +1,4 @@
-AUTOCOMPLETE_SELECTOR = '.folio-console-autocomplete-input'
+AUTOCOMPLETE_SELECTOR = '.folio-console-string-input--autocomplete'
 
 $.widget 'ui.autocomplete', $.ui.autocomplete,
   _renderMenu: ($ul, items) ->

@@ -27,13 +27,6 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
     common = { wrapper: :with_flag, flag: locale }
 
     if args.present? && first = args.first.presence
-      if first[:autocomplete]
-        common[:as] = :autocomplete
-        common[:collection] = f.object.class.distinct
-                                      .pluck("#{key}_#{locale}")
-                                      .compact
-      end
-
       [
         first.merge(common)
       ] + args[1..-1]

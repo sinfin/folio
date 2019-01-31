@@ -44,9 +44,9 @@
 #= require folio/console/menu_tree/menu_tree
 #= require folio/console/index/checkboxes/checkboxes
 
-#= require folio/console/simple_form_inputs/_autocomplete_input
 #= require folio/console/simple_form_inputs/_date_time_input
 #= require folio/console/simple_form_inputs/_redactor_input
+#= require folio/console/simple_form_inputs/_string_input
 
 #= require ./nodes_table
 
