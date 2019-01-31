@@ -43,6 +43,7 @@ cs:
           check_all: Vybrat vše
           handle_selected: Vyřídit vybrané
           uncheck_all: Odvybrat vše
+          toggle: Hromadný výběr
         filters:
           all: Všechny
           cancel: Zrušit filtry

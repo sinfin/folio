@@ -40,7 +40,7 @@ table.table
       td = Folio::Lead.human_attribute_name(:phone)
       td
         - if @lead.phone.present?
-          = link_to(@lead.phone, "tel:#{@lead.phone}") if @lead.phone.present?
+          = link_to(@lead.phone, "tel:#{@lead.phone}")
         - else
           = t('.blank')
 

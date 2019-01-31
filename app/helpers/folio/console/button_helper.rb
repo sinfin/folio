@@ -40,7 +40,9 @@ module Folio
     end
 
     def delete_button(record, path, opts = {}, text: false)
-      name = record.try(:full_title) || record.title
+      name = record.try(:to_label) ||
+             record.try(:full_title) ||
+             record.try(:title)
       question = t('folio.console.really_delete', title: name)
 
       if text

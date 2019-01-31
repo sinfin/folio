@@ -53,9 +53,8 @@ module Folio
     end
 
     def mass_handle
-      @leads = Lead.not_handled.where(id: params.require(:leads)).update_all(
-        state: 'handled'
-      )
+      @leads = Lead.not_handled.where(id: params.require(:leads))
+      @leads.update_all(state: 'handled')
       flash.notice = t('.success')
       respond_with @leads, location: console_leads_path
     end
