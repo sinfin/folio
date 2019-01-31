@@ -1,11 +1,12 @@
 tr
-  td.folio-console-index-checkboxes-td
-    input[
-      type="checkbox"
-      name="leads[]"
-      value=lead.id
-      class="folio-console-index-checkboxes-checkbox"
-    ]
+  - unless lead.handled?
+    td.folio-console-index-checkboxes-td
+      input[
+        type="checkbox"
+        name="leads[]"
+        value=lead.id
+        class="folio-console-index-checkboxes-checkbox"
+      ]
 
   td
     a href=console_lead_path(lead)
