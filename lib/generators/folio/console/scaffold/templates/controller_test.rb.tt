@@ -5,7 +5,7 @@ require 'test_helper'
 <% module_namespacing do -%>
 class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Console::BaseControllerTest
   test 'index' do
-    get <%= index_resource_name.gsub('main_app.', '') %>
+    get <%= test_index_resource_path %>
     assert_response :success
   end
 
@@ -15,9 +15,40 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
   end
 
   test 'edit' do
-    @<%= singular_table_name %> = create(:<%= singular_table_name %>)
-    get <%= edit_resource_name.gsub('main_app.', '') %>(@<%= singular_table_name %>.id)
+    model = create(:<%= singular_table_name %>)
+    get <%= edit_resource_name.gsub('main_app.', '') %>(model.id)
     assert_response :success
+  end
+
+  test 'create' do
+    params = build(:<%= singular_table_name %>).serializable_hash.merge(
+      cover_placement_attributes: build(:folio_cover_placement).serializable_hash,
+    )
+    assert_equal(0, <%= class_name %>.count)
+    post <%= test_index_resource_path %>, params: {
+      <%= singular_table_name %>: params,
+    }
+    assert_redirected_to <%= test_index_resource_path %>
+    assert_equal(1, <%= class_name %>.count)
+  end
+
+  test 'update' do
+    model = create(:<%= singular_table_name %>)
+    assert_not_equal('Title', model.title)
+    put <%= test_update_resource_name %>, params: {
+      <%= singular_table_name %>: {
+        title: 'Title',
+      },
+    }
+    assert_redirected_to <%= edit_resource_name.gsub('main_app.', '') %>
+    assert_equal('Title', model.reload.title)
+  end
+
+  test 'destroy' do
+    model = create(:<%= singular_table_name %>)
+    delete <%= test_update_resource_name %>
+    assert_redirected_to <%= test_index_resource_path %>
+    assert_not(<%= class_name %>.exists?(id: model.id))
   end
 end
 <% end -%>

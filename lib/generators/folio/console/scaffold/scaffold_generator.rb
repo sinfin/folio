@@ -36,6 +36,14 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     "main_app.console_#{singular_table_name}_path(#{singular_table_name}.id)"
   end
 
+  def test_update_resource_name
+    "main_app.console_#{singular_table_name}_path(model.id)"
+  end
+
+  def test_index_resource_path
+    index_resource_name.gsub('main_app.', '')
+  end
+
   def new_resource_name
     "main_app.new_console_#{singular_table_name}_path"
   end
