@@ -11,7 +11,11 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
   }
 
   def index
+    <%- if positionable? -%>
+    <%= plural_table_name %> = <%= class_name %>.ordered
+    <%- else -%>
     <%= plural_table_name %> = <%= class_name %>.all
+    <%- end -%>
     <%- if filterable? -%>
     if filter_params.present?
       <%= plural_table_name %> = <%= plural_table_name %>.filter_by_params(filter_params)
@@ -19,7 +23,11 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
       <%= plural_table_name %> = <%= plural_table_name %>.<%= index_scope %>
     end
     <%- end -%>
+    <%- if positionable? -%>
     @pagy, @<%= plural_table_name %> = pagy(<%= plural_table_name %>)
+    <%- else -%>
+    @<%= plural_table_name %> = <%= plural_table_name %>
+    <%- end -%>
   end
 
   def new
