@@ -2,6 +2,12 @@
 cs:
   folio:
     console:
+      actions:
+        show: Zobrazit
+        edit: Upravit
+        destroy: Smazat
+        submit: Uložit
+        back: Zpět
       alt_prompt: Alternativní popisek obrázku
       back: Zpět
       base:

@@ -43,5 +43,10 @@ module Folio
       cell('folio/console/form_footer', f, back_path: back_path,
                                            destroy: destroy).show.html_safe
     end
+
+    def console_actions(model, actions = nil, options = {})
+      opts = options.merge(actions: actions)
+      cell('folio/console/actions', model, opts).show.html_safe
+    end
   end
 end
