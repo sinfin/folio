@@ -1,9 +1,9 @@
 fieldset
-  .flex-row.flex-row--md.flex-row--reverse
-    .col
+  .row
+    .col-auto.order-sm-2
       = react_picker(f, :cover_placement)
 
-    .col.flex-col-grow
+    .col-sm.order-sm-1
       .row
         .col-sm-1
           = f.input :locale, disabled: true

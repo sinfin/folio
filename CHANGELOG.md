@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-02-04
+### Changed
+- Changed simple_form bootstrap 4 config - check forms and add `$enable-validation-icons: false` to sass variables, remove `flex-row` and use `col-auto` instead.
+
 ## 2019-01-30
 ### Changed
 - Changed autocomplete syntax to simply `autocomplete: true` or `autocomplete: ['a', 'b']` on string inputs.

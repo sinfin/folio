@@ -19,7 +19,7 @@ module Folio
       assert_response(:success)
       html = Nokogiri::HTML(response.body)
       assert_equal 0, html.css('.folio-lead-form-submitted').size
-      assert_equal 1, html.css('.has-danger #lead_email').size
+      assert_equal 1, html.css('.form-group-invalid #lead_email').size
     end
 
     test 'valid' do

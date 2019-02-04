@@ -2,7 +2,7 @@ $ ->
   $formAlert = $('.simple_form .alert-danger')
   return unless $formAlert.length
   $formAlert.on 'click', ->
-    $field = $formAlert.closest('form').find('.form-group.has-danger, .folio-console-react-picker--error').first()
+    $field = $formAlert.closest('form').find('.form-group-invalid, .form-group.has-danger, .folio-console-react-picker--error').first()
     return unless $field.length
     $tab = $field.closest('.tab-pane')
 
