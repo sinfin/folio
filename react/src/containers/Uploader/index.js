@@ -49,7 +49,10 @@ class Uploader extends Component {
       addedfile: (file) => dispatch(addedFile(file)),
       thumbnail: (file, dataUrl) => dispatch(thumbnail(file, dataUrl)),
       success: (file, response) => dispatch(success(file, response.file)),
-      error: (file, message) => dispatch(error(file, message)),
+      error: (file, message) => {
+        const flash = (typeof message === 'object') ? message.error : message
+        dispatch(error(file, flash))
+      },
       uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
       init: (dropzone) => this.dropzone = dropzone
     }

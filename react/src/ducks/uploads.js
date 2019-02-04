@@ -133,7 +133,6 @@ function uploadsReducer (state = initialState, action) {
       return {
         ...state,
         didUpload: true,
-        showTagger: true,
         records: {
           ...state.records,
           [id]: {
@@ -179,6 +178,7 @@ function uploadsReducer (state = initialState, action) {
     case FINISHED_UPLOAD:
       return {
         ...state,
+        showTagger: true,
         records: omit(state.records, [id]),
         uploadedIds: [...state.uploadedIds, action.uploadedFileId]
       }

@@ -74,8 +74,8 @@ function * updateFilePerform (action) {
   try {
     const { file, attributes } = action
     const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
-    const response = yield call(apiPut, `${filesUrl}/${file.id}`, { file: attributes })
+    const fileUrl = fileType === 'Folio::Document' ? `/console/documents/${file.id}.json` : `/console/images/${file.id}.json`
+    const response = yield call(apiPut, fileUrl, { file: attributes })
     yield put(updateFileSuccess(action.file, response.file))
   } catch (e) {
     flashError(e.message)

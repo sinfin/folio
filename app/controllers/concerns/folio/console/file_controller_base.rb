@@ -27,16 +27,32 @@ module Folio::Console::FileControllerBase
   end
 
   def create
-    @file = Folio::File.create!(file_params)
-    render json: Folio::FileSerializer.new(@file),
-           location: edit_path(@file)
+    @file = Folio::File.new(file_params)
+    if @file.save
+      render json: Folio::FileSerializer.new(@file),
+             location: edit_path(@file)
+    else
+      render json: { error: @file.errors.full_messages.first, status: 422 },
+             location: edit_path(@file),
+             status: 422
+    end
   end
 
   def update
-    @file.update(file_params)
-    respond_with(@file, location: index_path) do |format|
-      format.html
-      format.json { render json: Folio::FileSerializer.new(@file) }
+    if @file.update(file_params)
+      respond_with(@file, location: index_path) do |format|
+        format.html
+        format.json { render json: Folio::FileSerializer.new(@file) }
+      end
+    else
+      respond_with(@file, location: index_path) do |format|
+        format.html
+        format.json do
+          render json: { error: @file.errors.full_messages.first, status: 422 },
+                 location: index_path,
+                 status: 422
+        end
+      end
     end
   end
 

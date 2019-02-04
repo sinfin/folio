@@ -13,9 +13,8 @@ const HEADERS = {
 const fallbackMessage = (response) => `${response.status}: ${response.statusText}`
 
 const jsonError = (json) => {
-  if (!json.status) return null
-  if (!json.status.error) return null
-  return json.status.error.message || null
+  if (!json) return null
+  return json.error || null
 }
 
 function checkResponse (response) {
