@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module Folio
-  class PagesController < BaseController
-    include PagesControllerBase
-  end
+class Folio::PagesController < Folio::BaseController
+  include Folio::PagesControllerBase
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module Folio
-  class ApplicationController < ActionController::Base
-    include ApplicationControllerBase
-  end
+class Folio::ApplicationController < ActionController::Base
+  include Folio::ApplicationControllerBase
 end
