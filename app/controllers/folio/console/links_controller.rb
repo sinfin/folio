@@ -12,6 +12,10 @@ class Folio::Console::LinksController < Folio::Console::BaseController
       end
     end
 
+    rails_paths.each do |path, label|
+      links << { name: label, url: main_app.public_send(path) }
+    end
+
     sorted_links = links.sort_by { |link| I18n.transliterate(link[:name]) }
 
     render json: sorted_links, root: false
@@ -28,6 +32,13 @@ class Folio::Console::LinksController < Folio::Console::BaseController
     def additional_links
       # {
       #   Klass => Proc.new { |instance| main_app.klass_path(instance) },
+      # }
+      {}
+    end
+
+    def rails_paths
+      # {
+      #   :path_symbol => "label",
       # }
       {}
     end

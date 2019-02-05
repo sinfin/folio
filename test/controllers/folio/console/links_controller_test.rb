@@ -29,12 +29,19 @@ class Folio::Console::LinksControllerTest < Folio::Console::BaseControllerTest
               Folio::MenuItem => Proc.new { |node| 'url' }
             }
           end
+
+          def rails_paths
+            {
+              root_path: 'Homepage',
+            }
+          end
       end
 
       create(:folio_menu_item, title: 'Test', target: page)
 
       get console_links_path
-      assert_equal([{ 'name' => 'Odkaz - Test', 'url' => 'url' },
+      assert_equal([{ 'name' => 'Homepage', 'url' => '/' },
+                    { 'name' => 'Odkaz - Test', 'url' => 'url' },
                     { 'name' => 'Stránka - Bar', 'url' => '/cs/bar' },
                     { 'name' => 'Stránka - Foo', 'url' => '/cs/foo' }],
                    JSON.parse(response.body))
