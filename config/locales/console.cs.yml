@@ -16,10 +16,14 @@ cs:
       breadcrumbs:
         actions:
           add: Přidat
+          cancel: Stornovat
+          confirm: Potvrdit
           delete: Smazat
           edit: Upravit
+          handle: Vyřídit
           new: Vytvořit
           show: Zobrazit
+          unhandle: Označit za nevyřízené
         root: Administrace
       cancel: Zrušit
       create: Vytvořit
@@ -57,8 +61,6 @@ cs:
         header:
           by_query: Filtrovat...
       leads:
-        handle:
-          success: Formulář vyřízen
         index:
           handled: Vyřízené
           not_handled: Nevyřízené
@@ -68,8 +70,6 @@ cs:
           blank: "-- nevyplněno --"
           handle: Vyřídit
           unhandle: Označit jako nevyřízený
-        unhandle:
-          success: Formulář označen za nevyřízený
       menu_tree:
         error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
         success: Stromová struktura upravena

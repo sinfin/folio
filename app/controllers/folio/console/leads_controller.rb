@@ -30,7 +30,6 @@ module Folio
       respond_with @lead, location: console_leads_path
     end
 
-
     def destroy
       @lead.destroy
       respond_with @lead, location: console_leads_path
@@ -42,14 +41,12 @@ module Folio
 
     def handle
       @lead.handle!
-      flash.notice = t('.success')
-      redirect_back fallback_location: console_leads_path
+      respond_with @lead, location: console_leads_path
     end
 
     def unhandle
       @lead.unhandle!
-      flash.notice = t('.success')
-      redirect_back fallback_location: console_leads_path
+      respond_with @lead, location: console_leads_path
     end
 
     def mass_handle

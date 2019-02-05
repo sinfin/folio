@@ -23,11 +23,11 @@ class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
   test 'handle / unhandle' do
     model = create(:folio_lead)
     assert_not(model.handled?)
-    post handle_console_lead_path(model.id)
+    patch handle_console_lead_path(model.id)
     assert_redirected_to console_leads_path
     assert(model.reload.handled?)
 
-    post unhandle_console_lead_path(model.id)
+    patch unhandle_console_lead_path(model.id)
     assert_redirected_to console_leads_path
     assert_not(model.reload.handled?)
   end

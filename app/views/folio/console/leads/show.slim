@@ -13,12 +13,12 @@ table.table
         - if @lead.handled?
           = link_to t('.unhandle'), \
                     unhandle_console_lead_path(@lead), \
-                    method: :post, \
+                    method: :patch, \
                     class: 'btn btn-danger'
         - else
           = link_to t('.handle'), \
                     handle_console_lead_path(@lead), \
-                    method: :post, \
+                    method: :patch, \
                     class: 'btn btn-success'
 
     tr

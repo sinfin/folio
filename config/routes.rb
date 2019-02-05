@@ -29,8 +29,8 @@ Folio::Engine.routes.draw do
         post :mass_handle
       end
       member do
-        post :handle
-        post :unhandle
+        patch :handle
+        patch :unhandle
       end
     end
     resources :newsletter_subscriptions, only: %i[index destroy]

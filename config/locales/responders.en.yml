@@ -11,3 +11,15 @@ en:
       update:
         alert: "%{resource_name} could not be updated."
         notice: "%{resource_name} was successfully updated."
+      cancel:
+        alert: "%{resource_name} could not be canceled."
+        notice: "%{resource_name} was successfully canceled."
+      handle:
+        alert: "%{resource_name} could not be handled."
+        notice: "%{resource_name} was successfully handled."
+      unhandle:
+        alert: "%{resource_name} could not be set as not-handled."
+        notice: "%{resource_name} was successfully set as not-handled."
+      confirm:
+        alert: "%{resource_name} could not be confirmed."
+        notice: "%{resource_name} was successfully confirmed."
