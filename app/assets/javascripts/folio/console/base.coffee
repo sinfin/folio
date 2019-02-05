@@ -4,6 +4,7 @@
 #= require moment/min/moment.min
 #= require moment/locale/cs
 #= require tempusdominus-bs4/build/js/tempusdominus-bootstrap-4
+#= require slideout.js/dist/slideout
 
 #= require jquery-ui/jquery-ui
 #= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
@@ -43,6 +44,7 @@
 #= require folio/console/react_picker/react_picker
 #= require folio/console/menu_tree/menu_tree
 #= require folio/console/index/checkboxes/checkboxes
+#= require folio/console/modules/_layout
 
 #= require folio/console/simple_form_inputs/_date_time_input
 #= require folio/console/simple_form_inputs/_redactor_input

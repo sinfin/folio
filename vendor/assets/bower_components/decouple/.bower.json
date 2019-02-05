@@ -1,0 +1,42 @@
+{
+  "name": "decouple",
+  "repository": "git@github.com:pazguille/decouple.git",
+  "description": "Decouple the DOM events from expensive functions.",
+  "author": "@pazguille <guille87paz@gmail.com>",
+  "version": "0.0.2",
+  "ignore": [
+    ".*",
+    "package.json",
+    "component.json",
+    "node_modules",
+    "gulpfile.js",
+    "**/.*",
+    "bower_components",
+    "test"
+  ],
+  "main": "dist/decouple",
+  "license": "MIT",
+  "homepage": "https://github.com/pazguille/decouple",
+  "moduleType": [
+    "adecouplemd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "decouple",
+    "events",
+    "dom events"
+  ],
+  "authors": [
+    "@pazguille <guille87paz@gmail.com>"
+  ],
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.2",
+    "commit": "91b455007e05fc54fb227714ae704a14cbb4e68a"
+  },
+  "_source": "https://github.com/pazguille/decouple.git",
+  "_target": "0.0.2",
+  "_originalSource": "decouple"
+}

@@ -14,7 +14,8 @@
     "selectize-bootstrap-4-style": "^1.0.1",
     "photoswipe": "^4.1.3",
     "tempusdominus-bs4": "^5.1.2",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "slideout.js": "https://github.com/mango/slideout.git#^1.0.1"
   },
   "devDependencies": {}
 }

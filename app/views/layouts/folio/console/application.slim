@@ -1,23 +1,26 @@
 - add_action_breadcrumb(@breadcrumb_title) if @breadcrumbs.present?
 
 doctype html
-html.bg-dark lang=I18n.locale
+html.f-c-layout-html lang=I18n.locale
   head
     = render partial: 'layouts/folio/console/head'
 
-  body.bg-dark
-    = render partial: 'layouts/folio/console/header'
+  body.f-c-layout-body
+    == cell('folio/console/layout/sidebar')
 
-    - if @breadcrumbs.present?
-      = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
+    .f-c-layout-main#f-c-layout-main
+      = render partial: 'layouts/folio/console/header'
 
-    == cell('folio/console/flash', flash)
+      - if @breadcrumbs.present?
+        = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
 
-    .folio-console-layout-main
-      = yield
-      == cell('folio/console/pagination', @pagy)
+      == cell('folio/console/flash', flash)
 
-    == cell('folio/console/footer', @site)
+      .folio-console-layout-main
+        = yield
+        == cell('folio/console/pagination', @pagy)
+
+      == cell('folio/console/footer', @site)
 
     - %w[Folio::Image Folio::Document].each do |klass|
       - [true, false].each do |single|

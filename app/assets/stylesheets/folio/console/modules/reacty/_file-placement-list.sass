@@ -87,7 +87,7 @@ body > .folio-console-file-placement
   flex: 1 1 auto
   display: flex
 
-+mq-md-only
++media-breakpoint-only(md)
   .folio-console-file-placement__alt
     max-width: 150px
 
@@ -103,7 +103,7 @@ body > .folio-console-file-placement
     white-space: nowrap
     padding-right: 0
 
-+mq-sm
++media-breakpoint-down(sm)
   .folio-console-file-placement
     border: 1px solid $border-color
 
@@ -135,6 +135,6 @@ body > .folio-console-file-placement
       .form-control
         text-align: left
 
-+mq-xs
++media-breakpoint-down(xs)
   .folio-console-file-placement--document .folio-console-nested-model-controls .btn-group
     display: none

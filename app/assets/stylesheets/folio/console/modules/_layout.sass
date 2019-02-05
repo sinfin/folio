@@ -1,44 +1,71 @@
-html
+.f-c-layout-html
   height: 100%
   min-width: 320px
-  overflow-y: scroll
+  overflow: hidden
 
-body
-  display: flex
-  flex-direction: column
-  min-height: 100%
-  max-width: 1600px
-  margin: 0 auto
+.f-c-layout-body
   min-width: 320px
 
-.folio-console-layout-main
-  flex: 1 1 auto
-  padding: $grid-gutter-half
-  display: flex
-  flex-direction: column
-  background: white
+.f-c-layout-sidebar
+  background: $gray-800
+  color: $white
 
-.folio-console-layout-with-sidebar
-  display: flex
-  align-items: stretch
-  flex: 1 1 auto
++mq-desktop-menu
+  .f-c-layout-html
+    overflow: hidden
 
-.folio-console-layout-content
-  flex: 1 1 100%
+  .f-c-layout-body
+    display: flex
+    align-items: stretch
+    height: 100%
+    overflow: hidden
 
-.folio-console-layout-sidebar
-  flex: 0 0 270px
-  margin-top: -$grid-gutter-half
-  margin-bottom: -$grid-gutter-half
-  margin-right: -$grid-gutter-half
-  margin-left: $grid-gutter-width
-  padding: $grid-gutter-half
-  background: $gray-100
+  .f-c-layout-sidebar
+    height: 100%
+    max-width: 220px
+    flex: 1 0 220px
 
-+mq-wide-layout
-  .folio-console-layout-main
-    border-bottom-left-radius: $border-radius-lg
-    border-bottom-right-radius: $border-radius-lg
+  .f-c-layout-main
+    height: 100%
+    flex: 1 1 auto
 
-  .folio-console-layout-sidebar
-    border-bottom-right-radius: $border-radius-lg
++mq-mobile-menu
+  .f-c-layout-html
+    height: 100%
+    min-width: 320px
+    overflow-y: scroll
+
+  .f-c-layout-sidebar
+    display: none
+
+  .slideout-menu
+    position: fixed
+    top: 0
+    bottom: 0
+    width: 256px
+    min-height: 100vh
+    overflow-y: scroll
+    -webkit-overflow-scrolling: touch
+    z-index: 0
+    display: none
+
+  .slideout-menu-left
+    left: 0
+
+  .slideout-menu-right
+    right: 0
+
+  .slideout-panel
+    position: relative
+    z-index: 1
+    will-change: transform
+    background-color: #FFF
+    min-height: 100vh
+
+  .slideout-open,
+  .slideout-open body,
+  .slideout-open .slideout-panel
+    overflow: hidden
+
+  .slideout-open .slideout-menu
+    display: block

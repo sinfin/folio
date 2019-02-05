@@ -23,7 +23,7 @@
     padding: 18px
     z-index: 2
 
-  +mq-md
+  +media-breakpoint-down(md)
     .modal-dialog
       max-width: 100%
 
@@ -53,7 +53,7 @@
 .modal-body .modal-footer
   margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
 
-+mq-xs
++media-breakpoint-down(xs)
   .folio-console-react-modal
     .modal-body
       padding-top: 4rem

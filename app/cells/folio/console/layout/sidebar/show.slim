@@ -1,0 +1,16 @@
+aside#f-c-layout-sidebar.f-c-layout-sidebar
+  .f-c-layout-sidebar__part
+    a.f-c-layout-sidebar__title href=controller.console_root_path
+      = site_name
+
+  .f-c-layout-sidebar__part
+    ' search
+
+  .f-c-layout-sidebar__part
+    ul.f-c-layout-sidebar__ul
+      - links.each do |item|
+        li.f-c-layout-sidebar__li
+          = item
+
+      li.f-c-layout-sidebar__li
+        = link(t('.settings'), controller.edit_console_site_path)
