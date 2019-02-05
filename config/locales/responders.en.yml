@@ -12,8 +12,8 @@ en:
         alert: "%{resource_name} could not be updated."
         notice: "%{resource_name} was successfully updated."
       cancel:
-        alert: "%{resource_name} could not be canceled."
-        notice: "%{resource_name} was successfully canceled."
+        alert: "%{resource_name} could not be cancelled."
+        notice: "%{resource_name} was successfully cancelled."
       handle:
         alert: "%{resource_name} could not be handled."
         notice: "%{resource_name} was successfully handled."
