@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Atom::TextCell < Folio::ApplicationCell
+  def show
+    render if model.content.present?
+  end
+
   def content
     if model.content.include?('<table>')
       content_with_table
