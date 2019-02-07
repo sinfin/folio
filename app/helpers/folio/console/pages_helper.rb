@@ -1,60 +1,60 @@
 # frozen_string_literal: true
 
-module Folio::Console::NodesHelper
-  def node_breadcrumbs(ancestors)
+module Folio::Console::PagesHelper
+  def page_breadcrumbs(ancestors)
     unless ancestors.nil?
-      links = ancestors.collect do |node|
-        link_to(node.title, edit_console_node_path(node))
+      links = ancestors.collect do |page|
+        link_to(page.title, edit_console_page_path(page))
       end
       links.join(' / ')
     end
   end
 
-  def new_child_node_button(parent)
+  def new_child_page_button(parent)
     new_button(
-      new_console_node_path(parent: parent.id),
+      new_console_page_path(parent: parent.id),
       label: Folio::Page.model_name.human,
-      title: t('folio.console.nodes.node_row.add_child_node')
+      title: t('folio.console.pages.page_row.add_child_page')
     )
   end
 
-  def node_preview_button(node, opts = {})
-    path = nested_page_path(node, add_parents: true)
+  def page_preview_button(page, opts = {})
+    path = nested_page_path(page, add_parents: true)
     custom_icon_button(path,
                        'eye',
-                       title: t('folio.console.nodes.node_row.preview'),
+                       title: t('folio.console.pages.page_row.preview'),
                        target: :_blank)
   end
 
-  def node_types_for_select(node)
-    if node.present? && node.class.allowed_child_types.present?
-      types = node.class.allowed_child_types.map do |klass|
-        if klass.console_selectable? || node.instance_of?(klass)
+  def page_types_for_select(page)
+    if page.present? && page.class.allowed_child_types.present?
+      types = page.class.allowed_child_types.map do |klass|
+        if klass.console_selectable? || page.instance_of?(klass)
           [klass.model_name.human, klass]
         end
       end.compact
     else
       types = Folio::Page.recursive_subclasses(include_self: false).map do |klass|
-        if klass.console_selectable? || node.instance_of?(klass)
+        if klass.console_selectable? || page.instance_of?(klass)
           [klass.model_name.human, klass]
         end
       end.compact
     end
 
-    types << [node.class.model_name.human, node.class]
+    types << [page.class.model_name.human, page.class]
 
     types.uniq
   end
 
-  def node_type_select(f)
+  def page_type_select(f)
     readonly = f.object.respond_to?(:singleton?)
 
     if readonly && !f.object.new_record?
-      f.input :type, collection: node_types_for_select(f.object),
+      f.input :type, collection: page_types_for_select(f.object),
                      readonly: true,
                      disabled: true
     else
-      f.input :type, collection: node_types_for_select(f.object),
+      f.input :type, collection: page_types_for_select(f.object),
                      include_blank: false
     end
   end
@@ -74,7 +74,7 @@ module Folio::Console::NodesHelper
         f.object = f.object.becomes(type)
         disabled = type != original_type
         content_tag :fieldset, data: { type: type.to_s }, style: ('display:none' if disabled) do
-          render 'folio/console/nodes/additional_form_fields',
+          render 'folio/console/pages/additional_form_fields',
             f: f,
             additional_params: type.additional_params,
             disabled: disabled
@@ -87,24 +87,24 @@ module Folio::Console::NodesHelper
     fields
   end
 
-  def arrange_nodes_with_limit(nodes, limit)
+  def arrange_pages_with_limit(pages, limit)
     arranged = ActiveSupport::OrderedHash.new
     min_depth = Float::INFINITY
     index = Hash.new { |h, k| h[k] = ActiveSupport::OrderedHash.new }
 
-    nodes.each do |node|
-      children = index[node.id]
-      index[node.parent_id][node] = children
+    pages.each do |page|
+      children = index[page.id]
+      index[page.parent_id][page] = children
 
-      depth = node.depth
+      depth = page.depth
       if depth < min_depth
         min_depth = depth
         arranged.clear
       end
 
-      break if !node.root? && index[node.parent_id].count >= limit
+      break if !page.root? && index[page.parent_id].count >= limit
 
-      arranged[node] = children if depth == min_depth
+      arranged[page] = children if depth == min_depth
     end
     arranged
   end

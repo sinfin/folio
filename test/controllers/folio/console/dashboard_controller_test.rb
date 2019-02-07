@@ -8,7 +8,7 @@ module Folio
 
     test 'should or should not get index' do
       get console_root_url
-      assert_redirected_to console_nodes_path
+      assert_redirected_to console_pages_path
 
       @admin.forget_me!
       sign_out @admin

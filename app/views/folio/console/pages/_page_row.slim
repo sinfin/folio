@@ -1,0 +1,49 @@
+tr[
+  data-depth=(tree ? page.depth : nil)
+  data-parent=(page.parent ? page.parent.id : :root)
+]
+  td
+    / - if tree
+    /   = fa_icon page.console_caret_icon, \
+    /             class: 'mr-2', \
+    /             style: "margin-left:#{page.depth * 2}rem"
+
+    = link_to(truncate(page.title), edit_console_page_path(page.id))
+
+    - unless tree
+      li.small == page_breadcrumbs(page.ancestors)
+
+  td
+    - if sortable
+      - if limited
+        - limited_path = console_pages_path(by_parent: page.parent.id)
+        = index_position_buttons(page, as: :pages, limited: limited_path)
+      - else
+        = index_position_buttons(page, as: :pages)
+
+  - unless ::Rails.application.config.folio_using_traco
+    td
+      == cell('folio/console/pages/translations', page, hide_original: true)
+
+  td
+    = page.model_name.human
+
+  td
+    = featured_toggle page, as: :page
+
+  td
+    = published_toggle page, as: :page
+
+  td
+    = l(page.published_at, format: :short) if page.published_at.present?
+
+  td
+    - if page.kind_of? Folio::Category
+      = new_child_page_button(page)
+
+    = page_preview_button page
+    = edit_button page, edit_console_page_path(page.id)
+    = delete_button page, console_page_path(page.id)
+
+- if tree
+  = render partial: "pages_table", locals: { pages: children }

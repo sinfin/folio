@@ -26,7 +26,7 @@ class Folio::Console::LinksControllerTest < Folio::Console::BaseControllerTest
 
           def additional_links
             {
-              Folio::MenuItem => Proc.new { |node| 'url' }
+              Folio::MenuItem => Proc.new { |page| 'url' }
             }
           end
 

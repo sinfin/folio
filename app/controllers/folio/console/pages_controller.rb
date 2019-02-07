@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::PagesController < Folio::Console::BaseController
-  include Folio::Console::NodesHelper
+  include Folio::Console::PagesHelper
   include Folio::Console::SetPositions
   handles_set_positions_for Folio::Page
 

@@ -3,7 +3,7 @@
 module Folio
   module Console::ReactHelper
     def react_images(selected_placements = nil,
-                     attachmentable: 'node',
+                     attachmentable: 'page',
                      type: :image_placements)
       react_files('Folio::Image',
                   selected_placements,
@@ -12,7 +12,7 @@ module Folio
     end
 
     def react_documents(selected_placements = nil,
-                        attachmentable: 'node',
+                        attachmentable: 'page',
                         type: :document_placements)
       react_files('Folio::Document',
                   selected_placements,

@@ -1,0 +1,41 @@
+- if pages.is_a?(ActiveSupport::OrderedHash) || pages.is_a?(Hash)
+  - i = 0
+  - pages.map do |page, children|
+    - i += 1
+
+    - if @limit.nil?
+      / show all children for page
+      = render partial: "page_row", locals: { \
+        page: page, \
+        children: children, \
+        tree: true, \
+        sortable: pages.count > 1, \
+        limited: false \
+      }
+
+    - elsif page.root? || i <= @limit
+      / standart page row
+      = render partial: "page_row", locals: { \
+        page: page, \
+        children: children, \
+        tree: true, \
+        sortable: pages.count > 1, \
+        limited: !page.root? && pages.count > @limit \
+      }
+
+    - elsif (@limit && i == @limit + 1)
+      / more pages link row
+      tr
+        td colspan=10
+          = fa_icon 'ellipsis-v', \
+                    class: 'mr-2', \
+                      style: "margin-left:#{page.ancestors.count * 2}rem"
+          = link_to t('.more_pages'), \
+                    console_pages_path(by_parent: page.parent.id)
+- else
+  - pages.each do |page|
+    = render partial: "page_row", locals: { \
+      page: page, \
+      tree: false, \
+      sortable: false \
+    }

@@ -50,6 +50,6 @@
 #= require folio/console/simple_form_inputs/_redactor_input
 #= require folio/console/simple_form_inputs/_string_input
 
-#= require ./nodes_table
+#= require ./pages_table
 
 #= require folio/console/main_app

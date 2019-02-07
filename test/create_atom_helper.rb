@@ -16,7 +16,7 @@ def create_atom(klass = Folio::Atom::Base,
   attrs = {
     type: klass.to_s,
     position: position,
-    placement: placement || create(:folio_node),
+    placement: placement || create(:folio_page),
     title: title ||
            (fill_attrs.include?(:title) ? 'Title' : nil),
     perex: perex ||
@@ -24,7 +24,7 @@ def create_atom(klass = Folio::Atom::Base,
     content: content ||
              (fill_attrs.include?(:content) ? 'Content' : nil),
     model: model ||
-           (fill_attrs.include?(:model) ? create(:folio_node) : nil),
+           (fill_attrs.include?(:model) ? create(:folio_page) : nil),
     cover: cover ||
            (fill_attrs.include?(:cover) ? create(:folio_image) : nil),
     images: images ||

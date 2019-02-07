@@ -28,7 +28,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
              polymorphic: true,
              touch: true,
              required: true
-  alias_attribute :node, :placement
   belongs_to :model, polymorphic: true, optional: true
 
   accepts_nested_attributes_for :model, allow_destroy: true

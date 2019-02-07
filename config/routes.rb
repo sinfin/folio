@@ -12,7 +12,7 @@ Folio::Engine.routes.draw do
   namespace :console, locale: Rails.application.config.folio_console_locale do
     root to: 'dashboard#index'
     resources :dashboard, only: :index
-    resources :nodes, except: %i[show] do
+    resources :pages, except: %i[show] do
       post :set_positions, on: :collection
     end
     resources :menus do

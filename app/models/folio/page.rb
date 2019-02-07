@@ -129,8 +129,8 @@ class Folio::Page < Folio::ApplicationRecord
     hash ||= original.arrange(options)
 
     arr = []
-    hash.each do |node, children|
-      arr << node
+    hash.each do |page, children|
+      arr << page
       arr += arrange_as_array(options, children) unless children.empty?
     end
     arr
@@ -213,7 +213,6 @@ class Folio::Page < Folio::ApplicationRecord
 
     # custom Validations
     def validate_allowed_type
-      return if self.type == 'Folio::PageTranslation'
       return if parent.nil? || parent.class.allowed_child_types.nil?
 
       if parent.class.allowed_child_types.exclude? self.class

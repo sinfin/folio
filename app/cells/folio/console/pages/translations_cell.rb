@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Nodes::TranslationsCell < Folio::ConsoleCell
+class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
   include Folio::Console::FlagHelper
   include ActionView::Helpers::UrlHelper
 
@@ -18,19 +18,19 @@ class Folio::Console::Nodes::TranslationsCell < Folio::ConsoleCell
 
   def ul_class
     return 'nav nav-pills' if options[:as_pills]
-    'folio-console-nodes-translations-inline'
+    'folio-console-pages-translations-inline'
   end
 
-  def edit_link(node)
-    path = controller.edit_console_node_path(node.id)
-    link_to(label(node.locale),
+  def edit_link(page)
+    path = controller.edit_console_page_path(page.id)
+    link_to(label(page.locale),
             path,
             class: active_class(path))
   end
 
   def new_link(locale, original)
-    path = controller.new_console_node_path('node[locale]': locale,
-                                            'node[original_id]': original.id)
+    path = controller.new_console_page_path('page[locale]': locale,
+                                            'page[original_id]': original.id)
     link_to(label(locale),
             path,
             class: "folio-console-not-translated #{active_class(path)}",

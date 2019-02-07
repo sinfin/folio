@@ -6,7 +6,7 @@ class Folio::Console::LinksController < Folio::Console::BaseController
   def index
     links = []
 
-    node_links.merge(additional_links).each do |klass, url_proc|
+    page_links.merge(additional_links).each do |klass, url_proc|
       klass.find_each do |item|
         links << { name: record_label(item), url: url_proc.call(item) }
       end
@@ -23,9 +23,9 @@ class Folio::Console::LinksController < Folio::Console::BaseController
 
   private
 
-    def node_links
+    def page_links
       {
-        Folio::Page => Proc.new { |node| nested_page_path(node, add_parents: true) }
+        Folio::Page => Proc.new { |page| nested_page_path(page, add_parents: true) }
       }
     end
 

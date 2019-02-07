@@ -6,10 +6,10 @@ class MetaVariablesTest < ActionDispatch::IntegrationTest
   test 'meta variables' do
     create(:folio_site, title: 'SITE',
                                description: 'SITE DESCRIPTION')
-    node = create(:folio_page, title: 'PAGE')
+    page = create(:folio_page, title: 'PAGE')
 
-    # node without perex
-    visit page_path(path: node.slug, locale: node.locale)
+    # page without perex
+    visit page_path(path: page.slug, locale: page.locale)
 
     title = page.find('title', visible: false)
     assert_equal('PAGE | SITE', title.native.text)
@@ -26,9 +26,9 @@ class MetaVariablesTest < ActionDispatch::IntegrationTest
                                visible: false)
     assert_equal('SITE DESCRIPTION', og_description[:content])
 
-    # node with perex
-    node.update!(perex: 'PAGE DESCRIPTION')
-    visit page_path(path: node.slug, locale: node.locale)
+    # page with perex
+    page.update!(perex: 'PAGE DESCRIPTION')
+    visit page_path(path: page.slug, locale: page.locale)
 
     description = page.find('meta[name="description"]',
                             visible: false)
@@ -38,9 +38,9 @@ class MetaVariablesTest < ActionDispatch::IntegrationTest
                                visible: false)
     assert_equal('PAGE DESCRIPTION', og_description[:content])
 
-    # node with perex & meta_description
-    node.update!(meta_description: 'PAGE META DESCRIPTION')
-    visit page_path(path: node.slug, locale: node.locale)
+    # page with perex & meta_description
+    page.update!(meta_description: 'PAGE META DESCRIPTION')
+    visit page_path(path: page.slug, locale: page.locale)
 
     description = page.find('meta[name="description"]',
                             visible: false)

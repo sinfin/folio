@@ -4,12 +4,12 @@ require 'test_helper'
 
 class Folio::Console::FeaturedToggleCellTest < Folio::Console::CellTest
   test 'show' do
-    node = create(:folio_node, featured: true)
-    html = cell('folio/console/featured_toggle', node, as: :node).(:show)
+    page = create(:folio_page, featured: true)
+    html = cell('folio/console/featured_toggle', page, as: :page).(:show)
     assert html.find_css('input').attr('checked')
 
-    node = create(:folio_node, featured: false)
-    html = cell('folio/console/featured_toggle', node, as: :node).(:show)
+    page = create(:folio_page, featured: false)
+    html = cell('folio/console/featured_toggle', page, as: :page).(:show)
     assert_not html.find_css('input').attr('checked')
   end
 end

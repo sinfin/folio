@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
-  include Engine.routes.url_helpers
+  include Folio::Engine.routes.url_helpers
 
   test 'should get index' do
     get console_pages_url

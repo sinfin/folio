@@ -10,19 +10,19 @@ class Folio::FilePlacementTest < ActiveSupport::TestCase
   end
 
   test 'placement_title' do
-    node = create(:folio_page, title: 'foo')
-    node.cover = create(:folio_image)
+    page = create(:folio_page, title: 'foo')
+    page.cover = create(:folio_image)
 
     # works
-    assert_equal('foo', node.cover_placement.placement_title)
-    assert_equal('Folio::Page', node.cover_placement.placement_title_type)
+    assert_equal('foo', page.cover_placement.placement_title)
+    assert_equal('Folio::Page', page.cover_placement.placement_title_type)
 
     # updates through touch
-    node.update!(title: 'bar')
-    assert_equal('bar', node.cover_placement.reload.placement_title)
+    page.update!(title: 'bar')
+    assert_equal('bar', page.cover_placement.reload.placement_title)
 
     # works for atoms
-    atom = create_atom(MyAtom, :cover, placement: node)
+    atom = create_atom(MyAtom, :cover, placement: page)
     assert_equal('bar', atom.cover_placement.placement_title)
     assert_equal('Folio::Page',
                  atom.cover_placement.placement_title_type,

@@ -8,7 +8,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
       folio_document_placement :my_file_placement
     end
 
-    class MyNode < Folio::Page
+    class MyPage < Folio::Page
       has_one_placement :my_file,
                         placement: 'Folio::HasAttachmentsTest::MyFilePlacement'
     end
@@ -16,10 +16,10 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     assert_equal(0, MyFilePlacement.count)
     document = create(:folio_document)
 
-    my_node = MyNode.create!(title: 'MyNode',
+    my_page = MyPage.create!(title: 'MyPage',
                              my_file_placement_attributes: { file: document })
 
     assert_equal(1, MyFilePlacement.count)
-    assert_equal(document, my_node.my_file)
+    assert_equal(document, my_page.my_file)
   end
 end

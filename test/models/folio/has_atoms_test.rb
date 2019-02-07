@@ -27,56 +27,56 @@ module Folio
     end
 
     test 'atoms_in_molecules' do
-      node = create(:folio_node)
+      page = create(:folio_page)
 
-      assert_equal([], node.atoms)
-      assert_equal([], node.atoms_in_molecules)
+      assert_equal([], page.atoms)
+      assert_equal([], page.atoms_in_molecules)
 
-      atom_1 = create_atom(position: 1, placement: node)
-      node.reload
+      atom_1 = create_atom(position: 1, placement: page)
+      page.reload
 
-      assert_equal([atom_1], node.atoms.to_a)
-      assert_equal([[nil, [atom_1]]], node.atoms_in_molecules)
+      assert_equal([atom_1], page.atoms.to_a)
+      assert_equal([[nil, [atom_1]]], page.atoms_in_molecules)
 
       test_atom_1 = create_atom(TestAtom, title: 'foo',
                                           position: 2,
-                                          placement: node)
+                                          placement: page)
       test_atom_2 = create_atom(TestAtom, title: 'bar',
                                           position: 3,
-                                          placement: node)
+                                          placement: page)
 
-      atom_2 = create(:folio_atom, placement: node, position: 4)
+      atom_2 = create(:folio_atom, placement: page, position: 4)
 
-      node.reload
+      page.reload
 
       assert_equal([atom_1, test_atom_1, test_atom_2, atom_2],
-                   node.atoms.to_a)
+                   page.atoms.to_a)
       assert_equal([
         [nil, [atom_1]],
         [TestMolecule, [test_atom_1, test_atom_2]],
         [nil, [atom_2]],
-      ], node.atoms_in_molecules)
+      ], page.atoms_in_molecules)
 
       name_atom_1 = create_atom(TestMoleculeNameAtom, title: 'foo',
-                                                      placement: node,
+                                                      placement: page,
                                                       position: 5)
       name_atom_2 = create_atom(TestMoleculeNameAtom, title: 'bar',
-                                                      placement: node,
+                                                      placement: page,
                                                       position: 6)
 
-      node.reload
+      page.reload
 
       assert_equal([atom_1,
                    test_atom_1, test_atom_2,
                    atom_2,
                    name_atom_1, name_atom_2],
-                   node.atoms.to_a)
+                   page.atoms.to_a)
       assert_equal([
         [nil, [atom_1]],
         [TestMolecule, [test_atom_1, test_atom_2]],
         [nil, [atom_2]],
         ['bar', [name_atom_1, name_atom_2]],
-      ], node.atoms_in_molecules)
+      ], page.atoms_in_molecules)
     end
   end
 end

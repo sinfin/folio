@@ -1,0 +1,6 @@
+- show_translations = !Rails.application.config.folio_using_traco
+== cell('folio/console/form/header', @page, translations: show_translations)
+
+= simple_form_for(@page, as: :page, \
+                         url: console_page_path(@page.id)) do |f|
+  = render 'form', f: f

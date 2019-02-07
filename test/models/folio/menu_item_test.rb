@@ -6,15 +6,15 @@ module Folio
   class MenuItemTest < ActiveSupport::TestCase
     test 'respects menu locale' do
       cs_menu = create(:folio_menu, locale: :cs)
-      cs_node = create(:folio_node, locale: :cs)
-      en_node = create(:folio_node, locale: :en)
+      cs_page = create(:folio_page, locale: :cs)
+      en_page = create(:folio_page, locale: :en)
 
-      item = build(:folio_menu_item, target: cs_node, menu: cs_menu)
+      item = build(:folio_menu_item, target: cs_page, menu: cs_menu)
       assert item.valid?
       cs_menu.items << item
       assert cs_menu.save
 
-      item = build(:folio_menu_item, target: en_node, menu: cs_menu)
+      item = build(:folio_menu_item, target: en_page, menu: cs_menu)
       assert_not item.valid?
       cs_menu.items << item
       assert_not cs_menu.save

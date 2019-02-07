@@ -16,12 +16,12 @@ FactoryBot.define do
     locale { :cs }
     if Rails.application.config.folio_using_traco
       I18n.available_locales.each do |locale|
-        sequence("title_#{locale}".to_sym) { |n| "Folio node #{n}" }
-        sequence("slug_#{locale}".to_sym) { |n| "folio-node-#{n}" }
+        sequence("title_#{locale}".to_sym) { |n| "Folio page #{n}" }
+        sequence("slug_#{locale}".to_sym) { |n| "folio-page-#{n}" }
       end
     else
-      sequence(:title) { |n| "Folio node #{n}" }
-      sequence(:slug) { |n| "folio-node-#{n}" }
+      sequence(:title) { |n| "Folio page #{n}" }
+      sequence(:slug) { |n| "folio-page-#{n}" }
     end
     published { true }
     published_at { 1.day.ago }
@@ -36,7 +36,7 @@ FactoryBot.define do
 
   factory :folio_atom, class: 'Folio::Atom::Text' do
     type { 'Folio::Atom::Text' }
-    association :placement, factory: :folio_node
+    association :placement, factory: :folio_page
     content { '<p>Officiis perferendis commodi. Asperiores quas et. Veniam qui est.</p>' }
   end
 
@@ -97,7 +97,7 @@ FactoryBot.define do
 
   factory :folio_menu_item, class: 'Folio::MenuItem' do
     association :menu, factory: :folio_menu
-    association :target, factory: :folio_node
+    association :target, factory: :folio_page
     title { 'MenuItem' }
     position { 0 }
   end

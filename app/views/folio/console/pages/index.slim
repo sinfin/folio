@@ -1,7 +1,7 @@
 .folio-console-layout-with-sidebar
   .folio-console-layout-content
     == cell('folio/console/index/header', Folio::Page, \
-                                          new_path: new_console_node_path, \
+                                          new_path: new_console_page_path, \
                                           hidden_fields: index_filters.keys)
 
     .folio-console-index-table
@@ -18,7 +18,7 @@
             th
 
         tbody
-          = render partial: "nodes_table", locals: { nodes: @nodes }
+          = render partial: "pages_table", locals: { pages: @pages }
 
   .folio-console-layout-sidebar
     == cell('folio/console/index/filters', index_filters)
