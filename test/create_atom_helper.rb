@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def create_atom(klass = Folio::Atom::Base,
+def create_atom(klass = Folio::Atom::Text,
                 *fill_attrs,
                 position: nil,
                 placement: nil,

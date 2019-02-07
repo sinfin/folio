@@ -7,8 +7,7 @@ class Folio::MultisearchTest < ActiveSupport::TestCase
     search = PgSearch.multisearch('foo')
     assert search.blank?
 
-    page = create(:folio_page_with_atoms, atoms_count: 2,
-                                          content: 'foo bar')
+    page = create(:folio_page, title: 'foo bar')
 
     search = PgSearch.multisearch('foo')
     assert_equal(1, search.size)
@@ -19,13 +18,11 @@ class Folio::MultisearchTest < ActiveSupport::TestCase
     search = PgSearch.multisearch('foo')
     assert search.blank?
 
-    page = create(:folio_page_with_atoms, atoms_count: 2,
-                                          content: 'foo bar')
+    page = create(:folio_page, title: 'foo bar')
+    create_atom(content: 'lorem', placement: page)
+    create_atom(content: 'ipsum', placement: page)
 
-    page.atoms.first.update!(content: 'lorem')
-    page.atoms.second.update!(content: 'ipsum')
-
-    PgSearch::Multisearch.rebuild(Folio.page)
+    PgSearch::Multisearch.rebuild(Folio::Page)
 
     search = PgSearch.multisearch('lorem')
     assert_equal(1, search.size)

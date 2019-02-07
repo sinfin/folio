@@ -23,9 +23,8 @@ en:
       folio/newsletter_subscription:
         created_at: Subscribed at
         email: E-mail address
-      folio/node:
-        code: Code
-        parent_id: Parent node
+      folio/page:
+        parent_id: Parent page
         title: Page title
         translations: Translations
         type: Layout / content
@@ -67,9 +66,6 @@ en:
       folio/atom/text:
         one: Text
         other: Texts
-      folio/category:
-        one: Category
-        other: Categories
       folio/document:
         one: Document
         other: Documents
@@ -94,12 +90,6 @@ en:
       folio/newsletter_subscription:
         one: Newsletter subscription
         other: Newsletter subscriptions
-      folio/node:
-        one: Page
-        other: Pages
-      folio/node_translation:
-        one: Translation
-        other: Translations
       folio/page:
         one: Page
         other: Pages
@@ -124,7 +114,6 @@ en:
             submitted: Submitted
   attributes:
     aasm_state: State
-    code: Code
     content: Content
     cover_placement: Image
     description: Description

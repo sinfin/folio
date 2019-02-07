@@ -38,8 +38,8 @@ tr[
     = l(page.published_at, format: :short) if page.published_at.present?
 
   td
-    - if page.kind_of? Folio::Category
-      = new_child_page_button(page)
+    / - if page.kind_of? Folio::Page
+    /   = new_child_page_button(page)
 
     = page_preview_button page
     = edit_button page, edit_console_page_path(page.id)

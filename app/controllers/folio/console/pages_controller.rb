@@ -14,17 +14,16 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     if misc_filtering?
       if params[:by_parent].present?
         parent = Folio::Page.find(params[:by_parent])
-        @pages = parent.subtree.original
+        @pages = parent.subtree
                        .filter_by_params(filter_params)
                        .arrange(order: 'position asc, created_at asc')
       else
-        pages = Folio::Page.original
-                           .filter_by_params(filter_params)
+        pages = Folio::Page.filter_by_params(filter_params)
         @pagy, @pages = pagy(pages)
       end
     else
       @limit = self.class.index_children_limit
-      @pages = Folio::Page.original.arrange(order: 'position asc, created_at asc')
+      @pages = Folio::Page.arrange(order: 'position asc, created_at asc')
     end
   end
 
@@ -86,10 +85,8 @@ class Folio::Console::PagesController < Folio::Console::BaseController
                 .permit(:title,
                         :slug,
                         :perex,
-                        :content,
                         :meta_title,
                         :meta_description,
-                        :code,
                         :type,
                         :featured,
                         :published,
@@ -112,7 +109,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
           %i[title
              slug
              perex
-             content
              meta_title
              meta_description].map { |p| "#{p}_#{locale}".to_sym }
         end.flatten
@@ -129,7 +125,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
       {
         by_parent: [
           [t('.filters.all_parents'), nil],
-        ] + Folio::Page.original.roots.map { |n| [n.title, n.id] },
+        ] + Folio::Page.roots.map { |n| [n.title, n.id] },
         by_published: [
           [t('.filters.all_pages'), nil],
           [t('.filters.published'), 'published'],

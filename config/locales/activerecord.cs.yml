@@ -23,8 +23,7 @@ cs:
       folio/newsletter_subscription:
         created_at: Zapsána dne
         email: E-mailová adresa
-      folio/node:
-        code: Kód
+      folio/page:
         parent_id: Nadřazená stránka
         title: Název stránky
         translations: Překlady
@@ -106,14 +105,6 @@ cs:
         few: Newslettery
         one: Newsletter
         other: Newsletterů
-      folio/node:
-        few: Stránky
-        one: Stránka
-        other: Stránek
-      folio/node_translation:
-        few: Překlady
-        one: Překlad
-        other: Překladů
       folio/page:
         few: Stránky
         one: Stránka
@@ -142,7 +133,6 @@ cs:
             submitted: Nevyřízený
   attributes:
     aasm_state: Stav
-    code: Kód
     content: Obsah
     cover_placement: Obrázek
     description: Popisek

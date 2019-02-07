@@ -37,9 +37,9 @@ about = Folio::Page.create!(title: 'O nás',
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
 
-reference = Folio::Category.create!(title: 'Reference',
-                                    published: true,
-                                    published_at: 1.day.ago)
+reference = Folio::Page.create!(title: 'Reference',
+                                published: true,
+                                published_at: 1.day.ago)
 Folio::Page.create!(title: 'Smart Cities', parent: reference, published: true)
 Folio::Page.create!(title: 'Vyvolej.to', parent: reference, published: true)
 Folio::Page.create!(title: 'Hidden', parent: reference, published: false)

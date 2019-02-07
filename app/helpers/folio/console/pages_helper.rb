@@ -26,39 +26,6 @@ module Folio::Console::PagesHelper
                        target: :_blank)
   end
 
-  def page_types_for_select(page)
-    if page.present? && page.class.allowed_child_types.present?
-      types = page.class.allowed_child_types.map do |klass|
-        if klass.console_selectable? || page.instance_of?(klass)
-          [klass.model_name.human, klass]
-        end
-      end.compact
-    else
-      types = Folio::Page.recursive_subclasses(include_self: false).map do |klass|
-        if klass.console_selectable? || page.instance_of?(klass)
-          [klass.model_name.human, klass]
-        end
-      end.compact
-    end
-
-    types << [page.class.model_name.human, page.class]
-
-    types.uniq
-  end
-
-  def page_type_select(f)
-    readonly = f.object.respond_to?(:singleton?)
-
-    if readonly && !f.object.new_record?
-      f.input :type, collection: page_types_for_select(f.object),
-                     readonly: true,
-                     disabled: true
-    else
-      f.input :type, collection: page_types_for_select(f.object),
-                     include_blank: false
-    end
-  end
-
   def render_additional_form_fields(f)
     if f.object.parent.present?
       types = f.object.parent.class.allowed_child_types

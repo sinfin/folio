@@ -20,10 +20,8 @@ class Folio::PageSingletonTest < ActiveSupport::TestCase
   test 'can only have one' do
     create(:folio_site)
 
-    assert FirstSingleton.console_selectable?
     assert FirstSingleton.create!(title: 'foo')
 
-    assert_not FirstSingleton.console_selectable?
     assert_equal('foo', FirstSingleton.instance.title)
     assert FirstSingleton.instance.update!(title: 'oof'), 'can update'
     assert_equal('oof', FirstSingleton.instance.title, 'can update')

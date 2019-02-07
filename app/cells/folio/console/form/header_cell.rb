@@ -2,7 +2,7 @@
 
 class Folio::Console::Form::HeaderCell < Folio::ConsoleCell
   def translations
-    cell('folio/console/pages/translations', model.original, as_pills: true)
+    cell('folio/console/pages/translations', model, as_pills: true)
   end
 
   def title

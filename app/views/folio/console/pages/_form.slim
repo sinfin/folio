@@ -14,14 +14,14 @@
             .col-sm-1
               = f.input :locale, disabled: true
             .col-sm
-              = page_type_select(f)
+              - collection = Folio::Page.recursive_subclasses_for_select
+              = f.input :type, collection: collection, \
+                               include_blank: false
+
             .col-sm
               = f.input :parent_id, collection: Folio::Page.arrange_as_array, \
                                     label_method: :name_depth, \
                                     value_method: :id
-
-            .col-sm
-              = f.input :code
 
           .row
             .col-sm
@@ -30,7 +30,6 @@
               == translated_inputs f, :slug
 
       == translated_inputs f, :perex
-      == translated_inputs f, :content, as: :advanced_redactor
 
       = console_form_atoms f
 
