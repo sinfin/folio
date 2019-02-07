@@ -3,10 +3,17 @@
 class Folio::Atom::Text < Folio::Atom::Base
   STRUCTURE = {
     content: :redactor,
-    title: nil,
-    images: nil,
-    model: nil,
   }
+
+  if Rails.application.config.folio_using_traco
+    I18n.available_locales.each do |locale|
+      validates "content_#{locale}".to_sym,
+                presence: true
+    end
+  else
+    validates :content,
+              presence: true
+  end
 
   def self.cell_name
     'folio/atom/text'
