@@ -61,10 +61,46 @@ end
 
 class ShowFor::Builder
   def featured_toggle
-    template.cell('folio/console/featured_toggle', object).show.try(:html_safe)
+    toggle(:featured)
   end
 
   def published_toggle
-    template.cell('folio/console/published_toggle', object).show.try(:html_safe)
+    toggle(:published)
   end
+
+  def type
+    attribute(:type) do
+      object.class.model_name.human
+    end
+  end
+
+  def edit_link(attr, &block)
+    resource_link(attr, [:edit, :console, object], &block)
+  end
+
+  def show_link(attr, &block)
+    resource_link(attr, [:console, object], &block)
+  end
+
+  private
+
+    def resource_link(attr, url_for_args)
+      attribute(attr) do
+        if object.persisted?
+          content = block_given? ? yield(object) : object.public_send(attr)
+          url = template.url_for(url_for_args)
+          template.link_to(content, url)
+        end
+      end
+    end
+
+    def toggle(attr)
+      attribute(attr, class: 'foo') do
+        if object.persisted?
+          template.cell('folio/console/boolean_toggle',
+                        object,
+                        attribute: attr).show.try(:html_safe)
+        end
+      end
+    end
 end

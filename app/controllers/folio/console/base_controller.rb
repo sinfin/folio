@@ -22,6 +22,26 @@ class Folio::Console::BaseController < Folio::ApplicationController
     redirect_to console_dashboard_path
   end
 
+  def self.folio_console_controller_for(class_name)
+    klass = class_name.safe_constantize
+
+    if klass.private_method_defined?(:positionable_last_position)
+      include Folio::Console::SetPositions
+      handles_set_positions_for klass
+    end
+
+    respond_to :json, only: %i[update]
+
+    load_and_authorize_resource(class: class_name)
+
+    before_action do
+      @klass = klass
+
+      add_breadcrumb(klass.model_name.human(count: 2),
+                     url_for([:console, klass]))
+    end
+  end
+
   private
     # TODO: authorize account
     # def authorize_admin_user!

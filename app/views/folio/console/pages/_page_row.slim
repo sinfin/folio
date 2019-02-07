@@ -29,10 +29,10 @@ tr[
     = page.model_name.human
 
   td
-    = featured_toggle page, as: :page
+    / = featured_toggle page, as: :page
 
   td
-    = published_toggle page, as: :page
+    / = published_toggle page, as: :page
 
   td
     = l(page.published_at, format: :short) if page.published_at.present?

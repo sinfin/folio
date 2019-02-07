@@ -136,11 +136,6 @@ class Folio::Page < Folio::ApplicationRecord
     arr
   end
 
-  def self.additional_params
-    []
-  end
-  delegate :additional_params, to: :class
-
   def to_label
     self.title
   end

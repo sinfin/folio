@@ -24,5 +24,9 @@ module Folio
       end
       content_tag(:div, all.join('').html_safe, class: 'f-c-show-for-index')
     end
+
+    def index_header(opts = {})
+      cell('folio/console/index/header', @klass, opts).show.html_safe
+    end
   end
 end

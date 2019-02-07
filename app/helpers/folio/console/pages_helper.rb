@@ -26,34 +26,6 @@ module Folio::Console::PagesHelper
                        target: :_blank)
   end
 
-  def render_additional_form_fields(f)
-    if f.object.parent.present?
-      types = f.object.parent.class.allowed_child_types
-    else
-      types = Folio::Page.recursive_subclasses
-    end
-    original_type = f.object.class
-
-    return nil if types.blank?
-
-    fields = types.map do |type|
-      unless type.additional_params.blank?
-        f.object = f.object.becomes(type)
-        disabled = type != original_type
-        content_tag :fieldset, data: { type: type.to_s }, style: ('display:none' if disabled) do
-          render 'folio/console/pages/additional_form_fields',
-            f: f,
-            additional_params: type.additional_params,
-            disabled: disabled
-        end
-      end
-    end.join('').html_safe
-
-    f.object = f.object.becomes(original_type)
-
-    fields
-  end
-
   def arrange_pages_with_limit(pages, limit)
     arranged = ActiveSupport::OrderedHash.new
     min_depth = Float::INFINITY

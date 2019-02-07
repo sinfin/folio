@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
-  ATTRIBUTE = :published
-  ICON_ON = 'toggle-on'
-  ICON_OFF = 'toggle-off'
-
   def show
     render if url.present?
   end
@@ -16,38 +12,28 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def as
-    options[:as] || model.class.table_name.singularize
+    options[:as] || model.class.table_name.singularize.gsub('folio_', '')
   end
 
-  def attr
-    options[:attr] || self.class::ATTRIBUTE
+  def attribute
+    options[:attribute]
   end
 
   def attr_name
-    "#{as}[#{attr}]"
+    "#{as}[#{attribute}]"
   end
 
   def value
-    model.send(attr)
-  end
-
-  def icon_on
-    "fa-#{self.class::ICON_ON}"
-  end
-
-  def icon_off
-    "fa-#{self.class::ICON_OFF}"
+    model.send(attribute)
   end
 
   def url
-    return options[:url] if options[:url].present?
-    model_url = "console_#{as}_path"
-    public_send(model_url, model.id, format: :json)
-  rescue NoMethodError
-    controller.public_send(model_url, model.id, format: :json)
-  rescue ActionController::UrlGenerationError
-    controller.main_app.public_send(model_url, model.id, format: :json)
+    controller.url_for([:console, model, format: :json])
   rescue StandardError
     nil
+  end
+
+  def id
+    "f-c-boolean-toggle--#{model.id}-#{attribute}"
   end
 end

@@ -3,14 +3,10 @@
 # syntactic sugar for cells
 module Folio
   module Console::CellsHelper
-    def featured_toggle(model, options = {})
-      cell('folio/console/featured_toggle', model, options).show
-                                                           .try(:html_safe)
-    end
-
-    def published_toggle(model, options = {})
-      cell('folio/console/published_toggle', model, options).show
-                                                            .try(:html_safe)
+    def boolean_toggle(model, attribute, options = {})
+      opts = options.merge(attribute: attribute)
+      cell('folio/console/boolean_toggle', model, opts).show
+                                                       .try(:html_safe)
     end
 
     def nested_model_controls(model, options = {})
