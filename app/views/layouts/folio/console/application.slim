@@ -8,9 +8,10 @@ html.f-c-layout-html lang=I18n.locale
   body.f-c-layout-body
     == cell('folio/console/layout/sidebar')
 
-    .f-c-layout-main#f-c-layout-main
-      = render partial: 'layouts/folio/console/header'
+    / = render 'folio/console/partials/auth_links'
 
+
+    .f-c-layout-main#f-c-layout-main
       - if @breadcrumbs.present?
         = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
 
