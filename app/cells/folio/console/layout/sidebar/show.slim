@@ -4,7 +4,7 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
       = site_name
 
   .f-c-layout-sidebar__part
-    ' search
+    = cell('folio/console/layout/sidebar/search')
 
   .f-c-layout-sidebar__part
     ul.f-c-layout-sidebar__ul
@@ -13,4 +13,6 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
           = item
 
       li.f-c-layout-sidebar__li
-        = link(t('.settings'), controller.edit_console_site_path)
+        = link nil, controller.edit_console_site_path
+          i.fa.fa-cogs.f-c-layout-sidebar__icon
+          = t('.settings')

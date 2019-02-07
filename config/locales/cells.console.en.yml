@@ -5,3 +5,6 @@ en:
       layout:
         sidebar:
           settings: Settings
+
+          search:
+            placeholder: Search

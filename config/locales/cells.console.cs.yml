@@ -5,3 +5,6 @@ cs:
       layout:
         sidebar:
           settings: Nastavení
+
+          search:
+            placeholder: Hledat

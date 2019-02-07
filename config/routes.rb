@@ -37,6 +37,7 @@ Folio::Engine.routes.draw do
     resources :accounts
     resources :visits, only: %i[index show]
     resources :links, only: %i[index]
+    resource :search, only: %i[show]
     resource :site
   end
 

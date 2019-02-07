@@ -18,14 +18,18 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
   end
 
-  def link(label, path)
+  def link(label, path, &block)
     active = request.path.start_with?(path.split('?').first) ||
              request.url.start_with?(path.split('?').first)
 
     class_names = ['f-c-layout-sidebar__a']
     class_names << 'f-c-layout-sidebar__a--active' if active
 
-    link_to(label, path, class: class_names)
+    if block_given?
+      link_to(path, class: class_names, &block)
+    else
+      link_to(label, path, class: class_names)
+    end
   end
 
   def folio_link_class_names

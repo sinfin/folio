@@ -2,50 +2,46 @@
 
 require 'test_helper'
 
-module Folio
-  module Atom
-    class BaseTest < ActiveSupport::TestCase
-      test 'clears stuff when type changes' do
-        atom = create_atom(Folio::Atom::Text, content: 'foo')
-        assert_equal 'foo', atom.content
-        assert_equal 0, atom.images.count
+class Folio::Atom::BaseTest < ActiveSupport::TestCase
+  test 'clears stuff when type changes' do
+    atom = create_atom(Folio::Atom::Text, content: 'foo')
+    assert_equal 'foo', atom.content
+    assert_equal 0, atom.images.count
 
-        image = create(:folio_image)
+    image = create(:folio_image)
 
-        assert atom.update!(type: 'Atom::Gallery',
-                            image_placements_attributes: [{
-                              file_id: image.id,
-                            }])
+    assert atom.update!(type: 'Atom::Gallery',
+                        image_placements_attributes: [{
+                          file_id: image.id,
+                        }])
 
-        atom = Folio::Atom::Base.find(atom.id)
-        assert_equal 'Atom::Gallery', atom.type
-        assert_nil atom.content
-        assert_equal 1, atom.images.count
+    atom = Folio::Atom::Base.find(atom.id)
+    assert_equal 'Atom::Gallery', atom.type
+    assert_nil atom.content
+    assert_equal 1, atom.images.count
 
-        page = create(:folio_page)
-        assert atom.update!(type: 'Atom::PageReference',
-                            model: page)
+    page = create(:folio_page)
+    assert atom.update!(type: 'Atom::PageReference',
+                        model: page)
 
-        assert_nil atom.content
-        assert_equal 0, atom.images.count
-        assert_equal page, atom.model
-      end
+    assert_nil atom.content
+    assert_equal 0, atom.images.count
+    assert_equal page, atom.model
+  end
 
-      test 'model_type validation' do
-        lead = create(:folio_lead)
+  test 'model_type validation' do
+    lead = create(:folio_lead)
 
-        atom = build(:folio_atom, type: ::Atom::PageReference,
-                                  model: lead)
-        assert_not atom.valid?
-        assert_equal([I18n.t('errors.messages.invalid')],
-                     atom.errors[:model_type])
+    atom = build(:folio_atom, type: Atom::PageReference,
+                              model: lead)
+    assert_not atom.valid?
+    assert_equal([I18n.t('errors.messages.invalid')],
+                 atom.errors[:model_type])
 
-        page = create(:folio_page)
-        atom.model = page
-        assert atom.valid?
-        assert atom.save!
-      end
-    end
+    page = create(:folio_page)
+    atom.model = page
+    assert atom.valid?
+    assert atom.save!
   end
 end
 
