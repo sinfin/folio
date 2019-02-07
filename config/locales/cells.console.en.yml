@@ -8,3 +8,7 @@ en:
 
           search:
             placeholder: Search
+
+      searches:
+        results:
+          title: Search results

@@ -8,3 +8,7 @@ cs:
 
           search:
             placeholder: Hledat
+
+      searches:
+        results:
+          title: Výsledky vyhledávání

@@ -64,84 +64,92 @@ class Folio::Console::NodesController < Folio::Console::BaseController
     respond_with @node, location: console_nodes_path
   end
 
-private
+  private
 
-  def self.index_children_limit
-    5
-  end
-
-  def after_new
-  end
-
-  def find_node
-    @node = Folio::Node.friendly.find(params[:id])
-  end
-
-  def filter_params
-    params.permit(:by_query, :by_published, :by_type, :by_tag)
-  end
-
-  def node_params
-    p = params.require(:node)
-              .permit(:title,
-                      :slug,
-                      :perex,
-                      :content,
-                      :meta_title,
-                      :meta_description,
-                      :code,
-                      :type,
-                      :featured,
-                      :published,
-                      :published_at,
-                      :locale,
-                      :parent_id,
-                      :original_id,
-                      :tag_list,
-                      *traco_params,
-                      *additional_strong_params(@node),
-                      *atoms_strong_params,
-                      *file_placements_strong_params)
-    p[:slug] = nil unless p[:slug].present?
-    sti_atoms(p)
-  end
-
-  def traco_params
-    if ::Rails.application.config.folio_using_traco
-      I18n.available_locales.map do |locale|
-        %i[title
-           slug
-           perex
-           content
-           meta_title
-           meta_description].map { |p| "#{p}_#{locale}".to_sym }
-      end.flatten
-    else
-      []
+    def self.index_children_limit
+      5
     end
-  end
 
-  def misc_filtering?
-    %i[by_parent by_query by_published by_type by_tag].any? { |by| params[by].present? }
-  end
+    def after_new
+    end
 
-  def index_filters
-    {
-      by_parent: [
-        [t('.filters.all_parents'), nil],
-      ] + Folio::Node.original.roots.map { |n| [n.title, n.id] },
-      by_published: [
-        [t('.filters.all_nodes'), nil],
-        [t('.filters.published'), 'published'],
-        [t('.filters.unpublished'), 'unpublished'],
-      ],
-      by_type: [
-        [t('.filters.all_types'), nil],
-        [t('.filters.page'), 'page'],
-        [t('.filters.category'), 'category'],
-      ],
-    }
-  end
+    def find_node
+      @node = Folio::Node.friendly.find(params[:id])
+    end
 
-  helper_method :index_filters
+    def filter_params
+      params.permit(:by_query, :by_published, :by_type, :by_tag)
+    end
+
+    def node_params
+      p = params.require(:node)
+                .permit(:title,
+                        :slug,
+                        :perex,
+                        :content,
+                        :meta_title,
+                        :meta_description,
+                        :code,
+                        :type,
+                        :featured,
+                        :published,
+                        :published_at,
+                        :locale,
+                        :parent_id,
+                        :original_id,
+                        :tag_list,
+                        *traco_params,
+                        *additional_strong_params(@node),
+                        *atoms_strong_params,
+                        *file_placements_strong_params)
+      p[:slug] = nil unless p[:slug].present?
+      sti_atoms(p)
+    end
+
+    def traco_params
+      if ::Rails.application.config.folio_using_traco
+        I18n.available_locales.map do |locale|
+          %i[title
+             slug
+             perex
+             content
+             meta_title
+             meta_description].map { |p| "#{p}_#{locale}".to_sym }
+        end.flatten
+      else
+        []
+      end
+    end
+
+    def misc_filtering?
+      %i[by_parent by_query by_published by_type by_tag].any? { |by| params[by].present? }
+    end
+
+    def index_filters
+      {
+        by_parent: [
+          [t('.filters.all_parents'), nil],
+        ] + Folio::Node.original.roots.map { |n| [n.title, n.id] },
+        by_published: [
+          [t('.filters.all_nodes'), nil],
+          [t('.filters.published'), 'published'],
+          [t('.filters.unpublished'), 'unpublished'],
+        ],
+        by_type: [
+          [t('.filters.all_types'), nil],
+          [t('.filters.page'), 'page'],
+          [t('.filters.category'), 'category'],
+        ],
+      }
+    end
+
+    helper_method :index_filters
+
+    def additional_strong_params(node)
+      if node.class == Folio::NodeTranslation
+        node.node_original.additional_params
+      else
+        node.additional_params
+      end
+  end
 end

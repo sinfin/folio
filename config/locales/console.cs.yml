@@ -25,6 +25,7 @@ cs:
           show: Zobrazit
           unhandle: Označit za nevyřízené
         root: Administrace
+        searches: Vyhledávání
       cancel: Zrušit
       create: Vytvořit
       delete: Smazat

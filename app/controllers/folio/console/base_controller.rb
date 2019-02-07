@@ -95,14 +95,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
       }]
     end
 
-    def additional_strong_params(node)
-      if node.class == Folio::NodeTranslation
-        node.node_original.additional_params
-      else
-        node.additional_params
-      end
-    end
-
     def sti_atoms(params)
       sti_hack(params, :atoms_attributes, :model)
     end

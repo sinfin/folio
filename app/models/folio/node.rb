@@ -92,7 +92,6 @@ class Folio::Node < Folio::ApplicationRecord
 
   # Multi-search
   multisearchable against: [ :title, :perex, :content, :atom_contents ],
-                  if: :searchable?,
                   ignoring: :accents
 
   pg_search_scope :by_query,
@@ -151,11 +150,6 @@ class Folio::Node < Folio::ApplicationRecord
 
   def console_caret_icon
     'caret-right'
-  end
-
-  # override in subclasses
-  def searchable?
-    published?
   end
 
   def self.view_name

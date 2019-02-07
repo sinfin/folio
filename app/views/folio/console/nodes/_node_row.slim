@@ -3,10 +3,10 @@ tr[
   data-parent=(node.parent ? node.parent.id : :root)
 ]
   td
-    - if tree
-      = fa_icon node.console_caret_icon, \
-                class: 'mr-2', \
-                style: "margin-left:#{node.depth * 2}rem"
+    / - if tree
+    /   = fa_icon node.console_caret_icon, \
+    /             class: 'mr-2', \
+    /             style: "margin-left:#{node.depth * 2}rem"
 
     = link_to(truncate(node.title), edit_console_node_path(node.id))
 

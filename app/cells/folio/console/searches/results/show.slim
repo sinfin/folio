@@ -1,0 +1,13 @@
+.f-c-searches-result
+  .container-fluid
+    h1 = t('.title')
+
+    ul.f-c-searches-result__ul
+      - model.each do |result|
+        li.f-c-searches-result__li
+          h2.h3.f-c-searches-result__title
+            = result.searchable.class.model_name.human
+            '  /
+
+            a.f-c-searches-result__a href=href(result.searchable)
+              = result.searchable.to_label

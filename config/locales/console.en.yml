@@ -19,6 +19,7 @@ en:
           show: Show
           unhandle: Set as not handled
         root: Console
+        searches: Search
       cancel: Cancel
       create: Create
       delete: Remove
