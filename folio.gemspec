@@ -35,7 +35,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'pagy'
   s.add_dependency 'responders'
   s.add_dependency 'active_model_serializers', '~> 0.9.6'
-  s.add_dependency 'font-awesome-rails'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'dropzonejs-rails'
   s.add_dependency 'sitemap_generator'

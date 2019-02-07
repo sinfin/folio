@@ -27,3 +27,7 @@ bower_components/vanilla-lazyload/dist/*
 bower_components/jquery
 bower_components/tempusdominus-bs4/docs
 bower_components/moment/src
+
+bower_components/font-awesome/*
+!bower_components/font-awesome/scss
+!bower_components/font-awesome/webfonts
