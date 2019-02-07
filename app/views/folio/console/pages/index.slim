@@ -4,8 +4,8 @@
   = index_show_for(@pages) do |s|
     = s.attribute :title
     = s.attribute :type
-    = s.attribute :featured
-    = s.attribute :published
+    = s.featured_toggle
+    = s.published_toggle
 
 /   .folio-console-layout-sidebar
 /     == cell('folio/console/index/filters', index_filters)

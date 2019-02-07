@@ -58,3 +58,13 @@ ShowFor.setup do |config|
   # specify label_proc - it will be automatically called, passing in the label text.
   # config.label_proc = lambda { |l| l + ":" }
 end
+
+class ShowFor::Builder
+  def featured_toggle
+    template.cell('folio/console/featured_toggle', object).show.try(:html_safe)
+  end
+
+  def published_toggle
+    template.cell('folio/console/published_toggle', object).show.try(:html_safe)
+  end
+end
