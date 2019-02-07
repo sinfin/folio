@@ -1,6 +1,6 @@
 .folio-console-layout-with-sidebar
   .folio-console-layout-content
-    == cell('folio/console/index/header', Folio::Node, \
+    == cell('folio/console/index/header', Folio::Page, \
                                           new_path: new_console_node_path, \
                                           hidden_fields: index_filters.keys)
 
@@ -8,13 +8,13 @@
       table
         thead
           tr
-            th colspan=2 = Folio::Node.human_attribute_name(:title)
+            th colspan=2 = Folio::Page.human_attribute_name(:title)
             - unless ::Rails.application.config.folio_using_traco
-              th = Folio::Node.human_attribute_name(:translations)
+              th = Folio::Page.human_attribute_name(:translations)
 
-            th = Folio::Node.human_attribute_name(:type)
-            th = Folio::Node.human_attribute_name(:featured)
-            th colspan=2 = Folio::Node.human_attribute_name(:published)
+            th = Folio::Page.human_attribute_name(:type)
+            th = Folio::Page.human_attribute_name(:featured)
+            th colspan=2 = Folio::Page.human_attribute_name(:published)
             th
 
         tbody

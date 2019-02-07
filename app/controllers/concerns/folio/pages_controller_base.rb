@@ -10,8 +10,8 @@ module Folio::PagesControllerBase
   end
 
   def show
-    if @page.original.class.view_name
-      render @page.original.class.view_name
+    if @page.class.view_name
+      render @page.class.view_name
     else
       render 'folio/pages/show'
     end
@@ -47,10 +47,10 @@ module Folio::PagesControllerBase
     end
 
     def filter_pages_by_locale(pages)
-      if ::Rails.application.config.folio_using_traco
+      if Rails.application.config.folio_using_traco
         pages
       else
-        pages.with_locale(I18n.locale)
+        pages.by_locale(I18n.locale)
       end
     end
 end

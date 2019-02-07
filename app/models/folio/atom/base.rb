@@ -12,7 +12,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     images: nil,    # one of nil, true
     document: nil,  # one of nil, true
     documents: nil, # one of nil, true
-    model: nil,     # one of nil, an array of model class names - e.g. %w[Folie::Node My::Model]
+    model: nil,     # one of nil, an array of model class names - e.g. %w[Folie::Page My::Model]
   }
 
   self.table_name = 'folio_atoms'

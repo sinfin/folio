@@ -2,33 +2,31 @@
 
 require 'test_helper'
 
-module Folio
-  class FilePlacementTest < ActiveSupport::TestCase
-    class MyAtom < ::Folio::Atom::Base
-      STRUCTURE = {
-        cover: true,
-      }
-    end
+class Folio::FilePlacementTest < ActiveSupport::TestCase
+  class MyAtom < Folio::Atom::Base
+    STRUCTURE = {
+      cover: true,
+    }
+  end
 
-    test 'placement_title' do
-      node = create(:folio_node, title: 'foo')
-      node.cover = create(:folio_image)
+  test 'placement_title' do
+    node = create(:folio_page, title: 'foo')
+    node.cover = create(:folio_image)
 
-      # works
-      assert_equal('foo', node.cover_placement.placement_title)
-      assert_equal('Folio::Node', node.cover_placement.placement_title_type)
+    # works
+    assert_equal('foo', node.cover_placement.placement_title)
+    assert_equal('Folio::Page', node.cover_placement.placement_title_type)
 
-      # updates through touch
-      node.update!(title: 'bar')
-      assert_equal('bar', node.cover_placement.reload.placement_title)
+    # updates through touch
+    node.update!(title: 'bar')
+    assert_equal('bar', node.cover_placement.reload.placement_title)
 
-      # works for atoms
-      atom = create_atom(MyAtom, :cover, placement: node)
-      assert_equal('bar', atom.cover_placement.placement_title)
-      assert_equal('Folio::Node',
-                   atom.cover_placement.placement_title_type,
-                   "Uses atom's placement type")
-    end
+    # works for atoms
+    atom = create_atom(MyAtom, :cover, placement: node)
+    assert_equal('bar', atom.cover_placement.placement_title)
+    assert_equal('Folio::Page',
+                 atom.cover_placement.placement_title_type,
+                 "Uses atom's placement type")
   end
 end
 

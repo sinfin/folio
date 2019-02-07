@@ -16,4 +16,8 @@ module Folio::HasAtoms
   def atoms_in_molecules
     Folio::Atom.atoms_in_molecules(atoms)
   end
+
+  def atom_contents
+    atoms.map { |a| [a.title, a.perex, a.content] }.flatten.compact.join(' ')
+  end
 end

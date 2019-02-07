@@ -10,7 +10,7 @@ fieldset
         .col-sm
           = node_type_select(f)
         .col-sm
-          = f.input :parent_id, collection: Folio::Node.arrange_as_array, \
+          = f.input :parent_id, collection: Folio::Page.arrange_as_array, \
                                 label_method: :name_depth, \
                                 value_method: :id
 

@@ -2,36 +2,39 @@
 
 require 'test_helper'
 
-module Folio
-  class NodeSingletonTest < ActiveSupport::TestCase
-    class FirstSingleton < NodeSingleton; end
-    class SecondSingleton < NodeSingleton; end
+class Folio::PageSingletonTest < ActiveSupport::TestCase
+  class FirstSingleton < Folio::Page
+    include Folio::Singleton
+  end
 
-    test 'fails when no instance is present' do
-      assert_raises(NodeSingleton::MissingError) do
-        FirstSingleton.instance
-      end
+  class SecondSingleton < Folio::Page
+    include Folio::Singleton
+  end
+
+  test 'fails when no instance is present' do
+    assert_raises(Folio::Singleton::MissingError) do
+      FirstSingleton.instance
+    end
+  end
+
+  test 'can only have one' do
+    create(:folio_site)
+
+    assert FirstSingleton.console_selectable?
+    assert FirstSingleton.create!(title: 'foo')
+
+    assert_not FirstSingleton.console_selectable?
+    assert_equal('foo', FirstSingleton.instance.title)
+    assert FirstSingleton.instance.update!(title: 'oof'), 'can update'
+    assert_equal('oof', FirstSingleton.instance.title, 'can update')
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      FirstSingleton.create!(title: 'bar')
     end
 
-    test 'can only have one' do
-      create(:folio_site)
-
-      assert FirstSingleton.console_selectable?
-      assert FirstSingleton.create!(title: 'foo')
-
-      assert_not FirstSingleton.console_selectable?
-      assert_equal('foo', FirstSingleton.instance.title)
-      assert FirstSingleton.instance.update!(title: 'oof'), 'can update'
-      assert_equal('oof', FirstSingleton.instance.title, 'can update')
-
-      assert_raises(ActiveRecord::RecordInvalid) do
-        FirstSingleton.create!(title: 'bar')
-      end
-
-      assert SecondSingleton.create!(title: 'baz')
-      assert_raises(ActiveRecord::RecordInvalid) do
-        SecondSingleton.create!(title: 'bax')
-      end
+    assert SecondSingleton.create!(title: 'baz')
+    assert_raises(ActiveRecord::RecordInvalid) do
+      SecondSingleton.create!(title: 'bax')
     end
   end
 end

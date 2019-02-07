@@ -17,10 +17,6 @@ module Folio::Singleton
     def fail_on_missing_instance
       fail(MissingError, self.to_s)
     end
-
-    def console_selectable?
-      to_s != 'Folio::NodeSingleton' && !exists?
-    end
   end
 
   def singleton?

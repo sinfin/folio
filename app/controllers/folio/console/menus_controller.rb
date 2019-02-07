@@ -49,7 +49,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
     end
 
     def filter_params
-      # params.permit(:by_query, :by_published, :by_type, :by_tag)
+      # params.permit(:by_query, :by_published, :by_tag)
     end
 
     def menu_params

@@ -34,7 +34,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def folio_link_class_names
     %w[
-      Folio::Node
+      Folio::Page
       Folio::Menu
       Folio::Image
       Folio::Document

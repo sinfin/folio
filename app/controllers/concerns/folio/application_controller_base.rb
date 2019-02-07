@@ -47,7 +47,8 @@ module Folio::ApplicationControllerBase
     def nested_page_path_with_parents(page, params: {})
       path = [page]
       while page.parent
-        path.unshift page.parent.translate
+        # TODO: translate?
+        path.unshift page.parent
         page = page.parent
       end
       main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
@@ -56,9 +57,9 @@ module Folio::ApplicationControllerBase
     def page_roots
       @page_roots ||= begin
         if ::Rails.application.config.folio_using_traco
-          Folio::Node.roots.ordered
+          Folio::Page.roots.ordered
         else
-          Folio::Node.with_locale(I18n.locale).roots.ordered
+          Folio::Page.by_locale(I18n.locale).roots.ordered
         end
       end
     end

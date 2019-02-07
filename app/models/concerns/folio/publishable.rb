@@ -36,12 +36,18 @@ module Folio::Publishable
               true,
               Time.now.change(sec: 0))
       }
+
+      before_save :auto_publish_now, if: :published_changed?
     end
 
     def published?
       published.present? &&
       published_at &&
       published_at <= Time.now.change(sec: 0)
+    end
+
+    def auto_publish_now
+      self.published_at = Time.now if published? && published_at.nil?
     end
   end
 end

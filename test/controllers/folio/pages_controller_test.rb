@@ -8,7 +8,7 @@ module Folio
 
     setup do
       create(:folio_site)
-      @category = create(:folio_category)
+      @category = create(:folio_page)
       @page = create(:folio_page, parent: @category)
 
       @category_en = @category.translate!(:en)

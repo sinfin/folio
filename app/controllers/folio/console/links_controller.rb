@@ -25,7 +25,7 @@ class Folio::Console::LinksController < Folio::Console::BaseController
 
     def node_links
       {
-        Folio::Node => Proc.new { |node| nested_page_path(node, add_parents: true) }
+        Folio::Page => Proc.new { |node| nested_page_path(node, add_parents: true) }
       }
     end
 

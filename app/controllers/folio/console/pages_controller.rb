@@ -1,67 +1,67 @@
 # frozen_string_literal: true
 
-class Folio::Console::NodesController < Folio::Console::BaseController
+class Folio::Console::PagesController < Folio::Console::BaseController
   include Folio::Console::NodesHelper
   include Folio::Console::SetPositions
-  handles_set_positions_for Folio::Node
+  handles_set_positions_for Folio::Page
 
   respond_to :json, only: %i[update]
 
-  before_action :find_node, except: [:index, :create, :new, :set_positions]
-  add_breadcrumb Folio::Node.model_name.human(count: 2), :console_nodes_path
+  before_action :find_page, except: [:index, :create, :new, :set_positions]
+  add_breadcrumb Folio::Page.model_name.human(count: 2), :console_pages_path
 
   def index
     if misc_filtering?
       if params[:by_parent].present?
-        parent = Folio::Node.find(params[:by_parent])
-        @nodes = parent.subtree.original
+        parent = Folio::Page.find(params[:by_parent])
+        @pages = parent.subtree.original
                        .filter_by_params(filter_params)
                        .arrange(order: 'position asc, created_at asc')
       else
-        nodes = Folio::Node.original
+        pages = Folio::Page.original
                            .filter_by_params(filter_params)
-        @pagy, @nodes = pagy(nodes)
+        @pagy, @pages = pagy(pages)
       end
     else
       @limit = self.class.index_children_limit
-      @nodes = Folio::Node.original.arrange(order: 'position asc, created_at asc')
+      @pages = Folio::Page.original.arrange(order: 'position asc, created_at asc')
     end
   end
 
   def new
-    if params[:node].blank? || params[:node][:original_id].blank?
-      parent = Folio::Node.find(params[:parent]) if params[:parent].present?
-      @node = Folio::Page.new(parent: parent, type: params[:type])
+    if params[:page].blank? || params[:page][:original_id].blank?
+      parent = Folio::Page.find(params[:parent]) if params[:parent].present?
+      @page = Folio::Page.new(parent: parent, type: params[:type])
     else
-      original = Folio::Node.find(params[:node][:original_id])
+      original = Folio::Page.find(params[:page][:original_id])
 
-      @node = original.translate!(params[:node][:locale])
+      @page = original.translate!(params[:page][:locale])
 
-      redirect_to edit_console_node_path(@node.id)
+      redirect_to edit_console_page_path(@page.id)
     end
 
     after_new
   end
 
   def create
-    # set type first beacuse of @node.additional_params
-    @node = Folio::Node.new(type: params[:node][:type])
-    @node.update(node_params)
-    if @node.new_record?
-      respond_with @node, location: new_console_node_path
+    # set type first beacuse of @page.additional_params
+    @page = Folio::Page.new(type: params[:page][:type])
+    @page.update(page_params)
+    if @page.new_record?
+      respond_with @page, location: new_console_page_path
     else
-      respond_with @node, location: edit_console_node_path(@node.id)
+      respond_with @page, location: edit_console_page_path(@page.id)
     end
   end
 
   def update
-    @node.update(node_params)
-    respond_with @node, location: edit_console_node_path(@node.id)
+    @page.update(page_params)
+    respond_with @page, location: edit_console_page_path(@page.id)
   end
 
   def destroy
-    @node.destroy
-    respond_with @node, location: console_nodes_path
+    @page.destroy
+    respond_with @page, location: console_pages_path
   end
 
   private
@@ -73,16 +73,16 @@ class Folio::Console::NodesController < Folio::Console::BaseController
     def after_new
     end
 
-    def find_node
-      @node = Folio::Node.friendly.find(params[:id])
+    def find_page
+      @page = Folio::Page.friendly.find(params[:id])
     end
 
     def filter_params
-      params.permit(:by_query, :by_published, :by_type, :by_tag)
+      params.permit(:by_query, :by_published, :by_tag)
     end
 
-    def node_params
-      p = params.require(:node)
+    def page_params
+      p = params.require(:page)
                 .permit(:title,
                         :slug,
                         :perex,
@@ -99,7 +99,7 @@ class Folio::Console::NodesController < Folio::Console::BaseController
                         :original_id,
                         :tag_list,
                         *traco_params,
-                        *additional_strong_params(@node),
+                        *additional_strong_params(@page),
                         *atoms_strong_params,
                         *file_placements_strong_params)
       p[:slug] = nil unless p[:slug].present?
@@ -122,34 +122,25 @@ class Folio::Console::NodesController < Folio::Console::BaseController
     end
 
     def misc_filtering?
-      %i[by_parent by_query by_published by_type by_tag].any? { |by| params[by].present? }
+      %i[by_parent by_query by_published by_tag].any? { |by| params[by].present? }
     end
 
     def index_filters
       {
         by_parent: [
           [t('.filters.all_parents'), nil],
-        ] + Folio::Node.original.roots.map { |n| [n.title, n.id] },
+        ] + Folio::Page.original.roots.map { |n| [n.title, n.id] },
         by_published: [
-          [t('.filters.all_nodes'), nil],
+          [t('.filters.all_pages'), nil],
           [t('.filters.published'), 'published'],
           [t('.filters.unpublished'), 'unpublished'],
-        ],
-        by_type: [
-          [t('.filters.all_types'), nil],
-          [t('.filters.page'), 'page'],
-          [t('.filters.category'), 'category'],
         ],
       }
     end
 
     helper_method :index_filters
 
-    def additional_strong_params(node)
-      if node.class == Folio::NodeTranslation
-        node.node_original.additional_params
-      else
-        node.additional_params
-      end
-  end
+    def additional_strong_params(page)
+      page.additional_params
+    end
 end

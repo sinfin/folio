@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_11_084231) do
+ActiveRecord::Schema.define(version: 2019_02_07_101927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,14 +143,12 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.index ["visit_id"], name: "index_folio_newsletter_subscriptions_on_visit_id"
   end
 
-  create_table "folio_nodes", force: :cascade do |t|
+  create_table "folio_pages", force: :cascade do |t|
     t.string "title"
     t.string "slug"
     t.text "perex"
-    t.text "content"
     t.string "meta_title", limit: 512
     t.text "meta_description"
-    t.string "code"
     t.string "ancestry"
     t.string "type"
     t.boolean "featured"
@@ -161,16 +159,15 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.string "locale", limit: 6
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ancestry"], name: "index_folio_nodes_on_ancestry"
-    t.index ["code"], name: "index_folio_nodes_on_code"
-    t.index ["featured"], name: "index_folio_nodes_on_featured"
-    t.index ["locale"], name: "index_folio_nodes_on_locale"
-    t.index ["original_id"], name: "index_folio_nodes_on_original_id"
-    t.index ["position"], name: "index_folio_nodes_on_position"
-    t.index ["published"], name: "index_folio_nodes_on_published"
-    t.index ["published_at"], name: "index_folio_nodes_on_published_at"
-    t.index ["slug"], name: "index_folio_nodes_on_slug"
-    t.index ["type"], name: "index_folio_nodes_on_type"
+    t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
+    t.index ["featured"], name: "index_folio_pages_on_featured"
+    t.index ["locale"], name: "index_folio_pages_on_locale"
+    t.index ["original_id"], name: "index_folio_pages_on_original_id"
+    t.index ["position"], name: "index_folio_pages_on_position"
+    t.index ["published"], name: "index_folio_pages_on_published"
+    t.index ["published_at"], name: "index_folio_pages_on_published_at"
+    t.index ["slug"], name: "index_folio_pages_on_slug"
+    t.index ["type"], name: "index_folio_pages_on_type"
   end
 
   create_table "folio_sites", force: :cascade do |t|

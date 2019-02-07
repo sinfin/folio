@@ -9,7 +9,7 @@ class Folio::Console::FilePlacementListCell < Folio::ConsoleCell
 
   def href(fp)
     placement = fp.placement
-    if placement.is_a?(Folio::Node)
+    if placement.is_a?(Folio::Page)
       controller.edit_console_node_path(placement.id)
     elsif placement.is_a?(Folio::Atom::Base)
       controller.edit_console_node_path(placement.placement)
