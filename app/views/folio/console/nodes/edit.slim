@@ -1,4 +1,5 @@
-== cell('folio/console/form/header', @node, translations: true)
+- show_translations = !Rails.application.config.folio_using_traco
+== cell('folio/console/form/header', @node, translations: show_translations)
 
 = simple_form_for(@node, as: :node, \
                          url: console_node_path(@node.id)) do |f|

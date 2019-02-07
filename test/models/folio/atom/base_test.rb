@@ -6,7 +6,7 @@ module Folio
   module Atom
     class BaseTest < ActiveSupport::TestCase
       test 'clears stuff when type changes' do
-        atom = create(:folio_atom, content: 'foo')
+        atom = create_atom(Folio::Atom::Text, content: 'foo')
         assert_equal 'foo', atom.content
         assert_equal 0, atom.images.count
 
@@ -17,6 +17,7 @@ module Folio
                               file_id: image.id,
                             }])
 
+        atom = Folio::Atom::Base.find(atom.id)
         assert_equal 'Atom::Gallery', atom.type
         assert_nil atom.content
         assert_equal 1, atom.images.count
