@@ -15,6 +15,24 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
         type IN ('Folio::Node', 'Folio::Category', 'Folio::NodeTranslation')
     SQL
 
+    [
+      ['folio_atoms', 'placement_type'],
+      ['folio_atoms', 'model_type'],
+      ['folio_file_placements', 'placement_type'],
+      ['folio_menu_items', 'target_type'],
+      ['friendly_id_slugs', 'sluggable_type'],
+      ['pg_search_documents', 'searchable_type'],
+      ['taggings', 'taggable_type'],
+    ].each do |table, col|
+      conn.execute <<~SQL
+        UPDATE #{table}
+        SET
+          #{col} = 'Folio::Page'
+        WHERE
+          #{col} IN ('Folio::Node', 'Folio::Category', 'Folio::NodeTranslation')
+      SQL
+    end
+
     # correct Folio::NodeTranslation type
     Folio::Page.where.not(original_id: nil).find_each do |page|
       page.update_column(:type, page.original.type)
