@@ -27,7 +27,7 @@ cs:
         parent_id: Nadřazená stránka
         title: Název stránky
         translations: Překlady
-        type: Šablona / obsah
+        type: Typ
       folio/site:
         address: Adresa
         domain: Doména

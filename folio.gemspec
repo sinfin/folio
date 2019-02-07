@@ -54,6 +54,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'actionpack-page_caching'
   s.add_dependency 'recaptcha'
   s.add_dependency 'nokogiri'
+  s.add_dependency 'show_for'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'

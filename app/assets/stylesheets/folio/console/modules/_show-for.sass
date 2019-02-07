@@ -1,0 +1,64 @@
++media-breakpoint-up(lg)
+  .f-c-show-for-index
+    display: table
+    width: 100%
+    margin: 0
+
+    .f-c-show-for__row
+      display: table-row
+
+      &:first-child
+        .f-c-show-for__label
+          text-transform: uppercase
+          color: $table-head-color
+
+        .f-c-show-for__content
+          display: none
+
+      &:nth-child(n + 2)
+        .f-c-show-for__label
+          display: none
+
+        &:hover
+          .f-c-show-for__cell
+            background: $table-hover-bg
+
+      &:nth-child(even)
+        .f-c-show-for__cell
+          background: $table-accent-bg
+
+    .f-c-show-for__cell
+      display: table-cell
+      padding: $table-cell-padding
+      border-bottom: $table-border-width solid $table-border-color
+      background: $table-bg
+      vertical-align: middle
+
++media-breakpoint-down(md)
+  .f-c-show-for-index
+    .f-c-show-for__row
+      display: table
+      width: 100%
+      border: $table-border-width solid $table-border-color
+      margin: 0 0 $spacer
+      padding: $spacer
+
+      &:first-child
+        display: none
+
+    .f-c-show-for__cell
+      display: table-row
+
+    .f-c-show-for__label,
+    .f-c-show-for__content
+      display: table-cell
+      padding: $spacer / 4
+      vertical-align: middle
+
+    .f-c-show-for__label
+      width: 200px
+      max-width: 40vw
+      word-break: break-all
+      text-transform: uppercase
+      color: $table-head-color
+      padding: 0 $spacer 0 0

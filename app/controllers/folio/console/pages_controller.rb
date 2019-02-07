@@ -11,20 +11,21 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   add_breadcrumb Folio::Page.model_name.human(count: 2), :console_pages_path
 
   def index
-    if misc_filtering?
-      if params[:by_parent].present?
-        parent = Folio::Page.find(params[:by_parent])
-        @pages = parent.subtree
-                       .filter_by_params(filter_params)
-                       .arrange(order: 'position asc, created_at asc')
-      else
-        pages = Folio::Page.filter_by_params(filter_params)
-        @pagy, @pages = pagy(pages)
-      end
-    else
-      @limit = self.class.index_children_limit
-      @pages = Folio::Page.arrange(order: 'position asc, created_at asc')
-    end
+    @pages = Folio::Page.ordered
+    # if misc_filtering?
+    #   if params[:by_parent].present?
+    #     parent = Folio::Page.find(params[:by_parent])
+    #     @pages = parent.subtree
+    #                    .filter_by_params(filter_params)
+    #                    .arrange(order: 'position asc, created_at asc')
+    #   else
+    #     pages = Folio::Page.filter_by_params(filter_params)
+    #     @pagy, @pages = pagy(pages)
+    #   end
+    # else
+    #   @limit = self.class.index_children_limit
+    #   @pages = Folio::Page.arrange(order: 'position asc, created_at asc')
+    # end
   end
 
   def new

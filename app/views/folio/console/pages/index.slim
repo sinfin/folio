@@ -1,24 +1,11 @@
-.folio-console-layout-with-sidebar
-  .folio-console-layout-content
-    == cell('folio/console/index/header', Folio::Page, \
-                                          new_path: new_console_page_path, \
-                                          hidden_fields: index_filters.keys)
+== cell('folio/console/index/header', Folio::Page, csv: true)
 
-    .folio-console-index-table
-      table
-        thead
-          tr
-            th colspan=2 = Folio::Page.human_attribute_name(:title)
-            - unless ::Rails.application.config.folio_using_traco
-              th = Folio::Page.human_attribute_name(:translations)
+.container-fluid
+  = index_show_for(@pages) do |s|
+    = s.attribute :title
+    = s.attribute :type
+    = s.attribute :featured
+    = s.attribute :published
 
-            th = Folio::Page.human_attribute_name(:type)
-            th = Folio::Page.human_attribute_name(:featured)
-            th colspan=2 = Folio::Page.human_attribute_name(:published)
-            th
-
-        tbody
-          = render partial: "pages_table", locals: { pages: @pages }
-
-  .folio-console-layout-sidebar
-    == cell('folio/console/index/filters', index_filters)
+/   .folio-console-layout-sidebar
+/     == cell('folio/console/index/filters', index_filters)

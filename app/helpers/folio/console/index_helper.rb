@@ -13,5 +13,16 @@ module Folio
         img
       end
     end
+
+    def index_show_for(collection, &block)
+      return nil if collection.blank?
+
+      empty = show_for(collection.first.class.new, &block).html_safe
+
+      all = [empty] + collection.map do |item|
+        show_for(item, &block).html_safe
+      end
+      content_tag(:div, all.join('').html_safe, class: 'f-c-show-for-index')
+    end
   end
 end

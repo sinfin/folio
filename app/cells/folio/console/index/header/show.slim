@@ -1,40 +1,12 @@
-.folio-console-index-header.row.align-items-center
-  .col
-    h1 = title
+.container-fluid
+  .f-c-index-header
+    h1.f-c-index-header__h1 = title
 
-  .col.folio-console-index-header-right
-    - if options[:csv_path]
-      .folio-console-index-header-csv
-        a.btn.btn-warning href=options[:csv_path]
-          i.fa.fa-download<>
-          ' CSV
+    - if options[:csv]
+      a.btn.btn-secondary.f-c-index-header__btn href=csv_path
+        i.fa.fa-download<>
+        ' CSV
 
-    - if options[:no_filter]
-      form
-    - else
-      = form
-        .input-group
-          = input
-
-          - if controller.params[:by_query].present?
-            .input-group-append
-              button.btn.btn-outline.text-danger[
-                type="button"
-                data-target=".folio-console-by-query"
-                data-change-value=""
-                data-change-value-submit=""
-              ]
-                .fa.fa-close
-
-          .input-group-append
-            button.btn.btn-outline type="submit"
-              .fa.fa-search
-
-        - if options[:hidden_fields]
-          - options[:hidden_fields].each do |key|
-            = hidden_field_tag key, controller.params[key]
-
-    - if options[:new_path].present?
-        a.btn.btn-success href=options[:new_path]
-          i.fa.fa-plus.fa-mr
-          = t('folio.console.breadcrumbs.actions.add')
+    = new_button
+      i.fa.fa-plus
+      = t('.add')

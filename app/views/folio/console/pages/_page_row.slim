@@ -21,9 +21,9 @@ tr[
       - else
         = index_position_buttons(page, as: :pages)
 
-  - unless ::Rails.application.config.folio_using_traco
-    td
-      == cell('folio/console/pages/translations', page, hide_original: true)
+  / - unless ::Rails.application.config.folio_using_traco
+  /   td
+  /     == cell('folio/console/pages/translations', page, hide_original: true)
 
   td
     = page.model_name.human

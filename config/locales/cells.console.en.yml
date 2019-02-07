@@ -2,6 +2,11 @@
 en:
   folio:
     console:
+      index:
+        header:
+          add: Add
+          csv: CSV
+
       layout:
         sidebar:
           settings: Settings
