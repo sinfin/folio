@@ -21,8 +21,6 @@ html.f-c-layout-html lang=I18n.locale
         = yield
         == cell('folio/console/pagination', @pagy)
 
-      == cell('folio/console/footer', @site)
-
     - %w[Folio::Image Folio::Document].each do |klass|
       - [true, false].each do |single|
         .modal.folio-console-react-modal.fade[
