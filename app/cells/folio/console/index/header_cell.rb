@@ -1,23 +1,30 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
+  include SimpleForm::ActionViewExtensions::FormHelper
+
   def title
     model.model_name.human(count: 2)
   end
 
-  # def input
-  #   text_field_tag :by_query, controller.params[:by_query],
-  #                  class: 'form-control folio-console-by-query',
-  #                  placeholder: t('.by_query')
-  # end
+  def query_form(&block)
+    opts = {
+      url: controller.url_for([:console, model]),
+      method: :get,
+      html: { class: 'f-c-index-header__form' },
+    }
 
-  # def form(&block)
-  #   opts = {
-  #     method: :get,
-  #     'data-auto-submit': true,
-  #   }
-  #   form_tag(controller.request.url, opts, &block)
-  # end
+    simple_form_for('', opts, &block)
+  end
+
+  def query_autocomplete
+    title_columns = model.column_names.grep(/\A(title|name)/)
+    if title_columns.present?
+      model.pluck(title_columns).flatten.uniq
+    else
+      nil
+    end
+  end
 
   def new_button(&block)
     url = controller.url_for([:console, model, action: :new])

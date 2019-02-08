@@ -25,6 +25,7 @@ cs:
     'no': Ne
     placeholders:
       defaults:
+        by_query: Hledat...
         content: Textový článek s možností formátování, vkládání obrázků, tabulek apod.
         meta_description: Alternativní popis obsahu stránky doporučujeme napsat tak, aby se vše podstatné vešlo do 250 znaků textu.
         meta_title: 'Např.: Nabídka specializovaných služeb'
@@ -32,6 +33,7 @@ cs:
         slug: 'Např.: nabidka-nasich-sluzeb'
         tag_list: 'Např.: služby, nabídka'
         title: 'Např.: Nabídka našich služeb'
+        q: Hledat...
     required:
       mark: "*"
       text: povinný údaj

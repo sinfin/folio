@@ -25,6 +25,7 @@ en:
     'no': 'No'
     placeholders:
       defaults:
+        by_query: Search...
         content: Formatted text with images, tables, etc.
         meta_description: Recommended size is under 250 characters.
         meta_title: 'e.g.: Our team'
@@ -32,6 +33,7 @@ en:
         slug: 'e.g.: our-team'
         tag_list: 'e.g.: services, offer'
         title: 'e.g.: Our team'
+        q: Search...
     required:
       mark: "*"
       text: required

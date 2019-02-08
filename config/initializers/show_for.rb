@@ -82,6 +82,12 @@ class ShowFor::Builder
     resource_link(attr, [:console, object], &block)
   end
 
+  def locale_flag
+    attribute(:locale) do
+      template.country_flag(object.locale) if object.locale
+    end
+  end
+
   private
 
     def resource_link(attr, url_for_args)

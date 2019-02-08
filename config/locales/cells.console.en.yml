@@ -11,9 +11,6 @@ en:
         sidebar:
           settings: Settings
 
-          search:
-            placeholder: Search
-
       searches:
         results:
           title: Search results

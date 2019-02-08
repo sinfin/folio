@@ -11,9 +11,6 @@ cs:
         sidebar:
           settings: Nastavení
 
-          search:
-            placeholder: Hledat
-
       searches:
         results:
           title: Výsledky vyhledávání

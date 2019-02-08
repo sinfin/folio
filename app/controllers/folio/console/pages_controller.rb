@@ -4,7 +4,12 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Page'
 
   def index
-    @pages = @pages.ordered
+    if params[:by_query].present?
+      @pages = @pages.by_query(params[:by_query])
+    else
+      @pages = @pages.ordered
+    end
+
     # if misc_filtering?
     #   if params[:by_parent].present?
     #     parent = Folio::Page.find(params[:by_parent])

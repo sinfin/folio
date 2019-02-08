@@ -2,6 +2,25 @@
   .f-c-index-header
     h1.f-c-index-header__h1 = title
 
+    - if model.respond_to?(:by_query) && options[:by_query] != false
+      = query_form do |f|
+        .input-group
+          = f.input(:by_query, label: false, \
+                               wrapper: false, \
+                               input_html: { value: params[:by_query] })
+          .input-group-append
+            button[
+              class="btn"
+              class="fa fa-search"
+              type="submit"
+            ]
+            - if params[:by_query].present?
+              a[
+                class="btn"
+                class="fa fa-times"
+                href=controller.url_for([:console, model])
+              ]
+
     - if options[:csv]
       a.btn.btn-secondary.f-c-index-header__btn href=csv_path
         i.fa.fa-download<>

@@ -15,7 +15,6 @@ class Folio::Console::Layout::Sidebar::SearchCell < Folio::ConsoleCell
 
   def input(f)
     input_html = {
-      placeholder: t('.placeholder'),
       class: 'f-c-layout-sidebar-search__input',
       value: params[:q].presence,
     }
