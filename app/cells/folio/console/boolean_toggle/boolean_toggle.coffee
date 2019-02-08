@@ -1,11 +1,11 @@
 $(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
   e.preventDefault()
   $input = $(this)
-  $wrap = $input.closest('.f-c-boolean-toggle')
-  return if $wrap.hasClass('f-c-boolean-toggle--loading')
-  $wrap.addClass('f-c-boolean-toggle--loading')
+  $form = $input.closest('.f-c-boolean-toggle')
+  return if $form.hasClass('f-c-boolean-toggle--loading')
+  $form.addClass('f-c-boolean-toggle--loading')
 
-  url = $wrap.data('boolean-toggle')
+  url = $form.prop('action')
 
   data = {}
   data[$input.prop('name')] = $input.prop('checked')
@@ -14,7 +14,7 @@ $(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
     data: data
     method: 'PATCH'
     success: ->
-      $wrap.removeClass('f-c-boolean-toggle--loading')
+      $form.removeClass('f-c-boolean-toggle--loading')
     error: ->
-      $wrap.removeClass('f-c-boolean-toggle--loading')
+      $form.removeClass('f-c-boolean-toggle--loading')
       $input.prop('checked', !$input.prop('checked'))

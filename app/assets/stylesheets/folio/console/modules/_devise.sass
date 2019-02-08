@@ -1,4 +1,4 @@
-.folio-console-devise
+.f-c-layout-body--devise
   text-align: center
 
   h2
@@ -31,11 +31,15 @@
     &, ~ input, ~ label
       display: none
 
-.folio-console-layout-main-devise
+.f-c-layout-main--devise
   display: flex
   flex-direction: column
 
-.folio-console-layout-main-devise-inner
+.f-c-layout-devise
+  display: flex
+  flex-direction: column
+
+.f-c-layout-devise__inner
   background: white
   padding: $grid-gutter-width
 
@@ -49,15 +53,15 @@
       max-width: none
 
 +media-breakpoint-up(md)
-  .folio-console-layout-main-devise
+  .f-c-layout-devise
     flex: 1 1 auto
     align-items: center
     justify-content: center
 
-  .folio-console-layout-main-devise-inner
+  .f-c-layout-devise__inner
     min-width: 350px
     border-radius: $border-radius
 
 +media-breakpoint-down(sm)
-  .folio-console-layout-main-devise-inner
+  .f-c-layout-devise__inner
     width: 100%

@@ -27,8 +27,7 @@ class Folio::Page < Folio::ApplicationRecord
   if Rails.application.config.folio_using_traco
     include Folio::TracoSluggable
 
-    friendly_id :title, use: %i[slugged scoped history simple_i18n],
-                        scope: [:ancestry]
+    friendly_id :title, use: %i[slugged history simple_i18n]
 
     translates :title, :perex, :slug, :meta_title, :meta_description
 
@@ -37,11 +36,11 @@ class Folio::Page < Folio::ApplicationRecord
                 presence: true
 
       validates "slug_#{locale}".to_sym,
-                uniqueness: { scope: [:ancestry] }
+                presence: true,
+                uniqueness: true
     end
   else
-    friendly_id :title, use: %i[slugged scoped history],
-                        scope: [:locale, :ancestry]
+    friendly_id :title, use: %i[slugged history]
 
     validates :title,
               presence: true
@@ -56,7 +55,7 @@ class Folio::Page < Folio::ApplicationRecord
 
     validates :slug,
               presence: true,
-              uniqueness: { scope: [:locale, :ancestry] }
+              uniqueness: true
   end
 
   validate :validate_allowed_type,
