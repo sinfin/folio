@@ -1,10 +1,23 @@
 .f-c-index-header
-  display: flex
-  align-items: center
   margin: $spacer 0
-
-.f-c-index-header__h1
-  margin: 0 auto 0 0
+  position: relative
 
 .f-c-index-header__btn
   margin-left: $grid-gutter-half
+
++mq-desktop-menu
+  .f-c-index-header
+    display: flex
+    align-items: center
+
+  .f-c-index-header__h1
+    margin: 0 auto 0 0
+
++mq-mobile-menu
+  .f-c-index-header__h1
+    margin: 0 120px $spacer 0
+
+  .f-c-index-header__btn--new
+    position: absolute
+    top: 5px
+    right: 0

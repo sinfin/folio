@@ -3,11 +3,12 @@ cs:
   folio:
     console:
       actions:
-        show: Zobrazit
-        edit: Upravit
-        destroy: Smazat
-        submit: Uložit
         back: Zpět
+        destroy: Smazat
+        edit: Upravit
+        preview: Náhled
+        show: Zobrazit
+        submit: Uložit
       alt_prompt: Alternativní popisek obrázku
       back: Zpět
       base:
@@ -27,6 +28,7 @@ cs:
         root: Administrace
         searches: Vyhledávání
       cancel: Zrušit
+      confirmation: Určitě?
       create: Vytvořit
       delete: Smazat
       documents:

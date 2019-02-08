@@ -2,6 +2,13 @@
 en:
   folio:
     console:
+      actions:
+        back: Back
+        destroy: Destroy
+        edit: Edit
+        preview: Preview
+        show: Show
+        submit: Submit
       alt_prompt: Alternative image caption
       back: Zpět
       base:
@@ -21,6 +28,7 @@ en:
         root: Console
         searches: Search
       cancel: Cancel
+      confirmation: Are you sure?
       create: Create
       delete: Remove
       documents:

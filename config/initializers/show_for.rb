@@ -88,6 +88,16 @@ class ShowFor::Builder
     end
   end
 
+  def actions(*act)
+    attribute('') do
+      if object.persisted?
+        template.cell('folio/console/index/actions',
+                      object,
+                      actions: act).show.try(:html_safe)
+      end
+    end
+  end
+
   private
 
     def resource_link(attr, url_for_args)
@@ -101,7 +111,7 @@ class ShowFor::Builder
     end
 
     def toggle(attr)
-      attribute(attr, class: 'foo') do
+      attribute(attr) do
         if object.persisted?
           template.cell('folio/console/boolean_toggle',
                         object,

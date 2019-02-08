@@ -1,4 +1,4 @@
-+media-breakpoint-up(lg)
++mq-desktop-menu
   .f-c-show-for-index
     display: table
     width: 100%
@@ -34,31 +34,28 @@
       background: $table-bg
       vertical-align: middle
 
-+media-breakpoint-down(md)
++mq-mobile-menu
   .f-c-show-for-index
     .f-c-show-for__row
-      display: table
+      display: block
       width: 100%
       border: $table-border-width solid $table-border-color
       margin: 0 0 $spacer
-      padding: $spacer
+      padding: $spacer calc(#{2 * $spacer} + #{$input-height-border} + #{$input-height-inner}) 0 $spacer
+      position: relative
 
       &:first-child
         display: none
 
     .f-c-show-for__cell
-      display: table-row
+      margin-bottom: $spacer
 
     .f-c-show-for__label,
     .f-c-show-for__content
-      display: table-cell
-      padding: $spacer / 4
-      vertical-align: middle
+      padding: 0
 
     .f-c-show-for__label
-      width: 200px
-      max-width: 40vw
-      word-break: break-all
       text-transform: uppercase
       color: $table-head-color
-      padding: 0 $spacer 0 0
+      font-size: $font-size-tiny
+      margin-bottom: $spacer / 4

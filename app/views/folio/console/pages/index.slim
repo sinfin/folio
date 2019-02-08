@@ -7,3 +7,7 @@
     = s.type
     = s.featured_toggle
     = s.published_toggle
+
+    = s.actions :edit,
+                :destroy,
+                preview: (controller.nested_page_path(s.object) if s.object.id?)

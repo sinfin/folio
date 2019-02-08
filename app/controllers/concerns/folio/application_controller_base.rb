@@ -24,7 +24,7 @@ module Folio::ApplicationControllerBase
     current_account
   end
 
-  def nested_page_path(page_or_parts, add_parents: false, params: {})
+  def nested_page_path(page_or_parts, add_parents: true, params: {})
     return nil unless main_app.respond_to?(:page_path)
 
     if add_parents
