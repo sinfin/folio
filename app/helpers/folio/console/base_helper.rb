@@ -19,6 +19,14 @@ module Folio
       end
     end
 
+    def rendered_breadcrumbs
+      if @breadcrumbs.present?
+        render_breadcrumbs(
+          builder: Folio::Console::BootstrapBreadcrumbsBuilder
+        )
+      end
+    end
+
     private
 
       def add_action_breadcrumb_name

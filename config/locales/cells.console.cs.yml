@@ -11,6 +11,9 @@ cs:
         sidebar:
           settings: Nastavení
 
+        header:
+          sign_out: Odhlásit
+
       searches:
         results:
           title: Výsledky vyhledávání

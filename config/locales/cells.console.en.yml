@@ -15,6 +15,9 @@ en:
         sidebar:
           settings: Settings
 
+        header:
+          sign_out: Sign out
+
       searches:
         results:
           title: Search results
