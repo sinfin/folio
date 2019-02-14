@@ -103,7 +103,7 @@ module Folio
                         *additional_strong_params(@node),
                         *atoms_strong_params,
                         *file_placements_strong_params)
-      p[:slug] = nil unless p[:slug].present?
+      p.delete(:slug) if p[:slug].blank?
       sti_atoms(p)
     end
 
