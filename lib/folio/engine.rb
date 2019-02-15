@@ -36,6 +36,8 @@ module Folio
     config.folio_dragonfly_keep_png = false
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
+    config.folio_pages_translations = false
+    config.folio_pages_ancestry = false
     config.folio_console_locale = :cs
     config.folio_console_dashboard_redirect = :console_pages_path
 

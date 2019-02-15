@@ -24,9 +24,17 @@ class Folio::Console::LinksController < Folio::Console::BaseController
   private
 
     def page_links
-      {
-        Folio::Page => Proc.new { |page| nested_page_path(page, add_parents: true) }
-      }
+      if Rails.application.config.folio_pages_ancestry
+        {
+          Folio::Page => Proc.new do |page|
+            nested_page_path(page, add_parents: true)
+          end
+        }
+      else
+        {
+          Folio::Page => Proc.new { |page| main_app.url_for([page, only_path: true]) }
+        }
+      end
     end
 
     def additional_links

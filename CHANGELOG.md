@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-02-15
+### Changed
+- Translations are not enabled by default, one has to set `Rails.application.config.folio_pages_translations = true`
+- Pages ancestry is not enabled by default, one has to set `Rails.application.config.folio_pages_ancestry = true`
+- Renamed `folio_nodes` to `folio_pages`, change the STI default to `Folio::Page`.
+- Page slugs now must be unique, no scoping.
+
+### Removed
+- Removed `Folio::Node`, `Folio::Category` and `Folio::NodeTranslation`.
+- Removed `content` from `Folio::Page`
+
 ## 2019-02-04
 ### Changed
 - Changed simple_form bootstrap 4 config - check forms and add `$enable-validation-icons: false` to sass variables, remove `flex-row` and use `col-auto` instead.

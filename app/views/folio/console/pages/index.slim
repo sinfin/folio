@@ -1,13 +1,12 @@
 = index_header
 
-.container-fluid
-  = index_show_for(@pages) do |s|
-    = s.edit_link :title
-    = s.locale_flag unless Rails.application.config.folio_using_traco
-    = s.type
-    = s.featured_toggle
-    = s.published_toggle
+= index_show_for(@pages) do |s|
+  = s.edit_link :title
+  = s.locale_flag unless Rails.application.config.folio_using_traco
+  = s.type
+  = s.featured_toggle
+  = s.published_toggle
 
-    = s.actions :edit,
-                :destroy,
-                preview: (controller.nested_page_path(s.object) if s.object.id?)
+  = s.actions :edit,
+              :destroy,
+              preview: (controller.nested_page_path(s.object) if s.object.id?)

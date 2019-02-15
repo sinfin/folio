@@ -1,4 +1,4 @@
-- show_translations = !Rails.application.config.folio_using_traco
+- show_translations = Rails.application.config.folio_pages_translations
 == cell('folio/console/form/header', @page, translations: show_translations)
 
 = simple_form_for(@page, as: :page, \

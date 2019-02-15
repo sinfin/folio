@@ -20,22 +20,30 @@ module Folio::PagesControllerBase
   private
 
     def find_page
-      path = params[:path].split('/')
+      if Rails.application.config.folio_pages_ancestry
+        path = params[:path].split('/')
 
-      @page = page_roots.published_or_admin(admin_preview?)
-                        .friendly
-                        .find(path.shift)
-      add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
-
-      path.each do |path_part|
-        children = filter_pages_by_locale(@page.children)
-        @page = children.published_or_admin(admin_preview?)
-                        .friendly
-                        .find(path_part)
+        @page = pages_scope.published_or_admin(admin_preview?)
+                           .friendly
+                           .find(path.shift)
         add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
-      end
 
-      force_correct_path(nested_page_path(@page, add_parents: true))
+        path.each do |path_part|
+          children = filter_pages_by_locale(@page.children)
+          @page = children.published_or_admin(admin_preview?)
+                          .friendly
+                          .find(path_part)
+          add_breadcrumb @page.title, nested_page_path(@page, add_parents: true)
+        end
+
+        force_correct_path(nested_page_path(@page, add_parents: true))
+      else
+        @page = pages_scope.published_or_admin(admin_preview?)
+                           .friendly
+                           .find(params[:id])
+        add_breadcrumb @page.title, url_for(@page)
+        force_correct_path(url_for(@page))
+      end
     end
 
     def add_meta
@@ -47,10 +55,16 @@ module Folio::PagesControllerBase
     end
 
     def filter_pages_by_locale(pages)
-      if Rails.application.config.folio_using_traco
-        pages
-      else
+      if Rails.application.config.folio_pages_translations
         pages.by_locale(I18n.locale)
+      else
+        pages
       end
+    end
+
+    def pages_scope
+      base = Folio::Page
+      base = base.roots if Rails.application.config.folio_pages_ancestry
+      filter_pages_by_locale(base)
     end
 end

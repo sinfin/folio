@@ -12,7 +12,6 @@ module Folio::ApplicationControllerBase
 
     helper_method :current_admin
     helper_method :nested_page_path
-    helper_method :page_roots
 
     before_action do
       @site = Folio::Site.instance
@@ -45,22 +44,16 @@ module Folio::ApplicationControllerBase
   private
 
     def nested_page_path_with_parents(page, params: {})
-      path = [page]
-      while page.parent
-        # TODO: translate?
-        path.unshift page.parent
-        page = page.parent
-      end
-      main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
-    end
-
-    def page_roots
-      @page_roots ||= begin
-        if ::Rails.application.config.folio_using_traco
-          Folio::Page.roots.ordered
-        else
-          Folio::Page.by_locale(I18n.locale).roots.ordered
+      if Rails.application.config.folio_pages_ancestry
+        path = [page]
+        while page.parent
+          # TODO: translate?
+          path.unshift page.parent
+          page = page.parent
         end
+        main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
+      else
+        main_app.page_path(path: page.slug)
       end
     end
 
@@ -86,12 +79,13 @@ module Folio::ApplicationControllerBase
       @public_page_description = og_description || description
     end
 
-    def force_correct_path(correct_path)
+    def force_correct_path(correct_path_or_url)
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.
-      if request.path != correct_path
-        redirect_to(correct_path, status: :moved_permanently)
+      if request.path != correct_path_or_url &&
+         request.url != correct_path_or_url
+        redirect_to(correct_path_or_url, status: :moved_permanently)
       end
     end
 end

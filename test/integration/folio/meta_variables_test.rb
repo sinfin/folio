@@ -9,7 +9,7 @@ class Folio::MetaVariablesTest < ActionDispatch::IntegrationTest
     node = create(:folio_page, title: 'PAGE')
 
     # node without perex
-    visit page_path(path: node.slug, locale: node.locale)
+    visit url_for(node)
 
     title = page.find('title', visible: false)
     assert_equal('PAGE | SITE', title.native.text)
@@ -28,7 +28,7 @@ class Folio::MetaVariablesTest < ActionDispatch::IntegrationTest
 
     # node with perex
     node.update!(perex: 'PAGE DESCRIPTION')
-    visit page_path(path: node.slug, locale: node.locale)
+    visit url_for(node)
 
     description = page.find('meta[name="description"]',
                             visible: false)
@@ -40,7 +40,7 @@ class Folio::MetaVariablesTest < ActionDispatch::IntegrationTest
 
     # page with perex & meta_description
     node.update!(meta_description: 'PAGE META DESCRIPTION')
-    visit page_path(path: node.slug, locale: node.locale)
+    visit url_for(node)
 
     description = page.find('meta[name="description"]',
                             visible: false)

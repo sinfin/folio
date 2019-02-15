@@ -18,10 +18,11 @@
               = f.input :type, collection: collection, \
                                include_blank: false
 
-            .col-sm
-              = f.input :parent_id, collection: Folio::Page.arrange_as_array, \
-                                    label_method: :name_depth, \
-                                    value_method: :id
+            - if Rails.application.config.folio_pages_ancestry
+              .col-sm
+                = f.input :parent_id, collection: Folio::Page.arrange_as_array, \
+                                      label_method: :select_option_depth, \
+                                      value_method: :id
 
           .row
             .col-sm
@@ -57,5 +58,5 @@
   = tab :documents
     = react_documents f.object.document_placements
 
-- destroy = f.object.translation? ? console_page_path(f.object.id) : nil
-= form_footer f, console_pages_path, destroy: destroy
+/ - destroy = f.object.translation? ? console_page_path(f.object.id) : nil
+/ = form_footer f, console_pages_path, destroy: destroy

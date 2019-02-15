@@ -10,19 +10,15 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
 
+  if Rails.application.config.folio_pages_translations
+    include Folio::HasTranslations
+  end
+
+  if Rails.application.config.folio_pages_ancestry
+    include Folio::HasAncestry
+  end
+
   self.table_name = 'folio_pages'
-
-  # Relations
-  has_ancestry touch: true
-
-  belongs_to :original, class_name: 'Folio::Page',
-                        foreign_key: :original_id,
-                        optional: true
-
-  has_many :translations, class_name: 'Folio::Page',
-                          foreign_key: :original_id,
-                          inverse_of: :original,
-                          dependent: :destroy
 
   if Rails.application.config.folio_using_traco
     include Folio::TracoSluggable
@@ -42,43 +38,17 @@ class Folio::Page < Folio::ApplicationRecord
   else
     friendly_id :title, use: %i[slugged history]
 
-    validates :title,
-              presence: true
-
-    validates :locale,
-              presence: true,
-              inclusion: { in: proc { I18n.available_locales.map(&:to_s) } }
-
-    validates :locale,
-              uniqueness: { scope: :original_id },
-              if: :original_id
-
     validates :slug,
               presence: true,
               uniqueness: true
-  end
 
-  validate :validate_allowed_type,
-           if: :has_parent?
-
-  # Callbacks
-  before_save :set_position
-
-  before_validation do
-    if locale.nil?
-      if Folio::Site.exists?
-        self.locale = Folio::Site.instance.locale
-      else
-        self.locale = I18n.locale
-      end
-    end
+    validates :title,
+              presence: true
   end
 
   # Scopes
-  scope :original, -> { where(original_id: nil) }
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }
   scope :featured,  -> { where(featured: true) }
-  scope :by_locale, -> (locale) { where(locale: locale)   }
 
   scope :by_published, -> (state) {
     case state
@@ -124,95 +94,13 @@ class Folio::Page < Folio::ApplicationRecord
                   },
                   ignoring: :accents
 
-  def self.arrange_as_array(options = {}, hash = nil)
-    hash ||= original.arrange(options)
-
-    arr = []
-    hash.each do |page, children|
-      arr << page
-      arr += arrange_as_array(options, children) unless children.empty?
-    end
-    arr
-  end
-
   def to_label
-    self.title
-  end
-
-  def name_depth
-    "#{'&nbsp;' * self.depth} #{self.to_label}".html_safe
+    title
   end
 
   def self.view_name
     'folio/pages/show'
   end
-
-  def self.allowed_child_types
-    nil
-  end
-
-  # TODO
-  def translate(locale)
-    return nil unless persisted?
-    existing = translation(locale)
-    return existing if existing.present?
-
-    translation = dup
-    translation.locale = locale
-    translation.original_id = id
-    translation.published = false
-
-    # Files
-    file_placements.find_each do |fp|
-      translation.file_placements << fp.dup
-    end
-
-    # Atoms
-    atoms.find_each do |atom|
-      atom_translation = atom.dup
-      atom.file_placements.find_each do |fp|
-        atom_translation.file_placements << fp.dup
-      end
-      translation.atoms << atom_translation
-    end
-
-    translation
-  end
-
-  def translate!(locale)
-    ActiveRecord::Base.transaction do
-      translation = translate(locale)
-      translation.save!
-      translation
-    end
-  end
-
-  def translation?
-    original.present?
-  end
-
-  def translation(locale = I18n.locale)
-    translations.find_by(locale: locale)
-  end
-
-  private
-
-    # before_create
-    def set_position
-      if self.position.nil?
-        last = self.siblings.ordered.last
-        self.position = !last.nil? ? last.position + 1 : 0
-      end
-    end
-
-    # custom Validations
-    def validate_allowed_type
-      return if parent.nil? || parent.class.allowed_child_types.nil?
-
-      if parent.class.allowed_child_types.exclude? self.class
-        errors.add(:type, 'is not allowed')
-      end
-    end
 end
 
 # == Schema Information

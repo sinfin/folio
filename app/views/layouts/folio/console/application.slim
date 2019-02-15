@@ -8,16 +8,14 @@ html.f-c-layout-html lang=I18n.locale
   body.f-c-layout-body
     == cell('folio/console/layout/sidebar')
 
-    / = render 'folio/console/partials/auth_links'
-
-
     .f-c-layout-main#f-c-layout-main
       == cell('folio/console/layout/header', rendered_breadcrumbs)
       == cell('folio/console/flash', flash)
 
-      .folio-console-layout-main
+      .container-fluid
         = yield
-        == cell('folio/console/pagination', @pagy)
+
+      == cell('folio/console/pagination', @pagy)
 
     - %w[Folio::Image Folio::Document].each do |klass|
       - [true, false].each do |single|

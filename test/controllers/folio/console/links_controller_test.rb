@@ -12,13 +12,13 @@ class Folio::Console::LinksControllerTest < Folio::Console::BaseControllerTest
 
       page = create(:folio_page, title: 'Foo', slug: 'foo')
       get console_links_path
-      assert_equal([{ 'name' => 'Stránka - Foo', 'url' => '/cs/foo' }],
+      assert_equal([{ 'name' => 'Stránka - Foo', 'url' => '/foo' }],
                    JSON.parse(response.body))
 
       create(:folio_page, title: 'Bar', slug: 'bar')
       get console_links_path
-      assert_equal([{ 'name' => 'Stránka - Bar', 'url' => '/cs/bar' },
-                    { 'name' => 'Stránka - Foo', 'url' => '/cs/foo' }],
+      assert_equal([{ 'name' => 'Stránka - Bar', 'url' => '/bar' },
+                    { 'name' => 'Stránka - Foo', 'url' => '/foo' }],
                    JSON.parse(response.body))
 
       Folio::Console::LinksController.class_eval do
@@ -42,8 +42,8 @@ class Folio::Console::LinksControllerTest < Folio::Console::BaseControllerTest
       get console_links_path
       assert_equal([{ 'name' => 'Homepage', 'url' => '/' },
                     { 'name' => 'Odkaz - Test', 'url' => 'url' },
-                    { 'name' => 'Stránka - Bar', 'url' => '/cs/bar' },
-                    { 'name' => 'Stránka - Foo', 'url' => '/cs/foo' }],
+                    { 'name' => 'Stránka - Bar', 'url' => '/bar' },
+                    { 'name' => 'Stránka - Foo', 'url' => '/foo' }],
                    JSON.parse(response.body))
     end
   end
