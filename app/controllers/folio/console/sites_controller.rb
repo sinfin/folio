@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::SitesController < Folio::Console::BaseController
-  def index
-    redirect_to console_root_path
-  end
+  folio_console_controller_for 'Folio::Site'
 
   def edit
   end

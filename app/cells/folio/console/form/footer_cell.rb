@@ -5,5 +5,6 @@ class Folio::Console::Form::FooterCell < Folio::ConsoleCell
 
   def back_path
     options[:back_path] || controller.url_for([:console, model.object.class])
+  rescue NoMethodError
   end
 end

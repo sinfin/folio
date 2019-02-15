@@ -34,8 +34,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
     before_action do
       @klass = klass
 
-      add_breadcrumb(klass.model_name.human(count: 2),
-                     url_for([:console, klass]))
+      begin
+        add_breadcrumb(klass.model_name.human(count: 2),
+                       url_for([:console, klass]))
+      rescue NoMethodError
+      end
     end
   end
 
