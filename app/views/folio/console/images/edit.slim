@@ -1,36 +1,32 @@
-h1.d-flex.justify-content-between.align-items-center
-  = @file.file_name.presence || @file.class.model_name.human
-  = delete_button(@file, console_image_path(@file), text: true)
+= simple_form_for([:console, @file]) do |f|
+  = form_header f, destroy: true
 
-= simple_form_for(@file, as: :file, \
-                         url: console_image_path(@file.id)) do |f|
-  fieldset
-    .row
-      .col
-        = image_tag f.object.file.thumb('500x500').url
+  .row
+    .col
+      = image_tag f.object.file.thumb('500x500').url
 
-        br
-        br
+      br
+      br
 
-        = link_to f.object.file.url, target: '_blank', download: true
-          i.fa.fa-download<>
-          = t('.download_original')
+      = link_to f.object.file.url, target: '_blank', download: true
+        i.fa.fa-download<>
+        = t('.download_original')
 
-      .col
-        = f.input :file, as: :file, \
-                         hint: t('.file_hint'), \
-                         input_html: { class: 'form-control' }
+    .col
+      = f.input :file, as: :file, \
+                       hint: t('.file_hint'), \
+                       input_html: { class: 'form-control' }
 
-        == cell('folio/console/tagsinput', f)
+      == cell('folio/console/tagsinput', f)
 
-        h2 = f.object.class.human_attribute_name(:thumbnail_sizes)
+      h2 = f.object.class.human_attribute_name(:thumbnail_sizes)
 
-        ul
-          - f.object.thumbnail_sizes.each do |key, size|
-            li
-              a href=size[:url] target='_blank'
-                = key
+      ul
+        - f.object.thumbnail_sizes.each do |key, size|
+          li
+            a href=size[:url] target='_blank'
+              = key
 
-        == cell('folio/console/file_placement_list', f.object)
+      == cell('folio/console/file_placement_list', f.object)
 
   = form_footer f

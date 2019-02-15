@@ -1,4 +1,6 @@
-= render 'detail_heading', menu: @menu, action: :edit
-
 = simple_form_for([:console, @menu]) do |f|
+  = form_header f, right: link_to(t('.header_link'), \
+                                  url_for([:console, f.object]), \
+                                  class: 'btn btn-outline')
+
   = render 'form', f: f

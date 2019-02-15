@@ -1,4 +1,6 @@
-= render 'detail_heading', menu: @menu, action: :show
+= form_header @menu, right: link_to(t('.header_link'), \
+                                    url_for([:edit, :console, @menu]), \
+                                    class: 'btn btn-outline')
 
 h2 = t('.title')
 

@@ -76,15 +76,15 @@ cs:
         error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
         success: Stromová struktura upravena
       menus:
-        detail_heading:
-          edit_link: Upravit odkazy
-          show_link: Upravit stromovou strukturu
+        edit:
+          header_link: Upravit stromovou strukturu
         form:
           add_menu_item: Přidat odkaz
         menu_item_fields:
           title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
         show:
           title: Stromová struktura
+          header_link: Upravit odkazy
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

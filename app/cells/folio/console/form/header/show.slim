@@ -1,10 +1,18 @@
 .f-c-form-header
   h1.f-c-form-header__title
-    - if model.new_record?
-      = model.class.model_name.human
+    - if record.new_record?
+      = record.class.model_name.human
     - else
-      = model.to_label
+      = record.to_label
 
   - if options[:translations]
     .f-c-form-header__right
       == translations
+
+  - elsif options[:destroy]
+    .f-c-form-header__right
+      == cell('folio/console/destroy_button', record)
+
+  - elsif options[:right]
+    .f-c-form-header__right
+      = options[:right]

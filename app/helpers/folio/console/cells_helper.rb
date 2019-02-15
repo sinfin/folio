@@ -35,6 +35,10 @@ module Folio
                                                   as: as).show.html_safe
     end
 
+    def form_header(f, opts = {})
+      cell('folio/console/form/header', f, opts).show.html_safe
+    end
+
     def form_footer(f)
       cell('folio/console/form/footer', f).show.html_safe
     end
