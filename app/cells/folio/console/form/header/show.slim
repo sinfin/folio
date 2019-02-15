@@ -1,6 +1,10 @@
-.folio-console-form-header
-  h1 = title
+.f-c-form-header
+  h1.f-c-form-header__title
+    - if model.new_record?
+      = model.class.model_name.human
+    - else
+      = model.to_label
 
   - if options[:translations]
-    .folio-console-form-header-right
+    .f-c-form-header__right
       == translations

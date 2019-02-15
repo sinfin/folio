@@ -5,6 +5,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
+  before_action :filter_resource_by_params, only: [:index]
   # TODO: before_action :authorize_account!
 
   layout 'folio/console/application'
@@ -132,6 +133,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
         end
 
         obj
+      end
+    end
+
+    def filter_resource_by_params
+      name = "@#{params[:controller].split('/').last}".to_sym
+      if filter_params.present? &&
+         instance_variable_get(name).respond_to?(:filter_by_params)
+        filtered = instance_variable_get(name).filter_by_params(filter_params)
+        instance_variable_set(name, filtered)
       end
     end
 end

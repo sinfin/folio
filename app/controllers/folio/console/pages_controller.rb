@@ -4,26 +4,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Page'
 
   def index
-    if params[:by_query].present?
-      @pages = @pages.by_query(params[:by_query])
-    else
-      @pages = @pages.ordered
-    end
-
-    # if misc_filtering?
-    #   if params[:by_parent].present?
-    #     parent = Folio::Page.find(params[:by_parent])
-    #     @pages = parent.subtree
-    #                    .filter_by_params(filter_params)
-    #                    .arrange(order: 'position asc, created_at asc')
-    #   else
-    #     pages = Folio::Page.filter_by_params(filter_params)
-    #     @pagy, @pages = pagy(pages)
-    #   end
-    # else
-    #   @limit = self.class.index_children_limit
-    #   @pages = Folio::Page.arrange(order: 'position asc, created_at asc')
-    # end
+    @pages = @pages.ordered
   end
 
   def create

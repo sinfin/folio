@@ -3,6 +3,7 @@ en:
   activerecord:
     attributes:
       folio/account:
+        full_name: Name
         role: Role
       folio/atom/base:
         content: Content

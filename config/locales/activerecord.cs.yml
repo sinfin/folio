@@ -3,6 +3,7 @@ cs:
   activerecord:
     attributes:
       folio/account:
+        full_name: Jméno
         role: Uživatelská role
       folio/atom/base:
         content: Obsah

@@ -1,8 +1,20 @@
-= f.input :is_active
+== cell('folio/console/form/header', @account)
+
+.row
+  .col-sm
+    = f.input :email
+  .col-sm
+    = f.input :password
+
 = f.input :role, collection: Folio::Account::ROLES
-= f.input :email
-= f.input :password
-= f.input :first_name
-= f.input :last_name
+
+.row
+  .col-sm
+    = f.input :first_name
+  .col-sm
+    = f.input :last_name
+
+- is_active = @account.is_active.nil? ? true : @account.is_active
+= f.input :is_active, input_html: { value: is_active }
 
 = form_footer f
