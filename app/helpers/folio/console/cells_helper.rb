@@ -35,9 +35,8 @@ module Folio
                                                   as: as).show.html_safe
     end
 
-    def form_footer(f, back_path = nil, destroy: nil)
-      cell('folio/console/form_footer', f, back_path: back_path,
-                                           destroy: destroy).show.html_safe
+    def form_footer(f)
+      cell('folio/console/form/footer', f).show.html_safe
     end
   end
 end

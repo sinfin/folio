@@ -1,0 +1,9 @@
+.f-c-anti-container-fluid class=class_name
+  .container-fluid
+    = link_to back_path, class: 'btn btn-outline mr-2 f-c-form-footer__btn'
+      i.fa.fa-undo
+      = t('folio.console.actions.cancel')
+
+    = model.button :submit, \
+                   t('folio.console.actions.submit'), \
+                   class: 'f-c-form-footer__btn'

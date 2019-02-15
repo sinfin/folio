@@ -4,6 +4,7 @@ en:
     console:
       actions:
         back: Back
+        cancel: Cancel
         destroy: Destroy
         edit: Edit
         preview: Preview
@@ -14,6 +15,7 @@ en:
       base:
         atoms:
           add: Add chapter
+          title: Content
       breadcrumbs:
         actions:
           add: Add
@@ -27,7 +29,6 @@ en:
           unhandle: Set as not handled
         root: Console
         searches: Search
-      cancel: Cancel
       confirmation: Are you sure?
       create: Create
       delete: Remove
@@ -43,9 +44,6 @@ en:
       finalizing: Finalizing
       footer:
         text: Administration console for %{site_name}.
-      form_footer:
-        back: Back
-        submit: Submit
       gallery_management: Gallery management
       images:
         edit:

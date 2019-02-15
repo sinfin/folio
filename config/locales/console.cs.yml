@@ -4,6 +4,7 @@ cs:
     console:
       actions:
         back: Zpět
+        cancel: Zrušit
         destroy: Smazat
         edit: Upravit
         preview: Náhled
@@ -14,6 +15,7 @@ cs:
       base:
         atoms:
           add: Přidat kapitolu
+          title: Obsah
       breadcrumbs:
         actions:
           add: Přidat
@@ -27,7 +29,6 @@ cs:
           unhandle: Označit za nevyřízené
         root: Administrace
         searches: Vyhledávání
-      cancel: Zrušit
       confirmation: Určitě?
       create: Vytvořit
       delete: Smazat
@@ -43,9 +44,6 @@ cs:
       finalizing: Dokončuji
       footer:
         text: Administrace webu %{site_name}.
-      form_footer:
-        back: Zpět
-        submit: Uložit
       gallery_management: Správa galerie
       images:
         edit:

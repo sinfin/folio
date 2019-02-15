@@ -1,62 +1,52 @@
-= tabs [:content, :gallery, :documents]
+= tabs [:content]
 
 = f.error_notification
 
 .tab-content
   = tab :content
-    fieldset
-      .row
-        .col-auto.order-sm-2
-          = react_picker(f, :cover_placement)
+    .row
+      .col-md-auto
+        = react_picker(f, :cover_placement)
 
-        .col-sm.order-sm-1
+      .col-md
+        == translated_inputs f, :title
+        == translated_inputs f, :slug
+
+        - collection = Folio::Page.recursive_subclasses_for_select
+        = f.input :type, collection: collection, \
+                         include_blank: false
+
+        - if Rails.application.config.folio_pages_translations || \
+             Rails.application.config.folio_pages_ancestry
           .row
-            .col-sm-1
-              = f.input :locale, disabled: true
-            .col-sm
-              - collection = Folio::Page.recursive_subclasses_for_select
-              = f.input :type, collection: collection, \
-                               include_blank: false
+            - if Rails.application.config.folio_pages_translations
+              .col
+                = f.input :locale, disabled: true
 
             - if Rails.application.config.folio_pages_ancestry
-              .col-sm
+              .col
                 = f.input :parent_id, collection: Folio::Page.arrange_as_array, \
                                       label_method: :select_option_depth, \
                                       value_method: :id
 
-          .row
-            .col-sm
-              == translated_inputs f, :title
-            .col-sm
-              == translated_inputs f, :slug
+    == translated_inputs f, :perex
 
-      == translated_inputs f, :perex
+    = console_form_atoms f
 
-      = console_form_atoms f
+    .row
+      .col
+        h2 = t('.settings')
 
-      hr
+        = f.input :featured
+        = f.input :published
+        / FIXME: Wrapped time fields and hidden hint text.
+        = f.input :published_at
 
-      .row
-        .col
-          label = t('.settings')
+      .col
+        h2 = t('.meta')
 
-          = f.input :featured
-          = f.input :published
-          / FIXME: Wrapped time fields and hidden hint text.
-          = f.input :published_at
+        == cell('folio/console/tagsinput', f)
+        = translated_inputs f, :meta_title
+        = translated_inputs f, :meta_description
 
-        .col
-          label = t('.meta')
-
-          == cell('folio/console/tagsinput', f)
-          = translated_inputs f, :meta_title
-          = translated_inputs f, :meta_description
-
-  = tab :gallery
-    = react_images f.object.image_placements
-
-  = tab :documents
-    = react_documents f.object.document_placements
-
-/ - destroy = f.object.translation? ? console_page_path(f.object.id) : nil
-/ = form_footer f, console_pages_path, destroy: destroy
+= form_footer f
