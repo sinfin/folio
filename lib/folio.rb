@@ -48,4 +48,8 @@ module Folio
 
   EMAIL_REGEXP = /[^@]+@[^@]+/
   OG_IMAGE_DIMENSIONS = '1200x630#'
+
+  def self.table_name_prefix
+    'folio_'
+  end
 end

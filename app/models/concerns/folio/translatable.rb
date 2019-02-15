@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module Folio::HasTranslations
+module Folio::Translatable
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :original, class_name: 'Folio::Page',
+    belongs_to :original, class_name: self.name,
                           foreign_key: :original_id,
                           optional: true
 
-    has_many :translations, class_name: 'Folio::Page',
+    has_many :translations, class_name: self.name,
                             foreign_key: :original_id,
                             inverse_of: :original,
                             dependent: :destroy

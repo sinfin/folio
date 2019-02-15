@@ -9,9 +9,9 @@
   = f.input :locale, collection: @site.locales, include_blank: false
 
 - else
-  h2 = Folio::MenuItem.model_name.human(count: 2)
-
   fieldset#menu_items
+    h4 = Folio::MenuItem.model_name.human(count: 2)
+
     = f.simple_fields_for :menu_items do |menu_item|
       = render 'menu_item_fields', f: menu_item, menu: f.object
 
@@ -22,4 +22,4 @@
                                 class: 'btn btn-success', \
                                 render_options: { locals: { menu: f.object } }
 
-= form_footer f, console_menus_path
+= form_footer f

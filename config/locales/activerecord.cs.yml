@@ -16,7 +16,8 @@ cs:
         note: Zpráva
       folio/menu:
         locale: Jazyková verze
-        type: Název nabídky
+        type: Druh menu
+        menu_items: Odkazy
       folio/menu_item:
         target: Odkaz
         type: Druh

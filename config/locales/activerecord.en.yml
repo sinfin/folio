@@ -17,6 +17,7 @@ en:
       folio/menu:
         locale: Version
         type: Type
+        menu_items: Links
       folio/menu_item:
         target: Link
         type: Type

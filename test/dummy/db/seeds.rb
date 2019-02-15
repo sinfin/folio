@@ -40,10 +40,10 @@ about.cover = unsplash_pic
 reference = Folio::Page.create!(title: 'Reference',
                                 published: true,
                                 published_at: 1.day.ago)
-Folio::Page.create!(title: 'Smart Cities', parent: reference, published: true)
-Folio::Page.create!(title: 'Vyvolej.to', parent: reference, published: true)
-Folio::Page.create!(title: 'Hidden', parent: reference, published: false)
-Folio::Page.create!(title: 'DAM', parent: reference, published: true)
+Folio::Page.create!(title: 'Smart Cities', published: true)
+Folio::Page.create!(title: 'Vyvolej.to', published: true)
+Folio::Page.create!(title: 'Hidden', published: false)
+Folio::Page.create!(title: 'DAM', published: true)
 
 menu = Folio::Menu::Page.create!(locale: :cs)
 
@@ -63,7 +63,7 @@ Folio::Account.create!(email: 'test@test.test',
                        first_name: 'Test',
                        last_name: 'Dummy')
 
-nestable_menu = Menu::Nestable.create!(locale: :cs)
+nestable_menu = Dummy::Menu::Nestable.create!(locale: :cs)
 Folio::MenuItem.create!(menu: nestable_menu,
                         title: 'Reference',
                         target: reference,
@@ -76,10 +76,6 @@ wrap = Folio::MenuItem.create!(menu: nestable_menu,
                           target: target,
                           parent: wrap)
 end
-
-about_en = about.translate!(:en)
-about_en.update(title: 'About', published: true)
-about.translate!(:de)
 
 Folio::Lead.create!(name: 'Test lead',
                     email: 'test@lead.test',

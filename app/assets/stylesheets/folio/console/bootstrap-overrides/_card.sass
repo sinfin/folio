@@ -1,0 +1,20 @@
+.card
+  margin-bottom: $grid-gutter-half
+
+  .card-body
+    position: relative
+    z-index: 1
+
+  .list-group
+    position: relative
+    z-index: 2
+
+  &--highlighted
+    border: 0
+
+    .card-header
+      background: $success
+      color: white
+
+    .card-body
+      background: rgba($success, 0.2)

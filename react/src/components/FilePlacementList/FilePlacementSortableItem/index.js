@@ -129,7 +129,7 @@ class FilePlacement extends React.Component {
         />
 
         <div className='folio-console-file-placement__handle'>
-          <i className='fa fa-arrows' />
+          <i className='fa fa-arrows-alt' />
         </div>
       </div>
     )

@@ -18,10 +18,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def index
-    redirect_to console_dashboard_path
-  end
-
   def self.folio_console_controller_for(class_name)
     klass = class_name.safe_constantize
 

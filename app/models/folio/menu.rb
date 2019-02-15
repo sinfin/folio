@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Menu < Folio::ApplicationRecord
+  extend Folio::InheritenceBaseNaming
+
   # Relations
   has_many :menu_items, -> { ordered }, dependent: :destroy
   accepts_nested_attributes_for :menu_items, allow_destroy: true,

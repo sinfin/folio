@@ -11,7 +11,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Publishable::WithDate
 
   if Rails.application.config.folio_pages_translations
-    include Folio::HasTranslations
+    include Folio::Translatable
   end
 
   if Rails.application.config.folio_pages_ancestry

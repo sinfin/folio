@@ -3,6 +3,7 @@ en:
   folio:
     console:
       actions:
+        arrange: Arrange
         back: Back
         cancel: Cancel
         destroy: Destroy

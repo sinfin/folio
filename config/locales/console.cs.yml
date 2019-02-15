@@ -3,6 +3,7 @@ cs:
   folio:
     console:
       actions:
+        arrange: Upravit strukturu
         back: Zpět
         cancel: Zrušit
         destroy: Smazat

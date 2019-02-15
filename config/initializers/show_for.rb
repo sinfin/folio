@@ -74,11 +74,11 @@ class ShowFor::Builder
     end
   end
 
-  def edit_link(attr, &block)
+  def edit_link(attr = nil, &block)
     resource_link(attr, [:edit, :console, object], &block)
   end
 
-  def show_link(attr, &block)
+  def show_link(attr = nil, &block)
     resource_link(attr, [:console, object], &block)
   end
 
@@ -103,7 +103,14 @@ class ShowFor::Builder
     def resource_link(attr, url_for_args)
       attribute(attr) do
         if object.persisted?
-          content = block_given? ? yield(object) : object.public_send(attr)
+          if block_given?
+            content = yield(object)
+          elsif attr == :type
+            content = object.class.model_name.human
+          else
+            content = object.public_send(attr)
+          end
+
           url = template.url_for(url_for_args)
           template.link_to(content, url)
         end
