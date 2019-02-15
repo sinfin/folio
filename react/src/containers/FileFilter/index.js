@@ -95,11 +95,9 @@ class FileFilter extends Component {
           <div className='form-group form-group--reset'>
             <button
               type='button'
-              className='btn btn-danger'
+              className='btn btn-danger fa fa-times'
               onClick={this.onReset}
-            >
-              <i className='fa fa-times'></i>
-            </button>
+            />
           </div>
         )}
 

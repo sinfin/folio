@@ -41,12 +41,10 @@ class UploadTagger extends React.PureComponent {
         />
 
         <button
-          className='btn btn-success'
+          className='btn btn-success fa fa-check'
           type="button"
           onClick={this.setUploadTags}
-        >
-          <i className='fa fa-check' />
-        </button>
+        />
       </Wrap>
     )
   }

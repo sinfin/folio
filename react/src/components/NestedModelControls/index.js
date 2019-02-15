@@ -25,12 +25,10 @@ const NestedModelControls = ({ moveUp, moveDown, remove }) => (
     )}
 
     <button
-     className='btn btn-danger'
+     className='btn btn-danger fa fa-times'
      type='button'
      onClick={makeConfirmed(remove)}
-    >
-      <i className='fa fa-remove' />
-    </button>
+    />
   </div>
 )
 
