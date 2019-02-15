@@ -22,6 +22,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: 'eye',
         button: 'light',
         target: '_blank',
+        url: controller.main_app.url_for(model),
       },
     }
   end

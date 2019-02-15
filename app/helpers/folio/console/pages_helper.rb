@@ -18,14 +18,6 @@ module Folio::Console::PagesHelper
     )
   end
 
-  def page_preview_button(page, opts = {})
-    path = nested_page_path(page, add_parents: true)
-    custom_icon_button(path,
-                       'eye',
-                       title: t('folio.console.pages.page_row.preview'),
-                       target: :_blank)
-  end
-
   def arrange_pages_with_limit(pages, limit)
     arranged = ActiveSupport::OrderedHash.new
     min_depth = Float::INFINITY

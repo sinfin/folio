@@ -11,7 +11,6 @@ module Folio::ApplicationControllerBase
     layout 'folio/application'
 
     helper_method :current_admin
-    helper_method :nested_page_path
 
     before_action do
       @site = Folio::Site.instance
@@ -23,38 +22,28 @@ module Folio::ApplicationControllerBase
     current_account
   end
 
-  def nested_page_path(page_or_parts, add_parents: true, params: {})
-    return nil unless main_app.respond_to?(:page_path)
-
-    if add_parents
-      nested_page_path_with_parents(page_or_parts, params: params)
+  def url_for(options = nil)
+    if Rails.application.config.folio_pages_ancestry &&
+       options &&
+       options.is_a?(Folio::Page)
+      nested_page_path(options)
     else
-      if page_or_parts.respond_to?(:slug)
-        path = page_or_parts.slug
-      elsif page_or_parts.is_a?(Array)
-        path = page_or_parts.map(&:slug).join('/')
-      else
-        fail 'Unknown nested_page_path target'
-      end
-
-      main_app.page_path(params.merge(path: path))
+      super(options)
     end
   end
 
   private
 
-    def nested_page_path_with_parents(page, params: {})
-      if Rails.application.config.folio_pages_ancestry
-        path = [page]
-        while page.parent
-          # TODO: translate?
-          path.unshift page.parent
-          page = page.parent
-        end
-        main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
-      else
-        main_app.page_path(path: page.slug)
+    def nested_page_path(page)
+      return nil unless main_app.respond_to?(:page_path)
+
+      path = [page]
+      while page.parent
+        # TODO: translate?
+        path.unshift page.parent
+        page = page.parent
       end
+      main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
     end
 
     def set_meta_variables(instance, mappings = {})
