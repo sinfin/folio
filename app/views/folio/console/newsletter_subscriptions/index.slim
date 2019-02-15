@@ -1,13 +1,7 @@
-== cell('folio/console/index/header', Folio::NewsletterSubscription)
+= index_header
 
-.folio-console-index-table
-  table
-    thead
-      tr
-        th
-          = Folio::NewsletterSubscription.human_attribute_name(:email)
-        th colspan=2
-          = Folio::NewsletterSubscription.human_attribute_name(:created_at)
-
-    tbody
-      = render partial: "newsletter_subscription", collection: @subscriptions
+= index_show_for(@newsletter_subscriptions) do |s|
+  = s.email(:email)
+  = s.attribute(:created_at)
+  = s.visit
+  = s.actions :destroy

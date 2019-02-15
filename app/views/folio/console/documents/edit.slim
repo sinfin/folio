@@ -1,4 +1,6 @@
-h1 = @file.file_name.presence || @file.class.model_name.human
+h1.d-flex.justify-content-between.align-items-center
+  = @file.file_name.presence || @file.class.model_name.human
+  = delete_button(@file, console_document_path(@file), text: true)
 
 = simple_form_for(@file, as: :file, \
                          url: console_document_path(@file.id)) do |f|
@@ -19,7 +21,5 @@ h1 = @file.file_name.presence || @file.class.model_name.human
         == cell('folio/console/tagsinput', f)
 
         == cell('folio/console/file_placement_list', f.object)
-
-  = delete_button(@file, console_document_path(@file), text: true)
 
   = form_footer f

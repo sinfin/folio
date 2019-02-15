@@ -117,6 +117,8 @@ GEM
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
+    binding_of_caller (0.8.0)
+      debug_inspector (>= 0.0.1)
     breadcrumbs_on_rails (3.0.1)
     browser (2.5.3)
     builder (3.2.3)
@@ -163,6 +165,7 @@ GEM
       sixarm_ruby_unaccent (~> 1.1)
       unicode_utils (~> 1.4)
     crass (1.0.4)
+    debug_inspector (0.0.3)
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
@@ -459,6 +462,7 @@ PLATFORMS
 DEPENDENCIES
   annotate
   better_errors
+  binding_of_caller
   byebug
   capybara (~> 2.13)
   devise-i18n

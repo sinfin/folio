@@ -22,7 +22,7 @@ cs:
         target: Odkaz
         type: Druh
       folio/newsletter_subscription:
-        created_at: Zapsána dne
+        created_at: Zapsáno dne
         email: E-mailová adresa
       folio/page:
         parent_id: Nadřazená stránka
@@ -155,3 +155,4 @@ cs:
     tag_list: Klíčová slova
     title: Název
     url: URL
+    visit: Návštěva

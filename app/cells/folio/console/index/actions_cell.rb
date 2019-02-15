@@ -5,17 +5,23 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     @default_actions ||= {
       destroy: {
         name: :destroy,
-        icon: 'times',
+        icon: 'trash-alt',
         button: 'danger',
-        url: controller.url_for([:console, model]),
         method: :delete,
         confirm: true,
+        url: begin
+               controller.url_for([:console, model])
+             rescue StandardError
+             end
       },
       edit: {
         name: :edit,
         icon: 'edit',
         button: 'secondary',
-        url: controller.url_for([:edit, :console, model]),
+        url: begin
+               controller.url_for([:edit, :console, model])
+             rescue StandardError
+             end
       },
       preview: {
         name: :preview,

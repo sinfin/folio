@@ -10,6 +10,10 @@
   background: $gray-800
   color: $white
 
+.f-c-layout-main-container
+  padding-top: $spacer
+  padding-bottom: $spacer
+
 +mq-desktop-menu
   .f-c-layout-html
     overflow: hidden
@@ -28,6 +32,17 @@
   .f-c-layout-main
     height: 100%
     flex: 1 1 auto
+    display: flex
+    flex-direction: column
+
+  .f-c-layout-header,
+  .f-c-flash-wrap
+    flex: 0 0 auto
+
+  .f-c-layout-main-container
+    flex: 1 1 auto
+    overflow-y: scroll
+    -webkit-overflow-scrolling: touch
 
 +mq-mobile-menu
   .f-c-layout-html

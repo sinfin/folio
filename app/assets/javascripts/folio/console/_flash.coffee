@@ -8,7 +8,7 @@ window.FolioConsole.flash = (msg, type = 'success') ->
     className = 'alert-danger'
     icon = 'fa fa-mr fa-times-circle'
 
-  $('.folio-console-flash-wrap').append("""
+  $('.f-c-flash-wrap').append("""
     <div class="alert alert-dismissible fade show #{className}" role="alert">
       <button class="close" data-dismiss="alert"><span>&times;</span></button>
       <i class="#{icon}"></i>
@@ -17,4 +17,4 @@ window.FolioConsole.flash = (msg, type = 'success') ->
   """)
 
 window.FolioConsole.clearFlashes = ->
-  $('.folio-console-flash-wrap').html('')
+  $('.f-c-flash-wrap').html('')

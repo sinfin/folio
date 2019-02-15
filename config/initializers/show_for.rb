@@ -74,6 +74,14 @@ class ShowFor::Builder
     end
   end
 
+  def email(attr)
+    attribute(attr) do
+      if object.persisted?
+        template.mail_to(object.public_send(attr), nil)
+      end
+    end
+  end
+
   def edit_link(attr = nil, &block)
     resource_link(attr, [:edit, :console, object], &block)
   end
@@ -85,6 +93,17 @@ class ShowFor::Builder
   def locale_flag
     attribute(:locale) do
       template.country_flag(object.locale) if object.locale
+    end
+  end
+
+  def visit
+    attribute(:visit) do
+      if object.persisted?
+        if object.visit.present?
+          template.link_to(object.visit.to_label,
+                           template.url_for([:console, object.visit]))
+        end
+      end
     end
   end
 

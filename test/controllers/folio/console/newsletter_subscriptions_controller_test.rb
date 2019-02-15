@@ -2,13 +2,11 @@
 
 require 'test_helper'
 
-module Folio
-  class Console::NewsletterSubscriptionsControllerTest < Console::BaseControllerTest
-    include Engine.routes.url_helpers
+class Folio::Console::NewsletterSubscriptionsControllerTest < Folio::Console::BaseControllerTest
+  include Folio::Engine.routes.url_helpers
 
-    test 'should get index' do
-      get console_newsletter_subscriptions_url
-      assert_response :success
-    end
+  test 'index' do
+    get url_for([:console, Folio::NewsletterSubscription])
+    assert_response :success
   end
 end

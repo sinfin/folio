@@ -6,5 +6,5 @@ export function flashError (message) {
     <i class="fa fa-mr fa-times-circle"></i>
     ${message}
   `
-  document.querySelector('.folio-console-flash-wrap').appendChild(alert)
+  document.querySelector('.f-c-flash-wrap').appendChild(alert)
 }
