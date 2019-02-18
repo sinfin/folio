@@ -67,9 +67,8 @@ en:
       folio/atom:
         one: Atom
         other: Atoms
-      folio/atom/text:
-        one: Text
-        other: Texts
+      folio/atom/text: Text
+      folio/atom/title: Title
       folio/document:
         one: Document
         other: Documents
