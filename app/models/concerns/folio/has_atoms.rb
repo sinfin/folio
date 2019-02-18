@@ -25,6 +25,14 @@ module Folio::HasAtoms
         [I18n.default_locale]
       end
     end
+
+    def atom_multisearchable_keys
+      h = {}
+      atom_locales.each do |locale|
+        h["#{locale}_atoms".to_sym] = %i[title perex content]
+      end
+      h
+    end
   end
 
   def atoms(locale = I18n.locale)
@@ -36,6 +44,6 @@ module Folio::HasAtoms
   end
 
   def atom_contents
-    atoms.map { |a| [a.title, a.perex, a.content] }.flatten.compact.join(' ')
+    atoms.map { |a| [a.title, a.perex, a.content] }.flatten.compact.join(" \n ")
   end
 end

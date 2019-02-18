@@ -23,14 +23,20 @@ class AddAtomLocale < ActiveRecord::Migration[5.2]
         end
 
         (I18n.available_locales - [I18n.default_locale]).each do |locale|
-          remove_column :folio_atoms, "title_#{locale}", :string
-          remove_column :folio_atoms, "perex_#{locale}", :text
-          remove_column :folio_atoms, "content_#{locale}", :text
+          %i[title perex content].each do |field|
+            column = "#{field}_#{locale}".to_sym
+            if column_exists?(:folio_atoms, column)
+              remove_column :folio_atoms, column
+            end
+          end
         end
 
-        rename_column :folio_atoms, "title_#{I18n.default_locale}", :title
-        rename_column :folio_atoms, "perex_#{I18n.default_locale}", :perex
-        rename_column :folio_atoms, "content_#{I18n.default_locale}", :content
+        %i[title perex content].each do |field|
+          column = "#{field}_#{I18n.default_locale}".to_sym
+          if column_exists?(:folio_atoms, column)
+            rename_column :folio_atoms, column, field
+          end
+        end
       end
     end
   end

@@ -60,12 +60,12 @@ $(document)
   .on 'change', '.folio-console-atom-model-select', ->
     window.folioConsoleAtom.atomModelContentPrefill($(this))
 
-  .on 'focus', '.folio-console-atom-form-fields .form-control', ->
-    $wrap = $(this).closest('.folio-console-atom-form-fields')
-    $wrap.addClass('folio-console-atom-form-fields--focused')
+  .on 'focus', '.f-c-atom-form-fields .form-control', ->
+    $wrap = $(this).closest('.f-c-atom-form-fields')
+    $wrap.addClass('f-c-atom-form-fields--focused')
 
-  .on 'blur', '.folio-console-atom-form-fields .form-control', ->
-    $wrap = $(this).closest('.folio-console-atom-form-fields')
-    $wrap.removeClass('folio-console-atom-form-fields--focused')
+  .on 'blur', '.f-c-atom-form-fields .form-control', ->
+    $wrap = $(this).closest('.f-c-atom-form-fields')
+    $wrap.removeClass('f-c-atom-form-fields--focused')
 
 $('.folio-console-atom-type-select').each -> atomFormBySelect($(this))

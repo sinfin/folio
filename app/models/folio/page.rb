@@ -84,10 +84,9 @@ class Folio::Page < Folio::ApplicationRecord
                       }
                     end
                   end,
-                  associated_against: {
-                    atoms: %i[title perex content],
+                  associated_against: atom_multisearchable_keys.merge(
                     file_placements: %i[title alt],
-                  },
+                  ),
                   ignoring: :accents
 
   def to_label
