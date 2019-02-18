@@ -19,6 +19,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
 
   def destroy
     @page.destroy
+    require 'pry'; binding.pry
     respond_with @page, location: { action: :index }
   end
 

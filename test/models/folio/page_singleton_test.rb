@@ -35,6 +35,17 @@ class Folio::PageSingletonTest < ActiveSupport::TestCase
       SecondSingleton.create!(title: 'bax')
     end
   end
+
+  test 'cannot be destroyed' do
+    assert FirstSingleton.create!(title: 'foo')
+    assert_raises(ActiveRecord::RecordNotDestroyed) do
+      FirstSingleton.instance.destroy!
+    end
+
+    page = FirstSingleton.instance
+    page.force_destroy = true
+    assert page.destroy!
+  end
 end
 
 # == Schema Information

@@ -30,10 +30,6 @@ class Folio::Page < Folio::ApplicationRecord
     I18n.available_locales.each do |locale|
       validates "title_#{locale}".to_sym,
                 presence: true
-
-      validates "slug_#{locale}".to_sym,
-                presence: true,
-                uniqueness: true
     end
   else
     friendly_id :title, use: %i[slugged history]

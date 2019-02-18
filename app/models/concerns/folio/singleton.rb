@@ -2,6 +2,7 @@
 
 module Folio::Singleton
   extend ActiveSupport::Concern
+  include Folio::Indestructible
 
   class MissingError < ActiveRecord::RecordNotFound; end
 
@@ -17,10 +18,10 @@ module Folio::Singleton
     def fail_on_missing_instance
       fail(MissingError, self.to_s)
     end
-  end
 
-  def singleton?
-    true
+    def singleton?
+      true
+    end
   end
 
   private

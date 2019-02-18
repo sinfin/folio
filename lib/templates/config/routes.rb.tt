@@ -11,6 +11,6 @@ Rails.application.routes.draw do
   get '/500', to: 'errors#page500', via: :all
 
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
-    get '/*path', to: 'pages#show', as: 'page'
+    resources :pages, only: [:show], path: ''
   end
 end

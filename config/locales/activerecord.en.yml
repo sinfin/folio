@@ -49,6 +49,8 @@ en:
         utm_source: UTM source
         utm_term: UTM term
     errors:
+      messages:
+        indestructible: The record cannot be removed.
       models:
         folio/lead:
           attributes:

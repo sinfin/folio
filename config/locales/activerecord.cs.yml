@@ -49,6 +49,8 @@ cs:
         utm_source: UTM source
         utm_term: UTM term
     errors:
+      messages:
+        indestructible: Záznam není možné odstranit.
       models:
         folio/lead:
           attributes:

@@ -2,6 +2,8 @@
 
 class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   def default_actions
+    locale = model.try(:locale) || I18n.default_locale
+
     @default_actions ||= {
       destroy: {
         name: :destroy,
@@ -29,8 +31,8 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         button: 'light',
         target: '_blank',
         url: begin
-               controller.main_app.url_for(model)
-             rescue StandardError
+               controller.main_app.url_for([model, locale: locale])
+              rescue
              end
       },
       arrange: {
@@ -45,6 +47,10 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   def actions
     acts = []
     with_default = (options[:actions].presence || %i[edit destroy])
+
+    if with_default.include?(:destroy) && model.class.try(:indestructible?)
+      with_default = with_default.without(:destroy)
+    end
 
     sort_array_hashes_first(with_default).map do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
@@ -72,8 +78,11 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         'data-confirm': confirmation,
       }
 
-      link_to('', action[:url], opts)
-    end
+      begin
+        link_to('', action[:url], opts)
+      rescue ActionController::UrlGenerationError
+      end
+    end.compact
   end
 
   def sort_array_hashes_first(ary)
