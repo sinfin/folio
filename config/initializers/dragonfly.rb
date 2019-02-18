@@ -73,7 +73,7 @@ Dragonfly.app.configure do
 
   if Rails.env.test? || (Rails.env.development? && !ENV['DEV_S3_DRAGONFLY'])
     datastore :file,
-              root_path: Rails.root.join('public/system/dragonfly', Rails.env),
+              root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
               server_root: Rails.root.join('public')
   else
     datastore :s3,
