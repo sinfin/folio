@@ -11,11 +11,13 @@ def create_atom(klass = Folio::Atom::Text,
                 cover: nil,
                 images: nil,
                 document: nil,
-                documents: nil)
+                documents: nil,
+                locale: I18n.locale)
 
   attrs = {
     type: klass.to_s,
     position: position,
+    locale: locale,
     placement: placement || create(:folio_page),
     title: title ||
            (fill_attrs.include?(:title) ? 'Title' : nil),
@@ -34,17 +36,6 @@ def create_atom(klass = Folio::Atom::Text,
     documents: documents ||
                (fill_attrs.include?(:documents) ? create_list(:folio_document, 1) : nil),
   }.compact
-
-  if ::Rails.application.config.folio_using_traco
-    ::Folio::Atom.text_fields.each do |field|
-      locales = I18n.available_locales.join('|')
-      raw_field = field.to_s.gsub(/_(#{locales})/, '').to_sym
-      attrs[field] = attrs[raw_field]
-    end
-    attrs.delete :title
-    attrs.delete :perex
-    attrs.delete :content
-  end
 
   klass.create!(attrs)
 end

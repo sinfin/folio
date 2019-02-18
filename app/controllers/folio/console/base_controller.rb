@@ -102,21 +102,27 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def atoms_strong_params
-      [{
-        atoms_attributes: [:id,
-                           :type,
-                           :model,
-                           :model_id,
-                           :model_type,
-                           :position,
-                           :_destroy,
-                           *Folio::Atom.text_fields,
-                           *file_placements_strong_params]
-      }]
+      I18n.available_locales.map do |locale|
+        {
+          "#{locale}_atoms_attributes": [:id,
+                                         :title,
+                                         :perex,
+                                         :content,
+                                         :type,
+                                         :model,
+                                         :model_id,
+                                         :model_type,
+                                         :position,
+                                         :_destroy,
+                                         *file_placements_strong_params]
+        }
+      end
     end
 
     def sti_atoms(params)
-      sti_hack(params, :atoms_attributes, :model)
+      I18n.available_locales.reduce(params) do |pars, locale|
+        sti_hack(pars, "#{locale}_atoms_attributes".to_sym, :model)
+      end
     end
 
     def sti_hack(params, nested_name, relation_name)

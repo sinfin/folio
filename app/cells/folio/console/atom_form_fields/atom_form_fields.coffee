@@ -51,7 +51,7 @@ atomFormBySelect = ($element) ->
     $wrap.removeAttr('hidden')
 
 $(document)
-  .on 'cocoon:after-insert', '#atoms', (e, insertedItem) ->
+  .on 'cocoon:after-insert', '.f-c-atom-form-fields__wrap', (e, insertedItem) ->
     atomFormBySelect($(insertedItem).find('.folio-console-atom-type-select'))
 
   .on 'change', '.folio-console-atom-type-select', ->

@@ -20,10 +20,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   before_save :unset_extra_attrs, if: :type_changed?
   after_save :unlink_extra_files, if: :saved_change_to_type?
 
-  if Rails.application.config.folio_using_traco
-    translates :title, :perex, :content
-  end
-
   belongs_to :placement,
              polymorphic: true,
              touch: true,
@@ -109,17 +105,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       attrs = %i[title content perex]
 
       attrs.each do |attr|
-        if Rails.application.config.folio_using_traco
-          I18n.available_locales.each do |locale|
-            i18n_attr = "#{attr}_#{locale}".to_sym
-            if klass::STRUCTURE[attr].blank? && self[i18n_attr].present?
-              self[i18n_attr] = nil
-            end
-          end
-        else
-          if klass::STRUCTURE[attr].blank? && self[attr].present?
-            self[attr] = nil
-          end
+        if klass::STRUCTURE[attr].blank? && self[attr].present?
+          self[attr] = nil
         end
       end
     end

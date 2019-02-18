@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'folio/atom'
 
 module Folio
   module Atom
@@ -10,9 +11,9 @@ module Folio
       test 'renders' do
         create(:folio_site)
 
-        atom = create(:folio_atom, title: 'foo',
-                                   content: '<p>bar</p>',
-                                   placement: create(:folio_page, title: 'cat'))
+        atom = create_atom(title: 'foo',
+                           content: '<p>bar</p>',
+                           placement: create(:folio_page, title: 'cat'))
         visit page_path(atom.placement, locale: :cs)
         assert_equal('cat', page.find('h1').text)
         assert_equal('bar', page.find('p').text)

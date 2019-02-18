@@ -85,7 +85,7 @@ class Folio::Page < Folio::ApplicationRecord
                     end
                   end,
                   associated_against: {
-                    atoms: Folio::Atom.text_fields,
+                    atoms: %i[title perex content],
                     file_placements: %i[title alt],
                   },
                   ignoring: :accents
@@ -96,6 +96,14 @@ class Folio::Page < Folio::ApplicationRecord
 
   def self.view_name
     'folio/pages/show'
+  end
+
+  def self.atom_locales
+    if Rails.application.config.folio_using_traco
+      I18n.available_locales
+    else
+      [I18n.default_locale]
+    end
   end
 end
 

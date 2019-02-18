@@ -43,16 +43,7 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
   end
 
   def common_fields(attr, textarea: true)
-    if ::Rails.application.config.folio_using_traco
-      fields = I18n.available_locales.map do |locale|
-        field = common_field(attr, textarea: textarea, flag: locale)
-        "<div class=\"col-md\">#{field}</div>"
-      end
-
-      "<div class=\"row\">#{fields.join('')}</div>"
-    else
-      common_field(attr, textarea: textarea)
-    end
+    common_field(attr, textarea: textarea)
   end
 
   def common_field(attr, textarea: false, flag: nil)

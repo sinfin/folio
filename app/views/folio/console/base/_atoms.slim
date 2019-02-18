@@ -1,11 +1,20 @@
-fieldset#atoms.folio-console-atom-form-fields__wrap
-  h2 = t('.title')
+fieldset.f-c-atom-form-fields__wrap
+  .row
+    - f.object.class.atom_locales.each do |locale|
+      - key = "#{locale}_atoms".to_sym
+      .col-md id=key
+        h2.d-flex.align-items-center.mt-md-0.mt-4
+          = t('.title')
+          - if f.object.class.atom_locales.size > 1
+            span.ml-2
+              = country_flag(locale)
 
-  = f.simple_fields_for :atoms do |atom|
-    = render partial: 'atom_fields', locals: { f: atom }
+        = f.simple_fields_for key do |atom|
+          = render partial: 'atom_fields', locals: { f: atom }
 
-  .links
-    = link_to_add_association t('.add'), \
-                              f, \
-                              :atoms, \
-                              class: 'btn btn-success'
+        .links
+          = link_to_add_association t('.add'), \
+                                    f, \
+                                    key, \
+                                    partial: 'atom_fields', \
+                                    class: 'btn btn-success'
