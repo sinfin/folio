@@ -68,6 +68,13 @@ class ShowFor::Builder
     toggle(:published)
   end
 
+  def position_controls
+    attribute(:position) do
+      template.cell('folio/console/index/position_buttons', object).show
+                                                                   .html_safe
+    end
+  end
+
   def type
     attribute(:type) do
       object.class.model_name.human

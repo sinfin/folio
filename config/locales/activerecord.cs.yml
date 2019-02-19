@@ -149,6 +149,7 @@ cs:
     name: Jméno
     perex: Perex
     phone: Telefon
+    position: Pořadí
     published: Zveřejněno
     published_at: Zveřejněno k datu
     slug: Varianta názvu pro odkazy

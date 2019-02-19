@@ -20,45 +20,15 @@ switchRows = (tr) ->
   else
     tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
 
-#   this_pos = this_node.find('input#node_position').val()
-#   that_pos = that_node.find('input#node_position').val()
-#   this_node.find('input#node_position').val(that_pos)
-#   that_node.find('input#node_position').val(this_pos)
-#   this_node_id = this_node.find('input#node_id').val()
-#   this_node_children = this_node.nextAll("tr[data-parent='#{this_node_id}']")
-#   that_node_id = that_node.find('input#node_id').val()
-#   that_node_children = that_node.nextAll("tr[data-parent='#{that_node_id}']")
-#   this_node.after(that_node)
-
-#   if this_node_children
-#     moveChildrenRows(this_node, this_node_children)
-#   if that_node_children
-#     moveChildrenRows(that_node, that_node_children)
-
-# moveChildrenRows = (node, children) ->
-#   last_row = node
-#   children.each ->
-#     $t = $(this)
-#     last_row.after($t)
-#     last_row = $t
-
 getTr = ($btn) ->
-  $btnTr = $btn.closest('tr')
-  dataParent = $btnTr.data('parent')
-  dataDepth = $btnTr.data('depth')
+  $btnTr = $btn.closest('.f-c-show-for__row')
 
   switch $btn.data('direction')
     when 'up'
-      if dataParent? and dataDepth?
-        $targetTr = $btnTr.prevAll("tr[data-parent='#{dataParent}'][data-depth='#{dataDepth}']:first")
-      else
-        $targetTr = $btnTr.prevAll("tr:first")
+      $targetTr = $btnTr.prevAll(".f-c-show-for__row:first")
 
     when 'down'
-      if dataParent? and dataDepth?
-        $targetTr = $btnTr.nextAll("tr[data-parent='#{dataParent}'][data-depth='#{dataDepth}']:first")
-      else
-        $targetTr = $btnTr.nextAll("tr:first")
+      $targetTr = $btnTr.nextAll(".f-c-show-for__row:first")
 
     else
       return null
@@ -94,7 +64,7 @@ post = (tr, url) ->
       tr.btn.removeClass('folio-console-loading')
       tr.target.removeClass('folio-console-loading')
 
-$(document).on 'click', '.folio-console-index-position-button', (e) ->
+$(document).on 'click', '.f-c-index-position__button', (e) ->
   e.preventDefault()
   $btn = $(this)
   $btn.blur()
