@@ -5,7 +5,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
 
   def create
     @menu = Folio::Menu.create(menu_params)
-    respond_with @menu, location: { action: :index }
+    respond_with @menu
   end
 
   def update
@@ -15,7 +15,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
 
   def destroy
     @menu.destroy
-    respond_with @menu, location: { action: :index }
+    respond_with @menu
   end
 
   def show

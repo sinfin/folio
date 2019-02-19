@@ -101,7 +101,7 @@ class ShowFor::Builder
       if object.persisted?
         if object.visit.present?
           template.link_to(object.visit.to_label,
-                           template.url_for([:console, object.visit]))
+                           template.controller.url_for([:console, object.visit]))
         end
       end
     end
@@ -130,7 +130,7 @@ class ShowFor::Builder
             content = object.public_send(attr)
           end
 
-          url = template.url_for(url_for_args)
+          url = template.controller.url_for(url_for_args)
           template.link_to(content, url)
         end
       end

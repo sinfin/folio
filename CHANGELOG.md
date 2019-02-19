@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-02-19
+### Added
+- `folio_console_sidebar_prepended_link_class_names`, `folio_console_sidebar_appended_link_class_names` and `folio_console_sidebar_runner_up_link_class_names` to application config
+
 ## 2019-02-15
 ### Changed
 - Translations are not enabled by default, set `Rails.application.config.folio_pages_translations = true` to enable.

@@ -1,3 +1,7 @@
+- show_translations = Rails.application.config.folio_pages_translations && \
+                      f.object.persisted?
+= form_header f, translations: show_translations
+
 = tabs [:content]
 
 = f.error_notification

@@ -75,7 +75,7 @@ FactoryBot.define do
 
   factory :folio_admin_account, class: 'Folio::Account' do
     email { 'test@test.com' }
-    password { '123456' }
+    password { 'test@test.com' }
     role { :superuser }
     first_name { 'Test' }
     last_name { 'Dummy' }

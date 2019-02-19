@@ -9,18 +9,17 @@ class Folio::Console::PagesController < Folio::Console::BaseController
 
   def create
     @page = Folio::Page.create(page_params)
-    respond_with @page, location: { action: :index }
+    respond_with @page
   end
 
   def update
     @page.update(page_params)
-    respond_with @page, location: { action: :index }
+    respond_with @page
   end
 
   def destroy
     @page.destroy
-    require 'pry'; binding.pry
-    respond_with @page, location: { action: :index }
+    respond_with @page
   end
 
   private

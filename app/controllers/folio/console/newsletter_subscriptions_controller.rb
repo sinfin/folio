@@ -9,6 +9,6 @@ class Folio::Console::NewsletterSubscriptionsController < Folio::Console::BaseCo
 
   def destroy
     @newsletter_subscription.destroy
-    respond_with @newsletter_subscription, location: { action: :index }
+    respond_with @newsletter_subscription
   end
 end

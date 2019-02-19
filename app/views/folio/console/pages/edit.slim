@@ -1,6 +1,2 @@
-- show_translations = Rails.application.config.folio_pages_translations
-== cell('folio/console/form/header', @page, translations: show_translations)
-
-= simple_form_for(@page, as: :page, \
-                         url: console_page_path(@page.id)) do |f|
+= simple_form_for([:console, @page]) do |f|
   = render 'form', f: f

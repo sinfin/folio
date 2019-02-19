@@ -5,49 +5,47 @@ require 'test_helper'
 <% module_namespacing do -%>
 class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Console::BaseControllerTest
   test 'index' do
-    get <%= test_index_resource_path %>
+    get url_for([:console, <%= class_name %>])
     assert_response :success
   end
 
   test 'new' do
-    get <%= new_resource_name.gsub('main_app.', '') %>
+    get url_for([:console, <%= class_name %>, action: :new])
     assert_response :success
   end
 
   test 'edit' do
     model = create(:<%= singular_table_name %>)
-    get <%= edit_resource_name.gsub('main_app.', '') %>(model.id)
+    get url_for([:edit, :console, model])
     assert_response :success
   end
 
   test 'create' do
-    params = build(:<%= singular_table_name %>).serializable_hash.merge(
-      cover_placement_attributes: build(:folio_cover_placement).serializable_hash,
-    )
+    params = build(:<%= singular_table_name %>).serializable_hash
     assert_equal(0, <%= class_name %>.count)
-    post <%= test_index_resource_path %>, params: {
-      <%= singular_table_name %>: params,
+    post url_for([:console, <%= class_name %>]), params: {
+      <%= instance_variable_name %>: params,
     }
     assert_equal(1, <%= class_name %>.count, 'Creates record')
-    assert_redirected_to <%= test_index_resource_path %>
+    assert_redirected_to url_for([:console, <%= class_name %>])
   end
 
   test 'update' do
     model = create(:<%= singular_table_name %>)
     assert_not_equal('Title', model.title)
-    put <%= test_update_resource_name %>, params: {
-      <%= singular_table_name %>: {
+    put url_for([:console, model]), params: {
+      <%= instance_variable_name %>: {
         title: 'Title',
       },
     }
-    assert_redirected_to <%= edit_resource_name.gsub('main_app.', '') %>
+    assert_redirected_to url_for([:console, <%= class_name %>])
     assert_equal('Title', model.reload.title)
   end
 
   test 'destroy' do
     model = create(:<%= singular_table_name %>)
-    delete <%= test_update_resource_name %>
-    assert_redirected_to <%= test_index_resource_path %>
+    delete url_for([:console, model])
+    assert_redirected_to url_for([:console, <%= class_name %>])
     assert_not(<%= class_name %>.exists?(id: model.id))
   end
 end

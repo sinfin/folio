@@ -42,6 +42,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
   end
 
+  def url_for(options = nil)
+    super(options)
+  rescue NoMethodError
+    main_app.url_for(options)
+  end
+
   private
     # TODO: authorize account
     # def authorize_admin_user!
@@ -151,6 +157,20 @@ class Folio::Console::BaseController < Folio::ApplicationController
          instance_variable_get(name).respond_to?(:filter_by_params)
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
+      end
+    end
+
+    # Override respond_with to redirect to :index by default
+    def respond_with(*resources, &block)
+      options = resources.size == 1 ? {} : resources.extract_options!
+      if options[:action].nil? && options[:location].nil?
+        options[:location] ||= url_for([:console, @klass])
+      end
+
+      if resources.size == 1
+        super(resources.first, options, &block)
+      else
+        super(*resources, &block)
       end
     end
 end
