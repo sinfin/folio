@@ -96,14 +96,6 @@ class Folio::Page < Folio::ApplicationRecord
   def self.view_name
     'folio/pages/show'
   end
-
-  def self.atom_locales
-    if Rails.application.config.folio_using_traco
-      I18n.available_locales
-    else
-      [I18n.default_locale]
-    end
-  end
 end
 
 # == Schema Information

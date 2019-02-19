@@ -27,12 +27,10 @@ module Folio::Singleton
   private
 
     def validate_singularity
-      param = respond_to?(:type) ? :type : :id
-
       if new_record?
-        errors.add(param, :invalid) if self.class.exists?
+        errors.add(:base, :invalid) if self.class.exists?
       else
-        errors.add(param, :invalid) if self.class.where.not(id: id).exists?
+        errors.add(:base, :invalid) if self.class.where.not(id: id).exists?
       end
     end
 end
