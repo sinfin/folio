@@ -7,7 +7,11 @@ $.widget 'ui.autocomplete', $.ui.autocomplete,
       @_renderItemData($ul, item)
 
   _renderItem: ($ul, item) ->
-    $("<li class=\"ui-menu-item\"><span class=\"dropdown-item ui-menu-item-wrapper\">#{item.label}</span></li>").appendTo($ul)
+    $("""
+      <li class="ui-menu-item">
+        <span class="dropdown-item ui-menu-item-wrapper">#{item.label}</span>
+      </li>
+      """).appendTo($ul)
 
   _resizeMenu: ->
     $ul = @menu.element

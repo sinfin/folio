@@ -18,8 +18,6 @@ class Folio::Page < Folio::ApplicationRecord
     include Folio::HasAncestry
   end
 
-  self.table_name = 'folio_pages'
-
   if Rails.application.config.folio_using_traco
     include Folio::TracoSluggable
 
@@ -63,7 +61,7 @@ class Folio::Page < Folio::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: begin
-                    if Rails.application.config.folio_using_traco
+                    if Rails.application.config.folio_using_traco && ActiveRecord::Base.connection.table_exists?('folio_pages')
                       weighted = {}
                       self.column_names.each do |column|
                         if /\A(title|perex)_/.match?(column)
