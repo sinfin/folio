@@ -3,10 +3,10 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
 
   def index
     <%- if positionable? -%>
-    <%= instance_variable_name(plural: true) %> = <%= class_name %>.ordered
+    <%= instance_variable_name(plural: true) %> = @<%= class_name %>.ordered
     <%- end -%>
 
-    @pagy, @<%= instance_variable_name(plural: true) %> = pagy(<%= instance_variable_name(plural: true) %>)
+    @pagy, @<%= instance_variable_name(plural: true) %> = pagy(@<%= instance_variable_name(plural: true) %>)
   end
 
   def create

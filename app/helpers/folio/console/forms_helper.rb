@@ -10,6 +10,10 @@ module Folio
       cell('folio/console/translated_inputs', f: f, key: key, args: args).show.html_safe
     end
 
+    def private_attachments_fields(f)
+      render partial: 'private_attachments', locals: { f: f }
+    end
+
     def link_to_remove_association(*args)
       key = args.first.is_a?(String) ? 2 : 1
       data = { confirm: t('folio.console.remove_confirmation') }

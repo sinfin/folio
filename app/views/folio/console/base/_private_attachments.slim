@@ -1,0 +1,9 @@
+fieldset id="private_attachments"
+  = f.simple_fields_for :private_attachments do |g|
+    = render partial: 'private_attachment_fields', locals: { f: g }
+
+  .links
+    = link_to_add_association t('folio.console.actions.add'), \
+                              f, \
+                              :private_attachments, \
+                              class: 'btn btn-success'

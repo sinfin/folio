@@ -160,6 +160,7 @@ end
 #  model_id       :bigint(8)
 #  title          :string
 #  perex          :text
+#  locale         :string
 #
 # Indexes
 #

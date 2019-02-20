@@ -3,6 +3,7 @@ en:
   folio:
     console:
       actions:
+        add: Add
         arrange: Arrange
         back: Back
         cancel: Cancel

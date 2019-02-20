@@ -33,6 +33,7 @@
 //= require folio/console/_modal-lazyload
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_cocoon-set-position
+//= require folio/console/_cocoon-prompt-file-input
 //= require folio/console/_selectize
 //= require folio/console/_simple-form-error-scrollto
 //= require folio/console/_tabs

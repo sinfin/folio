@@ -83,6 +83,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
       []
     end
 
+    def additional_private_attachments_strong_params_keys
+      []
+    end
+
     def file_placements_strong_params
       commons = [:id,
                  :title,
@@ -101,6 +105,17 @@ class Folio::Console::BaseController < Folio::ApplicationController
         document_placements_attributes
         image_placements_attributes
       ]).each do |key|
+        hash[key] = commons
+      end
+
+      [ hash ]
+    end
+
+    def private_attachments_strong_params
+      commons = %i[id title alt file type _destroy]
+      hash = { private_attachments_attributes: commons }
+
+      additional_private_attachments_strong_params_keys.each do |key|
         hash[key] = commons
       end
 
