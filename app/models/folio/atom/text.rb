@@ -5,9 +5,6 @@ class Folio::Atom::Text < Folio::Atom::Base
     content: :redactor,
   }
 
-  validates :content,
-            presence: true
-
   def self.cell_name
     'folio/atom/text'
   end
