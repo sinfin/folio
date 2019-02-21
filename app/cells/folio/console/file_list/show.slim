@@ -1,0 +1,8 @@
+.folio-console-file-list.folio-console-file-list--cell
+  - model.each do |file|
+    .folio-console-file-list__file
+      - if file.respond_to?(:thumb)
+        .folio-console-file-list__img-wrap
+          = image_for(file)
+      - else
+        / TODO

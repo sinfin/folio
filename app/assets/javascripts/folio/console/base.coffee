@@ -22,6 +22,7 @@
 #= require ./redactor/_init
 
 #= require folio/cable
+#= require folio/lightbox
 #= require folio/console/_flash
 #= require folio/console/_data-auto-submit
 #= require folio/console/_data-change-value
@@ -43,6 +44,7 @@
 #= require folio/console/react_picker/react_picker
 #= require folio/console/menu_tree/menu_tree
 #= require folio/console/index/checkboxes/checkboxes
+#= require folio/console/file_list/file_list
 
 #= require folio/console/simple_form_inputs/_date_time_input
 #= require folio/console/simple_form_inputs/_redactor_input
@@ -51,3 +53,6 @@
 #= require ./nodes_table
 
 #= require folio/console/main_app
+
+# So that we can use frontend turbolinks-bound scripts
+$ -> $(document).trigger('turbolinks:load')
