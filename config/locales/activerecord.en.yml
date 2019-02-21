@@ -48,6 +48,8 @@ en:
         utm_source: UTM source
         utm_term: UTM term
     errors:
+      messages:
+        file_format: 'has invalid type. Allowed types: %{types}'
       models:
         folio/lead:
           attributes:
@@ -130,6 +132,7 @@ en:
     description: Description
     email: E-mail
     featured: Features
+    file: File
     first_name: First name
     is_active: Active
     last_name: Last name

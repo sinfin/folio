@@ -48,6 +48,8 @@ cs:
         utm_source: UTM source
         utm_term: UTM term
     errors:
+      messages:
+        file_format: 'není povoleného typu. Povolené typy: %{types}'
       models:
         folio/lead:
           attributes:
@@ -148,6 +150,7 @@ cs:
     description: Popisek
     email: E-mail
     featured: Zvýrazněno
+    file: Soubor
     first_name: Křestní jméno
     is_active: Aktivní
     last_name: Příjmení
