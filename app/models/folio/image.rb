@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::Image < Folio::File
+  include Folio::DragonflyFormatValidation
   include Folio::Thumbnails
 
-  VALID_FORMATS = %w{jpeg png bmp gif svg tif tiff}
-
-  # Validations
-  validates_property :format, of: :file, in: VALID_FORMATS
+  validate_file_format
 end
 
 # == Schema Information

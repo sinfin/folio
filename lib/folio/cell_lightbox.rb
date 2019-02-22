@@ -15,6 +15,15 @@ module Folio::CellLightbox
     }
   end
 
+  def lightbox_from_image(image)
+    thumb = image.thumb(LIGHTBOX_SIZE)
+    {
+      'data-lightbox-src': thumb.url,
+      'data-lightbox-width': thumb.width,
+      'data-lightbox-height': thumb.height,
+    }
+  end
+
   def lightbox_image_data(placements, json: true)
     data = placements.map do |placement|
       thumb = placement.image.thumb(LIGHTBOX_SIZE)

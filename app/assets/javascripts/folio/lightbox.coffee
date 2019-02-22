@@ -1,4 +1,3 @@
-#= require jquery3
 #= require photoswipe/dist/photoswipe
 #= require photoswipe/dist/photoswipe-ui-default
 
