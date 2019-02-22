@@ -1,0 +1,25 @@
+{
+  "name": "jquery-debounce",
+  "version": "1.0.6",
+  "authors": [
+    "Filatov Dmitry <dfilatov@inbox.ru>"
+  ],
+  "description": "jQuery debounce and throttle plugin",
+  "main": "jquery.debounce.js",
+  "keywords": [
+    "debounce",
+    "throttle"
+  ],
+  "license": "MIT",
+  "homepage": "https://code.google.com/p/jquery-debounce/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "*"
+  }
+}

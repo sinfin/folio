@@ -5,6 +5,7 @@
 //= require moment/locale/cs
 //= require tempusdominus-bs4/build/js/tempusdominus-bootstrap-4
 //= require slideout.js/dist/slideout
+//= require jquery-debounce/jquery.debounce
 
 //= require jquery-ui/jquery-ui
 //= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
@@ -50,6 +51,7 @@
 //= require folio/console/form/errors/errors
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_dirty-forms
+//= require folio/console/layout/sidebar/search/search
 
 //= require folio/console/simple_form_inputs/_date_time_input
 //= require folio/console/simple_form_inputs/_redactor_input

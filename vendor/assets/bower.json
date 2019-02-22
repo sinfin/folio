@@ -17,7 +17,8 @@
     "moment": "^2.24.0",
     "slideout.js": "https://github.com/mango/slideout.git#^1.0.1",
     "font-awesome": "^5.7.1",
-    "jquery.dirty": "^0.7.2"
+    "jquery.dirty": "^0.7.2",
+    "jquery-debounce": "^1.0.6"
   },
   "devDependencies": {}
 }

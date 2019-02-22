@@ -17,6 +17,7 @@ class Folio::Console::Layout::Sidebar::SearchCell < Folio::ConsoleCell
     input_html = {
       class: 'f-c-layout-sidebar-search__input',
       value: params[:q].presence,
+      autocomplete: 'off',
     }
     wrapper_html = { class: 'f-c-layout-sidebar-search__form-group' }
     f.input :q, label: false, input_html: input_html, wrapper_html: wrapper_html

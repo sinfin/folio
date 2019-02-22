@@ -25,3 +25,26 @@
   width: 35px
   color: $white
   cursor: pointer
+
+.f-c-layout-sidebar-search__results
+  height: 0
+  overflow: hidden
+  position: relative
+  transition: $transition-base
+
+  .f-c-layout-sidebar-search--searching &
+    height: 220px
+
+.f-c-layout-sidebar-search__results-inner
+  border-top: 1px solid rgba(#979797, 0.42)
+
+.f-c-layout-sidebar-search__loader.folio-loader
+  display: none
+  top: 1px
+  height: calc(100% - 1px)
+
+  .f-c-layout-sidebar-search.folio-inversed-loader &
+    background-color: rgba($gray-800, 0.9)
+
+  .f-c-layout-sidebar-search--loading &
+    display: block

@@ -1,4 +1,4 @@
-.f-c-layout-sidebar-search
+.f-c-layout-sidebar-search.folio-inversed-loader
   = form do |f|
     = input(f)
 
@@ -6,3 +6,7 @@
       type="submit"
       class="fa fa--small fa-search"
     ]
+
+  .f-c-layout-sidebar-search__results
+    .f-c-layout-sidebar-search__results-inner
+    span.folio-loader.f-c-layout-sidebar-search__loader
