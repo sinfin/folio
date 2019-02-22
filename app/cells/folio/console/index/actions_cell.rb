@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
+  def safe_url_for(opts)
+    controller.url_for(opts)
+  rescue StandardError
+  end
+
   def default_actions
     locale = model.try(:locale) || I18n.default_locale
 
@@ -11,29 +16,20 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         button: 'danger',
         method: :delete,
         confirm: true,
-        url: begin
-               controller.url_for([:console, model])
-             rescue StandardError
-             end
+        url: safe_url_for([:console, model]),
       },
       edit: {
         name: :edit,
         icon: 'edit',
         button: 'secondary',
-        url: begin
-               controller.url_for([:edit, :console, model])
-             rescue StandardError
-             end
+        url: safe_url_for([:edit, :console, model]),
       },
       preview: {
         name: :preview,
         icon: 'eye',
         button: 'light',
         target: '_blank',
-        url: begin
-               controller.main_app.url_for([model, locale: locale])
-              rescue
-             end
+        url: safe_url_for([model, locale: locale]),
       },
       arrange: {
         name: :arrange,

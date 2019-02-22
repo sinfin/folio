@@ -20,7 +20,7 @@ class Folio::HasAtomsTest < ActiveSupport::TestCase
   end
 
   test 'atoms_in_molecules' do
-    page = create(:folio_page)
+    page = create(:folio_page, locale: I18n.locale)
 
     assert_equal([], page.atoms)
     assert_equal([], page.atoms_in_molecules)
@@ -38,12 +38,12 @@ class Folio::HasAtomsTest < ActiveSupport::TestCase
                                         position: 3,
                                         placement: page)
 
-    atom_2 = create(:folio_atom, placement: page, position: 4)
+    atom_2 = create_atom(placement: page, position: 4, content: 'a')
 
     page.reload
 
-    assert_equal([atom_1, test_atom_1, test_atom_2, atom_2],
-                 page.atoms.to_a)
+    assert_equal([atom_1.id, test_atom_1.id, test_atom_2.id, atom_2.id],
+                 page.atoms.pluck(:id))
     assert_equal([
       [nil, [atom_1]],
       ['foo', [test_atom_1, test_atom_2]],

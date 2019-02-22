@@ -42,6 +42,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
   end
 
+  def url_for(options = nil)
+    super(options)
+  rescue NoMethodError
+    main_app.url_for(options)
+  end
+
   private
     # TODO: authorize account
     # def authorize_admin_user!
@@ -77,6 +83,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
       []
     end
 
+    def additional_private_attachments_strong_params_keys
+      []
+    end
+
     def file_placements_strong_params
       commons = [:id,
                  :title,
@@ -101,22 +111,39 @@ class Folio::Console::BaseController < Folio::ApplicationController
       [ hash ]
     end
 
+    def private_attachments_strong_params
+      commons = %i[id title alt file type _destroy]
+      hash = { private_attachments_attributes: commons }
+
+      additional_private_attachments_strong_params_keys.each do |key|
+        hash[key] = commons
+      end
+
+      [ hash ]
+    end
+
     def atoms_strong_params
-      [{
-        atoms_attributes: [:id,
-                           :type,
-                           :model,
-                           :model_id,
-                           :model_type,
-                           :position,
-                           :_destroy,
-                           *Folio::Atom.text_fields,
-                           *file_placements_strong_params]
-      }]
+      I18n.available_locales.map do |locale|
+        {
+          "#{locale}_atoms_attributes": [:id,
+                                         :title,
+                                         :perex,
+                                         :content,
+                                         :type,
+                                         :model,
+                                         :model_id,
+                                         :model_type,
+                                         :position,
+                                         :_destroy,
+                                         *file_placements_strong_params]
+        }
+      end
     end
 
     def sti_atoms(params)
-      sti_hack(params, :atoms_attributes, :model)
+      I18n.available_locales.reduce(params) do |pars, locale|
+        sti_hack(pars, "#{locale}_atoms_attributes".to_sym, :model)
+      end
     end
 
     def sti_hack(params, nested_name, relation_name)
@@ -145,6 +172,20 @@ class Folio::Console::BaseController < Folio::ApplicationController
          instance_variable_get(name).respond_to?(:filter_by_params)
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
+      end
+    end
+
+    # Override respond_with to redirect to :index by default
+    def respond_with(*resources, &block)
+      options = resources.size == 1 ? {} : resources.extract_options!
+      if options[:action].nil? && options[:location].nil?
+        options[:location] ||= url_for([:console, @klass])
+      end
+
+      if resources.size == 1
+        super(resources.first, options, &block)
+      else
+        super(*resources, &block)
       end
     end
 end

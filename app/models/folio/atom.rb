@@ -5,22 +5,6 @@ module Folio::Atom
     Folio::Atom::Base.recursive_subclasses
   end
 
-  def self.text_fields
-    @text_fields ||= begin
-      if Rails.application.config.folio_using_traco
-        text_fields = []
-        Folio::Atom::Base.column_names.each do |column|
-          if /\A(title|content|perex)_/.match?(column)
-            text_fields << column.to_sym
-          end
-        end
-        text_fields
-      else
-        [:title, :content, :perex]
-      end
-    end
-  end
-
   def self.atoms_in_molecules(atoms)
     molecules = []
 

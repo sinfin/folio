@@ -5,15 +5,8 @@ class Folio::Atom::Text < Folio::Atom::Base
     content: :redactor,
   }
 
-  if Rails.application.config.folio_using_traco
-    I18n.available_locales.each do |locale|
-      validates "content_#{locale}".to_sym,
-                presence: true
-    end
-  else
-    validates :content,
-              presence: true
-  end
+  validates :content,
+            presence: true
 
   def self.cell_name
     'folio/atom/text'
@@ -36,6 +29,7 @@ end
 #  model_id       :bigint(8)
 #  title          :string
 #  perex          :text
+#  locale         :string
 #
 # Indexes
 #

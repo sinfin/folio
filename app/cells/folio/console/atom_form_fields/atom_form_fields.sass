@@ -1,4 +1,8 @@
-.folio-console-atom-form-fields
+.f-c-atom-form-fields__wrap-title
+  display: flex
+  align-items: center
+
+.f-c-atom-form-fields
   margin-left: - $grid-gutter-half
   margin-right: - $grid-gutter-half
   padding: 0.5rem (( $grid-gutter-width + 39px )) 0.5rem $grid-gutter-half
@@ -16,7 +20,7 @@
     padding-bottom: (( $card-spacer-x - 1rem ))
     min-height: 114px
 
-  .folio-console-nested-model-controls-form-group
+  .f-c-nested-model-controls-form-group
     position: absolute
     top: 0.5rem
     right: $grid-gutter-half
@@ -27,10 +31,10 @@
     margin-bottom: 0
 
   &:hover,
-  &.folio-console-atom-form-fields--focused
+  &.f-c-atom-form-fields--focused
     background-color: rgba($info, 0.15)
 
-    .folio-console-nested-model-controls-form-group
+    .f-c-nested-model-controls-form-group
       opacity: 1
 
     .card
@@ -48,3 +52,8 @@
     aside.folio-console-smart-col:not([hidden]) ~ &
       max-width: calc(100% - 166px)
       flex-basis: calc(100% - 166px)
+
+
++media-breakpoint-down(md)
+  .f-c-atom-form-fields__wrap-row
+    display: block

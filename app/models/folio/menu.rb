@@ -51,7 +51,10 @@ class Folio::Menu < Folio::ApplicationRecord
 end
 
 if Rails.env.development?
-  Dir["#{Folio::Engine.root}/app/models/folio/menu/*.rb", 'app/models/menu/*.rb'].each do |file|
+  Dir[
+    Folio::Engine.root.join('app/models/folio/menu/**/*.rb'),
+    Rails.root.join('app/models/**/menu/**/*.rb'),
+  ].each do |file|
     require_dependency file
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_07_101927) do
+ActiveRecord::Schema.define(version: 2019_02_20_070412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 2019_02_07_101927) do
     t.bigint "model_id"
     t.string "title"
     t.text "perex"
+    t.string "locale"
     t.index ["model_type", "model_id"], name: "index_folio_atoms_on_model_type_and_model_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
@@ -168,6 +169,27 @@ ActiveRecord::Schema.define(version: 2019_02_07_101927) do
     t.index ["published_at"], name: "index_folio_pages_on_published_at"
     t.index ["slug"], name: "index_folio_pages_on_slug"
     t.index ["type"], name: "index_folio_pages_on_type"
+  end
+
+  create_table "folio_private_attachments", force: :cascade do |t|
+    t.string "attachmentable_type"
+    t.bigint "attachmentable_id"
+    t.string "type"
+    t.string "file_uid"
+    t.string "file_name"
+    t.text "title"
+    t.string "alt"
+    t.text "thumbnail_sizes"
+    t.integer "position"
+    t.integer "file_width"
+    t.integer "file_height"
+    t.bigint "file_size"
+    t.string "mime_type", limit: 255
+    t.json "additional_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
+    t.index ["type"], name: "index_folio_private_attachments_on_type"
   end
 
   create_table "folio_sites", force: :cascade do |t|

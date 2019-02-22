@@ -13,7 +13,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       filename = filename_with_extensions(view).gsub('.html', '')
       template "#{view}.slim", File.join('app/views/folio/console', controller_file_path, filename)
     end
-    template '_table_row.slim', File.join('app/views/folio/console', controller_file_path, "_#{singular_table_name}.slim")
   end
 
   def copy_controller
@@ -22,42 +21,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
   def copy_controller_test
     template 'controller_test.rb.tt', File.join('test/controllers/folio/console', "#{controller_file_path}_controller_test.rb")
-  end
-
-  def index_resource_name
-    "main_app.console_#{plural_table_name}_path"
-  end
-
-  def update_resource_name
-    "main_app.console_#{singular_table_name}_path(@#{singular_table_name}.id)"
-  end
-
-  def delete_resource_name_no_at
-    "main_app.console_#{singular_table_name}_path(#{singular_table_name}.id)"
-  end
-
-  def test_update_resource_name
-    "main_app.console_#{singular_table_name}_path(model.id)"
-  end
-
-  def test_index_resource_path
-    index_resource_name.gsub('main_app.', '')
-  end
-
-  def new_resource_name
-    "main_app.new_console_#{singular_table_name}_path"
-  end
-
-  def edit_resource_name
-    "main_app.edit_console_#{singular_table_name}_path"
-  end
-
-  def view_resource_name
-    "main_app.#{singular_table_name}_path"
-  end
-
-  def redirect_resource_name
-    edit_resource_name
   end
 
   def positionable?
@@ -78,12 +41,20 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
   def form_tabs
     base = [:content]
-    base << :gallery if has_attachmentable?
     base
   end
 
   def index_scope
     positionable? ? '.ordered' : '.order(id: :desc)'
+  end
+
+  def instance_variable_name(plural: false)
+    base = controller_file_path.split('/').last
+    if plural
+      base
+    else
+      base.singularize
+    end
   end
 
   protected

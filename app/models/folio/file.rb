@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'open3'
-
 class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::SanitizeFilename

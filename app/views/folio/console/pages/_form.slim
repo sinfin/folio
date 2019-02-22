@@ -1,3 +1,7 @@
+- show_translations = Rails.application.config.folio_pages_translations && \
+                      f.object.persisted?
+= form_header f, translations: show_translations
+
 = tabs [:content]
 
 = f.error_notification
@@ -26,9 +30,10 @@
 
             - if Rails.application.config.folio_pages_ancestry
               .col
-                = f.input :parent_id, collection: Folio::Page.arrange_as_array, \
-                                      label_method: :select_option_depth, \
-                                      value_method: :id
+                = f.input :parent_id, \
+                          collection: Folio::Page.arrange_as_array, \
+                          label_method: :select_option_depth, \
+                          value_method: :id
 
     == translated_inputs f, :perex
 

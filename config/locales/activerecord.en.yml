@@ -133,6 +133,7 @@ en:
     name: Name
     perex: Perex
     phone: Phone
+    position: Position
     published: Published
     published_at: Published at
     slug: Slug

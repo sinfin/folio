@@ -1,7 +1,7 @@
 .f-c-layout-html
   height: 100%
   min-width: 320px
-  overflow: hidden
+  overflow-y: scroll
 
 .f-c-layout-body
   min-width: 320px
@@ -12,44 +12,37 @@
 
 .f-c-layout-main-container
   padding-top: $spacer
-  padding-bottom: $spacer
 
 +mq-desktop-menu
-  .f-c-layout-html
-    overflow: hidden
-
   .f-c-layout-body
-    display: flex
-    align-items: stretch
-    height: 100%
-    overflow: hidden
+    padding-left: 220px
 
   .f-c-layout-sidebar
     height: 100%
-    max-width: 220px
-    flex: 1 0 220px
+    width: 220px
+    position: fixed
+    top: 0
+    bottom: 0
+    left: 0
+    z-index: 2
 
-  .f-c-layout-main
-    height: 100%
-    flex: 1 1 auto
-    display: flex
-    flex-direction: column
+  .f-c-layout-header
+    position: sticky
+    top: 0
+    left: 0
+    z-index: 2
 
-  .f-c-layout-header,
   .f-c-flash-wrap
-    flex: 0 0 auto
+    position: sticky
+    top: 36px
+    left: 0
+    z-index: 2
 
   .f-c-layout-main-container
-    flex: 1 1 auto
-    overflow-y: scroll
-    -webkit-overflow-scrolling: touch
+    position: relative
+    z-index: 1
 
 +mq-mobile-menu
-  .f-c-layout-html
-    height: 100%
-    min-width: 320px
-    overflow-y: scroll
-
   .f-c-layout-sidebar
     display: none
 

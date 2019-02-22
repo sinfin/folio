@@ -7,11 +7,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def links
     class_names = prepended_link_class_names +
+                  %w[Folio::Page] +
+                  runner_up_link_class_names +
                   folio_link_class_names +
                   appended_link_class_names
 
     class_names.map do |class_name|
-      klass = class_name.safe_constantize
+      klass = class_name.constantize
       label = klass.model_name.human(count: 2)
       path = controller.url_for([:console, klass])
       link(label, path)
@@ -34,7 +36,6 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def folio_link_class_names
     %w[
-      Folio::Page
       Folio::Menu
       Folio::Image
       Folio::Document
@@ -46,10 +47,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def prepended_link_class_names
-    []
+    ::Rails.application.config.folio_console_sidebar_prepended_link_class_names
   end
 
   def appended_link_class_names
-    []
+    ::Rails.application.config.folio_console_sidebar_appended_link_class_names
+  end
+
+  def runner_up_link_class_names
+    ::Rails.application.config.folio_console_sidebar_runner_up_link_class_names
   end
 end

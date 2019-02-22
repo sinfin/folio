@@ -5,15 +5,8 @@ class Folio::Atom::Title < Folio::Atom::Base
     title: :string,
   }
 
-  if Rails.application.config.folio_using_traco
-    I18n.available_locales.each do |locale|
-      validates "title_#{locale}".to_sym,
-                presence: true
-    end
-  else
-    validates :title,
-              presence: true
-  end
+  validates :title,
+            presence: true
 
   def self.cell_name
     'folio/atom/title'
@@ -36,6 +29,7 @@ end
 #  model_id       :bigint(8)
 #  title          :string
 #  perex          :text
+#  locale         :string
 #
 # Indexes
 #
