@@ -7,6 +7,10 @@ cs:
           add: Přidat
           csv: CSV
 
+      form:
+        errors:
+          fix: Opravit
+
       layout:
         sidebar:
           settings: Nastavení
@@ -17,3 +21,4 @@ cs:
       searches:
         results:
           title: Výsledky vyhledávání
+

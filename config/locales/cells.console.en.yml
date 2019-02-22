@@ -7,9 +7,9 @@ en:
           add: Add
           csv: CSV
 
-        actions:
-          edit: Upravit
-          destroy: Smazat
+      form:
+        errors:
+          fix: Fix
 
       layout:
         sidebar:

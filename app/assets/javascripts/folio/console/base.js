@@ -36,7 +36,6 @@
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_cocoon-prompt-file-input
 //= require folio/console/_selectize
-//= require folio/console/_simple-form-error-scrollto
 //= require folio/console/_tabs
 //= require folio/console/atom_form_fields/atom_form_fields
 //= require folio/console/tagsinput/tagsinput
@@ -48,6 +47,7 @@
 //= require folio/console/file_list/file_list
 //= require folio/console/index/checkboxes/checkboxes
 //= require folio/console/index/position_buttons/position_buttons
+//= require folio/console/form/errors/errors
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_dirty-forms
 

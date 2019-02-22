@@ -1,5 +1,3 @@
-= f.error_notification
-
 - if f.object.new_record?
   - klass = f.object.class
   - collection = klass.recursive_subclasses_for_select(include_self: false)
