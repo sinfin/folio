@@ -56,7 +56,16 @@ class Folio::Page < Folio::ApplicationRecord
   }
 
   # Multi-search
-  multisearchable against: [ :title, :perex, :atom_contents ],
+  multisearchable against: begin
+                    if Rails.application.config.folio_using_traco &&
+                       ActiveRecord::Base.connection.table_exists?('folio_pages')
+                      I18n.available_locales.map do |locale|
+                        "title_#{locale}"
+                      end
+                    else
+                      [:title]
+                    end
+                  end,
                   ignoring: :accents
 
   pg_search_scope :by_query,
