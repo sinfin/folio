@@ -39,7 +39,7 @@ ShowFor.setup do |config|
   config.separator = ''
 
   # The tag used to wrap collections. Default is :ul.
-  config.collection_tag = :div
+  # config.collection_tag = :div
 
   # The DOM class set for the collection tag. Default is :collection.
   config.collection_class = 'f-c-show-for__collection'
