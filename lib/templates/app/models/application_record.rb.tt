@@ -2,6 +2,7 @@
 
 class ApplicationRecord < ActiveRecord::Base
   include Folio::ClearsPageCache
+  include Folio::Filterable
   include Folio::NillifyBlanks
 
   self.abstract_class = true
