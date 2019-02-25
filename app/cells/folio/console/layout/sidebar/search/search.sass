@@ -16,7 +16,7 @@
     background: transparent
     box-shadow: none
 
-.f-c-layout-sidebar-search__submit
+.f-c-layout-sidebar-search__button
   +unbutton
   position: absolute
   top: 0
@@ -25,6 +25,15 @@
   width: 35px
   color: $white
   cursor: pointer
+
+  &--cancel
+    display: none
+
+  .f-c-layout-sidebar-search--searching &
+    display: none
+
+    &--cancel
+      display: block
 
 .f-c-layout-sidebar-search__results
   height: 0
@@ -75,3 +84,6 @@
 
   .f-c-layout-sidebar-search--error &
     opacity: 1
+
+.js-f-c-layout-sidebar-search-cancel
+  cursor: pointer
