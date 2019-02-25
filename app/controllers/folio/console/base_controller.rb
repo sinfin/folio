@@ -178,7 +178,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def respond_with(*resources, &block)
       options = resources.size == 1 ? {} : resources.extract_options!
       if options[:action].nil? && options[:location].nil?
-        if resources.size == 1 && !resources.first.destroyed?
+        if resources.size == 1 &&
+           !resources.first.destroyed? &&
+           resources.first.persisted?
           options[:location] ||= url_for([:console,
                                           resources.first,
                                           action: :edit])
