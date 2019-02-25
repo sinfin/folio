@@ -40,7 +40,6 @@ class Folio::Console::MenusControllerTest < Folio::Console::BaseControllerTest
       menu: params.merge(type: 'Dummy::Menu::Nestable'),
     }
     assert_equal(1, Folio::Menu.count, 'Creates record')
-    assert_redirected_to url_for([:console, Folio::Menu])
   end
 
   test 'update' do

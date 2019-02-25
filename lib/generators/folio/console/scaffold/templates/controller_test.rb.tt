@@ -27,7 +27,6 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
       <%= instance_variable_name %>: params,
     }
     assert_equal(1, <%= class_name %>.count, 'Creates record')
-    assert_redirected_to url_for([:console, <%= class_name %>])
   end
 
   test 'update' do
@@ -38,7 +37,7 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
         title: 'Title',
       },
     }
-    assert_redirected_to url_for([:console, <%= class_name %>])
+    assert_redirected_to url_for([:edit, :console, menu])
     assert_equal('Title', model.reload.title)
   end
 
