@@ -1,4 +1,6 @@
-fieldset id="private_attachments"
+fieldset.mt-4.mb-3 id="private_attachments"
+  h2.mt-0.mb-3 = f.object.class.human_attribute_name(:private_attachments)
+
   = f.simple_fields_for :private_attachments do |g|
     = render partial: 'private_attachment_fields', locals: { f: g }
 

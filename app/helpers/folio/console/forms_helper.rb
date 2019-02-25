@@ -10,8 +10,8 @@ module Folio
       cell('folio/console/translated_inputs', f: f, key: key, args: args).show.html_safe
     end
 
-    def private_attachments_fields(f)
-      render partial: 'private_attachments', locals: { f: f }
+    def private_attachments_fields(f, options = {})
+      render partial: 'private_attachments', locals: options.merge(f: f)
     end
 
     def link_to_remove_association(*args)

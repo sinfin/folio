@@ -134,6 +134,7 @@ en:
     perex: Perex
     phone: Phone
     position: Position
+    private_attachments: Files
     published: Published
     published_at: Published at
     slug: Slug

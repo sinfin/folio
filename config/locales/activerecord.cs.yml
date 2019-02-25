@@ -154,6 +154,7 @@ cs:
     position: Pořadí
     published: Zveřejněno
     published_at: Zveřejněno k datu
+    private_attachments: Soubory
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
