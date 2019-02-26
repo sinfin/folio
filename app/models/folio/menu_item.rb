@@ -10,7 +10,6 @@ class Folio::MenuItem < Folio::ApplicationRecord
   scope :ordered, -> { order(position: :asc) }
 
   # Validations
-  validate :validate_target_and_menu_locales
   validate :validate_menu_allowed_types
   validate :validate_menu_available_targets_and_paths
 
@@ -25,16 +24,6 @@ class Folio::MenuItem < Folio::ApplicationRecord
 
   private
 
-    def validate_target_and_menu_locales
-      return if Rails.application.config.folio_using_traco
-      if target &&
-         target.respond_to?(:locale) &&
-         target.locale &&
-         target.locale != menu.locale
-        errors.add(:target, :invalid)
-      end
-    end
-
     def validate_menu_allowed_types
       if menu.class.allowed_menu_item_classes.exclude?(self.class)
         errors.add(:type, :invalid)
@@ -42,7 +31,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
     end
 
     def validate_menu_available_targets_and_paths
-      if target && menu.available_targets.exclude?(target)
+      if target && menu.available_targets.map { |t| [t.id, t.class.name] }.exclude?([target.id, target.class.name])
         errors.add(:target, :invalid)
       end
       if rails_path && menu.class.rails_paths.keys.exclude?(rails_path.to_sym)

@@ -29,7 +29,11 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def file_extension
-    Mime::Type.lookup(mime_type).symbol
+    if /msword/.match?(mime_type)
+      /docx/.match?(file_name) ? :docx : :doc
+    else
+      Mime::Type.lookup(mime_type).symbol
+    end
   end
 
   private
