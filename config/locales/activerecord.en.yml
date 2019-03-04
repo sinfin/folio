@@ -141,5 +141,6 @@ en:
     state: State
     tag_list: Keywords
     title: Title
+    to_label: Label
     url: URL
     visit: Visit

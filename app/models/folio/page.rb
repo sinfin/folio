@@ -19,7 +19,7 @@ class Folio::Page < Folio::ApplicationRecord
 
   if Rails.application.config.folio_using_traco
     include Folio::TracoSluggable
-    include Folio::HasAtoms::Translatable
+    include Folio::HasAtoms::Localized
 
     friendly_id :title, use: %i[slugged history simple_i18n]
 

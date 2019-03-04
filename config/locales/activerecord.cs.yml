@@ -158,6 +158,7 @@ cs:
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
+    to_label: Název
     title: Název
     url: URL
     visit: Návštěva

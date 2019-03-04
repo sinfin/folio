@@ -24,7 +24,7 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
     params = build(:<%= singular_table_name %>).serializable_hash
     assert_equal(0, <%= class_name %>.count)
     post url_for([:console, <%= class_name %>]), params: {
-      <%= instance_variable_name %>: params,
+      <%= singular_table_name %>: params,
     }
     assert_equal(1, <%= class_name %>.count, 'Creates record')
   end
@@ -33,11 +33,11 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
     model = create(:<%= singular_table_name %>)
     assert_not_equal('Title', model.title)
     put url_for([:console, model]), params: {
-      <%= instance_variable_name %>: {
+      <%= singular_table_name %>: {
         title: 'Title',
       },
     }
-    assert_redirected_to url_for([:edit, :console, menu])
+    assert_redirected_to url_for([:edit, :console, model])
     assert_equal('Title', model.reload.title)
   end
 

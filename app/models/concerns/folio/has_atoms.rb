@@ -48,6 +48,10 @@ module Folio::HasAtoms
       end
     end
 
+    def atoms(locale = I18n.locale)
+      send("#{locale}_atoms")
+    end
+
     def atoms_in_molecules
       Folio::Atom.atoms_in_molecules(atoms)
     end
