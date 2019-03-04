@@ -8,9 +8,13 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
 
   .f-c-layout-sidebar__part
     ul.f-c-layout-sidebar__ul
+      = render(:_prepended)
+
       - links.each do |item|
         li.f-c-layout-sidebar__li
           = item
+
+      = render(:_appended)
 
       li.f-c-layout-sidebar__li
         = link nil, controller.edit_console_site_path
