@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-03-04
+### Changed
+- split `Folio::HasAtoms` to `Folio::HasAtoms::Basic` for single-locale `:atoms` and `Folio::HasAtoms::Translatable` for multiple locales (`:cs_atoms`, `:en_atoms`, ...)
+
 ## 2019-02-20
 ### Added
 - `Folio::PrivateAttachment` model and `Folio::HasPrivateAttachments` concern

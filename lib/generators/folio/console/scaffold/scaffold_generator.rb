@@ -81,7 +81,8 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def attribute_inputs
-      form_attribute_names.map { |name| attribute_input(name) }.join("\n    ")
+      spacer = has_attachmentable? ? "\n        " : "\n    "
+      form_attribute_names.map { |name| attribute_input(name) }.join(spacer)
     end
 
     def attribute_input(name)

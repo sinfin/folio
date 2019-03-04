@@ -130,20 +130,40 @@ class Folio::Console::BaseController < Folio::ApplicationController
       [ hash ]
     end
 
-    def atoms_strong_params
-      I18n.available_locales.map do |locale|
+    def basic_atoms_strong_params
+      [
         {
-          "#{locale}_atoms_attributes": [:id,
-                                         :title,
-                                         :perex,
-                                         :content,
-                                         :type,
-                                         :model,
-                                         :model_id,
-                                         :model_type,
-                                         :position,
-                                         :_destroy,
-                                         *file_placements_strong_params]
+          atoms_attributes: [:id,
+                             :title,
+                             :perex,
+                             :content,
+                             :type,
+                             :model,
+                             :model_id,
+                             :model_type,
+                             :position,
+                             :_destroy,
+                             *file_placements_strong_params]
+        }
+      ]
+    end
+
+    def atoms_strong_params
+      base = [:id,
+              :title,
+              :perex,
+              :content,
+              :type,
+              :model,
+              :model_id,
+              :model_type,
+              :position,
+              :_destroy,
+              *file_placements_strong_params]
+
+      [{ atoms_attributes: base }] + I18n.available_locales.map do |locale|
+        {
+          "#{locale}_atoms_attributes": base
         }
       end
     end
@@ -152,6 +172,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
       I18n.available_locales.reduce(params) do |pars, locale|
         sti_hack(pars, "#{locale}_atoms_attributes".to_sym, :model)
       end
+    end
+
+    def params_with_atoms(params)
+      sti_atoms(params)
     end
 
     def sti_hack(params, nested_name, relation_name)

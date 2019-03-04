@@ -5,7 +5,6 @@ class Folio::Page < Folio::ApplicationRecord
   extend Folio::InheritenceBaseNaming
   include PgSearch
   include Folio::Taggable
-  include Folio::HasAtoms
   include Folio::HasAttachments
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
@@ -20,6 +19,7 @@ class Folio::Page < Folio::ApplicationRecord
 
   if Rails.application.config.folio_using_traco
     include Folio::TracoSluggable
+    include Folio::HasAtoms::Translatable
 
     friendly_id :title, use: %i[slugged history simple_i18n]
 
@@ -30,6 +30,8 @@ class Folio::Page < Folio::ApplicationRecord
                 presence: true
     end
   else
+    include Folio::HasAtoms::Basic
+
     friendly_id :title, use: %i[slugged history]
 
     validates :slug,
@@ -91,9 +93,24 @@ class Folio::Page < Folio::ApplicationRecord
                       }
                     end
                   end,
-                  associated_against: atom_multisearchable_keys.merge(
-                    file_placements: %i[title alt],
-                  ),
+                  associated_against: begin
+                    if Rails.application.config.folio_using_traco
+                      h = {}
+                      I18n.available_locales.each do |locale|
+                        h["#{locale}_atoms".to_sym] = %i[title perex content]
+                      end
+                      h
+
+                      h.merge(
+                        file_placements: %i[title alt],
+                      )
+                    else
+                      {
+                        atoms: %i[title perex content],
+                        file_placements: %i[title alt],
+                      }
+                    end
+                  end,
                   ignoring: :accents
 
   def to_label
