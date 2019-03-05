@@ -57,10 +57,12 @@ cs:
           attributes:
             verified_captcha:
               invalid: Neplatné potvrzení
+            email:
+              invalid: není platný
         folio/newsletter_subscription:
           attributes:
             email:
-              invalid: Neplatná e-mailová adresa
+              invalid: není platná
     models:
       folio/account:
         few: Uživatelé

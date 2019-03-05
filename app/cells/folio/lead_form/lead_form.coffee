@@ -33,7 +33,7 @@ $(document).on 'submit', '.folio-lead-form', (e) ->
         else
           $response.trigger('folio:failure')
 
-      .catch ->
+      .fail ->
         alert($wrap.data('failure'))
         $wrap.find('input[type="submit"]').prop('disabled', false)
         $wrap.removeClass('folio-lead-form-submitting')
