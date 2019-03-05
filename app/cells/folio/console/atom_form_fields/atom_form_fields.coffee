@@ -54,10 +54,10 @@ $(document)
   .on 'cocoon:after-insert', '.f-c-atom-form-fields__wrap', (e, insertedItem) ->
     atomFormBySelect($(insertedItem).find('.folio-console-atom-type-select'))
 
-  .on 'change', '.folio-console-atom-type-select', ->
+  .on 'change selectizeChange', '.folio-console-atom-type-select', ->
     atomFormBySelect($(this))
 
-  .on 'change', '.folio-console-atom-model-select', ->
+  .on 'change selectizeChange', '.folio-console-atom-model-select', ->
     window.folioConsoleAtom.atomModelContentPrefill($(this))
 
   .on 'focus', '.f-c-atom-form-fields .form-control', ->
@@ -68,4 +68,6 @@ $(document)
     $wrap = $(this).closest('.f-c-atom-form-fields')
     $wrap.removeClass('f-c-atom-form-fields--focused')
 
-$('.folio-console-atom-type-select').each -> atomFormBySelect($(this))
+  .on 'ready', ->
+    $('select.folio-console-atom-type-select').each ->
+      atomFormBySelect($(this))

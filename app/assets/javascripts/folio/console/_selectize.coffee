@@ -3,16 +3,19 @@ window.folioConsoleBindSelectize = ($selects) ->
     .not('.folio-console-selectize--bound')
     .addClass('folio-console-selectize--bound')
     .each ->
+      $this = $(this)
       if @multiple
-        $(this).selectize
+        $this.selectize
           dropdownParent: 'body'
           maxOptions: 50000
+          onChange: -> $this.trigger('selectizeChange')
       else
-        $(this).selectize
+        $this.selectize
           plugins: ['typing_mode']
           usePlaceholder: true
           dropdownParent: 'body'
           maxOptions: 50000
+          onChange: -> $this.trigger('selectizeChange')
 
 window.folioConsoleUnbindSelectize = ($selects) ->
   $selects

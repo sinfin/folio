@@ -169,8 +169,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def sti_atoms(params)
-      I18n.available_locales.reduce(params) do |pars, locale|
-        sti_hack(pars, "#{locale}_atoms_attributes".to_sym, :model)
+      keys = I18n.available_locales.map do |locale|
+        "#{locale}_atoms_attributes"
+      end + ['atoms_attributes']
+
+      keys.reduce(params) do |pars, key|
+        sti_hack(pars, key.to_sym, :model)
       end
     end
 
