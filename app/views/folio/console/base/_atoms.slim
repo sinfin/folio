@@ -1,4 +1,4 @@
-- if f.object.respond_to?(:atom_locales)
+- if f.object.class.respond_to?(:atom_locales)
   .row.f-c-atom-form-fields__wrap-row
     - f.object.class.atom_locales.each do |locale|
       - key = "#{locale}_atoms".to_sym
