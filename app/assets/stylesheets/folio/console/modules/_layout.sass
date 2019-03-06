@@ -15,7 +15,14 @@
 
 +mq-desktop-menu
   .f-c-layout-body
-    padding-left: 220px
+    &:not(&--devise)
+      padding-left: 220px
+
+    &--devise
+      min-height: 100%
+      display: flex
+      flex-direction: column
+      justify-content: center
 
   .f-c-layout-sidebar
     height: 100%
@@ -37,6 +44,11 @@
     top: 36px
     left: 0
     z-index: 2
+
+    .f-c-layout-body--devise &
+      position: fixed
+      top: 0
+      right: 0
 
   .f-c-layout-main-container
     position: relative

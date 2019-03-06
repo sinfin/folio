@@ -59,8 +59,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
 
+  s.add_dependency 'devise-i18n'
+  s.add_dependency 'devise-bootstrap-views'
+
   s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'devise-i18n'
   s.add_development_dependency 'byebug'
   s.add_development_dependency 'pry-rails'
   s.add_development_dependency 'rubocop-rails_config'

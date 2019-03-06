@@ -1,39 +1,23 @@
 .f-c-layout-body--devise
-  text-align: center
+  h1
+    @extend .h2
+    margin: 0 0 $spacer
+    text-align: center
 
-  h2
-    margin-top: 0
+  form + .form-group
+    margin-bottom: 0
+    text-align: center
 
-  input[type="text"],
-  input[type="password"],
-  input[type="email"]
-    @extend .form-control
-
-  .actions input
-    @extend .btn
+  .btn-primary
     @extend .btn-block
-    @extend .btn-primary
 
-  .field,
-  .actions
-    @extend .form-group
-
-    em
-      margin-bottom: 0.5rem
-
-  .field
-    text-align: left
-
-    br
+  .alert
+    .alert-heading
       display: none
 
-  input[name="account[remember_me]"]
-    &, ~ input, ~ label
+  .new_account
+    .form-group.form-check
       display: none
-
-.f-c-layout-main--devise
-  display: flex
-  flex-direction: column
 
 .f-c-layout-devise
   display: flex
@@ -42,15 +26,6 @@
 .f-c-layout-devise__inner
   background: white
   padding: $grid-gutter-width
-
-  .row
-    margin: 0
-    padding: 0
-
-    .col-sm-4
-      padding: 0
-      flex: 1 1 auto
-      max-width: none
 
 +media-breakpoint-up(md)
   .f-c-layout-devise
@@ -61,7 +36,3 @@
   .f-c-layout-devise__inner
     min-width: 350px
     border-radius: $border-radius
-
-+media-breakpoint-down(sm)
-  .f-c-layout-devise__inner
-    width: 100%
