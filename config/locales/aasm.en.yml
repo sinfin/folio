@@ -1,0 +1,22 @@
+---
+en:
+  aasm_events:
+    cancel:
+      btn_class: danger
+      icon_class: close
+      name: Stornovat
+    handle:
+      btn_class: success
+      icon_class: check
+      name: Vyřídit
+    unhandle:
+      btn_class: warning
+      icon_class: close
+      name: Označit jako nevyřízenou
+
+  activerecord:
+    attributes:
+      aasm_state: State
+      folio/lead:
+        aasm_state/submitted: To be handled
+        aasm_state/handled: Handled

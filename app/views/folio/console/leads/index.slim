@@ -1,26 +1,7 @@
-== cell('folio/console/index/header', \
-        Folio::Lead, \
-        csv_path: console_leads_path(format: :csv))
+= index_header csv: true
 
-- if leads = @leads.not_handled.presence
-  h2
-    = t('.not_handled')
+= index_show_for(@leads) do |s|
+  = s.show_link :to_label
+  = s.state
 
-    == cell('folio/console/index/checkboxes').(:toggle)
-
-  = form_tag mass_handle_console_leads_path
-    .folio-console-index-table
-      == cell('folio/console/index/checkboxes')
-
-      table
-        tbody
-          = render partial: 'lead', collection: leads
-
-- if leads = @leads.handled.presence
-  h2 style="opacity: 0.5;"
-    = t('.handled')
-
-  .folio-console-index-table style="opacity: 0.5;"
-    table
-      tbody
-        = render partial: 'lead', collection: leads
+  = s.actions

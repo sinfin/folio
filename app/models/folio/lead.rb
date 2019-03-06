@@ -25,8 +25,8 @@ class Folio::Lead < Folio::ApplicationRecord
                   ignoring: :accents
 
   aasm do
-    state :submitted, initial: true
-    state :handled
+    state :submitted, initial: true, color: 'red'
+    state :handled, color: 'green'
 
     event :handle do
       transitions from: :submitted, to: :handled
@@ -41,8 +41,10 @@ class Folio::Lead < Folio::ApplicationRecord
     email.presence || phone.presence || self.class.model_name.human
   end
 
+  alias_method :to_label, :title
+
   def self.csv_attribute_names
-    %i[id email phone note created_at name url state]
+    %i[id email phone note created_at name url aasm_state]
   end
 
   def self.clears_page_cache_on_save?
@@ -52,8 +54,8 @@ class Folio::Lead < Folio::ApplicationRecord
   def csv_attributes
     self.class.csv_attribute_names.map do |attr|
       case attr
-      when :state
-        human_state_name
+      when :aasm_state
+        aasm.human_state
       else
         send(attr)
       end

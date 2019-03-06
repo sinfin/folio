@@ -5,7 +5,7 @@ table.table
     tr
       td = Folio::Lead.human_attribute_name(:state)
       td
-        = @lead.human_state_name
+        = @lead.aasm.human_state
 
         br
         br
