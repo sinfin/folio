@@ -24,6 +24,7 @@ class Folio::Site < Folio::ApplicationRecord
     %i[facebook
        instagram
        twitter
+       linkedin
        youtube
        appstore
        google_play

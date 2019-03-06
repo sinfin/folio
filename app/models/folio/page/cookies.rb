@@ -2,10 +2,6 @@
 
 class Folio::Page::Cookies < Folio::Page
   include Folio::Singleton
-
-  def console_caret_icon
-    'info-circle'
-  end
 end
 
 # == Schema Information
