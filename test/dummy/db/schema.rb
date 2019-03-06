@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_20_070412) do
+ActiveRecord::Schema.define(version: 2019_03_06_150818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2019_02_20_070412) do
     t.string "name"
     t.string "url"
     t.json "additional_data"
-    t.string "state", default: "submitted"
+    t.string "aasm_state", default: "submitted"
     t.bigint "visit_id"
     t.index ["visit_id"], name: "index_folio_leads_on_visit_id"
   end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Lead < Folio::ApplicationRecord
+  include AASM
+
   attr_accessor :verified_captcha
 
   belongs_to :visit, optional: true
@@ -15,21 +17,23 @@ class Folio::Lead < Folio::ApplicationRecord
   validate :validate_verified_captcha
 
   # Scopes
-  scope :handled, -> { with_state(:handled) }
-  scope :not_handled, -> { with_state(:submitted) }
+  scope :not_handled, -> { submitted }
   scope :ordered, -> { order(created_at: :desc) }
 
   pg_search_scope :by_query,
                   against: %i[email name phone],
                   ignoring: :accents
 
-  state_machine initial: :submitted do
+  aasm do
+    state :submitted, initial: true
+    state :handled
+
     event :handle do
-      transition submitted: :handled
+      transitions from: :submitted, to: :handled
     end
 
     event :unhandle do
-      transition handled: :submitted
+      transitions from: :handled, to: :submitted
     end
   end
 
@@ -86,7 +90,7 @@ end
 #  name            :string
 #  url             :string
 #  additional_data :json
-#  state           :string           default("submitted")
+#  aasm_state      :string           default("submitted")
 #  visit_id        :bigint(8)
 #
 # Indexes
