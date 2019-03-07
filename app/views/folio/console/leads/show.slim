@@ -1,64 +1,14 @@
-h1 = Folio::Lead.model_name.human
+= show_header @lead
 
-table.table
-  tbody
-    tr
-      td = Folio::Lead.human_attribute_name(:state)
-      td
-        = @lead.aasm.human_state
+= show_for(@lead) do |s|
+  = s.attribute(:name)
+  = s.email
+  = s.attribute(:phone)
+  = s.attribute(:note)
+  = s.attribute(:url)
+  = s.visit
 
-        br
-        br
-
-        - if @lead.handled?
-          = link_to t('.unhandle'), \
-                    unhandle_console_lead_path(@lead), \
-                    method: :patch, \
-                    class: 'btn btn-danger'
-        - else
-          = link_to t('.handle'), \
-                    handle_console_lead_path(@lead), \
-                    method: :patch, \
-                    class: 'btn btn-success'
-
-    tr
-      td = Folio::Lead.human_attribute_name(:name)
-      td = @lead.name.presence || t('.blank')
-
-    tr
-      td = Folio::Lead.human_attribute_name(:email)
-      td
-        - if @lead.email.present?
-          - if @lead.skip_email_validation?
-            = @lead.email
-          - else
-            = mail_to(@lead.email, @lead.email)
-        - else
-          = t('.blank')
-
-    tr
-      td = Folio::Lead.human_attribute_name(:phone)
-      td
-        - if @lead.phone.present?
-          = link_to(@lead.phone, "tel:#{@lead.phone}")
-        - else
-          = t('.blank')
-
-    tr
-      td = Folio::Lead.human_attribute_name(:note)
-      td = @lead.note.presence || t('.blank')
-
-    tr
-      td = Folio::Lead.human_attribute_name(:url)
-      td = link_to(@lead.url, @lead.url)
-
-    tr
-      td = Visit.model_name.human
-      td
-        - if @lead.visit.present?
-          = link_to(@lead.visit.id, console_visit_path(@lead.visit.id))
-        - else
-          ' -
-
-    = render(partial: 'folio/console/leads/additional_data', \
-             locals: { lead: @lead })
+  - s.object.additional_data.present?
+    - s.object.additional_data.each do |key, value|
+      = s.attribute(key)
+        = value

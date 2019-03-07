@@ -1,3 +1,21 @@
+.f-c-show-for__content.blank
+  opacity: 0.5
+
+*:not(.f-c-show-for-index) > .f-c-show-for__row
+  .f-c-show-for__cell
+    margin-bottom: $spacer
+
+  .f-c-show-for__label
+    display: inline-block
+    margin-right: 1ch
+
+    &:after
+      content: ':'
+      display: inline
+
+  .f-c-show-for__content
+    display: inline-block
+
 +mq-desktop-menu
   .f-c-show-for-index
     display: table

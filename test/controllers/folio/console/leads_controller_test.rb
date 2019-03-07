@@ -4,32 +4,36 @@ require 'test_helper'
 
 class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
   test 'index' do
-    get console_leads_path
+    get url_for([:console, Folio::Lead])
+    assert_response :success
+    create(:folio_lead)
+    get url_for([:console, Folio::Lead])
     assert_response :success
   end
 
-  test 'show' do
-    get console_lead_path(create(:folio_lead))
+  test 'edit' do
+    model = create(:folio_lead)
+    get url_for([:edit, :console, model])
     assert_response :success
+  end
+
+  test 'update' do
+    model = create(:folio_lead)
+    assert_not_equal('email@email.email', model.email)
+    put url_for([:console, model]), params: {
+      lead: {
+        email: 'email@email.email',
+      },
+    }
+    assert_redirected_to url_for([:edit, :console, model])
+    assert_equal('email@email.email', model.reload.email)
   end
 
   test 'destroy' do
     model = create(:folio_lead)
-    delete console_lead_path(model.id)
-    assert_redirected_to console_leads_path
+    delete url_for([:console, model])
+    assert_redirected_to url_for([:console, Folio::Lead])
     assert_not(Folio::Lead.exists?(id: model.id))
-  end
-
-  test 'handle / unhandle' do
-    model = create(:folio_lead)
-    assert_not(model.handled?)
-    patch handle_console_lead_path(model.id)
-    assert_redirected_to console_leads_path
-    assert(model.reload.handled?)
-
-    patch unhandle_console_lead_path(model.id)
-    assert_redirected_to console_leads_path
-    assert_not(model.reload.handled?)
   end
 
   test 'mass_handle' do

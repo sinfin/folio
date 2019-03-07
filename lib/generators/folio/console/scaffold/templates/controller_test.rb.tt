@@ -7,6 +7,9 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
   test 'index' do
     get url_for([:console, <%= class_name %>])
     assert_response :success
+    create(:<%= singular_table_name %>)
+    get url_for([:console, <%= class_name %>])
+    assert_response :success
   end
 
   test 'new' do

@@ -8,4 +8,8 @@ class Folio::ConsoleCell < Folio::ApplicationCell
       (yield subfields).html_safe
     end
   end
+
+  def url_for(*args)
+    controller.url_for(*args)
+  end
 end

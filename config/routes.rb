@@ -26,7 +26,7 @@ Folio::Engine.routes.draw do
     resources :documents, except: %i[show new] do
       collection { post :tag }
     end
-    resources :leads, only: %i[index show update destroy] do
+    resources :leads, only: %i[index show edit update destroy] do
       collection do
         post :mass_handle
       end

@@ -81,7 +81,7 @@ class ShowFor::Builder
     end
   end
 
-  def email(attr)
+  def email(attr = :email)
     attribute(attr) do
       if object.persisted?
         template.mail_to(object.public_send(attr), nil)
@@ -117,8 +117,7 @@ class ShowFor::Builder
   def state
     attribute(:aasm_state) do
       if object.persisted?
-        template.cell('folio/console/index/state',
-                      object).show.try(:html_safe)
+        template.cell('folio/console/state', object).show.try(:html_safe)
       end
     end
   end

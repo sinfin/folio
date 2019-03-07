@@ -24,6 +24,12 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         button: 'secondary',
         url: safe_url_for([:edit, :console, model]),
       },
+      show: {
+        name: :show,
+        icon: 'eye',
+        button: 'light',
+        url: safe_url_for([:console, model]),
+      },
       preview: {
         name: :preview,
         icon: 'eye',

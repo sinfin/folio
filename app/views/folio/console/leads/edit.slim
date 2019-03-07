@@ -1,0 +1,11 @@
+= simple_form_for([:console, @lead]) do |f|
+  = form_header f
+
+  = f.input :name
+  = f.input :email
+  = f.input :phone
+  = f.input :note
+  = f.input :url
+  = f.input :additional_data
+
+  = form_footer f

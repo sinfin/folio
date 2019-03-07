@@ -26,6 +26,9 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
     end
   end
 
+  def edit
+  end
+
   def update
     @lead.update(lead_params)
     respond_with @lead
@@ -36,19 +39,9 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
     respond_with @lead
   end
 
-  def handle
-    @lead.handle!
-    respond_with @lead
-  end
-
-  def unhandle
-    @lead.unhandle!
-    respond_with @lead
-  end
-
   def mass_handle
     @leads = Folio::Lead.not_handled.where(id: params.require(:leads))
-    @leads.update_all(state: 'handled')
+    @leads.update_all(aasm_state: 'handled')
     flash.notice = t('.success')
     respond_with @leads
   end
@@ -56,6 +49,13 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
   private
 
     def lead_params
-      params.require(:lead).permit(:email, :phone, :note)
+      params.require(:lead)
+            .permit(:aasm_state,
+                    :name,
+                    :email,
+                    :phone,
+                    :note,
+                    :url,
+                    :additional_data)
     end
 end

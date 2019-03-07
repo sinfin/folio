@@ -2,6 +2,8 @@
 
 = index_show_for(@leads) do |s|
   = s.show_link :to_label
+  = s.attribute(:created_at)
+  = s.visit
   = s.state
 
-  = s.actions
+  = s.actions :show, :edit, :destroy
