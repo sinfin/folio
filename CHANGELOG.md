@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-03-07
+### Added
+- `folio_by_scopes_for` to `Folio::Filterable`
+
+### Changed
+- console index filters
+
 ## 2019-03-04
 ### Changed
 - split `Folio::HasAtoms` to `Folio::HasAtoms::Basic` for single-locale `:atoms` and `Folio::HasAtoms::Localized` for multiple locales (`:cs_atoms`, `:en_atoms`, ...)

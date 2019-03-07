@@ -10,6 +10,17 @@ module Folio::Publishable
       scope :unpublished, -> { where("#{table_name}.published != ? OR "\
                                      "#{table_name}.published IS NULL",
                                      true) }
+
+      scope :by_published, -> (bool) {
+        case bool
+        when true, 'true'
+          published
+        when false, 'false'
+          unpublished
+        else
+          all
+        end
+      }
     end
 
     def published?
@@ -35,6 +46,17 @@ module Folio::Publishable
               "(#{table_name}.published_at IS NULL OR #{table_name}.published_at > ?)",
               true,
               Time.now.change(sec: 0))
+      }
+
+      scope :by_published, -> (bool) {
+        case bool
+        when true, 'true'
+          published
+        when false, 'false'
+          unpublished
+        else
+          all
+        end
       }
 
       before_save :auto_publish_now, if: :published_changed?
