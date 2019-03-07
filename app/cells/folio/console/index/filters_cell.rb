@@ -37,18 +37,43 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def collection(key)
-    index_filters[key].map do |value|
+    base = index_filters[key].map do |value|
       if value == true
         [t('true'), true]
       elsif value == false
         [t('false'), false]
+      elsif !value.is_a?(Array)
+        [value, value]
       else
         value
       end
     end
+
+    if controller.params[key].present?
+      base.map do |label, value|
+        [
+          "#{label_for_key(key)} - #{label}",
+          value,
+        ]
+      end
+    else
+      base
+    end
   end
 
   def blank_label(key)
-    "#{klass.human_attribute_name(key.to_s.gsub(/\Aby_/, ''))}..."
+    if controller.params[key].present?
+      "× #{t('folio.console.actions.cancel')}"
+    else
+      "#{label_for_key(key)}..."
+    end
+  end
+
+  def label_for_key(key)
+    klass.human_attribute_name(key.to_s.gsub(/\Aby_/, ''))
+  end
+
+  def cancel_url
+    url_for([:console, klass, by_query: controller.params[:by_query]])
   end
 end

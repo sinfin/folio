@@ -8,9 +8,7 @@
 
       - if filtered?
         .ml-g
-          == cell('folio/console/cancel', \
-                  url_for([:console, klass, by_query: controller.params[:by_query]]), \
-                  label: t('.cancel'))
+          == cell('folio/console/cancel', cancel_url, label: t('.cancel'))
 
       = f.input :by_query, as: :hidden,
                            input_html: { value: controller.params[:by_query] }
