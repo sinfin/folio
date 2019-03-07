@@ -30,10 +30,10 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
   def form(event, &block)
     opts = {
-      method: :patch,
-      url: url_for([:console, model]),
+      method: :post,
+      url: url_for([:event, :console, model]),
     }
-    simple_form_for model, opts, &block
+    simple_form_for '', opts, &block
   end
 
   def target_state(event)

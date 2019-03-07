@@ -50,6 +50,23 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
   end
 
+  def event
+    event = params.require(:aasm_event).to_sym
+    name = "@#{params[:controller].split('/').last.singularize}".to_sym
+
+    if instance_variable_get(name).aasm
+                                  .events(possible: true)
+                                  .any? { |e| e.name == event }
+      instance_variable_get(name).send("#{event}!")
+      respond_with instance_variable_get(name)
+    else
+      human_event = AASM::Localizer.new.human_event_name(@klass, event)
+
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }
+    end
+  end
+
   def url_for(options = nil)
     super(options)
   rescue NoMethodError

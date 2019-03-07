@@ -18,6 +18,8 @@ en:
         atoms:
           add: Add chapter
           title: Content
+      base_controller:
+        invalid_event: Cannot perform event - %{event}.
       breadcrumbs:
         actions:
           add: Add

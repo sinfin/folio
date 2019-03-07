@@ -27,13 +27,8 @@ Folio::Engine.routes.draw do
       collection { post :tag }
     end
     resources :leads, only: %i[index show edit update destroy] do
-      collection do
-        post :mass_handle
-      end
-      member do
-        patch :handle
-        patch :unhandle
-      end
+      collection { post :mass_handle }
+      member { post :event }
     end
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts

@@ -18,6 +18,8 @@ cs:
         atoms:
           add: Přidat kapitolu
           title: Obsah
+      base_controller:
+        invalid_event: Nelze provést změnu stavu - %{event}.
       breadcrumbs:
         actions:
           add: Přidat
