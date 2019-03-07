@@ -5,6 +5,8 @@ class Folio::Console::DocumentsController < Folio::Console::BaseController
   add_breadcrumb(Folio::Document.model_name.human(count: 2),
                  :console_documents_path)
 
+  before_action { @klass = Folio::Document }
+
   private
 
     def index_path

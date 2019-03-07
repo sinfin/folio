@@ -7,9 +7,7 @@
       .mr-h
         == cell('folio/console/state', model)
 
-    - if has_edit?
-      a.btn.btn-outline.ml-h[
-        href=url_for([:edit, :console, model])
-      ]
+    - if edit_url
+      a.btn.btn-outline.ml-h href=edit_url
         i.fa.fa-edit
         = t('folio.console.actions.edit')

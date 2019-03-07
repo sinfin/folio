@@ -5,6 +5,8 @@ class Folio::Console::ImagesController < Folio::Console::BaseController
   add_breadcrumb(Folio::Image.model_name.human(count: 2),
                  :console_images_path)
 
+  before_action { @klass = Folio::Image }
+
   private
 
     def index_path

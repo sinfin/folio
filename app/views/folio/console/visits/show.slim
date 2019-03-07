@@ -1,12 +1,11 @@
-h1 = Visit.model_name.human
+= show_header @visit
 
 .row
   .col-md-5
-    table.table
+    = show_for @visit do |s|
       - @visit.attributes.each do |k, v|
-        tr
-          th = Visit.human_attribute_name(k)
-          td = v
+        - if v.present?
+          = s.attribute(k)
 
   .col-md-6.offset-md-1
     == cell('folio/console/ahoy_events', @visit.ahoy_events.ordered)
