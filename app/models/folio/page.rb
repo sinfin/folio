@@ -64,6 +64,8 @@ class Folio::Page < Folio::ApplicationRecord
                     else
                       [:title]
                     end
+                  rescue ActiveRecord::NoDatabaseError
+                    [:title]
                   end,
                   ignoring: :accents
 
@@ -89,6 +91,11 @@ class Folio::Page < Folio::ApplicationRecord
                         perex: 'B',
                       }
                     end
+                  rescue ActiveRecord::NoDatabaseError
+                    {
+                      title: 'A',
+                      perex: 'B',
+                    }
                   end,
                   associated_against: begin
                     if Rails.application.config.folio_using_traco
