@@ -40,9 +40,6 @@ cs:
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
       documents_management: Správa dokumentů
       file_title_prompt: Název souboru
-      filters:
-        all_tags: Všechny tagy
-        query: Vyhledávání...
       finalizing: Dokončuji
       footer:
         text: Administrace webu %{site_name}.
@@ -57,12 +54,6 @@ cs:
           handle_selected: Vyřídit vybrané
           uncheck_all: Odvybrat vše
           toggle: Hromadný výběr
-        filters:
-          all: Všechny
-          cancel: Zrušit filtry
-          title: Filtry
-        header:
-          by_query: Filtrovat...
       leads:
         index:
           handled: Vyřízené

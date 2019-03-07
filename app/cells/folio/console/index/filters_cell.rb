@@ -1,27 +1,46 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
+  include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
+
+  def klass
+    model[:klass]
+  end
+
+  def index_filters
+    model[:index_filters]
+  end
 
   def form(&block)
     opts = {
       method: :get,
-      'data-auto-submit': true,
+      url: request.path,
+      html: {
+        class: 'f-c-index-filters f-c-anti-container-fluid',
+        'data-auto-submit' => true,
+      }
     }
-    form_tag(controller.request.url, opts, &block)
+    simple_form_for '', opts, &block
   end
 
   def filtered?
-    model.keys.any? { |key| controller.params[key].present? }
+    index_filters.keys.any? { |key| controller.params[key].present? }
   end
 
-  def select(key)
-    select_tag key, select_options(key),
-               include_blank: false,
-               class: 'form-control'
+  def select(f, key)
+    f.input key, collection: index_filters[key],
+                 include_blank: blank_label(key),
+                 selected: controller.params[key],
+                 label: false,
+                 input_html: { class: 'folio-console-selectize--manual' }
   end
 
   def select_options(key)
-    options_for_select(model[key], controller.params[key])
+    options_for_select(index_filters[key], controller.params[key])
+  end
+
+  def blank_label(key)
+    "#{klass.human_attribute_name(key.to_s.gsub(/\Aby_/, ''))}..."
   end
 end

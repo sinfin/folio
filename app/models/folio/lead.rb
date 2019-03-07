@@ -2,6 +2,7 @@
 
 class Folio::Lead < Folio::ApplicationRecord
   include AASM
+  include PgSearch
 
   attr_accessor :verified_captcha
 
@@ -19,10 +20,10 @@ class Folio::Lead < Folio::ApplicationRecord
   # Scopes
   scope :not_handled, -> { submitted }
   scope :ordered, -> { order(created_at: :desc) }
+  scope :by_state, -> (state) { where(aasm_state: state) }
 
   pg_search_scope :by_query,
-                  against: %i[email name phone],
-                  ignoring: :accents
+                  against: %i[email name phone]
 
   aasm do
     state :submitted, initial: true, color: 'red'

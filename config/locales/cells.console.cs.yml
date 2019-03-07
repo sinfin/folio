@@ -3,6 +3,10 @@ cs:
   folio:
     console:
       index:
+        filters:
+          title: Filtr
+          cancel: Zrušit filtry
+
         header:
           add: Přidat
           csv: CSV

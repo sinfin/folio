@@ -3,6 +3,10 @@ en:
   folio:
     console:
       index:
+        filters:
+          title: Filter
+          cancel: Cancel filters
+
         header:
           add: Add
           csv: CSV

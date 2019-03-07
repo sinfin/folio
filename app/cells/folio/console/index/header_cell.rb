@@ -18,12 +18,28 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_autocomplete
-    title_columns = model.column_names.grep(/\A(title|name)/)
+    title_columns = model.column_names.grep(/\A(title|name|email)/)
     if title_columns.present?
-      model.pluck(title_columns).flatten.uniq
+      safe_columns = Arel.sql(title_columns.join(', '))
+      model.select(safe_columns)
+           .map { |r| title_columns.map { |c| r.send(c) } }
+           .flatten
+           .uniq
     else
       nil
     end
+  end
+
+  def query_reset_url
+    h = {}
+
+    controller.index_filters.keys.each do |key|
+      if controller.params[key].present?
+        h[key] = controller.params[key]
+      end
+    end
+
+    controller.url_for([:console, model, h])
   end
 
   def new_button(&block)

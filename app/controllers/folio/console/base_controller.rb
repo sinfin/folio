@@ -56,6 +56,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
     main_app.url_for(options)
   end
 
+  def filter_params
+    params.permit(:by_query, *index_filters.keys)
+  end
+
+  def index_filters
+    {}
+  end
+
   private
     # TODO: authorize account
     # def authorize_admin_user!
@@ -65,23 +73,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def current_ability
       @current_ability ||= Folio::ConsoleAbility.new(current_admin)
     end
-
-    def query
-      @query ||= params[:by_query]
-    end
-
-    helper_method :query
-
-    def filter_params
-      params.permit(:by_query, *index_filters.keys)
-    end
-
-    def index_filters
-      {}
-    end
-
-    helper_method :filter_params
-    helper_method :index_filters
 
     def add_root_breadcrumb
       add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path

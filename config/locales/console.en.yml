@@ -40,9 +40,6 @@ en:
           file_hint: Do not input anything to keep the original file.
       documents_management: Documents management
       file_title_prompt: Displayed file name
-      filters:
-        all_tags: Všechny tagy
-        query: Vyhledávání...
       finalizing: Finalizing
       footer:
         text: Administration console for %{site_name}.
@@ -56,12 +53,6 @@ en:
           check_all: Check all
           handle_selected: Handle selected
           uncheck_all: Uncheck all
-        filters:
-          all: All
-          cancel: Cancel filters
-          title: Filtering
-        header:
-          by_query: Filter...
       leads:
         index:
           handled: Handled

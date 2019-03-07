@@ -1,16 +1,16 @@
-= form
-  strong.folio-console-index-filters-title = t('.title')
+= form do |f|
+  .container-fluid
+    .f-c-index-filters__inner
+      strong = t('.title')
 
-  - model.keys.each do |key|
-    .form-group
-      = select key
+      - index_filters.keys.each do |key|
+        = select(f, key)
 
-  - if filtered?
-    button.btn.btn-block.btn-outline-danger[
-      type="submit"
-      data-target="*"
-      data-change-value=""
-    ]
-      = t('.cancel')
+      - if filtered?
+        .ml-g
+          == cell('folio/console/cancel', \
+                  url_for([:console, klass, by_query: controller.params[:by_query]]), \
+                  label: t('.cancel'))
 
-  = hidden_field_tag :by_query, controller.params[:by_query]
+      = f.input :by_query, as: :hidden,
+                           input_html: { value: controller.params[:by_query] }

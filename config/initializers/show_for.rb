@@ -84,7 +84,12 @@ class ShowFor::Builder
   def email(attr = :email)
     attribute(attr) do
       if object.persisted?
-        template.mail_to(object.public_send(attr), nil)
+        [
+          object.public_send(attr),
+          template.mail_to(object.public_send(attr),
+                           '',
+                           class: 'fa fa--small ml-1 fa-envelope'),
+        ].join(' ').html_safe
       end
     end
   end
