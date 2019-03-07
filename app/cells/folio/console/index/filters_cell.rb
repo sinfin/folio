@@ -29,15 +29,23 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def select(f, key)
-    f.input key, collection: index_filters[key],
+    f.input key, collection: collection(key),
                  include_blank: blank_label(key),
                  selected: controller.params[key],
                  label: false,
                  input_html: { class: 'folio-console-selectize--manual' }
   end
 
-  def select_options(key)
-    options_for_select(index_filters[key], controller.params[key])
+  def collection(key)
+    index_filters[key].map do |value|
+      if value == true
+        [t('true'), true]
+      elsif value == false
+        [t('false'), false]
+      else
+        value
+      end
+    end
   end
 
   def blank_label(key)

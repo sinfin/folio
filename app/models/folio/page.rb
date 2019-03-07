@@ -46,14 +46,22 @@ class Folio::Page < Folio::ApplicationRecord
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }
   scope :featured,  -> { where(featured: true) }
 
-  scope :by_published, -> (state) {
-    case state
-    when 'published'
+  scope :by_published, -> (bool) {
+    case bool
+    when true, 'true'
       published
-    when 'unpublished'
+    when false, 'false'
       unpublished
     else
-      where(nil)
+      all
+    end
+  }
+
+  scope :by_type, -> (type) {
+    if type == 'Folio::Page'
+      where(type: [type, nil])
+    else
+      where(type: type)
     end
   }
 
