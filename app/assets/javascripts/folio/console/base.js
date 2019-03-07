@@ -46,7 +46,6 @@
 //= require folio/console/react_picker/react_picker
 //= require folio/console/menu_tree/menu_tree
 //= require folio/console/file_list/file_list
-//= require folio/console/index/checkboxes/checkboxes
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/form/errors/errors
 //= require folio/console/modules/_layout
