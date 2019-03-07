@@ -3,21 +3,6 @@
 class Folio::Console::MenusController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Menu'
 
-  def create
-    @menu = Folio::Menu.create(menu_params)
-    respond_with @menu
-  end
-
-  def update
-    @menu.update(menu_params)
-    respond_with @menu, location: { action: :edit }
-  end
-
-  def destroy
-    @menu.destroy
-    respond_with @menu
-  end
-
   def show
     fail ActionController::MethodNotAllowed unless @menu.supports_nesting?
   end

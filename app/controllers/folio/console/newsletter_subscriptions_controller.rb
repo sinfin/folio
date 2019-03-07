@@ -6,9 +6,4 @@ class Folio::Console::NewsletterSubscriptionsController < Folio::Console::BaseCo
   def index
     @pagy, @newsletter_subscriptions = pagy(@newsletter_subscriptions)
   end
-
-  def destroy
-    @newsletter_subscription.destroy
-    respond_with @newsletter_subscription
-  end
 end

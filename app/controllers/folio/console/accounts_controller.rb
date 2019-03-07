@@ -7,21 +7,6 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
     @pagy, @accounts = pagy(@accounts)
   end
 
-  def create
-    @account = Folio::Account.create(account_params)
-    respond_with @account
-  end
-
-  def update
-    @account.update(account_params)
-    respond_with @account
-  end
-
-  def destroy
-    @account.destroy
-    respond_with @account
-  end
-
   private
 
     def account_params

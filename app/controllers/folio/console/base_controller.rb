@@ -2,6 +2,7 @@
 
 class Folio::Console::BaseController < Folio::ApplicationController
   include Pagy::Backend
+  include Folio::Console::DefaultActions
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
@@ -47,23 +48,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
       end
-    end
-  end
-
-  def event
-    event = params.require(:aasm_event).to_sym
-    name = "@#{params[:controller].split('/').last.singularize}".to_sym
-
-    if instance_variable_get(name).aasm
-                                  .events(possible: true)
-                                  .any? { |e| e.name == event }
-      instance_variable_get(name).send("#{event}!")
-      respond_with instance_variable_get(name)
-    else
-      human_event = AASM::Localizer.new.human_event_name(@klass, event)
-
-      redirect_back fallback_location: url_for([:console, @klass]),
-                    flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }
     end
   end
 

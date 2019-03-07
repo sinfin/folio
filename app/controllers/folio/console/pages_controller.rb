@@ -7,21 +7,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     @pages = @pages.ordered
   end
 
-  def create
-    @page = Folio::Page.create(page_params)
-    respond_with @page
-  end
-
-  def update
-    @page.update(page_params)
-    respond_with @page
-  end
-
-  def destroy
-    @page.destroy
-    respond_with @page
-  end
-
   def index_filters
     {
       by_type: Folio::Page.recursive_subclasses.map do |klass|

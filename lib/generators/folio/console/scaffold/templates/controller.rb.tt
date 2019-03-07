@@ -4,24 +4,9 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
   def index
     <%- if positionable? -%>
     <%= instance_variable_name(plural: true) %> = @<%= class_name %>.ordered
+
     <%- end -%>
-
     @pagy, @<%= instance_variable_name(plural: true) %> = pagy(@<%= instance_variable_name(plural: true) %>)
-  end
-
-  def create
-    @<%= instance_variable_name %> = <%= class_name %>.create(<%= instance_variable_name %>_params)
-    respond_with @<%= instance_variable_name %>
-  end
-
-  def update
-    @<%= instance_variable_name %>.update(<%= instance_variable_name %>_params)
-    respond_with @<%= instance_variable_name %>
-  end
-
-  def destroy
-    @<%= instance_variable_name %>.destroy
-    respond_with @<%= instance_variable_name %>
   end
 
   private

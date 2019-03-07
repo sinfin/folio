@@ -26,19 +26,6 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
     end
   end
 
-  def edit
-  end
-
-  def update
-    @lead.update(lead_params)
-    respond_with @lead
-  end
-
-  def destroy
-    @lead.destroy
-    respond_with @lead
-  end
-
   def mass_handle
     @leads = Folio::Lead.not_handled.where(id: params.require(:leads))
     @leads.update_all(aasm_state: 'handled')

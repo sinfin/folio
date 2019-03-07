@@ -36,16 +36,10 @@ class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
     assert_not(Folio::Lead.exists?(id: model.id))
   end
 
-  test 'mass_handle' do
-    models = create_list(:folio_lead, 3)
+  test 'event' do
     model = create(:folio_lead)
-
-    assert(models.none? { |m| m.handled? })
-    post mass_handle_console_leads_path, params: {
-      leads: models.map(&:id),
-    }
-    assert_redirected_to console_leads_path
-    assert(models.all? { |m| m.reload.handled? })
-    assert_not(model.reload.handled?)
+    assert_not(model.handled?)
+    post url_for([:event, :console, model]), params: { aasm_event: 'handle' }
+    assert(model.reload.handled?)
   end
 end
