@@ -15,6 +15,22 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
         type IN ('Folio::Node', 'Folio::Category', 'Folio::NodeTranslation')
     SQL
 
+    conn.execute <<~SQL
+      UPDATE folio_menu_items
+      SET
+        target_type = 'Folio::Page'
+      WHERE
+        target_type IN ('Folio::Node', 'Folio::Category', 'Folio::NodeTranslation')
+    SQL
+
+    conn.execute <<~SQL
+      UPDATE folio_atoms
+      SET
+        placement_type = 'Folio::Page'
+      WHERE
+        placement_type IN ('Folio::Node', 'Folio::Category', 'Folio::NodeTranslation')
+    SQL
+
     [
       ['folio_atoms', 'placement_type'],
       ['folio_atoms', 'model_type'],

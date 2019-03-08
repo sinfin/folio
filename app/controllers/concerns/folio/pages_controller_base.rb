@@ -26,17 +26,17 @@ module Folio::PagesControllerBase
         @page = pages_scope.published_or_admin(admin_preview?)
                            .friendly
                            .find(path.shift)
-        add_breadcrumb @page.title, url_for(@page)
+        add_breadcrumb @page.title, page_path(@page)
 
-        path.each do |path_part|
+        path.each do |slug|
           children = filter_pages_by_locale(@page.children)
           @page = children.published_or_admin(admin_preview?)
                           .friendly
-                          .find(path_part)
-          add_breadcrumb @page.title, url_for(@page)
+                          .find(slug)
+          add_breadcrumb @page.title, nested_page_path(@page)
         end
 
-        force_correct_path(url_for(@page))
+        force_correct_path(nested_page_path(@page))
       else
         @page = pages_scope.published_or_admin(admin_preview?)
                            .friendly

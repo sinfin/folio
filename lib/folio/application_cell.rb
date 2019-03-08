@@ -23,4 +23,8 @@ class Folio::ApplicationCell < Cell::ViewModel
       class_names.join(' ')
     end
   end
+
+  def url_for(options)
+    controller.url_for(options)
+  end
 end

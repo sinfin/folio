@@ -37,13 +37,14 @@ module Folio::ApplicationControllerBase
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)
 
-      path = [page]
-      while page.parent
-        # TODO: translate?
-        path.unshift page.parent
-        page = page.parent
+      parts = [page]
+
+      while page = page.parent
+        parts << page
       end
-      main_app.page_path(params.merge(path: path.map(&:slug).join('/')))
+
+      path = parts.reverse.map(&:slug).join('/')
+      main_app.page_path(path: path)
     end
 
     def set_meta_variables(instance, mappings = {})
