@@ -5,7 +5,7 @@ Folio::Engine.routes.draw do
 
   get 'errors/internal_server_error'
 
-  devise_for :accounts, class_name: 'Folio::Account', module: :devise
+  devise_for :accounts, class_name: 'Folio::Account', module: 'folio/accounts'
 
   root to: 'home#index', as: :home
 
