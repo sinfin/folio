@@ -137,6 +137,24 @@ class ShowFor::Builder
     end
   end
 
+  def cover
+    attribute(:cover) do
+      if object.persisted?
+        template.cell('folio/console/index/images',
+                      object,
+                      cover: true).show.try(:html_safe)
+      end
+    end
+  end
+
+  def images
+    attribute(:images) do
+      if object.persisted?
+        template.cell('folio/console/index/images', object).show.try(:html_safe)
+      end
+    end
+  end
+
   private
 
     def resource_link(attr, url_for_args)

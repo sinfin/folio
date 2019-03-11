@@ -1,0 +1,8 @@
+.f-c-index-images class=id_class_name
+  - if options[:cover]
+    .f-c-index-images__item
+      = image(model.cover_placement)
+  - else
+    - model.image_placements.first(3).each do |placement|
+      .f-c-index-images__item
+        = image(placement)
