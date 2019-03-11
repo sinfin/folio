@@ -7,16 +7,16 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     @pages = @pages.ordered
   end
 
-  def index_filters
-    {
-      by_type: Folio::Page.recursive_subclasses.map do |klass|
-                 [klass.model_name.human, klass]
-               end,
-      by_published: [true, false],
-    }
-  end
-
   private
+
+    def index_filters
+      {
+        by_type: Folio::Page.recursive_subclasses.map do |klass|
+                   [klass.model_name.human, klass]
+                 end,
+        by_published: [true, false],
+      }
+    end
 
     def page_params
       sti_atoms(

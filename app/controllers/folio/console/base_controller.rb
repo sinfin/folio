@@ -61,15 +61,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
     params.permit(:by_query, *index_filters.keys)
   end
 
-  def index_filters
-    {}
-  end
-
   private
     # TODO: authorize account
     # def authorize_admin_user!
     #   authorize! :manage, :all
     # end
+
+    def index_filters
+      {}
+    end
 
     def current_ability
       @current_ability ||= Folio::ConsoleAbility.new(current_admin)

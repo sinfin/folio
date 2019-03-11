@@ -23,8 +23,8 @@
               href=query_reset_url
             ]
 
-        - if controller.index_filters.present?
-          - controller.index_filters.keys.each do |key|
+        - if controller.send(:index_filters).present?
+          - controller.send(:index_filters).keys.each do |key|
             - if controller.params[key].present?
               = f.input(key, as: :hidden, \
                              input_html: { \
@@ -36,11 +36,17 @@
       i.fa.fa-download<>
       ' CSV
 
-  = new_button
-    i.fa.fa-plus
-    = t('.add')
+  - if options[:types]
+    .f-c-index-header__new-dropdown
+      == cell('folio/console/dropdown', title: render(:_new_button_label),  \
+                                        class_name: 'btn btn-success', \
+                                        links: new_dropdown_links)
 
-- if controller.index_filters.present?
+  - else
+    = new_button
+      = render(:_new_button_label)
+
+- if controller.send(:index_filters).present?
   == cell('folio/console/index/filters', \
           klass: model, \
-          index_filters: controller.index_filters)
+          index_filters: controller.send(:index_filters))

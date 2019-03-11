@@ -33,13 +33,13 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
     respond_with @leads
   end
 
-  def index_filters
-    {
-      by_state: Folio::Lead.aasm.states_for_select,
-    }
-  end
-
   private
+
+    def index_filters
+      {
+        by_state: Folio::Lead.aasm.states_for_select,
+      }
+    end
 
     def lead_params
       params.require(:lead)

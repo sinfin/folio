@@ -9,7 +9,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def query_form(&block)
     opts = {
-      url: controller.url_for([:console, model]),
+      url: url_for([:console, model]),
       method: :get,
       html: { class: 'f-c-index-header__form' },
     }
@@ -33,17 +33,17 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def query_reset_url
     h = {}
 
-    controller.index_filters.keys.each do |key|
+    controller.send(:index_filters).keys.each do |key|
       if controller.params[key].present?
         h[key] = controller.params[key]
       end
     end
 
-    controller.url_for([:console, model, h])
+    url_for([:console, model, h])
   end
 
   def new_button(&block)
-    url = controller.url_for([:console, model, action: :new])
+    url = url_for([:console, model, action: :new])
     html_opts = { title: t('.add'),
                   class: 'btn btn-success '\
                          'f-c-index-header__btn f-c-index-header__btn--new' }
@@ -51,7 +51,20 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   rescue NoMethodError
   end
 
+  def new_dropdown_title
+    render(:_new_dropdown_title)
+  end
+
+  def new_dropdown_links
+    options[:types].map do |klass|
+      {
+        title: klass.model_name.human,
+        url: url_for([:console, model, action: :new, type: klass.to_s])
+      }
+    end
+  end
+
   def csv_path
-    controller.url_for([:console, model, format: :csv])
+    url_for([:console, model, format: :csv])
   end
 end
