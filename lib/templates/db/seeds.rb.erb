@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
+def force_destroy(klass)
+  klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+end
+
 Folio::Account.destroy_all
 Folio::Atom::Base.destroy_all
 Folio::File.destroy_all
-Folio::Page.destroy_all
-Folio::Site.destroy_all
+force_destroy Folio::Menu
+force_destroy Folio::Page
+force_destroy Folio::Site
 
 def unsplash_pic(square = false)
   image = Folio::Image.new
@@ -13,11 +18,13 @@ def unsplash_pic(square = false)
   image
 end
 
-Folio::Account.create!(email: 'test@test.test',
-                       password: 'test@test.test',
-                       role: :superuser,
-                       first_name: 'Test',
-                       last_name: 'Dummy')
+if Rails.env.development?
+  Folio::Account.create!(email: 'test@test.test',
+                         password: 'test@test.test',
+                         role: :superuser,
+                         first_name: 'Test',
+                         last_name: 'Dummy')
+end
 
 site = Folio::Site.new(title: '<%= project_name %>',
                        domain: '<%= project_name %>.localhost',

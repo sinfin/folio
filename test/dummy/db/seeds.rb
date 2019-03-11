@@ -2,13 +2,17 @@
 
 require 'faker'
 
+def force_destroy(klass)
+  klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+end
+
 Folio::Atom::Base.destroy_all
-Folio::Page.destroy_all
-Folio::Site.destroy_all
 Folio::Account.destroy_all
 Folio::Lead.destroy_all
-Folio::Menu.destroy_all
 Folio::File.destroy_all
+force_destroy Folio::Menu
+force_destroy Folio::Page
+force_destroy Folio::Site
 
 def unsplash_pic(square = false)
   image = Folio::Image.new
@@ -57,11 +61,13 @@ Folio::MenuItem.create!(menu: menu,
                         target: about,
                         position: 1)
 
-Folio::Account.create!(email: 'test@test.test',
-                       password: 'test@test.test',
-                       role: :superuser,
-                       first_name: 'Test',
-                       last_name: 'Dummy')
+if Rails.env.development?
+  Folio::Account.create!(email: 'test@test.test',
+                         password: 'test@test.test',
+                         role: :superuser,
+                         first_name: 'Test',
+                         last_name: 'Dummy')
+end
 
 nestable_menu = Dummy::Menu::Nestable.create!(locale: :cs)
 Folio::MenuItem.create!(menu: nestable_menu,
