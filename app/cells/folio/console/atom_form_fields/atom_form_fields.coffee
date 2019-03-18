@@ -5,7 +5,6 @@
 #= require ./coffee/_switchFileFields
 
 atomFormBySelect = ($element) ->
-  window.folioConsoleBindSelectize($element) unless $element.hasClass('selectized')
   klass = $element.val()
   $fields = $element.closest('.nested-fields')
   $wrap = $fields.find('.folio-console-atom-main-fields').first()

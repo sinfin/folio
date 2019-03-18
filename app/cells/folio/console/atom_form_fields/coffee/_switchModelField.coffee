@@ -19,7 +19,6 @@ window.folioConsoleAtom.switchModelField = ({ structure, $field, klassFilter }) 
       .each ->
         $this = $(this)
         window.folioConsoleAtom.atomModelContentPrefill($this)
-        window.folioConsoleBindSelectize($this)
       .closest('.form-group')
       .removeAttr('hidden')
   else

@@ -19,17 +19,3 @@ window.folioConsoleUnbindSelectize = ($selects) ->
     .filter('.folio-console-selectize--bound')
     .removeClass('folio-console-selectize--bound')
     .each -> @selectize.destroy()
-
-$ ->
-  $items = $('select').not('.folio-console-selectize--manual')
-  window.folioConsoleBindSelectize($items)
-
-  $(document)
-    .on 'cocoon:after-insert', (e, insertedItem) ->
-      $items = $(insertedItem).find('select')
-                              .not('.folio-console-selectize--manual')
-
-      window.folioConsoleBindSelectize($items)
-
-    .on 'cocoon:before-remove', (e, item) ->
-      window.folioConsoleUnbindSelectize($(item).find('select'))
