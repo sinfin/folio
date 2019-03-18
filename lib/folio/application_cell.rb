@@ -17,7 +17,10 @@ class Folio::ApplicationCell < Cell::ViewModel
       class_names << options[:class_name] if options[:class_name]
 
       keys.each do |key|
-        class_names << "#{base}--#{key.to_s.gsub('_', '-')}" if options[key]
+        if try(key) || options[key]
+          safe_key = key.to_s.gsub('_', '-').gsub('?', '')
+          class_names << "#{base}--#{safe_key}"
+        end
       end
 
       class_names.join(' ')
