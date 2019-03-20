@@ -59,7 +59,6 @@ class ModalSingleSelect extends ModalSelect {
     const name = this.inputName($el)
     const placementKey = $fields.data('placement-key')
     const placementType = $fields.data('placement-type')
-    console.log(placementType)
     const prefix = `${name}[${placementKey}_attributes]`
 
     const $newFile = $(`
