@@ -16,6 +16,10 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
     options[:placement_key]
   end
 
+  def placement_type
+    f.object.class.reflect_on_association(placement_key).class_name
+  end
+
   def title
     options[:title].presence ||
       f.object.class.human_attribute_name(placement_key)

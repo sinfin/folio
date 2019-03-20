@@ -18,13 +18,14 @@ class ModalMultiSelect extends ModalSelect {
 
     const name = this.inputName($el)
     const placementKey = $wrap.data('placement-key')
+    const placementType = $wrap.data('placement-type')
     const date = Date.now()
     let i = 0
 
     const selected = this.props.filePlacements.selected.map((placement) => {
       i++
       const prefix = `${name}[${placementKey}_attributes][${date + i}]`
-      return this.htmlForPlacement(placement, prefix, i)
+      return this.htmlForPlacement(placement, prefix, placementType, i)
     })
 
     const deleted = this.props.filePlacements.deleted.map((placement, i) => {
@@ -42,13 +43,14 @@ class ModalMultiSelect extends ModalSelect {
     this.close()
   }
 
-  htmlForPlacement = (placement, prefix, i) => {
+  htmlForPlacement = (placement, prefix, placementType, i) => {
     const hiddenFields = [
       hiddenFieldHtml(prefix, 'id', placement.id),
       hiddenFieldHtml(prefix, 'alt', placement.alt),
       hiddenFieldHtml(prefix, 'title', placement.title),
       hiddenFieldHtml(prefix, 'file_id', placement.file_id),
       hiddenFieldHtml(prefix, 'position', i),
+      hiddenFieldHtml(prefix, 'type', placementType),
       hiddenFieldHtml(prefix, '_destroy', 0),
     ].join('')
 
