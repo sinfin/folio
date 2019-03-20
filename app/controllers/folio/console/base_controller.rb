@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class Folio::Console::BaseController < Folio::ApplicationController
   include Pagy::Backend
   include Folio::Console::DefaultActions
@@ -214,5 +216,19 @@ class Folio::Console::BaseController < Folio::ApplicationController
       else
         super(*resources, &block)
       end
+    end
+
+    def render_csv(records)
+      data = ::CSV.generate(headers: true) do |csv|
+        csv << @klass.csv_attribute_names.map do |a|
+          @klass.human_attribute_name(a)
+        end
+        records.each { |rec| csv << rec.csv_attributes }
+      end
+      name = @klass.model_name.human(count: 2)
+      filename = "#{name}-#{Date.today}.csv".split('.')
+                                            .map(&:parameterize)
+                                            .join('.')
+      send_data data, filename: filename
     end
 end

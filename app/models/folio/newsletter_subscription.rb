@@ -17,6 +17,16 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     email
   end
 
+  def self.csv_attribute_names
+    %i[id email created_at]
+  end
+
+  def csv_attributes
+    self.class.csv_attribute_names.map do |attr|
+      send(attr)
+    end
+  end
+
   def self.clears_page_cache_on_save?
     false
   end
