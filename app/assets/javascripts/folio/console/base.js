@@ -3,7 +3,7 @@
 //= require folio-bootstrap/dist/js/bootstrap.bundle
 //= require moment/min/moment.min
 //= require moment/locale/cs
-//= require tempusdominus-bs4/build/js/tempusdominus-bootstrap-4
+//= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require slideout.js/dist/slideout
 //= require jquery-debounce/jquery.debounce
 
