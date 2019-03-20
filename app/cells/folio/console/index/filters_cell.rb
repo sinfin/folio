@@ -32,8 +32,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     f.input key, collection: collection(key),
                  include_blank: blank_label(key),
                  selected: controller.params[key],
-                 label: false,
-                 input_html: { class: 'folio-console-selectize--manual' }
+                 label: false
   end
 
   def collection(key)

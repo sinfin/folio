@@ -10,8 +10,6 @@
 //= require jquery-ui/jquery-ui
 //= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
 //= require selectize/dist/js/standalone/selectize
-//= require selectize-typing-mode
-//= require jquery.dirty/dist/jquery.dirty
 
 //= require cocoon
 //= require redactor
@@ -36,7 +34,6 @@
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_cocoon-prompt-file-input
-//= require folio/console/_selectize
 //= require folio/console/_tabs
 //= require folio/console/atom_form_fields/atom_form_fields
 //= require folio/console/tagsinput/tagsinput

@@ -9,7 +9,6 @@ window.folioConsoleAtom.switchModelField = ({ structure, $field, klassFilter }) 
 
     $selects
       .not($activeSelects)
-      .each -> @selectize?.destroy()
       .prop('disabled', true)
       .closest('.form-group')
       .attr('hidden', true)

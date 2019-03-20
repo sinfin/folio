@@ -78,7 +78,6 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
           disabled: !active,
           wrapper_html: { hidden: !active },
           input_html: {
-            class: 'folio-console-atom-model-select folio-console-selectize--manual',
             data: { class: type.to_s }
           }
       end

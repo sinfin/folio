@@ -1,4 +1,7 @@
 $('.simple_form')
   .filter(-> @className.match(/(new_|edit_)/))
-  .dirty
-    preventLeaving: true
+  .one 'change', ->
+    beforeunload = -> 'Changes you made may not be saved.'
+
+    $(window).on 'beforeunload', beforeunload
+    $(this).on 'submit', -> $(window).off('beforeunload')

@@ -21,7 +21,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     def page_params
       sti_atoms(
         params.require(:page)
-              .permit(*(Folio::Page.column_names - ['id']),
+              .permit(*(Folio::Page.column_names - ['id'] + ['tag_list']),
                       *atoms_strong_params,
                       *file_placements_strong_params)
       )
