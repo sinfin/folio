@@ -39,6 +39,7 @@ PATH
       responders
       sass-rails
       show_for
+      sidekiq
       simple_form
       sitemap_generator
       slim
@@ -164,6 +165,7 @@ GEM
     coffee-script-source (1.12.2)
     colorize (0.8.1)
     concurrent-ruby (1.1.4)
+    connection_pool (2.2.2)
     countries (3.0.0)
       i18n_data (~> 0.8.0)
       sixarm_ruby_unaccent (~> 1.1)
@@ -330,6 +332,8 @@ GEM
     rack (2.0.6)
     rack-mini-profiler (1.0.1)
       rack (>= 1.2.0)
+    rack-protection (2.0.5)
+      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rack_session_access (0.2.0)
@@ -369,6 +373,7 @@ GEM
       ffi (~> 1.0)
     recaptcha (4.13.1)
       json
+    redis (4.1.0)
     referer-parser (0.3.0)
     request_store (1.4.1)
       rack (>= 1.4)
@@ -409,6 +414,11 @@ GEM
     show_for (0.6.1)
       actionpack (>= 4.1)
       activemodel (>= 4.1)
+    sidekiq (5.2.5)
+      connection_pool (~> 2.2, >= 2.2.2)
+      rack (>= 1.5.0)
+      rack-protection (>= 1.5.0)
+      redis (>= 3.3.5, < 5)
     simple_form (4.1.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
