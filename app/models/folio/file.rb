@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::File < Folio::ApplicationRecord
-  include Folio::Taggable
-  include Folio::SanitizeFilename
+  include Folio::InheritanceHack
   include Folio::MimeTypeDetection
+  include Folio::SanitizeFilename
+  include Folio::Taggable
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename

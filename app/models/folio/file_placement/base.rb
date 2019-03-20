@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::FilePlacement::Base < Folio::ApplicationRecord
+  include Folio::InheritanceHack
   include Folio::Taggable
 
   self.table_name = 'folio_file_placements'
@@ -41,7 +42,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   private
 
     def extract_placement_title_and_type
-      if placement.present?
+      if try(:placement).present?
         if placement.class < Folio::Atom::Base
           source = placement.placement
         else
