@@ -1,2 +1,2 @@
-.<%= classname_prefix %>-<%= dashed_resource_name %>
+.<%= classname_prefix %><%= dashed_resource_name %>
   = model

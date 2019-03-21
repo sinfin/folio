@@ -12,7 +12,11 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
   private
 
     def classname_prefix
-      Rails.application.class.name[0].downcase
+      if name.start_with?('/')
+        ''
+      else
+        "#{Rails.application.class.name[0].downcase}-"
+      end
     end
 
     def model_resource_name
