@@ -8,7 +8,7 @@
   = s.attribute(:url)
   = s.visit
 
-  - s.object.additional_data.present?
+  - if s.object.additional_data.present?
     - s.object.additional_data.each do |key, value|
       = s.attribute(key)
         = value
