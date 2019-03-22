@@ -8,6 +8,8 @@ class Folio::LeadsController < Folio::ApplicationController
     :note_label,
     :note_rows,
     :above_submit_content,
+    :next_to_submit_content,
+    :under_submit_content,
   ]
 
   def create
