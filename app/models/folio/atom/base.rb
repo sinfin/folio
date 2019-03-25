@@ -167,3 +167,12 @@ end
 #  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
 #  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
 #
+
+if Rails.env.development?
+  Dir[
+    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
+    Rails.root.join('app/models/**/atom/**/*.rb')
+  ].each do |file|
+    require_dependency file
+  end
+end

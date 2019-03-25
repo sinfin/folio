@@ -24,12 +24,3 @@ module Folio::Atom
     molecules
   end
 end
-
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
-    Rails.root.join('app/models/**/atom/**/*.rb')
-  ].each do |file|
-    require_dependency file
-  end
-end
