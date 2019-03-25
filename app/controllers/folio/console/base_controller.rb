@@ -8,6 +8,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
+  before_action do
+    I18n.locale = Rails.application.config.folio_console_locale
+  end
   # TODO: before_action :authorize_account!
 
   layout 'folio/console/application'

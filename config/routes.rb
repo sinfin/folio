@@ -9,7 +9,7 @@ Folio::Engine.routes.draw do
 
   root to: 'home#index', as: :home
 
-  namespace :console, locale: Rails.application.config.folio_console_locale do
+  namespace :console do
     root to: 'dashboard#index'
     resources :dashboard, only: :index
 
