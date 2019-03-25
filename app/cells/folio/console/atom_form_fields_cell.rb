@@ -94,7 +94,7 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
       sti_records_for_select(klass.scoped_model_resource(model_class),
                              show_model_names: show_model_names,
                              add_content: true)
-    end
+    end.sort_by { |ary| I18n.transliterate(ary.first) }
   end
 
   def placeholders
