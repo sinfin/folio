@@ -34,6 +34,7 @@ require 'invisible_captcha'
 require 'rails-i18n'
 require 'aasm'
 require 'recaptcha'
+require 'paper_trail'
 
 require 'folio/console/simple_form_inputs/date_time_input'
 

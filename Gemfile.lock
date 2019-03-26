@@ -31,6 +31,7 @@ PATH
       mini_magick
       nokogiri
       pagy
+      paper_trail
       pg (~> 0.21.0)
       pg_search
       rails (~> 5.2.1)
@@ -48,7 +49,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.0.1)
+    aasm (5.0.2)
       concurrent-ruby (~> 1.0)
     actioncable (5.2.2)
       actionpack (= 5.2.2)
@@ -207,7 +208,7 @@ GEM
     faker (1.9.1)
       i18n (>= 0.7)
     ffi (1.10.0)
-    fog-aws (3.3.0)
+    fog-aws (3.4.0)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
       fog-xml (~> 0.1)
@@ -313,7 +314,10 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
-    pagy (2.0.1)
+    pagy (2.1.4)
+    paper_trail (10.2.1)
+      activerecord (>= 4.2, < 6.1)
+      request_store (~> 1.1)
     parallel (1.13.0)
     parser (2.6.0.0)
       ast (~> 2.4.0)
@@ -371,7 +375,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    recaptcha (4.13.1)
+    recaptcha (4.13.2)
       json
     redis (4.1.0)
     referer-parser (0.3.0)

@@ -3,7 +3,7 @@
 $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 
 # Maintain your gem's version:
-require 'folio/version'
+require 'folio/version_number'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
@@ -56,6 +56,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'recaptcha'
   s.add_dependency 'nokogiri'
   s.add_dependency 'show_for'
+  s.add_dependency 'paper_trail'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'

@@ -8,6 +8,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
+  before_action :set_paper_trail_whodunnit
   # TODO: before_action :authorize_account!
 
   layout 'folio/console/application'
@@ -174,6 +175,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def params_with_atoms(params)
       sti_atoms(params)
+    end
+
+    def user_for_paper_trail
+      current_account.id
     end
 
     def sti_hack(params, nested_name, relation_name)
