@@ -60,6 +60,9 @@
             $selector.html('');
             $selector.off('change');
 
+            var formData = this.$form.getData()
+            var url = formData.link || formData.url
+
             for (var key in data)
             {
                 if (!data.hasOwnProperty(key) || typeof data[key] !== 'object')
@@ -72,6 +75,10 @@
                 var $option = $R.dom('<option>');
                 $option.val(key);
                 $option.html(data[key].name);
+
+                if (data[key].url === url) {
+                    $option.attr('selected', 'selected')
+                }
 
                 $selector.append($option);
             }

@@ -31,8 +31,9 @@
         open: ($modal, $form) ->
           node = $modal.app.selection.getCurrent()
           if node?.classList?.contains('folio-redactor-button')
-            $form.getField('link').val(node.querySelector('a').href)
-            $form.getField('text').val(node.querySelector('a').text)
+            $a = $(node).find('a')
+            $form.getField('link').val($a.attr('href'))
+            $form.getField('text').val($a.text())
 
         opened: ($modal, $form) ->
           $form.getField('link').focus()
