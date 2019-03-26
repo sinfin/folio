@@ -1,7 +1,7 @@
 (($R) ->
   $R.add 'plugin', 'button',
-  	modals:
-  	  button: """
+    modals:
+      button: """
         <form action="">
           <div class="form-item">
             <label>## button-link ##</label>
@@ -54,7 +54,7 @@
         title: @lang.get('button')
         api: 'plugin.button.open'
 
-      $button.setIcon('<i class="fa fa-hand-pointer-o"></i>')
+      $button.setIcon('<i class="fa fa-hand-pointer"></i>')
 
     open: ->
       @app.api 'module.modal.build',

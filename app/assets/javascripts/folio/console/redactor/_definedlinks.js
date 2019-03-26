@@ -13,16 +13,14 @@
         },
         // messages
         onmodal: {
-            link: {
-                open: function($modal, $form)
-                {
-                    if (!this.opts.definedlinks) return;
+            open: function($modal, $form)
+            {
+                if (!this.opts.definedlinks) return;
 
-                    this.$modal = $modal;
-                    this.$form = $form;
+                this.$modal = $modal;
+                this.$form = $form;
 
-                    this._load();
-                }
+                this._load();
             }
         },
 
@@ -84,17 +82,18 @@
         {
             var formData = this.$form.getData();
             var key = $R.dom(e.target).val();
-            var data = { text: '', url: '' };
+            var data = { text: '', url: '', link: '' };
 
             if (key !== '0')
             {
                 data.text = this.links[key].name;
                 data.url = this.links[key].url;
+                data.link = this.links[key].url;
             }
 
             if (formData.text !== '')
             {
-                data = { url: data.url };
+                data = { url: data.url, link: data.link };
             }
 
             this.$form.setData(data);
