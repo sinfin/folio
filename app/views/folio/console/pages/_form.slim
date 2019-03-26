@@ -32,6 +32,10 @@
                           collection: Folio::Page.arrange_as_array, \
                           label_method: :select_option_depth, \
                           value_method: :id
+      .col-md-2.text-right
+        .folio-console-versions-btn
+          a.btn.btn-secondary href=url_for([:console, @page, :versions])
+            = t('folio.console.versions.title')
 
     == translated_inputs f, :perex
 

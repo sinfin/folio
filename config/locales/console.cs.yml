@@ -138,6 +138,8 @@ cs:
         add_image: Přidat obrázek
         add_video: Přidat video
         remove_video: Odebrat video
+      versions:
+        title: Historie verzí
   date:
     formats:
       console_short: "%d. %m. %Y"

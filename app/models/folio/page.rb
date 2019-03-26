@@ -9,6 +9,8 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
 
+  has_paper_trail class_name: 'Folio::Version'
+
   if Rails.application.config.folio_pages_translations
     include Folio::Translatable
   end
