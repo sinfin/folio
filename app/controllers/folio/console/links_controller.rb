@@ -44,6 +44,7 @@ class Folio::Console::LinksController < Folio::Console::BaseController
     end
 
     def record_label(record)
-      "#{record.class.model_name.human} - #{record.try(:to_label)}"
+      label = record.try(:to_console_label) || record.try(:to_label)
+      "#{record.class.model_name.human} - #{label}"
     end
 end
