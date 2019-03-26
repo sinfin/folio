@@ -21,8 +21,12 @@ class Folio::Console::VersionsController < Folio::Console::BaseController
 
     def find_item
       item_class = params[:item_class].safe_constantize
-      id_param = :"#{item_class.to_s.demodulize.parameterize}_id"
+      item_to_param = item_class.to_s.demodulize.parameterize
+      @versions_partial_name = "folio/console/#{item_to_param.pluralize}/versions"
 
-      @item = item_class.find(params[id_param])
+      @item = item_class.find(params[:"#{item_to_param}_id"])
     end
+
+    attr_reader :versions_partial_name
+    helper_method :versions_partial_name
 end
