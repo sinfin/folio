@@ -7,12 +7,13 @@
 atomFormBySelect = ($element) ->
   klass = $element.val()
   $fields = $element.closest('.nested-fields')
+  $fieldset = $fields.closest('.f-c-atom-form-fields__wrap')
   $wrap = $fields.find('.folio-console-atom-main-fields').first()
   presence = []
   klassFilter = """[data-class="#{klass}"]"""
 
-  structure = $fields.data('structures')[klass]
-  placeholders = $fields.data('placeholders')[klass]
+  structure = $fieldset.data('structures')[klass]
+  placeholders = $fieldset.data('placeholders')[klass]
 
   presence.push window.folioConsoleAtom.switchStringField
     structure: structure.title
@@ -32,7 +33,8 @@ atomFormBySelect = ($element) ->
   presence.push window.folioConsoleAtom.switchModelField
     structure: structure.model
     $field: $fields.find('.folio-console-atom-model')
-    klassFilter: klassFilter
+    $fieldset: $fieldset
+    klass: klass
 
   presence.push window.folioConsoleAtom.switchFileFields
     $fields: $fields.find('.folio-console-atom-fields')
