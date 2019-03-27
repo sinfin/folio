@@ -32,7 +32,7 @@ atomFormBySelect = ($element) ->
 
   presence.push window.folioConsoleAtom.switchModelField
     structure: structure.model
-    $field: $fields.find('.folio-console-atom-model')
+    $field: $fields.find('.folio-console-atom-model .form-group')
     $fieldset: $fieldset
     klass: klass
 
