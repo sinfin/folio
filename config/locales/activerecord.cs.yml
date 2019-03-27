@@ -139,6 +139,7 @@ cs:
   attributes:
     aasm_state: Stav
     content: Obsah
+    cover: Obrázek
     cover_placement: Obrázek
     description: Popisek
     email: E-mail

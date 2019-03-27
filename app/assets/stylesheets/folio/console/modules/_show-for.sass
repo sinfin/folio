@@ -52,6 +52,13 @@
       background: $table-bg
       vertical-align: middle
 
+      &[class$="_cover"],
+      &[class$="_cover blank"]
+        width: 59px
+
+        .f-c-show-for__label
+          display: none
+
 +mq-mobile-menu
   .f-c-show-for-index
     .f-c-show-for__row
