@@ -22,7 +22,7 @@ module Folio
     def rendered_breadcrumbs
       if @breadcrumbs.present?
         render_breadcrumbs(
-          builder: Folio::Console::BootstrapBreadcrumbsBuilder
+          builder: ::Folio::Console::BootstrapBreadcrumbsBuilder
         )
       end
     end
