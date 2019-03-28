@@ -22,6 +22,13 @@ def unsplash_pic(square = false)
   image
 end
 
+def file_pic(file_instance)
+  image = Folio::Image.new
+  image.file = file_instance
+  image.save!
+  image
+end
+
 2.times { unsplash_pic }
 
 Folio::Site.create!(title: 'Sinfin.digital',
@@ -41,6 +48,14 @@ about = Folio::Page.create!(title: 'O nás',
                             published_at: 1.month.ago)
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
+
+
+night_sky = Folio::Page.create!(title: 'Noční obloha', published: true, published_at: 1.month.ago, locale: :cs)
+night_photo = File.new(Rails.root.join('..', 'fixtures', 'folio', 'night.jpg'))
+night_sky.cover = file_pic(night_photo)
+1.times { night_sky.images << file_pic(night_photo) }
+# TODO: Atoms
+
 
 reference = Folio::Page.create!(title: 'Reference',
                                 published: true,
