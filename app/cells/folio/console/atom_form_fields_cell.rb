@@ -88,7 +88,7 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
     show_model_names = klass::STRUCTURE[:model].size > 1
 
     klass::STRUCTURE[:model].flat_map do |model_class_name|
-      model_class = model_class_name.safe_constantize
+      model_class = model_class_name.constantize
       sti_records_for_select(klass.scoped_model_resource(model_class),
                              show_model_names: show_model_names,
                              add_content: true)

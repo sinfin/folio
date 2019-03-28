@@ -25,7 +25,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   # end
 
   def self.folio_console_controller_for(class_name)
-    klass = class_name.safe_constantize
+    klass = class_name.constantize
 
     if klass.private_method_defined?(:positionable_last_position)
       include Folio::Console::SetPositions

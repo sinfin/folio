@@ -91,7 +91,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     def model_type_is_allowed
       if model &&
          klass::STRUCTURE[:model].present? &&
-         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.safe_constantize) }
+         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.constantize) }
         errors.add(:model_type, :invalid)
       end
     end
