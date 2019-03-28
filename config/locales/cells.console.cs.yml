@@ -11,6 +11,10 @@ cs:
           add: Přidat
           csv: CSV
 
+        no_records:
+          text: Žádné záznamy.
+          new: Vytvořit?
+
       form:
         errors:
           fix: Opravit
@@ -25,4 +29,3 @@ cs:
       searches:
         results:
           title: Výsledky vyhledávání
-

@@ -15,7 +15,9 @@ module Folio
     end
 
     def index_show_for(collection, &block)
-      return nil if collection.blank?
+      if collection.blank?
+        return cell('folio/console/index/no_records', @klass).show.html_safe
+      end
 
       empty = show_for(collection.first.class.new, &block).html_safe
 
