@@ -8,8 +8,9 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::HasAttachments
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
+  include Folio::HasVersions
 
-  has_paper_trail class_name: 'Folio::Version'
+  has_folio_versions
 
   if Rails.application.config.folio_pages_translations
     include Folio::Translatable
