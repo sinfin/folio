@@ -37,15 +37,16 @@ Folio::Site.create!(title: 'Sinfin.digital',
                     })
 
 about = Folio::Page.create!(title: 'O nás',
-                            published: true)
+                            published: true,
+                            published_at: 1.month.ago)
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
 
 reference = Folio::Page.create!(title: 'Reference',
                                 published: true,
                                 published_at: 1.day.ago)
-Folio::Page.create!(title: 'Smart Cities', published: true)
-Folio::Page.create!(title: 'Vyvolej.to', published: true)
+Folio::Page.create!(title: 'Smart Cities', published: true, published_at: 1.month.ago)
+Folio::Page.create!(title: 'Vyvolej.to', published: true, published_at: 1.month.ago)
 Folio::Page.create!(title: 'Hidden', published: false)
 Folio::Page.create!(title: 'DAM', published: true)
 

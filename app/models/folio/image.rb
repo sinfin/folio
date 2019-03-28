@@ -3,6 +3,7 @@
 class Folio::Image < Folio::File
   include Folio::DragonflyFormatValidation
   include Folio::Thumbnails
+  include Folio::Sitemap::Image
 
   validate_file_format
 end
