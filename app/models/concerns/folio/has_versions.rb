@@ -5,8 +5,8 @@ module Folio::HasVersions
 
   module ClassMethods
     def has_folio_versions(opts = {})
-      opts[:class_name] = 'Folio::Version'
-      has_paper_trail versions: opts
+      opts[:versions] = { class_name: 'Folio::Version' }
+      has_paper_trail opts
     end
   end
 end

@@ -8,6 +8,7 @@ PATH
       acts-as-taggable-on (~> 6.0)
       ahoy_matey (~> 2)
       ancestry
+      audited (~> 4.7)
       breadcrumbs_on_rails
       cancancan (~> 2.0)
       carrierwave
@@ -31,7 +32,6 @@ PATH
       mini_magick
       nokogiri
       pagy
-      paper_trail
       pg (~> 0.21.0)
       pg_search
       rails (~> 5.2.1)
@@ -118,6 +118,8 @@ GEM
       rake (>= 10.4, < 13.0)
     arel (9.0.0)
     ast (2.4.0)
+    audited (4.8.0)
+      activerecord (>= 4.0, < 5.3)
     bcrypt (3.1.12)
     better_errors (2.5.0)
       coderay (>= 1.0.0)
@@ -177,7 +179,7 @@ GEM
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
     device_detector (1.0.1)
-    devise (4.6.1)
+    devise (4.6.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 4.1.0, < 6.0)
@@ -186,9 +188,9 @@ GEM
     devise-bootstrap-views (1.1.0)
     devise-i18n (1.8.0)
       devise (>= 4.6)
-    dotenv (2.7.1)
-    dotenv-rails (2.7.1)
-      dotenv (= 2.7.1)
+    dotenv (2.7.2)
+    dotenv-rails (2.7.2)
+      dotenv (= 2.7.2)
       railties (>= 3.2, < 6.1)
     dragonfly (1.2.0)
       addressable (~> 2.3)
@@ -314,10 +316,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
-    pagy (2.1.4)
-    paper_trail (10.2.1)
-      activerecord (>= 4.2, < 6.1)
-      request_store (~> 1.1)
+    pagy (2.1.5)
     parallel (1.13.0)
     parser (2.6.0.0)
       ast (~> 2.4.0)

@@ -14,6 +14,8 @@ class Folio::Console::VersionsController < Folio::Console::BaseController
 
   def index
     @versions = @versions.where(item: @item)
+                         .where.not(event: 'create')
+                         .reorder(id: :desc)
                          .map(&:reify)
   end
 

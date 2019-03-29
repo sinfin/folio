@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_160708) do
+ActiveRecord::Schema.define(version: 2019_03_29_115333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,28 @@ ActiveRecord::Schema.define(version: 2019_03_25_160708) do
     t.index ["account_id"], name: "index_ahoy_events_on_account_id"
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
+  end
+
+  create_table "audits", force: :cascade do |t|
+    t.bigint "auditable_id"
+    t.string "auditable_type"
+    t.bigint "associated_id"
+    t.string "associated_type"
+    t.bigint "user_id"
+    t.string "user_type"
+    t.string "username"
+    t.string "action"
+    t.jsonb "audited_changes"
+    t.integer "version", default: 0
+    t.string "comment"
+    t.string "remote_address"
+    t.string "request_uuid"
+    t.datetime "created_at"
+    t.index ["associated_type", "associated_id"], name: "associated_index"
+    t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
+    t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["request_uuid"], name: "index_audits_on_request_uuid"
+    t.index ["user_id", "user_type"], name: "user_index"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -254,17 +276,6 @@ ActiveRecord::Schema.define(version: 2019_03_25_160708) do
     t.string "name"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
-  end
-
-  create_table "versions", force: :cascade do |t|
-    t.string "item_type", null: false
-    t.integer "item_id", null: false
-    t.string "event", null: false
-    t.bigint "whodunnit"
-    t.jsonb "object"
-    t.jsonb "object_changes"
-    t.datetime "created_at"
-    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   create_table "visits", force: :cascade do |t|

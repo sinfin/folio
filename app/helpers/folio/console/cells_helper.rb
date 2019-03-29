@@ -48,7 +48,7 @@ module Folio
     end
 
     def console_versions_button_for(model)
-      cell('folio/console/versions_button', model).show.html_safe
+      cell('folio/console/versions_button', model).show.to_s.html_safe
     end
   end
 end

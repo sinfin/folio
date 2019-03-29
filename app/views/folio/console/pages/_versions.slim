@@ -4,4 +4,4 @@
   = s.attribute(:slug)
   = s.attribute(:meta_title)
   = s.attribute(:account, label: Folio::Account.model_name.human) do
-    = s.object.version.account.full_name if s.object.version
+    = s.object.version.try(:account).try(:full_name)
