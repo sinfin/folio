@@ -2,7 +2,8 @@
                       f.object.persisted?
 = form_header f, translations: show_translations
 
-= tabs [:content]
+= tabs [:content, \
+        (:audits if Rails.application.config.folio_pages_audited)].compact
 
 .tab-content
   = tab :content
@@ -32,8 +33,6 @@
                           collection: Folio::Page.arrange_as_array, \
                           label_method: :select_option_depth, \
                           value_method: :id
-      .col-md-2.text-right
-        = console_audits_button_for(f.object)
 
     == translated_inputs f, :perex
 
@@ -53,5 +52,9 @@
         == cell('folio/console/tagsinput', f)
         = translated_inputs f, :meta_title
         = translated_inputs f, :meta_description
+
+  - if Rails.application.config.folio_pages_audited
+    = tab :audits
+      = console_audits_table(f.object)
 
 = form_footer f

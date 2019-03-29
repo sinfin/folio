@@ -46,9 +46,5 @@ module Folio
     def form_footer(f)
       cell('folio/console/form/footer', f).show.html_safe
     end
-
-    def console_audits_button_for(model)
-      cell('folio/console/audits_button', model).show.to_s.html_safe
-    end
   end
 end
