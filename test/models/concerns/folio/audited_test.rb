@@ -3,16 +3,18 @@
 require 'test_helper'
 
 class Folio::AuditedTest < ActiveSupport::TestCase
-  test 'audits' do
-    page = create(:folio_page, title: 'Foo')
-    assert_equal 1, page.audits.count
+  setup do
+    @page = create(:folio_page, title: 'Foo')
+  end
 
-    page.update(title: 'Bar')
-    assert_equal 2, page.audits.count
+  test 'audits' do
+    assert_equal 1, @page.audits.count
+
+    @page.update(title: 'Bar')
+    assert_equal 2, @page.audits.count
   end
 
   test 'revision has audit' do
-    page = create(:folio_page, title: 'Foo')
-    assert page.revisions.first.audit
+    assert @page.revisions.first.audit
   end
 end

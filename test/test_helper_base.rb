@@ -10,6 +10,9 @@ require 'cells-slim'
 require 'factory_bot'
 require Folio::Engine.root.join('test/create_atom_helper')
 
+# FIXME
+Rails.application.config.folio_pages_audited = true
+
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
