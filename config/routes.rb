@@ -15,7 +15,7 @@ Folio::Engine.routes.draw do
 
     resources :pages, except: %i[show] do
       post :set_positions, on: :collection
-      folio_console_versions_for 'Folio::Page'
+      folio_console_audits_for 'Folio::Page'
     end
 
     resources :menus do

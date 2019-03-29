@@ -1,0 +1,7 @@
+= index_show_for(audits) do |s|
+  = s.attribute(:created_at, in: :audit, format: :short, label: nil)
+  = s.attribute(:title)
+  = s.attribute(:slug)
+  = s.attribute(:meta_title)
+  = s.attribute(:user, label: Folio::Account.model_name.human) do
+    = s.object.try(:audit).try(:user).try(:full_name)

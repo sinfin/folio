@@ -1,6 +1,0 @@
-.f-c-index-header
-  h1.f-c-index-header__h1
-    a.f-c-index-header__h1-a href=url_for([:console, @item, Folio::Version])
-      = "#{@item.title} / #{t('folio.console.versions.title')}"
-
-= render versions_partial_name, versions: @versions

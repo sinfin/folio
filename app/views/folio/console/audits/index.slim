@@ -1,0 +1,6 @@
+.f-c-index-header
+  h1.f-c-index-header__h1
+    a.f-c-index-header__h1-a href=url_for([:console, @audited, :audits])
+      = "#{@audited.title} / #{t('folio.console.audits.title')}"
+
+= render audits_partial_name, audits: @audits

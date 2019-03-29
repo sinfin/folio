@@ -47,8 +47,8 @@ module Folio
       cell('folio/console/form/footer', f).show.html_safe
     end
 
-    def console_versions_button_for(model)
-      cell('folio/console/versions_button', model).show.to_s.html_safe
+    def console_audits_button_for(model)
+      cell('folio/console/audits_button', model).show.to_s.html_safe
     end
   end
 end

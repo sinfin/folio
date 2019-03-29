@@ -8,7 +8,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
-  before_action :set_paper_trail_whodunnit
   # TODO: before_action :authorize_account!
 
   layout 'folio/console/application'
