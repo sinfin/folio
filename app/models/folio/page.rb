@@ -8,9 +8,9 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::HasAttachments
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
-  include Folio::HasVersions
+  include Folio::Audited
 
-  has_folio_versions
+  audited only: %i[title slug meta_title meta_description perex]
 
   if Rails.application.config.folio_pages_translations
     include Folio::Translatable
