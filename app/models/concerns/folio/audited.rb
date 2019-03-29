@@ -22,7 +22,8 @@ module Folio::Audited
 
         targeted_audits.map do |audit|
           previous_attributes.merge!(audit.new_attributes)
-          previous_attributes.merge!(audit_version: audit.version, audit: audit)
+          previous_attributes[:audit_version] = audit.version
+          previous_attributes[:audit] = audit
           revision_with(previous_attributes)
         end
       end

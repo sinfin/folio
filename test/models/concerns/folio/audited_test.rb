@@ -11,7 +11,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     assert_equal 2, page.audits.count
   end
 
-  test "revision has audit" do
+  test 'revision has audit' do
     page = create(:folio_page, title: 'Foo')
     assert page.revisions.first.audit
   end

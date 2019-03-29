@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'recaptcha'
   s.add_dependency 'nokogiri'
   s.add_dependency 'show_for'
-  s.add_dependency "audited", "~> 4.7"
+  s.add_dependency 'audited', '~> 4.7'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
