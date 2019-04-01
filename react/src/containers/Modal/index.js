@@ -3,17 +3,17 @@ import { connect } from 'react-redux'
 
 import ReactModal from 'react-modal'
 
-import { updateFile } from 'ducks/files';
+import { updateFile } from 'ducks/files'
 
 import {
   closeModal,
   changeModalTags,
   modalSelector,
-} from 'ducks/modal';
+} from 'ducks/modal'
 
 import { tagsSelector } from 'ducks/filters'
 
-import ModalFile from './ModalFile';
+import ModalFile from './ModalFile'
 
 export const ModalContext = React.createContext(() => {})
 

@@ -7,20 +7,16 @@ const NestedModelControls = ({ moveUp, moveDown, remove }) => (
     {(moveUp && moveDown) && (
       <div className='btn-group mr-3'>
         <button
-          className='btn btn-outline-secondary'
+          className='btn btn-outline-secondary fa fa-arrow-up'
           type='button'
           onClick={moveUp}
-        >
-          <i className='fa fa-arrow-up'></i>
-        </button>
+        />
 
         <button
-          className='btn btn-outline-secondary'
+          className='btn btn-outline-secondary fa fa-arrow-down'
           type='button'
           onClick={moveDown}
-        >
-          <i className='fa fa-arrow-down'></i>
-        </button>
+        />
       </div>
     )}
 
