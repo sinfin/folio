@@ -35,7 +35,8 @@ $(document)
 
   .on 'click', (e) ->
     $picker = $('.bootstrap-datetimepicker-widget')
-    if $picker.length and not $.contains($picker, $(e.target))
+    $target = $(e.target)
+    if $picker.length and not $target.hasClass('folio-console-date-picker') and not $.contains($picker, $target)
       $(DATE_INPUT_SELECTOR).each ->
         picker = $(this).data('DateTimePicker')
         picker.hide() if picker
