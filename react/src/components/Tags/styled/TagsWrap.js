@@ -9,4 +9,8 @@ export default styled.div`
   .table & {
     text-align: right;
   }
+
+  .badge {
+    margin: 0.1rem;
+  }
 `

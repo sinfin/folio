@@ -56,7 +56,6 @@ $(document)
     atomFormBySelect($(insertedItem).find('.folio-console-atom-type-select'))
 
   .on 'change', '.folio-console-atom-type-select', ->
-    console.log(this)
     atomFormBySelect($(this))
 
   .on 'change', '.folio-console-atom-model-select', ->

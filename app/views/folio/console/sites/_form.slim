@@ -11,7 +11,8 @@
     = f.input :email
     = f.input :address, as: :text
 
-    = render 'additional_form_fields', f: f
+    = render partial: 'folio/console/sites/additional_form_fields', \
+             locals: { f: f }
 
     = f.input :turbo_mode
 
