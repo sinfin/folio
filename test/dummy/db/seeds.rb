@@ -48,6 +48,10 @@ about = Folio::Page.create!(title: 'O nás',
                             published_at: 1.month.ago)
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
+about.image_placements.each{|ip|
+  name = Faker::Name.name
+  ip.update_attributes!(alt: name, title: "Portrait of #{name}")
+}
 
 
 night_sky = Folio::Page.create!(title: 'Noční obloha', published: true, published_at: 1.month.ago, locale: :cs)
