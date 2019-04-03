@@ -20,7 +20,7 @@ module Folio
         gem 'pg', version: '~> 0.21.0'
         gem 'devise-i18n'
         gem 'rails-i18n'
-        gem 'actionpack-page_caching'
+        gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'mini_racer'
 
         gem_group :test do

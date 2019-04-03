@@ -13,6 +13,8 @@ gemspec
 # your gem to rubygems.org.
 gem 'mini_racer', platforms: :ruby
 
+gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
+
 group :test do
   gem 'minitest', '5.10.3'
   gem 'factory_bot'
