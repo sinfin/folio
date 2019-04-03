@@ -1,4 +1,6 @@
-[data-anti-cache]:not(.folio-anti-cache--done)
-  [data-anti-cache-blurred]
+.folio-anti-cache-blurred
+  transition: filter 0.15s
+
+  [data-anti-cache]:not(.folio-anti-cache--done) &
     filter: blur(3px)
     cursor: wait
