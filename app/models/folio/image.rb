@@ -6,6 +6,11 @@ class Folio::Image < Folio::File
   include Folio::Sitemap::Image
 
   validate_file_format
+
+  dragonfly_accessor :file do
+    after_assign :sanitize_filename
+    after_assign { |image| image.metadata }
+  end
 end
 
 # == Schema Information

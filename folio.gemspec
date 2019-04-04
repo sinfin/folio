@@ -59,6 +59,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
+  s.add_dependency 'mini_exiftool'
 
   s.add_dependency 'devise-i18n'
   s.add_dependency 'devise-bootstrap-views'
