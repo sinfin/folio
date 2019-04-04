@@ -9,7 +9,7 @@
     "ilikenwf-nested-sortable": "^2.0",
     "jquery-ui": "^1.12.1",
     "popper.js": "https://unpkg.com/popper.js",
-    "vanilla-lazyload": "^10.19.0",
+    "vanilla-lazyload": "^11.0.6",
     "selectize": "^0.12.6",
     "selectize-bootstrap-4-style": "^1.0.1",
     "photoswipe": "^4.1.3",
