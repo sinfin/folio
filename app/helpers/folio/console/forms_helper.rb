@@ -5,7 +5,12 @@ module Folio::Console::FormsHelper
     render partial: 'atoms', locals: { f: f }
   end
 
-  def translated_inputs(f, key, *args, locales: nil)
+  def translated_inputs(f, key, *args)
+    model = { f: f, key: key, args: args }
+    cell('folio/console/translated_inputs', model).show.html_safe
+  end
+
+  def translated_inputs_for_locales(f, key, locales, *args)
     model = { f: f, key: key, args: args }
     cell('folio/console/translated_inputs',
          model,
