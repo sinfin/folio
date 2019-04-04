@@ -12,7 +12,7 @@ module Folio::Sitemap
       image_placements.flatten!.compact!
 
       unless size.nil?
-        return image_placements.collect { |ip| ip.to_sitemap(size) }
+        return image_placements.uniq.collect { |ip| ip.to_sitemap(size) }
       else
         image_placement_variants = []
         image_placements.each do |ip|
@@ -20,7 +20,7 @@ module Folio::Sitemap
             image_placement_variants << ip.to_sitemap(size_key)
           end
         end
-        return image_placement_variants
+        return image_placement_variants.uniq
       end
     end
   end

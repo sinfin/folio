@@ -73,7 +73,7 @@ module Folio::Thumbnails
   end
 
   def thumbnail_sizes_keys
-    thumbnail_sizes.collect{|size, value| size}
+    thumbnail_sizes.collect{|size, value| size}.uniq
   end
 
   def temporary_url(w_x_h)
