@@ -4,7 +4,7 @@ module Folio::Sitemap
   module Base
     extend ActiveSupport::Concern
 
-    def image_sitemap(size=nil)
+    def image_sitemap(size = nil)
       image_placements = []
       image_placements << self.cover_placement if self.respond_to?(:cover_placement)
       image_placements << self.atoms_image_placements  if self.respond_to?(:atoms_image_placements)
@@ -41,7 +41,7 @@ module Folio::Sitemap
     module Image
       extend ActiveSupport::Concern
 
-      def to_sitemap_loc(size=nil)
+      def to_sitemap_loc(size = nil)
         self.file.file.thumb(size, immediate: true).url
       end
 
@@ -53,9 +53,9 @@ module Folio::Sitemap
         self.title || self.file.to_sitemap_caption
       end
 
-      def to_sitemap(size=nil)
+      def to_sitemap(size = nil)
         {
-          loc: self.to_sitemap_loc(size=nil),
+          loc: self.to_sitemap_loc(size = nil),
           title: self.to_sitemap_title,
           caption: self.to_sitemap_caption
           # TODO: geo_location: file.todo_loc

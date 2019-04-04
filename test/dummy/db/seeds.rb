@@ -48,7 +48,7 @@ about = Folio::Page.create!(title: 'O nás',
                             published_at: 1.month.ago)
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
-about.image_placements.each{|ip|
+about.image_placements.each { |ip|
   name = Faker::Name.name
   ip.update_attributes!(alt: name, title: "Portrait of #{name}")
 }
