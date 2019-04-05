@@ -12,6 +12,17 @@ module Folio
       assert_not_nil image.file_metadata
       assert_equal image.file_metadata['Keywords'], ['city', 'light', 'night', 'prague']
     end
+
+    test 'load metadata from different file types' do
+      photo_dir = Rails.root.join('..', 'fixtures', 'folio', 'photos')
+      Dir.glob("#{photo_dir}/*").each do |photo|
+        image = ::Folio::Image.new
+        image.file = ::File.new(photo)
+        image.save!
+
+        assert_not_nil image.file_metadata
+      end
+    end
   end
 end
 
