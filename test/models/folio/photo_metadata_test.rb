@@ -15,10 +15,20 @@ module Folio
 
     test 'load metadata from different file types' do
       photo_dir = Rails.root.join('..', 'fixtures', 'folio', 'photos')
-      Dir.glob("#{photo_dir}/*").each do |photo|
+      Dir.glob("#{photo_dir}/**/*").grep(/\.[jpg|JPG|tiff|TIFF]/).each do |photo|
         image = ::Folio::Image.new
         image.file = ::File.new(photo)
         image.save!
+
+        # puts photo
+        # puts image.file_metadata
+        # puts '===='
+
+        # Just for check correct execution
+        image.title
+        image.caption
+        image.keywords
+        image.geo_location
 
         assert_not_nil image.file_metadata
       end
