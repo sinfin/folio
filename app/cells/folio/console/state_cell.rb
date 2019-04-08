@@ -39,4 +39,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   def target_state(event)
     model.aasm.state_object_for_name(event.transitions.first.to)
   end
+
+  def active?
+    options[:active] != false
+  end
 end

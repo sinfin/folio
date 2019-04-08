@@ -1,5 +1,5 @@
 .f-c-state
-  - if model.aasm.events(possible: true).present?
+  - if model.aasm.events(possible: true).present? && active?
     - localizer = AASM::Localizer.new
 
     .dropdown
