@@ -29,11 +29,11 @@ module Folio::Sitemap
     extend ActiveSupport::Concern
 
     def to_sitemap_title
-      nil # TODO: self.alt
+      self.title
     end
 
     def to_sitemap_caption
-      nil # TODO: self.caption
+      self.caption
     end
   end
 
@@ -57,9 +57,8 @@ module Folio::Sitemap
         {
           loc: self.to_sitemap_loc(size = nil),
           title: self.to_sitemap_title,
-          caption: self.to_sitemap_caption
-          # TODO: geo_location: file.todo_loc
-          # Geografické umístění obrázku. Příklad: <image:geo_location>Limerick, Irsko</image:geo_location>.
+          caption: self.to_sitemap_caption,
+          geo_location: self.file.geo_location
         }
       end
     end

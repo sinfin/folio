@@ -58,14 +58,17 @@ night_sky = Folio::Page.create!(title: 'Noční obloha', published: true, publis
 night_photo = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'night.jpg'))
 night_sky.cover = file_pic(night_photo)
 1.times { night_sky.images << file_pic(night_photo) }
-# TODO: Atoms
 
+# TODO: Atoms
 
 reference = Folio::Page.create!(title: 'Reference',
                                 published: true,
                                 published_at: 1.day.ago)
 Folio::Page.create!(title: 'Smart Cities', published: true, published_at: 1.month.ago)
-Folio::Page.create!(title: 'Vyvolej.to', published: true, published_at: 1.month.ago)
+vyvolejto = Folio::Page.create!(title: 'Vyvolej.to', published: true, published_at: 1.month.ago)
+iptc_test = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'exif-samples', 'jpg', 'tests', '46_UnicodeEncodeError.jpg'))
+vyvolejto.cover = file_pic(iptc_test)
+
 Folio::Page.create!(title: 'Hidden', published: false)
 Folio::Page.create!(title: 'DAM', published: true)
 
