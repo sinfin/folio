@@ -1,7 +1,7 @@
 //= require jquery
-//= require jquery_ujs
+//= require rails-ujs
 //= require folio-bootstrap/dist/js/bootstrap.bundle
-//= require moment/min/moment.min
+//= require moment/moment
 //= require moment/locale/cs
 //= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require slideout.js/dist/slideout
