@@ -14,7 +14,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   def state_square(s)
     color = s.options[:color].presence || 'default'
 
-    content_tag(:span, '', class: "f-c-state__state-square "\
+    content_tag(:span, '', class: 'f-c-state__state-square '\
                                   "f-c-state__state-square--color-#{color} "\
                                   "f-c-state__state-square--state-#{s.name}")
   end

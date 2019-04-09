@@ -73,7 +73,4 @@ module Folio::Console::DefaultActions
     def folio_console_params
       send("#{folio_console_name_base}_params")
     end
-
-    def folio_console_includes
-    end
 end
