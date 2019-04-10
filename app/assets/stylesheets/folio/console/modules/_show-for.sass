@@ -1,5 +1,9 @@
-.f-c-show-for__content.blank
-  opacity: 0.5
+.f-c-show-for__content
+  &.blank
+    opacity: 0.5
+
+  > :last-child
+    margin-bottom: 0
 
 *:not(.f-c-show-for-index) > .f-c-show-for__row
   .f-c-show-for__cell:not(:last-child)
