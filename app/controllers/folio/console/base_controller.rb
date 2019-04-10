@@ -227,9 +227,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if resources.size == 1 &&
            !resources.first.try(:destroyed?) &&
            resources.first.try(:persisted?)
-          options[:location] ||= (request.referer || url_for([:console,
-                                                              resources.first,
-                                                              action: :edit]))
+          referrer = request.referer.try(:gsub, '/new', '')
+          options[:location] ||= (referrer || url_for([:console,
+                                                       resources.first,
+                                                       action: :edit]))
         else
           options[:location] ||= url_for([:console, @klass])
         end
