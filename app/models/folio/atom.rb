@@ -24,13 +24,14 @@ module Folio::Atom
     molecules
   end
 
-  def self.atoms_image_placements(atoms)
+  def self.atom_image_placements(atoms)
     images = []
 
     atoms.each do |atom|
-      images << atom.image_placements
+      images << atom.cover_placement
+      images += atom.image_placements.to_a
     end
 
-    images
+    images.compact
   end
 end

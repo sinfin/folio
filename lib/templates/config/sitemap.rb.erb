@@ -8,15 +8,15 @@ SitemapGenerator::Sitemap.sitemaps_path = 'sitemaps'
 
 SitemapGenerator::Sitemap.create do
   Folio::Page.published.each do |page|
-    I18n.locale = page.locale unless page.locale.blank?
-
-    add(
-      page_path(page),
-      lastmod: page.updated_at,
-      changefreq: 'monthly',
-      priority: 0.5,
-      images: page.image_sitemap
-    )
+    I18n.with_locale(page.locale || I18n.locale) do
+      add(
+        page_path(page),
+        lastmod: page.updated_at,
+        changefreq: 'monthly',
+        priority: 0.5,
+        images: page.image_sitemap
+      )
+    end
   end
 
   # TODO: Uncomment a search engine ping method within a site generator

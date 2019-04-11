@@ -6,10 +6,18 @@ module Folio::Sitemap
 
     def image_sitemap(size = nil)
       image_placements = []
-      image_placements << self.cover_placement if self.respond_to?(:cover_placement)
-      image_placements << self.atoms_image_placements  if self.respond_to?(:atoms_image_placements)
-      image_placements << self.image_placements if self.respond_to?(:image_placements)
-      image_placements.flatten!.compact!
+
+      if self.try(:cover_placement).present?
+        image_placements << self.cover_placement
+      end
+
+      if self.try(:atom_image_placements).present?
+        image_placements += self.atom_image_placements
+      end
+
+      if self.try(:image_placements).present?
+        image_placements += self.image_placements.to_a
+      end
 
       unless size.nil?
         return image_placements.uniq.collect { |ip| ip.to_sitemap(size) }
@@ -55,7 +63,7 @@ module Folio::Sitemap
 
       def to_sitemap(size = nil)
         {
-          loc: self.to_sitemap_loc(size = nil),
+          loc: self.to_sitemap_loc(size),
           title: self.to_sitemap_title,
           caption: self.to_sitemap_caption,
           geo_location: self.file.geo_location

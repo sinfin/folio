@@ -28,7 +28,7 @@ $ rails generate folio:install
 If you want to analyse and store all Exif & IPTC data from uploaded Image files
 you have to install ExifTool (https://www.sno.phy.queensu.ca/~phil/exiftool/index.html).
 
-Ubuntu: `sudo apt-get exiftoool`
+Ubuntu: `sudo apt install exiftool`
 MacOS: `brew install exiftool`
 
 Every uploaded file will be processed and all the metadata will be saved
