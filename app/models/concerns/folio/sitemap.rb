@@ -5,30 +5,32 @@ module Folio::Sitemap
     extend ActiveSupport::Concern
 
     def image_sitemap(size = nil)
-      image_placements = []
+      placements = []
 
       if self.try(:cover_placement).present?
-        image_placements << self.cover_placement
-      end
-
-      if self.try(:atom_image_placements).present?
-        image_placements += self.atom_image_placements
+        placements << self.cover_placement
       end
 
       if self.try(:image_placements).present?
-        image_placements += self.image_placements.to_a
+        placements += self.image_placements.to_a
       end
 
-      unless size.nil?
-        return image_placements.uniq.collect { |ip| ip.to_sitemap(size) }
-      else
+      if self.try(:atom_image_placements).present?
+        placements += self.atom_image_placements
+      end
+
+      if size.nil?
         image_placement_variants = []
-        image_placements.each do |ip|
-          ip.file.thumbnail_sizes_keys.each do |size_key|
+
+        placements.each do |ip|
+          ip.file.thumbnail_sizes.keys.each do |size_key|
             image_placement_variants << ip.to_sitemap(size_key)
           end
         end
-        return image_placement_variants.uniq
+
+        image_placement_variants.uniq
+      else
+        placements.uniq.collect { |ip| ip.to_sitemap(size) }
       end
     end
   end
@@ -49,7 +51,7 @@ module Folio::Sitemap
     module Image
       extend ActiveSupport::Concern
 
-      def to_sitemap_loc(size = nil)
+      def to_sitemap_loc(size)
         self.file.file.thumb(size, immediate: true).url
       end
 
@@ -61,7 +63,7 @@ module Folio::Sitemap
         self.title || self.file.to_sitemap_caption
       end
 
-      def to_sitemap(size = nil)
+      def to_sitemap(size)
         {
           loc: self.to_sitemap_loc(size),
           title: self.to_sitemap_title,

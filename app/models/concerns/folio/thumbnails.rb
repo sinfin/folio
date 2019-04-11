@@ -72,10 +72,6 @@ module Folio::Thumbnails
     )
   end
 
-  def thumbnail_sizes_keys
-    thumbnail_sizes.collect { |size, value| size }.uniq
-  end
-
   def temporary_url(w_x_h)
     size = w_x_h.match(/\d+x?\d+/)[0]
     "https://doader.com/#{size}?image=#{id}"
