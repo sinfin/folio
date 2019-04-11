@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-04-05
+### Added
+- image sitemap concern enabled by default for `Folio::Node`
+- automatic file metadata tagging with `exiftool`
+
 ## 2019-04-02
 ### Removed
 - Removed obsolete `console_tooltip` helper.
@@ -189,4 +194,4 @@ All notable changes to this project will be documented in this file.
 
 ## 2018-09-03
 ### Changed
-- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base` 
+- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base`

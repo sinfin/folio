@@ -23,7 +23,7 @@ module Folio::Thumbnails
 
   # User w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 90)
+  def thumb(w_x_h, quality: 90, immediate: false)
     fail_for_non_images
     return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test?
 
@@ -37,7 +37,7 @@ module Folio::Thumbnails
         width = file_width
         height = file_height
       else
-        if self.class.immediate_thumbnails
+        if immediate || self.class.immediate_thumbnails
           image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality)
           ret = OpenStruct.new(image.thumbnail_sizes[w_x_h])
           ret.url = Dragonfly.app.remote_url_for(ret.uid)

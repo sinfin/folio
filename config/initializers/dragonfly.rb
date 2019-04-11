@@ -67,6 +67,19 @@ Dragonfly.app.configure do
     content.process! :convert, '-background white -alpha remove'
   end
 
+  analyser :metadata do |content|
+    if shell('which', 'exiftool').blank?
+      msg = 'Missing ExifTool binary. Metadata not processed.'
+      Raven.capture_message msg if defined?(Raven)
+      logger.error msg if defined?(logger)
+      # content
+      {}
+    else
+      photo = MiniExiftool.new(content.file, ignore_minor_errors: true, replace_invalid_chars: true)
+      photo.to_hash
+    end
+  end
+
   secret Rails.application.secrets.dragonfly_secret
 
   url_format '/media/:job/:sha/:name'
