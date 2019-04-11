@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-04-11
+### Removed
+- removed `current_admin` helper, use `current_account` instead
+
 ## 2019-04-05
 ### Added
 - image sitemap concern enabled by default for `Folio::Node`

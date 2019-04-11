@@ -98,7 +98,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def current_ability
-      @current_ability ||= Folio::ConsoleAbility.new(current_admin)
+      @current_ability ||= Folio::ConsoleAbility.new(current_account)
     end
 
     def add_root_breadcrumb

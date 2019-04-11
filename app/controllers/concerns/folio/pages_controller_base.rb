@@ -23,14 +23,14 @@ module Folio::PagesControllerBase
       if Rails.application.config.folio_pages_ancestry
         path = params[:path].split('/')
 
-        @page = pages_scope.published_or_admin(admin_preview?)
+        @page = pages_scope.published_or_admin(current_account.present?)
                            .friendly
                            .find(path.shift)
         add_breadcrumb @page.title, page_path(@page)
 
         path.each do |slug|
           children = filter_pages_by_locale(@page.children)
-          @page = children.published_or_admin(admin_preview?)
+          @page = children.published_or_admin(current_account.present?)
                           .friendly
                           .find(slug)
           add_breadcrumb @page.title, nested_page_path(@page)
@@ -38,7 +38,7 @@ module Folio::PagesControllerBase
 
         force_correct_path(nested_page_path(@page))
       else
-        @page = pages_scope.published_or_admin(admin_preview?)
+        @page = pages_scope.published_or_admin(current_account.present?)
                            .friendly
                            .find(params[:id])
         add_breadcrumb @page.title, url_for(@page)
@@ -48,10 +48,6 @@ module Folio::PagesControllerBase
 
     def add_meta
       set_meta_variables(@page)
-    end
-
-    def admin_preview?
-      current_admin.present?
     end
 
     def filter_pages_by_locale(pages)
