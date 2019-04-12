@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-04-12
+### Added
+- `Folio::Audited` version control concern
+- `folio_pages_audited` to application config (enables version control for `Folio::Page`)
+
 ## 2019-03-07
 ### Added
 - `folio_by_scopes_for` to `Folio::Filterable`
