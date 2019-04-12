@@ -17,7 +17,7 @@ class Folio::Console::DocumentsControllerTest < Folio::Console::BaseControllerTe
   test 'create' do
     assert_equal(0, Folio::Document.count)
     post console_documents_url, params: {
-      file: {
+      document: {
         file: fixture_file_upload('test/fixtures/folio/test.gif'),
         type: 'Folio::Document',
       }
@@ -29,7 +29,7 @@ class Folio::Console::DocumentsControllerTest < Folio::Console::BaseControllerTe
   test 'update' do
     document = create(:folio_document)
     put console_document_url(document), params: {
-      file: {
+      document: {
         tag_list: 'foo'
       }
     }

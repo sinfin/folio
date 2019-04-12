@@ -17,7 +17,7 @@ class Folio::Console::ImagesControllerTest < Folio::Console::BaseControllerTest
   test 'create' do
     assert_equal(0, Folio::Image.count)
     post console_images_url, params: {
-      file: {
+      image: {
         file: fixture_file_upload('test/fixtures/folio/test.gif'),
         type: 'Folio::Image',
       }
@@ -29,7 +29,7 @@ class Folio::Console::ImagesControllerTest < Folio::Console::BaseControllerTest
   test 'update' do
     image = create(:folio_image)
     put console_image_url(image), params: {
-      file: {
+      image: {
         tag_list: 'foo'
       }
     }
