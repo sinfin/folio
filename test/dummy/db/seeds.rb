@@ -66,7 +66,7 @@ reference = Folio::Page.create!(title: 'Reference',
                                 published_at: 1.day.ago)
 Folio::Page.create!(title: 'Smart Cities', published: true, published_at: 1.month.ago)
 vyvolejto = Folio::Page.create!(title: 'Vyvolej.to', published: true, published_at: 1.month.ago)
-iptc_test = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'exif-samples', 'jpg', 'tests', '46_UnicodeEncodeError.jpg'))
+iptc_test = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'downsized-exif-samples', 'jpg', 'tests', '46_UnicodeEncodeError.jpg'))
 vyvolejto.cover = file_pic(iptc_test)
 
 Folio::Page.create!(title: 'Hidden', published: false)
