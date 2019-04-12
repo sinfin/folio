@@ -1,10 +1,18 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'pry-rails'
+require 'concerns/folio/audited'
+
+class AuditedPage < Folio::Page
+  include Folio::Audited
+
+  audited only: :title
+end
 
 class Folio::AuditedTest < ActiveSupport::TestCase
   setup do
-    @page = create(:folio_page, title: 'Foo')
+    @page = AuditedPage.create(title: 'Foo')
   end
 
   test 'audits' do
@@ -14,7 +22,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     assert_equal 2, @page.audits.count
   end
 
-  test 'revision has audit' do
+  test 'revisions have audits' do
     assert @page.revisions.first.audit
   end
 end
