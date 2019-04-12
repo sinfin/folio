@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'pry-rails'
-require 'concerns/folio/audited'
 
 class AuditedPage < Folio::Page
   include Folio::Audited
