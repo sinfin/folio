@@ -14,8 +14,9 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   def state_square(s)
     color = s.options[:color].presence || 'default'
 
-    content_tag(:span, '', class: "f-c-state__state-square \
-                                   f-c-state__state-square--#{color}")
+    content_tag(:span, '', class: 'f-c-state__state-square '\
+                                  "f-c-state__state-square--color-#{color} "\
+                                  "f-c-state__state-square--state-#{s.name}")
   end
 
   def states
@@ -38,5 +39,9 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
   def target_state(event)
     model.aasm.state_object_for_name(event.transitions.first.to)
+  end
+
+  def active?
+    options[:active] != false
   end
 end

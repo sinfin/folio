@@ -39,14 +39,14 @@
     = console_form_atoms f
 
     .row
-      .col
+      .col-md
         h2 = t('.settings')
 
         = f.input :featured
         = f.input :published
         = f.input :published_at
 
-      .col
+      .col-md
         h2 = t('.meta')
 
         == cell('folio/console/tagsinput', f)

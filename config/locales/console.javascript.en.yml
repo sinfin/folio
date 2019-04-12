@@ -14,6 +14,8 @@ en:
         noResults: No results
         placementsLabel: Usage
         save: Save
+        selectable: Selectable
+        selected: Selected
         selectedDocuments: Selected documents
         selectedImages: Selected images
         used: Used already

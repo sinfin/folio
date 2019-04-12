@@ -11,6 +11,10 @@ en:
           add: Add
           csv: CSV
 
+        no_records:
+          text: There are no records.
+          new: Create one?
+
       form:
         errors:
           fix: Fix

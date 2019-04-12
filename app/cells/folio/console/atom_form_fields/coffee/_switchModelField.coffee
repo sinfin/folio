@@ -1,27 +1,31 @@
 window.folioConsoleAtom ?= {}
 
-window.folioConsoleAtom.switchModelField = ({ structure, $field, klassFilter }) ->
+window.folioConsoleAtom.switchModelField = ({ structure, $field, $fieldset, klass }) ->
   if structure
     present = true
+
+    models = $fieldset.data('models')
+    model = models[klass]
+
+    $select = $field.find('.form-control')
+    oldValue = $select.val()
+
+    $select.html('')
+
+    options = model.map (ary) ->
+      $option = $('<option />')
+      $option.html(ary[0])
+      $option.prop('value', ary[1])
+      $option.prop('selected', true) if ary[1] is oldValue
+      $select.append($option)
+
+    $select.prop('disabled', false)
     $field.removeAttr('hidden')
-    $selects = $field.find('.folio-console-atom-model-select')
-    $activeSelects = $selects.filter(klassFilter)
-
-    $selects
-      .not($activeSelects)
-      .prop('disabled', true)
-      .closest('.form-group')
-      .attr('hidden', true)
-
-    $activeSelects
-      .prop('disabled', false)
-      .each ->
-        $this = $(this)
-        window.folioConsoleAtom.atomModelContentPrefill($this)
-      .closest('.form-group')
-      .removeAttr('hidden')
   else
     present = false
-    $field.attr('hidden', true)
+    $field
+      .attr('hidden', true)
+      .find('.form-control')
+      .prop('disabled', true)
 
   return present

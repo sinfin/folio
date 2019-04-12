@@ -119,10 +119,12 @@ class ShowFor::Builder
     end
   end
 
-  def state
+  def state(active: true)
     attribute(:aasm_state) do
       if object.persisted?
-        template.cell('folio/console/state', object).show.try(:html_safe)
+        template.cell('folio/console/state',
+                      object,
+                      active: active).show.try(:html_safe)
       end
     end
   end

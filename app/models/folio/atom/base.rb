@@ -91,7 +91,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     def model_type_is_allowed
       if model &&
          klass::STRUCTURE[:model].present? &&
-         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.safe_constantize) }
+         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.constantize) }
         errors.add(:model_type, :invalid)
       end
     end
@@ -167,3 +167,12 @@ end
 #  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
 #  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
 #
+
+if Rails.env.development?
+  Dir[
+    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
+    Rails.root.join('app/models/**/atom/**/*.rb')
+  ].each do |file|
+    require_dependency file
+  end
+end

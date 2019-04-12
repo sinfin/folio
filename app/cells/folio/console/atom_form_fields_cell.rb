@@ -4,6 +4,14 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
   include Folio::Console::ReactHelper
   include Folio::Console::StiHelper
 
+  def data
+    {
+      placeholders: ERB::Util.html_escape(placeholders),
+      structures: ERB::Util.html_escape(structures),
+      models: ERB::Util.html_escape(models),
+    }
+  end
+
   def f
     model
   end
@@ -67,34 +75,24 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
   end
 
   def model_field
-    selects = atom_types.map do |type|
-      if type::STRUCTURE[:model].present?
-        active = (type == f.object.class)
-        became = f.object.becomes(type)
-        f.input :model,
-          collection: atom_model_collection_for_select(became),
-          selected: sti_record_select_value(became, :model),
-          include_blank: true,
-          disabled: !active,
-          wrapper_html: { hidden: !active },
-          input_html: {
-            data: { class: type.to_s }
-          }
-      end
-    end.compact
-    selects.join('')
+    active = f.object.class::STRUCTURE[:model].present?
+    f.input :model,
+      collection: active ? atom_model_collection_for_select(f.object.class) : [],
+      selected: active ? sti_record_select_value(f.object, :model) : nil,
+      include_blank: true,
+      disabled: !active,
+      wrapper_html: { hidden: !active }
   end
 
-  def atom_model_collection_for_select(atom)
-    klass = atom.class
+  def atom_model_collection_for_select(klass)
     show_model_names = klass::STRUCTURE[:model].size > 1
 
     klass::STRUCTURE[:model].flat_map do |model_class_name|
-      model_class = model_class_name.safe_constantize
+      model_class = model_class_name.constantize
       sti_records_for_select(klass.scoped_model_resource(model_class),
                              show_model_names: show_model_names,
                              add_content: true)
-    end
+    end.sort_by { |ary| I18n.transliterate(ary.first) }
   end
 
   def placeholders
@@ -109,6 +107,14 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
     atom_types.map do |type|
       [type.to_s, type.structure_as_safe_hash]
     end.to_h.to_json
+  end
+
+  def models
+    atom_types.map do |klass|
+      if klass::STRUCTURE[:model].present?
+        [klass, atom_model_collection_for_select(klass)]
+      end
+    end.compact.to_h.to_json
   end
 
   def default_atom_type

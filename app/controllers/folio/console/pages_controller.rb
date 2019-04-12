@@ -26,4 +26,8 @@ class Folio::Console::PagesController < Folio::Console::BaseController
                       *file_placements_strong_params)
       )
     end
+
+    def folio_console_record_includes
+      folio_console_atom_includes + folio_console_attachment_includes
+    end
 end

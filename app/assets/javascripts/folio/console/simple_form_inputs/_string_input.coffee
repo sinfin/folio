@@ -8,8 +8,8 @@ $.widget 'ui.autocomplete', $.ui.autocomplete,
 
   _renderItem: ($ul, item) ->
     $("""
-      <li class="ui-menu-item">
-        <span class="dropdown-item ui-menu-item-wrapper">#{item.label}</span>
+      <li class="ui-menu-item" title="#{item.label}">
+        <span class="dropdown-item ui-menu-item-wrapper folio-console-autocomplete-input-menu-item">#{item.label}</span>
       </li>
       """).appendTo($ul)
 

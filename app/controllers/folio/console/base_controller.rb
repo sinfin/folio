@@ -5,9 +5,13 @@ require 'csv'
 class Folio::Console::BaseController < Folio::ApplicationController
   include Pagy::Backend
   include Folio::Console::DefaultActions
+  include Folio::Console::Includes
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
+  before_action do
+    I18n.locale = Rails.application.config.folio_console_locale
+  end
   # TODO: before_action :authorize_account!
 
   layout 'folio/console/application'
@@ -22,7 +26,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   # end
 
   def self.folio_console_controller_for(class_name)
-    klass = class_name.safe_constantize
+    klass = class_name.constantize
 
     if klass.private_method_defined?(:positionable_last_position)
       include Folio::Console::SetPositions
@@ -34,8 +38,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
     load_and_authorize_resource(class: class_name)
 
     before_action do
-      @klass = klass
-
       begin
         add_breadcrumb(klass.model_name.human(count: 2),
                        url_for([:console, klass]))
@@ -45,11 +47,33 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     before_action only: :index do
       name = "@#{params[:controller].split('/').last}".to_sym
+
+      if folio_console_collection_includes.present?
+        with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
+        instance_variable_set(name, with_include)
+      end
+
       if filter_params.present? &&
          instance_variable_get(name).respond_to?(:filter_by_params)
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
       end
+    end
+
+    prepend_before_action except: :index do
+      name = "@#{params[:controller].split('/').last.singularize}".to_sym
+
+      if folio_console_record_includes.present?
+        begin
+          instance_variable_set(name, klass.includes(*folio_console_record_includes)
+                                           .find(params[:id]))
+        rescue ActiveRecord::RecordNotFound
+        end
+      end
+    end
+
+    prepend_before_action do
+      @klass = klass
     end
   end
 
@@ -74,7 +98,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def current_ability
-      @current_ability ||= Folio::ConsoleAbility.new(current_admin)
+      @current_ability ||= Folio::ConsoleAbility.new(current_account)
     end
 
     def add_root_breadcrumb
@@ -203,9 +227,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if resources.size == 1 &&
            !resources.first.try(:destroyed?) &&
            resources.first.try(:persisted?)
-          options[:location] ||= (request.referer || url_for([:console,
-                                                              resources.first,
-                                                              action: :edit]))
+          referrer = request.referer.try(:gsub, '/new', '')
+          options[:location] ||= (referrer || url_for([:console,
+                                                       resources.first,
+                                                       action: :edit]))
         else
           options[:location] ||= url_for([:console, @klass])
         end

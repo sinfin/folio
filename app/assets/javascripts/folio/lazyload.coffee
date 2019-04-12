@@ -14,7 +14,7 @@ window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
       defaults =
         elements_selector: selector
         container: container
-        callback_set: (el) ->
+        callback_reveal: (el) ->
           el.style.visibility = ''
           el.alt = el.dataset.alt
           el.classList.remove(selector.replace('.', ''))

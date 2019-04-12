@@ -1,14 +1,6 @@
 class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::BaseController
   folio_console_controller_for '<%= class_name %>'
 
-  def index
-    <%- if positionable? -%>
-    <%= instance_variable_name(plural: true) %> = @<%= class_name %>.ordered
-
-    <%- end -%>
-    @pagy, @<%= instance_variable_name(plural: true) %> = pagy(@<%= instance_variable_name(plural: true) %>)
-  end
-
   private
 
     def <%= "#{instance_variable_name}_params" %>
@@ -18,5 +10,17 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
       params.require(:<%= singular_table_name %>)
             .permit(<%= form_attribute_names.map { |name| ":#{name}" }.join(",\n                    ") %>)
       <%- end -%>
+    end
+
+    def index_filters
+      {}
+    end
+
+    def folio_console_collection_includes
+      []
+    end
+
+    def folio_console_record_includes
+      []
     end
 end

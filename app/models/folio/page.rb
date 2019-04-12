@@ -8,6 +8,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::HasAttachments
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
+  include Folio::Sitemap::Base
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited

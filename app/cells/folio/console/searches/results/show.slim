@@ -5,7 +5,10 @@
     ul.f-c-searches-results__ul
       - model.each do |result|
         li.f-c-searches-results__li
-          a.f-c-searches-results__a href=href(result.searchable)
+          a.f-c-searches-results__a[
+            href=href(result.searchable)
+            title=result.searchable.to_label
+          ]
             h3.f-c-searches-results__type
               = result.searchable.class.model_name.human
             h2.f-c-searches-results__title

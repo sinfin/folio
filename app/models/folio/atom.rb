@@ -23,13 +23,15 @@ module Folio::Atom
 
     molecules
   end
-end
 
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
-    Rails.root.join('app/models/**/atom/**/*.rb')
-  ].each do |file|
-    require_dependency file
+  def self.atom_image_placements(atoms)
+    images = []
+
+    atoms.each do |atom|
+      images << atom.cover_placement
+      images += atom.image_placements.to_a
+    end
+
+    images.compact
   end
 end

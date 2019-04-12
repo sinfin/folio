@@ -11,16 +11,10 @@ module Folio::ApplicationControllerBase
 
     layout 'folio/application'
 
-    helper_method :current_admin
-
     before_action do
       @site = Folio::Site.instance
       I18n.locale = params[:locale] || @site.locale
     end
-  end
-
-  def current_admin
-    current_account
   end
 
   def url_for(options = nil)

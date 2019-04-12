@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_29_115333) do
+ActiveRecord::Schema.define(version: 2019_04_04_130516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(version: 2019_03_29_115333) do
     t.bigint "file_size"
     t.string "mime_type", limit: 255
     t.json "additional_data"
+    t.json "file_metadata"
     t.index ["type"], name: "index_folio_files_on_type"
   end
 

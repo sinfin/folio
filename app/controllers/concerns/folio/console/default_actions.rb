@@ -3,6 +3,19 @@
 module Folio::Console::DefaultActions
   extend ActiveSupport::Concern
 
+  def index
+    if folio_console_records.respond_to?(:ordered)
+      records = folio_console_records.ordered
+    else
+      records = folio_console_records
+    end
+
+    pagy, records = pagy(records)
+    instance_variable_set('@pagy', pagy)
+    instance_variable_set(folio_console_record_variable_name(plural: true),
+                          records)
+  end
+
   def create
     instance_variable_set(folio_console_record_variable_name,
                           @klass.create(folio_console_params))
@@ -37,16 +50,24 @@ module Folio::Console::DefaultActions
 
   private
 
-    def folio_console_name_base
-      params[:controller].split('/').last.singularize
+    def folio_console_name_base(plural: false)
+      if plural
+        params[:controller].split('/').last
+      else
+        params[:controller].split('/').last.singularize
+      end
     end
 
-    def folio_console_record_variable_name
-      "@#{folio_console_name_base}".to_sym
+    def folio_console_record_variable_name(plural: false)
+      "@#{folio_console_name_base(plural: plural)}".to_sym
     end
 
     def folio_console_record
       instance_variable_get(folio_console_record_variable_name)
+    end
+
+    def folio_console_records
+      instance_variable_get(folio_console_record_variable_name(plural: true))
     end
 
     def folio_console_params

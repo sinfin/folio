@@ -1,8 +1,12 @@
-.f-c-show-for__content.blank
-  opacity: 0.5
+.f-c-show-for__content
+  &.blank
+    opacity: 0.5
+
+  > :last-child
+    margin-bottom: 0
 
 *:not(.f-c-show-for-index) > .f-c-show-for__row
-  .f-c-show-for__cell
+  .f-c-show-for__cell:not(:last-child)
     margin-bottom: $spacer
 
   .f-c-show-for__label
@@ -51,6 +55,13 @@
       border-bottom: $table-border-width solid $table-border-color
       background: $table-bg
       vertical-align: middle
+
+      &[class$="_cover"],
+      &[class$="_cover blank"]
+        width: 59px
+
+        .f-c-show-for__label
+          display: none
 
 +mq-mobile-menu
   .f-c-show-for-index

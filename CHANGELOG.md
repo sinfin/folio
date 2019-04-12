@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 - `Folio::Audited` version control concern
 - `folio_pages_audited` to application config (enables version control for `Folio::Page`)
 
+## 2019-04-11
+### Removed
+- removed `current_admin` helper, use `current_account` instead
+
+## 2019-04-05
+### Added
+- image sitemap concern enabled by default for `Folio::Node`
+- automatic file metadata tagging with `exiftool`
+
+## 2019-04-02
+### Removed
+- Removed obsolete `console_tooltip` helper.
+
 ## 2019-03-07
 ### Added
 - `folio_by_scopes_for` to `Folio::Filterable`
@@ -190,4 +203,4 @@ All notable changes to this project will be documented in this file.
 
 ## 2018-09-03
 ### Changed
-- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base` 
+- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base`

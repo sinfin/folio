@@ -33,3 +33,8 @@ bower_components/font-awesome/*
 
 bower_components/eonasdan-bootstrap-datetimepicker/*
 !bower_components/eonasdan-bootstrap-datetimepicker/build
+!bower_components/eonasdan-bootstrap-datetimepicker/src
+bower_components/eonasdan-bootstrap-datetimepicker/src/*
+!bower_components/eonasdan-bootstrap-datetimepicker/src/sass
+
+bower_components/multiselect/test
