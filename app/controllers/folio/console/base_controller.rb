@@ -176,10 +176,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
       sti_atoms(params)
     end
 
-    def user_for_paper_trail
-      current_account.id
-    end
-
     def sti_hack(params, nested_name, relation_name)
       params.tap do |obj|
         # STI hack

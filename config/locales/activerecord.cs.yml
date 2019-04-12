@@ -122,7 +122,6 @@ cs:
         few: Weby
         one: Web
         other: Webů
-      folio/version: Verze
       tag:
         few: Tagy
         one: Tag
