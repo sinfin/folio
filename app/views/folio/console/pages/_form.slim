@@ -1,9 +1,13 @@
+- show_audited = Rails.application.config.folio_pages_audited && \
+                 f.object.revisions.present?
+
 - show_translations = Rails.application.config.folio_pages_translations && \
                       f.object.persisted?
+
 = form_header f, translations: show_translations
 
 = tabs [:content, \
-        (:audits if Rails.application.config.folio_pages_audited)].compact
+        (:audits if show_audited)].compact
 
 .tab-content
   = tab :content
@@ -53,7 +57,7 @@
         = translated_inputs f, :meta_title
         = translated_inputs f, :meta_description
 
-  - if Rails.application.config.folio_pages_audited
+  - if show_audited
     = tab :audits
       = console_audits_table(f.object)
 
