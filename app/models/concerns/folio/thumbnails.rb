@@ -101,6 +101,15 @@ module Folio::Thumbnails
     additional_data['animated'].presence || false
   end
 
+  def largest_thumb_key
+    keys = thumbnail_sizes.keys
+    largest_key = nil; largest_value = 0
+    keys.each do |key|
+      largest = key if thumbnail_sizes[key][:height] > largest_value
+    end
+    return largest_key
+  end
+
   private
 
     def reset_thumbnails
