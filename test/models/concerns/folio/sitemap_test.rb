@@ -37,10 +37,12 @@ class Folio::SitemapTest < ActiveSupport::TestCase
       })
     end
 
-    version_sitemap = page.reload.image_sitemap('100x100')
+    version_sitemap = page.reload.image_sitemap('200x200')
     sitemap = page.reload.image_sitemap
 
     assert_equal(image_count, version_sitemap.size)
-    assert_equal(2 * image_count, sitemap.size)
+
+    # Sitemap gets only the biggest thumbnail available
+    assert_equal(image_count, sitemap.size)
   end
 end
