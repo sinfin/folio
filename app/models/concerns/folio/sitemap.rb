@@ -50,7 +50,7 @@ module Folio::Sitemap
       extend ActiveSupport::Concern
 
       def to_sitemap_loc(size)
-        self.file.file.thumb(size, immediate: true).url
+        self.file.thumb(size, immediate: true).url
       end
 
       def to_sitemap_title
