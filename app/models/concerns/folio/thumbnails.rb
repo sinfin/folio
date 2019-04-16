@@ -105,7 +105,7 @@ module Folio::Thumbnails
     keys = thumbnail_sizes.keys
     largest_key = nil; largest_value = 0
     keys.each do |key|
-      largest = key if thumbnail_sizes[key][:height] > largest_value
+      largest_key = key if thumbnail_sizes[key] && thumbnail_sizes[key][:height] > largest_value
     end
     return largest_key
   end

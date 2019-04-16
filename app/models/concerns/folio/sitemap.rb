@@ -23,7 +23,8 @@ module Folio::Sitemap
         image_placement_variants = []
 
         placements.each do |ip|
-          image_placement_variants << ip.to_sitemap(ip.image.largest_thumb_key)
+          key = ip.image.largest_thumb_key
+          image_placement_variants << ip.to_sitemap(key) unless key.nil?
         end
 
         image_placement_variants.uniq
