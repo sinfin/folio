@@ -14,7 +14,7 @@ en:
         perex: Brief description of the content. Used as an opening paragraph on the page and description when multiple pages are listed. It is also used by search engines.
         published: Publish on the web at the date below.
         published_at: Content will be visible since the selected date.
-        slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong> characters are accepted. Changing it doesn't break old URLs.
+        slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> and <strong>dash</strong> characters are accepted. Changing this doesn't break old URLs.
         tag_list: A comma-separated list of keywords. Used for faster searching/categorization and content display.
         title: Title as displayed on the website
       node:
