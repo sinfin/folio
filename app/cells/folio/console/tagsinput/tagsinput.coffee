@@ -6,7 +6,7 @@ makeItems = (string) ->
   else
     []
 
-$ ->
+init = ->
   $inputs = $('.folio-console-tagsinput').not('.folio-console-selectize--bound')
   return if $inputs.length is 0
 
@@ -36,3 +36,15 @@ $ ->
               <strong>#{escape(data.input)}</strong>&hellip;
             </div>
           """
+
+dispose = ->
+  $('.folio-console-tagsinput').each ->
+    @selectize?.destroy()
+
+if Turbolinks?
+  $(document)
+    .on 'turbolinks:load', init
+    .on 'turbolinks:before-cache', dispose
+
+else
+  $ init
