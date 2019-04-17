@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-04-17
+### Added
+- added `autosize: true` option to text inputs (uses JS to autosize the textarea)
+
 ## 2019-04-11
 ### Removed
 - removed `current_admin` helper, use `current_account` instead

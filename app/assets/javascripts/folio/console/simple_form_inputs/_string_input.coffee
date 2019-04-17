@@ -27,12 +27,22 @@ bindAutocomplete = ($elements) ->
 unbindAutocomplete = ($elements) ->
   $elements.autocomplete('destroy')
 
-$(document)
-  .on 'ready', ->
+$document = $(document)
+
+$document.on 'cocoon:after-insert', (e, insertedItem) ->
+  bindAutocomplete(insertedItem.find(AUTOCOMPLETE_SELECTOR))
+
+$document.on 'cocoon:before-remove', (e, item) ->
+  unbindAutocomplete(item.find(AUTOCOMPLETE_SELECTOR))
+
+if Turbolinks?
+  $(document)
+    .on 'turbolinks:load', ->
+      bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+
+    .on 'turbolinks:before-cache', ->
+      unbindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+
+else
+  $document.on 'ready', ->
     bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-
-  .on 'cocoon:after-insert', (e, insertedItem) ->
-    bindAutocomplete(insertedItem.find(AUTOCOMPLETE_SELECTOR))
-
-  .on 'cocoon:before-remove', (e, item) ->
-    unbindAutocomplete(item.find(AUTOCOMPLETE_SELECTOR))

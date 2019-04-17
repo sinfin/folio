@@ -5,11 +5,11 @@
 .tab-content
   = tab :content
     = f.input :title
-    = f.input :description, as: :text
+    = f.input :description, as: :text, autosize: true
 
     = f.input :phone
     = f.input :email
-    = f.input :address, as: :text
+    = f.input :address, as: :text, autosize: true
 
     = render partial: 'folio/console/sites/additional_form_fields', \
              locals: { f: f }
