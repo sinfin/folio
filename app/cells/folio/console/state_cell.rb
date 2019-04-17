@@ -11,7 +11,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     @state ||= model.aasm.state_object_for_name(model.aasm_state.to_sym)
   end
 
-  def state_square(s)
+  def state_square(s = nil)
+    s ||= state
     color = s.options[:color].presence || 'default'
 
     content_tag(:span, '', class: 'f-c-state__state-square '\
@@ -29,16 +30,22 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     end
   end
 
-  def form(event, &block)
+  def form(&block)
     opts = {
       method: :post,
-      url: url_for([:event, :console, model]),
+      url: options[:url] || url_for([:event, :console, model]),
     }
     simple_form_for '', opts, &block
   end
 
   def target_state(event)
-    model.aasm.state_object_for_name(event.transitions.first.to)
+    to = event.transitions.first.to
+
+    if to.is_a?(Array)
+      to = model.try(:previous_aasm_state).try(:to_sym) || to.first
+    end
+
+    model.aasm.state_object_for_name(to)
   end
 
   def active?
