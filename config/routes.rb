@@ -7,7 +7,7 @@ Folio::Engine.routes.draw do
 
   devise_for :accounts, class_name: 'Folio::Account', module: 'folio/accounts'
 
-  root to: 'home#index', as: :home
+  root to: 'home#index'
 
   namespace :console do
     root to: 'dashboard#index'

@@ -3,14 +3,15 @@
 .row
   .col-sm
     = f.input :email
-  .col-sm
-    = f.input :password
 
-= f.input :role, collection: Folio::Account::ROLES
+  .col-sm
+    = f.input :role, collection: Folio::Account::ROLES, \
+                     include_blank: false
 
 .row
   .col-sm
     = f.input :first_name
+
   .col-sm
     = f.input :last_name
 

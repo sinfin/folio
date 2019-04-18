@@ -20,6 +20,7 @@ PATH
       devise
       devise-bootstrap-views
       devise-i18n
+      devise_invitable
       dotenv-rails
       dragonfly
       dragonfly-s3_data_store
@@ -186,6 +187,9 @@ GEM
     devise-bootstrap-views (1.1.0)
     devise-i18n (1.8.0)
       devise (>= 4.6)
+    devise_invitable (2.0.1)
+      actionmailer (>= 5.0)
+      devise (>= 4.6)
     dotenv (2.7.2)
     dotenv-rails (2.7.2)
       dotenv (= 2.7.2)
@@ -201,7 +205,7 @@ GEM
       rails (> 3.1)
     errbase (0.1.1)
     erubi (1.8.0)
-    excon (0.62.0)
+    excon (0.64.0)
     execjs (2.7.0)
     factory_bot (4.11.1)
       activesupport (>= 3.0.0)
@@ -320,7 +324,7 @@ GEM
     parser (2.6.0.0)
       ast (~> 2.4.0)
     pg (0.21.0)
-    pg_search (2.1.4)
+    pg_search (2.1.6)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
     powerpack (0.1.2)
@@ -416,7 +420,7 @@ GEM
     show_for (0.6.1)
       actionpack (>= 4.1)
       activemodel (>= 4.1)
-    sidekiq (5.2.5)
+    sidekiq (5.2.6)
       connection_pool (~> 2.2, >= 2.2.2)
       rack (>= 1.5.0)
       rack-protection (>= 1.5.0)
