@@ -17,7 +17,9 @@ force_destroy Folio::Site
 def unsplash_pic(square = false)
   image = Folio::Image.new
   scale = 0.5 + rand / 2
-  image.file_url = "https://picsum.photos/#{scale * 2560}/#{square ? scale * 2560 : scale * 1440}/?random"
+  w = (scale * 2560).to_i
+  h = (square ? scale * 2560 : scale * 1440).to_i
+  image.file_url = "https://picsum.photos/#{w}/#{h}/?random"
   image.save!
   image
 end
