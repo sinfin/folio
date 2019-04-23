@@ -17,7 +17,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
     content_tag(:span, '', class: 'f-c-state__state-square '\
                                   "f-c-state__state-square--color-#{color} "\
-                                  "f-c-state__state-square--state-#{s.name}")
+                                  "f-c-state__state-square--state-#{s.name} "\
+                                  "f-c-state__state-square--model-#{model.class.table_name}")
   end
 
   def states
