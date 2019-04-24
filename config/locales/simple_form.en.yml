@@ -3,6 +3,9 @@ en:
   simple_form:
     error_notification:
       default_message: 'Please review the problems below:'
+    labels:
+      account:
+        edit_password: New password
     hints:
       defaults:
         alt: Image alternative text. Displayed on image loading failure.
@@ -17,6 +20,8 @@ en:
         slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> and <strong>dash</strong> characters are accepted. Changing this doesn't break old URLs.
         tag_list: A comma-separated list of keywords. Used for faster searching/categorization and content display.
         title: Title as displayed on the website
+      account:
+        edit_password: Leave blank if you don't want to change
       node:
         code: Optional internal node specification.
         parent_id: If using tree structure, parent page/category is selected here.

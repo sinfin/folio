@@ -20,7 +20,8 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
                         :email,
                         :first_name,
                         :last_name,
-                        :is_active)
+                        :is_active,
+                        :password)
       p.delete(:password) unless p[:password].present?
       p
     end
