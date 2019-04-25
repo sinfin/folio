@@ -19,11 +19,12 @@ $(document)
             .data('errorFormGroup', $formGroup)
         else
           key = $formGroup
-            .find('.form-control:visible')
+            .find('.form-control:visible, .form-control.redactor-source')
             .prop('name')
             .match(/\[(.+)\]$/)
           key = key[1] if key
           if key
+            key = key.replace('_attributes', '').replace(/\]\[\d*\]\[/, '.')
             $errorButtons
               .filter('.f-c-form-errors__button--hidden')
               .filter("[data-error-field='#{key}']")
