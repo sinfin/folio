@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
-module Folio
-  class NewsletterSubscriptionMailer < ApplicationMailer
-    layout false
+class Folio::NewsletterSubscriptionMailer < Folio::ApplicationMailer
+  def notification_email(newsletter_subscription)
+    @newsletter_subscription = newsletter_subscription
+    @console_link = true
+    site = Folio::Site.instance
+    @subject = "#{site.title} newsletter subscription"
 
-    def notification_email(newsletter_subscription)
-      @newsletter_subscription = newsletter_subscription
-      site = Site.instance
-      mail(to: site.email,
-           subject: "#{site.title} newsletter subscription",
-           from: newsletter_subscription.email) do |format|
-        format.text
-      end
-    end
+    mail(to: site.email,
+         subject: @subject,
+         from: newsletter_subscription.email)
   end
 end

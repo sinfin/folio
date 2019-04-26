@@ -1,0 +1,12 @@
+- if @subject
+  p.h2.mb-4 = @subject
+
+p
+  strong E-mail:
+  br #{@newsletter_subscription.email}
+
+a.btn.btn-primary[
+  href=url_for([:console, @newsletter_subscription.class])
+  target="_blank"
+]
+  = t('folio.mailer.show_in_console')
