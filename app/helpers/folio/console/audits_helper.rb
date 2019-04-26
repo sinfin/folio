@@ -2,8 +2,8 @@
 
 module Folio::Console::AuditsHelper
   def console_audits_table(audited)
-    audits = audited.revisions.reverse
+    revisions = audited.revisions.reverse
 
-    render 'audits', audited: audited, audits: audits
+    render 'audits', audited: audited, revisions: revisions
   end
 end

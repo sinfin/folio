@@ -1,4 +1,4 @@
-= index_show_for(audited.revisions.reverse) do |s|
+= index_show_for(revisions) do |s|
   = s.attribute(:created_at, in: :audit, format: :short, label: nil)
   = s.attribute(:title)
   = s.attribute(:slug)

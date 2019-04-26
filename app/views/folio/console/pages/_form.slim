@@ -1,5 +1,5 @@
 - show_audited = Rails.application.config.folio_pages_audited && \
-                 f.object.revisions.present?
+                 f.object.revisions.size > 1
 
 - show_translations = Rails.application.config.folio_pages_translations && \
                       f.object.persisted?
