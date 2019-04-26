@@ -10,6 +10,25 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
 
+  if Rails.application.config.folio_pages_audited
+    include Folio::Audited
+
+    translated = %i[
+      title perex slug meta_title meta_description
+    ]
+    other = %i[published published_at featured]
+
+    if Rails.application.config.folio_using_traco
+      translated = translated.map do |key|
+        I18n.available_locales.map do |locale|
+          :"#{key}_#{locale}"
+        end
+      end.flatten
+    end
+
+    audited only: translated + other
+  end
+
   if Rails.application.config.folio_pages_translations
     include Folio::Translatable
   end
