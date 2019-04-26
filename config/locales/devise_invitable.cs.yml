@@ -1,0 +1,31 @@
+cs:
+  devise:
+    failure:
+      invited: "Máte platnou pozvánku, přijměte ji pro finalizaci vašeho uživatelského účtu."
+    invitations:
+      send_instructions: "Pozvánka odeslána na %{email}."
+      invitation_token_invalid: "Neplatný klíč pozvánky!"
+      updated: "Heslo nastaveno - byli jste přihlášeni."
+      updated_not_active: "Heslo nastaveno."
+      no_invitations_remaining: "Žádné další pozvánky"
+      invitation_removed: "Vaše pozvánka byla odebrána."
+      new:
+        header: "Odeslat pozvánku"
+        submit_button: "Odeslat pozvánku"
+      edit:
+        header: "Nastavte si heslo"
+        submit_button: "Nastavit heslo"
+    mailer:
+      invitation_instructions:
+        subject: "Pozvánka"
+        hello: "Dobrý den %{email},"
+        someone_invited_you: "byli jste pozváni na web %{url}. Pozvánku můžete přijmout kliknutím na odkaz níže."
+        accept: "Přijmout pozvánku"
+        accept_until: "Pozvánka je platná do %{due_date}."
+        ignore: "Pokud si nepřejete pozvánku využít, ignorujte tento e-mail. Uživatelský účet vám nebude zřízen, dokud nekliknete na odkaz výše a nenastavíte si heslo."
+  time:
+    formats:
+      devise:
+        mailer:
+          invitation_instructions:
+            accept_until_format: "%d. %m. %Y %H:%M"

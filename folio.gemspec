@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'simple_form'
   s.add_dependency 'cocoon'
   s.add_dependency 'devise'
+  s.add_dependency 'devise_invitable'
   s.add_dependency 'cancancan', '~> 2.0'
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'

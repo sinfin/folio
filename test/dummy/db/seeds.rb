@@ -17,7 +17,9 @@ force_destroy Folio::Site
 def unsplash_pic(square = false)
   image = Folio::Image.new
   scale = 0.5 + rand / 2
-  image.file_url = "https://picsum.photos/#{scale * 2560}/#{square ? scale * 2560 : scale * 1440}/?random"
+  w = (scale * 2560).to_i
+  h = (square ? scale * 2560 : scale * 1440).to_i
+  image.file_url = "https://picsum.photos/#{w}/#{h}/?random"
   image.save!
   image
 end
@@ -66,7 +68,7 @@ reference = Folio::Page.create!(title: 'Reference',
                                 published_at: 1.day.ago)
 Folio::Page.create!(title: 'Smart Cities', published: true, published_at: 1.month.ago)
 vyvolejto = Folio::Page.create!(title: 'Vyvolej.to', published: true, published_at: 1.month.ago)
-iptc_test = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'exif-samples', 'jpg', 'tests', '46_UnicodeEncodeError.jpg'))
+iptc_test = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'downsized-exif-samples', 'jpg', 'tests', '46_UnicodeEncodeError.jpg'))
 vyvolejto.cover = file_pic(iptc_test)
 
 Folio::Page.create!(title: 'Hidden', published: false)

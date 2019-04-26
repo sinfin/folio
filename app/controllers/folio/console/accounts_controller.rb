@@ -7,6 +7,11 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
     @pagy, @accounts = pagy(@accounts)
   end
 
+  def create
+    @account = Folio::Account.invite!(account_params)
+    respond_with @account
+  end
+
   private
 
     def account_params
@@ -15,8 +20,8 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
                         :email,
                         :first_name,
                         :last_name,
-                        :password,
-                        :is_active)
+                        :is_active,
+                        :password)
       p.delete(:password) unless p[:password].present?
       p
     end

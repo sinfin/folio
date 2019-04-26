@@ -23,9 +23,8 @@ module Folio::Sitemap
         image_placement_variants = []
 
         placements.each do |ip|
-          ip.file.thumbnail_sizes.keys.each do |size_key|
-            image_placement_variants << ip.to_sitemap(size_key)
-          end
+          key = ip.image.largest_thumb_key
+          image_placement_variants << ip.to_sitemap(key) unless key.nil?
         end
 
         image_placement_variants.uniq
@@ -39,7 +38,7 @@ module Folio::Sitemap
     extend ActiveSupport::Concern
 
     def to_sitemap_title
-      self.title
+      self.title || self.file_name
     end
 
     def to_sitemap_caption
@@ -52,7 +51,7 @@ module Folio::Sitemap
       extend ActiveSupport::Concern
 
       def to_sitemap_loc(size)
-        self.file.file.thumb(size, immediate: true).url
+        self.file.thumb(size, immediate: true).url
       end
 
       def to_sitemap_title
@@ -60,7 +59,7 @@ module Folio::Sitemap
       end
 
       def to_sitemap_caption
-        self.title || self.file.to_sitemap_caption
+        [self.placement_title, self.title, self.file.to_sitemap_caption].compact.join(' / ')
       end
 
       def to_sitemap(size)

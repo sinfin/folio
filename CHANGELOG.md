@@ -1,10 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2019-04-12
+
+## 2019-04-26
 ### Added
 - `Folio::Audited` version control concern
 - `folio_pages_audited` to application config (enables version control for `Folio::Page`)
+
+## 2019-04-18
+### Added
+- added `devise_invitable` for `Folio::Account`
+
+## 2019-04-17
+### Added
+- added `autosize: true` option to text inputs (uses JS to autosize the textarea)
 
 ## 2019-04-11
 ### Removed

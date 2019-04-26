@@ -9,7 +9,7 @@
 
       .dropdown-menu
         - model.aasm.events(possible: true).each do |event|
-          = form(event) do |f|
+          = form do |f|
             = f.input :aasm_event, \
                       as: :hidden, \
                       input_html: { value: event.name }

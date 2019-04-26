@@ -39,7 +39,11 @@ module Folio
       cell('folio/console/show/header', model, opts).show.html_safe
     end
 
-    def form_header(f, opts = {})
+    def form_header(f, opts = {}, &block)
+      if block_given?
+        opts[:right] = capture(&block)
+      end
+
       cell('folio/console/form/header', f, opts).show.html_safe
     end
 
