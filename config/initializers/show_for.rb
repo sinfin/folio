@@ -156,6 +156,14 @@ class ShowFor::Builder
     end
   end
 
+  def audit_user(opts = {})
+    opts[:label] ||= Folio::Account.model_name.human
+
+    attribute(:user, opts) do
+      object.try(:audit).try(:user).try(:full_name)
+    end
+  end
+
   private
 
     def resource_link(attr, url_for_args)

@@ -6,5 +6,4 @@
   = s.attribute(:published)
   = s.attribute(:published_at)
   = s.attribute(:featured)
-  = s.attribute(:user, label: Folio::Account.model_name.human) do
-    = s.object.try(:audit).try(:user).try(:full_name)
+  = s.audit_user
