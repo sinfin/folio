@@ -27,6 +27,7 @@ group :development do
   gem 'puma'
   gem 'rack-mini-profiler', require: false
   gem 'i18n-tasks'
+  gem 'rubocop', '0.66.0'
 end
 
 group :development, :test do
