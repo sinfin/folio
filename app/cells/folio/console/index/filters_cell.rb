@@ -73,6 +73,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def cancel_url
+    model[:cancel_url] ||
     url_for([:console, klass, by_query: controller.params[:by_query]])
   end
 end

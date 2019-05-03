@@ -9,7 +9,7 @@ en:
     hints:
       defaults:
         alt: Image alternative text. Displayed on image loading failure.
-        content: Main content. If you need to add more structured content, you canadd <strong>chapters</strong> bellow.
+        content: Main content. If you need to add more structured content, you can add <strong>chapters</strong> bellow.
         featured: Used to display a page on the homepage or other selections.
         locale: Language variant
         meta_description: SEO, Optional. This description appears on a search engine page.
