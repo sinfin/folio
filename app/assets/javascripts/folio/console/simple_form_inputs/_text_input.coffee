@@ -22,5 +22,5 @@ if Turbolinks?
       unbindAutosize($(AUTOSIZE_SELECTOR))
 
 else
-  $document.on 'ready', ->
+  $ ->
     bindAutosize($(AUTOSIZE_SELECTOR))
