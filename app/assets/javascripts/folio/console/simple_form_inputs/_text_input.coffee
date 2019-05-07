@@ -6,13 +6,12 @@ bindAutosize = ($elements) ->
 unbindAutosize = ($elements) ->
   $elements.trigger('autosize.destroy')
 
-$document = $(document)
+$(document)
+  .on 'cocoon:after-insert', (e, insertedItem) ->
+    bindAutosize(insertedItem.find(AUTOSIZE_SELECTOR))
 
-$document.on 'cocoon:after-insert', (e, insertedItem) ->
-  bindAutosize(insertedItem.find(AUTOSIZE_SELECTOR))
-
-$document.on 'cocoon:before-remove', (e, item) ->
-  unbindAutosize(item.find(AUTOSIZE_SELECTOR))
+  .on 'cocoon:before-remove', (e, item) ->
+    unbindAutosize(item.find(AUTOSIZE_SELECTOR))
 
 if Turbolinks?
   $(document)

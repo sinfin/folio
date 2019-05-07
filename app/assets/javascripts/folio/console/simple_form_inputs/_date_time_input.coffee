@@ -29,21 +29,20 @@ bindDatePicker = ($elements) ->
 unbindDatePicker = ($elements) ->
   $elements.datetimepicker('destroy')
 
-$document = $(document)
+$(document)
+  .on 'click', (e) ->
+    $picker = $('.bootstrap-datetimepicker-widget')
+    $target = $(e.target)
+    if $picker.length and not $target.hasClass('folio-console-date-picker') and not $.contains($picker, $target)
+      $(DATE_INPUT_SELECTOR).each ->
+        picker = $(this).data('DateTimePicker')
+        picker.hide() if picker
 
-$document.on 'click', (e) ->
-  $picker = $('.bootstrap-datetimepicker-widget')
-  $target = $(e.target)
-  if $picker.length and not $target.hasClass('folio-console-date-picker') and not $.contains($picker, $target)
-    $(DATE_INPUT_SELECTOR).each ->
-      picker = $(this).data('DateTimePicker')
-      picker.hide() if picker
+  .on 'cocoon:after-insert', (e, insertedItem) ->
+    bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))
 
-$document.on 'cocoon:after-insert', (e, insertedItem) ->
-  bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))
-
-$document.on 'cocoon:before-remove', (e, item) ->
-  unbindDatePicker(item.find(DATE_INPUT_SELECTOR))
+  .on 'cocoon:before-remove', (e, item) ->
+    unbindDatePicker(item.find(DATE_INPUT_SELECTOR))
 
 if Turbolinks?
   $(document)
@@ -54,5 +53,4 @@ if Turbolinks?
       unbindDatePicker($(DATE_INPUT_SELECTOR))
 
 else
-  $document.on 'ready', ->
-    bindDatePicker($(DATE_INPUT_SELECTOR))
+  $ -> bindDatePicker($(DATE_INPUT_SELECTOR))
