@@ -39,8 +39,9 @@ html[
                   td align="left" valign="top"
                     = yield
 
-            table.f-mailer__footer
-              tbody
-                tr
-                  td.f-mailer__footer-td.small align="left" valign="top"
-                    = render 'folio/mailer/footer'
+            - unless @hide_footer
+              table.f-mailer__footer
+                tbody
+                  tr
+                    td.f-mailer__footer-td.small align="left" valign="top"
+                      = render 'folio/mailer/footer'
