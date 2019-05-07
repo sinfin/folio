@@ -21,7 +21,6 @@ $.widget 'ui.autocomplete', $.ui.autocomplete,
 bindAutocomplete = ($elements) ->
   $elements.each ->
     $this = $(this)
-    console.log(this)
     $this.autocomplete
       source: $this.data('autocomplete')
 
