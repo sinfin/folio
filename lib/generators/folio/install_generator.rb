@@ -22,6 +22,8 @@ module Folio
         gem 'rails-i18n'
         gem 'actionpack-page_caching'
         gem 'mini_racer'
+        gem 'premailer', github: 'sinfin/premailer'
+        gem 'premailer-rails'
 
         gem_group :test do
           gem 'factory_bot'
