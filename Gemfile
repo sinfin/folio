@@ -12,6 +12,7 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 gem 'mini_racer', platforms: :ruby
+gem 'premailer', github: 'sinfin/premailer'
 gem 'premailer-rails'
 
 group :test do
