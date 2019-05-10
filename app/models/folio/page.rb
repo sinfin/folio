@@ -144,6 +144,10 @@ class Folio::Page < Folio::ApplicationRecord
   def self.view_name
     'folio/pages/show'
   end
+
+  def self.public?
+    true
+  end
 end
 
 # == Schema Information

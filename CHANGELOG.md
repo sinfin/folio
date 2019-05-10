@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## 2019-05-02
 ### Added
+- added `public?` class method to `Page` to disable access to homepage and such via pages controller
+
+## 2019-05-02
+### Added
 - added email richtext via `premailer-rails`
 
 ## 2019-04-26

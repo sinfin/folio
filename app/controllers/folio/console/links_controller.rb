@@ -8,6 +8,7 @@ class Folio::Console::LinksController < Folio::Console::BaseController
 
     page_links.merge(additional_links).each do |klass, url_proc|
       klass.find_each do |item|
+        next if item.class.try(:public?) == false
         links << { name: record_label(item), url: url_proc.call(item) }
       end
     end
