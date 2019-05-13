@@ -20,7 +20,11 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
     def cell_options_params
       cell_options = params[:cell_options]
       if cell_options
-        cell_options.permit(:placeholder, :submit_text, :message, :button_class)
+        cell_options.permit(:placeholder,
+                            :submit_text,
+                            :message,
+                            :button_class,
+                            :label)
       else
         {}
       end
