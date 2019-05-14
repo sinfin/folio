@@ -18,7 +18,7 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   before_save :set_mime_type
 
   def title
-    file_name
+    super.presence || file_name
   end
 
   def file_extension
