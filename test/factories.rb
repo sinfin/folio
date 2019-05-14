@@ -67,6 +67,10 @@ FactoryBot.define do
     file { Folio::Engine.root.join('test/fixtures/folio/empty.pdf') }
   end
 
+  factory :folio_private_attachment, class: 'Folio::PrivateAttachment' do
+    file { Folio::Engine.root.join('test/fixtures/folio/empty.pdf') }
+  end
+
   factory :folio_lead, class: 'Folio::Lead' do
     email { 'folio@folio.folio' }
     phone { '+420 123456789' }
