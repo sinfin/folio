@@ -12,15 +12,22 @@ if String.prototype.normalize
 else
   normalize = (str) -> str.toLowerCase()
 
+bindMultiSelects = ->
+  $('select[multiple]').multiSelect
+    selectableHeader: text(window.FolioConsole.translations.selectable)
+    selectionHeader: text(window.FolioConsole.translations.selected)
+
+if Turbolinks?
+  $(document)
+    .on 'turbolinks:load', bindMultiSelects
+
+    .on 'turbolinks:before-cache', ->
+      $('select[multiple]').multiSelect('destroy')
+
+else
+  $ bindMultiSelects
+
 $(document)
-  .on 'turbolinks:load', ->
-    $('select[multiple]').multiSelect
-      selectableHeader: text(window.FolioConsole.translations.selectable)
-      selectionHeader: text(window.FolioConsole.translations.selected)
-
-  .on 'turbolinks:before-cache', ->
-    $('select[multiple]').multiSelect('destroy')
-
   .on 'keyup', '.ms-filter', (e) ->
     $input = $(this)
 
