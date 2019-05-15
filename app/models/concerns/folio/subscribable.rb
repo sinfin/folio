@@ -9,11 +9,13 @@ module Folio::Subscribable
 
   def subscribe
     if !Rails.env.test? || (Rails.env.development? && ENV['DEV_MAILCHIMP'])
-      Folio::Mailchimp::SubscribeJob.perform_later(self, additional_subscription_data)
+      Folio::Mailchimp::SubscribeJob.perform_later(self, subscription_merge_vars)
     end
   end
 
-  def additional_subscription_data
-    {}
-  end
+  private
+
+    def subscription_merge_vars
+      {}
+    end
 end
