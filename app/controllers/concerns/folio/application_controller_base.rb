@@ -51,4 +51,15 @@ module Folio::ApplicationControllerBase
         redirect_to(correct_path_or_url, status: :moved_permanently)
       end
     end
+
+    def atom_includes
+      [
+        atoms: {
+          cover_placement: :file,
+          document_placement: :file,
+          image_placements: :file,
+          document_placements: :file,
+        }
+      ]
+    end
 end

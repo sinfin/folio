@@ -23,22 +23,18 @@ module Folio::PagesControllerBase
       if Rails.application.config.folio_pages_ancestry
         path = params[:path].split('/')
 
-        @page = pages_scope.published_or_admin(current_account.present?)
-                           .friendly
-                           .find(path.shift)
-        add_breadcrumb @page.title, page_path(@page)
+        set_nested_page(pages_scope, path.shift, last: path.size == 1)
 
-        path.each do |slug|
-          children = filter_pages_by_locale(@page.children)
-          @page = children.published_or_admin(current_account.present?)
-                          .friendly
-                          .find(slug)
-          add_breadcrumb @page.title, nested_page_path(@page)
+        path.each_with_index do |slug, i|
+          set_nested_page(filter_pages_by_locale(@page.children),
+                          slug,
+                          last: path.size - 1 == i)
         end
 
         force_correct_path(nested_page_path(@page))
       else
-        @page = pages_scope.published_or_admin(current_account.present?)
+        @page = pages_scope.includes(*atom_includes)
+                           .published_or_admin(current_account.present?)
                            .friendly
                            .find(params[:id])
         add_breadcrumb @page.title, url_for(@page)
@@ -64,5 +60,18 @@ module Folio::PagesControllerBase
       base = Folio::Page
       base = base.roots if Rails.application.config.folio_pages_ancestry
       filter_pages_by_locale(base)
+    end
+
+    def set_nested_page(scoped, slug, last: false)
+      base = last ? scoped.includes(*page_includes) : scoped
+
+      @page = base.published_or_admin(current_account.present?)
+                  .friendly
+                  .find(slug)
+      add_breadcrumb @page.title, nested_page_path(@page)
+    end
+
+    def page_includes
+      atom_includes
     end
 end
