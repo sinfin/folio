@@ -22,6 +22,10 @@ class Folio::NodeTranslation < Folio::Node
       nil
     end
   end
+
+  def console_selectable?
+    false
+  end
 end
 
 # == Schema Information
