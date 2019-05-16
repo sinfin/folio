@@ -21,7 +21,10 @@ class Folio::Lead < Folio::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: %i[email name phone],
-                  ignoring: :accents
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   state_machine initial: :submitted do
     event :handle do

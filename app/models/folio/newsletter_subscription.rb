@@ -11,7 +11,10 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: %i[email],
-                  ignoring: :accents
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   def title
     email

@@ -123,7 +123,10 @@ class Folio::Node < Folio::ApplicationRecord
                     atoms: Folio::Atom.text_fields,
                     file_placements: %i[title alt],
                   },
-                  ignoring: :accents
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   def self.arrange_as_array(options = {}, hash = nil)
     hash ||= original.arrange(options)

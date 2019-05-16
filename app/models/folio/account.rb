@@ -16,7 +16,11 @@ class Folio::Account < Folio::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: %i[first_name last_name email],
-                  ignoring: :accents
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
 
   scope :by_is_active, -> (b) {
     unless b.nil?
