@@ -10,7 +10,7 @@ tr[
 
     = link_to(truncate(node.title), edit_console_node_path(node.id))
 
-    - unless tree
+    - unless tree || node.ancestors.blank?
       li.small == node_breadcrumbs(node.ancestors)
 
   td
