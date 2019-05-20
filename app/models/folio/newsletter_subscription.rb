@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
+  include Folio::Subscribable
+
+  # Relations
   belongs_to :visit, optional: true
 
   # Validations
