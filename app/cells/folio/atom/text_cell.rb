@@ -2,7 +2,7 @@
 
 class Folio::Atom::TextCell < Folio::ApplicationCell
   def content
-    if model.content.include?('<table>')
+    if model.content.present? && model.content.include?('<table>')
       content_with_table
     else
       model.content
