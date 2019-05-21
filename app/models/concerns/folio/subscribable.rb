@@ -10,7 +10,8 @@ module Folio::Subscribable
   def subscribe
     if !Rails.env.test? && (!Rails.env.development? || ENV['DEV_MAILCHIMP'])
       Folio::Mailchimp::SubscribeJob.perform_now(self, status: subscription_default_status,
-                                                       merge_vars: subscription_merge_vars)
+                                                       merge_vars: subscription_merge_vars,
+                                                       tags: subscription_tags)
     end
   end
 
@@ -22,5 +23,9 @@ module Folio::Subscribable
 
     def subscription_merge_vars
       {}
+    end
+
+    def subscription_tags
+      []
     end
 end
