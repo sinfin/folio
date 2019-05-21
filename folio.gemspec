@@ -42,7 +42,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sitemap_generator'
   s.add_dependency 'whenever'
   s.add_dependency 'dotenv-rails'
-  s.add_dependency 'mailchimp-api'
+  s.add_dependency 'gibbon'
   s.add_dependency 'invisible_captcha'
   s.add_dependency 'countries'
   s.add_dependency 'acts-as-taggable-on', '~> 6.0'

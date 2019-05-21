@@ -36,9 +36,9 @@ PATH
       dragonfly-s3_data_store
       dropzonejs-rails
       friendly_id (~> 5.2.4)
+      gibbon
       invisible_captcha
       jquery-rails
-      mailchimp-api
       mini_exiftool
       mini_magick
       nokogiri
@@ -61,7 +61,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.0.3)
+    aasm (5.0.5)
       concurrent-ruby (~> 1.0)
     actioncable (5.2.3)
       actionpack (= 5.2.3)
@@ -226,6 +226,8 @@ GEM
       activesupport (>= 4.2.0)
     faker (1.9.3)
       i18n (>= 0.7)
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
     fog-aws (3.5.0)
       fog-core (~> 2.1)
@@ -247,6 +249,9 @@ GEM
     friendly_id (5.2.5)
       activerecord (>= 4.0.0)
     geocoder (1.5.1)
+    gibbon (3.2.0)
+      faraday (>= 0.9.1)
+      multi_json (>= 1.11.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     guard (2.15.0)
@@ -309,9 +314,6 @@ GEM
     lumberjack (1.0.13)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
-    mailchimp-api (2.0.6)
-      excon (>= 0.16.0)
-      json (>= 1.7.7)
     marcel (0.3.3)
       mimemagic (~> 0.3.2)
     method_source (0.9.2)
@@ -327,6 +329,7 @@ GEM
       libv8 (>= 6.9.411)
     minitest (5.10.3)
     multi_json (1.13.1)
+    multipart-post (2.1.1)
     nenv (0.3.0)
     nio4r (2.3.1)
     nokogiri (1.10.3)
@@ -335,7 +338,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
-    pagy (3.0.0)
+    pagy (3.2.0)
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
@@ -398,7 +401,7 @@ GEM
       ffi (~> 1.0)
     recaptcha (4.14.0)
       json
-    redis (4.1.0)
+    redis (4.1.1)
     referer-parser (0.3.0)
     request_store (1.4.1)
       rack (>= 1.4)
