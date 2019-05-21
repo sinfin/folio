@@ -15,14 +15,16 @@ class Folio::Mailchimp::SubscribeJob < ApplicationJob
       merge_fields: merge_vars,
       status: status || 'pending'
     }
+    subscription_id = Digest::MD5.hexdigest(model.email)
 
     mailchimp = Gibbon::Request.new(api_key: api_key)
-    response = mailchimp.lists(list_id).members.create(body: subscription)
+    mailchimp.lists(list_id).members(subscription_id)
+                            .upsert(body: subscription)
 
     if tags.present?
       tags = tags.map { |t| { name: t, status: 'active' } }
       mailchimp.lists(list_id)
-               .members(response.body['id'])
+               .members(subscription_id)
                .tags
                .create(body: { tags: tags })
     end
