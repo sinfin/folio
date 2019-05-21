@@ -33,7 +33,7 @@ module Folio::PagesControllerBase
 
         force_correct_path(nested_page_path(@page))
       else
-        @page = pages_scope.includes(*atom_includes)
+        @page = pages_scope.includes(*page_includes)
                            .published_or_admin(current_account.present?)
                            .friendly
                            .find(params[:id])
