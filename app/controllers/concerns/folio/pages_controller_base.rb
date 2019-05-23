@@ -33,10 +33,15 @@ module Folio::PagesControllerBase
 
         force_correct_path(nested_page_path(@page))
       else
-        @page = pages_scope.includes(*page_includes)
-                           .published_or_admin(current_account.present?)
-                           .friendly
-                           .find(params[:id])
+        if page_includes.present?
+          base = pages_scope.includes(*page_includes)
+        else
+          base = pages_scope
+        end
+
+        @page = base.published_or_admin(current_account.present?)
+                    .friendly
+                    .find(params[:id])
         add_breadcrumb @page.title, url_for(@page)
         force_correct_path(url_for(@page))
       end
@@ -63,7 +68,11 @@ module Folio::PagesControllerBase
     end
 
     def set_nested_page(scoped, slug, last: false)
-      base = last ? scoped.includes(*page_includes) : scoped
+      if last && page_includes.present?
+        base = scoped.includes(*page_includes)
+      else
+        base = scoped
+      end
 
       @page = base.published_or_admin(current_account.present?)
                   .friendly
@@ -72,6 +81,6 @@ module Folio::PagesControllerBase
     end
 
     def page_includes
-      atom_includes
+      []
     end
 end
