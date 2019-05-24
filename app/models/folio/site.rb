@@ -58,6 +58,9 @@ end
 #  address                        :text
 #  description                    :text
 #  turbo_mode                     :boolean          default(FALSE)
+#  system_email                   :string
+#  system_email_copy              :string
+#  email_from                     :string
 #
 # Indexes
 #

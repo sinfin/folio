@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_18_055819) do
+ActiveRecord::Schema.define(version: 2019_05_24_080820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,6 +242,9 @@ ActiveRecord::Schema.define(version: 2019_04_18_055819) do
     t.text "address"
     t.text "description"
     t.boolean "turbo_mode", default: false
+    t.string "system_email"
+    t.string "system_email_copy"
+    t.string "email_from"
     t.index ["domain"], name: "index_folio_sites_on_domain"
   end
 
