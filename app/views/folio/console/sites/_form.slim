@@ -8,7 +8,13 @@
     = f.input :description, as: :text, autosize: true
 
     = f.input :phone
-    = f.input :email
+    .row
+      .col
+        = f.input :email
+        = f.input :email_from
+      .col
+        = f.input :system_email
+        = f.input :system_email_copy
     = f.input :address, as: :text, autosize: true
 
     = render partial: 'folio/console/sites/additional_form_fields', \
