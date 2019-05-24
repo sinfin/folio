@@ -3,12 +3,8 @@
 class Folio::ApplicationMailer < ActionMailer::Base
   include Folio::Engine.routes.url_helpers
 
-  default from: -> { self.class.email_from }
+  default from: -> { Folio::Site.instance.email_from.presence || Folio::Site.instance.email }
   layout 'folio/mailer'
-
-  def self.email_from
-    Folio::Site.instance.email_from.presence || Folio::Site.instance.email
-  end
 
   def self.system_email
     if Folio::Site.instance.system_email.present?
