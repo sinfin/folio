@@ -135,7 +135,10 @@ class Folio::Page < Folio::ApplicationRecord
                       }
                     end
                   end,
-                  ignoring: :accents
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   def to_label
     title
