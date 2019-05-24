@@ -20,10 +20,11 @@ class Folio::LeadMailer < Folio::ApplicationMailer
   def notification_email(lead)
     @lead = lead
     @console_link = true
+    @subject = self.class.email_subject(lead)
 
     mail(to: self.class.email_to(lead),
          cc: self.class.email_cc(lead),
-         subject: self.class.email_subject(lead),
+         subject: @subject,
          from: self.class.email_from(lead))
   end
 end
