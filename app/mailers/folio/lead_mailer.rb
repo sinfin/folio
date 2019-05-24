@@ -2,11 +2,15 @@
 
 class Folio::LeadMailer < Folio::ApplicationMailer
   def self.email_to(_lead)
-    Folio::Site.instance.email
+    self.system_email
   end
 
-  def self.email_subject(_lead)
-    "#{Folio::Site.instance.title} lead"
+  def self.email_cc(_lead)
+    self.system_email_copy
+  end
+
+  def self.email_subject(lead)
+    "#{Folio::Site.instance.title} #{Folio::Lead.model_name.human} ##{lead.id}"
   end
 
   def self.email_from(lead)
@@ -16,10 +20,10 @@ class Folio::LeadMailer < Folio::ApplicationMailer
   def notification_email(lead)
     @lead = lead
     @console_link = true
-    @subject = self.class.email_subject(lead)
 
     mail(to: self.class.email_to(lead),
-         subject: @subject,
+         cc: self.class.email_cc(lead),
+         subject: self.class.email_subject(lead),
          from: self.class.email_from(lead))
   end
 end
