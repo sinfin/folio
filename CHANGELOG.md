@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-05-24
+### Added
+- added `email_from`, `system_email` and `system_email_copy` to `Site`
+
 ## 2019-05-15
 ### Added
 - `Folio::Subscribable` concern
