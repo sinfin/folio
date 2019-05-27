@@ -9,7 +9,8 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
     after_assign :sanitize_filename
   end
 
-  belongs_to :attachmentable, polymorphic: true
+  belongs_to :attachmentable, polymorphic: true,
+                              touch: true
 
   # Validations
   validates :file,
