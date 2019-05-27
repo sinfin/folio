@@ -17,7 +17,16 @@ force_destroy Folio::Site
 def unsplash_pic(square = false)
   image = Folio::Image.new
   scale = 0.5 + rand / 2
-  image.file_url = "https://picsum.photos/#{scale * 2560}/#{square ? scale * 2560 : scale * 1440}/?random"
+  w = (scale * 2560).to_i
+  h = (square ? scale * 2560 : scale * 1440).to_i
+  image.file_url = "https://picsum.photos/#{w}/#{h}/?random"
+  image.save!
+  image
+end
+
+def file_pic(file_instance)
+  image = Folio::Image.new
+  image.file = file_instance
   image.save!
   image
 end
@@ -37,15 +46,31 @@ Folio::Site.create!(title: 'Sinfin.digital',
                     })
 
 about = Folio::Page.create!(title: 'O nás',
-                            published: true)
+                            published: true,
+                            published_at: 1.month.ago)
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
+about.image_placements.each { |ip|
+  name = Faker::Name.name
+  ip.update_attributes!(alt: name, title: "Portrait of #{name}")
+}
+
+
+night_sky = Folio::Page.create!(title: 'Noční obloha', published: true, published_at: 1.month.ago, locale: :cs)
+night_photo = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'night.jpg'))
+night_sky.cover = file_pic(night_photo)
+1.times { night_sky.images << file_pic(night_photo) }
+
+# TODO: Atoms
 
 reference = Folio::Page.create!(title: 'Reference',
                                 published: true,
                                 published_at: 1.day.ago)
-Folio::Page.create!(title: 'Smart Cities', published: true)
-Folio::Page.create!(title: 'Vyvolej.to', published: true)
+Folio::Page.create!(title: 'Smart Cities', published: true, published_at: 1.month.ago)
+vyvolejto = Folio::Page.create!(title: 'Vyvolej.to', published: true, published_at: 1.month.ago)
+iptc_test = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'downsized-exif-samples', 'jpg', 'tests', '46_UnicodeEncodeError.jpg'))
+vyvolejto.cover = file_pic(iptc_test)
+
 Folio::Page.create!(title: 'Hidden', published: false)
 Folio::Page.create!(title: 'DAM', published: true)
 

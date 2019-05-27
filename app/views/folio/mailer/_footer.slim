@@ -1,0 +1,9 @@
+- if @console_link
+  p
+    = t('.sent_from')
+
+  a href=console_root_url target="_blank"
+    = t('.console')
+
+- else
+  = t('.sent_from')

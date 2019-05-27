@@ -23,35 +23,34 @@ module Folio::PagesControllerBase
       if Rails.application.config.folio_pages_ancestry
         path = params[:path].split('/')
 
-        @page = pages_scope.published_or_admin(admin_preview?)
-                           .friendly
-                           .find(path.shift)
-        add_breadcrumb @page.title, page_path(@page)
+        set_nested_page(pages_scope, path.shift, last: path.size == 1)
 
-        path.each do |slug|
-          children = filter_pages_by_locale(@page.children)
-          @page = children.published_or_admin(admin_preview?)
-                          .friendly
-                          .find(slug)
-          add_breadcrumb @page.title, nested_page_path(@page)
+        path.each_with_index do |slug, i|
+          set_nested_page(filter_pages_by_locale(@page.children),
+                          slug,
+                          last: path.size - 1 == i)
         end
 
         force_correct_path(nested_page_path(@page))
       else
-        @page = pages_scope.published_or_admin(admin_preview?)
-                           .friendly
-                           .find(params[:id])
+        if page_includes.present?
+          base = pages_scope.includes(*page_includes)
+        else
+          base = pages_scope
+        end
+
+        @page = base.published_or_admin(current_account.present?)
+                    .friendly
+                    .find(params[:id])
         add_breadcrumb @page.title, url_for(@page)
         force_correct_path(url_for(@page))
       end
+
+      fail ActiveRecord::RecordNotFound unless @page.class.public?
     end
 
     def add_meta
       set_meta_variables(@page)
-    end
-
-    def admin_preview?
-      current_admin.present?
     end
 
     def filter_pages_by_locale(pages)
@@ -66,5 +65,22 @@ module Folio::PagesControllerBase
       base = Folio::Page
       base = base.roots if Rails.application.config.folio_pages_ancestry
       filter_pages_by_locale(base)
+    end
+
+    def set_nested_page(scoped, slug, last: false)
+      if last && page_includes.present?
+        base = scoped.includes(*page_includes)
+      else
+        base = scoped
+      end
+
+      @page = base.published_or_admin(current_account.present?)
+                  .friendly
+                  .find(slug)
+      add_breadcrumb @page.title, nested_page_path(@page)
+    end
+
+    def page_includes
+      []
     end
 end

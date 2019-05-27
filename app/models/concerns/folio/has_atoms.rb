@@ -19,6 +19,10 @@ module Folio::HasAtoms
     def atoms_in_molecules
       Folio::Atom.atoms_in_molecules(atoms)
     end
+
+    def atom_image_placements
+      Folio::Atom.atom_image_placements(atoms)
+    end
   end
 
   module Localized
@@ -54,6 +58,12 @@ module Folio::HasAtoms
 
     def atoms_in_molecules
       Folio::Atom.atoms_in_molecules(atoms)
+    end
+
+    def atom_image_placements
+      atom_locales.map do |locale|
+        Folio::Atom.atom_image_placements(send("#{locale}_atoms"))
+      end.flatten
     end
   end
 end

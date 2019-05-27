@@ -1,0 +1,8 @@
+cs:
+  folio:
+    mailer:
+      show_in_console: Zobrazit v administraci
+
+      footer:
+        sent_from: Odesláno z CMS systému Folio
+        console: Vstup do administrace

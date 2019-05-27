@@ -22,6 +22,8 @@ module Folio
         gem 'rails-i18n'
         gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'mini_racer'
+        gem 'premailer', github: 'sinfin/premailer'
+        gem 'premailer-rails'
 
         gem_group :test do
           gem 'factory_bot'
@@ -127,6 +129,8 @@ module Folio
           'app/assets/stylesheets/modules/_bootstrap-overrides.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/_type.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass',
+          'app/views/devise/mailer/invitation_instructions.html.erb',
+          'app/views/devise/mailer/invitation_instructions.text.erb',
           'app/views/home/index.slim',
           'app/views/folio/pages/show.slim',
           'app/views/folio/console/partials/_appended_menu_items.slim',

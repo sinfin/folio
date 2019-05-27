@@ -1,12 +1,13 @@
 //= require jquery
-//= require jquery_ujs
+//= require rails-ujs
 //= require folio-bootstrap/dist/js/bootstrap.bundle
-//= require moment/min/moment.min
+//= require moment/moment
 //= require moment/locale/cs
 //= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require slideout.js/dist/slideout
 //= require jquery-debounce/jquery.debounce
 //= require multiselect/js/jquery.multi-select
+//= require autosize/dist/autosize
 
 //= require jquery-ui/jquery-ui
 //= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
@@ -55,6 +56,7 @@
 //= require folio/console/simple_form_inputs/_date_time_input
 //= require folio/console/simple_form_inputs/_redactor_input
 //= require folio/console/simple_form_inputs/_string_input
+//= require folio/console/simple_form_inputs/_text_input
 
 //= require ./pages_table
 

@@ -12,6 +12,8 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 gem 'mini_racer', platforms: :ruby
+gem 'premailer', github: 'sinfin/premailer'
+gem 'premailer-rails'
 
 gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
 
@@ -28,6 +30,7 @@ group :development do
   gem 'puma'
   gem 'rack-mini-profiler', require: false
   gem 'i18n-tasks'
+  gem 'rubocop', '0.66.0'
 end
 
 group :development, :test do

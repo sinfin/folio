@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_06_150818) do
+ActiveRecord::Schema.define(version: 2019_05_24_080820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,28 @@ ActiveRecord::Schema.define(version: 2019_03_06_150818) do
     t.index ["account_id"], name: "index_ahoy_events_on_account_id"
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
+  end
+
+  create_table "audits", force: :cascade do |t|
+    t.bigint "auditable_id"
+    t.string "auditable_type"
+    t.bigint "associated_id"
+    t.string "associated_type"
+    t.bigint "user_id"
+    t.string "user_type"
+    t.string "username"
+    t.string "action"
+    t.jsonb "audited_changes"
+    t.integer "version", default: 0
+    t.string "comment"
+    t.string "remote_address"
+    t.string "request_uuid"
+    t.datetime "created_at"
+    t.index ["associated_type", "associated_id"], name: "associated_index"
+    t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
+    t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["request_uuid"], name: "index_audits_on_request_uuid"
+    t.index ["user_id", "user_type"], name: "user_index"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -44,7 +66,19 @@ ActiveRecord::Schema.define(version: 2019_03_06_150818) do
     t.string "last_name"
     t.string "role"
     t.boolean "is_active", default: true
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.string "invited_by_type"
+    t.bigint "invited_by_id"
+    t.integer "invitations_count", default: 0
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
+    t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
+    t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
+    t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
@@ -94,6 +128,7 @@ ActiveRecord::Schema.define(version: 2019_03_06_150818) do
     t.bigint "file_size"
     t.string "mime_type", limit: 255
     t.json "additional_data"
+    t.json "file_metadata"
     t.index ["type"], name: "index_folio_files_on_type"
   end
 
@@ -207,6 +242,9 @@ ActiveRecord::Schema.define(version: 2019_03_06_150818) do
     t.text "address"
     t.text "description"
     t.boolean "turbo_mode", default: false
+    t.string "system_email"
+    t.string "system_email_copy"
+    t.string "email_from"
     t.index ["domain"], name: "index_folio_sites_on_domain"
   end
 

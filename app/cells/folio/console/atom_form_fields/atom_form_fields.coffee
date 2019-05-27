@@ -69,6 +69,6 @@ $(document)
     $wrap = $(this).closest('.f-c-atom-form-fields')
     $wrap.removeClass('f-c-atom-form-fields--focused')
 
-  .on 'ready', ->
-    $('.folio-console-atom-type-select').each ->
-      atomFormBySelect($(this))
+$ ->
+  $('.folio-console-atom-type-select').each ->
+    atomFormBySelect($(this))

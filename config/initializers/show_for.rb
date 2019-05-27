@@ -20,7 +20,7 @@ ShowFor.setup do |config|
   config.label_tag = :div
 
   # The DOM class of each label tag. Default is :label.
-  config.label_class = 'f-c-show-for__label'
+  config.label_class = 'f-c-show-for__label text-body'
 
   # The tag used to wrap each content (value). Default is nil.
   config.content_tag = :div
@@ -29,8 +29,7 @@ ShowFor.setup do |config|
   config.content_class = 'f-c-show-for__content'
 
   # The DOM class set for blank content tags. Default is "blank".
-  # config.blank_content_class = 'f-c-show-for__content '\
-  #                              'f-c-show-for__content--blank'
+  config.blank_content_class = 'blank text-muted'
 
   # Skip blank attributes instead of generating with a default message. Default is false.
   # config.skip_blanks = true
@@ -83,7 +82,7 @@ class ShowFor::Builder
 
   def email(attr = :email)
     attribute(attr) do
-      if object.persisted?
+      if object.persisted? && object.public_send(attr).present?
         [
           object.public_send(attr),
           template.mail_to(object.public_send(attr),
@@ -119,10 +118,12 @@ class ShowFor::Builder
     end
   end
 
-  def state
+  def state(active: true)
     attribute(:aasm_state) do
       if object.persisted?
-        template.cell('folio/console/state', object).show.try(:html_safe)
+        template.cell('folio/console/state',
+                      object,
+                      active: active).show.try(:html_safe)
       end
     end
   end
@@ -152,6 +153,14 @@ class ShowFor::Builder
       if object.persisted?
         template.cell('folio/console/index/images', object).show.try(:html_safe)
       end
+    end
+  end
+
+  def audit_user(opts = {})
+    opts[:label] ||= Folio::Account.model_name.human
+
+    attribute(:user, opts) do
+      object.try(:audit).try(:user).try(:full_name)
     end
   end
 

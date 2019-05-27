@@ -88,11 +88,13 @@ module Folio::Console::FileControllerBase
     end
 
     def file_params
-      p = params.require(:file).permit(:tag_list,
-                                       :type,
-                                       :file,
-                                       file: [],
-                                       tags: [])
+      p = params.require(params[:controller].split('/').last.singularize)
+                .permit(:tag_list,
+                        :type,
+                        :file,
+                        file: [],
+                        tags: [])
+
       # redactor 3 ¯\_(ツ)_/¯
       if p[:file].is_a?(Array)
         p[:file] = p[:file].first

@@ -1,6 +1,47 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-05-24
+### Added
+- added `email_from`, `system_email` and `system_email_copy` to `Site`
+
+## 2019-05-15
+### Added
+- `Folio::Subscribable` concern
+- `Folio::Mailchimp::SubscribeJob`
+### Removed
+- `folio:export:newsletter` rake task
+
+## 2019-05-02
+### Added
+- added `public?` class method to `Page` to disable access to homepage and such via pages controller
+
+## 2019-05-02
+### Added
+- added email richtext via `premailer-rails`
+
+## 2019-04-26
+### Added
+- `Folio::Audited` version control concern
+- `folio_pages_audited` to application config (enables version control for `Folio::Page`)
+
+## 2019-04-18
+### Added
+- added `devise_invitable` for `Folio::Account`
+
+## 2019-04-17
+### Added
+- added `autosize: true` option to text inputs (uses JS to autosize the textarea)
+
+## 2019-04-11
+### Removed
+- removed `current_admin` helper, use `current_account` instead
+
+## 2019-04-05
+### Added
+- image sitemap concern enabled by default for `Folio::Node`
+- automatic file metadata tagging with `exiftool`
+
 ## 2019-04-02
 ### Removed
 - Removed obsolete `console_tooltip` helper.
@@ -189,4 +230,4 @@ All notable changes to this project will be documented in this file.
 
 ## 2018-09-03
 ### Changed
-- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base` 
+- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base`

@@ -11,16 +11,10 @@ module Folio::ApplicationControllerBase
 
     layout 'folio/application'
 
-    helper_method :current_admin
-
     before_action do
       @site = Folio::Site.instance
       I18n.locale = params[:locale] || @site.locale
     end
-  end
-
-  def current_admin
-    current_account
   end
 
   def url_for(options = nil)
@@ -56,5 +50,16 @@ module Folio::ApplicationControllerBase
          request.url != correct_path_or_url
         redirect_to(correct_path_or_url, status: :moved_permanently)
       end
+    end
+
+    def atom_includes
+      [
+        atoms: {
+          cover_placement: :file,
+          document_placement: :file,
+          image_placements: :file,
+          document_placements: :file,
+        }
+      ]
     end
 end

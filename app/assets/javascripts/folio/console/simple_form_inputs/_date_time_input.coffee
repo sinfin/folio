@@ -30,9 +30,6 @@ unbindDatePicker = ($elements) ->
   $elements.datetimepicker('destroy')
 
 $(document)
-  .on 'ready', ->
-    bindDatePicker($(DATE_INPUT_SELECTOR))
-
   .on 'click', (e) ->
     $picker = $('.bootstrap-datetimepicker-widget')
     $target = $(e.target)
@@ -46,3 +43,14 @@ $(document)
 
   .on 'cocoon:before-remove', (e, item) ->
     unbindDatePicker(item.find(DATE_INPUT_SELECTOR))
+
+if Turbolinks?
+  $(document)
+    .on 'turbolinks:load', ->
+      bindDatePicker($(DATE_INPUT_SELECTOR))
+
+    .on 'turbolinks:before-cache', ->
+      unbindDatePicker($(DATE_INPUT_SELECTOR))
+
+else
+  $ -> bindDatePicker($(DATE_INPUT_SELECTOR))

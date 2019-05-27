@@ -11,6 +11,8 @@ html.bg-dark.f-c-layout-html lang=I18n.locale
         .f-c-layout-devise__inner
           = yield
 
+    = render 'folio/console/partials/translations'
+
     = javascript_include_tag 'folio/console/base'
 
     = yield :javascripts

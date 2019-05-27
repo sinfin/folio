@@ -101,4 +101,19 @@ class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
     get "/#{old_slug}"
     assert_redirected_to url_for(@page)
   end
+
+  class ::NonPublicPage < Folio::Page
+    def self.public?
+      false
+    end
+  end
+
+  test 'public?' do
+    get url_for(@page)
+    assert_response :ok
+
+    @page.becomes!(NonPublicPage)
+    @page.save!
+    assert_raises(ActiveRecord::RecordNotFound) { get url_for(@page.reload) }
+  end
 end

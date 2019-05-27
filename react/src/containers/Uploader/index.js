@@ -67,18 +67,21 @@ class Uploader extends Component {
   }
 
   djsConfig () {
+    const base = this.props.fileType === 'Folio::Document' ? 'document' : 'image'
+
+    let params = {}
+    params[`${base}[type]`] = this.props.fileType
+    params[`${base}[tag_list]`] = this.props.uploads.uploadTags.join(',')
+
     return {
       headers: CSRF,
-      paramName: 'file[file][]',
+      paramName: `${base}[file][]`,
       previewTemplate: '<span></span>',
       clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
       thumbnailMethod: 'contain',
       thumbnailWidth: 150,
       thumbnailHeight: 150,
-      params: {
-        'file[type]': this.props.fileType,
-        'file[tag_list]': this.props.uploads.uploadTags.join(','),
-      }
+      params,
     }
   }
 

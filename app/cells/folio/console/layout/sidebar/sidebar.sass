@@ -1,31 +1,42 @@
-.f-c-layout-sidebar__part + .f-c-layout-sidebar__part
-  border-top: 1px solid rgba(#979797, 0.42)
+.f-c-layout-sidebar
+  display: flex
+  flex-direction: column
 
-.f-c-layout-sidebar__title
-  text-transform: uppercase
-  font-weight: $font-weight-bold
-  display: block
-  padding: $grid-gutter-half
+  &__part
+    flex: 0 0 auto
 
-  +plain-hover-focus
-    color: $white
-    text-decoration: none
+    &--overflowable
+      flex-shrink: 1
+      overflow-y: auto
 
-.f-c-layout-sidebar__ul
-  padding: 10px 0
+    & + &
+      border-top: 1px solid rgba(#979797, 0.42)
 
-.f-c-layout-sidebar__a
-  display: block
-  padding: 10px 20px
-
-  +plain-hover-focus
-    color: $gray-200
-
-  &--active
+  &__title
+    text-transform: uppercase
     font-weight: $font-weight-bold
+    display: block
+    padding: $grid-gutter-half
 
     +plain-hover-focus
       color: $white
+      text-decoration: none
 
-.f-c-layout-sidebar__icon
-  margin: 0 7px 0 0
+  &__ul
+    padding: 10px 0
+
+  &__a
+    display: block
+    padding: 10px 20px
+
+    +plain-hover-focus
+      color: $gray-200
+
+    &--active
+      font-weight: $font-weight-bold
+
+      +plain-hover-focus
+        color: $white
+
+  &__icon
+    margin: 0 7px 0 0

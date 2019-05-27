@@ -10,6 +10,7 @@ en:
         destroy: Destroy
         edit: Edit
         preview: Preview
+        save: Save
         show: Show
         submit: Submit
       alt_prompt: Alternative image caption
@@ -131,7 +132,6 @@ en:
         add: Add
       really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
-      save: Save
       single_file_select:
         add_image: Add image
         add_video: Add video
