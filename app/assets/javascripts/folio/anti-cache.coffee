@@ -11,7 +11,7 @@ swapItems = ($old, $new) ->
     replacement = $new.find("[data-anti-cache-item='#{id}']")
     $item.replaceWith(replacement)
 
-  $old.addClass('folio-anti-cache--done')
+  setTimeout (-> $old.addClass('folio-anti-cache--done')), 0
 
 fetchFresh = ($el, url) ->
   $.get url, (res) -> swapItems($el, $(res))
