@@ -23,7 +23,7 @@ class Folio::NodeTranslation < Folio::Node
     end
   end
 
-  def console_selectable?
+  def self.console_selectable?
     false
   end
 end
