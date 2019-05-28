@@ -14,12 +14,9 @@ cs:
       cancel:
         alert: "%{resource_name} nelze stornovat."
         notice: "%{resource_name} stornován(a)."
-      handle:
-        alert: "%{resource_name} nelze vyřídit."
-        notice: "%{resource_name} vyřízen(a)."
-      unhandle:
-        alert: "%{resource_name} nelze označit jako nevyřízené."
-        notice: "%{resource_name} označen jako nevyřízené."
+      event:
+        alert: "Stav záznamu se nepodařilo upravit."
+        notice: "Stav záznamu upraven."
       confirm:
         alert: "%{resource_name} nelze potvrdit."
         notice: "%{resource_name} potvrzen(a)."

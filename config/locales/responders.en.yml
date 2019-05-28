@@ -14,12 +14,9 @@ en:
       cancel:
         alert: "%{resource_name} could not be cancelled."
         notice: "%{resource_name} was successfully cancelled."
-      handle:
-        alert: "%{resource_name} could not be handled."
-        notice: "%{resource_name} was successfully handled."
-      unhandle:
-        alert: "%{resource_name} could not be set as not-handled."
-        notice: "%{resource_name} was successfully set as not-handled."
+      event:
+        alert: "%{resource_name} state could not be updated."
+        notice: "%{resource_name} state was successfully updated."
       confirm:
         alert: "%{resource_name} could not be confirmed."
         notice: "%{resource_name} was successfully confirmed."
