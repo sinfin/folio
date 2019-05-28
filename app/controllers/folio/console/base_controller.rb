@@ -220,29 +220,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    # Override respond_with to redirect to :index by default
-    def respond_with(*resources, &block)
-      options = resources.size == 1 ? {} : resources.extract_options!
-      if options[:action].nil? && options[:location].nil?
-        if resources.size == 1 &&
-           !resources.first.try(:destroyed?) &&
-           resources.first.try(:persisted?)
-          referrer = request.referer.try(:gsub, '/new', '')
-          options[:location] ||= (referrer || url_for([:console,
-                                                       resources.first,
-                                                       action: :edit]))
-        else
-          options[:location] ||= url_for([:console, @klass])
-        end
-      end
-
-      if resources.size == 1
-        super(resources.first, options, &block)
-      else
-        super(*resources, &block)
-      end
-    end
-
     def render_csv(records)
       data = ::CSV.generate(headers: true) do |csv|
         csv << @klass.csv_attribute_names.map do |a|

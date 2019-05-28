@@ -19,17 +19,17 @@ module Folio::Console::DefaultActions
   def create
     instance_variable_set(folio_console_record_variable_name,
                           @klass.create(folio_console_params))
-    respond_with folio_console_record
+    respond_with folio_console_record, location: respond_with_location
   end
 
   def update
     folio_console_record.update(folio_console_params)
-    respond_with folio_console_record
+    respond_with folio_console_record, location: respond_with_location
   end
 
   def destroy
     folio_console_record.destroy
-    respond_with folio_console_record
+    respond_with folio_console_record, location: respond_with_location
   end
 
   def event
@@ -39,7 +39,8 @@ module Folio::Console::DefaultActions
                            .events(possible: true)
                            .any? { |e| e.name == event }
       folio_console_record.send("#{event}!")
-      respond_with folio_console_record
+      location = request.referer || respond_with_location
+      respond_with folio_console_record, location: location
     else
       human_event = AASM::Localizer.new.human_event_name(@klass, event)
 
@@ -72,5 +73,19 @@ module Folio::Console::DefaultActions
 
     def folio_console_params
       send("#{folio_console_name_base}_params")
+    end
+
+    def respond_with_location
+      if folio_console_record.destroyed?
+        url_for([:console, @klass])
+      else
+        if folio_console_record.persisted?
+          begin
+            url_for([:edit, :console, folio_console_record])
+          rescue ActionController::UrlGenerationError
+            url_for([:console, @klass])
+          end
+        end
+      end
     end
 end
