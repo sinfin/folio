@@ -1,3 +1,5 @@
 # frozen_string_literal: true
 
-Premailer::Rails.config[:drop_unmergeable_css_rules] = true
+if defined?(Premailer)
+  Premailer::Rails.config[:drop_unmergeable_css_rules] = true
+end
