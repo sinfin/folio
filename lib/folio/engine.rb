@@ -38,6 +38,7 @@ module Folio
     config.folio_using_traco = false
     config.folio_console_locale = :cs
     config.folio_console_dashboard_redirect = :console_nodes_path
+    config.folio_server_names = []
 
     initializer :append_migrations do |app|
       unless app.root.to_s.match? root.to_s
