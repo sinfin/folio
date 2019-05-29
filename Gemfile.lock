@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/sinfin/actionpack-page_caching.git
+  revision: 205bb1eb88ca7efe5156298f954e764ce7ef07f8
+  specs:
+    actionpack-page_caching (1.1.1)
+      actionpack (>= 4.0.0, < 6)
+
+GIT
   remote: git://github.com/sinfin/premailer.git
   revision: 4f14229876c7f226ebb175b9cfaaf8c361169819
   specs:
@@ -12,7 +19,6 @@ PATH
   specs:
     folio (0.1.0)
       aasm
-      actionpack-page_caching
       active_model_serializers (~> 0.9.6)
       acts-as-taggable-on (~> 6.0)
       ahoy_matey (~> 2)
@@ -80,8 +86,6 @@ GEM
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionpack-page_caching (1.1.1)
-      actionpack (>= 4.0.0, < 6)
     actionview (5.2.3)
       activesupport (= 5.2.3)
       builder (~> 3.1)
@@ -496,6 +500,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionpack-page_caching!
   annotate
   better_errors
   binding_of_caller

@@ -15,6 +15,8 @@ gem 'mini_racer', platforms: :ruby
 gem 'premailer', github: 'sinfin/premailer'
 gem 'premailer-rails'
 
+gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
+
 group :test do
   gem 'minitest', '5.10.3'
   gem 'factory_bot'

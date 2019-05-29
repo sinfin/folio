@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get '/500', to: 'errors#page500', via: :all
 
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
+    get '/anti-cache/*name', to: 'anti_cache#show', as: :anti_cache
+
     resources :pages, only: [:show], path: ''
   end
 end

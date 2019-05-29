@@ -20,7 +20,7 @@ module Folio
         gem 'pg', version: '~> 0.21.0'
         gem 'devise-i18n'
         gem 'rails-i18n'
-        gem 'actionpack-page_caching'
+        gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'mini_racer'
         gem 'premailer', github: 'sinfin/premailer'
         gem 'premailer-rails'
@@ -89,6 +89,7 @@ module Folio
         [
           'test/factories.rb',
           'test/test_helper.rb',
+          'app/controllers/anti_cache_controller.rb',
           'app/controllers/application_controller.rb',
           'app/controllers/pages_controller.rb',
           'app/controllers/errors_controller.rb',
@@ -99,6 +100,7 @@ module Folio
           'config/initializers/smtp.rb',
           'config/routes.rb',
           'lib/application_cell.rb',
+          'test/controllers/anti_cache_controller_test.rb',
         ].each { |f| template "#{f}.tt", f }
 
         template '.env.sample.erb', '.env'
