@@ -57,6 +57,10 @@ class Folio::Account < Folio::ApplicationRecord
     # our own "is_active" column
     super && self.is_active?
   end
+
+  def self.clears_page_cache_on_save?
+    false
+  end
 end
 
 # == Schema Information
