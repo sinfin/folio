@@ -43,7 +43,8 @@ tr[
 
     = node_preview_button node
     = edit_button node, edit_console_node_path(node.id)
-    = delete_button node, console_node_path(node.id)
+    - unless node.class.try(:indestructible?)
+      = delete_button node, console_node_path(node.id)
 
 - if tree
   = render partial: "nodes_table", locals: { nodes: children }

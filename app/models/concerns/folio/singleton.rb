@@ -2,6 +2,7 @@
 
 module Folio::Singleton
   extend ActiveSupport::Concern
+  include Folio::Indestructible
 
   class MissingError < ActiveRecord::RecordNotFound; end
 
