@@ -53,7 +53,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'ahoy_matey', '~> 2'
   s.add_dependency 'rails-i18n'
   s.add_dependency 'aasm'
-  s.add_dependency 'recaptcha'
+  s.add_dependency 'recaptcha', '4.13.1'
   s.add_dependency 'nokogiri'
   s.add_dependency 'show_for'
   s.add_dependency 'audited', '~> 4.7'
@@ -67,7 +67,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'devise-bootstrap-views'
 
   s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'byebug'
   s.add_development_dependency 'pry-rails'
   s.add_development_dependency 'rubocop-rails_config'
   s.add_development_dependency 'guard-rubocop'
