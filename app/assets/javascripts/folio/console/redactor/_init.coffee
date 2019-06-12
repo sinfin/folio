@@ -19,10 +19,10 @@ OPTIONS =
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
 
-window.folioConsoleInitRedactor = (node, options = {}) ->
+window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')
   opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
-  $R(node, opts)
+  $R(node, $.extend({}, opts, additional))
 
 window.folioConsoleDestroyRedactor = (node) ->
   $R(node, 'destroy')
