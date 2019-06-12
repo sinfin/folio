@@ -54,7 +54,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-i18n'
   s.add_dependency 'state_machines-activerecord'
   s.add_dependency 'actionpack-page_caching'
-  s.add_dependency 'recaptcha'
+  s.add_dependency 'recaptcha', '4.13.1'
   s.add_dependency 'nokogiri'
 
   s.add_dependency 'dragonfly'
