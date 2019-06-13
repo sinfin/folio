@@ -60,7 +60,7 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
     puts 'Converting node contents to atoms'
 
     Folio::Page.find_each do |node|
-      if node.content.present?
+      if node.try(:content).present? || node.try("content_#{I18n.default_locale}").present?
         values = {}
 
         columns.each do |col|
@@ -74,7 +74,9 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
           next
         end
 
-        if Folio::Atom::Text.create(values.merge(placement: node, position: -1))
+        atom = Folio::Atom::Text.new(values.merge(placement: node,
+                                                  position: -1))
+        if atom.save(validate: false)
           print '.'
         else
           print 'x'
@@ -82,7 +84,7 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
       end
     end
 
-    remove_column :folio_pages, :content
+    columns.each { |col| remove_column :folio_pages, col }
     remove_column :folio_pages, :code
   end
 end

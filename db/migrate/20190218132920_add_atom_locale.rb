@@ -9,7 +9,7 @@ class AddAtomLocale < ActiveRecord::Migration[5.2]
         atom.update_column(:locale, I18n.default_locale)
 
         (I18n.available_locales - [I18n.default_locale]).each do |locale|
-          translation = atom.dup
+          translation = atom.reload.dup
           translation.locale = locale
           atom.file_placements.find_each do |fp|
             translation.file_placements << fp.dup
@@ -19,7 +19,7 @@ class AddAtomLocale < ActiveRecord::Migration[5.2]
           translation["perex_#{I18n.default_locale}"] = translation["perex_#{locale}"]
           translation["content_#{I18n.default_locale}"] = translation["content_#{locale}"]
 
-          translation.save!
+          translation.save(validate: false)
         end
 
         (I18n.available_locales - [I18n.default_locale]).each do |locale|
