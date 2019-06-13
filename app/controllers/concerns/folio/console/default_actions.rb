@@ -82,7 +82,7 @@ module Folio::Console::DefaultActions
         if folio_console_record.persisted?
           begin
             url_for([:edit, :console, folio_console_record])
-          rescue ActionController::UrlGenerationError
+          rescue ActionController::UrlGenerationError, NoMethodError
             url_for([:console, @klass])
           end
         end
