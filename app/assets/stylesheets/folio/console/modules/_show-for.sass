@@ -2,7 +2,7 @@
   > :last-child
     margin-bottom: 0
 
-*:not(.f-c-show-for-index) > .f-c-show-for__row
+*:not(.f-c-show-for-index):not(.f-c-show-for-table) > .f-c-show-for__row
   .f-c-show-for__cell:not(:last-child)
     margin-bottom: $spacer
 
@@ -60,8 +60,41 @@
         .f-c-show-for__label
           display: none
 
+  .f-c-show-for-table
+    .f-c-show-for__row
+      display: table
+      box-shadow: 0 0 5px rgba($black, 0.05)
+
+    .f-c-show-for__cell
+      display: table-row
+
+    .f-c-show-for__label,
+    .f-c-show-for__content
+      display: table-cell
+      padding: $table-cell-padding
+      vertical-align: middle
+      border-top: 1px solid $table-border-color
+      border-left: 1px solid $table-border-color
+      border-right: 1px solid $table-border-color
+
+    .f-c-show-for__label
+      border-right: 0
+
+    .f-c-show-for__cell:last-child
+      .f-c-show-for__label,
+      .f-c-show-for__content
+        border-bottom: 1px solid $table-border-color
+
+    .f-c-show-for__label
+      text-transform: uppercase
+      color: $table-head-color
+      white-space: nowrap
+      background: $gray-50
+      font-size: $font-size-sm
+
 +mq-mobile-menu
-  .f-c-show-for-index
+  .f-c-show-for-index,
+  .f-c-show-for-table
     .f-c-show-for__row
       display: block
       width: 100%
@@ -69,9 +102,6 @@
       margin: 0 0 $spacer
       padding: $spacer calc(#{2 * $spacer} + #{$input-height-border} + #{$input-height-inner}) 0 $spacer
       position: relative
-
-      &:first-child
-        display: none
 
     .f-c-show-for__cell
       margin-bottom: $spacer
@@ -85,3 +115,8 @@
       color: $table-head-color
       font-size: $font-size-tiny
       margin-bottom: $spacer / 4
+
+  .f-c-show-for-index
+    .f-c-show-for__row
+      &:first-child
+        display: none
