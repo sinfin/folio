@@ -21,8 +21,15 @@ fetchFresh = ($el, url) ->
 
 performAntiCache = (e) ->
   $body = $(e.originalEvent.data.newBody || 'body')
+  window.performFolioAntiCache $body.find('[data-anti-cache]')
 
-  $body.find('[data-anti-cache]').each ->
+saveAntiCacheHtml = ->
+  $('[data-anti-cache]').each ->
+    $el = $(this)
+    write $el.data('anti-cache'), $el.html()
+
+window.performFolioAntiCache = ($items) ->
+  $items.each ->
     $el = $(this)
     url = $el.data('anti-cache')
     value = read(url)
@@ -30,11 +37,6 @@ performAntiCache = (e) ->
     swapItems($el, $(value), true) if value
 
     fetchFresh($el, url)
-
-saveAntiCacheHtml = ->
-  $('[data-anti-cache]').each ->
-    $el = $(this)
-    write $el.data('anti-cache'), $el.html()
 
 $(document)
   .one 'turbolinks:load', performAntiCache
