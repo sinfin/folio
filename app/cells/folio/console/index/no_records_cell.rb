@@ -5,6 +5,6 @@ class Folio::Console::Index::NoRecordsCell < Folio::ConsoleCell
     url = options[:url].presence || url_for([:console, model, action: :new])
     html_opts = { title: t('.new') }
     link_to(t('.new'), url, html_opts)
-  rescue NoMethodError
+  rescue ActionController::UrlGenerationError, NoMethodError
   end
 end
