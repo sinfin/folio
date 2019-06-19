@@ -13,9 +13,13 @@ html.f-c-layout-html lang=I18n.locale
       == cell('folio/console/layout/header', rendered_breadcrumbs)
       == cell('folio/console/flash', flash)
 
-      .f-c-layout-main-container.container-fluid
-        = yield
-        == cell('folio/console/pagination', @pagy)
+      - if content_for?(:with_aside)
+        = yield(:with_aside)
+
+      - else
+        .f-c-layout-main-container.container-fluid
+          = yield
+          == cell('folio/console/pagination', @pagy)
 
     - %w[Folio::Image Folio::Document].each do |klass|
       - [true, false].each do |single|
