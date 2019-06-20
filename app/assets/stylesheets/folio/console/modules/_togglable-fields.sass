@@ -1,0 +1,22 @@
+.f-c-togglable-fields
+  position: relative
+
+  &__label
+    padding-left: $form-check-input-gutter
+
+  &__input
+    position: absolute
+    margin-top: $form-check-input-margin-y
+
+  &__content
+    display: none
+
+    &--reverse
+      display: block
+
+  &__input:checked ~ &__content,
+  &__input:checked ~ &__parent &__content
+    display: block
+
+    &--reverse
+      display: none

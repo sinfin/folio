@@ -32,4 +32,23 @@ module Folio::Console::FormsHelper
     args[key] = (args[key] || {}).merge(data: data)
     super(*args)
   end
+
+  def togglable_fields(f, key, parent: false, &block)
+    content_tag(:div, class: 'f-c-togglable-fields') do
+      concat(f.check_box(key, class: 'f-c-togglable-fields__input'))
+      concat(f.label(key, class: 'f-c-togglable-fields__label'))
+      concat(content_tag(:div, class: parent ? 'f-c-togglable-fields__parent' : 'f-c-togglable-fields__content', &block))
+    end
+  end
+
+  def togglable_fields_content(reverse: false, &block)
+    if reverse
+      class_name = 'f-c-togglable-fields__content '\
+                   'f-c-togglable-fields__content--reverse'
+    else
+      class_name = 'f-c-togglable-fields__content'
+    end
+
+    content_tag(:div, class: class_name, &block)
+  end
 end
