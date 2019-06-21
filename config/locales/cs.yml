@@ -1,6 +1,9 @@
 ---
 cs:
   all: Všechny
+  date:
+    formats:
+      short: "%d. %m. %Y"
   dragonfly:
     invalid_format: Nepodporovaný formát
   'false': Ne
