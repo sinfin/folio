@@ -33,9 +33,12 @@ Folio::Engine.routes.draw do
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
     resources :visits, only: %i[index show]
-    resources :links, only: %i[index]
     resource :search, only: %i[show]
     resource :site, only: %i[edit update]
+
+    namespace :api do
+      resources :links, only: %i[index]
+    end
   end
 
   resource :csrf, only: %i[show], controller: :csrf
