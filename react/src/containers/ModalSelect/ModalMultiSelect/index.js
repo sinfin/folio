@@ -55,9 +55,9 @@ class ModalMultiSelect extends ModalSelect {
     if (this.selectingDocument()) {
       return `
         <div class="folio-console-file-table__tr">
-          <div class="folio-console-file-table__td folio-console-file-table__td--main">${placement.title || placement.file.file_name}</div>
-          <div class="folio-console-file-table__td folio-console-file-table__td--size">${numberToHumanSize(placement.file.file_size)}</div>
-          <div class="folio-console-file-table__td folio-console-file-table__td--extension">${placement.file.extension}</div>
+          <div class="folio-console-file-table__td folio-console-file-table__td--main">${placement.title || placement.file.attributes.file_name}</div>
+          <div class="folio-console-file-table__td folio-console-file-table__td--size">${numberToHumanSize(placement.file.attributes.file_size)}</div>
+          <div class="folio-console-file-table__td folio-console-file-table__td--extension">${placement.file.attributes.extension}</div>
           ${hiddenFields}
         </div>
       `
@@ -65,7 +65,7 @@ class ModalMultiSelect extends ModalSelect {
       return `
         <div class="folio-console-file-list__file">
           <div class="folio-console-file-list__img-wrap">
-            <img class="folio-console-thumbnail__img folio-console-file-list__img" src="${window.encodeURI(placement.file.thumb)}">
+            <img class="folio-console-thumbnail__img folio-console-file-list__img" src="${window.encodeURI(placement.file.attributes.thumb)}">
           </div>
           ${hiddenFields}
         </div>

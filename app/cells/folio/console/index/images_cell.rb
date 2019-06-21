@@ -20,7 +20,7 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
 
   def image(placement)
     image_from(placement,
-               Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE,
+               Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
                lightbox(placement).merge(class: 'f-c-index-images__img'))
   end
 

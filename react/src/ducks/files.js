@@ -58,9 +58,9 @@ export function updateFileFailure (file) {
 function * getFilesPerform (action) {
   try {
     const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
+    const filesUrl = fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images'
     const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(records))
+    yield put(getFilesSuccess(records.data))
   } catch (e) {
     flashError(e.message)
   }
@@ -74,9 +74,15 @@ function * updateFilePerform (action) {
   try {
     const { file, attributes } = action
     const fileType = yield select(fileTypeSelector)
-    const fileUrl = fileType === 'Folio::Document' ? `/console/documents/${file.id}.json` : `/console/images/${file.id}.json`
-    const response = yield call(apiPut, fileUrl, { file: attributes })
-    yield put(updateFileSuccess(action.file, response.file))
+    const fileUrl = fileType === 'Folio::Document' ? `/console/api/documents/${file.id}` : `/console/api/images/${file.id}`
+    const data = {
+      file: {
+        id: file.id,
+        attributes,
+      },
+    }
+    const response = yield call(apiPut, fileUrl, data)
+    yield put(updateFileSuccess(action.file, response.data))
   } catch (e) {
     flashError(e.message)
     yield put(updateFileFailure(action.file))
@@ -115,7 +121,7 @@ export const filesForListSelector = (state) => {
       if (uploads.uploadedIds.indexOf(file.id) === -1) {
         return file
       } else {
-        return { ...file, freshlyUploaded: true }
+        return { ...file, attributes: { ...file.attributes, freshlyUploaded: true } }
       }
     })
   } else {
@@ -123,7 +129,7 @@ export const filesForListSelector = (state) => {
   }
 
   return [
-    ...Object.values(uploads.records).map((upload) => ({ ...upload, uploading: true })),
+    ...Object.values(uploads.records).map((upload) => ({ ...upload, attributes: { ...upload.attributes, uploading: true } })),
     ...files,
   ]
 }
@@ -140,7 +146,7 @@ export const unselectedFilesForListSelector = (state) => {
 const initialState = {
   loading: false,
   loaded: false,
-  filesUrl: '/console/files.json',
+  filesUrl: '/console/api/files',
   records: [],
 }
 
@@ -172,10 +178,13 @@ function filesReducer (state = initialState, action) {
       return {
         ...state,
         records: state.records.map((record) => {
-          if (record.thumb !== action.temporary_url) return record
+          if (record.attributes.thumb !== action.temporary_url) return record
           return {
             ...record,
-            thumb: action.url,
+            attributes: {
+              ...record.attributes,
+              thumb: action.url,
+            }
           }
         }),
       }
@@ -188,8 +197,11 @@ function filesReducer (state = initialState, action) {
           if (record.id === action.file.id) {
             return {
               ...record,
-              ...action.attributes,
-              updating: true,
+              attributes: {
+                ...record.attributes,
+                ...action.attributes,
+                updating: true,
+              }
             }
           } else {
             return record
@@ -214,9 +226,9 @@ function filesReducer (state = initialState, action) {
         ...state,
         records: state.records.map((record) => {
           if (record.id === action.file.id) {
-            return record
-          } else {
             return { ...action.file }
+          } else {
+            return record
           }
         }),
       }

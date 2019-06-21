@@ -68,10 +68,14 @@ function * uploadsErrorSaga (): Generator<*, *, *> {
 function * uploadedFilePerform (action) {
   const id = idFromFile(action.file)
   const upload = yield select(uploadSelector(id))
-  yield put(finishedUpload(action.file, action.response.id))
+  const data = action.response.data
+  yield put(finishedUpload(action.file, data.id))
   yield put(uploadedFile({
-    ...action.response,
-    thumb: upload.thumb || action.response.thumb,
+    ...data,
+    attributes: {
+      ...data.attributes,
+      thumb: upload.thumb || data.attributes.thumb,
+    }
   }))
 }
 
@@ -83,9 +87,9 @@ function * setUploadTagsPerform (action) {
   const { uploadedIds, uploadTags } = yield select(uploadsSelector)
   if (uploadedIds.length) {
     const fileType = yield select(fileTypeSelector)
-    const url = fileType === 'Folio::Document' ? '/console/documents/tag' : '/console/images/tag'
+    const url = fileType === 'Folio::Document' ? '/console/api/documents/tag' : '/console/api/images/tag'
     const response = yield call(apiPost, url, { file_ids: uploadedIds, tags: uploadTags })
-    yield put(updatedFiles(response))
+    yield put(updatedFiles(response.data))
     yield put(clearUploadedIds(uploadedIds))
   }
 }
@@ -137,13 +141,15 @@ function uploadsReducer (state = initialState, action) {
           ...state.records,
           [id]: {
             id,
-            file: action.file,
-            file_size: action.file.size,
-            file_name: action.file.name,
-            extension: action.file.type.split('/').pop().toUpperCase(),
-            tags: state.uploadTags,
-            thumb: null,
-            progress: 0,
+            attributes: {
+              file: action.file,
+              file_size: action.file.size,
+              file_name: action.file.name,
+              extension: action.file.type.split('/').pop().toUpperCase(),
+              tags: state.uploadTags,
+              thumb: null,
+              progress: 0,
+            },
           },
         }
       }
@@ -157,7 +163,10 @@ function uploadsReducer (state = initialState, action) {
           ...state.records,
           [id]: {
             ...state.records[id],
-            thumb: action.dataUrl,
+            attributes: {
+              ...state.records[id].attributes,
+              thumb: action.dataUrl,
+            },
           },
         }
       }
@@ -170,7 +179,10 @@ function uploadsReducer (state = initialState, action) {
           ...state.records,
           [id]: {
             ...state.records[id],
-            progress: action.percentage,
+            attributes: {
+              ...state.records[id].attributes,
+              progress: action.percentage,
+            },
           },
         }
       }

@@ -42,13 +42,13 @@ export const filteredFilesSelector = (state) => {
     let valid = true
 
     if (valid && filters.name) {
-      valid = new RegExp(filters.name, 'i').test(file.file_name)
+      valid = new RegExp(filters.name, 'i').test(file.attributes.file_name)
     }
 
     if (valid && filters.tags.length) {
-      if (file.tags.length) {
+      if (file.attributes.tags.length) {
         filters.tags.forEach((tag) => {
-          valid = valid && file.tags.indexOf(tag) !== -1
+          valid = valid && file.attributes.tags.indexOf(tag) !== -1
         })
       } else {
         valid = false
@@ -56,7 +56,7 @@ export const filteredFilesSelector = (state) => {
     }
 
     if (valid && filters.placement) {
-      valid = file.placements.indexOf(filters.placement) !== -1
+      valid = file.attributes.placements.indexOf(filters.placement) !== -1
     }
 
     if (valid) filtered.push(file)
@@ -68,7 +68,7 @@ export const filteredFilesSelector = (state) => {
 export const tagsSelector = (state) => {
   const files = filesSelector(state)
   let tags = []
-  files.forEach((file) => file.tags.forEach((tag) => {
+  files.forEach((file) => file.attributes.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
   }))
   return tags.sort((a, b) => {
@@ -81,7 +81,7 @@ export const tagsSelector = (state) => {
 export const placementsSelector = (state) => {
   const files = filesSelector(state)
   let placements = []
-  files.forEach((file) => file.placements.forEach((placement) => {
+  files.forEach((file) => file.attributes.placements.forEach((placement) => {
     if (placements.indexOf(placement) === -1) placements.push(placement)
   }))
   return placements

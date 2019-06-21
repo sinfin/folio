@@ -20,12 +20,10 @@ Folio::Engine.routes.draw do
     resources :menus do
       post :tree_sort, on: :member
     end
-    resources :images, except: %i[show new] do
-      collection { post :tag }
-    end
-    resources :documents, except: %i[show new] do
-      collection { post :tag }
-    end
+
+    resources :images, only: %i[index edit update destroy]
+    resources :documents, only: %i[index edit update destroy]
+
     resources :leads, only: %i[index show edit update destroy] do
       collection { post :mass_handle }
       member { post :event }
@@ -38,6 +36,12 @@ Folio::Engine.routes.draw do
 
     namespace :api do
       resources :links, only: %i[index]
+      resources :images, only: %i[index create update] do
+        collection { post :tag }
+      end
+      resources :documents, only: %i[index create update] do
+        collection { post :tag }
+      end
     end
   end
 

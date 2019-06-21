@@ -36,7 +36,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'coffee-rails'
   s.add_dependency 'pagy'
   s.add_dependency 'responders'
-  s.add_dependency 'active_model_serializers', '~> 0.9.6'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'dropzonejs-rails'
   s.add_dependency 'sitemap_generator'
@@ -58,7 +57,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'show_for'
   s.add_dependency 'audited', '~> 4.7'
   s.add_dependency 'premailer-rails'
-  s.add_dependency 'grape-entity'
+  s.add_dependency 'fast_jsonapi'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'

@@ -1,12 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2019-06-20
+## 2019-06-21
 ### Added
 - added `Folio::Console::Api::BaseController`
+- added `fast_jsonapi` gem
+
+### Removed
+- removed `active_model_serializers` gem
 
 ### Changed
 - moved location controller to api namespace, update your decorators!
+- updated image & document routes
 
 ## 2019-05-24
 ### Added

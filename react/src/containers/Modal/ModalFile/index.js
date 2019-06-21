@@ -5,7 +5,7 @@ import TagsInput from 'components/TagsInput'
 export default ({ modal, onTagsChange, closeModal, saveModal, tags }) => (
   <div className='modal-content'>
     <div className='modal-header'>
-      <strong className='modal-title'>{modal.file.file_name}</strong>
+      <strong className='modal-title'>{modal.file.attributes.file_name}</strong>
       <button type='button' className='close' onClick={closeModal}>×</button>
     </div>
 
@@ -16,7 +16,7 @@ export default ({ modal, onTagsChange, closeModal, saveModal, tags }) => (
         </label>
 
         <TagsInput
-          value={modal.newTags || modal.file.tags}
+          value={modal.newTags || modal.file.attributes.tags}
           options={tags}
           onTagsChange={onTagsChange}
           submit={saveModal}

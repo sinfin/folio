@@ -5,6 +5,8 @@ class Folio::Image < Folio::File
   include Folio::Thumbnails
   include Folio::Sitemap::Image
 
+  ADMIN_THUMBNAIL_SIZE = '250x250'
+
   validate_file_format
 
   dragonfly_accessor :file do

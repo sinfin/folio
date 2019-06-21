@@ -35,7 +35,7 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
     if fp.object && fp.object.file
       url = fp.object
               .file
-              .thumb(Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE)
+              .thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
               .url
       image_tag(url, class: "folio-console-thumbnail__img #{class_name}")
     end
