@@ -62,5 +62,20 @@ module Folio
         end
       end
     end
+
+    initializer :add_watchable_cell_i18n_files do |app|
+      dirs = {
+        Folio::Engine.root.join('app/cells').to_s => ['.yml'],
+        Rails.root.join('app/cells').to_s => ['.yml']
+      }
+      cells_i18n_reloader = app.config.file_watcher.new([], dirs) do
+        I18n.reload!
+      end
+      app.reloaders << cells_i18n_reloader
+
+      ActiveSupport::Reloader.to_prepare do
+        cells_i18n_reloader.execute_if_updated
+      end
+    end
   end
 end
