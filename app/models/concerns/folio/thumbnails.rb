@@ -110,6 +110,11 @@ module Folio::Thumbnails
     largest_key
   end
 
+  def clear_thumbnails!
+    delete_thumbnails
+    save!
+  end
+
   private
 
     def reset_thumbnails
