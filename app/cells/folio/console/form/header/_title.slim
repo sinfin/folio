@@ -1,0 +1,5 @@
+h1.m-0
+  - if record.new_record?
+    = record.class.model_name.human
+  - else
+    = record.to_label
