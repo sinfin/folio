@@ -23,4 +23,8 @@ module Folio::Console::ShowForHelper
 
     content_tag(:div, show_for(model, &block), class: class_name)
   end
+
+  def small_show_for(model, &block)
+    content_tag(:div, show_for(model, &block), class: 'f-c-show-for-small')
+  end
 end
