@@ -346,7 +346,7 @@ GEM
     parser (2.6.3.0)
       ast (~> 2.4.0)
     pg (0.21.0)
-    pg_search (2.2.0)
+    pg_search (2.3.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
     premailer-rails (1.10.2)
