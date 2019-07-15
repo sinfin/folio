@@ -1,0 +1,28 @@
+.f-c-new-record-modal.f-c-new-record-modal--loading.modal.modal--fullscreen[
+  data-new-url=url_for([:console, model, action: :new])
+  data-create-url=url_for([:console, model])
+  data-class=model.to_s
+  class=modal_class_name
+]
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-header.modal-header--main
+        strong.h3.m-0 = model.model_name.human
+
+        button type="button" class="close ml-g" data-dismiss="modal" &times;
+
+      .modal-body.f-c-new-record-modal__body
+
+      .modal-footer.f-c-new-record-modal__footer
+        button.btn.btn-outline.f-c-new-record-modal__close[
+          type="button"
+          data-dismiss="modal"
+        ]
+          = t('folio.console.actions.close')
+
+        button.btn.btn-primary.f-c-new-record-modal__submit[
+          type="button"
+        ]
+          = t('folio.console.actions.submit')
+
+      span.folio-loader

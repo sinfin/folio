@@ -39,10 +39,10 @@ $(document)
         picker.hide() if picker
 
   .on 'cocoon:after-insert', (e, insertedItem) ->
-    bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))
+    bindDatePicker($(insertedItem).find(DATE_INPUT_SELECTOR))
 
   .on 'cocoon:before-remove', (e, item) ->
-    unbindDatePicker(item.find(DATE_INPUT_SELECTOR))
+    unbindDatePicker($(item).find(DATE_INPUT_SELECTOR))
 
 if Turbolinks?
   $(document)

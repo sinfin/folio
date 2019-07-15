@@ -51,4 +51,14 @@ module Folio::Console::FormsHelper
 
     content_tag(:div, class: class_name, &block)
   end
+
+  def new_record_modal_toggle(klass, opts = {})
+    cell('folio/console/new_record_modal', klass, opts).toggle.html_safe
+  end
+
+  def new_record_modal(klass, opts = {})
+    content_for(:modals) do
+      cell('folio/console/new_record_modal', klass, opts).show.html_safe
+    end
+  end
 end

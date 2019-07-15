@@ -19,7 +19,17 @@ module Folio::Console::DefaultActions
   def create
     instance_variable_set(folio_console_record_variable_name,
                           @klass.create(folio_console_params))
-    respond_with folio_console_record, location: respond_with_location
+
+    if folio_console_record.persisted? && params[:created_from_modal]
+      label = folio_console_record.try(:to_console_label) ||
+              folio_console_record.try(:to_label) ||
+              folio_console_record.try(:title) ||
+              folio_console_record.id
+
+      render json: { label: label, id: folio_console_record.id }, layout: false
+    else
+      respond_with folio_console_record, location: respond_with_location
+    end
   end
 
   def update
