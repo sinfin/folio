@@ -20,6 +20,7 @@ DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 bindDatePicker = ($elements) ->
   $elements.each ->
     $this = $(this)
+    return if $this.hasClass('f-c-js-manual')
 
     if $this.hasClass('folio-console-date-picker--date')
       $this.datetimepicker(DATE_CONFIG)
