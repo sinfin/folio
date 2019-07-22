@@ -68,9 +68,9 @@ cs:
               invalid: není platná
     models:
       folio/account:
-        few: Uživatelé
-        one: Uživatel
-        other: Uživatelů
+        few: Administrátoři
+        one: Administrátor
+        other: Administrátorů
       folio/atom:
         few: Kapitoly
         one: Kapitola

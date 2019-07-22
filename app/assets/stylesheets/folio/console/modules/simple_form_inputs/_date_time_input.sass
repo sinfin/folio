@@ -1,0 +1,22 @@
+.simple_form .form-group
+  &.date,
+  &.datetime
+    .d-flex
+      position: relative
+
+      &:after
+        +pseudo-font-awesome-icon($fa-var-calendar-alt)
+        position: absolute
+        top: 0
+        right: 0
+        width: $input-height
+        height: $input-height
+        pointer-events: none
+        font-size: 16px
+        display: flex
+        align-items: center
+        justify-content: center
+        color: $gray-600
+
+    .folio-console-date-picker
+      padding-right: $input-height

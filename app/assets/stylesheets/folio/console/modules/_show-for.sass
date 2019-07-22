@@ -17,6 +17,12 @@
   .f-c-show-for__content
     display: inline-block
 
+.f-c-show-for-small:not(.f-c-show-for-index):not(.f-c-show-for-table)
+  font-size: $font-size-sm
+
+  > .f-c-show-for__row .f-c-show-for__cell:not(:last-child)
+    margin-bottom: $spacer / 2
+
 +mq-desktop-menu
   .f-c-show-for-index
     display: table
@@ -61,6 +67,10 @@
           display: none
 
   .f-c-show-for-table
+    &--wide
+      .f-c-show-for__row
+        width: 100%
+
     .f-c-show-for__row
       display: table
       box-shadow: 0 0 5px rgba($black, 0.05)

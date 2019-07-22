@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::LinksController < Folio::Console::BaseController
-  respond_to :json, only: [:index]
-
+class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
   def index
     links = []
 
@@ -19,7 +17,7 @@ class Folio::Console::LinksController < Folio::Console::BaseController
 
     sorted_links = links.sort_by { |link| I18n.transliterate(link[:name]) }
 
-    render json: sorted_links, root: false
+    render_json(sorted_links)
   end
 
   private

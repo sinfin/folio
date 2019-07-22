@@ -6,7 +6,7 @@ ADVANCED_OPTIONS =
     'file[type]': 'Folio::Image'
   imageUpload: '/console/images.json'
   imageManagerJson: '/console/images.json'
-  definedlinks: '/console/links.json'
+  definedlinks: '/console/api/links.json'
   toolbarFixed: false
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
@@ -15,7 +15,7 @@ OPTIONS =
   plugins: ['table', 'button', 'definedlinks']
   buttonsHide: ['file', 'image']
   toolbarFixed: false
-  definedlinks: '/console/links.json'
+  definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
 

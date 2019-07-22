@@ -80,19 +80,19 @@ class FilePlacement extends React.Component {
         {fileTypeIsImage && (
           <a
             className='folio-console-file-placement__img-wrap'
-            href={filePlacement.file.source_image}
+            href={filePlacement.file.attributes.source_image}
             target='_blank'
             rel='noopener noreferrer'
             onClick={(e) => e.stopPropagation()}
           >
-            <img src={filePlacement.file.thumb} className='folio-console-file-placement__img' alt='' />
+            <img src={filePlacement.file.attributes.thumb} className='folio-console-file-placement__img' alt='' />
           </a>
         )}
 
         <div className='folio-console-file-placement__inputs'>
           <div className='folio-console-file-placement__title'>
             <FormGroup
-              placeholder={filePlacement.file.file_name}
+              placeholder={filePlacement.file.attributes.file_name}
               value={this.state.title}
               onChange={this.onTitleChange}
               onBlur={this.onTitleBlur}

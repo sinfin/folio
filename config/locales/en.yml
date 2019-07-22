@@ -1,6 +1,9 @@
 ---
 en:
   all: All
+  date:
+    formats:
+      short: "%d %m %Y"
   dragonfly:
     invalid_format: Invalid format
   'false': false

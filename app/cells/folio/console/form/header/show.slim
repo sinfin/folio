@@ -1,10 +1,6 @@
 .f-c-form-header
   .f-c-form-header__inner
-    h1.f-c-form-header__title
-      - if record.new_record?
-        = record.class.model_name.human
-      - else
-        = record.to_label
+    = render(:_title)
 
     - if options[:translations]
       .f-c-form-header__right

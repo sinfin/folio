@@ -1,6 +1,18 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-06-21
+### Added
+- added `Folio::Console::Api::BaseController`
+- added `fast_jsonapi` gem
+
+### Removed
+- removed `active_model_serializers` gem
+
+### Changed
+- moved location controller to api namespace, update your decorators!
+- updated image & document routes
+
 ## 2019-05-24
 ### Added
 - added `email_from`, `system_email` and `system_email_copy` to `Site`
@@ -9,6 +21,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - `Folio::Subscribable` concern
 - `Folio::Mailchimp::SubscribeJob`
+
 ### Removed
 - `folio:export:newsletter` rake task
 

@@ -20,7 +20,7 @@ class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
   end
 
   def file_src
-    file.thumb(Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE).url
+    file.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url
   end
 
   def wrap_class

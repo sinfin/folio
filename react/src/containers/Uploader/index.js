@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
+import { flashMessageFromApiErrors } from 'utils/flash'
 
 import Loader from 'components/Loader'
 import {
@@ -48,10 +49,9 @@ class Uploader extends Component {
     return {
       addedfile: (file) => dispatch(addedFile(file)),
       thumbnail: (file, dataUrl) => dispatch(thumbnail(file, dataUrl)),
-      success: (file, response) => dispatch(success(file, response.file)),
+      success: (file, response) => dispatch(success(file, response)),
       error: (file, message) => {
-        const flash = (typeof message === 'object') ? message.error : message
-        dispatch(error(file, flash))
+        dispatch(error(file, flashMessageFromApiErrors(message)))
       },
       uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
       init: (dropzone) => this.dropzone = dropzone
@@ -62,20 +62,19 @@ class Uploader extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: this.props.fileType === 'Folio::Document' ? '/console/documents' : '/console/images',
+      postUrl: this.props.fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images',
     }
   }
 
   djsConfig () {
-    const base = this.props.fileType === 'Folio::Document' ? 'document' : 'image'
-
     let params = {}
-    params[`${base}[type]`] = this.props.fileType
-    params[`${base}[tag_list]`] = this.props.uploads.uploadTags.join(',')
+    params['file[type]'] = this.props.fileType
+    params['file[attributes][type]'] = this.props.fileType
+    params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
 
     return {
       headers: CSRF,
-      paramName: `${base}[file][]`,
+      paramName: 'file[attributes][file]',
       previewTemplate: '<span></span>',
       clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
       thumbnailMethod: 'contain',

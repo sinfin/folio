@@ -18,6 +18,15 @@
        asset-url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
 }
 
+@mixin pseudo-font-awesome-icon($symbol) {
+  font-family: 'Font Awesome 5 Free Regular', 'Font Awesome 5 Free Solid';
+  font-weight: 400;
+  font-size: inherit;
+  content: "#{$symbol}";
+  display: inline-block;
+  text-rendering: auto;
+}
+
 .fas {
   font-family: 'Font Awesome 5 Free Solid';
   font-weight: 900;

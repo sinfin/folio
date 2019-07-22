@@ -1,6 +1,9 @@
 ---
 cs:
   all: Všechny
+  date:
+    formats:
+      short: "%d. %m. %Y"
   dragonfly:
     invalid_format: Nepodporovaný formát
   'false': Ne
@@ -13,7 +16,7 @@ cs:
           text_line_2: Špatně formulovaný požadavek. Ověřte parametry v adrese.
           title: '400'
         error_404:
-          text_line_1: Stránka kterou hledáte neexistuje.
+          text_line_1: Stránka, kterou hledáte, neexistuje.
           text_line_2: Buďto máte špatný odkaz, nebo byla přesunuta.
           title: '404'
         error_422:

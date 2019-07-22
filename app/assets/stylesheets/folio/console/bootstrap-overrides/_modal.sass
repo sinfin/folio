@@ -53,6 +53,31 @@
 .modal-body .modal-footer
   margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
 
+.modal--fullscreen
+  &.show
+    display: flex !important
+    flex-direction: column
+
+  .modal-content
+    height: 100%
+
+  .modal-header,
+  .modal-footer
+    flex: 0 0 auto
+    width: 100%
+
+  .modal-dialog,
+  .modal-content,
+    flex: 1 1 auto
+    width: 100%
+    display: flex
+    flex-direction: column
+
+  .modal-body
+    flex: 1 1 auto
+    width: 100%
+    overflow-y: auto
+
 +media-breakpoint-down(xs)
   .folio-console-react-modal
     .modal-body

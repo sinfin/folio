@@ -15,7 +15,7 @@ module Folio::PregenerateThumbnails
       return unless file.respond_to?(:thumb)
 
       # admin thumbnail
-      file.thumb(Folio::FileSerializer::ADMIN_THUMBNAIL_SIZE)
+      file.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
 
       # public page thumbnails
       return unless respond_to?(:placement)

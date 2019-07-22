@@ -8,3 +8,11 @@ export function flashError (message) {
   `
   document.querySelector('.f-c-flash-wrap').appendChild(alert)
 }
+
+export function flashMessageFromApiErrors (apiResponse) {
+  let flash = apiResponse
+  if (typeof apiResponse === 'object' && apiResponse.errors) {
+    flash = apiResponse.errors.map((obj) => `${obj.title} ${obj.detail}`)
+  }
+  return flash
+}

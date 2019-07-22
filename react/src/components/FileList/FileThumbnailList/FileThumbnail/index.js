@@ -7,34 +7,34 @@ import FileThumbnailHover from './FileThumbnailHover';
 const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) => {
   const Tag = link ? 'a' : 'div'
   let className = 'folio-console-file-list__file'
-  const persistedOnClick = !file.uploading && onClick
+  const persistedOnClick = !file.attributes.uploading && onClick
 
-  if (file.freshlyUploaded) {
+  if (file.attributes.freshlyUploaded) {
     className = 'folio-console-file-list__file folio-console-file-list__file--fresh'
-  } else if (file.uploading) {
+  } else if (file.attributes.uploading) {
     className = 'folio-console-file-list__file folio-console-file-list__file--uploading'
   }
 
   return (
     <Tag
-      href={link ? file.edit_path : undefined}
+      href={(link && file.links) ? file.links.edit : undefined}
       className={className}
     >
-      <div className='folio-console-file-list__img-wrap' style={{ background: file.dominant_color }}>
-        {file.thumb && (
+      <div className='folio-console-file-list__img-wrap' style={{ background: file.attributes.dominant_color }}>
+        {file.attributes.thumb && (
           <LazyLoad height={150} once overflow={overflowingParent}>
             <img
-              src={file.thumb}
+              src={file.attributes.thumb}
               className='folio-console-file-list__img'
-              alt={file.file_name}
+              alt={file.attributes.file_name}
             />
           </LazyLoad>
         )}
       </div>
 
-      <FileUploadProgress progress={file.progress} />
+      <FileUploadProgress progress={file.attributes.progress} />
       <FileThumbnailHover
-        progress={file.progress}
+        progress={file.attributes.progress}
         onClick={persistedOnClick}
         file={file}
         selecting={selecting}

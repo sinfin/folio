@@ -1,0 +1,40 @@
+.f-c-with-aside
+  &__aside
+    background: $aside-bg
+
+  +mq-desktop-menu
+    display: flex
+    align-items: stretch
+    height: 100%
+
+    &__main,
+    &__aside
+      display: flex
+      flex-direction: column
+      height: 100%
+
+    &__main
+      width: percentage(2 / 3)
+      flex: 1 0 percentage(2 / 3)
+
+    &__aside
+      width: percentage(1 / 3)
+      flex: 0 0 percentage(1 / 3)
+      max-width: 390px
+
+    &__fixed
+      padding: $grid-gutter-half $grid-gutter-width
+
+    &__scroll
+      overflow-y: scroll
+      -webkit-overflow-scrolling: touch
+      padding: $grid-gutter-half $grid-gutter-width
+      flex: 1 1 auto
+
+      .f-c-form-footer
+        bottom: -$grid-gutter-half
+
+  +mq-mobile-menu
+    &__main,
+    &__aside
+      padding: $grid-gutter-half $grid-gutter-width

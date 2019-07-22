@@ -14,15 +14,29 @@
   padding-top: $spacer
 
 +mq-desktop-menu
+  .f-c-layout-html
+    overflow-y: hidden
+    height: 100%
+
   .f-c-layout-body
     &:not(&--devise)
       padding-left: 220px
+      height: 100%
 
     &--devise
       min-height: 100%
       display: flex
       flex-direction: column
       justify-content: center
+
+  .f-c-layout-main
+    height: 100%
+    width: 100%
+    display: flex
+    flex-direction: column
+
+    &--devise
+      flex: 1 0 auto
 
   .f-c-layout-sidebar
     height: 100%
@@ -34,25 +48,25 @@
     z-index: 2
 
   .f-c-layout-header
-    position: sticky
-    top: 0
-    left: 0
+    flex: 0 0 auto
     z-index: 2
 
   .f-c-flash-wrap
-    position: sticky
-    top: 36px
-    left: 0
+    flex: 0 0 auto
     z-index: 2
 
     .f-c-layout-body--devise &
       position: fixed
       top: 0
       right: 0
+      left: 0
 
   .f-c-layout-main-container
     position: relative
     z-index: 1
+    flex: 1 1 auto
+    overflow-y: scroll
+    -webkit-overflow-scrolling: touch
 
 +mq-mobile-menu
   .f-c-layout-sidebar

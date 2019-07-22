@@ -6,7 +6,7 @@
 #
 module Folio::Filterable
   extend ActiveSupport::Concern
-  include PgSearch
+  include PgSearch::Model
 
   included do
     scope :filter_by_params, -> (filtering_params) do
