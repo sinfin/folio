@@ -2,7 +2,7 @@
 
 class Folio::Atom::Text < Folio::Atom::Base
   STRUCTURE = {
-    content: :redactor,
+    content: :richtext,
   }
 
   validates :content,

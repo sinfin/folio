@@ -38,6 +38,34 @@ module Folio
       end
     end
 
+    def console_form_atoms(f)
+      if f.object.class.respond_to?(:atom_locales)
+        atoms = {}
+        f.object.class.atom_locales.each do |locale|
+          atoms[locale] = f.object.send("#{locale}_atoms").to_a.map(&:to_h)
+        end
+      else
+        atoms = {
+          atoms: f.object.atoms.to_a.map(&:to_h),
+        }
+      end
+
+      if f.lookup_model_names.size == 1
+        namespace = f.lookup_model_names[0]
+      else
+        nested = f.lookup_model_names[1..-1].map { |n| "[#{n}]" }
+        namespace = "#{f.lookup_model_names[0]}#{nested.join('')}"
+      end
+
+      content_tag(:div, nil,
+        'class': 'folio-react-wrap',
+        'data-mode': 'atoms',
+        'data-structures': Folio::Atom.structures.to_json,
+        'data-atoms': atoms.to_json,
+        'data-namespace': namespace,
+      )
+    end
+
     private
 
       def react_files(file_type, selected_placements, attachmentable:, type:)

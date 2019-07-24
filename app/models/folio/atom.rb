@@ -2,7 +2,29 @@
 
 module Folio::Atom
   def self.types
-    Folio::Atom::Base.recursive_subclasses
+    Folio::Atom::Base.recursive_subclasses(include_self: false)
+  end
+
+  def self.structures
+    str = {}
+    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+      h = {}
+
+      klass::STRUCTURE.each do |key, value|
+        h[key] = {
+          type: value,
+          validators: klass.validators_on(key).map do |validator|
+            { 'class' => validator.class.to_s, 'options' => validator.options }
+          end
+        }
+      end
+
+      str[klass.to_s] = {
+        structures: h,
+        title: klass.model_name.human,
+      }
+    end
+    str
   end
 
   def self.atoms_in_molecules(atoms)

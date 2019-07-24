@@ -3,7 +3,7 @@
 module Atom
   class PageReferenceWithRichtext < Folio::Atom::Base
     STRUCTURE = {
-      content: :redactor,
+      content: :richtext,
       model: %w[Folio::Page],
     }
   end

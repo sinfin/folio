@@ -31,6 +31,17 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     model_name.element
   end
 
+  def to_h
+    {
+      id: id,
+      type: type,
+      position: position,
+      placement_type: placement_type,
+      placement_id: placement_id,
+      data: data,
+    }
+  end
+
   def self.scoped_model_resource(resource)
     resource.all
   end
