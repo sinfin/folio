@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import {
   atomsSelector,
-  updateAtomValue,
+  updateAtomValue
 } from 'ducks/atoms'
 import AtomForm from 'components/AtomForm'
 
@@ -37,7 +37,7 @@ class Atoms extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-  atoms: atomsSelector(state),
+  atoms: atomsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

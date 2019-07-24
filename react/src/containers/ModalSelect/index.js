@@ -2,7 +2,7 @@ import { Component } from 'react'
 
 class ModalSelect extends Component {
   state = {
-    el: null,
+    el: null
   }
 
   componentWillMount () {

@@ -1,9 +1,9 @@
 import React from 'react'
 
 import SingleSelect from 'containers/SingleSelect'
-import truncate from 'utils/truncate';
+import truncate from 'utils/truncate'
 
-import ModalSelect from '../';
+import ModalSelect from '../'
 
 class ModalSingleSelect extends ModalSelect {
   selector () {
@@ -49,7 +49,7 @@ class ModalSingleSelect extends ModalSelect {
 
   selectFile = (file) => {
     if (!this.state.el) return
-    let $ = window.jQuery
+    const $ = window.jQuery
     if (!$) return
 
     const $el = $(this.state.el)

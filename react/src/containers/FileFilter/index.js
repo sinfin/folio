@@ -6,13 +6,13 @@ import {
   tagsSelector,
   placementsSelector,
   setFilter,
-  resetFilters,
+  resetFilters
 } from 'ducks/filters'
 
 import {
   setCardsDisplay,
   setThumbsDisplay,
-  displaySelector,
+  displaySelector
 } from 'ducks/display'
 
 import { fileTypeIsImageSelector } from 'ducks/app'
@@ -56,7 +56,7 @@ class FileFilter extends Component {
     }
   }
 
-  render() {
+  render () {
     const { filters, margined, display, fileTypeIsImage } = this.props
 
     return (
@@ -118,7 +118,7 @@ const mapStateToProps = (state) => ({
   tags: tagsSelector(state),
   placements: placementsSelector(state),
   display: displaySelector(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
+  fileTypeIsImage: fileTypeIsImageSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

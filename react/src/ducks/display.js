@@ -61,12 +61,12 @@ function * setDisplayPerform (action) {
   }
 }
 
-function * setDisplaySaga (): Generator<*, *, *> {
+function * setDisplaySaga () {
   yield takeLatest(SET_DISPLAY, setDisplayPerform)
 }
 
 export const displaySagas = [
-  setDisplaySaga,
+  setDisplaySaga
 ]
 
 export default displayReducer

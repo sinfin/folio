@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 import { tagsSelector } from 'ducks/filters'
 import {
   setUploadTags,
-  uploadsSelector,
+  uploadsSelector
 } from 'ducks/uploads'
 
 import TagsInput from 'components/TagsInput'
-import Wrap from './styled/Wrap';
+import Wrap from './styled/Wrap'
 
 class UploadTagger extends React.PureComponent {
   state = { tags: [] }
@@ -42,7 +42,7 @@ class UploadTagger extends React.PureComponent {
 
         <button
           className='btn btn-success fa fa-check'
-          type="button"
+          type='button'
           onClick={this.setUploadTags}
         />
       </Wrap>
@@ -52,7 +52,7 @@ class UploadTagger extends React.PureComponent {
 
 const mapStateToProps = (state) => ({
   uploads: uploadsSelector(state),
-  tags: tagsSelector(state),
+  tags: tagsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

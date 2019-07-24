@@ -22,7 +22,7 @@ export const atomsSelector = (state) => ({
   atoms: mapValues(state.atoms.atoms, (collection) => (
     collection.map((atom) => ({
       ...atom,
-      meta: state.atoms.structures[atom.type],
+      meta: state.atoms.structures[atom.type]
     }))
   ))
 })
@@ -32,7 +32,7 @@ export const atomsSelector = (state) => ({
 export const initialState = {
   atoms: {},
   namespace: null,
-  structures: {},
+  structures: {}
 }
 
 // Reducer
@@ -42,7 +42,7 @@ function atomsReducer (state = initialState, action) {
     case SET_ATOMS_DATA:
       return {
         ...state,
-        ...action.data,
+        ...action.data
       }
 
     case UPDATE_ATOM_VALUE:
@@ -56,7 +56,7 @@ function atomsReducer (state = initialState, action) {
                 ...atom,
                 data: {
                   ...atom.data,
-                  [action.key]: action.value,
+                  [action.key]: action.value
                 }
               }
             } else {

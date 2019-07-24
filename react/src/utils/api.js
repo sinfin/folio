@@ -1,13 +1,13 @@
 const meta = document.querySelector('meta[name="csrf-token"]')
 
 export const CSRF = meta ? {
-  'X-CSRF-Token': meta.getAttribute('content'),
+  'X-CSRF-Token': meta.getAttribute('content')
 } : {}
 
 const HEADERS = {
   ...CSRF,
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
+  Accept: 'application/json',
+  'Content-Type': 'application/json'
 }
 
 const fallbackMessage = (response) => `${response.status}: ${response.statusText}`
@@ -38,10 +38,10 @@ function responseToJson (response) {
 }
 
 function api (method, url, body) {
-  let data = {
+  const data = {
     method,
     headers: HEADERS,
-    credentials: 'same-origin',
+    credentials: 'same-origin'
   }
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)

@@ -5,13 +5,13 @@ import { fileTypeIsImageSelector } from 'ducks/app'
 import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
-import ModalScroll from 'components/ModalScroll';
+import ModalScroll from 'components/ModalScroll'
 
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
@@ -58,7 +58,7 @@ const mapStateToProps = (state) => ({
   filesLoading: filesLoadingSelector(state),
   filesForList: filesForListSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
-  displayAsThumbs: displayAsThumbsSelector(state),
+  displayAsThumbs: displayAsThumbsSelector(state)
 })
 
 export default connect(mapStateToProps, null)(SingleSelect)

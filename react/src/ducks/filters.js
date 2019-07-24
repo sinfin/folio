@@ -29,14 +29,14 @@ export const filtersSelector = (state) => {
 
   return {
     ...filters,
-    active,
+    active
   }
 }
 
 export const filteredFilesSelector = (state) => {
   const files = filesSelector(state)
   const filters = filtersSelector(state)
-  let filtered = []
+  const filtered = []
 
   files.forEach((file) => {
     let valid = true
@@ -67,20 +67,20 @@ export const filteredFilesSelector = (state) => {
 
 export const tagsSelector = (state) => {
   const files = filesSelector(state)
-  let tags = []
+  const tags = []
   files.forEach((file) => file.attributes.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
   }))
   return tags.sort((a, b) => {
     const lowerA = a.toLowerCase()
     const lowerB = b.toLowerCase()
-    return lowerA > lowerB ? 1 : lowerB > lowerA ? -1 : 0;
+    return lowerA > lowerB ? 1 : lowerB > lowerA ? -1 : 0
   })
 }
 
 export const placementsSelector = (state) => {
   const files = filesSelector(state)
-  let placements = []
+  const placements = []
   files.forEach((file) => file.attributes.placements.forEach((placement) => {
     if (placements.indexOf(placement) === -1) placements.push(placement)
   }))
@@ -92,7 +92,7 @@ export const placementsSelector = (state) => {
 const initialState = {
   name: '',
   tags: [],
-  placement: null,
+  placement: null
 }
 
 // Reducer
@@ -102,7 +102,7 @@ function filtersReducer (state = initialState, action) {
     case SET_FILTER:
       return {
         ...state,
-        [action.filter]: action.value,
+        [action.filter]: action.value
       }
 
     case RESET_FILTERS:

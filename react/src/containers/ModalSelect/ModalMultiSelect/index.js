@@ -2,13 +2,13 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import MultiSelect from 'containers/MultiSelect'
-import ModalScroll from 'components/ModalScroll';
+import ModalScroll from 'components/ModalScroll'
 import { setOriginalPlacements, filePlacementsSelector } from 'ducks/filePlacements'
 import numberToHumanSize from 'utils/numberToHumanSize'
 
-import ModalSelect from '../';
-import getPlacementField from './utils/getPlacementField';
-import hiddenFieldHtml from './utils/hiddenFieldHtml';
+import ModalSelect from '../'
+import getPlacementField from './utils/getPlacementField'
+import hiddenFieldHtml from './utils/hiddenFieldHtml'
 
 class ModalMultiSelect extends ModalSelect {
   save = () => {
@@ -49,7 +49,7 @@ class ModalMultiSelect extends ModalSelect {
       hiddenFieldHtml(prefix, 'title', placement.title),
       hiddenFieldHtml(prefix, 'file_id', placement.file_id),
       hiddenFieldHtml(prefix, 'position', i),
-      hiddenFieldHtml(prefix, '_destroy', 0),
+      hiddenFieldHtml(prefix, '_destroy', 0)
     ].join('')
 
     if (this.selectingDocument()) {
@@ -114,7 +114,7 @@ class ModalMultiSelect extends ModalSelect {
     const $ = window.jQuery
     const $wrap = $(el).closest('.folio-console-react-picker')
 
-    let placements = []
+    const placements = []
 
     $wrap.find('.folio-console-file-list__file, .folio-console-file-table__tr').each((_i, el) => {
       const $fields = $(el).find('input[type="hidden"]')
@@ -123,7 +123,7 @@ class ModalMultiSelect extends ModalSelect {
         file_id: Number(getPlacementField($fields, 'file_id')),
         alt: getPlacementField($fields, 'alt'),
         title: getPlacementField($fields, 'title'),
-        position: getPlacementField($fields, 'position'),
+        position: getPlacementField($fields, 'position')
       })
     })
 
@@ -138,10 +138,10 @@ class ModalMultiSelect extends ModalSelect {
   renderFooter () {
     return (
       <Fragment>
-        <button className='btn btn-secondary' type="button" onClick={this.close}>
+        <button className='btn btn-secondary' type='button' onClick={this.close}>
           {window.FolioConsole.translations.cancel}
         </button>
-        <button className='btn btn-primary' type="button" onClick={this.save}>
+        <button className='btn btn-primary' type='button' onClick={this.save}>
           {window.FolioConsole.translations.save}
         </button>
       </Fragment>
@@ -161,7 +161,7 @@ class ModalMultiSelect extends ModalSelect {
 }
 
 const mapStateToProps = (state) => ({
-  filePlacements: filePlacementsSelector(state),
+  filePlacements: filePlacementsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

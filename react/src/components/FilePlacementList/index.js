@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 
-import FilePlacementSortableList from './FilePlacementSortableList';
-import filePlacementInputName from './utils/filePlacementInputName';
+import FilePlacementSortableList from './FilePlacementSortableList'
+import filePlacementInputName from './utils/filePlacementInputName'
 
 const FilePlacementList = (props) => (
   <Fragment>

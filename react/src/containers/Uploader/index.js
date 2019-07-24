@@ -14,7 +14,7 @@ import {
   success,
   error,
   progress,
-  uploadsSelector,
+  uploadsSelector
 } from 'ducks/uploads'
 import { fileTypeSelector } from 'ducks/app'
 
@@ -41,6 +41,7 @@ export const UploaderContext = React.createContext(() => {})
 
 class Uploader extends Component {
   state = { uploaderClassName: uniqueId('folio-console-uploader-') }
+
   dropzone = null
 
   eventHandlers () {
@@ -54,7 +55,7 @@ class Uploader extends Component {
         dispatch(error(file, flashMessageFromApiErrors(message)))
       },
       uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
-      init: (dropzone) => this.dropzone = dropzone
+      init: (dropzone) => { this.dropzone = dropzone }
     }
   }
 
@@ -62,12 +63,12 @@ class Uploader extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: this.props.fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images',
+      postUrl: this.props.fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images'
     }
   }
 
   djsConfig () {
-    let params = {}
+    const params = {}
     params['file[type]'] = this.props.fileType
     params['file[attributes][type]'] = this.props.fileType
     params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
@@ -80,7 +81,7 @@ class Uploader extends Component {
       thumbnailMethod: 'contain',
       thumbnailWidth: 150,
       thumbnailHeight: 150,
-      params,
+      params
     }
   }
 
@@ -88,11 +89,11 @@ class Uploader extends Component {
     this.dropzone.hiddenFileInput.click()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.dropzone = null
   }
 
-  render() {
+  render () {
     const { fileType } = this.props
     if (!fileType) return <Loader />
 
@@ -114,7 +115,7 @@ class Uploader extends Component {
 
 const mapStateToProps = (state) => ({
   fileType: fileTypeSelector(state),
-  uploads: uploadsSelector(state),
+  uploads: uploadsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

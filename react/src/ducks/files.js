@@ -33,8 +33,8 @@ export function uploadedFile (file) {
   return { type: UPLOADED_FILE, file }
 }
 
-export function thumbnailGenerated (temporary_url, url) {
-  return { type: THUMBNAIL_GENERATED, temporary_url, url }
+export function thumbnailGenerated (temporaryUrl, url) {
+  return { type: THUMBNAIL_GENERATED, temporaryUrl, url }
 }
 
 export function updatedFiles (files) {
@@ -66,7 +66,7 @@ function * getFilesPerform (action) {
   }
 }
 
-function * getFilesSaga (): Generator<*, *, *> {
+function * getFilesSaga () {
   yield takeLatest(GET_FILES, getFilesPerform)
 }
 
@@ -78,8 +78,8 @@ function * updateFilePerform (action) {
     const data = {
       file: {
         id: file.id,
-        attributes,
-      },
+        attributes
+      }
     }
     const response = yield call(apiPut, fileUrl, data)
     yield put(updateFileSuccess(action.file, response.data))
@@ -89,13 +89,13 @@ function * updateFilePerform (action) {
   }
 }
 
-function * updateFileSaga (): Generator<*, *, *> {
+function * updateFileSaga () {
   yield takeEvery(UPDATE_FILE, updateFilePerform)
 }
 
 export const filesSagas = [
   getFilesSaga,
-  updateFileSaga,
+  updateFileSaga
 ]
 
 // Selectors
@@ -130,7 +130,7 @@ export const filesForListSelector = (state) => {
 
   return [
     ...Object.values(uploads.records).map((upload) => ({ ...upload, attributes: { ...upload.attributes, uploading: true } })),
-    ...files,
+    ...files
   ]
 }
 
@@ -147,7 +147,7 @@ const initialState = {
   loading: false,
   loaded: false,
   filesUrl: '/console/api/files',
-  records: [],
+  records: []
 }
 
 // Reducer
@@ -157,7 +157,7 @@ function filesReducer (state = initialState, action) {
     case GET_FILES:
       return {
         ...state,
-        loading: true,
+        loading: true
       }
 
     case GET_FILES_SUCCESS:
@@ -165,7 +165,7 @@ function filesReducer (state = initialState, action) {
         ...state,
         records: action.records,
         loading: false,
-        loaded: true,
+        loaded: true
       }
 
     case UPLOADED_FILE:
@@ -178,15 +178,15 @@ function filesReducer (state = initialState, action) {
       return {
         ...state,
         records: state.records.map((record) => {
-          if (record.attributes.thumb !== action.temporary_url) return record
+          if (record.attributes.thumb !== action.temporaryUrl) return record
           return {
             ...record,
             attributes: {
               ...record.attributes,
-              thumb: action.url,
+              thumb: action.url
             }
           }
-        }),
+        })
       }
     }
 
@@ -200,13 +200,13 @@ function filesReducer (state = initialState, action) {
               attributes: {
                 ...record.attributes,
                 ...action.attributes,
-                updating: true,
+                updating: true
               }
             }
           } else {
             return record
           }
-        }),
+        })
       }
 
     case UPDATE_FILE_SUCCESS:
@@ -218,7 +218,7 @@ function filesReducer (state = initialState, action) {
           } else {
             return record
           }
-        }),
+        })
       }
 
     case UPDATE_FILE_FAILURE:
@@ -230,7 +230,7 @@ function filesReducer (state = initialState, action) {
           } else {
             return record
           }
-        }),
+        })
       }
 
     case UPDATED_FILES:
@@ -239,7 +239,7 @@ function filesReducer (state = initialState, action) {
         records: state.records.map((record) => {
           const found = find(action.files, { id: record.id })
           return found || record
-        }),
+        })
       }
 
     default:

@@ -39,9 +39,8 @@ class App extends Component {
     this.cableSubscription = window.FolioCable.cable.subscriptions.create('FolioThumbnailsChannel', {
       received: (data) => {
         if (!data) return
-        const { temporary_url, url } = data
-        if (!temporary_url || !url) return
-        this.props.dispatch(thumbnailGenerated(temporary_url, url))
+        if (!data.temporary_url || !data.url) return
+        this.props.dispatch(thumbnailGenerated(data.temporary_url, data.url))
       }
     })
   }
@@ -111,7 +110,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => ({
   app: state.app,
-  filesLoaded: filesLoadedSelector(state),
+  filesLoaded: filesLoadedSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

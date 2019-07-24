@@ -4,7 +4,7 @@ import LazyLoad from 'react-lazyload'
 import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'components/Tags'
 
-import FileUploadProgress from 'components/FileUploadProgress';
+import FileUploadProgress from 'components/FileUploadProgress'
 
 const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick }) => {
   let className = 'folio-console-file-table__tr'

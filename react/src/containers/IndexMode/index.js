@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { fileTypeIsImageSelector } from 'ducks/app'
 import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
   filesLoading: filesLoadingSelector(state),
   filesForList: filesForListSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
-  displayAsThumbs: displayAsThumbsSelector(state),
+  displayAsThumbs: displayAsThumbsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

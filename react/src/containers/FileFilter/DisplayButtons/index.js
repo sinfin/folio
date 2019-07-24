@@ -2,15 +2,15 @@ import React from 'react'
 
 import {
   DISPLAY_CARDS,
-  DISPLAY_THUMBS,
+  DISPLAY_THUMBS
 } from 'ducks/display'
 
-import Button from './styled/Button';
-import Wrap from './styled/Wrap';
+import Button from './styled/Button'
+import Wrap from './styled/Wrap'
 
 const DisplayButton = ({ active, onClick, icon }) => (
   <Button
-    type="button"
+    type='button'
     className={`btn btn-secondary ${icon}`}
     onClick={onClick}
     active={active}

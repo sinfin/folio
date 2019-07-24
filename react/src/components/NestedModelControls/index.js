@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { makeConfirmed } from 'utils/confirmed';
+import { makeConfirmed } from 'utils/confirmed'
 
 const NestedModelControls = ({ moveUp, moveDown, remove }) => (
   <div className='folio-console-nested-model-controls'>
@@ -21,9 +21,9 @@ const NestedModelControls = ({ moveUp, moveDown, remove }) => (
     )}
 
     <button
-     className='btn btn-danger fa fa-times'
-     type='button'
-     onClick={makeConfirmed(remove)}
+      className='btn btn-danger fa fa-times'
+      type='button'
+      onClick={makeConfirmed(remove)}
     />
   </div>
 )

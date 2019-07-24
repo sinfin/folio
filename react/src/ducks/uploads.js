@@ -61,7 +61,7 @@ function * uploadsErrorPerform (action) {
   yield call(flashError, action.error)
 }
 
-function * uploadsErrorSaga (): Generator<*, *, *> {
+function * uploadsErrorSaga () {
   yield takeLatest(ERROR, uploadsErrorPerform)
 }
 
@@ -74,12 +74,12 @@ function * uploadedFilePerform (action) {
     ...data,
     attributes: {
       ...data.attributes,
-      thumb: upload.thumb || data.attributes.thumb,
+      thumb: upload.thumb || data.attributes.thumb
     }
   }))
 }
 
-function * uploadedFileSaga (): Generator<*, *, *> {
+function * uploadedFileSaga () {
   yield takeLatest(SUCCESS, uploadedFilePerform)
 }
 
@@ -94,14 +94,14 @@ function * setUploadTagsPerform (action) {
   }
 }
 
-function * setUploadTagsSaga (): Generator<*, *, *> {
+function * setUploadTagsSaga () {
   yield takeEvery(SET_UPLOAD_TAGS, setUploadTagsPerform)
 }
 
 export const uploadsSagas = [
   uploadsErrorSaga,
   uploadedFileSaga,
-  setUploadTagsSaga,
+  setUploadTagsSaga
 ]
 
 // Selectors
@@ -124,7 +124,7 @@ const initialState = {
   records: {},
   showTagger: false,
   uploadTags: [defaultTag],
-  uploadedIds: [],
+  uploadedIds: []
 }
 
 // Reducer
@@ -148,9 +148,9 @@ function uploadsReducer (state = initialState, action) {
               extension: action.file.type.split('/').pop().toUpperCase(),
               tags: state.uploadTags,
               thumb: null,
-              progress: 0,
-            },
-          },
+              progress: 0
+            }
+          }
         }
       }
 
@@ -165,9 +165,9 @@ function uploadsReducer (state = initialState, action) {
             ...state.records[id],
             attributes: {
               ...state.records[id].attributes,
-              thumb: action.dataUrl,
-            },
-          },
+              thumb: action.dataUrl
+            }
+          }
         }
       }
     }
@@ -181,9 +181,9 @@ function uploadsReducer (state = initialState, action) {
             ...state.records[id],
             attributes: {
               ...state.records[id].attributes,
-              progress: action.percentage,
-            },
-          },
+              progress: action.percentage
+            }
+          }
         }
       }
 
@@ -198,14 +198,14 @@ function uploadsReducer (state = initialState, action) {
     case ERROR:
       return {
         ...state,
-        records: omit(state.records, [id]),
+        records: omit(state.records, [id])
       }
 
     case SET_UPLOAD_TAGS:
       return {
         ...state,
         uploadTags: action.tags,
-        showTagger: false,
+        showTagger: false
       }
 
     case CLEAR_UPLOADED_IDS:

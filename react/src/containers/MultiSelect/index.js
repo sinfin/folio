@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import {
   filesLoadingSelector,
-  unselectedFilesForListSelector,
+  unselectedFilesForListSelector
 } from 'ducks/files'
 import {
   selectFile,
@@ -12,7 +12,7 @@ import {
   onSortEnd,
   changeTitle,
   changeAlt,
-  filePlacementsSelector,
+  filePlacementsSelector
 } from 'ducks/filePlacements'
 import { fileTypeIsImageSelector } from 'ducks/app'
 import { displayAsThumbsSelector } from 'ducks/display'
@@ -23,7 +23,7 @@ import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
-import FilePlacementList from 'components/FilePlacementList';
+import FilePlacementList from 'components/FilePlacementList'
 
 class MultiSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
@@ -35,10 +35,12 @@ class MultiSelect extends LazyLoadCheckingComponent {
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
+
   onTitleChange = (filePlacement, title) => this.props.dispatch(changeTitle(filePlacement, title))
+
   onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(filePlacement, alt))
 
-  render() {
+  render () {
     if (this.props.filesLoading) return <Loader />
 
     const headerKey = this.props.fileTypeIsImage ? 'Images' : 'Documents'
@@ -84,7 +86,7 @@ const mapStateToProps = (state) => ({
   filesLoading: filesLoadingSelector(state),
   unselectedFilesForList: unselectedFilesForListSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
-  displayAsThumbs: displayAsThumbsSelector(state),
+  displayAsThumbs: displayAsThumbsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -23,33 +23,33 @@ window.folioConsoleInitReact = (domRoot) => {
     {
       key: 'mode',
       action: setMode,
-      asJson: false,
+      asJson: false
     },
     {
       key: 'originalPlacements',
       action: setOriginalPlacements,
-      asJson: true,
+      asJson: true
     },
     {
       key: 'fileType',
       action: setFileType,
-      asJson: false,
+      asJson: false
     },
     {
       key: 'attachmentable',
       action: setAttachmentable,
-      asJson: false,
+      asJson: false
     },
     {
       key: 'placementType',
       action: setPlacementType,
-      asJson: false,
+      asJson: false
     },
     {
       key: 'atoms',
       action: setAtomsData,
-      asJson: true,
-    },
+      asJson: true
+    }
   ]
   DOM_DATA.forEach(({ key, action, asJson }) => {
     let data = domRoot.dataset[key] || null

@@ -22,7 +22,7 @@ export const fileTypeIsImageSelector = (state) => state.app.fileType === 'Folio:
 
 const initialState = {
   mode: null,
-  fileType: 'Folio::Image',
+  fileType: 'Folio::Image'
 }
 
 // Reducer
@@ -32,13 +32,13 @@ function appReducer (state = initialState, action) {
     case SET_MODE:
       return {
         ...state,
-        mode: action.mode,
+        mode: action.mode
       }
 
     case SET_FILE_TYPE:
       return {
         ...state,
-        fileType: action.fileType,
+        fileType: action.fileType
       }
 
     default:

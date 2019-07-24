@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormGroup, Label, Input } from 'reactstrap'
-import { debounce } from 'lodash';
+import { debounce } from 'lodash'
 
 class AtomForm extends React.PureComponent {
   constructor (props) {
@@ -18,7 +18,7 @@ class AtomForm extends React.PureComponent {
       rootKey: this.props.rootKey,
       index: this.props.index,
       key: key,
-      value: e.target.value,
+      value: e.target.value
     })
   }
 
@@ -27,12 +27,12 @@ class AtomForm extends React.PureComponent {
     const prefix = `${this.props.namespace}[${this.props.index + 1}]`
 
     return (
-      <div className="mb-3 border">
+      <div className='mb-3 border'>
         {Object.keys(meta.structure).map((key) => (
           <FormGroup key={key}>
             <Label>{key}</Label>
             <Input
-              type="text"
+              type='text'
               name={`${prefix}[${key}]`}
               defaultValue={data[key]}
               onChange={(e) => this.onChangeRaw(e, key)}

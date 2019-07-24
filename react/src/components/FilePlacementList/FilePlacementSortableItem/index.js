@@ -2,22 +2,22 @@ import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
 
 import NestedModelControls from 'components/NestedModelControls'
-import FormGroup from 'components/FormGroup';
+import FormGroup from 'components/FormGroup'
 
 import filePlacementInputName from '../utils/filePlacementInputName'
-import HiddenInputs from './HiddenInputs';
+import HiddenInputs from './HiddenInputs'
 
 class FilePlacement extends React.Component {
   state = {
     alt: '',
-    title: '',
+    title: ''
   }
 
   constructor (props) {
     super(props)
     this.state = {
       alt: props.filePlacement.alt,
-      title: props.filePlacement.title,
+      title: props.filePlacement.title
     }
   }
 
@@ -45,7 +45,7 @@ class FilePlacement extends React.Component {
     if (!this.props.isFirst) {
       this.props.move({
         oldIndex: this.props.position,
-        newIndex: this.props.position - 1,
+        newIndex: this.props.position - 1
       })
     }
   }
@@ -54,7 +54,7 @@ class FilePlacement extends React.Component {
     if (!this.props.isLast) {
       this.props.move({
         oldIndex: this.props.position,
-        newIndex: this.props.position + 1,
+        newIndex: this.props.position + 1
       })
     }
   }
@@ -65,7 +65,7 @@ class FilePlacement extends React.Component {
       attachmentable,
       placementType,
       position,
-      fileTypeIsImage,
+      fileTypeIsImage
     } = this.props
 
     let className

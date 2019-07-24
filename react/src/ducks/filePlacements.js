@@ -58,14 +58,14 @@ export const selectedFileIdsSelector = (state) => {
 export const filePlacementsSelector = (state) => {
   const base = state.filePlacements
   const files = filesSelector(state)
-  let selectedIds = []
+  const selectedIds = []
 
   const selected = base.selected.map((filePlacement) => {
     selectedIds.push(filePlacement.id)
     const file = find(files, { id: String(filePlacement.file_id) })
     return {
       ...filePlacement,
-      file: file,
+      file: file
     }
   })
 
@@ -77,7 +77,7 @@ export const filePlacementsSelector = (state) => {
     selected,
     deleted,
     attachmentable: base.attachmentable,
-    placementType: base.placementType,
+    placementType: base.placementType
   }
 }
 
@@ -87,7 +87,7 @@ const initialState = {
   original: [],
   selected: [],
   attachmentable: 'node',
-  placementType: 'file_placements',
+  placementType: 'file_placements'
 }
 
 // Reducer
@@ -97,14 +97,14 @@ function filePlacementsReducer (state = initialState, action) {
     case SET_ATTACHMENTABLE:
       return {
         ...state,
-        attachmentable: action.attachmentable,
+        attachmentable: action.attachmentable
       }
 
     case SET_ORIGINAL_PLACEMENTS:
       return {
         ...state,
         original: action.original,
-        selected: action.original,
+        selected: action.original
       }
 
     case SELECT_FILE:
@@ -112,14 +112,14 @@ function filePlacementsReducer (state = initialState, action) {
         ...state,
         selected: [
           ...state.selected,
-          { id: null, file_id: action.file.id, selectedAt: Date.now() },
+          { id: null, file_id: action.file.id, selectedAt: Date.now() }
         ]
       }
 
     case UNSELECT_FILE_PLACEMENT:
       return {
         ...state,
-        selected: state.selected.filter((filePlacement) => filePlacement.file_id !== action.filePlacement.file_id),
+        selected: state.selected.filter((filePlacement) => filePlacement.file_id !== action.filePlacement.file_id)
       }
 
     case ON_SORT_END:
@@ -131,7 +131,7 @@ function filePlacementsReducer (state = initialState, action) {
     case SET_PLACEMENT_TYPE:
       return {
         ...state,
-        placementType: action.placementType,
+        placementType: action.placementType
       }
 
     case CHANGE_TITLE:
@@ -141,12 +141,12 @@ function filePlacementsReducer (state = initialState, action) {
           if (filePlacement.file_id === action.filePlacement.file_id) {
             return {
               ...filePlacement,
-              title: action.title,
+              title: action.title
             }
           } else {
             return filePlacement
           }
-        }),
+        })
       }
 
     case CHANGE_ALT:
@@ -156,12 +156,12 @@ function filePlacementsReducer (state = initialState, action) {
           if (filePlacement.file_id === action.filePlacement.file_id) {
             return {
               ...filePlacement,
-              alt: action.alt,
+              alt: action.alt
             }
           } else {
             return filePlacement
           }
-        }),
+        })
       }
 
     default:

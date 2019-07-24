@@ -8,7 +8,7 @@ import { updateFile } from 'ducks/files'
 import {
   closeModal,
   changeModalTags,
-  modalSelector,
+  modalSelector
 } from 'ducks/modal'
 
 import { tagsSelector } from 'ducks/filters'
@@ -32,7 +32,7 @@ class Modal extends Component {
     const { modal } = this.props
 
     const attributes = {
-      tags: modal.newTags || [],
+      tags: modal.newTags || []
     }
     this.props.dispatch(updateFile(modal.file, attributes))
     this.props.dispatch(closeModal())
@@ -42,7 +42,7 @@ class Modal extends Component {
     this.props.dispatch(closeModal())
   }
 
-  render() {
+  render () {
     const { modal, tags } = this.props
 
     return (
@@ -67,7 +67,7 @@ class Modal extends Component {
 
 const mapStateToProps = (state) => ({
   modal: modalSelector(state),
-  tags: tagsSelector(state),
+  tags: tagsSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

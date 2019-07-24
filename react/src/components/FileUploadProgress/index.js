@@ -5,7 +5,7 @@ const FileUploadProgress = ({ progress }) => {
 
   let message
 
-  if (progress === 100)  {
+  if (progress === 100) {
     message = `${window.FolioConsole.translations.finalizing}…`
   } else {
     message = `${progress || 0}%`

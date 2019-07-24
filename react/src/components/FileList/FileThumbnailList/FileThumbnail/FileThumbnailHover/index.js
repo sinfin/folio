@@ -7,7 +7,7 @@ const FileThumbnailHover = ({ onClick, progress, file, selecting }) => {
 
   return (
     <div className='folio-console-file-list__file-hover' onClick={() => onClick(file)}>
-      <i className={icon}></i>
+      <i className={icon} />
     </div>
   )
 }

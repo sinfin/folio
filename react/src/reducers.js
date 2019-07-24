@@ -17,5 +17,5 @@ export default combineReducers({
   files: filesReducer,
   filters: filtersReducer,
   modal: modalReducer,
-  uploads: uploadsReducer,
+  uploads: uploadsReducer
 })

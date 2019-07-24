@@ -1,8 +1,8 @@
 import React from 'react'
 import LazyLoad from 'react-lazyload'
 
-import FileUploadProgress from 'components/FileUploadProgress';
-import FileThumbnailHover from './FileThumbnailHover';
+import FileUploadProgress from 'components/FileUploadProgress'
+import FileThumbnailHover from './FileThumbnailHover'
 
 const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) => {
   const Tag = link ? 'a' : 'div'
