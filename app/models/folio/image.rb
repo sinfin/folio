@@ -56,6 +56,7 @@ end
 #  file_size       :bigint(8)
 #  mime_type       :string(255)
 #  additional_data :json
+#  file_metadata   :json
 #
 # Indexes
 #

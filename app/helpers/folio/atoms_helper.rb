@@ -7,9 +7,9 @@ module Folio::AtomsHelper
       next if except.present? && except.include?(atom.class)
 
       if atom.class.cell_name
-        cell(atom.class.cell_name, atom.data, atom.cell_options.presence || {})
+        cell(atom.class.cell_name, atom, atom.cell_options.presence || {})
       else
-        render "folio/atoms/#{atom.partial_name}", data: atom.data
+        render "folio/atoms/#{atom.partial_name}", data: atom
       end
     end.compact.join('').html_safe
   end

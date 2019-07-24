@@ -5,30 +5,17 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   include Folio::Positionable
 
   STRUCTURE = {
-    title: nil,     # one of nil, :string
-    perex: nil,     # one of nil, :string, :redactor
-    content: nil,   # one of nil, :string, :redactor
-    cover: nil,     # one of nil, true
-    images: nil,    # one of nil, true
-    document: nil,  # one of nil, true
-    documents: nil, # one of nil, true
-    model: nil,     # one of nil, an array of model class names - e.g. %w[Folie::Page My::Model]
+    title: :string,
   }
 
   self.table_name = 'folio_atoms'
 
-  before_save :unset_extra_attrs, if: :type_changed?
   after_save :unlink_extra_files, if: :saved_change_to_type?
 
   belongs_to :placement,
              polymorphic: true,
              touch: true,
              required: true
-  belongs_to :model, polymorphic: true, optional: true
-
-  accepts_nested_attributes_for :model, allow_destroy: true
-
-  validate :model_type_is_allowed, if: :model_id?
 
   scope :by_type, -> (type) { where(type: type.to_s) }
 
@@ -42,10 +29,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def partial_name
     model_name.element
-  end
-
-  def data
-    self
   end
 
   def self.scoped_model_resource(resource)
@@ -81,34 +64,30 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     }
   end
 
+  def method_missing(method_name, *arguments, &block)
+    name_without_operator = method_name.to_s.gsub('=', '').to_sym
+    if respond_to_missing?(name_without_operator)
+      if method_name.to_s.include?('=')
+        self.data ||= {}
+        self.data[name_without_operator.to_s] = arguments[0]
+      else
+        (self.data || {})[name_without_operator.to_s]
+      end
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    name_without_operator = method_name.to_s.gsub('=', '').to_sym
+    klass::STRUCTURE.keys.include?(name_without_operator) || super
+  end
+
   private
 
     def klass
       # as type can be changed
       self.type.constantize
-    end
-
-    def model_type_is_allowed
-      if model &&
-         klass::STRUCTURE[:model].present? &&
-         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.constantize) }
-        errors.add(:model_type, :invalid)
-      end
-    end
-
-    def unset_extra_attrs
-      if klass::STRUCTURE[:model].blank? && model.present?
-        self.model_id = nil
-        self.model_type = nil
-      end
-
-      attrs = %i[title content perex]
-
-      attrs.each do |attr|
-        if klass::STRUCTURE[attr].blank? && self[attr].present?
-          self[attr] = nil
-        end
-      end
     end
 
     def unlink_extra_files
@@ -150,21 +129,17 @@ end
 #
 #  id             :bigint(8)        not null, primary key
 #  type           :string
-#  content        :text
 #  position       :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  placement_type :string
 #  placement_id   :bigint(8)
 #  model_type     :string
-#  model_id       :bigint(8)
-#  title          :string
-#  perex          :text
 #  locale         :string
+#  data           :jsonb
 #
 # Indexes
 #
-#  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
 #  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
 #
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_24_080820) do
+ActiveRecord::Schema.define(version: 2019_07_22_073723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,18 +84,14 @@ ActiveRecord::Schema.define(version: 2019_05_24_080820) do
 
   create_table "folio_atoms", force: :cascade do |t|
     t.string "type"
-    t.text "content"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "placement_type"
     t.bigint "placement_id"
     t.string "model_type"
-    t.bigint "model_id"
-    t.string "title"
-    t.text "perex"
     t.string "locale"
-    t.index ["model_type", "model_id"], name: "index_folio_atoms_on_model_type_and_model_id"
+    t.jsonb "data", default: {}
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
