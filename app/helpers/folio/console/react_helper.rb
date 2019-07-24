@@ -57,12 +57,16 @@ module Folio
         namespace = "#{f.lookup_model_names[0]}#{nested.join('')}"
       end
 
+      data = {
+        atoms: atoms,
+        namespace: namespace,
+        structures: Folio::Atom.structures,
+      }
+
       content_tag(:div, nil,
         'class': 'folio-react-wrap',
         'data-mode': 'atoms',
-        'data-structures': Folio::Atom.structures.to_json,
-        'data-atoms': atoms.to_json,
-        'data-namespace': namespace,
+        'data-atoms': data.to_json,
       )
     end
 

@@ -20,7 +20,7 @@ module Folio::Atom
       end
 
       str[klass.to_s] = {
-        structures: h,
+        structure: h,
         title: klass.model_name.human,
       }
     end

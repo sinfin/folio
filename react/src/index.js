@@ -7,6 +7,7 @@ import createSagaMiddleware from 'redux-saga'
 
 import App from 'containers/App'
 import { setMode, setFileType } from 'ducks/app'
+import { setAtomsData } from 'ducks/atoms'
 import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
 
 import reducers from './reducers'
@@ -43,6 +44,11 @@ window.folioConsoleInitReact = (domRoot) => {
       key: 'placementType',
       action: setPlacementType,
       asJson: false,
+    },
+    {
+      key: 'atoms',
+      action: setAtomsData,
+      asJson: true,
     },
   ]
   DOM_DATA.forEach(({ key, action, asJson }) => {

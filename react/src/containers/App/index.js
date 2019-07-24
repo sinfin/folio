@@ -11,6 +11,7 @@ import IndexMode from 'containers/IndexMode'
 import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
 import ModalMultiSelect from 'containers/ModalSelect/ModalMultiSelect'
 import Modal, { ModalContext } from 'containers/Modal'
+import Atoms from 'containers/Atoms'
 
 import AppWrap from './styled/AppWrap'
 
@@ -79,6 +80,12 @@ class App extends Component {
           fileType={fileType}
           loadFiles={this.loadFiles}
         />
+      )
+    }
+
+    if (mode === 'atoms') {
+      return (
+        <Atoms />
       )
     }
 
