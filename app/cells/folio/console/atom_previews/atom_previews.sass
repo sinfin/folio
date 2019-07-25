@@ -1,42 +1,70 @@
-// .f-c-simple-form-with-atoms__preview
-//   @import 'folio/console/atom_previews'
-
-.f-c-simple-form-with-atoms
-  &__preview
-    display: flex
-    flex-direction: column
-    flex: 1 0 auto
-    position: relative
-
-    .folio-loader
-      z-index: 2
-
-    &:not(&--loading) .folio-loader
-      display: none
-
-  &__iframe
-    width: 100%
-    min-height: 100%
-    flex: 1 0 auto
-    border: 0
-    position: relative
-    z-index: 1
-
-  &__form
-    position: absolute
-    top: 0
-    right: 0
-    bottom: 0
-    width: 40%
-    background: $white
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.29)
-    z-index: 2
+@import 'font-awesome/scss/fontawesome'
+@import 'folio/console/variables'
+@import 'folio-bootstrap/scss/functions'
+@import 'folio-bootstrap/scss/variables'
+@import 'folio-bootstrap/scss/mixins'
+@import 'folio/console/plugin-overrides/font-awesome'
+@import 'folio/console/modules/font-awesome'
+@import 'folio/utilities'
 
 .f-c-atom-previews
-  pointer-events: none
+  padding: 10px (( 10px + 40px + 10px )) 10px 10px
 
-  > &__atom:first-child > :first-child
-    margin-top: 0 !important
+  &__atom
+    position: relative
 
-  > &__atom:last-child > :first-child
-    margin-bottom: 0 !important
+    > *
+      position: relative
+      z-index: 2
+
+    &:first-child > :first-child
+      margin-top: 0
+
+    &:last-child > :first-child
+      margin-bottom: 0
+
+  &__controls
+    position: absolute
+    top: -10px
+    left: -10px
+    right: -10px
+    bottom: -10px
+    z-index: 1
+    border: 2px dashed rgba(#589E92, 0.79)
+    visibility: hidden
+
+    .f-c-atom-previews__buttons
+      position: absolute
+      top: -2px
+      left: 100%
+      bottom: 0
+      display: flex
+      flex-direction: column
+      width: 40px
+
+    .f-c-atom-previews__button
+      +unbutton
+      flex: 0 0 40px
+      width: 40px
+      height: 40px
+      min-width: 40px
+      padding: 0
+      display: inline-flex
+      align-items: center
+      justify-content: center
+      border: 1px solid #BFC4C4
+      font-size: 14px
+
+      &--edit
+        +button-variant($secondary, $secondary)
+
+      &--arrow
+        +button-variant($white, $white)
+        +plain-hover-focus
+          border-color: #BFC4C4
+
+      &--remove
+        +button-variant($danger, $danger)
+
+  &__atom:hover &__controls
+    visibility: visible

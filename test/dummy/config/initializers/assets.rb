@@ -18,5 +18,6 @@ Rails.application.config.assets.precompile += %w(
   non_turbo.js
   folio/console/react.js
   folio/mailer/base.css
+  folio/console/atom_previews/atom_previews.css
   folio/console/atom_previews/atom_previews.js
 )

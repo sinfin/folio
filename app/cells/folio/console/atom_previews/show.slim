@@ -2,3 +2,28 @@
   - model.each do |atom|
     .f-c-atom-previews__atom
       == cell(atom.class.cell_name, atom, atom.cell_options.presence || {})
+
+      .f-c-atom-previews__controls
+        .f-c-atom-previews__buttons
+          button.fa.fa-pencil-alt[
+            type="button"
+            class="f-c-atom-previews__button"
+            class="f-c-atom-previews__button--edit"
+          ]
+          button.fa.fa-arrow-up[
+            type="button"
+            class="f-c-atom-previews__button"
+            class="f-c-atom-previews__button--arrow"
+            class="f-c-atom-previews__button--arrow-up"
+          ]
+          button.fa.fa-arrow-down[
+            type="button"
+            class="f-c-atom-previews__button"
+            class="f-c-atom-previews__button--arrow"
+            class="f-c-atom-previews__button--arrow-down"
+          ]
+          button.fa.fa-trash[
+            type="button"
+            class="f-c-atom-previews__button"
+            class="f-c-atom-previews__button--remove"
+          ]
