@@ -63,4 +63,5 @@ function mapDispatchToProps (dispatch) {
   return { dispatch }
 }
 
+export { Atoms }
 export default connect(mapStateToProps, mapDispatchToProps)(Atoms)

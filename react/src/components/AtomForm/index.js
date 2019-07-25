@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, Label, Input } from 'reactstrap'
+import { FormGroup, Input } from 'reactstrap'
 import { debounce } from 'lodash'
 
 import RichTextEditor from 'components/RichTextEditor'
@@ -84,6 +84,7 @@ class AtomForm extends React.Component {
                       name={`${prefix}[${key}]`}
                       defaultValue={data[key]}
                       onChange={(e) => this.onChangeRaw(e, key)}
+                      placeholder={meta.structure[key].label}
                     />
                   ) : (
                     <Input
@@ -91,6 +92,7 @@ class AtomForm extends React.Component {
                       name={`${prefix}[${key}]`}
                       defaultValue={data[key]}
                       onChange={(e) => this.onChangeRaw(e, key)}
+                      placeholder={meta.structure[key].label}
                     >
                       {(meta.structure[key].collection || []).map((record) => (
                         <option key={record[1]} value={record[1]}>{record[0]}</option>

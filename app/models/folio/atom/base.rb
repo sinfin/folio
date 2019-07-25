@@ -38,7 +38,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       position: position,
       placement_type: placement_type,
       placement_id: placement_id,
-      data: data,
+      data: data || {},
     }
   end
 

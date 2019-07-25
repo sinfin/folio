@@ -42,7 +42,8 @@ module Folio
       if f.object.class.respond_to?(:atom_locales)
         atoms = {}
         f.object.class.atom_locales.each do |locale|
-          atoms[locale] = f.object.send("#{locale}_atoms").to_a.map(&:to_h)
+          key = "#{locale}_atoms"
+          atoms[key] = f.object.send(key).to_a.map(&:to_h)
         end
       else
         atoms = {
