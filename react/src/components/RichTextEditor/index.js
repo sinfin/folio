@@ -7,7 +7,7 @@ class RichTextEditor extends React.PureComponent {
     super(props)
 
     this.state = {
-      editorState: EditorState.createWithContent(convertFromHTML(props.defaultValue)),
+      editorState: EditorState.createWithContent(convertFromHTML(props.defaultValue || '')),
       html: props.defaultValue
     }
   }

@@ -1,0 +1,8 @@
+doctype html
+html lang=Rails.application.config.folio_console_locale
+  head
+    = stylesheet_link_tag('application', media: 'all')
+
+  body
+    = yield
+    = javascript_include_tag 'folio/console/atom_previews/atom_previews'

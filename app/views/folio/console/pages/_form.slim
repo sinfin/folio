@@ -1,6 +1,4 @@
-p bar
-
-/ = console_form_atoms f
+= console_form_atoms f
 
 / - show_audited = Rails.application.config.folio_pages_audited && \
 /                  f.object.revisions.size > 1
@@ -65,4 +63,3 @@ p bar
 /     = tab :audits
 /       = console_audits_table(f.object)
 
-= form_footer f

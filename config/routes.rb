@@ -44,7 +44,9 @@ Folio::Engine.routes.draw do
       end
     end
 
-    resource :atoms_preview, only: [:show]
+    resource :atom_preview, only: [:show] do
+      post :preview
+    end
   end
 
   resource :csrf, only: %i[show], controller: :csrf

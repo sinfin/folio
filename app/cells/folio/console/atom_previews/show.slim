@@ -1,2 +1,4 @@
 .f-c-atom-previews
-  = render_atoms(model)
+  - model.each do |atom|
+    .f-c-atom-previews__atom
+      == cell(atom.class.cell_name, atom, atom.cell_options.presence || {})

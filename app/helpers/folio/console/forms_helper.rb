@@ -66,13 +66,18 @@ module Folio::Console::FormsHelper
     simple_form_for(model, opts) do |f|
       concat(
         content_tag(:div, class: 'f-c-simple-form-with-atoms__preview') do
-          concat(content_tag(:div,
-                             cell('folio/console/atom_previews', f.object.atoms).show.html_safe,
-                             class: 'f-c-simple-form-with-atoms__preview-inner'))
+          concat(content_tag(:iframe,
+                             nil,
+                             class: 'f-c-simple-form-with-atoms__iframe',
+                             id: 'f-c-simple-form-with-atoms__iframe',
+                             src: console_atom_preview_path(ids: f.object.atoms.map(&:id))))
           concat(content_tag(:span, nil, class: 'folio-loader'))
         end
       )
-      content_tag(:div, yield(f), class: 'f-c-simple-form-with-atoms__form')
+      concat(form_footer(f))
+      concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form') do
+        yield(f)
+      end)
     end
   end
 end

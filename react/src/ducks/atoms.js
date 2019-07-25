@@ -1,4 +1,7 @@
 import { mapValues, sortBy } from 'lodash'
+import { takeEvery, call, select } from 'redux-saga/effects'
+
+import { apiHtmlPost } from 'utils/api'
 
 // Constants
 
@@ -39,6 +42,40 @@ export const atomTypesSelector = (state) => {
   }))
   return sortBy(unsorted, ['title'])
 }
+
+export const serializedAtomsSelector = (state) => {
+  const h = {}
+  Object.keys(state.atoms.atoms).forEach((rootKey) => {
+    h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => ({
+      ...atom,
+      ...atom.data,
+      data: null
+    }))
+  })
+  return h
+}
+
+// Sagas
+function * updateAtomPreviews (action) {
+  const iframe = document.getElementById('f-c-simple-form-with-atoms__iframe')
+  iframe.parentElement.classList.add('f-c-simple-form-with-atoms__preview--loading')
+  const serializedAtoms = yield select(serializedAtomsSelector)
+  const html = yield (call(apiHtmlPost, '/console/atom_preview/preview', serializedAtoms))
+  iframe.contentDocument.body.innerHTML = html
+  iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
+  iframe.parentElement.classList.remove('f-c-simple-form-with-atoms__preview--loading')
+}
+
+function * updateAtomPreviewsSaga () {
+  yield [
+    takeEvery(UPDATE_ATOM_VALUE, updateAtomPreviews),
+    takeEvery(UPDATE_ATOM_TYPE, updateAtomPreviews)
+  ]
+}
+
+export const atomsSagas = [
+  updateAtomPreviewsSaga
+]
 
 // State
 
