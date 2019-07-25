@@ -90,8 +90,7 @@ class Folio::Console::AtomFormFieldsCell < Folio::ConsoleCell
     klass::STRUCTURE[:model].flat_map do |model_class_name|
       model_class = model_class_name.constantize
       sti_records_for_select(klass.scoped_model_resource(model_class),
-                             show_model_names: show_model_names,
-                             add_content: true)
+                             show_model_names: show_model_names)
     end.sort_by { |ary| I18n.transliterate(ary.first) }
   end
 

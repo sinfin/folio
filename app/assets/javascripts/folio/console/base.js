@@ -37,7 +37,6 @@
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
-//= require folio/console/atom_form_fields/atom_form_fields
 //= require folio/console/boolean_toggle/boolean_toggle
 //= require folio/console/file_list/file_list
 //= require folio/console/form/errors/errors

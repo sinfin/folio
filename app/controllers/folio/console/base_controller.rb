@@ -148,56 +148,18 @@ class Folio::Console::BaseController < Folio::ApplicationController
       [ hash ]
     end
 
-    def basic_atoms_strong_params
-      [
-        {
-          atoms_attributes: [:id,
-                             :title,
-                             :perex,
-                             :content,
-                             :type,
-                             :model,
-                             :model_id,
-                             :model_type,
-                             :position,
-                             :_destroy,
-                             *file_placements_strong_params]
-        }
-      ]
-    end
-
     def atoms_strong_params
       base = [:id,
-              :title,
-              :perex,
-              :content,
               :type,
-              :model,
-              :model_id,
-              :model_type,
               :position,
               :_destroy,
-              *file_placements_strong_params]
+              *file_placements_strong_params] + Folio::Atom.strong_params
 
       [{ atoms_attributes: base }] + I18n.available_locales.map do |locale|
         {
           "#{locale}_atoms_attributes": base
         }
       end
-    end
-
-    def sti_atoms(params)
-      keys = I18n.available_locales.map do |locale|
-        "#{locale}_atoms_attributes"
-      end + ['atoms_attributes']
-
-      keys.reduce(params) do |pars, key|
-        sti_hack(pars, key.to_sym, :model)
-      end
-    end
-
-    def params_with_atoms(params)
-      sti_atoms(params)
     end
 
     def sti_hack(params, nested_name, relation_name)

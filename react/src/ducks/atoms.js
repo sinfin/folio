@@ -1,9 +1,10 @@
-import { mapValues } from 'lodash'
+import { mapValues, sortBy } from 'lodash'
 
 // Constants
 
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
 const UPDATE_ATOM_VALUE = 'atoms/UPDATE_ATOM_VALUE'
+const UPDATE_ATOM_TYPE = 'atoms/UPDATE_ATOM_TYPE'
 
 // Actions
 
@@ -13,6 +14,10 @@ export function setAtomsData (data) {
 
 export function updateAtomValue (rootKey, index, key, value) {
   return { type: UPDATE_ATOM_VALUE, rootKey, index, key, value }
+}
+
+export function updateAtomType (rootKey, index, newType, values) {
+  return { type: UPDATE_ATOM_TYPE, rootKey, index, newType, values }
 }
 
 // Selectors
@@ -26,6 +31,14 @@ export const atomsSelector = (state) => ({
     }))
   ))
 })
+
+export const atomTypesSelector = (state) => {
+  const unsorted = Object.keys(state.atoms.structures).map((key) => ({
+    key,
+    title: state.atoms.structures[key].title
+  }))
+  return sortBy(unsorted, ['title'])
+}
 
 // State
 
@@ -58,6 +71,25 @@ function atomsReducer (state = initialState, action) {
                   ...atom.data,
                   [action.key]: action.value
                 }
+              }
+            } else {
+              return { ...atom }
+            }
+          })
+        }
+      }
+
+    case UPDATE_ATOM_TYPE:
+      return {
+        ...state,
+        atoms: {
+          ...state.atoms,
+          [action.rootKey]: state.atoms[action.rootKey].map((atom, index) => {
+            if (index === action.index) {
+              return {
+                ...atom,
+                type: action.newType,
+                data: action.values
               }
             } else {
               return { ...atom }

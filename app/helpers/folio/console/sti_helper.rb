@@ -2,7 +2,7 @@
 
 module Folio
   module Console::StiHelper
-    def sti_records_for_select(records, show_model_names: true, add_content: false)
+    def sti_records_for_select(records, show_model_names: true)
       records.map do |record|
         record_name = record.try(:to_console_label) ||
                       record.try(:to_label) ||
@@ -22,7 +22,6 @@ module Folio
         [
           label,
           value,
-          add_content ? { 'data-content' => record.try(:to_content) } : nil,
         ].compact
       end.sort_by(&:first)
     end

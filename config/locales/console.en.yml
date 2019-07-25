@@ -15,6 +15,7 @@ en:
         show: Show
         submit: Submit
       alt_prompt: Alternative image caption
+      atoms_title: Obsah
       back: Zpět
       base:
         atoms:

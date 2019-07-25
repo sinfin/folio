@@ -12,6 +12,7 @@ import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'duck
 
 import reducers from './reducers'
 import sagas from './sagas'
+
 // import registerServiceWorker from './registerServiceWorker'
 
 window.folioConsoleInitReact = (domRoot) => {
