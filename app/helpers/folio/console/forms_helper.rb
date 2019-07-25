@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module Folio::Console::FormsHelper
-  def console_form_atoms(f)
-    render partial: 'atoms', locals: { f: f }
-  end
-
   def translated_inputs(f, key, *args)
     model = { f: f, key: key, args: args }
     cell('folio/console/translated_inputs', model).show.html_safe
@@ -59,6 +55,24 @@ module Folio::Console::FormsHelper
   def new_record_modal(klass, opts = {})
     content_for(:modals) do
       cell('folio/console/new_record_modal', klass, opts).show.html_safe
+    end
+  end
+
+  def simple_form_for_with_atoms(model, opts = {}, &block)
+    opts[:html] ||= {}
+    opts[:html][:class] ||= ''
+    opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms"
+
+    simple_form_for(model, opts) do |f|
+      concat(
+        content_tag(:div, class: 'f-c-simple-form-with-atoms__preview') do
+          concat(content_tag(:div,
+                             cell('folio/console/atom_previews', f.object.atoms).show.html_safe,
+                             class: 'f-c-simple-form-with-atoms__preview-inner'))
+          concat(content_tag(:span, nil, class: 'folio-loader'))
+        end
+      )
+      content_tag(:div, yield(f), class: 'f-c-simple-form-with-atoms__form')
     end
   end
 end

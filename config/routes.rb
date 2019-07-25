@@ -43,6 +43,8 @@ Folio::Engine.routes.draw do
         collection { post :tag }
       end
     end
+
+    resource :atoms_preview, only: [:show]
   end
 
   resource :csrf, only: %i[show], controller: :csrf

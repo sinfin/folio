@@ -64,12 +64,9 @@ module Folio
         structures: Folio::Atom.structures,
       }
 
-      content_tag(:div) do
-        concat(content_tag(:h2, I18n.t('folio.console.atoms_title')))
-        concat(content_tag(:div, nil, 'class': 'folio-react-wrap',
-                                 'data-mode': 'atoms',
-                                 'data-atoms': data.to_json))
-      end
+      content_tag(:div, nil, 'class': 'f-c-atoms folio-react-wrap',
+                             'data-mode': 'atoms',
+                             'data-atoms': data.to_json)
     end
 
     private

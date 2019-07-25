@@ -25,6 +25,7 @@
 //= require ./redactor/_init
 
 //= require folio/cable
+//= require folio/lazyload
 //= require folio/lightbox
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-prompt-file-input
