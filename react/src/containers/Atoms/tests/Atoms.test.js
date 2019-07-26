@@ -1,7 +1,7 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
 import { Atoms } from '../'
-import AtomForm from 'components/AtomForm'
+import { SerializedAtom } from 'components/SerializedAtoms'
 
 import atomsReducer, {
   atomsSelector,
@@ -22,7 +22,7 @@ describe('Atoms', () => {
     }
 
     const component = renderer.create(<Atoms {...props} />)
-    const atomForms = component.root.findAllByType(AtomForm)
+    const atomForms = component.root.findAllByType(SerializedAtom)
     expect(atomForms.length).toEqual(3)
   })
 
@@ -35,7 +35,7 @@ describe('Atoms', () => {
     }
 
     const component = renderer.create(<Atoms {...props} />)
-    const atomForms = component.root.findAllByType(AtomForm)
+    const atomForms = component.root.findAllByType(SerializedAtom)
     expect(atomForms.length).toEqual(2 * 3)
   })
 })

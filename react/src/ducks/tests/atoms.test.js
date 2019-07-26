@@ -1,70 +1,72 @@
 import atomsReducer, {
   initialState,
   setAtomsData,
-  updateAtomValue,
-  updateAtomType
+  updateFormAtomType,
+  updateFormAtomValue,
+  newAtom,
+  editAtom,
+  saveFormAtom
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
 
 describe('atomsReducer', () => {
-  describe('single locale', () => {
-    let state
+  let state
 
-    beforeEach(() => {
-      state = atomsReducer(initialState, setAtomsData(SINGLE_LOCALE_ATOMS))
-    })
-
-    it('setAtomsData', () => {
-      expect(state.namespace).toEqual('page')
-      expect(state.atoms.atoms.length).toEqual(3)
-    })
-
-    it('updateAtomValue', () => {
-      expect(state.atoms.atoms[0].data.content).not.toEqual('foo')
-      const newSingleState = atomsReducer(state, updateAtomValue('atoms', 0, 'content', 'foo'))
-      expect(newSingleState.atoms.atoms[0].data.content).toEqual('foo')
-    })
-
-    it('updateAtomType', () => {
-      state = atomsReducer(state, updateAtomValue('atoms', 0, 'content', 'foo'))
-      expect(state.atoms.atoms[0].type).not.toEqual('Atom::PageReferenceWithRichtext')
-      const newSingleState = atomsReducer(state, updateAtomType('atoms', 0, 'Atom::PageReferenceWithRichtext', { content: 'foo' }))
-      expect(newSingleState.atoms.atoms[0].type).toEqual('Atom::PageReferenceWithRichtext')
-      expect(newSingleState.atoms.atoms[0].data.content).toEqual('foo')
-    })
+  beforeEach(() => {
+    state = atomsReducer(initialState, setAtomsData(SINGLE_LOCALE_ATOMS))
   })
 
-  describe('multiple locales', () => {
-    let state
+  it('setAtomsData', () => {
+    expect(state.namespace).toEqual('page')
+    expect(state.atoms.atoms.length).toEqual(3)
+  })
 
-    beforeEach(() => {
-      state = atomsReducer(initialState, setAtomsData(MULTI_LOCALE_ATOMS))
-    })
+  it('setAtomsData multiple', () => {
+    state = atomsReducer(initialState, setAtomsData(MULTI_LOCALE_ATOMS))
+    expect(state.namespace).toEqual('page')
+    expect(Object.keys(state.atoms).length).toEqual(2)
+    expect(state.atoms.cs_atoms.length).toEqual(3)
+    expect(state.atoms.en_atoms.length).toEqual(3)
+  })
 
-    it('setAtomsData', () => {
-      expect(state.namespace).toEqual('page')
-      expect(Object.keys(state.atoms).length).toEqual(2)
-      expect(state.atoms.cs_atoms.length).toEqual(3)
-      expect(state.atoms.en_atoms.length).toEqual(3)
-    })
+  it('updateFormAtomType', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    const newState = atomsReducer(state, updateFormAtomType('Atom::PageReferenceWithRichtext', { content: 'foo' }))
+    expect(newState.form.atom.type).toEqual('Atom::PageReferenceWithRichtext')
+    expect(newState.form.atom.meta.structure.model).toBeTruthy()
+    expect(newState.form.atom.data.content).toEqual('foo')
+  })
 
-    it('updateAtomValue', () => {
-      expect(state.atoms.cs_atoms[0].data.content).not.toEqual('foo')
-      expect(state.atoms.en_atoms[0].data.content).not.toEqual('foo')
-      const newMultiState = atomsReducer(state, updateAtomValue('cs_atoms', 0, 'content', 'foo'))
-      expect(newMultiState.atoms.cs_atoms[0].data.content).toEqual('foo')
-      expect(newMultiState.atoms.en_atoms[0].data.content).not.toEqual('foo')
-    })
+  it('updateFormAtomValue', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    expect(state.form.atom.data.content).not.toEqual('bar')
+    const newState = atomsReducer(state, updateFormAtomValue('content', 'bar'))
+    expect(newState.form.atom.data.content).toEqual('bar')
+  })
 
-    it('updateAtomType', () => {
-      state = atomsReducer(state, updateAtomValue('cs_atoms', 0, 'content', 'foo'))
-      expect(state.atoms.cs_atoms[0].type).not.toEqual('Atom::PageReferenceWithRichtext')
-      expect(state.atoms.en_atoms[0].type).not.toEqual('Atom::PageReferenceWithRichtext')
-      const newMultiState = atomsReducer(state, updateAtomType('cs_atoms', 0, 'Atom::PageReferenceWithRichtext', { content: 'foo' }))
-      expect(newMultiState.atoms.cs_atoms[0].type).toEqual('Atom::PageReferenceWithRichtext')
-      expect(newMultiState.atoms.cs_atoms[0].data.content).toEqual('foo')
-      expect(newMultiState.atoms.en_atoms[0].type).not.toEqual('Atom::PageReferenceWithRichtext')
-    })
+  it('newAtom', () => {
+    expect(state.form.rootKey).toEqual(null)
+    const newState = atomsReducer(state, newAtom('atoms', 0, 'Atom::PageReferenceWithRichtext'))
+    expect(newState.form.rootKey).toEqual('atoms')
+    expect(newState.form.atom.type).toEqual('Atom::PageReferenceWithRichtext')
+    expect(newState.form.atom.timestamp).toBeTruthy()
+  })
+
+  it('editAtom', () => {
+    expect(state.form.rootKey).toEqual(null)
+    const newState = atomsReducer(state, editAtom('atoms', 0))
+    expect(newState.form.rootKey).toEqual('atoms')
+    expect(newState.form.atom.id).toEqual(3)
+  })
+
+  it('saveFormAtom', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    state = atomsReducer(state, updateFormAtomType('Atom::PageReferenceWithRichtext', { content: 'foo' }))
+    const newState = atomsReducer(state, saveFormAtom())
+    expect(state.atoms['atoms'][0].type).not.toEqual('Atom::PageReferenceWithRichtext')
+    expect(state.atoms['atoms'][0].data.content).not.toEqual('foo')
+    expect(newState.atoms['atoms'][0].type).toEqual('Atom::PageReferenceWithRichtext')
+    expect(newState.atoms['atoms'][0].data.content).toEqual('foo')
   })
 })

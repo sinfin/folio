@@ -11,7 +11,17 @@ selectLocale = (locale) ->
     $this = $(this)
     $this.prop('hidden', $this.data('locale') isnt locale)
 
+handleEditClick = (e) ->
+  e.preventDefault()
+  $wrap = $(this).closest('.f-c-atoms-previews__atom')
+  data =
+    type: 'editAtom'
+    rootKey: $wrap.data('root-key')
+    index: $wrap.data('index')
+  window.parent.postMessage(data, window.origin)
+
 $(document)
+  .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()
 

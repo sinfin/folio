@@ -1,13 +1,17 @@
-import { mapValues, sortBy } from 'lodash'
-import { takeEvery, call, select } from 'redux-saga/effects'
+import { mapValues, sortBy, omit } from 'lodash'
+import { takeEvery, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost } from 'utils/api'
 
 // Constants
 
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
-const UPDATE_ATOM_VALUE = 'atoms/UPDATE_ATOM_VALUE'
-const UPDATE_ATOM_TYPE = 'atoms/UPDATE_ATOM_TYPE'
+const NEW_ATOM = 'atoms/NEW_ATOM'
+const EDIT_ATOM = 'atoms/EDIT_ATOM'
+const SAVE_FORM_ATOM = 'atoms/SAVE_FORM_ATOM'
+const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
+const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
+const UPDATE_FORM_ATOM_VALUE = 'atoms/UPDATE_FORM_ATOM_VALUE'
 
 // Actions
 
@@ -15,12 +19,28 @@ export function setAtomsData (data) {
   return { type: SET_ATOMS_DATA, data }
 }
 
-export function updateAtomValue (rootKey, index, key, value) {
-  return { type: UPDATE_ATOM_VALUE, rootKey, index, key, value }
+export function updateFormAtomType (newType, values) {
+  return { type: UPDATE_FORM_ATOM_TYPE, newType, values }
 }
 
-export function updateAtomType (rootKey, index, newType, values) {
-  return { type: UPDATE_ATOM_TYPE, rootKey, index, newType, values }
+export function updateFormAtomValue (key, value) {
+  return { type: UPDATE_FORM_ATOM_VALUE, key, value }
+}
+
+export function newAtom (rootKey, index, atomType) {
+  return { type: NEW_ATOM, rootKey, index, atomType }
+}
+
+export function editAtom (rootKey, index) {
+  return { type: EDIT_ATOM, rootKey, index }
+}
+
+export function closeFormAtom () {
+  return { type: CLOSE_FORM_ATOM }
+}
+
+export function saveFormAtom () {
+  return { type: SAVE_FORM_ATOM }
 }
 
 // Selectors
@@ -34,6 +54,15 @@ export const atomsSelector = (state) => ({
     }))
   ))
 })
+
+export const atomSelector = (substate, rootKey, index) => {
+  const atom = substate.atoms[rootKey][index]
+
+  return {
+    ...atom,
+    meta: substate.structures[atom.type]
+  }
+}
 
 export const atomTypesSelector = (state) => {
   const unsorted = Object.keys(state.atoms.structures).map((key) => ({
@@ -57,6 +86,7 @@ export const serializedAtomsSelector = (state) => {
 
 // Sagas
 function * updateAtomPreviews (action) {
+  yield put(closeFormAtom())
   const iframe = document.getElementById('f-c-simple-form-with-atoms__iframe')
   iframe.parentElement.classList.add('f-c-simple-form-with-atoms__preview--loading')
   const serializedAtoms = yield select(serializedAtomsSelector)
@@ -67,14 +97,31 @@ function * updateAtomPreviews (action) {
 }
 
 function * updateAtomPreviewsSaga () {
+  yield takeEvery(SAVE_FORM_ATOM, updateAtomPreviews)
+}
+
+function * showAtomsForm (action) {
+  yield window.jQuery('.f-c-simple-form-with-atoms__form--atoms').addClass('f-c-simple-form-with-atoms__form--active')
+}
+
+function * showAtomsFormSaga () {
   yield [
-    takeEvery(UPDATE_ATOM_VALUE, updateAtomPreviews),
-    takeEvery(UPDATE_ATOM_TYPE, updateAtomPreviews)
+    takeEvery(EDIT_ATOM, showAtomsForm)
   ]
 }
 
+function * hideAtomsForm (action) {
+  yield window.jQuery('.f-c-simple-form-with-atoms__form--atoms').removeClass('f-c-simple-form-with-atoms__form--active')
+}
+
+function * hideAtomsFormSaga () {
+  yield takeEvery(CLOSE_FORM_ATOM, hideAtomsForm)
+}
+
 export const atomsSagas = [
-  updateAtomPreviewsSaga
+  updateAtomPreviewsSaga,
+  showAtomsFormSaga,
+  hideAtomsFormSaga
 ]
 
 // State
@@ -82,7 +129,12 @@ export const atomsSagas = [
 export const initialState = {
   atoms: {},
   namespace: null,
-  structures: {}
+  structures: {},
+  form: {
+    rootKey: null,
+    index: null,
+    atom: null
+  }
 }
 
 // Reducer
@@ -95,43 +147,85 @@ function atomsReducer (state = initialState, action) {
         ...action.data
       }
 
-    case UPDATE_ATOM_VALUE:
+    case NEW_ATOM:
       return {
         ...state,
-        atoms: {
-          ...state.atoms,
-          [action.rootKey]: state.atoms[action.rootKey].map((atom, index) => {
-            if (index === action.index) {
-              return {
-                ...atom,
-                data: {
-                  ...atom.data,
-                  [action.key]: action.value
-                }
-              }
-            } else {
-              return { ...atom }
-            }
-          })
+        form: {
+          rootKey: action.rootKey,
+          index: action.index,
+          atom: {
+            id: null,
+            type: action.atomType,
+            data: {},
+            timestamp: Number(new Date())
+          }
         }
       }
 
-    case UPDATE_ATOM_TYPE:
+    case EDIT_ATOM:
+      return {
+        ...state,
+        form: {
+          rootKey: action.rootKey,
+          index: action.index,
+          atom: atomSelector(state, action.rootKey, action.index)
+        }
+      }
+
+    case CLOSE_FORM_ATOM:
+      return {
+        ...state,
+        form: {
+          ...initialState.form
+        }
+      }
+
+    case SAVE_FORM_ATOM:
       return {
         ...state,
         atoms: {
           ...state.atoms,
-          [action.rootKey]: state.atoms[action.rootKey].map((atom, index) => {
-            if (index === action.index) {
-              return {
-                ...atom,
-                type: action.newType,
-                data: action.values
-              }
+          [state.form.rootKey]: state.atoms[state.form.rootKey].map((atom, index) => {
+            // TODO: handle new
+            if (index === state.form.index) {
+              return omit(state.form.atom, ['meta'])
             } else {
               return { ...atom }
             }
           })
+        },
+        form: {
+          ...initialState.form
+        }
+      }
+
+    case UPDATE_FORM_ATOM_TYPE:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atom: {
+            ...state.form.atom,
+            type: action.newType,
+            data: action.values,
+            meta: state.structures[action.newType]
+          }
+        }
+      }
+
+    case UPDATE_FORM_ATOM_VALUE:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atom: {
+            ...state.form.atom,
+            type: action.newType,
+            data: {
+              ...state.form.atom.data,
+              [action.key]: action.value
+            }
+          }
         }
       }
 

@@ -1,54 +1,56 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { isEqual } from 'lodash'
 
 import {
   atomsSelector,
   atomTypesSelector,
-  updateAtomValue,
-  updateAtomType
+  editAtom,
+  saveFormAtom,
+  closeFormAtom,
+  updateFormAtomType,
+  updateFormAtomValue
 } from 'ducks/atoms'
 import AtomForm from 'components/AtomForm'
+import SerializedAtoms from 'components/SerializedAtoms'
 
 class Atoms extends React.PureComponent {
-  onChange = ({ rootKey, index, key, value }) => {
-    this.props.dispatch(updateAtomValue(rootKey, index, key, value))
+  componentDidMount () {
+    window.addEventListener('message', this.receiveMessage, false)
   }
 
-  onTypeChange = ({ rootKey, index, newType }) => {
-    const atom = this.props.atoms.atoms[rootKey][index]
-    const newStructure = this.props.atoms.structures[newType].structure
-    const oldStructure = atom.meta.structure
-    const values = {}
-    Object.keys(newStructure).forEach((key) => {
-      if (isEqual(newStructure[key], oldStructure[key])) {
-        values[key] = atom.data[key]
+  receiveMessage = (e) => {
+    if (e.origin !== window.origin) return
+    switch (e.data.type) {
+      case 'editAtom': {
+        return this.props.dispatch(editAtom(e.data.rootKey, e.data.index))
       }
-    })
-    this.props.dispatch(updateAtomType(rootKey, index, newType, values))
+      default: {}
+    }
   }
 
   render () {
-    const { atoms, namespace } = this.props.atoms
+    const { atoms, form, namespace, structures } = this.props.atoms
 
     return (
-      <div className='row'>
+      <div>
         {Object.keys(atoms).map((key) => (
-          <div className='col-lg folio-console--compact' key={key}>
-            {atoms[key].map((atom, i) => (
-              <AtomForm
-                key={atom.id}
-                atom={atom}
-                index={i}
-                namespace={`${namespace}[${key}_attributes]`}
-                rootKey={key}
-                onChange={this.onChange}
-                onTypeChange={this.onTypeChange}
-                atomTypes={this.props.atomTypes}
-              />
-            ))}
-          </div>
+          <SerializedAtoms key={key} atoms={atoms[key]} namespace={namespace} />
         ))}
+
+        {form.rootKey && (
+          <AtomForm
+            atom={form.atom}
+            index={form.index}
+            namespace={`${namespace}[${form.rootKey}_attributes]`}
+            rootKey={form.rootKey}
+            saveFormAtom={() => this.props.dispatch(saveFormAtom())}
+            closeFormAtom={() => this.props.dispatch(closeFormAtom())}
+            updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
+            updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
+            atomTypes={this.props.atomTypes}
+            structures={structures}
+          />
+        )}
       </div>
     )
   }

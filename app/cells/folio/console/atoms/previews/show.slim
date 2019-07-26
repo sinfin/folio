@@ -2,8 +2,11 @@
   - model.keys.each_with_index do |locale, index|
     - I18n.with_locale(locale)
       .f-c-atoms-previews__locale data-locale=locale hidden=(index != 0)
-        - model[locale].each do |atom|
-          .f-c-atoms-previews__atom
+        - model[locale].each_with_index do |atom, atom_index|
+          .f-c-atoms-previews__atom[
+            data-root-key="#{locale}_atoms"
+            data-index=atom_index
+          ]
             == cell(atom.class.cell_name, \
                     atom, \
                     atom.cell_options.presence || {})

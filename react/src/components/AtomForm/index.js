@@ -1,39 +1,26 @@
 import React from 'react'
-import { FormGroup, Input } from 'reactstrap'
-import { debounce } from 'lodash'
+import { FormGroup, Input, Label } from 'reactstrap'
+import { isEqual } from 'lodash'
 
 import RichTextEditor from 'components/RichTextEditor'
 
-class AtomForm extends React.Component {
-  constructor (props) {
-    super(props)
-    this.debouncedOnChange = debounce(this.onChange, 1000)
-  }
-
-  onChangeRaw (e, key) {
-    e.persist()
-    this.debouncedOnChange(e, key, 1000)
+class AtomForm extends React.PureComponent {
+  onTypeChange = (e) => {
+    const { atom, structures } = this.props
+    const newType = e.target.value
+    const newStructure = structures[newType].structure
+    const oldStructure = atom.meta.structure
+    const values = {}
+    Object.keys(newStructure).forEach((key) => {
+      if (isEqual(newStructure[key], oldStructure[key])) {
+        values[key] = atom.data[key]
+      }
+    })
+    this.props.updateFormAtomType(newType, values)
   }
 
   onChange (e, key) {
-    this.props.onChange({
-      rootKey: this.props.rootKey,
-      index: this.props.index,
-      key: key,
-      value: e.target.value
-    })
-  }
-
-  onTypeChange = (e) => {
-    this.props.onTypeChange({
-      rootKey: this.props.rootKey,
-      index: this.props.index,
-      newType: e.target.value
-    })
-  }
-
-  shouldComponentUpdate (nextProps) {
-    return Boolean(nextProps.atom.destroyed) || (nextProps.index !== this.props.index) || (nextProps.atom.type !== this.props.atom.type)
+    this.props.updateFormAtomValue(key, e.target.value)
   }
 
   inputType (type) {
@@ -50,61 +37,73 @@ class AtomForm extends React.Component {
   }
 
   render () {
-    const { data, destroyed, id, meta, type } = this.props.atom
+    const { data, meta, type } = this.props.atom
     const prefix = `${this.props.namespace}[${this.props.index + 1}]`
 
     return (
-      <div className='card' hidden={destroyed}>
-        <div className='card-body mb-n3'>
-          {id && <Input type='hidden' name={`${prefix}[id]`} value={id} />}
-          {destroyed && <Input type='hidden' name={`${prefix}[_destroy]`} value='1' />}
-          <Input type='hidden' name={`${prefix}[position]`} value={this.props.index + 1} />
+      <React.Fragment>
+        <div className='row mb-4'>
+          <div className='col-6'>
+            <Input
+              type='select'
+              defaultValue={type}
+              name={`${prefix}[type]`}
+              onChange={this.onTypeChange}
+              className='folio-console-atom-type-select'
+            >
+              {this.props.atomTypes.map(({ key, title }) => (
+                <option key={key} value={key}>{title}</option>
+              ))}
+            </Input>
+          </div>
 
-          {!destroyed && <React.Fragment>
-            <FormGroup>
-              <Input
-                type='select'
-                defaultValue={type}
-                name={`${prefix}[type]`}
-                onChange={this.onTypeChange}
-                className='folio-console-atom-type-select'
-              >
-                {this.props.atomTypes.map(({ key, title }) => (
-                  <option key={key} value={key}>{title}</option>
-                ))}
-              </Input>
-            </FormGroup>
+          <div className='col-6 d-flex align-items-center justify-content-end'>
+            <button
+              type='button'
+              className='btn btn-outline f-c-atoms-settings-header__button'
+              onClick={this.props.saveFormAtom}
+            >
+              Hotovo
+            </button>
 
-            {Object.keys(meta.structure).map((key) => (
-              <FormGroup key={key}>
-                {/* <Label>{meta.structure[key].label}</Label> */}
-                {
-                  meta.structure[key].type === 'richtext' ? (
-                    <RichTextEditor
-                      name={`${prefix}[${key}]`}
-                      defaultValue={data[key]}
-                      onChange={(e) => this.onChangeRaw(e, key)}
-                      placeholder={meta.structure[key].label}
-                    />
-                  ) : (
-                    <Input
-                      type={this.inputType(meta.structure[key].type)}
-                      name={`${prefix}[${key}]`}
-                      defaultValue={data[key]}
-                      onChange={(e) => this.onChangeRaw(e, key)}
-                      placeholder={meta.structure[key].label}
-                    >
-                      {(meta.structure[key].collection || []).map((record) => (
-                        <option key={record[1]} value={record[1]}>{record[0]}</option>
-                      ))}
-                    </Input>
-                  )
-                }
-              </FormGroup>
-            ))}
-          </React.Fragment>}
+            <button
+              type='button'
+              className='f-c-atoms-settings-header__close mi ml-g'
+              onClick={this.props.closeFormAtom}
+            >
+              close
+            </button>
+          </div>
         </div>
-      </div>
+
+        {Object.keys(meta.structure).map((key) => (
+          <FormGroup key={key}>
+            {<Label>{meta.structure[key].label}</Label>}
+            {
+              meta.structure[key].type === 'richtext' ? (
+                <RichTextEditor
+                  name={`${prefix}[${key}]`}
+                  defaultValue={data[key]}
+                  onChange={this.onChange}
+                  placeholder={meta.structure[key].label}
+                />
+              ) : (
+                <Input
+                  type={this.inputType(meta.structure[key].type)}
+                  name={`${prefix}[${key}]`}
+                  defaultValue={data[key]}
+                  onChange={(e) => this.onChange(e, key)}
+                  placeholder={meta.structure[key].label}
+                >
+                  {(meta.structure[key].collection || []).map((record) => (
+                    <option key={record[1]} value={record[1]}>{record[0]}</option>
+                  ))}
+                </Input>
+              )
+            }
+          </FormGroup>
+        ))}
+      </React.Fragment>
     )
   }
 }
