@@ -64,19 +64,22 @@ module Folio::Console::FormsHelper
     opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms"
 
     simple_form_for(model, opts) do |f|
-      concat(
-        content_tag(:div, class: 'f-c-simple-form-with-atoms__preview') do
-          concat(content_tag(:iframe,
-                             nil,
-                             class: 'f-c-simple-form-with-atoms__iframe',
-                             id: 'f-c-simple-form-with-atoms__iframe',
-                             src: console_atom_preview_path(ids: f.object.atoms.map(&:id))))
-          concat(content_tag(:span, nil, class: 'folio-loader'))
-        end
-      )
-      concat(form_footer(f))
-      concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form') do
-        yield(f)
+      concat(cell('folio/console/atoms_form_header', f.object).show.html_safe)
+      concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__inner') do
+        concat(
+          content_tag(:div, class: 'f-c-simple-form-with-atoms__preview') do
+            concat(content_tag(:iframe,
+                               nil,
+                               class: 'f-c-simple-form-with-atoms__iframe',
+                               id: 'f-c-simple-form-with-atoms__iframe',
+                               src: console_atom_preview_path(ids: f.object.all_atoms_in_array)))
+            concat(content_tag(:span, nil, class: 'folio-loader'))
+          end
+        )
+        concat(form_footer(f))
+        concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form') do
+          yield(f)
+        end)
       end)
     end
   end

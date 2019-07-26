@@ -15,6 +15,8 @@ cs:
         show: Zobrazit
         submit: Uložit
       alt_prompt: Alternativní popisek obrázku
+      atoms_form_header:
+        settings: Nastavení
       atoms_title: Obsah
       back: Zpět
       base:

@@ -52,6 +52,14 @@ module Folio::HasAtoms
       end
     end
 
+    def all_atoms_in_array
+      all = []
+      self.class.atom_locales.each do |locale|
+        all += atoms(locale).to_a
+      end
+      all
+    end
+
     def atoms(locale = I18n.locale)
       send("#{locale}_atoms")
     end

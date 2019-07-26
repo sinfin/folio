@@ -1,9 +1,23 @@
 .f-c-simple-form-with-atoms
+  min-height: calc(100% + #{$grid-gutter-half})
+  margin: - $grid-gutter-half
+  position: relative
+  display: flex
+  flex-direction: column
+
+  &__inner
+    display: flex
+    flex-direction: column
+    flex: 1 1 auto
+    position: relative
+    z-index: 1
+
   &__preview
     display: flex
     flex-direction: column
     flex: 1 0 auto
     position: relative
+    padding: $grid-gutter-half $grid-gutter-half 0
 
     .folio-loader
       z-index: 2
@@ -28,3 +42,4 @@
     background: $white
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.29)
     z-index: 2
+    display: none
