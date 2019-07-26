@@ -18,6 +18,9 @@ en:
       atoms:
         form_header:
           settings: Settings
+        settings_header:
+          done: Done
+          title: Settings
       back: Zpět
       base:
         atoms:

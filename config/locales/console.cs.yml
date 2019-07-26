@@ -18,6 +18,9 @@ cs:
       atoms:
         form_header:
           settings: Nastavení
+        settings_header:
+          done: Hotovo
+          title: Nastavení
       back: Zpět
       base:
         atoms:

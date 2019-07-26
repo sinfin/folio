@@ -2,7 +2,9 @@
 #= require folio/lazyload
 
 lazyloadAll = ->
-  window.folioLazyloadInstances.forEach (instance) -> instance.update()
+  window.folioLazyloadInstances.forEach (instance) ->
+    instance.update()
+    instance.loadAll()
 
 selectLocale = (locale) ->
   $('.f-c-atoms-previews__locale').each ->
@@ -20,3 +22,6 @@ receiveMessage = (e) ->
     when 'selectLocale' then selectLocale(e.data.locale)
 
 window.addEventListener('message', receiveMessage, false)
+
+$ ->
+  lazyloadAll()

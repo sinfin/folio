@@ -60,7 +60,7 @@ function * updateAtomPreviews (action) {
   const iframe = document.getElementById('f-c-simple-form-with-atoms__iframe')
   iframe.parentElement.classList.add('f-c-simple-form-with-atoms__preview--loading')
   const serializedAtoms = yield select(serializedAtomsSelector)
-  const html = yield (call(apiHtmlPost, '/console/atom_preview/preview', serializedAtoms))
+  const html = yield (call(apiHtmlPost, '/console/atoms_preview/preview', serializedAtoms))
   iframe.contentDocument.body.innerHTML = html
   iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
   iframe.parentElement.classList.remove('f-c-simple-form-with-atoms__preview--loading')

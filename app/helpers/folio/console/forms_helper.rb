@@ -61,7 +61,7 @@ module Folio::Console::FormsHelper
   def simple_form_for_with_atoms(model, opts = {}, &block)
     opts[:html] ||= {}
     opts[:html][:class] ||= ''
-    opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms"
+    opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms f-c-anti-container-fluid"
 
     simple_form_for(model, opts) do |f|
       concat(cell('folio/console/atoms/form_header', f.object).show.html_safe)
@@ -76,9 +76,21 @@ module Folio::Console::FormsHelper
             concat(content_tag(:span, nil, class: 'folio-loader'))
           end
         )
-        concat(form_footer(f))
-        concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form') do
-          yield(f)
+        concat(form_footer(f, static: true))
+
+        concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form f-c-simple-form-with-atoms__form--settings') do
+          concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form-inner') do
+            concat(cell('folio/console/atoms/settings_header').show.html_safe)
+            concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form-scroll') do
+              yield(f)
+            end)
+          end)
+        end)
+
+        concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form f-c-simple-form-with-atoms__form--atoms') do
+          concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form-inner') do
+            concat(console_form_atoms(f))
+          end)
         end)
       end)
     end

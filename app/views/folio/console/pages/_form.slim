@@ -1,65 +1,52 @@
-= console_form_atoms f
+- show_audited = Rails.application.config.folio_pages_audited && \
+                 f.object.revisions.size > 1
 
-/ - show_audited = Rails.application.config.folio_pages_audited && \
-/                  f.object.revisions.size > 1
+- show_translations = Rails.application.config.folio_pages_translations && \
+                      f.object.persisted?
 
-/ - show_translations = Rails.application.config.folio_pages_translations && \
-/                       f.object.persisted?
+= tabs [:content, \
+        (:audits if show_audited)].compact
 
-/ = form_header f, translations: show_translations
+.tab-content
+  = tab :content
+    = react_picker(f, :cover_placement)
 
-/ = tabs [:content, \
-/         (:audits if show_audited)].compact
+    == translated_inputs f, :title
+    == translated_inputs f, :slug
 
-/ .tab-content
-/   = tab :content
-/     .row
-/       .col-md-auto
-/         = react_picker(f, :cover_placement)
+    - collection = Folio::Page.recursive_subclasses_for_select
+    - if collection.size > 1
+      = f.input :type, collection: collection, \
+                       include_blank: false
 
-/       .col-md
-/         == translated_inputs f, :title
-/         == translated_inputs f, :slug
+    - if Rails.application.config.folio_pages_translations || \
+         Rails.application.config.folio_pages_ancestry
+      .row
+        - if Rails.application.config.folio_pages_translations
+          .col
+            = f.input :locale, disabled: true
 
-/         - collection = Folio::Page.recursive_subclasses_for_select
-/         - if collection.size > 1
-/           = f.input :type, collection: collection, \
-/                            include_blank: false
+        - if Rails.application.config.folio_pages_ancestry
+          .col
+            = f.input :parent_id, \
+                      collection: Folio::Page.arrange_as_array, \
+                      label_method: :select_option_depth, \
+                      value_method: :id
 
-/         - if Rails.application.config.folio_pages_translations || \
-/              Rails.application.config.folio_pages_ancestry
-/           .row
-/             - if Rails.application.config.folio_pages_translations
-/               .col
-/                 = f.input :locale, disabled: true
+    == translated_inputs f, :perex, autosize: true
 
-/             - if Rails.application.config.folio_pages_ancestry
-/               .col
-/                 = f.input :parent_id, \
-/                           collection: Folio::Page.arrange_as_array, \
-/                           label_method: :select_option_depth, \
-/                           value_method: :id
+    h2 = t('.settings')
 
-/     == translated_inputs f, :perex, autosize: true
+    = f.input :featured
+    = f.input :published
+    = f.input :published_at
 
-/     = console_form_atoms f
+    h2 = t('.meta')
 
-/     .row
-/       .col-md
-/         h2 = t('.settings')
+    == cell('folio/console/tagsinput', f)
+    = translated_inputs f, :meta_title
+    = translated_inputs f, :meta_description, autosize: true
 
-/         = f.input :featured
-/         = f.input :published
-/         = f.input :published_at
-
-/       .col-md
-/         h2 = t('.meta')
-
-/         == cell('folio/console/tagsinput', f)
-/         = translated_inputs f, :meta_title
-/         = translated_inputs f, :meta_description, autosize: true
-
-/   - if show_audited
-/     = tab :audits
-/       = console_audits_table(f.object)
-
+  - if show_audited
+    = tab :audits
+      = console_audits_table(f.object)

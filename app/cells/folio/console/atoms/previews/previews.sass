@@ -8,10 +8,11 @@
 @import 'folio/utilities'
 
 .f-c-atoms-previews
-  padding: calc(10px + #{$input-btn-focus-width}) (( 10px + 40px + 10px )) 10px 10px
+  padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width (( $grid-gutter-width + 10px ))
 
   &__atom
     position: relative
+    padding: 0 (( 10px + 40px + 10px )) 0 10px
 
     > *
       position: relative
@@ -26,8 +27,8 @@
   &__controls
     position: absolute
     top: -10px
-    left: -10px
-    right: -10px
+    left: 0
+    right: 50px
     bottom: -10px
     z-index: 1
     border: 2px dashed rgba(#589E92, 0.79)
