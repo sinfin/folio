@@ -5,7 +5,7 @@ lazyloadAll = ->
   window.folioLazyloadInstances.forEach (instance) -> instance.update()
 
 selectLocale = (locale) ->
-  $('.f-c-atom-previews__locale').each ->
+  $('.f-c-atoms-previews__locale').each ->
     $this = $(this)
     $this.prop('hidden', $this.data('locale') isnt locale)
 

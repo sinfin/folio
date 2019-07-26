@@ -44,7 +44,7 @@ Folio::Engine.routes.draw do
       end
     end
 
-    resource :atom_preview, only: [:show] do
+    resource :atoms_preview, only: [:show] do
       post :preview
     end
   end

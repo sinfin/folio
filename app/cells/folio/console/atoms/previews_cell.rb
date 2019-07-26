@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class Folio::Console::AtomPreviewsCell < Folio::ConsoleCell
+class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   include Folio::AtomsHelper
 end

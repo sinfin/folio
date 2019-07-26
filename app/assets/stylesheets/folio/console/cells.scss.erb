@@ -1,13 +1,13 @@
 <% base = Folio::Engine.root.join('app/cells/folio/console') %>
 <% Dir.glob("#{base}/**/*.sass").each do |file| %>
-<% unless file =~ %r{/_[^/]+\.sass} or file =~ /atom_previews\.sass/ %>
+<% unless file =~ %r{/_[^/]+\.sass} or file =~ /atoms\/previews\/previews\.sass/ %>
 @import 'folio/console/<%= file.gsub("#{base}/", '') %>';
 <% end %>
 <% end %>
 
 <% base = Rails.root.join('app/cells/folio/console') %>
 <% Dir.glob("#{base}/**/*.sass").each do |file| %>
-<% unless file =~ %r{/_[^/]+\.sass} or file =~ /atom_previews\.sass/ %>
+<% unless file =~ %r{/_[^/]+\.sass} or file =~ /atoms\/previews\/previews\.sass/ %>
 @import 'folio/console/<%= file.gsub("#{base}/", '') %>';
 <% end %>
 <% end %>

@@ -7,8 +7,8 @@
 @import 'folio/console/modules/font-awesome'
 @import 'folio/utilities'
 
-.f-c-atom-previews
-  padding: 10px (( 10px + 40px + 10px )) 10px 10px
+.f-c-atoms-previews
+  padding: calc(10px + #{$input-btn-focus-width}) (( 10px + 40px + 10px )) 10px 10px
 
   &__atom
     position: relative
@@ -33,7 +33,7 @@
     border: 2px dashed rgba(#589E92, 0.79)
     visibility: hidden
 
-    .f-c-atom-previews__buttons
+    .f-c-atoms-previews__buttons
       position: absolute
       top: -2px
       left: 100%
@@ -42,7 +42,7 @@
       flex-direction: column
       width: 40px
 
-    .f-c-atom-previews__button
+    .f-c-atoms-previews__button
       +unbutton
       flex: 0 0 40px
       width: 40px

@@ -39,7 +39,7 @@
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
 
-//= require folio/console/atoms_form_header/atoms_form_header
+//= require folio/console/atoms/form_header/form_header
 //= require folio/console/boolean_toggle/boolean_toggle
 //= require folio/console/file_list/file_list
 //= require folio/console/form/errors/errors

@@ -3,7 +3,7 @@
 require 'test_helper'
 
 module Folio
-  class Console::AtomPreviewsControllerTest < ActionDispatch::IntegrationTest
+  class Console::AtomsPreviewsControllerTest < ActionDispatch::IntegrationTest
     include Engine.routes.url_helpers
 
     # test "the truth" do

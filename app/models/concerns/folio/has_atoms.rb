@@ -23,6 +23,10 @@ module Folio::HasAtoms
     def atom_image_placements
       Folio::Atom.atom_image_placements(atoms)
     end
+
+    def all_atoms_in_array
+      atoms.to_a
+    end
   end
 
   module Localized
