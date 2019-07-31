@@ -41,14 +41,15 @@ module Folio
     def console_form_atoms(f)
       if f.object.class.respond_to?(:atom_locales)
         atoms = {}
+        destroyed_ids = {}
         f.object.class.atom_locales.each do |locale|
           key = "#{locale}_atoms"
           atoms[key] = f.object.send(key).to_a.map(&:to_h)
+          destroyed_ids[key] = []
         end
       else
-        atoms = {
-          atoms: f.object.atoms.to_a.map(&:to_h),
-        }
+        atoms = { atoms: f.object.atoms.to_a.map(&:to_h) }
+        destroyed_ids = { atoms: [] }
       end
 
       if f.lookup_model_names.size == 1
@@ -60,6 +61,7 @@ module Folio
 
       data = {
         atoms: atoms,
+        destroyedIds: destroyed_ids,
         namespace: namespace,
         structures: Folio::Atom.structures,
       }

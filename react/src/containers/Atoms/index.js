@@ -36,6 +36,7 @@ class Atoms extends React.PureComponent {
 
   render () {
     const { atoms, form, namespace, structures } = this.props.atoms
+    // TODO SerializedAtoms destroyedIds
 
     return (
       <div>

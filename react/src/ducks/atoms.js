@@ -3,6 +3,7 @@ import { takeEvery, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
+import timestamp from 'utils/timestamp'
 
 // Constants
 
@@ -143,12 +144,14 @@ export const atomsSagas = [
 
 export const initialState = {
   atoms: {},
+  destroyedIds: {},
   namespace: null,
   structures: {},
   form: {
     rootKey: null,
     index: null,
-    atom: null
+    atom: null,
+    edit: null
   }
 }
 
@@ -168,11 +171,12 @@ function atomsReducer (state = initialState, action) {
         form: {
           rootKey: action.rootKey,
           index: action.index,
+          edit: false,
           atom: {
             id: null,
             type: action.atomType,
             data: {},
-            timestamp: Number(new Date())
+            timestamp: timestamp()
           }
         }
       }
@@ -183,7 +187,8 @@ function atomsReducer (state = initialState, action) {
         form: {
           rootKey: action.rootKey,
           index: action.index,
-          atom: atomSelector(state, action.rootKey, action.index)
+          atom: atomSelector(state, action.rootKey, action.index),
+          edit: true
         }
       }
 
@@ -193,15 +198,13 @@ function atomsReducer (state = initialState, action) {
       if (atom.id) {
         return {
           ...state,
+          destroyedIds: {
+            ...state.destroyedIds,
+            [action.rootKey]: [...state.destroyedIds[action.rootKey], atom.id]
+          },
           atoms: {
             ...state.atoms,
-            [action.rootKey]: state.atoms[action.rootKey].map((atom, index) => {
-              if (index === action.index) {
-                return { ...atom, _destroy: true }
-              } else {
-                return { ...atom }
-              }
-            })
+            [action.rootKey]: state.atoms[action.rootKey].filter((a, i) => i !== action.index)
           }
         }
       } else {
@@ -223,24 +226,42 @@ function atomsReducer (state = initialState, action) {
         }
       }
 
-    case SAVE_FORM_ATOM:
+    case SAVE_FORM_ATOM: {
+      const destroyedIds = { ...state.destroyedIds }
+
+      if (state.form.edit) {
+        destroyedIds[state.form.rootKey] = [...state.destroyedIds[state.form.rootKey], state.form.atom.id]
+      }
+
+      const atoms = []
+
+      state.atoms[state.form.rootKey].forEach((atom, index) => {
+        if (index === state.form.index) {
+          atoms.push({
+            ...omit(state.form.atom, ['meta', 'id']),
+            timestamp: timestamp()
+          })
+
+          if (!state.form.edit) {
+            atoms.push(atom)
+          }
+        } else {
+          atoms.push(atom)
+        }
+      })
+
       return {
         ...state,
+        destroyedIds,
         atoms: {
           ...state.atoms,
-          [state.form.rootKey]: state.atoms[state.form.rootKey].map((atom, index) => {
-            // TODO: handle new
-            if (index === state.form.index) {
-              return omit(state.form.atom, ['meta'])
-            } else {
-              return { ...atom }
-            }
-          })
+          [state.form.rootKey]: atoms
         },
         form: {
           ...initialState.form
         }
       }
+    }
 
     case UPDATE_FORM_ATOM_TYPE:
       return {

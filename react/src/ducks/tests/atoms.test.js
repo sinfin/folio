@@ -21,7 +21,7 @@ describe('atomsReducer', () => {
 
   it('setAtomsData', () => {
     expect(state.namespace).toEqual('page')
-    expect(state.atoms.atoms.length).toEqual(3)
+    expect(state.atoms['atoms'].length).toEqual(3)
   })
 
   it('setAtomsData multiple', () => {
@@ -56,6 +56,7 @@ describe('atomsReducer', () => {
     expect(newState.form.rootKey).toEqual('atoms')
     expect(newState.form.atom.type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.form.atom.timestamp).toBeTruthy()
+    expect(newState.form.edit).toEqual(false)
   })
 
   it('editAtom', () => {
@@ -63,30 +64,93 @@ describe('atomsReducer', () => {
     const newState = atomsReducer(state, editAtom('atoms', 0))
     expect(newState.form.rootKey).toEqual('atoms')
     expect(newState.form.atom.id).toEqual(1)
+    expect(newState.form.edit).toEqual(true)
   })
 
   it('removeAtom', () => {
     // TODO test non-persisted atom
-    expect(state.atoms.atoms[0]._destroy).toEqual(undefined)
+    const firstId = state.atoms['atoms'][0].id
+    expect(state.atoms['atoms'].length).toEqual(3)
+    expect(state.destroyedIds['atoms']).toEqual([])
     const newState = atomsReducer(state, removeAtom('atoms', 0))
-    expect(newState.atoms.atoms[0]._destroy).toEqual(true)
+    expect(newState.atoms['atoms'].length).toEqual(2)
+    expect(newState.destroyedIds['atoms']).toEqual([firstId])
   })
 
-  it('saveFormAtom', () => {
-    state = atomsReducer(state, editAtom('atoms', 0))
-    state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
+  it('saveFormAtom - from new', () => {
+    state = atomsReducer(state, newAtom('atoms', 0, 'Dummy::Atom::DaVinci'))
+    state = atomsReducer(state, updateFormAtomValue('text', 'text'))
+    const ids = [0, 1].map((i) => {
+      const atom = state.atoms['atoms'][i]
+      expect(atom._destroy).toEqual(undefined)
+      expect(atom.timestamp).toEqual(undefined)
+      expect(atom.id).toBeTruthy()
+      expect(atom.type).not.toEqual('Dummy::Atom::DaVinci')
+      return atom.id
+    })
+    expect(state.atoms['atoms'].length).toEqual(3)
     const newState = atomsReducer(state, saveFormAtom())
-    expect(state.atoms['atoms'][0].type).not.toEqual('Dummy::Atom::DaVinci')
-    expect(state.atoms['atoms'][0].data.content).not.toEqual('foo')
+    expect(newState.atoms['atoms'].length).toEqual(4)
+    expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
+    expect(newState.atoms['atoms'][0].id).toEqual(undefined)
+    expect(newState.atoms['atoms'][0].timestamp).toBeTruthy()
+
+    const newIndices = [1, 2]
+    newIndices.forEach((newIndex, index) => {
+      const oldId = ids[index]
+      const atom = newState.atoms['atoms'][newIndex]
+      expect(atom._destroy).toEqual(undefined)
+      expect(atom.timestamp).toEqual(undefined)
+      expect(atom.type).not.toEqual('Dummy::Atom::DaVinci')
+      expect(atom.id).toEqual(oldId)
+    })
+  })
+
+  it('saveFormAtom - from edit with id', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    const oldId = state.form.atom.id
+    expect(oldId).toEqual(1)
+    state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
+    expect(state.atoms['atoms'][0]._destroy).toEqual(undefined)
+    expect(state.atoms['atoms'][1].type).not.toEqual('Dummy::Atom::DaVinci')
+    expect(state.atoms['atoms'][1].data.content).not.toEqual('foo')
+    expect(state.atoms['atoms'][1].id).toBeTruthy()
+    expect(state.atoms['atoms'][1].timestamp).toEqual(undefined)
+    expect(state.atoms['atoms'].length).toEqual(3)
+
+    const newState = atomsReducer(state, saveFormAtom())
+    expect(newState.atoms['atoms'].length).toEqual(3)
+    expect(newState.destroyedIds['atoms']).toEqual([oldId])
     expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.atoms['atoms'][0].data.content).toEqual('foo')
+    expect(newState.atoms['atoms'][0].id).toEqual(undefined)
+    expect(newState.atoms['atoms'][0].timestamp).toBeTruthy()
+  })
+
+  it('saveFormAtom - from edit without id', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    expect(state.form.atom.id).toEqual(1)
+    state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
+    expect(state.atoms['atoms'][0]._destroy).toEqual(undefined)
+    expect(state.atoms['atoms'][1].type).not.toEqual('Dummy::Atom::DaVinci')
+    expect(state.atoms['atoms'][1].data.content).not.toEqual('foo')
+    expect(state.atoms['atoms'][1].id).toBeTruthy()
+    expect(state.atoms['atoms'][1].timestamp).toEqual(undefined)
+    expect(state.atoms['atoms'].length).toEqual(3)
+
+    const newState = atomsReducer(state, saveFormAtom())
+    expect(newState.atoms['atoms'].length).toEqual(3)
+    expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
+    expect(newState.atoms['atoms'][0].data.content).toEqual('foo')
+    expect(newState.atoms['atoms'][0].id).toEqual(undefined)
+    expect(newState.atoms['atoms'][0].timestamp).toBeTruthy()
   })
 
   it('moveAtomToIndex', () => {
-    expect(state.atoms.atoms[0].id).toEqual(1)
-    expect(state.atoms.atoms[1].id).toEqual(2)
+    expect(state.atoms['atoms'][0].id).toEqual(1)
+    expect(state.atoms['atoms'][1].id).toEqual(2)
     const newState = atomsReducer(state, moveAtomToIndex('atoms', 1, 0))
-    expect(newState.atoms.atoms[0].id).toEqual(2)
-    expect(newState.atoms.atoms[1].id).toEqual(1)
+    expect(newState.atoms['atoms'][0].id).toEqual(2)
+    expect(newState.atoms['atoms'][1].id).toEqual(1)
   })
 })
