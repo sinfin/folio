@@ -23,6 +23,10 @@ class AtomForm extends React.PureComponent {
     this.props.updateFormAtomValue(key, e.target.value)
   }
 
+  onRichTextChange (html, key) {
+    this.props.updateFormAtomValue(key, html)
+  }
+
   inputType (type) {
     switch (type) {
       case 'text':
@@ -82,23 +86,33 @@ class AtomForm extends React.PureComponent {
             {
               meta.structure[key].type === 'richtext' ? (
                 <RichTextEditor
-                  name={`${prefix}[${key}]`}
+                  name={key}
                   defaultValue={data[key]}
-                  onChange={this.onChange}
+                  onChange={(html) => this.onRichTextChange(html, key)}
                   placeholder={meta.structure[key].label}
                 />
               ) : (
-                <Input
-                  type={this.inputType(meta.structure[key].type)}
-                  name={`${prefix}[${key}]`}
-                  defaultValue={data[key]}
-                  onChange={(e) => this.onChange(e, key)}
-                  placeholder={meta.structure[key].label}
-                >
-                  {(meta.structure[key].collection || []).map((record) => (
-                    <option key={record[1]} value={record[1]}>{record[0]}</option>
-                  ))}
-                </Input>
+                meta.structure[key].collection ? (
+                  <Input
+                    type={this.inputType(meta.structure[key].type)}
+                    name={key}
+                    defaultValue={data[key]}
+                    onChange={(e) => this.onChange(e, key)}
+                    placeholder={meta.structure[key].label}
+                  >
+                    {meta.structure[key].collection.map((record) => (
+                      <option key={record[1]} value={record[1]}>{record[0]}</option>
+                    ))}
+                  </Input>
+                ) : (
+                  <Input
+                    type={this.inputType(meta.structure[key].type)}
+                    name={key}
+                    defaultValue={data[key]}
+                    onChange={(e) => this.onChange(e, key)}
+                    placeholder={meta.structure[key].label}
+                  />
+                )
               )
             }
           </FormGroup>

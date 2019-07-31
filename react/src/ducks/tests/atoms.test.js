@@ -32,6 +32,7 @@ describe('atomsReducer', () => {
 
   it('updateFormAtomType', () => {
     state = atomsReducer(state, editAtom('atoms', 0))
+    expect(state.form.atom.type).not.toEqual('Atom::PageReferenceWithRichtext')
     const newState = atomsReducer(state, updateFormAtomType('Atom::PageReferenceWithRichtext', { content: 'foo' }))
     expect(newState.form.atom.type).toEqual('Atom::PageReferenceWithRichtext')
     expect(newState.form.atom.meta.structure.model).toBeTruthy()
@@ -40,8 +41,10 @@ describe('atomsReducer', () => {
 
   it('updateFormAtomValue', () => {
     state = atomsReducer(state, editAtom('atoms', 0))
+    expect(state.form.atom.type).toEqual('Folio::Atom::Text')
     expect(state.form.atom.data.content).not.toEqual('bar')
     const newState = atomsReducer(state, updateFormAtomValue('content', 'bar'))
+    expect(newState.form.atom.type).toEqual('Folio::Atom::Text')
     expect(newState.form.atom.data.content).toEqual('bar')
   })
 

@@ -13,8 +13,11 @@ class Folio::Console::AtomsPreviewsController < Folio::Console::BaseController
     I18n.available_locales.each do |locale|
       atoms = atom_params["#{locale}_atoms_attributes"]
       next if atoms.blank?
-      @atoms[locale] = atoms.map do |attrs|
-        attrs['type'].constantize.new(attrs.to_h.without('id'))
+      @atoms[locale] = []
+      atoms.each do |attrs|
+        next if attrs['_destroy']
+        @atoms[locale] << attrs['type'].constantize
+                                       .new(attrs.to_h.without('id'))
       end
     end
 

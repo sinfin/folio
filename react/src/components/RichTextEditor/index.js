@@ -7,24 +7,18 @@ class RichTextEditor extends React.PureComponent {
     super(props)
 
     this.state = {
-      editorState: EditorState.createWithContent(convertFromHTML(props.defaultValue || '')),
-      html: props.defaultValue
+      editorState: EditorState.createWithContent(convertFromHTML(props.defaultValue || ''))
     }
   }
 
   onChange = (editorState) => {
-    this.setState({
-      editorState,
-      html: convertToHTML(editorState.getCurrentContent())
-    })
+    this.setState({ editorState })
+    this.props.onChange(convertToHTML(editorState.getCurrentContent()))
   }
 
   render () {
     return (
-      <React.Fragment>
-        <Editor editorState={this.state.editorState} onChange={this.onChange} />
-        <input type='hidden' value={this.state.html} name={this.props.name} />
-      </React.Fragment>
+      <Editor editorState={this.state.editorState} onChange={this.onChange} />
     )
   }
 }

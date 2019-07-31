@@ -34,7 +34,11 @@ class Atoms extends React.PureComponent {
     return (
       <div>
         {Object.keys(atoms).map((key) => (
-          <SerializedAtoms key={key} atoms={atoms[key]} namespace={namespace} />
+          <SerializedAtoms
+            key={key}
+            atoms={atoms[key]}
+            namespace={`${namespace}[${key}_attributes]`}
+          />
         ))}
 
         {form.rootKey && (

@@ -89,7 +89,6 @@ ActiveRecord::Schema.define(version: 2019_07_22_073723) do
     t.datetime "updated_at", null: false
     t.string "placement_type"
     t.bigint "placement_id"
-    t.string "model_type"
     t.string "locale"
     t.jsonb "data", default: {}
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"

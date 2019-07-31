@@ -18,6 +18,6 @@ class ConvertAtomFieldsToJson < ActiveRecord::Migration[5.2]
     remove_column :folio_atoms, :title, :string
     remove_column :folio_atoms, :perex, :text
     remove_column :folio_atoms, :content, :text
-    remove_reference :folio_atoms, :model
+    remove_reference :folio_atoms, :model, polymorphic: true
   end
 end

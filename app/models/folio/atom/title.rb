@@ -24,7 +24,6 @@ end
 #  updated_at     :datetime         not null
 #  placement_type :string
 #  placement_id   :bigint(8)
-#  model_type     :string
 #  locale         :string
 #  data           :jsonb
 #

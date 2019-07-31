@@ -10,7 +10,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   self.table_name = 'folio_atoms'
 
-  after_save :unlink_extra_files, if: :saved_change_to_type?
+  attr_readonly :type
 
   belongs_to :placement,
              polymorphic: true,
@@ -101,28 +101,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       self.type.constantize
     end
 
-    def unlink_extra_files
-      if klass::STRUCTURE[:cover].nil?
-        self.cover_placement.destroy! if cover_placement.present?
-      end
-
-      if klass::STRUCTURE[:images].nil?
-        if image_placements.exists?
-          self.image_placements.each(&:destroy!)
-        end
-      end
-
-      if klass::STRUCTURE[:documents].nil?
-        if document_placements.exists?
-          if klass::STRUCTURE[:document].nil?
-            self.document_placements.each(&:destroy!)
-          else
-            self.document_placements.offset(1).each(&:destroy!)
-          end
-        end
-      end
-    end
-
     def positionable_last_record
       if placement.present?
         if placement.new_record?
@@ -145,7 +123,6 @@ end
 #  updated_at     :datetime         not null
 #  placement_type :string
 #  placement_id   :bigint(8)
-#  model_type     :string
 #  locale         :string
 #  data           :jsonb
 #
