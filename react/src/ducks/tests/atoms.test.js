@@ -5,6 +5,7 @@ import atomsReducer, {
   updateFormAtomValue,
   newAtom,
   editAtom,
+  removeAtom,
   saveFormAtom
 } from '../atoms'
 
@@ -61,6 +62,13 @@ describe('atomsReducer', () => {
     const newState = atomsReducer(state, editAtom('atoms', 0))
     expect(newState.form.rootKey).toEqual('atoms')
     expect(newState.form.atom.id).toEqual(1)
+  })
+
+  it('removeAtom', () => {
+    // TODO test non-persisted atom
+    expect(state.atoms.atoms[0]._destroy).toEqual(undefined)
+    const newState = atomsReducer(state, removeAtom('atoms', 0))
+    expect(newState.atoms.atoms[0]._destroy).toEqual(true)
   })
 
   it('saveFormAtom', () => {

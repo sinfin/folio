@@ -5,6 +5,7 @@ import {
   atomsSelector,
   atomTypesSelector,
   editAtom,
+  removeAtom,
   saveFormAtom,
   closeFormAtom,
   updateFormAtomType,
@@ -21,9 +22,10 @@ class Atoms extends React.PureComponent {
   receiveMessage = (e) => {
     if (e.origin !== window.origin) return
     switch (e.data.type) {
-      case 'editAtom': {
+      case 'editAtom':
         return this.props.dispatch(editAtom(e.data.rootKey, e.data.index))
-      }
+      case 'removeAtom':
+        return this.props.dispatch(removeAtom(e.data.rootKey, e.data.index))
       default: {}
     }
   }

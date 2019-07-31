@@ -21,4 +21,9 @@ class Folio::Console::AtomsPreviewsControllerTest < Folio::Console::BaseControll
     assert_equal('atoms', atoms[0].native['data-root-key'])
     assert_equal('0', atoms[0].native['data-index'])
   end
+
+  test 'preview' do
+    post preview_console_atoms_preview_path, params: JSON.parse('{"atoms_attributes":[{"id":1,"type":"Folio::Atom::Text","position":1,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":2,"type":"Folio::Atom::Text","position":2,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":3,"type":"Folio::Atom::Text","position":3,"placement_type":"Folio::Page","placement_id":1,"data":null,"_destroy":true,"content":"lorem ipsum"}]}')
+    assert_response(:ok)
+  end
 end

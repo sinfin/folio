@@ -8,6 +8,7 @@ import { apiHtmlPost } from 'utils/api'
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
 const NEW_ATOM = 'atoms/NEW_ATOM'
 const EDIT_ATOM = 'atoms/EDIT_ATOM'
+const REMOVE_ATOM = 'atoms/REMOVE_ATOM'
 const SAVE_FORM_ATOM = 'atoms/SAVE_FORM_ATOM'
 const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
 const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
@@ -33,6 +34,10 @@ export function newAtom (rootKey, index, atomType) {
 
 export function editAtom (rootKey, index) {
   return { type: EDIT_ATOM, rootKey, index }
+}
+
+export function removeAtom (rootKey, index) {
+  return { type: REMOVE_ATOM, rootKey, index }
 }
 
 export function closeFormAtom () {
@@ -97,7 +102,10 @@ function * updateAtomPreviews (action) {
 }
 
 function * updateAtomPreviewsSaga () {
-  yield takeEvery(SAVE_FORM_ATOM, updateAtomPreviews)
+  yield [
+    takeEvery(REMOVE_ATOM, updateAtomPreviews),
+    takeEvery(SAVE_FORM_ATOM, updateAtomPreviews)
+  ]
 }
 
 function * showAtomsForm (action) {
@@ -171,6 +179,34 @@ function atomsReducer (state = initialState, action) {
           atom: atomSelector(state, action.rootKey, action.index)
         }
       }
+
+    case REMOVE_ATOM: {
+      const atom = state.atoms[action.rootKey][action.index]
+
+      if (atom.id) {
+        return {
+          ...state,
+          atoms: {
+            ...state.atoms,
+            [action.rootKey]: state.atoms[action.rootKey].map((atom, index) => {
+              if (index === action.index) {
+                return { ...atom, _destroy: true }
+              } else {
+                return { ...atom }
+              }
+            })
+          }
+        }
+      } else {
+        return {
+          ...state,
+          atoms: {
+            ...state.atoms,
+            [action.rootKey]: state.atoms[action.rootKey].filter((atom, i) => i !== action.index)
+          }
+        }
+      }
+    }
 
     case CLOSE_FORM_ATOM:
       return {

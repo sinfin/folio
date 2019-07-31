@@ -20,8 +20,19 @@ handleEditClick = (e) ->
     index: $wrap.data('index')
   window.parent.postMessage(data, window.origin)
 
+handleRemoveClick = (e) ->
+  e.preventDefault()
+  if window.confirm(window.FolioConsole.translations.removePrompt)
+    $wrap = $(this).closest('.f-c-atoms-previews__atom')
+    data =
+      type: 'removeAtom'
+      rootKey: $wrap.data('root-key')
+      index: $wrap.data('index')
+    window.parent.postMessage(data, window.origin)
+
 $(document)
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
+  .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()
 

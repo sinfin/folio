@@ -16,6 +16,7 @@ class Folio::Console::AtomsPreviewsController < Folio::Console::BaseController
       next if atoms.blank?
       @atoms[locale] = []
       atoms.each do |attrs|
+        next if attrs['destroyed']
         next if attrs['_destroy']
         @atoms[locale] << attrs['type'].constantize
                                        .new(attrs.to_h.without('id'))
