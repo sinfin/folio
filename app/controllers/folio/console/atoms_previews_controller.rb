@@ -10,8 +10,9 @@ class Folio::Console::AtomsPreviewsController < Folio::Console::BaseController
   def preview
     @atoms = {}
 
-    I18n.available_locales.each do |locale|
-      atoms = atom_params["#{locale}_atoms_attributes"]
+    I18n.available_locales + [nil].each do |locale|
+      key = locale ? "#{locale}_atoms_attributes" : 'atoms_attributes'
+      atoms = atom_params[key]
       next if atoms.blank?
       @atoms[locale] = []
       atoms.each do |attrs|
