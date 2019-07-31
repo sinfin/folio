@@ -20,7 +20,7 @@ module Folio
     test 'touches page through atoms' do
       page = create(:folio_page)
       image = create(:folio_image)
-      atom = create_atom(::Atom::SingleImage, placement: page, cover: image)
+      atom = create_atom(Dummy::Atom::DaVinci, placement: page, cover: image)
 
       atom_updated_at = atom.reload.updated_at
       page_updated_at = page.reload.updated_at

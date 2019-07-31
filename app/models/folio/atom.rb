@@ -36,6 +36,7 @@ module Folio::Atom
       end
 
       str[klass.to_s] = {
+        attachments: klass::ATTACHMENTS,
         structure: h,
         title: klass.model_name.human,
       }

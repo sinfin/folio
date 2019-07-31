@@ -61,8 +61,6 @@ night_photo = File.new(Rails.root.join('..', 'fixtures', 'folio', 'photos', 'nig
 night_sky.cover = file_pic(night_photo)
 1.times { night_sky.images << file_pic(night_photo) }
 
-# TODO: Atoms
-
 reference = Folio::Page.create!(title: 'Reference',
                                 published: true,
                                 published_at: 1.day.ago)

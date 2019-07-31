@@ -4,9 +4,7 @@ require 'test_helper'
 
 class Folio::FilePlacementTest < ActiveSupport::TestCase
   class MyAtom < Folio::Atom::Base
-    STRUCTURE = {
-      cover: true,
-    }
+    ATTACHMENTS = %i[cover]
   end
 
   test 'placement_title' do

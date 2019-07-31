@@ -32,10 +32,10 @@ describe('atomsReducer', () => {
 
   it('updateFormAtomType', () => {
     state = atomsReducer(state, editAtom('atoms', 0))
-    expect(state.form.atom.type).not.toEqual('Atom::PageReferenceWithRichtext')
-    const newState = atomsReducer(state, updateFormAtomType('Atom::PageReferenceWithRichtext', { content: 'foo' }))
-    expect(newState.form.atom.type).toEqual('Atom::PageReferenceWithRichtext')
-    expect(newState.form.atom.meta.structure.model).toBeTruthy()
+    expect(state.form.atom.type).not.toEqual('Dummy::Atom::DaVinci')
+    const newState = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
+    expect(newState.form.atom.type).toEqual('Dummy::Atom::DaVinci')
+    expect(newState.form.atom.meta.structure.date).toBeTruthy()
     expect(newState.form.atom.data.content).toEqual('foo')
   })
 
@@ -50,9 +50,9 @@ describe('atomsReducer', () => {
 
   it('newAtom', () => {
     expect(state.form.rootKey).toEqual(null)
-    const newState = atomsReducer(state, newAtom('atoms', 0, 'Atom::PageReferenceWithRichtext'))
+    const newState = atomsReducer(state, newAtom('atoms', 0, 'Dummy::Atom::DaVinci'))
     expect(newState.form.rootKey).toEqual('atoms')
-    expect(newState.form.atom.type).toEqual('Atom::PageReferenceWithRichtext')
+    expect(newState.form.atom.type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.form.atom.timestamp).toBeTruthy()
   })
 
@@ -60,16 +60,16 @@ describe('atomsReducer', () => {
     expect(state.form.rootKey).toEqual(null)
     const newState = atomsReducer(state, editAtom('atoms', 0))
     expect(newState.form.rootKey).toEqual('atoms')
-    expect(newState.form.atom.id).toEqual(3)
+    expect(newState.form.atom.id).toEqual(1)
   })
 
   it('saveFormAtom', () => {
     state = atomsReducer(state, editAtom('atoms', 0))
-    state = atomsReducer(state, updateFormAtomType('Atom::PageReferenceWithRichtext', { content: 'foo' }))
+    state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
     const newState = atomsReducer(state, saveFormAtom())
-    expect(state.atoms['atoms'][0].type).not.toEqual('Atom::PageReferenceWithRichtext')
+    expect(state.atoms['atoms'][0].type).not.toEqual('Dummy::Atom::DaVinci')
     expect(state.atoms['atoms'][0].data.content).not.toEqual('foo')
-    expect(newState.atoms['atoms'][0].type).toEqual('Atom::PageReferenceWithRichtext')
+    expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.atoms['atoms'][0].data.content).toEqual('foo')
   })
 })

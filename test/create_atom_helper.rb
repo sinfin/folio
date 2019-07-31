@@ -2,7 +2,6 @@
 
 def create_atom(klass = Folio::Atom::Text, *fill_attrs, **data_attrs)
   attrs = data_attrs.merge(type: klass.to_s)
-  attrs[:locale] ||= I18n.locale
   attrs[:placement] ||= create(:folio_page)
 
   fill_attrs.each do |field|

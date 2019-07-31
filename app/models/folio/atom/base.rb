@@ -4,6 +4,20 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   include Folio::HasAttachments
   include Folio::Positionable
 
+  KNOWN_STRUCTURE_TYPES = %i[
+    string
+    text
+    richtext
+    code
+    integer
+    float
+    color
+    date
+    datetime
+  ]
+
+  ATTACHMENTS = []
+
   STRUCTURE = {
     title: :string,
   }
@@ -11,6 +25,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   self.table_name = 'folio_atoms'
 
   attr_readonly :type
+  after_initialize :validate_structure
 
   belongs_to :placement,
              polymorphic: true,
@@ -108,6 +123,14 @@ class Folio::Atom::Base < Folio::ApplicationRecord
         else
           placement.reload.atoms.last
         end
+      end
+    end
+
+    def validate_structure
+      klass::STRUCTURE.values.each do |value|
+        next if value.is_a?(Array)
+        next if KNOWN_STRUCTURE_TYPES.include?(value)
+        fail ArgumentError, "Unknown field type: #{value}"
       end
     end
 end

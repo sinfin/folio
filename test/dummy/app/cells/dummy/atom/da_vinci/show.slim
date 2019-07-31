@@ -1,0 +1,8 @@
+.d-atom.d-atom-da-vinci
+  .container
+    ul
+      - model.class::STRUCTURE.keys.each do |key|
+        - if model.send(key).present?
+          b = key
+          br
+          = model.send(key)

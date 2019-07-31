@@ -74,7 +74,6 @@ export const atomTypesSelector = (state) => {
 
 export const serializedAtomsSelector = (state) => {
   const h = {}
-  console.log(state.atoms)
   Object.keys(state.atoms.atoms).forEach((rootKey) => {
     h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => ({
       ...atom,
@@ -200,8 +199,7 @@ function atomsReducer (state = initialState, action) {
         }
       }
 
-    case UPDATE_FORM_ATOM_TYPE: {
-      console.log(state.form.atom)
+    case UPDATE_FORM_ATOM_TYPE:
       return {
         ...state,
         form: {
@@ -214,7 +212,6 @@ function atomsReducer (state = initialState, action) {
           }
         }
       }
-    }
 
     case UPDATE_FORM_ATOM_VALUE:
       return {

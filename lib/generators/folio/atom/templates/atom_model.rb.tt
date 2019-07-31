@@ -1,16 +1,9 @@
 # frozen_string_literal: true
 
 class <%= global_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
-  STRUCTURE = {
-    title: :string,
-    perex: :string,
-    content: :string,
-    cover: true,
-    images: true,
-    document: true,
-    documents: true,
-    model: nil,
-  }
+  ATTACHMENTS = %i[]
+
+  STRUCTURE = {}
 
   def self.cell_name
     '<%= atom_cell_name %>'

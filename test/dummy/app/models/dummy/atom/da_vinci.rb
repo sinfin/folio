@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
-  ATTACHMENTS = %i[]
+class Dummy::Atom::DaVinci < Folio::Atom::Base
+  ATTACHMENTS = %i[
+    cover
+    images
+    document
+    documents
+  ]
 
-  STRUCTURE = {}
+  STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }]
 
-  def self.molecule_cell_name
-    '<%= molecule_cell_name %>'
+  def self.cell_name
+    'dummy/atom/da_vinci'
   end
 end
 

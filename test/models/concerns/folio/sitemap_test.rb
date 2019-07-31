@@ -10,10 +10,10 @@ class Folio::SitemapTest < ActiveSupport::TestCase
     page.cover = create(:folio_image)
     image_count += 1
 
-    create_atom(::Atom::SingleImage, :cover, placement: page)
+    create_atom(Dummy::Atom::DaVinci, :cover, placement: page)
     image_count += 1
 
-    create_atom(::Atom::Gallery, :images, placement: page)
+    create_atom(Dummy::Atom::DaVinci, :images, placement: page)
     image_count += 1
 
     Folio::Image.find_each do |img|

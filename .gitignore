@@ -9,5 +9,6 @@ test/dummy/public/sitemaps
 test/dummy/public/sitemap.*
 test/dummy/.env
 test/dummy/public/system/dragonfly
+test/dummy/public/assets
 test/dummy/vendor/assets/redactor/*.css
 test/dummy/vendor/assets/redactor/*.js
