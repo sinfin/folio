@@ -8,6 +8,7 @@ import {
   removeAtom,
   saveFormAtom,
   closeFormAtom,
+  moveAtomToIndex,
   updateFormAtomType,
   updateFormAtomValue
 } from 'ducks/atoms'
@@ -24,6 +25,9 @@ class Atoms extends React.PureComponent {
     switch (e.data.type) {
       case 'editAtom':
         return this.props.dispatch(editAtom(e.data.rootKey, e.data.index))
+      case 'moveAtomToIndex':
+        return this.props.dispatch(moveAtomToIndex(e.data.rootKey, e.data.index, e.data.targetIndex))
+
       case 'removeAtom':
         return this.props.dispatch(removeAtom(e.data.rootKey, e.data.index))
       default: {}

@@ -4,7 +4,10 @@ class Folio::Console::AtomsPreviewsController < Folio::Console::BaseController
   layout 'folio/console/atoms_previews'
 
   def show
-    @atoms = Folio::Atom::Base.where(id: params[:ids]).to_a.group_by(&:locale)
+    @atoms = Folio::Atom::Base.ordered
+                              .where(id: params[:ids])
+                              .to_a
+                              .group_by(&:locale)
   end
 
   def preview

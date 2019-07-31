@@ -11,6 +11,24 @@ selectLocale = (locale) ->
     $this = $(this)
     $this.prop('hidden', $this.data('locale') isnt locale)
 
+handleArrowClick = (e) ->
+  e.preventDefault()
+  $this = $(this)
+  $wrap = $this.closest('.f-c-atoms-previews__atom')
+  index = $wrap.data('index')
+  if $this.hasClass('f-c-atoms-previews__button--arrow-up')
+    return if $wrap.is(':first-child')
+    targetIndex = index - 1
+  else
+    return if $wrap.is(':last-child')
+    targetIndex = index + 1
+  data =
+    type: 'moveAtomToIndex'
+    rootKey: $wrap.data('root-key')
+    index: index
+    targetIndex: targetIndex
+  window.parent.postMessage(data, window.origin)
+
 handleEditClick = (e) ->
   e.preventDefault()
   $wrap = $(this).closest('.f-c-atoms-previews__atom')
@@ -31,6 +49,7 @@ handleRemoveClick = (e) ->
     window.parent.postMessage(data, window.origin)
 
 $(document)
+  .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
   .on 'click', 'a, button', (e) -> e.preventDefault()

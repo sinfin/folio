@@ -2,6 +2,7 @@ import { mapValues, sortBy, omit } from 'lodash'
 import { takeEvery, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost } from 'utils/api'
+import arrayMove from 'utils/arrayMove'
 
 // Constants
 
@@ -13,6 +14,7 @@ const SAVE_FORM_ATOM = 'atoms/SAVE_FORM_ATOM'
 const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
 const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
 const UPDATE_FORM_ATOM_VALUE = 'atoms/UPDATE_FORM_ATOM_VALUE'
+const MOVE_ATOM_TO_INDEX = 'atoms/MOVE_ATOM_TO_INDEX'
 
 // Actions
 
@@ -38,6 +40,10 @@ export function editAtom (rootKey, index) {
 
 export function removeAtom (rootKey, index) {
   return { type: REMOVE_ATOM, rootKey, index }
+}
+
+export function moveAtomToIndex (rootKey, index, targetIndex) {
+  return { type: MOVE_ATOM_TO_INDEX, rootKey, index, targetIndex }
 }
 
 export function closeFormAtom () {
@@ -104,6 +110,7 @@ function * updateAtomPreviews (action) {
 function * updateAtomPreviewsSaga () {
   yield [
     takeEvery(REMOVE_ATOM, updateAtomPreviews),
+    takeEvery(MOVE_ATOM_TO_INDEX, updateAtomPreviews),
     takeEvery(SAVE_FORM_ATOM, updateAtomPreviews)
   ]
 }
@@ -261,6 +268,15 @@ function atomsReducer (state = initialState, action) {
               [action.key]: action.value
             }
           }
+        }
+      }
+
+    case MOVE_ATOM_TO_INDEX:
+      return {
+        ...state,
+        atoms: {
+          ...state.atoms,
+          [action.rootKey]: arrayMove(state.atoms[action.rootKey], action.index, action.targetIndex)
         }
       }
 

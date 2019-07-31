@@ -6,7 +6,8 @@ import atomsReducer, {
   newAtom,
   editAtom,
   removeAtom,
-  saveFormAtom
+  saveFormAtom,
+  moveAtomToIndex
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -79,5 +80,13 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'][0].data.content).not.toEqual('foo')
     expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.atoms['atoms'][0].data.content).toEqual('foo')
+  })
+
+  it('moveAtomToIndex', () => {
+    expect(state.atoms.atoms[0].id).toEqual(1)
+    expect(state.atoms.atoms[1].id).toEqual(2)
+    const newState = atomsReducer(state, moveAtomToIndex('atoms', 1, 0))
+    expect(newState.atoms.atoms[0].id).toEqual(2)
+    expect(newState.atoms.atoms[1].id).toEqual(1)
   })
 })
