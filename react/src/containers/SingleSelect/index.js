@@ -26,7 +26,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
     return (
       <Fragment>
         <FileFilter />
-        <UploadTagger />
+        <UploadTagger filesKey={this.props.filesKey} />
       </Fragment>
     )
   }

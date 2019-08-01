@@ -5,7 +5,7 @@ import { filter, find } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
 import { filteredFilesSelector } from 'ducks/filters'
-import { uploadsSelector } from 'ducks/uploads'
+import { makeUploadsSelector } from 'ducks/uploads'
 import { selectedFileIdsSelector } from 'ducks/filePlacements'
 
 // Constants
@@ -21,16 +21,16 @@ const UPDATED_FILES = 'files/UPDATED_FILES'
 
 // Actions
 
-export function getFiles (key) {
-  return { type: GET_FILES, key }
+export function getFiles (filesKey) {
+  return { type: GET_FILES, filesKey }
 }
 
-export function getFilesSuccess (key, records) {
-  return { type: GET_FILES_SUCCESS, key, records }
+export function getFilesSuccess (filesKey, records) {
+  return { type: GET_FILES_SUCCESS, filesKey, records }
 }
 
-export function uploadedFile (file) {
-  return { type: UPLOADED_FILE, file }
+export function uploadedFile (filesKey, file) {
+  return { type: UPLOADED_FILE, filesKey, file }
 }
 
 export function thumbnailGenerated (temporaryUrl, url) {
@@ -60,7 +60,7 @@ function * getFilesPerform (action) {
     const fileType = yield select(fileTypeSelector)
     const filesUrl = fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images'
     const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(action.key, records.data))
+    yield put(getFilesSuccess(action.filesKey, records.data))
   } catch (e) {
     flashError(e.message)
   }
@@ -113,7 +113,7 @@ export const filesSelector = (state) => {
 }
 
 export const filesForListSelector = (state) => {
-  const uploads = uploadsSelector(state)
+  const uploads = makeUploadsSelector(state)
   let files
 
   if (uploads.uploadedIds.length) {
@@ -163,8 +163,8 @@ function filesReducer (state = initialState, action) {
     case GET_FILES:
       return {
         ...state,
-        [action.key]: {
-          ...state[action.key],
+        [action.filesKey]: {
+          ...state[action.filesKey],
           loading: true
         }
       }
@@ -172,7 +172,8 @@ function filesReducer (state = initialState, action) {
     case GET_FILES_SUCCESS:
       return {
         ...state,
-        [action.key]: {
+        [action.filesKey]: {
+          ...state[action.filesKey],
           records: action.records,
           loading: false,
           loaded: true
@@ -182,7 +183,10 @@ function filesReducer (state = initialState, action) {
     case UPLOADED_FILE:
       return {
         ...state,
-        records: [action.file, ...state.records]
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: [action.file, ...state.records]
+        }
       }
 
     case THUMBNAIL_GENERATED: {

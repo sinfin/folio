@@ -14,7 +14,7 @@ import {
   success,
   error,
   progress,
-  uploadsSelector
+  makeUploadsSelector
 } from 'ducks/uploads'
 import { fileTypeSelector } from 'ducks/app'
 
@@ -45,16 +45,16 @@ class Uploader extends Component {
   dropzone = null
 
   eventHandlers () {
-    const { dispatch } = this.props
+    const { dispatch, filesKey } = this.props
 
     return {
-      addedfile: (file) => dispatch(addedFile(file)),
-      thumbnail: (file, dataUrl) => dispatch(thumbnail(file, dataUrl)),
-      success: (file, response) => dispatch(success(file, response)),
+      addedfile: (file) => dispatch(addedFile(filesKey, file)),
+      thumbnail: (file, dataUrl) => dispatch(thumbnail(filesKey, file, dataUrl)),
+      success: (file, response) => dispatch(success(filesKey, file, response)),
       error: (file, message) => {
-        dispatch(error(file, flashMessageFromApiErrors(message)))
+        dispatch(error(filesKey, file, flashMessageFromApiErrors(message)))
       },
-      uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
+      uploadprogress: (file, percentage) => dispatch(progress(filesKey, file, Math.round(percentage))),
       init: (dropzone) => { this.dropzone = dropzone }
     }
   }
@@ -113,9 +113,9 @@ class Uploader extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, props) => ({
   fileType: fileTypeSelector(state),
-  uploads: uploadsSelector(state)
+  uploads: makeUploadsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -22,7 +22,7 @@ class IndexMode extends LazyLoadCheckingComponent {
         <Card
           filters={<FileFilter />}
         >
-          <UploadTagger />
+          <UploadTagger filesKey={this.props.filesKey} />
 
           <FileList
             files={this.props.filesForList}

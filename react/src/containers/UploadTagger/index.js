@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { tagsSelector } from 'ducks/filters'
 import {
   setUploadTags,
-  uploadsSelector
+  makeUploadsSelector
 } from 'ducks/uploads'
 
 import TagsInput from 'components/TagsInput'
@@ -23,7 +23,7 @@ class UploadTagger extends React.PureComponent {
   }
 
   setUploadTags = () => {
-    this.props.dispatch(setUploadTags(this.state.tags))
+    this.props.dispatch(setUploadTags(this.props.filesKey, this.state.tags))
   }
 
   render () {
@@ -50,8 +50,8 @@ class UploadTagger extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => ({
-  uploads: uploadsSelector(state),
+const mapStateToProps = (state, props) => ({
+  uploads: makeUploadsSelector(props.filesKey)(state),
   tags: tagsSelector(state)
 })
 

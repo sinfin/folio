@@ -65,7 +65,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
           header={window.FolioConsole.translations[`available${headerKey}`]}
           filters={<FileFilter />}
         >
-          <UploadTagger />
+          <UploadTagger filesKey={this.props.filesKey} />
 
           <FileList
             files={this.props.unselectedFilesForList}
