@@ -54,7 +54,41 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       placement_type: placement_type,
       placement_id: placement_id,
       data: data || {},
-    }
+    }.merge(attachments_to_h)
+  end
+
+  def attachments_to_h
+    h = {}
+
+    klass::ATTACHMENTS.each do |key|
+      reflection = klass.reflections[key.to_s]
+      plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+      placement_key = klass.reflections[key.to_s].options[:through]
+
+      if plural
+        if (placements = send(placement_key)).present?
+          h["#{placement_key}_attributes".to_sym] = placements.map do |placement|
+            {
+              file_id: placement.file_id,
+              file: placement.file.to_h,
+              alt: placement.alt,
+              title: placement.title,
+            }
+          end
+        end
+      else
+        if (placement = send(placement_key)).present?
+          h["#{placement_key}_attributes".to_sym] = {
+            file_id: placement.file_id,
+            file: placement.file.to_h,
+            alt: placement.alt,
+            title: placement.title,
+          }
+        end
+      end
+    end
+
+    h
   end
 
   def self.scoped_model_resource(resource)

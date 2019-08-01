@@ -36,6 +36,16 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def to_h
+    {
+      thumb: is_a?(Folio::Image) ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
+      file_size: file_size,
+      file_name: file_name,
+      type: type,
+      id: id,
+    }
+  end
+
   private
 
     def touch_placements

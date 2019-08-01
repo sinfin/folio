@@ -46,7 +46,7 @@ class App extends Component {
   }
 
   shouldAutoLoadFiles () {
-    return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'modal-multi-select'
+    return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'modal-multi-select' && this.props.app.mode !== 'atoms'
   }
 
   renderMode () {

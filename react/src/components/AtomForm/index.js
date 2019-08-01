@@ -3,6 +3,7 @@ import { FormGroup, Input, Label } from 'reactstrap'
 import { isEqual } from 'lodash'
 
 import RichTextEditor from 'components/RichTextEditor'
+import SingleSelectTrigger from 'components/SingleSelectTrigger'
 
 class AtomForm extends React.PureComponent {
   onTypeChange = (e) => {
@@ -67,7 +68,7 @@ class AtomForm extends React.PureComponent {
               className='btn btn-outline f-c-atoms-settings-header__button'
               onClick={this.props.saveFormAtom}
             >
-              Hotovo
+              {window.FolioConsole.translations.done}
             </button>
 
             <button
@@ -78,6 +79,18 @@ class AtomForm extends React.PureComponent {
               close
             </button>
           </div>
+        </div>
+
+        <div className='d-flex'>
+          {meta.attachments.map((attachmentType) => (
+            attachmentType.plural ? null : (
+              <SingleSelectTrigger
+                key={attachmentType.type}
+                attachmentType={attachmentType}
+                data={this.props.atom[`${attachmentType.type}_attributes`]}
+              />
+            )
+          ))}
         </div>
 
         {Object.keys(meta.structure).map((key) => (

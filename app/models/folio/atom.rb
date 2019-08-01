@@ -35,8 +35,21 @@ module Folio::Atom
         end
       end
 
+      attachments = klass::ATTACHMENTS.map do |key|
+        reflection = klass.reflections[key.to_s]
+        plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+        file_type = reflection.source_reflection.options[:class_name]
+
+        {
+          type: klass.reflections[key.to_s].options[:through],
+          label: klass.human_attribute_name(key),
+          plural: plural,
+          file_type: file_type,
+        }
+      end
+
       str[klass.to_s] = {
-        attachments: klass::ATTACHMENTS,
+        attachments: attachments,
         structure: h,
         title: klass.model_name.human,
       }
