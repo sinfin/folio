@@ -33,24 +33,24 @@ export function uploadedFile (filesKey, file) {
   return { type: UPLOADED_FILE, filesKey, file }
 }
 
-export function thumbnailGenerated (temporaryUrl, url) {
-  return { type: THUMBNAIL_GENERATED, temporaryUrl, url }
+export function thumbnailGenerated (filesKey, temporaryUrl, url) {
+  return { type: THUMBNAIL_GENERATED, filesKey, temporaryUrl, url }
 }
 
-export function updatedFiles (files) {
-  return { type: UPDATED_FILES, files }
+export function updatedFiles (filesKey, files) {
+  return { type: UPDATED_FILES, filesKey, files }
 }
 
-export function updateFile (file, attributes) {
-  return { type: UPDATE_FILE, file, attributes }
+export function updateFile (filesKey, file, attributes) {
+  return { type: UPDATE_FILE, filesKey, file, attributes }
 }
 
-export function updateFileSuccess (file, response) {
-  return { type: UPDATE_FILE_SUCCESS, file, response }
+export function updateFileSuccess (filesKey, file, response) {
+  return { type: UPDATE_FILE_SUCCESS, filesKey, file, response }
 }
 
-export function updateFileFailure (file) {
-  return { type: UPDATE_FILE_FAILURE, file }
+export function updateFileFailure (filesKey, file) {
+  return { type: UPDATE_FILE_FAILURE, filesKey, file }
 }
 
 // Sagas
@@ -82,10 +82,10 @@ function * updateFilePerform (action) {
       }
     }
     const response = yield call(apiPut, fileUrl, data)
-    yield put(updateFileSuccess(action.file, response.data))
+    yield put(updateFileSuccess(action.filesKey, action.file, response.data))
   } catch (e) {
     flashError(e.message)
-    yield put(updateFileFailure(action.file))
+    yield put(updateFileFailure(action.filesKey, action.file))
   }
 }
 
@@ -185,76 +185,91 @@ function filesReducer (state = initialState, action) {
         ...state,
         [action.filesKey]: {
           ...state[action.filesKey],
-          records: [action.file, ...state.records]
+          records: [action.file, ...state[action.filesKey].records]
         }
       }
 
     case THUMBNAIL_GENERATED: {
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.attributes.thumb !== action.temporaryUrl) return record
-          return {
-            ...record,
-            attributes: {
-              ...record.attributes,
-              thumb: action.url
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.attributes.thumb !== action.temporaryUrl) return record
+            return {
+              ...record,
+              attributes: {
+                ...record.attributes,
+                thumb: action.url
+              }
             }
-          }
-        })
+          })
+        }
       }
     }
 
     case UPDATE_FILE:
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.id === action.file.id) {
-            return {
-              ...record,
-              attributes: {
-                ...record.attributes,
-                ...action.attributes,
-                updating: true
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.file.id) {
+              return {
+                ...record,
+                attributes: {
+                  ...record.attributes,
+                  ...action.attributes,
+                  updating: true
+                }
               }
+            } else {
+              return record
             }
-          } else {
-            return record
-          }
-        })
+          })
+        }
       }
 
     case UPDATE_FILE_SUCCESS:
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.id === action.response.id) {
-            return action.response
-          } else {
-            return record
-          }
-        })
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.response.id) {
+              return action.response
+            } else {
+              return record
+            }
+          })
+        }
       }
 
     case UPDATE_FILE_FAILURE:
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.id === action.file.id) {
-            return { ...action.file }
-          } else {
-            return record
-          }
-        })
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.file.id) {
+              return { ...action.file }
+            } else {
+              return record
+            }
+          })
+        }
       }
 
     case UPDATED_FILES:
       return {
         ...state,
-        records: state.records.map((record) => {
-          const found = find(action.files, { id: record.id })
-          return found || record
-        })
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            const found = find(action.files, { id: record.id })
+            return found || record
+          })
+        }
       }
 
     default:

@@ -70,7 +70,7 @@ function * uploadedFilePerform (action) {
   const upload = yield select(makeUploadSelector(action.filesKey)(id))
   const data = action.response.data
   yield put(finishedUpload(action.file, data.id))
-  yield put(uploadedFile({
+  yield put(uploadedFile(action.filesKey, {
     ...data,
     attributes: {
       ...data.attributes,

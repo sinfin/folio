@@ -34,7 +34,7 @@ class Modal extends Component {
     const attributes = {
       tags: modal.newTags || []
     }
-    this.props.dispatch(updateFile(modal.file, attributes))
+    this.props.dispatch(updateFile(this.props.filesKey, modal.file, attributes))
     this.props.dispatch(closeModal())
   }
 

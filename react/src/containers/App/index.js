@@ -40,7 +40,7 @@ class App extends Component {
       received: (data) => {
         if (!data) return
         if (!data.temporary_url || !data.url) return
-        this.props.dispatch(thumbnailGenerated(data.temporary_url, data.url))
+        this.props.dispatch(thumbnailGenerated('images', data.temporary_url, data.url))
       }
     })
   }
