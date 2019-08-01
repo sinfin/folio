@@ -10,14 +10,28 @@ import {
   closeFormAtom,
   moveAtomToIndex,
   updateFormAtomType,
-  updateFormAtomValue
+  updateFormAtomValue,
+  updateFormAtomAttachments,
+  removeFormAtomAttachment
 } from 'ducks/atoms'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
+import { confirm } from 'utils/confirmed'
+
+import { FILE_TRIGGER_EVENT } from './constants'
 
 class Atoms extends React.PureComponent {
   componentDidMount () {
     window.addEventListener('message', this.receiveMessage, false)
+    const $ = window.jQuery
+    if (!$) return
+    $(document).on(FILE_TRIGGER_EVENT, (e, data) => { this.handleFileTrigger(data) })
+  }
+
+  componentWillUnmount () {
+    const $ = window.jQuery
+    if (!$) return
+    $(document).off(FILE_TRIGGER_EVENT)
   }
 
   receiveMessage = (e) => {
@@ -34,9 +48,18 @@ class Atoms extends React.PureComponent {
     }
   }
 
+  removeFormAtomAttachment = (attachmentKey) => {
+    if (confirm()) {
+      this.props.dispatch(removeFormAtomAttachment(attachmentKey))
+    }
+  }
+
+  handleFileTrigger ({ attachmentKey, data }) {
+    this.props.dispatch(updateFormAtomAttachments(attachmentKey, data))
+  }
+
   render () {
-    const { atoms, form, namespace, structures } = this.props.atoms
-    // TODO SerializedAtoms destroyedIds
+    const { atoms, destroyedIds, form, namespace, structures } = this.props.atoms
 
     return (
       <div>
@@ -45,6 +68,7 @@ class Atoms extends React.PureComponent {
             key={key}
             atoms={atoms[key]}
             namespace={`${namespace}[${key}_attributes]`}
+            destroyedIds={destroyedIds[key]}
           />
         ))}
 
@@ -58,6 +82,7 @@ class Atoms extends React.PureComponent {
             closeFormAtom={() => this.props.dispatch(closeFormAtom())}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
+            removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}
           />

@@ -15,6 +15,16 @@ class ModalSelect extends Component {
       this.onOpen(e.target)
       this.jQueryModal().modal('show')
     })
+
+    const eventName = this.eventName()
+    if (eventName) {
+      $(document).on(eventName, (e, eventData) => {
+        this.setState(eventData)
+        this.props.loadFiles()
+        this.onOpen(e.target)
+        this.jQueryModal().modal('show')
+      })
+    }
   }
 
   onOpen (el) {
@@ -22,6 +32,9 @@ class ModalSelect extends Component {
 
   selector () {
     throw new Error('Not implemented')
+  }
+
+  eventName () {
   }
 
   selectingDocument () {

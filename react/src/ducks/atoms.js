@@ -16,6 +16,8 @@ const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
 const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
 const UPDATE_FORM_ATOM_VALUE = 'atoms/UPDATE_FORM_ATOM_VALUE'
 const MOVE_ATOM_TO_INDEX = 'atoms/MOVE_ATOM_TO_INDEX'
+const UPDATE_FORM_ATOM_ATTACHMENTS = 'atoms/UPDATE_FORM_ATOM_ATTACHMENTS'
+const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
 
 // Actions
 
@@ -55,6 +57,14 @@ export function saveFormAtom () {
   return { type: SAVE_FORM_ATOM }
 }
 
+export function updateFormAtomAttachments (attachmentKey, data) {
+  return { type: UPDATE_FORM_ATOM_ATTACHMENTS, attachmentKey, data }
+}
+
+export function removeFormAtomAttachment (attachmentKey) {
+  return { type: REMOVE_FORM_ATOM_ATTACHMENT, attachmentKey }
+}
+
 // Selectors
 
 export const atomsSelector = (state) => ({
@@ -87,11 +97,20 @@ export const atomTypesSelector = (state) => {
 export const serializedAtomsSelector = (state) => {
   const h = {}
   Object.keys(state.atoms.atoms).forEach((rootKey) => {
-    h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => ({
-      ...atom,
-      ...atom.data,
-      data: null
-    }))
+    h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => {
+      const base = {
+        ...atom,
+        ...atom.data,
+        data: null
+      }
+
+      state.atoms.structures[atom.type]['attachments'].forEach(({ type }) => {
+        const key = `${type}_attributes`
+        if (!base[key]) return
+        base[key] = omit(base[key], ['id', 'file'])
+      })
+      return base
+    })
   })
   return h
 }
@@ -300,6 +319,32 @@ function atomsReducer (state = initialState, action) {
           [action.rootKey]: arrayMove(state.atoms[action.rootKey], action.index, action.targetIndex)
         }
       }
+
+    case UPDATE_FORM_ATOM_ATTACHMENTS: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atom: {
+            ...state.form.atom,
+            [action.attachmentKey]: {
+              ...state.form.atom[action.attachmentKey],
+              ...action.data
+            }
+          }
+        }
+      }
+    }
+
+    case REMOVE_FORM_ATOM_ATTACHMENT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atom: omit(state.form.atom, [action.attachmentKey])
+        }
+      }
+    }
 
     default:
       return state

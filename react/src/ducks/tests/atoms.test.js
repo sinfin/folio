@@ -7,7 +7,9 @@ import atomsReducer, {
   editAtom,
   removeAtom,
   saveFormAtom,
-  moveAtomToIndex
+  moveAtomToIndex,
+  updateFormAtomAttachments,
+  removeFormAtomAttachment
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -152,5 +154,20 @@ describe('atomsReducer', () => {
     const newState = atomsReducer(state, moveAtomToIndex('atoms', 1, 0))
     expect(newState.atoms['atoms'][0].id).toEqual(2)
     expect(newState.atoms['atoms'][1].id).toEqual(1)
+  })
+
+  it('updateFormAtomAttachments, removeFormAtomAttachment', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci'))
+    expect(state.form.atom.cover_placement_attributes).toEqual(undefined)
+    const data = {
+      file_id: 1,
+      file: { id: 1 }
+    }
+    const newState = atomsReducer(state, updateFormAtomAttachments('cover_placement_attributes', data))
+    expect(newState.form.atom.cover_placement_attributes).toEqual(data)
+
+    const finalState = atomsReducer(newState, removeFormAtomAttachment('cover_placement_attributes'))
+    expect(finalState.form.atom.cover_placement_attributes).toEqual(undefined)
   })
 })

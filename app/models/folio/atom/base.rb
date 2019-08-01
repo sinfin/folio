@@ -125,6 +125,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     }
   end
 
+  def self.attachment_placements
+    self::ATTACHMENTS.map do |key|
+      self.reflections[key.to_s].options[:through]
+    end
+  end
+
   def method_missing(method_name, *arguments, &block)
     name_without_operator = method_name.to_s.gsub('=', '').to_sym
     if respond_to_missing?(name_without_operator)

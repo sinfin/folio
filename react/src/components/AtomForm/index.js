@@ -88,6 +88,7 @@ class AtomForm extends React.PureComponent {
                 key={attachmentType.type}
                 attachmentType={attachmentType}
                 data={this.props.atom[`${attachmentType.type}_attributes`]}
+                remove={() => this.props.removeFormAtomAttachment(`${attachmentType.type}_attributes`)}
               />
             )
           ))}

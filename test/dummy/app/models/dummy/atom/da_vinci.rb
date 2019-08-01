@@ -4,8 +4,6 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
   ATTACHMENTS = %i[
     cover
     images
-    document
-    documents
   ]
 
   STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }]

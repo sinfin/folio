@@ -1,9 +1,23 @@
 import React from 'react'
+import { Button } from 'reactstrap'
 
+import { EVENT_NAME } from 'containers/ModalSelect/ModalSingleSelect/constants'
+import { FILE_TRIGGER_EVENT } from 'containers/Atoms/constants'
 import SingleSelectTriggerWrap from './styled/SingleSelectTriggerWrap'
 
-function SingleSelectTrigger ({ data, attachmentType }) {
+function triggerModal (fileType, data) {
+  window.jQuery(document).trigger(`${EVENT_NAME}/${fileType}`, [data])
+}
+
+function SingleSelectTrigger ({ data, attachmentType, remove }) {
   const isDocument = attachmentType.file_type === 'Folio::Document'
+  const trigger = () => {
+    const data = {
+      triggerEvent: FILE_TRIGGER_EVENT,
+      attachmentKey: `${attachmentType.type}_attributes`
+    }
+    triggerModal(attachmentType.file_type, data)
+  }
 
   return (
     <SingleSelectTriggerWrap className='form-group folio-console-react-picker folio-console-react-picker--single'>
@@ -26,15 +40,19 @@ function SingleSelectTrigger ({ data, attachmentType }) {
                 )}
 
                 <div className='folio-console-hover-destroy'>
-                  <i className='fa fa-edit' />
-                  <i className='fa fa-times-circle' />
+                  <i className='fa fa-edit' onClick={trigger} />
+                  <i className='fa fa-times-circle' onClick={remove} />
                 </div>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <p>nope</p>
+        <div>
+          <Button color='success' onClick={trigger} className='px-3'>
+            {window.FolioConsole.translations.add}
+          </Button>
+        </div>
       )}
     </SingleSelectTriggerWrap>
   )
