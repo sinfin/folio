@@ -85,10 +85,10 @@ class AtomForm extends React.PureComponent {
           {meta.attachments.map((attachmentType) => (
             attachmentType.plural ? null : (
               <SingleSelectTrigger
-                key={attachmentType.type}
+                key={attachmentType.key}
                 attachmentType={attachmentType}
-                data={this.props.atom[`${attachmentType.type}_attributes`]}
-                remove={() => this.props.removeFormAtomAttachment(`${attachmentType.type}_attributes`)}
+                data={this.props.atom[attachmentType.key]}
+                remove={() => this.props.removeFormAtomAttachment(attachmentType.key)}
               />
             )
           ))}

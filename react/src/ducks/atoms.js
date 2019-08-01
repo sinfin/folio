@@ -104,8 +104,7 @@ export const serializedAtomsSelector = (state) => {
         data: null
       }
 
-      state.atoms.structures[atom.type]['attachments'].forEach(({ type }) => {
-        const key = `${type}_attributes`
+      state.atoms.structures[atom.type]['attachments'].forEach(({ key }) => {
         if (!base[key]) return
         base[key] = omit(base[key], ['id', 'file'])
       })

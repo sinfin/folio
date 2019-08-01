@@ -14,7 +14,7 @@ function SingleSelectTrigger ({ data, attachmentType, remove }) {
   const trigger = () => {
     const data = {
       triggerEvent: FILE_TRIGGER_EVENT,
-      attachmentKey: `${attachmentType.type}_attributes`
+      attachmentKey: attachmentType.key
     }
     triggerModal(attachmentType.file_type, data)
   }

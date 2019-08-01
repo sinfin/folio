@@ -41,7 +41,7 @@ module Folio::Atom
         file_type = reflection.source_reflection.options[:class_name]
 
         {
-          type: klass.reflections[key.to_s].options[:through],
+          key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
           label: klass.human_attribute_name(key),
           plural: plural,
           file_type: file_type,
