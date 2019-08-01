@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import MultiSelect from 'containers/MultiSelect'
 import ModalScroll from 'components/ModalScroll'
-import { setOriginalPlacements, filePlacementsSelector } from 'ducks/filePlacements'
+import { setOriginalPlacements, makeFilePlacementsSelector } from 'ducks/filePlacements'
 import numberToHumanSize from 'utils/numberToHumanSize'
 
 import ModalSelect from '../'
@@ -160,8 +160,8 @@ class ModalMultiSelect extends ModalSelect {
   }
 }
 
-const mapStateToProps = (state) => ({
-  filePlacements: filePlacementsSelector(state)
+const mapStateToProps = (state, props) => ({
+  filePlacements: makeFilePlacementsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

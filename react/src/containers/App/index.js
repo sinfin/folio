@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 
-import { getFiles, thumbnailGenerated, filesLoadedSelector } from 'ducks/files'
+import { getFiles, thumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
 import { openModal } from 'ducks/modal'
 
 import SingleSelect from 'containers/SingleSelect'
@@ -108,9 +108,9 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, props) => ({
   app: state.app,
-  filesLoaded: filesLoadedSelector(state)
+  filesLoaded: makeFilesLoadedSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -11,7 +11,7 @@ import {
   modalSelector
 } from 'ducks/modal'
 
-import { tagsSelector } from 'ducks/filters'
+import { makeTagsSelector } from 'ducks/filters'
 
 import ModalFile from './ModalFile'
 
@@ -65,9 +65,9 @@ class Modal extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, props) => ({
   modal: modalSelector(state),
-  tags: tagsSelector(state)
+  tags: makeTagsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

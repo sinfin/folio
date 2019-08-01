@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { fileTypeIsImageSelector } from 'ducks/app'
-import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
+import { makeFilesLoadingSelector, makeFilesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
@@ -37,9 +37,9 @@ class IndexMode extends LazyLoadCheckingComponent {
   }
 }
 
-const mapStateToProps = (state) => ({
-  filesLoading: filesLoadingSelector(state),
-  filesForList: filesForListSelector(state),
+const mapStateToProps = (state, props) => ({
+  filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
+  filesForList: makeFilesForListSelector(props.filesKey)(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })

@@ -4,9 +4,9 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
-import { filteredFilesSelector } from 'ducks/filters'
+import { makeFilteredFilesSelector } from 'ducks/filters'
 import { makeUploadsSelector } from 'ducks/uploads'
-import { selectedFileIdsSelector } from 'ducks/filePlacements'
+import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 
 // Constants
 
@@ -100,24 +100,24 @@ export const filesSagas = [
 
 // Selectors
 
-export const filesLoadingSelector = (state) => {
-  return state.files.loading
+export const makeFilesLoadingSelector = (filesKey) => (state) => {
+  return state.files[filesKey].loading
 }
 
-export const filesLoadedSelector = (state) => {
-  return state.files.loaded
+export const makeFilesLoadedSelector = (filesKey) => (state) => {
+  return state.files[filesKey].loaded
 }
 
-export const filesSelector = (state) => {
-  return state.files.records
+export const makeFilesSelector = (filesKey) => (state) => {
+  return state.files[filesKey].records
 }
 
-export const filesForListSelector = (state) => {
-  const uploads = makeUploadsSelector(state)
+export const makeFilesForListSelector = (filesKey) => (state) => {
+  const uploads = makeUploadsSelector(filesKey)(state)
   let files
 
   if (uploads.uploadedIds.length) {
-    files = filteredFilesSelector(state).map((file) => {
+    files = makeFilteredFilesSelector(filesKey)(state).map((file) => {
       if (uploads.uploadedIds.indexOf(file.id) === -1) {
         return file
       } else {
@@ -125,7 +125,7 @@ export const filesForListSelector = (state) => {
       }
     })
   } else {
-    files = filteredFilesSelector(state)
+    files = makeFilteredFilesSelector(filesKey)(state)
   }
 
   return [
@@ -134,9 +134,9 @@ export const filesForListSelector = (state) => {
   ]
 }
 
-export const unselectedFilesForListSelector = (state) => {
-  const all = filesForListSelector(state)
-  const selectedIds = selectedFileIdsSelector(state)
+export const makeUnselectedFilesForListSelector = (filesKey) => (state) => {
+  const all = makeFilesForListSelector(filesKey)(state)
+  const selectedIds = makeSelectedFileIdsSelector(filesKey)(state)
 
   return filter(all, (file) => selectedIds.indexOf(file.id) === -1)
 }

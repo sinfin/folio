@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash'
 
-import { filesSelector } from 'ducks/files'
+import { makeFilesSelector } from 'ducks/files'
 
 // Constants
 
@@ -9,23 +9,23 @@ const RESET_FILTERS = 'filters/RESET_FILTERS'
 
 // Actions
 
-export function setFilter (filter, value) {
-  return { type: SET_FILTER, filter, value }
+export function setFilter (filesKey, filter, value) {
+  return { type: SET_FILTER, filesKey, filter, value }
 }
 
-export function unsetFilter (filter) {
-  return setFilter(filter, '')
+export function unsetFilter (filesKey, filter) {
+  return setFilter(filesKey, filter, filter === 'tags' ? [] : '')
 }
 
-export function resetFilters () {
-  return { type: RESET_FILTERS }
+export function resetFilters (filesKey) {
+  return { type: RESET_FILTERS, filesKey }
 }
 
 // Selectors
 
-export const filtersSelector = (state) => {
-  const filters = state.filters
-  const active = !isEqual(filters, initialState)
+export const makeFiltersSelector = (filesKey) => (state) => {
+  const filters = state.filters[filesKey]
+  const active = !isEqual(filters, initialState[filesKey])
 
   return {
     ...filters,
@@ -33,9 +33,9 @@ export const filtersSelector = (state) => {
   }
 }
 
-export const filteredFilesSelector = (state) => {
-  const files = filesSelector(state)
-  const filters = filtersSelector(state)
+export const makeFilteredFilesSelector = (filesKey) => (state) => {
+  const files = makeFilesSelector(filesKey)(state)
+  const filters = makeFilesSelector(filesKey)(state)
   const filtered = []
 
   files.forEach((file) => {
@@ -65,8 +65,8 @@ export const filteredFilesSelector = (state) => {
   return filtered
 }
 
-export const tagsSelector = (state) => {
-  const files = filesSelector(state)
+export const makeTagsSelector = (filesKey) => (state) => {
+  const files = makeFilesSelector(filesKey)(state)
   const tags = []
   files.forEach((file) => file.attributes.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
@@ -78,8 +78,8 @@ export const tagsSelector = (state) => {
   })
 }
 
-export const placementsSelector = (state) => {
-  const files = filesSelector(state)
+export const makePlacementsSelector = (filesKey) => (state) => {
+  const files = makeFilesSelector(filesKey)(state)
   const placements = []
   files.forEach((file) => file.attributes.placements.forEach((placement) => {
     if (placements.indexOf(placement) === -1) placements.push(placement)
@@ -89,10 +89,17 @@ export const placementsSelector = (state) => {
 
 // State
 
-const initialState = {
-  name: '',
-  tags: [],
-  placement: null
+export const initialState = {
+  documents: {
+    name: '',
+    tags: [],
+    placement: null
+  },
+  images: {
+    name: '',
+    tags: [],
+    placement: null
+  }
 }
 
 // Reducer
@@ -102,7 +109,10 @@ function filtersReducer (state = initialState, action) {
     case SET_FILTER:
       return {
         ...state,
-        [action.filter]: action.value
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          [action.filter]: action.value
+        }
       }
 
     case RESET_FILTERS:

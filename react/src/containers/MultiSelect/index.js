@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import {
-  filesLoadingSelector,
-  unselectedFilesForListSelector
+  makeFilesLoadingSelector,
+  makeUnselectedFilesForListSelector
 } from 'ducks/files'
 import {
   selectFile,
@@ -12,7 +12,7 @@ import {
   onSortEnd,
   changeTitle,
   changeAlt,
-  filePlacementsSelector
+  makeFilePlacementsSelector
 } from 'ducks/filePlacements'
 import { fileTypeIsImageSelector } from 'ducks/app'
 import { displayAsThumbsSelector } from 'ducks/display'
@@ -81,10 +81,10 @@ class MultiSelect extends LazyLoadCheckingComponent {
   }
 }
 
-const mapStateToProps = (state) => ({
-  filePlacements: filePlacementsSelector(state),
-  filesLoading: filesLoadingSelector(state),
-  unselectedFilesForList: unselectedFilesForListSelector(state),
+const mapStateToProps = (state, props) => ({
+  filePlacements: makeFilePlacementsSelector(props.filesKey)(state),
+  filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
+  unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })

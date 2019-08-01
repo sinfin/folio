@@ -1,7 +1,7 @@
 import { arrayMove } from 'react-sortable-hoc'
 import { find, filter } from 'lodash'
 
-import { filesSelector } from 'ducks/files'
+import { makeFilesSelector } from 'ducks/files'
 
 // Constants
 
@@ -50,14 +50,14 @@ export function changeAlt (filePlacement, alt) {
 
 // Selectors
 
-export const selectedFileIdsSelector = (state) => {
-  const base = state.filePlacements
+export const makeSelectedFileIdsSelector = (filesKey) => (state) => {
+  const base = state.filePlacements[filesKey]
   return base.selected.map((filePlacement) => filePlacement.file_id)
 }
 
-export const filePlacementsSelector = (state) => {
-  const base = state.filePlacements
-  const files = filesSelector(state)
+export const makeFilePlacementsSelector = (filesKey) => (state) => {
+  const base = state.filePlacements[filesKey]
+  const files = makeFilesSelector(filesKey)(state)
   const selectedIds = []
 
   const selected = base.selected.map((filePlacement) => {
@@ -84,10 +84,18 @@ export const filePlacementsSelector = (state) => {
 // State
 
 const initialState = {
-  original: [],
-  selected: [],
-  attachmentable: 'node',
-  placementType: 'file_placements'
+  documents: {
+    original: [],
+    selected: [],
+    attachmentable: 'page',
+    placementType: 'document_placements'
+  },
+  images: {
+    original: [],
+    selected: [],
+    attachmentable: 'page',
+    placementType: 'image_placements'
+  }
 }
 
 // Reducer

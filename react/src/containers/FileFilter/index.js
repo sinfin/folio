@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import {
-  filtersSelector,
-  tagsSelector,
-  placementsSelector,
+  makeFiltersSelector,
+  makeTagsSelector,
+  makePlacementsSelector,
   setFilter,
   resetFilters
 } from 'ducks/filters'
@@ -26,21 +26,21 @@ import DisplayButtons from './DisplayButtons'
 class FileFilter extends Component {
   onNameChange = (e) => {
     this.props.dispatch(
-      setFilter('name', e.target.value)
+      setFilter(this.props.filesKey, 'name', e.target.value)
     )
   }
 
   onTagsChange = (tags) => {
-    this.props.dispatch(setFilter('tags', tags))
+    this.props.dispatch(setFilter(this.props.filesKey, 'tags', tags))
   }
 
   onPlacementChange = (placement) => {
-    this.props.dispatch(setFilter('placement', placement))
+    this.props.dispatch(setFilter(this.props.filesKey, 'placement', placement))
   }
 
   onReset = () => {
     this.props.dispatch(
-      resetFilters()
+      resetFilters(this.props.filesKey)
     )
   }
 
@@ -113,10 +113,10 @@ class FileFilter extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  filters: filtersSelector(state),
-  tags: tagsSelector(state),
-  placements: placementsSelector(state),
+const mapStateToProps = (state, props) => ({
+  filters: makeFiltersSelector(props.filesKey)(state),
+  tags: makeTagsSelector(props.filesKey)(state),
+  placements: makePlacementsSelector(props.filesKey)(state),
   display: displaySelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state)
 })
