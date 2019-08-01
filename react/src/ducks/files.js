@@ -21,12 +21,12 @@ const UPDATED_FILES = 'files/UPDATED_FILES'
 
 // Actions
 
-export function getFiles () {
-  return { type: GET_FILES }
+export function getFiles (key) {
+  return { type: GET_FILES, key }
 }
 
-export function getFilesSuccess (records) {
-  return { type: GET_FILES_SUCCESS, records }
+export function getFilesSuccess (key, records) {
+  return { type: GET_FILES_SUCCESS, key, records }
 }
 
 export function uploadedFile (file) {
@@ -60,7 +60,7 @@ function * getFilesPerform (action) {
     const fileType = yield select(fileTypeSelector)
     const filesUrl = fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images'
     const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(records.data))
+    yield put(getFilesSuccess(action.key, records.data))
   } catch (e) {
     flashError(e.message)
   }
@@ -144,10 +144,16 @@ export const unselectedFilesForListSelector = (state) => {
 // State
 
 const initialState = {
-  loading: false,
-  loaded: false,
-  filesUrl: '/console/api/files',
-  records: []
+  images: {
+    loading: false,
+    loaded: false,
+    records: []
+  },
+  documents: {
+    loading: false,
+    loaded: false,
+    records: []
+  }
 }
 
 // Reducer
@@ -157,15 +163,20 @@ function filesReducer (state = initialState, action) {
     case GET_FILES:
       return {
         ...state,
-        loading: true
+        [action.key]: {
+          ...state[action.key],
+          loading: true
+        }
       }
 
     case GET_FILES_SUCCESS:
       return {
         ...state,
-        records: action.records,
-        loading: false,
-        loaded: true
+        [action.key]: {
+          records: action.records,
+          loading: false,
+          loaded: true
+        }
       }
 
     case UPLOADED_FILE:

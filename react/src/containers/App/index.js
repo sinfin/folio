@@ -24,9 +24,9 @@ class App extends Component {
     window.addEventListener('checkLazyload', forceCheck)
   }
 
-  loadFiles = () => {
+  loadFiles = (key) => {
     if (!this.props.filesLoaded) {
-      this.props.dispatch(getFiles())
+      this.props.dispatch(getFiles(key))
     }
   }
 

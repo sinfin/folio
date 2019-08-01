@@ -1,5 +1,7 @@
 import { Component } from 'react'
 
+import fileTypeToKey from 'utils/fileTypeToKey'
+
 class ModalSelect extends Component {
   state = {
     el: null
@@ -11,7 +13,7 @@ class ModalSelect extends Component {
 
     $(document).on('click', this.selector(), (e) => {
       this.setState({ el: e.target })
-      this.props.loadFiles()
+      this.props.loadFiles(fileTypeToKey(this.props.fileType))
       this.onOpen(e.target)
       this.jQueryModal().modal('show')
     })
