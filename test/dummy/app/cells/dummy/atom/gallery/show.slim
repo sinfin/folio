@@ -1,0 +1,10 @@
+.d-atom.d-atom-gallery
+  .container
+    - if model.title.present?
+      h2 = model.titel
+
+    ul.list-unstyled.d-flex
+      - model.image_placements.each do |image_placement|
+        li.mr-3
+          - size = Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+          img src=image_placement.file.thumb(size).url
