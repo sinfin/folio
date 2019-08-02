@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import {
+  getFiles,
+  makeFilesLoadedSelector,
   makeFilesLoadingSelector,
   makeUnselectedFilesForListSelector
 } from 'ducks/files'
@@ -30,8 +32,17 @@ class MultiSelect extends LazyLoadCheckingComponent {
     this.props.dispatch(selectFile(this.props.filesKey, file))
   }
 
-  unselectFilePlacement = (filePlacements) => {
-    this.props.dispatch(unselectFilePlacement(this.props.filesKey, filePlacements))
+  componentWillMount () {
+    if (this.props.shouldLoadFiles &&
+        !this.props.filesLoading &&
+        !this.props.filesLoaded &&
+        this.props.filesKey) {
+      this.props.dispatch(getFiles(this.props.filesKey))
+    }
+  }
+
+  unselectFilePlacement = (filesKey, filePlacement) => {
+    this.props.dispatch(unselectFilePlacement(filesKey, filePlacement))
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(this.props.filesKey, oldIndex, newIndex))
@@ -84,6 +95,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
 
 const mapStateToProps = (state, props) => ({
   filePlacements: makeFilePlacementsSelector(props.filesKey)(state),
+  filesLoaded: makeFilesLoadedSelector(props.filesKey)(state),
   filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
   unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),

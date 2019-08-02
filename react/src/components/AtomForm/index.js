@@ -2,8 +2,11 @@ import React from 'react'
 import { FormGroup, Input, Label } from 'reactstrap'
 import { isEqual } from 'lodash'
 
+import MultiSelect from 'containers/MultiSelect'
 import RichTextEditor from 'components/RichTextEditor'
 import SingleSelectTrigger from 'components/SingleSelectTrigger'
+
+import fileTypeToKey from 'utils/fileTypeToKey'
 
 class AtomForm extends React.PureComponent {
   onTypeChange = (e) => {
@@ -130,6 +133,17 @@ class AtomForm extends React.PureComponent {
               )
             }
           </FormGroup>
+        ))}
+
+        {meta.attachments.map((attachmentType) => (
+          attachmentType.plural ? (
+            <div className='mt-4' key={attachmentType.key}>
+              <MultiSelect
+                filesKey={fileTypeToKey(attachmentType['file_type'])}
+                shouldLoadFiles
+              />
+            </div>
+          ) : null
         ))}
       </React.Fragment>
     )

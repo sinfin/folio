@@ -1,5 +1,40 @@
 import React from 'react'
 
+function SerializedAttachment ({ prefix, attachmentKey, attachment, index }) {
+  let name = (field) => `${prefix}[${attachmentKey}][${field}]`
+  if (typeof index !== undefined) {
+    name = (field) => `${prefix}[${attachmentKey}][${index}][${field}]`
+  }
+
+  return (
+    <React.Fragment>
+      <input type='hidden' name={name('id')} value={attachment['id'] || ''} />
+      {attachment['_destroy'] && <input type='hidden' name={name('_destroy')} value='1' />}
+      <input type='hidden' name={name('file_id')} value={attachment['file_id']} />
+      <input type='hidden' name={name('alt')} value={attachment['alt'] || ''} />
+      <input type='hidden' name={name('title')} value={attachment['title'] || ''} />
+    </React.Fragment>
+  )
+}
+
+function SerializedAttachments ({ atom, prefix }) {
+  return (
+    <React.Fragment>
+      {atom.meta.attachments.map(({ plural, key }) => {
+        const values = atom[key]
+        if (!values) return null
+        return (
+          plural ? (
+            values.map((value, i) => <SerializedAttachment prefix={prefix} attachmentKey={key} attachment={value} index={i} key={value.file_id} />)
+          ) : (
+            <SerializedAttachment prefix={prefix} attachmentKey={key} attachment={values} key={key} />
+          )
+        )
+      })}
+    </React.Fragment>
+  )
+}
+
 function SerializedAtom ({ atom, index, namespace, position }) {
   const prefix = `${namespace}[${index + 1}]`
   const { data, id, meta, type } = atom
@@ -12,23 +47,7 @@ function SerializedAtom ({ atom, index, namespace, position }) {
       {Object.keys(meta.structure).map((key) => (
         <input key={key} type='hidden' name={`${prefix}[${key}]`} value={data[key]} />
       ))}
-      {meta.attachments.map(({ plural, key }) => {
-        const values = atom[key]
-        if (!values) return null
-        return (
-          plural ? null : (
-            <React.Fragment key={key}>
-              {values['_destroy'] ? (<input type='hidden' name={`${prefix}[${key}][_destroy]`} value='1' />) : (
-                <React.Fragment>
-                  <input type='hidden' name={`${prefix}[${key}][file_id]`} value={values['file_id']} />
-                  <input type='hidden' name={`${prefix}[${key}][alt]`} value={values['alt'] || ''} />
-                  <input type='hidden' name={`${prefix}[${key}][title]`} value={values['title'] || ''} />
-                </React.Fragment>
-              )}
-            </React.Fragment>
-          )
-        )
-      })}
+      <SerializedAttachments atom={atom} prefix={prefix} />
     </div>
   )
 }

@@ -5,6 +5,8 @@ import { apiHtmlPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
 import timestamp from 'utils/timestamp'
 
+import { setOriginalPlacements } from 'ducks/filePlacements'
+
 // Constants
 
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
@@ -18,6 +20,7 @@ const UPDATE_FORM_ATOM_VALUE = 'atoms/UPDATE_FORM_ATOM_VALUE'
 const MOVE_ATOM_TO_INDEX = 'atoms/MOVE_ATOM_TO_INDEX'
 const UPDATE_FORM_ATOM_ATTACHMENTS = 'atoms/UPDATE_FORM_ATOM_ATTACHMENTS'
 const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
+const SET_FORM_ATOM_FILE_PLACEMENTS = 'atoms/SET_FORM_ATOM_FILE_PLACEMENTS'
 
 // Actions
 
@@ -53,8 +56,8 @@ export function closeFormAtom () {
   return { type: CLOSE_FORM_ATOM }
 }
 
-export function saveFormAtom () {
-  return { type: SAVE_FORM_ATOM }
+export function saveFormAtom (filePlacements) {
+  return { type: SAVE_FORM_ATOM, filePlacements }
 }
 
 export function updateFormAtomAttachments (attachmentKey, data) {
@@ -63,6 +66,10 @@ export function updateFormAtomAttachments (attachmentKey, data) {
 
 export function removeFormAtomAttachment (attachmentKey) {
   return { type: REMOVE_FORM_ATOM_ATTACHMENT, attachmentKey }
+}
+
+export function setFormAtomFilePlacements () {
+  return { type: SET_FORM_ATOM_FILE_PLACEMENTS }
 }
 
 // Selectors
@@ -76,6 +83,8 @@ export const atomsSelector = (state) => ({
     }))
   ))
 })
+
+export const atomsFormSelector = (state) => state.atoms.form
 
 export const atomSelector = (substate, rootKey, index) => {
   const atom = substate.atoms[rootKey][index]
@@ -104,10 +113,15 @@ export const serializedAtomsSelector = (state) => {
         data: null
       }
 
-      state.atoms.structures[atom.type]['attachments'].forEach(({ key }) => {
+      state.atoms.structures[atom.type]['attachments'].forEach(({ key, plural }) => {
         if (!base[key]) return
-        base[key] = omit(base[key], ['id', 'file'])
+        if (plural) {
+          base[key] = base[key].map((fp) => omit(fp, ['id', 'file']))
+        } else {
+          base[key] = omit(base[key], ['id', 'file'])
+        }
       })
+
       return base
     })
   })
@@ -135,11 +149,13 @@ function * updateAtomPreviewsSaga () {
 }
 
 function * showAtomsForm (action) {
-  yield window.jQuery('.f-c-simple-form-with-atoms__form--atoms').addClass('f-c-simple-form-with-atoms__form--active')
+  window.jQuery('.f-c-simple-form-with-atoms__form--atoms').addClass('f-c-simple-form-with-atoms__form--active')
+  yield put(setFormAtomFilePlacements())
 }
 
 function * showAtomsFormSaga () {
   yield [
+    takeEvery(NEW_ATOM, showAtomsForm),
     takeEvery(EDIT_ATOM, showAtomsForm)
   ]
 }
@@ -152,10 +168,21 @@ function * hideAtomsFormSaga () {
   yield takeEvery(CLOSE_FORM_ATOM, hideAtomsForm)
 }
 
+function * setAtomFilePlacements (action) {
+  const form = yield select(atomsFormSelector)
+  yield put(setOriginalPlacements('images', form.atom.image_placements_attributes || []))
+  yield put(setOriginalPlacements('documents', form.atom.document_placement_attributes || []))
+}
+
+function * setAtomFilePlacementsSaga () {
+  yield takeEvery(SET_FORM_ATOM_FILE_PLACEMENTS, setAtomFilePlacements)
+}
+
 export const atomsSagas = [
   updateAtomPreviewsSaga,
   showAtomsFormSaga,
-  hideAtomsFormSaga
+  hideAtomsFormSaga,
+  setAtomFilePlacementsSaga
 ]
 
 // State
@@ -257,6 +284,7 @@ function atomsReducer (state = initialState, action) {
         if (index === state.form.index) {
           atoms.push({
             ...omit(state.form.atom, ['meta', 'id']),
+            ...action.filePlacements,
             timestamp: timestamp()
           })
 

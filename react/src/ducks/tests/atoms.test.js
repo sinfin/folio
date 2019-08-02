@@ -148,6 +148,22 @@ describe('atomsReducer', () => {
     expect(newState.atoms['atoms'][0].timestamp).toBeTruthy()
   })
 
+  it('saveFormAtom - with filePlacements', () => {
+    const filePlacements = {
+      image_placement_attributes: [
+        { id: 1, file_id: 1, title: 'foo' },
+        { id: 2, file_id: 2, title: 'bar' }
+      ]
+    }
+    expect(state.atoms['atoms'][0].type).not.toEqual('Dummy::Atom::Gallery')
+    expect(state.atoms['atoms'][0]['image_placement_attributes']).toEqual(undefined)
+    state = atomsReducer(state, newAtom('atoms', 0, 'Dummy::Atom::Gallery'))
+    state = atomsReducer(state, saveFormAtom(filePlacements))
+    expect(state.atoms['atoms'][0].type).toEqual('Dummy::Atom::Gallery')
+    expect(state.atoms['atoms'][0]['image_placement_attributes']).toBeTruthy()
+    expect(state.atoms['atoms'][0]['image_placement_attributes'].length).toEqual(2)
+  })
+
   it('moveAtomToIndex', () => {
     expect(state.atoms['atoms'][0].id).toEqual(1)
     expect(state.atoms['atoms'][1].id).toEqual(2)

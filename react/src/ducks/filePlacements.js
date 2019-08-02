@@ -52,7 +52,7 @@ export function changeAlt (filesKey, filePlacement, alt) {
 
 export const makeSelectedFileIdsSelector = (filesKey) => (state) => {
   const base = state.filePlacements[filesKey]
-  return base.selected.map((filePlacement) => filePlacement.file_id)
+  return base.selected.map((filePlacement) => String(filePlacement.file_id))
 }
 
 export const makeFilePlacementsSelector = (filesKey) => (state) => {

@@ -138,7 +138,7 @@ export const makeUnselectedFilesForListSelector = (filesKey) => (state) => {
   const all = makeFilesForListSelector(filesKey)(state)
   const selectedIds = makeSelectedFileIdsSelector(filesKey)(state)
 
-  return filter(all, (file) => selectedIds.indexOf(file.id) === -1)
+  return filter(all, (file) => selectedIds.indexOf(String(file.id)) === -1)
 }
 
 // State

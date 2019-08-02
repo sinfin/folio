@@ -14,9 +14,11 @@ import {
   updateFormAtomAttachments,
   removeFormAtomAttachment
 } from 'ducks/atoms'
+import { makeFilePlacementsSelector } from 'ducks/filePlacements'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
 import { confirm } from 'utils/confirmed'
+import fileTypeToKey from 'utils/fileTypeToKey'
 
 import { FILE_TRIGGER_EVENT } from './constants'
 
@@ -46,6 +48,21 @@ class Atoms extends React.PureComponent {
         return this.props.dispatch(removeAtom(e.data.rootKey, e.data.index))
       default: {}
     }
+  }
+
+  saveFormAtom = () => {
+    const filePlacementsAttributes = {}
+    this.props.atoms.form.atom.meta.attachments.forEach((attachmentType) => {
+      if (!attachmentType.plural) return
+      const filesKey = fileTypeToKey(attachmentType.file_type)
+      const selector = makeFilePlacementsSelector(filesKey)
+      const filePlacements = selector(this.props.state)
+      filePlacementsAttributes[attachmentType.key] = [
+        ...filePlacements.selected,
+        ...filePlacements.deleted.map((fp) => ({ ...fp, _destroy: true }))
+      ]
+    })
+    this.props.dispatch(saveFormAtom(filePlacementsAttributes))
   }
 
   removeFormAtomAttachment = (attachmentKey) => {
@@ -78,7 +95,7 @@ class Atoms extends React.PureComponent {
             index={form.index}
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
-            saveFormAtom={() => this.props.dispatch(saveFormAtom())}
+            saveFormAtom={this.saveFormAtom}
             closeFormAtom={() => this.props.dispatch(closeFormAtom())}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
@@ -94,7 +111,8 @@ class Atoms extends React.PureComponent {
 
 const mapStateToProps = (state) => ({
   atoms: atomsSelector(state),
-  atomTypes: atomTypesSelector(state)
+  atomTypes: atomTypesSelector(state),
+  state: state
 })
 
 function mapDispatchToProps (dispatch) {
