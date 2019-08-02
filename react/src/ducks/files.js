@@ -101,11 +101,11 @@ export const filesSagas = [
 // Selectors
 
 export const makeFilesLoadingSelector = (filesKey) => (state) => {
-  return state.files[filesKey].loading
+  return state.files[filesKey] && state.files[filesKey].loading
 }
 
 export const makeFilesLoadedSelector = (filesKey) => (state) => {
-  return state.files[filesKey].loaded
+  return state.files[filesKey] && state.files[filesKey].loaded
 }
 
 export const makeFilesSelector = (filesKey) => (state) => {

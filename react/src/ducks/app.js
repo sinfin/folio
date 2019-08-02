@@ -1,3 +1,5 @@
+import fileTypeToKey from 'utils/fileTypeToKey'
+
 // Constants
 
 const SET_MODE = 'app/SET_MODE'
@@ -22,7 +24,8 @@ export const fileTypeIsImageSelector = (state) => state.app.fileType === 'Folio:
 
 const initialState = {
   mode: null,
-  fileType: 'Folio::Image'
+  fileType: 'Folio::Image',
+  filesKey: 'images'
 }
 
 // Reducer
@@ -38,7 +41,8 @@ function appReducer (state = initialState, action) {
     case SET_FILE_TYPE:
       return {
         ...state,
-        fileType: action.fileType
+        fileType: action.fileType,
+        filesKey: fileTypeToKey(action.fileType)
       }
 
     default:

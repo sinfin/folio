@@ -35,7 +35,7 @@ export const makeFiltersSelector = (filesKey) => (state) => {
 
 export const makeFilteredFilesSelector = (filesKey) => (state) => {
   const files = makeFilesSelector(filesKey)(state)
-  const filters = makeFilesSelector(filesKey)(state)
+  const filters = makeFiltersSelector(filesKey)(state)
   const filtered = []
 
   files.forEach((file) => {

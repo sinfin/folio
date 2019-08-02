@@ -18,9 +18,9 @@ class IndexMode extends LazyLoadCheckingComponent {
     if (this.props.filesLoading) return <Loader />
 
     return (
-      <Uploader>
+      <Uploader filesKey={this.props.filesKey}>
         <Card
-          filters={<FileFilter />}
+          filters={<FileFilter filesKey={this.props.filesKey} />}
         >
           <UploadTagger filesKey={this.props.filesKey} />
 

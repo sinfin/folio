@@ -22,7 +22,7 @@ class ModalSelect extends Component {
     if (eventName) {
       $(document).on(eventName, (e, eventData) => {
         this.setState(eventData)
-        this.props.loadFiles()
+        this.props.loadFiles(fileTypeToKey(this.props.fileType))
         this.onOpen(e.target)
         this.jQueryModal().modal('show')
       })

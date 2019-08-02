@@ -18,15 +18,15 @@ import AppWrap from './styled/AppWrap'
 class App extends Component {
   componentWillMount () {
     if (this.shouldAutoLoadFiles()) {
-      this.loadFiles()
+      this.loadFiles(this.props.app.filesKey)
     }
     this.listenOnActionCable()
     window.addEventListener('checkLazyload', forceCheck)
   }
 
-  loadFiles = (key) => {
+  loadFiles = (filesKey) => {
     if (!this.props.filesLoaded) {
-      this.props.dispatch(getFiles(key))
+      this.props.dispatch(getFiles(filesKey))
     }
   }
 
@@ -50,24 +50,25 @@ class App extends Component {
   }
 
   renderMode () {
-    const { mode, fileType } = this.props.app
+    const { mode, fileType, filesKey } = this.props.app
 
     if (mode === 'multi-select') {
-      return <MultiSelect />
+      return <MultiSelect filesKey={filesKey} />
     }
 
     if (mode === 'single-select') {
-      return <SingleSelect />
+      return <SingleSelect filesKey={filesKey} />
     }
 
     if (mode === 'index') {
-      return <IndexMode />
+      return <IndexMode filesKey={filesKey} />
     }
 
     if (mode === 'modal-single-select') {
       return (
         <ModalSingleSelect
           fileType={fileType}
+          filesKey={filesKey}
           loadFiles={this.loadFiles}
         />
       )
@@ -77,6 +78,7 @@ class App extends Component {
       return (
         <ModalMultiSelect
           fileType={fileType}
+          filesKey={filesKey}
           loadFiles={this.loadFiles}
         />
       )
@@ -102,7 +104,7 @@ class App extends Component {
           {this.renderMode()}
         </ModalContext.Provider>
 
-        <Modal />
+        <Modal filesKey={this.props.app.filesKey} />
       </AppWrap>
     )
   }

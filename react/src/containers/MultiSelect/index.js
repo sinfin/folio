@@ -46,7 +46,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
     const headerKey = this.props.fileTypeIsImage ? 'Images' : 'Documents'
 
     return (
-      <Uploader>
+      <Uploader filesKey={this.props.filesKey}>
         <Card
           highlighted
           header={window.FolioConsole.translations[`selected${headerKey}`]}
@@ -58,12 +58,13 @@ class MultiSelect extends LazyLoadCheckingComponent {
             onTitleChange={this.onTitleChange}
             unselectFilePlacement={this.unselectFilePlacement}
             fileTypeIsImage={this.props.fileTypeIsImage}
+            filesKey={this.props.filesKey}
           />
         </Card>
 
         <Card
           header={window.FolioConsole.translations[`available${headerKey}`]}
-          filters={<FileFilter />}
+          filters={<FileFilter filesKey={this.props.filesKey} />}
         >
           <UploadTagger filesKey={this.props.filesKey} />
 

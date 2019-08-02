@@ -25,7 +25,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
   renderHeader () {
     return (
       <Fragment>
-        <FileFilter />
+        <FileFilter filesKey={this.props.filesKey} />
         <UploadTagger filesKey={this.props.filesKey} />
       </Fragment>
     )
@@ -38,7 +38,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
       <ModalScroll
         header={this.renderHeader()}
       >
-        <Uploader>
+        <Uploader filesKey={this.props.filesKey}>
           <FileList
             files={this.props.filesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}
