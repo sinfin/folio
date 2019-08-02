@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import {
   atomsSelector,
   atomTypesSelector,
+  newAtom,
   editAtom,
   removeAtom,
   saveFormAtom,
@@ -39,6 +40,8 @@ class Atoms extends React.PureComponent {
   receiveMessage = (e) => {
     if (e.origin !== window.origin) return
     switch (e.data.type) {
+      case 'newAtom':
+        return this.props.dispatch(newAtom(e.data.rootKey, e.data.index, e.data.atomType))
       case 'editAtom':
         return this.props.dispatch(editAtom(e.data.rootKey, e.data.index))
       case 'moveAtomToIndex':

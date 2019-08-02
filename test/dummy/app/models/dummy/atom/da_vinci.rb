@@ -11,6 +11,10 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
   def self.cell_name
     'dummy/atom/da_vinci'
   end
+
+  def self.console_icon
+    :palette
+  end
 end
 
 # == Schema Information

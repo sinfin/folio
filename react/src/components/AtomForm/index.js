@@ -9,6 +9,11 @@ import SingleSelectTrigger from 'components/SingleSelectTrigger'
 import fileTypeToKey from 'utils/fileTypeToKey'
 
 class AtomForm extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.autofocusRef = React.createRef()
+  }
+
   onTypeChange = (e) => {
     const { atom, structures } = this.props
     const newType = e.target.value
@@ -44,9 +49,24 @@ class AtomForm extends React.PureComponent {
     }
   }
 
+  componentDidMount () {
+    if (this.autofocusRef.current) {
+      setTimeout(() => { this.autofocusRef.current.focus() }, 0)
+    }
+  }
+
   render () {
     const { data, meta, type } = this.props.atom
     const prefix = `${this.props.namespace}[${this.props.index + 1}]`
+    let autofocused = false
+    const autofocusRef = () => {
+      if (autofocused) {
+        return undefined
+      } else {
+        autofocused = true
+        return this.autofocusRef
+      }
+    }
 
     return (
       <React.Fragment>
@@ -107,6 +127,7 @@ class AtomForm extends React.PureComponent {
                   defaultValue={data[key]}
                   onChange={(html) => this.onRichTextChange(html, key)}
                   placeholder={meta.structure[key].label}
+                  ref={autofocusRef()}
                 />
               ) : (
                 meta.structure[key].collection ? (
@@ -128,6 +149,7 @@ class AtomForm extends React.PureComponent {
                     defaultValue={data[key]}
                     onChange={(e) => this.onChange(e, key)}
                     placeholder={meta.structure[key].label}
+                    innerRef={autofocusRef()}
                   />
                 )
               )

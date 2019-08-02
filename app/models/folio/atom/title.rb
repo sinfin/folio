@@ -11,6 +11,10 @@ class Folio::Atom::Title < Folio::Atom::Base
   def self.cell_name
     'folio/atom/title'
   end
+
+  def self.console_icon
+    :text_fields
+  end
 end
 
 # == Schema Information

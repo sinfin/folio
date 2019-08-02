@@ -6,6 +6,8 @@ class RichTextEditor extends React.PureComponent {
   constructor (props) {
     super(props)
 
+    this.editorRef = React.createRef()
+
     this.state = {
       editorState: EditorState.createWithContent(convertFromHTML(props.defaultValue || ''))
     }
@@ -16,9 +18,17 @@ class RichTextEditor extends React.PureComponent {
     this.props.onChange(convertToHTML(editorState.getCurrentContent()))
   }
 
+  focus () {
+    this.editorRef.current.focus()
+  }
+
   render () {
     return (
-      <Editor editorState={this.state.editorState} onChange={this.onChange} />
+      <Editor
+        editorState={this.state.editorState}
+        onChange={this.onChange}
+        ref={this.editorRef}
+      />
     )
   }
 }

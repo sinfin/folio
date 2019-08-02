@@ -221,7 +221,8 @@ function atomsReducer (state = initialState, action) {
             id: null,
             type: action.atomType,
             data: {},
-            timestamp: timestamp()
+            timestamp: timestamp(),
+            meta: state.structures[action.atomType]
           }
         }
       }

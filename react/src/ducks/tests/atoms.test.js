@@ -58,6 +58,7 @@ describe('atomsReducer', () => {
     expect(newState.form.rootKey).toEqual('atoms')
     expect(newState.form.atom.type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.form.atom.timestamp).toBeTruthy()
+    expect(newState.form.atom.meta).toBeTruthy()
     expect(newState.form.edit).toEqual(false)
   })
 

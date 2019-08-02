@@ -131,6 +131,9 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
   end
 
+  def self.console_icon
+  end
+
   def method_missing(method_name, *arguments, &block)
     name_without_operator = method_name.to_s.gsub('=', '').to_sym
     if respond_to_missing?(name_without_operator)

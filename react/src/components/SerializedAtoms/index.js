@@ -2,7 +2,7 @@ import React from 'react'
 
 function SerializedAttachment ({ prefix, attachmentKey, attachment, index }) {
   let name = (field) => `${prefix}[${attachmentKey}][${field}]`
-  if (typeof index !== undefined) {
+  if (typeof index !== 'undefined') {
     name = (field) => `${prefix}[${attachmentKey}][${index}][${field}]`
   }
 

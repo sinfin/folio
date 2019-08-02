@@ -2,6 +2,7 @@
   - model.keys.each_with_index do |locale, index|
     - I18n.with_locale(locale || I18n.default_locale)
       .f-c-atoms-previews__locale data-locale=locale hidden=(index != 0)
+        = insert
         - model[locale].each_with_index do |atom, atom_index|
           .f-c-atoms-previews__atom[
             data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
@@ -11,27 +12,5 @@
                     atom, \
                     atom.cell_options.presence || {})
 
-            .f-c-atoms-previews__controls
-              .f-c-atoms-previews__buttons
-                button.fa.fa-pencil-alt[
-                  type="button"
-                  class="f-c-atoms-previews__button"
-                  class="f-c-atoms-previews__button--edit"
-                ]
-                button.fa.fa-arrow-up[
-                  type="button"
-                  class="f-c-atoms-previews__button"
-                  class="f-c-atoms-previews__button--arrow"
-                  class="f-c-atoms-previews__button--arrow-up"
-                ]
-                button.fa.fa-arrow-down[
-                  type="button"
-                  class="f-c-atoms-previews__button"
-                  class="f-c-atoms-previews__button--arrow"
-                  class="f-c-atoms-previews__button--arrow-down"
-                ]
-                button.fa.fa-trash[
-                  type="button"
-                  class="f-c-atoms-previews__button"
-                  class="f-c-atoms-previews__button--remove"
-                ]
+            = controls
+          = insert

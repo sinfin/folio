@@ -11,6 +11,10 @@ class Folio::Atom::Text < Folio::Atom::Base
   def self.cell_name
     'folio/atom/text'
   end
+
+  def self.console_icon
+    :format_align_left
+  end
 end
 
 # == Schema Information

@@ -10,6 +10,10 @@ class Dummy::Atom::Gallery < Folio::Atom::Base
   def self.cell_name
     'dummy/atom/gallery'
   end
+
+  def self.console_icon
+    :image
+  end
 end
 
 # == Schema Information

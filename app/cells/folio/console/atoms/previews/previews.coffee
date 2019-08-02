@@ -48,10 +48,42 @@ handleRemoveClick = (e) ->
       index: $wrap.data('index')
     window.parent.postMessage(data, window.origin)
 
+showInsertHint = (e) ->
+  e.preventDefault()
+  $(this)
+    .closest('.f-c-atoms-previews__insert')
+    .addClass('f-c-atoms-previews__insert--active')
+
+hideInsertHint = (e) ->
+  e.preventDefault()
+  $(this)
+    .removeClass('f-c-atoms-previews__insert--active')
+
+handleInsertClick = (e) ->
+  e.preventDefault()
+  $a = $(this)
+  $insert = $a.closest('.f-c-atoms-previews__insert')
+  $insert.removeClass('f-c-atoms-previews__insert--active')
+  $atom = $insert.next('.f-c-atoms-previews__atom')
+  if $atom.length is 0
+    $atom = $insert.before('.f-c-atoms-previews__atom')
+    index = $atom.data('index') + 1
+  else
+    index = $atom.data('index')
+  data =
+    type: 'newAtom'
+    rootKey: $atom.data('root-key')
+    index: index
+    atomType: $a.data('type')
+  window.parent.postMessage(data, window.origin)
+
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
+  .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick
+  .on 'click', '.f-c-atoms-previews__insert-hint-btn', showInsertHint
+  .on 'mouseleave', '.f-c-atoms-previews__insert', hideInsertHint
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()
 
