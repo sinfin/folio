@@ -16,7 +16,7 @@ import ModalScroll from 'components/ModalScroll'
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
     if (this.props.selectFile) {
-      this.props.selectFile(file)
+      this.props.selectFile(this.props.filesKey, file)
     } else if (window.folioConsoleInsertImage) {
       window.folioConsoleInsertImage(file)
     }

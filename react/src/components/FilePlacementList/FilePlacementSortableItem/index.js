@@ -30,15 +30,15 @@ class FilePlacement extends React.Component {
   }
 
   onTitleBlur = (e) => {
-    this.props.onTitleChange(this.props.filePlacement, e.target.value)
+    this.props.onTitleChange(this.props.filesKey, this.props.filePlacement, e.target.value)
   }
 
   onAltBlur = (e) => {
-    this.props.onAltChange(this.props.filePlacement, e.target.value)
+    this.props.onAltChange(this.props.filesKey, this.props.filePlacement, e.target.value)
   }
 
   unselect = () => {
-    this.props.unselectFilePlacement(this.props.filePlacement)
+    this.props.unselectFilePlacement(this.props.filesKey, this.props.filePlacement)
   }
 
   moveUp = () => {

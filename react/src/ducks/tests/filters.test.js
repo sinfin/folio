@@ -9,7 +9,7 @@ describe('filtersReducer', () => {
   let state
 
   beforeEach(() => {
-    state = filtersReducer(state, setFilter('images', 'tags', ['a']))
+    state = filtersReducer(initialState, setFilter('images', 'tags', ['a']))
   })
 
   it('setFilter', () => {

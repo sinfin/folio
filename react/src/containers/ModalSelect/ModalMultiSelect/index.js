@@ -127,7 +127,7 @@ class ModalMultiSelect extends ModalSelect {
       })
     })
 
-    this.props.dispatch(setOriginalPlacements(placements))
+    this.props.dispatch(setOriginalPlacements(this.props.filesKey, placements))
   }
 
   renderHeader () {

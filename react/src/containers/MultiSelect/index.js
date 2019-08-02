@@ -27,18 +27,18 @@ import FilePlacementList from 'components/FilePlacementList'
 
 class MultiSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
-    this.props.dispatch(selectFile(file))
+    this.props.dispatch(selectFile(this.props.filesKey, file))
   }
 
   unselectFilePlacement = (filePlacements) => {
-    this.props.dispatch(unselectFilePlacement(filePlacements))
+    this.props.dispatch(unselectFilePlacement(this.props.filesKey, filePlacements))
   }
 
-  onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
+  onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(this.props.filesKey, oldIndex, newIndex))
 
-  onTitleChange = (filePlacement, title) => this.props.dispatch(changeTitle(filePlacement, title))
+  onTitleChange = (filePlacement, title) => this.props.dispatch(changeTitle(this.props.filesKey, filePlacement, title))
 
-  onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(filePlacement, alt))
+  onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(this.props.filesKey, filePlacement, alt))
 
   render () {
     if (this.props.filesLoading) return <Loader />
