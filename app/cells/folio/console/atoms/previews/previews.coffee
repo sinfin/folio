@@ -66,13 +66,21 @@ handleInsertClick = (e) ->
   $insert.removeClass('f-c-atoms-previews__insert--active')
   $atom = $insert.next('.f-c-atoms-previews__atom')
   if $atom.length is 0
-    $atom = $insert.before('.f-c-atoms-previews__atom')
+    $atom = $insert.prev('.f-c-atoms-previews__atom')
     index = $atom.data('index') + 1
   else
     index = $atom.data('index')
+
+  if $atom.length is 0
+    $locale = $a.closest('.f-c-atoms-previews__locale')
+    rootKey = $locale.data('root-key')
+    index = 0
+  else
+    rootKey = $atom.data('root-key')
+
   data =
     type: 'newAtom'
-    rootKey: $atom.data('root-key')
+    rootKey: rootKey
     index: index
     atomType: $a.data('type')
   window.parent.postMessage(data, window.origin)

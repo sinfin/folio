@@ -29,7 +29,7 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
 
   test 'validate' do
     post validate_console_atoms_path, params: {
-      type: 'Dummy::Atom::DaVinci',
+      type: 'Dummy::Atom::Gallery',
       placement_type: 'Folio::Page',
       placement_id: create(:folio_page).id,
     }
@@ -38,6 +38,6 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
     assert_equal(false, json['valid'])
     assert_not_nil(json['errors'])
     assert_not_nil(json['messages'])
-    assert_equal(['string'], json['errors'].keys)
+    assert_equal(['image_placements'], json['errors'].keys)
   end
 end

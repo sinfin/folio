@@ -324,23 +324,31 @@ function atomsReducer (state = initialState, action) {
         destroyedIds[state.form.rootKey] = [...state.destroyedIds[state.form.rootKey], state.form.atom.id]
       }
 
-      const atoms = []
+      let atoms = []
+      const newAtom = {
+        ...omit(state.form.atom, ['meta', 'id']),
+        ...action.filePlacements,
+        timestamp: timestamp()
+      }
 
-      state.atoms[state.form.rootKey].forEach((atom, index) => {
-        if (index === state.form.index) {
-          atoms.push({
-            ...omit(state.form.atom, ['meta', 'id']),
-            ...action.filePlacements,
-            timestamp: timestamp()
-          })
+      if (state.form.index < state.atoms[state.form.rootKey].length) {
+        state.atoms[state.form.rootKey].forEach((atom, index) => {
+          if (index === state.form.index) {
+            atoms.push(newAtom)
 
-          if (!state.form.edit) {
+            if (!state.form.edit) {
+              atoms.push(atom)
+            }
+          } else {
             atoms.push(atom)
           }
-        } else {
-          atoms.push(atom)
-        }
-      })
+        })
+      } else {
+        atoms = [
+          ...state.atoms[state.form.rootKey],
+          newAtom
+        ]
+      }
 
       return {
         ...state,

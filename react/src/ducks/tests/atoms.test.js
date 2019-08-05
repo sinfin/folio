@@ -167,6 +167,15 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'][0]['image_placement_attributes'].length).toEqual(2)
   })
 
+  it('saveFormAtom - last', () => {
+    state = atomsReducer(state, newAtom('atoms', 3, 'Dummy::Atom::DaVinci'))
+    state = atomsReducer(state, updateFormAtomValue('text', 'text'))
+    expect(state.atoms['atoms'].length).toEqual(3)
+    const newState = atomsReducer(state, saveFormAtom())
+    expect(newState.atoms['atoms'].length).toEqual(4)
+    expect(newState.atoms['atoms'][3].type).toEqual('Dummy::Atom::DaVinci')
+  })
+
   it('moveAtomToIndex', () => {
     expect(state.atoms['atoms'][0].id).toEqual(1)
     expect(state.atoms['atoms'][1].id).toEqual(2)
