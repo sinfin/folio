@@ -29,9 +29,33 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     render :index, layout: false
   end
 
+  def validate
+    atom = params.require(:type)
+                 .constantize
+                 .new(atom_validation_params)
+
+    if atom.valid?
+      render json: { valid: true }
+    else
+      render json: { valid: false,
+                     errors: atom.errors.messages,
+                     messages: atom.errors.full_messages }
+    end
+  end
+
   private
 
     def atom_params
       params.permit(atoms_strong_params)
+    end
+
+    def atom_validation_params
+      params.permit(:type,
+                    :position,
+                    :placement_type,
+                    :placement_id,
+                    :_destroy,
+                    *file_placements_strong_params,
+                    *Folio::Atom.strong_params)
     end
 end

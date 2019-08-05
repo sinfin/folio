@@ -7,6 +7,9 @@ class Dummy::Atom::Gallery < Folio::Atom::Base
     title: :string,
   }
 
+  validates :image_placements,
+            presence: true
+
   def self.cell_name
     'dummy/atom/gallery'
   end

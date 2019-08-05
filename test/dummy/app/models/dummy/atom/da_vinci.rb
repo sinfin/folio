@@ -8,6 +8,9 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
 
   STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }]
 
+  validates Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.first,
+            presence: true
+
   def self.cell_name
     'dummy/atom/da_vinci'
   end
