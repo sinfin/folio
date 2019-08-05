@@ -68,6 +68,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
         if (placements = send(placement_key)).present?
           h["#{placement_key}_attributes".to_sym] = placements.map do |placement|
             {
+              id: placement.id,
               file_id: placement.file_id,
               file: placement.file.to_h,
               alt: placement.alt,
@@ -78,7 +79,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       else
         if (placement = send(placement_key)).present?
           h["#{placement_key}_attributes".to_sym] = {
-            id: placement.id,
             file_id: placement.file_id,
             file: placement.file.to_h,
             alt: placement.alt,
