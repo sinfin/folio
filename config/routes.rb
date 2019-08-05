@@ -44,8 +44,11 @@ Folio::Engine.routes.draw do
       end
     end
 
-    resource :atoms_preview, only: [:show] do
-      post :preview
+    resources :atoms, only: [:index] do
+      collection do
+        post :preview
+        post :validate
+      end
     end
   end
 

@@ -72,7 +72,7 @@ module Folio::Console::FormsHelper
                                nil,
                                class: 'f-c-simple-form-with-atoms__iframe',
                                id: 'f-c-simple-form-with-atoms__iframe',
-                               src: console_atoms_preview_path(ids: f.object.all_atoms_in_array)))
+                               src: console_atoms_path(ids: f.object.all_atoms_in_array)))
             concat(content_tag(:span, nil, class: 'folio-loader'))
           end
         )

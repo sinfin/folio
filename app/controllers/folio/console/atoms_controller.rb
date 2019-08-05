@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Folio::Console::AtomsPreviewsController < Folio::Console::BaseController
-  layout 'folio/console/atoms_previews'
+class Folio::Console::AtomsController < Folio::Console::BaseController
+  layout 'folio/console/atoms'
 
-  def show
+  def index
     @atoms = Folio::Atom::Base.ordered
                               .where(id: params[:ids])
                               .to_a
@@ -26,7 +26,7 @@ class Folio::Console::AtomsPreviewsController < Folio::Console::BaseController
       end
     end
 
-    render :show, layout: false
+    render :index, layout: false
   end
 
   private
