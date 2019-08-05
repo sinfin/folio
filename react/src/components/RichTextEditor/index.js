@@ -1,21 +1,26 @@
 import React from 'react'
-import { Editor, EditorState } from 'draft-js'
-import { convertToHTML, convertFromHTML } from 'draft-convert'
+import { Input } from 'reactstrap'
 
 class RichTextEditor extends React.PureComponent {
   constructor (props) {
     super(props)
-
     this.editorRef = React.createRef()
+  }
 
-    this.state = {
-      editorState: EditorState.createWithContent(convertFromHTML(props.defaultValue || ''))
+  componentDidMount () {
+    if (window.folioConsoleInitRedactor) {
+      window.folioConsoleInitRedactor(this.editorRef.current, {}, {
+        callbacks: {
+          changed: this.props.onChange
+        }
+      })
     }
   }
 
-  onChange = (editorState) => {
-    this.setState({ editorState })
-    this.props.onChange(convertToHTML(editorState.getCurrentContent()))
+  componentWillUnmount () {
+    if (window.folioConsoleDestroyRedactor) {
+      window.folioConsoleDestroyRedactor(this.editorRef.current)
+    }
   }
 
   focus () {
@@ -24,10 +29,10 @@ class RichTextEditor extends React.PureComponent {
 
   render () {
     return (
-      <Editor
-        editorState={this.state.editorState}
-        onChange={this.onChange}
-        ref={this.editorRef}
+      <Input
+        type='textarea'
+        defaultValue={this.props.defaultValue}
+        innerRef={this.editorRef}
       />
     )
   }
