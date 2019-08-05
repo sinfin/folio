@@ -9,7 +9,9 @@ import atomsReducer, {
   saveFormAtom,
   moveAtomToIndex,
   updateFormAtomAttachments,
-  removeFormAtomAttachment
+  removeFormAtomAttachment,
+  validateAndSaveFormAtom,
+  setFormValidationErrors
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -186,5 +188,19 @@ describe('atomsReducer', () => {
 
     const finalState = atomsReducer(newState, removeFormAtomAttachment('cover_placement_attributes'))
     expect(finalState.form.atom.cover_placement_attributes).toEqual(undefined)
+  })
+
+  it('validateAndSaveFormAtom', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    expect(state.form.validating).toEqual(false)
+    state = atomsReducer(state, validateAndSaveFormAtom())
+    expect(state.form.validating).toEqual(true)
+  })
+
+  it('setFormValidationErrors', () => {
+    state = atomsReducer(state, editAtom('atoms', 0))
+    state = atomsReducer(state, setFormValidationErrors({ valid: false, errors: { foo: 'bar' }, messages: ['Foo bar!'] }))
+    expect(state.form.errors).toEqual({ foo: 'bar' })
+    expect(state.form.messages).toEqual(['Foo bar!'])
   })
 })

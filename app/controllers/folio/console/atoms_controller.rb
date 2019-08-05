@@ -33,6 +33,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     atom = params.require(:type)
                  .constantize
                  .new(atom_validation_params)
+    atom.placement = atom.placement_type.constantize.new
 
     if atom.valid?
       render json: { valid: true }

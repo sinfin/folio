@@ -64,6 +64,7 @@ module Folio
         destroyedIds: destroyed_ids,
         namespace: namespace,
         structures: Folio::Atom.structures,
+        placementType: f.object.class.to_s,
       }
 
       content_tag(:div, nil, 'class': 'f-c-atoms folio-react-wrap',

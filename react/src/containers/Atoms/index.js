@@ -7,7 +7,7 @@ import {
   newAtom,
   editAtom,
   removeAtom,
-  saveFormAtom,
+  validateAndSaveFormAtom,
   closeFormAtom,
   moveAtomToIndex,
   updateFormAtomType,
@@ -53,7 +53,7 @@ class Atoms extends React.PureComponent {
     }
   }
 
-  saveFormAtom = () => {
+  validateAndSaveFormAtom = () => {
     const filePlacementsAttributes = {}
     this.props.atoms.form.atom.meta.attachments.forEach((attachmentType) => {
       if (!attachmentType.plural) return
@@ -65,7 +65,7 @@ class Atoms extends React.PureComponent {
         ...filePlacements.deleted.map((fp) => ({ ...fp, _destroy: true }))
       ]
     })
-    this.props.dispatch(saveFormAtom(filePlacementsAttributes))
+    this.props.dispatch(validateAndSaveFormAtom(filePlacementsAttributes))
   }
 
   removeFormAtomAttachment = (attachmentKey) => {
@@ -94,11 +94,12 @@ class Atoms extends React.PureComponent {
 
         {form.rootKey && (
           <AtomForm
+            form={form}
             atom={form.atom}
             index={form.index}
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
-            saveFormAtom={this.saveFormAtom}
+            saveFormAtom={this.validateAndSaveFormAtom}
             closeFormAtom={() => this.props.dispatch(closeFormAtom())}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}

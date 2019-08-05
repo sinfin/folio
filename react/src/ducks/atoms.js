@@ -1,7 +1,7 @@
 import { mapValues, sortBy, omit } from 'lodash'
 import { takeEvery, call, select, put } from 'redux-saga/effects'
 
-import { apiHtmlPost } from 'utils/api'
+import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
 import timestamp from 'utils/timestamp'
 
@@ -13,6 +13,7 @@ const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
 const NEW_ATOM = 'atoms/NEW_ATOM'
 const EDIT_ATOM = 'atoms/EDIT_ATOM'
 const REMOVE_ATOM = 'atoms/REMOVE_ATOM'
+const VALIDATE_AND_SAVE_FORM_ATOM = 'atoms/VALIDATE_AND_SAVE_FORM_ATOM'
 const SAVE_FORM_ATOM = 'atoms/SAVE_FORM_ATOM'
 const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
 const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
@@ -21,6 +22,7 @@ const MOVE_ATOM_TO_INDEX = 'atoms/MOVE_ATOM_TO_INDEX'
 const UPDATE_FORM_ATOM_ATTACHMENTS = 'atoms/UPDATE_FORM_ATOM_ATTACHMENTS'
 const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
 const SET_FORM_ATOM_FILE_PLACEMENTS = 'atoms/SET_FORM_ATOM_FILE_PLACEMENTS'
+const SET_FORM_VALIDATION_ERRORS = 'atoms/SET_FORM_VALIDATION_ERRORS'
 
 // Actions
 
@@ -56,6 +58,10 @@ export function closeFormAtom () {
   return { type: CLOSE_FORM_ATOM }
 }
 
+export function validateAndSaveFormAtom (filePlacements) {
+  return { type: VALIDATE_AND_SAVE_FORM_ATOM, filePlacements }
+}
+
 export function saveFormAtom (filePlacements) {
   return { type: SAVE_FORM_ATOM, filePlacements }
 }
@@ -70,6 +76,10 @@ export function removeFormAtomAttachment (attachmentKey) {
 
 export function setFormAtomFilePlacements () {
   return { type: SET_FORM_ATOM_FILE_PLACEMENTS }
+}
+
+export function setFormValidationErrors (formSubstate) {
+  return { type: SET_FORM_VALIDATION_ERRORS, formSubstate }
 }
 
 // Selectors
@@ -103,29 +113,42 @@ export const atomTypesSelector = (state) => {
   return sortBy(unsorted, ['title'])
 }
 
+const serializeAtom = (state, atom) => {
+  const base = {
+    ...atom,
+    ...atom.data
+  }
+
+  Object.keys(base).forEach((key) => {
+    if (base[key] === '<p></p>') base[key] = null
+  })
+
+  state.atoms.structures[atom.type]['attachments'].forEach(({ key, plural }) => {
+    if (!base[key]) return
+    if (plural) {
+      base[key] = base[key].map((fp) => omit(fp, ['id', 'file']))
+    } else {
+      base[key] = omit(base[key], ['id', 'file'])
+    }
+  })
+
+  return omit(base, ['meta', 'timestamp', 'data'])
+}
+
 export const serializedAtomsSelector = (state) => {
   const h = {}
   Object.keys(state.atoms.atoms).forEach((rootKey) => {
-    h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => {
-      const base = {
-        ...atom,
-        ...atom.data,
-        data: null
-      }
-
-      state.atoms.structures[atom.type]['attachments'].forEach(({ key, plural }) => {
-        if (!base[key]) return
-        if (plural) {
-          base[key] = base[key].map((fp) => omit(fp, ['id', 'file']))
-        } else {
-          base[key] = omit(base[key], ['id', 'file'])
-        }
-      })
-
-      return base
-    })
+    h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => serializeAtom(state, atom))
   })
   return h
+}
+
+export const makeSerializedFormAtomSelector = (action) => (state) => {
+  return serializeAtom(state, {
+    ...state.atoms.form.atom,
+    ...action.filePlacements,
+    placement_type: state.atoms.placementType
+  })
 }
 
 // Sagas
@@ -178,11 +201,26 @@ function * setAtomFilePlacementsSaga () {
   yield takeEvery(SET_FORM_ATOM_FILE_PLACEMENTS, setAtomFilePlacements)
 }
 
+function * validateAndSaveFormAtomPerform (action) {
+  const serializedForm = yield select(makeSerializedFormAtomSelector(action))
+  const response = yield (call(apiPost, '/console/atoms/validate', serializedForm))
+  if (response.valid) {
+    yield put(saveFormAtom(action.filePlacements))
+  } else {
+    yield put(setFormValidationErrors(response))
+  }
+}
+
+function * validateAndSaveFormAtomSaga () {
+  yield takeEvery(VALIDATE_AND_SAVE_FORM_ATOM, validateAndSaveFormAtomPerform)
+}
+
 export const atomsSagas = [
   updateAtomPreviewsSaga,
   showAtomsFormSaga,
   hideAtomsFormSaga,
-  setAtomFilePlacementsSaga
+  setAtomFilePlacementsSaga,
+  validateAndSaveFormAtomSaga
 ]
 
 // State
@@ -192,11 +230,16 @@ export const initialState = {
   destroyedIds: {},
   namespace: null,
   structures: {},
+  placementType: null,
   form: {
     rootKey: null,
     index: null,
     atom: null,
-    edit: null
+    edit: null,
+    valid: null,
+    validating: false,
+    errors: {},
+    messages: []
   }
 }
 
@@ -214,6 +257,7 @@ function atomsReducer (state = initialState, action) {
       return {
         ...state,
         form: {
+          ...initialState.form,
           rootKey: action.rootKey,
           index: action.index,
           edit: false,
@@ -231,6 +275,7 @@ function atomsReducer (state = initialState, action) {
       return {
         ...state,
         form: {
+          ...initialState.form,
           rootKey: action.rootKey,
           index: action.index,
           atom: atomSelector(state, action.rootKey, action.index),
@@ -310,6 +355,15 @@ function atomsReducer (state = initialState, action) {
       }
     }
 
+    case VALIDATE_AND_SAVE_FORM_ATOM:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          validating: true
+        }
+      }
+
     case UPDATE_FORM_ATOM_TYPE:
       return {
         ...state,
@@ -370,6 +424,17 @@ function atomsReducer (state = initialState, action) {
         form: {
           ...state.form,
           atom: omit(state.form.atom, [action.attachmentKey])
+        }
+      }
+    }
+
+    case SET_FORM_VALIDATION_ERRORS: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          ...action.formSubstate,
+          validating: false
         }
       }
     }

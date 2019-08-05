@@ -56,6 +56,12 @@ cs:
         indestructible: Záznam není možné odstranit.
         file_format: 'není povoleného typu. Povolené typy: %{types}'
       models:
+        folio/atom/base:
+          attributes:
+            document_placements:
+              blank: jsou povinná položka
+            image_placements:
+              blank: jsou povinná položka
         folio/lead:
           attributes:
             verified_captcha:
@@ -145,10 +151,13 @@ cs:
     cover: Obrázek
     cover_placement: Obrázek
     description: Popisek
+    document_placement: Dokument
+    document_placements: Dokumenty
     email: E-mail
     featured: Zvýrazněno
     file: Soubor
     first_name: Křestní jméno
+    image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
     locale: Překlad
@@ -158,13 +167,13 @@ cs:
     perex: Perex
     phone: Telefon
     position: Pořadí
+    private_attachments: Soubory
     published: Zveřejněno
     published_at: Zveřejněno k datu
-    private_attachments: Soubory
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
-    to_label: Název
     title: Název
+    to_label: Název
     url: URL
     visit: Návštěva

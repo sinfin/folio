@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, Input, Label } from 'reactstrap'
+import { FormGroup, FormText, Input, Label } from 'reactstrap'
 import { isEqual } from 'lodash'
 
 import MultiSelect from 'containers/MultiSelect'
@@ -7,6 +7,10 @@ import RichTextEditor from 'components/RichTextEditor'
 import SingleSelectTrigger from 'components/SingleSelectTrigger'
 
 import fileTypeToKey from 'utils/fileTypeToKey'
+
+import AtomFormWrap from './styled/AtomFormWrap'
+
+const preventEnterSubmit = (e) => { e.key === 'Enter' && e.preventDefault() }
 
 class AtomForm extends React.PureComponent {
   constructor (props) {
@@ -57,6 +61,7 @@ class AtomForm extends React.PureComponent {
 
   render () {
     const { data, meta, type } = this.props.atom
+    const { errors, messages, validating } = this.props.form
     const prefix = `${this.props.namespace}[${this.props.index + 1}]`
     let autofocused = false
     const autofocusRef = () => {
@@ -69,7 +74,7 @@ class AtomForm extends React.PureComponent {
     }
 
     return (
-      <React.Fragment>
+      <AtomFormWrap>
         <div className='row mb-4'>
           <div className='col-6'>
             <Input
@@ -104,6 +109,18 @@ class AtomForm extends React.PureComponent {
           </div>
         </div>
 
+        {messages.length > 0 && (
+          <div className='my-3 alert alert-danger'>
+            <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
+
+            <ul>
+              {messages.map((message) => (
+                <li className='mt-2' key={message}>{message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className='d-flex'>
           {meta.attachments.map((attachmentType) => (
             attachmentType.plural ? null : (
@@ -118,7 +135,7 @@ class AtomForm extends React.PureComponent {
         </div>
 
         {Object.keys(meta.structure).map((key) => (
-          <FormGroup key={key}>
+          <FormGroup key={key} className={errors[key] ? 'form-group-invalid' : 'form-group-valid'}>
             {<Label>{meta.structure[key].label}</Label>}
             {
               meta.structure[key].type === 'richtext' ? (
@@ -127,6 +144,7 @@ class AtomForm extends React.PureComponent {
                   defaultValue={data[key]}
                   onChange={(html) => this.onRichTextChange(html, key)}
                   placeholder={meta.structure[key].label}
+                  invalid={Boolean(errors[key])}
                   ref={autofocusRef()}
                 />
               ) : (
@@ -137,6 +155,7 @@ class AtomForm extends React.PureComponent {
                     defaultValue={data[key]}
                     onChange={(e) => this.onChange(e, key)}
                     placeholder={meta.structure[key].label}
+                    invalid={Boolean(errors[key])}
                   >
                     {meta.structure[key].collection.map((record) => (
                       <option key={record[1]} value={record[1]}>{record[0]}</option>
@@ -148,12 +167,18 @@ class AtomForm extends React.PureComponent {
                     name={key}
                     defaultValue={data[key]}
                     onChange={(e) => this.onChange(e, key)}
+                    onKeyPress={preventEnterSubmit}
                     placeholder={meta.structure[key].label}
                     innerRef={autofocusRef()}
+                    invalid={Boolean(errors[key])}
                   />
                 )
               )
             }
+
+            {errors[key] && (
+              <FormText className='invalid-feedback' color='danger'>{errors[key]}</FormText>
+            )}
           </FormGroup>
         ))}
 
@@ -167,7 +192,9 @@ class AtomForm extends React.PureComponent {
             </div>
           ) : null
         ))}
-      </React.Fragment>
+
+        {validating && <span className='folio-loader' />}
+      </AtomFormWrap>
     )
   }
 }
