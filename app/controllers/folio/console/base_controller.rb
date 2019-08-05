@@ -152,6 +152,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       base = [:id,
               :type,
               :position,
+              :placement_type,
               :_destroy,
               *file_placements_strong_params] + Folio::Atom.strong_params
 

@@ -8,6 +8,10 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
                               .where(id: params[:ids])
                               .to_a
                               .group_by(&:locale)
+
+    if params[:keys]
+      params[:keys].each { |key| @atoms[key == '' ? nil : key] ||= [] }
+    end
   end
 
   def preview
@@ -21,8 +25,11 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       atoms.each do |attrs|
         next if attrs['destroyed']
         next if attrs['_destroy']
+        props = attrs.to_h
+                     .without('id', 'placement_id')
+                     .merge(placement: attrs[:placement_type].constantize.new)
         @atoms[locale] << attrs['type'].constantize
-                                       .new(attrs.to_h.without('id'))
+                                       .new(props)
       end
     end
 

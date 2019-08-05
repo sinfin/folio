@@ -116,7 +116,8 @@ export const atomTypesSelector = (state) => {
 const serializeAtom = (state, atom) => {
   const base = {
     ...atom,
-    ...atom.data
+    ...omit(atom.data, ['placement_id']),
+    placement_type: state.atoms.placementType
   }
 
   Object.keys(base).forEach((key) => {

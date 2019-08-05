@@ -63,7 +63,10 @@ module Folio::Console::FormsHelper
     opts[:html][:class] ||= ''
     opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms f-c-anti-container-fluid"
 
+
     simple_form_for(model, opts) do |f|
+      keys = f.object.class.try(:atom_locales) || [nil]
+
       concat(cell('folio/console/atoms/form_header', f.object).show.html_safe)
       concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__inner') do
         concat(
@@ -72,13 +75,24 @@ module Folio::Console::FormsHelper
                                nil,
                                class: 'f-c-simple-form-with-atoms__iframe',
                                id: 'f-c-simple-form-with-atoms__iframe',
-                               src: console_atoms_path(ids: f.object.all_atoms_in_array)))
+                               src: console_atoms_path(ids: f.object.all_atoms_in_array,
+                                                       keys: keys)))
             concat(content_tag(:span, nil, class: 'folio-loader'))
           end
         )
         concat(form_footer(f, static: true))
 
-        concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form f-c-simple-form-with-atoms__form--settings') do
+        settings_class = [
+          'f-c-simple-form-with-atoms__form',
+          'f-c-simple-form-with-atoms__form--settings'
+        ]
+
+        if f.object.new_record? && f.object.all_atoms_in_array.blank?
+          settings_class << 'f-c-simple-form-with-atoms__form--active'
+        end
+
+        concat(content_tag(:div, class: settings_class.join(' ')) do
+          concat(content_tag(:div, nil, class: 'f-c-simple-form-with-atoms__form-overlay'))
           concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form-inner') do
             concat(cell('folio/console/atoms/settings_header').show.html_safe)
             concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form-scroll') do
@@ -88,6 +102,7 @@ module Folio::Console::FormsHelper
         end)
 
         concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form f-c-simple-form-with-atoms__form--atoms') do
+          concat(content_tag(:div, nil, class: 'f-c-simple-form-with-atoms__form-overlay'))
           concat(content_tag(:div, class: 'f-c-simple-form-with-atoms__form-inner') do
             concat(console_form_atoms(f))
           end)

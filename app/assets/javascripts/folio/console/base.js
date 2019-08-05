@@ -51,6 +51,7 @@
 //= require folio/console/modules/_dirty-forms
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_multiselect
+//= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal
 //= require folio/console/react_picker/react_picker

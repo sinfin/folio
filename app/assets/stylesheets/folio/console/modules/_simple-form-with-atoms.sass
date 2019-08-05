@@ -64,6 +64,14 @@
       right: 15px
       background: $white
 
+  &__form-overlay
+    position: absolute
+    z-index: 1
+    top: 0
+    left: 0
+    right: 0
+    height: 100%
+
   &__form-inner
     background: $white
     margin-left: auto
@@ -74,6 +82,8 @@
     padding: $grid-gutter-width $grid-gutter-width 0
     display: flex
     flex-direction: column
+    position: relative
+    z-index: 2
 
   &__form-scroll
     overflow-y: auto

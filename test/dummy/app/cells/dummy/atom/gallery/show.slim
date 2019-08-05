@@ -1,7 +1,7 @@
 .d-atom.d-atom-gallery
   .container
     - if model.title.present?
-      h2 = model.titel
+      h2 = model.title
 
     ul.list-unstyled.d-flex.flex-wrap.d-atom-gallery__list
       - model.image_placements.each do |image_placement|
