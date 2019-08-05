@@ -152,6 +152,16 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     klass::STRUCTURE.keys.include?(name_without_operator) || super
   end
 
+  def model(key, includes = nil)
+    delim = Folio::Console::BaseController::TYPE_ID_DELIMITER
+    class_name, id = data[key.to_s].split(delim)
+    scope = class_name.constantize
+    if includes
+      scope = scope.includes(includes)
+    end
+    scope.find_by(id: id)
+  end
+
   private
 
     def klass
