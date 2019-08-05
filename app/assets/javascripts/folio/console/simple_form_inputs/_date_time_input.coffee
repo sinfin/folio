@@ -17,15 +17,25 @@ DATE_CONFIG = $.extend {}, CONFIG, format: 'DD. MM. YYYY'
 
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 
+window.folioConsoleInitDatePicker = (el) ->
+  $(el).datetimepicker(DATE_CONFIG)
+
+window.folioConsoleInitDateTimePicker = (el) ->
+  $(el).datetimepicker(CONFIG)
+
+window.folioConsoleUnbindDatePicker = (el) ->
+  $(el).datetimepicker('destroy')
+
 bindDatePicker = ($elements) ->
   $elements.each ->
     $this = $(this)
     return if $this.hasClass('f-c-js-manual')
 
     if $this.hasClass('folio-console-date-picker--date')
+      window.folioConsoleInitDatePicker(this)
       $this.datetimepicker(DATE_CONFIG)
     else
-      $this.datetimepicker(CONFIG)
+      window.folioConsoleInitDateTimePicker(this)
 
 unbindDatePicker = ($elements) ->
   $elements.datetimepicker('destroy')

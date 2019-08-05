@@ -5,12 +5,12 @@ import { isEqual } from 'lodash'
 import MultiSelect from 'containers/MultiSelect'
 import RichTextEditor from 'components/RichTextEditor'
 import SingleSelectTrigger from 'components/SingleSelectTrigger'
+import DateInput from 'components/DateInput'
 
 import fileTypeToKey from 'utils/fileTypeToKey'
+import preventEnterSubmit from 'utils/preventEnterSubmit'
 
 import AtomFormWrap from './styled/AtomFormWrap'
-
-const preventEnterSubmit = (e) => { e.key === 'Enter' && e.preventDefault() }
 
 class AtomForm extends React.PureComponent {
   constructor (props) {
@@ -40,16 +40,20 @@ class AtomForm extends React.PureComponent {
     this.props.updateFormAtomValue(key, html)
   }
 
-  inputType (type) {
+  inputProps (type) {
     switch (type) {
+      case 'code':
       case 'text':
-        return 'textarea'
+        return { type: 'textarea' }
 
-      case 'relation':
-        return 'select'
+      case 'float':
+        return { type: 'number', step: '0.01' }
+
+      case 'integer':
+        return { type: 'number', step: '1' }
 
       default:
-        return 'text'
+        return { type: 'text' }
     }
   }
 
@@ -57,6 +61,64 @@ class AtomForm extends React.PureComponent {
     if (this.autofocusRef.current) {
       setTimeout(() => { this.autofocusRef.current.focus() }, 0)
     }
+  }
+
+  renderInput (key, meta, data, autofocusRef) {
+    if (meta.structure[key].type === 'richtext') {
+      return (
+        <RichTextEditor
+          name={key}
+          defaultValue={data[key]}
+          onChange={(html) => this.onRichTextChange(html, key)}
+          placeholder={meta.structure[key].label}
+          invalid={Boolean(this.props.form.errors[key])}
+          ref={autofocusRef()}
+        />
+      )
+    }
+
+    if (meta.structure[key].type === 'date' || meta.structure[key].type === 'datetime') {
+      return (
+        <DateInput
+          name={key}
+          defaultValue={data[key]}
+          onChange={(e) => this.onChange(e, key)}
+          placeholder={meta.structure[key].label}
+          invalid={Boolean(this.props.form.errors[key])}
+          type={meta.structure[key].type}
+        />
+      )
+    }
+
+    if (meta.structure[key].collection) {
+      return (
+        <Input
+          type='select'
+          name={key}
+          defaultValue={data[key]}
+          onChange={(e) => this.onChange(e, key)}
+          placeholder={meta.structure[key].label}
+          invalid={Boolean(this.props.form.errors[key])}
+        >
+          {meta.structure[key].collection.map((record) => (
+            <option key={record[1]} value={record[1]}>{record[0]}</option>
+          ))}
+        </Input>
+      )
+    }
+
+    return (
+      <Input
+        {...this.inputProps(meta.structure[key].type)}
+        name={key}
+        defaultValue={data[key]}
+        onChange={(e) => this.onChange(e, key)}
+        onKeyPress={preventEnterSubmit}
+        placeholder={meta.structure[key].label}
+        innerRef={autofocusRef()}
+        invalid={Boolean(this.props.form.errors[key])}
+      />
+    )
   }
 
   render () {
@@ -137,44 +199,7 @@ class AtomForm extends React.PureComponent {
         {Object.keys(meta.structure).map((key) => (
           <FormGroup key={key} className={errors[key] ? 'form-group-invalid' : 'form-group-valid'}>
             {<Label>{meta.structure[key].label}</Label>}
-            {
-              meta.structure[key].type === 'richtext' ? (
-                <RichTextEditor
-                  name={key}
-                  defaultValue={data[key]}
-                  onChange={(html) => this.onRichTextChange(html, key)}
-                  placeholder={meta.structure[key].label}
-                  invalid={Boolean(errors[key])}
-                  ref={autofocusRef()}
-                />
-              ) : (
-                meta.structure[key].collection ? (
-                  <Input
-                    type={this.inputType(meta.structure[key].type)}
-                    name={key}
-                    defaultValue={data[key]}
-                    onChange={(e) => this.onChange(e, key)}
-                    placeholder={meta.structure[key].label}
-                    invalid={Boolean(errors[key])}
-                  >
-                    {meta.structure[key].collection.map((record) => (
-                      <option key={record[1]} value={record[1]}>{record[0]}</option>
-                    ))}
-                  </Input>
-                ) : (
-                  <Input
-                    type={this.inputType(meta.structure[key].type)}
-                    name={key}
-                    defaultValue={data[key]}
-                    onChange={(e) => this.onChange(e, key)}
-                    onKeyPress={preventEnterSubmit}
-                    placeholder={meta.structure[key].label}
-                    innerRef={autofocusRef()}
-                    invalid={Boolean(errors[key])}
-                  />
-                )
-              )
-            }
+            {this.renderInput(key, meta, data, autofocusRef)}
 
             {errors[key] && (
               <FormText className='invalid-feedback' color='danger'>{errors[key]}</FormText>

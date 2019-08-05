@@ -11,7 +11,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     code
     integer
     float
-    color
     date
     datetime
   ]

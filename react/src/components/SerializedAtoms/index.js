@@ -1,6 +1,6 @@
 import React from 'react'
 
-function SerializedAttachment ({ prefix, attachmentKey, attachment, index }) {
+function SerializedAttachment ({ prefix, attachmentKey, attachment, index, plural }) {
   let name = (field) => `${prefix}[${attachmentKey}][${field}]`
   if (typeof index !== 'undefined') {
     name = (field) => `${prefix}[${attachmentKey}][${index}][${field}]`
@@ -8,7 +8,7 @@ function SerializedAttachment ({ prefix, attachmentKey, attachment, index }) {
 
   return (
     <React.Fragment>
-      <input type='hidden' name={name('id')} value={attachment['id'] || ''} />
+      {plural && <input type='hidden' name={name('id')} value={attachment['id'] || ''} />}
       {attachment['_destroy'] && <input type='hidden' name={name('_destroy')} value='1' />}
       <input type='hidden' name={name('file_id')} value={attachment['file_id']} />
       <input type='hidden' name={name('alt')} value={attachment['alt'] || ''} />
@@ -25,7 +25,7 @@ function SerializedAttachments ({ atom, prefix }) {
         if (!values) return null
         return (
           plural ? (
-            values.map((value, i) => <SerializedAttachment prefix={prefix} attachmentKey={key} attachment={value} index={i} key={value.file_id} />)
+            values.map((value, i) => <SerializedAttachment prefix={prefix} attachmentKey={key} attachment={value} index={i} key={value.file_id} plural />)
           ) : (
             <SerializedAttachment prefix={prefix} attachmentKey={key} attachment={values} key={key} />
           )
