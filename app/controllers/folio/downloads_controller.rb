@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
-class Folio::DownloadsController < ApplicationController
+class Folio::DownloadsController < ActionController::Base
   layout false
   before_action :find_file
 
   def show
-    respond_to do |format|
-      format.all do
-        redirect_to @file.file.remote_url
-      end
-    end
+    redirect_to @file.file.remote_url
   end
 
   private

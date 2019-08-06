@@ -50,6 +50,8 @@ Folio::Engine.routes.draw do
   resources :newsletter_subscriptions, only: %i[create]
 
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
-    get '/download/:hash_id/*name', to: 'downloads#show', as: :download
+    get '/download/:hash_id/*name', to: 'downloads#show',
+                                    as: :download,
+                                    constraints: { name: /.*/ }
   end
 end
