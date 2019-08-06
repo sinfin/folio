@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::File < Folio::ApplicationRecord
+  include Folio::HasHashId
   include Folio::Taggable
   include Folio::SanitizeFilename
   include Folio::MimeTypeDetection
@@ -65,6 +66,8 @@ end
 #  file_size       :bigint(8)
 #  mime_type       :string(255)
 #  additional_data :json
+#  file_metadata   :json
+#  hash_id         :string
 #
 # Indexes
 #

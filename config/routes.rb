@@ -48,4 +48,8 @@ Folio::Engine.routes.draw do
   resource :csrf, only: %i[show], controller: :csrf
   resources :leads, only: %i[create]
   resources :newsletter_subscriptions, only: %i[create]
+
+  scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
+    get '/download/:hash_id/*name', to: 'downloads#show', as: :download
+  end
 end
