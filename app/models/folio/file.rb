@@ -37,6 +37,10 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def self.hash_id_additional_classes
+    [Folio::PrivateAttachment]
+  end
+
   private
 
     def touch_placements
