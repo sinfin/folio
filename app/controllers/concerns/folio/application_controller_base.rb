@@ -12,8 +12,7 @@ module Folio::ApplicationControllerBase
     layout 'folio/application'
 
     before_action do
-      @site = Folio::Site.instance
-      I18n.locale = params[:locale] || @site.locale
+      I18n.locale = params[:locale] || Folio::Site.instance.locale
     end
   end
 
