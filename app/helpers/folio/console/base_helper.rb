@@ -8,16 +8,6 @@ module Folio::Console::BaseHelper
     [i, title].compact.join(' ').html_safe
   end
 
-  def add_action_breadcrumb(title = false)
-    return if action_name == 'index'
-    if title
-      add_breadcrumb title
-    else
-      name = add_action_breadcrumb_name
-      add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.#{name}")
-    end
-  end
-
   def rendered_breadcrumbs
     if @breadcrumbs.present?
       render_breadcrumbs(
@@ -25,17 +15,4 @@ module Folio::Console::BaseHelper
       )
     end
   end
-
-  private
-
-    def add_action_breadcrumb_name
-      case action_name
-      when 'update'
-        'edit'
-      when 'create'
-        'new'
-      else
-        action_name
-      end
-    end
 end
