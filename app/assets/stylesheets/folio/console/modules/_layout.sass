@@ -10,8 +10,22 @@
   background: $gray-800
   color: $white
 
+.f-c-layout-main
+  height: 100%
+  width: 100%
+  display: flex
+  flex-direction: column
+
+  &--devise
+    flex: 1 0 auto
+
 .f-c-layout-main-container
   padding-top: $spacer
+  position: relative
+  z-index: 1
+  flex: 1 1 auto
+  overflow-y: scroll
+  -webkit-overflow-scrolling: touch
 
 +mq-desktop-menu
   .f-c-layout-html
@@ -28,15 +42,6 @@
       display: flex
       flex-direction: column
       justify-content: center
-
-  .f-c-layout-main
-    height: 100%
-    width: 100%
-    display: flex
-    flex-direction: column
-
-    &--devise
-      flex: 1 0 auto
 
   .f-c-layout-sidebar
     height: 100%
@@ -60,13 +65,6 @@
       top: 0
       right: 0
       left: 0
-
-  .f-c-layout-main-container
-    position: relative
-    z-index: 1
-    flex: 1 1 auto
-    overflow-y: scroll
-    -webkit-overflow-scrolling: touch
 
 +mq-mobile-menu
   .f-c-layout-sidebar

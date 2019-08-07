@@ -11,10 +11,10 @@
 
 = button-style
   +unbutton
-  flex: 0 0 40px
-  width: 40px
-  height: 40px
-  min-width: 40px
+  flex: 0 0 24px
+  width: 24px
+  height: 24px
+  min-width: 24px
   padding: 0
   display: inline-flex
   align-items: center
@@ -29,40 +29,37 @@
 
   &__atom
     position: relative
-    padding: 0 (( 10px + 40px + 10px )) 0 10px
-    min-height: 4 * 40px
+    min-height: 10px
+    z-index: 2
 
-    > *
-      position: relative
-      z-index: 2
-
-    &:first-child > :first-child
+    &:first-of-type > :first-child
       margin-top: 0
 
-    &:last-child > :first-child
+    &:last-of-type > :first-child
       margin-bottom: 0
 
   &__controls
     position: absolute
-    top: -10px
+    top: 0
     left: 0
-    right: 50px
-    bottom: -10px
-    z-index: 1
-    border: 2px dashed rgba(#589E92, 0.79)
+    right: 0
+    bottom: 0
+    z-index: 2
+    border: 1px dashed rgba(#589E92, 0.79)
     visibility: hidden
+    cursor: pointer
 
     .f-c-atoms-previews__buttons
       position: absolute
-      top: -2px
-      left: 100%
-      bottom: 0
+      top: -12px
+      right: -12px
       display: flex
-      flex-direction: column
-      width: 40px
+      height: 24px
+      z-index: 2
 
     .f-c-atoms-previews__button
       +button-style
+      margin-left: 15px
 
       &--edit
         +button-variant($secondary, $secondary)
@@ -75,11 +72,20 @@
       &--remove
         +button-variant($danger, $danger)
 
+  &__controls-overlay
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 1
+
   &__insert
     width: 100%
     height: 0
     position: relative
-    z-index: 3
+    top: -1rem
+    z-index: 1
     opacity: 0
 
     &:hover
@@ -87,17 +93,18 @@
 
   &__insert-hint
     position: absolute
-    top: -50px
+    top: 0
     left: 0
     width: 100%
-    height: 60px
+    height: 20px
+    cursor: pointer
 
     &:before
       content: ''
-      border-top: 2px dashed rgba(#589E92, 0.79)
+      border-top: 1px dashed rgba(#589E92, 0.79)
       width: 100%
       position: absolute
-      top: (( (60px - 2px) / 2 ))
+      top: 0
       left: 0
       display: block
       z-index: 1
@@ -105,12 +112,22 @@
   &__insert-hint-btn
     +button-style
     +button-variant($secondary, $secondary)
-    font-size: 20px
+    width: 20px
+    height: 20px
+    flex: 0 0 20px
+    min-width: 20px
+    border-radius: 100%
     position: absolute
-    top: 10px
+    top: -10px
     left: 50%
-    margin-left: -20px
+    margin-left: -10px
     z-index: 2
+
+  &__insert-inner
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
 
   &__insert-ul
     background: $secondary
@@ -140,3 +157,9 @@
 
   &__atom:hover &__controls
     visibility: visible
+
+  &__insert--active
+    z-index: 3
+
+  &__insert--active &__insert-hint:before
+    display: none

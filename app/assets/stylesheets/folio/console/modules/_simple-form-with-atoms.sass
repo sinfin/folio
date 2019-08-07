@@ -1,15 +1,16 @@
 .f-c-simple-form-with-atoms
-  min-height: calc(100% + #{$grid-gutter-half})
-  margin-top: - $grid-gutter-half
   position: relative
   display: flex
   flex-direction: column
   overflow: hidden
+  flex: 1 1 auto
 
   .f-c-form-footer
     padding: $grid-gutter-width
     margin: 0
-    z-index: 1
+    z-index: 2
+    position: absolute
+    width: 100%
 
     .container-fluid
       padding: 0
@@ -48,7 +49,7 @@
     left: 0
     right: 0
     height: 100%
-    z-index: 2
+    z-index: 3
     display: none
 
     &--active

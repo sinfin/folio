@@ -88,9 +88,10 @@ handleInsertClick = (e) ->
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
+  .on 'click', '.f-c-atoms-previews__controls-overlay', handleEditClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
   .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick
-  .on 'click', '.f-c-atoms-previews__insert-hint-btn', showInsertHint
+  .on 'click', '.f-c-atoms-previews__insert-hint', showInsertHint
   .on 'mouseleave', '.f-c-atoms-previews__insert', hideInsertHint
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()

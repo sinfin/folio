@@ -16,6 +16,9 @@ html.f-c-layout-html lang=I18n.locale
       - if content_for?(:with_aside)
         = yield(:with_aside)
 
+      - elsif content_for?(:with_atoms)
+        = yield(:with_atoms)
+
       - else
         .f-c-layout-main-container.container-fluid
           = yield
