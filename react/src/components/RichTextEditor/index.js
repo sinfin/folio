@@ -12,7 +12,8 @@ class RichTextEditor extends React.PureComponent {
       window.folioConsoleInitRedactor(this.editorRef.current, {}, {
         callbacks: {
           changed: this.props.onChange
-        }
+        },
+        toolbarFixedTarget: '.f-c-atom-form-toolbar-fix-parent'
       })
     }
   }

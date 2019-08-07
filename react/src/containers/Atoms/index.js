@@ -82,7 +82,7 @@ class Atoms extends React.PureComponent {
     const { atoms, destroyedIds, form, namespace, structures } = this.props.atoms
 
     return (
-      <div>
+      <React.Fragment>
         {Object.keys(atoms).map((key) => (
           <SerializedAtoms
             key={key}
@@ -108,7 +108,7 @@ class Atoms extends React.PureComponent {
             structures={structures}
           />
         )}
-      </div>
+      </React.Fragment>
     )
   }
 }

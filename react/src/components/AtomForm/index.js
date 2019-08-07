@@ -10,6 +10,8 @@ import DateInput from 'components/DateInput'
 import fileTypeToKey from 'utils/fileTypeToKey'
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
+import AtomFormScroll from './styled/AtomFormScroll'
+import AtomFormTop from './styled/AtomFormTop'
 import AtomFormWrap from './styled/AtomFormWrap'
 
 class AtomForm extends React.PureComponent {
@@ -137,87 +139,93 @@ class AtomForm extends React.PureComponent {
 
     return (
       <AtomFormWrap>
-        <div className='row mb-4'>
-          <div className='col-6'>
-            <Input
-              type='select'
-              defaultValue={type}
-              name={`${prefix}[type]`}
-              onChange={this.onTypeChange}
-              className='folio-console-atom-type-select'
-            >
-              {this.props.atomTypes.map(({ key, title }) => (
-                <option key={key} value={key}>{title}</option>
-              ))}
-            </Input>
-          </div>
-
-          <div className='col-6 d-flex align-items-center justify-content-end'>
-            <button
-              type='button'
-              className='btn btn-outline f-c-atoms-settings-header__button'
-              onClick={this.props.saveFormAtom}
-            >
-              {window.FolioConsole.translations.done}
-            </button>
-
-            <button
-              type='button'
-              className='f-c-atoms-settings-header__close mi ml-g'
-              onClick={this.props.closeFormAtom}
-            >
-              close
-            </button>
-          </div>
-        </div>
-
-        {messages.length > 0 && (
-          <div className='my-3 alert alert-danger'>
-            <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
-
-            <ul>
-              {messages.map((message) => (
-                <li className='mt-2' key={message}>{message}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        <div className='d-flex'>
-          {meta.attachments.map((attachmentType) => (
-            attachmentType.plural ? null : (
-              <SingleSelectTrigger
-                key={attachmentType.key}
-                attachmentType={attachmentType}
-                data={this.props.atom[attachmentType.key]}
-                remove={() => this.props.removeFormAtomAttachment(attachmentType.key)}
-              />
-            )
-          ))}
-        </div>
-
-        {Object.keys(meta.structure).map((key) => (
-          <FormGroup key={key} className={errors[key] ? 'form-group-invalid' : 'form-group-valid'}>
-            {<Label>{meta.structure[key].label}</Label>}
-            {this.renderInput(key, meta, data, autofocusRef)}
-
-            {errors[key] && (
-              <FormText className='invalid-feedback' color='danger'>{errors[key]}</FormText>
-            )}
-          </FormGroup>
-        ))}
-
-        {meta.attachments.map((attachmentType) => (
-          attachmentType.plural ? (
-            <div className='mt-4' key={attachmentType.key}>
-              <MultiSelect
-                filesKey={fileTypeToKey(attachmentType['file_type'])}
-                shouldLoadFiles
-              />
+        <AtomFormTop>
+          <div className='row mb-4'>
+            <div className='col-6'>
+              <Input
+                type='select'
+                defaultValue={type}
+                name={`${prefix}[type]`}
+                onChange={this.onTypeChange}
+                className='folio-console-atom-type-select'
+              >
+                {this.props.atomTypes.map(({ key, title }) => (
+                  <option key={key} value={key}>{title}</option>
+                ))}
+              </Input>
             </div>
-          ) : null
-        ))}
 
+            <div className='col-6 d-flex align-items-center justify-content-end'>
+              <button
+                type='button'
+                className='btn btn-outline f-c-atoms-settings-header__button'
+                onClick={this.props.saveFormAtom}
+              >
+                {window.FolioConsole.translations.done}
+              </button>
+
+              <button
+                type='button'
+                className='f-c-atoms-settings-header__close mi ml-g'
+                onClick={this.props.closeFormAtom}
+              >
+                close
+              </button>
+            </div>
+          </div>
+        </AtomFormTop>
+
+        <AtomFormScroll className='f-c-atom-form-toolbar-fix-parent'>
+          <div>
+            {messages.length > 0 && (
+              <div className='my-3 alert alert-danger'>
+                <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
+
+                <ul>
+                  {messages.map((message) => (
+                    <li className='mt-2' key={message}>{message}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className='d-flex'>
+              {meta.attachments.map((attachmentType) => (
+                attachmentType.plural ? null : (
+                  <SingleSelectTrigger
+                    key={attachmentType.key}
+                    attachmentType={attachmentType}
+                    data={this.props.atom[attachmentType.key]}
+                    remove={() => this.props.removeFormAtomAttachment(attachmentType.key)}
+                  />
+                )
+              ))}
+            </div>
+
+            {Object.keys(meta.structure).map((key) => (
+              <FormGroup key={key} className={errors[key] ? 'form-group-invalid' : 'form-group-valid'}>
+                {<Label>{meta.structure[key].label}</Label>}
+                {this.renderInput(key, meta, data, autofocusRef)}
+
+                {errors[key] && (
+                  <FormText className='invalid-feedback' color='danger'>{errors[key]}</FormText>
+                )}
+              </FormGroup>
+            ))}
+
+            {meta.attachments.map((attachmentType) => (
+              attachmentType.plural ? (
+                <div className='mt-4' key={attachmentType.key}>
+                  <MultiSelect
+                    filesKey={fileTypeToKey(attachmentType['file_type'])}
+                    shouldLoadFiles
+                  />
+                </div>
+              ) : null
+            ))}
+
+          </div>
+        </AtomFormScroll>
         {validating && <span className='folio-loader' />}
       </AtomFormWrap>
     )

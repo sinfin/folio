@@ -7,14 +7,14 @@ ADVANCED_OPTIONS =
   imageUpload: '/console/images.json'
   imageManagerJson: '/console/images.json'
   definedlinks: '/console/api/links.json'
-  toolbarFixed: false
+  toolbarFixed: true
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
 
 OPTIONS =
   plugins: ['table', 'button', 'definedlinks']
   buttonsHide: ['file', 'image']
-  toolbarFixed: false
+  toolbarFixed: true
   definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']

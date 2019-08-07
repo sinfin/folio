@@ -16,6 +16,9 @@ en:
           new: Create one?
 
       form:
+        footer:
+          dirty_forms: Unsaved changes
+
         errors:
           fix: Fix
 

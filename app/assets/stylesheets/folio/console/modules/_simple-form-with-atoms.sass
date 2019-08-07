@@ -96,3 +96,11 @@
   @for $i from 0 through 10
     .f-c-atoms-form-header[data-active-offset="#{$i}"] + &__inner &__form:after
       right: $grid-gutter-half + $i * 60px
+
+  .f-c-atoms
+    &,
+    .folio-react-app
+      flex: 1 1 auto
+      display: flex
+      flex-direction: column
+      height: 100%

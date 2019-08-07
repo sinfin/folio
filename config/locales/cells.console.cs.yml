@@ -16,6 +16,9 @@ cs:
           new: Vytvořit?
 
       form:
+        footer:
+          dirty_forms: Neuložené změny
+
         errors:
           fix: Opravit
 
