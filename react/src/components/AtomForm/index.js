@@ -5,6 +5,7 @@ import { isEqual } from 'lodash'
 import MultiSelect from 'containers/MultiSelect'
 import RichTextEditor from 'components/RichTextEditor'
 import SingleSelectTrigger from 'components/SingleSelectTrigger'
+import ColorInput from 'components/ColorInput'
 import DateInput from 'components/DateInput'
 
 import fileTypeToKey from 'utils/fileTypeToKey'
@@ -36,8 +37,8 @@ class AtomForm extends React.PureComponent {
     this.props.updateFormAtomValue(key, e.target.value)
   }
 
-  onRichTextChange (html, key) {
-    this.props.updateFormAtomValue(key, html)
+  onValueChange (value, key) {
+    this.props.updateFormAtomValue(key, value)
   }
 
   inputProps (type) {
@@ -69,10 +70,23 @@ class AtomForm extends React.PureComponent {
         <RichTextEditor
           name={key}
           defaultValue={data[key]}
-          onChange={(html) => this.onRichTextChange(html, key)}
+          onChange={(html) => this.onValueChange(html, key)}
           placeholder={meta.structure[key].label}
           invalid={Boolean(this.props.form.errors[key])}
           ref={autofocusRef()}
+        />
+      )
+    }
+
+    if (meta.structure[key].type === 'color') {
+      return (
+        <ColorInput
+          name={key}
+          defaultValue={data[key]}
+          onChange={(colorString) => this.onValueChange(colorString, key)}
+          placeholder={meta.structure[key].label}
+          invalid={Boolean(this.props.form.errors[key])}
+          type={meta.structure[key].type}
         />
       )
     }
@@ -134,6 +148,8 @@ class AtomForm extends React.PureComponent {
       classNames.push('date')
     } else if (meta.structure[key].type === 'datetime') {
       classNames.push('datetime')
+    } else if (meta.structure[key].type === 'color') {
+      classNames.push('color')
     }
 
     return classNames.join(' ')

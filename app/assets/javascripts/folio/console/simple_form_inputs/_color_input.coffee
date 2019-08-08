@@ -1,6 +1,7 @@
 COLOR_INPUT_SELECTOR = '.folio-console-color-input'
 
 CONFIG =
+  allowEmpty: true
   showAlpha: true
   showButtons: false
 

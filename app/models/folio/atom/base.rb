@@ -13,6 +13,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     float
     date
     datetime
+    color
   ]
 
   ATTACHMENTS = []
