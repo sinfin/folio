@@ -19,7 +19,8 @@
     "jquery-debounce": "^1.0.6",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "multiselect": "^0.9.12",
-    "autosize": "^4.0.2"
+    "autosize": "^4.0.2",
+    "spectrum": "^1.8.0"
   },
   "devDependencies": {}
 }

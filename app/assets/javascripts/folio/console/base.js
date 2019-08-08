@@ -8,6 +8,7 @@
 //= require jquery-debounce/jquery.debounce
 //= require multiselect/js/jquery.multi-select
 //= require autosize/dist/autosize
+//= require spectrum/spectrum
 
 //= require jquery-ui/jquery-ui
 //= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
@@ -58,6 +59,7 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/tagsinput/tagsinput
 
+//= require folio/console/simple_form_inputs/_color_input
 //= require folio/console/simple_form_inputs/_date_time_input
 //= require folio/console/simple_form_inputs/_redactor_input
 //= require folio/console/simple_form_inputs/_string_input
