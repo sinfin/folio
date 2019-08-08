@@ -4,7 +4,7 @@
       .f-c-atoms-previews__locale[
         data-locale=locale
         data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
-        hidden=(index != 0)
+        hidden=(!locale.nil? && locale.to_sym != I18n.default_locale)
       ]
         = insert
         - model[locale].each_with_index do |atom, atom_index|

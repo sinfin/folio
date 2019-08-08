@@ -6,4 +6,8 @@ class Folio::Console::Atoms::FormHeaderCell < Folio::ConsoleCell
   def locales
     model.class.try(:atom_locales) || [I18n.default_locale]
   end
+
+  def active(locale)
+    locale.nil? || locale.to_sym == I18n.default_locale
+  end
 end

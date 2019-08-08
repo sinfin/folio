@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormGroup, FormText, Input, Label } from 'reactstrap'
 import { isEqual } from 'lodash'
+import TextareaAutosize from 'react-autosize-textarea'
 
 import MultiSelect from 'containers/MultiSelect'
 import RichTextEditor from 'components/RichTextEditor'
@@ -43,10 +44,6 @@ class AtomForm extends React.PureComponent {
 
   inputProps (type) {
     switch (type) {
-      case 'code':
-      case 'text':
-        return { type: 'textarea' }
-
       case 'float':
         return { type: 'number', step: '0.01' }
 
@@ -97,6 +94,24 @@ class AtomForm extends React.PureComponent {
           onChange={(e) => this.onChange(e, key)}
           invalid={Boolean(this.props.form.errors[key])}
           type={meta.structure[key].type}
+        />
+      )
+    }
+
+    if (meta.structure[key].type === 'text' || meta.structure[key].type === 'code') {
+      const classNames = ['form-control']
+
+      if (this.props.form.errors[key]) {
+        classNames.push('is-invalid')
+      }
+
+      return (
+        <TextareaAutosize
+          name={key}
+          defaultValue={data[key]}
+          onChange={(e) => this.onValueChange(e.currentTarget.value, key)}
+          type={meta.structure[key].type}
+          className={classNames.join(' ')}
         />
       )
     }
