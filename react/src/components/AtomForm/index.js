@@ -10,8 +10,6 @@ import DateInput from 'components/DateInput'
 import fileTypeToKey from 'utils/fileTypeToKey'
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
-import AtomFormScroll from './styled/AtomFormScroll'
-import AtomFormTop from './styled/AtomFormTop'
 import AtomFormWrap from './styled/AtomFormWrap'
 
 class AtomForm extends React.PureComponent {
@@ -139,43 +137,41 @@ class AtomForm extends React.PureComponent {
 
     return (
       <AtomFormWrap>
-        <AtomFormTop>
-          <div className='row mb-4'>
-            <div className='col-6'>
-              <Input
-                type='select'
-                defaultValue={type}
-                name={`${prefix}[type]`}
-                onChange={this.onTypeChange}
-                className='folio-console-atom-type-select'
-              >
-                {this.props.atomTypes.map(({ key, title }) => (
-                  <option key={key} value={key}>{title}</option>
-                ))}
-              </Input>
-            </div>
-
-            <div className='col-6 d-flex align-items-center justify-content-end'>
-              <button
-                type='button'
-                className='btn btn-outline f-c-atoms-settings-header__button'
-                onClick={this.props.saveFormAtom}
-              >
-                {window.FolioConsole.translations.done}
-              </button>
-
-              <button
-                type='button'
-                className='f-c-atoms-settings-header__close mi ml-g'
-                onClick={this.props.closeFormAtom}
-              >
-                close
-              </button>
-            </div>
+        <div className='f-c-atoms-settings-header'>
+          <div className='f-c-atoms-settings-header__title'>
+            <Input
+              type='select'
+              defaultValue={type}
+              name={`${prefix}[type]`}
+              onChange={this.onTypeChange}
+              className='folio-console-atom-type-select'
+            >
+              {this.props.atomTypes.map(({ key, title }) => (
+                <option key={key} value={key}>{title}</option>
+              ))}
+            </Input>
           </div>
-        </AtomFormTop>
 
-        <AtomFormScroll className='f-c-atom-form-toolbar-fix-parent'>
+          <div className='f-c-atoms-settings-header__controls'>
+            <button
+              type='button'
+              className='btn btn-outline f-c-atoms-settings-header__button'
+              onClick={this.props.saveFormAtom}
+            >
+              {window.FolioConsole.translations.done}
+            </button>
+
+            <button
+              type='button'
+              className='f-c-atoms-settings-header__close mi'
+              onClick={this.props.closeFormAtom}
+            >
+              close
+            </button>
+          </div>
+        </div>
+
+        <div className='f-c-simple-form-with-atoms__form-scroll f-c-atom-form-toolbar-fix-parent'>
           <div>
             {messages.length > 0 && (
               <div className='my-3 alert alert-danger'>
@@ -225,7 +221,7 @@ class AtomForm extends React.PureComponent {
             ))}
 
           </div>
-        </AtomFormScroll>
+        </div>
         {validating && <span className='folio-loader' />}
       </AtomFormWrap>
     )

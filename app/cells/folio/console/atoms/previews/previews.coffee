@@ -11,9 +11,15 @@ selectLocale = (locale) ->
     $this = $(this)
     $this.prop('hidden', $this.data('locale') isnt locale)
 
+closeMobileControls = ($el) ->
+  $el
+    .closest('.f-c-atoms-previews__controls--active')
+    .removeClass('f-c-atoms-previews__controls--active')
+
 handleArrowClick = (e) ->
   e.preventDefault()
   $this = $(this)
+  closeMobileControls($this)
   $wrap = $this.closest('.f-c-atoms-previews__atom')
   index = $wrap.data('index')
   if $this.hasClass('f-c-atoms-previews__button--arrow-up')
@@ -31,15 +37,27 @@ handleArrowClick = (e) ->
 
 handleEditClick = (e) ->
   e.preventDefault()
-  $wrap = $(this).closest('.f-c-atoms-previews__atom')
+  $this = $(this)
+  closeMobileControls($this)
+  $wrap = $this.closest('.f-c-atoms-previews__atom')
   data =
     type: 'editAtom'
     rootKey: $wrap.data('root-key')
     index: $wrap.data('index')
   window.parent.postMessage(data, window.origin)
 
+handleOverlayClick = (e) ->
+  $controls = $(this).closest('.f-c-atoms-previews__controls--active')
+  if $controls.length
+    e.preventDefault()
+    $controls.removeClass('f-c-atoms-previews__controls--active')
+  else
+    handleEditClick(e)
+
 handleRemoveClick = (e) ->
   e.preventDefault()
+  $this = $(this)
+  closeMobileControls($this)
   if window.confirm(window.FolioConsole.translations.removePrompt)
     $wrap = $(this).closest('.f-c-atoms-previews__atom')
     data =
@@ -47,6 +65,13 @@ handleRemoveClick = (e) ->
       rootKey: $wrap.data('root-key')
       index: $wrap.data('index')
     window.parent.postMessage(data, window.origin)
+
+handleMobileclick = (e) ->
+  e.preventDefault()
+  e.stopPropagation()
+  $(this)
+    .closest('.f-c-atoms-previews__controls')
+    .addClass('f-c-atoms-previews__controls--active')
 
 showInsertHint = (e) ->
   e.preventDefault()
@@ -88,10 +113,11 @@ handleInsertClick = (e) ->
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
-  .on 'click', '.f-c-atoms-previews__controls-overlay', handleEditClick
+  .on 'click', '.f-c-atoms-previews__controls-overlay', handleOverlayClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
   .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick
   .on 'click', '.f-c-atoms-previews__insert-hint', showInsertHint
+  .on 'click', '.f-c-atoms-previews__controls-mobile-overlay', handleMobileclick
   .on 'mouseleave', '.f-c-atoms-previews__insert', hideInsertHint
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()

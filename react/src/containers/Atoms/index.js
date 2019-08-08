@@ -24,10 +24,11 @@ import fileTypeToKey from 'utils/fileTypeToKey'
 import { FILE_TRIGGER_EVENT } from './constants'
 
 class Atoms extends React.PureComponent {
-  componentDidMount () {
-    window.addEventListener('message', this.receiveMessage, false)
+  constructor (props) {
+    super(props)
     const $ = window.jQuery
     if (!$) return
+    $(window).on('message onmessage', this.receiveMessage)
     $(document).on(FILE_TRIGGER_EVENT, (e, data) => { this.handleFileTrigger(data) })
   }
 
@@ -37,7 +38,8 @@ class Atoms extends React.PureComponent {
     $(document).off(FILE_TRIGGER_EVENT)
   }
 
-  receiveMessage = (e) => {
+  receiveMessage = (jqueryEvent) => {
+    const e = jqueryEvent.originalEvent
     if (e.origin !== window.origin) return
     switch (e.data.type) {
       case 'newAtom':

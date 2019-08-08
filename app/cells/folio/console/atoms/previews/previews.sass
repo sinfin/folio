@@ -49,28 +49,28 @@
     visibility: hidden
     cursor: pointer
 
-    .f-c-atoms-previews__buttons
-      position: absolute
-      top: -12px
-      right: -12px
-      display: flex
-      height: 24px
-      z-index: 2
+  &__buttons
+    position: absolute
+    top: -12px
+    right: -12px
+    display: flex
+    height: 24px
+    z-index: 2
 
-    .f-c-atoms-previews__button
-      +button-style
-      margin-left: 15px
+  &__button
+    +button-style
+    margin-left: 15px
 
-      &--edit
-        +button-variant($secondary, $secondary)
+    &--edit
+      +button-variant($secondary, $secondary)
 
-      &--arrow
-        +button-variant($white, $white)
-        +plain-hover-focus
-          border-color: #BFC4C4
+    &--arrow
+      +button-variant($white, $white)
+      +plain-hover-focus
+        border-color: #BFC4C4
 
-      &--remove
-        +button-variant($danger, $danger)
+    &--remove
+      +button-variant($danger, $danger)
 
   &__controls-overlay
     position: absolute
@@ -152,14 +152,64 @@
     +hover-focus
       background: darken($secondary, 7.5%)
 
-  &__insert:not(&__insert--active) &__insert-inner
-    display: none
-
-  &__atom:hover &__controls
-    visibility: visible
-
   &__insert--active
     z-index: 3
 
   &__insert--active &__insert-hint:before
     display: none
+
+  &__insert:not(&__insert--active) &__insert-inner
+    display: none
+
+  +media-breakpoint-up(lg)
+    &__atom:hover &__controls
+      visibility: visible
+
+    &__controls-mobile-overlay
+      display: none
+
+  +media-breakpoint-down(md)
+    &__insert
+      opacity: 1
+
+    &__controls
+      visibility: visible
+
+    &__button
+      width: 40px
+      height: 40px
+      flex: 0 0 40px
+      font-size: 20px
+
+      &:first-child
+        margin-left: 0
+
+    &__buttons
+      position: absolute
+      z-index: 3
+      top: 50%
+      left: 50%
+      right: auto
+      height: auto
+      padding: 15px
+      transform: translate(-50%, -50%)
+      background: $white
+      border: 1px solid #979797
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.3)
+
+    &__controls-mobile-overlay
+      position: absolute
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      z-index: 2
+
+    &__controls--active &__controls-mobile-overlay
+      display: none
+
+    &__controls:not(&__controls--active)
+      opacity: 0
+
+    &__controls:not(&__controls--active) &__buttons
+      display: none
