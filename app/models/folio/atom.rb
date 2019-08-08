@@ -15,6 +15,7 @@ module Folio::Atom
       klass::STRUCTURE.each do |key, value|
         h[key] = {
           label: klass.human_attribute_name(key),
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
           validators: klass.validators_on(key).map do |validator|
             { 'class' => validator.class.to_s, 'options' => validator.options }
           end
@@ -52,6 +53,7 @@ module Folio::Atom
         attachments: attachments,
         structure: h,
         title: klass.model_name.human,
+        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil)
       }
     end
     str

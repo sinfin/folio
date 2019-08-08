@@ -71,7 +71,6 @@ class AtomForm extends React.PureComponent {
           name={key}
           defaultValue={data[key]}
           onChange={(html) => this.onValueChange(html, key)}
-          placeholder={meta.structure[key].label}
           invalid={Boolean(this.props.form.errors[key])}
           ref={autofocusRef()}
         />
@@ -84,7 +83,6 @@ class AtomForm extends React.PureComponent {
           name={key}
           defaultValue={data[key]}
           onChange={(colorString) => this.onValueChange(colorString, key)}
-          placeholder={meta.structure[key].label}
           invalid={Boolean(this.props.form.errors[key])}
           type={meta.structure[key].type}
         />
@@ -97,7 +95,6 @@ class AtomForm extends React.PureComponent {
           name={key}
           defaultValue={data[key]}
           onChange={(e) => this.onChange(e, key)}
-          placeholder={meta.structure[key].label}
           invalid={Boolean(this.props.form.errors[key])}
           type={meta.structure[key].type}
         />
@@ -111,7 +108,6 @@ class AtomForm extends React.PureComponent {
           name={key}
           defaultValue={data[key]}
           onChange={(e) => this.onChange(e, key)}
-          placeholder={meta.structure[key].label}
           invalid={Boolean(this.props.form.errors[key])}
         >
           {meta.structure[key].collection.map((record) => (
@@ -128,7 +124,6 @@ class AtomForm extends React.PureComponent {
         defaultValue={data[key]}
         onChange={(e) => this.onChange(e, key)}
         onKeyPress={preventEnterSubmit}
-        placeholder={meta.structure[key].label}
         innerRef={autofocusRef()}
         invalid={Boolean(this.props.form.errors[key])}
       />
@@ -153,6 +148,14 @@ class AtomForm extends React.PureComponent {
     }
 
     return classNames.join(' ')
+  }
+
+  renderHint (text) {
+    return (
+      <div className='mt-5 small'>
+        {text.split(/\n/).map((part, i) => <p key={i}>{part}</p>)}
+      </div>
+    )
   }
 
   render () {
@@ -237,6 +240,8 @@ class AtomForm extends React.PureComponent {
                 {<Label>{meta.structure[key].label}</Label>}
                 {this.renderInput(key, meta, data, autofocusRef)}
 
+                {meta.structure[key].hint && <FormText>{meta.structure[key].hint}</FormText>}
+
                 {errors[key] && (
                   <FormText className='invalid-feedback' color='danger'>{errors[key]}</FormText>
                 )}
@@ -253,8 +258,8 @@ class AtomForm extends React.PureComponent {
                 </div>
               ) : null
             ))}
-
           </div>
+          {meta.hint && this.renderHint(meta.hint)}
         </div>
         {validating && <span className='folio-loader' />}
       </AtomFormWrap>

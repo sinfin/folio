@@ -117,14 +117,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     }
   end
 
-  def self.form_placeholders
-    {
-      title: self.human_attribute_name(:title),
-      perex: self.human_attribute_name(:perex),
-      content: self.human_attribute_name(:content),
-    }
-  end
-
   def self.attachment_placements
     self::ATTACHMENTS.map do |key|
       self.reflections[key.to_s].options[:through]
