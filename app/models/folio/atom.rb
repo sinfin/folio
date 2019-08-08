@@ -10,30 +10,14 @@ module Folio::Atom
   def self.structures
     str = {}
     Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
-      h = {}
+      structure = {}
 
       klass::STRUCTURE.each do |key, value|
-        h[key] = {
+        structure[key] = {
           label: klass.human_attribute_name(key),
           hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
-          validators: klass.validators_on(key).map do |validator|
-            { 'class' => validator.class.to_s, 'options' => validator.options }
-          end
+          type: value
         }
-
-        if value.is_a?(Array)
-          show_model_names = value.size > 1
-          h[key][:type] = :relation
-          h[key][:collection] = value.flat_map do |model_class_name|
-            model_class = model_class_name.constantize
-            sti_records_for_select(klass.scoped_model_resource(model_class),
-                                   show_model_names: show_model_names)
-          end.sort_by { |ary| I18n.transliterate(ary.first) }
-        elsif value == :redactor
-          h[key][:type] = :richtext
-        else
-          h[key][:type] = value
-        end
       end
 
       attachments = klass::ATTACHMENTS.map do |key|
@@ -42,18 +26,35 @@ module Folio::Atom
         file_type = reflection.source_reflection.options[:class_name]
 
         {
+          file_type: file_type,
           key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
           label: klass.human_attribute_name(key),
           plural: plural,
-          file_type: file_type,
+        }
+      end
+
+      associations = {}
+      klass::ASSOCIATIONS.each do |key, model_class_names|
+        records = model_class_names.flat_map do |model_class_name|
+          model_class = model_class_name.to_s.constantize
+          klass.scoped_model_resource(model_class)
+               .map { |record| { id: record.id, type: record.class.name, label: record.to_label } }
+               .sort_by { |h| I18n.transliterate(h[:label]) }
+        end
+
+        associations[key] = {
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          label: klass.human_attribute_name(key),
+          records: records,
         }
       end
 
       str[klass.to_s] = {
+        associations: associations,
         attachments: attachments,
-        structure: h,
+        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil),
+        structure: structure,
         title: klass.model_name.human,
-        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil)
       }
     end
     str

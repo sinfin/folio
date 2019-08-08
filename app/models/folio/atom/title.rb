@@ -30,6 +30,7 @@ end
 #  placement_id   :bigint(8)
 #  locale         :string
 #  data           :jsonb
+#  associations   :jsonb
 #
 # Indexes
 #

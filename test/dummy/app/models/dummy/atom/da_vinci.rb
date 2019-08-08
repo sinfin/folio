@@ -8,6 +8,10 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
 
   STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }]
 
+  ASSOCIATIONS = {
+    page: %i[Folio::Page],
+  }
+
   def self.cell_name
     'dummy/atom/da_vinci'
   end

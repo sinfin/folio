@@ -3,26 +3,22 @@
 require 'test_helper'
 
 class Folio::Atom::BaseTest < ActiveSupport::TestCase
-end
+  class PageReferenceAtom < Folio::Atom::Base
+    ASSOCIATIONS = {
+      page: %i[Folio::Page]
+    }
+  end
 
-# == Schema Information
-#
-# Table name: folio_atoms
-#
-#  id             :integer          not null, primary key
-#  type           :string
-#  content        :text
-#  position       :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  placement_type :string
-#  placement_id   :integer
-#  model_type     :string
-#  model_id       :integer
-#  title          :string
-#
-# Indexes
-#
-#  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
-#  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
-#
+  test 'associations' do
+    page = create(:folio_page)
+    atom1 = PageReferenceAtom.create!(page: page, placement: page)
+    assert_equal(atom1.page, page)
+    assert_equal(page.id, atom1.page_id)
+
+    atom2 = PageReferenceAtom.create!(page_type: page.class.name,
+                                      page_id: page.id,
+                                      placement: page)
+    assert_equal(atom2.page, page)
+    assert_equal(page.id, atom2.page_id)
+  end
+end

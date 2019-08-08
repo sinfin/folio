@@ -1,6 +1,11 @@
 .d-atom.d-atom-da-vinci style="background-color: #{model.color || 'white'}"
   .container
     ul.list-unstyled
+      - if model.page.present?
+        li
+          h5.mt-3.mb-2 = model.page.class.model_name.human
+          = model.page.to_label
+
       - model.class::STRUCTURE.keys.each do |key|
         - if model.send(key).present?
           li

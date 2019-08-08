@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2019_08_06_061816) do
     t.bigint "placement_id"
     t.string "locale"
     t.jsonb "data", default: {}
+    t.jsonb "associations", default: {}
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 

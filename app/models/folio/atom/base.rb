@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Atom::Base < Folio::ApplicationRecord
+  include Folio::Atom::MethodMissing
   include Folio::HasAttachments
   include Folio::Positionable
 
@@ -21,6 +22,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   STRUCTURE = {
     title: :string,
   }
+
+  ASSOCIATIONS = {}
 
   self.table_name = 'folio_atoms'
 
@@ -126,25 +129,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   def self.console_icon
   end
 
-  def method_missing(method_name, *arguments, &block)
-    name_without_operator = method_name.to_s.gsub('=', '').to_sym
-    if respond_to_missing?(name_without_operator)
-      if method_name.to_s.include?('=')
-        self.data ||= {}
-        self.data[name_without_operator.to_s] = arguments[0]
-      else
-        (self.data || {})[name_without_operator.to_s]
-      end
-    else
-      super
-    end
-  end
-
-  def respond_to_missing?(method_name, include_private = false)
-    name_without_operator = method_name.to_s.gsub('=', '').to_sym
-    klass::STRUCTURE.keys.include?(name_without_operator) || super
-  end
-
   def model(key, includes = nil)
     delim = Folio::Console::BaseController::TYPE_ID_DELIMITER
     class_name, id = data[key.to_s].split(delim)
@@ -194,6 +178,7 @@ end
 #  placement_id   :bigint(8)
 #  locale         :string
 #  data           :jsonb
+#  associations   :jsonb
 #
 # Indexes
 #

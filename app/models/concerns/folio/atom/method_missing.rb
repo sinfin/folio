@@ -1,0 +1,87 @@
+# frozen_string_literal: true
+
+module Folio::Atom::MethodMissing
+  extend ActiveSupport::Concern
+
+  def method_missing(method_name, *arguments, &block)
+    name_without_operator = method_name.to_s
+                                       .gsub('=', '')
+                                       .to_sym
+    name_for_association = name_without_operator.to_s
+                                                .gsub(/_(id|type)$/, '')
+                                                .to_sym
+
+    if respond_to_missing?(name_without_operator)
+      if klass::ASSOCIATIONS.keys.include?(name_for_association)
+        method_missing_association(method_name, arguments[0])
+      else
+        method_missing_data(method_name, arguments[0])
+      end
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    name_without_operator = method_name.to_s
+                                       .gsub('=', '')
+                                       .to_sym
+    name_for_association = name_without_operator.to_s
+                                                .gsub(/_(id|type)$/, '')
+                                                .to_sym
+
+    klass::STRUCTURE.keys.include?(name_without_operator) ||
+    klass::ASSOCIATIONS.keys.include?(name_for_association) ||
+    super
+  end
+
+  private
+
+    def method_missing_association(method_name, argument)
+      name_without_operator = method_name.to_s
+                                         .gsub('=', '')
+                                         .to_sym
+      name_for_association = name_without_operator.to_s
+                                                  .gsub(/_(id|type)$/, '')
+                                                  .to_sym
+
+      if method_name.to_s.include?('=')
+        self.associations ||= {}
+        if method_name.to_s.match?(/_(id|type)=$/)
+          key = method_name.to_s.match?(/_id=$/) ? 'id' : 'type'
+          self.associations[name_for_association.to_s] ||= {}
+          self.associations[name_for_association.to_s][key] = argument
+        else
+          self.associations[name_for_association.to_s] = {
+            id: argument.id,
+            type: argument.class.name,
+          }
+        end
+      else
+        assoc = (self.associations || {})[name_for_association.to_s] || {}
+        if method_name.to_s.match?(/_(id|type)$/)
+          key = method_name.to_s.match?(/_id$/) ? 'id' : 'type'
+          assoc[key]
+        else
+          if assoc['type'] && assoc['id']
+            assoc['type'].constantize.find(assoc['id'])
+          else
+            nil
+          end
+        end
+      end
+    end
+
+    def method_missing_data(method_name, argument)
+      name_without_operator = method_name.to_s
+                                         .gsub('=', '')
+                                         .to_sym
+
+      if method_name.to_s.include?('=')
+        self.data ||= {}
+        self.data[name_without_operator.to_s] = argument
+      else
+        (self.data || {})[name_without_operator.to_s]
+      end
+    end
+end
