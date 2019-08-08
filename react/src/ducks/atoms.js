@@ -162,6 +162,8 @@ function * updateAtomPreviews (action) {
   iframe.contentDocument.body.innerHTML = html
   iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
   iframe.parentElement.classList.remove('f-c-simple-form-with-atoms__preview--loading')
+  const $ = window.jQuery
+  if ($) $('.f-c-simple-form-with-atoms__form--settings').trigger('change')
 }
 
 function * updateAtomPreviewsSaga () {
