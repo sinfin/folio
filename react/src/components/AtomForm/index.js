@@ -112,6 +112,7 @@ class AtomForm extends React.PureComponent {
           onChange={(e) => this.onValueChange(e.currentTarget.value, key)}
           type={meta.structure[key].type}
           className={classNames.join(' ')}
+          rows={2}
         />
       )
     }
