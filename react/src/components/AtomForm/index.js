@@ -121,6 +121,24 @@ class AtomForm extends React.PureComponent {
     )
   }
 
+  formGroupClassName (key, meta) {
+    const classNames = []
+
+    if (this.props.form.errors[key]) {
+      classNames.push('form-group-invalid')
+    } else {
+      classNames.push('form-group-valid')
+    }
+
+    if (meta.structure[key].type === 'date') {
+      classNames.push('date')
+    } else if (meta.structure[key].type === 'datetime') {
+      classNames.push('datetime')
+    }
+
+    return classNames.join(' ')
+  }
+
   render () {
     const { data, meta, type } = this.props.atom
     const { errors, messages, validating } = this.props.form
@@ -199,7 +217,7 @@ class AtomForm extends React.PureComponent {
             </div>
 
             {Object.keys(meta.structure).map((key) => (
-              <FormGroup key={key} className={errors[key] ? 'form-group-invalid' : 'form-group-valid'}>
+              <FormGroup key={key} className={this.formGroupClassName(key, meta)}>
                 {<Label>{meta.structure[key].label}</Label>}
                 {this.renderInput(key, meta, data, autofocusRef)}
 

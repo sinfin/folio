@@ -90,8 +90,9 @@
   &__form-scroll
     overflow-y: auto
     -webkit-overflow-scrolling: touch
-    margin: 0 (( - $grid-gutter-width )) (( - $grid-gutter-width ))
+    margin: 0 (( - $grid-gutter-width )) 0
     padding: 0 $grid-gutter-width $grid-gutter-width
+    flex: 1 1 auto
 
   @for $i from 0 through 10
     .f-c-atoms-form-header[data-active-offset="#{$i}"] + &__inner &__form:after

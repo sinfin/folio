@@ -38,15 +38,17 @@ class DateInput extends React.PureComponent {
 
   render () {
     return (
-      <Input
-        type='text'
-        name={this.props.name}
-        defaultValue={this.props.defaultValue}
-        onKeyPress={preventEnterSubmit}
-        placeholder={this.props.placeholder}
-        innerRef={this.inputRef}
-        invalid={this.props.invalid}
-      />
+      <div className='d-flex flex-row justify-content-between align-items-center'>
+        <Input
+          type='text'
+          name={this.props.name}
+          defaultValue={this.props.defaultValue}
+          onKeyPress={preventEnterSubmit}
+          placeholder={this.props.placeholder}
+          innerRef={this.inputRef}
+          invalid={this.props.invalid}
+        />
+      </div>
     )
   }
 }
