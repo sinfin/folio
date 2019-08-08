@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_22_073723) do
+ActiveRecord::Schema.define(version: 2019_08_06_061816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_073723) do
     t.string "mime_type", limit: 255
     t.json "additional_data"
     t.json "file_metadata"
+    t.string "hash_id"
     t.index ["type"], name: "index_folio_files_on_type"
   end
 
@@ -218,6 +219,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_073723) do
     t.json "additional_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "hash_id"
     t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
     t.index ["type"], name: "index_folio_private_attachments_on_type"
   end

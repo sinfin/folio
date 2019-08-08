@@ -9,7 +9,7 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
 
   def create
     @account = Folio::Account.invite!(account_params)
-    respond_with @account
+    respond_with @account, location: respond_with_location
   end
 
   private

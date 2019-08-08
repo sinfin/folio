@@ -3,8 +3,7 @@
 class Folio::Console::SitesController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Site'
 
-  def edit
-  end
+  before_action :find_site
 
   def update
     @site.update(site_params)
@@ -30,5 +29,9 @@ class Folio::Console::SitesController < Folio::Console::BaseController
                                    *file_placements_strong_params,
                                    locales: [],
                                    social_links: Folio::Site.social_link_sites)
+    end
+
+    def find_site
+      @site = Folio::Site.instance
     end
 end

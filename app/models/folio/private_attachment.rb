@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::PrivateAttachment < Folio::ApplicationRecord
+  include Folio::HasHashId
   include Folio::MimeTypeDetection
   include Folio::Positionable
   include Folio::SanitizeFilename
@@ -28,6 +29,10 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
     else
       Mime::Type.lookup(mime_type).symbol
     end
+  end
+
+  def self.hash_id_additional_classes
+    [Folio::File]
   end
 
   private
@@ -60,6 +65,7 @@ end
 #  additional_data     :json
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  hash_id             :string
 #
 # Indexes
 #

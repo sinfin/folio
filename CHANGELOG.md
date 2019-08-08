@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-08-06
+### Added
+- added `Folio::DownloadsController` and `download_path`
+- added `Folio::HasHashId` concern
+- added `hash_id` to folio files
+
 ## 2019-06-21
 ### Added
 - added `Folio::Console::Api::BaseController`
