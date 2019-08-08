@@ -141,7 +141,7 @@ class AtomForm extends React.PureComponent {
           <div className='f-c-atoms-settings-header__title'>
             <Input
               type='select'
-              defaultValue={type}
+              value={type}
               name={`${prefix}[type]`}
               onChange={this.onTypeChange}
               className='folio-console-atom-type-select'

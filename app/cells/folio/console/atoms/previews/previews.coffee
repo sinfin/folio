@@ -33,7 +33,7 @@ handleArrowClick = (e) ->
     rootKey: $wrap.data('root-key')
     index: index
     targetIndex: targetIndex
-  window.parent.postMessage(data, window.origin)
+  window.top.postMessage(data, window.origin)
 
 handleEditClick = (e) ->
   e.preventDefault()
@@ -44,7 +44,7 @@ handleEditClick = (e) ->
     type: 'editAtom'
     rootKey: $wrap.data('root-key')
     index: $wrap.data('index')
-  window.parent.postMessage(data, window.origin)
+  window.top.postMessage(data, window.origin)
 
 handleOverlayClick = (e) ->
   $controls = $(this).closest('.f-c-atoms-previews__controls--active')
@@ -52,7 +52,7 @@ handleOverlayClick = (e) ->
     e.preventDefault()
     $controls.removeClass('f-c-atoms-previews__controls--active')
   else
-    handleEditClick(e)
+    handleEditClick.call(this, e)
 
 handleRemoveClick = (e) ->
   e.preventDefault()
@@ -64,7 +64,7 @@ handleRemoveClick = (e) ->
       type: 'removeAtom'
       rootKey: $wrap.data('root-key')
       index: $wrap.data('index')
-    window.parent.postMessage(data, window.origin)
+    window.top.postMessage(data, window.origin)
 
 handleMobileclick = (e) ->
   e.preventDefault()
@@ -108,7 +108,7 @@ handleInsertClick = (e) ->
     rootKey: rootKey
     index: index
     atomType: $a.data('type')
-  window.parent.postMessage(data, window.origin)
+  window.top.postMessage(data, window.origin)
 
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick

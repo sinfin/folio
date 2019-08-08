@@ -233,6 +233,7 @@ export const initialState = {
   structures: {},
   placementType: null,
   form: {
+    dirty: false,
     rootKey: null,
     index: null,
     atom: null,
@@ -378,6 +379,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
+          dirty: true,
           atom: {
             ...state.form.atom,
             type: action.newType,
@@ -392,6 +394,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
+          dirty: true,
           atom: {
             ...state.form.atom,
             data: {

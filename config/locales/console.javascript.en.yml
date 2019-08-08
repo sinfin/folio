@@ -7,6 +7,7 @@ en:
         availableDocuments: Available documents
         availableImages: Available images
         cancel: Cancel
+        cancelChanges: Cancel changes?
         create: Create
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing

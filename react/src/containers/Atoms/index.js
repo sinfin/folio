@@ -28,7 +28,7 @@ class Atoms extends React.PureComponent {
     super(props)
     const $ = window.jQuery
     if (!$) return
-    $(window).on('message onmessage', this.receiveMessage)
+    $(window).on('message', this.receiveMessage)
     $(document).on(FILE_TRIGGER_EVENT, (e, data) => { this.handleFileTrigger(data) })
   }
 
@@ -39,19 +39,34 @@ class Atoms extends React.PureComponent {
   }
 
   receiveMessage = (jqueryEvent) => {
-    const e = jqueryEvent.originalEvent
-    if (e.origin !== window.origin) return
-    switch (e.data.type) {
-      case 'newAtom':
-        return this.props.dispatch(newAtom(e.data.rootKey, e.data.index, e.data.atomType))
-      case 'editAtom':
-        return this.props.dispatch(editAtom(e.data.rootKey, e.data.index))
-      case 'moveAtomToIndex':
-        return this.props.dispatch(moveAtomToIndex(e.data.rootKey, e.data.index, e.data.targetIndex))
+    const { data, origin } = jqueryEvent.originalEvent
+    if (origin === window.origin) {
+      switch (data.type) {
+        case 'newAtom':
+          this.props.dispatch(newAtom(data.rootKey, data.index, data.atomType))
+          break
+        case 'editAtom':
+          this.props.dispatch(editAtom(data.rootKey, data.index))
+          break
+        case 'moveAtomToIndex':
+          this.props.dispatch(moveAtomToIndex(data.rootKey, data.index, data.targetIndex))
+          break
+        case 'removeAtom':
+          this.props.dispatch(removeAtom(data.rootKey, data.index))
+          break
+        case 'closeForm': {
+          this.confirmedDirtyClose()
+          break
+        }
+        default:
+          // do nothing
+      }
+    }
+  }
 
-      case 'removeAtom':
-        return this.props.dispatch(removeAtom(e.data.rootKey, e.data.index))
-      default: {}
+  confirmedDirtyClose = () => {
+    if (!this.props.atoms.form.dirty || window.confirm(window.FolioConsole.translations.cancelChanges)) {
+      this.props.dispatch(closeFormAtom())
     }
   }
 
@@ -102,7 +117,7 @@ class Atoms extends React.PureComponent {
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
             saveFormAtom={this.validateAndSaveFormAtom}
-            closeFormAtom={() => this.props.dispatch(closeFormAtom())}
+            closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
             removeFormAtomAttachment={this.removeFormAtomAttachment}
