@@ -11,7 +11,8 @@ import atomsReducer, {
   updateFormAtomAttachments,
   removeFormAtomAttachment,
   validateAndSaveFormAtom,
-  setFormValidationErrors
+  setFormValidationErrors,
+  updateFormAtomAssociation
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -63,6 +64,7 @@ describe('atomsReducer', () => {
     const newState = atomsReducer(state, newAtom('atoms', 0, 'Dummy::Atom::DaVinci'))
     expect(newState.form.rootKey).toEqual('atoms')
     expect(newState.form.atom.type).toEqual('Dummy::Atom::DaVinci')
+    expect(newState.form.atom.associations).toEqual({})
     expect(newState.form.atom.timestamp).toBeTruthy()
     expect(newState.form.atom.meta).toBeTruthy()
     expect(newState.form.edit).toEqual(false)
@@ -215,5 +217,14 @@ describe('atomsReducer', () => {
     state = atomsReducer(state, setFormValidationErrors({ valid: false, errors: { foo: 'bar' }, messages: ['Foo bar!'] }))
     expect(state.form.errors).toEqual({ foo: 'bar' })
     expect(state.form.messages).toEqual(['Foo bar!'])
+  })
+
+  it('updateFormAtomAssociation', () => {
+    const page = { id: 1, type: 'Folio::Page', label: 'O nás', value: 'Folio::Page -=- 1' }
+    state = atomsReducer(state, newAtom('atoms', 0, 'Dummy::Atom::DaVinci'))
+    expect(state.form.atom.associations['page']).toEqual(undefined)
+
+    state = atomsReducer(state, updateFormAtomAssociation('page', page))
+    expect(state.form.atom.associations['page']).toEqual(page)
   })
 })

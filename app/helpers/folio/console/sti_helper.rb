@@ -35,5 +35,12 @@ module Folio
         related_model.id,
       ].join(Console::BaseController::TYPE_ID_DELIMITER)
     end
+
+    def self.sti_record_to_select_value(record)
+      [
+        record.class.to_s,
+        record.id,
+      ].join(Console::BaseController::TYPE_ID_DELIMITER)
+    end
   end
 end

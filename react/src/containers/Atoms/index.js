@@ -13,7 +13,8 @@ import {
   updateFormAtomType,
   updateFormAtomValue,
   updateFormAtomAttachments,
-  removeFormAtomAttachment
+  removeFormAtomAttachment,
+  updateFormAtomAssociation
 } from 'ducks/atoms'
 import { makeFilePlacementsSelector } from 'ducks/filePlacements'
 import AtomForm from 'components/AtomForm'
@@ -120,6 +121,7 @@ class Atoms extends React.PureComponent {
             closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
+            updateFormAtomAssociation={(key, record) => this.props.dispatch(updateFormAtomAssociation(key, record))}
             removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}

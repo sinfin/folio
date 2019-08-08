@@ -49,6 +49,31 @@ function SerializedAttachments ({ atom, prefix }) {
   )
 }
 
+function SerializedAssociations ({ atom, prefix }) {
+  return (
+    <React.Fragment>
+      {Object.keys(atom.meta.associations).map((key) => {
+        const record = atom.associations[key]
+        let id, type
+        if (record) {
+          id = record.id
+          type = record.type
+        } else {
+          id = ''
+          type = ''
+        }
+
+        return (
+          <React.Fragment key={key}>
+            <input type='hidden' name={`${prefix}[${key}][id]`} value={id} />
+            <input type='hidden' name={`${prefix}[${key}][type]`} value={type} />
+          </React.Fragment>
+        )
+      })}
+    </React.Fragment>
+  )
+}
+
 function SerializedAtom ({ atom, index, namespace, position }) {
   const prefix = `${namespace}[${index + 1}]`
   const { data, id, meta, type } = atom
@@ -62,6 +87,7 @@ function SerializedAtom ({ atom, index, namespace, position }) {
         <input key={key} type='hidden' name={`${prefix}[${key}]`} value={data[key]} />
       ))}
       <SerializedAttachments atom={atom} prefix={prefix} />
+      <SerializedAssociations atom={atom} prefix={prefix} />
     </div>
   )
 }

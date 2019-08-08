@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module Folio::Atom
-  extend Folio::Console::StiHelper
-
   def self.types
     Folio::Atom::Base.recursive_subclasses(include_self: false)
   end
@@ -38,7 +36,7 @@ module Folio::Atom
         records = model_class_names.flat_map do |model_class_name|
           model_class = model_class_name.to_s.constantize
           klass.scoped_model_resource(model_class)
-               .map { |record| { id: record.id, type: record.class.name, label: record.to_label } }
+               .map { |record| association_to_h(record) }
                .sort_by { |h| I18n.transliterate(h[:label]) }
         end
 
@@ -64,6 +62,7 @@ module Folio::Atom
     keys = []
     Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
       keys += klass::STRUCTURE.keys
+      keys += klass::ASSOCIATIONS.keys.map { |k| { k => [:id, :type] } }
     end
     keys.uniq
   end
@@ -96,5 +95,14 @@ module Folio::Atom
     end
 
     images.compact
+  end
+
+  def self.association_to_h(record)
+    {
+      id: record.id,
+      type: record.class.name,
+      label: record.to_label,
+      value: Folio::Console::StiHelper.sti_record_to_select_value(record)
+    }
   end
 end

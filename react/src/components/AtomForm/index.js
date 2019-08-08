@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormGroup, FormText, Input, Label } from 'reactstrap'
-import { isEqual } from 'lodash'
+import { isEqual, find } from 'lodash'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import MultiSelect from 'containers/MultiSelect'
@@ -12,6 +12,8 @@ import DateInput from 'components/DateInput'
 import fileTypeToKey from 'utils/fileTypeToKey'
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
+import Associations from './Associations'
+import formGroupClassName from './utils/formGroupClassName'
 import AtomFormWrap from './styled/AtomFormWrap'
 
 class AtomForm extends React.PureComponent {
@@ -36,6 +38,12 @@ class AtomForm extends React.PureComponent {
 
   onChange (e, key) {
     this.props.updateFormAtomValue(key, e.target.value)
+  }
+
+  onAssociationChange (e, key) {
+    const { records } = this.props.form.atom.meta.associations[key]
+    const record = find(records, { value: e.target.value })
+    this.props.updateFormAtomAssociation(key, record)
   }
 
   onValueChange (value, key) {
@@ -117,22 +125,6 @@ class AtomForm extends React.PureComponent {
       )
     }
 
-    if (meta.structure[key].collection) {
-      return (
-        <Input
-          type='select'
-          name={key}
-          defaultValue={data[key]}
-          onChange={(e) => this.onChange(e, key)}
-          invalid={Boolean(this.props.form.errors[key])}
-        >
-          {meta.structure[key].collection.map((record) => (
-            <option key={record[1]} value={record[1]}>{record[0]}</option>
-          ))}
-        </Input>
-      )
-    }
-
     return (
       <Input
         {...this.inputProps(meta.structure[key].type)}
@@ -144,26 +136,6 @@ class AtomForm extends React.PureComponent {
         invalid={Boolean(this.props.form.errors[key])}
       />
     )
-  }
-
-  formGroupClassName (key, meta) {
-    const classNames = []
-
-    if (this.props.form.errors[key]) {
-      classNames.push('form-group-invalid')
-    } else {
-      classNames.push('form-group-valid')
-    }
-
-    if (meta.structure[key].type === 'date') {
-      classNames.push('date')
-    } else if (meta.structure[key].type === 'datetime') {
-      classNames.push('datetime')
-    } else if (meta.structure[key].type === 'color') {
-      classNames.push('color')
-    }
-
-    return classNames.join(' ')
   }
 
   renderHint (text) {
@@ -252,8 +224,8 @@ class AtomForm extends React.PureComponent {
             </div>
 
             {Object.keys(meta.structure).map((key) => (
-              <FormGroup key={key} className={this.formGroupClassName(key, meta)}>
-                {<Label>{meta.structure[key].label}</Label>}
+              <FormGroup key={key} className={formGroupClassName(key, errors, meta.structure)}>
+                <Label>{meta.structure[key].label}</Label>
                 {this.renderInput(key, meta, data, autofocusRef)}
 
                 {meta.structure[key].hint && <FormText>{meta.structure[key].hint}</FormText>}
@@ -263,6 +235,11 @@ class AtomForm extends React.PureComponent {
                 )}
               </FormGroup>
             ))}
+
+            <Associations
+              onChange={(e, key) => this.onAssociationChange(e, key)}
+              form={this.props.form}
+            />
 
             {meta.attachments.map((attachmentType) => (
               attachmentType.plural ? (

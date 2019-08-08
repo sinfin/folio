@@ -23,6 +23,7 @@ const UPDATE_FORM_ATOM_ATTACHMENTS = 'atoms/UPDATE_FORM_ATOM_ATTACHMENTS'
 const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
 const SET_FORM_ATOM_FILE_PLACEMENTS = 'atoms/SET_FORM_ATOM_FILE_PLACEMENTS'
 const SET_FORM_VALIDATION_ERRORS = 'atoms/SET_FORM_VALIDATION_ERRORS'
+const UPDATE_FORM_ATOM_ASSOCIATION = 'atoms/UPDATE_FORM_ATOM_ASSOCIATION'
 
 // Actions
 
@@ -82,6 +83,10 @@ export function setFormValidationErrors (formSubstate) {
   return { type: SET_FORM_VALIDATION_ERRORS, formSubstate }
 }
 
+export function updateFormAtomAssociation (associationKey, record) {
+  return { type: UPDATE_FORM_ATOM_ASSOCIATION, associationKey, record }
+}
+
 // Selectors
 
 export const atomsSelector = (state) => ({
@@ -115,8 +120,9 @@ export const atomTypesSelector = (state) => {
 
 const serializeAtom = (state, atom) => {
   const base = {
-    ...atom,
+    ...omit(atom, ['associations']),
     ...omit(atom.data, ['placement_id']),
+    ...atom.associations,
     placement_type: state.atoms.placementType
   }
 
@@ -270,7 +276,8 @@ function atomsReducer (state = initialState, action) {
             type: action.atomType,
             data: {},
             timestamp: timestamp(),
-            meta: state.structures[action.atomType]
+            meta: state.structures[action.atomType],
+            associations: {}
           }
         }
       }
@@ -449,6 +456,22 @@ function atomsReducer (state = initialState, action) {
           ...state.form,
           ...action.formSubstate,
           validating: false
+        }
+      }
+    }
+
+    case UPDATE_FORM_ATOM_ASSOCIATION: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atom: {
+            ...state.form.atom,
+            associations: {
+              ...state.form.atom.associations,
+              [action.associationKey]: action.record
+            }
+          }
         }
       }
     }

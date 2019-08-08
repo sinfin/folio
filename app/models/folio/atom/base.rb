@@ -57,7 +57,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       placement_type: placement_type,
       placement_id: placement_id,
       data: data || {},
-    }.merge(attachments_to_h)
+    }.merge(attachments_to_h).merge(associations_to_h)
   end
 
   def attachments_to_h
@@ -95,6 +95,21 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     h
   end
 
+  def associations_to_h
+    h = {}
+
+    klass::ASSOCIATIONS.keys.each do |key|
+      record = send(key)
+      if record
+        h[key] = Folio::Atom.association_to_h(record)
+      else
+        h[key] = nil
+      end
+    end
+
+    { associations: h }
+  end
+
   def self.scoped_model_resource(resource)
     resource.all
   end
@@ -127,16 +142,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def self.console_icon
-  end
-
-  def model(key, includes = nil)
-    delim = Folio::Console::BaseController::TYPE_ID_DELIMITER
-    class_name, id = data[key.to_s].split(delim)
-    scope = class_name.constantize
-    if includes
-      scope = scope.includes(includes)
-    end
-    scope.find_by(id: id)
   end
 
   private

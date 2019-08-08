@@ -52,10 +52,17 @@ module Folio::Atom::MethodMissing
           self.associations[name_for_association.to_s] ||= {}
           self.associations[name_for_association.to_s][key] = argument
         else
-          self.associations[name_for_association.to_s] = {
-            id: argument.id,
-            type: argument.class.name,
-          }
+          if argument.is_a?(Hash)
+            self.associations[name_for_association.to_s] = {
+              'id' => argument[:id],
+              'type' => argument[:type],
+            }
+          else
+            self.associations[name_for_association.to_s] = {
+              'id' => argument.id,
+              'type' => argument.class.name,
+            }
+          end
         end
       else
         assoc = (self.associations || {})[name_for_association.to_s] || {}
@@ -63,7 +70,7 @@ module Folio::Atom::MethodMissing
           key = method_name.to_s.match?(/_id$/) ? 'id' : 'type'
           assoc[key]
         else
-          if assoc['type'] && assoc['id']
+          if assoc['type'].present? && assoc['id'].present?
             assoc['type'].constantize.find(assoc['id'])
           else
             nil
