@@ -69,7 +69,7 @@ function * uploadedFilePerform (action) {
   const id = idFromFile(action.file)
   const upload = yield select(makeUploadSelector(action.filesKey)(id))
   const data = action.response.data
-  yield put(finishedUpload(action.file, data.id))
+  yield put(finishedUpload(action.filesKey, action.file, data.id))
   yield put(uploadedFile(action.filesKey, {
     ...data,
     attributes: {
@@ -169,6 +169,7 @@ function uploadsReducer (state = initialState, action) {
       return {
         ...state,
         [action.filesKey]: {
+          ...state[action.filesKey],
           records: {
             ...state[action.filesKey].records,
             [id]: {
@@ -187,6 +188,7 @@ function uploadsReducer (state = initialState, action) {
       return {
         ...state,
         [action.filesKey]: {
+          ...state[action.filesKey],
           records: {
             ...state[action.filesKey].records,
             [id]: {
