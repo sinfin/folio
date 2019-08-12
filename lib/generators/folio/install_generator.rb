@@ -117,6 +117,8 @@ module Folio
           'app/assets/images/sprites@2x/.keep',
           'app/assets/javascripts/application.js',
           'app/assets/javascripts/non_turbo.js',
+          'app/assets/javascripts/folio/console/main_app.coffee',
+          'app/cells/folio/console/atoms/previews/main_app.coffee',
           'app/assets/stylesheets/_cells.scss.erb',
           'app/assets/stylesheets/_custom_bootstrap.sass',
           'app/assets/stylesheets/_fonts.scss',

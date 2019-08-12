@@ -1,5 +1,6 @@
 #= require jquery
 #= require folio/lazyload
+#= require folio/console/atoms/previews/main_app
 
 lazyloadAll = ->
   window.folioLazyloadInstances.forEach (instance) ->
@@ -130,5 +131,4 @@ receiveMessage = (e) ->
 
 window.addEventListener('message', receiveMessage, false)
 
-$ ->
-  lazyloadAll()
+$ lazyloadAll
