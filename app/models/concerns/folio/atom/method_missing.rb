@@ -13,7 +13,7 @@ module Folio::Atom::MethodMissing
 
     if respond_to_missing?(name_without_operator)
       if klass::ASSOCIATIONS.keys.include?(name_for_association)
-        method_missing_association(method_name, arguments[0])
+        method_missing_association(method_name, arguments)
       else
         method_missing_data(method_name, arguments[0])
       end
@@ -37,7 +37,7 @@ module Folio::Atom::MethodMissing
 
   private
 
-    def method_missing_association(method_name, argument)
+    def method_missing_association(method_name, arguments)
       name_without_operator = method_name.to_s
                                          .gsub('=', '')
                                          .to_sym
@@ -50,17 +50,17 @@ module Folio::Atom::MethodMissing
         if method_name.to_s.match?(/_(id|type)=$/)
           key = method_name.to_s.match?(/_id=$/) ? 'id' : 'type'
           self.associations[name_for_association.to_s] ||= {}
-          self.associations[name_for_association.to_s][key] = argument
+          self.associations[name_for_association.to_s][key] = arguments[0]
         else
-          if argument.is_a?(Hash)
+          if arguments[0].is_a?(Hash)
             self.associations[name_for_association.to_s] = {
-              'id' => argument[:id],
-              'type' => argument[:type],
+              'id' => arguments[0][:id],
+              'type' => arguments[0][:type],
             }
           else
             self.associations[name_for_association.to_s] = {
-              'id' => argument.id,
-              'type' => argument.class.name,
+              'id' => arguments[0].id,
+              'type' => arguments[0].class.name,
             }
           end
         end
@@ -71,7 +71,11 @@ module Folio::Atom::MethodMissing
           assoc[key]
         else
           if assoc['type'].present? && assoc['id'].present?
-            assoc['type'].constantize.find(assoc['id'])
+            scope = assoc['type'].constantize
+            if arguments.size > 1
+              scope = scope.includes(*associations[1..-1])
+            end
+            scope.find(assoc['id'])
           else
             nil
           end

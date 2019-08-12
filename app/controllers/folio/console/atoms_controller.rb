@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::AtomsController < Folio::Console::BaseController
+  include Rails.application.routes.url_helpers
+
   layout 'folio/console/atoms'
 
   def index
@@ -49,12 +51,6 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
                      errors: atom.errors.messages,
                      messages: atom.errors.full_messages }
     end
-  end
-
-  def default_url_options
-    {
-      locale: I18n.locale
-    }
   end
 
   private
