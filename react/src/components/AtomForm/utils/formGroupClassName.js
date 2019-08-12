@@ -14,6 +14,8 @@ export default function formGroupClassName (key, errors = {}, structure = {}) {
       classNames.push('datetime')
     } else if (structure[key].type === 'color') {
       classNames.push('color')
+    } else if (structure[key].type === 'boolean') {
+      classNames.push('mb-3')
     }
   }
 

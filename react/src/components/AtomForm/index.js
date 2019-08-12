@@ -30,7 +30,11 @@ class AtomForm extends React.PureComponent {
   }
 
   onChange = (e, key) => {
-    this.props.updateFormAtomValue(key, e.target.value)
+    if (e.target.type === 'checkbox') {
+      this.props.updateFormAtomValue(key, e.target.checked)
+    } else {
+      this.props.updateFormAtomValue(key, e.target.value)
+    }
   }
 
   onAssociationChange (e, key) {

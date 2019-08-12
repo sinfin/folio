@@ -9,24 +9,49 @@ export default function Fields ({ form, onChange, onValueChange }) {
 
   return (
     <React.Fragment>
-      {Object.keys(meta.structure).map((key) => (
-        <FormGroup key={key} className={formGroupClassName(key, form.errors, meta.structure)}>
-          <Label>{meta.structure[key].label}</Label>
-          <AtomInput
+      {Object.keys(meta.structure).map((key) => {
+        const isCheck = meta.structure[key] && meta.structure[key].type === 'boolean'
+
+        return (
+          <FormGroup
             key={key}
-            field={key}
-            form={form}
-            onChange={onChange}
-            onValueChange={onValueChange}
-          />
+            className={formGroupClassName(key, form.errors, meta.structure)}
+            check={isCheck}
+          >
+            <Label
+              check={isCheck}
+            >
+              {isCheck && (
+                <AtomInput
+                  key={key}
+                  field={key}
+                  form={form}
+                  onChange={onChange}
+                  onValueChange={onValueChange}
+                />
+              )}
+              {isCheck && ' '}
+              {meta.structure[key].label}
+            </Label>
 
-          {meta.structure[key].hint && <FormText>{meta.structure[key].hint}</FormText>}
+            {!isCheck && (
+              <AtomInput
+                key={key}
+                field={key}
+                form={form}
+                onChange={onChange}
+                onValueChange={onValueChange}
+              />
+            )}
 
-          {form.errors[key] && (
-            <FormText className='invalid-feedback' color='danger'>{form.errors[key]}</FormText>
-          )}
-        </FormGroup>
-      ))}
+            {meta.structure[key].hint && <FormText>{meta.structure[key].hint}</FormText>}
+
+            {form.errors[key] && (
+              <FormText className='invalid-feedback' color='danger'>{form.errors[key]}</FormText>
+            )}
+          </FormGroup>
+        )
+      })}
     </React.Fragment>
   )
 }

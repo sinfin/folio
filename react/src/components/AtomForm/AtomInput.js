@@ -8,13 +8,16 @@ import DateInput from 'components/DateInput'
 
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
-function inputProps (type) {
+function inputProps (type, defaultValue) {
   switch (type) {
     case 'float':
       return { type: 'number', step: '0.01' }
 
     case 'integer':
       return { type: 'number', step: '1' }
+
+    case 'boolean':
+      return { type: 'checkbox', defaultChecked: defaultValue }
 
     default:
       return { type: 'text' }
@@ -81,7 +84,7 @@ export default function AtomInput ({ field, form, onChange, onValueChange }) {
 
   return (
     <Input
-      {...inputProps(structure[key].type)}
+      {...inputProps(structure[key].type, form.atom.data[key])}
       name={key}
       defaultValue={form.atom.data[key]}
       onChange={(e) => onChange(e, key)}
