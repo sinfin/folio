@@ -14,6 +14,10 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     if params[:keys]
       params[:keys].each { |key| @atoms[key == '' ? nil : key] ||= [] }
     end
+
+    @atoms.each do |key, atoms|
+      @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
+    end
   end
 
   def preview
@@ -33,6 +37,10 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
         @atoms[locale] << attrs['type'].constantize
                                        .new(props)
       end
+    end
+
+    @atoms.each do |key, atoms|
+      @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
     end
 
     render :index, layout: false
