@@ -14,7 +14,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_touch :extract_placement_title_and_type
 
   def to_label
-    title.presence || file.file_name
+    title.presence || file.try(:file_name) || 'error: empty file'
   end
 
   def self.folio_file_placement(class_name, name = nil)
