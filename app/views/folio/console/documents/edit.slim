@@ -3,7 +3,9 @@
 
   .row
     .col
-      = link_to f.object.file.url, target: '_blank', download: true
+      = link_to download_path(f.object, f.object.file_name, locale: I18n.default_locale),
+                target: '_blank',
+                download: true
         i.fa.fa-download<>
         = t('.download')
 
