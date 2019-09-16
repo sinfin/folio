@@ -16,6 +16,11 @@ module Folio::Atom
           hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
           type: value
         }
+
+        if value.is_a?(Array)
+          structure[key][:type] = 'collection'
+          structure[key][:collection] = value
+        end
       end
 
       attachments = klass::ATTACHMENTS.map do |key|

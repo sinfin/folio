@@ -27,7 +27,7 @@
     "build": "react-scripts build && bin/copy_to_rails",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "standard": "./node_modules/.bin/watch './node_modules/.bin/standard --fix' src"
+    "standard": "./node_modules/.bin/watch 'clear; echo \"Standard JS:\n\"; ./node_modules/.bin/standard --fix' src"
   },
   "browserslist": [
     ">0.2%",

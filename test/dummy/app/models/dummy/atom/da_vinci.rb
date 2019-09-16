@@ -6,7 +6,7 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
     document
   ]
 
-  STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }]
+  STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }].merge(fruit: [nil, 'apple', 'banana'])
 
   ASSOCIATIONS = {
     page: %i[Folio::Page],

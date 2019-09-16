@@ -19,6 +19,9 @@ function inputProps (type, defaultValue) {
     case 'boolean':
       return { type: 'checkbox', defaultChecked: defaultValue }
 
+    case 'collection':
+      return { type: 'select' }
+
     default:
       return { type: 'text' }
   }
@@ -60,6 +63,23 @@ export default function AtomInput ({ field, form, onChange, onValueChange }) {
         invalid={Boolean(form.errors[key])}
         type={structure[key].type}
       />
+    )
+  }
+
+  if (structure[key].type === 'collection') {
+    return (
+      <Input
+        {...inputProps(structure[key].type, form.atom.data[key])}
+        name={key}
+        defaultValue={form.atom.data[key]}
+        onChange={(e) => onChange(e, key)}
+        onKeyPress={preventEnterSubmit}
+        invalid={Boolean(form.errors[key])}
+      >
+        {structure[key].collection.map((value) => (
+          <option key={value} value={value}>{value}</option>
+        ))}
+      </Input>
     )
   }
 
