@@ -8,6 +8,7 @@ cs:
       folio/atom/base:
         content: Obsah
         perex: Perex
+        target: Odkaz
         title: Název
       folio/image:
         file_placements: Použití

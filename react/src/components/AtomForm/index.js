@@ -8,6 +8,7 @@ import MultiAttachments from './MultiAttachments'
 import SingleAttachments from './SingleAttachments'
 
 import AtomFormWrap from './styled/AtomFormWrap'
+import AtomFormHint from './styled/AtomFormHint'
 
 class AtomForm extends React.PureComponent {
   constructor (props) {
@@ -55,9 +56,10 @@ class AtomForm extends React.PureComponent {
 
   renderHint (text) {
     return (
-      <div className='mt-5 small'>
+      <AtomFormHint>
+        <span className='mi'>info</span>
         {text.split(/\n/).map((part, i) => <p key={i}>{part}</p>)}
-      </div>
+      </AtomFormHint>
     )
   }
 
@@ -142,6 +144,7 @@ class AtomForm extends React.PureComponent {
 
             <MultiAttachments attachments={this.props.form.atom.meta.attachments} />
           </div>
+
           {this.props.form.atom.meta.hint && this.renderHint(this.props.form.atom.meta.hint)}
         </div>
         {this.props.form.validating && <span className='folio-loader' />}
