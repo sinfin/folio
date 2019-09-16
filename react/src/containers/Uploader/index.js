@@ -6,6 +6,7 @@ import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
 import { flashMessageFromApiErrors } from 'utils/flash'
+import fileKeyToType from 'utils/fileKeyToType'
 
 import Loader from 'components/Loader'
 import {
@@ -16,7 +17,6 @@ import {
   progress,
   makeUploadsSelector
 } from 'ducks/uploads'
-import { fileTypeSelector } from 'ducks/app'
 
 import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
 
@@ -63,14 +63,15 @@ class Uploader extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: this.props.fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images'
+      postUrl: `/console/api/${this.props.filesKey}`
     }
   }
 
   djsConfig () {
     const params = {}
-    params['file[type]'] = this.props.fileType
-    params['file[attributes][type]'] = this.props.fileType
+    const fileType = fileKeyToType(this.props.filesKey)
+    params['file[type]'] = fileType
+    params['file[attributes][type]'] = fileType
     params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
 
     return {
@@ -94,8 +95,8 @@ class Uploader extends Component {
   }
 
   render () {
-    const { fileType } = this.props
-    if (!fileType) return <Loader />
+    const { filesKey } = this.props
+    if (!filesKey) return <Loader />
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
@@ -114,7 +115,6 @@ class Uploader extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  fileType: fileTypeSelector(state),
   uploads: makeUploadsSelector(props.filesKey)(state)
 })
 
