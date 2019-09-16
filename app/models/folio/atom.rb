@@ -38,10 +38,11 @@ module Folio::Atom
 
       associations = {}
       klass::ASSOCIATIONS.each do |key, model_class_names|
+        show_model_names = model_class_names.size > 1
         records = model_class_names.flat_map do |model_class_name|
           model_class = model_class_name.to_s.constantize
           klass.scoped_model_resource(model_class)
-               .map { |record| association_to_h(record) }
+               .map { |record| association_to_h(record, show_model_names: show_model_names) }
                .sort_by { |h| I18n.transliterate(h[:label]) }
         end
 
@@ -102,11 +103,16 @@ module Folio::Atom
     images.compact
   end
 
-  def self.association_to_h(record)
+  def self.association_to_h(record, show_model_names: false)
+    label = [
+      show_model_names ? record.model_name.human : nil,
+      record.to_label,
+    ].compact.join(' / ')
+
     {
       id: record.id,
       type: record.class.name,
-      label: record.to_label,
+      label: label,
       value: Folio::Console::StiHelper.sti_record_to_select_value(record)
     }
   end

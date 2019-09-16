@@ -97,10 +97,7 @@ en:
       folio/page:
         one: Page
         other: Pages
-      folio/page/cookies:
-        few: Cookies
-        one: Cookies
-        other: Cookies
+      folio/page/cookies: Page - Cookies
       folio/site:
         one: Site
         other: Sites

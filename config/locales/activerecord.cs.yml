@@ -123,10 +123,7 @@ cs:
         few: Stránky
         one: Stránka
         other: Stránek
-      folio/page/cookies:
-        few: Používání cookies
-        one: Používání cookies
-        other: Používání cookies
+      folio/page/cookies: Stránka - Používání cookies
       folio/site:
         few: Weby
         one: Web
