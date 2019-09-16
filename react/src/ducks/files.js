@@ -57,8 +57,7 @@ export function updateFileFailure (filesKey, file) {
 
 function * getFilesPerform (action) {
   try {
-    const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/api/documents' : '/console/api/images'
+    const filesUrl = `/console/api/${action.filesKey}`
     const records = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.filesKey, records.data))
   } catch (e) {

@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
-import { fileTypeIsImageSelector } from 'ducks/app'
 import { makeFilesLoadingSelector, makeFilesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 
@@ -41,7 +40,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
         <Uploader filesKey={this.props.filesKey}>
           <FileList
             files={this.props.filesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
+            fileTypeIsImage={this.props.filesKey === 'images'}
             displayAsThumbs={this.props.displayAsThumbs}
             onClick={this.selectFile}
             selecting='single'
@@ -57,7 +56,6 @@ class SingleSelect extends LazyLoadCheckingComponent {
 const mapStateToProps = (state, props) => ({
   filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
   filesForList: makeFilesForListSelector(props.filesKey)(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })
 

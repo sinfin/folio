@@ -15,8 +15,6 @@ import {
   displaySelector
 } from 'ducks/display'
 
-import { fileTypeIsImageSelector } from 'ducks/app'
-
 import TagsInput from 'components/TagsInput'
 import Select from 'components/Select'
 
@@ -117,8 +115,7 @@ const mapStateToProps = (state, props) => ({
   filters: makeFiltersSelector(props.filesKey)(state),
   tags: makeTagsSelector(props.filesKey)(state),
   placements: makePlacementsSelector(props.filesKey)(state),
-  display: displaySelector(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state)
+  display: displaySelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

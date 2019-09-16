@@ -16,7 +16,6 @@ import {
   changeAlt,
   makeFilePlacementsSelector
 } from 'ducks/filePlacements'
-import { fileTypeIsImageSelector } from 'ducks/app'
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import FileFilter from 'containers/FileFilter'
@@ -53,14 +52,13 @@ class MultiSelect extends LazyLoadCheckingComponent {
 
   render () {
     if (this.props.filesLoading) return <Loader />
-
-    const headerKey = this.props.fileTypeIsImage ? 'Images' : 'Documents'
+    const fileTypeIsImage = this.props.filesKey === 'images'
 
     return (
       <Uploader filesKey={this.props.filesKey}>
         <Card
           highlighted
-          header={window.FolioConsole.translations[`selected${headerKey}`]}
+          header={window.FolioConsole.translations[`selected${this.props.filesKey}`]}
         >
           <FilePlacementList
             filePlacements={this.props.filePlacements}
@@ -68,20 +66,20 @@ class MultiSelect extends LazyLoadCheckingComponent {
             onAltChange={this.onAltChange}
             onTitleChange={this.onTitleChange}
             unselectFilePlacement={this.unselectFilePlacement}
-            fileTypeIsImage={this.props.fileTypeIsImage}
+            fileTypeIsImage={fileTypeIsImage}
             filesKey={this.props.filesKey}
           />
         </Card>
 
         <Card
-          header={window.FolioConsole.translations[`available${headerKey}`]}
-          filters={<FileFilter filesKey={this.props.filesKey} />}
+          header={window.FolioConsole.translations[`available${this.props.filesKey}`]}
+          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
         >
           <UploadTagger filesKey={this.props.filesKey} />
 
           <FileList
             files={this.props.unselectedFilesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
+            fileTypeIsImage={fileTypeIsImage}
             displayAsThumbs={this.props.displayAsThumbs}
             onClick={this.selectFile}
             selecting='multiple'
@@ -98,7 +96,6 @@ const mapStateToProps = (state, props) => ({
   filesLoaded: makeFilesLoadedSelector(props.filesKey)(state),
   filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
   unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })
 
