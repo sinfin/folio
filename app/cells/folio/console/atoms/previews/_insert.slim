@@ -1,18 +1,19 @@
-aside.f-c-atoms-previews__insert
-  .f-c-atoms-previews__insert-hint
-    span.f-c-atoms-previews__insert-hint-btn.mi
-      ' add
+- I18n.with_locale(Rails.application.config.folio_console_locale)
+  aside.f-c-atoms-previews__insert
+    .f-c-atoms-previews__insert-hint
+      span.f-c-atoms-previews__insert-hint-btn.mi
+        ' add
 
-  .f-c-atoms-previews__insert-inner
-    .container
-      ul.f-c-atoms-previews__insert-ul.row.list-unstyled
-        - Folio::Atom.types.each do |klass|
-          li.f-c-atoms-previews__insert-li.col-6.col-md-3
-            a.f-c-atoms-previews__insert-a[
-              href="##{klass.model_name.human}"
-              data-type=klass.to_s
-            ]
-              - if klass.console_icon
-                span.mi = klass.console_icon
+    .f-c-atoms-previews__insert-inner
+      .container
+        ul.f-c-atoms-previews__insert-ul.row.list-unstyled
+          - Folio::Atom.types.each do |klass|
+            li.f-c-atoms-previews__insert-li.col-6.col-md-3
+              a.f-c-atoms-previews__insert-a[
+                href="##{klass.model_name.human}"
+                data-type=klass.to_s
+              ]
+                - if klass.console_icon
+                  span.mi = klass.console_icon
 
-              = klass.model_name.human
+                = klass.model_name.human
