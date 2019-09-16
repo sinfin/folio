@@ -14,4 +14,10 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   def insert
     @insert ||= render(:_insert)
   end
+
+  def sorted_types
+    Folio::Atom.types.sort_by do |klass|
+      I18n.transliterate(klass.model_name.human)
+    end
+  end
 end

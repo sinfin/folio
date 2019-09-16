@@ -7,7 +7,7 @@
     .f-c-atoms-previews__insert-inner
       .container
         ul.f-c-atoms-previews__insert-ul.row.list-unstyled
-          - Folio::Atom.types.each do |klass|
+          - sorted_types.each do |klass|
             li.f-c-atoms-previews__insert-li.col-6.col-md-3
               a.f-c-atoms-previews__insert-a[
                 href="##{klass.model_name.human}"

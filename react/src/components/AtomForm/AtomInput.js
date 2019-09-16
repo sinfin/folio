@@ -30,48 +30,59 @@ function inputProps (type, defaultValue) {
 export default function AtomInput ({ field, form, onChange, onValueChange }) {
   const { structure } = form.atom.meta
   const key = field
+  const type = structure[key].type
+  const defaultValue = form.atom.data[key]
 
-  if (structure[key].type === 'richtext') {
+  React.useEffect(() => {
+    if (type === 'collection') {
+      const { collection } = structure[key]
+      if (collection && !defaultValue && defaultValue !== collection[0]) {
+        onValueChange(collection[0], key)
+      }
+    }
+  }, [type, onValueChange, defaultValue, key, structure])
+
+  if (type === 'richtext') {
     return (
       <RichTextEditor
         name={key}
-        defaultValue={form.atom.data[key]}
+        defaultValue={defaultValue}
         onChange={(html) => onValueChange(html, key)}
         invalid={Boolean(form.errors[key])}
       />
     )
   }
 
-  if (structure[key].type === 'color') {
+  if (type === 'color') {
     return (
       <ColorInput
         name={key}
-        defaultValue={form.atom.data[key]}
+        defaultValue={defaultValue}
         onChange={(colorString) => onValueChange(colorString, key)}
         invalid={Boolean(form.errors[key])}
-        type={structure[key].type}
+        type={type}
       />
     )
   }
 
-  if (structure[key].type === 'date' || structure[key].type === 'datetime') {
+  if (type === 'date' || type === 'datetime') {
     return (
       <DateInput
         name={key}
-        defaultValue={form.atom.data[key]}
+        defaultValue={defaultValue}
         onChange={(e) => onChange(e, key)}
         invalid={Boolean(form.errors[key])}
-        type={structure[key].type}
+        type={type}
       />
     )
   }
 
-  if (structure[key].type === 'collection') {
+  if (type === 'collection') {
     return (
       <Input
-        {...inputProps(structure[key].type, form.atom.data[key])}
+        {...inputProps(type, form.atom.data[key])}
         name={key}
-        defaultValue={form.atom.data[key]}
+        defaultValue={defaultValue}
         onChange={(e) => onChange(e, key)}
         onKeyPress={preventEnterSubmit}
         invalid={Boolean(form.errors[key])}
@@ -83,7 +94,7 @@ export default function AtomInput ({ field, form, onChange, onValueChange }) {
     )
   }
 
-  if (structure[key].type === 'text' || structure[key].type === 'code') {
+  if (type === 'text' || type === 'code') {
     const classNames = ['form-control']
 
     if (form.errors[key]) {
@@ -93,9 +104,9 @@ export default function AtomInput ({ field, form, onChange, onValueChange }) {
     return (
       <TextareaAutosize
         name={key}
-        defaultValue={form.atom.data[key]}
+        defaultValue={defaultValue}
         onChange={(e) => onValueChange(e.currentTarget.value, key)}
-        type={structure[key].type}
+        type={type}
         className={classNames.join(' ')}
         rows={2}
       />
@@ -104,9 +115,9 @@ export default function AtomInput ({ field, form, onChange, onValueChange }) {
 
   return (
     <Input
-      {...inputProps(structure[key].type, form.atom.data[key])}
+      {...inputProps(type, form.atom.data[key])}
       name={key}
-      defaultValue={form.atom.data[key]}
+      defaultValue={defaultValue}
       onChange={(e) => onChange(e, key)}
       onKeyPress={preventEnterSubmit}
       invalid={Boolean(form.errors[key])}
