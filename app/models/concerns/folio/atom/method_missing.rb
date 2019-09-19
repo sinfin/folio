@@ -87,12 +87,14 @@ module Folio::Atom::MethodMissing
       name_without_operator = method_name.to_s
                                          .gsub('=', '')
                                          .to_sym
+      is_bool = klass::STRUCTURE[name_without_operator] == :boolean
 
       if method_name.to_s.include?('=')
         self.data ||= {}
-        self.data[name_without_operator.to_s] = argument
+        self.data[name_without_operator.to_s] = is_bool ? argument.present? : argument
       else
-        (self.data || {})[name_without_operator.to_s]
+        val = (self.data || {})[name_without_operator.to_s]
+        is_bool ? val.present? : val
       end
     end
 end
