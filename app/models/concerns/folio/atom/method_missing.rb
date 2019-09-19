@@ -91,7 +91,17 @@ module Folio::Atom::MethodMissing
 
       if method_name.to_s.include?('=')
         self.data ||= {}
-        self.data[name_without_operator.to_s] = is_bool ? argument.present? : argument
+        value = argument
+
+        if is_bool
+          if value == 'false' || value == '0'
+            value = false
+          else
+            value = value.present?
+          end
+        end
+
+        self.data[name_without_operator.to_s] = value
       else
         val = (self.data || {})[name_without_operator.to_s]
         is_bool ? val.present? : val
