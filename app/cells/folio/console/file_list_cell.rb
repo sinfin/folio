@@ -14,4 +14,8 @@ class Folio::Console::FileListCell < Folio::ConsoleCell
                 class: 'folio-console-file-list__img',
               ))
   end
+
+  def as_documents?
+    model.any? { |file| !file.respond_to?(:thumb) }
+  end
 end
