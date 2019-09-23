@@ -11,6 +11,7 @@ cs:
         create: Vytvořit
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
+        link: Odkaz
         newUploadTags: Štítky pro nové soubory
         noResults: Žádné výsledky
         placementsLabel: Použití
@@ -19,4 +20,5 @@ cs:
         selected: Vybrané
         selectedDocuments: Vybrané dokumenty
         selectedImages: Vybrané obrázky
+        title: Název
         used: Již použité

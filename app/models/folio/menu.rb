@@ -14,6 +14,8 @@ class Folio::Menu < Folio::ApplicationRecord
 
   alias_attribute :items, :menu_items
 
+  scope :ordered, -> { order(type: :asc, locale: :asc) }
+
   def title
     model_name.human
   end

@@ -11,6 +11,7 @@ en:
         create: Create
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
+        link: Link
         newUploadTags: Tags for new files
         noResults: No results
         placementsLabel: Usage
@@ -19,4 +20,5 @@ en:
         selected: Selected
         selectedDocuments: Selected documents
         selectedImages: Selected images
+        title: Title
         used: Used already

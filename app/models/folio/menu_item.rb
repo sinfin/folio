@@ -22,6 +22,17 @@ class Folio::MenuItem < Folio::ApplicationRecord
     self.class.human_name
   end
 
+  def to_h
+    {
+      id: id,
+      position: position,
+      rails_path: rails_path,
+      target_id: target_id,
+      target_type: target_type,
+      title: title,
+    }
+  end
+
   private
 
     def validate_menu_allowed_types

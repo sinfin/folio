@@ -73,9 +73,6 @@ en:
           blank: "-- blank --"
           handle: Handle
           unhandle: Set as not handled
-      menu_tree:
-        error: 'Failed to update tree structure: %{msg}'
-        success: Tree structure updated
       menus:
         detail_heading:
           edit_link: Edit links
@@ -86,6 +83,7 @@ en:
           title_hint: Optional. If left blank, the title of the target is shown.
         show:
           title: Tree structure
+        link: Link
       nested_model_controls:
         destroy: Remove
       noTags: No tags

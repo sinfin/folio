@@ -6,6 +6,7 @@ import displayReducer from 'ducks/display'
 import filePlacementsReducer from 'ducks/filePlacements'
 import filesReducer from 'ducks/files'
 import filtersReducer from 'ducks/filters'
+import menusReducer from 'ducks/menus'
 import modalReducer from 'ducks/modal'
 import uploadsReducer from 'ducks/uploads'
 
@@ -16,6 +17,7 @@ export default combineReducers({
   filePlacements: filePlacementsReducer,
   files: filesReducer,
   filters: filtersReducer,
+  menus: menusReducer,
   modal: modalReducer,
   uploads: uploadsReducer
 })

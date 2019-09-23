@@ -1,3 +1,5 @@
+= form_header f
+
 - if f.object.new_record?
   - klass = f.object.class
   - collection = klass.recursive_subclasses_for_select(include_self: false)
@@ -8,17 +10,10 @@
                      include_blank: false
 
 - else
-  fieldset#menu_items
-    h4 = Folio::MenuItem.model_name.human(count: 2)
-
-    = f.simple_fields_for :menu_items do |menu_item|
-      = render 'menu_item_fields', f: menu_item, menu: f.object
-
-    .links
-      = link_to_add_association t('.add_menu_item'), \
-                                f, \
-                                :menu_items, \
-                                class: 'btn btn-success', \
-                                render_options: { locals: { menu: f.object } }
+  .folio-react-wrap.folio-react-wrap--menu-form[
+    data-menupaths=@serialized_menu_paths
+    data-menuitems=@serialized_menu_items
+    data-menudepth=@menu.class.max_nesting_depth
+  ]
 
 = form_footer f

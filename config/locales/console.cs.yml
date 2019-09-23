@@ -74,9 +74,6 @@ cs:
           blank: "-- nevyplněno --"
           handle: Vyřídit
           unhandle: Označit jako nevyřízený
-      menu_tree:
-        error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
-        success: Stromová struktura upravena
       menus:
         edit:
           header_link: Upravit stromovou strukturu
@@ -87,6 +84,7 @@ cs:
         show:
           title: Stromová struktura
           header_link: Upravit odkazy
+        link: Odkaz
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova
