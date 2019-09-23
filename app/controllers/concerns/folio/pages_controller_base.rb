@@ -13,12 +13,16 @@ module Folio::PagesControllerBase
     if @page.published?
       render_page unless force_correct_path_for_page
     else
-      redirect_to(action: :preview) && (return)
+      redirect_to(action: :preview)
     end
   end
 
   def preview
-    render_page
+    if @page.published?
+      redirect_to(action: :show)
+    else
+      render_page
+    end
   end
 
   private
