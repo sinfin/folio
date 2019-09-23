@@ -48,6 +48,9 @@ module Folio::ApplicationControllerBase
       if request.path != correct_path_or_url &&
          request.url != correct_path_or_url
         redirect_to(correct_path_or_url, status: :moved_permanently)
+        true
+      else
+        false
       end
     end
 

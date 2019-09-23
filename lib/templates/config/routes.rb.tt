@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
     get '/anti-cache/*name', to: 'anti_cache#show', as: :anti_cache
 
-    resources :pages, only: [:show], path: ''
+    resources :pages, only: [:show], path: '' do
+      member { get :preview }
+    end
   end
 end

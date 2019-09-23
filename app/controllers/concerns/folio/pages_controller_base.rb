@@ -10,14 +10,26 @@ module Folio::PagesControllerBase
   end
 
   def show
-    if @page.class.view_name
-      render @page.class.view_name
+    if @page.published?
+      render_page unless force_correct_path_for_page
     else
-      render 'folio/pages/show'
+      redirect_to(action: :preview) && (return)
     end
   end
 
+  def preview
+    render_page
+  end
+
   private
+
+    def render_page
+      if @page.class.view_name
+        render @page.class.view_name
+      else
+        render 'folio/pages/show'
+      end
+    end
 
     def find_page
       if Rails.application.config.folio_pages_ancestry
@@ -30,8 +42,6 @@ module Folio::PagesControllerBase
                           slug,
                           last: path.size - 1 == i)
         end
-
-        force_correct_path(nested_page_path(@page))
       else
         if page_includes.present?
           base = pages_scope.includes(*page_includes)
@@ -43,7 +53,6 @@ module Folio::PagesControllerBase
                     .friendly
                     .find(params[:id])
         add_breadcrumb @page.title, url_for(@page)
-        force_correct_path(url_for(@page))
       end
 
       fail ActiveRecord::RecordNotFound unless @page.class.public?
@@ -82,5 +91,13 @@ module Folio::PagesControllerBase
 
     def page_includes
       []
+    end
+
+    def force_correct_path_for_page
+      if Rails.application.config.folio_pages_ancestry
+        force_correct_path(nested_page_path(@page))
+      else
+        force_correct_path(url_for(@page))
+      end
     end
 end

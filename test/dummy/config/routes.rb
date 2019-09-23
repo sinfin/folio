@@ -15,9 +15,13 @@ Rails.application.routes.draw do
     end
   else
     if Rails.application.config.folio_pages_ancestry
-      get '/*path', to: 'pages#show', as: 'page'
+      get '/*path', to: 'pages#show', as: 'page' do
+        member { get :preview }
+      end
     else
-      resources :pages, only: [:show], path: ''
+      resources :pages, only: [:show], path: '' do
+        member { get :preview }
+      end
     end
   end
 end
