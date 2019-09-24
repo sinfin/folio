@@ -24,7 +24,8 @@ class Folio::MenuItem < Folio::ApplicationRecord
 
   def to_label
     return title if title.present?
-    return target.try(:title) || target.try(:to_label) if target.present?
+    trgt = self.class.use_pages_relation ? page : target
+    return trgt.try(:title) || trgt.try(:to_label) if trgt.present?
     return menu.class.rails_paths[rails_path.to_sym] if rails_path.present?
     self.class.human_name
   end
@@ -38,6 +39,10 @@ class Folio::MenuItem < Folio::ApplicationRecord
       target_type: target_type,
       title: title,
     }
+  end
+
+  def self.use_pages_relation
+    true
   end
 
   private

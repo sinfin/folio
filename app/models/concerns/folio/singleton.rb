@@ -11,8 +11,13 @@ module Folio::Singleton
   end
 
   class_methods do
-    def instance(fail_on_missing: true)
-      self.first.presence || (fail_on_missing ? fail_on_missing_instance : nil)
+    def instance(fail_on_missing: true, includes: nil)
+      if includes
+        scope = self.includes(*includes)
+      else
+        scope = self
+      end
+      scope.first.presence || (fail_on_missing ? fail_on_missing_instance : nil)
     end
 
     def fail_on_missing_instance
