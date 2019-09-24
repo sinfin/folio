@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import SortableTree, { changeNodeAtPath } from 'react-sortable-tree'
+import SortableTree, { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree'
 
 import 'react-sortable-tree/style.css'
 
-import { menusSelector, updateItems } from 'ducks/menus'
+import { menusSelector, updateItems, removeItem } from 'ducks/menus'
 
 import MenuFormAppWrap from './styled/MenuFormAppWrap'
 import MenuItem from './MenuItem'
@@ -12,8 +12,9 @@ import SerializedMenu from './SerializedMenu'
 
 const getNodeKey = ({ treeIndex }) => treeIndex
 
-function MenuFormApp ({ menus, onChange, makeOnMenuItemChange }) {
+function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRemove }) {
   const itemOnChange = makeOnMenuItemChange(menus.items)
+  const itemOnRemove = makeOnMenuItemRemove(menus.items)
 
   const options = menus.paths.map((path, i) => {
     const value = path.rails_path || `${path.target_type} - ${path.target_id}`
@@ -39,7 +40,7 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange }) {
         onChange={onChange}
         isVirtualized={false}
         generateNodeProps={({ node, path }) => ({
-          title: <MenuItem node={node} path={path} onChange={itemOnChange} options={options} />
+          title: <MenuItem node={node} path={path} onChange={itemOnChange} options={options} remove={itemOnRemove} />
         })}
       />
 
@@ -65,6 +66,13 @@ function mapDispatchToProps (dispatch) {
             getNodeKey
           })
         )
+      )
+    },
+    makeOnMenuItemRemove: (items) => (path, removed) => {
+      const tree = removeNodeAtPath({ treeData: items, path, getNodeKey })
+
+      dispatch(
+        removeItem(tree, removed)
       )
     }
   }

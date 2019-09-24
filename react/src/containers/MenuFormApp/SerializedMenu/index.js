@@ -18,6 +18,18 @@ function SerializedMenuItem ({ item, index }) {
   )
 }
 
+function SerializedRemovedMenuItem ({ id, index }) {
+  const prefix = `menu[menu_items_attributes][${index + 1}]`
+  const name = (field) => `${prefix}[${field}]`
+
+  return (
+    <div>
+      <input type='hidden' name={name('id')} value={id} />
+      <input type='hidden' name={name('_destroy')} value='1' />
+    </div>
+  )
+}
+
 const flatItems = (items) => {
   const flat = []
 
@@ -31,14 +43,19 @@ const flatItems = (items) => {
 }
 
 function SerializedMenu ({ menus }) {
+  let i = -1
   return (
     <div hidden>
-      {flatItems(menus.items).map((item, i) => (
+      {flatItems(menus.items).map((item) => (
         <SerializedMenuItem
           key={item.uniqueId}
           item={item}
-          index={i}
+          index={i += 1}
         />
+      ))}
+
+      {menus.removedIds.map((id) => (
+        <SerializedRemovedMenuItem id={id} key={id} index={i += 1} />
       ))}
     </div>
   )

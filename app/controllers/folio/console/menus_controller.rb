@@ -16,12 +16,18 @@ class Folio::Console::MenusController < Folio::Console::BaseController
           menu_item = @menu.menu_items.create(mia)
         else
           menu_item = @menu.menu_items.find(mia[:id])
-          menu_item.update(mia)
+          if mia[:_destroy]
+            menu_item.destroy
+            next
+          else
+            menu_item.update(mia)
+          end
         end
         dict[mia[:unique_id]] = menu_item
       end
 
       menu_params[:menu_items_attributes].each do |_i, mia|
+        next if mia[:_destroy]
         dict[mia[:unique_id]].update(parent: dict[mia[:parent_unique_id]])
       end
     end

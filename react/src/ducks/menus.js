@@ -4,6 +4,7 @@ import { uniqueId } from 'lodash'
 
 const SET_MENUS_DATA = 'menus/SET_MENUS_DATA'
 const UPDATE_ITEMS = 'menus/UPDATE_ITEMS'
+const REMOVE_ITEM = 'menus/REMOVE_ITEM'
 
 // Actions
 
@@ -15,6 +16,10 @@ export function updateItems (items) {
   return { type: UPDATE_ITEMS, items }
 }
 
+export function removeItem (items, removed) {
+  return { type: REMOVE_ITEM, items, removed }
+}
+
 // Selectors
 
 export const menusSelector = (state) => state.menus
@@ -24,7 +29,8 @@ export const menusSelector = (state) => state.menus
 const initialState = {
   paths: {},
   items: [],
-  maxNestingDepth: 1
+  maxNestingDepth: 1,
+  removedIds: []
 }
 
 // Reducer
@@ -52,6 +58,20 @@ function menusReducer (state = initialState, action) {
         ...state,
         items: action.items
       }
+
+    case REMOVE_ITEM: {
+      const removedIds = state.removedIds
+      const markRemoved = (item) => {
+        if (item.id) removedIds.push(item.id)
+        item.children.forEach(markRemoved)
+      }
+      markRemoved(action.removed)
+      return {
+        ...state,
+        removedIds,
+        items: action.items
+      }
+    }
 
     default:
       return state
