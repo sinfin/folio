@@ -3,7 +3,32 @@
 class Folio::Console::MenusController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Menu'
 
-  before_action :serialize_menu_items, except: [:destroy, :index]
+  def edit
+    serialize_menu_items
+  end
+
+  def update
+    @klass.transaction do
+      dict = {}
+
+      menu_params[:menu_items_attributes].each do |_i, mia|
+        if mia[:id].blank?
+          menu_item = @menu.menu_items.create(mia)
+        else
+          menu_item = @menu.menu_items.find(mia[:id])
+          menu_item.update(mia)
+        end
+        dict[mia[:unique_id]] = menu_item
+      end
+
+      menu_params[:menu_items_attributes].each do |_i, mia|
+        dict[mia[:unique_id]].update(parent: dict[mia[:parent_unique_id]])
+      end
+    end
+
+    serialize_menu_items
+    respond_with @menu, location: url_for([:edit, :console, @menu])
+  end
 
   private
 
@@ -24,6 +49,8 @@ class Folio::Console::MenusController < Folio::Console::BaseController
         :position,
         :type,
         :rails_path,
+        :unique_id,
+        :parent_unique_id,
         :_destroy,
       ]
     end

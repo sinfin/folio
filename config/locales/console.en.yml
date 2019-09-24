@@ -84,6 +84,7 @@ en:
         show:
           title: Tree structure
         link: Link
+        noLink: No link (wrap only)
       nested_model_controls:
         destroy: Remove
       noTags: No tags

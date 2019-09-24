@@ -85,6 +85,7 @@ cs:
           title: Stromová struktura
           header_link: Upravit odkazy
         link: Odkaz
+        noLink: Bez odkazu (pouze obal)
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

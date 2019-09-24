@@ -1,3 +1,5 @@
+import { uniqueId } from 'lodash'
+
 // Constants
 
 const SET_MENUS_DATA = 'menus/SET_MENUS_DATA'
@@ -29,12 +31,21 @@ const initialState = {
 
 function menusReducer (state = initialState, action) {
   switch (action.type) {
-    case SET_MENUS_DATA:
+    case SET_MENUS_DATA: {
+      const { items } = action.data
+      const modify = (item) => {
+        item.expanded = true
+        item.uniqueId = uniqueId()
+        item.children.forEach(modify)
+      }
+      items.forEach(modify)
+
       return {
         ...state,
         ...action.data,
-        items: action.data.items.map((item) => ({ ...item, expanded: true }))
+        items
       }
+    }
 
     case UPDATE_ITEMS:
       return {

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::MenuItem < Folio::ApplicationRecord
+  attribute :unique_id, :string
+  attribute :parent_unique_id, :string
+
   # Relations
   has_ancestry orphan_strategy: :adopt, touch: true
   belongs_to :menu, touch: true, required: true

@@ -8,6 +8,7 @@ import { menusSelector, updateItems } from 'ducks/menus'
 
 import MenuFormAppWrap from './styled/MenuFormAppWrap'
 import MenuItem from './MenuItem'
+import SerializedMenu from './SerializedMenu'
 
 const getNodeKey = ({ treeIndex }) => treeIndex
 
@@ -41,6 +42,8 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange }) {
           title: <MenuItem node={node} path={path} onChange={itemOnChange} options={options} />
         })}
       />
+
+      <SerializedMenu menus={menus} />
     </MenuFormAppWrap>
   )
 }
