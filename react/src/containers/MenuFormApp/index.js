@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import SortableTree, { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree'
+import { Button } from 'reactstrap'
 
 import 'react-sortable-tree/style.css'
 
-import { menusSelector, updateItems, removeItem } from 'ducks/menus'
+import { menusSelector, addItem, updateItems, removeItem } from 'ducks/menus'
 
 import MenuFormAppWrap from './styled/MenuFormAppWrap'
 import MenuItem from './MenuItem'
@@ -12,7 +13,7 @@ import SerializedMenu from './SerializedMenu'
 
 const getNodeKey = ({ treeIndex }) => treeIndex
 
-function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRemove }) {
+function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRemove, add }) {
   const itemOnChange = makeOnMenuItemChange(menus.items)
   const itemOnRemove = makeOnMenuItemRemove(menus.items)
 
@@ -44,6 +45,12 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
         })}
       />
 
+      <div className='my-4'>
+        <Button color='success' type='button' onClick={add}>
+          {window.FolioConsole.translations.add}
+        </Button>
+      </div>
+
       <SerializedMenu menus={menus} />
     </MenuFormAppWrap>
   )
@@ -55,6 +62,7 @@ const mapStateToProps = (state, props) => ({
 
 function mapDispatchToProps (dispatch) {
   return {
+    add: () => { dispatch(addItem()) },
     onChange: (treeData) => { dispatch(updateItems(treeData)) },
     makeOnMenuItemChange: (items) => (path, newNode) => {
       dispatch(

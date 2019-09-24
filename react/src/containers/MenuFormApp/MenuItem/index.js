@@ -13,6 +13,7 @@ function MenuItem ({ node, path, onChange, options, remove }) {
         className='mr-g'
         value={node.title || ''}
         onChange={(e) => onChange(path, { ...node, title: e.target.value })}
+        autoFocus={node.id === null}
       />
 
       <Label className='mr-h'>{window.FolioConsole.translations.link}:</Label>

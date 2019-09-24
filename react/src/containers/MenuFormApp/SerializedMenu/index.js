@@ -44,18 +44,20 @@ const flatItems = (items) => {
 
 function SerializedMenu ({ menus }) {
   let i = -1
+  const index = () => { i++; return i }
+
   return (
     <div hidden>
       {flatItems(menus.items).map((item) => (
         <SerializedMenuItem
           key={item.uniqueId}
           item={item}
-          index={i += 1}
+          index={index()}
         />
       ))}
 
       {menus.removedIds.map((id) => (
-        <SerializedRemovedMenuItem id={id} key={id} index={i += 1} />
+        <SerializedRemovedMenuItem id={id} key={id} index={index()} />
       ))}
     </div>
   )
