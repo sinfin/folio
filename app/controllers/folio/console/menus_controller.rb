@@ -11,24 +11,26 @@ class Folio::Console::MenusController < Folio::Console::BaseController
     @klass.transaction do
       dict = {}
 
-      menu_params[:menu_items_attributes].each do |_i, mia|
-        if mia[:id].blank?
-          menu_item = @menu.menu_items.create(mia)
-        else
-          menu_item = @menu.menu_items.find(mia[:id])
-          if mia[:_destroy]
-            menu_item.destroy
-            next
+      if menu_params[:menu_items_attributes]
+        menu_params[:menu_items_attributes].each do |_i, mia|
+          if mia[:id].blank?
+            menu_item = @menu.menu_items.create(mia)
           else
-            menu_item.update(mia)
+            menu_item = @menu.menu_items.find(mia[:id])
+            if mia[:_destroy]
+              menu_item.destroy
+              next
+            else
+              menu_item.update(mia)
+            end
           end
+          dict[mia[:unique_id]] = menu_item
         end
-        dict[mia[:unique_id]] = menu_item
-      end
 
-      menu_params[:menu_items_attributes].each do |_i, mia|
-        next if mia[:_destroy]
-        dict[mia[:unique_id]].update(parent: dict[mia[:parent_unique_id]])
+        menu_params[:menu_items_attributes].each do |_i, mia|
+          next if mia[:_destroy]
+          dict[mia[:unique_id]].update(parent: dict[mia[:parent_unique_id]])
+        end
       end
     end
 
@@ -39,19 +41,16 @@ class Folio::Console::MenusController < Folio::Console::BaseController
   private
 
     def menu_params
-      sti_menu_items(
-        params.require(:menu)
-              .permit(:type,
-                      :locale,
-                      menu_items_attributes: menu_items_attributes)
-      )
+      params.require(:menu)
+            .permit(menu_items_attributes: menu_items_attributes)
     end
 
     def menu_items_attributes
       [
         :id,
         :title,
-        :target,
+        :target_id,
+        :target_type,
         :position,
         :type,
         :rails_path,
@@ -59,10 +58,6 @@ class Folio::Console::MenusController < Folio::Console::BaseController
         :parent_unique_id,
         :_destroy,
       ]
-    end
-
-    def sti_menu_items(params)
-      sti_hack(params, :menu_items_attributes, :target)
     end
 
     def folio_console_collection_includes

@@ -8,6 +8,10 @@ class Folio::MenuItem < Folio::ApplicationRecord
   has_ancestry orphan_strategy: :adopt, touch: true
   belongs_to :menu, touch: true, required: true
   belongs_to :target, optional: true, polymorphic: true
+  # target shortcut for including, be careful with that
+  belongs_to :page, optional: true,
+                    class_name: 'Folio::Page',
+                    foreign_key: :target_id
 
   # Scopes
   scope :ordered, -> { order(position: :asc) }

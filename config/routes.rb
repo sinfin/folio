@@ -17,7 +17,7 @@ Folio::Engine.routes.draw do
       post :set_positions, on: :collection
     end
 
-    resources :menus, except: [:new, :create, :show]
+    resources :menus, only: [:edit, :update, :index]
 
     resources :images, only: %i[index edit update destroy]
     resources :documents, only: %i[index edit update destroy]

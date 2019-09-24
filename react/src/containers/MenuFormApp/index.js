@@ -18,14 +18,11 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
   const itemOnRemove = makeOnMenuItemRemove(menus.items)
 
   const options = menus.paths.map((path, i) => {
-    const value = path.rails_path || `${path.target_type} - ${path.target_id}`
+    const value = path.rails_path || `${path.target_type} -=- ${path.target_id}`
     return (
       <option
         key={i}
         value={value}
-        data-targetid={path.target_id}
-        data-targettype={path.target_type}
-        data-railspath={path.rails_path}
       >
         {path.title}
       </option>

@@ -16,20 +16,20 @@ class Folio::Console::MenusControllerTest < Folio::Console::BaseControllerTest
 
   test 'update' do
     menu = create(:folio_menu)
-    assert_not_equal('en', menu.locale)
+    assert_equal(0, menu.menu_items.count)
+
     put url_for([:console, menu]), params: {
       menu: {
-        locale: 'en',
+        menu_items_attributes: {
+          '0' => {
+            id: '',
+            unique_id: '1',
+            title: 'foo'
+          }
+        }
       },
     }
     assert_redirected_to url_for([:edit, :console, menu])
-    assert_equal('en', menu.reload.locale)
-  end
-
-  test 'destroy' do
-    menu = create(:folio_menu)
-    delete url_for([:console, menu])
-    assert_redirected_to url_for([:console, Folio::Menu])
-    assert_not(Folio::Menu.exists?(id: menu.id))
+    assert_equal(1, menu.menu_items.count)
   end
 end
