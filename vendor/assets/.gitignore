@@ -1,6 +1,3 @@
-bower_components/ilikenwf-nested-sortable/*
-!bower_components/ilikenwf-nested-sortable/jquery.mjs.nestedSortable.js
-
 bower_components/jquery-ui/*
 !bower_components/jquery-ui/jquery-ui.js
 

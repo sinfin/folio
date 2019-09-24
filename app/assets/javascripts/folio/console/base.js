@@ -11,7 +11,6 @@
 //= require spectrum/spectrum
 
 //= require jquery-ui/jquery-ui
-//= require ilikenwf-nested-sortable/jquery.mjs.nestedSortable
 //= require selectize/dist/js/standalone/selectize
 
 //= require cocoon
@@ -48,7 +47,6 @@
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search
-//= require folio/console/menu_tree/menu_tree
 //= require folio/console/modules/_dirty-forms
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_multiselect
