@@ -38,6 +38,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   scope :by_type, -> (type) { where(type: type.to_s) }
 
+  before_save :set_data_for_search
+
   def self.cell_name
     nil
   end
@@ -169,22 +171,27 @@ class Folio::Atom::Base < Folio::ApplicationRecord
         fail ArgumentError, "Unknown field type: #{value}"
       end
     end
+
+    def set_data_for_search
+      self.data_for_search = data.try(:values).try(:join, "\n").presence
+    end
 end
 
 # == Schema Information
 #
 # Table name: folio_atoms
 #
-#  id             :bigint(8)        not null, primary key
-#  type           :string
-#  position       :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  placement_type :string
-#  placement_id   :bigint(8)
-#  locale         :string
-#  data           :jsonb
-#  associations   :jsonb
+#  id              :bigint(8)        not null, primary key
+#  type            :string
+#  position        :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  placement_type  :string
+#  placement_id    :bigint(8)
+#  locale          :string
+#  data            :jsonb
+#  associations    :jsonb
+#  data_for_search :text
 #
 # Indexes
 #

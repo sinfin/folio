@@ -121,7 +121,7 @@ class Folio::Page < Folio::ApplicationRecord
                     if Rails.application.config.folio_using_traco
                       h = {}
                       I18n.available_locales.each do |locale|
-                        h["#{locale}_atoms".to_sym] = %i[title perex content]
+                        h["#{locale}_atoms".to_sym] = %i[data_for_search]
                       end
                       h
 
@@ -130,7 +130,7 @@ class Folio::Page < Folio::ApplicationRecord
                       )
                     else
                       {
-                        atoms: %i[title perex content],
+                        atoms: %i[data_for_search],
                         file_placements: %i[title alt],
                       }
                     end
