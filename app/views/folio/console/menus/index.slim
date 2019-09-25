@@ -7,9 +7,4 @@
   = s.attribute :menu_items
     = s.object.menu_items.size
 
-  - if s.object.supports_nesting?
-    = s.actions :edit, \
-                :destroy, \
-                arrange: url_for([:console, s.object])
-  - else
-    = s.actions
+  = s.actions
