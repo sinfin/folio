@@ -28,7 +28,6 @@ function MenuItem ({ node, path, onChange, options, remove }) {
   if (!linkValue && node.target_type && node.target_id) {
     linkValue = `${node.target_type} -=- ${node.target_id}`
   }
-  console.log(linkValue)
 
   return (
     <MenuItemWrap className='form-inline'>

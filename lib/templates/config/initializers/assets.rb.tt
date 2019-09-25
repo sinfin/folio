@@ -16,6 +16,7 @@ Rails.application.config.assets.paths << Rails.root.join('vendor/assets/bower_co
 # folder are already added.
 Rails.application.config.assets.precompile += %w(
   non_turbo.js
+  folio/console/react.css
   folio/console/react.js
   folio/console/atoms/previews/previews.css
   folio/console/atoms/previews/previews.js

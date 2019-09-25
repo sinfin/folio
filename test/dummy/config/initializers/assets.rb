@@ -17,6 +17,7 @@ Rails.application.config.assets.paths << Rails.root.join('app/cells')
 Rails.application.config.assets.precompile += %w(
   folio_cells.css
   non_turbo.js
+  folio/console/react.css
   folio/console/react.js
   folio/mailer/base.css
   folio/console/atoms/previews/previews.css

@@ -14,4 +14,8 @@ meta[
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
   = stylesheet_link_tag 'folio/console/base', media: 'all'
 
+  - unless ENV['REACT_DEV']
+    = stylesheet_link_tag 'folio/console/react', media: 'all'
+
+
 = csrf_meta_tags
