@@ -54,7 +54,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     before_action only: :index do
-      name = "@#{params[:controller].split('/').last}".to_sym
+      name = folio_console_record_variable_name(plural: true)
 
       if folio_console_collection_includes.present?
         with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
@@ -69,7 +69,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     prepend_before_action except: :index do
-      name = "@#{params[:controller].split('/').last.singularize}".to_sym
+      name = folio_console_record_variable_name(plural: false)
 
       if folio_console_record_includes.present?
         begin
