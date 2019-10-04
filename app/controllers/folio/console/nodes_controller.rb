@@ -145,5 +145,22 @@ module Folio
     end
 
     helper_method :index_filters
+
+    # HACK: BEWARE! removes multiple ancestry layers
+    def order_children_if_needed(node, children)
+      return {} if children.empty?
+
+      if node.children_order_hash
+        hash = {}
+        node.children.original
+                      .order(node.children_order_hash)
+                      .map { |c| hash[c] = {} }
+        hash
+      else
+        children
+      end
+    end
+
+    helper_method :order_children_if_needed
   end
 end

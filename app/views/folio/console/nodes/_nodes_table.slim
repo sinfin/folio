@@ -2,6 +2,7 @@
   - i = 0
   - nodes.map do |node, children|
     - i += 1
+    - children = order_children_if_needed(node, children)
 
     - if @limit.nil?
       / show all children for node
@@ -9,7 +10,7 @@
         node: node, \
         children: children, \
         tree: true, \
-        sortable: nodes.count > 1, \
+        sortable: node.children_order_hash.nil? && nodes.count > 1, \
         limited: false \
       }
 
@@ -19,7 +20,7 @@
         node: node, \
         children: children, \
         tree: true, \
-        sortable: nodes.count > 1, \
+        sortable: node.children_order_hash.nil? && nodes.count > 1, \
         limited: !node.root? && nodes.count > @limit \
       }
 

@@ -4,6 +4,7 @@ class Folio::Node < Folio::ApplicationRecord
   extend FriendlyId
   include PgSearch::Model
   include Folio::Taggable
+  include Folio::AncestryOrderable
   include Folio::HasAtoms
   include Folio::HasAttachments
   include Folio::ReferencedFromMenuItems
