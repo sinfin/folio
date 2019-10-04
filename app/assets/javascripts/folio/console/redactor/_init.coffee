@@ -10,6 +10,7 @@ ADVANCED_OPTIONS =
   toolbarFixed: false
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
+  linkNewTab: true
 
 OPTIONS =
   plugins: ['table', 'button', 'definedlinks']
@@ -18,6 +19,7 @@ OPTIONS =
   definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
+  linkNewTab: true
 
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')
