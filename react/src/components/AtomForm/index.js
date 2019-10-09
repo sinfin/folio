@@ -111,7 +111,7 @@ class AtomForm extends React.PureComponent {
           </div>
         </div>
 
-        <div className='f-c-simple-form-with-atoms__form-scroll f-c-atom-form-toolbar-fix-parent'>
+        <div className='f-c-simple-form-with-atoms__overlay-scroll f-c-atom-form-toolbar-fix-parent'>
           <div>
             {this.props.form.messages.length > 0 && (
               <div className='my-3 alert alert-danger'>

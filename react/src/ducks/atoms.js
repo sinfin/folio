@@ -181,7 +181,7 @@ function * updateAtomPreviewsSaga () {
 }
 
 function * showAtomsForm (action) {
-  window.jQuery('.f-c-simple-form-with-atoms__form--atoms').addClass('f-c-simple-form-with-atoms__form--active')
+  window.jQuery('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--editing-atom')
   yield put(setFormAtomFilePlacements())
 }
 
@@ -193,7 +193,7 @@ function * showAtomsFormSaga () {
 }
 
 function * hideAtomsForm (action) {
-  yield window.jQuery('.f-c-simple-form-with-atoms__form--atoms').removeClass('f-c-simple-form-with-atoms__form--active')
+  yield window.jQuery('.f-c-simple-form-with-atoms').removeClass('f-c-simple-form-with-atoms--editing-atom')
 }
 
 function * hideAtomsFormSaga () {
