@@ -1,0 +1,12 @@
+.f-c-atoms-locale-switch
+  .container-fluid
+    .position-relative
+      .f-c-atoms-locale-switch__inner
+        - locales.each_with_index do |locale, index|
+          button[
+            type="button"
+            class="f-c-atoms-locale-switch__button"
+            class=(active(locale) ? "f-c-atoms-locale-switch__button--active" : nil)
+            data-locale=locale
+          ]
+            = country_flag(locale)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Atoms::FormHeaderCell < Folio::ConsoleCell
+class Folio::Console::Atoms::LocaleSwitchCell < Folio::ConsoleCell
   include Folio::Console::FlagHelper
 
   def locales

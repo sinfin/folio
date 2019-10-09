@@ -111,6 +111,12 @@ handleInsertClick = (e) ->
     atomType: $a.data('type')
   window.top.postMessage(data, window.origin)
 
+sendResizeMessage = ->
+  data =
+    type: 'setHeight'
+    height: $('.f-c-atoms-previews').outerHeight(true) + 50
+  window.top.postMessage(data, window.origin)
+
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
@@ -123,6 +129,8 @@ $(document)
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()
 
+$(window).on 'resize orientationchange', sendResizeMessage
+
 receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
@@ -131,4 +139,6 @@ receiveMessage = (e) ->
 
 window.addEventListener('message', receiveMessage, false)
 
-$ lazyloadAll
+$ ->
+  lazyloadAll()
+  sendResizeMessage()

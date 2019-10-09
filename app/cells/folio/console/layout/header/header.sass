@@ -67,13 +67,23 @@
           display: block
 
           &:before
-            content: ''
-            font-family: 'Font Awesome 5 Free'
-            font-weight: 900
-            font-size: $font-size-sm
-            margin-right: 4px
-            position: relative
-            top: -1px
+            display: none
+
+          a
+            display: flex
+            align-items: center
+
+            +plain-hover-focus
+              text-decoration: none
+
+            &:before
+              +material-icon-style
+              content: 'arrow_back'
+              margin-right: 4px
+              position: relative
+              top: -1px
+              color: $dark
+              font-size: inherit
 
       &.active:last-child:nth-child(2)
         display: block
