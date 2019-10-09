@@ -12,7 +12,9 @@
             .f-c-simple-form-with-atoms__title-arrow
 
         .container-fluid
-          = yield(f)
+          / used for max-widths etc.
+          .simple_form
+            = yield(f)
 
       .f-c-simple-form-with-atoms__form-toggle
         .container-fluid

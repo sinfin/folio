@@ -9,10 +9,14 @@
 
 .tab-content
   = tab :content
-    = react_picker(f, :cover_placement)
+    == cell('folio/console/publishable_inputs', f)
 
-    == translated_inputs f, :title
-    == translated_inputs f, :slug
+    .d-flex
+      = react_picker(f, :cover_placement)
+
+      .ml-g
+        == translated_inputs f, :title
+        == translated_inputs f, :slug
 
     - collection = Folio::Page.recursive_subclasses_for_select
     - if collection.size > 1
@@ -38,8 +42,6 @@
     h2 = t('.settings')
 
     = f.input :featured
-    = f.input :published
-    = f.input :published_at
 
     h2 = t('.meta')
 
