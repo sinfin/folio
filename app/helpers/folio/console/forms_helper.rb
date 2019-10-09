@@ -63,7 +63,7 @@ module Folio::Console::FormsHelper
     opts[:html][:class] ||= ''
     opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms"
 
-    render layout: 'folio/console/partials/simple-form-with-atoms',
+    render layout: 'folio/console/partials/simple_form_with_atoms',
            locals: {
              model: model,
              opts: opts,

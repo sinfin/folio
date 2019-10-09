@@ -137,6 +137,9 @@ cs:
           settings: Nastavení
           site_social_links: Odkazy
           audits: Historie verzí
+        simple_form_with_atoms:
+          editor: Editor
+          settings: Nastavení
       react_picker:
         add: Přidat
       really_delete: Jste si jist, že chcete smazat "%{title}"?

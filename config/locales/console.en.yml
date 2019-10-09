@@ -134,6 +134,9 @@ en:
           gallery: Gallery
           settings: Settings
           site_social_links: Links
+        simple_form_with_atoms:
+          editor: Editor
+          settings: Settings
       react_picker:
         add: Add
       really_delete: Are you sure you want to remove "%{title}"?

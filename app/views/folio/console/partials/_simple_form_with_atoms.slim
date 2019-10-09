@@ -1,0 +1,47 @@
+- content_for(:with_atoms)
+  = simple_form_for(model, opts) do |f|
+    .f-c-simple-form-with-atoms__scroll
+      .f-c-simple-form-with-atoms__form
+        .container-fluid[
+          class="f-c-simple-form-with-atoms__title"
+          class='f-c-simple-form-with-atoms__title--clickable'
+        ]
+          .f-c-with-icon
+            span.mi.f-c-simple-form-with-atoms__title-ico settings
+            = t('.settings')
+            .f-c-simple-form-with-atoms__title-arrow
+
+        .container-fluid
+          = yield(f)
+
+      .f-c-simple-form-with-atoms__form-toggle
+        .container-fluid
+          .position-relative.f-c-simple-form-with-atoms__form-toggle-inner
+            button.f-c-simple-form-with-atoms__form-toggle-button.mi[
+              type="button"
+            ]
+              .mi.f-c-simple-form-with-atoms__form-toggle-icon arrow_drop_down
+
+      .f-c-simple-form-with-atoms__atoms
+        == cell('folio/console/atoms/locale_switch', f.object)
+
+        - keys = f.object.class.try(:atom_locales) || [nil]
+        .f-c-simple-form-with-atoms__preview
+          .f-c-simple-form-with-atoms__title.container-fluid
+            .f-c-with-icon
+              span.mi.f-c-simple-form-with-atoms__title-ico line_style
+              = t('.editor')
+
+          iframe[
+            class="f-c-simple-form-with-atoms__iframe"
+            id="f-c-simple-form-with-atoms__iframe"
+            src=console_atoms_path(ids: f.object.all_atoms_in_array, keys: keys)
+          ]
+          span.folio-loader.f-c-simple-form-with-atoms__preview-loader
+
+      .f-c-simple-form-with-atoms__overlay
+        .f-c-simple-form-with-atoms__overlay-dismiss
+        .f-c-simple-form-with-atoms__overlay-inner
+          = console_form_atoms(f)
+
+    = form_footer(f)

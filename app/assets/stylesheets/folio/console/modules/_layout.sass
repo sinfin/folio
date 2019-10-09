@@ -11,10 +11,7 @@
   color: $white
 
 .f-c-layout-main
-  height: 100%
   width: 100%
-  display: flex
-  flex-direction: column
 
   &--devise
     flex: 1 0 auto
@@ -51,6 +48,11 @@
     bottom: 0
     left: 0
     z-index: 2
+
+  .f-c-layout-main
+    display: flex
+    flex-direction: column
+    height: 100%
 
   .f-c-layout-header
     flex: 0 0 auto

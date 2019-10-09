@@ -7,7 +7,9 @@ class Folio::Console::Atoms::LocaleSwitchCell < Folio::ConsoleCell
     model.class.try(:atom_locales) || [I18n.default_locale]
   end
 
-  def active(locale)
-    locale.nil? || locale.to_sym == I18n.default_locale
+  def active_class(locale)
+    if locale.nil? || locale.to_sym == I18n.default_locale
+      'f-c-atoms-locale-switch__button--active'
+    end
   end
 end

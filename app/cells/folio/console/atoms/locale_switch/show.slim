@@ -6,7 +6,7 @@
           button[
             type="button"
             class="f-c-atoms-locale-switch__button"
-            class=(active(locale) ? "f-c-atoms-locale-switch__button--active" : nil)
+            class=active_class(locale)
             data-locale=locale
           ]
             = country_flag(locale)
