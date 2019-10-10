@@ -2,7 +2,7 @@
 
 class Folio::Console::Atoms::LayoutSwitchCell < Folio::ConsoleCell
   def layouts
-    %w[vertical horizontal]
+    %w[horizontal vertical]
   end
 
   def default_layout

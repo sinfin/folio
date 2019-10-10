@@ -11,12 +11,11 @@
             = t('.settings')
             .f-c-simple-form-with-atoms__title-arrow
 
-        .container-fluid
-          / used for max-widths etc.
-          .simple_form
+        .f-c-simple-form-with-atoms__form-scroll
+          .container-fluid.f-c-simple-form-with-atoms__form-container
             = yield(f)
 
-        == cell('folio/console/atoms/layout_switch', cookies[:f_c_atoms_layout_switch])
+        == cell('folio/console/atoms/layout_switch', layout_code)
 
       .f-c-simple-form-with-atoms__form-toggle
         .container-fluid

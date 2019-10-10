@@ -1,5 +1,6 @@
 .f-c-simple-form-with-atoms
   position: relative
+  z-index: 3
   max-width: none
 
   &__form
@@ -150,6 +151,7 @@
     font-size: 14px
     font-weight: $font-weight-bold
     color: $body-color
+    flex: 0 0 auto
 
     &--clickable
       cursor: pointer
@@ -214,11 +216,15 @@
       max-height: 100%
       overflow: auto
       overflow-y: scroll
+      -webkit-overflow-scrolling: touch
 
     &--editing-atom &__scroll
       overflow: hidden
 
   @media screen and (max-width: 1699px)
+    .f-c-atoms-layout-switch
+      display: none
+
     &__preview
       &:not(:first-child)
         display: none
@@ -237,3 +243,51 @@
 
       &:not(:first-child)
         border-left: 1px solid #DBDBDB
+
+    &--layout-horizontal &__scroll
+      flex-direction: row
+      align-items: stretch
+      overflow: hidden
+
+    &--layout-horizontal &__form
+      flex: 0 0 50%
+      max-width: 50%
+      border-radius: 1px solid #DBDBDB
+      max-height: none !important
+      display: flex
+      flex-direction: column
+
+    &--layout-horizontal &__form-container
+      padding-bottom: 95px
+
+    &--layout-horizontal &__form-toggle
+      display: none
+
+    &--layout-horizontal &__atoms
+      flex: 0 0 50%
+      max-width: 50%
+
+    &--layout-horizontal &__previews
+      min-height: 0
+      flex: 0 0 100%
+
+    &--layout-horizontal &__preview
+      &:first-child
+        flex: 0 0 100%
+        max-width: 100%
+
+      &:not(:first-child)
+        display: none
+
+    &--layout-horizontal &__iframe
+      min-height: 0 !important
+      flex: 1 1 auto
+
+    &--layout-horizontal &__form-scroll
+      -webkit-overflow-scrolling: touch
+      overflow-y: scroll
+      flex: 1 1 auto
+      min-height: 0
+
+    &--layout-horizontal &__title-arrow
+      display: none
