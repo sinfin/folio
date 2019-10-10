@@ -16,6 +16,8 @@
           .simple_form
             = yield(f)
 
+        == cell('folio/console/atoms/layout_switch', cookies[:f_c_atoms_layout_switch])
+
       .f-c-simple-form-with-atoms__form-toggle
         .container-fluid
           .position-relative.f-c-simple-form-with-atoms__form-toggle-inner

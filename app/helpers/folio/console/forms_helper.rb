@@ -59,9 +59,15 @@ module Folio::Console::FormsHelper
   end
 
   def simple_form_for_with_atoms(model, opts = {}, &block)
+    if layout_code = cookies[:f_c_atoms_layout_switch]
+      layout_class = "f-c-simple-form-with-atoms--layout-#{layout_code}"
+    else
+      layout_class = ''
+    end
+
     opts[:html] ||= {}
     opts[:html][:class] ||= ''
-    opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms"
+    opts[:html][:class] = "#{opts[:html][:class]} f-c-simple-form-with-atoms #{layout_class}"
 
     render layout: 'folio/console/partials/simple_form_with_atoms',
            locals: {

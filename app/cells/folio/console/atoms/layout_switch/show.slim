@@ -1,0 +1,9 @@
+.f-c-atoms-layout-switch
+  - layouts.each_with_index do |layout, index|
+    button[
+      type="button"
+      class="f-c-atoms-layout-switch__button"
+      class="f-c-atoms-layout-switch__button--#{layout}"
+      class=active_class(layout)
+      data-layout=layout
+    ]

@@ -9,6 +9,7 @@
 //= require multiselect/js/jquery.multi-select
 //= require autosize/dist/autosize
 //= require spectrum/spectrum
+//= require js-cookie/src/js.cookie
 
 //= require jquery-ui/jquery-ui
 //= require selectize/dist/js/standalone/selectize
@@ -39,6 +40,7 @@
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
 
+//= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
 //= require folio/console/atoms/settings_header/settings_header
 //= require folio/console/boolean_toggle/boolean_toggle
