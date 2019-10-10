@@ -15,6 +15,8 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       params[:keys].each { |key| @atoms[key == '' ? nil : key] ||= [] }
     end
 
+    @default_locale = (params[:default_locale] || @atoms.keys.first).to_s
+
     @atoms.each do |key, atoms|
       @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
     end

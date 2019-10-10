@@ -142,3 +142,4 @@ window.addEventListener('message', receiveMessage, false)
 $ ->
   lazyloadAll()
   sendResizeMessage()
+  $(window).one 'load', sendResizeMessage

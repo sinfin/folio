@@ -20,4 +20,13 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
       I18n.transliterate(klass.model_name.human)
     end
   end
+
+  def locale_hidden(locale)
+    return false if locale.nil?
+    locale.to_sym != default_locale
+  end
+
+  def default_locale
+    options[:default_locale].try(:to_sym) || I18n.default_locale
+  end
 end

@@ -4,7 +4,7 @@
       .f-c-atoms-previews__locale[
         data-locale=locale
         data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
-        hidden=(!locale.nil? && locale.to_sym != I18n.default_locale)
+        hidden=locale_hidden(locale)
       ]
         = insert
         - index = 0

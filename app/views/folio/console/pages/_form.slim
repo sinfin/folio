@@ -11,10 +11,10 @@
   = tab :content
     == cell('folio/console/publishable_inputs', f)
 
-    .d-flex
+    .d-md-flex
       = react_picker(f, :cover_placement)
 
-      .ml-g
+      .ml-md-g
         == translated_inputs f, :title
         == translated_inputs f, :slug
 
