@@ -6,11 +6,12 @@
         data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
         hidden=locale_hidden(locale)
       ]
-        = insert
         - index = 0
         - model[locale].each_with_index do |atoms_in_molecules, molecule_index|
           - molecule, atoms = atoms_in_molecules
           - atoms.each_with_index do |atom, atom_index|
+            = insert
+
             .f-c-atoms-previews__atom[
               data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
               data-index=index
@@ -24,6 +25,7 @@
                         atom.cell_options.presence || {})
 
               = controls
-            = insert
 
             - index += 1
+
+        = insert

@@ -28,7 +28,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     (I18n.available_locales + [nil]).each do |locale|
       key = locale ? "#{locale}_atoms_attributes" : 'atoms_attributes'
       atoms = atom_params[key]
-      next if atoms.blank?
+      next if atoms.nil?
       @atoms[locale] = []
       atoms.each do |attrs|
         next if attrs['destroyed']

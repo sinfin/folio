@@ -31,3 +31,10 @@ $ ->
   sendMessage()
   $(window).on 'resize orientationchange', ->
     sendMessage()
+
+  receiveMessage = (e) ->
+    return if e.origin isnt window.origin
+    switch e.data.type
+      when 'requestMediaQuery' then sendMessage()
+
+  window.addEventListener('message', receiveMessage, false)

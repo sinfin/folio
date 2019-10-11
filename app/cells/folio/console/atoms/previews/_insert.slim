@@ -1,6 +1,10 @@
 - I18n.with_locale(::Rails.application.config.folio_console_locale)
   aside.f-c-atoms-previews__insert
     .f-c-atoms-previews__insert-hint
+      span.f-c-atoms-previews__insert-hint-big-btn.f-c-with-icon
+        span.mi add
+        = t('.add_atom')
+
       span.f-c-atoms-previews__insert-hint-btn.mi
         ' add
 

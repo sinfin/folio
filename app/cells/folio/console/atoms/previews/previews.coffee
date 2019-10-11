@@ -1,4 +1,5 @@
 #= require jquery
+#= require folio/cable
 #= require folio/lazyload
 #= require folio/console/atoms/previews/main_app
 
@@ -117,6 +118,11 @@ sendResizeMessage = ->
     height: $('.f-c-atoms-previews').outerHeight(true) + 50
   window.top.postMessage(data, window.origin)
 
+sendMediaQueryRequest = ->
+  data =
+    type: 'requestMediaQuery'
+  window.top.postMessage(data, window.origin)
+
 setMediaQuery = (width) ->
   width ||= $(window).width()
   if width > 991
@@ -159,6 +165,7 @@ $ ->
   setMediaQuery()
   handleNewHtml()
   setTimeout(sendResizeMessage, 0)
+  sendMediaQueryRequest()
   $(window).one 'load', ->
     sendResizeMessage()
     setTimeout(sendResizeMessage, 0)

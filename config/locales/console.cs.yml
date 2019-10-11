@@ -21,6 +21,8 @@ cs:
         settings_header:
           done: Hotovo
           title: Nastavení
+        previews:
+          add_atom: Vložit kapitolu
       back: Zpět
       base:
         atoms:

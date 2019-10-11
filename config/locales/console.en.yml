@@ -21,6 +21,8 @@ en:
         settings_header:
           done: Done
           title: Settings
+        previews:
+          add_atom: Insert chapter
       back: Zpět
       base:
         atoms:

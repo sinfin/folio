@@ -97,6 +97,12 @@
     &:hover
       opacity: 1
 
+  &__insert:last-of-type
+    opacity: 1
+
+    &:not(:only-child)
+      margin-top: $grid-gutter-width
+
   &__insert-hint
     position: absolute
     top: 0
@@ -128,6 +134,29 @@
     left: 50%
     margin-left: -10px
     z-index: 2
+
+  &__insert:last-of-type &__insert-hint-btn
+    display: none
+
+  &__insert-hint-big-btn
+    +button-style
+    +button-variant($secondary, $secondary)
+    display: none
+    height: 35px
+    min-width: 140px
+    border-radius: 26px
+    position: absolute
+    top: 0
+    left: 50%
+    z-index: 2
+    transform: translate(-50%, -50%)
+    font-size: 14px
+
+    .mi
+      font-size: 16px
+
+  &__insert:last-of-type &__insert-hint-big-btn
+    display: inline-flex
 
   &__insert-inner
     position: absolute
