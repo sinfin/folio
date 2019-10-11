@@ -94,7 +94,7 @@ describe('atomsReducer', () => {
     const ids = [0, 1].map((i) => {
       const atom = state.atoms['atoms'][i]
       expect(atom._destroy).toEqual(undefined)
-      expect(atom.timestamp).toEqual(undefined)
+      expect(atom.timestamp).toBeTruthy()
       expect(atom.id).toBeTruthy()
       expect(atom.type).not.toEqual('Dummy::Atom::DaVinci')
       return atom.id
@@ -111,7 +111,7 @@ describe('atomsReducer', () => {
       const oldId = ids[index]
       const atom = newState.atoms['atoms'][newIndex]
       expect(atom._destroy).toEqual(undefined)
-      expect(atom.timestamp).toEqual(undefined)
+      expect(atom.timestamp).toBeTruthy()
       expect(atom.type).not.toEqual('Dummy::Atom::DaVinci')
       expect(atom.id).toEqual(oldId)
     })
@@ -126,7 +126,7 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'][1].type).not.toEqual('Dummy::Atom::DaVinci')
     expect(state.atoms['atoms'][1].data.content).not.toEqual('foo')
     expect(state.atoms['atoms'][1].id).toBeTruthy()
-    expect(state.atoms['atoms'][1].timestamp).toEqual(undefined)
+    expect(state.atoms['atoms'][1].timestamp).toBeTruthy()
     expect(state.atoms['atoms'].length).toEqual(3)
 
     const newState = atomsReducer(state, saveFormAtom())
@@ -146,7 +146,7 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'][1].type).not.toEqual('Dummy::Atom::DaVinci')
     expect(state.atoms['atoms'][1].data.content).not.toEqual('foo')
     expect(state.atoms['atoms'][1].id).toBeTruthy()
-    expect(state.atoms['atoms'][1].timestamp).toEqual(undefined)
+    expect(state.atoms['atoms'][1].timestamp).toBeTruthy()
     expect(state.atoms['atoms'].length).toEqual(3)
 
     const newState = atomsReducer(state, saveFormAtom())

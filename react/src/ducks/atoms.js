@@ -177,7 +177,7 @@ function * updateAtomPreviews (action) {
       $el.prop('hidden', $el.data('locale') !== visibleLocale)
     })
     iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
-    $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--loading')
+    $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
   })
   $('.f-c-simple-form-with-atoms__form--settings').trigger('change')
 }
@@ -186,7 +186,8 @@ function * updateAtomPreviewsSaga () {
   yield [
     takeEvery(REMOVE_ATOM, updateAtomPreviews),
     takeEvery(MOVE_ATOM_TO_INDEX, updateAtomPreviews),
-    takeEvery(SAVE_FORM_ATOM, updateAtomPreviews)
+    takeEvery(SAVE_FORM_ATOM, updateAtomPreviews),
+    takeEvery(SET_ATOMS_DATA, updateAtomPreviews)
   ]
 }
 
@@ -267,11 +268,25 @@ export const initialState = {
 
 function atomsReducer (state = initialState, action) {
   switch (action.type) {
-    case SET_ATOMS_DATA:
+    case SET_ATOMS_DATA: {
+      const atoms = {}
+      let i = 1
+      Object.keys(action.data.atoms).forEach((atomsKey) => {
+        atoms[atomsKey] = action.data.atoms[atomsKey].map((atom) => {
+          const timestamp = i += 1
+          return {
+            ...atom,
+            timestamp: timestamp
+          }
+        })
+      })
+
       return {
         ...state,
-        ...action.data
+        ...action.data,
+        atoms
       }
+    }
 
     case NEW_ATOM:
       return {

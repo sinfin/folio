@@ -3,8 +3,8 @@ html.f-c-layout-atoms__html lang=Rails.application.config.folio_console_locale
   head
     = stylesheet_link_tag('application', media: 'all')
     = stylesheet_link_tag('folio/console/atoms/previews/previews', media: 'all')
+    = javascript_include_tag 'folio/console/atoms/previews/previews'
 
   body.f-c-layout-atoms__body
     = yield
     = render 'folio/console/partials/translations'
-    = javascript_include_tag 'folio/console/atoms/previews/previews'

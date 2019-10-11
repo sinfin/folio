@@ -101,6 +101,9 @@
     z-index: 1
     border: 0
 
+  &__preview--initializing &__iframe
+    visibility: hidden
+
   &__overlay
     position: fixed
     z-index: 1000
@@ -252,7 +255,7 @@
     &--layout-horizontal &__form
       flex: 0 0 50%
       max-width: 50%
-      border-radius: 1px solid #DBDBDB
+      border-right: 1px solid #DBDBDB
       max-height: none !important
       display: flex
       flex-direction: column
