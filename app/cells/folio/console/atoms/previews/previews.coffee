@@ -117,6 +117,21 @@ sendResizeMessage = ->
     height: $('.f-c-atoms-previews').outerHeight(true) + 50
   window.top.postMessage(data, window.origin)
 
+setMediaQuery = (width) ->
+  width ||= $(window).width()
+  if width > 991
+    $('html')
+      .removeClass('media-breakpoint-down-md')
+      .addClass('media-breakpoint-up-lg')
+  else
+    $('html')
+      .addClass('media-breakpoint-down-md')
+      .removeClass('media-breakpoint-up-lg')
+
+handleNewHtml = ->
+  lazyloadAll()
+  sendResizeMessage()
+
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
@@ -134,12 +149,16 @@ $(window).on 'resize orientationchange', sendResizeMessage
 receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
-    when 'replacedHtml' then lazyloadAll()
+    when 'replacedHtml' then handleNewHtml()
     when 'selectLocale' then selectLocale(e.data.locale)
+    when 'setMediaQuery' then setMediaQuery(e.data.width)
 
 window.addEventListener('message', receiveMessage, false)
 
 $ ->
-  lazyloadAll()
-  sendResizeMessage()
-  $(window).one 'load', sendResizeMessage
+  setMediaQuery()
+  handleNewHtml()
+  setTimeout(sendResizeMessage, 0)
+  $(window).one 'load', ->
+    sendResizeMessage()
+    setTimeout(sendResizeMessage, 0)

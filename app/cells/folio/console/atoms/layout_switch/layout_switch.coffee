@@ -2,6 +2,16 @@ $ ->
   $layoutButtons = $('.f-c-atoms-layout-switch__button')
   return if $layoutButtons.length is 0
 
+  sendMessage = ->
+    msg =
+      type: 'setMediaQuery'
+
+    if $layoutButtons.is(':visible')
+      msg.width = $(window).width()
+
+    $('.f-c-simple-form-with-atoms__iframe').each ->
+      @contentWindow.postMessage(msg, window.origin)
+
   $layoutButtons.on 'click', (e) ->
     e.preventDefault()
     $button = $(this)
@@ -15,3 +25,9 @@ $ ->
       .closest('.f-c-simple-form-with-atoms')
       .removeClass('f-c-simple-form-with-atoms--layout-vertical f-c-simple-form-with-atoms--layout-horizontal')
       .addClass("f-c-simple-form-with-atoms--layout-#{layout}")
+
+    sendMessage()
+
+  sendMessage()
+  $(window).on 'resize orientationchange', ->
+    sendMessage()
