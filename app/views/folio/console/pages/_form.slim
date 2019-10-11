@@ -15,7 +15,7 @@
       = react_picker(f, :cover_placement)
 
       .ml-md-g
-        == translated_inputs f, :title
+        == translated_inputs f, :title, folio_label: true
         == translated_inputs f, :slug
 
     - collection = Folio::Page.recursive_subclasses_for_select
@@ -37,7 +37,7 @@
                       label_method: :select_option_depth, \
                       value_method: :id
 
-    == translated_inputs f, :perex, autosize: true
+    == translated_inputs f, :perex, autosize: true, folio_perex: true
 
     = f.input :featured
 

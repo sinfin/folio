@@ -6,6 +6,22 @@
         data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
         hidden=locale_hidden(locale)
       ]
+        - if options[:labels] && options[:labels][locale]
+          .f-c-atoms-previews__label.mb-5[
+            hidden=options[:labels][locale].blank?
+          ]
+            .container
+              h1.f-c-atoms-previews__label-h1.m-0 = options[:labels][locale]
+            = label_perex_controls
+
+        - if options[:perexes] && options[:perexes][locale]
+          .f-c-atoms-previews__perex.mb-5.mt-n4[
+            hidden=options[:perexes][locale].blank?
+          ]
+            .container
+              p.f-c-atoms-previews__perex-p.lead = options[:perexes][locale]
+            = label_perex_controls
+
         - index = 0
         - model[locale].each_with_index do |atoms_in_molecules, molecule_index|
           - molecule, atoms = atoms_in_molecules

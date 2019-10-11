@@ -6,20 +6,6 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   layout 'folio/console/atoms'
 
   def index
-    @atoms = Folio::Atom::Base.ordered
-                              .where(id: params[:ids])
-                              .to_a
-                              .group_by(&:locale)
-
-    if params[:keys]
-      params[:keys].each { |key| @atoms[key == '' ? nil : key] ||= [] }
-    end
-
-    @default_locale = (params[:default_locale] || @atoms.keys.first).to_s
-
-    @atoms.each do |key, atoms|
-      @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
-    end
   end
 
   def preview
@@ -45,7 +31,10 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
     end
 
-    render :index, layout: false
+    @labels = params.permit(labels: I18n.available_locales)[:labels]
+    @perexes = params.permit(perexes: I18n.available_locales)[:perexes]
+
+    render :preview, layout: false
   end
 
   def validate

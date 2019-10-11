@@ -183,10 +183,9 @@
       height: 100%
 
   .f-c-form-footer
-    position: absolute
-    width: 100%
     margin-left: 0 !important
     margin-right: 0 !important
+    width: 100%
 
   +media-breakpoint-down(sm)
     &__overlay-inner
@@ -211,6 +210,9 @@
     flex-direction: column
     flex: 1 1 auto
     min-height: 0
+
+    .f-c-form-footer
+      position: absolute
 
     &__scroll
       display: flex

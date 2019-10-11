@@ -167,19 +167,42 @@ function * updateAtomPreviews (action) {
     $(iframe).parent().addClass('f-c-simple-form-with-atoms__preview--loading')
   })
   const serializedAtoms = yield select(serializedAtomsSelector)
+
+  const $labels = $('.f-c-js-atoms-placement-label')
+  if ($labels.length) {
+    serializedAtoms['labels'] = {}
+    $labels.each((i, label) => {
+      const $label = $(label)
+      serializedAtoms['labels'][$label.data('locale')] = $label.val()
+    })
+  }
+  const $perexes = $('.f-c-js-atoms-placement-perex')
+  if ($perexes.length) {
+    serializedAtoms['perexes'] = {}
+    $perexes.each((i, perex) => {
+      const $perex = $(perex)
+      serializedAtoms['perexes'][$perex.data('locale')] = $perex.val()
+    })
+  }
+
   const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
   $iframes.each((_i, iframe) => {
-    const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
-    const visibleLocale = $body.find('.f-c-atoms-previews__locale').not('[hidden]').data('locale')
-    $body.html(html)
-    $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
-      const $el = iframe.contentWindow.jQuery(el)
-      $el.prop('hidden', $el.data('locale') !== visibleLocale)
-    })
-    iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
-    $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
+    const callback = () => {
+      if (!iframe.contentWindow.jQuery) { return setTimeout(callback, 100) }
+      const $iframe = $(iframe)
+      const visibleLocale = $iframe.closest('.f-c-simple-form-with-atoms__preview').find('.f-c-atoms-locale-switch__button--active').data('locale')
+      const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
+      $body.html(html)
+      $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
+        const $el = iframe.contentWindow.jQuery(el)
+        $el.prop('hidden', $el.data('locale') !== visibleLocale)
+      })
+      iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
+      $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
+    }
+    callback()
   })
-  $('.f-c-simple-form-with-atoms__form--settings').trigger('change')
+  $('.f-c-simple-form-with-atoms__form').trigger('change')
 }
 
 function * updateAtomPreviewsSaga () {

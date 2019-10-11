@@ -52,6 +52,12 @@
     visibility: hidden
     cursor: pointer
 
+  &__label,
+  &__perex
+    position: relative
+    min-height: 10px
+    z-index: 2
+
   &__buttons
     position: absolute
     top: -12px
@@ -66,6 +72,10 @@
 
     &--edit
       +button-variant($secondary, $secondary)
+
+    &--settings
+      +button-variant($secondary, $secondary)
+      margin-right: 20px
 
     &--arrow
       +button-variant($white, $white)
@@ -197,8 +207,11 @@
     display: none
 
   html.media-breakpoint-up-lg &
-    &__atom:hover .f-c-atoms-previews__controls
-      visibility: visible
+    &__atom:hover,
+    &__label:hover,
+    &__perex:hover
+      .f-c-atoms-previews__controls
+        visibility: visible
 
     &__controls-mobile-overlay
       display: none

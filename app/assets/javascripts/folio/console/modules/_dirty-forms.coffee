@@ -9,5 +9,5 @@ $('.simple_form')
   .one 'change', -> handler($(this))
 
 $('.f-c-simple-form-with-atoms')
-  .one 'change', '.f-c-simple-form-with-atoms__form--settings', ->
+  .one 'change', '.f-c-simple-form-with-atoms__form', ->
     handler($(this).closest('.f-c-simple-form-with-atoms'))

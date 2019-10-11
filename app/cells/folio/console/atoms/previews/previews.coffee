@@ -42,11 +42,26 @@ handleEditClick = (e) ->
   $this = $(this)
   closeMobileControls($this)
   $wrap = $this.closest('.f-c-atoms-previews__atom')
-  data =
-    type: 'editAtom'
-    rootKey: $wrap.data('root-key')
-    index: $wrap.data('index')
-  window.top.postMessage(data, window.origin)
+  if $wrap.length
+    data =
+      type: 'editAtom'
+      rootKey: $wrap.data('root-key')
+      index: $wrap.data('index')
+    window.top.postMessage(data, window.origin)
+  else
+    $wrap = $this.closest('.f-c-atoms-previews__label')
+    if $wrap.length
+      data =
+        type: 'editLabel'
+        locale: $wrap.closest('.f-c-atoms-previews__locale').data('locale')
+      window.top.postMessage(data, window.origin)
+    else
+      $wrap = $this.closest('.f-c-atoms-previews__perex')
+      if $wrap.length
+        data =
+          type: 'editPerex'
+          locale: $wrap.closest('.f-c-atoms-previews__locale').data('locale')
+        window.top.postMessage(data, window.origin)
 
 handleOverlayClick = (e) ->
   $controls = $(this).closest('.f-c-atoms-previews__controls--active')
@@ -115,7 +130,6 @@ handleInsertClick = (e) ->
 sendResizeMessage = ->
   data =
     type: 'setHeight'
-    height: $('.f-c-atoms-previews').outerHeight(true) + 50
   window.top.postMessage(data, window.origin)
 
 sendMediaQueryRequest = ->
@@ -138,6 +152,16 @@ handleNewHtml = ->
   lazyloadAll()
   sendResizeMessage()
 
+updateLabel = (locale, value) ->
+  $label = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__label")
+  $label.prop('hidden', value.length is 0)
+  $label.find('.f-c-atoms-previews__label-h1').text(value)
+
+updatePerex = (locale, value) ->
+  $perex = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__perex")
+  $perex.prop('hidden', value.length is 0)
+  $perex.find('.f-c-atoms-previews__perex-p').text(value)
+
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
@@ -158,14 +182,13 @@ receiveMessage = (e) ->
     when 'replacedHtml' then handleNewHtml()
     when 'selectLocale' then selectLocale(e.data.locale)
     when 'setMediaQuery' then setMediaQuery(e.data.width)
+    when 'updateLabel' then updateLabel(e.data.locale, e.data.value)
+    when 'updatePerex' then updatePerex(e.data.locale, e.data.value)
 
 window.addEventListener('message', receiveMessage, false)
 
 $ ->
   setMediaQuery()
   handleNewHtml()
-  setTimeout(sendResizeMessage, 0)
   sendMediaQueryRequest()
-  $(window).one 'load', ->
-    sendResizeMessage()
-    setTimeout(sendResizeMessage, 0)
+  $(window).one 'load', -> sendResizeMessage()

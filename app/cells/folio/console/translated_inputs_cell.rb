@@ -26,7 +26,7 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
   end
 
   def args_with_locale(locale)
-    common = { wrapper: :with_flag, flag: locale, hint: false }
+    common = { wrapper: :with_flag, flag: locale, hint: false, locale: locale }
 
     if args.present? && first = args.first.presence
       [

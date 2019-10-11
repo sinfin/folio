@@ -15,6 +15,10 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
     @insert ||= render(:_insert)
   end
 
+  def label_perex_controls
+    @label_perex_controls ||= render(:_label_perex_controls)
+  end
+
   def sorted_types
     Folio::Atom.types.sort_by do |klass|
       I18n.transliterate(klass.model_name.human)
