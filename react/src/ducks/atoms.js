@@ -161,15 +161,25 @@ export const makeSerializedFormAtomSelector = (action) => (state) => {
 // Sagas
 function * updateAtomPreviews (action) {
   yield put(closeFormAtom())
-  const iframe = document.getElementById('f-c-simple-form-with-atoms__iframe')
-  iframe.parentElement.classList.add('f-c-simple-form-with-atoms__preview--loading')
+  const $ = window.jQuery
+  const $iframes = $('.f-c-simple-form-with-atoms__iframe')
+  $iframes.each((_i, iframe) => {
+    $(iframe).parent().addClass('f-c-simple-form-with-atoms__preview--loading')
+  })
   const serializedAtoms = yield select(serializedAtomsSelector)
   const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
-  iframe.contentDocument.body.innerHTML = html
-  iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
-  iframe.parentElement.classList.remove('f-c-simple-form-with-atoms__preview--loading')
-  const $ = window.jQuery
-  if ($) $('.f-c-simple-form-with-atoms__form--settings').trigger('change')
+  $iframes.each((_i, iframe) => {
+    const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
+    const visibleLocale = $body.find('.f-c-atoms-previews__locale').not('[hidden]').data('locale')
+    $body.html(html)
+    $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
+      const $el = iframe.contentWindow.jQuery(el)
+      $el.prop('hidden', $el.data('locale') !== visibleLocale)
+    })
+    iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
+    $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--loading')
+  })
+  $('.f-c-simple-form-with-atoms__form--settings').trigger('change')
 }
 
 function * updateAtomPreviewsSaga () {

@@ -30,7 +30,9 @@
           - keys = f.object.class.try(:atom_locales) || [nil]
           - keys.first(2).each_with_index do |key, index|
             .f-c-simple-form-with-atoms__preview
-              == cell('folio/console/atoms/locale_switch', f.object, selected: key)
+              == cell('folio/console/atoms/locale_switch', \
+                      f.object, \
+                      selected: key)
 
               .f-c-simple-form-with-atoms__title.container-fluid[
                 class=(index > 0 ? 'invisible' : nil)
