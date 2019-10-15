@@ -173,7 +173,7 @@ function * updateAtomPreviews (action) {
     serializedAtoms['labels'] = {}
     $labels.each((i, label) => {
       const $label = $(label)
-      serializedAtoms['labels'][$label.data('locale')] = $label.val()
+      serializedAtoms['labels'][$label.data('locale') || null] = $label.val()
     })
   }
   const $perexes = $('.f-c-js-atoms-placement-perex')
@@ -181,7 +181,7 @@ function * updateAtomPreviews (action) {
     serializedAtoms['perexes'] = {}
     $perexes.each((i, perex) => {
       const $perex = $(perex)
-      serializedAtoms['perexes'][$perex.data('locale')] = $perex.val()
+      serializedAtoms['perexes'][$perex.data('locale') || null] = $perex.val()
     })
   }
 
@@ -195,7 +195,7 @@ function * updateAtomPreviews (action) {
       $body.html(html)
       $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
         const $el = iframe.contentWindow.jQuery(el)
-        $el.prop('hidden', $el.data('locale') !== visibleLocale)
+        $el.prop('hidden', $el.data('locale') && $el.data('locale') !== visibleLocale)
       })
       iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
       $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')

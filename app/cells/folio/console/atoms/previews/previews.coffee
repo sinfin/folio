@@ -11,7 +11,7 @@ lazyloadAll = ->
 selectLocale = (locale) ->
   $('.f-c-atoms-previews__locale').each ->
     $this = $(this)
-    $this.prop('hidden', $this.data('locale') isnt locale)
+    $this.prop('hidden', $this.data('locale') and $this.data('locale') isnt locale)
 
 closeMobileControls = ($el) ->
   $el
@@ -153,12 +153,18 @@ handleNewHtml = ->
   sendResizeMessage()
 
 updateLabel = (locale, value) ->
-  $label = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__label")
+  if locale
+    $label = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__label")
+  else
+    $label = $(".f-c-atoms-previews__locale .f-c-atoms-previews__label")
   $label.prop('hidden', value.length is 0)
   $label.find('.f-c-atoms-previews__label-h1').text(value)
 
 updatePerex = (locale, value) ->
-  $perex = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__perex")
+  if locale
+    $perex = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__perex")
+  else
+    $perex = $(".f-c-atoms-previews__locale .f-c-atoms-previews__perex")
   $perex.prop('hidden', value.length is 0)
   $perex.find('.f-c-atoms-previews__perex-p').text(value)
 

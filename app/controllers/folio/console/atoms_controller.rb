@@ -31,8 +31,9 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
     end
 
-    @labels = params.permit(labels: I18n.available_locales)[:labels]
-    @perexes = params.permit(perexes: I18n.available_locales)[:perexes]
+    locales = ['null'] + I18n.available_locales
+    @labels = params.permit(labels: locales)[:labels]
+    @perexes = params.permit(perexes: locales)[:perexes]
 
     render :preview, layout: false
   end

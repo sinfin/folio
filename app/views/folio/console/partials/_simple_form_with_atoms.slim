@@ -33,9 +33,10 @@
               class="f-c-simple-form-with-atoms__preview--initializing"
               class="f-c-simple-form-with-atoms__preview--loading"
             ]
-              == cell('folio/console/atoms/locale_switch', \
-                      f.object, \
-                      selected: key)
+              - if keys.size > 1
+                == cell('folio/console/atoms/locale_switch', \
+                        f.object, \
+                        selected: key)
 
               .f-c-simple-form-with-atoms__title.container-fluid[
                 class=(index > 0 ? 'invisible' : nil)

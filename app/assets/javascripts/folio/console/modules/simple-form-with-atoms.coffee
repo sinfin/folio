@@ -16,7 +16,7 @@ $(document)
     $this = $(this)
     sendMessage
       type: 'updateLabel'
-      locale: $this.data('locale')
+      locale: $this.data('locale') or null
       value: $this.val()
 
   .on 'keyup', '.f-c-js-atoms-placement-perex', (e) ->
@@ -24,7 +24,7 @@ $(document)
     $this = $(this)
     sendMessage
       type: 'updatePerex'
-      locale: $this.data('locale')
+      locale: $this.data('locale') or null
       value: $this.val()
 
 editLabel = (locale) ->
