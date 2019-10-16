@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_25_130600) do
+ActiveRecord::Schema.define(version: 2019_10_16_073239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(version: 2019_09_25_130600) do
     t.string "placement_title"
     t.string "placement_title_type"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
+    t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
+    t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
@@ -127,6 +129,9 @@ ActiveRecord::Schema.define(version: 2019_09_25_130600) do
     t.json "additional_data"
     t.json "file_metadata"
     t.string "hash_id"
+    t.index ["created_at"], name: "index_folio_files_on_created_at"
+    t.index ["file_name"], name: "index_folio_files_on_file_name"
+    t.index ["hash_id"], name: "index_folio_files_on_hash_id"
     t.index ["type"], name: "index_folio_files_on_type"
   end
 
