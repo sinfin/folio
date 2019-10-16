@@ -91,14 +91,14 @@ export const makePlacementsSelector = (filesKey) => (state) => {
 
 export const initialState = {
   documents: {
-    name: '',
+    file_name: '',
     tags: [],
-    placement: null
+    placement: ''
   },
   images: {
-    name: '',
+    file_name: '',
     tags: [],
-    placement: null
+    placement: ''
   }
 }
 

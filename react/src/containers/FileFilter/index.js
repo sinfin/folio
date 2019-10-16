@@ -20,18 +20,14 @@ import Wrap from './styled/Wrap'
 import DisplayButtons from './DisplayButtons'
 
 class FileFilter extends Component {
-  onNameChange = (e) => {
+  onInputChange = (e) => {
     this.props.dispatch(
-      setFilter(this.props.filesKey, 'name', e.target.value)
+      setFilter(this.props.filesKey, e.target.name, e.target.value)
     )
   }
 
   onTagsChange = (tags) => {
     this.props.dispatch(setFilter(this.props.filesKey, 'tags', tags))
-  }
-
-  onPlacementChange = (placement) => {
-    this.props.dispatch(setFilter(this.props.filesKey, 'placement', placement))
   }
 
   onReset = () => {
@@ -60,9 +56,10 @@ class FileFilter extends Component {
         <div className='form-group'>
           <input
             className='form-control'
-            value={filters.name}
-            onChange={this.onNameChange}
+            value={filters.file_name}
+            onChange={this.onInputChange}
             placeholder={window.FolioConsole.translations.fileNameFilter}
+            name='file_name'
           />
         </div>
 
@@ -79,9 +76,10 @@ class FileFilter extends Component {
         <div className='form-group form-group--react-select'>
           <input
             className='form-control'
-            value={filters.name}
-            onChange={this.onPlacementChange}
+            value={filters.placement}
+            onChange={this.onInputChange}
             placeholder={window.FolioConsole.translations.usageFilter}
+            name='placement'
           />
         </div>
 

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::File < Folio::ApplicationRecord
+  include Folio::Filterable
   include Folio::HasHashId
-  include Folio::Taggable
-  include Folio::SanitizeFilename
   include Folio::MimeTypeDetection
+  include Folio::SanitizeFilename
+  include Folio::Taggable
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -21,6 +22,30 @@ class Folio::File < Folio::ApplicationRecord
 
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
+  scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+  scope :by_tags, -> (tags) do
+    if tags.is_a?(String)
+      tagged_with(tags.split(','))
+    else
+      tagged_with(tags)
+    end
+  end
+
+  pg_search_scope :by_file_name,
+                  against: [:file_name],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
+  pg_search_scope :by_placement,
+                  associated_against: {
+                    file_placements: [:placement_title],
+                  },
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   before_save :set_mime_type
   after_save :touch_placements

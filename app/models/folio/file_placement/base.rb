@@ -2,6 +2,7 @@
 
 class Folio::FilePlacement::Base < Folio::ApplicationRecord
   include Folio::Taggable
+  include PgSearch::Model
 
   self.table_name = 'folio_file_placements'
 

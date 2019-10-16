@@ -32,6 +32,10 @@ module Folio::Console::Api::FileControllerBase
 
   private
 
+    def filter_params
+      params.permit(:by_file_name, :by_placement, :by_tags)
+    end
+
     def file_params
       p = params.require(:file)
                 .require(:attributes)
