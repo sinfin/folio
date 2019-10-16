@@ -21,12 +21,16 @@ module Folio
     end
 
     def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil)
+      @output_react_meta_data = true
+
       raw cell('folio/console/react_picker', f, placement_key: placement_key,
                                                 title: title,
                                                 file_type: file_type)
     end
 
     def react_modal_for(file_type, single: true)
+      @output_react_meta_data = true
+
       if ['new', 'edit', 'create', 'update'].include?(action_name)
         mode = single ? 'modal-single-select' : 'modal-multi-select'
 
@@ -39,6 +43,8 @@ module Folio
     end
 
     def console_form_atoms(f)
+      @output_react_meta_data = true
+
       if f.object.class.respond_to?(:atom_locales)
         atoms = {}
         destroyed_ids = {}
@@ -72,9 +78,43 @@ module Folio
                              'data-atoms': data.to_json)
     end
 
+    def react_meta_data
+      {
+        placements: react_meta_data_placements,
+        tags: react_meta_data_tags,
+      }.to_json
+    end
+
+    def react_meta_data_placements
+      key = [
+        'folio/console/react_meta_data_placements',
+        Folio::FilePlacement::Base.maximum(:updated_at),
+      ]
+
+      Rails.cache.fetch(key, expires_in: 1.day) do
+        unscoped = Folio::FilePlacement::Base.unscope(:order)
+        unscoped.select('DISTINCT(placement_title, placement_title_type), placement_title, placement_title_type')
+                .where.not(placement_title: nil, placement_title_type: nil)
+                .pluck(:placement_title_type, :placement_title)
+      end
+    end
+
+    def react_meta_data_tags
+      key = [
+        'folio/console/react_meta_data_tags',
+        Folio::File.maximum(:updated_at),
+      ]
+
+      Rails.cache.fetch(key, expires_in: 1.day) do
+        Folio::File.tag_counts.order(:name).pluck(:name)
+      end
+    end
+
     private
 
       def react_files(file_type, selected_placements, attachmentable:, type:)
+        @output_react_meta_data = true
+
         if selected_placements.present?
           placements = selected_placements.ordered.map do |fp|
             {

@@ -3,6 +3,9 @@
 module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
+  def index
+  end
+
   private
 
     def file_params

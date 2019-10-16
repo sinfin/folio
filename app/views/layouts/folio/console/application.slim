@@ -36,6 +36,9 @@ html.f-c-layout-html lang=I18n.locale
     = yield :modals
 
     = render 'folio/console/partials/translations'
+    - if @output_react_meta_data
+      = render 'folio/console/partials/react_meta_data'
+
     = render 'folio/partials/photoswipe'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?

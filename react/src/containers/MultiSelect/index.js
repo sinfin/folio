@@ -5,7 +5,7 @@ import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import {
   getFiles,
   makeFilesLoadedSelector,
-  makeFilesLoadingSelector,
+  makeFilesStatusSelector,
   makeUnselectedFilesForListSelector
 } from 'ducks/files'
 import {
@@ -51,7 +51,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
   onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(this.props.filesKey, filePlacement, alt))
 
   render () {
-    if (this.props.filesLoading) return <Loader />
+    if (!this.props.filesStatus.loaded) return <Loader />
     const fileTypeIsImage = this.props.filesKey === 'images'
 
     return (
@@ -77,14 +77,16 @@ class MultiSelect extends LazyLoadCheckingComponent {
         >
           <UploadTagger filesKey={this.props.filesKey} />
 
-          <FileList
-            files={this.props.unselectedFilesForList}
-            fileTypeIsImage={fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            onClick={this.selectFile}
-            selecting='multiple'
-            dropzoneTrigger
-          />
+          {this.props.filesStatus.loading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.unselectedFilesForList}
+              fileTypeIsImage={fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              onClick={this.selectFile}
+              selecting='multiple'
+              dropzoneTrigger
+            />
+          )}
         </Card>
       </Uploader>
     )
@@ -94,7 +96,7 @@ class MultiSelect extends LazyLoadCheckingComponent {
 const mapStateToProps = (state, props) => ({
   filePlacements: makeFilePlacementsSelector(props.filesKey)(state),
   filesLoaded: makeFilesLoadedSelector(props.filesKey)(state),
-  filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
   unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })

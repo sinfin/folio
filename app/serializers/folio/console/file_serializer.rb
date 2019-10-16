@@ -34,25 +34,6 @@ class Folio::Console::FileSerializer
     object.tags.collect(&:name).sort
   end
 
-  attribute :placements do |object|
-    titles = []
-
-    object.file_placements.each do |fp|
-      type = fp.placement_title_type.presence || fp.placement_type
-      title = fp.placement_title
-      next if type.blank? || title.blank?
-
-      klass = type.safe_constantize
-      next if klass.blank?
-
-      joined = [klass.model_name.human, title].join(' - ')
-
-      titles << joined unless titles.include?(joined)
-    end
-
-    titles
-  end
-
   attribute :extension do |object|
     Mime::Type.lookup(object.mime_type).symbol.to_s.upcase
   end
@@ -63,10 +44,10 @@ class Folio::Console::FileSerializer
   end
 
   link :edit do |object|
-    if object.is_a?(Folio::Image)
-      "/console/images/#{object.id}/edit"
-    else
-      "/console/documents/#{object.id}/edit"
+    if object.persisted?
+      Folio::Engine.routes
+                   .url_helpers
+                   .url_for([:edit, :console, object, only_path: true])
     end
   end
 end

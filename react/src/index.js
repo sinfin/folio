@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import 'url-search-params-polyfill'
 
 import App from 'containers/App'
 import MenuFormApp from 'containers/MenuFormApp'

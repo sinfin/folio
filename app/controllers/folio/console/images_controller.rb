@@ -3,7 +3,7 @@
 class Folio::Console::ImagesController < Folio::Console::BaseController
   include Folio::Console::FileControllerBase
 
-  folio_console_controller_for 'Folio::Image'
+  folio_console_controller_for 'Folio::Image', except: %w[index]
 
   private
 

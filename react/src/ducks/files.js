@@ -4,7 +4,6 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
-import { makeFilteredFilesSelector } from 'ducks/filters'
 import { makeUploadsSelector } from 'ducks/uploads'
 import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 
@@ -21,8 +20,8 @@ const UPDATED_FILES = 'files/UPDATED_FILES'
 
 // Actions
 
-export function getFiles (filesKey) {
-  return { type: GET_FILES, filesKey }
+export function getFiles (filesKey, query = '') {
+  return { type: GET_FILES, filesKey, query }
 }
 
 export function getFilesSuccess (filesKey, records) {
@@ -57,7 +56,7 @@ export function updateFileFailure (filesKey, file) {
 
 function * getFilesPerform (action) {
   try {
-    const filesUrl = `/console/api/${action.filesKey}`
+    const filesUrl = `/console/api/${action.filesKey}?${action.query}`
     const records = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.filesKey, records.data))
   } catch (e) {
@@ -66,6 +65,7 @@ function * getFilesPerform (action) {
 }
 
 function * getFilesSaga () {
+  // takeLatest automatically cancels any saga task started previously if it's still running
   yield takeLatest(GET_FILES, getFilesPerform)
 }
 
@@ -99,8 +99,11 @@ export const filesSagas = [
 
 // Selectors
 
-export const makeFilesLoadingSelector = (filesKey) => (state) => {
-  return state.files[filesKey] && state.files[filesKey].loading
+export const makeFilesStatusSelector = (filesKey) => (state) => {
+  return {
+    loading: state.files[filesKey] && state.files[filesKey].loading,
+    loaded: state.files[filesKey] && state.files[filesKey].loaded
+  }
 }
 
 export const makeFilesLoadedSelector = (filesKey) => (state) => {
@@ -116,7 +119,7 @@ export const makeFilesForListSelector = (filesKey) => (state) => {
   let files
 
   if (uploads.uploadedIds.length) {
-    files = makeFilteredFilesSelector(filesKey)(state).map((file) => {
+    files = makeFilesSelector(filesKey)(state).map((file) => {
       if (uploads.uploadedIds.indexOf(file.id) === -1) {
         return file
       } else {
@@ -124,7 +127,7 @@ export const makeFilesForListSelector = (filesKey) => (state) => {
       }
     })
   } else {
-    files = makeFilteredFilesSelector(filesKey)(state)
+    files = makeFilesSelector(filesKey)(state)
   }
 
   return [

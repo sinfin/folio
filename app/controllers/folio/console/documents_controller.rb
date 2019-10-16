@@ -3,7 +3,7 @@
 class Folio::Console::DocumentsController < Folio::Console::BaseController
   include Folio::Console::FileControllerBase
 
-  folio_console_controller_for 'Folio::Document'
+  folio_console_controller_for 'Folio::Document', except: %w[index]
 
   private
 

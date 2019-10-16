@@ -4,7 +4,8 @@ module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    render_records(folio_console_records.ordered, Folio::Console::FileSerializer)
+    pagy, records = pagy(folio_console_records.ordered, items: 300)
+    render_records(records, Folio::Console::FileSerializer)
   end
 
   def create

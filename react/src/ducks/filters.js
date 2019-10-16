@@ -1,6 +1,8 @@
 import { isEqual } from 'lodash'
+import { takeEvery, put, select } from 'redux-saga/effects'
 
-import { makeFilesSelector } from 'ducks/files'
+import { flashError } from 'utils/flash'
+import { makeFilesSelector, getFiles } from 'ducks/files'
 
 // Constants
 
@@ -21,6 +23,25 @@ export function resetFilters (filesKey) {
   return { type: RESET_FILTERS, filesKey }
 }
 
+// Sagas
+
+function * setFilterPerform (action) {
+  try {
+    const query = yield select(makeFiltersQuerySelector(action.filesKey))
+    yield put(getFiles(action.filesKey, query))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * setFilterSaga () {
+  yield takeEvery(SET_FILTER, setFilterPerform)
+}
+
+export const filtersSagas = [
+  setFilterSaga
+]
+
 // Selectors
 
 export const makeFiltersSelector = (filesKey) => (state) => {
@@ -33,58 +54,34 @@ export const makeFiltersSelector = (filesKey) => (state) => {
   }
 }
 
-export const makeFilteredFilesSelector = (filesKey) => (state) => {
-  const files = makeFilesSelector(filesKey)(state)
-  const filters = makeFiltersSelector(filesKey)(state)
-  const filtered = []
-
-  files.forEach((file) => {
-    let valid = true
-
-    if (valid && filters.name) {
-      valid = new RegExp(filters.name, 'i').test(file.attributes.file_name)
-    }
-
-    if (valid && filters.tags.length) {
-      if (file.attributes.tags.length) {
-        filters.tags.forEach((tag) => {
-          valid = valid && file.attributes.tags.indexOf(tag) !== -1
-        })
-      } else {
-        valid = false
-      }
-    }
-
-    if (valid && filters.placement) {
-      valid = file.attributes.placements.indexOf(filters.placement) !== -1
-    }
-
-    if (valid) filtered.push(file)
-  })
-
-  return filtered
-}
-
 export const makeTagsSelector = (filesKey) => (state) => {
+  const tags = window.FolioConsole.ReactMetaData.tags
+
   const files = makeFilesSelector(filesKey)(state)
-  const tags = []
   files.forEach((file) => file.attributes.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
   }))
-  return tags.sort((a, b) => {
-    const lowerA = a.toLowerCase()
-    const lowerB = b.toLowerCase()
-    return lowerA > lowerB ? 1 : lowerB > lowerA ? -1 : 0
+  return tags
+}
+
+export const makeFiltersQuerySelector = (filesKey) => (state) => {
+  const filters = state.filters[filesKey]
+  const params = new URLSearchParams()
+  Object.keys(filters).forEach((key) => {
+    if (filters[key]) {
+      let value = filters[key]
+      if (key === 'tags') {
+        value = filters[key].join(',')
+      }
+      params.set(`by_${key}`, value)
+    }
   })
+  return params.toString()
 }
 
 export const makePlacementsSelector = (filesKey) => (state) => {
-  const files = makeFilesSelector(filesKey)(state)
-  const placements = []
-  files.forEach((file) => file.attributes.placements.forEach((placement) => {
-    if (placements.indexOf(placement) === -1) placements.push(placement)
-  }))
-  return placements
+  // return window.FolioConsole.ReactMetaData.placements
+  return []
 }
 
 // State

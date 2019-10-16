@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { makeFilesLoadingSelector, makeFilesForListSelector } from 'ducks/files'
+import { makeFilesStatusSelector, makeFilesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
@@ -14,7 +14,7 @@ import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
   render () {
-    if (this.props.filesLoading) return <Loader />
+    if (!this.props.filesStatus.loaded) return <Loader />
     const fileTypeIsImage = this.props.filesKey === 'images'
 
     return (
@@ -24,13 +24,15 @@ class IndexMode extends LazyLoadCheckingComponent {
         >
           <UploadTagger filesKey={this.props.filesKey} />
 
-          <FileList
-            files={this.props.filesForList}
-            fileTypeIsImage={fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            link
-            dropzoneTrigger
-          />
+          {this.props.filesStatus.loading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.filesForList}
+              fileTypeIsImage={fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              link
+              dropzoneTrigger
+            />
+          )}
         </Card>
       </Uploader>
     )
@@ -38,7 +40,7 @@ class IndexMode extends LazyLoadCheckingComponent {
 }
 
 const mapStateToProps = (state, props) => ({
-  filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
   filesForList: makeFilesForListSelector(props.filesKey)(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })

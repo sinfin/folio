@@ -21,7 +21,8 @@
     "reactstrap": "^8.0.1",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.0",
-    "styled-components": "^3.4.2"
+    "styled-components": "^3.4.2",
+    "url-search-params-polyfill": "^7.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

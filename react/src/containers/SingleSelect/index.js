@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
-import { makeFilesLoadingSelector, makeFilesForListSelector } from 'ducks/files'
+import { makeFilesStatusSelector, makeFilesForListSelector } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
@@ -31,30 +31,32 @@ class SingleSelect extends LazyLoadCheckingComponent {
   }
 
   render () {
-    if (this.props.filesLoading) return <Loader />
+    if (!this.props.filesStatus.loaded) return <Loader />
 
     return (
       <ModalScroll
         header={this.renderHeader()}
       >
-        <Uploader filesKey={this.props.filesKey}>
-          <FileList
-            files={this.props.filesForList}
-            fileTypeIsImage={this.props.filesKey === 'images'}
-            displayAsThumbs={this.props.displayAsThumbs}
-            onClick={this.selectFile}
-            selecting='single'
-            overflowingParent
-            dropzoneTrigger
-          />
-        </Uploader>
+        {this.props.filesStatus.loading ? <Loader standalone /> : (
+          <Uploader filesKey={this.props.filesKey}>
+            <FileList
+              files={this.props.filesForList}
+              fileTypeIsImage={this.props.filesKey === 'images'}
+              displayAsThumbs={this.props.displayAsThumbs}
+              onClick={this.selectFile}
+              selecting='single'
+              overflowingParent
+              dropzoneTrigger
+            />
+          </Uploader>
+        )}
       </ModalScroll>
     )
   }
 }
 
 const mapStateToProps = (state, props) => ({
-  filesLoading: makeFilesLoadingSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
   filesForList: makeFilesForListSelector(props.filesKey)(state),
   displayAsThumbs: displayAsThumbsSelector(state)
 })
