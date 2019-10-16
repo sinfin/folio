@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import {
   makeFiltersSelector,
   makeTagsSelector,
-  makePlacementsSelector,
   setFilter,
   resetFilters
 } from 'ducks/filters'
@@ -16,7 +15,6 @@ import {
 } from 'ducks/display'
 
 import TagsInput from 'components/TagsInput'
-import Select from 'components/Select'
 
 import Wrap from './styled/Wrap'
 import DisplayButtons from './DisplayButtons'
@@ -64,7 +62,7 @@ class FileFilter extends Component {
             className='form-control'
             value={filters.name}
             onChange={this.onNameChange}
-            placeholder='File name'
+            placeholder={window.FolioConsole.translations.fileNameFilter}
           />
         </div>
 
@@ -79,13 +77,11 @@ class FileFilter extends Component {
         </div>
 
         <div className='form-group form-group--react-select'>
-          <Select
-            options={this.props.placements}
-            value={filters.placement}
+          <input
+            className='form-control'
+            value={filters.name}
             onChange={this.onPlacementChange}
-            defaultValue={null}
-            placeholder={window.FolioConsole.translations.placementsLabel}
-            isClearable
+            placeholder={window.FolioConsole.translations.usageFilter}
           />
         </div>
 
@@ -114,7 +110,6 @@ class FileFilter extends Component {
 const mapStateToProps = (state, props) => ({
   filters: makeFiltersSelector(props.filesKey)(state),
   tags: makeTagsSelector(props.filesKey)(state),
-  placements: makePlacementsSelector(props.filesKey)(state),
   display: displaySelector(state)
 })
 

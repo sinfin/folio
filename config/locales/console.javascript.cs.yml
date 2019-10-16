@@ -9,6 +9,7 @@ cs:
         cancel: Zrušit
         cancelChanges: Zahodit změny?
         create: Vytvořit
+        fileNameFilter: Filtr jména souboru
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
         link: Odkaz
@@ -21,4 +22,5 @@ cs:
         selectedDocuments: Vybrané dokumenty
         selectedImages: Vybrané obrázky
         title: Název
+        usageFilter: Filtr použití
         used: Již použité

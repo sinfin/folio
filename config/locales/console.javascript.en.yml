@@ -9,6 +9,7 @@ en:
         cancel: Cancel
         cancelChanges: Cancel changes?
         create: Create
+        fileNameFilter: File name filter
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
         link: Link
@@ -21,4 +22,5 @@ en:
         selectedDocuments: Selected documents
         selectedImages: Selected images
         title: Title
+        usageFilter: Usage filter
         used: Used already

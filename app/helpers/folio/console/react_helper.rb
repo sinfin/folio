@@ -80,23 +80,8 @@ module Folio
 
     def react_meta_data
       {
-        placements: react_meta_data_placements,
         tags: react_meta_data_tags,
       }.to_json
-    end
-
-    def react_meta_data_placements
-      key = [
-        'folio/console/react_meta_data_placements',
-        Folio::FilePlacement::Base.maximum(:updated_at),
-      ]
-
-      Rails.cache.fetch(key, expires_in: 1.day) do
-        unscoped = Folio::FilePlacement::Base.unscope(:order)
-        unscoped.select('DISTINCT(placement_title, placement_title_type), placement_title, placement_title_type')
-                .where.not(placement_title: nil, placement_title_type: nil)
-                .pluck(:placement_title_type, :placement_title)
-      end
     end
 
     def react_meta_data_tags

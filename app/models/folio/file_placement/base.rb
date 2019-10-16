@@ -48,13 +48,17 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
           source = placement
         end
 
-        title = source.try(:to_label) ||
-                source.try(:title) ||
-                source.try(:name)
+        I18n.with_locale(Rails.application.config.folio_console_locale) do
+          title = source.try(:to_label) ||
+                  source.try(:title) ||
+                  source.try(:name)
 
-        if title.present?
-          update_column(:placement_title, title)
-          update_column(:placement_title_type, source.class.to_s)
+          pl_title = [source.class.model_name.human, title].join(' - ')
+
+          if title.present?
+            update_columns(placement_title: pl_title,
+                           placement_title_type: source.class.to_s)
+          end
         end
       end
     end

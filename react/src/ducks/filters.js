@@ -1,5 +1,6 @@
 import { isEqual } from 'lodash'
-import { takeEvery, put, select } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import { takeLatest, put, select } from 'redux-saga/effects'
 
 import { flashError } from 'utils/flash'
 import { makeFilesSelector, getFiles } from 'ducks/files'
@@ -27,6 +28,8 @@ export function resetFilters (filesKey) {
 
 function * setFilterPerform (action) {
   try {
+    // debounce by 750ms, using delay with takeLatest
+    yield delay(750)
     const query = yield select(makeFiltersQuerySelector(action.filesKey))
     yield put(getFiles(action.filesKey, query))
   } catch (e) {
@@ -35,7 +38,7 @@ function * setFilterPerform (action) {
 }
 
 function * setFilterSaga () {
-  yield takeEvery(SET_FILTER, setFilterPerform)
+  yield takeLatest(SET_FILTER, setFilterPerform)
 }
 
 export const filtersSagas = [
@@ -68,11 +71,11 @@ export const makeFiltersQuerySelector = (filesKey) => (state) => {
   const filters = state.filters[filesKey]
   const params = new URLSearchParams()
   Object.keys(filters).forEach((key) => {
-    if (filters[key]) {
-      let value = filters[key]
-      if (key === 'tags') {
-        value = filters[key].join(',')
-      }
+    let value = filters[key]
+    if (key === 'tags') {
+      value = filters[key].join(',')
+    }
+    if (value) {
       params.set(`by_${key}`, value)
     }
   })
