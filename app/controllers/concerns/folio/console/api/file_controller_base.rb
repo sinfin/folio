@@ -4,8 +4,12 @@ module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    pagy, records = pagy(folio_console_records.ordered, items: 300)
-    render_records(records, Folio::Console::FileSerializer)
+    pagy, records = pagy(folio_console_records.ordered, items: 100)
+    meta = {
+      page: pagy.page,
+      pages: pagy.pages,
+    }
+    render_records(records, Folio::Console::FileSerializer, meta: meta)
   end
 
   def create
@@ -31,6 +35,10 @@ module Folio::Console::Api::FileControllerBase
   end
 
   private
+
+    def folio_console_collection_includes
+      [:tags]
+    end
 
     def filter_params
       params.permit(:by_file_name, :by_placement, :by_tags)

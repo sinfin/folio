@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { makeFilesStatusSelector, makeFilesForListSelector } from 'ducks/files'
+import { makeFilesStatusSelector, makeFilesForListSelector, makeFilesPaginationSelector, changeFilesPage } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
@@ -29,6 +29,9 @@ class IndexMode extends LazyLoadCheckingComponent {
               files={this.props.filesForList}
               fileTypeIsImage={fileTypeIsImage}
               displayAsThumbs={this.props.displayAsThumbs}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+              overflowingParent
               link
               dropzoneTrigger
             />
@@ -42,7 +45,8 @@ class IndexMode extends LazyLoadCheckingComponent {
 const mapStateToProps = (state, props) => ({
   filesStatus: makeFilesStatusSelector(props.filesKey)(state),
   filesForList: makeFilesForListSelector(props.filesKey)(state),
-  displayAsThumbs: displayAsThumbsSelector(state)
+  displayAsThumbs: displayAsThumbsSelector(state),
+  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

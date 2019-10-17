@@ -26,23 +26,29 @@ export function resetFilters (filesKey) {
 
 // Sagas
 
-function * setFilterPerform (action) {
+function * updateFiltersPerform (action) {
   try {
     // debounce by 750ms, using delay with takeLatest
-    yield delay(750)
-    const query = yield select(makeFiltersQuerySelector(action.filesKey))
+    let query = ''
+    if (action.type === SET_FILTER) {
+      yield delay(750)
+      query = yield select(makeFiltersQuerySelector(action.filesKey))
+    }
     yield put(getFiles(action.filesKey, query))
   } catch (e) {
     flashError(e.message)
   }
 }
 
-function * setFilterSaga () {
-  yield takeLatest(SET_FILTER, setFilterPerform)
+function * updateFiltersSaga () {
+  yield [
+    takeLatest(SET_FILTER, updateFiltersPerform),
+    takeLatest(RESET_FILTERS, updateFiltersPerform)
+  ]
 }
 
 export const filtersSagas = [
-  setFilterSaga
+  updateFiltersSaga
 ]
 
 // Selectors

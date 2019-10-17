@@ -5,6 +5,7 @@ import { filter, find } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
 import { makeUploadsSelector } from 'ducks/uploads'
+import { makeFiltersQuerySelector } from 'ducks/filters'
 import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 
 // Constants
@@ -17,6 +18,7 @@ const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 const UPDATED_FILES = 'files/UPDATED_FILES'
+const CHANGE_FILES_PAGE = 'files/CHANGE_FILES_PAGE'
 
 // Actions
 
@@ -24,8 +26,8 @@ export function getFiles (filesKey, query = '') {
   return { type: GET_FILES, filesKey, query }
 }
 
-export function getFilesSuccess (filesKey, records) {
-  return { type: GET_FILES_SUCCESS, filesKey, records }
+export function getFilesSuccess (filesKey, records, pagination) {
+  return { type: GET_FILES_SUCCESS, filesKey, records, pagination }
 }
 
 export function uploadedFile (filesKey, file) {
@@ -52,13 +54,17 @@ export function updateFileFailure (filesKey, file) {
   return { type: UPDATE_FILE_FAILURE, filesKey, file }
 }
 
+export function changeFilesPage (filesKey, page) {
+  return { type: CHANGE_FILES_PAGE, filesKey, page }
+}
+
 // Sagas
 
 function * getFilesPerform (action) {
   try {
     const filesUrl = `/console/api/${action.filesKey}?${action.query}`
     const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(action.filesKey, records.data))
+    yield put(getFilesSuccess(action.filesKey, records.data, records.meta))
   } catch (e) {
     flashError(e.message)
   }
@@ -92,9 +98,27 @@ function * updateFileSaga () {
   yield takeEvery(UPDATE_FILE, updateFilePerform)
 }
 
+function * changeFilesPagePerform (action) {
+  try {
+    const filtersQuery = yield select(makeFiltersQuerySelector(action.filesKey))
+    let query = `page=${action.page}`
+    if (filtersQuery) {
+      query = `${query}&${filtersQuery}`
+    }
+    yield put(getFiles(action.filesKey, query))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * changeFilesPageSaga () {
+  yield takeLatest(CHANGE_FILES_PAGE, changeFilesPagePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
-  updateFileSaga
+  updateFileSaga,
+  changeFilesPageSaga
 ]
 
 // Selectors
@@ -143,18 +167,30 @@ export const makeUnselectedFilesForListSelector = (filesKey) => (state) => {
   return filter(all, (file) => selectedIds.indexOf(String(file.id)) === -1)
 }
 
+export const makeFilesPaginationSelector = (filesKey) => (state) => {
+  return state.files[filesKey].pagination
+}
+
 // State
 
 const initialState = {
   images: {
     loading: false,
     loaded: false,
-    records: []
+    records: [],
+    pagination: {
+      page: null,
+      pages: null
+    }
   },
   documents: {
     loading: false,
     loaded: false,
-    records: []
+    records: [],
+    pagination: {
+      page: null,
+      pages: null
+    }
   }
 }
 
@@ -178,7 +214,8 @@ function filesReducer (state = initialState, action) {
           ...state[action.filesKey],
           records: action.records,
           loading: false,
-          loaded: true
+          loaded: true,
+          pagination: action.pagination
         }
       }
 

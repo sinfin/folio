@@ -83,15 +83,15 @@ class FileFilter extends Component {
           />
         </div>
 
-        {filters.active && (
-          <div className='form-group form-group--reset'>
+        <div className='form-group form-group--reset'>
+          {filters.active && (
             <button
               type='button'
               className='btn btn-danger fa fa-times'
               onClick={this.onReset}
             />
-          </div>
-        )}
+          )}
+        </div>
 
         {fileTypeIsImage && (
           <DisplayButtons

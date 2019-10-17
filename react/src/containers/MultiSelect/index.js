@@ -6,7 +6,9 @@ import {
   getFiles,
   makeFilesLoadedSelector,
   makeFilesStatusSelector,
-  makeUnselectedFilesForListSelector
+  makeUnselectedFilesForListSelector,
+  makeFilesPaginationSelector,
+  changeFilesPage
 } from 'ducks/files'
 import {
   selectFile,
@@ -83,6 +85,8 @@ class MultiSelect extends LazyLoadCheckingComponent {
               fileTypeIsImage={fileTypeIsImage}
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.selectFile}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
               selecting='multiple'
               dropzoneTrigger
             />
@@ -98,7 +102,8 @@ const mapStateToProps = (state, props) => ({
   filesLoaded: makeFilesLoadedSelector(props.filesKey)(state),
   filesStatus: makeFilesStatusSelector(props.filesKey)(state),
   unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
-  displayAsThumbs: displayAsThumbsSelector(state)
+  displayAsThumbs: displayAsThumbsSelector(state),
+  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {
