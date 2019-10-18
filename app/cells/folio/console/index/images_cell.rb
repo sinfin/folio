@@ -14,7 +14,7 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
     if options[:cover]
       render
     else
-      render if model.images.present?
+      render if model.image_placements.present?
     end
   end
 
