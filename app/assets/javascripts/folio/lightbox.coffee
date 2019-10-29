@@ -48,6 +48,8 @@ class window.FolioLightbox
 
   destroy: ->
     @photoSwipe?.close()
+    @photoSwipe?.destroy?()
+    @photoswipe = null
     $(document).off "click.#{@eventIdentifier}", @full_selector
     @$pswp = null
 
