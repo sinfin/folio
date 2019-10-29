@@ -31,6 +31,9 @@
                                 value: controller.params[key], \
                              })
 
+  - if options[:left_content]
+    = options[:left_content]
+
   - if options[:csv]
     a.btn.btn-secondary.f-c-index-header__btn href=csv_path
       i.fa.fa-download<>
@@ -45,6 +48,9 @@
   - else
     = new_button
       = render(:_new_button_label)
+
+  - if options[:right_content]
+    = options[:right_content]
 
 - if controller.send(:index_filters).present?
   == cell('folio/console/index/filters', \
