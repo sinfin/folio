@@ -439,6 +439,7 @@ function atomsReducer (state = initialState, action) {
           dirty: true,
           atom: {
             ...state.form.atom,
+            associations: {},
             type: action.newType,
             data: action.values,
             meta: state.structures[action.newType]
