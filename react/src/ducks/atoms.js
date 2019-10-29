@@ -202,7 +202,9 @@ function * updateAtomPreviews (action) {
     }
     callback()
   })
-  $('.f-c-simple-form-with-atoms__form').trigger('change')
+  if (action.type !== SET_ATOMS_DATA) {
+    window.postMessage({ type: 'setFormAsDirty' }, window.origin)
+  }
 }
 
 function * updateAtomPreviewsSaga () {

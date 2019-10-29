@@ -94,7 +94,7 @@ function SerializedAtom ({ atom, index, namespace, position }) {
 
 function SerializedAtoms ({ atoms, destroyedIds, namespace }) {
   return (
-    <div hidden>
+    <div hidden className='f-c-simple-form-with-atoms__dirty-wrap'>
       {atoms.map((atom, index) => {
         return (
           <SerializedAtom

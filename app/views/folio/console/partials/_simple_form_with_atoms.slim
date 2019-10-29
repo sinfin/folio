@@ -11,7 +11,9 @@
             = t('.settings')
             .f-c-simple-form-with-atoms__title-arrow
 
-        .f-c-simple-form-with-atoms__form-scroll
+        .f-c-simple-form-with-atoms__form-scroll[
+          class="f-c-simple-form-with-atoms__dirty-wrap"
+        ]
           .container-fluid.f-c-simple-form-with-atoms__form-container
             = yield(f)
 
