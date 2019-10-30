@@ -56,7 +56,7 @@ class window.FolioLightbox
 window.makeFolioLightbox = (selector, opts = {}) ->
   window.folioLightboxInstances ?= []
 
-  $(document).on 'turbolinks:load', ->
+  init = ->
     $items = $(selector)
     return if $items.length is 0
     if opts.individual
@@ -76,9 +76,14 @@ window.makeFolioLightbox = (selector, opts = {}) ->
     else
       window.folioLightboxInstances.push(new window.FolioLightbox(selector))
 
-  $(document).on 'turbolinks:before-cache', ->
-    return unless window.folioLightboxInstances.length > 0
+  if Turbolinks?
+    $(document).on 'turbolinks:load', init
 
-    instance.destroy() for instance in window.folioLightboxInstances
+    $(document).on 'turbolinks:before-cache', ->
+      return unless window.folioLightboxInstances.length > 0
 
-    window.folioLightboxInstances = []
+      instance.destroy() for instance in window.folioLightboxInstances
+
+      window.folioLightboxInstances = []
+  else
+    $ init
