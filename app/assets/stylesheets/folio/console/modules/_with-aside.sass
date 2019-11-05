@@ -13,6 +13,9 @@
       flex-direction: column
       height: 100%
 
+      .f-c-with-aside__scroll
+        padding-bottom: 65px
+
     &__main
       width: percentage(2 / 3)
       flex: 1 0 percentage(2 / 3)
@@ -31,10 +34,16 @@
       padding: $grid-gutter-half $grid-gutter-width
       flex: 1 1 auto
 
-      .f-c-form-footer
-        bottom: -$grid-gutter-half
-
-  +mq-mobile-menu
+  +media-breakpoint-up(xxl)
     &__main,
     &__aside
+      .f-c-with-aside__scroll
+        padding-bottom: 95px
+
+  +mq-mobile-menu
+    &__main
       padding: $grid-gutter-half $grid-gutter-width
+
+    &__aside
+      .f-c-with-aside__scroll
+        padding: $grid-gutter-half $grid-gutter-width 65px
