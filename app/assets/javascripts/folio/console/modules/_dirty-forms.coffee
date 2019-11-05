@@ -13,6 +13,9 @@ $('.simple_form')
   .not('.f-c-simple-form-with-atoms')
   .one 'change', handler
 
+$('.f-c-simple-form-with-atoms__form')
+  .one 'change', handler
+
 receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
