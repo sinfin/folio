@@ -16,6 +16,7 @@ class window.FolioLightbox
     @$pswp
 
   bind: (data) ->
+    @unbind()
     $(document).on "click.#{@eventIdentifier}", @full_selector, (e) =>
       e.preventDefault()
       $img = $(e.target)
@@ -46,11 +47,16 @@ class window.FolioLightbox
     item.title = $el.data('lightbox-title') or $el.next('figcaption').text()
     item
 
-  destroy: ->
-    @photoSwipe?.close()
-    @photoSwipe?.destroy?()
-    @photoswipe = null
+  unbind: ->
     $(document).off "click.#{@eventIdentifier}", @full_selector
+
+  destroy: ->
+    try
+      @photoSwipe.close()
+      @photoSwipe.destroy()
+    catch e
+    @photoSwipe = null
+    @unbind()
     @$pswp = null
 
 window.makeFolioLightbox = (selector, opts = {}) ->
@@ -79,10 +85,11 @@ window.makeFolioLightbox = (selector, opts = {}) ->
   if Turbolinks?
     $(document).on 'turbolinks:load', init
 
-    $(document).on 'turbolinks:before-cache', ->
+    $(document).on 'turbolinks:before-cache turbolinks:before-render', ->
       return unless window.folioLightboxInstances.length > 0
 
-      instance.destroy() for instance in window.folioLightboxInstances
+      window.folioLightboxInstances.forEach (instance) ->
+        instance.destroy()
 
       window.folioLightboxInstances = []
   else

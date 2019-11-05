@@ -20,6 +20,7 @@ fetchFresh = ($el, url) ->
   $.get url, (res) -> swapItems($el, $(res), false)
 
 performAntiCache = (e) ->
+  saveAntiCacheHtml()
   $body = $(e.originalEvent.data.newBody || 'body')
   window.performFolioAntiCache $body.find('[data-anti-cache]')
 
@@ -41,4 +42,3 @@ window.performFolioAntiCache = ($items) ->
 $(document)
   .one 'turbolinks:load', performAntiCache
   .on 'turbolinks:before-render', performAntiCache
-  .on 'turbolinks:before-cache', saveAntiCacheHtml
