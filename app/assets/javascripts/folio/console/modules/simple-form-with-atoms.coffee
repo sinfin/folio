@@ -28,14 +28,15 @@ $(document)
       value: $this.val()
 
 editLabel = (locale) ->
-  $('.f-c-js-atoms-placement-label')
-    .filter("[data-locale='#{locale}']")
-    .focus()
+  $label = $('.f-c-js-atoms-placement-label')
+  $label = $label.filter("[data-locale='#{locale}']") if locale
+  $label.focus()
 
 editPerex = (locale) ->
-  $('.f-c-js-atoms-placement-perex')
-    .filter("[data-locale='#{locale}']")
-    .focus()
+  $('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--expanded-form')
+  $perex = $('.f-c-js-atoms-placement-perex')
+  $perex = $perex.filter("[data-locale='#{locale}']") if locale
+  $perex.focus()
 
 setHeight = ->
   $iframes = $('.f-c-simple-form-with-atoms__iframe')
