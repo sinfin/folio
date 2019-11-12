@@ -11,6 +11,9 @@ function PaginationComponent ({ changeFilesPage, pagination }) {
   const active = pagination.page
   const min = 1
   const max = pagination.pages
+
+  if (max === 1) { return null }
+
   const next = Math.min(max, active + 1)
   const prev = Math.max(min, active - 1)
   const numbers = [min]
