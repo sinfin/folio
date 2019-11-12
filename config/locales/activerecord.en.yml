@@ -36,6 +36,15 @@ en:
         facebook_pixel_code: Facebook pixel - code
         google_analytics_tracking_code: Google analytics - tracking code
         locales: Languages
+        social_links/appstore: Appstore
+        social_links/facebook: Facebook
+        social_links/google_play: Google play
+        social_links/instagram: Instagram
+        social_links/linkedin: LinkedIn
+        social_links/messenger: Messenger
+        social_links/pinterest: Pinterest
+        social_links/twitter: Twitter
+        social_links/youtube: Youtube
         turbo_mode: Turbo mode
       visit:
         events: Events

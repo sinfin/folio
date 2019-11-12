@@ -40,6 +40,15 @@ cs:
         facebook_pixel_code: Facebook pixel - kód
         google_analytics_tracking_code: Google analytics - trackovací kód
         locales: Jazyky
+        social_links/appstore: Appstore
+        social_links/facebook: Facebook
+        social_links/google_play: Google play
+        social_links/instagram: Instagram
+        social_links/linkedin: LinkedIn
+        social_links/messenger: Messenger
+        social_links/pinterest: Pinterest
+        social_links/twitter: Twitter
+        social_links/youtube: Youtube
         turbo_mode: Kritický režim
       visit:
         events: Události

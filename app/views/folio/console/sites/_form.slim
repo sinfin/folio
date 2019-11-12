@@ -33,6 +33,10 @@
     = f.simple_fields_for :social_links do |g|
       - Folio::Site.social_link_sites.each do |key|
         - value = f.object.social_links.try(:[], key.to_s)
-        = g.input key, required: false, input_html: { value: value }
+        - i18n_key = "social_links/#{key}"
+        = g.input key, \
+                  required: false, \
+                  label: Folio::Site.human_attribute_name(i18n_key), \
+                  input_html: { value: value }
 
 = form_footer f
