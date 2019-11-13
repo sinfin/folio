@@ -31,7 +31,7 @@ module Folio::ImageHelper
     img_tag_retina(normal,
                    retina,
                    options.reverse_merge(
-                     alt: placement.alt,
+                     alt: placement.alt || '',
                      title: placement.title,
                      retina_multiplier: retina_multiplier,
                    ))
@@ -50,6 +50,7 @@ module Folio::ImageHelper
       options['data-alt'] = options.delete(:alt)
     end
 
+    options[:alt] = ''
     options[:class] = "#{lazyload_class} #{options[:class] || ''}"
     options[:style] = "visibility: hidden; #{options[:style] || ''}"
 

@@ -15,7 +15,7 @@ window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
       container: container
       callback_reveal: (el) ->
         el.style.visibility = ''
-        el.alt = el.dataset.alt
+        el.alt = el.dataset.alt if el.dataset.alt
         el.classList.remove(selector.replace('.', ''))
 
     window.folioLazyloadInstances.push(
