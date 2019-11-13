@@ -12,12 +12,17 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                   folio_link_class_names +
                   appended_link_class_names
 
-    class_names.map do |class_name|
+    ary = []
+
+    class_names.each do |class_name|
+      next if skip_link_class_names.include?(class_name)
       klass = class_name.constantize
       label = klass.model_name.human(count: 2)
       path = controller.url_for([:console, klass])
-      link(label, path)
+      ary << link(label, path)
     end
+
+    ary
   end
 
   def link(label, path, &block)
@@ -56,5 +61,9 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def runner_up_link_class_names
     ::Rails.application.config.folio_console_sidebar_runner_up_link_class_names
+  end
+
+  def skip_link_class_names
+    ::Rails.application.config.folio_console_sidebar_skip_link_class_names || []
   end
 end
