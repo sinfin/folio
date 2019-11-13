@@ -27,9 +27,11 @@ module Folio::ClearsPageCache
 
       return if !::File.exist?(cache_dir)
 
-      Dir.mktmpdir do |tmp_dir|
+      tmp_dir = Dir.mktmpdir
+      begin
         FileUtils.mv cache_dir, tmp_dir
-        FileUtils.rmdir tmp_dir
+      ensure
+        FileUtils.remove_entry tmp_dir
       end
     end
 
