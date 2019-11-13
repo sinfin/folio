@@ -53,6 +53,7 @@ module Folio
     config.folio_console_sidebar_prepended_link_class_names = []
     config.folio_console_sidebar_appended_link_class_names = []
     config.folio_console_sidebar_runner_up_link_class_names = []
+    config.folio_console_sidebar_skip_link_class_names = []
     config.folio_server_names = []
 
     initializer :append_migrations do |app|
