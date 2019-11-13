@@ -28,6 +28,7 @@ class IndexMode extends LazyLoadCheckingComponent {
             files={this.props.filesForList}
             fileTypeIsImage={this.props.fileTypeIsImage}
             displayAsThumbs={this.props.displayAsThumbs}
+            overflowingParent
             link
             dropzoneTrigger
           />
