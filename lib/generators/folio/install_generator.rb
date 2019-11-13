@@ -197,6 +197,8 @@ module Folio
         inject_into_file 'config/environments/production.rb', after: /config\.action_controller\.perform_caching\s*=\s*true/ do
           "\n  config.action_controller.page_cache_directory = Rails.root.join('public', 'cached_pages')"
         end
+
+        gsub_file 'config/environments/production.rb', 'config.assets.js_compressor = :uglifier', 'config.assets.js_compressor = Uglifier.new(harmony: true)'
       end
 
       def setup_routes
