@@ -1,4 +1,4 @@
-= simple_form_for([:console, @document]) do |f|
+= simple_form_for([:console, @document], as: :file) do |f|
   = form_header f, destroy: true
 
   .row
