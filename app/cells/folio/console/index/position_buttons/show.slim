@@ -1,0 +1,26 @@
+= hidden_field_tag :position, model.position,
+                              class: 'folio-console-input-position'
+= hidden_field_tag :id, model.id,
+                        class: 'folio-console-input-id'
+
+.btn-group[
+  role="group"
+  class="f-c-index-position__button-group"
+]
+  button.btn.btn-sm.btn-outline[
+    class="f-c-index-position__button"
+    class="fa fa-arrow-up"
+    type="button"
+    data-direction="up"
+    data-url=url
+  ]
+
+  button.btn.btn-sm.btn-outline[
+    class="f-c-index-position__button"
+    class="fa fa-arrow-down"
+    type="button"
+    data-direction="down"
+    data-url=url
+  ]
+
+  span.folio-loader.folio-loader--small.folio-loader--transparent

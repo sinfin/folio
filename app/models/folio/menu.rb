@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Menu < Folio::ApplicationRecord
+  extend Folio::InheritenceBaseNaming
+
   # Relations
   has_many :menu_items, -> { ordered }, dependent: :destroy
   accepts_nested_attributes_for :menu_items, allow_destroy: true,
@@ -12,15 +14,18 @@ class Folio::Menu < Folio::ApplicationRecord
 
   alias_attribute :items, :menu_items
 
+  scope :ordered, -> { order(type: :asc, locale: :asc) }
+
   def title
     model_name.human
   end
 
   def available_targets
-    if Rails.application.config.folio_using_traco
-      Folio::Node.all
+    if Rails.application.config.folio_using_traco ||
+       !Rails.application.config.folio_pages_translations
+      Folio::Page.all
     else
-      Folio::Node.where(locale: locale)
+      Folio::Page.by_locale(locale)
     end
   end
 
@@ -48,7 +53,10 @@ class Folio::Menu < Folio::ApplicationRecord
 end
 
 if Rails.env.development?
-  Dir["#{Folio::Engine.root}/app/models/folio/menu/*.rb", 'app/models/menu/*.rb'].each do |file|
+  Dir[
+    Folio::Engine.root.join('app/models/folio/menu/**/*.rb'),
+    Rails.root.join('app/models/**/menu/**/*.rb'),
+  ].each do |file|
     require_dependency file
   end
 end

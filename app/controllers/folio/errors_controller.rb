@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-module Folio
-  class ErrorsController < ApplicationController
-    include ErrorsControllerBase
-  end
+class Folio::ErrorsController < Folio::ApplicationController
+  include Folio::ErrorsControllerBase
 end

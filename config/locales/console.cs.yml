@@ -2,20 +2,48 @@
 cs:
   folio:
     console:
+      actions:
+        add: Přidat
+        arrange: Upravit strukturu
+        back: Zpět
+        cancel: Zrušit
+        close: Zavřít
+        destroy: Smazat
+        edit: Upravit
+        preview: Náhled
+        save: Uložit
+        show: Zobrazit
+        submit: Uložit
       alt_prompt: Alternativní popisek obrázku
+      atoms:
+        form_header:
+          settings: Nastavení
+        settings_header:
+          done: Hotovo
+          title: Nastavení
+        previews:
+          add_atom: Vložit kapitolu
       back: Zpět
       base:
         atoms:
           add: Přidat kapitolu
+          title: Obsah
+      base_controller:
+        invalid_event: Nelze provést změnu stavu - %{event}.
       breadcrumbs:
         actions:
           add: Přidat
+          cancel: Stornovat
+          confirm: Potvrdit
           delete: Smazat
           edit: Upravit
+          handle: Vyřídit
           new: Vytvořit
           show: Zobrazit
+          unhandle: Označit za nevyřízené
         root: Administrace
-      cancel: Zrušit
+        searches: Vyhledávání
+      confirmation: Určitě?
       create: Vytvořit
       delete: Smazat
       documents:
@@ -24,15 +52,9 @@ cs:
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
       documents_management: Správa dokumentů
       file_title_prompt: Název souboru
-      filters:
-        all_tags: Všechny tagy
-        query: Vyhledávání...
       finalizing: Dokončuji
       footer:
         text: Administrace webu %{site_name}.
-      form_footer:
-        back: Zpět
-        submit: Uložit
       gallery_management: Správa galerie
       images:
         edit:
@@ -44,15 +66,7 @@ cs:
           handle_selected: Vyřídit vybrané
           uncheck_all: Odvybrat vše
           toggle: Hromadný výběr
-        filters:
-          all: Všechny
-          cancel: Zrušit filtry
-          title: Filtry
-        header:
-          by_query: Filtrovat...
       leads:
-        handle:
-          success: Formulář vyřízen
         index:
           handled: Vyřízené
           not_handled: Nevyřízené
@@ -62,21 +76,18 @@ cs:
           blank: "-- nevyplněno --"
           handle: Vyřídit
           unhandle: Označit jako nevyřízený
-        unhandle:
-          success: Formulář označen za nevyřízený
-      menu_tree:
-        error: 'Stromovou strukturu se nepovedlo upravit: %{msg}'
-        success: Stromová struktura upravena
       menus:
-        detail_heading:
-          edit_link: Upravit odkazy
-          show_link: Upravit stromovou strukturu
+        edit:
+          header_link: Upravit stromovou strukturu
         form:
           add_menu_item: Přidat odkaz
         menu_item_fields:
           title_hint: Nepovinný, v případě nevyplnění se ukáže titulek odkazu.
         show:
           title: Stromová struktura
+          header_link: Upravit odkazy
+        link: Odkaz
+        noLink: Bez odkazu (pouze obal)
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova
@@ -127,11 +138,14 @@ cs:
           gallery: Galerie
           settings: Nastavení
           site_social_links: Odkazy
+          audits: Historie verzí
+        simple_form_with_atoms:
+          editor: Editor
+          settings: Nastavení
       react_picker:
         add: Přidat
       really_delete: Jste si jist, že chcete smazat "%{title}"?
       remove_confirmation: Odebrat?
-      save: Uložit
       single_file_select:
         add_image: Přidat obrázek
         add_video: Přidat video

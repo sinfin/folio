@@ -1,0 +1,89 @@
+.f-c-layout-sidebar-search__form
+  position: relative
+
+.f-c-layout-sidebar-search__form-group
+  margin: 0
+
+.f-c-layout-sidebar-search__input
+  padding: 10px 45px 10px 20px
+  border: 0
+
+  &::placeholder
+    color: rgba($white, 0.29)
+
+  &, &:focus
+    color: $white
+    background: transparent
+    box-shadow: none
+
+.f-c-layout-sidebar-search__button
+  +unbutton
+  position: absolute
+  top: 0
+  right: 0
+  height: 100%
+  width: 35px
+  color: $white
+  cursor: pointer
+
+  &--cancel
+    display: none
+
+  .f-c-layout-sidebar-search--searching &
+    display: none
+
+    &--cancel
+      display: block
+
+.f-c-layout-sidebar-search__results
+  height: 0
+  overflow: hidden
+  position: relative
+  transition: $transition-base
+  background: #4b5258
+
+  .f-c-layout-sidebar-search--searching &
+    height: 220px
+
+.f-c-layout-sidebar-search__results-inner
+  border-top: 1px solid rgba(#979797, 0.42)
+  transition: $transition-base
+  position: relative
+  z-index: 2
+
+  .f-c-layout-sidebar-search--loading &
+    opacity: 0.1
+
+.f-c-layout-sidebar-search__loader.folio-loader
+  top: 1px
+  height: calc(100% - 1px)
+  z-index: 1
+  opacity: 0
+  transition: $transition-base
+
+  .f-c-layout-sidebar-search.folio-inversed-loader &
+    background-color: transparent
+
+  .f-c-layout-sidebar-search--loading &
+    opacity: 1
+
+.f-c-layout-sidebar-search__error
+  color: $red
+  position: absolute
+  z-index: 1
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  font-size: 60px
+  display: flex
+  align-items: center
+  justify-content: center
+  opacity: 0
+  transition: $transition-base
+
+  .f-c-layout-sidebar-search--error &
+    opacity: 1
+
+.js-f-c-layout-sidebar-search-cancel
+  cursor: pointer

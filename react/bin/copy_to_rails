@@ -7,16 +7,25 @@ rootDir="$( dirname "$0" )/../.."
 (
   cd "$rootDir/react" || exit
 
-  target=../app/assets/javascripts/folio/console/react.js
-  touch $target
-  echo '' > $target
+  js=../app/assets/javascripts/folio/console/react.js
+  touch $js
+  echo '' > $js
 
   for file in build/static/js/*.js; do
-    cat $file >> $target
-    echo -e "\n" >> $target
+    cat $file >> $js
+    echo -e "\n" >> $js
   done
 
-  sed -i '/\/\/# sourceMappingURL/d' $target
+  sed -i '/\/\/# sourceMappingURL/d' $js
+
+  css=../app/assets/javascripts/folio/console/react.css
+  touch $css
+  echo '' > $css
+
+  for file in build/static/css/*.css; do
+    cat $file >> $css
+    echo -e "\n" >> $css
+  done
 
   echo -e "${GREEN}Copied build to rails assets folder. $NO_COLOR\n"
 )

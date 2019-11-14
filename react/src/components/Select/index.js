@@ -30,7 +30,7 @@ class Select extends React.Component {
 
     return (
       <SelectComponent
-        name="form-field-name"
+        name='form-field-name'
         className='react-select-container'
         classNamePrefix='react-select'
         value={formattedValue}

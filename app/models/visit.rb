@@ -28,7 +28,7 @@ class Visit < Folio::ApplicationRecord
   end
 
   def title
-    "#{id}"
+    "#{self.class.model_name.human} #{id}"
   end
 
   def to_label

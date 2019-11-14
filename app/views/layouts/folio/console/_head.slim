@@ -11,6 +11,10 @@ meta[
   content="width=device-width, user-scalable=no, initial-scale=1"
 ]
 
-= stylesheet_link_tag 'folio/console/base', media: 'all'
+- if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+  = stylesheet_link_tag 'folio/console/base', media: 'all'
+
+  - unless ENV['REACT_DEV']
+    = stylesheet_link_tag 'folio/console/react', media: 'all'
 
 = csrf_meta_tags

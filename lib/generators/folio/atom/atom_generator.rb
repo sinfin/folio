@@ -4,13 +4,13 @@ class Folio::AtomGenerator < Rails::Generators::NamedBase
   source_root File.expand_path('templates', __dir__)
 
   def atom_model
-    template 'atom_model.rb.tt', "app/models/#{global_namespace_path}/atom/#{file_name}.rb"
+    template 'atom_model.rb.tt', "app/models/#{global_namespace_path}/atom/#{name}.rb"
   end
 
   def cell
-    template 'cell.rb.tt', "app/cells/#{global_namespace_path}/atom/#{file_name}_cell.rb"
-    template 'cell.slim.tt', "app/cells/#{global_namespace_path}/atom/#{file_name}/show.slim"
-    template 'cell_test.rb.tt', "test/cells/#{global_namespace_path}/atom/#{file_name}_cell_test.rb"
+    template 'cell.rb.tt', "app/cells/#{global_namespace_path}/atom/#{name}_cell.rb"
+    template 'cell.slim.tt', "app/cells/#{global_namespace_path}/atom/#{name}/show.slim"
+    template 'cell_test.rb.tt', "test/cells/#{global_namespace_path}/atom/#{name}_cell_test.rb"
   end
 
   private
@@ -24,7 +24,7 @@ class Folio::AtomGenerator < Rails::Generators::NamedBase
     end
 
     def atom_cell_name
-      "#{global_namespace_path}/atom/#{file_name}"
+      "#{global_namespace_path}/atom/#{name}"
     end
 
     def global_namespace_path

@@ -11,17 +11,15 @@
   +button-variant($danger, $danger)
 
 .simple_form
-  fieldset:not(.form-group)
-    margin: 0 0 $fieldset-margin
+  h2, h3, h4, h5
+    margin-top: 2rem
+    margin-bottom: 1rem
 
-    + fieldset
-      margin-top: $fieldset-margin
+  fieldset:not(.form-group)
+    margin: $fieldset-margin 0
 
     h1, h2, h3, h4, h5
-      margin-bottom: 1rem
-
-      &:first-child
-        margin-top: 0
+      margin-top: 0
 
   input.btn
     + a
@@ -36,8 +34,9 @@
 
   .has-danger-blink
     .form-control,
-    .folio-console-react-picker__button .btn
-      box-shadow: 0 0 10px 2px $red
+    .folio-console-react-picker__button .btn,
+    .redactor-box
+      box-shadow: 0 0 10px 2px $red !important
 
   .text-danger
     .form-text ~ .form-text
@@ -70,19 +69,6 @@
         margin-bottom: 0
         display: flex
         align-items: center
-
-  .alert-danger
-    cursor: pointer
-    display: flex
-    align-items: center
-
-    &:after
-      content: 'Fix'
-      margin-left: $grid-gutter-half
-      +sm-danger-btn-style
-
-      html[lang="cs"] &
-        content: 'Opravit'
 
 .form-group--with-flag
   position: relative

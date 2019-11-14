@@ -1,44 +1,111 @@
-html
+.f-c-layout-html
   height: 100%
   min-width: 320px
   overflow-y: scroll
 
-body
-  display: flex
-  flex-direction: column
-  min-height: 100%
-  max-width: 1600px
-  margin: 0 auto
+.f-c-layout-body
   min-width: 320px
 
-.folio-console-layout-main
+.f-c-layout-sidebar
+  background: $gray-800
+  color: $white
+
+.f-c-layout-main
+  width: 100%
+
+  &--devise
+    flex: 1 0 auto
+
+.f-c-layout-main-container
+  padding-top: $spacer
+  padding-bottom: 65px
+  position: relative
+  z-index: 1
   flex: 1 1 auto
-  padding: $grid-gutter-half
-  display: flex
-  flex-direction: column
-  background: white
+  overflow-y: scroll
+  -webkit-overflow-scrolling: touch
 
-.folio-console-layout-with-sidebar
-  display: flex
-  align-items: stretch
-  flex: 1 1 auto
++mq-desktop-menu
+  .f-c-layout-html
+    overflow-y: hidden
+    height: 100%
 
-.folio-console-layout-content
-  flex: 1 1 100%
+  .f-c-layout-body
+    &:not(&--devise)
+      padding-left: 220px
+      height: 100%
 
-.folio-console-layout-sidebar
-  flex: 0 0 270px
-  margin-top: -$grid-gutter-half
-  margin-bottom: -$grid-gutter-half
-  margin-right: -$grid-gutter-half
-  margin-left: $grid-gutter-width
-  padding: $grid-gutter-half
-  background: $gray-100
+    &--devise
+      min-height: 100%
+      display: flex
+      flex-direction: column
+      justify-content: center
 
-+mq-wide-layout
-  .folio-console-layout-main
-    border-bottom-left-radius: $border-radius-lg
-    border-bottom-right-radius: $border-radius-lg
+  .f-c-layout-sidebar
+    height: 100%
+    width: 220px
+    position: fixed
+    top: 0
+    bottom: 0
+    left: 0
+    z-index: 2
 
-  .folio-console-layout-sidebar
-    border-bottom-right-radius: $border-radius-lg
+  .f-c-layout-main
+    display: flex
+    flex-direction: column
+    height: 100%
+    position: relative
+    z-index: 1
+
+  .f-c-layout-header
+    flex: 0 0 auto
+    z-index: 2
+
+  .f-c-flash-wrap
+    flex: 0 0 auto
+    z-index: 2
+
+    .f-c-layout-body--devise &
+      position: fixed
+      top: 0
+      right: 0
+      left: 0
+
++mq-mobile-menu
+  .f-c-layout-sidebar
+    display: none
+
+  .slideout-menu
+    position: fixed
+    top: 0
+    bottom: 0
+    width: 220px
+    min-height: 100vh
+    overflow-y: scroll
+    -webkit-overflow-scrolling: touch
+    z-index: 0
+    display: none
+
+  .slideout-menu-left
+    left: 0
+
+  .slideout-menu-right
+    right: 0
+
+  .slideout-panel
+    position: relative
+    z-index: 1
+    background-color: #FFF
+    min-height: 100vh
+
+  .slideout-open,
+  .slideout-open body,
+  .slideout-open .slideout-panel
+    overflow: hidden
+
+  .slideout-open .slideout-menu
+    display: block
+
++media-breakpoint-up(xxl)
+  .f-c-layout-main-container
+    padding-bottom: 95px

@@ -1,0 +1,35 @@
+.f-c-state
+  &__state
+    +unbutton
+    display: flex
+    align-items: center
+    white-space: nowrap
+
+    &.dropdown-item
+      padding: $dropdown-item-padding-y $dropdown-item-padding-x
+
+  &__state-square
+    width: 12px
+    height: 12px
+    display: block
+    background: #e9ecef
+    margin: 0 10px 0 0
+
+    &--color-red
+      background: #f0655d
+
+    &--color-green
+      background: #589e92
+
+    &--color-yellow
+      background: #facd35
+
+    &--color-dark
+      background: #212529
+
+  .dropdown-menu
+    margin-left: -25px
+    margin-top: 5px
+
+div.f-c-state__state
+  cursor: auto

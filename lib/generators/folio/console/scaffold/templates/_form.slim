@@ -1,19 +1,21 @@
-= tabs <%= form_tabs %>
+= form_header f
 
-= f.error_notification
+= tabs <%= form_tabs %>
 
 .tab-content
   = tab :content
     <%- if has_attachmentable? -%>
-    = react_picker(f, :cover_placement)
-    <%- end -%>
+    .row
+      .col-md-auto
+        = react_picker(f, :cover_placement)
+      .col-md
+        <%= attribute_inputs %>
+    <%- else -%>
     <%= attribute_inputs %>
+    <%- end -%>
     <%- if has_atoms? -%>
+
     = console_form_atoms f
     <%- end -%>
-  <%- if has_attachmentable? -%>
-  = tab :gallery
-    = react_images(f.object.image_placements, attachmentable: '<%= singular_table_name %>')
-  <%- end -%>
 
-= form_footer f, <%= index_resource_name %>
+= form_footer f

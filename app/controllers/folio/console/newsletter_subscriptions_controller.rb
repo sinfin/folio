@@ -1,29 +1,16 @@
 # frozen_string_literal: true
 
-module Folio
-  class Console::NewsletterSubscriptionsController < Console::BaseController
-    before_action :find_subscription, except: :index
-    add_breadcrumb(NewsletterSubscription.model_name.human(count: 2),
-                   :console_newsletter_subscriptions_path)
+class Folio::Console::NewsletterSubscriptionsController < Folio::Console::BaseController
+  folio_console_controller_for 'Folio::NewsletterSubscription'
 
-    def index
-      if params[:by_query].present?
-        subscriptions = NewsletterSubscription.filter_by_params(filter_params)
-      else
-        subscriptions = NewsletterSubscription.all
+  def index
+    @newsletter_subscriptions = @newsletter_subscriptions.includes(:visit)
+
+    respond_with(@newsletter_subscriptions) do |format|
+      format.html do
+        @pagy, @newsletter_subscriptions = pagy(@newsletter_subscriptions)
       end
-      @pagy, @subscriptions = pagy(subscriptions)
+      format.csv { render_csv(@newsletter_subscriptions) }
     end
-
-    def destroy
-      @subscription.destroy
-      respond_with @subscription, location: console_newsletter_subscriptions_path
-    end
-
-    private
-
-      def find_subscription
-        @subscription = NewsletterSubscription.find(params[:id])
-      end
   end
 end

@@ -1,0 +1,16 @@
+.f-c-index-position__button-group
+  .folio-loader
+    display: none
+
+  .folio-console-loading &
+    > *
+      visibility: hidden
+
+    > .folio-loader
+      visibility: visible
+      display: block
+
+tr:first-child .f-c-index-position__button[data-direction="up"],
+tr:last-child .f-c-index-position__button[data-direction="down"]
+  @extend .disabled
+  cursor: not-allowed

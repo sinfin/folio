@@ -1,0 +1,49 @@
+.f-c-atoms-previews
+  - model.keys.each_with_index do |locale, index|
+    - I18n.with_locale(locale || I18n.default_locale)
+      .f-c-atoms-previews__locale[
+        data-locale=locale
+        data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
+        hidden=locale_hidden(locale)
+      ]
+        - if options[:labels] && options[:labels][locale || 'null']
+          .f-c-atoms-previews__label.mb-5[
+            hidden=options[:labels][locale || 'null'].blank?
+          ]
+            .container
+              h1.f-c-atoms-previews__label-h1.m-0
+                = options[:labels][locale || 'null']
+            = label_perex_controls
+
+        - if options[:perexes] && options[:perexes][locale || 'null']
+          .f-c-atoms-previews__perex.mb-5.mt-n4[
+            hidden=options[:perexes][locale || 'null'].blank?
+          ]
+            .container
+              p.f-c-atoms-previews__perex-p.lead
+                = options[:perexes][locale || 'null']
+            = label_perex_controls
+
+        - index = 0
+        - model[locale].each_with_index do |atoms_in_molecules, molecule_index|
+          - molecule, atoms = atoms_in_molecules
+          - atoms.each_with_index do |atom, atom_index|
+            = insert
+
+            .f-c-atoms-previews__atom[
+              data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
+              data-index=index
+            ]
+              - if atom.class.molecule_cell_name
+                == cell(atom.class.molecule_cell_name, [atom])
+
+              - else
+                == cell(atom.class.cell_name, \
+                        atom, \
+                        atom.cell_options.presence || {})
+
+              = controls
+
+            - index += 1
+
+        = insert

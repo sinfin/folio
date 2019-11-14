@@ -7,14 +7,16 @@
         = f.input :target, \
                   collection: sti_records_for_select(menu.available_targets), \
                   selected: sti_record_select_value(f.object, :target), \
-                  include_blank: true
+                  include_blank: true, \
+                  wrapper_html: { class: 'mb-0' }
 
       - if menu.class.rails_paths.present?
         - paths = menu.class.rails_paths.stringify_keys.to_a.map(&:reverse)
         .col
           = f.input :rails_path, collection: paths, \
                                  selected: f.object.rails_path, \
-                                 include_blank: true
+                                 include_blank: true, \
+                                 wrapper_html: { class: 'mb-0' }
 
       - if allowed_classes.length == 1
         = f.hidden_field :type, value: allowed_classes.first.last
@@ -22,10 +24,12 @@
         .col
           = f.input :type, \
                     collection: allowed_classes, \
-                    include_blank: false
+                    include_blank: false, \
+                    wrapper_html: { class: 'mb-0' }
 
       .col
-        = f.input :title, hint: t('.title_hint')
+        = f.input :title, hint: t('.title_hint'), \
+                          wrapper_html: { class: 'mb-0' }
 
       .col.text-right
         = nested_model_controls f, label: true

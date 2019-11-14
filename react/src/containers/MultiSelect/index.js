@@ -1,10 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import {
-  filesLoadingSelector,
-  unselectedFilesForListSelector,
+  getFiles,
+  makeFilesLoadedSelector,
+  makeFilesStatusSelector,
+  makeUnselectedFilesForListSelector,
+  makeFilesPaginationSelector,
+  changeFilesPage
 } from 'ducks/files'
 import {
   selectFile,
@@ -12,9 +16,8 @@ import {
   onSortEnd,
   changeTitle,
   changeAlt,
-  filePlacementsSelector,
+  makeFilePlacementsSelector
 } from 'ducks/filePlacements'
-import { fileTypeIsImageSelector } from 'ducks/app'
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import FileFilter from 'containers/FileFilter'
@@ -23,31 +26,41 @@ import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
-import FilePlacementList from 'components/FilePlacementList';
+import FilePlacementList from 'components/FilePlacementList'
 
 class MultiSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
-    this.props.dispatch(selectFile(file))
+    this.props.dispatch(selectFile(this.props.filesKey, file))
   }
 
-  unselectFilePlacement = (filePlacements) => {
-    this.props.dispatch(unselectFilePlacement(filePlacements))
+  componentWillMount () {
+    if (this.props.shouldLoadFiles &&
+        !this.props.filesLoading &&
+        !this.props.filesLoaded &&
+        this.props.filesKey) {
+      this.props.dispatch(getFiles(this.props.filesKey))
+    }
   }
 
-  onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(oldIndex, newIndex))
-  onTitleChange = (filePlacement, title) => this.props.dispatch(changeTitle(filePlacement, title))
-  onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(filePlacement, alt))
+  unselectFilePlacement = (filesKey, filePlacement) => {
+    this.props.dispatch(unselectFilePlacement(filesKey, filePlacement))
+  }
 
-  render() {
-    if (this.props.filesLoading) return <Loader />
+  onSortEnd = ({ oldIndex, newIndex }) => this.props.dispatch(onSortEnd(this.props.filesKey, oldIndex, newIndex))
 
-    const headerKey = this.props.fileTypeIsImage ? 'Images' : 'Documents'
+  onTitleChange = (filePlacement, title) => this.props.dispatch(changeTitle(this.props.filesKey, filePlacement, title))
+
+  onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(this.props.filesKey, filePlacement, alt))
+
+  render () {
+    if (!this.props.filesStatus.loaded) return <Loader />
+    const fileTypeIsImage = this.props.filesKey === 'images'
 
     return (
-      <Uploader>
+      <Uploader filesKey={this.props.filesKey}>
         <Card
           highlighted
-          header={window.FolioConsole.translations[`selected${headerKey}`]}
+          header={window.FolioConsole.translations[`selected${this.props.filesKey}`]}
         >
           <FilePlacementList
             filePlacements={this.props.filePlacements}
@@ -55,36 +68,42 @@ class MultiSelect extends LazyLoadCheckingComponent {
             onAltChange={this.onAltChange}
             onTitleChange={this.onTitleChange}
             unselectFilePlacement={this.unselectFilePlacement}
-            fileTypeIsImage={this.props.fileTypeIsImage}
+            fileTypeIsImage={fileTypeIsImage}
+            filesKey={this.props.filesKey}
           />
         </Card>
 
         <Card
-          header={window.FolioConsole.translations[`available${headerKey}`]}
-          filters={<FileFilter />}
+          header={window.FolioConsole.translations[`available${this.props.filesKey}`]}
+          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
         >
-          <UploadTagger />
+          <UploadTagger filesKey={this.props.filesKey} />
 
-          <FileList
-            files={this.props.unselectedFilesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            onClick={this.selectFile}
-            selecting='multiple'
-            dropzoneTrigger
-          />
+          {this.props.filesStatus.loading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.unselectedFilesForList}
+              fileTypeIsImage={fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              onClick={this.selectFile}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+              selecting='multiple'
+              dropzoneTrigger
+            />
+          )}
         </Card>
       </Uploader>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  filePlacements: filePlacementsSelector(state),
-  filesLoading: filesLoadingSelector(state),
-  unselectedFilesForList: unselectedFilesForListSelector(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
+const mapStateToProps = (state, props) => ({
+  filePlacements: makeFilePlacementsSelector(props.filesKey)(state),
+  filesLoaded: makeFilesLoadedSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
+  unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
+  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

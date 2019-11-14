@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { fileTypeIsImageSelector } from 'ducks/app'
-import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
+import { makeFilesStatusSelector, makeFilesForListSelector, makeFilesPaginationSelector, changeFilesPage } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
@@ -15,33 +14,39 @@ import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
   render () {
-    if (this.props.filesLoading) return <Loader />
+    if (!this.props.filesStatus.loaded) return <Loader />
+    const fileTypeIsImage = this.props.filesKey === 'images'
 
     return (
-      <Uploader>
+      <Uploader filesKey={this.props.filesKey}>
         <Card
-          filters={<FileFilter />}
+          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
         >
-          <UploadTagger />
+          <UploadTagger filesKey={this.props.filesKey} />
 
-          <FileList
-            files={this.props.filesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            link
-            dropzoneTrigger
-          />
+          {this.props.filesStatus.loading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.filesForList}
+              fileTypeIsImage={fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+              overflowingParent
+              link
+              dropzoneTrigger
+            />
+          )}
         </Card>
       </Uploader>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  filesLoading: filesLoadingSelector(state),
-  filesForList: filesForListSelector(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
+const mapStateToProps = (state, props) => ({
+  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
+  filesForList: makeFilesForListSelector(props.filesKey)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
+  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

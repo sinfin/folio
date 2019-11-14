@@ -2,9 +2,9 @@
 
 require 'test_helper'
 
-class <%= global_namespace %>::<%= class_name %>CellTest < Cell::TestCase
+class <%= global_namespace %><%= class_name %>CellTest < Cell::TestCase
   test 'show' do
     html = cell('<%= cell_name %>', nil).(:show)
-    assert html.has_css?('.<%= classname_prefix %>-<%= dashed_resource_name %>')
+    assert html.has_css?('.<%= classname_prefix %><%= dashed_resource_name %>')
   end
 end

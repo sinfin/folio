@@ -67,22 +67,35 @@ Dragonfly.app.configure do
     content.process! :convert, '-background white -alpha remove'
   end
 
+  analyser :metadata do |content|
+    if shell('which', 'exiftool').blank?
+      msg = 'Missing ExifTool binary. Metadata not processed.'
+      Raven.capture_message msg if defined?(Raven)
+      logger.error msg if defined?(logger)
+      # content
+      {}
+    else
+      photo = MiniExiftool.new(content.file, ignore_minor_errors: true, replace_invalid_chars: true)
+      photo.to_hash
+    end
+  end
+
   secret Rails.application.secrets.dragonfly_secret
 
   url_format '/media/:job/:sha/:name'
 
   if Rails.env.test? || (Rails.env.development? && !ENV['DEV_S3_DRAGONFLY'])
     datastore :file,
-              root_path: Rails.root.join('public/system/dragonfly', Rails.env),
+              root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
               server_root: Rails.root.join('public')
   else
     datastore :s3,
-            bucket_name: ENV.fetch('S3_BUCKET_NAME'),
-            access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
-            secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
-            url_scheme: ENV.fetch('S3_SCHEME'),
-            region: ENV.fetch('S3_REGION'),
-            root_path: "#{ENV.fetch('PROJECT_NAME')}/#{Rails.env}/files",
-            fog_storage_options: { path_style: true }
+              bucket_name: ENV.fetch('S3_BUCKET_NAME'),
+              access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
+              secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
+              url_scheme: ENV.fetch('S3_SCHEME'),
+              region: ENV.fetch('S3_REGION'),
+              root_path: "#{ENV.fetch('PROJECT_NAME')}/#{Rails.env}/files",
+              fog_storage_options: { path_style: true }
   end
 end

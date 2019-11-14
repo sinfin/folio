@@ -1,23 +1,25 @@
-- add_action_breadcrumb(@breadcrumb_title) if @breadcrumbs.present?
-
 doctype html
-html.bg-dark lang=I18n.locale
+html.f-c-layout-html lang=I18n.locale
   head
     = render partial: 'layouts/folio/console/head'
 
-  body.bg-dark
-    = render partial: 'layouts/folio/console/header'
+  body.f-c-layout-body
+    == cell('folio/console/layout/sidebar')
 
-    - if @breadcrumbs.present?
-      = render_breadcrumbs builder: Folio::Console::BootstrapBreadcrumbsBuilder
+    .f-c-layout-main#f-c-layout-main
+      == cell('folio/console/layout/header', rendered_breadcrumbs)
+      == cell('folio/console/flash', flash)
 
-    == cell('folio/console/flash', flash)
+      - if content_for?(:with_aside)
+        = yield(:with_aside)
 
-    .folio-console-layout-main
-      = yield
-      == cell('folio/console/pagination', @pagy)
+      - elsif content_for?(:with_atoms)
+        = yield(:with_atoms)
 
-    == cell('folio/console/footer', @site)
+      - else
+        .f-c-layout-main-container.container-fluid
+          = yield
+          == cell('folio/console/pagination', @pagy)
 
     - %w[Folio::Image Folio::Document].each do |klass|
       - [true, false].each do |single|
@@ -31,18 +33,24 @@ html.bg-dark lang=I18n.locale
                 = react_modal_for(klass, single: single)
 
               button type="button" class="close" data-dismiss="modal" &times;
+    = yield :modals
 
     = render 'folio/console/partials/translations'
-    = javascript_include_tag 'folio/console/base'
+    - if @output_react_meta_data
+      = render 'folio/console/partials/react_meta_data'
 
-    - if ENV['REACT_DEV']
-      = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
-      = javascript_include_tag 'http://localhost:3001/static/js/0.chunk.js'
-      = javascript_include_tag 'http://localhost:3001/static/js/1.chunk.js'
-      = javascript_include_tag 'http://localhost:3001/static/js/main.chunk.js'
-    - else
-      = javascript_include_tag 'folio/console/react'
+    = render 'folio/partials/photoswipe'
 
-    = yield :javascripts
+    - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+      = javascript_include_tag 'folio/console/base'
+
+      - if ENV['REACT_DEV']
+        = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
+        = javascript_include_tag 'http://localhost:3001/static/js/0.chunk.js'
+        = javascript_include_tag 'http://localhost:3001/static/js/main.chunk.js'
+      - else
+        = javascript_include_tag 'folio/console/react'
+
+      = yield :javascripts
 
     = render 'folio/console/partials/application_bottom'

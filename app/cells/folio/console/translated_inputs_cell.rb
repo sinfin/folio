@@ -15,7 +15,9 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
 
   def translations
     @translations ||= begin
-      if ::Rails.application.config.folio_using_traco
+      if options[:locales]
+        options[:locales]
+      elsif ::Rails.application.config.folio_using_traco
         I18n.available_locales
       else
         nil
@@ -24,7 +26,7 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
   end
 
   def args_with_locale(locale)
-    common = { wrapper: :with_flag, flag: locale }
+    common = { wrapper: :with_flag, flag: locale, hint: false, locale: locale }
 
     if args.present? && first = args.first.presence
       [

@@ -1,7 +1,7 @@
 import { arrayMove } from 'react-sortable-hoc'
 import { find, filter } from 'lodash'
 
-import { filesSelector } from 'ducks/files'
+import { makeFilesSelector } from 'ducks/files'
 
 // Constants
 
@@ -16,56 +16,56 @@ const CHANGE_ALT = 'filePlacements/CHANGE_ALT'
 
 // Actions
 
-export function setOriginalPlacements (original) {
-  return { type: SET_ORIGINAL_PLACEMENTS, original }
+export function setOriginalPlacements (filesKey, original) {
+  return { type: SET_ORIGINAL_PLACEMENTS, filesKey, original }
 }
 
-export function setAttachmentable (attachmentable) {
-  return { type: SET_ATTACHMENTABLE, attachmentable }
+export function setAttachmentable (filesKey, attachmentable) {
+  return { type: SET_ATTACHMENTABLE, filesKey, attachmentable }
 }
 
-export function selectFile (file) {
-  return { type: SELECT_FILE, file }
+export function selectFile (filesKey, file) {
+  return { type: SELECT_FILE, filesKey, file }
 }
 
-export function unselectFilePlacement (filePlacement) {
-  return { type: UNSELECT_FILE_PLACEMENT, filePlacement }
+export function unselectFilePlacement (filesKey, filePlacement) {
+  return { type: UNSELECT_FILE_PLACEMENT, filesKey, filePlacement }
 }
 
-export function onSortEnd (oldIndex, newIndex) {
-  return { type: ON_SORT_END, oldIndex, newIndex }
+export function onSortEnd (filesKey, oldIndex, newIndex) {
+  return { type: ON_SORT_END, filesKey, oldIndex, newIndex }
 }
 
-export function setPlacementType (placementType) {
-  return { type: SET_PLACEMENT_TYPE, placementType }
+export function setPlacementType (filesKey, placementType) {
+  return { type: SET_PLACEMENT_TYPE, filesKey, placementType }
 }
 
-export function changeTitle (filePlacement, title) {
-  return { type: CHANGE_TITLE, filePlacement, title }
+export function changeTitle (filesKey, filePlacement, title) {
+  return { type: CHANGE_TITLE, filesKey, filePlacement, title }
 }
 
-export function changeAlt (filePlacement, alt) {
-  return { type: CHANGE_ALT, filePlacement, alt }
+export function changeAlt (filesKey, filePlacement, alt) {
+  return { type: CHANGE_ALT, filesKey, filePlacement, alt }
 }
 
 // Selectors
 
-export const selectedFileIdsSelector = (state) => {
-  const base = state.filePlacements
-  return base.selected.map((filePlacement) => filePlacement.file_id)
+export const makeSelectedFileIdsSelector = (filesKey) => (state) => {
+  const base = state.filePlacements[filesKey]
+  return base.selected.map((filePlacement) => String(filePlacement.file_id))
 }
 
-export const filePlacementsSelector = (state) => {
-  const base = state.filePlacements
-  const files = filesSelector(state)
-  let selectedIds = []
+export const makeFilePlacementsSelector = (filesKey) => (state) => {
+  const base = state.filePlacements[filesKey]
+  const files = makeFilesSelector(filesKey)(state)
+  const selectedIds = []
 
   const selected = base.selected.map((filePlacement) => {
     selectedIds.push(filePlacement.id)
-    const file = find(files, { id: filePlacement.file_id })
+    const file = find(files, { id: String(filePlacement.file_id) })
     return {
       ...filePlacement,
-      file: file,
+      file: file
     }
   })
 
@@ -77,91 +77,123 @@ export const filePlacementsSelector = (state) => {
     selected,
     deleted,
     attachmentable: base.attachmentable,
-    placementType: base.placementType,
+    placementType: base.placementType
   }
 }
 
 // State
 
-const initialState = {
-  original: [],
-  selected: [],
-  attachmentable: 'node',
-  placementType: 'file_placements',
+export const initialState = {
+  documents: {
+    original: [],
+    selected: [],
+    attachmentable: 'page',
+    placementType: 'document_placements'
+  },
+  images: {
+    original: [],
+    selected: [],
+    attachmentable: 'page',
+    placementType: 'image_placements'
+  }
 }
 
 // Reducer
 
 function filePlacementsReducer (state = initialState, action) {
   switch (action.type) {
-    case SET_ATTACHMENTABLE:
-      return {
-        ...state,
-        attachmentable: action.attachmentable,
-      }
-
     case SET_ORIGINAL_PLACEMENTS:
       return {
         ...state,
-        original: action.original,
-        selected: action.original,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          original: action.original,
+          selected: action.original
+        }
+      }
+
+    case SET_ATTACHMENTABLE:
+      return {
+        ...state,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          attachmentable: action.attachmentable
+        }
       }
 
     case SELECT_FILE:
       return {
         ...state,
-        selected: [
-          ...state.selected,
-          { id: null, file_id: action.file.id, selectedAt: Date.now() },
-        ]
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          selected: [
+            ...state[action.filesKey].selected,
+            { id: null, file_id: action.file.id, selectedAt: Date.now() }
+          ]
+        }
       }
 
     case UNSELECT_FILE_PLACEMENT:
       return {
         ...state,
-        selected: state.selected.filter((filePlacement) => filePlacement.file_id !== action.filePlacement.file_id),
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          selected: state[action.filesKey].selected.filter((filePlacement) => filePlacement.file_id !== action.filePlacement.file_id)
+        }
       }
 
     case ON_SORT_END:
       return {
         ...state,
-        selected: arrayMove(state.selected, action.oldIndex, action.newIndex)
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          selected: arrayMove(state[action.filesKey].selected, action.oldIndex, action.newIndex)
+        }
       }
 
     case SET_PLACEMENT_TYPE:
       return {
         ...state,
-        placementType: action.placementType,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          placementType: action.placementType
+        }
       }
 
     case CHANGE_TITLE:
       return {
         ...state,
-        selected: state.selected.map((filePlacement) => {
-          if (filePlacement.file_id === action.filePlacement.file_id) {
-            return {
-              ...filePlacement,
-              title: action.title,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          selected: state[action.filesKey].selected.map((filePlacement) => {
+            if (filePlacement.file_id === action.filePlacement.file_id) {
+              return {
+                ...filePlacement,
+                title: action.title
+              }
+            } else {
+              return filePlacement
             }
-          } else {
-            return filePlacement
-          }
-        }),
+          })
+        }
       }
 
     case CHANGE_ALT:
       return {
         ...state,
-        selected: state.selected.map((filePlacement) => {
-          if (filePlacement.file_id === action.filePlacement.file_id) {
-            return {
-              ...filePlacement,
-              alt: action.alt,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          selected: state[action.filesKey].selected.map((filePlacement) => {
+            if (filePlacement.file_id === action.filePlacement.file_id) {
+              return {
+                ...filePlacement,
+                alt: action.alt
+              }
+            } else {
+              return filePlacement
             }
-          } else {
-            return filePlacement
-          }
-        }),
+          })
+        }
       }
 
     default:

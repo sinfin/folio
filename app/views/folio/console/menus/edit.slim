@@ -1,5 +1,2 @@
-= render 'detail_heading', menu: @menu, action: :edit
-
-= simple_form_for(@menu, as: :menu,
-                         url: console_menu_path(@menu.id)) do |f|
+= simple_form_for([:console, @menu]) do |f|
   = render 'form', f: f

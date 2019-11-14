@@ -1,0 +1,34 @@
+---
+cs:
+  folio:
+    console:
+      index:
+        filters:
+          title: Filtr
+          cancel: Zrušit filtry
+
+        header:
+          add: Přidat
+          csv: CSV
+
+        no_records:
+          text: Žádné záznamy.
+          new: Vytvořit?
+
+      form:
+        footer:
+          dirty_forms: Neuložené změny
+
+        errors:
+          fix: Opravit
+
+      layout:
+        sidebar:
+          settings: Nastavení
+
+        header:
+          sign_out: Odhlásit
+
+      searches:
+        results:
+          title: Výsledky vyhledávání

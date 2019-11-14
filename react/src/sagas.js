@@ -1,6 +1,9 @@
-import { filesSagas } from 'ducks/files'
-import { uploadsSagas } from 'ducks/uploads'
-import { displaySagas } from 'ducks/display'
 import { concat } from 'lodash'
 
-export default concat(filesSagas, uploadsSagas, displaySagas)
+import { atomsSagas } from 'ducks/atoms'
+import { displaySagas } from 'ducks/display'
+import { filesSagas } from 'ducks/files'
+import { filtersSagas } from 'ducks/filters'
+import { uploadsSagas } from 'ducks/uploads'
+
+export default concat(filesSagas, uploadsSagas, displaySagas, atomsSagas, filtersSagas)

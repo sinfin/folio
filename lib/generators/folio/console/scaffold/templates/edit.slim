@@ -1,6 +1,3 @@
-== cell('folio/console/form/header', @<%= singular_table_name %>, translations: false)
-
-= simple_form_for(@<%= singular_table_name %>, \
-                  url: <%= update_resource_name %>, \
-                  as: :<%= singular_table_name %>) do |f|
+= simple_form_for([:console, @<%= instance_variable_name %>], \
+                  url: main_app.url_for([:console, @<%= instance_variable_name %>])) do |f|
   = render 'form', f: f

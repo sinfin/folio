@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :folio_site, class: Folio::Site do
+  factory :folio_site, class: 'Folio::Site' do
     title { 'Folio' }
     sequence(:domain) { |n| "folio-#{n}.com" }
     email { 'folio@folio.folio' }
@@ -12,16 +12,16 @@ FactoryBot.define do
     locales { [:cs] }
   end
 
-  factory :folio_node, class: Folio::Node do
+  factory :folio_page, class: 'Folio::Page' do
     locale { :cs }
-    if ::Rails.application.config.folio_using_traco
+    if Rails.application.config.folio_using_traco
       I18n.available_locales.each do |locale|
-        sequence("title_#{locale}".to_sym) { |n| "Folio node #{n}" }
-        sequence("slug_#{locale}".to_sym) { |n| "folio-node-#{n}" }
+        sequence("title_#{locale}".to_sym) { |n| "Folio page #{n}" }
+        sequence("slug_#{locale}".to_sym) { |n| "folio-page-#{n}" }
       end
     else
-      sequence(:title) { |n| "Folio node #{n}" }
-      sequence(:slug) { |n| "folio-node-#{n}" }
+      sequence(:title) { |n| "Folio page #{n}" }
+      sequence(:slug) { |n| "folio-page-#{n}" }
     end
     published { true }
     published_at { 1.day.ago }
@@ -30,44 +30,32 @@ FactoryBot.define do
       published { false }
       published_at { nil }
     end
-
-    factory :folio_node_with_atoms do
-      transient do
-        atoms_count { 3 }
-      end
-
-      after(:create) do |node, evaluator|
-        node.atoms = create_list(:folio_atom, evaluator.atoms_count)
-      end
-    end
   end
 
-  factory :folio_category, parent: :folio_node, class: Folio::Category
-  factory :folio_page, parent: :folio_node, class: Folio::Page
-  factory :folio_page_cookies, parent: :folio_page, class: Folio::Page::Cookies
+  factory :folio_page_cookies, parent: :folio_page, class: 'Folio::Page::Cookies'
 
-  factory :folio_atom, class: Folio::Atom::Text do
+  factory :folio_atom, class: 'Folio::Atom::Text' do
     type { 'Folio::Atom::Text' }
-    association :placement, factory: :folio_node
+    association :placement, factory: :folio_page
     content { '<p>Officiis perferendis commodi. Asperiores quas et. Veniam qui est.</p>' }
   end
 
-  factory :folio_document_placement, class: Folio::FilePlacement::Document do
+  factory :folio_document_placement, class: 'Folio::FilePlacement::Document' do
     association :file, factory: :folio_document
     association :placement, factory: :folio_page
   end
 
-  factory :folio_image_placement, class: Folio::FilePlacement::Image do
+  factory :folio_image_placement, class: 'Folio::FilePlacement::Image' do
     association :file, factory: :folio_image
     association :placement, factory: :folio_page
   end
 
-  factory :folio_cover_placement, class: Folio::FilePlacement::Cover do
+  factory :folio_cover_placement, class: 'Folio::FilePlacement::Cover' do
     association :file, factory: :folio_image
     association :placement, factory: :folio_page
   end
 
-  factory :folio_image, class: Folio::Image do
+  factory :folio_image, class: 'Folio::Image' do
     file { Folio::Engine.root.join('test/fixtures/folio/test.gif') }
 
     trait :black do
@@ -75,25 +63,29 @@ FactoryBot.define do
     end
   end
 
-  factory :folio_document, class: Folio::Document do
+  factory :folio_document, class: 'Folio::Document' do
     file { Folio::Engine.root.join('test/fixtures/folio/empty.pdf') }
   end
 
-  factory :folio_lead, class: Folio::Lead do
+  factory :folio_private_attachment, class: 'Folio::PrivateAttachment' do
+    file { Folio::Engine.root.join('test/fixtures/folio/empty.pdf') }
+  end
+
+  factory :folio_lead, class: 'Folio::Lead' do
     email { 'folio@folio.folio' }
     phone { '+420 123456789' }
     note { 'Officiis perferendis commodi.' }
   end
 
-  factory :folio_admin_account, class: Folio::Account do
+  factory :folio_admin_account, class: 'Folio::Account' do
     email { 'test@test.com' }
-    password { '123456' }
+    password { 'test@test.com' }
     role { :superuser }
     first_name { 'Test' }
     last_name { 'Dummy' }
   end
 
-  factory :folio_menu, class: Folio::Menu::Page do
+  factory :folio_menu, class: 'Folio::Menu::Page' do
     locale { :cs }
 
     factory :folio_menu_with_menu_items do
@@ -107,9 +99,9 @@ FactoryBot.define do
     end
   end
 
-  factory :folio_menu_item, class: Folio::MenuItem do
+  factory :folio_menu_item, class: 'Folio::MenuItem' do
     association :menu, factory: :folio_menu
-    association :target, factory: :folio_node
+    association :target, factory: :folio_page
     title { 'MenuItem' }
     position { 0 }
   end

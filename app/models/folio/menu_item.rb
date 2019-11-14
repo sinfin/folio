@@ -1,16 +1,22 @@
 # frozen_string_literal: true
 
 class Folio::MenuItem < Folio::ApplicationRecord
+  attribute :unique_id, :string
+  attribute :parent_unique_id, :string
+
   # Relations
   has_ancestry orphan_strategy: :adopt, touch: true
   belongs_to :menu, touch: true, required: true
   belongs_to :target, optional: true, polymorphic: true
+  # target shortcut for including, be careful with that
+  belongs_to :page, optional: true,
+                    class_name: 'Folio::Page',
+                    foreign_key: :target_id
 
   # Scopes
   scope :ordered, -> { order(position: :asc) }
 
   # Validations
-  validate :validate_target_and_menu_locales
   validate :validate_menu_allowed_types
   validate :validate_menu_available_targets_and_paths
 
@@ -18,22 +24,28 @@ class Folio::MenuItem < Folio::ApplicationRecord
 
   def to_label
     return title if title.present?
-    return target.try(:title) || target.try(:to_label) if target.present?
+    trgt = self.class.use_pages_relation ? page : target
+    return trgt.try(:title) || trgt.try(:to_label) if trgt.present?
     return menu.class.rails_paths[rails_path.to_sym] if rails_path.present?
     self.class.human_name
   end
 
-  private
+  def to_h
+    {
+      id: id,
+      position: position,
+      rails_path: rails_path,
+      target_id: target_id,
+      target_type: target_type,
+      title: title,
+    }
+  end
 
-    def validate_target_and_menu_locales
-      return if Rails.application.config.folio_using_traco
-      if target &&
-         target.respond_to?(:locale) &&
-         target.locale &&
-         target.locale != menu.locale
-        errors.add(:target, :invalid)
-      end
-    end
+  def self.use_pages_relation
+    true
+  end
+
+  private
 
     def validate_menu_allowed_types
       if menu.class.allowed_menu_item_classes.exclude?(self.class)
@@ -42,7 +54,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
     end
 
     def validate_menu_available_targets_and_paths
-      if target && menu.available_targets.exclude?(target)
+      if target && menu.available_targets.map { |t| [t.id, t.class.name] }.exclude?([target.id, target.class.name])
         errors.add(:target, :invalid)
       end
       if rails_path && menu.class.rails_paths.keys.exclude?(rails_path.to_sym)

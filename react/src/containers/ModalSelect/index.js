@@ -1,8 +1,10 @@
 import { Component } from 'react'
 
+import fileTypeToKey from 'utils/fileTypeToKey'
+
 class ModalSelect extends Component {
   state = {
-    el: null,
+    el: null
   }
 
   componentWillMount () {
@@ -11,10 +13,20 @@ class ModalSelect extends Component {
 
     $(document).on('click', this.selector(), (e) => {
       this.setState({ el: e.target })
-      this.props.loadFiles()
+      this.props.loadFiles(fileTypeToKey(this.props.fileType))
       this.onOpen(e.target)
       this.jQueryModal().modal('show')
     })
+
+    const eventName = this.eventName()
+    if (eventName) {
+      $(document).on(eventName, (e, eventData) => {
+        this.setState(eventData)
+        this.props.loadFiles(fileTypeToKey(this.props.fileType))
+        this.onOpen(e.target)
+        this.jQueryModal().modal('show')
+      })
+    }
   }
 
   onOpen (el) {
@@ -22,6 +34,9 @@ class ModalSelect extends Component {
 
   selector () {
     throw new Error('Not implemented')
+  }
+
+  eventName () {
   }
 
   selectingDocument () {
@@ -36,7 +51,7 @@ class ModalSelect extends Component {
     const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]')
     let name
     if ($nestedInput.length) {
-      name = $nestedInput.attr('name').match(/\w+\[\w+\]\[\w+\]/)
+      name = $nestedInput.attr('name').match(/\w+\[\w+\]\[\w+\](?:\[\d+\])?/)
     } else {
       const $genericInput = $el.closest('form').find('.form-control[name*="["]').first()
       name = $genericInput.attr('name').split('[')[0]

@@ -1,22 +1,20 @@
-$(document).on 'click', '.folio-console-boolean-toggle', (e) ->
+$(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
   e.preventDefault()
-  $btn = $(this)
-  return if $btn.hasClass('folio-console-loading')
-  $btn.addClass('folio-console-loading')
-  $btn.blur()
+  $input = $(this)
+  $form = $input.closest('.f-c-boolean-toggle')
+  return if $form.hasClass('f-c-boolean-toggle--loading')
+  $form.addClass('f-c-boolean-toggle--loading')
 
-  $input = $btn.find('input')
-
-  url = $btn.data('boolean-toggle')
+  url = $form.prop('action')
 
   data = {}
-  data[$input.prop('name')] = !$input.prop('checked')
+  data[$input.prop('name')] = $input.prop('checked')
 
   $.ajax url,
     data: data
     method: 'PATCH'
     success: ->
-      $btn.removeClass('folio-console-loading')
-      $input.prop('checked', !$input.prop('checked'))
+      $form.removeClass('f-c-boolean-toggle--loading')
     error: ->
-      $btn.removeClass('folio-console-loading')
+      $form.removeClass('f-c-boolean-toggle--loading')
+      $input.prop('checked', !$input.prop('checked'))

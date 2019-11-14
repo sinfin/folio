@@ -3,6 +3,9 @@ cs:
   simple_form:
     error_notification:
       default_message: Doplňte chybějící povinné údaje, prosím.
+    labels:
+      account:
+        edit_password: Nové heslo
     hints:
       defaults:
         alt: Alternativní text obrázku. Zobrazuje se v případě nenačtení obrázku.
@@ -17,14 +20,21 @@ cs:
         slug: Ponechte prázdné pro automatické vyplnění. Povoleny jsou jen znaky <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong>. Po změně funguje i původní varianta.
         tag_list: Seznam klíčových slov sloužící pro rychlejší vyhledávání nebo kategorizaci a zobrazování obsahu na webu.
         title: Titulek tak, jak bude zobrazen na webu.
+      account:
+        edit_password: Nevyplňujte, pokud nechcete měnit
       node:
         code: Nepovinný údaj. Využívá se, pokud je potřeba najít stránku vždy pod stejným označením nehledě na titulek a odkaz.
         parent_id: Pokud je web sestaven do stromové struktury, zde nastavíte nadřazenou stránku / kategorii.
       site:
+        email: Adresa, která bude zobrazena na webu.
+        email_from: Adresa, ze které budou odesílány informační a jiné zpravy..
+        system_email: Adresa(y), na které budou odesílány systémové zprávy. Vícero adres oddělte čárkou.
+        system_email_copy:  Adresa(y), na které budou odesílány kopie systémových zpráv. Vícero adres oddělte čárkou.
         turbo_mode: Vypne trackování návštěv, čímž se výrazně omezí zátěž serveru v období vysoké návštěvnosti.
     'no': Ne
     placeholders:
       defaults:
+        by_query: Hledat...
         content: Textový článek s možností formátování, vkládání obrázků, tabulek apod.
         meta_description: Alternativní popis obsahu stránky doporučujeme napsat tak, aby se vše podstatné vešlo do 250 znaků textu.
         meta_title: 'Např.: Nabídka specializovaných služeb'
@@ -32,6 +42,7 @@ cs:
         slug: 'Např.: nabidka-nasich-sluzeb'
         tag_list: 'Např.: služby, nabídka'
         title: 'Např.: Nabídka našich služeb'
+        q: Hledat...
     required:
       mark: "*"
       text: povinný údaj

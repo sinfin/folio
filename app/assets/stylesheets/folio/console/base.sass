@@ -1,82 +1,58 @@
-=mq-wide-layout
-  @media screen and (min-width: 1600px)
-    @content
-
-@import 'bootstrap-variables'
+@import 'folio/console/variables'
 @import 'folio-bootstrap/scss/bootstrap'
-@import 'tempusdominus-bs4/src/sass/_tempusdominus-bootstrap-4'
+@import 'folio/console/post-bootstrap-variables'
+@import 'eonasdan-bootstrap-datetimepicker/src/sass/bootstrap-datetimepicker'
 @import 'selectize-bootstrap-4-style/src/selectize/selectize.bootstrap4'
+@import 'font-awesome/scss/fontawesome'
+@import 'multiselect/css/multi-select'
+@import 'draft-js/Draft'
+@import 'spectrum/spectrum'
+@import 'material_icons'
+
+=material-icon-style
+  font-family: 'Material Icons'
+  font-weight: normal
+  font-style: normal
+  font-size: 24px
+  display: inline-block
+  width: 1em
+  height: 1em
+  line-height: 1
+  text-transform: none
+  -webkit-font-smoothing: antialiased
+  text-rendering: optimizeLegibility
+  -moz-osx-font-smoothing: grayscale
+  font-feature-settings: 'liga'
 
 $grid-gutter-half: $grid-gutter-width / 2
 
-@import '../bootstrap-media-queries'
 @import '../utilities'
 @import 'bootstrap-overrides'
 @import 'plugin-overrides'
 
-@import 'font-awesome'
 @import 'redactor'
 @import 'redactor-overrides'
 @import 'cells'
-
-$grid-gutter-half: $grid-gutter-width / 2
-
-h2, .h2
-  margin: $form-group-margin-bottom 0
-
-.select-file
-  cursor: pointer
-
-.card.active
-  border-color: $blue !important
-
-.btn-transparent
-  color: #111
-  background-color: transparent
-  border-color: transparent
-  &:hover
-    background-color: #e2e6ea
-    border-color: #dae0e5
-
-.btn-outline
-  color: #111
-  background-color: transparent
-  border-color: $gray-400
-  &:hover
-    background-color: #e2e6ea
-    border-color: #dae0e5
-  &:focus
-    box-shadow: none
-
-tr.active
-  background-color: $gray-300 !important
-
-.dropzone
-  border: 0
-
-a.inactive
-  color: grey
-  border-bottom: 1px dotted grey
-
-.badge
-  margin-left: 0.2rem
-
-[class^="icon-"].icon-fixed-width, [class*=" icon-"].icon-fixed-width
-  text-align: center
 
 @import '../loader'
 @import '../animations/pulsing'
 @import 'modules/font-awesome'
 @import 'modules/layout'
+@import 'modules/with-aside'
 @import 'modules/devise'
 @import 'modules/simple-form'
+@import 'modules/simple-form-with-atoms'
 @import 'modules/flags'
 @import 'modules/hover-destroy'
 @import 'modules/nested-fields-with-files'
 @import 'modules/react-image-select'
+@import 'modules/show-for'
 @import 'modules/smart-row'
-@import 'modules/index-table'
 @import 'modules/thumbnail'
+@import 'modules/lightbox'
+@import 'modules/with-icon'
+@import 'modules/togglable-fields'
+@import 'modules/react/draft'
 @import 'modules/react/modal'
 @import 'modules/reacty/dropzone-trigger'
 @import 'modules/reacty/file-thumbnail-list'
@@ -84,6 +60,8 @@ a.inactive
 @import 'modules/reacty/file-placement-list'
 @import 'modules/reacty/file-upload-progress'
 
+@import 'modules/simple_form_inputs/date_time_input'
 @import 'modules/simple_form_inputs/string_input'
 
+@import 'folio/lightbox'
 @import 'folio/console/main_app'

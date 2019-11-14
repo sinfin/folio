@@ -1,0 +1,12 @@
+.f-c-show-header
+  = render(:_title)
+
+  .f-c-show-header__right
+    - if model.respond_to?(:aasm_state)
+      .mr-h
+        == cell('folio/console/state', model)
+
+    - if edit_url
+      a.btn.btn-outline.ml-h href=edit_url
+        i.fa.fa-edit
+        = t('folio.console.actions.edit')

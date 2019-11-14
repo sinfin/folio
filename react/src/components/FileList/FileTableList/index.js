@@ -1,10 +1,10 @@
 import React from 'react'
 
-import DropzoneTrigger from './DropzoneTrigger';
-import FileTableRow from './FileTableRow';
+import DropzoneTrigger from './DropzoneTrigger'
+import FileTableRow from './FileTableRow'
 
 const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, overflowingParent, onClick }) => {
-  let classNames = ['folio-console-file-table']
+  const classNames = ['folio-console-file-table']
 
   if (fileTypeIsImage) {
     classNames.push('folio-console-file-table--image')

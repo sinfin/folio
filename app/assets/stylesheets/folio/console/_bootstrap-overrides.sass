@@ -1,19 +1,10 @@
+@import './bootstrap-overrides/button'
+@import './bootstrap-overrides/card'
+@import './bootstrap-overrides/form'
+@import './bootstrap-overrides/grid'
 @import './bootstrap-overrides/modal'
-
-.nav-tabs
-  margin-bottom: $nav-tabs-margin
-
-.alert
-  margin: 0
-  padding-left: 1rem
-  border-left: 0
-  border-right: 0
-
-  .breadcrumb + &
-    margin-top: -1rem
-
-  form &
-    margin: 1em 0
+@import './bootstrap-overrides/nav'
+@import './bootstrap-overrides/type'
 
 .table
   thead th, tbody td
@@ -24,31 +15,6 @@
 
   .form-group
     margin-bottom: 0
-
-.breadcrumb
-  border-radius: 0
-  margin-bottom: 0
-
-.card
-  margin-bottom: $grid-gutter-width
-
-  .card-body
-    position: relative
-    z-index: 1
-
-  .list-group
-    position: relative
-    z-index: 2
-
-.card-active
-  border: 0
-
-  .card-header
-    background: $success
-    color: white
-
-  .card-body
-    background: rgba($success, 0.2)
 
 .btn-primary
   &, &:disabled
@@ -65,20 +31,9 @@
 .btn-outline-secondary
   background-color: white
 
-.nav-pills
-  .nav-item
-    .nav-link.active
-      background-color: $gray-500
-      border-radius: 0
-
 select.form-control
   max-width: 100%
 
 .form-control
   &::placeholder
     color: $input-placeholder-color
-
-+mq-wide-layout
-  .breadcrumb
-    border-top-left-radius: $border-radius-lg
-    border-top-right-radius: $border-radius-lg

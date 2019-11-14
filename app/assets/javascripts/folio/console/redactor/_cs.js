@@ -21,7 +21,7 @@
 		"link-insert": "Vložit odkaz",
 		"link-edit": "Upravit odkaz",
 		"link-select": "Vybrat...",
-		"link_new_tab": "Otevírat odkaz v novém okně",
+		"link-in-new-tab": "Otevírat odkaz v novém okně",
 		"link": "Vložit odkaz",
 		"unlink": "Odstranit odkaz",
 		"cancel": "Zrušit",

@@ -21,13 +21,17 @@ module Folio::ClearsPageCache
       return unless Rails.application.config.action_controller.perform_caching
       cache_dir = Rails.application.config.action_controller.page_cache_directory
       return if cache_dir.to_s =~ /\/public\Z/ # do not delete whole /public folder
-      return if cache_dir.blank? || !::File.exist?(cache_dir)
+      return if cache_dir.blank?
 
       send_clear_page_cache_signal!
 
-      Dir.mktmpdir do |tmp_dir|
+      return if !::File.exist?(cache_dir)
+
+      tmp_dir = Dir.mktmpdir
+      begin
         FileUtils.mv cache_dir, tmp_dir
-        FileUtils.rmdir tmp_dir
+      ensure
+        FileUtils.remove_entry tmp_dir
       end
     end
 

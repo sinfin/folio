@@ -1,6 +1,101 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2019-08-06
+### Added
+- added `Folio::DownloadsController` and `download_path`
+- added `Folio::HasHashId` concern
+- added `hash_id` to folio files
+
+## 2019-06-21
+### Added
+- added `Folio::Console::Api::BaseController`
+- added `fast_jsonapi` gem
+
+### Removed
+- removed `active_model_serializers` gem
+
+### Changed
+- moved location controller to api namespace, update your decorators!
+- updated image & document routes
+
+## 2019-05-24
+### Added
+- added `email_from`, `system_email` and `system_email_copy` to `Site`
+
+## 2019-05-15
+### Added
+- `Folio::Subscribable` concern
+- `Folio::Mailchimp::SubscribeJob`
+
+### Removed
+- `folio:export:newsletter` rake task
+
+## 2019-05-02
+### Added
+- added `public?` class method to `Page` to disable access to homepage and such via pages controller
+
+## 2019-05-02
+### Added
+- added email richtext via `premailer-rails`
+
+## 2019-04-26
+### Added
+- `Folio::Audited` version control concern
+- `folio_pages_audited` to application config (enables version control for `Folio::Page`)
+
+## 2019-04-18
+### Added
+- added `devise_invitable` for `Folio::Account`
+
+## 2019-04-17
+### Added
+- added `autosize: true` option to text inputs (uses JS to autosize the textarea)
+
+## 2019-04-11
+### Removed
+- removed `current_admin` helper, use `current_account` instead
+
+## 2019-04-05
+### Added
+- image sitemap concern enabled by default for `Folio::Node`
+- automatic file metadata tagging with `exiftool`
+
+## 2019-04-02
+### Removed
+- Removed obsolete `console_tooltip` helper.
+
+## 2019-03-07
+### Added
+- `folio_by_scopes_for` to `Folio::Filterable`
+
+### Changed
+- console index filters
+
+## 2019-03-04
+### Changed
+- split `Folio::HasAtoms` to `Folio::HasAtoms::Basic` for single-locale `:atoms` and `Folio::HasAtoms::Localized` for multiple locales (`:cs_atoms`, `:en_atoms`, ...)
+
+## 2019-02-20
+### Added
+- `Folio::PrivateAttachment` model and `Folio::HasPrivateAttachments` concern
+
+## 2019-02-19
+### Added
+- `folio_console_sidebar_prepended_link_class_names`, `folio_console_sidebar_appended_link_class_names` and `folio_console_sidebar_runner_up_link_class_names` to application config
+
+## 2019-02-15
+### Changed
+- Translations are not enabled by default, set `Rails.application.config.folio_pages_translations = true` to enable.
+- Pages ancestry is not enabled by default, set `Rails.application.config.folio_pages_ancestry = true` to enable.
+- Renamed `folio_nodes` to `folio_pages`, change the STI default to `Folio::Page`.
+- Page slugs now must be unique, no scoping.
+
+### Removed
+- Removed `Folio::Node`, `Folio::Category` and `Folio::NodeTranslation`.
+- Removed `content` from `Folio::Page`.
+- Removed `nested_page_path` helper, use `url_for` instead.
+
 ## 2019-02-04
 ### Changed
 - Changed simple_form bootstrap 4 config - check forms and add `$enable-validation-icons: false` to sass variables, remove `flex-row` and use `col-auto` instead.
@@ -154,4 +249,4 @@ All notable changes to this project will be documented in this file.
 
 ## 2018-09-03
 ### Changed
-- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base` 
+- added `required: true` to `belongs_to :placement` of `Folio::Atom::Base`

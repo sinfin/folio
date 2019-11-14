@@ -1,0 +1,8 @@
+en:
+  folio:
+    mailer:
+      show_in_console: Show in console
+
+      footer:
+        sent_from: Sent from Folio CMS
+        console: Go to administration console

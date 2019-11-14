@@ -1,26 +1,10 @@
-== cell('folio/console/index/header', Folio::Menu, \
-                                      new_path: new_console_menu_path, \
-                                      no_filter: true)
+= index_header by_query: false
 
-.folio-console-index-table
-  table
-    thead
-      tr
-        th = Folio::Menu.human_attribute_name(:type)
-        th = Folio::Menu.human_attribute_name(:locale)
-        th = Folio::MenuItem.model_name.human(count: 2)
-        th
+= index_show_for(@menus) do |s|
+  = s.edit_link :type
+  = s.locale_flag
 
-    tbody
-      - @menus.each do |menu|
-        tr
-          td = menu.class.model_name.human
-          td = country_flag(menu.locale)
-          td = menu.menu_items.count
-          td
-            - if menu.supports_nesting?
-              = custom_icon_button console_menu_path(menu.id), 'list'
+  = s.attribute :menu_items
+    = s.object.menu_items.size
 
-            = edit_button menu, edit_console_menu_path(menu.id)
-            - unless menu.class.try(:indestructible?)
-              = delete_button menu, console_menu_path(menu.id)
+  = s.actions

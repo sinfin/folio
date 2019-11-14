@@ -11,3 +11,12 @@ en:
       update:
         alert: "%{resource_name} could not be updated."
         notice: "%{resource_name} was successfully updated."
+      cancel:
+        alert: "%{resource_name} could not be cancelled."
+        notice: "%{resource_name} was successfully cancelled."
+      event:
+        alert: "%{resource_name} state could not be updated."
+        notice: "%{resource_name} state was successfully updated."
+      confirm:
+        alert: "%{resource_name} could not be confirmed."
+        notice: "%{resource_name} was successfully confirmed."

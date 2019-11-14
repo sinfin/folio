@@ -1,0 +1,11 @@
+.f-c-publishable-inputs
+  = f.input :published, hint: false, \
+                        wrapper_html: { class: 'f-c-publishable-inputs__check' }
+
+  - if f.object.respond_to?(:published_at)
+    .f-c-publishable-inputs__date
+      = f.input :published_at, \
+                label: false, \
+                hint: false, \
+                wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
+                input_html: { class: 'f-c-publishable-inputs__input' }

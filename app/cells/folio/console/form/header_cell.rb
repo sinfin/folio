@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Form::HeaderCell < Folio::ConsoleCell
-  def translations
-    cell('folio/console/nodes/translations', model.original, as_pills: true)
+  def record
+    model.try(:object) || model
   end
 
-  def title
-    model.try(:to_label) || model.try(:title) || model.class.model_name.human
+  def translations
+    cell('folio/console/pages/translations', record, as_pills: true)
   end
 end

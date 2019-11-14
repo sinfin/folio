@@ -1,9 +1,0 @@
-fieldset#atoms.folio-console-atom-form-fields__wrap
-  = f.simple_fields_for :atoms do |atom|
-    = render partial: 'atom_fields', locals: { f: atom }
-
-  .links
-    = link_to_add_association t('.add'), \
-                              f, \
-                              :atoms, \
-                              class: 'btn btn-success'

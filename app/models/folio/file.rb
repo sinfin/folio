@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'open3'
-
 class Folio::File < Folio::ApplicationRecord
-  include Folio::Taggable
-  include Folio::SanitizeFilename
+  include Folio::Filterable
+  include Folio::HasHashId
   include Folio::MimeTypeDetection
+  include Folio::SanitizeFilename
+  include Folio::Taggable
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -22,6 +22,30 @@ class Folio::File < Folio::ApplicationRecord
 
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
+  scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+  scope :by_tags, -> (tags) do
+    if tags.is_a?(String)
+      tagged_with(tags.split(','))
+    else
+      tagged_with(tags)
+    end
+  end
+
+  pg_search_scope :by_file_name,
+                  against: [:file_name],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
+  pg_search_scope :by_placement,
+                  associated_against: {
+                    file_placements: [:placement_title],
+                  },
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   before_save :set_mime_type
   after_save :touch_placements
@@ -31,7 +55,25 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def file_extension
-    Mime::Type.lookup(mime_type).symbol
+    if /msword/.match?(mime_type)
+      /docx/.match?(file_name) ? :docx : :doc
+    else
+      Mime::Type.lookup(mime_type).symbol
+    end
+  end
+
+  def to_h
+    {
+      thumb: is_a?(Folio::Image) ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
+      file_size: file_size,
+      file_name: file_name,
+      type: type,
+      id: id,
+    }
+  end
+
+  def self.hash_id_additional_classes
+    [Folio::PrivateAttachment]
   end
 
   private
@@ -63,8 +105,13 @@ end
 #  file_size       :bigint(8)
 #  mime_type       :string(255)
 #  additional_data :json
+#  file_metadata   :json
+#  hash_id         :string
 #
 # Indexes
 #
-#  index_folio_files_on_type  (type)
+#  index_folio_files_on_created_at  (created_at)
+#  index_folio_files_on_file_name   (file_name)
+#  index_folio_files_on_hash_id     (hash_id)
+#  index_folio_files_on_type        (type)
 #

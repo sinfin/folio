@@ -2,37 +2,34 @@
 
 require 'test_helper'
 
-module Folio
-  class Console::MenusControllerTest < Console::BaseControllerTest
-    setup do
-      @menu = create(:folio_menu_with_menu_items)
-    end
+class Folio::Console::MenusControllerTest < Folio::Console::BaseControllerTest
+  test 'index' do
+    get url_for([:console, Folio::Menu])
+    assert_response :success
+  end
 
-    test 'should get index' do
-      get console_menus_url
-      assert_response :success
-    end
+  test 'edit' do
+    menu = create(:folio_menu_with_menu_items)
+    get url_for([:edit, :console, menu])
+    assert_response :success
+  end
 
-    test 'should get new' do
-      get new_console_menu_url
-      assert_response :success
-    end
+  test 'update' do
+    menu = create(:folio_menu)
+    assert_equal(0, menu.menu_items.count)
 
-    test 'should get edit' do
-      get edit_console_menu_url(@menu)
-      assert_response :success
-    end
-
-    test 'should not get show for non-nestable' do
-      assert_raises(ActionController::MethodNotAllowed) do
-        get console_menu_url(@menu)
-      end
-    end
-
-    test 'should get show for nestable' do
-      @menu = ::Menu::Nestable.create!(locale: :cs)
-      get console_menu_url(@menu)
-      assert_response :ok
-    end
+    put url_for([:console, menu]), params: {
+      menu: {
+        menu_items_attributes: {
+          '0' => {
+            id: '',
+            unique_id: '1',
+            title: 'foo'
+          }
+        }
+      },
+    }
+    assert_redirected_to url_for([:edit, :console, menu])
+    assert_equal(1, menu.menu_items.count)
   end
 end

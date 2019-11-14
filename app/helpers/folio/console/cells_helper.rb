@@ -3,14 +3,10 @@
 # syntactic sugar for cells
 module Folio
   module Console::CellsHelper
-    def featured_toggle(model, options = {})
-      cell('folio/console/featured_toggle', model, options).show
-                                                           .try(:html_safe)
-    end
-
-    def published_toggle(model, options = {})
-      cell('folio/console/published_toggle', model, options).show
-                                                            .try(:html_safe)
+    def boolean_toggle(model, attribute, options = {})
+      opts = options.merge(attribute: attribute)
+      cell('folio/console/boolean_toggle', model, opts).show
+                                                       .try(:html_safe)
     end
 
     def nested_model_controls(model, options = {})
@@ -18,7 +14,7 @@ module Folio
     end
 
     def index_position_buttons(model, options = {})
-      cell('folio/console/index_position_buttons', model,
+      cell('folio/console/index/position_buttons', model,
                                                    options).show.html_safe
     end
 
@@ -39,9 +35,20 @@ module Folio
                                                   as: as).show.html_safe
     end
 
-    def form_footer(f, back_path = nil, destroy: nil)
-      cell('folio/console/form_footer', f, back_path: back_path,
-                                           destroy: destroy).show.html_safe
+    def show_header(model, opts = {})
+      cell('folio/console/show/header', model, opts).show.html_safe
+    end
+
+    def form_header(f, opts = {}, &block)
+      if block_given?
+        opts[:right] = capture(&block)
+      end
+
+      cell('folio/console/form/header', f, opts).show.html_safe
+    end
+
+    def form_footer(f, opts = {})
+      cell('folio/console/form/footer', f, opts).show.html_safe
     end
   end
 end

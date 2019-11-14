@@ -5,10 +5,9 @@ require 'test_helper'
 module Folio
   class PublishableTest < ActiveSupport::TestCase
     test 'nillifies blanks' do
-      node = create(:folio_node, title: 'foo', perex: '', content: '', featured: false)
-      assert_nil(node.perex)
-      assert_nil(node.content)
-      assert_equal(false, node.featured, 'Keeps false')
+      page = create(:folio_page, title: 'foo', perex: '', featured: false)
+      assert_nil(page.perex)
+      assert_equal(false, page.featured, 'Keeps false')
     end
   end
 end

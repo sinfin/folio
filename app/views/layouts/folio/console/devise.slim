@@ -1,16 +1,17 @@
 doctype html
-html.bg-dark lang=I18n.locale
+html.bg-dark.f-c-layout-html lang=I18n.locale
   head
     = render partial: 'layouts/folio/console/head'
 
-  body.bg-dark.folio-console-devise
-    == cell('folio/console/flash', flash)
+  body.bg-dark.f-c-layout-body.f-c-layout-body--devise
+    .f-c-layout-main.f-c-layout-main--devise
+      == cell('folio/console/flash', flash)
 
-    .folio-console-layout-main-devise
-      .folio-console-layout-main-devise-inner
-        = yield
+      .f-c-layout-devise
+        .f-c-layout-devise__inner
+          = yield
 
-    == cell('folio/console/footer', @site)
+    = render 'folio/console/partials/translations'
 
     = javascript_include_tag 'folio/console/base'
 

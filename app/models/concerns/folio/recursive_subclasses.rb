@@ -4,21 +4,23 @@ module Folio::RecursiveSubclasses
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def recursive_subclasses(include_self: true)
-      subs = subclasses.map do |sub|
-        sub.recursive_subclasses if sub.try(:console_selectable?) != false
-      end.flatten.compact
+    def recursive_subclasses(include_self: true,
+                             exclude_singletons: false)
+      subs = subclasses.map(&:recursive_subclasses)
+                       .flatten
 
-      if include_self && self.try(:console_selectable?) != false
-        [self] + subs
-      else
-        subs
+      if exclude_singletons
+        subs = subs.reject { |k| k.try(:singleton?) }
       end
+
+      include_self ? [self] + subs.compact : subs.compact
     end
 
-    def recursive_subclasses_for_select(include_self: true)
+    def recursive_subclasses_for_select(include_self: true,
+                                        exclude_singletons: true)
       type_collection_for_select(
-        recursive_subclasses(include_self: include_self)
+        recursive_subclasses(include_self: include_self,
+                             exclude_singletons: exclude_singletons)
       )
     end
 

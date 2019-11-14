@@ -1,14 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { tagsSelector } from 'ducks/filters'
+import { makeTagsSelector } from 'ducks/filters'
 import {
   setUploadTags,
-  uploadsSelector,
+  makeUploadsSelector
 } from 'ducks/uploads'
 
 import TagsInput from 'components/TagsInput'
-import Wrap from './styled/Wrap';
+import Wrap from './styled/Wrap'
 
 class UploadTagger extends React.PureComponent {
   state = { tags: [] }
@@ -23,7 +23,7 @@ class UploadTagger extends React.PureComponent {
   }
 
   setUploadTags = () => {
-    this.props.dispatch(setUploadTags(this.state.tags))
+    this.props.dispatch(setUploadTags(this.props.filesKey, this.state.tags))
   }
 
   render () {
@@ -41,20 +41,18 @@ class UploadTagger extends React.PureComponent {
         />
 
         <button
-          className='btn btn-success'
-          type="button"
+          className='btn btn-success fa fa-check'
+          type='button'
           onClick={this.setUploadTags}
-        >
-          <i className='fa fa-check' />
-        </button>
+        />
       </Wrap>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  uploads: uploadsSelector(state),
-  tags: tagsSelector(state),
+const mapStateToProps = (state, props) => ({
+  uploads: makeUploadsSelector(props.filesKey)(state),
+  tags: makeTagsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -1,40 +1,52 @@
-.folio-console-index-header.row.align-items-center
-  .col
-    h1 = title
+.f-c-index-header
+  h1.f-c-index-header__h1
+    a.f-c-index-header__h1-a href=url_for([:console, model])
+      = title
 
-  .col.folio-console-index-header-right
-    - if options[:csv_path]
-      .folio-console-index-header-csv
-        a.btn.btn-warning href=options[:csv_path]
-          i.fa.fa-download<>
-          ' CSV
-
-    - if options[:no_filter]
-      form
-    - else
-      = form
-        .input-group
-          = input
-
+  - if model.respond_to?(:by_query) && options[:by_query] != false
+    = query_form do |f|
+      .input-group
+        = f.input(:by_query, label: false, \
+                             wrapper: false, \
+                             autocomplete: query_autocomplete, \
+                             input_html: { value: params[:by_query] })
+        .input-group-append
+          button[
+            class="btn"
+            class="fa fa-search"
+            type="submit"
+          ]
           - if controller.params[:by_query].present?
-            .input-group-append
-              button.btn.btn-outline.text-danger[
-                type="button"
-                data-target=".folio-console-by-query"
-                data-change-value=""
-                data-change-value-submit=""
-              ]
-                .fa.fa-close
+            a[
+              class="btn"
+              class="fa fa-times"
+              href=query_reset_url
+            ]
 
-          .input-group-append
-            button.btn.btn-outline type="submit"
-              .fa.fa-search
+        - if controller.send(:index_filters).present?
+          - controller.send(:index_filters).keys.each do |key|
+            - if controller.params[key].present?
+              = f.input(key, as: :hidden, \
+                             input_html: { \
+                                value: controller.params[key], \
+                             })
 
-        - if options[:hidden_fields]
-          - options[:hidden_fields].each do |key|
-            = hidden_field_tag key, controller.params[key]
+  - if options[:csv]
+    a.btn.btn-secondary.f-c-index-header__btn href=csv_path
+      i.fa.fa-download<>
+      ' CSV
 
-    - if options[:new_path].present?
-        a.btn.btn-success href=options[:new_path]
-          i.fa.fa-plus.fa-mr
-          = t('folio.console.breadcrumbs.actions.add')
+  - if options[:types]
+    .f-c-index-header__new-dropdown
+      == cell('folio/console/dropdown', title: render(:_new_button_label),  \
+                                        class_name: 'btn btn-success', \
+                                        links: new_dropdown_links)
+
+  - else
+    = new_button
+      = render(:_new_button_label)
+
+- if controller.send(:index_filters).present?
+  == cell('folio/console/index/filters', \
+          klass: model, \
+          index_filters: controller.send(:index_filters))

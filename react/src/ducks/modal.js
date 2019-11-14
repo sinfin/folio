@@ -26,7 +26,7 @@ export const modalSelector = (state) => state.modal
 
 const initialState = {
   file: null,
-  newTags: null,
+  newTags: null
 }
 
 // Reducer
@@ -36,7 +36,7 @@ function modalReducer (state = initialState, action) {
     case OPEN_MODAL:
       return {
         ...state,
-        file: action.file,
+        file: action.file
       }
 
     case CLOSE_MODAL:
@@ -45,7 +45,7 @@ function modalReducer (state = initialState, action) {
     case CHANGE_MODAL_TAGS:
       return {
         ...state,
-        newTags: action.tags,
+        newTags: action.tags
       }
 
     default:

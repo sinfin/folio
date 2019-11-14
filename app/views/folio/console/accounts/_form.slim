@@ -1,8 +1,27 @@
-= f.input :is_active
-= f.input :role, collection: Folio::Account::ROLES
-= f.input :email
-= f.input :password
-= f.input :first_name
-= f.input :last_name
+= form_header f
+
+.row
+  .col-sm
+    = f.input :email
+
+  .col-sm
+    = f.input :role, collection: Folio::Account::ROLES, \
+                     include_blank: false
+
+.row
+  .col-sm
+    = f.input :first_name
+
+  .col-sm
+    = f.input :last_name
+
+- unless f.object.new_record?
+  .row
+    .col-sm.col-md-6
+      = f.input :password, label: t('simple_form.labels.account.edit_password'),
+                           hint: t('simple_form.hints.account.edit_password')
+
+- is_active = @account.is_active.nil? ? true : @account.is_active
+= f.input :is_active, input_html: { value: is_active }
 
 = form_footer f

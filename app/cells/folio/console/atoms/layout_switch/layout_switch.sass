@@ -1,0 +1,67 @@
+.f-c-atoms-layout-switch
+  z-index: 2
+  display: flex
+  position: absolute
+  top: 0
+  right: 0
+
+  &__button
+    +unbutton
+    height: 35px
+    width: 45px
+    border: 1px solid #CED4DA
+    border-top: 0
+    position: relative
+
+    &:last-child
+      border-right: 0
+
+    &--active
+      background: #495057
+      border-color: #495057
+
+    & + &
+      border-left: 0
+
+    &:before, &:after
+      content: ''
+      background: transparent center center no-repeat
+      position: absolute
+      top: 0
+      left: 0
+      width: 45px
+      height: 35px
+
+    &:before
+      display: block
+
+    &:after
+      display: none
+
+    &:first-child
+      &:before, &:after
+        left: -1px
+
+    &--active
+      background-color: #495057
+      border-color: #495057
+
+      &:before
+        display: none
+
+      &:after
+        display: block
+
+    &--vertical
+      &:before
+        background-image: asset-url('folio/console/atoms/layout_switch/vertical.svg')
+
+      &:after
+        background-image: asset-url('folio/console/atoms/layout_switch/vertical-active.svg')
+
+    &--horizontal
+      &:before
+        background-image: asset-url('folio/console/atoms/layout_switch/horizontal.svg')
+
+      &:after
+        background-image: asset-url('folio/console/atoms/layout_switch/horizontal-active.svg')

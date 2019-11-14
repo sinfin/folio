@@ -3,10 +3,12 @@
 class Folio::Account < Folio::ApplicationRecord
   ROLES = %w( superuser manager ).freeze
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :recoverable, :rememberable,
-         :trackable, :validatable
+  devise :database_authenticatable,
+         :recoverable,
+         :rememberable,
+         :trackable,
+         :validatable,
+         :invitable
 
   validates :role, inclusion: ROLES
   validates :first_name, :last_name, presence: true
@@ -59,6 +61,10 @@ class Folio::Account < Folio::ApplicationRecord
     # our own "is_active" column
     super && self.is_active?
   end
+
+  def self.clears_page_cache_on_save?
+    false
+  end
 end
 
 # == Schema Information
@@ -82,9 +88,21 @@ end
 #  last_name              :string
 #  role                   :string
 #  is_active              :boolean          default(TRUE)
+#  invitation_token       :string
+#  invitation_created_at  :datetime
+#  invitation_sent_at     :datetime
+#  invitation_accepted_at :datetime
+#  invitation_limit       :integer
+#  invited_by_type        :string
+#  invited_by_id          :bigint(8)
+#  invitations_count      :integer          default(0)
 #
 # Indexes
 #
-#  index_folio_accounts_on_email                 (email) UNIQUE
-#  index_folio_accounts_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_folio_accounts_on_email                              (email) UNIQUE
+#  index_folio_accounts_on_invitation_token                   (invitation_token) UNIQUE
+#  index_folio_accounts_on_invitations_count                  (invitations_count)
+#  index_folio_accounts_on_invited_by_id                      (invited_by_id)
+#  index_folio_accounts_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)
+#  index_folio_accounts_on_reset_password_token               (reset_password_token) UNIQUE
 #

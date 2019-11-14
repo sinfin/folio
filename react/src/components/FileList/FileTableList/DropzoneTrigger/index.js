@@ -15,7 +15,7 @@ class DropzoneTrigger extends React.PureComponent {
         type='button'
         onClick={this.onClick}
       >
-        <i className='fa fa-plus-circle'></i>
+        <i className='fa fa-plus-circle' />
       </button>
     )
   }

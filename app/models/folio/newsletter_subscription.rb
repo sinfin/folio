@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
+  include Folio::Subscribable
+
+  # Relations
   belongs_to :visit, optional: true
 
   # Validations
@@ -18,6 +21,16 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
 
   def title
     email
+  end
+
+  def self.csv_attribute_names
+    %i[id email created_at]
+  end
+
+  def csv_attributes
+    self.class.csv_attribute_names.map do |attr|
+      send(attr)
+    end
   end
 
   def self.clears_page_cache_on_save?

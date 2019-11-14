@@ -1,25 +1,21 @@
-h1 = @file.file_name.presence || @file.class.model_name.human
+= simple_form_for([:console, @document], as: :file) do |f|
+  = form_header f, destroy: true
 
-= simple_form_for(@file, as: :file, \
-                         url: console_document_path(@file.id)) do |f|
-  fieldset
-    .row
-      .col
-        = link_to f.object.file.url, target: '_blank', download: true
-          i.fa.fa-download<>
-          = t('.download')
+  .row
+    .col
+      = link_to f.object.file.url, target: '_blank', download: true
+        i.fa.fa-download<>
+        = t('.download')
 
-        br
-        br
+      br
+      br
 
-        = f.input :file, as: :file, \
-                         hint: t('.file_hint'), \
-                         input_html: { class: 'form-control' }
+      = f.input :file, as: :file, \
+                       hint: t('.file_hint'), \
+                       input_html: { class: 'form-control' }
 
-        == cell('folio/console/tagsinput', f)
+      == cell('folio/console/tagsinput', f)
 
-        == cell('folio/console/file_placement_list', f.object)
+      == cell('folio/console/file_placement_list', f.object)
 
-  = delete_button(@file, console_document_path(@file), text: true)
-
-  = form_footer f, console_documents_path
+  = form_footer f

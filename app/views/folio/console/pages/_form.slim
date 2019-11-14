@@ -1,0 +1,50 @@
+- show_audited = Rails.application.config.folio_pages_audited && \
+                 f.object.revisions.size > 1
+
+- show_translations = Rails.application.config.folio_pages_translations && \
+                      f.object.persisted?
+
+= tabs [:content, \
+        (:audits if show_audited)].compact
+
+.tab-content
+  = tab :content
+    == cell('folio/console/publishable_inputs', f)
+
+    .d-md-flex
+      = react_picker(f, :cover_placement)
+
+      .ml-md-g
+        == translated_inputs f, :title, folio_label: true
+        == translated_inputs f, :slug
+
+    - collection = Folio::Page.recursive_subclasses_for_select
+    - if collection.size > 1
+      = f.input :type, collection: collection, \
+                       include_blank: false
+
+    - if Rails.application.config.folio_pages_translations || \
+         Rails.application.config.folio_pages_ancestry
+      .row
+        - if Rails.application.config.folio_pages_translations
+          .col
+            = f.input :locale, disabled: true
+
+        - if Rails.application.config.folio_pages_ancestry
+          .col
+            = f.input :parent_id, \
+                      collection: Folio::Page.arrange_as_array, \
+                      label_method: :select_option_depth, \
+                      value_method: :id
+
+    == translated_inputs f, :perex, autosize: true, folio_perex: true
+
+    = f.input :featured
+
+    == cell('folio/console/tagsinput', f)
+    = translated_inputs f, :meta_title
+    = translated_inputs f, :meta_description, autosize: true
+
+  - if show_audited
+    = tab :audits
+      = console_audits_table(f.object)

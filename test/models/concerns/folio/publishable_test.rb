@@ -2,51 +2,49 @@
 
 require 'test_helper'
 
-module Folio
-  class PublishableTest < ActiveSupport::TestCase
-    test 'published, published_or_admin' do
-      assert_equal(0, Node.published.count)
-      assert_equal(0, Node.unpublished.count)
-      assert_equal(0, Node.published_or_admin(true).count)
-      assert_equal(0, Node.published_or_admin(false).count)
+class Folio::PublishableTest < ActiveSupport::TestCase
+  test 'published, published_or_admin' do
+    assert_equal(0, Folio::Page.published.count)
+    assert_equal(0, Folio::Page.unpublished.count)
+    assert_equal(0, Folio::Page.published_or_admin(true).count)
+    assert_equal(0, Folio::Page.published_or_admin(false).count)
 
-      node = create(:folio_node, :unpublished)
-      assert_equal(0, Node.published.count)
-      assert_equal(1, Node.unpublished.count)
-      assert_equal(1, Node.unpublished.count)
-      assert_equal(1, Node.published_or_admin(true).count)
-      assert_equal(0, Node.published_or_admin(false).count)
+    page = create(:folio_page, :unpublished)
+    assert_equal(0, Folio::Page.published.count)
+    assert_equal(1, Folio::Page.unpublished.count)
+    assert_equal(1, Folio::Page.unpublished.count)
+    assert_equal(1, Folio::Page.published_or_admin(true).count)
+    assert_equal(0, Folio::Page.published_or_admin(false).count)
 
-      node.update!(published: true)
-      assert_equal(0, Node.published.count)
-      assert_equal(1, Node.unpublished.count)
-      assert_equal(1, Node.published_or_admin(true).count)
-      assert_equal(0, Node.published_or_admin(false).count)
+    page.update!(published: true)
+    assert_equal(0, Folio::Page.published.count)
+    assert_equal(1, Folio::Page.unpublished.count)
+    assert_equal(1, Folio::Page.published_or_admin(true).count)
+    assert_equal(0, Folio::Page.published_or_admin(false).count)
 
-      node.update!(published: false, published_at: 1.hour.ago)
-      assert_equal(0, Node.published.count)
-      assert_equal(1, Node.unpublished.count)
-      assert_equal(1, Node.published_or_admin(true).count)
-      assert_equal(0, Node.published_or_admin(false).count)
+    page.update!(published: false, published_at: 1.hour.ago)
+    assert_equal(0, Folio::Page.published.count)
+    assert_equal(1, Folio::Page.unpublished.count)
+    assert_equal(1, Folio::Page.published_or_admin(true).count)
+    assert_equal(0, Folio::Page.published_or_admin(false).count)
 
-      node.update!(published: true, published_at: 1.hour.ago)
-      assert_equal(1, Node.published.count)
-      assert_equal(0, Node.unpublished.count)
-      assert_equal(1, Node.published_or_admin(true).count)
-      assert_equal(1, Node.published_or_admin(false).count)
+    page.update!(published: true, published_at: 1.hour.ago)
+    assert_equal(1, Folio::Page.published.count)
+    assert_equal(0, Folio::Page.unpublished.count)
+    assert_equal(1, Folio::Page.published_or_admin(true).count)
+    assert_equal(1, Folio::Page.published_or_admin(false).count)
 
-      node.update!(published: true, published_at: 1.hour.from_now)
-      assert_equal(0, Node.published.count)
-      assert_equal(1, Node.unpublished.count)
-      assert_equal(1, Node.published_or_admin(true).count)
-      assert_equal(0, Node.published_or_admin(false).count)
-    end
+    page.update!(published: true, published_at: 1.hour.from_now)
+    assert_equal(0, Folio::Page.published.count)
+    assert_equal(1, Folio::Page.unpublished.count)
+    assert_equal(1, Folio::Page.published_or_admin(true).count)
+    assert_equal(0, Folio::Page.published_or_admin(false).count)
   end
 end
 
 # == Schema Information
 #
-# Table name: folio_nodes
+# Table name: folio_pages
 #
 #  id               :integer          not null, primary key
 #  site_id          :integer
@@ -70,15 +68,15 @@ end
 #
 # Indexes
 #
-#  index_folio_nodes_on_ancestry      (ancestry)
-#  index_folio_nodes_on_code          (code)
-#  index_folio_nodes_on_featured      (featured)
-#  index_folio_nodes_on_locale        (locale)
-#  index_folio_nodes_on_original_id   (original_id)
-#  index_folio_nodes_on_position      (position)
-#  index_folio_nodes_on_published     (published)
-#  index_folio_nodes_on_published_at  (published_at)
-#  index_folio_nodes_on_site_id       (site_id)
-#  index_folio_nodes_on_slug          (slug)
-#  index_folio_nodes_on_type          (type)
+#  index_folio_pages_on_ancestry      (ancestry)
+#  index_folio_pages_on_code          (code)
+#  index_folio_pages_on_featured      (featured)
+#  index_folio_pages_on_locale        (locale)
+#  index_folio_pages_on_original_id   (original_id)
+#  index_folio_pages_on_position      (position)
+#  index_folio_pages_on_published     (published)
+#  index_folio_pages_on_published_at  (published_at)
+#  index_folio_pages_on_site_id       (site_id)
+#  index_folio_pages_on_slug          (slug)
+#  index_folio_pages_on_type          (type)
 #

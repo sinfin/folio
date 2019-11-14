@@ -4,7 +4,7 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
   source_root File.expand_path('templates', __dir__)
 
   def atom_model
-    template 'atom_model.rb.tt', "app/models/#{global_namespace_path}/atom/#{file_name}.rb"
+    template 'atom_model.rb.tt', "app/models/#{global_namespace_path}/atom/#{name}.rb"
   end
 
   def cell

@@ -1,0 +1,32 @@
+.btn
+  .fa
+    font-size: 80%
+    line-height: 1
+    margin: 0 7px 0 0
+    position: relative
+    top: -1px
+
+.btn.fa
+  width: $input-height
+  font-size: $font-size-sm
+  line-height: $input-height-inner
+  text-align: center
+  padding: 0
+
+.btn-light
+  +plain-hover-focus
+    color: $white
+
+.btn-outline
+  color: $dark
+  border-color: $dark
+  background: $white
+
+  +hover-focus
+    color: $dark
+    border-color: $dark
+    background: $gray-100
+
+.input-group-append
+  .btn
+    border-color: $input-border-color

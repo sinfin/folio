@@ -5,22 +5,22 @@ require 'test_helper'
 module Folio
   class ReferencedFromMenuItemsTest < ActiveSupport::TestCase
     test 'deletes referenced menu_items' do
-      node = create(:folio_node)
+      page = create(:folio_page)
 
       menu = create(:folio_menu)
-      menu_item = menu.menu_items.create!(target: node)
+      menu_item = menu.menu_items.create!(target: page)
 
-      node.destroy!
+      page.destroy!
       assert_not MenuItem.exists?(id: menu_item.id)
     end
 
     test 'destroys referenced menu_items on unpublishing' do
-      node = create(:folio_node)
+      page = create(:folio_page)
 
       menu = create(:folio_menu)
-      menu_item = menu.menu_items.create!(target: node)
+      menu_item = menu.menu_items.create!(target: page)
 
-      node.update!(published: false)
+      page.update!(published: false)
       assert_not MenuItem.exists?(id: menu_item.id)
     end
   end

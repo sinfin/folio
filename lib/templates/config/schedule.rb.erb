@@ -23,7 +23,11 @@ set :environment_variable, 'RACK_ENV'
 set :environment_variable, 'RAILS_ENV'
 
 every 1.day, at: '4:30 am', roles: [:app] do
-  rake '-s sitemap:refresh'
+  rake '-s sitemap:create'
+end
+
+every 1.minute do
+  rake 'folio_cache:conditional_clear'
 end
 
 every 1.minute do

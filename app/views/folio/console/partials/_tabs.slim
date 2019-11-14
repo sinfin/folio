@@ -6,4 +6,4 @@ ul.nav.nav-tabs
         href="#tab-#{key}"
         class=(i == 0 ? 'active' : nil)
       ]
-        = t(".#{key}")
+        = t(".#{key}", default: @klass.try(:human_attribute_name, key))

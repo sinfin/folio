@@ -4,9 +4,9 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
-import { filteredFilesSelector } from 'ducks/filters'
-import { uploadsSelector } from 'ducks/uploads'
-import { selectedFileIdsSelector } from 'ducks/filePlacements'
+import { makeUploadsSelector } from 'ducks/uploads'
+import { makeFiltersQuerySelector } from 'ducks/filters'
+import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 
 // Constants
 
@@ -18,55 +18,60 @@ const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 const UPDATED_FILES = 'files/UPDATED_FILES'
+const CHANGE_FILES_PAGE = 'files/CHANGE_FILES_PAGE'
 
 // Actions
 
-export function getFiles () {
-  return { type: GET_FILES }
+export function getFiles (filesKey, query = '') {
+  return { type: GET_FILES, filesKey, query }
 }
 
-export function getFilesSuccess (records) {
-  return { type: GET_FILES_SUCCESS, records }
+export function getFilesSuccess (filesKey, records, pagination) {
+  return { type: GET_FILES_SUCCESS, filesKey, records, pagination }
 }
 
-export function uploadedFile (file) {
-  return { type: UPLOADED_FILE, file }
+export function uploadedFile (filesKey, file) {
+  return { type: UPLOADED_FILE, filesKey, file }
 }
 
-export function thumbnailGenerated (temporary_url, url) {
-  return { type: THUMBNAIL_GENERATED, temporary_url, url }
+export function thumbnailGenerated (filesKey, temporaryUrl, url) {
+  return { type: THUMBNAIL_GENERATED, filesKey, temporaryUrl, url }
 }
 
-export function updatedFiles (files) {
-  return { type: UPDATED_FILES, files }
+export function updatedFiles (filesKey, files) {
+  return { type: UPDATED_FILES, filesKey, files }
 }
 
-export function updateFile (file, attributes) {
-  return { type: UPDATE_FILE, file, attributes }
+export function updateFile (filesKey, file, attributes) {
+  return { type: UPDATE_FILE, filesKey, file, attributes }
 }
 
-export function updateFileSuccess (file, response) {
-  return { type: UPDATE_FILE_SUCCESS, file, response }
+export function updateFileSuccess (filesKey, file, response) {
+  return { type: UPDATE_FILE_SUCCESS, filesKey, file, response }
 }
 
-export function updateFileFailure (file) {
-  return { type: UPDATE_FILE_FAILURE, file }
+export function updateFileFailure (filesKey, file) {
+  return { type: UPDATE_FILE_FAILURE, filesKey, file }
+}
+
+export function changeFilesPage (filesKey, page) {
+  return { type: CHANGE_FILES_PAGE, filesKey, page }
 }
 
 // Sagas
 
 function * getFilesPerform (action) {
   try {
-    const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
+    const filesUrl = `/console/api/${action.filesKey}?${action.query}`
     const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(records))
+    yield put(getFilesSuccess(action.filesKey, records.data, records.meta))
   } catch (e) {
     flashError(e.message)
   }
 }
 
-function * getFilesSaga (): Generator<*, *, *> {
+function * getFilesSaga () {
+  // takeLatest automatically cancels any saga task started previously if it's still running
   yield takeLatest(GET_FILES, getFilesPerform)
 }
 
@@ -74,74 +79,119 @@ function * updateFilePerform (action) {
   try {
     const { file, attributes } = action
     const fileType = yield select(fileTypeSelector)
-    const fileUrl = fileType === 'Folio::Document' ? `/console/documents/${file.id}.json` : `/console/images/${file.id}.json`
-    const response = yield call(apiPut, fileUrl, { file: attributes })
-    yield put(updateFileSuccess(action.file, response.file))
+    const fileUrl = fileType === 'Folio::Document' ? `/console/api/documents/${file.id}` : `/console/api/images/${file.id}`
+    const data = {
+      file: {
+        id: file.id,
+        attributes
+      }
+    }
+    const response = yield call(apiPut, fileUrl, data)
+    yield put(updateFileSuccess(action.filesKey, action.file, response.data))
   } catch (e) {
     flashError(e.message)
-    yield put(updateFileFailure(action.file))
+    yield put(updateFileFailure(action.filesKey, action.file))
   }
 }
 
-function * updateFileSaga (): Generator<*, *, *> {
+function * updateFileSaga () {
   yield takeEvery(UPDATE_FILE, updateFilePerform)
+}
+
+function * changeFilesPagePerform (action) {
+  try {
+    const filtersQuery = yield select(makeFiltersQuerySelector(action.filesKey))
+    let query = `page=${action.page}`
+    if (filtersQuery) {
+      query = `${query}&${filtersQuery}`
+    }
+    yield put(getFiles(action.filesKey, query))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * changeFilesPageSaga () {
+  yield takeLatest(CHANGE_FILES_PAGE, changeFilesPagePerform)
 }
 
 export const filesSagas = [
   getFilesSaga,
   updateFileSaga,
+  changeFilesPageSaga
 ]
 
 // Selectors
 
-export const filesLoadingSelector = (state) => {
-  return state.files.loading
+export const makeFilesStatusSelector = (filesKey) => (state) => {
+  return {
+    loading: state.files[filesKey] && state.files[filesKey].loading,
+    loaded: state.files[filesKey] && state.files[filesKey].loaded
+  }
 }
 
-export const filesLoadedSelector = (state) => {
-  return state.files.loaded
+export const makeFilesLoadedSelector = (filesKey) => (state) => {
+  return state.files[filesKey] && state.files[filesKey].loaded
 }
 
-export const filesSelector = (state) => {
-  return state.files.records
+export const makeFilesSelector = (filesKey) => (state) => {
+  return state.files[filesKey].records
 }
 
-export const filesForListSelector = (state) => {
-  const uploads = uploadsSelector(state)
+export const makeFilesForListSelector = (filesKey) => (state) => {
+  const uploads = makeUploadsSelector(filesKey)(state)
   let files
 
   if (uploads.uploadedIds.length) {
-    files = filteredFilesSelector(state).map((file) => {
+    files = makeFilesSelector(filesKey)(state).map((file) => {
       if (uploads.uploadedIds.indexOf(file.id) === -1) {
         return file
       } else {
-        return { ...file, freshlyUploaded: true }
+        return { ...file, attributes: { ...file.attributes, freshlyUploaded: true } }
       }
     })
   } else {
-    files = filteredFilesSelector(state)
+    files = makeFilesSelector(filesKey)(state)
   }
 
   return [
-    ...Object.values(uploads.records).map((upload) => ({ ...upload, uploading: true })),
-    ...files,
+    ...Object.values(uploads.records).map((upload) => ({ ...upload, attributes: { ...upload.attributes, uploading: true } })),
+    ...files
   ]
 }
 
-export const unselectedFilesForListSelector = (state) => {
-  const all = filesForListSelector(state)
-  const selectedIds = selectedFileIdsSelector(state)
+export const makeUnselectedFilesForListSelector = (filesKey) => (state) => {
+  const all = makeFilesForListSelector(filesKey)(state)
+  const selectedIds = makeSelectedFileIdsSelector(filesKey)(state)
 
-  return filter(all, (file) => selectedIds.indexOf(file.id) === -1)
+  return filter(all, (file) => selectedIds.indexOf(String(file.id)) === -1)
+}
+
+export const makeFilesPaginationSelector = (filesKey) => (state) => {
+  return state.files[filesKey].pagination
 }
 
 // State
 
 const initialState = {
-  loading: false,
-  loaded: false,
-  filesUrl: '/console/files.json',
-  records: [],
+  images: {
+    loading: false,
+    loaded: false,
+    records: [],
+    pagination: {
+      page: null,
+      pages: null
+    }
+  },
+  documents: {
+    loading: false,
+    loaded: false,
+    records: [],
+    pagination: {
+      page: null,
+      pages: null
+    }
+  }
 }
 
 // Reducer
@@ -151,83 +201,114 @@ function filesReducer (state = initialState, action) {
     case GET_FILES:
       return {
         ...state,
-        loading: true,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          loading: true
+        }
       }
 
     case GET_FILES_SUCCESS:
       return {
         ...state,
-        records: action.records,
-        loading: false,
-        loaded: true,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: action.records,
+          loading: false,
+          loaded: true,
+          pagination: action.pagination
+        }
       }
 
     case UPLOADED_FILE:
       return {
         ...state,
-        records: [action.file, ...state.records]
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: [action.file, ...state[action.filesKey].records]
+        }
       }
 
     case THUMBNAIL_GENERATED: {
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.thumb !== action.temporary_url) return record
-          return {
-            ...record,
-            thumb: action.url,
-          }
-        }),
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.attributes.thumb !== action.temporaryUrl) return record
+            return {
+              ...record,
+              attributes: {
+                ...record.attributes,
+                thumb: action.url
+              }
+            }
+          })
+        }
       }
     }
 
     case UPDATE_FILE:
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.id === action.file.id) {
-            return {
-              ...record,
-              ...action.attributes,
-              updating: true,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.file.id) {
+              return {
+                ...record,
+                attributes: {
+                  ...record.attributes,
+                  ...action.attributes,
+                  updating: true
+                }
+              }
+            } else {
+              return record
             }
-          } else {
-            return record
-          }
-        }),
+          })
+        }
       }
 
     case UPDATE_FILE_SUCCESS:
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.id === action.response.id) {
-            return action.response
-          } else {
-            return record
-          }
-        }),
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.response.id) {
+              return action.response
+            } else {
+              return record
+            }
+          })
+        }
       }
 
     case UPDATE_FILE_FAILURE:
       return {
         ...state,
-        records: state.records.map((record) => {
-          if (record.id === action.file.id) {
-            return record
-          } else {
-            return { ...action.file }
-          }
-        }),
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.file.id) {
+              return { ...action.file }
+            } else {
+              return record
+            }
+          })
+        }
       }
 
     case UPDATED_FILES:
       return {
         ...state,
-        records: state.records.map((record) => {
-          const found = find(action.files, { id: record.id })
-          return found || record
-        }),
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            const found = find(action.files, { id: record.id })
+            return found || record
+          })
+        }
       }
 
     default:

@@ -2,22 +2,22 @@ import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
 
 import NestedModelControls from 'components/NestedModelControls'
-import FormGroup from 'components/FormGroup';
+import FormGroup from 'components/FormGroup'
 
 import filePlacementInputName from '../utils/filePlacementInputName'
-import HiddenInputs from './HiddenInputs';
+import HiddenInputs from './HiddenInputs'
 
 class FilePlacement extends React.Component {
   state = {
     alt: '',
-    title: '',
+    title: ''
   }
 
   constructor (props) {
     super(props)
     this.state = {
       alt: props.filePlacement.alt,
-      title: props.filePlacement.title,
+      title: props.filePlacement.title
     }
   }
 
@@ -30,22 +30,22 @@ class FilePlacement extends React.Component {
   }
 
   onTitleBlur = (e) => {
-    this.props.onTitleChange(this.props.filePlacement, e.target.value)
+    this.props.onTitleChange(this.props.filesKey, this.props.filePlacement, e.target.value)
   }
 
   onAltBlur = (e) => {
-    this.props.onAltChange(this.props.filePlacement, e.target.value)
+    this.props.onAltChange(this.props.filesKey, this.props.filePlacement, e.target.value)
   }
 
   unselect = () => {
-    this.props.unselectFilePlacement(this.props.filePlacement)
+    this.props.unselectFilePlacement(this.props.filesKey, this.props.filePlacement)
   }
 
   moveUp = () => {
     if (!this.props.isFirst) {
       this.props.move({
         oldIndex: this.props.position,
-        newIndex: this.props.position - 1,
+        newIndex: this.props.position - 1
       })
     }
   }
@@ -54,7 +54,7 @@ class FilePlacement extends React.Component {
     if (!this.props.isLast) {
       this.props.move({
         oldIndex: this.props.position,
-        newIndex: this.props.position + 1,
+        newIndex: this.props.position + 1
       })
     }
   }
@@ -65,7 +65,7 @@ class FilePlacement extends React.Component {
       attachmentable,
       placementType,
       position,
-      fileTypeIsImage,
+      fileTypeIsImage
     } = this.props
 
     let className
@@ -80,19 +80,19 @@ class FilePlacement extends React.Component {
         {fileTypeIsImage && (
           <a
             className='folio-console-file-placement__img-wrap'
-            href={filePlacement.file.source_image}
+            href={filePlacement.file.attributes.source_image}
             target='_blank'
             rel='noopener noreferrer'
             onClick={(e) => e.stopPropagation()}
           >
-            <img src={filePlacement.file.thumb} className='folio-console-file-placement__img' alt='' />
+            <img src={filePlacement.file.attributes.thumb} className='folio-console-file-placement__img' alt='' />
           </a>
         )}
 
         <div className='folio-console-file-placement__inputs'>
           <div className='folio-console-file-placement__title'>
             <FormGroup
-              placeholder={filePlacement.file.file_name}
+              placeholder={filePlacement.file.attributes.file_name}
               value={this.state.title}
               onChange={this.onTitleChange}
               onBlur={this.onTitleBlur}
@@ -129,7 +129,7 @@ class FilePlacement extends React.Component {
         />
 
         <div className='folio-console-file-placement__handle'>
-          <i className='fa fa-arrows' />
+          <i className='fa fa-arrows-alt' />
         </div>
       </div>
     )

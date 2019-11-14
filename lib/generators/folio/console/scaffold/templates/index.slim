@@ -1,9 +1,5 @@
-== cell('folio/console/index/header',
-        <%= class_name %>, \
-        new_path: <%= new_resource_name %>, \
-        hidden_fields: index_filters.keys)
+= index_header
 
-.folio-console-index-table
-  table
-    tbody
-      = render partial: "<%= singular_table_name %>", collection: @<%= plural_table_name %>
+= index_show_for(@<%= instance_variable_name(plural: true) %>) do |s|
+  = s.edit_link :to_label
+  = s.actions

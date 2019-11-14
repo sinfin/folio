@@ -1,6 +1,4 @@
 # frozen_string_literal: true
 
-module Folio
-  class BaseController < ApplicationController
-  end
+class Folio::BaseController < Folio::ApplicationController
 end

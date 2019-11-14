@@ -11,3 +11,12 @@ cs:
       update:
         alert: "%{resource_name} nelze upravit."
         notice: "%{resource_name} upraven(a)."
+      cancel:
+        alert: "%{resource_name} nelze stornovat."
+        notice: "%{resource_name} stornován(a)."
+      event:
+        alert: "Stav záznamu se nepodařilo upravit."
+        notice: "Stav záznamu upraven."
+      confirm:
+        alert: "%{resource_name} nelze potvrdit."
+        notice: "%{resource_name} potvrzen(a)."

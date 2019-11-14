@@ -46,6 +46,12 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
     @admin = create(:folio_admin_account)
     sign_in @admin
   end
+
+  def url_for(options = nil)
+    super(options)
+  rescue NoMethodError
+    main_app.url_for(options)
+  end
 end
 
 ActiveSupport::TestCase.include FactoryBot::Syntax::Methods

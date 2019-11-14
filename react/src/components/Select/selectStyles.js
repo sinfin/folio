@@ -1,7 +1,7 @@
 export default {
   container: (base) => ({
     ...base,
-    borderRadius: '0.15rem',
+    borderRadius: '0.15rem'
   }),
   control: (base, state) => ({
     ...base,
@@ -11,23 +11,23 @@ export default {
     minHeight: '35px',
     '&:hover': {
       borderColor: state.isFocused ? '#86c8ec' : base.borderColor,
-      boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(33, 148, 210, 0.25)' : base.boxShadow,
+      boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(33, 148, 210, 0.25)' : base.boxShadow
     }
   }),
   dropdownIndicator: (base) => ({
     ...base,
-    padding: '6px',
+    padding: '6px'
   }),
   clearIndicator: (base) => ({
     ...base,
-    padding: '6px',
+    padding: '6px'
   }),
   placeholder: (base) => ({
     ...base,
-    color: '#bfc4c4',
+    color: '#bfc4c4'
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? '#c7e4f4' : base.backgroundColor,
-  }),
+    backgroundColor: state.isFocused ? '#c7e4f4' : base.backgroundColor
+  })
 }

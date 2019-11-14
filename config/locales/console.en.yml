@@ -2,20 +2,48 @@
 en:
   folio:
     console:
+      actions:
+        add: Add
+        arrange: Arrange
+        back: Back
+        cancel: Cancel
+        close: Close
+        destroy: Destroy
+        edit: Edit
+        preview: Preview
+        save: Save
+        show: Show
+        submit: Submit
       alt_prompt: Alternative image caption
+      atoms:
+        form_header:
+          settings: Settings
+        settings_header:
+          done: Done
+          title: Settings
+        previews:
+          add_atom: Insert chapter
       back: Zpět
       base:
         atoms:
           add: Add chapter
+          title: Content
+      base_controller:
+        invalid_event: Cannot perform event - %{event}.
       breadcrumbs:
         actions:
           add: Add
+          cancel: Cancel
+          confirm: Confirm
           delete: Delete
           edit: Edit
+          handle: Handle
           new: New
           show: Show
+          unhandle: Set as not handled
         root: Console
-      cancel: Cancel
+        searches: Search
+      confirmation: Are you sure?
       create: Create
       delete: Remove
       documents:
@@ -24,15 +52,9 @@ en:
           file_hint: Do not input anything to keep the original file.
       documents_management: Documents management
       file_title_prompt: Displayed file name
-      filters:
-        all_tags: Všechny tagy
-        query: Vyhledávání...
       finalizing: Finalizing
       footer:
         text: Administration console for %{site_name}.
-      form_footer:
-        back: Back
-        submit: Submit
       gallery_management: Gallery management
       images:
         edit:
@@ -43,15 +65,7 @@ en:
           check_all: Check all
           handle_selected: Handle selected
           uncheck_all: Uncheck all
-        filters:
-          all: All
-          cancel: Cancel filters
-          title: Filtering
-        header:
-          by_query: Filter...
       leads:
-        handle:
-          success: Lead form handled
         index:
           handled: Handled
           not_handled: Not handled
@@ -61,11 +75,6 @@ en:
           blank: "-- blank --"
           handle: Handle
           unhandle: Set as not handled
-        unhandle:
-          success: Lead form set as not handled
-      menu_tree:
-        error: 'Failed to update tree structure: %{msg}'
-        success: Tree structure updated
       menus:
         detail_heading:
           edit_link: Edit links
@@ -76,6 +85,8 @@ en:
           title_hint: Optional. If left blank, the title of the target is shown.
         show:
           title: Tree structure
+        link: Link
+        noLink: No link (wrap only)
       nested_model_controls:
         destroy: Remove
       noTags: No tags
@@ -99,7 +110,6 @@ en:
             all_nodes: All nodes
             all_parents: All categories
             all_types: All types
-            category: Category
             page: Page
             published: Published only
             unpublished: Unpublished only
@@ -126,11 +136,13 @@ en:
           gallery: Gallery
           settings: Settings
           site_social_links: Links
+        simple_form_with_atoms:
+          editor: Editor
+          settings: Settings
       react_picker:
         add: Add
       really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
-      save: Save
       single_file_select:
         add_image: Add image
         add_video: Add video

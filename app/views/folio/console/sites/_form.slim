@@ -1,17 +1,24 @@
-= tabs [:content, :settings, :site_social_links]
+= form_header f
 
-= f.error_notification
+= tabs [:content, :settings, :site_social_links]
 
 .tab-content
   = tab :content
     = f.input :title
-    = f.input :description, as: :text
+    = f.input :description, as: :text, autosize: true
 
     = f.input :phone
-    = f.input :email
-    = f.input :address, as: :text
+    .row
+      .col
+        = f.input :email
+        = f.input :email_from
+      .col
+        = f.input :system_email
+        = f.input :system_email_copy
+    = f.input :address, as: :text, autosize: true
 
-    = render 'additional_form_fields', f: f
+    = render partial: 'folio/console/sites/additional_form_fields', \
+             locals: { f: f }
 
     = f.input :turbo_mode
 
@@ -26,6 +33,10 @@
     = f.simple_fields_for :social_links do |g|
       - Folio::Site.social_link_sites.each do |key|
         - value = f.object.social_links.try(:[], key.to_s)
-        = g.input key, required: false, input_html: { value: value }
+        - i18n_key = "social_links/#{key}"
+        = g.input key, \
+                  required: false, \
+                  label: Folio::Site.human_attribute_name(i18n_key), \
+                  input_html: { value: value }
 
-= form_footer f, console_nodes_path
+= form_footer f

@@ -3,6 +3,7 @@ en:
   activerecord:
     attributes:
       folio/account:
+        full_name: Name
         role: Role
       folio/atom/base:
         content: Content
@@ -17,15 +18,15 @@ en:
       folio/menu:
         locale: Version
         type: Type
+        menu_items: Links
       folio/menu_item:
         target: Link
         type: Type
       folio/newsletter_subscription:
         created_at: Subscribed at
         email: E-mail address
-      folio/node:
-        code: Code
-        parent_id: Parent node
+      folio/page:
+        parent_id: Parent page
         title: Page title
         translations: Translations
         type: Layout / content
@@ -35,6 +36,15 @@ en:
         facebook_pixel_code: Facebook pixel - code
         google_analytics_tracking_code: Google analytics - tracking code
         locales: Languages
+        social_links/appstore: Appstore
+        social_links/facebook: Facebook
+        social_links/google_play: Google play
+        social_links/instagram: Instagram
+        social_links/linkedin: LinkedIn
+        social_links/messenger: Messenger
+        social_links/pinterest: Pinterest
+        social_links/twitter: Twitter
+        social_links/youtube: Youtube
         turbo_mode: Turbo mode
       visit:
         events: Events
@@ -48,6 +58,9 @@ en:
         utm_source: UTM source
         utm_term: UTM term
     errors:
+      messages:
+        indestructible: The record cannot be removed.
+        file_format: 'has invalid type. Allowed types: %{types}'
       models:
         folio/lead:
           attributes:
@@ -64,12 +77,8 @@ en:
       folio/atom:
         one: Atom
         other: Atoms
-      folio/atom/text:
-        one: Text
-        other: Texts
-      folio/category:
-        one: Category
-        other: Categories
+      folio/atom/text: Text
+      folio/atom/title: Title
       folio/document:
         one: Document
         other: Documents
@@ -94,19 +103,10 @@ en:
       folio/newsletter_subscription:
         one: Newsletter subscription
         other: Newsletter subscriptions
-      folio/node:
-        one: Page
-        other: Pages
-      folio/node_translation:
-        one: Translation
-        other: Translations
       folio/page:
         one: Page
         other: Pages
-      folio/page/cookies:
-        few: Cookies
-        one: Cookies
-        other: Cookies
+      folio/page/cookies: Page - Cookies
       folio/site:
         one: Site
         other: Sites
@@ -124,12 +124,13 @@ en:
             submitted: Submitted
   attributes:
     aasm_state: State
-    code: Code
     content: Content
     cover_placement: Image
     description: Description
     email: E-mail
     featured: Features
+    file: File
+    figcaption: Caption
     first_name: First name
     is_active: Active
     last_name: Last name
@@ -139,10 +140,14 @@ en:
     name: Name
     perex: Perex
     phone: Phone
+    position: Position
+    private_attachments: Files
     published: Published
     published_at: Published at
     slug: Slug
     state: State
     tag_list: Keywords
     title: Title
+    to_label: Label
     url: URL
+    visit: Visit

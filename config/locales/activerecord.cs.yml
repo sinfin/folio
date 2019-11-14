@@ -3,10 +3,12 @@ cs:
   activerecord:
     attributes:
       folio/account:
+        full_name: Jméno
         role: Uživatelská role
       folio/atom/base:
         content: Obsah
         perex: Perex
+        target: Odkaz
         title: Název
       folio/image:
         file_placements: Použití
@@ -16,25 +18,37 @@ cs:
         note: Zpráva
       folio/menu:
         locale: Jazyková verze
-        type: Název nabídky
+        type: Druh menu
+        menu_items: Odkazy
       folio/menu_item:
         target: Odkaz
         type: Druh
       folio/newsletter_subscription:
-        created_at: Zapsána dne
+        created_at: Zapsáno dne
         email: E-mailová adresa
-      folio/node:
-        code: Kód
+      folio/page:
         parent_id: Nadřazená stránka
         title: Název stránky
         translations: Překlady
-        type: Šablona / obsah
+        type: Typ
       folio/site:
         address: Adresa
         domain: Doména
+        email_from: E-mail odesílatele
+        system_email: Systémová e-mailová adresa
+        system_email_copy: Systémová e-mailová adresa (kopie)
         facebook_pixel_code: Facebook pixel - kód
         google_analytics_tracking_code: Google analytics - trackovací kód
         locales: Jazyky
+        social_links/appstore: Appstore
+        social_links/facebook: Facebook
+        social_links/google_play: Google play
+        social_links/instagram: Instagram
+        social_links/linkedin: LinkedIn
+        social_links/messenger: Messenger
+        social_links/pinterest: Pinterest
+        social_links/twitter: Twitter
+        social_links/youtube: Youtube
         turbo_mode: Kritický režim
       visit:
         events: Události
@@ -48,28 +62,37 @@ cs:
         utm_source: UTM source
         utm_term: UTM term
     errors:
+      messages:
+        indestructible: Záznam není možné odstranit.
+        file_format: 'není povoleného typu. Povolené typy: %{types}'
       models:
+        folio/atom/base:
+          attributes:
+            document_placements:
+              blank: jsou povinná položka
+            image_placements:
+              blank: jsou povinná položka
         folio/lead:
           attributes:
             verified_captcha:
               invalid: Neplatné potvrzení
+            email:
+              invalid: není platný
         folio/newsletter_subscription:
           attributes:
             email:
-              invalid: Neplatná e-mailová adresa
+              invalid: není platná
     models:
       folio/account:
-        few: Uživatelé
-        one: Uživatel
-        other: Uživatelů
+        few: Administrátoři
+        one: Administrátor
+        other: Administrátorů
       folio/atom:
         few: Kapitoly
         one: Kapitola
         other: Kapitol
-      folio/atom/text:
-        few: Texty
-        one: Text
-        other: Textů
+      folio/atom/text: Text
+      folio/atom/title: Titulek
       folio/category:
         few: Kategorie
         one: Kategorie
@@ -106,22 +129,11 @@ cs:
         few: Newslettery
         one: Newsletter
         other: Newsletterů
-      folio/node:
-        few: Stránky
-        one: Stránka
-        other: Stránek
-      folio/node_translation:
-        few: Překlady
-        one: Překlad
-        other: Překladů
       folio/page:
         few: Stránky
         one: Stránka
         other: Stránek
-      folio/page/cookies:
-        few: Používání cookies
-        one: Používání cookies
-        other: Používání cookies
+      folio/page/cookies: Stránka - Používání cookies
       folio/site:
         few: Weby
         one: Web
@@ -142,13 +154,18 @@ cs:
             submitted: Nevyřízený
   attributes:
     aasm_state: Stav
-    code: Kód
     content: Obsah
+    cover: Obrázek
     cover_placement: Obrázek
     description: Popisek
+    document_placement: Dokument
+    document_placements: Dokumenty
     email: E-mail
     featured: Zvýrazněno
+    file: Soubor
+    figcaption: Popisek
     first_name: Křestní jméno
+    image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
     locale: Překlad
@@ -157,10 +174,14 @@ cs:
     name: Jméno
     perex: Perex
     phone: Telefon
+    position: Pořadí
+    private_attachments: Soubory
     published: Zveřejněno
     published_at: Zveřejněno k datu
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
     title: Název
+    to_label: Název
     url: URL
+    visit: Návštěva

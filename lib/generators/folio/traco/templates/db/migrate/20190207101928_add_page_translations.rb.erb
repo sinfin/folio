@@ -1,0 +1,20 @@
+# frozen_string_literal: true
+
+class AddPageTranslations < ActiveRecord::Migration[5.2]
+  def change
+    rename_column :folio_pages, :title, :title_<%= I18n.default_locale %>
+    rename_column :folio_pages, :perex, :perex_<%= I18n.default_locale %>
+    rename_column :folio_pages, :slug, :slug_<%= I18n.default_locale %>
+    rename_column :folio_pages, :meta_title, :meta_title_<%= I18n.default_locale %>
+    rename_column :folio_pages, :meta_description, :meta_description_<%= I18n.default_locale %>
+
+    <%- (I18n.available_locales - [I18n.default_locale]).each do |locale| -%>
+    add_column :folio_pages, :title_<%= locale %>, :string
+    add_column :folio_pages, :perex_<%= locale %>, :text
+    add_column :folio_pages, :slug_<%= locale %>, :string
+    add_column :folio_pages, :meta_title_<%= locale %>, :string
+    add_column :folio_pages, :meta_description_<%= locale %>, :text
+    add_index :folio_pages, :slug_<%= locale %>
+    <%- end -%>
+  end
+end

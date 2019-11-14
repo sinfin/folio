@@ -3,10 +3,13 @@ en:
   simple_form:
     error_notification:
       default_message: 'Please review the problems below:'
+    labels:
+      account:
+        edit_password: New password
     hints:
       defaults:
         alt: Image alternative text. Displayed on image loading failure.
-        content: Main content. If you need to add more structured content, you canadd <strong>chapters</strong> bellow.
+        content: Main content. If you need to add more structured content, you can add <strong>chapters</strong> bellow.
         featured: Used to display a page on the homepage or other selections.
         locale: Language variant
         meta_description: SEO, Optional. This description appears on a search engine page.
@@ -14,9 +17,11 @@ en:
         perex: Brief description of the content. Used as an opening paragraph on the page and description when multiple pages are listed. It is also used by search engines.
         published: Publish on the web at the date below.
         published_at: Content will be visible since the selected date.
-        slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong> characters are accepted. Changing it doesn't break old URLs.
+        slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> and <strong>dash</strong> characters are accepted. Changing this doesn't break old URLs.
         tag_list: A comma-separated list of keywords. Used for faster searching/categorization and content display.
         title: Title as displayed on the website
+      account:
+        edit_password: Leave blank if you don't want to change
       node:
         code: Optional internal node specification.
         parent_id: If using tree structure, parent page/category is selected here.
@@ -25,6 +30,7 @@ en:
     'no': 'No'
     placeholders:
       defaults:
+        by_query: Search...
         content: Formatted text with images, tables, etc.
         meta_description: Recommended size is under 250 characters.
         meta_title: 'e.g.: Our team'
@@ -32,6 +38,7 @@ en:
         slug: 'e.g.: our-team'
         tag_list: 'e.g.: services, offer'
         title: 'e.g.: Our team'
+        q: Search...
     required:
       mark: "*"
       text: required

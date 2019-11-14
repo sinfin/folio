@@ -12,13 +12,16 @@ class Tags extends React.Component {
   }
 
   render () {
+    const tags = this.props.file.attributes.tags
+    const hasTags = tags && tags.length > 0
+
     return (
       <TagsWrap onClick={this.onClick}>
-        {this.props.file.tags.map((tag) => (
-          <span key={tag} className='badge badge-secondary'>{tag}</span>
-        ))}
-
-        {this.props.file.tags.length === 0 && (
+        {hasTags ? (
+          tags.map((tag) => (
+            <span key={tag} className='badge badge-secondary'>{tag}</span>
+          ))
+        ) : (
           <span className='badge badge-success'>+</span>
         )}
       </TagsWrap>

@@ -1,0 +1,35 @@
+.ms-container
+  width: auto
+  background: none
+
+  .ms-list
+    -webkit-overflow-scrolling: touch
+    border-color: $input-border-color
+    border-radius: $input-border-radius
+    box-shadow: $input-box-shadow
+    color: $input-color
+    background: $input-bg
+    overflow-y: scroll
+
+  .ms-selectable
+    padding-right: 0.25rem
+
+  .ms-selection
+    padding-left: 0.25rem
+
+  .ms-selectable,
+  .ms-selection
+    width: 50%
+
+    li.ms-hover
+      color: inherit
+      background: rgba($blue, 0.1)
+
+  .ms-selectable li.ms-elem-selectable,
+  .ms-selection li.ms-elem-selection
+    min-height: $input-height-inner
+    display: flex
+    align-items: center
+    font-size: $input-font-size
+    padding: $input-padding-y $input-padding-x
+    border-color: $input-border-color

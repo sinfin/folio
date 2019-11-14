@@ -1,5 +1,9 @@
+export function confirm (callback) {
+  return window.confirm(window.FolioConsole.translations.removePrompt)
+}
+
 export function confirmed (callback) {
-  if (window.confirm(window.FolioConsole.translations.removePrompt)) {
+  if (confirm()) {
     callback()
   }
 }

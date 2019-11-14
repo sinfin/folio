@@ -6,23 +6,25 @@ ADVANCED_OPTIONS =
     'file[type]': 'Folio::Image'
   imageUpload: '/console/images.json'
   imageManagerJson: '/console/images.json'
-  definedlinks: '/console/links.json'
-  toolbarFixed: false
+  definedlinks: '/console/api/links.json'
+  toolbarFixed: true
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
+  linkNewTab: true
 
 OPTIONS =
   plugins: ['table', 'button', 'definedlinks']
   buttonsHide: ['file', 'image']
-  toolbarFixed: false
-  definedlinks: '/console/links.json'
+  toolbarFixed: true
+  definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
+  linkNewTab: true
 
-window.folioConsoleInitRedactor = (node, options = {}) ->
+window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')
   opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
-  $R(node, opts)
+  $R(node, $.extend({}, opts, additional))
 
 window.folioConsoleDestroyRedactor = (node) ->
   $R(node, 'destroy')

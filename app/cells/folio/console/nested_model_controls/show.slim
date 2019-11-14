@@ -1,4 +1,4 @@
-.form-group.folio-console-nested-model-controls-form-group class=class_name
+.form-group class=class_name
   - if options[:label]
     label.control-label.d-block
       = options[:label] == true ? '&nbsp;' : options[:label]
@@ -8,10 +8,10 @@
       - %w(up down).each do |direction|
         button.btn.btn-outline-secondary[
           class="folio-console-nested-model-position-button"
+          class="fa fa-arrow-#{direction}"
           data-direction=direction
           type="button"
         ]
-          i.fa class="fa-arrow-#{direction}"
 
       = f.hidden_field :position, \
                        class: 'folio-console-nested-model-position-input'

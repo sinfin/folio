@@ -1,0 +1,263 @@
+@import 'font-awesome/scss/fontawesome'
+@import 'folio/console/variables'
+@import 'folio-bootstrap/scss/functions'
+@import 'folio-bootstrap/scss/variables'
+@import 'folio-bootstrap/scss/mixins'
+@import 'folio/console/plugin-overrides/font-awesome'
+@import 'folio/console/modules/font-awesome'
+@import 'folio/console/modules/with-icon'
+@import 'folio/utilities'
+@import 'material_icons'
+
+= button-style
+  +unbutton
+  flex: 0 0 24px
+  width: 24px
+  height: 24px
+  min-width: 24px
+  padding: 0
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  border: 1px solid #BFC4C4
+  font-size: 14px
+
+.f-c-layout-atoms__html
+  overflow-y: auto
+
+.f-c-atoms-previews
+  $insert-bg: #6C757E
+
+  padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width 500px
+
+  &__atom
+    position: relative
+    min-height: 10px
+    z-index: 2
+
+    &:first-of-type > :first-child
+      margin-top: 0
+
+    &:last-of-type > :first-child
+      margin-bottom: 0
+
+  &__controls
+    position: absolute
+    top: -10px
+    left: -10px
+    right: -10px
+    bottom: -10px
+    z-index: 2
+    border: 1px dashed rgba(#589E92, 0.79)
+    visibility: hidden
+    cursor: pointer
+
+  &__label,
+  &__perex
+    position: relative
+    min-height: 10px
+    z-index: 2
+
+  &__buttons
+    position: absolute
+    top: -12px
+    right: -12px
+    display: flex
+    height: 24px
+    z-index: 2
+
+  &__button
+    +button-style
+    margin-left: 15px
+
+    &--edit
+      +button-variant($secondary, $secondary)
+
+    &--settings
+      +button-variant($secondary, $secondary)
+      margin-right: 20px
+
+    &--arrow
+      +button-variant($white, $white)
+      +plain-hover-focus
+        border-color: #BFC4C4
+
+    &--remove
+      +button-variant($danger, $danger)
+
+  &__controls-overlay
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 1
+
+  &__insert
+    width: 100%
+    height: 0
+    position: relative
+    top: -1rem
+    z-index: 1
+    opacity: 0
+
+    &:last-child
+      top: 1rem
+
+    &:hover
+      opacity: 1
+
+  &__insert:last-of-type
+    opacity: 1
+
+    &:not(:only-child)
+      margin-top: $grid-gutter-width
+
+  &__insert-hint
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 20px
+    cursor: pointer
+
+    &:before
+      content: ''
+      border-top: 1px dashed rgba(#589E92, 0.79)
+      width: 100%
+      position: absolute
+      top: 0
+      left: 0
+      display: block
+      z-index: 1
+
+  &__insert-hint-btn
+    +button-style
+    +button-variant($secondary, $secondary)
+    width: 20px
+    height: 20px
+    flex: 0 0 20px
+    min-width: 20px
+    border-radius: 100%
+    position: absolute
+    top: -10px
+    left: 50%
+    margin-left: -10px
+    z-index: 2
+
+  &__insert:last-of-type &__insert-hint-btn
+    display: none
+
+  &__insert-hint-big-btn
+    +button-style
+    +button-variant($secondary, $secondary)
+    display: none
+    height: 35px
+    min-width: 140px
+    border-radius: 26px
+    position: absolute
+    top: 0
+    left: 50%
+    z-index: 2
+    transform: translate(-50%, -50%)
+    font-size: 14px
+
+    .mi
+      font-size: 16px
+
+  &__insert:last-of-type &__insert-hint-big-btn
+    display: inline-flex
+
+  &__insert-inner
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+
+  &__insert-ul
+    background: $secondary
+    padding: $grid-gutter-width / 2
+
+    &, .mi
+      font-size: 14px
+
+  &__insert-a
+    padding: 10px
+    width: 100%
+    display: flex
+    align-items: center
+
+    .mi
+      margin-right: 7px
+
+    +plain-hover-focus
+      color: $white
+      text-decoration: none
+
+    +hover-focus
+      background: darken($secondary, 7.5%)
+
+  &__insert--active
+    z-index: 3
+
+  &__insert--active &__insert-hint:before
+    display: none
+
+  &__insert:not(&__insert--active) &__insert-inner
+    display: none
+
+  html.media-breakpoint-up-lg &
+    &__atom:hover,
+    &__label:hover,
+    &__perex:hover
+      .f-c-atoms-previews__controls
+        visibility: visible
+
+    &__controls-mobile-overlay
+      display: none
+
+  html.media-breakpoint-down-md &
+    &__insert
+      opacity: 1
+
+    &__controls
+      visibility: visible
+
+    &__button
+      width: 40px
+      height: 40px
+      flex: 0 0 40px
+      font-size: 20px
+
+      &:first-child
+        margin-left: 0
+
+    &__buttons
+      position: absolute
+      z-index: 3
+      top: 50%
+      left: 50%
+      right: auto
+      height: auto
+      padding: 15px
+      transform: translate(-50%, -50%)
+      background: $white
+      border: 1px solid #979797
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.3)
+
+    &__controls-mobile-overlay
+      position: absolute
+      top: 0
+      left: 0
+      right: 0
+      bottom: 0
+      z-index: 2
+
+    &__controls--active .f-c-atoms-previews__controls-mobile-overlay
+      display: none
+
+    &__controls:not(.f-c-atoms-previews__controls--active)
+      opacity: 0
+
+    &__controls:not(.f-c-atoms-previews__controls--active) .f-c-atoms-previews__buttons
+      display: none

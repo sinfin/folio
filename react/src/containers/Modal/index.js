@@ -3,17 +3,17 @@ import { connect } from 'react-redux'
 
 import ReactModal from 'react-modal'
 
-import { updateFile } from 'ducks/files';
+import { updateFile } from 'ducks/files'
 
 import {
   closeModal,
   changeModalTags,
-  modalSelector,
-} from 'ducks/modal';
+  modalSelector
+} from 'ducks/modal'
 
-import { tagsSelector } from 'ducks/filters'
+import { makeTagsSelector } from 'ducks/filters'
 
-import ModalFile from './ModalFile';
+import ModalFile from './ModalFile'
 
 export const ModalContext = React.createContext(() => {})
 
@@ -32,9 +32,9 @@ class Modal extends Component {
     const { modal } = this.props
 
     const attributes = {
-      tags: modal.newTags || [],
+      tags: modal.newTags || []
     }
-    this.props.dispatch(updateFile(modal.file, attributes))
+    this.props.dispatch(updateFile(this.props.filesKey, modal.file, attributes))
     this.props.dispatch(closeModal())
   }
 
@@ -42,7 +42,7 @@ class Modal extends Component {
     this.props.dispatch(closeModal())
   }
 
-  render() {
+  render () {
     const { modal, tags } = this.props
 
     return (
@@ -65,9 +65,9 @@ class Modal extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, props) => ({
   modal: modalSelector(state),
-  tags: tagsSelector(state),
+  tags: makeTagsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

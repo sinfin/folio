@@ -1,6 +1,3 @@
-bower_components/ilikenwf-nested-sortable/*
-!bower_components/ilikenwf-nested-sortable/jquery.mjs.nestedSortable.js
-
 bower_components/jquery-ui/*
 !bower_components/jquery-ui/jquery-ui.js
 
@@ -25,5 +22,20 @@ bower_components/vanilla-lazyload/dist/*
 !bower_components/vanilla-lazyload/dist/lazyload.js
 
 bower_components/jquery
-bower_components/tempusdominus-bs4/docs
 bower_components/moment/src
+
+bower_components/font-awesome/*
+!bower_components/font-awesome/scss
+!bower_components/font-awesome/webfonts
+
+bower_components/eonasdan-bootstrap-datetimepicker/*
+!bower_components/eonasdan-bootstrap-datetimepicker/build
+!bower_components/eonasdan-bootstrap-datetimepicker/src
+bower_components/eonasdan-bootstrap-datetimepicker/src/*
+!bower_components/eonasdan-bootstrap-datetimepicker/src/sass
+
+bower_components/multiselect/test
+
+bower_components/spectrum/*
+!bower_components/spectrum/spectrum.css
+!bower_components/spectrum/spectrum.js

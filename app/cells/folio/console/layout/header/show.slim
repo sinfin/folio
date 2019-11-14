@@ -1,0 +1,16 @@
+.f-c-layout-header
+  button.f-c-layout-header__toggle[
+    type="button"
+    class="fa fa-bars"
+    class="f-c-js-sidebar-toggle"
+  ]
+
+  .container-fluid
+    .f-c-layout-header__inner
+      = model
+
+      = link_to controller.destroy_account_session_path, \
+                method: :delete, \
+                class: 'f-c-layout-header__sign-out-link f-c-with-icon'
+        i.fa.fa-sign-out-alt.f-c-layout-header__sign-out-link-icon
+        span.f-c-layout-header__sign-out-link__label = t('.sign_out')

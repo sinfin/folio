@@ -36,6 +36,12 @@
     .folio-lead-form__submit
       = f.button :submit, t('.submit')
 
+      - if options[:next_to_submit_content].present?
+        == options[:next_to_submit_content]
+
+    - if options[:under_submit_content].present?
+      == options[:under_submit_content]
+
   - if submitted
     .folio-lead-form-message
       = message

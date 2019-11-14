@@ -1,0 +1,34 @@
+---
+en:
+  folio:
+    console:
+      index:
+        filters:
+          title: Filter
+          cancel: Cancel filters
+
+        header:
+          add: Add
+          csv: CSV
+
+        no_records:
+          text: There are no records.
+          new: Create one?
+
+      form:
+        footer:
+          dirty_forms: Unsaved changes
+
+        errors:
+          fix: Fix
+
+      layout:
+        sidebar:
+          settings: Settings
+
+        header:
+          sign_out: Sign out
+
+      searches:
+        results:
+          title: Search results

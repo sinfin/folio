@@ -1,13 +1,19 @@
 import React from 'react'
 
 import SingleSelect from 'containers/SingleSelect'
-import truncate from 'utils/truncate';
+import truncate from 'utils/truncate'
 
-import ModalSelect from '../';
+import { EVENT_NAME } from './constants'
+import ModalSelect from '../'
 
 class ModalSingleSelect extends ModalSelect {
   selector () {
     return this.selectingDocument() ? '.folio-console-add-document' : '.folio-console-add-image'
+  }
+
+  eventName () {
+    const append = this.selectingDocument() ? 'Folio::Document' : 'Folio::Image'
+    return `${EVENT_NAME}/${append}`
   }
 
   jQueryModal () {
@@ -22,8 +28,8 @@ class ModalSingleSelect extends ModalSelect {
       return `
         <div class="folio-console-thumbnail__inner">
           <i class="folio-console-thumbnail__fa-icon fa fa-file-o"></i>
-          <strong class="folio-console-thumbnail__title">${truncate(file.file_name)}</strong>
-          <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.file_name}" />
+          <strong class="folio-console-thumbnail__title">${truncate(file.attributes.file_name)}</strong>
+          <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.attributes.file_name}" />
           <div class="folio-console-hover-destroy">
             <i class="fa fa-edit folio-console-thumbnail__title-edit"></i>
             <i class="fa fa-times-circle" data-destroy-association></i>
@@ -34,7 +40,7 @@ class ModalSingleSelect extends ModalSelect {
       return `
         <div class="folio-console-thumbnail__inner">
           <div class="folio-console-thumbnail__img-wrap">
-            <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.thumb)} alt="" />
+            <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.attributes.thumb)} alt="" />
             <div class="folio-console-hover-destroy">
               <i class="fa fa-times-circle" data-destroy-association></i>
             </div>
@@ -47,10 +53,27 @@ class ModalSingleSelect extends ModalSelect {
     }
   }
 
-  selectFile = (file) => {
-    if (!this.state.el) return
-    let $ = window.jQuery
+  selectFile = (filesKey, file) => {
+    const $ = window.jQuery
     if (!$) return
+
+    if (this.state.triggerEvent) {
+      $(document).trigger(this.state.triggerEvent, [{
+        attachmentKey: this.state.attachmentKey,
+        data: {
+          file_id: file.id,
+          file: {
+            id: file.id,
+            file_name: file.attributes.file_name,
+            file_size: file.attributes.file_size,
+            thumb: file.attributes.thumb,
+            type: file.attributes.type
+          }
+        }
+      }])
+      return this.jQueryModal().modal('hide')
+    }
+    if (!this.state.el) return
 
     const $el = $(this.state.el)
     const $wrap = $el.closest('.folio-console-react-picker')
@@ -78,6 +101,7 @@ class ModalSingleSelect extends ModalSelect {
     return (
       <SingleSelect
         selectFile={this.selectFile}
+        filesKey={this.props.filesKey}
       />
     )
   }

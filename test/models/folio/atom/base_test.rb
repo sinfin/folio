@@ -2,70 +2,23 @@
 
 require 'test_helper'
 
-module Folio
-  module Atom
-    class BaseTest < ActiveSupport::TestCase
-      test 'clears stuff when type changes' do
-        atom = create(:folio_atom, content: 'foo')
-        assert_equal 'foo', atom.content
-        assert_equal 0, atom.images.count
+class Folio::Atom::BaseTest < ActiveSupport::TestCase
+  class PageReferenceAtom < Folio::Atom::Base
+    ASSOCIATIONS = {
+      page: %i[Folio::Page]
+    }
+  end
 
-        image = create(:folio_image)
+  test 'associations' do
+    page = create(:folio_page)
+    atom1 = PageReferenceAtom.create!(page: page, placement: page)
+    assert_equal(atom1.page, page)
+    assert_equal(page.id, atom1.page_id)
 
-        assert atom.update!(type: 'Atom::Gallery',
-                            image_placements_attributes: [{
-                              file_id: image.id,
-                            }])
-
-        assert_equal 'Atom::Gallery', atom.type
-        assert_nil atom.content
-        assert_equal 1, atom.images.count
-
-        page = create(:folio_page)
-        assert atom.update!(type: 'Atom::PageReference',
-                            model: page)
-
-        assert_nil atom.content
-        assert_equal 0, atom.images.count
-        assert_equal page, atom.model
-      end
-
-      test 'model_type validation' do
-        lead = create(:folio_lead)
-
-        atom = build(:folio_atom, type: ::Atom::PageReference,
-                                  model: lead)
-        assert_not atom.valid?
-        assert_equal([I18n.t('errors.messages.invalid')],
-                     atom.errors[:model_type])
-
-        page = create(:folio_page)
-        atom.model = page
-        assert atom.valid?
-        assert atom.save!
-      end
-    end
+    atom2 = PageReferenceAtom.create!(page_type: page.class.name,
+                                      page_id: page.id,
+                                      placement: page)
+    assert_equal(atom2.page, page)
+    assert_equal(page.id, atom2.page_id)
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_atoms
-#
-#  id             :integer          not null, primary key
-#  type           :string
-#  content        :text
-#  position       :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  placement_type :string
-#  placement_id   :integer
-#  model_type     :string
-#  model_id       :integer
-#  title          :string
-#
-# Indexes
-#
-#  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
-#  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
-#

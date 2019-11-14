@@ -1,4 +1,4 @@
-= f.error_notification
+= form_header f
 
 - if f.object.new_record?
   - klass = f.object.class
@@ -6,20 +6,14 @@
   = f.input :type, collection: collection, \
                    include_blank: false
 
-  = f.input :locale, collection: @site.locales, include_blank: false
+  = f.input :locale, collection: Folio::Site.instance.locales,
+                     include_blank: false
 
 - else
-  h2 = Folio::MenuItem.model_name.human(count: 2)
+  .folio-react-wrap.folio-react-wrap--menu-form[
+    data-menupaths=@serialized_menu_paths
+    data-menuitems=@serialized_menu_items
+    data-menudepth=@menu.class.max_nesting_depth
+  ]
 
-  fieldset#menu_items
-    = f.simple_fields_for :menu_items do |menu_item|
-      = render 'menu_item_fields', f: menu_item, menu: f.object
-
-    .links
-      = link_to_add_association t('.add_menu_item'), \
-                                f, \
-                                :menu_items, \
-                                class: 'btn btn-success', \
-                                render_options: { locals: { menu: f.object } }
-
-= form_footer f, console_menus_path
+= form_footer f

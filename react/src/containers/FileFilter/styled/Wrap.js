@@ -17,6 +17,7 @@ const Wrap = styled.div`
 
   .form-group {
     margin: 7.5px;
+    flex: 1 0 100px;
   }
 
   .form-group--react-select {

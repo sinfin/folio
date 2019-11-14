@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_11_084231) do
+ActiveRecord::Schema.define(version: 2019_10_16_073239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,28 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.index ["account_id"], name: "index_ahoy_events_on_account_id"
     t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
     t.index ["visit_id", "name"], name: "index_ahoy_events_on_visit_id_and_name"
+  end
+
+  create_table "audits", force: :cascade do |t|
+    t.bigint "auditable_id"
+    t.string "auditable_type"
+    t.bigint "associated_id"
+    t.string "associated_type"
+    t.bigint "user_id"
+    t.string "user_type"
+    t.string "username"
+    t.string "action"
+    t.jsonb "audited_changes"
+    t.integer "version", default: 0
+    t.string "comment"
+    t.string "remote_address"
+    t.string "request_uuid"
+    t.datetime "created_at"
+    t.index ["associated_type", "associated_id"], name: "associated_index"
+    t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
+    t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["request_uuid"], name: "index_audits_on_request_uuid"
+    t.index ["user_id", "user_type"], name: "user_index"
   end
 
   create_table "folio_accounts", force: :cascade do |t|
@@ -44,23 +66,33 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.string "last_name"
     t.string "role"
     t.boolean "is_active", default: true
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.string "invited_by_type"
+    t.bigint "invited_by_id"
+    t.integer "invitations_count", default: 0
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
+    t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
+    t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
+    t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
   create_table "folio_atoms", force: :cascade do |t|
     t.string "type"
-    t.text "content"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "placement_type"
     t.bigint "placement_id"
-    t.string "model_type"
-    t.bigint "model_id"
-    t.string "title"
-    t.text "perex"
-    t.index ["model_type", "model_id"], name: "index_folio_atoms_on_model_type_and_model_id"
+    t.string "locale"
+    t.jsonb "data", default: {}
+    t.jsonb "associations", default: {}
+    t.text "data_for_search"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
@@ -77,6 +109,8 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.string "placement_title"
     t.string "placement_title_type"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
+    t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
+    t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
     t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
@@ -93,6 +127,11 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.bigint "file_size"
     t.string "mime_type", limit: 255
     t.json "additional_data"
+    t.json "file_metadata"
+    t.string "hash_id"
+    t.index ["created_at"], name: "index_folio_files_on_created_at"
+    t.index ["file_name"], name: "index_folio_files_on_file_name"
+    t.index ["hash_id"], name: "index_folio_files_on_hash_id"
     t.index ["type"], name: "index_folio_files_on_type"
   end
 
@@ -105,7 +144,7 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.string "name"
     t.string "url"
     t.json "additional_data"
-    t.string "state", default: "submitted"
+    t.string "aasm_state", default: "submitted"
     t.bigint "visit_id"
     t.index ["visit_id"], name: "index_folio_leads_on_visit_id"
   end
@@ -143,14 +182,12 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.index ["visit_id"], name: "index_folio_newsletter_subscriptions_on_visit_id"
   end
 
-  create_table "folio_nodes", force: :cascade do |t|
+  create_table "folio_pages", force: :cascade do |t|
     t.string "title"
     t.string "slug"
     t.text "perex"
-    t.text "content"
     t.string "meta_title", limit: 512
     t.text "meta_description"
-    t.string "code"
     t.string "ancestry"
     t.string "type"
     t.boolean "featured"
@@ -161,16 +198,37 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.string "locale", limit: 6
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ancestry"], name: "index_folio_nodes_on_ancestry"
-    t.index ["code"], name: "index_folio_nodes_on_code"
-    t.index ["featured"], name: "index_folio_nodes_on_featured"
-    t.index ["locale"], name: "index_folio_nodes_on_locale"
-    t.index ["original_id"], name: "index_folio_nodes_on_original_id"
-    t.index ["position"], name: "index_folio_nodes_on_position"
-    t.index ["published"], name: "index_folio_nodes_on_published"
-    t.index ["published_at"], name: "index_folio_nodes_on_published_at"
-    t.index ["slug"], name: "index_folio_nodes_on_slug"
-    t.index ["type"], name: "index_folio_nodes_on_type"
+    t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
+    t.index ["featured"], name: "index_folio_pages_on_featured"
+    t.index ["locale"], name: "index_folio_pages_on_locale"
+    t.index ["original_id"], name: "index_folio_pages_on_original_id"
+    t.index ["position"], name: "index_folio_pages_on_position"
+    t.index ["published"], name: "index_folio_pages_on_published"
+    t.index ["published_at"], name: "index_folio_pages_on_published_at"
+    t.index ["slug"], name: "index_folio_pages_on_slug"
+    t.index ["type"], name: "index_folio_pages_on_type"
+  end
+
+  create_table "folio_private_attachments", force: :cascade do |t|
+    t.string "attachmentable_type"
+    t.bigint "attachmentable_id"
+    t.string "type"
+    t.string "file_uid"
+    t.string "file_name"
+    t.text "title"
+    t.string "alt"
+    t.text "thumbnail_sizes"
+    t.integer "position"
+    t.integer "file_width"
+    t.integer "file_height"
+    t.bigint "file_size"
+    t.string "mime_type", limit: 255
+    t.json "additional_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "hash_id"
+    t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
+    t.index ["type"], name: "index_folio_private_attachments_on_type"
   end
 
   create_table "folio_sites", force: :cascade do |t|
@@ -188,6 +246,9 @@ ActiveRecord::Schema.define(version: 2018_12_11_084231) do
     t.text "address"
     t.text "description"
     t.boolean "turbo_mode", default: false
+    t.string "system_email"
+    t.string "system_email_copy"
+    t.string "email_from"
     t.index ["domain"], name: "index_folio_sites_on_domain"
   end
 

@@ -1,6 +1,9 @@
 import { isEqual } from 'lodash'
+import { delay } from 'redux-saga'
+import { takeLatest, put, select } from 'redux-saga/effects'
 
-import { filesSelector } from 'ducks/files'
+import { flashError } from 'utils/flash'
+import { makeFilesSelector, getFiles } from 'ducks/files'
 
 // Constants
 
@@ -9,90 +12,100 @@ const RESET_FILTERS = 'filters/RESET_FILTERS'
 
 // Actions
 
-export function setFilter (filter, value) {
-  return { type: SET_FILTER, filter, value }
+export function setFilter (filesKey, filter, value) {
+  return { type: SET_FILTER, filesKey, filter, value }
 }
 
-export function unsetFilter (filter) {
-  return setFilter(filter, '')
+export function unsetFilter (filesKey, filter) {
+  return setFilter(filesKey, filter, filter === 'tags' ? [] : '')
 }
 
-export function resetFilters () {
-  return { type: RESET_FILTERS }
+export function resetFilters (filesKey) {
+  return { type: RESET_FILTERS, filesKey }
 }
 
-// Selectors
+// Sagas
 
-export const filtersSelector = (state) => {
-  const filters = state.filters
-  const active = !isEqual(filters, initialState)
-
-  return {
-    ...filters,
-    active,
+function * updateFiltersPerform (action) {
+  try {
+    // debounce by 750ms, using delay with takeLatest
+    let query = ''
+    if (action.type === SET_FILTER) {
+      yield delay(750)
+      query = yield select(makeFiltersQuerySelector(action.filesKey))
+    }
+    yield put(getFiles(action.filesKey, query))
+  } catch (e) {
+    flashError(e.message)
   }
 }
 
-export const filteredFilesSelector = (state) => {
-  const files = filesSelector(state)
-  const filters = filtersSelector(state)
-  let filtered = []
-
-  files.forEach((file) => {
-    let valid = true
-
-    if (valid && filters.name) {
-      valid = new RegExp(filters.name, 'i').test(file.file_name)
-    }
-
-    if (valid && filters.tags.length) {
-      if (file.tags.length) {
-        filters.tags.forEach((tag) => {
-          valid = valid && file.tags.indexOf(tag) !== -1
-        })
-      } else {
-        valid = false
-      }
-    }
-
-    if (valid && filters.placement) {
-      valid = file.placements.indexOf(filters.placement) !== -1
-    }
-
-    if (valid) filtered.push(file)
-  })
-
-  return filtered
+function * updateFiltersSaga () {
+  yield [
+    takeLatest(SET_FILTER, updateFiltersPerform),
+    takeLatest(RESET_FILTERS, updateFiltersPerform)
+  ]
 }
 
-export const tagsSelector = (state) => {
-  const files = filesSelector(state)
-  let tags = []
-  files.forEach((file) => file.tags.forEach((tag) => {
+export const filtersSagas = [
+  updateFiltersSaga
+]
+
+// Selectors
+
+export const makeFiltersSelector = (filesKey) => (state) => {
+  const filters = state.filters[filesKey]
+  const active = !isEqual(filters, initialState[filesKey])
+
+  return {
+    ...filters,
+    active
+  }
+}
+
+export const makeTagsSelector = (filesKey) => (state) => {
+  const tags = window.FolioConsole.ReactMetaData.tags
+
+  const files = makeFilesSelector(filesKey)(state)
+  files.forEach((file) => file.attributes.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
   }))
-  return tags.sort((a, b) => {
-    const lowerA = a.toLowerCase()
-    const lowerB = b.toLowerCase()
-    return lowerA > lowerB ? 1 : lowerB > lowerA ? -1 : 0;
-  })
+  return tags
 }
 
-export const placementsSelector = (state) => {
-  const files = filesSelector(state)
-  let placements = []
-  files.forEach((file) => file.placements.forEach((placement) => {
-    if (placements.indexOf(placement) === -1) placements.push(placement)
-  }))
-  return placements
+export const makeFiltersQuerySelector = (filesKey) => (state) => {
+  const filters = state.filters[filesKey]
+  const params = new URLSearchParams()
+  Object.keys(filters).forEach((key) => {
+    let value = filters[key]
+    if (key === 'tags') {
+      value = filters[key].join(',')
+    }
+    if (value) {
+      params.set(`by_${key}`, value)
+    }
+  })
+  return params.toString()
+}
+
+export const makePlacementsSelector = (filesKey) => (state) => {
+  // return window.FolioConsole.ReactMetaData.placements
+  return []
 }
 
 // State
 
-const initialState = {
-  name: '',
-  tags: [],
-  placement: null,
+export const initialState = {
+  documents: {
+    file_name: '',
+    tags: [],
+    placement: ''
+  },
+  images: {
+    file_name: '',
+    tags: [],
+    placement: ''
+  }
 }
 
 // Reducer
@@ -102,7 +115,10 @@ function filtersReducer (state = initialState, action) {
     case SET_FILTER:
       return {
         ...state,
-        [action.filter]: action.value,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          [action.filter]: action.value
+        }
       }
 
     case RESET_FILTERS:

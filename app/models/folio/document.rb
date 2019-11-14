@@ -19,8 +19,13 @@ end
 #  file_size       :bigint(8)
 #  mime_type       :string(255)
 #  additional_data :json
+#  file_metadata   :json
+#  hash_id         :string
 #
 # Indexes
 #
-#  index_folio_files_on_type  (type)
+#  index_folio_files_on_created_at  (created_at)
+#  index_folio_files_on_file_name   (file_name)
+#  index_folio_files_on_hash_id     (hash_id)
+#  index_folio_files_on_type        (type)
 #

@@ -1,41 +1,44 @@
 # frozen_string_literal: true
 
 class Folio::Atom::Base < Folio::ApplicationRecord
+  include Folio::Atom::MethodMissing
   include Folio::HasAttachments
   include Folio::Positionable
 
+  KNOWN_STRUCTURE_TYPES = %i[
+    string
+    text
+    richtext
+    code
+    integer
+    float
+    date
+    datetime
+    color
+    boolean
+  ]
+
+  ATTACHMENTS = []
+
   STRUCTURE = {
-    title: nil,     # one of nil, :string
-    perex: nil,     # one of nil, :string, :redactor
-    content: nil,   # one of nil, :string, :redactor
-    cover: nil,     # one of nil, true
-    images: nil,    # one of nil, true
-    document: nil,  # one of nil, true
-    documents: nil, # one of nil, true
-    model: nil,     # one of nil, an array of model class names - e.g. %w[Folie::Node My::Model]
+    title: :string,
   }
+
+  ASSOCIATIONS = {}
 
   self.table_name = 'folio_atoms'
 
-  before_save :unset_extra_attrs, if: :type_changed?
-  after_save :unlink_extra_files, if: :saved_change_to_type?
-
-  if Rails.application.config.folio_using_traco
-    translates :title, :perex, :content
-  end
+  attr_readonly :type
+  after_initialize :validate_structure
 
   belongs_to :placement,
              polymorphic: true,
              touch: true,
              required: true
-  alias_attribute :node, :placement
-  belongs_to :model, polymorphic: true, optional: true
-
-  accepts_nested_attributes_for :model, allow_destroy: true
-
-  validate :model_type_is_allowed, if: :model_id?
 
   scope :by_type, -> (type) { where(type: type.to_s) }
+
+  before_save :set_data_for_search
 
   def self.cell_name
     nil
@@ -49,8 +52,65 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     model_name.element
   end
 
-  def data
-    self
+  def to_h
+    {
+      id: id,
+      type: type,
+      position: position,
+      placement_type: placement_type,
+      placement_id: placement_id,
+      data: data || {},
+    }.merge(attachments_to_h).merge(associations_to_h)
+  end
+
+  def attachments_to_h
+    h = {}
+
+    klass::ATTACHMENTS.each do |key|
+      reflection = klass.reflections[key.to_s]
+      plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+      placement_key = klass.reflections[key.to_s].options[:through]
+
+      if plural
+        if (placements = send(placement_key)).present?
+          h["#{placement_key}_attributes".to_sym] = placements.map do |placement|
+            {
+              id: placement.id,
+              file_id: placement.file_id,
+              file: placement.file.to_h,
+              alt: placement.alt,
+              title: placement.title,
+            }
+          end
+        end
+      else
+        if (placement = send(placement_key)).present?
+          h["#{placement_key}_attributes".to_sym] = {
+            file_id: placement.file_id,
+            file: placement.file.to_h,
+            alt: placement.alt,
+            title: placement.title,
+          }
+        end
+      end
+    end
+
+    h
+  end
+
+  def associations_to_h
+    h = {}
+
+    klass::ASSOCIATIONS.keys.each do |key|
+      record = send(key)
+      if record
+        h[key] = Folio::Atom.association_to_h(record)
+      else
+        h[key] = nil
+      end
+    end
+
+    { associations: h }
   end
 
   def self.scoped_model_resource(resource)
@@ -78,12 +138,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     }
   end
 
-  def self.form_placeholders
-    {
-      title: self.human_attribute_name(:title),
-      perex: self.human_attribute_name(:perex),
-      content: self.human_attribute_name(:content),
-    }
+  def self.attachment_placements
+    self::ATTACHMENTS.map do |key|
+      self.reflections[key.to_s].options[:through]
+    end
+  end
+
+  def self.console_icon
   end
 
   private
@@ -91,60 +152,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     def klass
       # as type can be changed
       self.type.constantize
-    end
-
-    def model_type_is_allowed
-      if model &&
-         klass::STRUCTURE[:model].present? &&
-         klass::STRUCTURE[:model].none? { |m| model.is_a?(m.safe_constantize) }
-        errors.add(:model_type, :invalid)
-      end
-    end
-
-    def unset_extra_attrs
-      if klass::STRUCTURE[:model].blank? && model.present?
-        self.model_id = nil
-        self.model_type = nil
-      end
-
-      attrs = %i[title content perex]
-
-      attrs.each do |attr|
-        if Rails.application.config.folio_using_traco
-          I18n.available_locales.each do |locale|
-            i18n_attr = "#{attr}_#{locale}".to_sym
-            if klass::STRUCTURE[attr].blank? && self[i18n_attr].present?
-              self[i18n_attr] = nil
-            end
-          end
-        else
-          if klass::STRUCTURE[attr].blank? && self[attr].present?
-            self[attr] = nil
-          end
-        end
-      end
-    end
-
-    def unlink_extra_files
-      if klass::STRUCTURE[:cover].nil?
-        self.cover_placement.destroy! if cover_placement.present?
-      end
-
-      if klass::STRUCTURE[:images].nil?
-        if image_placements.exists?
-          self.image_placements.each(&:destroy!)
-        end
-      end
-
-      if klass::STRUCTURE[:documents].nil?
-        if document_placements.exists?
-          if klass::STRUCTURE[:document].nil?
-            self.document_placements.each(&:destroy!)
-          else
-            self.document_placements.offset(1).each(&:destroy!)
-          end
-        end
-      end
     end
 
     def positionable_last_record
@@ -156,27 +163,46 @@ class Folio::Atom::Base < Folio::ApplicationRecord
         end
       end
     end
+
+    def validate_structure
+      klass::STRUCTURE.values.each do |value|
+        next if value.is_a?(Array)
+        next if KNOWN_STRUCTURE_TYPES.include?(value)
+        fail ArgumentError, "Unknown field type: #{value}"
+      end
+    end
+
+    def set_data_for_search
+      self.data_for_search = data.try(:values).try(:join, "\n").presence
+    end
 end
 
 # == Schema Information
 #
 # Table name: folio_atoms
 #
-#  id             :bigint(8)        not null, primary key
-#  type           :string
-#  content        :text
-#  position       :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  placement_type :string
-#  placement_id   :bigint(8)
-#  model_type     :string
-#  model_id       :bigint(8)
-#  title          :string
-#  perex          :text
+#  id              :bigint(8)        not null, primary key
+#  type            :string
+#  position        :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  placement_type  :string
+#  placement_id    :bigint(8)
+#  locale          :string
+#  data            :jsonb
+#  associations    :jsonb
+#  data_for_search :text
 #
 # Indexes
 #
-#  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
 #  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
 #
+
+if Rails.env.development?
+  Dir[
+    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
+    Rails.root.join('app/models/**/atom/**/*.rb')
+  ].each do |file|
+    require_dependency file
+  end
+end

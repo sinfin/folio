@@ -1,63 +1,38 @@
-.folio-console-devise
-  text-align: center
+.f-c-layout-body--devise
+  h1
+    @extend .h2
+    margin: 0 0 $spacer
+    text-align: center
 
-  h2
-    margin-top: 0
+  form + .form-group
+    margin-bottom: 0
+    text-align: center
 
-  input[type="text"],
-  input[type="password"],
-  input[type="email"]
-    @extend .form-control
-
-  .actions input
-    @extend .btn
+  .btn-primary
     @extend .btn-block
-    @extend .btn-primary
 
-  .field,
-  .actions
-    @extend .form-group
-
-    em
-      margin-bottom: 0.5rem
-
-  .field
-    text-align: left
-
-    br
+  .alert
+    .alert-heading
       display: none
 
-  input[name="account[remember_me]"]
-    &, ~ input, ~ label
+  .new_account
+    .form-group.form-check
       display: none
 
-.folio-console-layout-main-devise
+.f-c-layout-devise
   display: flex
   flex-direction: column
 
-.folio-console-layout-main-devise-inner
+.f-c-layout-devise__inner
   background: white
   padding: $grid-gutter-width
 
-  .row
-    margin: 0
-    padding: 0
-
-    .col-sm-4
-      padding: 0
-      flex: 1 1 auto
-      max-width: none
-
-+mq-md-up
-  .folio-console-layout-main-devise
++media-breakpoint-up(md)
+  .f-c-layout-devise
     flex: 1 1 auto
     align-items: center
     justify-content: center
 
-  .folio-console-layout-main-devise-inner
+  .f-c-layout-devise__inner
     min-width: 350px
     border-radius: $border-radius
-
-+mq-sm
-  .folio-console-layout-main-devise-inner
-    width: 100%

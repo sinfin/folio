@@ -12,7 +12,7 @@ module Dummy
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
 
-    I18n.available_locales = [:cs, :en, :de, :es]
+    I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 
     # Custom error pages

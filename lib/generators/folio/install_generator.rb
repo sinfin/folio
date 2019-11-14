@@ -20,8 +20,11 @@ module Folio
         gem 'pg', version: '~> 0.21.0'
         gem 'devise-i18n'
         gem 'rails-i18n'
-        gem 'actionpack-page_caching'
+        gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'mini_racer'
+        gem 'premailer', github: 'sinfin/premailer'
+        gem 'premailer-rails'
+        gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
 
         gem_group :test do
           gem 'factory_bot'
@@ -87,6 +90,7 @@ module Folio
         [
           'test/factories.rb',
           'test/test_helper.rb',
+          'app/controllers/anti_cache_controller.rb',
           'app/controllers/application_controller.rb',
           'app/controllers/pages_controller.rb',
           'app/controllers/errors_controller.rb',
@@ -97,6 +101,7 @@ module Folio
           'config/initializers/smtp.rb',
           'config/routes.rb',
           'lib/application_cell.rb',
+          'test/controllers/anti_cache_controller_test.rb',
         ].each { |f| template "#{f}.tt", f }
 
         template '.env.sample.erb', '.env'
@@ -112,6 +117,8 @@ module Folio
           'app/assets/images/sprites@2x/.keep',
           'app/assets/javascripts/application.js',
           'app/assets/javascripts/non_turbo.js',
+          'app/assets/javascripts/folio/console/main_app.coffee',
+          'app/cells/folio/console/atoms/previews/main_app.coffee',
           'app/assets/stylesheets/_cells.scss.erb',
           'app/assets/stylesheets/_custom_bootstrap.sass',
           'app/assets/stylesheets/_fonts.scss',
@@ -125,6 +132,8 @@ module Folio
           'app/assets/stylesheets/modules/_bootstrap-overrides.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/_type.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass',
+          'app/views/devise/mailer/invitation_instructions.html.erb',
+          'app/views/devise/mailer/invitation_instructions.text.erb',
           'app/views/home/index.slim',
           'app/views/folio/pages/show.slim',
           'app/views/folio/console/partials/_appended_menu_items.slim',
@@ -188,6 +197,8 @@ module Folio
         inject_into_file 'config/environments/production.rb', after: /config\.action_controller\.perform_caching\s*=\s*true/ do
           "\n  config.action_controller.page_cache_directory = Rails.root.join('public', 'cached_pages')"
         end
+
+        gsub_file 'config/environments/production.rb', 'config.assets.js_compressor = :uglifier', 'config.assets.js_compressor = Uglifier.new(harmony: true)'
       end
 
       def setup_routes

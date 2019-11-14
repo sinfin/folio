@@ -1,0 +1,12 @@
+div class=class_name class=id_class_name
+  - if options[:cover]
+    .f-c-index-images__item
+      - if model.cover_placement.present?
+        = image(model.cover_placement)
+      - else
+        img.f-c-index-images__missing src=broken_src
+
+  - else
+    - model.image_placements.first(3).each do |placement|
+      .f-c-index-images__item
+        = image(placement)

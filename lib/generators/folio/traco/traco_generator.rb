@@ -10,8 +10,7 @@ class Folio::TracoGenerator < Rails::Generators::Base
   def add_migrations
     [
       'config/initializers/folio_using_traco.rb',
-      'db/migrate/20181109082101_add_atom_translations.rb',
-      'db/migrate/20181109082102_add_node_translations.rb',
+      'db/migrate/20190207101928_add_page_translations.rb',
     ].each { |f| template "#{f}.erb", f }
   end
 end

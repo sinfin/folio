@@ -1,0 +1,40 @@
+.f-c-publishable-inputs
+  display: flex
+  align-items: center
+  margin-bottom: $spacer
+  position: relative
+  bottom: -1px
+
+  &__check
+    margin-right: $spacer
+    margin-bottom: 0
+
+  &__date
+    position: relative
+    display: flex
+    align-items: center
+    margin: - $spacer 0
+    cursor: pointer
+
+  &__wrapper
+    margin: 0
+
+    .d-flex
+      flex-direction: row-reverse
+
+      &:after
+        color: $black
+        left: 0
+        right: auto
+
+  &__input
+    font-size: 11px
+    margin-left: -5px
+
+    .simple_form .form-group.datetime &.folio-console-date-picker
+      padding-left: $input-height
+      padding-right: $input-btn-padding-x
+      box-shadow: none !important
+      border: none !important
+      background: none !important
+      cursor: pointer

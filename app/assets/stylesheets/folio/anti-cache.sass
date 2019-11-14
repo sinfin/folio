@@ -1,0 +1,14 @@
+[data-anti-cache-blurred]
+  transition: filter 0.15s
+
+  [data-anti-cache]:not(.folio-anti-cache--done) &
+    filter: blur(5px)
+    cursor: wait
+    opacity: 0.5
+
+[data-anti-cache-hidden]
+  transition: opacity 0.15s
+  opacity: 1
+
+  [data-anti-cache]:not(.folio-anti-cache--done) &
+    opacity: 0

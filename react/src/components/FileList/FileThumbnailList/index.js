@@ -1,11 +1,11 @@
 import React from 'react'
 
-import DropzoneTrigger from './DropzoneTrigger';
-import FileThumbnail from './FileThumbnail';
+import DropzoneTrigger from './DropzoneTrigger'
+import FileThumbnail from './FileThumbnail'
 
 const FileThumbnailList = ({ files, dropzoneTrigger, link, overflowingParent, onClick, selecting }) => (
-  <div className="folio-console-file-list">
-    {dropzoneTrigger  && <DropzoneTrigger />}
+  <div className='folio-console-file-list'>
+    {dropzoneTrigger && <DropzoneTrigger />}
 
     {files.map((file) => (
       <FileThumbnail

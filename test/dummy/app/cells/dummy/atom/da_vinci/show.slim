@@ -1,0 +1,28 @@
+.d-atom.d-atom-da-vinci style="background-color: #{model.color || 'white'}"
+  .container
+    ul.list-unstyled
+      - if model.page.present?
+        li
+          h5.mt-3.mb-2 = model.page.class.model_name.human
+          = model.page.to_label
+
+      - model.class::STRUCTURE.keys.each do |key|
+        - if model.send(key).present?
+          li
+            h5.mt-3.mb-2 = key
+            - if key == :richtext
+              == model.send(key)
+            - else
+              = model.send(key)
+
+      - model.class.attachment_placements.each_with_index do |key, i|
+        - if file = model.send(key).try(:file)
+          li
+            h5.mt-3.mb-2
+              = model.class.human_attribute_name(model.class::ATTACHMENTS[i])
+
+            - if file.is_a?(Folio::Image)
+              - size = Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+              img src=file.thumb(size).url
+            - else
+              = file.file_name

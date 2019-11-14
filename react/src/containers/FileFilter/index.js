@@ -2,45 +2,37 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import {
-  filtersSelector,
-  tagsSelector,
-  placementsSelector,
+  makeFiltersSelector,
+  makeTagsSelector,
   setFilter,
-  resetFilters,
+  resetFilters
 } from 'ducks/filters'
 
 import {
   setCardsDisplay,
   setThumbsDisplay,
-  displaySelector,
+  displaySelector
 } from 'ducks/display'
 
-import { fileTypeIsImageSelector } from 'ducks/app'
-
 import TagsInput from 'components/TagsInput'
-import Select from 'components/Select'
 
 import Wrap from './styled/Wrap'
 import DisplayButtons from './DisplayButtons'
 
 class FileFilter extends Component {
-  onNameChange = (e) => {
+  onInputChange = (e) => {
     this.props.dispatch(
-      setFilter('name', e.target.value)
+      setFilter(this.props.filesKey, e.target.name, e.target.value)
     )
   }
 
   onTagsChange = (tags) => {
-    this.props.dispatch(setFilter('tags', tags))
-  }
-
-  onPlacementChange = (placement) => {
-    this.props.dispatch(setFilter('placement', placement))
+    this.props.dispatch(setFilter(this.props.filesKey, 'tags', tags))
   }
 
   onReset = () => {
     this.props.dispatch(
-      resetFilters()
+      resetFilters(this.props.filesKey)
     )
   }
 
@@ -56,7 +48,7 @@ class FileFilter extends Component {
     }
   }
 
-  render() {
+  render () {
     const { filters, margined, display, fileTypeIsImage } = this.props
 
     return (
@@ -64,9 +56,10 @@ class FileFilter extends Component {
         <div className='form-group'>
           <input
             className='form-control'
-            value={filters.name}
-            onChange={this.onNameChange}
-            placeholder='File name'
+            value={filters.file_name}
+            onChange={this.onInputChange}
+            placeholder={window.FolioConsole.translations.fileNameFilter}
+            name='file_name'
           />
         </div>
 
@@ -81,27 +74,24 @@ class FileFilter extends Component {
         </div>
 
         <div className='form-group form-group--react-select'>
-          <Select
-            options={this.props.placements}
+          <input
+            className='form-control'
             value={filters.placement}
-            onChange={this.onPlacementChange}
-            defaultValue={null}
-            placeholder={window.FolioConsole.translations.placementsLabel}
-            isClearable
+            onChange={this.onInputChange}
+            placeholder={window.FolioConsole.translations.usageFilter}
+            name='placement'
           />
         </div>
 
-        {filters.active && (
-          <div className='form-group form-group--reset'>
+        <div className='form-group form-group--reset'>
+          {filters.active && (
             <button
               type='button'
-              className='btn btn-danger'
+              className='btn btn-danger fa fa-times'
               onClick={this.onReset}
-            >
-              <i className='fa fa-times'></i>
-            </button>
-          </div>
-        )}
+            />
+          )}
+        </div>
 
         {fileTypeIsImage && (
           <DisplayButtons
@@ -115,12 +105,10 @@ class FileFilter extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  filters: filtersSelector(state),
-  tags: tagsSelector(state),
-  placements: placementsSelector(state),
-  display: displaySelector(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
+const mapStateToProps = (state, props) => ({
+  filters: makeFiltersSelector(props.filesKey)(state),
+  tags: makeTagsSelector(props.filesKey)(state),
+  display: displaySelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -14,7 +14,7 @@ class DropzoneTrigger extends React.PureComponent {
         className={`folio-console-file-list__dropzone-trigger ${DROPZONE_TRIGGER_CLASSNAME}`}
         onClick={this.onClick}
       >
-        <i className='fa fa-plus-circle'></i>
+        <i className='fa fa-plus-circle' />
       </div>
     )
   }

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Lead < Folio::ApplicationRecord
+  include AASM
+  include PgSearch::Model
+
   attr_accessor :verified_captcha
 
   belongs_to :visit, optional: true
@@ -15,9 +18,9 @@ class Folio::Lead < Folio::ApplicationRecord
   validate :validate_verified_captcha
 
   # Scopes
-  scope :handled, -> { with_state(:handled) }
-  scope :not_handled, -> { with_state(:submitted) }
+  scope :not_handled, -> { submitted }
   scope :ordered, -> { order(created_at: :desc) }
+  scope :by_state, -> (state) { where(aasm_state: state) }
 
   pg_search_scope :by_query,
                   against: %i[email name phone],
@@ -26,13 +29,16 @@ class Folio::Lead < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-  state_machine initial: :submitted do
+  aasm do
+    state :submitted, initial: true, color: 'red'
+    state :handled, color: 'green'
+
     event :handle do
-      transition submitted: :handled
+      transitions from: :submitted, to: :handled
     end
 
     event :unhandle do
-      transition handled: :submitted
+      transitions from: :handled, to: :submitted
     end
   end
 
@@ -40,8 +46,10 @@ class Folio::Lead < Folio::ApplicationRecord
     email.presence || phone.presence || self.class.model_name.human
   end
 
+  alias_method :to_label, :title
+
   def self.csv_attribute_names
-    %i[id email phone note created_at name url state]
+    %i[id email phone note created_at name url aasm_state]
   end
 
   def self.clears_page_cache_on_save?
@@ -51,8 +59,8 @@ class Folio::Lead < Folio::ApplicationRecord
   def csv_attributes
     self.class.csv_attribute_names.map do |attr|
       case attr
-      when :state
-        human_state_name
+      when :aasm_state
+        aasm.human_state
       else
         send(attr)
       end
@@ -89,7 +97,7 @@ end
 #  name            :string
 #  url             :string
 #  additional_data :json
-#  state           :string           default("submitted")
+#  aasm_state      :string           default("submitted")
 #  visit_id        :bigint(8)
 #
 # Indexes

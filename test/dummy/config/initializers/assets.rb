@@ -9,6 +9,7 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.paths << Emoji.images_path
 # Add Yarn node_modules folder to the asset load path.
 Rails.application.config.assets.paths << Rails.root.join('node_modules')
+Rails.application.config.assets.paths << Rails.root.join('app/cells')
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
@@ -16,5 +17,9 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile += %w(
   folio_cells.css
   non_turbo.js
+  folio/console/react.css
   folio/console/react.js
+  folio/mailer/base.css
+  folio/console/atoms/previews/previews.css
+  folio/console/atoms/previews/previews.js
 )

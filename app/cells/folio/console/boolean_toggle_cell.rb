@@ -1,53 +1,42 @@
 # frozen_string_literal: true
 
 class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
-  ATTRIBUTE = :published
-  ICON_ON = 'toggle-on'
-  ICON_OFF = 'toggle-off'
+  include SimpleForm::ActionViewExtensions::FormHelper
 
   def show
-    render if url.present?
-  end
-
-  def form(&block)
-    form_with(model: model, as: as, url: url) do
-      yield(block)
+    if attribute.present? && url.present?
+      form { |f| input(f) }
     end
   end
 
-  def as
-    options[:as] || model.class.table_name.singularize
+  def form(&block)
+    opts = {
+      url: url,
+      html: { class: 'f-c-boolean-toggle' },
+    }
+
+    simple_form_for(model, opts, &block)
   end
 
-  def attr
-    options[:attr] || self.class::ATTRIBUTE
+  def input(f)
+    f.input(attribute, wrapper: :custom_boolean_switch,
+                       label: '<span></span>'.html_safe,
+                       hint: false,
+                       input_html: { class: 'f-c-boolean-toggle__input',
+                                     id: id })
   end
 
-  def attr_name
-    "#{as}[#{attr}]"
-  end
-
-  def value
-    model.send(attr)
-  end
-
-  def icon_on
-    "fa-#{self.class::ICON_ON}"
-  end
-
-  def icon_off
-    "fa-#{self.class::ICON_OFF}"
+  def attribute
+    options[:attribute]
   end
 
   def url
-    return options[:url] if options[:url].present?
-    model_url = "console_#{as}_path"
-    public_send(model_url, model.id, format: :json)
-  rescue NoMethodError
-    controller.public_send(model_url, model.id, format: :json)
-  rescue ActionController::UrlGenerationError
-    controller.main_app.public_send(model_url, model.id, format: :json)
+    controller.url_for([:console, model, format: :json])
   rescue StandardError
     nil
+  end
+
+  def id
+    "f-c-boolean-toggle--#{model.id}-#{attribute}"
   end
 end

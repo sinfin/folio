@@ -1,7 +1,7 @@
 import React from 'react'
 import { SortableContainer } from 'react-sortable-hoc'
 
-import FilePlacementSortableItem from '../FilePlacementSortableItem';
+import FilePlacementSortableItem from '../FilePlacementSortableItem'
 
 const FilePlacementSortableList = SortableContainer(({
   filePlacements,
@@ -10,6 +10,7 @@ const FilePlacementSortableList = SortableContainer(({
   onTitleChange,
   onAltChange,
   move,
+  filesKey
 }) => (
   <div className='folio-console-file-placement-list'>
     {filePlacements.selected.map((filePlacement, index) => (
@@ -27,6 +28,7 @@ const FilePlacementSortableList = SortableContainer(({
         move={move}
         isFirst={index === 0}
         isLast={index === filePlacement.length - 1}
+        filesKey={filesKey}
       />
     ))}
   </div>

@@ -2,23 +2,75 @@
 
 module Folio::Atom
   def self.types
-    Folio::Atom::Base.recursive_subclasses
+    Folio::Atom::Base.recursive_subclasses(include_self: false)
   end
 
-  def self.text_fields
-    @text_fields ||= begin
-      if Rails.application.config.folio_using_traco
-        text_fields = []
-        Folio::Atom::Base.column_names.each do |column|
-          if /\A(title|content|perex)_/.match?(column)
-            text_fields << column.to_sym
-          end
+  def self.structures
+    str = {}
+    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+      structure = {}
+
+      klass::STRUCTURE.each do |key, value|
+        structure[key] = {
+          label: klass.human_attribute_name(key),
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          type: value
+        }
+
+        if value.is_a?(Array)
+          structure[key][:type] = 'collection'
+          structure[key][:collection] = value
         end
-        text_fields
-      else
-        [:title, :content, :perex]
       end
+
+      attachments = klass::ATTACHMENTS.map do |key|
+        reflection = klass.reflections[key.to_s]
+        plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+        file_type = reflection.source_reflection.options[:class_name]
+
+        {
+          file_type: file_type,
+          key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
+          label: klass.human_attribute_name(key),
+          plural: plural,
+        }
+      end
+
+      associations = {}
+      klass::ASSOCIATIONS.each do |key, model_class_names|
+        show_model_names = model_class_names.size > 1
+        records = model_class_names.flat_map do |model_class_name|
+          model_class = model_class_name.to_s.constantize
+          klass.scoped_model_resource(model_class)
+               .map { |record| association_to_h(record, show_model_names: show_model_names) }
+               .sort_by { |h| I18n.transliterate(h[:label]) }
+        end
+
+        associations[key] = {
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          label: klass.human_attribute_name(key),
+          records: records,
+        }
+      end
+
+      str[klass.to_s] = {
+        associations: associations,
+        attachments: attachments,
+        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil),
+        structure: structure,
+        title: klass.model_name.human,
+      }
     end
+    str
+  end
+
+  def self.strong_params
+    keys = []
+    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+      keys += klass::STRUCTURE.keys
+      keys += klass::ASSOCIATIONS.keys.map { |k| { k => [:id, :type] } }
+    end
+    keys.uniq
   end
 
   def self.atoms_in_molecules(atoms)
@@ -39,13 +91,29 @@ module Folio::Atom
 
     molecules
   end
-end
 
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
-    Rails.root.join('app/models/**/atom/**/*.rb')
-  ].each do |file|
-    require_dependency file
+  def self.atom_image_placements(atoms)
+    images = []
+
+    atoms.each do |atom|
+      images << atom.cover_placement
+      images += atom.image_placements.to_a
+    end
+
+    images.compact
+  end
+
+  def self.association_to_h(record, show_model_names: false)
+    label = [
+      show_model_names ? record.model_name.human : nil,
+      record.to_label,
+    ].compact.join(' / ')
+
+    {
+      id: record.id,
+      type: record.class.name,
+      label: label,
+      value: Folio::Console::StiHelper.sti_record_to_select_value(record)
+    }
   end
 end

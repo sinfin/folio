@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
+import { flashMessageFromApiErrors } from 'utils/flash'
+import fileKeyToType from 'utils/fileKeyToType'
 
 import Loader from 'components/Loader'
 import {
@@ -13,9 +15,8 @@ import {
   success,
   error,
   progress,
-  uploadsSelector,
+  makeUploadsSelector
 } from 'ducks/uploads'
-import { fileTypeSelector } from 'ducks/app'
 
 import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
 
@@ -40,21 +41,21 @@ export const UploaderContext = React.createContext(() => {})
 
 class Uploader extends Component {
   state = { uploaderClassName: uniqueId('folio-console-uploader-') }
+
   dropzone = null
 
   eventHandlers () {
-    const { dispatch } = this.props
+    const { dispatch, filesKey } = this.props
 
     return {
-      addedfile: (file) => dispatch(addedFile(file)),
-      thumbnail: (file, dataUrl) => dispatch(thumbnail(file, dataUrl)),
-      success: (file, response) => dispatch(success(file, response.file)),
+      addedfile: (file) => dispatch(addedFile(filesKey, file)),
+      thumbnail: (file, dataUrl) => dispatch(thumbnail(filesKey, file, dataUrl)),
+      success: (file, response) => dispatch(success(filesKey, file, response)),
       error: (file, message) => {
-        const flash = (typeof message === 'object') ? message.error : message
-        dispatch(error(file, flash))
+        dispatch(error(filesKey, file, flashMessageFromApiErrors(message)))
       },
-      uploadprogress: (file, percentage) => dispatch(progress(file, Math.round(percentage))),
-      init: (dropzone) => this.dropzone = dropzone
+      uploadprogress: (file, percentage) => dispatch(progress(filesKey, file, Math.round(percentage))),
+      init: (dropzone) => { this.dropzone = dropzone }
     }
   }
 
@@ -62,23 +63,26 @@ class Uploader extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: this.props.fileType === 'Folio::Document' ? '/console/documents' : '/console/images',
+      postUrl: `/console/api/${this.props.filesKey}`
     }
   }
 
   djsConfig () {
+    const params = {}
+    const fileType = fileKeyToType(this.props.filesKey)
+    params['file[type]'] = fileType
+    params['file[attributes][type]'] = fileType
+    params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
+
     return {
       headers: CSRF,
-      paramName: 'file[file][]',
+      paramName: 'file[attributes][file]',
       previewTemplate: '<span></span>',
       clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
       thumbnailMethod: 'contain',
       thumbnailWidth: 150,
       thumbnailHeight: 150,
-      params: {
-        'file[type]': this.props.fileType,
-        'file[tag_list]': this.props.uploads.uploadTags.join(','),
-      }
+      params
     }
   }
 
@@ -86,13 +90,13 @@ class Uploader extends Component {
     this.dropzone.hiddenFileInput.click()
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.dropzone = null
   }
 
-  render() {
-    const { fileType } = this.props
-    if (!fileType) return <Loader />
+  render () {
+    const { filesKey } = this.props
+    if (!filesKey) return <Loader />
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
@@ -110,9 +114,8 @@ class Uploader extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  fileType: fileTypeSelector(state),
-  uploads: uploadsSelector(state),
+const mapStateToProps = (state, props) => ({
+  uploads: makeUploadsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

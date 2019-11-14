@@ -7,7 +7,11 @@ $.widget 'ui.autocomplete', $.ui.autocomplete,
       @_renderItemData($ul, item)
 
   _renderItem: ($ul, item) ->
-    $("<li class=\"ui-menu-item\"><span class=\"dropdown-item ui-menu-item-wrapper\">#{item.label}</span></li>").appendTo($ul)
+    $("""
+      <li class="ui-menu-item" title="#{item.label}">
+        <span class="dropdown-item ui-menu-item-wrapper folio-console-autocomplete-input-menu-item">#{item.label}</span>
+      </li>
+      """).appendTo($ul)
 
   _resizeMenu: ->
     $ul = @menu.element
@@ -24,11 +28,19 @@ unbindAutocomplete = ($elements) ->
   $elements.autocomplete('destroy')
 
 $(document)
-  .on 'ready', ->
-    bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-
   .on 'cocoon:after-insert', (e, insertedItem) ->
     bindAutocomplete(insertedItem.find(AUTOCOMPLETE_SELECTOR))
 
   .on 'cocoon:before-remove', (e, item) ->
     unbindAutocomplete(item.find(AUTOCOMPLETE_SELECTOR))
+
+if Turbolinks?
+  $(document)
+    .on 'turbolinks:load', ->
+      bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+
+    .on 'turbolinks:before-cache', ->
+      unbindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+
+else
+  $ -> bindAutocomplete($(AUTOCOMPLETE_SELECTOR))

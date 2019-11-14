@@ -1,4 +1,3 @@
-#= require jquery3
 #= require photoswipe/dist/photoswipe
 #= require photoswipe/dist/photoswipe-ui-default
 
@@ -17,6 +16,7 @@ class window.FolioLightbox
     @$pswp
 
   bind: (data) ->
+    @unbind()
     $(document).on "click.#{@eventIdentifier}", @full_selector, (e) =>
       e.preventDefault()
       $img = $(e.target)
@@ -47,15 +47,22 @@ class window.FolioLightbox
     item.title = $el.data('lightbox-title') or $el.next('figcaption').text()
     item
 
-  destroy: ->
-    @photoSwipe?.close()
+  unbind: ->
     $(document).off "click.#{@eventIdentifier}", @full_selector
+
+  destroy: ->
+    try
+      @photoSwipe.close()
+      @photoSwipe.destroy()
+    catch e
+    @photoSwipe = null
+    @unbind()
     @$pswp = null
 
 window.makeFolioLightbox = (selector, opts = {}) ->
   window.folioLightboxInstances ?= []
 
-  $(document).on 'turbolinks:load', ->
+  init = ->
     $items = $(selector)
     return if $items.length is 0
     if opts.individual
@@ -75,9 +82,15 @@ window.makeFolioLightbox = (selector, opts = {}) ->
     else
       window.folioLightboxInstances.push(new window.FolioLightbox(selector))
 
-  $(document).on 'turbolinks:before-cache', ->
-    return unless window.folioLightboxInstances.length > 0
+  if Turbolinks?
+    $(document).on 'turbolinks:load', init
 
-    instance.destroy() for instance in window.folioLightboxInstances
+    $(document).on 'turbolinks:before-cache turbolinks:before-render', ->
+      return unless window.folioLightboxInstances.length > 0
 
-    window.folioLightboxInstances = []
+      window.folioLightboxInstances.forEach (instance) ->
+        instance.destroy()
+
+      window.folioLightboxInstances = []
+  else
+    $ init

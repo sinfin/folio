@@ -1,0 +1,42 @@
+.f-c-layout-sidebar
+  display: flex
+  flex-direction: column
+
+  &__part
+    flex: 0 0 auto
+
+    &--overflowable
+      flex-shrink: 1
+      overflow-y: auto
+
+    & + &
+      border-top: 1px solid rgba(#979797, 0.42)
+
+  &__title
+    text-transform: uppercase
+    font-weight: $font-weight-bold
+    display: block
+    padding: $grid-gutter-half
+
+    +plain-hover-focus
+      color: $white
+      text-decoration: none
+
+  &__ul
+    padding: 10px 0
+
+  &__a
+    display: block
+    padding: 10px 20px
+
+    +plain-hover-focus
+      color: $gray-200
+
+    &--active
+      font-weight: $font-weight-bold
+
+      +plain-hover-focus
+        color: $white
+
+  &__icon
+    margin: 0 7px 0 0

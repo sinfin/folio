@@ -1,13 +1,19 @@
 const meta = document.querySelector('meta[name="csrf-token"]')
 
 export const CSRF = meta ? {
-  'X-CSRF-Token': meta.getAttribute('content'),
+  'X-CSRF-Token': meta.getAttribute('content')
 } : {}
 
-const HEADERS = {
+const JSON_HEADERS = {
   ...CSRF,
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
+  Accept: 'application/json',
+  'Content-Type': 'application/json'
+}
+
+const HTML_HEADERS = {
+  ...CSRF,
+  Accept: 'text/html',
+  'Content-Type': 'application/json'
 }
 
 const fallbackMessage = (response) => `${response.status}: ${response.statusText}`
@@ -37,11 +43,16 @@ function responseToJson (response) {
   return response.json()
 }
 
+function responseToHtml (response) {
+  if (response.status === 204) return Promise.resolve('')
+  return response.text()
+}
+
 function api (method, url, body) {
-  let data = {
+  const data = {
     method,
-    headers: HEADERS,
-    credentials: 'same-origin',
+    headers: JSON_HEADERS,
+    credentials: 'same-origin'
   }
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
@@ -63,4 +74,20 @@ export function apiGet (url, body = null) {
 
 export function apiDelete (url) {
   return api('DELETE', url, null)
+}
+
+function htmlApi (method, url, body) {
+  const data = {
+    method,
+    headers: HTML_HEADERS,
+    credentials: 'same-origin'
+  }
+  // need to have this extra for MS Edge
+  if (body) data.body = JSON.stringify(body)
+
+  return fetch(url, data).then(checkResponse).then(responseToHtml)
+}
+
+export function apiHtmlPost (url, body) {
+  return htmlApi('POST', url, body)
 }

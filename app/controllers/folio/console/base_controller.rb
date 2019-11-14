@@ -1,10 +1,17 @@
 # frozen_string_literal: true
 
+require 'csv'
+
 class Folio::Console::BaseController < Folio::ApplicationController
   include Pagy::Backend
+  include Folio::Console::DefaultActions
+  include Folio::Console::Includes
 
   before_action :authenticate_account!
   before_action :add_root_breadcrumb
+  before_action do
+    I18n.locale = Rails.application.config.folio_console_locale
+  end
   # TODO: before_action :authorize_account!
 
   layout 'folio/console/application'
@@ -18,8 +25,76 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def index
-    redirect_to console_dashboard_path
+  def self.folio_console_controller_for(class_name, except: [])
+    klass = class_name.constantize
+
+    if klass.private_method_defined?(:positionable_last_position)
+      include Folio::Console::SetPositions
+      handles_set_positions_for klass
+    end
+
+    respond_to :json, only: %i[update]
+
+    load_and_authorize_resource(class: class_name, except: except)
+
+    before_action do
+      begin
+        add_breadcrumb(klass.model_name.human(count: 2),
+                       url_for([:console, klass]))
+
+        if folio_console_record
+          if folio_console_record.new_record?
+            add_breadcrumb I18n.t('folio.console.breadcrumbs.actions.new')
+          else
+            add_breadcrumb(folio_console_record.to_label)
+          end
+        end
+      rescue NoMethodError
+      end
+    end
+
+    unless except.include?(:index)
+      before_action only: :index do
+        name = folio_console_record_variable_name(plural: true)
+
+        if folio_console_collection_includes.present?
+          with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
+          instance_variable_set(name, with_include)
+        end
+
+        if filter_params.present? &&
+           instance_variable_get(name).respond_to?(:filter_by_params)
+          filtered = instance_variable_get(name).filter_by_params(filter_params)
+          instance_variable_set(name, filtered)
+        end
+      end
+    end
+
+    prepend_before_action except: :index do
+      name = folio_console_record_variable_name(plural: false)
+
+      if folio_console_record_includes.present?
+        begin
+          instance_variable_set(name, klass.includes(*folio_console_record_includes)
+                                           .find(params[:id]))
+        rescue ActiveRecord::RecordNotFound
+        end
+      end
+    end
+
+    prepend_before_action do
+      @klass = klass
+    end
+  end
+
+  def url_for(options = nil)
+    super(options)
+  rescue NoMethodError
+    main_app.url_for(options)
+  end
+
+  def filter_params
+    params.permit(:by_query, *index_filters.keys)
   end
 
   private
@@ -28,32 +103,23 @@ class Folio::Console::BaseController < Folio::ApplicationController
     #   authorize! :manage, :all
     # end
 
-    def current_ability
-      @current_ability ||= Folio::ConsoleAbility.new(current_admin)
-    end
-
-    def query
-      @query ||= params[:by_query]
-    end
-
-    helper_method :query
-
-    def filter_params
-      params.permit(:by_query, *index_filters.keys)
-    end
-
     def index_filters
       {}
     end
 
-    helper_method :filter_params
-    helper_method :index_filters
+    def current_ability
+      @current_ability ||= Folio::ConsoleAbility.new(current_account)
+    end
 
     def add_root_breadcrumb
       add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
     end
 
     def additional_file_placements_strong_params_keys
+      []
+    end
+
+    def additional_private_attachments_strong_params_keys
       []
     end
 
@@ -81,30 +147,30 @@ class Folio::Console::BaseController < Folio::ApplicationController
       [ hash ]
     end
 
-    def atoms_strong_params
-      [{
-        atoms_attributes: [:id,
-                           :type,
-                           :model,
-                           :model_id,
-                           :model_type,
-                           :position,
-                           :_destroy,
-                           *Folio::Atom.text_fields,
-                           *file_placements_strong_params]
-      }]
-    end
+    def private_attachments_strong_params
+      commons = %i[id title alt file type _destroy]
+      hash = { private_attachments_attributes: commons }
 
-    def additional_strong_params(node)
-      if node.class == Folio::NodeTranslation
-        node.node_original.additional_params
-      else
-        node.additional_params
+      additional_private_attachments_strong_params_keys.each do |key|
+        hash[key] = commons
       end
+
+      [ hash ]
     end
 
-    def sti_atoms(params)
-      sti_hack(params, :atoms_attributes, :model)
+    def atoms_strong_params
+      base = [:id,
+              :type,
+              :position,
+              :placement_type,
+              :_destroy,
+              *file_placements_strong_params] + Folio::Atom.strong_params
+
+      [{ atoms_attributes: base }] + I18n.available_locales.map do |locale|
+        {
+          "#{locale}_atoms_attributes": base
+        }
+      end
     end
 
     def sti_hack(params, nested_name, relation_name)
@@ -125,5 +191,19 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
         obj
       end
+    end
+
+    def render_csv(records)
+      data = ::CSV.generate(headers: true) do |csv|
+        csv << @klass.csv_attribute_names.map do |a|
+          @klass.human_attribute_name(a)
+        end
+        records.each { |rec| csv << rec.csv_attributes }
+      end
+      name = @klass.model_name.human(count: 2)
+      filename = "#{name}-#{Date.today}.csv".split('.')
+                                            .map(&:parameterize)
+                                            .join('.')
+      send_data data, filename: filename
     end
 end

@@ -1,22 +1,21 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
-import { fileTypeIsImageSelector } from 'ducks/app'
-import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
+import { makeFilesStatusSelector, makeFilesForListSelector, makeFilesPaginationSelector, changeFilesPage } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 
-import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
+import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
-import ModalScroll from 'components/ModalScroll';
+import ModalScroll from 'components/ModalScroll'
 
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
     if (this.props.selectFile) {
-      this.props.selectFile(file)
+      this.props.selectFile(this.props.filesKey, file)
     } else if (window.folioConsoleInsertImage) {
       window.folioConsoleInsertImage(file)
     }
@@ -25,40 +24,48 @@ class SingleSelect extends LazyLoadCheckingComponent {
   renderHeader () {
     return (
       <Fragment>
-        <FileFilter />
-        <UploadTagger />
+        <FileFilter filesKey={this.props.filesKey} />
+        <UploadTagger filesKey={this.props.filesKey} />
       </Fragment>
     )
   }
 
   render () {
-    if (this.props.filesLoading) return <Loader />
+    if (!this.props.filesStatus.loaded) return <Loader />
 
     return (
       <ModalScroll
         header={this.renderHeader()}
       >
-        <Uploader>
-          <FileList
-            files={this.props.filesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            onClick={this.selectFile}
-            selecting='single'
-            overflowingParent
-            dropzoneTrigger
-          />
-        </Uploader>
+        {this.props.filesStatus.loading ? <Loader standalone /> : (
+          <Uploader filesKey={this.props.filesKey}>
+            <FileList
+              files={this.props.filesForList}
+              fileTypeIsImage={this.props.filesKey === 'images'}
+              displayAsThumbs={this.props.displayAsThumbs}
+              onClick={this.selectFile}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+              selecting='single'
+              overflowingParent
+              dropzoneTrigger
+            />
+          </Uploader>
+        )}
       </ModalScroll>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  filesLoading: filesLoadingSelector(state),
-  filesForList: filesForListSelector(state),
-  fileTypeIsImage: fileTypeIsImageSelector(state),
+const mapStateToProps = (state, props) => ({
+  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
+  filesForList: makeFilesForListSelector(props.filesKey)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
+  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
 })
 
-export default connect(mapStateToProps, null)(SingleSelect)
+function mapDispatchToProps (dispatch) {
+  return { dispatch }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SingleSelect)
