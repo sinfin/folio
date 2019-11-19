@@ -15,8 +15,20 @@ $ ->
             $group = $toggle.prev('.form-group')
             selector = ".#{$group.prop('className').replace(/ /g, '.')}"
             option = new Option(res.label, res.id)
-            $(selector).find('.form-control').append(option)
-            $group.find('.form-control').val(res.id)
+
+            $(selector).find('.form-control, .selectized').each ->
+              $formControl = $(this)
+              $formControl.append(option)
+              if $formControl[0].selectize
+                $formControl[0].selectize.addOption
+                  text: res.label
+                  id: res.id
+                  value: res.id
+
+            $formControl = $group.find('.form-control, .selectized')
+            if $formControl[0].selectize
+              $formControl[0].selectize.setValue(res.id, true)
+            $formControl.val(res.id)
 
             $toggle.removeClass('f-c-new-record-modal__toggle--active')
             $modal.modal('hide')

@@ -58,6 +58,13 @@ module Folio::ApiControllerBase
       render json: { errors: errors }, status: 400
     end
 
+    def render_selectize_options(models)
+      ary = models.map do |model|
+        { id: model.id, text: model.to_console_label, value: model.id }
+      end
+      render json: { data: ary }
+    end
+
     def serializer_for(model)
       serializer = "#{model.class.name}Serializer".safe_constantize
       fail ArgumentError.new('Unknown serializer') if serializer.nil?

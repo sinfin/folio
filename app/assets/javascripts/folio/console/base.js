@@ -60,6 +60,7 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/tagsinput/tagsinput
 
+//= require folio/console/simple_form_inputs/_collection_select_input
 //= require folio/console/simple_form_inputs/_color_input
 //= require folio/console/simple_form_inputs/_date_time_input
 //= require folio/console/simple_form_inputs/_redactor_input
