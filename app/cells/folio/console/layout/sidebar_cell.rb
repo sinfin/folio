@@ -5,24 +5,47 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     Folio::Site.instance.title
   end
 
-  def links
-    class_names = prepended_link_class_names +
-                  %w[Folio::Page] +
-                  runner_up_link_class_names +
-                  folio_link_class_names +
-                  appended_link_class_names
-
-    ary = []
-
-    class_names.each do |class_name|
-      next if skip_link_class_names.include?(class_name)
-      klass = class_name.constantize
-      label = klass.model_name.human(count: 2)
-      path = controller.url_for([:console, klass])
-      ary << link(label, path)
+  def link_groups
+    if ::Rails.application.config.folio_console_sidebar_link_class_names
+      class_names = ::Rails.application
+                           .config
+                           .folio_console_sidebar_link_class_names
+    else
+      class_names = prepended_link_class_names +
+                    [%w[
+                      Folio::Page
+                      Folio::Menu
+                      Folio::Image
+                      Folio::Document
+                    ]] +
+                    runner_up_link_class_names +
+                    folio_link_class_names +
+                    appended_link_class_names
     end
 
-    ary
+    link_groups_from(class_names)
+  end
+
+  def link_groups_from(class_name)
+    if class_name.is_a?(Array)
+      class_name.map { |cn| link_groups_from(cn) }.compact
+    else
+      return if skip_link_class_names.include?(class_name)
+      klass = class_name.constantize
+
+      if klass == Folio::Site
+        link(nil, controller.edit_console_site_path) do
+          concat(content_tag(:i,
+                             '',
+                             class: 'fa fa-cogs f-c-layout-sidebar__icon'))
+          concat(t('.settings'))
+        end
+      else
+        label = klass.model_name.human(count: 2)
+        path = controller.url_for([:console, klass])
+        link(label, path)
+      end
+    end
   end
 
   def link(label, path, &block)
@@ -40,14 +63,16 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def folio_link_class_names
-    %w[
-      Folio::Menu
-      Folio::Image
-      Folio::Document
-      Folio::NewsletterSubscription
-      Folio::Lead
-      Visit
-      Folio::Account
+    [
+      %w[
+        Folio::NewsletterSubscription
+        Folio::Lead
+        Visit
+      ],
+      %w[
+        Folio::Account
+        Folio::Site
+      ]
     ]
   end
 

@@ -7,16 +7,12 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
     = cell('folio/console/layout/sidebar/search')
 
   .f-c-layout-sidebar__part.f-c-layout-sidebar__part--overflowable
-    ul.f-c-layout-sidebar__ul
-      = render(:_prepended)
+    = render(:_prepended)
 
-      - links.each do |item|
-        li.f-c-layout-sidebar__li
-          = item
+    - link_groups.each do |group|
+      ul.f-c-layout-sidebar__ul
+        - group.each do |link|
+          li.f-c-layout-sidebar__li
+            = link
 
-      = render(:_appended)
-
-      li.f-c-layout-sidebar__li
-        = link nil, controller.edit_console_site_path
-          i.fa.fa-cogs.f-c-layout-sidebar__icon
-          = t('.settings')
+    = render(:_appended)
