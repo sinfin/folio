@@ -13,6 +13,7 @@ cs:
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
         link: Odkaz
+        menuItemUrl: Volný odkaz
         newUploadTags: Štítky pro nové soubory
         noResults: Žádné výsledky
         placementsLabel: Použití

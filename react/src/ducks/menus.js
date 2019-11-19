@@ -7,6 +7,8 @@ const ADD_ITEM = 'menus/ADD_ITEM'
 const UPDATE_ITEMS = 'menus/UPDATE_ITEMS'
 const REMOVE_ITEM = 'menus/REMOVE_ITEM'
 
+export const MENU_ITEM_URL = 'menus/MENU_ITEM_URL'
+
 // Actions
 
 export function setMenusData (data) {
@@ -44,6 +46,8 @@ const makeItem = () => ({
   rails_path: null,
   target_id: null,
   target_type: null,
+  url: null,
+  open_in_new: false,
   title: null,
   children: [],
   uniqueId: uniqueId(),

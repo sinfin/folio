@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_16_073239) do
+ActiveRecord::Schema.define(version: 2019_11_19_090711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,8 @@ ActiveRecord::Schema.define(version: 2019_10_16_073239) do
     t.datetime "updated_at", null: false
     t.string "target_type"
     t.bigint "target_id"
+    t.string "url"
+    t.boolean "open_in_new"
     t.index ["ancestry"], name: "index_folio_menu_items_on_ancestry"
     t.index ["menu_id"], name: "index_folio_menu_items_on_menu_id"
     t.index ["target_type", "target_id"], name: "index_folio_menu_items_on_target_type_and_target_id"

@@ -56,6 +56,8 @@ class Folio::Console::MenusController < Folio::Console::BaseController
         :rails_path,
         :unique_id,
         :parent_unique_id,
+        :url,
+        :open_in_new,
         :_destroy,
       ]
     end

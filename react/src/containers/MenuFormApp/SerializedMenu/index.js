@@ -3,13 +3,19 @@ import React from 'react'
 function SerializedMenuItem ({ item, index }) {
   const prefix = `menu[menu_items_attributes][${index + 1}]`
   const name = (field) => `${prefix}[${field}]`
+  let railsPath = item['rails_path'] || ''
+  if (item['url'] !== null) {
+    railsPath = ''
+  }
 
   return (
     <div>
       <input type='hidden' name={name('id')} value={item['id'] || ''} />
       <input type='hidden' name={name('title')} value={item['title'] || ''} />
       <input type='hidden' name={name('position')} value={index + 1} />
-      <input type='hidden' name={name('rails_path')} value={item['rails_path'] || ''} />
+      <input type='hidden' name={name('rails_path')} value={railsPath} />
+      <input type='hidden' name={name('url')} value={item['url'] || ''} />
+      <input type='hidden' name={name('open_in_new')} value={item['open_in_new'] ? '1' : '0'} />
       <input type='hidden' name={name('target_id')} value={item['target_id'] || ''} />
       <input type='hidden' name={name('target_type')} value={item['target_type'] || ''} />
       <input type='hidden' name={name('parent_unique_id')} value={item.parentUniqueId || ''} />

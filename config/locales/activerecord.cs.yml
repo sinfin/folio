@@ -21,6 +21,7 @@ cs:
         type: Druh menu
         menu_items: Odkazy
       folio/menu_item:
+        open_in_new: V novém okně?
         target: Odkaz
         type: Druh
       folio/newsletter_subscription:

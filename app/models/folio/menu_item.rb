@@ -38,6 +38,8 @@ class Folio::MenuItem < Folio::ApplicationRecord
       target_id: target_id,
       target_type: target_type,
       title: title,
+      url: url,
+      open_in_new: open_in_new,
     }
   end
 
@@ -91,6 +93,8 @@ end
 #  updated_at  :datetime         not null
 #  target_type :string
 #  target_id   :bigint(8)
+#  url         :string
+#  open_in_new :boolean
 #
 # Indexes
 #

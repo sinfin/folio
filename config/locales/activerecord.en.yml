@@ -20,6 +20,7 @@ en:
         type: Type
         menu_items: Links
       folio/menu_item:
+        open_in_new: Open in new tab?
         target: Link
         type: Type
       folio/newsletter_subscription:

@@ -5,7 +5,13 @@ import { Button } from 'reactstrap'
 
 import 'react-sortable-tree/style.css'
 
-import { menusSelector, addItem, updateItems, removeItem } from 'ducks/menus'
+import {
+  menusSelector,
+  addItem,
+  updateItems,
+  removeItem,
+  MENU_ITEM_URL
+} from 'ducks/menus'
 
 import MenuFormAppWrap from './styled/MenuFormAppWrap'
 import MenuItem from './MenuItem'
@@ -17,9 +23,13 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
   const itemOnChange = makeOnMenuItemChange(menus.items)
   const itemOnRemove = makeOnMenuItemRemove(menus.items)
 
-  const options = menus.paths.map((path, i) => {
+  const options = [
+    <option key='no-link' value=''>{window.FolioConsole.translations.menuNoLink}</option>,
+    <option key={MENU_ITEM_URL} value={MENU_ITEM_URL}>{window.FolioConsole.translations.menuItemUrl}</option>
+  ]
+  menus.paths.forEach((path, i) => {
     const value = path.rails_path || `${path.target_type} -=- ${path.target_id}`
-    return (
+    options.push(
       <option
         key={i}
         value={value}
