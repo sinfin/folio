@@ -15,7 +15,7 @@ $ ->
             q: request.term
             controller: $input.data('controller')
           success: (data) ->
-            response(data)
+            response(data.data)
 
       select: (e, ui) ->
         setTimeout (-> $input.closest('[data-auto-submit]').submit()), 0
