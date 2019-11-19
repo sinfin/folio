@@ -6,7 +6,9 @@ handler = ->
   beforeunload = -> 'Changes you made may not be saved.'
   $('.f-c-form-footer').addClass('f-c-form-footer--dirty')
   $(window).on 'beforeunload', beforeunload
-  $(this).on 'submit', -> $(window).off('beforeunload')
+  $form = $(this)
+  $form = $form.closest('form') unless $form.is('form')
+  $form.on 'submit', -> $(window).off('beforeunload')
 
 $('.simple_form')
   .filter(-> @className.match(/(new_|edit_)/))
