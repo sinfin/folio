@@ -29,10 +29,21 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def select(f, key)
-    f.input key, collection: collection(key),
-                 include_blank: blank_label(key),
-                 selected: controller.params[key],
-                 label: false
+    if index_filters[key].is_a?(String)
+      f.input key, label: false,
+                   input_html: {
+                     class: 'f-c-index-filters__autocomplete-input',
+                     'data-url' => index_filters[key],
+                     'data-controller' => controller.class.to_s.underscore,
+                     placeholder: blank_label(key),
+                     value: controller.params[key]
+                   }
+    else
+      f.input key, collection: collection(key),
+                   include_blank: blank_label(key),
+                   selected: controller.params[key],
+                   label: false
+    end
   end
 
   def collection(key)
@@ -69,7 +80,8 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def label_for_key(key)
-    klass.human_attribute_name(key.to_s.gsub(/\Aby_/, ''))
+    clear_key = key.to_s.gsub(/\Aby_/, '').gsub(/_query\z/, '')
+    klass.human_attribute_name(clear_key)
   end
 
   def cancel_url
