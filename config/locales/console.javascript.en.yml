@@ -4,6 +4,7 @@ en:
     console:
       javascript:
         add: Add
+        addMenuItem: Add link
         availableDocuments: Available documents
         availableImages: Available images
         cancel: Cancel

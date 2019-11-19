@@ -4,6 +4,7 @@ cs:
     console:
       javascript:
         add: Přidat
+        addMenuItem: Přidat odkaz
         availableDocuments: Dostupné dokumenty
         availableImages: Dostupné obrázky
         cancel: Zrušit

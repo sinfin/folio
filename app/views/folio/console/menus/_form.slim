@@ -1,4 +1,7 @@
 = form_header f
+  button.btn.btn-success.f-c-js-menus-form-add type="button"
+    i.fa.fa-plus
+    = t('folio.console.javascript.addMenuItem')
 
 - if f.object.new_record?
   - klass = f.object.class

@@ -20,6 +20,14 @@ import SerializedMenu from './SerializedMenu'
 const getNodeKey = ({ treeIndex }) => treeIndex
 
 function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRemove, add }) {
+  React.useEffect(() => {
+    const $add = window.jQuery('.f-c-js-menus-form-add')
+    $add.on('click', add)
+    return function cleanup () {
+      $add.off('click', add)
+    }
+  }, [add])
+
   const itemOnChange = makeOnMenuItemChange(menus.items)
   const itemOnRemove = makeOnMenuItemRemove(menus.items)
 
@@ -54,7 +62,8 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
 
       <div className='my-4'>
         <Button color='success' type='button' onClick={add}>
-          {window.FolioConsole.translations.add}
+          <i className='fa fa-plus' />
+          {window.FolioConsole.translations.addMenuItem}
         </Button>
       </div>
 
