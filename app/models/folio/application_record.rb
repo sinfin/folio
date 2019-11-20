@@ -7,11 +7,6 @@ class Folio::ApplicationRecord < ActiveRecord::Base
   include Folio::Filterable
   include Folio::NillifyBlanks
   include Folio::RecursiveSubclasses
+  include Folio::ToLabel
   include Folio::Sortable
-
-  def to_label
-    try(:title).presence ||
-    try(:name).presence ||
-    self.class.model_name.human
-  end
 end

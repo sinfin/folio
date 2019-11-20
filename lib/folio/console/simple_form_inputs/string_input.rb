@@ -4,8 +4,13 @@ SimpleForm::Inputs::StringInput.class_eval do
   def input(wrapper_options = nil)
     if string?
       if options[:autocomplete]
+        collection = nil
+        remote_autocomplete = nil
+
         if options[:autocomplete].is_a?(Array)
           collection = options[:autocomplete].to_json
+        elsif options[:autocomplete].is_a?(String)
+          remote_autocomplete = options[:autocomplete]
         else
           collection = @builder.object
                                .class
@@ -15,9 +20,16 @@ SimpleForm::Inputs::StringInput.class_eval do
                                .sort_by { |name| I18n.transliterate(name) }
                                .to_json
         end
-        input_html_options['data-autocomplete'] = collection
+
         input_html_classes << 'folio-console-string-input'
-        input_html_classes << 'folio-console-string-input--autocomplete'
+
+        if collection
+          input_html_options['data-autocomplete'] = collection
+          input_html_classes << 'folio-console-string-input--autocomplete'
+        elsif remote_autocomplete
+          input_html_options['data-remote-autocomplete'] = remote_autocomplete
+          input_html_classes << 'folio-console-string-input--remote-autocomplete'
+        end
       end
     else
       input_html_classes.unshift('string')

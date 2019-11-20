@@ -1,3 +1,4 @@
+REMOTE_AUTOCOMPLETE_SELECTOR = '.folio-console-string-input--remote-autocomplete'
 AUTOCOMPLETE_SELECTOR = '.folio-console-string-input--autocomplete'
 
 $.widget 'ui.autocomplete', $.ui.autocomplete,
@@ -27,20 +28,44 @@ bindAutocomplete = ($elements) ->
 unbindAutocomplete = ($elements) ->
   $elements.autocomplete('destroy')
 
+bindRemoteAutocomplete = ($elements) ->
+  $elements.each ->
+    $this = $(this)
+    $this.autocomplete
+      source: (request, response) ->
+        $.ajax
+          url: $this.data('remote-autocomplete')
+          dataType: "json"
+          data:
+            q: request.term
+          success: (data) ->
+            response(data.data)
+      select: (e, ui) ->
+        setTimeout (-> $this.closest('form').submit()), 0
+
+unbindRemoteAutocomplete = ($elements) ->
+  $elements.off('change').autocomplete('destroy')
+
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->
     bindAutocomplete(insertedItem.find(AUTOCOMPLETE_SELECTOR))
+    bindRemoteAutocomplete(insertedItem.find(REMOTE_AUTOCOMPLETE_SELECTOR))
 
   .on 'cocoon:before-remove', (e, item) ->
     unbindAutocomplete(item.find(AUTOCOMPLETE_SELECTOR))
+    unbindRemoteAutocomplete(item.find(REMOTE_AUTOCOMPLETE_SELECTOR))
 
 if Turbolinks?
   $(document)
     .on 'turbolinks:load', ->
       bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+      bindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
 
     .on 'turbolinks:before-cache', ->
       unbindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+      unbindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
 
 else
-  $ -> bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+  $ ->
+    bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
+    bindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))

@@ -18,15 +18,8 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_autocomplete
-    title_columns = model.column_names.grep(/\A(title|name|email)/)
-    if title_columns.present?
-      safe_columns = Arel.sql(title_columns.join(', '))
-      model.select(safe_columns)
-           .map { |r| title_columns.map { |c| r.send(c) } }
-           .flatten
-           .uniq
-    else
-      nil
+    if model.new.respond_to?(:to_label)
+      controller.console_api_autocomplete_path(klass: model.to_s)
     end
   end
 

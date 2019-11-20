@@ -6,8 +6,5 @@ $(document).on 'cocoon:after-insert', (e, insertedItem) ->
 
   return unless $input.length
 
-  pos = $item.prevAll('.nested-fields:first')
-             .find(INPUT_SELECTOR)
-             .val()
-
+  pos = $item.prevAll('.nested-fields:first').find(INPUT_SELECTOR).val()
   $input.val((parseInt(pos) or 0) + 1)
