@@ -50,3 +50,7 @@
   == cell('folio/console/index/filters', \
           klass: model, \
           index_filters: controller.send(:index_filters))
+
+- if options[:pagy]
+  .f-c-index-header__pagy
+    == cell('folio/console/pagination', options[:pagy])

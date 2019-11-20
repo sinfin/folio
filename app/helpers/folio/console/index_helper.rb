@@ -14,6 +14,7 @@ module Folio::Console::IndexHelper
   end
 
   def index_header(opts = {})
+    opts[:pagy] ||= @pagy
     cell('folio/console/index/header', @klass, opts).show.html_safe
   end
 end

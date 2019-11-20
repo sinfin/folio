@@ -10,11 +10,12 @@ cs:
         one: "Zobrazuji <b>1</b> %{item_name}"
         other: "Zobrazuji <b>všech %{count}</b> %{item_name}"
       multiple_pages: "Zobrazuji %{item_name} <b>%{from}-%{to}</b> z <b>%{count}</b> celkem"
-      item_name:
-        zero: "výsledek"
-        one: "výsledek"
-        few: "výsledky"
-        other: "výsledků"
+      no_items: Žádný záznam nenalezen
     compact:
       page: Stránka
       of: z
+    item_name:
+      zero: záznam
+      one: záznam
+      few: záznamy
+      other: záznamy

@@ -1,2 +1,6 @@
-.f-c-pagination
-  == pagy_bootstrap_nav(model)
+.f-c-pagination.d-flex.flex-wrap.align-items-center
+  .mr-auto.my-2.pr-g
+    == pagy_info(model)
+
+  .my-2
+    == pagy_bootstrap_nav(model)
