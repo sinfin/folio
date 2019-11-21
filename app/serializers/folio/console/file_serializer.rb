@@ -4,6 +4,7 @@ class Folio::Console::FileSerializer
   include FastJsonapi::ObjectSerializer
 
   ADMIN_THUMBNAIL_SIZE = '250x250'
+  ADMIN_RETINA_THUMBNAIL_SIZE = '500x500'
 
   attributes :id,
              :file_size,
