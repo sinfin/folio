@@ -27,23 +27,34 @@
         - index = 0
         - model[locale].each_with_index do |atoms_in_molecules, molecule_index|
           - molecule, atoms = atoms_in_molecules
-          - atoms.each_with_index do |atom, atom_index|
+
+          - if molecule
             = insert
 
-            .f-c-atoms-previews__atom[
+            .f-c-atoms-previews__preview.f-c-atoms-previews__preview--molecule[
               data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
               data-index=index
             ]
-              - if atom.class.molecule_cell_name
-                == cell(atom.class.molecule_cell_name, [atom])
+              == cell(atoms.first.class.molecule_cell_name, atoms)
 
-              - else
+              = controls
+
+            - index += atoms.size
+
+          - else
+            - atoms.each_with_index do |atom, atom_index|
+              = insert
+
+              .f-c-atoms-previews__preview.f-c-atoms-previews__preview--atom[
+                data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
+                data-index=index
+              ]
                 == cell(atom.class.cell_name, \
                         atom, \
                         atom.cell_options.presence || {})
 
-              = controls
+                = controls
 
-            - index += 1
+              - index += 1
 
         = insert
