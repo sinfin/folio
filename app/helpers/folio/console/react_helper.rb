@@ -107,6 +107,8 @@ module Folio
               file_id: fp.file.id,
               alt: fp.alt,
               title: fp.title,
+              file: Folio::Console::FileSerializer.new(fp.file)
+                                                  .serializable_hash[:data]
             }
           end.to_json
         else

@@ -63,9 +63,10 @@ export const makeFilePlacementsSelector = (filesKey) => (state) => {
   const selected = base.selected.map((filePlacement) => {
     selectedIds.push(filePlacement.id)
     const file = find(files, { id: String(filePlacement.file_id) })
-    return {
-      ...filePlacement,
-      file: file
+    if (file) {
+      return { ...filePlacement, file }
+    } else {
+      return filePlacement
     }
   })
 
@@ -128,7 +129,12 @@ function filePlacementsReducer (state = initialState, action) {
           ...state[action.filesKey],
           selected: [
             ...state[action.filesKey].selected,
-            { id: null, file_id: action.file.id, selectedAt: Date.now() }
+            {
+              id: null,
+              file_id: action.file.id,
+              file: action.file,
+              selectedAt: Date.now()
+            }
           ]
         }
       }
@@ -138,7 +144,9 @@ function filePlacementsReducer (state = initialState, action) {
         ...state,
         [action.filesKey]: {
           ...state[action.filesKey],
-          selected: state[action.filesKey].selected.filter((filePlacement) => filePlacement.file_id !== action.filePlacement.file_id)
+          selected: state[action.filesKey].selected.filter((filePlacement) => (
+            filePlacement.file_id !== action.filePlacement.file_id
+          ))
         }
       }
 
