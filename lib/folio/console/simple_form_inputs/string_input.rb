@@ -12,13 +12,14 @@ SimpleForm::Inputs::StringInput.class_eval do
         elsif options[:autocomplete].is_a?(String)
           remote_autocomplete = options[:autocomplete]
         else
-          collection = @builder.object
-                               .class
-                               .distinct
-                               .pluck(attribute_name)
-                               .compact
-                               .sort_by { |name| I18n.transliterate(name) }
-                               .to_json
+          opts = [:field,
+                  :console,
+                  :api,
+                  :autocomplete,
+                  klass: object.class.to_s,
+                  field: attribute_name,
+                  only_path: true]
+          remote_autocomplete = Folio::Engine.app.url_helpers.url_for(opts)
         end
 
         input_html_classes << 'folio-console-string-input'

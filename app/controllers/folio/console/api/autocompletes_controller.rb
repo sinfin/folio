@@ -20,4 +20,23 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       render json: { data: [] }
     end
   end
+
+  def field
+    klass = params.require(:klass).safe_constantize
+    q = params.require(:q)
+    field = params.require(:field)
+
+    if klass && klass.column_names.include?(field)
+      ary = klass.unscope(:order)
+                 .where("#{field} ILIKE ?", "%#{q}%")
+                 .limit(10)
+                 .select("DISTINCT(#{field})")
+                 .map { |r| r.send(field) }
+                 .compact
+
+      render json: { data: ary }
+    else
+      render json: { data: [] }
+    end
+  end
 end

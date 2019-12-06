@@ -41,7 +41,9 @@ bindRemoteAutocomplete = ($elements) ->
           success: (data) ->
             response(data.data)
       select: (e, ui) ->
-        setTimeout (-> $this.closest('form').submit()), 0
+        $form = $this.closest('[data-auto-submit], .f-c-index-header__form')
+        if $form.length
+          setTimeout (-> $form.submit()), 0
 
 unbindRemoteAutocomplete = ($elements) ->
   $elements.off('change').autocomplete('destroy')
