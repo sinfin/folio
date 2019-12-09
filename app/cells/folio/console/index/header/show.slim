@@ -46,7 +46,11 @@
     = new_button
       = render(:_new_button_label)
 
-- if controller.send(:index_filters).present?
+- if options[:above_filters]
+  == options[:above_filters]
+
+- if controller.send(:index_filters).present? && \
+     options[:index_filters] != false
   == cell('folio/console/index/filters', \
           klass: model, \
           index_filters: controller.send(:index_filters))
