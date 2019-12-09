@@ -31,8 +31,8 @@ module Folio::Filterable
   class_methods do
     def folio_by_scopes_for(*keys)
       keys.each do |key|
-        if type_for_attribute(key.to_s).type == :boolean
-          scope "by_#{key}".to_sym, -> (arg) {
+        scope "by_#{key}".to_sym, -> (arg) do
+          if type_for_attribute(key.to_s).type == :boolean
             case arg
             when true, 'true'
               where(key => true)
@@ -41,15 +41,13 @@ module Folio::Filterable
             else
               all
             end
-          }
-        else
-          scope "by_#{key}".to_sym, -> (arg) {
+          else
             if arg.present?
               where(key => arg)
             else
               all
             end
-          }
+          end
         end
       end
     end
