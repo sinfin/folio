@@ -43,7 +43,15 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           path = controller.main_app.send(class_name[:path])
         end
 
-        link(label, path)
+        paths = (class_name[:paths] || []).map do |p|
+          begin
+            controller.send(p)
+          rescue NoMethodError
+            controller.main_app.send(p)
+          end
+        end
+
+        link(label, path, paths: paths)
       else
         klass = class_name.constantize
 
@@ -63,9 +71,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
   end
 
-  def link(label, path, &block)
-    active = request.path.start_with?(path.split('?').first) ||
-             request.url.start_with?(path.split('?').first)
+  def link(label, path, paths: [], &block)
+    active = ([path] + paths).any? do |p|
+      start = p.split('?').first
+      request.path.start_with?(start) || request.url.start_with?(start)
+    end
 
     class_names = ['f-c-layout-sidebar__a']
     class_names << 'f-c-layout-sidebar__a--active' if active
