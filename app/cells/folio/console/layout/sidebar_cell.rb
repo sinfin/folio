@@ -31,26 +31,51 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       class_name.map { |cn| link_groups_from(cn) }.compact
     else
       return if skip_link_class_names.include?(class_name)
-      klass = class_name.constantize
 
-      if klass == Folio::Site
-        link(nil, controller.edit_console_site_path) do
-          concat(content_tag(:i,
-                             '',
-                             class: 'fa fa-cogs f-c-layout-sidebar__icon'))
-          concat(t('.settings'))
+      if class_name.is_a?(Hash) &&
+         class_name.try(:[], :klass) &&
+         class_name.try(:[], :path)
+        label = class_name[:klass].constantize.model_name.human(count: 2)
+
+        begin
+          path = controller.send(class_name[:path])
+        rescue NoMethodError
+          path = controller.main_app.send(class_name[:path])
         end
+
+        paths = (class_name[:paths] || []).map do |p|
+          begin
+            controller.send(p)
+          rescue NoMethodError
+            controller.main_app.send(p)
+          end
+        end
+
+        link(label, path, paths: paths)
       else
-        label = klass.model_name.human(count: 2)
-        path = controller.url_for([:console, klass])
-        link(label, path)
+        klass = class_name.constantize
+
+        if klass == Folio::Site
+          link(nil, controller.edit_console_site_path) do
+            concat(content_tag(:i,
+                               '',
+                               class: 'fa fa-cogs f-c-layout-sidebar__icon'))
+            concat(t('.settings'))
+          end
+        else
+          label = klass.model_name.human(count: 2)
+          path = controller.url_for([:console, klass])
+          link(label, path)
+        end
       end
     end
   end
 
-  def link(label, path, &block)
-    active = request.path.start_with?(path.split('?').first) ||
-             request.url.start_with?(path.split('?').first)
+  def link(label, path, paths: [], &block)
+    active = ([path] + paths).any? do |p|
+      start = p.split('?').first
+      request.path.start_with?(start) || request.url.start_with?(start)
+    end
 
     class_names = ['f-c-layout-sidebar__a']
     class_names << 'f-c-layout-sidebar__a--active' if active

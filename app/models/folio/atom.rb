@@ -106,7 +106,7 @@ module Folio::Atom
   def self.association_to_h(record, show_model_names: false)
     label = [
       show_model_names ? record.model_name.human : nil,
-      record.to_label,
+      record.to_console_label,
     ].compact.join(' / ')
 
     {

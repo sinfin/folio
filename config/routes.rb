@@ -33,7 +33,9 @@ Folio::Engine.routes.draw do
     resource :site, only: %i[edit update]
 
     namespace :api do
-      resource :autocomplete, only: %i[show]
+      resource :autocomplete, only: %i[show] do
+        get :field
+      end
       resources :links, only: %i[index]
       resources :images, only: %i[index create update] do
         collection { post :tag }
