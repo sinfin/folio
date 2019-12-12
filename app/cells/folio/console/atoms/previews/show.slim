@@ -31,9 +31,11 @@
           - if molecule
             = insert
 
+            - indices = Array.new(atoms.size) { |i| i + index }
+
             .f-c-atoms-previews__preview.f-c-atoms-previews__preview--molecule[
               data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
-              data-index=index
+              data-indices=indices
             ]
               == cell(atoms.first.class.molecule_cell_name, atoms)
 
@@ -47,7 +49,7 @@
 
               .f-c-atoms-previews__preview.f-c-atoms-previews__preview--atom[
                 data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
-                data-index=index
+                data-indices=[index]
               ]
                 == cell(atom.class.cell_name, \
                         atom, \

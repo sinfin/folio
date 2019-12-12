@@ -23,7 +23,7 @@ describe('Atoms', () => {
 
     const component = renderer.create(<Atoms {...props} />)
     const atomForms = component.root.findAllByType(SerializedAtom)
-    expect(atomForms.length).toEqual(3)
+    expect(atomForms.length).toEqual(6)
   })
 
   it('multiple locales', () => {
@@ -36,6 +36,6 @@ describe('Atoms', () => {
 
     const component = renderer.create(<Atoms {...props} />)
     const atomForms = component.root.findAllByType(SerializedAtom)
-    expect(atomForms.length).toEqual(2 * 3)
+    expect(atomForms.length).toEqual(2 * 6)
   })
 })

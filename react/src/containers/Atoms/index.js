@@ -4,12 +4,12 @@ import { connect } from 'react-redux'
 import {
   atomsSelector,
   atomTypesSelector,
-  newAtom,
-  editAtom,
-  removeAtom,
+  newAtoms,
+  editAtoms,
+  removeAtoms,
   validateAndSaveFormAtom,
   closeFormAtom,
-  moveAtomToIndex,
+  moveAtomsToIndex,
   updateFormAtomType,
   updateFormAtomValue,
   updateFormAtomAttachments,
@@ -43,18 +43,22 @@ class Atoms extends React.PureComponent {
     const { data, origin } = jqueryEvent.originalEvent
     if (origin === window.origin) {
       switch (data.type) {
-        case 'newAtom':
-          this.props.dispatch(newAtom(data.rootKey, data.index, data.atomType))
+        case 'newAtoms': {
+          this.props.dispatch(newAtoms(data.rootKey, data.action, data.indices, data.atomType))
           break
-        case 'editAtom':
-          this.props.dispatch(editAtom(data.rootKey, data.index))
+        }
+        case 'editAtoms': {
+          this.props.dispatch(editAtoms(data.rootKey, data.indices))
           break
-        case 'moveAtomToIndex':
-          this.props.dispatch(moveAtomToIndex(data.rootKey, data.index, data.targetIndex))
+        }
+        case 'moveAtomsToIndex': {
+          this.props.dispatch(moveAtomsToIndex(data.rootKey, data.indices, data.targetIndex, data.action))
           break
-        case 'removeAtom':
-          this.props.dispatch(removeAtom(data.rootKey, data.index))
+        }
+        case 'removeAtoms': {
+          this.props.dispatch(removeAtoms(data.rootKey, data.indices))
           break
+        }
         case 'closeForm': {
           this.confirmedDirtyClose()
           break
@@ -117,7 +121,7 @@ class Atoms extends React.PureComponent {
             index={form.index}
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
-            saveFormAtom={this.validateAndSaveFormAtom}
+            saveFormAtoms={this.validateAndSaveFormAtom}
             closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}

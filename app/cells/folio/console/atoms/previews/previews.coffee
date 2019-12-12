@@ -23,22 +23,25 @@ handleArrowClick = (e) ->
   $this = $(this)
   closeMobileControls($this)
   $wrap = $this.closest('.f-c-atoms-previews__preview')
-  index = $wrap.data('index')
+  indices = $wrap.data('indices')
   if $this.hasClass('f-c-atoms-previews__button--arrow-up')
     return if $wrap.is(':first-child')
-    targetIndex = index - 1
+    $prev = $wrap.prevAll('.f-c-atoms-previews__preview').first()
+    targetIndex = $prev.data('indices')[0]
+    action = 'prepend'
   else
     return if $wrap.is(':last-child')
-    targetIndex = index + 1
+    $next = $wrap.nextAll('.f-c-atoms-previews__preview').first()
+    nextIndices = $next.data('indices')
+    targetIndex = nextIndices[nextIndices.length - 1]
+    action = 'append'
+
   data =
     rootKey: $wrap.data('root-key')
-    index: index
+    indices: indices
     targetIndex: targetIndex
-
-  if $wrap.hasClass('f-c-atoms-previews__preview--molecule')
-    data.type = 'moveMoleculeToIndex'
-  else
-    data.type = 'moveAtomToIndex'
+    action: action
+    type: 'moveAtomsToIndex'
 
   window.top.postMessage(data, window.origin)
 
@@ -50,12 +53,8 @@ handleEditClick = (e) ->
   if $wrap.length
     data =
       rootKey: $wrap.data('root-key')
-      index: $wrap.data('index')
-
-    if $wrap.hasClass('f-c-atoms-previews__preview--molecule')
-      data.type = 'editMolecule'
-    else
-      data.type = 'editAtom'
+      indices: $wrap.data('indices')
+      type: 'editAtoms'
 
     window.top.postMessage(data, window.origin)
   else
@@ -89,12 +88,8 @@ handleRemoveClick = (e) ->
     $wrap = $(this).closest('.f-c-atoms-previews__preview')
     data =
       rootKey: $wrap.data('root-key')
-      index: $wrap.data('index')
-
-    if $wrap.hasClass('f-c-atoms-previews__preview--molecule')
-      data.type = 'removeMolecule'
-    else
-      data.type = 'removeAtom'
+      indices: $wrap.data('indices')
+      type: 'removeAtoms'
 
     window.top.postMessage(data, window.origin)
 
@@ -122,24 +117,25 @@ handleInsertClick = (e) ->
   $insert = $a.closest('.f-c-atoms-previews__insert')
   $insert.removeClass('f-c-atoms-previews__insert--active')
   $wrap = $insert.next('.f-c-atoms-previews__preview')
+  action = 'splice'
 
   if $wrap.length is 0
     $wrap = $insert.prev('.f-c-atoms-previews__preview')
-    index = $wrap.data('index') + 1
-  else
-    index = $wrap.data('index')
 
-  if $wrap.length is 0
-    $locale = $a.closest('.f-c-atoms-previews__locale')
-    rootKey = $locale.data('root-key')
-    index = 0
-  else
-    rootKey = $wrap.data('root-key')
+    if $wrap.length is 0
+      action = 'prepend'
+    else
+      action = 'append'
+      indices = $wrap.data('indices')
+
+  $locale = $a.closest('.f-c-atoms-previews__locale')
+  rootKey = $locale.data('root-key')
 
   data =
-    type: 'newAtom'
+    type: 'newAtoms'
     rootKey: rootKey
-    index: index
+    action: action
+    indices: indices
     atomType: $a.data('type')
   window.top.postMessage(data, window.origin)
 

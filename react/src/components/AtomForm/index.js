@@ -96,7 +96,7 @@ class AtomForm extends React.PureComponent {
             <button
               type='button'
               className='btn btn-outline f-c-atoms-settings-header__button'
-              onClick={this.props.saveFormAtom}
+              onClick={this.props.saveFormAtoms}
             >
               {window.FolioConsole.translations.done}
             </button>
