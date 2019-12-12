@@ -655,6 +655,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
+          dirty: true,
           atoms: [
             ...state.form.atoms,
             {
@@ -677,6 +678,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
+          dirty: true,
           atoms: arrayMove(state.form.atoms, action.from, action.to)
         }
       }
@@ -699,6 +701,7 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
+          dirty: true,
           destroyedIds,
           atoms
         }
