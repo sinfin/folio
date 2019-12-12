@@ -77,7 +77,9 @@ class Atoms extends React.PureComponent {
 
   validateAndSaveFormAtom = () => {
     const filePlacementsAttributes = {}
-    this.props.atoms.form.atom.meta.attachments.forEach((attachmentType) => {
+    // TODO placements
+    // this.props.atoms.form.atom.meta.attachments.forEach((attachmentType) => {
+    this.props.atoms.form.atoms[0].record.meta.attachments.forEach((attachmentType) => {
       if (!attachmentType.plural) return
       const filesKey = fileTypeToKey(attachmentType.file_type)
       const selector = makeFilePlacementsSelector(filesKey)
@@ -117,15 +119,14 @@ class Atoms extends React.PureComponent {
         {form.rootKey && (
           <AtomForm
             form={form}
-            atom={form.atom}
             index={form.index}
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
             saveFormAtoms={this.validateAndSaveFormAtom}
             closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
-            updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
-            updateFormAtomAssociation={(key, record) => this.props.dispatch(updateFormAtomAssociation(key, record))}
+            updateFormAtomValue={(index, key, value) => this.props.dispatch(updateFormAtomValue(index, key, value))}
+            updateFormAtomAssociation={(index, key, record) => this.props.dispatch(updateFormAtomAssociation(index, key, record))}
             removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}

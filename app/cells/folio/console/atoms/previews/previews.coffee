@@ -117,6 +117,7 @@ handleInsertClick = (e) ->
   $insert = $a.closest('.f-c-atoms-previews__insert')
   $insert.removeClass('f-c-atoms-previews__insert--active')
   $wrap = $insert.next('.f-c-atoms-previews__preview')
+  indices = $wrap.data('indices')
   action = 'splice'
 
   if $wrap.length is 0
@@ -124,6 +125,7 @@ handleInsertClick = (e) ->
 
     if $wrap.length is 0
       action = 'prepend'
+      indices = [0]
     else
       action = 'append'
       indices = $wrap.data('indices')

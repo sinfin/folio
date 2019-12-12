@@ -43,9 +43,9 @@ describe('atomsReducer', () => {
     expect(state.form.dirty).toEqual(false)
     state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
     expect(state.form.dirty).toEqual(true)
-    expect(state.form.atoms[0].atom.type).toEqual('Dummy::Atom::DaVinci')
-    expect(state.form.atoms[0].atom.meta.structure.date).toBeTruthy()
-    expect(state.form.atoms[0].atom.data.content).toEqual('foo')
+    expect(state.form.atoms[0].record.type).toEqual('Dummy::Atom::DaVinci')
+    expect(state.form.atoms[0].record.meta.structure.date).toBeTruthy()
+    expect(state.form.atoms[0].record.data.content).toEqual('foo')
 
     state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
     expect(state.form.atoms.length).toEqual(3)
@@ -54,20 +54,20 @@ describe('atomsReducer', () => {
     state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
     expect(state.form.dirty).toEqual(true)
     expect(state.form.atoms.length).toEqual(1)
-    expect(state.form.atoms[0].atom.type).toEqual('Dummy::Atom::DaVinci')
-    expect(state.form.atoms[0].atom.meta.structure.date).toBeTruthy()
-    expect(state.form.atoms[0].atom.data.content).toEqual('foo')
+    expect(state.form.atoms[0].record.type).toEqual('Dummy::Atom::DaVinci')
+    expect(state.form.atoms[0].record.meta.structure.date).toBeTruthy()
+    expect(state.form.atoms[0].record.data.content).toEqual('foo')
   })
 
   it('updateFormAtomValue', () => {
     state = atomsReducer(state, editAtoms('atoms', [0]))
-    expect(state.form.atoms[0].atom.type).toEqual('Folio::Atom::Text')
-    expect(state.form.atoms[0].atom.data.content).not.toEqual('bar')
+    expect(state.form.atoms[0].record.type).toEqual('Folio::Atom::Text')
+    expect(state.form.atoms[0].record.data.content).not.toEqual('bar')
     expect(state.form.dirty).toEqual(false)
     state = atomsReducer(state, updateFormAtomValue(0, 'content', 'bar'))
     expect(state.form.dirty).toEqual(true)
-    expect(state.form.atoms[0].atom.type).toEqual('Folio::Atom::Text')
-    expect(state.form.atoms[0].atom.data.content).toEqual('bar')
+    expect(state.form.atoms[0].record.type).toEqual('Folio::Atom::Text')
+    expect(state.form.atoms[0].record.data.content).toEqual('bar')
   })
 
   it('newAtoms', () => {
@@ -77,10 +77,10 @@ describe('atomsReducer', () => {
     expect(newState.form.action).toEqual('prepend')
     expect(newState.form.indices).toEqual([0])
     expect(newState.form.atoms.length).toEqual(1)
-    expect(newState.form.atoms[0].atom.type).toEqual('Dummy::Atom::DaVinci')
-    expect(newState.form.atoms[0].atom.associations).toEqual({})
-    expect(newState.form.atoms[0].atom.timestamp).toBeTruthy()
-    expect(newState.form.atoms[0].atom.meta).toBeTruthy()
+    expect(newState.form.atoms[0].record.type).toEqual('Dummy::Atom::DaVinci')
+    expect(newState.form.atoms[0].record.associations).toEqual({})
+    expect(newState.form.atoms[0].record.timestamp).toBeTruthy()
+    expect(newState.form.atoms[0].record.meta).toBeTruthy()
     expect(newState.form.edit).toEqual(false)
   })
 
@@ -89,7 +89,7 @@ describe('atomsReducer', () => {
     const newState = atomsReducer(state, editAtoms('atoms', [0]))
     expect(newState.form.rootKey).toEqual('atoms')
     expect(newState.form.atoms.length).toEqual(1)
-    expect(newState.form.atoms[0].atom.id).toEqual(1)
+    expect(newState.form.atoms[0].record.id).toEqual(1)
     expect(newState.form.edit).toEqual(true)
   })
 
@@ -135,7 +135,7 @@ describe('atomsReducer', () => {
 
   it('saveFormAtoms - from edit', () => {
     state = atomsReducer(state, editAtoms('atoms', [0]))
-    const oldId = state.form.atoms[0].atom.id
+    const oldId = state.form.atoms[0].record.id
     expect(oldId).toEqual(1)
     state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci', { content: 'foo' }))
     expect(state.atoms['atoms'][0].type).not.toEqual('Dummy::Atom::DaVinci')
@@ -230,9 +230,9 @@ describe('atomsReducer', () => {
   it('updateFormAtomAssociation', () => {
     const page = { id: 1, type: 'Folio::Page', label: 'O nás', value: 'Folio::Page -=- 1' }
     state = atomsReducer(state, newAtoms('atoms', 'prepend', [0], 'Dummy::Atom::DaVinci'))
-    expect(state.form.atoms[0].atom.associations['page']).toEqual(undefined)
+    expect(state.form.atoms[0].record.associations['page']).toEqual(undefined)
 
     state = atomsReducer(state, updateFormAtomAssociation(0, 'page', page))
-    expect(state.form.atoms[0].atom.associations['page']).toEqual(page)
+    expect(state.form.atoms[0].record.associations['page']).toEqual(page)
   })
 })

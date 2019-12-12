@@ -1,5 +1,5 @@
 .d-molecule.d-molecule-moleculables
   .container
-    ul.list-unstyled
+    ul.list-unstyled.row
       - model.each do |atom|
-        li = model.title
+        li.col = atom.title

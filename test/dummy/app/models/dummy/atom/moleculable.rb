@@ -15,7 +15,7 @@ class Dummy::Atom::Moleculable < Folio::Atom::Base
   }
 
   def self.molecule_cell_name
-    'dummy/molecule/moleculable'
+    'dummy/molecule/moleculables'
   end
 end
 

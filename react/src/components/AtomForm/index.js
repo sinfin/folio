@@ -2,6 +2,8 @@ import React from 'react'
 import { Input } from 'reactstrap'
 import { isEqual, find } from 'lodash'
 
+import NestedModelControls from 'components/NestedModelControls'
+
 import Associations from './Associations'
 import Fields from './Fields'
 import MultiAttachments from './MultiAttachments'
@@ -17,10 +19,10 @@ class AtomForm extends React.PureComponent {
   }
 
   onTypeChange = (e) => {
-    const { atom, structures } = this.props
+    const { form, structures } = this.props
     const newType = e.target.value
     const newStructure = structures[newType].structure
-    const oldStructure = atom.meta.structure
+    const oldStructure = form.atoms[0].record.meta.structure
     const values = {}
     Object.keys(newStructure).forEach((key) => {
       if (isEqual(newStructure[key], oldStructure[key])) {
@@ -30,22 +32,22 @@ class AtomForm extends React.PureComponent {
     this.props.updateFormAtomType(newType, values)
   }
 
-  onChange = (e, key) => {
+  onChange = (e, index, key) => {
     if (e.target.type === 'checkbox') {
-      this.props.updateFormAtomValue(key, e.target.checked)
+      this.props.updateFormAtomValue(index, key, e.target.checked)
     } else {
-      this.props.updateFormAtomValue(key, e.target.value)
+      this.props.updateFormAtomValue(index, key, e.target.value)
     }
   }
 
-  onAssociationChange (e, key) {
-    const { records } = this.props.form.atom.meta.associations[key]
+  onAssociationChange = (e, index, key) => {
+    const { records } = this.props.form.atoms[index].record.meta.associations[key]
     const record = find(records, { value: e.target.value })
-    this.props.updateFormAtomAssociation(key, record)
+    this.props.updateFormAtomAssociation(index, key, record)
   }
 
-  onValueChange = (value, key) => {
-    this.props.updateFormAtomValue(key, value)
+  onValueChange = (index, value, key) => {
+    this.props.updateFormAtomValue(index, key, value)
   }
 
   componentDidMount () {
@@ -81,7 +83,7 @@ class AtomForm extends React.PureComponent {
           <div className='f-c-atoms-settings-header__title'>
             <Input
               type='select'
-              value={this.props.form.atom.type}
+              value={this.props.form.atoms[0].record.type}
               name={`${prefix}[type]`}
               onChange={this.onTypeChange}
               className='folio-console-atom-type-select'
@@ -112,42 +114,63 @@ class AtomForm extends React.PureComponent {
         </div>
 
         <div className='f-c-simple-form-with-atoms__overlay-scroll f-c-atom-form-toolbar-fix-parent'>
-          <div>
-            {this.props.form.messages.length > 0 && (
-              <div className='my-3 alert alert-danger'>
-                <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
+          {this.props.form.atoms.map((atom, index) => (
+            <div key={atom.record.id || atom.record.timestamp} className={atom.record.molecule && 'card'}>
+              <div className={atom.record.molecule && 'card-body d-flex mb-n3'}>
+                <div className='flex-grow-1'>
+                  {atom.messages.length > 0 && (
+                    <div className='my-3 alert alert-danger'>
+                      <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
 
-                <ul>
-                  {this.props.form.messages.map((message) => (
-                    <li className='mt-2' key={message}>{message}</li>
-                  ))}
-                </ul>
+                      <ul>
+                        {atom.messages.map((message) => (
+                          <li className='mt-2' key={message}>{message}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/*
+                  <SingleAttachments
+                    attachments={atom.record.meta.attachments}
+                    atom={atom.record}
+                    remove={this.props.removeFormAtomAttachment}
+                  />
+                  */}
+
+                  <Fields
+                    atom={atom}
+                    onChange={this.onChange}
+                    onValueChange={this.onValueChange}
+                    index={index}
+                  />
+
+                  <Associations
+                    atom={atom}
+                    onChange={this.onAssociationChange}
+                    index={index}
+                  />
+
+                  {/* <MultiAttachments attachments={atom.record.meta.attachments} /> */}
+
+                  {atom.record.meta.hint && this.renderHint(atom.record.meta.hint)}
+
+                  {atom.validating && <span className='folio-loader' />}
+                </div>
+
+                {atom.record.molecule && (
+                  <NestedModelControls
+                    moveUp={console.log}
+                    moveDown={console.log}
+                    remove={console.log}
+                    vertical
+                  />
+                )}
               </div>
-            )}
+            </div>
+          ))}
 
-            <SingleAttachments
-              attachments={this.props.form.atom.meta.attachments}
-              atom={this.props.form.atom}
-              remove={this.props.removeFormAtomAttachment}
-            />
-
-            <Fields
-              form={this.props.form}
-              onChange={this.onChange}
-              onValueChange={this.onValueChange}
-            />
-
-            <Associations
-              onChange={(e, key) => this.onAssociationChange(e, key)}
-              form={this.props.form}
-            />
-
-            <MultiAttachments attachments={this.props.form.atom.meta.attachments} />
-          </div>
-
-          {this.props.form.atom.meta.hint && this.renderHint(this.props.form.atom.meta.hint)}
         </div>
-        {this.props.form.validating && <span className='folio-loader' />}
       </AtomFormWrap>
     )
   }

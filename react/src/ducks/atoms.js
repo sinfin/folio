@@ -165,7 +165,7 @@ export const serializedAtomsSelector = (state) => {
 
 export const makeSerializedFormAtomsSelector = (action) => (state) => {
   return state.atoms.form.atoms.map((atom) => (
-    serializeAtom(state, { atom, ...action.filePlacements, placement_type: state.atoms.placementType })
+    serializeAtom(state, { ...atom.record, ...action.filePlacements, placement_type: state.atoms.placementType })
   ))
 }
 
@@ -249,8 +249,9 @@ function * hideAtomsFormSaga () {
 
 function * setAtomFilePlacements (action) {
   const form = yield select(atomsFormSelector)
-  yield put(setOriginalPlacements('images', form.atom.image_placements_attributes || []))
-  yield put(setOriginalPlacements('documents', form.atom.document_placement_attributes || []))
+  // TODO
+  yield put(setOriginalPlacements('images', form.atoms[0].image_placements_attributes || []))
+  yield put(setOriginalPlacements('documents', form.atoms[0].document_placement_attributes || []))
 }
 
 function * setAtomFilePlacementsSaga () {
@@ -259,8 +260,11 @@ function * setAtomFilePlacementsSaga () {
 
 function * validateAndSaveFormAtomPerform (action) {
   const serializedForm = yield select(makeSerializedFormAtomsSelector(action))
-  const response = yield (call(apiPost, '/console/atoms/validate', serializedForm))
-  if (response.valid) {
+  const response = yield (call(apiPost, '/console/atoms/validate', { atoms: serializedForm }))
+  let valid = true
+  response.forEach((res) => { valid = valid && res.valid })
+
+  if (valid) {
     yield put(saveFormAtoms(action.filePlacements))
   } else {
     yield put(setFormValidationErrors(response))
@@ -330,7 +334,7 @@ function atomsReducer (state = initialState, action) {
       }
     }
 
-    case NEW_ATOMS: {
+    case NEW_ATOMS:
       return {
         ...state,
         form: {
@@ -343,7 +347,7 @@ function atomsReducer (state = initialState, action) {
           atoms: [
             {
               ...DEFAULT_FORM_ATOM_STATE,
-              atom: {
+              record: {
                 id: null,
                 type: action.atomType,
                 data: {},
@@ -355,7 +359,6 @@ function atomsReducer (state = initialState, action) {
           ]
         }
       }
-    }
 
     case EDIT_ATOMS:
       return {
@@ -365,9 +368,9 @@ function atomsReducer (state = initialState, action) {
           rootKey: action.rootKey,
           indices: action.indices,
           edit: true,
-          atoms: atomsByIndicesSelector(state, action.rootKey, action.indices).map((atom) => ({
+          atoms: atomsByIndicesSelector(state, action.rootKey, action.indices).map((record) => ({
             ...DEFAULT_FORM_ATOM_STATE,
-            atom
+            record
           }))
         }
       }
@@ -418,7 +421,7 @@ function atomsReducer (state = initialState, action) {
 
       let atoms = []
       const newAtoms = state.form.atoms.map((atom) => ({
-        ...omit(atom.atom, ['meta', 'id']),
+        ...omit(atom.record, ['meta']),
         ...action.filePlacements,
         timestamp: timestamp()
       }))
@@ -480,8 +483,8 @@ function atomsReducer (state = initialState, action) {
       const destroyedIds = []
 
       state.form.atoms.forEach((atom) => {
-        if (atom.atom.id) {
-          destroyedIds.push(atom.atom.id)
+        if (atom.record.id) {
+          destroyedIds.push(atom.record.id)
         }
       })
 
@@ -494,7 +497,7 @@ function atomsReducer (state = initialState, action) {
           atoms: [
             {
               ...DEFAULT_FORM_ATOM_STATE,
-              atom: {
+              record: {
                 id: null,
                 type: action.newType,
                 data: action.values,
@@ -518,10 +521,10 @@ function atomsReducer (state = initialState, action) {
             if (i === action.index) {
               return {
                 ...atom,
-                atom: {
-                  ...atom.atom,
+                record: {
+                  ...atom.record,
                   data: {
-                    ...atom.atom.data,
+                    ...atom.record.data,
                     [action.key]: action.value
                   }
                 }
@@ -615,8 +618,8 @@ function atomsReducer (state = initialState, action) {
             if (i === action.index) {
               return {
                 ...atom,
-                atom: {
-                  ...atom.atom,
+                record: {
+                  ...atom.record,
                   associations: {
                     ...atom.associations,
                     [action.associationKey]: action.record

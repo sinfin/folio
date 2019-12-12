@@ -14,4 +14,9 @@ export default styled.div`
     height: calc(100% + 30px);
     z-index: 2;
   }
+
+  .folio-console-nested-model-controls {
+    flex: 0 0 35px;
+    margin-left: 1rem;
+  }
 `

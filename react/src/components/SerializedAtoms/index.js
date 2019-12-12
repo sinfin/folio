@@ -84,7 +84,7 @@ function SerializedAtom ({ atom, index, namespace, position }) {
       <input type='hidden' name={`${prefix}[position]`} value={index} />
       <input type='hidden' name={`${prefix}[type]`} value={type} />
       {Object.keys(meta.structure).map((key) => (
-        <input key={key} type='hidden' name={`${prefix}[${key}]`} value={data[key]} />
+        <input key={key} type='hidden' name={`${prefix}[${key}]`} value={data[key] || ''} />
       ))}
       <SerializedAttachments atom={atom} prefix={prefix} />
       <SerializedAssociations atom={atom} prefix={prefix} />
