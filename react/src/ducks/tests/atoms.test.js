@@ -12,7 +12,10 @@ import atomsReducer, {
   removeFormAtomAttachment,
   validateAndSaveFormAtom,
   setFormValidationErrors,
-  updateFormAtomAssociation
+  updateFormAtomAssociation,
+  addAtomToForm,
+  moveFormAtom,
+  removeFormAtom
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -120,7 +123,7 @@ describe('atomsReducer', () => {
     const newState = atomsReducer(state, saveFormAtoms())
     expect(newState.atoms['atoms'].length).toEqual(7)
     expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
-    expect(newState.atoms['atoms'][0].id).toEqual(undefined)
+    expect(newState.atoms['atoms'][0].id).toEqual(null)
     expect(newState.atoms['atoms'][0].timestamp).toBeTruthy()
 
     const newIndices = [1, 2]
@@ -150,7 +153,7 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'].length).toEqual(6)
     expect(state.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
     expect(state.atoms['atoms'][0].data.content).toEqual('foo')
-    expect(state.atoms['atoms'][0].id).toEqual(undefined)
+    expect(state.atoms['atoms'][0].id).toEqual(null)
     expect(state.atoms['atoms'][0].timestamp).toBeTruthy()
 
     expect(state.destroyedIds['atoms']).toEqual([oldId])
@@ -234,5 +237,40 @@ describe('atomsReducer', () => {
 
     state = atomsReducer(state, updateFormAtomAssociation(0, 'page', page))
     expect(state.form.atoms[0].record.associations['page']).toEqual(page)
+  })
+
+  it('addAtomToForm', () => {
+    expect(state.form.rootKey).toEqual(null)
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    expect(state.form.atoms.length).toEqual(3)
+    state = atomsReducer(state, addAtomToForm('Dummy::Atom::Moleculable'))
+    expect(state.form.atoms.length).toEqual(4)
+  })
+
+  it('moveFormAtom', () => {
+    expect(state.form.rootKey).toEqual(null)
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([4, 5, 6])
+    state = atomsReducer(state, moveFormAtom(1, 0))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([5, 4, 6])
+
+    state = atomsReducer(state, removeFormAtom(1))
+    state = atomsReducer(state, removeFormAtom(1))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([5])
+    state = atomsReducer(state, addAtomToForm('Dummy::Atom::Moleculable'))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([5, null])
+    state = atomsReducer(state, moveFormAtom(1, 0))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([null, 5])
+  })
+
+  it('removeFormAtom', () => {
+    expect(state.form.rootKey).toEqual(null)
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([4, 5, 6])
+    expect(state.form.destroyedIds).toEqual([])
+
+    state = atomsReducer(state, removeFormAtom(1))
+    expect(state.form.atoms.map((a) => a.record.id)).toEqual([4, 6])
+    expect(state.form.destroyedIds).toEqual([5])
   })
 })

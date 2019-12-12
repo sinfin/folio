@@ -2,6 +2,7 @@ import { mapValues, sortBy, omit } from 'lodash'
 import { takeEvery, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost, apiPost } from 'utils/api'
+import arrayMove from 'utils/arrayMove'
 import timestamp from 'utils/timestamp'
 
 import { setOriginalPlacements } from 'ducks/filePlacements'
@@ -23,6 +24,9 @@ const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
 const SET_FORM_ATOM_FILE_PLACEMENTS = 'atoms/SET_FORM_ATOM_FILE_PLACEMENTS'
 const SET_FORM_VALIDATION_ERRORS = 'atoms/SET_FORM_VALIDATION_ERRORS'
 const UPDATE_FORM_ATOM_ASSOCIATION = 'atoms/UPDATE_FORM_ATOM_ASSOCIATION'
+const ADD_ATOM_TO_FORM = 'atoms/ADD_ATOM_TO_FORM'
+const MOVE_FORM_ATOM = 'atoms/MOVE_FORM_ATOM'
+const REMOVE_FORM_ATOM = 'atoms/REMOVE_FORM_ATOM'
 
 // Actions
 
@@ -84,6 +88,18 @@ export function setFormValidationErrors (response) {
 
 export function updateFormAtomAssociation (index, associationKey, record) {
   return { type: UPDATE_FORM_ATOM_ASSOCIATION, index, associationKey, record }
+}
+
+export function addAtomToForm (atomType) {
+  return { type: ADD_ATOM_TO_FORM, atomType }
+}
+
+export function moveFormAtom (from, to) {
+  return { type: MOVE_FORM_ATOM, from, to }
+}
+
+export function removeFormAtom (index) {
+  return { type: REMOVE_FORM_ATOM, index }
 }
 
 // Selectors
@@ -286,7 +302,7 @@ export const atomsSagas = [
 // State
 
 export const DEFAULT_FORM_ATOM_STATE = {
-  atom: null,
+  record: null,
   valid: null,
   validating: false,
   errors: {},
@@ -600,10 +616,10 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
-          validating: false,
           atoms: state.form.atoms.map((atom, i) => ({
             ...atom,
-            ...action.response[i]
+            ...action.response[i],
+            validating: false
           }))
         }
       }
@@ -630,6 +646,61 @@ function atomsReducer (state = initialState, action) {
               return atom
             }
           })
+        }
+      }
+    }
+
+    case ADD_ATOM_TO_FORM:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atoms: [
+            ...state.form.atoms,
+            {
+              ...DEFAULT_FORM_ATOM_STATE,
+              record: {
+                id: null,
+                type: action.atomType,
+                data: {},
+                timestamp: timestamp(),
+                meta: state.structures[action.atomType],
+                associations: {}
+              }
+            }
+          ]
+        }
+      }
+
+    case MOVE_FORM_ATOM:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          atoms: arrayMove(state.form.atoms, action.from, action.to)
+        }
+      }
+
+    case REMOVE_FORM_ATOM: {
+      const atoms = []
+      const destroyedIds = [...state.form.destroyedIds]
+
+      state.form.atoms.forEach((atom, i) => {
+        if (i === action.index) {
+          if (atom.record.id) {
+            destroyedIds.push(atom.record.id)
+          }
+        } else {
+          atoms.push(atom)
+        }
+      })
+
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          destroyedIds,
+          atoms
         }
       }
     }

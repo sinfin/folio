@@ -14,7 +14,7 @@ module Folio::Atom
         structure[key] = {
           label: klass.human_attribute_name(key),
           hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
-          type: value
+          type: value,
         }
 
         if value.is_a?(Array)
@@ -59,6 +59,7 @@ module Folio::Atom
         hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil),
         structure: structure,
         title: klass.model_name.human,
+        molecule: klass.molecule_cell_name,
       }
     end
     str

@@ -60,7 +60,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       placement_type: placement_type,
       placement_id: placement_id,
       data: data || {},
-      molecule: self.class.molecule_cell_name,
     }.merge(attachments_to_h).merge(associations_to_h)
   end
 

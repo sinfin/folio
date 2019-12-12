@@ -25,9 +25,9 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
     }
     assert_response(:ok)
     json = JSON.parse(response.body)
-    assert_equal(false, json['0']['valid'])
-    assert_not_nil(json['0']['errors'])
-    assert_not_nil(json['0']['messages'])
-    assert_equal(['image_placements'], json['0']['errors'].keys)
+    assert_equal(false, json.first['valid'])
+    assert_not_nil(json.first['errors'])
+    assert_not_nil(json.first['messages'])
+    assert_equal(['image_placements'], json.first['errors'].keys)
   end
 end

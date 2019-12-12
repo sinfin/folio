@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input } from 'reactstrap'
+import { Button, Input } from 'reactstrap'
 import { isEqual, find } from 'lodash'
 
 import NestedModelControls from 'components/NestedModelControls'
@@ -22,11 +22,12 @@ class AtomForm extends React.PureComponent {
     const { form, structures } = this.props
     const newType = e.target.value
     const newStructure = structures[newType].structure
-    const oldStructure = form.atoms[0].record.meta.structure
+    const oldAtom = form.atoms[0].record
+    const oldStructure = oldAtom.meta.structure
     const values = {}
     Object.keys(newStructure).forEach((key) => {
       if (isEqual(newStructure[key], oldStructure[key])) {
-        values[key] = atom.data[key]
+        values[key] = oldAtom.data[key]
       }
     })
     this.props.updateFormAtomType(newType, values)
@@ -67,15 +68,7 @@ class AtomForm extends React.PureComponent {
 
   render () {
     const prefix = `${this.props.namespace}[${this.props.index + 1}]`
-    // let autofocused = false
-    // const autofocusRef = () => {
-    //   if (autofocused) {
-    //     return undefined
-    //   } else {
-    //     autofocused = true
-    //     return this.autofocusRef
-    //   }
-    // }
+    const molecule = Boolean(this.props.form.atoms[0].record.meta.molecule)
 
     return (
       <AtomFormWrap>
@@ -115,8 +108,8 @@ class AtomForm extends React.PureComponent {
 
         <div className='f-c-simple-form-with-atoms__overlay-scroll f-c-atom-form-toolbar-fix-parent'>
           {this.props.form.atoms.map((atom, index) => (
-            <div key={atom.record.id || atom.record.timestamp} className={atom.record.molecule && 'card'}>
-              <div className={atom.record.molecule && 'card-body d-flex mb-n3'}>
+            <div key={atom.record.id || atom.record.timestamp} className={molecule ? 'card' : undefined}>
+              <div className={molecule ? 'card-body d-flex mb-n3' : undefined}>
                 <div className='flex-grow-1'>
                   {atom.messages.length > 0 && (
                     <div className='my-3 alert alert-danger'>
@@ -158,11 +151,11 @@ class AtomForm extends React.PureComponent {
                   {atom.validating && <span className='folio-loader' />}
                 </div>
 
-                {atom.record.molecule && (
+                {molecule && (
                   <NestedModelControls
-                    moveUp={console.log}
-                    moveDown={console.log}
-                    remove={console.log}
+                    moveUp={index !== 0 ? () => { this.props.moveFormAtom(index, index - 1) } : null}
+                    moveDown={(index + 1 !== this.props.form.atoms.length) ? () => { this.props.moveFormAtom(index, index + 1) } : null}
+                    remove={this.props.form.atoms.length > 1 ? () => { this.props.removeFormAtom(index) } : null}
                     vertical
                   />
                 )}
@@ -170,6 +163,12 @@ class AtomForm extends React.PureComponent {
             </div>
           ))}
 
+          {molecule && (
+            <Button color='success' type='button' onClick={this.props.addAtom}>
+              <i className='fa fa-plus' />
+              {window.FolioConsole.translations.add}
+            </Button>
+          )}
         </div>
       </AtomFormWrap>
     )
