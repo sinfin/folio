@@ -6,7 +6,7 @@ import Tags from 'components/Tags'
 
 import FileUploadProgress from 'components/FileUploadProgress'
 
-const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick }) => {
+const FileTableRow = ({ file, link, fileTypeIsImage, onClick }) => {
   let className = 'folio-console-file-table__tr'
   const persistedOnClick = !file.attributes.uploading && onClick
 
@@ -34,7 +34,7 @@ const FileTableRow = ({ file, link, fileTypeIsImage, overflowingParent, onClick 
                 rel='noopener noreferrer'
                 onClick={(e) => e.stopPropagation()}
               >
-                <LazyLoad height={50} once overflow={overflowingParent}>
+                <LazyLoad height={50} once overflow>
                   <img src={file.attributes.thumb} className='folio-console-file-table__img' alt='' />
                 </LazyLoad>
               </a>

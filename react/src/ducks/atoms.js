@@ -27,6 +27,10 @@ const UPDATE_FORM_ATOM_ASSOCIATION = 'atoms/UPDATE_FORM_ATOM_ASSOCIATION'
 const ADD_ATOM_TO_FORM = 'atoms/ADD_ATOM_TO_FORM'
 const MOVE_FORM_ATOM = 'atoms/MOVE_FORM_ATOM'
 const REMOVE_FORM_ATOM = 'atoms/REMOVE_FORM_ATOM'
+const ATOM_FORM_PLACEMENTS_SELECT = 'atoms/ATOM_FORM_PLACEMENTS_SELECT'
+const ATOM_FORM_PLACEMENTS_UNSELECT = 'atoms/ATOM_FORM_PLACEMENTS_UNSELECT'
+const ATOM_FORM_PLACEMENTS_SORT = 'atoms/ATOM_FORM_PLACEMENTS_SORT'
+const ATOM_FORM_PLACEMENTS_CHANGE = 'atoms/ATOM_FORM_PLACEMENTS_CHANGE'
 
 // Actions
 
@@ -100,6 +104,30 @@ export function moveFormAtom (from, to) {
 
 export function removeFormAtom (index) {
   return { type: REMOVE_FORM_ATOM, index }
+}
+
+export function atomFormPlacementsSelect (index, attachmentKey, file) {
+  return { type: ATOM_FORM_PLACEMENTS_SELECT, index, attachmentKey, file }
+}
+
+export function atomFormPlacementsUnselect (index, attachmentKey, filePlacement) {
+  return { type: ATOM_FORM_PLACEMENTS_UNSELECT, index, attachmentKey, filePlacement }
+}
+
+export function atomFormPlacementsSort (index, attachmentKey, oldIndex, newIndex) {
+  return { type: ATOM_FORM_PLACEMENTS_SORT, index, attachmentKey, oldIndex, newIndex }
+}
+
+export function atomFormPlacementsChange (index, attachmentKey, filePlacement, attribute, value) {
+  return { type: ATOM_FORM_PLACEMENTS_CHANGE, index, attachmentKey, filePlacement, attribute, value }
+}
+
+export function atomFormPlacementsChangeTitle (index, attachmentKey, filePlacement, title) {
+  return atomFormPlacementsChange(index, attachmentKey, filePlacement, 'title', title)
+}
+
+export function atomFormPlacementsChangeAlt (index, attachmentKey, filePlacement, alt) {
+  return atomFormPlacementsChange(index, attachmentKey, filePlacement, 'alt', alt)
 }
 
 // Selectors

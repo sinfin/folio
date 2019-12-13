@@ -31,7 +31,6 @@ class IndexMode extends LazyLoadCheckingComponent {
               displayAsThumbs={this.props.displayAsThumbs}
               pagination={this.props.filesPagination}
               changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
-              overflowingParent
               link
               dropzoneTrigger
             />

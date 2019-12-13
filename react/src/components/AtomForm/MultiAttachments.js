@@ -3,10 +3,10 @@ import React from 'react'
 import MultiSelect from 'containers/MultiSelect'
 import fileTypeToKey from 'utils/fileTypeToKey'
 
-export default function MultiAttachments ({ attachments }) {
+export default function MultiAttachments ({ atom }) {
   return (
     <React.Fragment>
-      {attachments.map((attachmentType) => (
+      {atom.record.meta.attachments.map((attachmentType) => (
         attachmentType.plural ? (
           <div className='mt-4' key={attachmentType.key}>
             <MultiSelect

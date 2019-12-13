@@ -4,7 +4,7 @@ import LazyLoad from 'react-lazyload'
 import FileUploadProgress from 'components/FileUploadProgress'
 import FileThumbnailHover from './FileThumbnailHover'
 
-const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) => {
+const FileThumbnail = ({ file, link, onClick, selecting }) => {
   const Tag = link ? 'a' : 'div'
   let className = 'folio-console-file-list__file'
   const persistedOnClick = !file.attributes.uploading && onClick
@@ -22,7 +22,7 @@ const FileThumbnail = ({ file, link, overflowingParent, onClick, selecting }) =>
     >
       <div className='folio-console-file-list__img-wrap' style={{ background: file.attributes.dominant_color }}>
         {file.attributes.thumb && (
-          <LazyLoad height={150} once overflow={overflowingParent}>
+          <LazyLoad height={150} once overflow>
             <img
               src={file.attributes.thumb}
               className='folio-console-file-list__img'
