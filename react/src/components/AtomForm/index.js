@@ -108,9 +108,9 @@ class AtomForm extends React.PureComponent {
 
         <div className='f-c-simple-form-with-atoms__overlay-scroll f-c-atom-form-toolbar-fix-parent'>
           {this.props.form.atoms.map((atom, index) => (
-            <div key={atom.record.id || atom.record.timestamp} className={molecule ? 'card' : undefined}>
-              <div className={molecule ? 'card-body d-flex mb-n3' : undefined}>
-                <div className='flex-grow-1'>
+            <div key={atom.record.id || atom.record.timestamp} className={molecule ? 'card-outer' : undefined}>
+              <div className={molecule ? 'card' : undefined}>
+                <div className={molecule ? 'card-body mb-n3' : undefined}>
                   {atom.messages.length > 0 && (
                     <div className='my-3 alert alert-danger'>
                       <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
@@ -123,13 +123,12 @@ class AtomForm extends React.PureComponent {
                     </div>
                   )}
 
-                  {/*
                   <SingleAttachments
                     attachments={atom.record.meta.attachments}
                     atom={atom.record}
+                    index={index}
                     remove={this.props.removeFormAtomAttachment}
                   />
-                  */}
 
                   <Fields
                     atom={atom}
@@ -150,16 +149,16 @@ class AtomForm extends React.PureComponent {
 
                   {atom.validating && <span className='folio-loader' />}
                 </div>
-
-                {molecule && (
-                  <NestedModelControls
-                    moveUp={index !== 0 ? () => { this.props.moveFormAtom(index, index - 1) } : null}
-                    moveDown={(index + 1 !== this.props.form.atoms.length) ? () => { this.props.moveFormAtom(index, index + 1) } : null}
-                    remove={this.props.form.atoms.length > 1 ? () => { this.props.removeFormAtom(index) } : null}
-                    vertical
-                  />
-                )}
               </div>
+
+              {molecule && (
+                <NestedModelControls
+                  moveUp={index !== 0 ? () => { this.props.moveFormAtom(index, index - 1) } : null}
+                  moveDown={(index + 1 !== this.props.form.atoms.length) ? () => { this.props.moveFormAtom(index, index + 1) } : null}
+                  remove={this.props.form.atoms.length > 1 ? () => { this.props.removeFormAtom(index) } : null}
+                  vertical
+                />
+              )}
             </div>
           ))}
 

@@ -15,8 +15,21 @@ export default styled.div`
     z-index: 2;
   }
 
+  .card-outer {
+    padding-right: 3rem;
+    position: relative;
+    min-height: 103px;
+  }
+
   .folio-console-nested-model-controls {
-    flex: 0 0 35px;
-    margin-left: 1rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: .15s all;
+    opacity: 0;
+  }
+
+  .card-outer:hover .folio-console-nested-model-controls {
+    opacity: 1;
   }
 `

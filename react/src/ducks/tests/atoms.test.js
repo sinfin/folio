@@ -201,20 +201,20 @@ describe('atomsReducer', () => {
     expect(moveState.atoms['atoms'][4].id).toEqual(1)
   })
 
-  // it('updateFormAtomAttachments, removeFormAtomAttachment', () => {
-  //   state = atomsReducer(state, editAtoms('atoms', [0]))
-  //   state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci'))
-  //   expect(state.form.atom.cover_placement_attributes).toEqual(undefined)
-  //   const data = {
-  //     file_id: 1,
-  //     file: { id: 1 }
-  //   }
-  //   const newState = atomsReducer(state, updateFormAtomAttachments('cover_placement_attributes', data))
-  //   expect(newState.form.atom.cover_placement_attributes).toEqual(data)
+  it('updateFormAtomAttachments, removeFormAtomAttachment', () => {
+    state = atomsReducer(state, editAtoms('atoms', [0]))
+    state = atomsReducer(state, updateFormAtomType('Dummy::Atom::DaVinci'))
+    expect(state.form.atoms[0].record.cover_placement_attributes).toEqual(undefined)
+    const data = {
+      file_id: 1,
+      file: { id: 1 }
+    }
+    const newState = atomsReducer(state, updateFormAtomAttachments(0, 'cover_placement_attributes', data))
+    expect(newState.form.atoms[0].record.cover_placement_attributes).toEqual(data)
 
-  //   const finalState = atomsReducer(newState, removeFormAtomAttachment('cover_placement_attributes'))
-  //   expect(finalState.form.atom.cover_placement_attributes).toEqual(undefined)
-  // })
+    const finalState = atomsReducer(newState, removeFormAtomAttachment(0, 'cover_placement_attributes'))
+    expect(finalState.form.atoms[0].record.cover_placement_attributes).toEqual(undefined)
+  })
 
   it('validateAndSaveFormAtom', () => {
     state = atomsReducer(state, editAtoms('atoms', [0]))

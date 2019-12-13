@@ -48,9 +48,9 @@ module Folio::Imprintable
         end
       end
 
-      define_method(:revive_imprint) do |klass, hash, include|
+      define_method(:revive_imprint) do |klass, hash, incl|
         imprinted_model_associations = {}
-        include.each do |i|
+        incl.each do |i|
           imprinted_model_associations[i] = hash.delete(i)
         end
         result = klass.new(hash)

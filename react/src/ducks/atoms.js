@@ -70,12 +70,12 @@ export function saveFormAtoms (filePlacements) {
   return { type: SAVE_FORM_ATOMS, filePlacements }
 }
 
-export function updateFormAtomAttachments (attachmentKey, data) {
-  return { type: UPDATE_FORM_ATOM_ATTACHMENTS, attachmentKey, data }
+export function updateFormAtomAttachments (index, attachmentKey, data) {
+  return { type: UPDATE_FORM_ATOM_ATTACHMENTS, index, attachmentKey, data }
 }
 
-export function removeFormAtomAttachment (attachmentKey) {
-  return { type: REMOVE_FORM_ATOM_ATTACHMENT, attachmentKey }
+export function removeFormAtomAttachment (index, attachmentKey) {
+  return { type: REMOVE_FORM_ATOM_ATTACHMENT, index, attachmentKey }
 }
 
 export function setFormAtomFilePlacements () {
@@ -590,13 +590,22 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
-          atom: {
-            ...state.form.atom,
-            [action.attachmentKey]: {
-              ...state.form.atom[action.attachmentKey],
-              ...action.data
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: {
+                    ...omit(atom.record[action.attachmentKey], ['_destroy']),
+                    ...action.data
+                  }
+                }
+              }
+            } else {
+              return atom
             }
-          }
+          })
         }
       }
     }
@@ -606,7 +615,24 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
-          atom: omit(state.form.atom, [action.attachmentKey])
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const record = omit(atom.record, [action.attachmentKey])
+              if (atom.record[action.attachmentKey] && atom.record[action.attachmentKey].id) {
+                record[action.attachmentKey] = {
+                  id: atom.record[action.attachmentKey].id,
+                  _destroy: true
+                }
+              }
+
+              return {
+                ...atom,
+                record
+              }
+            } else {
+              return atom
+            }
+          })
         }
       }
     }

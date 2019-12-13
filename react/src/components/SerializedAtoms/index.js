@@ -9,10 +9,15 @@ function SerializedAttachment ({ prefix, attachmentKey, attachment, index, showI
   return (
     <React.Fragment>
       {showId && <input type='hidden' name={name('id')} value={attachment['id'] || ''} />}
-      {attachment['_destroy'] && <input type='hidden' name={name('_destroy')} value='1' />}
-      <input type='hidden' name={name('file_id')} value={attachment['file_id']} />
-      <input type='hidden' name={name('alt')} value={attachment['alt'] || ''} />
-      <input type='hidden' name={name('title')} value={attachment['title'] || ''} />
+      {attachment['_destroy'] ? (
+        <input type='hidden' name={name('_destroy')} value='1' />
+      ) : (
+        <React.Fragment>
+          <input type='hidden' name={name('file_id')} value={attachment['file_id']} />
+          <input type='hidden' name={name('alt')} value={attachment['alt'] || ''} />
+          <input type='hidden' name={name('title')} value={attachment['title'] || ''} />
+        </React.Fragment>
+      )}
     </React.Fragment>
   )
 }
@@ -41,6 +46,7 @@ function SerializedAttachments ({ atom, prefix }) {
               attachmentKey={key}
               attachment={values}
               key={key}
+              showId={values.id && values._destroy}
             />
           )
         )

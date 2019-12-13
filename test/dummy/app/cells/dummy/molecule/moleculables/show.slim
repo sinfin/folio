@@ -2,4 +2,10 @@
   .container
     ul.list-unstyled.row
       - model.each do |atom|
-        li.col = atom.title
+        li.col.d-flex.align-items-center
+          .mr-3.d-flex.align-items-center.justify-content-center[
+            style="width: 50px; height: 50px;"
+          ]
+            = cover(atom)
+
+          = atom.title

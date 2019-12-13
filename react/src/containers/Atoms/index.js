@@ -95,14 +95,14 @@ class Atoms extends React.PureComponent {
     this.props.dispatch(validateAndSaveFormAtom(filePlacementsAttributes))
   }
 
-  removeFormAtomAttachment = (attachmentKey) => {
+  removeFormAtomAttachment = (index, attachmentKey) => {
     if (confirm()) {
-      this.props.dispatch(removeFormAtomAttachment(attachmentKey))
+      this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
     }
   }
 
-  handleFileTrigger ({ attachmentKey, data }) {
-    this.props.dispatch(updateFormAtomAttachments(attachmentKey, data))
+  handleFileTrigger ({ attachmentKey, data, index }) {
+    this.props.dispatch(updateFormAtomAttachments(index, attachmentKey, data))
   }
 
   render () {
