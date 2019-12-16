@@ -1,12 +1,12 @@
 GIT
-  remote: git://github.com/sinfin/actionpack-page_caching.git
+  remote: https://github.com/sinfin/actionpack-page_caching.git
   revision: 205bb1eb88ca7efe5156298f954e764ce7ef07f8
   specs:
     actionpack-page_caching (1.1.1)
       actionpack (>= 4.0.0, < 6)
 
 GIT
-  remote: git://github.com/sinfin/premailer.git
+  remote: https://github.com/sinfin/premailer.git
   revision: 4f14229876c7f226ebb175b9cfaaf8c361169819
   specs:
     premailer (1.11.1)
@@ -190,7 +190,7 @@ GEM
       sixarm_ruby_unaccent (~> 1.1)
       unicode_utils (~> 1.4)
     crass (1.0.5)
-    css_parser (1.7.0)
+    css_parser (1.7.1)
       addressable
     debug_inspector (0.0.3)
     declarative-builder (0.1.0)
@@ -224,7 +224,7 @@ GEM
       rails (> 3.1)
     errbase (0.2.0)
     erubi (1.9.0)
-    excon (0.68.0)
+    excon (0.71.0)
     execjs (2.7.0)
     factory_bot (5.1.1)
       activesupport (>= 4.2.0)
