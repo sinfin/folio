@@ -42,7 +42,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
     )
   }
 
-  onAltChange = (filePlacement, alt) => {
+  onAltChange = (_filesKey, filePlacement, alt) => {
     this.props.dispatch(
       atomFormPlacementsChangeAlt(
         this.props.index,
@@ -53,7 +53,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
     )
   }
 
-  onTitleChange = (filePlacement, title) => {
+  onTitleChange = (_filesKey, filePlacement, title) => {
     this.props.dispatch(
       atomFormPlacementsChangeTitle(
         this.props.index,
@@ -101,16 +101,31 @@ class MultiAttachmentsSelect extends React.PureComponent {
         filesPagination={this.props.filesPagination}
         changeFilesPage={this.changeFilesPage}
         shouldLoadFiles
+        nested
       />
     )
   }
 }
 
 const mapStateToProps = (state, props) => {
+  const all = props.atom.record[props.attachmentType.key]
+  const selected = []
+  const deleted = []
+
+  if (all && all.length) {
+    all.forEach((placement) => {
+      if (placement._destroy) {
+        deleted.push(placement)
+      } else {
+        selected.push(placement)
+      }
+    })
+  }
+
   const filesKey = fileTypeToKey(props.attachmentType['file_type'])
   const filePlacements = {
-    selected: [],
-    deleted: [],
+    selected,
+    deleted,
     attachmentable: 'foo',
     placementType: props.attachmentType.key.replace('_attributes', '')
   }

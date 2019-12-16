@@ -143,7 +143,7 @@ class AtomForm extends React.PureComponent {
                     index={index}
                   />
 
-                  <MultiAttachments atom={atom} />
+                  <MultiAttachments atom={atom} index={index} />
 
                   {atom.record.meta.hint && this.renderHint(atom.record.meta.hint)}
 

@@ -19,11 +19,9 @@ import {
   moveFormAtom,
   removeFormAtom
 } from 'ducks/atoms'
-import { makeFilePlacementsSelector } from 'ducks/filePlacements'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
 import { confirm } from 'utils/confirmed'
-import fileTypeToKey from 'utils/fileTypeToKey'
 
 import { FILE_TRIGGER_EVENT } from './constants'
 
@@ -79,20 +77,7 @@ class Atoms extends React.PureComponent {
   }
 
   validateAndSaveFormAtom = () => {
-    const filePlacementsAttributes = {}
-    // TODO placements
-    // this.props.atoms.form.atom.meta.attachments.forEach((attachmentType) => {
-    this.props.atoms.form.atoms[0].record.meta.attachments.forEach((attachmentType) => {
-      if (!attachmentType.plural) return
-      const filesKey = fileTypeToKey(attachmentType.file_type)
-      const selector = makeFilePlacementsSelector(filesKey)
-      const filePlacements = selector(this.props.state)
-      filePlacementsAttributes[attachmentType.key] = [
-        ...filePlacements.selected,
-        ...filePlacements.deleted.map((fp) => ({ ...fp, _destroy: true }))
-      ]
-    })
-    this.props.dispatch(validateAndSaveFormAtom(filePlacementsAttributes))
+    this.props.dispatch(validateAndSaveFormAtom())
   }
 
   removeFormAtomAttachment = (index, attachmentKey) => {

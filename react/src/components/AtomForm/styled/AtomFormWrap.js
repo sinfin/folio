@@ -21,7 +21,7 @@ export default styled.div`
     min-height: 103px;
   }
 
-  .folio-console-nested-model-controls {
+  .card-outer > .folio-console-nested-model-controls {
     position: absolute;
     top: 0;
     right: 0;
@@ -29,7 +29,7 @@ export default styled.div`
     opacity: 0;
   }
 
-  .card-outer:hover .folio-console-nested-model-controls {
+  .card-outer:hover > .folio-console-nested-model-controls {
     opacity: 1;
   }
 `

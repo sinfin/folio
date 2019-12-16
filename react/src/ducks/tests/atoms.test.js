@@ -15,10 +15,22 @@ import atomsReducer, {
   updateFormAtomAssociation,
   addAtomToForm,
   moveFormAtom,
-  removeFormAtom
+  removeFormAtom,
+  atomFormPlacementsSelect,
+  atomFormPlacementsUnselect,
+  atomFormPlacementsSort,
+  atomFormPlacementsChangeTitle,
+  atomFormPlacementsChangeAlt
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
+
+const mockImages = [
+  { id: 1, file_id: 1 },
+  { id: 2, file_id: 2 },
+  { id: 3, file_id: 3 }
+]
+const fileMock = { id: '999', type: 'file', attributes: { id: 999, file_size: 326774, file_name: 'bar.jpg', type: 'Folio::Image', thumb: 'foo/bar.jpg', source_image: 'foo/bar.jpg', url: '/foo/bar.jpg', dominant_color: '#2F312F', tags: [], placements: [], extension: 'JPEG' }, links: { edit: '/console/images/999/edit' } }
 
 describe('atomsReducer', () => {
   let state
@@ -159,22 +171,6 @@ describe('atomsReducer', () => {
     expect(state.destroyedIds['atoms']).toEqual([oldId])
   })
 
-  it('saveFormAtoms - with filePlacements', () => {
-    const filePlacements = {
-      image_placement_attributes: [
-        { id: 1, file_id: 1, title: 'foo' },
-        { id: 2, file_id: 2, title: 'bar' }
-      ]
-    }
-    expect(state.atoms['atoms'][0].type).not.toEqual('Dummy::Atom::Gallery')
-    expect(state.atoms['atoms'][0]['image_placement_attributes']).toEqual(undefined)
-    state = atomsReducer(state, newAtoms('atoms', 'prepend', [0], 'Dummy::Atom::Gallery'))
-    state = atomsReducer(state, saveFormAtoms(filePlacements))
-    expect(state.atoms['atoms'][0].type).toEqual('Dummy::Atom::Gallery')
-    expect(state.atoms['atoms'][0]['image_placement_attributes']).toBeTruthy()
-    expect(state.atoms['atoms'][0]['image_placement_attributes'].length).toEqual(2)
-  })
-
   it('saveFormAtoms - last', () => {
     state = atomsReducer(state, newAtoms('atoms', 'splice', [3], 'Dummy::Atom::DaVinci'))
     state = atomsReducer(state, updateFormAtomValue(0, 'text', 'text'))
@@ -272,5 +268,71 @@ describe('atomsReducer', () => {
     state = atomsReducer(state, removeFormAtom(1))
     expect(state.form.atoms.map((a) => a.record.id)).toEqual([4, 6])
     expect(state.form.destroyedIds).toEqual([5])
+  })
+
+  it('atomFormPlacementsSelect', () => {
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    expect(state.form.atoms.map((a) => a.record.image_placements_attributes)).toEqual([undefined, undefined, undefined])
+
+    state = atomsReducer(state, atomFormPlacementsSelect(1, 'image_placements_attributes', fileMock))
+
+    expect(state.form.atoms[0].record.image_placements_attributes).toEqual(undefined)
+    expect(state.form.atoms[1].record.image_placements_attributes).not.toEqual(undefined)
+    expect(state.form.atoms[1].record.image_placements_attributes.length).toEqual(1)
+    expect(state.form.atoms[1].record.image_placements_attributes[0].id).toEqual(null)
+    expect(state.form.atoms[1].record.image_placements_attributes[0].file_id).toEqual(fileMock.id)
+    expect(state.form.atoms[2].record.image_placements_attributes).toEqual(undefined)
+  })
+
+  it('atomFormPlacementsUnselect', () => {
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    state.form.atoms[0].record.image_placements_attributes = mockImages
+    state = atomsReducer(state, atomFormPlacementsSelect(0, 'image_placements_attributes', fileMock))
+
+    expect(state.form.atoms[0].record.image_placements_attributes.length).toEqual(4)
+    expect(state.form.atoms[0].record.image_placements_attributes.map((pl) => pl.id)).toEqual([1, 2, 3, null])
+    expect(state.form.atoms[0].record.image_placements_attributes.map((pl) => pl._destroy)).toEqual([undefined, undefined, undefined, undefined])
+
+    let filePlacement = state.form.atoms[0].record.image_placements_attributes[3]
+    state = atomsReducer(state, atomFormPlacementsUnselect(0, 'image_placements_attributes', filePlacement))
+    expect(state.form.atoms[0].record.image_placements_attributes.length).toEqual(3)
+
+    filePlacement = state.form.atoms[0].record.image_placements_attributes[0]
+    state = atomsReducer(state, atomFormPlacementsUnselect(0, 'image_placements_attributes', filePlacement))
+    expect(state.form.atoms[0].record.image_placements_attributes.length).toEqual(3)
+    expect(state.form.atoms[0].record.image_placements_attributes[0]._destroy).toEqual(true)
+    expect(state.form.atoms[0].record.image_placements_attributes[1]._destroy).toEqual(undefined)
+    expect(state.form.atoms[0].record.image_placements_attributes[2]._destroy).toEqual(undefined)
+  })
+
+  it('atomFormPlacementsSort', () => {
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    state.form.atoms[0].record.image_placements_attributes = mockImages
+
+    expect(state.form.atoms[0].record.image_placements_attributes[0].id).toEqual(1)
+    expect(state.form.atoms[0].record.image_placements_attributes[1].id).toEqual(2)
+    expect(state.form.atoms[0].record.image_placements_attributes[2].id).toEqual(3)
+    state = atomsReducer(state, atomFormPlacementsSort(0, 'image_placements_attributes', 2, 0))
+    expect(state.form.atoms[0].record.image_placements_attributes[0].id).toEqual(3)
+    expect(state.form.atoms[0].record.image_placements_attributes[1].id).toEqual(1)
+    expect(state.form.atoms[0].record.image_placements_attributes[2].id).toEqual(2)
+  })
+
+  it('atomFormPlacementsChangeTitle', () => {
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    state.form.atoms[0].record.image_placements_attributes = mockImages
+    expect(state.form.atoms[0].record.image_placements_attributes[0].title).toEqual(undefined)
+    const filePlacement = state.form.atoms[0].record.image_placements_attributes[0]
+    state = atomsReducer(state, atomFormPlacementsChangeTitle(0, 'image_placements_attributes', filePlacement, 'foo'))
+    expect(state.form.atoms[0].record.image_placements_attributes[0].title).toEqual('foo')
+  })
+
+  it('atomFormPlacementsChangeAlt', () => {
+    state = atomsReducer(state, editAtoms('atoms', [3, 4, 5]))
+    state.form.atoms[0].record.image_placements_attributes = mockImages
+    expect(state.form.atoms[0].record.image_placements_attributes[0].alt).toEqual(undefined)
+    const filePlacement = state.form.atoms[0].record.image_placements_attributes[0]
+    state = atomsReducer(state, atomFormPlacementsChangeAlt(0, 'image_placements_attributes', filePlacement, 'foo'))
+    expect(state.form.atoms[0].record.image_placements_attributes[0].alt).toEqual('foo')
   })
 })

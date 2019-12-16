@@ -77,7 +77,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
             {
               id: placement.id,
               file_id: placement.file_id,
-              file: placement.file.to_h,
+              file: Folio::Console::FileSerializer.new(placement.file)
+                                                  .serializable_hash[:data],
               alt: placement.alt,
               title: placement.title,
             }
@@ -88,7 +89,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
           h["#{placement_key}_attributes".to_sym] = {
             id: placement.id,
             file_id: placement.file_id,
-            file: placement.file.to_h,
+            file: Folio::Console::FileSerializer.new(placement.file)
+                                                .serializable_hash[:data],
             alt: placement.alt,
             title: placement.title,
           }

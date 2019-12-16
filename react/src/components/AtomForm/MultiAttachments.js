@@ -2,7 +2,7 @@ import React from 'react'
 
 import MultiAttachmentsSelect from './MultiAttachmentsSelect'
 
-export default function MultiAttachments ({ atom }) {
+export default function MultiAttachments ({ atom, index }) {
   return (
     <React.Fragment>
       {atom.record.meta.attachments.map((attachmentType) => (
@@ -11,6 +11,7 @@ export default function MultiAttachments ({ atom }) {
             <MultiAttachmentsSelect
               attachmentType={attachmentType}
               atom={atom}
+              index={index}
             />
           </div>
         ) : null

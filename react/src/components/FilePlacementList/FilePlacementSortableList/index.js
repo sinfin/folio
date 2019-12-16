@@ -10,7 +10,8 @@ const FilePlacementSortableList = SortableContainer(({
   onTitleChange,
   onAltChange,
   move,
-  filesKey
+  filesKey,
+  nested
 }) => (
   <div className='folio-console-file-placement-list'>
     {filePlacements.selected.map((filePlacement, index) => (
@@ -29,6 +30,7 @@ const FilePlacementSortableList = SortableContainer(({
         isFirst={index === 0}
         isLast={index === filePlacement.length - 1}
         filesKey={filesKey}
+        nested={nested}
       />
     ))}
   </div>

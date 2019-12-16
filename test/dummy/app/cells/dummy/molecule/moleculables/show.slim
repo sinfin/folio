@@ -9,3 +9,9 @@
             = cover(atom)
 
           = atom.title
+
+          - atom.image_placements.each do |ip|
+            .ml-3.d-flex.align-items-center.justify-content-center[
+              style="width: 50px; height: 50px;"
+            ]
+              = thumb(ip)

@@ -66,12 +66,12 @@ export function closeFormAtom () {
   return { type: CLOSE_FORM_ATOM }
 }
 
-export function validateAndSaveFormAtom (filePlacements) {
-  return { type: VALIDATE_AND_SAVE_FORM_ATOMS, filePlacements }
+export function validateAndSaveFormAtom () {
+  return { type: VALIDATE_AND_SAVE_FORM_ATOMS }
 }
 
-export function saveFormAtoms (filePlacements) {
-  return { type: SAVE_FORM_ATOMS, filePlacements }
+export function saveFormAtoms () {
+  return { type: SAVE_FORM_ATOMS }
 }
 
 export function updateFormAtomAttachments (index, attachmentKey, data) {
@@ -207,11 +207,9 @@ export const serializedAtomsSelector = (state) => {
   return h
 }
 
-export const makeSerializedFormAtomsSelector = (action) => (state) => {
-  return state.atoms.form.atoms.map((atom) => (
-    serializeAtom(state, { ...atom.record, ...action.filePlacements, placement_type: state.atoms.placementType })
-  ))
-}
+export const serializedFormAtomsSelector = (state) => (
+  state.atoms.form.atoms.map((atom) => serializeAtom(state, atom.record))
+)
 
 // Sagas
 function * updateAtomPreviews (action) {
@@ -303,13 +301,13 @@ function * setAtomFilePlacementsSaga () {
 }
 
 function * validateAndSaveFormAtomPerform (action) {
-  const serializedForm = yield select(makeSerializedFormAtomsSelector(action))
+  const serializedForm = yield select(serializedFormAtomsSelector)
   const response = yield (call(apiPost, '/console/atoms/validate', { atoms: serializedForm }))
   let valid = true
   response.forEach((res) => { valid = valid && res.valid })
 
   if (valid) {
-    yield put(saveFormAtoms(action.filePlacements))
+    yield put(saveFormAtoms())
   } else {
     yield put(setFormValidationErrors(response))
   }
@@ -466,7 +464,6 @@ function atomsReducer (state = initialState, action) {
       let atoms = []
       const newAtoms = state.form.atoms.map((atom) => ({
         ...omit(atom.record, ['meta']),
-        ...action.filePlacements,
         timestamp: timestamp()
       }))
 
@@ -758,6 +755,145 @@ function atomsReducer (state = initialState, action) {
           dirty: true,
           destroyedIds,
           atoms
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_SELECT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              let placements = []
+              let replaced = false
+
+              if (atom.record[action.attachmentKey]) {
+                placements = atom.record[action.attachmentKey].map((placement) => {
+                  if (placement.file_id === action.file.id) {
+                    replaced = true
+                    return omit(placement, ['_destroy'])
+                  } else {
+                    return placement
+                  }
+                })
+              }
+
+              if (!replaced) {
+                placements.push({
+                  id: null,
+                  file_id: action.file.id,
+                  file: action.file,
+                  selectedAt: Date.now()
+                })
+              }
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_UNSELECT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const placements = []
+
+              atom.record[action.attachmentKey].forEach((placement) => {
+                if (placement.file_id === action.filePlacement.file_id) {
+                  if (placement.id) {
+                    placements.push({ ...placement, _destroy: true })
+                  } else {
+                    // remove non-id placement by not pushing it to the array
+                  }
+                } else {
+                  placements.push(placement)
+                }
+              })
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_SORT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const placements = arrayMove(atom.record[action.attachmentKey], action.oldIndex, action.newIndex)
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_CHANGE: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const placements = atom.record[action.attachmentKey].map((placement) => {
+                if (placement.file_id === action.filePlacement.file_id) {
+                  return { ...placement, [action.attribute]: action.value }
+                } else {
+                  return placement
+                }
+              })
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
         }
       }
     }

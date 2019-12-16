@@ -12,7 +12,7 @@ const FilePlacementList = (props) => (
       {...props}
     />
 
-    {props.filePlacements.deleted.map((filePlacement) => (
+    {!props.nested && props.filePlacements.deleted.map((filePlacement) => (
       <div key={filePlacement.id}>
         <input
           type='hidden'

@@ -5,9 +5,13 @@ class Dummy::Molecule::MoleculablesCell < Folio::ApplicationCell
 
   def cover(atom)
     if atom.cover_placement.present?
-      lazy_image_from(atom.cover_placement,
-                      Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
-                      class: 'mw-100')
+      thumb(atom.cover_placement)
     end
+  end
+
+  def thumb(from)
+    lazy_image_from(from,
+                    Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
+                    class: 'mw-100')
   end
 end
