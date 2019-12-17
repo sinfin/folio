@@ -20,9 +20,9 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def sorted_types
-    Folio::Atom.types.sort_by do |klass|
-      I18n.transliterate(klass.model_name.human)
-    end
+    Folio::Atom.types
+               .reject { |klass| klass.molecule_secondary }
+               .sort_by { |klass| I18n.transliterate(klass.model_name.human) }
   end
 
   def locale_hidden(locale)

@@ -9,21 +9,24 @@ function triggerModal (fileType, data) {
   window.jQuery(document).trigger(`${EVENT_NAME}/${fileType}`, [data])
 }
 
-function SingleSelectTrigger ({ data, attachmentType, remove }) {
+function SingleSelectTrigger ({ data, attachmentType, remove, index }) {
   const isDocument = attachmentType.file_type === 'Folio::Document'
   const trigger = () => {
-    const data = {
+    const d = {
+      index,
       triggerEvent: FILE_TRIGGER_EVENT,
       attachmentKey: attachmentType.key
     }
-    triggerModal(attachmentType.file_type, data)
+    triggerModal(attachmentType.file_type, d)
   }
+
+  const present = data && !data._destroy
 
   return (
     <SingleSelectTriggerWrap className='form-group folio-console-react-picker folio-console-react-picker--single'>
       <label className='folio-console-react-picker__label'>{attachmentType.label}</label>
 
-      {data ? (
+      {present ? (
         <div className='folio-console-react-picker__files'>
           <div className='folio-console-thumbnail folio-console-thumbnail--image'>
             <div className='folio-console-thumbnail__inner'>

@@ -4,8 +4,8 @@ import { FormGroup, FormText, Label } from 'reactstrap'
 import formGroupClassName from './utils/formGroupClassName'
 import AtomInput from './AtomInput'
 
-export default function Fields ({ form, onChange, onValueChange }) {
-  const { meta } = form.atom
+export default function Fields ({ atom, index, onChange, onValueChange }) {
+  const { meta } = atom.record
 
   return (
     <React.Fragment>
@@ -15,7 +15,7 @@ export default function Fields ({ form, onChange, onValueChange }) {
         return (
           <FormGroup
             key={key}
-            className={formGroupClassName(key, form.errors, meta.structure)}
+            className={formGroupClassName(key, atom.errors, meta.structure)}
             check={isCheck}
           >
             <Label
@@ -25,7 +25,8 @@ export default function Fields ({ form, onChange, onValueChange }) {
                 <AtomInput
                   key={key}
                   field={key}
-                  form={form}
+                  atom={atom}
+                  index={index}
                   onChange={onChange}
                   onValueChange={onValueChange}
                 />
@@ -38,7 +39,8 @@ export default function Fields ({ form, onChange, onValueChange }) {
               <AtomInput
                 key={key}
                 field={key}
-                form={form}
+                atom={atom}
+                index={index}
                 onChange={onChange}
                 onValueChange={onValueChange}
               />
@@ -46,8 +48,8 @@ export default function Fields ({ form, onChange, onValueChange }) {
 
             {meta.structure[key].hint && <FormText>{meta.structure[key].hint}</FormText>}
 
-            {form.errors[key] && (
-              <FormText className='invalid-feedback' color='danger'>{form.errors[key]}</FormText>
+            {atom.errors[key] && (
+              <FormText className='invalid-feedback' color='danger'>{atom.errors[key]}</FormText>
             )}
           </FormGroup>
         )

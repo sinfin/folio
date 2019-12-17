@@ -10,20 +10,27 @@ import { setOriginalPlacements } from 'ducks/filePlacements'
 // Constants
 
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
-const NEW_ATOM = 'atoms/NEW_ATOM'
-const EDIT_ATOM = 'atoms/EDIT_ATOM'
-const REMOVE_ATOM = 'atoms/REMOVE_ATOM'
-const VALIDATE_AND_SAVE_FORM_ATOM = 'atoms/VALIDATE_AND_SAVE_FORM_ATOM'
-const SAVE_FORM_ATOM = 'atoms/SAVE_FORM_ATOM'
+const NEW_ATOMS = 'atoms/NEW_ATOMS'
+const EDIT_ATOMS = 'atoms/EDIT_ATOMS'
+const REMOVE_ATOMS = 'atoms/REMOVE_ATOMS'
+const VALIDATE_AND_SAVE_FORM_ATOMS = 'atoms/VALIDATE_AND_SAVE_FORM_ATOMS'
+const SAVE_FORM_ATOMS = 'atoms/SAVE_FORM_ATOMS'
 const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
 const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
 const UPDATE_FORM_ATOM_VALUE = 'atoms/UPDATE_FORM_ATOM_VALUE'
-const MOVE_ATOM_TO_INDEX = 'atoms/MOVE_ATOM_TO_INDEX'
+const MOVE_ATOMS_TO_INDEX = 'atoms/MOVE_ATOMS_TO_INDEX'
 const UPDATE_FORM_ATOM_ATTACHMENTS = 'atoms/UPDATE_FORM_ATOM_ATTACHMENTS'
 const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
 const SET_FORM_ATOM_FILE_PLACEMENTS = 'atoms/SET_FORM_ATOM_FILE_PLACEMENTS'
 const SET_FORM_VALIDATION_ERRORS = 'atoms/SET_FORM_VALIDATION_ERRORS'
 const UPDATE_FORM_ATOM_ASSOCIATION = 'atoms/UPDATE_FORM_ATOM_ASSOCIATION'
+const ADD_ATOM_TO_FORM = 'atoms/ADD_ATOM_TO_FORM'
+const MOVE_FORM_ATOM = 'atoms/MOVE_FORM_ATOM'
+const REMOVE_FORM_ATOM = 'atoms/REMOVE_FORM_ATOM'
+const ATOM_FORM_PLACEMENTS_SELECT = 'atoms/ATOM_FORM_PLACEMENTS_SELECT'
+const ATOM_FORM_PLACEMENTS_UNSELECT = 'atoms/ATOM_FORM_PLACEMENTS_UNSELECT'
+const ATOM_FORM_PLACEMENTS_SORT = 'atoms/ATOM_FORM_PLACEMENTS_SORT'
+const ATOM_FORM_PLACEMENTS_CHANGE = 'atoms/ATOM_FORM_PLACEMENTS_CHANGE'
 
 // Actions
 
@@ -35,56 +42,92 @@ export function updateFormAtomType (newType, values) {
   return { type: UPDATE_FORM_ATOM_TYPE, newType, values }
 }
 
-export function updateFormAtomValue (key, value) {
-  return { type: UPDATE_FORM_ATOM_VALUE, key, value }
+export function updateFormAtomValue (index, key, value) {
+  return { type: UPDATE_FORM_ATOM_VALUE, index, key, value }
 }
 
-export function newAtom (rootKey, index, atomType) {
-  return { type: NEW_ATOM, rootKey, index, atomType }
+export function newAtoms (rootKey, action, indices, atomType) {
+  return { type: NEW_ATOMS, rootKey, action, indices, atomType }
 }
 
-export function editAtom (rootKey, index) {
-  return { type: EDIT_ATOM, rootKey, index }
+export function editAtoms (rootKey, indices) {
+  return { type: EDIT_ATOMS, rootKey, indices }
 }
 
-export function removeAtom (rootKey, index) {
-  return { type: REMOVE_ATOM, rootKey, index }
+export function removeAtoms (rootKey, indices) {
+  return { type: REMOVE_ATOMS, rootKey, indices }
 }
 
-export function moveAtomToIndex (rootKey, index, targetIndex) {
-  return { type: MOVE_ATOM_TO_INDEX, rootKey, index, targetIndex }
+export function moveAtomsToIndex (rootKey, indices, targetIndex, action) {
+  return { type: MOVE_ATOMS_TO_INDEX, rootKey, indices, targetIndex, action }
 }
 
 export function closeFormAtom () {
   return { type: CLOSE_FORM_ATOM }
 }
 
-export function validateAndSaveFormAtom (filePlacements) {
-  return { type: VALIDATE_AND_SAVE_FORM_ATOM, filePlacements }
+export function validateAndSaveFormAtom () {
+  return { type: VALIDATE_AND_SAVE_FORM_ATOMS }
 }
 
-export function saveFormAtom (filePlacements) {
-  return { type: SAVE_FORM_ATOM, filePlacements }
+export function saveFormAtoms () {
+  return { type: SAVE_FORM_ATOMS }
 }
 
-export function updateFormAtomAttachments (attachmentKey, data) {
-  return { type: UPDATE_FORM_ATOM_ATTACHMENTS, attachmentKey, data }
+export function updateFormAtomAttachments (index, attachmentKey, data) {
+  return { type: UPDATE_FORM_ATOM_ATTACHMENTS, index, attachmentKey, data }
 }
 
-export function removeFormAtomAttachment (attachmentKey) {
-  return { type: REMOVE_FORM_ATOM_ATTACHMENT, attachmentKey }
+export function removeFormAtomAttachment (index, attachmentKey) {
+  return { type: REMOVE_FORM_ATOM_ATTACHMENT, index, attachmentKey }
 }
 
 export function setFormAtomFilePlacements () {
   return { type: SET_FORM_ATOM_FILE_PLACEMENTS }
 }
 
-export function setFormValidationErrors (formSubstate) {
-  return { type: SET_FORM_VALIDATION_ERRORS, formSubstate }
+export function setFormValidationErrors (response) {
+  return { type: SET_FORM_VALIDATION_ERRORS, response }
 }
 
-export function updateFormAtomAssociation (associationKey, record) {
-  return { type: UPDATE_FORM_ATOM_ASSOCIATION, associationKey, record }
+export function updateFormAtomAssociation (index, associationKey, record) {
+  return { type: UPDATE_FORM_ATOM_ASSOCIATION, index, associationKey, record }
+}
+
+export function addAtomToForm (atomType) {
+  return { type: ADD_ATOM_TO_FORM, atomType }
+}
+
+export function moveFormAtom (from, to) {
+  return { type: MOVE_FORM_ATOM, from, to }
+}
+
+export function removeFormAtom (index) {
+  return { type: REMOVE_FORM_ATOM, index }
+}
+
+export function atomFormPlacementsSelect (index, attachmentKey, file) {
+  return { type: ATOM_FORM_PLACEMENTS_SELECT, index, attachmentKey, file }
+}
+
+export function atomFormPlacementsUnselect (index, attachmentKey, filePlacement) {
+  return { type: ATOM_FORM_PLACEMENTS_UNSELECT, index, attachmentKey, filePlacement }
+}
+
+export function atomFormPlacementsSort (index, attachmentKey, oldIndex, newIndex) {
+  return { type: ATOM_FORM_PLACEMENTS_SORT, index, attachmentKey, oldIndex, newIndex }
+}
+
+export function atomFormPlacementsChange (index, attachmentKey, filePlacement, attribute, value) {
+  return { type: ATOM_FORM_PLACEMENTS_CHANGE, index, attachmentKey, filePlacement, attribute, value }
+}
+
+export function atomFormPlacementsChangeTitle (index, attachmentKey, filePlacement, title) {
+  return atomFormPlacementsChange(index, attachmentKey, filePlacement, 'title', title)
+}
+
+export function atomFormPlacementsChangeAlt (index, attachmentKey, filePlacement, alt) {
+  return atomFormPlacementsChange(index, attachmentKey, filePlacement, 'alt', alt)
 }
 
 // Selectors
@@ -101,6 +144,20 @@ export const atomsSelector = (state) => ({
 
 export const atomsFormSelector = (state) => state.atoms.form
 
+export const atomsByIndicesSelector = (substate, rootKey, indices) => {
+  const collection = []
+  substate.atoms[rootKey].forEach((atom, i) => {
+    if (indices.indexOf(i) !== -1) {
+      collection.push({
+        ...atom,
+        meta: substate.structures[atom.type]
+      })
+    }
+  })
+
+  return collection
+}
+
 export const atomSelector = (substate, rootKey, index) => {
   const atom = substate.atoms[rootKey][index]
 
@@ -111,10 +168,15 @@ export const atomSelector = (substate, rootKey, index) => {
 }
 
 export const atomTypesSelector = (state) => {
-  const unsorted = Object.keys(state.atoms.structures).map((key) => ({
-    key,
-    title: state.atoms.structures[key].title
-  }))
+  const unsorted = []
+
+  Object.keys(state.atoms.structures).forEach((key) => {
+    const str = state.atoms.structures[key]
+    if (!str.molecule_secondary) {
+      unsorted.push({ key, title: str.title })
+    }
+  })
+
   return sortBy(unsorted, ['title'])
 }
 
@@ -150,13 +212,9 @@ export const serializedAtomsSelector = (state) => {
   return h
 }
 
-export const makeSerializedFormAtomSelector = (action) => (state) => {
-  return serializeAtom(state, {
-    ...state.atoms.form.atom,
-    ...action.filePlacements,
-    placement_type: state.atoms.placementType
-  })
-}
+export const serializedFormAtomsSelector = (state) => (
+  state.atoms.form.atoms.map((atom) => serializeAtom(state, atom.record))
+)
 
 // Sagas
 function * updateAtomPreviews (action) {
@@ -209,9 +267,9 @@ function * updateAtomPreviews (action) {
 
 function * updateAtomPreviewsSaga () {
   yield [
-    takeEvery(REMOVE_ATOM, updateAtomPreviews),
-    takeEvery(MOVE_ATOM_TO_INDEX, updateAtomPreviews),
-    takeEvery(SAVE_FORM_ATOM, updateAtomPreviews),
+    takeEvery(REMOVE_ATOMS, updateAtomPreviews),
+    takeEvery(MOVE_ATOMS_TO_INDEX, updateAtomPreviews),
+    takeEvery(SAVE_FORM_ATOMS, updateAtomPreviews),
     takeEvery(SET_ATOMS_DATA, updateAtomPreviews)
   ]
 }
@@ -223,8 +281,8 @@ function * showAtomsForm (action) {
 
 function * showAtomsFormSaga () {
   yield [
-    takeEvery(NEW_ATOM, showAtomsForm),
-    takeEvery(EDIT_ATOM, showAtomsForm)
+    takeEvery(NEW_ATOMS, showAtomsForm),
+    takeEvery(EDIT_ATOMS, showAtomsForm)
   ]
 }
 
@@ -238,8 +296,9 @@ function * hideAtomsFormSaga () {
 
 function * setAtomFilePlacements (action) {
   const form = yield select(atomsFormSelector)
-  yield put(setOriginalPlacements('images', form.atom.image_placements_attributes || []))
-  yield put(setOriginalPlacements('documents', form.atom.document_placement_attributes || []))
+  // TODO
+  yield put(setOriginalPlacements('images', form.atoms[0].image_placements_attributes || []))
+  yield put(setOriginalPlacements('documents', form.atoms[0].document_placement_attributes || []))
 }
 
 function * setAtomFilePlacementsSaga () {
@@ -247,17 +306,20 @@ function * setAtomFilePlacementsSaga () {
 }
 
 function * validateAndSaveFormAtomPerform (action) {
-  const serializedForm = yield select(makeSerializedFormAtomSelector(action))
-  const response = yield (call(apiPost, '/console/atoms/validate', serializedForm))
-  if (response.valid) {
-    yield put(saveFormAtom(action.filePlacements))
+  const serializedForm = yield select(serializedFormAtomsSelector)
+  const response = yield (call(apiPost, '/console/atoms/validate', { atoms: serializedForm }))
+  let valid = true
+  response.forEach((res) => { valid = valid && res.valid })
+
+  if (valid) {
+    yield put(saveFormAtoms())
   } else {
     yield put(setFormValidationErrors(response))
   }
 }
 
 function * validateAndSaveFormAtomSaga () {
-  yield takeEvery(VALIDATE_AND_SAVE_FORM_ATOM, validateAndSaveFormAtomPerform)
+  yield takeEvery(VALIDATE_AND_SAVE_FORM_ATOMS, validateAndSaveFormAtomPerform)
 }
 
 export const atomsSagas = [
@@ -270,6 +332,14 @@ export const atomsSagas = [
 
 // State
 
+export const DEFAULT_FORM_ATOM_STATE = {
+  record: null,
+  valid: null,
+  validating: false,
+  errors: {},
+  messages: []
+}
+
 export const initialState = {
   atoms: {},
   destroyedIds: {},
@@ -277,15 +347,13 @@ export const initialState = {
   structures: {},
   placementType: null,
   form: {
-    dirty: false,
     rootKey: null,
-    index: null,
-    atom: null,
-    edit: null,
-    valid: null,
-    validating: false,
-    errors: {},
-    messages: []
+    indices: null,
+    action: null,
+    dirty: false,
+    edit: false,
+    destroyedIds: [],
+    atoms: []
   }
 }
 
@@ -313,59 +381,70 @@ function atomsReducer (state = initialState, action) {
       }
     }
 
-    case NEW_ATOM:
+    case NEW_ATOMS:
       return {
         ...state,
         form: {
           ...initialState.form,
+          dirty: true,
           rootKey: action.rootKey,
-          index: action.index,
+          indices: action.indices,
+          action: action.action,
           edit: false,
-          atom: {
-            id: null,
-            type: action.atomType,
-            data: {},
-            timestamp: timestamp(),
-            meta: state.structures[action.atomType],
-            associations: {}
-          }
+          atoms: [
+            {
+              ...DEFAULT_FORM_ATOM_STATE,
+              record: {
+                id: null,
+                type: action.atomType,
+                data: {},
+                timestamp: timestamp(),
+                meta: state.structures[action.atomType],
+                associations: {}
+              }
+            }
+          ]
         }
       }
 
-    case EDIT_ATOM:
+    case EDIT_ATOMS:
       return {
         ...state,
         form: {
           ...initialState.form,
           rootKey: action.rootKey,
-          index: action.index,
-          atom: atomSelector(state, action.rootKey, action.index),
-          edit: true
+          indices: action.indices,
+          edit: true,
+          atoms: atomsByIndicesSelector(state, action.rootKey, action.indices).map((record) => ({
+            ...DEFAULT_FORM_ATOM_STATE,
+            record
+          }))
         }
       }
 
-    case REMOVE_ATOM: {
-      const atom = state.atoms[action.rootKey][action.index]
+    case REMOVE_ATOMS: {
+      const destroyedIds = []
+      const atoms = []
 
-      if (atom.id) {
-        return {
-          ...state,
-          destroyedIds: {
-            ...state.destroyedIds,
-            [action.rootKey]: [...state.destroyedIds[action.rootKey], atom.id]
-          },
-          atoms: {
-            ...state.atoms,
-            [action.rootKey]: state.atoms[action.rootKey].filter((a, i) => i !== action.index)
+      state.atoms[action.rootKey].forEach((atom, i) => {
+        if (action.indices.indexOf(i) === -1) {
+          atoms.push(atom)
+        } else {
+          if (atom.id) {
+            destroyedIds.push(atom.id)
           }
         }
-      } else {
-        return {
-          ...state,
-          atoms: {
-            ...state.atoms,
-            [action.rootKey]: state.atoms[action.rootKey].filter((atom, i) => i !== action.index)
-          }
+      })
+
+      return {
+        ...state,
+        destroyedIds: {
+          ...state.destroyedIds,
+          [action.rootKey]: [...state.destroyedIds[action.rootKey], ...destroyedIds]
+        },
+        atoms: {
+          ...state.atoms,
+          [action.rootKey]: atoms
         }
       }
     }
@@ -378,37 +457,47 @@ function atomsReducer (state = initialState, action) {
         }
       }
 
-    case SAVE_FORM_ATOM: {
-      const destroyedIds = { ...state.destroyedIds }
-
-      if (state.form.edit) {
-        destroyedIds[state.form.rootKey] = [...state.destroyedIds[state.form.rootKey], state.form.atom.id]
+    case SAVE_FORM_ATOMS: {
+      const destroyedIds = {
+        ...state.destroyedIds,
+        [state.form.rootKey]: [
+          ...state.destroyedIds[state.form.rootKey],
+          ...state.form.destroyedIds
+        ]
       }
 
       let atoms = []
-      const newAtom = {
-        ...omit(state.form.atom, ['meta', 'id']),
-        ...action.filePlacements,
+      const newAtoms = state.form.atoms.map((atom) => ({
+        ...omit(atom.record, ['meta']),
         timestamp: timestamp()
-      }
+      }))
 
-      if (state.form.index < state.atoms[state.form.rootKey].length) {
-        state.atoms[state.form.rootKey].forEach((atom, index) => {
-          if (index === state.form.index) {
-            atoms.push(newAtom)
-
-            if (!state.form.edit) {
-              atoms.push(atom)
-            }
+      switch (state.form.action) {
+        case 'prepend':
+          atoms = [...newAtoms, ...state.atoms[state.form.rootKey]]
+          break
+        case 'append':
+          atoms = [...state.atoms[state.form.rootKey], ...newAtoms]
+          break
+        default: {
+          if (state.form.edit) {
+            state.atoms[state.form.rootKey].forEach((atom, i) => {
+              if (state.form.indices.indexOf(i) === -1) {
+                atoms.push(atom)
+              } else if (i === state.form.indices[0]) {
+                atoms = [...atoms, ...newAtoms]
+              }
+            })
           } else {
-            atoms.push(atom)
+            state.atoms[state.form.rootKey].forEach((atom, i) => {
+              if (state.form.indices.indexOf(i) === -1) {
+                atoms.push(atom)
+              } else if (i === state.form.indices[0]) {
+                atoms = [...atoms, ...newAtoms, atom]
+              }
+            })
           }
-        })
-      } else {
-        atoms = [
-          ...state.atoms[state.form.rootKey],
-          newAtom
-        ]
+        }
       }
 
       return {
@@ -424,30 +513,49 @@ function atomsReducer (state = initialState, action) {
       }
     }
 
-    case VALIDATE_AND_SAVE_FORM_ATOM:
+    case VALIDATE_AND_SAVE_FORM_ATOMS:
       return {
         ...state,
         form: {
           ...state.form,
-          validating: true
+          atoms: state.form.atoms.map((atom) => ({
+            ...atom,
+            validating: true
+          }))
         }
       }
 
-    case UPDATE_FORM_ATOM_TYPE:
+    case UPDATE_FORM_ATOM_TYPE: {
+      const destroyedIds = []
+
+      state.form.atoms.forEach((atom) => {
+        if (atom.record.id) {
+          destroyedIds.push(atom.record.id)
+        }
+      })
+
       return {
         ...state,
         form: {
           ...state.form,
+          destroyedIds,
           dirty: true,
-          atom: {
-            ...state.form.atom,
-            associations: {},
-            type: action.newType,
-            data: action.values,
-            meta: state.structures[action.newType]
-          }
+          atoms: [
+            {
+              ...DEFAULT_FORM_ATOM_STATE,
+              record: {
+                id: null,
+                type: action.newType,
+                data: action.values,
+                timestamp: timestamp(),
+                meta: state.structures[action.newType],
+                associations: {}
+              }
+            }
+          ]
         }
       }
+    }
 
     case UPDATE_FORM_ATOM_VALUE:
       return {
@@ -455,37 +563,79 @@ function atomsReducer (state = initialState, action) {
         form: {
           ...state.form,
           dirty: true,
-          atom: {
-            ...state.form.atom,
-            data: {
-              ...state.form.atom.data,
-              [action.key]: action.value
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  data: {
+                    ...atom.record.data,
+                    [action.key]: action.value
+                  }
+                }
+              }
+            } else {
+              return atom
             }
-          }
+          })
         }
       }
 
-    case MOVE_ATOM_TO_INDEX:
+    case MOVE_ATOMS_TO_INDEX: {
+      let atoms = []
+      const movedAtoms = []
+
+      state.atoms[action.rootKey].forEach((atom, i) => {
+        if (action.indices.indexOf(i) !== -1) {
+          movedAtoms.push(atom)
+        }
+      })
+
+      state.atoms[action.rootKey].forEach((atom, i) => {
+        if (action.indices.indexOf(i) === -1) {
+          if (i === action.targetIndex) {
+            if (action.action === 'prepend') {
+              atoms = [...atoms, ...movedAtoms, atom]
+            } else {
+              atoms = [...atoms, atom, ...movedAtoms]
+            }
+          } else {
+            atoms.push(atom)
+          }
+        }
+      })
+
       return {
         ...state,
         atoms: {
           ...state.atoms,
-          [action.rootKey]: arrayMove(state.atoms[action.rootKey], action.index, action.targetIndex)
+          [action.rootKey]: atoms
         }
       }
+    }
 
     case UPDATE_FORM_ATOM_ATTACHMENTS: {
       return {
         ...state,
         form: {
           ...state.form,
-          atom: {
-            ...state.form.atom,
-            [action.attachmentKey]: {
-              ...state.form.atom[action.attachmentKey],
-              ...action.data
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: {
+                    ...omit(atom.record[action.attachmentKey], ['_destroy']),
+                    ...action.data
+                  }
+                }
+              }
+            } else {
+              return atom
             }
-          }
+          })
         }
       }
     }
@@ -495,7 +645,24 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
-          atom: omit(state.form.atom, [action.attachmentKey])
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const record = omit(atom.record, [action.attachmentKey])
+              if (atom.record[action.attachmentKey] && atom.record[action.attachmentKey].id) {
+                record[action.attachmentKey] = {
+                  id: atom.record[action.attachmentKey].id,
+                  _destroy: true
+                }
+              }
+
+              return {
+                ...atom,
+                record
+              }
+            } else {
+              return atom
+            }
+          })
         }
       }
     }
@@ -505,8 +672,11 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
-          ...action.formSubstate,
-          validating: false
+          atoms: state.form.atoms.map((atom, i) => ({
+            ...atom,
+            ...action.response[i],
+            validating: false
+          }))
         }
       }
     }
@@ -516,13 +686,219 @@ function atomsReducer (state = initialState, action) {
         ...state,
         form: {
           ...state.form,
-          atom: {
-            ...state.form.atom,
-            associations: {
-              ...state.form.atom.associations,
-              [action.associationKey]: action.record
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  associations: {
+                    ...atom.associations,
+                    [action.associationKey]: action.record
+                  }
+                }
+              }
+            } else {
+              return atom
             }
+          })
+        }
+      }
+    }
+
+    case ADD_ATOM_TO_FORM:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: [
+            ...state.form.atoms,
+            {
+              ...DEFAULT_FORM_ATOM_STATE,
+              record: {
+                id: null,
+                type: action.atomType,
+                data: {},
+                timestamp: timestamp(),
+                meta: state.structures[action.atomType],
+                associations: {}
+              }
+            }
+          ]
+        }
+      }
+
+    case MOVE_FORM_ATOM:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: sortBy(arrayMove(state.form.atoms, action.from, action.to), (a) => !a.record.meta.molecule_singleton)
+        }
+      }
+
+    case REMOVE_FORM_ATOM: {
+      const atoms = []
+      const destroyedIds = [...state.form.destroyedIds]
+
+      state.form.atoms.forEach((atom, i) => {
+        if (i === action.index) {
+          if (atom.record.id) {
+            destroyedIds.push(atom.record.id)
           }
+        } else {
+          atoms.push(atom)
+        }
+      })
+
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          destroyedIds,
+          atoms
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_SELECT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              let placements = []
+              let replaced = false
+
+              if (atom.record[action.attachmentKey]) {
+                placements = atom.record[action.attachmentKey].map((placement) => {
+                  if (placement.file_id === action.file.id) {
+                    replaced = true
+                    return omit(placement, ['_destroy'])
+                  } else {
+                    return placement
+                  }
+                })
+              }
+
+              if (!replaced) {
+                placements.push({
+                  id: null,
+                  file_id: action.file.id,
+                  file: action.file,
+                  selectedAt: Date.now()
+                })
+              }
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_UNSELECT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const placements = []
+
+              atom.record[action.attachmentKey].forEach((placement) => {
+                if (placement.file_id === action.filePlacement.file_id) {
+                  if (placement.id) {
+                    placements.push({ ...placement, _destroy: true })
+                  } else {
+                    // remove non-id placement by not pushing it to the array
+                  }
+                } else {
+                  placements.push(placement)
+                }
+              })
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_SORT: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const placements = arrayMove(atom.record[action.attachmentKey], action.oldIndex, action.newIndex)
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
+        }
+      }
+    }
+
+    case ATOM_FORM_PLACEMENTS_CHANGE: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms: state.form.atoms.map((atom, i) => {
+            if (i === action.index) {
+              const placements = atom.record[action.attachmentKey].map((placement) => {
+                if (placement.file_id === action.filePlacement.file_id) {
+                  return { ...placement, [action.attribute]: action.value }
+                } else {
+                  return placement
+                }
+              })
+
+              return {
+                ...atom,
+                record: {
+                  ...atom.record,
+                  [action.attachmentKey]: placements
+                }
+              }
+            } else {
+              return atom
+            }
+          })
         }
       }
     }

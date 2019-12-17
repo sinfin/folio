@@ -2,25 +2,26 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import {
+  addAtomToForm,
   atomsSelector,
   atomTypesSelector,
-  newAtom,
-  editAtom,
-  removeAtom,
+  newAtoms,
+  editAtoms,
+  removeAtoms,
   validateAndSaveFormAtom,
   closeFormAtom,
-  moveAtomToIndex,
+  moveAtomsToIndex,
   updateFormAtomType,
   updateFormAtomValue,
   updateFormAtomAttachments,
   removeFormAtomAttachment,
-  updateFormAtomAssociation
+  updateFormAtomAssociation,
+  moveFormAtom,
+  removeFormAtom
 } from 'ducks/atoms'
-import { makeFilePlacementsSelector } from 'ducks/filePlacements'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
 import { confirm } from 'utils/confirmed'
-import fileTypeToKey from 'utils/fileTypeToKey'
 
 import { FILE_TRIGGER_EVENT } from './constants'
 
@@ -43,18 +44,22 @@ class Atoms extends React.PureComponent {
     const { data, origin } = jqueryEvent.originalEvent
     if (origin === window.origin) {
       switch (data.type) {
-        case 'newAtom':
-          this.props.dispatch(newAtom(data.rootKey, data.index, data.atomType))
+        case 'newAtoms': {
+          this.props.dispatch(newAtoms(data.rootKey, data.action, data.indices, data.atomType))
           break
-        case 'editAtom':
-          this.props.dispatch(editAtom(data.rootKey, data.index))
+        }
+        case 'editAtoms': {
+          this.props.dispatch(editAtoms(data.rootKey, data.indices))
           break
-        case 'moveAtomToIndex':
-          this.props.dispatch(moveAtomToIndex(data.rootKey, data.index, data.targetIndex))
+        }
+        case 'moveAtomsToIndex': {
+          this.props.dispatch(moveAtomsToIndex(data.rootKey, data.indices, data.targetIndex, data.action))
           break
-        case 'removeAtom':
-          this.props.dispatch(removeAtom(data.rootKey, data.index))
+        }
+        case 'removeAtoms': {
+          this.props.dispatch(removeAtoms(data.rootKey, data.indices))
           break
+        }
         case 'closeForm': {
           this.confirmedDirtyClose()
           break
@@ -72,28 +77,17 @@ class Atoms extends React.PureComponent {
   }
 
   validateAndSaveFormAtom = () => {
-    const filePlacementsAttributes = {}
-    this.props.atoms.form.atom.meta.attachments.forEach((attachmentType) => {
-      if (!attachmentType.plural) return
-      const filesKey = fileTypeToKey(attachmentType.file_type)
-      const selector = makeFilePlacementsSelector(filesKey)
-      const filePlacements = selector(this.props.state)
-      filePlacementsAttributes[attachmentType.key] = [
-        ...filePlacements.selected,
-        ...filePlacements.deleted.map((fp) => ({ ...fp, _destroy: true }))
-      ]
-    })
-    this.props.dispatch(validateAndSaveFormAtom(filePlacementsAttributes))
+    this.props.dispatch(validateAndSaveFormAtom())
   }
 
-  removeFormAtomAttachment = (attachmentKey) => {
+  removeFormAtomAttachment = (index, attachmentKey) => {
     if (confirm()) {
-      this.props.dispatch(removeFormAtomAttachment(attachmentKey))
+      this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
     }
   }
 
-  handleFileTrigger ({ attachmentKey, data }) {
-    this.props.dispatch(updateFormAtomAttachments(attachmentKey, data))
+  handleFileTrigger ({ attachmentKey, data, index }) {
+    this.props.dispatch(updateFormAtomAttachments(index, attachmentKey, data))
   }
 
   render () {
@@ -113,18 +107,20 @@ class Atoms extends React.PureComponent {
         {form.rootKey && (
           <AtomForm
             form={form}
-            atom={form.atom}
             index={form.index}
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
-            saveFormAtom={this.validateAndSaveFormAtom}
+            saveFormAtoms={this.validateAndSaveFormAtom}
             closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
-            updateFormAtomValue={(key, value) => this.props.dispatch(updateFormAtomValue(key, value))}
-            updateFormAtomAssociation={(key, record) => this.props.dispatch(updateFormAtomAssociation(key, record))}
+            updateFormAtomValue={(index, key, value) => this.props.dispatch(updateFormAtomValue(index, key, value))}
+            updateFormAtomAssociation={(index, key, record) => this.props.dispatch(updateFormAtomAssociation(index, key, record))}
             removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}
+            addAtom={(type) => this.props.dispatch(addAtomToForm(type))}
+            moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
+            removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
           />
         )}
       </React.Fragment>

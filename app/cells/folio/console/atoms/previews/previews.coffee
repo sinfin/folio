@@ -22,31 +22,40 @@ handleArrowClick = (e) ->
   e.preventDefault()
   $this = $(this)
   closeMobileControls($this)
-  $wrap = $this.closest('.f-c-atoms-previews__atom')
-  index = $wrap.data('index')
+  $wrap = $this.closest('.f-c-atoms-previews__preview')
+  indices = $wrap.data('indices')
   if $this.hasClass('f-c-atoms-previews__button--arrow-up')
     return if $wrap.is(':first-child')
-    targetIndex = index - 1
+    $prev = $wrap.prevAll('.f-c-atoms-previews__preview').first()
+    targetIndex = $prev.data('indices')[0]
+    action = 'prepend'
   else
     return if $wrap.is(':last-child')
-    targetIndex = index + 1
+    $next = $wrap.nextAll('.f-c-atoms-previews__preview').first()
+    nextIndices = $next.data('indices')
+    targetIndex = nextIndices[nextIndices.length - 1]
+    action = 'append'
+
   data =
-    type: 'moveAtomToIndex'
     rootKey: $wrap.data('root-key')
-    index: index
+    indices: indices
     targetIndex: targetIndex
+    action: action
+    type: 'moveAtomsToIndex'
+
   window.top.postMessage(data, window.origin)
 
 handleEditClick = (e) ->
   e.preventDefault()
   $this = $(this)
   closeMobileControls($this)
-  $wrap = $this.closest('.f-c-atoms-previews__atom')
+  $wrap = $this.closest('.f-c-atoms-previews__preview')
   if $wrap.length
     data =
-      type: 'editAtom'
       rootKey: $wrap.data('root-key')
-      index: $wrap.data('index')
+      indices: $wrap.data('indices')
+      type: 'editAtoms'
+
     window.top.postMessage(data, window.origin)
   else
     $wrap = $this.closest('.f-c-atoms-previews__label')
@@ -76,11 +85,12 @@ handleRemoveClick = (e) ->
   $this = $(this)
   closeMobileControls($this)
   if window.confirm(window.FolioConsole.translations.removePrompt)
-    $wrap = $(this).closest('.f-c-atoms-previews__atom')
+    $wrap = $(this).closest('.f-c-atoms-previews__preview')
     data =
-      type: 'removeAtom'
       rootKey: $wrap.data('root-key')
-      index: $wrap.data('index')
+      indices: $wrap.data('indices')
+      type: 'removeAtoms'
+
     window.top.postMessage(data, window.origin)
 
 handleMobileclick = (e) ->
@@ -106,24 +116,28 @@ handleInsertClick = (e) ->
   $a = $(this)
   $insert = $a.closest('.f-c-atoms-previews__insert')
   $insert.removeClass('f-c-atoms-previews__insert--active')
-  $atom = $insert.next('.f-c-atoms-previews__atom')
-  if $atom.length is 0
-    $atom = $insert.prev('.f-c-atoms-previews__atom')
-    index = $atom.data('index') + 1
-  else
-    index = $atom.data('index')
+  $wrap = $insert.next('.f-c-atoms-previews__preview')
+  indices = $wrap.data('indices')
+  action = 'splice'
 
-  if $atom.length is 0
-    $locale = $a.closest('.f-c-atoms-previews__locale')
-    rootKey = $locale.data('root-key')
-    index = 0
-  else
-    rootKey = $atom.data('root-key')
+  if $wrap.length is 0
+    $wrap = $insert.prev('.f-c-atoms-previews__preview')
+
+    if $wrap.length is 0
+      action = 'prepend'
+      indices = [0]
+    else
+      action = 'append'
+      indices = $wrap.data('indices')
+
+  $locale = $a.closest('.f-c-atoms-previews__locale')
+  rootKey = $locale.data('root-key')
 
   data =
-    type: 'newAtom'
+    type: 'newAtoms'
     rootKey: rootKey
-    index: index
+    action: action
+    indices: indices
     atomType: $a.data('type')
   window.top.postMessage(data, window.origin)
 

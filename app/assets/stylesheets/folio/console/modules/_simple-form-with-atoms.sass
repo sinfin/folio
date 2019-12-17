@@ -145,7 +145,7 @@
     overflow-y: auto
     -webkit-overflow-scrolling: touch
     margin: 0 (( - $grid-gutter-width )) 0
-    padding: 0 $grid-gutter-width $grid-gutter-width
+    padding: 0 $grid-gutter-width (( $grid-gutter-width + 95px ))
     flex: 1 1 auto
 
   &--editing-atom &__overlay
@@ -189,6 +189,9 @@
     margin-left: 0 !important
     margin-right: 0 !important
     width: 100%
+
+  &--editing-atom .f-c-form-footer
+    pointer-events: none
 
   +media-breakpoint-down(sm)
     &__overlay-inner

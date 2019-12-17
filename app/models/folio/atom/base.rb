@@ -77,7 +77,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
             {
               id: placement.id,
               file_id: placement.file_id,
-              file: placement.file.to_h,
+              file: Folio::Console::FileSerializer.new(placement.file)
+                                                  .serializable_hash[:data][:attributes],
               alt: placement.alt,
               title: placement.title,
             }
@@ -86,8 +87,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       else
         if (placement = send(placement_key)).present?
           h["#{placement_key}_attributes".to_sym] = {
+            id: placement.id,
             file_id: placement.file_id,
-            file: placement.file.to_h,
+            file: Folio::Console::FileSerializer.new(placement.file)
+                                                .serializable_hash[:data][:attributes],
             alt: placement.alt,
             title: placement.title,
           }
@@ -127,6 +130,14 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def self.molecule_cell_name
     molecule.try(:cell_name)
+  end
+
+  def self.molecule_singleton
+    false
+  end
+
+  def self.molecule_secondary
+    false
   end
 
   def self.form_hints

@@ -69,7 +69,8 @@ class ModalSingleSelect extends ModalSelect {
             thumb: file.attributes.thumb,
             type: file.attributes.type
           }
-        }
+        },
+        index: this.state.index
       }])
       return this.jQueryModal().modal('hide')
     }

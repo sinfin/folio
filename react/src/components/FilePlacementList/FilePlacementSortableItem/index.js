@@ -121,12 +121,14 @@ class FilePlacement extends React.Component {
           moveDown={this.moveDown}
         />
 
-        <HiddenInputs
-          filePlacement={filePlacement}
-          attachmentable={attachmentable}
-          placementType={placementType}
-          position={position}
-        />
+        {!this.props.nested && (
+          <HiddenInputs
+            filePlacement={filePlacement}
+            attachmentable={attachmentable}
+            placementType={placementType}
+            position={position}
+          />
+        )}
 
         <div className='folio-console-file-placement__handle'>
           <i className='fa fa-arrows-alt' />

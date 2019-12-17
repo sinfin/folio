@@ -39,18 +39,22 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   end
 
   def validate
-    atom = params.require(:type)
-                 .constantize
-                 .new(atom_validation_params)
-    atom.placement = atom.placement_type.constantize.new
+    res = params.require(:atoms)
+                .map do |raw|
+                  p = raw.permit(*atom_validation_params)
+                  atom = p[:type].constantize.new(p)
+                  atom.placement = atom.placement_type.constantize.new
 
-    if atom.valid?
-      render json: { valid: true }
-    else
-      render json: { valid: false,
-                     errors: atom.errors.messages,
-                     messages: atom.errors.full_messages }
-    end
+                  if atom.valid?
+                    { valid: true }
+                  else
+                    { valid: false,
+                      errors: atom.errors.messages,
+                      messages: atom.errors.full_messages }
+                  end
+                end
+
+    render json: res
   end
 
   def default_url_options
@@ -64,12 +68,14 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     end
 
     def atom_validation_params
-      params.permit(:type,
-                    :position,
-                    :placement_type,
-                    :placement_id,
-                    :_destroy,
-                    *file_placements_strong_params,
-                    *Folio::Atom.strong_params)
+      [
+        :type,
+        :position,
+        :placement_type,
+        :placement_id,
+        :_destroy,
+        *file_placements_strong_params,
+        *Folio::Atom.strong_params,
+      ]
     end
 end

@@ -14,6 +14,7 @@ cs:
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
         link: Odkaz
+        loading: Načítám...
         menuItemUrl: Volný odkaz
         newUploadTags: Štítky pro nové soubory
         noResults: Žádné výsledky
@@ -23,6 +24,7 @@ cs:
         selected: Vybrané
         selectedDocuments: Vybrané dokumenty
         selectedImages: Vybrané obrázky
+        selectPlaceholder: Vybrat...
         title: Název
         usageFilter: Filtr použití
         used: Již použité

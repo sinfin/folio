@@ -3,7 +3,7 @@ import React from 'react'
 import DropzoneTrigger from './DropzoneTrigger'
 import FileTableRow from './FileTableRow'
 
-const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, overflowingParent, onClick }) => {
+const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, onClick }) => {
   const classNames = ['folio-console-file-table']
 
   if (fileTypeIsImage) {
@@ -28,7 +28,6 @@ const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, overflow
               file={file}
               link={link}
               fileTypeIsImage={fileTypeIsImage}
-              overflowingParent={overflowingParent}
               onClick={onClick}
             />
           ))}

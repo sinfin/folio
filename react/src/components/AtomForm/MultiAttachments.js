@@ -1,17 +1,17 @@
 import React from 'react'
 
-import MultiSelect from 'containers/MultiSelect'
-import fileTypeToKey from 'utils/fileTypeToKey'
+import MultiAttachmentsSelect from './MultiAttachmentsSelect'
 
-export default function MultiAttachments ({ attachments }) {
+export default function MultiAttachments ({ atom, index }) {
   return (
     <React.Fragment>
-      {attachments.map((attachmentType) => (
+      {atom.record.meta.attachments.map((attachmentType) => (
         attachmentType.plural ? (
           <div className='mt-4' key={attachmentType.key}>
-            <MultiSelect
-              filesKey={fileTypeToKey(attachmentType['file_type'])}
-              shouldLoadFiles
+            <MultiAttachmentsSelect
+              attachmentType={attachmentType}
+              atom={atom}
+              index={index}
             />
           </div>
         ) : null
