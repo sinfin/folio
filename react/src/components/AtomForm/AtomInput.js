@@ -95,7 +95,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
   }
 
   if (type === 'text' || type === 'code') {
-    const classNames = ['atom-control']
+    const classNames = ['form-control']
 
     if (atom.errors[key]) {
       classNames.push('is-invalid')
