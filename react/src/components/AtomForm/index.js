@@ -73,6 +73,18 @@ class AtomForm extends React.PureComponent {
     const addButtons = []
     let nonSingletonIndex = 0
 
+    const asyncData = {}
+
+    this.props.form.atoms.forEach((atom) => {
+      if (atom.record.meta.molecule_singleton) {
+        Object.keys(atom.record.associations).forEach((key) => {
+          if (atom.record.associations[key]) {
+            asyncData[key] = atom.record.associations[key].id
+          }
+        })
+      }
+    })
+
     if (molecule) {
       Object.keys(this.props.structures).forEach((type) => {
         if (this.props.structures[type].molecule === molecule) {
@@ -151,6 +163,7 @@ class AtomForm extends React.PureComponent {
 
                 <Associations
                   atom={atom}
+                  asyncData={asMolecule ? asyncData : undefined}
                   onChange={this.onAssociationChange}
                   onBlur={() => { this.setState({ focusedIndex: null }) }}
                   onFocus={() => { this.setState({ focusedIndex: index }) }}

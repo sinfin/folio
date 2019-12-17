@@ -11,7 +11,7 @@ class Associations extends React.PureComponent {
   }
 
   render () {
-    const { atom, index, onBlur, onChange, onFocus } = this.props
+    const { atom, asyncData, index, onBlur, onChange, onFocus } = this.props
     const { associations } = atom.record.meta
 
     return (
@@ -22,6 +22,7 @@ class Associations extends React.PureComponent {
 
             <Select
               async={associations[key].url}
+              asyncData={asyncData}
               value={atom.record.associations[key]}
               options={atom.record.associations[key] ? [atom.record.associations[key]] : []}
               onChange={(record) => onChange(record, index, key)}
