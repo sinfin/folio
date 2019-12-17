@@ -57,9 +57,9 @@ class AtomForm extends React.PureComponent {
     }
   }
 
-  renderHint (text) {
+  renderHint (text, molecule) {
     return (
-      <AtomFormHint>
+      <AtomFormHint molecule={molecule}>
         <span className='mi'>info</span>
         {text.split(/\n/).map((part, i) => <p key={i}>{part}</p>)}
       </AtomFormHint>
@@ -168,7 +168,7 @@ class AtomForm extends React.PureComponent {
 
                     <MultiAttachments atom={atom} index={index} />
 
-                    {atom.record.meta.hint && this.renderHint(atom.record.meta.hint)}
+                    {atom.record.meta.hint && this.renderHint(atom.record.meta.hint, molecule)}
 
                     {atom.validating && <span className='folio-loader' />}
                   </div>
