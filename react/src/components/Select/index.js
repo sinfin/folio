@@ -87,6 +87,7 @@ class Select extends React.Component {
         loadOptions={loadOptions}
         onKeyDown={this.onKeyDown}
         placeholder={window.FolioConsole.translations.selectPlaceholder}
+        loadingMessage={() => window.FolioConsole.translations.loading}
         {...rest}
       />
     )

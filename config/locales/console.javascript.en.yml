@@ -14,6 +14,7 @@ en:
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
         link: Link
+        loading: Loading...
         menuItemUrl: Custom URL
         newUploadTags: Tags for new files
         noResults: No results
