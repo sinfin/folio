@@ -1,12 +1,12 @@
 GIT
-  remote: https://github.com/sinfin/actionpack-page_caching.git
+  remote: git://github.com/sinfin/actionpack-page_caching.git
   revision: 205bb1eb88ca7efe5156298f954e764ce7ef07f8
   specs:
     actionpack-page_caching (1.1.1)
       actionpack (>= 4.0.0, < 6)
 
 GIT
-  remote: https://github.com/sinfin/premailer.git
+  remote: git://github.com/sinfin/premailer.git
   revision: 4f14229876c7f226ebb175b9cfaaf8c361169819
   specs:
     premailer (1.11.1)
