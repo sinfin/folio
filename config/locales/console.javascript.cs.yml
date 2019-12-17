@@ -23,6 +23,7 @@ cs:
         selected: Vybrané
         selectedDocuments: Vybrané dokumenty
         selectedImages: Vybrané obrázky
+        selectPlaceholder: Vybrat...
         title: Název
         usageFilter: Filtr použití
         used: Již použité

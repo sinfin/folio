@@ -1,33 +1,44 @@
 import React from 'react'
-import { FormGroup, FormText, Input, Label } from 'reactstrap'
+import { FormGroup, FormText, Label } from 'reactstrap'
 
+import Select from 'components/Select'
 import formGroupClassName from './utils/formGroupClassName'
 
-export default function Associations ({ atom, index, onChange }) {
-  const { associations } = atom.record.meta
+class Associations extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.selectRef = React.createRef()
+  }
 
-  return (
-    <React.Fragment>
-      {Object.keys(associations).map((key) => (
-        <FormGroup key={key} className={formGroupClassName(key, atom.errors)}>
-          <Label>{associations[key].label}</Label>
-          <Input
-            type='select'
-            name={key}
-            defaultValue={atom.record.associations[key] ? atom.record.associations[key].value : ''}
-            onChange={(e) => onChange(e, index, key)}
-            invalid={Boolean(atom.errors[key])}
-          >
-            <option value='' />
-            {associations[key].records.map((record) => (
-              <option key={record.value} value={record.value}>{record.label}</option>
-            ))}
-          </Input>
+  render () {
+    const { atom, index, onBlur, onChange, onFocus } = this.props
+    const { associations } = atom.record.meta
 
-          {associations[key].hint && <FormText>{associations[key].hint}</FormText>}
-          {atom.errors[key] && <FormText className='invalid-feedback' color='danger'>{atom.errors[key]}</FormText>}
-        </FormGroup>
-      ))}
-    </React.Fragment>
-  )
+    return (
+      <React.Fragment>
+        {Object.keys(associations).map((key) => (
+          <FormGroup key={key} className={formGroupClassName(key, atom.errors)}>
+            <Label>{associations[key].label}</Label>
+
+            <Select
+              async={associations[key].url}
+              value={atom.record.associations[key]}
+              options={atom.record.associations[key] ? [atom.record.associations[key]] : []}
+              onChange={(record) => onChange(record, index, key)}
+              onBlur={onBlur}
+              onFocus={onFocus}
+              innerRef={this.selectRef}
+              defaultOptions
+              selectize
+            />
+
+            {associations[key].hint && <FormText>{associations[key].hint}</FormText>}
+            {atom.errors[key] && <FormText className='invalid-feedback' color='danger'>{atom.errors[key]}</FormText>}
+          </FormGroup>
+        ))}
+      </React.Fragment>
+    )
+  }
 }
+
+export default Associations

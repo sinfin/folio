@@ -35,6 +35,7 @@ Folio::Engine.routes.draw do
     namespace :api do
       resource :autocomplete, only: %i[show] do
         get :field
+        get :selectize
       end
       resources :links, only: %i[index]
       resources :images, only: %i[index create update] do

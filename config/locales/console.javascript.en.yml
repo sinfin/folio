@@ -23,6 +23,7 @@ en:
         selected: Selected
         selectedDocuments: Selected documents
         selectedImages: Selected images
+        selectPlaceholder: Select...
         title: Title
         usageFilter: Usage filter
         used: Used already

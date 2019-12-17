@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Input } from 'reactstrap'
-import { isEqual, find } from 'lodash'
+import { isEqual } from 'lodash'
 
 import NestedModelControls from 'components/NestedModelControls'
 
@@ -11,8 +11,11 @@ import SingleAttachments from './SingleAttachments'
 
 import AtomFormWrap from './styled/AtomFormWrap'
 import AtomFormHint from './styled/AtomFormHint'
+import AtomFormCardOuter from './styled/AtomFormCardOuter'
 
 class AtomForm extends React.PureComponent {
+  state = { focusedIndex: null }
+
   constructor (props) {
     super(props)
     this.autofocusRef = React.createRef()
@@ -41,9 +44,7 @@ class AtomForm extends React.PureComponent {
     }
   }
 
-  onAssociationChange = (e, index, key) => {
-    const { records } = this.props.form.atoms[index].record.meta.associations[key]
-    const record = find(records, { value: e.target.value })
+  onAssociationChange = (record, index, key) => {
     this.props.updateFormAtomAssociation(index, key, record)
   }
 
@@ -130,8 +131,49 @@ class AtomForm extends React.PureComponent {
             const asMolecule = molecule && !atom.record.meta.molecule_singleton
             if (asMolecule) { nonSingletonIndex++ }
 
+            const singleAttachments = (
+              <SingleAttachments
+                attachments={atom.record.meta.attachments}
+                atom={atom.record}
+                index={index}
+                remove={this.props.removeFormAtomAttachment}
+              />
+            )
+
+            const inputs = (
+              <React.Fragment>
+                <Fields
+                  atom={atom}
+                  onChange={this.onChange}
+                  onValueChange={this.onValueChange}
+                  index={index}
+                />
+
+                <Associations
+                  atom={atom}
+                  onChange={this.onAssociationChange}
+                  onBlur={() => { this.setState({ focusedIndex: null }) }}
+                  onFocus={() => { this.setState({ focusedIndex: index }) }}
+                  index={index}
+                />
+              </React.Fragment>
+            )
+
+            let renderAsFlex = false
+            if (Object.keys(atom.record.meta.attachments).length === 1) {
+              if (!atom.record.meta.attachments[0].plural) {
+                if (Object.keys(atom.record.meta.structure).length <= 3) {
+                  renderAsFlex = true
+                }
+              }
+            }
+
             return (
-              <div key={atom.record.id || atom.record.timestamp} className={asMolecule ? 'card-outer' : undefined}>
+              <AtomFormCardOuter
+                key={atom.record.id || atom.record.timestamp}
+                className={asMolecule ? 'card-outer' : undefined}
+                focused={index === this.state.focusedIndex}
+              >
                 <div className={asMolecule ? 'card' : undefined}>
                   <div className={asMolecule ? 'card-body mb-n3' : undefined}>
                     {atom.messages.length > 0 && (
@@ -146,25 +188,19 @@ class AtomForm extends React.PureComponent {
                       </div>
                     )}
 
-                    <SingleAttachments
-                      attachments={atom.record.meta.attachments}
-                      atom={atom.record}
-                      index={index}
-                      remove={this.props.removeFormAtomAttachment}
-                    />
-
-                    <Fields
-                      atom={atom}
-                      onChange={this.onChange}
-                      onValueChange={this.onValueChange}
-                      index={index}
-                    />
-
-                    <Associations
-                      atom={atom}
-                      onChange={this.onAssociationChange}
-                      index={index}
-                    />
+                    {renderAsFlex ? (
+                      <div className='d-flex'>
+                        {singleAttachments}
+                        <div className='flex-grow-1'>
+                          {inputs}
+                        </div>
+                      </div>
+                    ) : (
+                      <React.Fragment>
+                        {singleAttachments}
+                        {inputs}
+                      </React.Fragment>
+                    )}
 
                     <MultiAttachments atom={atom} index={index} />
 
@@ -182,7 +218,7 @@ class AtomForm extends React.PureComponent {
                     vertical
                   />
                 )}
-              </div>
+              </AtomFormCardOuter>
             )
           })}
 
