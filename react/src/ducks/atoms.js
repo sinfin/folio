@@ -168,10 +168,15 @@ export const atomSelector = (substate, rootKey, index) => {
 }
 
 export const atomTypesSelector = (state) => {
-  const unsorted = Object.keys(state.atoms.structures).map((key) => ({
-    key,
-    title: state.atoms.structures[key].title
-  }))
+  const unsorted = []
+
+  Object.keys(state.atoms.structures).forEach((key) => {
+    const str = state.atoms.structures[key]
+    if (!str.molecule_secondary) {
+      unsorted.push({ key, title: str.title })
+    }
+  })
+
   return sortBy(unsorted, ['title'])
 }
 
@@ -730,7 +735,7 @@ function atomsReducer (state = initialState, action) {
         form: {
           ...state.form,
           dirty: true,
-          atoms: arrayMove(state.form.atoms, action.from, action.to)
+          atoms: sortBy(arrayMove(state.form.atoms, action.from, action.to), (a) => !a.record.meta.molecule_singleton)
         }
       }
 

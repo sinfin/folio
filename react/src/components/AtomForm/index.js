@@ -68,7 +68,26 @@ class AtomForm extends React.PureComponent {
 
   render () {
     const prefix = `${this.props.namespace}[${this.props.index + 1}]`
-    const molecule = Boolean(this.props.form.atoms[0].record.meta.molecule)
+    const molecule = this.props.form.atoms[0].record.meta.molecule
+    const addButtons = []
+    let nonSingletonIndex = 0
+
+    if (molecule) {
+      Object.keys(this.props.structures).forEach((type) => {
+        if (this.props.structures[type].molecule === molecule) {
+          let shouldAdd = true
+
+          if (this.props.structures[type].molecule_singleton) {
+            const exists = this.props.form.atoms.filter((atom) => atom.record.type === type).length > 0
+            shouldAdd = !exists
+          }
+
+          if (shouldAdd) {
+            addButtons.push({ type, title: this.props.structures[type].title })
+          }
+        }
+      })
+    }
 
     return (
       <AtomFormWrap>
@@ -107,67 +126,72 @@ class AtomForm extends React.PureComponent {
         </div>
 
         <div className='f-c-simple-form-with-atoms__overlay-scroll f-c-atom-form-toolbar-fix-parent'>
-          {this.props.form.atoms.map((atom, index) => (
-            <div key={atom.record.id || atom.record.timestamp} className={molecule ? 'card-outer' : undefined}>
-              <div className={molecule ? 'card' : undefined}>
-                <div className={molecule ? 'card-body mb-n3' : undefined}>
-                  {atom.messages.length > 0 && (
-                    <div className='my-3 alert alert-danger'>
-                      <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
+          {this.props.form.atoms.map((atom, index) => {
+            const asMolecule = molecule && !atom.record.meta.molecule_singleton
+            if (asMolecule) { nonSingletonIndex++ }
 
-                      <ul>
-                        {atom.messages.map((message) => (
-                          <li className='mt-2' key={message}>{message}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+            return (
+              <div key={atom.record.id || atom.record.timestamp} className={asMolecule ? 'card-outer' : undefined}>
+                <div className={asMolecule ? 'card' : undefined}>
+                  <div className={asMolecule ? 'card-body mb-n3' : undefined}>
+                    {atom.messages.length > 0 && (
+                      <div className='my-3 alert alert-danger'>
+                        <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
 
-                  <SingleAttachments
-                    attachments={atom.record.meta.attachments}
-                    atom={atom.record}
-                    index={index}
-                    remove={this.props.removeFormAtomAttachment}
-                  />
+                        <ul>
+                          {atom.messages.map((message) => (
+                            <li className='mt-2' key={message}>{message}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
-                  <Fields
-                    atom={atom}
-                    onChange={this.onChange}
-                    onValueChange={this.onValueChange}
-                    index={index}
-                  />
+                    <SingleAttachments
+                      attachments={atom.record.meta.attachments}
+                      atom={atom.record}
+                      index={index}
+                      remove={this.props.removeFormAtomAttachment}
+                    />
 
-                  <Associations
-                    atom={atom}
-                    onChange={this.onAssociationChange}
-                    index={index}
-                  />
+                    <Fields
+                      atom={atom}
+                      onChange={this.onChange}
+                      onValueChange={this.onValueChange}
+                      index={index}
+                    />
 
-                  <MultiAttachments atom={atom} index={index} />
+                    <Associations
+                      atom={atom}
+                      onChange={this.onAssociationChange}
+                      index={index}
+                    />
 
-                  {atom.record.meta.hint && this.renderHint(atom.record.meta.hint)}
+                    <MultiAttachments atom={atom} index={index} />
 
-                  {atom.validating && <span className='folio-loader' />}
+                    {atom.record.meta.hint && this.renderHint(atom.record.meta.hint)}
+
+                    {atom.validating && <span className='folio-loader' />}
+                  </div>
                 </div>
+
+                {asMolecule && (
+                  <NestedModelControls
+                    moveUp={nonSingletonIndex > 1 ? () => { this.props.moveFormAtom(index, index - 1) } : null}
+                    moveDown={(index + 1 !== this.props.form.atoms.length) ? () => { this.props.moveFormAtom(index, index + 1) } : null}
+                    remove={this.props.form.atoms.length > 1 ? () => { this.props.removeFormAtom(index) } : null}
+                    vertical
+                  />
+                )}
               </div>
+            )
+          })}
 
-              {molecule && (
-                <NestedModelControls
-                  moveUp={index !== 0 ? () => { this.props.moveFormAtom(index, index - 1) } : null}
-                  moveDown={(index + 1 !== this.props.form.atoms.length) ? () => { this.props.moveFormAtom(index, index + 1) } : null}
-                  remove={this.props.form.atoms.length > 1 ? () => { this.props.removeFormAtom(index) } : null}
-                  vertical
-                />
-              )}
-            </div>
-          ))}
-
-          {molecule && (
-            <Button color='success' type='button' onClick={this.props.addAtom}>
+          {addButtons.map((type) => (
+            <Button color='success' type='button' className='mr-2' onClick={() => { this.props.addAtom(type.type) }} key={type.type}>
               <i className='fa fa-plus' />
-              {window.FolioConsole.translations.add}
+              {type.title}
             </Button>
-          )}
+          ))}
         </div>
       </AtomFormWrap>
     )

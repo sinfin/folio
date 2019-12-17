@@ -60,6 +60,8 @@ module Folio::Atom
         structure: structure,
         title: klass.model_name.human,
         molecule: klass.molecule_cell_name,
+        molecule_singleton: klass.molecule_singleton,
+        molecule_secondary: klass.molecule_secondary,
       }
     end
     str

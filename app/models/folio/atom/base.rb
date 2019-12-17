@@ -132,6 +132,14 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     molecule.try(:cell_name)
   end
 
+  def self.molecule_singleton
+    false
+  end
+
+  def self.molecule_secondary
+    false
+  end
+
   def self.form_hints
     prefix = "simple_form.hints.#{name.underscore}"
     {

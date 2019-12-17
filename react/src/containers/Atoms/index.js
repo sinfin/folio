@@ -118,7 +118,7 @@ class Atoms extends React.PureComponent {
             removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}
-            addAtom={() => this.props.dispatch(addAtomToForm(form.atoms[0].record.type))}
+            addAtom={(type) => this.props.dispatch(addAtomToForm(type))}
             moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
           />
