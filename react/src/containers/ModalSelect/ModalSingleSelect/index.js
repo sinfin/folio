@@ -62,13 +62,7 @@ class ModalSingleSelect extends ModalSelect {
         attachmentKey: this.state.attachmentKey,
         data: {
           file_id: file.id,
-          file: {
-            id: file.id,
-            file_name: file.attributes.file_name,
-            file_size: file.attributes.file_size,
-            thumb: file.attributes.thumb,
-            type: file.attributes.type
-          }
+          file
         },
         index: this.state.index
       }])

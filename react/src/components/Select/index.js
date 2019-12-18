@@ -44,7 +44,7 @@ class Select extends React.Component {
     if (async) {
       SelectComponent = AsyncSelect
 
-      loadOptions = (inputValue, callback) => {
+      loadOptions = (inputValue, handle) => {
         let data = ''
         if (asyncData) {
           const params = new URLSearchParams()
@@ -56,8 +56,8 @@ class Select extends React.Component {
         }
 
         apiGet(`${async}&q=${inputValue}${data}`)
-          .catch(() => callback([]))
-          .then((res) => callback(res ? res.data : []))
+          .catch(() => handle([]))
+          .then((res) => handle(res ? res.data : []))
       }
     }
 

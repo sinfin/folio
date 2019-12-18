@@ -5,8 +5,6 @@ import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
 import timestamp from 'utils/timestamp'
 
-import { setOriginalPlacements } from 'ducks/filePlacements'
-
 // Constants
 
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
@@ -21,7 +19,6 @@ const UPDATE_FORM_ATOM_VALUE = 'atoms/UPDATE_FORM_ATOM_VALUE'
 const MOVE_ATOMS_TO_INDEX = 'atoms/MOVE_ATOMS_TO_INDEX'
 const UPDATE_FORM_ATOM_ATTACHMENTS = 'atoms/UPDATE_FORM_ATOM_ATTACHMENTS'
 const REMOVE_FORM_ATOM_ATTACHMENT = 'atoms/REMOVE_FORM_ATOM_ATTACHMENT'
-const SET_FORM_ATOM_FILE_PLACEMENTS = 'atoms/SET_FORM_ATOM_FILE_PLACEMENTS'
 const SET_FORM_VALIDATION_ERRORS = 'atoms/SET_FORM_VALIDATION_ERRORS'
 const UPDATE_FORM_ATOM_ASSOCIATION = 'atoms/UPDATE_FORM_ATOM_ASSOCIATION'
 const ADD_ATOM_TO_FORM = 'atoms/ADD_ATOM_TO_FORM'
@@ -80,10 +77,6 @@ export function updateFormAtomAttachments (index, attachmentKey, data) {
 
 export function removeFormAtomAttachment (index, attachmentKey) {
   return { type: REMOVE_FORM_ATOM_ATTACHMENT, index, attachmentKey }
-}
-
-export function setFormAtomFilePlacements () {
-  return { type: SET_FORM_ATOM_FILE_PLACEMENTS }
 }
 
 export function setFormValidationErrors (response) {
@@ -275,8 +268,7 @@ function * updateAtomPreviewsSaga () {
 }
 
 function * showAtomsForm (action) {
-  window.jQuery('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--editing-atom')
-  yield put(setFormAtomFilePlacements())
+  yield window.jQuery('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--editing-atom')
 }
 
 function * showAtomsFormSaga () {
@@ -292,17 +284,6 @@ function * hideAtomsForm (action) {
 
 function * hideAtomsFormSaga () {
   yield takeEvery(CLOSE_FORM_ATOM, hideAtomsForm)
-}
-
-function * setAtomFilePlacements (action) {
-  const form = yield select(atomsFormSelector)
-  // TODO
-  yield put(setOriginalPlacements('images', form.atoms[0].image_placements_attributes || []))
-  yield put(setOriginalPlacements('documents', form.atoms[0].document_placement_attributes || []))
-}
-
-function * setAtomFilePlacementsSaga () {
-  yield takeEvery(SET_FORM_ATOM_FILE_PLACEMENTS, setAtomFilePlacements)
 }
 
 function * validateAndSaveFormAtomPerform (action) {
@@ -326,7 +307,6 @@ export const atomsSagas = [
   updateAtomPreviewsSaga,
   showAtomsFormSaga,
   hideAtomsFormSaga,
-  setAtomFilePlacementsSaga,
   validateAndSaveFormAtomSaga
 ]
 

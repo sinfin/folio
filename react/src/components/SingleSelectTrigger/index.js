@@ -33,12 +33,12 @@ function SingleSelectTrigger ({ data, attachmentType, remove, index }) {
               <div className='folio-console-thumbnail__img-wrap'>
 
                 {isDocument ? (
-                  data.file.file_name
+                  data.file.attributes.file_name
                 ) : (
                   <img
-                    src={data.file.thumb}
+                    src={data.file.attributes.thumb}
                     className='folio-console-thumbnail__img'
-                    alt={data.file.file_name}
+                    alt={data.file.attributes.file_name}
                   />
                 )}
 
