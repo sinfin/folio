@@ -41,6 +41,19 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   end
 
   def selectize
+    klass = params.require(:klass).safe_constantize
+    q = params[:q]
+
+    if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
+      scope = klass.all
+      scope = scope.by_query(q) if q.present?
+      render_selectize_options(scope.limit(25))
+    else
+      render json: { data: [] }
+    end
+  end
+
+  def react_select
     class_names = params.require(:class_names).split(',')
     q = params[:q]
 

@@ -40,7 +40,7 @@ module Folio::Atom
       klass::ASSOCIATIONS.each do |key, model_class_names|
         url = Folio::Engine.routes
                            .url_helpers
-                           .url_for([:selectize,
+                           .url_for([:react_select,
                                      :console,
                                      :api,
                                      :autocomplete,
