@@ -35,7 +35,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       if class_name.is_a?(Hash) &&
          class_name.try(:[], :klass) &&
          class_name.try(:[], :path)
-        label = class_name[:klass].constantize.model_name.human(count: 2)
+        label = label_from(class_name[:klass].constantize)
 
         begin
           path = controller.send(class_name[:path])
@@ -63,7 +63,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             concat(t('.settings'))
           end
         else
-          label = klass.model_name.human(count: 2)
+          label = label_from(klass)
           path = controller.url_for([:console, klass])
           link(label, path)
         end
@@ -115,5 +115,18 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def skip_link_class_names
     ::Rails.application.config.folio_console_sidebar_skip_link_class_names || []
+  end
+
+  def label_from(klass)
+    label = klass.model_name.human(count: 2)
+
+    if klass.respond_to?(:console_sidebar_count)
+      count = klass.console_sidebar_count
+      if count > 0
+        return "#{label} <strong class=\"font-weight-bold\">(#{count})</strong>"
+      end
+    end
+
+    label
   end
 end
