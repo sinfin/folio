@@ -36,15 +36,25 @@
       i.fa.fa-download<>
       ' CSV
 
-  - if options[:types]
-    .f-c-index-header__new-dropdown
-      == cell('folio/console/dropdown', title: render(:_new_button_label),  \
-                                        class_name: 'btn btn-success', \
-                                        links: new_dropdown_links)
+  - if options[:react_new]
+    button.btn.btn-success[
+      class="f-c-index-header__btn"
+      class="f-c-index-header__btn--new"
+      class="f-c-index-header__btn--react"
+      type="button"
+    ]
+      = render(:_new_button_label)
 
   - else
-    = new_button
-      = render(:_new_button_label)
+    - if options[:types]
+      .f-c-index-header__new-dropdown
+        == cell('folio/console/dropdown', title: render(:_new_button_label),  \
+                                          class_name: 'btn btn-success', \
+                                          links: new_dropdown_links)
+
+    - else
+      = new_button
+        = render(:_new_button_label)
 
 - if options[:above_filters]
   == options[:above_filters]

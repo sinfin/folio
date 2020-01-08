@@ -18,25 +18,27 @@ class IndexMode extends LazyLoadCheckingComponent {
     const fileTypeIsImage = this.props.filesKey === 'images'
 
     return (
-      <Uploader filesKey={this.props.filesKey}>
-        <Card
-          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
-        >
-          <UploadTagger filesKey={this.props.filesKey} />
+      <div className='mt-n3'>
+        <Uploader filesKey={this.props.filesKey}>
+          <Card
+            filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
+          >
+            <UploadTagger filesKey={this.props.filesKey} />
 
-          {this.props.filesStatus.loading ? <Loader standalone /> : (
-            <FileList
-              files={this.props.filesForList}
-              fileTypeIsImage={fileTypeIsImage}
-              displayAsThumbs={this.props.displayAsThumbs}
-              pagination={this.props.filesPagination}
-              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
-              link
-              dropzoneTrigger
-            />
-          )}
-        </Card>
-      </Uploader>
+            {this.props.filesStatus.loading ? <Loader standalone /> : (
+              <FileList
+                files={this.props.filesForList}
+                fileTypeIsImage={fileTypeIsImage}
+                displayAsThumbs={this.props.displayAsThumbs}
+                pagination={this.props.filesPagination}
+                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+                link
+                dropzoneTrigger
+              />
+            )}
+          </Card>
+        </Uploader>
+      </div>
     )
   }
 }

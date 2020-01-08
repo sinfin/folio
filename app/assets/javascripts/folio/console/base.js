@@ -47,6 +47,7 @@
 //= require folio/console/file_list/file_list
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
+//= require folio/console/index/header/header
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search
