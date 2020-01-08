@@ -1,10 +1,15 @@
 import React from 'react'
 
-function Card ({ highlighted, header, filters, children }) {
+import HeaderUploadButton from './HeaderUploadButton'
+
+function Card ({ highlighted, header, headerUpload, filters, children }) {
   return (
     <div className={`card ${highlighted ? 'card--highlighted' : ''}`}>
       {header && (
-        <div className='card-header'>{header}</div>
+        <div className='card-header card-header--flexy'>
+          {header}
+          {headerUpload && <HeaderUploadButton />}
+        </div>
       )}
 
       {filters ? (

@@ -44,6 +44,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
 
         <Card
           header={window.FolioConsole.translations[`available${this.props.filesKey}`]}
+          headerUpload
           filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
         >
           <UploadTagger filesKey={this.props.filesKey} nested={this.props.nested} />

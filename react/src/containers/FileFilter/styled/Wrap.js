@@ -17,6 +17,10 @@ const Wrap = styled.div`
     padding-right: 5px;
   }
 
+  .folio-console-modal__scroll-fixed & {
+    margin-right: 30px;
+  }
+
   @media screen and (max-width: 576px) {
     flex-direction: column;
     align-items: stretch;
