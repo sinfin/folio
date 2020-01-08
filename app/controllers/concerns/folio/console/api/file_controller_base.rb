@@ -8,6 +8,9 @@ module Folio::Console::Api::FileControllerBase
     meta = {
       page: pagy.page,
       pages: pagy.pages,
+      from: pagy.from,
+      to: pagy.to,
+      count: pagy.count,
     }
     render_records(records, Folio::Console::FileSerializer, meta: meta)
   end
@@ -41,7 +44,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def filter_params
-      params.permit(:by_file_name, :by_placement, :by_tags)
+      params.permit(:by_file_name, :by_placement, :by_tags, :by_used)
     end
 
     def file_params

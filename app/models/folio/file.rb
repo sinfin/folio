@@ -23,6 +23,15 @@ class Folio::File < Folio::ApplicationRecord
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
+  scope :by_used, -> (used) do
+    if used == 'used'
+      joins(:file_placements)
+    elsif used == 'unused'
+      left_joins(:file_placements).where(folio_file_placements: { id: nil })
+    else
+      all
+    end
+  end
   scope :by_tags, -> (tags) do
     if tags.is_a?(String)
       tagged_with(tags.split(','))

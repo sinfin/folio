@@ -1,5 +1,10 @@
 import React from 'react'
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap'
+import { unescape } from 'lodash'
+
+import DisplayButtons from 'containers/DisplayButtons'
+
+import PaginationWrap from './styled/PaginationWrap'
 
 const makeOnClick = (number, changeFilesPage) => (e) => {
   e.preventDefault()
@@ -7,12 +12,18 @@ const makeOnClick = (number, changeFilesPage) => (e) => {
   changeFilesPage(number)
 }
 
-function PaginationComponent ({ changeFilesPage, pagination }) {
+function paginationInfo (pagination) {
+  if (pagination.count === 0) {
+    return window.FolioConsole.translations.paginationEmpty
+  } else {
+    return unescape(window.FolioConsole.translations.paginationInfo).replace('%{from}', pagination.from).replace('%{to}', pagination.to).replace('%{count}', pagination.count)
+  }
+}
+
+function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, setThumbsDisplay, display, fileTypeIsImage }) {
   const active = pagination.page
   const min = 1
   const max = pagination.pages
-
-  if (max === 1) { return null }
 
   const next = Math.min(max, active + 1)
   const prev = Math.max(min, active - 1)
@@ -37,29 +48,50 @@ function PaginationComponent ({ changeFilesPage, pagination }) {
   }
 
   return (
-    <div className='f-c-pagination'>
-      <div className='pagy-bootstrap-nav pagination'>
-        <Pagination>
-          <PaginationItem disabled={prev === active}>
-            <PaginationLink href={`#${prev}`} onClick={makeOnClick(prev, changeFilesPage)}>{window.FolioConsole.translations['paginationPrev']}</PaginationLink>
-          </PaginationItem>
+    <PaginationWrap single={max === 1}>
+      <div className='f-c-pagination d-flex flex-wrap align-items-center pb-0 flex-grow-1'>
+        <div
+          className='mr-auto my-2 pr-g small'
+          dangerouslySetInnerHTML={{ __html: paginationInfo(pagination) }}
+        />
 
-          {numbers.map((number) => (
-            <PaginationItem key={number} active={number === active}>
-              {number === 'a' || number === 'b' ? (
-                <PaginationLink style={{ pointerEvents: 'none' }}>...</PaginationLink>
-              ) : (
-                <PaginationLink href={`#${number}`} onClick={makeOnClick(number, changeFilesPage)}>{number}</PaginationLink>
-              )}
-            </PaginationItem>
-          ))}
+        {max !== 1 && (
+          <div className='my-2'>
+            <div className='pagy-bootstrap-nav pagination'>
+              <Pagination>
+                <PaginationItem disabled={prev === active}>
+                  <PaginationLink href={`#${prev}`} onClick={makeOnClick(prev, changeFilesPage)}>{window.FolioConsole.translations['paginationPrev']}</PaginationLink>
+                </PaginationItem>
 
-          <PaginationItem disabled={next === active}>
-            <PaginationLink href={`#${next}`} onClick={makeOnClick(next, changeFilesPage)}>{window.FolioConsole.translations['paginationNext']}</PaginationLink>
-          </PaginationItem>
-        </Pagination>
+                {numbers.map((number) => (
+                  <PaginationItem key={number} active={number === active}>
+                    {number === 'a' || number === 'b' ? (
+                      <PaginationLink style={{ pointerEvents: 'none' }}>...</PaginationLink>
+                    ) : (
+                      <PaginationLink href={`#${number}`} onClick={makeOnClick(number, changeFilesPage)}>{number}</PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem disabled={next === active}>
+                  <PaginationLink href={`#${next}`} onClick={makeOnClick(next, changeFilesPage)}>{window.FolioConsole.translations['paginationNext']}</PaginationLink>
+                </PaginationItem>
+              </Pagination>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
+
+      {fileTypeIsImage && (
+        <div className='ml-g'>
+          <DisplayButtons
+            display={display}
+            setCardsDisplay={setCardsDisplay}
+            setThumbsDisplay={setThumbsDisplay}
+          />
+        </div>
+      )}
+    </PaginationWrap>
   )
 }
 

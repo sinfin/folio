@@ -2,36 +2,19 @@ import styled from 'styled-components'
 
 const Wrap = styled.div`
   z-index: 2;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  margin: -7.5px -15px;
 
-  .modal-body & {
-    margin: -0.5rem;
+  .form-control--select:invalid:not(:focus) {
+    color: #c1c4c9;
   }
 
-  .redactor-modal-tab & {
-    padding-bottom: 30px;
+  .row {
+    margin-left: -5px;
+    margin-right: -5px;
   }
 
-  .form-group {
-    margin: 7.5px;
-    flex: 1 0 100px;
-  }
-
-  .form-group--react-select {
-    &, > div {
-      min-width: 250px;
-    }
-  }
-
-  .form-group--reset {
-    margin-left: auto;
-
-    + .folio-console-react-display-controls {
-      margin-left: 0;
-    }
+  .col-12 {
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
   @media screen and (max-width: 576px) {

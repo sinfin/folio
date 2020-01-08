@@ -8,7 +8,14 @@ import FileThumbnailList from './FileThumbnailList'
 
 const FileList = (props) => {
   setTimeout(forceCheck, 0)
-  const pagination = <Pagination pagination={props.pagination} changeFilesPage={props.changeFilesPage} />
+
+  const pagination = (
+    <Pagination
+      pagination={props.pagination}
+      changeFilesPage={props.changeFilesPage}
+      fileTypeIsImage={props.fileTypeIsImage}
+    />
+  )
 
   return (
     <React.Fragment>

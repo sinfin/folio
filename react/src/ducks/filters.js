@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash'
+import { isEqual, omit } from 'lodash'
 import { delay } from 'redux-saga'
 import { takeLatest, put, select } from 'redux-saga/effects'
 
@@ -112,14 +112,18 @@ export const initialState = {
 
 function filtersReducer (state = initialState, action) {
   switch (action.type) {
-    case SET_FILTER:
+    case SET_FILTER: {
+      const obj = omit(state[action.filesKey], [action.filter])
+
+      if (action.value) {
+        obj[action.filter] = action.value
+      }
+
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          [action.filter]: action.value
-        }
+        [action.filesKey]: obj
       }
+    }
 
     case RESET_FILTERS:
       return initialState

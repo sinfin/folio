@@ -9,7 +9,7 @@ function Card ({ highlighted, header, filters, children }) {
 
       {filters ? (
         <div className='list-group list-group-flush'>
-          <div className='list-group-item'>
+          <div className='list-group-item bg-100'>
             {filters}
           </div>
         </div>

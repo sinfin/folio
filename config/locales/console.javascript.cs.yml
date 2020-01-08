@@ -10,7 +10,7 @@ cs:
         cancel: Zrušit
         cancelChanges: Zahodit změny?
         create: Vytvořit
-        fileNameFilter: Filtr jména souboru
+        fileNameFilter: Hledat dle jména souboru
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
         link: Odkaz
@@ -18,6 +18,8 @@ cs:
         menuItemUrl: Volný odkaz
         newUploadTags: Štítky pro nové soubory
         noResults: Žádné výsledky
+        paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
+        paginationEmpty: Žádné záznamy
         placementsLabel: Použití
         save: Uložit
         selectable: Volitelné
@@ -26,5 +28,8 @@ cs:
         selectedImages: Vybrané obrázky
         selectPlaceholder: Vybrat...
         title: Název
-        usageFilter: Filtr použití
+        usageFilter: Hledat dle použití
+        usagePlaceholder: Využití...
+        usageUnused: Nepoužité
+        usageUsed: Použité
         used: Již použité

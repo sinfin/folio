@@ -10,7 +10,7 @@ en:
         cancel: Cancel
         cancelChanges: Cancel changes?
         create: Create
-        fileNameFilter: File name filter
+        fileNameFilter: Search by file name
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
         link: Link
@@ -18,6 +18,8 @@ en:
         menuItemUrl: Custom URL
         newUploadTags: Tags for new files
         noResults: No results
+        paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
+        paginationEmpty: No records
         placementsLabel: Usage
         save: Save
         selectable: Selectable
@@ -26,5 +28,8 @@ en:
         selectedImages: Selected images
         selectPlaceholder: Select...
         title: Title
-        usageFilter: Usage filter
+        usageFilter: Search by usage
+        usagePlaceholder: Využití...
+        usageUnused: Unused
+        usageUsed: Used
         used: Used already

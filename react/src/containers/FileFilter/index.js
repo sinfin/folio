@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { FormGroup, Input } from 'reactstrap'
 
 import {
   makeFiltersSelector,
@@ -8,16 +9,10 @@ import {
   resetFilters
 } from 'ducks/filters'
 
-import {
-  setCardsDisplay,
-  setThumbsDisplay,
-  displaySelector
-} from 'ducks/display'
-
 import TagsInput from 'components/TagsInput'
+import InputWithSearchIcon from 'components/InputWithSearchIcon'
 
 import Wrap from './styled/Wrap'
-import DisplayButtons from './DisplayButtons'
 
 class FileFilter extends Component {
   onInputChange = (e) => {
@@ -36,10 +31,6 @@ class FileFilter extends Component {
     )
   }
 
-  setCardsDisplay = (e) => { this.props.dispatch(setCardsDisplay()) }
-
-  setThumbsDisplay = (e) => { this.props.dispatch(setThumbsDisplay()) }
-
   booleanButton (bool) {
     if (bool) {
       return 'btn btn-primary'
@@ -49,57 +40,75 @@ class FileFilter extends Component {
   }
 
   render () {
-    const { filters, margined, display, fileTypeIsImage } = this.props
+    const { filters, margined } = this.props
 
     return (
       <Wrap margined={margined}>
-        <div className='form-group'>
-          <input
-            className='form-control'
-            value={filters.file_name}
-            onChange={this.onInputChange}
-            placeholder={window.FolioConsole.translations.fileNameFilter}
-            name='file_name'
-          />
-        </div>
+        <div className='row mb-n3'>
+          <div className='col-12 col-sm-6 col-xl-3'>
+            <FormGroup>
+              <InputWithSearchIcon
+                value={filters.file_name}
+                onChange={this.onInputChange}
+                placeholder={window.FolioConsole.translations.fileNameFilter}
+                name='file_name'
+              />
+            </FormGroup>
+          </div>
 
-        <div className='form-group form-group--react-select'>
-          <TagsInput
-            options={this.props.tags}
-            value={filters.tags}
-            onTagsChange={this.onTagsChange}
-            noAutofocus
-            notCreatable
-          />
-        </div>
+          <div className='col-12 col-sm-6 col-xl-3'>
+            <FormGroup>
+              <InputWithSearchIcon
+                value={filters.placement}
+                onChange={this.onInputChange}
+                placeholder={window.FolioConsole.translations.usageFilter}
+                name='placement'
+              />
+            </FormGroup>
+          </div>
 
-        <div className='form-group form-group--react-select'>
-          <input
-            className='form-control'
-            value={filters.placement}
-            onChange={this.onInputChange}
-            placeholder={window.FolioConsole.translations.usageFilter}
-            name='placement'
-          />
-        </div>
+          <div className='col-12 col-sm-6 col-xl-2'>
+            <FormGroup>
+              <Input
+                type='select'
+                value={filters.used}
+                onChange={this.onInputChange}
+                placeholder={window.FolioConsole.translations.usagePlaceholder}
+                name='used'
+                className='form-control--select'
+                required
+              >
+                <option value=''>{window.FolioConsole.translations.usagePlaceholder}</option>
+                <option value='used'>{window.FolioConsole.translations.usageUsed}</option>
+                <option value='unused'>{window.FolioConsole.translations.usageUnused}</option>
+              </Input>
+            </FormGroup>
+          </div>
 
-        <div className='form-group form-group--reset'>
-          {filters.active && (
-            <button
-              type='button'
-              className='btn btn-danger fa fa-times'
-              onClick={this.onReset}
-            />
-          )}
-        </div>
+          <div className='col-12 col-sm-6 col-xl-3'>
+            <FormGroup className='form-group--react-select'>
+              <TagsInput
+                options={this.props.tags}
+                value={filters.tags}
+                onTagsChange={this.onTagsChange}
+                noAutofocus
+                notCreatable
+              />
+            </FormGroup>
+          </div>
 
-        {fileTypeIsImage && (
-          <DisplayButtons
-            display={display}
-            setCardsDisplay={this.setCardsDisplay}
-            setThumbsDisplay={this.setThumbsDisplay}
-          />
-        )}
+          <div className='col-12 col-xl-1'>
+            <FormGroup className='form-group--react-reset ml-auto text-center text-xl-right'>
+              {filters.active && (
+                <button
+                  type='button'
+                  className='btn btn-danger fa fa-times'
+                  onClick={this.onReset}
+                />
+              )}
+            </FormGroup>
+          </div>
+        </div>
       </Wrap>
     )
   }
@@ -107,8 +116,7 @@ class FileFilter extends Component {
 
 const mapStateToProps = (state, props) => ({
   filters: makeFiltersSelector(props.filesKey)(state),
-  tags: makeTagsSelector(props.filesKey)(state),
-  display: displaySelector(state)
+  tags: makeTagsSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {
