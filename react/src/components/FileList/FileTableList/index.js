@@ -3,7 +3,15 @@ import React from 'react'
 import DropzoneTrigger from './DropzoneTrigger'
 import FileTableRow from './FileTableRow'
 
-const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, onClick }) => {
+const FileTableList = ({
+  files,
+  dropzoneTrigger,
+  link,
+  fileTypeIsImage,
+  onClick,
+  massSelect,
+  massSelectVisible
+}) => {
   const classNames = ['folio-console-file-table']
 
   if (fileTypeIsImage) {
@@ -29,6 +37,7 @@ const FileTableList = ({ files, dropzoneTrigger, link, fileTypeIsImage, onClick 
               link={link}
               fileTypeIsImage={fileTypeIsImage}
               onClick={onClick}
+              massSelect={massSelect}
             />
           ))}
         </div>

@@ -6,7 +6,13 @@ import Tags from 'components/Tags'
 
 import FileUploadProgress from 'components/FileUploadProgress'
 
-const FileTableRow = ({ file, link, fileTypeIsImage, onClick }) => {
+const FileTableRow = ({
+  file,
+  link,
+  fileTypeIsImage,
+  onClick,
+  massSelect
+}) => {
   let className = 'folio-console-file-table__tr'
   const persistedOnClick = !file.attributes.uploading && onClick
 
@@ -21,6 +27,16 @@ const FileTableRow = ({ file, link, fileTypeIsImage, onClick }) => {
       className={className}
       onClick={persistedOnClick ? () => onClick(file) : undefined}
     >
+      {massSelect && (
+        <div className='folio-console-file-table__td folio-console-file-table__td--checkbox'>
+          <input
+            type='checkbox'
+            checked={file.massSelected || false}
+            onChange={(e) => massSelect(file, !file.massSelected)}
+          />
+        </div>
+      )}
+
       {fileTypeIsImage && (
         <div className='folio-console-file-table__td folio-console-file-table__td--image'>
           <FileUploadProgress progress={file.attributes.progress} />
