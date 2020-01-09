@@ -1,5 +1,9 @@
 = simple_form_for([:console, @document], as: :file) do |f|
-  = form_header f, destroy: true
+  - if f.object.file_placements.present?
+    - btn = cell('folio/console/disabled_destroy_button', t('.cannot_destroy'))
+    = form_header f, right: btn.show
+  - else
+    = form_header f, destroy: true
 
   .row
     .col

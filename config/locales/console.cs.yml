@@ -58,6 +58,7 @@ cs:
       gallery_management: Správa galerie
       images:
         edit:
+          cannot_destroy: Použitý obrázek nelze odstranit
           download_original: Stáhnout originál
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
       index:

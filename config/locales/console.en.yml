@@ -58,6 +58,7 @@ en:
       gallery_management: Gallery management
       images:
         edit:
+          cannot_destroy: Cannot destroy used image.
           download_original: Download original
           file_hint: Do not input anything to keep the original file.
       index:

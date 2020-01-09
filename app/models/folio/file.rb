@@ -12,8 +12,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   # Relations
-  has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
-                             dependent: :destroy
+  has_many :file_placements, class_name: 'Folio::FilePlacement::Base'
   has_many :placements, through: :file_placements
 
   # Validations
@@ -57,6 +56,7 @@ class Folio::File < Folio::ApplicationRecord
                   }
 
   before_save :set_mime_type
+  before_destroy :check_usage_before_destroy
   after_save :touch_placements
 
   def title
@@ -95,6 +95,10 @@ class Folio::File < Folio::ApplicationRecord
       return unless file.present?
       return unless respond_to?(:mime_type)
       self.mime_type = get_mime_type(file)
+    end
+
+    def check_usage_before_destroy
+      throw(:abort) if file_placements.exists?
     end
 end
 

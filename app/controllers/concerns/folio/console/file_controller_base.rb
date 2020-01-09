@@ -43,4 +43,8 @@ module Folio::Console::FileControllerBase
 
       p
     end
+
+    def folio_console_record_includes
+      [:file_placements]
+    end
 end
