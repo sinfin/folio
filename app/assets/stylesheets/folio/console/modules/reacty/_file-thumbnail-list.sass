@@ -58,9 +58,6 @@
     align-items: center
     justify-content: center
 
-    &__file:not(&__file--uploading) &
-      cursor: pointer
-
     .fa-times-circle
       color: $danger
 
@@ -70,8 +67,11 @@
     .fa-arrow-circle-up
       color: $success
 
-    &__file:hover &
-      opacity: 1
+  &__file:not(&__file--uploading) &__file-hover
+    cursor: pointer
+
+  &__file:hover &__file-hover
+    opacity: 1
 
   &__file-placements-count
     position: absolute
