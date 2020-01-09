@@ -11,7 +11,7 @@ class Folio::Console::FileListCell < Folio::ConsoleCell
   def image_for(image)
     image_tag(image.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url,
               lightbox_from_image(image).merge(
-                class: 'folio-console-file-list__img',
+                class: 'f-c-file-list__img',
               ))
   end
 

@@ -40,7 +40,7 @@ module Folio::Console::Api::FileControllerBase
   private
 
     def folio_console_collection_includes
-      [:tags]
+      [:tags, :file_placements]
     end
 
     def filter_params

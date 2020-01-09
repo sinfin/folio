@@ -63,9 +63,9 @@ class ModalMultiSelect extends ModalSelect {
       `
     } else {
       return `
-        <div class="folio-console-file-list__file">
-          <div class="folio-console-file-list__img-wrap">
-            <img class="folio-console-thumbnail__img folio-console-file-list__img" src="${window.encodeURI(placement.file.attributes.thumb)}">
+        <div class="f-c-file-list__file">
+          <div class="f-c-file-list__img-wrap">
+            <img class="folio-console-thumbnail__img f-c-file-list__img" src="${window.encodeURI(placement.file.attributes.thumb)}">
           </div>
           ${hiddenFields}
         </div>
@@ -87,7 +87,7 @@ class ModalMultiSelect extends ModalSelect {
       `
     } else {
       return `
-        <div class="folio-console-file-list">
+        <div class="f-c-file-list">
           ${selected.join('')}
           ${deleted.join('')}
         </div>
@@ -116,7 +116,7 @@ class ModalMultiSelect extends ModalSelect {
 
     const placements = []
 
-    $wrap.find('.folio-console-file-list__file, .folio-console-file-table__tr').each((_i, el) => {
+    $wrap.find('.f-c-file-list__file, .folio-console-file-table__tr').each((_i, el) => {
       const $fields = $(el).find('input[type="hidden"]')
       placements.push({
         id: Number(getPlacementField($fields, 'id')),

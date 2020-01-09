@@ -44,6 +44,10 @@ class Folio::Console::FileSerializer
     "#{object.class.model_name.human} ##{object.id}"
   end
 
+  attribute :file_placements_count do |object|
+    object.file_placements.size
+  end
+
   link :edit do |object|
     if object.persisted?
       Folio::Engine.routes

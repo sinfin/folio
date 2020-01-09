@@ -10,6 +10,8 @@ cs:
         cancel: Zrušit
         cancelChanges: Zahodit změny?
         create: Vytvořit
+        destroy: Smazat
+        download: Stáhnout
         fileNameFilter: Hledat dle jména souboru
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji

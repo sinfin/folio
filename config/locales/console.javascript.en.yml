@@ -10,6 +10,8 @@ en:
         cancel: Cancel
         cancelChanges: Cancel changes?
         create: Create
+        destroy: Destroy
+        download: Download
         fileNameFilter: Search by file name
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing

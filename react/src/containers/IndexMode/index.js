@@ -1,13 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { makeFilesStatusSelector, makeFilesForListSelector, makeFilesPaginationSelector, changeFilesPage } from 'ducks/files'
+import {
+  makeFilesStatusSelector,
+  makeFilesForListSelector,
+  makeFilesPaginationSelector,
+  changeFilesPage,
+  massSelect
+} from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
+import FileMassActions from 'containers/FileMassActions'
+
 import FileList from 'components/FileList'
 import Loader from 'components/Loader'
 import Card from 'components/Card'
@@ -25,6 +33,8 @@ class IndexMode extends LazyLoadCheckingComponent {
           >
             <UploadTagger filesKey={this.props.filesKey} />
 
+            <FileMassActions filesKey={this.props.filesKey} />
+
             {this.props.filesStatus.loading ? <Loader standalone /> : (
               <FileList
                 files={this.props.filesForList}
@@ -32,6 +42,8 @@ class IndexMode extends LazyLoadCheckingComponent {
                 displayAsThumbs={this.props.displayAsThumbs}
                 pagination={this.props.filesPagination}
                 changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+                massSelect={(file, select) => this.props.dispatch(massSelect(this.props.filesKey, file, select))}
+                massSelectVisible={this.props.filesStatus.massSelecting}
                 link
                 dropzoneTrigger
               />

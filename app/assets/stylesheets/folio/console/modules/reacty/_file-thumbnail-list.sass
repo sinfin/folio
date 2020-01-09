@@ -1,58 +1,88 @@
-.folio-console-file-list
+.f-c-file-list
   display: flex
   flex-wrap: wrap
   margin: - $grid-gutter-half / 2
 
-.folio-console-file-list__file,
-.folio-console-file-list__dropzone-trigger
-  flex: 0 0 150px
-  width: 150px
-  margin: $grid-gutter-half / 2
-  position: relative
+  &__file,
+  &__dropzone-trigger
+    flex: 0 0 150px
+    width: 150px
+    margin: $grid-gutter-half / 2
+    position: relative
 
-.folio-console-file-list__file--fresh
-  box-shadow: 0 0 0 5px #c1e1f2
-
-.folio-console-file-list__img-wrap,
-.folio-console-file-list__dropzone-trigger
-  display: flex
-  width: 150px
-  height: 150px
-  align-items: center
-  justify-content: center
-  background: #e9ecef
-
-.folio-console-file-list__img
-  display: block
-  max-width: 100%
-  max-height: 100%
-
-.folio-console-file-list__file-hover
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  z-index: 2
-  opacity: 0
-  transition: $transition-base
-  background: rgba($white, 0.66)
-  font-size: 26px
-  display: flex
-  align-items: center
-  justify-content: center
-
-  .folio-console-file-list__file:not(.folio-console-file-list__file--uploading) &
+  &__file-checkbox
+    position: absolute
+    top: 0
+    left: 0
+    padding: 9px
     cursor: pointer
+    line-height: 1
+    opacity: 0
 
-  .fa-times-circle
-    color: $danger
-
-  .fa-check-circle
-    color: $primary
-
-  .fa-arrow-circle-up
-    color: $success
-
-  .folio-console-file-list__file:hover &
+  &__file:hover &__file-checkbox,
+  &__file-checkbox--visible
     opacity: 1
+
+  &__file-checkbox-input
+    pointer-events: none
+
+  &__file--fresh
+    box-shadow: 0 0 0 5px #c1e1f2
+
+  &__img-wrap,
+  &__dropzone-trigger
+    display: flex
+    width: 150px
+    height: 150px
+    align-items: center
+    justify-content: center
+    background: #e9ecef
+
+  &__img
+    display: block
+    max-width: 100%
+    max-height: 100%
+
+  &__file-hover
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 2
+    opacity: 0
+    transition: $transition-base
+    background: rgba($white, 0.66)
+    font-size: 26px
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &__file:not(&__file--uploading) &
+      cursor: pointer
+
+    .fa-times-circle
+      color: $danger
+
+    .fa-check-circle
+      color: $primary
+
+    .fa-arrow-circle-up
+      color: $success
+
+    &__file:hover &
+      opacity: 1
+
+  &__file-placements-count
+    position: absolute
+    top: 8px
+    right: 8px
+    pointer-events: none
+    height: 16px
+    min-width: 16px
+    text-align: center
+    background: rgba($black, 0.4)
+    font-size: 10px
+    line-height: 13px
+    color: $white
+    padding: 0 4px

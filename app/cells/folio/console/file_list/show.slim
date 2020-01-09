@@ -15,8 +15,8 @@
             = file.try(:file_extension).try(:upcase)
 
 - else
-  .folio-console-file-list.folio-console-file-list--cell
+  .f-c-file-list.f-c-file-list--cell
     - model.each do |file|
-      .folio-console-file-list__file
-        .folio-console-file-list__img-wrap
+      .f-c-file-list__file
+        .f-c-file-list__img-wrap
           = image_for(file)

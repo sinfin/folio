@@ -21,12 +21,12 @@ $(document).on 'change', '.folio-console-single-file-select-file', ->
   $wrap.addClass('folio-console-single-file-select--has-file')
   $wrap.find('.folio-console-single-file-select__clearable').html('')
 
-  isImage = $wrap.find('.folio-console-file-list__img-wrap').length
+  isImage = $wrap.find('.f-c-file-list__img-wrap').length
   isVideo = $wrap.find('.folio-console-single-file-select__video').length
 
   if isImage or isVideo
     if isImage
-      $wrap.find('.folio-console-file-list__img-wrap').html('<img src="https://doader.s3.amazonaws.com/250x250.gif?" alt="" />')
+      $wrap.find('.f-c-file-list__img-wrap').html('<img src="https://doader.s3.amazonaws.com/250x250.gif?" alt="" />')
 
     reader = new FileReader()
 
@@ -39,8 +39,8 @@ $(document).on 'change', '.folio-console-single-file-select-file', ->
           </video>
         """)
       else if isImage
-        $imageWrap = $wrap.find('.folio-console-file-list__img-wrap')
-        $imageWrap.html("<img src=\"#{e.target.result}\" alt=\"\" class=\"folio-console-file-list__img\" />")
+        $imageWrap = $wrap.find('.f-c-file-list__img-wrap')
+        $imageWrap.html("<img src=\"#{e.target.result}\" alt=\"\" class=\"f-c-file-list__img\" />")
 
     reader.readAsDataURL(@files[0])
   else

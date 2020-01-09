@@ -3,8 +3,16 @@ import React from 'react'
 import DropzoneTrigger from './DropzoneTrigger'
 import FileThumbnail from './FileThumbnail'
 
-const FileThumbnailList = ({ files, dropzoneTrigger, link, onClick, selecting }) => (
-  <div className='folio-console-file-list'>
+const FileThumbnailList = ({
+  files,
+  dropzoneTrigger,
+  link,
+  onClick,
+  selecting,
+  massSelect,
+  massSelectVisible
+}) => (
+  <div className='f-c-file-list'>
     {dropzoneTrigger && <DropzoneTrigger />}
 
     {files.map((file) => (
@@ -14,6 +22,8 @@ const FileThumbnailList = ({ files, dropzoneTrigger, link, onClick, selecting })
         link={link}
         onClick={onClick}
         selecting={selecting}
+        massSelect={massSelect}
+        massSelectVisible={massSelectVisible}
       />
     ))}
   </div>

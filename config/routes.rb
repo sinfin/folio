@@ -19,8 +19,13 @@ Folio::Engine.routes.draw do
 
     resources :menus, only: [:edit, :update, :index]
 
-    resources :images, only: %i[index edit update destroy]
-    resources :documents, only: %i[index edit update destroy]
+    resources :images, only: %i[index edit update destroy] do
+      collection { get :mass_download }
+    end
+
+    resources :documents, only: %i[index edit update destroy] do
+      collection { get :mass_download }
+    end
 
     resources :leads, only: %i[index show edit update destroy] do
       collection { post :mass_handle }

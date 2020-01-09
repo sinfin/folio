@@ -31,4 +31,11 @@ class Folio::Console::ImagesControllerTest < Folio::Console::BaseControllerTest
     delete url_for([:console, image])
     assert_equal(0, Folio::Image.count)
   end
+
+  test 'mass_download' do
+    images = create_list(:folio_image, 2)
+    ids = images.map(&:id).join(',')
+    get url_for([:mass_download, :console, Folio::Image, ids: ids])
+    assert_response(:ok)
+  end
 end

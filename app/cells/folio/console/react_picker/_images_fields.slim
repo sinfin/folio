@@ -1,12 +1,12 @@
-.folio-console-file-list
+.f-c-file-list
   = html_safe_fields_for f, placement_key do |fp|
     - if fp.object.marked_for_destruction?
       = fp.hidden_field :_destroy, value: 1
 
     - else
-      .folio-console-file-list__file
-        .folio-console-file-list__img-wrap
-          = image(fp, 'folio-console-file-list__img')
+      .f-c-file-list__file
+        .f-c-file-list__img-wrap
+          = image(fp, 'f-c-file-list__img')
 
         = fp.hidden_field :id
         = fp.hidden_field :alt

@@ -1,7 +1,7 @@
 import { apiGet, apiPut } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
-import { filter, find } from 'lodash'
+import { filter, find, without } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
 import { makeUploadsSelector } from 'ducks/uploads'
@@ -19,6 +19,9 @@ const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 const UPDATED_FILES = 'files/UPDATED_FILES'
 const CHANGE_FILES_PAGE = 'files/CHANGE_FILES_PAGE'
+const MASS_SELECT = 'files/MASS_SELECT'
+const MASS_DELETE = 'files/MASS_DELETE'
+const MASS_CANCEL = 'files/MASS_CANCEL'
 
 // Actions
 
@@ -56,6 +59,18 @@ export function updateFileFailure (filesKey, file) {
 
 export function changeFilesPage (filesKey, page) {
   return { type: CHANGE_FILES_PAGE, filesKey, page }
+}
+
+export function massSelect (filesKey, file, select) {
+  return { type: MASS_SELECT, filesKey, file, select }
+}
+
+export function massDelete (filesKey) {
+  return { type: MASS_DELETE, filesKey }
+}
+
+export function massCancel (filesKey) {
+  return { type: MASS_CANCEL, filesKey }
 }
 
 // Sagas
@@ -126,7 +141,8 @@ export const filesSagas = [
 export const makeFilesStatusSelector = (filesKey) => (state) => {
   return {
     loading: state.files[filesKey] && state.files[filesKey].loading,
-    loaded: state.files[filesKey] && state.files[filesKey].loaded
+    loaded: state.files[filesKey] && state.files[filesKey].loaded,
+    massSelecting: state.files[filesKey].massSelectedIds.length > 0
   }
 }
 
@@ -134,8 +150,19 @@ export const makeFilesLoadedSelector = (filesKey) => (state) => {
   return state.files[filesKey] && state.files[filesKey].loaded
 }
 
+export const makeMassSelectedIdsSelector = (filesKey) => (state) => {
+  return state.files[filesKey] ? state.files[filesKey].massSelectedIds : []
+}
+
 export const makeFilesSelector = (filesKey) => (state) => {
-  return state.files[filesKey].records
+  const selected = state.files[filesKey].massSelectedIds
+  return state.files[filesKey].records.map((file) => {
+    if (file.id && selected.indexOf(file.id) !== -1) {
+      return { ...file, massSelected: true }
+    } else {
+      return file
+    }
+  })
 }
 
 export const makeFilesForListSelector = (filesKey) => (state) => {
@@ -183,6 +210,7 @@ const initialState = {
     loading: false,
     loaded: false,
     records: [],
+    massSelectedIds: [],
     pagination: {
       page: null,
       pages: null
@@ -192,6 +220,7 @@ const initialState = {
     loading: false,
     loaded: false,
     records: [],
+    massSelectedIds: [],
     pagination: {
       page: null,
       pages: null
@@ -313,6 +342,34 @@ function filesReducer (state = initialState, action) {
             const found = find(action.files, { id: record.id })
             return found || record
           })
+        }
+      }
+
+    case MASS_SELECT:
+      if (!action.file.id) return state
+
+      let massSelectedIds = state[action.filesKey].massSelectedIds
+
+      if (action.select) {
+        massSelectedIds = [...massSelectedIds, action.file.id]
+      } else {
+        massSelectedIds = without(massSelectedIds, [action.file.id])
+      }
+
+      return {
+        ...state,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          massSelectedIds
+        }
+      }
+
+    case MASS_CANCEL:
+      return {
+        ...state,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          massSelectedIds: []
         }
       }
 

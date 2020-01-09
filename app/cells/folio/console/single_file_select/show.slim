@@ -9,13 +9,13 @@
                               input_html: { class: destroy_class }
 
   - if options[:as] == :image
-    .folio-console-file-list
-      .folio-console-file-list__file
-        .folio-console-file-list__img-wrap[
+    .f-c-file-list
+      .f-c-file-list__file
+        .f-c-file-list__img-wrap[
           class="folio-console-single-file-select__clearable"
         ]
           - if filled?
-            img.folio-console-file-list__img src=file_src
+            img.f-c-file-list__img src=file_src
 
   - elsif options[:as] == :video
     .folio-console-single-file-select__video[

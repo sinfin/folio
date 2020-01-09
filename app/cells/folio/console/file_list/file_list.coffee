@@ -1,1 +1,1 @@
-window.makeFolioLightbox('.folio-console-file-list--cell .folio-console-file-list__img')
+window.makeFolioLightbox('.f-c-file-list--cell .f-c-file-list__img')
