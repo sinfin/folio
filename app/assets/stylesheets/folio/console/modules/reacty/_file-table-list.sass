@@ -1,19 +1,4 @@
-.folio-console-file-table-wrap
-  position: relative
-  min-width: 100%
-
-  .modal-body &
-    margin: 0 (( - $modal-inner-padding )) (( - $modal-inner-padding ))
-
-  .folio-console-dropzone-trigger
-    +unbutton
-    background: $table-hover-bg
-    width: 100%
-    display: block
-    text-align: center
-    padding: 1rem
-
-.folio-console-file-table
+.f-c-file-table
   margin-bottom: 0
 
   .card-body &
@@ -23,97 +8,115 @@
       &:last-child
         border-right: 1px solid $border-color
 
-.folio-console-file-table__td
-  white-space: nowrap
+  &-wrap
+    position: relative
+    min-width: 100%
 
-.folio-console-file-table__tr--fresh
-  &, .folio-console-file-table__td
+    .modal-body &
+      margin: 0 (( - $modal-inner-padding )) (( - $modal-inner-padding ))
+
+    .folio-console-dropzone-trigger
+      +unbutton
+      background: $table-hover-bg
+      width: 100%
+      display: block
+      text-align: center
+      padding: 1rem
+
+      .folio-react-wrap[data-mode="index"] &
+        display: none
+
+  &__td
+    white-space: nowrap
+
+  &__tr--fresh,
+  &__tr--fresh &__td
     background: #d3eaf6
 
-.folio-console-file-table--hover
-  .folio-console-file-table__tr:not(.folio-console-file-table__tr--uploading)
-    .folio-console-file-table__td
-      cursor: pointer
+  &--hover &__tr:not(&__tr--uploading) &__td
+    cursor: pointer
 
-  .folio-console-file-table__tr:not(.folio-console-file-table__tr--uploading):hover .folio-console-file-table__td
+  &--hover &__tr:not(&__tr--uploading):hover &__td
     background: $table-hover-bg
 
-.folio-console-file-table__td--main
-  width: 100%
+  &__td--main
+    width: 100%
 
-.folio-console-file-table__td--image
-  padding-top: 0
-  padding-bottom: 0
+  &__img-wrap
+    display: flex
+    width: 50px
+    height: 50px
+    align-items: center
+    justify-content: center
 
-.folio-console-file-table__td--checkbox
-  padding-left: 0
+  &__img
+    max-width: 50px
+    max-height: 50px
+    display: block
 
-.folio-console-file-table__img-wrap
-  display: flex
-  width: 50px
-  height: 50px
-  align-items: center
-  justify-content: center
+  &__img-a
+    cursor: zoom-in
 
-.folio-console-file-table__img
-  max-width: 50px
-  max-height: 50px
-  display: block
+  &__file-placements-count
+    pointer-events: none
+    height: 16px
+    min-width: 16px
+    text-align: center
+    background: rgba($black, 0.4)
+    font-size: 10px
+    line-height: 13px
+    color: $white
+    padding: 0 4px
+    display: inline-block
 
-.folio-console-file-table__img-a
-  cursor: zoom-in
+  +media-breakpoint-up(lg)
+    .f-c-file-table-wrap
+      overflow-x: auto
 
-+media-breakpoint-up(lg)
-  .folio-console-file-table-wrap
-    overflow-x: auto
+    &__tr
+      display: table-row
 
-  .folio-console-file-table__tr
-    display: table-row
+    &__td
+      display: table-cell
+      padding: $table-cell-padding
+      vertical-align: middle
+      border-top: $table-border-width solid $table-border-color
 
-  .folio-console-file-table__td
-    display: table-cell
-    padding: $table-cell-padding
-    vertical-align: middle
-    border-top: $table-border-width solid $table-border-color
-
-    .folio-console-file-table__tr:last-child &
+    &__td &__tr:last-child &
       border-bottom: $table-border-width solid $table-border-color
 
-  .folio-console-file-table__tbody
-    display: table
+    &__tbody
+      display: table
 
-  .folio-console-file-table__td--tags
-    text-align: right
+  +media-breakpoint-down(md)
+    &__tbody
+      margin-top: -0.25rem
 
-+media-breakpoint-down(md)
-  .folio-console-file-table__tbody
-    margin-top: -0.25rem
+    &__tr
+      display: block
+      padding: 0.25rem
+      position: relative
+      min-height: 50px
+      border-bottom: 1px solid $border-color
 
-  .folio-console-file-table__tr
-    display: block
-    padding: 0.25rem
-    position: relative
-    min-height: 50px
-    border-bottom: 1px solid $border-color
-
-    .folio-console-file-table-wrap--image &
+    &-wrap--image &__tr
       padding-left: calc(50px)
 
-  .folio-console-file-table__td
-    padding: 0 0 0.25rem 0
-    white-space: normal
-    word-break: break-all
+    &__td
+      padding: 0 0 0.25rem 0
+      white-space: normal
+      word-break: break-all
 
-    .folio-console-file-table-wrap--image &
-      padding-left: calc(50px)
+    &-wrap--image &__td
+        padding-left: calc(50px)
 
-  .folio-console-file-table__td--image
-    width: 0
-    height: 0
-    display: block
-    padding: 0
+    &__td--image
+      width: 0
+      height: 0
+      display: block
+      padding: 0
 
-    .folio-console-file-table__img-a
+    &__td--image &__img-a
       display: flex
       width: 50px
       height: 50px
@@ -125,19 +128,9 @@
       padding-left: 0
       transform: translate(0, -50%)
 
-  .folio-console-file-table__td--size
-    display: inline-block
+    &__td--size
+      display: inline-block
 
-    &:after
-      content: ' / '
-      display: inline
-
-  .folio-console-file-table__td--extension
-    display: inline-block
-
-    &, .folio-console-file-table-wrap--image &
-      padding-left: 0
-
-  .folio-console-file-table__td--tags
-    line-height: 15px
-    margin-left: -0.2rem
+      &:after
+        content: ' / '
+        display: inline

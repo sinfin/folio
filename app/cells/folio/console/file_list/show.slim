@@ -1,17 +1,17 @@
 - if as_documents?
-  .folio-console-file-table.folio-console-file-table--document
-    .folio-console-file-table__tbody
+  .f-c-file-table.f-c-file-table--document
+    .f-c-file-table__tbody
       - model.each do |file|
-        .folio-console-file-table__tr
-          .folio-console-file-table__td.folio-console-file-table__td--main
+        .f-c-file-table__tr
+          .f-c-file-table__td.f-c-file-table__td--main
             a href=file.file.url
               = file.file_name
 
-          .folio-console-file-table__td.folio-console-file-table__td--size
+          .f-c-file-table__td.f-c-file-table__td--size
             - if file.try(:file_size)
               = number_to_human_size(file.file_size)
 
-          .folio-console-file-table__td.folio-console-file-table__td--extension
+          .f-c-file-table__td.f-c-file-table__td--extension
             = file.try(:file_extension).try(:upcase)
 
 - else

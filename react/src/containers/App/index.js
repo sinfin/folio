@@ -10,7 +10,7 @@ import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
 import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
 import ModalMultiSelect from 'containers/ModalSelect/ModalMultiSelect'
-import Modal, { ModalContext } from 'containers/Modal'
+import Modal from 'containers/Modal'
 import Atoms from 'containers/Atoms'
 
 import AppWrap from './styled/AppWrap'
@@ -100,9 +100,7 @@ class App extends Component {
   render () {
     return (
       <AppWrap className='folio-react-app'>
-        <ModalContext.Provider value={this.openModal}>
-          {this.renderMode()}
-        </ModalContext.Provider>
+        {this.renderMode()}
 
         <Modal filesKey={this.props.app.filesKey} />
       </AppWrap>

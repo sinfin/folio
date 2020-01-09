@@ -54,10 +54,10 @@ class ModalMultiSelect extends ModalSelect {
 
     if (this.selectingDocument()) {
       return `
-        <div class="folio-console-file-table__tr">
-          <div class="folio-console-file-table__td folio-console-file-table__td--main">${placement.title || placement.file.attributes.file_name}</div>
-          <div class="folio-console-file-table__td folio-console-file-table__td--size">${numberToHumanSize(placement.file.attributes.file_size)}</div>
-          <div class="folio-console-file-table__td folio-console-file-table__td--extension">${placement.file.attributes.extension}</div>
+        <div class="f-c-file-table__tr">
+          <div class="f-c-file-table__td f-c-file-table__td--main">${placement.title || placement.file.attributes.file_name}</div>
+          <div class="f-c-file-table__td f-c-file-table__td--size">${numberToHumanSize(placement.file.attributes.file_size)}</div>
+          <div class="f-c-file-table__td f-c-file-table__td--extension">${placement.file.attributes.extension}</div>
           ${hiddenFields}
         </div>
       `
@@ -76,9 +76,9 @@ class ModalMultiSelect extends ModalSelect {
   htmlForPlacements = (selected, deleted) => {
     if (this.selectingDocument()) {
       return `
-        <div class="folio-console-file-table-wrap">
-          <div class="folio-console-file-table folio-console-file-table--document">
-            <div class="folio-console-file-table__tbody">
+        <div class="f-c-file-table-wrap">
+          <div class="f-c-file-table f-c-file-table--document">
+            <div class="f-c-file-table__tbody">
               ${selected.join('')}
               ${deleted.join('')}
             </div>
@@ -116,7 +116,7 @@ class ModalMultiSelect extends ModalSelect {
 
     const placements = []
 
-    $wrap.find('.f-c-file-list__file, .folio-console-file-table__tr').each((_i, el) => {
+    $wrap.find('.f-c-file-list__file, .f-c-file-table__tr').each((_i, el) => {
       const $fields = $(el).find('input[type="hidden"]')
       placements.push({
         id: Number(getPlacementField($fields, 'id')),

@@ -44,6 +44,7 @@ class IndexMode extends LazyLoadCheckingComponent {
                 changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
                 massSelect={(file, select) => this.props.dispatch(massSelect(this.props.filesKey, file, select))}
                 massSelectVisible={this.props.filesStatus.massSelecting}
+                filesKey={this.props.filesKey}
                 link
                 dropzoneTrigger
               />

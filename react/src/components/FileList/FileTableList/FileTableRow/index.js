@@ -2,24 +2,25 @@ import React from 'react'
 import LazyLoad from 'react-lazyload'
 
 import numberToHumanSize from 'utils/numberToHumanSize'
-import Tags from 'components/Tags'
+import Tags from 'containers/Tags'
 
 import FileUploadProgress from 'components/FileUploadProgress'
 
 const FileTableRow = ({
   file,
+  filesKey,
   link,
   fileTypeIsImage,
   onClick,
   massSelect
 }) => {
-  let className = 'folio-console-file-table__tr'
+  let className = 'f-c-file-table__tr'
   const persistedOnClick = !file.attributes.uploading && onClick
 
   if (file.attributes.freshlyUploaded) {
-    className = 'folio-console-file-table__tr folio-console-file-table__tr--fresh'
+    className = 'f-c-file-table__tr f-c-file-table__tr--fresh'
   } else if (file.attributes.uploading) {
-    className = 'folio-console-file-table__tr folio-console-file-table__tr--uploading'
+    className = 'f-c-file-table__tr f-c-file-table__tr--uploading'
   }
 
   return (
@@ -28,7 +29,7 @@ const FileTableRow = ({
       onClick={persistedOnClick ? () => onClick(file) : undefined}
     >
       {massSelect && (
-        <div className='folio-console-file-table__td folio-console-file-table__td--checkbox'>
+        <div className='f-c-file-table__td pl-0'>
           <input
             type='checkbox'
             checked={file.massSelected || false}
@@ -38,20 +39,20 @@ const FileTableRow = ({
       )}
 
       {fileTypeIsImage && (
-        <div className='folio-console-file-table__td folio-console-file-table__td--image'>
+        <div className='f-c-file-table__td f-c-file-table__td--image py-0'>
           <FileUploadProgress progress={file.attributes.progress} />
 
-          <div className='folio-console-file-table__img-wrap'>
+          <div className='f-c-file-table__img-wrap'>
             {file.attributes.thumb && (
               <a
                 href={file.attributes.source_image}
                 target='_blank'
-                className='folio-console-file-table__img-a'
+                className='f-c-file-table__img-a'
                 rel='noopener noreferrer'
                 onClick={(e) => e.stopPropagation()}
               >
                 <LazyLoad height={50} once overflow>
-                  <img src={file.attributes.thumb} className='folio-console-file-table__img' alt='' />
+                  <img src={file.attributes.thumb} className='f-c-file-table__img' alt='' />
                 </LazyLoad>
               </a>
             )}
@@ -59,7 +60,7 @@ const FileTableRow = ({
         </div>
       )}
 
-      <div className='folio-console-file-table__td folio-console-file-table__td--main'>
+      <div className='f-c-file-table__td f-c-file-table__td--main'>
         {fileTypeIsImage ? null : <FileUploadProgress progress={file.attributes.progress} />}
 
         {(link && file.links) ? (
@@ -71,11 +72,33 @@ const FileTableRow = ({
           </a>
         ) : file.attributes.file_name}
       </div>
-      <div className='folio-console-file-table__td folio-console-file-table__td--tags'>
-        <Tags file={file} />
+
+      <div className='f-c-file-table__td f-c-file-table__td--size'>
+        {file.attributes.extension}, {numberToHumanSize(file.attributes.file_size)}
       </div>
-      <div className='folio-console-file-table__td folio-console-file-table__td--size'>{numberToHumanSize(file.attributes.file_size)}</div>
-      <div className='folio-console-file-table__td folio-console-file-table__td--extension'>{file.attributes.extension}</div>
+
+      {massSelect && (
+        <div className='f-c-file-table__td f-c-file-table__td--extension'>
+          {file.attributes.file_placements_count ? (
+            <div className='f-c-file-table__file-placements-count'>
+              {file.attributes.file_placements_count}
+            </div>
+          ) : null}
+        </div>
+      )}
+
+      <div className='f-c-file-table__td text-lg-right'>
+        <Tags file={file} filesKey={filesKey} />
+      </div>
+
+      <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>
+        <a // eslint-disable-line
+          href={file.links.edit}
+          target='_blank'
+          className='btn btn-secondary fa fa-edit'
+          rel='noopener noreferrer'
+        />
+      </div>
     </div>
   )
 }

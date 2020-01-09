@@ -1,11 +1,11 @@
-.folio-console-file-table-wrap
-  .folio-console-file-table.folio-console-file-table--document
-    .folio-console-file-table__tbody
+.f-c-file-table-wrap
+  .f-c-file-table.f-c-file-table--document
+    .f-c-file-table__tbody
       = html_safe_fields_for f, placement_key do |fp|
         - if fp.object.marked_for_destruction?
           = fp.hidden_field :_destroy, value: 1
         - else
-          .folio-console-file-table__tr
+          .f-c-file-table__tr
             = fp.hidden_field :_destroy, value: 0
             = fp.hidden_field :file_id
             = fp.hidden_field :title
@@ -13,19 +13,19 @@
             = fp.hidden_field :id
 
             div[
-              class="folio-console-file-table__td"
-              class="folio-console-file-table__td--main"
+              class="f-c-file-table__td"
+              class="f-c-file-table__td--main"
             ]
               = fp.object.to_label
 
             div[
-              class="folio-console-file-table__td"
-              class="folio-console-file-table__td--size"
+              class="f-c-file-table__td"
+              class="f-c-file-table__td--size"
             ]
               = number_to_human_size(fp.object.file.file_size)
 
             div[
-              class="folio-console-file-table__td"
-              class="folio-console-file-table__td--extension"
+              class="f-c-file-table__td"
+              class="f-c-file-table__td--extension"
             ]
               = fp.object.file.file_extension.to_s.upcase

@@ -30,27 +30,27 @@
           source src=f.object.file.remote_url type="video/mp4"
 
   - else
-    .folio-console-file-table-wrap
-      .folio-console-file-table.folio-console-file-table--document
-        .folio-console-file-table__tbody
-          .folio-console-file-table__tr
+    .f-c-file-table-wrap
+      .f-c-file-table.f-c-file-table--document
+        .f-c-file-table__tbody
+          .f-c-file-table__tr
             div[
-              class="folio-console-file-table__td"
-              class="folio-console-file-table__td--main"
+              class="f-c-file-table__td"
+              class="f-c-file-table__td--main"
               class="folio-console-single-file-select__clearable"
             ]
               = f.object.file_name if filled?
 
             div[
-              class="folio-console-file-table__td"
-              class="folio-console-file-table__td--size"
+              class="f-c-file-table__td"
+              class="f-c-file-table__td--size"
               class="folio-console-single-file-select__clearable"
             ]
               = number_to_human_size(f.object.file_size) if filled?
 
             div[
-              class="folio-console-file-table__td"
-              class="folio-console-file-table__td--extension"
+              class="f-c-file-table__td"
+              class="f-c-file-table__td--extension"
               class="folio-console-single-file-select__clearable"
             ]
               = f.object.file_extension.to_s.upcase if filled?

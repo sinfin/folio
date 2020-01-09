@@ -15,8 +15,6 @@ import { makeTagsSelector } from 'ducks/filters'
 
 import ModalFile from './ModalFile'
 
-export const ModalContext = React.createContext(() => {})
-
 ReactModal.setAppElement('body')
 
 class Modal extends Component {

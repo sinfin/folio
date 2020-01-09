@@ -44,4 +44,4 @@ $(document).on 'change', '.folio-console-single-file-select-file', ->
 
     reader.readAsDataURL(@files[0])
   else
-    $wrap.find('.folio-console-file-table__td--main').text(@files[0].name)
+    $wrap.find('.f-c-file-table__td--main').text(@files[0].name)
