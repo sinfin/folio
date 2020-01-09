@@ -37,6 +37,14 @@ module Folio::Console::Api::FileControllerBase
     render_records(files, Folio::Console::FileSerializer)
   end
 
+  def mass_destroy
+    ids = params.require(:ids).split(',')
+    @klass.where(id: ids).each(&:destroy!)
+    render json: { data: { message: t('.success') }, status: 200 }
+  rescue StandardError => e
+    render json: { error: t('.failure', msg: e.message), status: 400 }
+  end
+
   private
 
     def folio_console_collection_includes

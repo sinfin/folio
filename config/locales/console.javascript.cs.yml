@@ -15,6 +15,7 @@ cs:
         fileNameFilter: Hledat dle jména souboru
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
+        indestructibleFiles: Některé z vybraných obrázků jsou použité. Použité obrázky nelze mazat.
         link: Odkaz
         loading: Načítám...
         menuItemUrl: Volný odkaz

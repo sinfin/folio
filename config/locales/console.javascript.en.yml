@@ -15,13 +15,14 @@ en:
         fileNameFilter: Search by file name
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
+        indestructibleFiles: Some of the selected files have active placements and therefore cannot be destroyed.
         link: Link
         loading: Loading...
         menuItemUrl: Custom URL
         newUploadTags: Tags for new files
         noResults: No results
-        paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
         paginationEmpty: No records
+        paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
         placementsLabel: Usage
         save: Save
         selectable: Selectable

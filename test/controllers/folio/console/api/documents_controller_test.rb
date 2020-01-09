@@ -49,4 +49,12 @@ class Folio::Console::Api::DocumentsControllerTest < Folio::Console::BaseControl
     assert_equal(['a', 'b'], documents.first.reload.tag_list.sort)
     assert_equal(['a', 'b'], documents.second.reload.tag_list.sort)
   end
+
+  test 'mass_destroy' do
+    documents = create_list(:folio_document, 3)
+    assert_equal(3, Folio::Document.count)
+    ids = documents.first(2).map(&:id).join(',')
+    delete url_for([:mass_destroy, :console, :api, Folio::Document, ids: ids])
+    assert_equal(1, Folio::Document.count)
+  end
 end

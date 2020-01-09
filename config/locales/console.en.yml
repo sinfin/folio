@@ -15,6 +15,15 @@ en:
         show: Show
         submit: Submit
       alt_prompt: Alternative image caption
+      api:
+        documents:
+          mass_destroy:
+            success: Documents destroyed
+            failure: Failed to destroy documents - %{msg}
+        images:
+          mass_destroy:
+            success: Images destroyed
+            failure: Failed to destroy images - %{msg}
       atoms:
         form_header:
           settings: Settings

@@ -49,4 +49,12 @@ class Folio::Console::Api::ImagesControllerTest < Folio::Console::BaseController
     assert_equal(['a', 'b'], images.first.reload.tag_list.sort)
     assert_equal(['a', 'b'], images.second.reload.tag_list.sort)
   end
+
+  test 'mass_destroy' do
+    images = create_list(:folio_image, 3)
+    assert_equal(3, Folio::Image.count)
+    ids = images.first(2).map(&:id).join(',')
+    delete url_for([:mass_destroy, :console, :api, Folio::Image, ids: ids])
+    assert_equal(1, Folio::Image.count)
+  end
 end

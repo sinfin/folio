@@ -20,11 +20,15 @@ Folio::Engine.routes.draw do
     resources :menus, only: [:edit, :update, :index]
 
     resources :images, only: %i[index edit update destroy] do
-      collection { get :mass_download }
+      collection do
+        get :mass_download
+      end
     end
 
     resources :documents, only: %i[index edit update destroy] do
-      collection { get :mass_download }
+      collection do
+        get :mass_download
+      end
     end
 
     resources :leads, only: %i[index show edit update destroy] do
@@ -45,10 +49,16 @@ Folio::Engine.routes.draw do
       end
       resources :links, only: %i[index]
       resources :images, only: %i[index create update] do
-        collection { post :tag }
+        collection do
+          post :tag
+          delete :mass_destroy
+        end
       end
       resources :documents, only: %i[index create update] do
-        collection { post :tag }
+        collection do
+          post :tag
+          delete :mass_destroy
+        end
       end
     end
 

@@ -1,5 +1,5 @@
-import { apiGet, apiPut } from 'utils/api'
-import { flashError } from 'utils/flash'
+import { apiGet, apiPut, apiDelete } from 'utils/api'
+import { flashError, flashSuccess } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find, without } from 'lodash'
 
@@ -18,6 +18,7 @@ const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 const UPDATED_FILES = 'files/UPDATED_FILES'
+const REMOVED_FILES = 'files/REMOVED_FILES'
 const CHANGE_FILES_PAGE = 'files/CHANGE_FILES_PAGE'
 const MASS_SELECT = 'files/MASS_SELECT'
 const MASS_DELETE = 'files/MASS_DELETE'
@@ -47,6 +48,10 @@ export function updatedFiles (filesKey, files) {
 
 export function updateFile (filesKey, file, attributes) {
   return { type: UPDATE_FILE, filesKey, file, attributes }
+}
+
+export function removedFiles (filesKey, ids) {
+  return { type: REMOVED_FILES, filesKey, ids }
 }
 
 export function updateFileSuccess (filesKey, file, response) {
@@ -130,10 +135,31 @@ function * changeFilesPageSaga () {
   yield takeLatest(CHANGE_FILES_PAGE, changeFilesPagePerform)
 }
 
+function * massDeletePerform (action) {
+  try {
+    const { massSelectedIds } = yield select(makeMassSelectedIdsSelector(action.filesKey))
+    const res = yield call(apiDelete, `/console/api/${action.filesKey}/mass_destroy?ids=${massSelectedIds.join(',')}`)
+    if (res.error) {
+      flashError(res.error)
+    } else {
+      flashSuccess(res.data.message)
+      yield put(removedFiles(action.filesKey, massSelectedIds))
+      yield put(massCancel(action.filesKey))
+    }
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * massDeleteSaga () {
+  yield takeLatest(MASS_DELETE, massDeletePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
   updateFileSaga,
-  changeFilesPageSaga
+  changeFilesPageSaga,
+  massDeleteSaga
 ]
 
 // Selectors
@@ -151,7 +177,10 @@ export const makeFilesLoadedSelector = (filesKey) => (state) => {
 }
 
 export const makeMassSelectedIdsSelector = (filesKey) => (state) => {
-  return state.files[filesKey] ? state.files[filesKey].massSelectedIds : []
+  return {
+    massSelectedIds: state.files[filesKey].massSelectedIds,
+    massSelectedIndestructibleIds: state.files[filesKey].massSelectedIndestructibleIds
+  }
 }
 
 export const makeFilesSelector = (filesKey) => (state) => {
@@ -211,6 +240,7 @@ const initialState = {
     loaded: false,
     records: [],
     massSelectedIds: [],
+    massSelectedIndestructibleIds: [],
     pagination: {
       page: null,
       pages: null
@@ -221,6 +251,7 @@ const initialState = {
     loaded: false,
     records: [],
     massSelectedIds: [],
+    massSelectedIndestructibleIds: [],
     pagination: {
       page: null,
       pages: null
@@ -345,24 +376,35 @@ function filesReducer (state = initialState, action) {
         }
       }
 
-    case MASS_SELECT:
+    case MASS_SELECT: {
       if (!action.file.id) return state
 
       let massSelectedIds = state[action.filesKey].massSelectedIds
+      let massSelectedIndestructibleIds = state[action.filesKey].massSelectedIndestructibleIds
 
       if (action.select) {
         massSelectedIds = [...massSelectedIds, action.file.id]
+
+        if (action.file.attributes.file_placements_count) {
+          massSelectedIndestructibleIds = [...massSelectedIndestructibleIds, action.file.id]
+        }
       } else {
-        massSelectedIds = without(massSelectedIds, [action.file.id])
+        massSelectedIds = without(massSelectedIds, action.file.id)
+
+        if (action.file.attributes.file_placements_count) {
+          massSelectedIndestructibleIds = without(massSelectedIndestructibleIds, action.file.id)
+        }
       }
 
       return {
         ...state,
         [action.filesKey]: {
           ...state[action.filesKey],
-          massSelectedIds
+          massSelectedIds,
+          massSelectedIndestructibleIds
         }
       }
+    }
 
     case MASS_CANCEL:
       return {
@@ -370,6 +412,15 @@ function filesReducer (state = initialState, action) {
         [action.filesKey]: {
           ...state[action.filesKey],
           massSelectedIds: []
+        }
+      }
+
+    case REMOVED_FILES:
+      return {
+        ...state,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.filter((record) => action.ids.indexOf(record.id) === -1)
         }
       }
 

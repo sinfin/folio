@@ -28,6 +28,7 @@ module Folio::Console::FileControllerBase
                         filename: "#{@klass.model_name.human(count: 2)}-#{Time.zone.now.to_i}.zip")
   end
 
+
   private
 
     def file_params
