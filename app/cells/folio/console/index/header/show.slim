@@ -9,7 +9,7 @@
         = f.input(:by_query, label: false, \
                              wrapper: false, \
                              autocomplete: query_autocomplete, \
-                             input_html: { value: params[:by_query] })
+                             input_html: { value: params[:by_query], id: nil })
         .input-group-append
           button[
             class="btn"
@@ -29,6 +29,7 @@
               = f.input(key, as: :hidden, \
                              input_html: { \
                                 value: controller.params[key], \
+                                id: nil, \
                              })
 
   - if options[:csv]
