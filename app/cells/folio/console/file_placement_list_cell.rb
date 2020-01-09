@@ -14,8 +14,12 @@ class Folio::Console::FilePlacementListCell < Folio::ConsoleCell
     elsif placement.is_a?(Folio::Atom::Base)
       controller.edit_console_page_path(placement.placement)
     else
-      nil
+      controller.url_for([:edit, :console, placement])
     end
+  rescue StandardError
+    controller.url_for([:console, placement])
+  rescue StandardError
+    nil
   end
 
   def title(fp)
