@@ -10,7 +10,7 @@ $ ->
         url: opts.url or $modal.data('new-url')
         data: opts.data
         success: (res) ->
-          if opts.create
+          if opts.create and res.id
             $toggle = $('.f-c-new-record-modal__toggle--active')
             $group = $toggle.prev('.form-group')
             selector = ".#{$group.prop('className').replace(/ /g, '.')}"
@@ -41,7 +41,7 @@ $ ->
               .first()
 
             $form
-              .find('.f-c-form-header, .f-c-form-footer')
+              .find('.f-c-form-header__inner, .f-c-form-footer')
               .remove()
 
             $modal
