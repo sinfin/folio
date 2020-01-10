@@ -14,6 +14,7 @@ gemspec
 gem 'mini_racer', platforms: :ruby
 gem 'premailer', github: 'sinfin/premailer'
 gem 'premailer-rails'
+gem 'rubyzip'
 
 gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
 
