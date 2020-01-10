@@ -25,6 +25,7 @@ module Folio
         gem 'premailer', github: 'sinfin/premailer'
         gem 'premailer-rails'
         gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
+        gem 'rubyzip'
 
         gem_group :test do
           gem 'factory_bot'
