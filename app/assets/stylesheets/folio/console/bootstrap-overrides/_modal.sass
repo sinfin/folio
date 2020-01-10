@@ -2,6 +2,9 @@
   .modal-open &
     overflow: hidden
 
+  .modal-header
+    margin-top: - $modal-inner-padding
+
   .modal-dialog
     min-width: 320px
     height: calc(100% - 3.5rem)
@@ -18,10 +21,11 @@
 
   .close
     position: absolute
-    top: 5px
+    top: 0
     right: 0
     padding: 18px
     z-index: 2
+    opacity: 1
 
   +media-breakpoint-down(md)
     .modal-dialog
@@ -36,6 +40,7 @@
   flex: 0 0 auto
   position: relative
   z-index: 2
+  margin: 0 (( - $modal-inner-padding ))
 
   .alert
     margin-top: 1rem
@@ -45,13 +50,20 @@
   flex: 1 1 auto
   position: relative
   z-index: 1
-  overflow-y: auto
-  overflow-x: hidden
   margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
-  padding: 0 $modal-inner-padding $modal-inner-padding
+  padding: $modal-inner-padding
 
 .modal-body .modal-footer
   margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
+
+.modal-title
+  font-size: 20px
+  line-height: 24px
+  font-weight: $font-weight-bold
+  margin: 0
+
+.modal-header
+  align-items: center
 
 .modal--fullscreen
   &.show
@@ -78,11 +90,19 @@
     width: 100%
     overflow-y: auto
 
++media-breakpoint-up(sm)
+  .folio-console-modal__scroll-wrap
+    height: 100%
+    display: flex
+    flex-direction: column
+
+  .folio-console-modal__scroll-inner
+    overflow-y: auto
+    overflow-x: hidden
+    -webkit-overflow-scrolling: touch
+
 +media-breakpoint-down(xs)
   .folio-console-react-modal
-    .modal-body
-      padding-top: 4rem
-
     .close
       height: 3rem
       top: 0
@@ -91,6 +111,11 @@
       position: absolute
       top: $modal-inner-padding
       left: $modal-inner-padding
+
+  .folio-console-modal__scroll-wrap
+    overflow-y: auto
+    overflow-x: hidden
+    -webkit-overflow-scrolling: touch
 
   .folio-console-modal__scroll-fixed
     position: static

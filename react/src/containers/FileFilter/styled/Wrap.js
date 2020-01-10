@@ -18,7 +18,8 @@ const Wrap = styled.div`
   }
 
   .folio-console-modal__scroll-fixed & {
-    margin-right: 30px;
+    margin-bottom: -1rem;
+    padding: 0.5rem 1rem;
   }
 
   @media screen and (max-width: 576px) {

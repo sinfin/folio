@@ -154,7 +154,7 @@ class ModalMultiSelect extends ModalSelect {
         header={this.renderHeader()}
         footer={this.renderFooter()}
       >
-        <MultiSelect filesKey={this.props.filesKey} />
+        <MultiSelect filesKey={this.props.filesKey} inModal />
       </ModalScroll>
     )
   }

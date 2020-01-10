@@ -52,7 +52,7 @@ class Tags extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  filters: makeFiltersSelector(props.filesKey)(state),
+  filters: makeFiltersSelector(props.filesKey)(state)
 })
 
 function mapDispatchToProps (dispatch) {

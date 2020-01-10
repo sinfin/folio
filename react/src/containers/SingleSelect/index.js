@@ -11,6 +11,7 @@ import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
 import ModalScroll from 'components/ModalScroll'
+import ModalTitleAndUpload from 'components/ModalTitleAndUpload'
 
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
@@ -24,6 +25,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
   renderHeader () {
     return (
       <Fragment>
+        {this.props.inModal && <ModalTitleAndUpload filesKey={this.props.filesKey} />}
         <FileFilter filesKey={this.props.filesKey} />
         <UploadTagger filesKey={this.props.filesKey} />
       </Fragment>

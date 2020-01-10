@@ -29,6 +29,8 @@ en:
         selected: Selected
         selectedDocuments: Selected documents
         selectedImages: Selected images
+        selectDocument: Select document
+        selectImage: Select image
         selectPlaceholder: Select...
         title: Title
         usageFilter: Search by usage

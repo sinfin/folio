@@ -97,6 +97,7 @@ class ModalSingleSelect extends ModalSelect {
       <SingleSelect
         selectFile={this.selectFile}
         filesKey={this.props.filesKey}
+        inModal
       />
     )
   }

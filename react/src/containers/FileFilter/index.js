@@ -43,7 +43,7 @@ class FileFilter extends Component {
     const { filters, margined } = this.props
 
     return (
-      <Wrap margined={margined}>
+      <Wrap margined={margined} className='bg-100'>
         <div className='row mb-n3'>
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup>
@@ -97,17 +97,17 @@ class FileFilter extends Component {
             </FormGroup>
           </div>
 
-          <div className='col-12 col-xl-1'>
-            <FormGroup className='form-group--react-reset ml-auto text-center text-xl-right'>
-              {filters.active && (
+          {filters.active && (
+            <div className='col-12 col-xl-1'>
+              <FormGroup className='form-group--react-reset ml-auto text-center text-xl-right'>
                 <button
                   type='button'
                   className='btn btn-danger fa fa-times'
                   onClick={this.onReset}
                 />
-              )}
-            </FormGroup>
-          </div>
+              </FormGroup>
+            </div>
+          )}
         </div>
       </Wrap>
     )
