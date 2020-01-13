@@ -9,6 +9,10 @@ module Folio::HasHashId
     friendly_id :hash_id
   end
 
+  def hash_id
+    super || set_hash_id
+  end
+
   def set_hash_id
     hash_id = nil
 
