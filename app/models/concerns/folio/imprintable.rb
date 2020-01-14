@@ -54,9 +54,11 @@ module Folio::Imprintable
           imprinted_model_associations[i] = hash.delete(i)
         end
         result = klass.new(hash)
+        result.instance_variable_set(:@new_record, false)
 
         imprinted_model_associations.each do |k, h|
-          result.public_send(k).build(h)
+          a = result.public_send(k).build(h)
+                                   .each { |a| a.instance_variable_set(:@new_record, false) }
         end
 
         result
