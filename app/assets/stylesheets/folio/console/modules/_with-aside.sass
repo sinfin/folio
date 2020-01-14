@@ -12,6 +12,7 @@
       display: flex
       flex-direction: column
       height: 100%
+      position: relative
 
       .f-c-with-aside__scroll
         padding-bottom: 65px
@@ -19,11 +20,13 @@
     &__main
       width: percentage(2 / 3)
       flex: 1 0 percentage(2 / 3)
+      z-index: 1
 
     &__aside
       width: percentage(1 / 3)
       flex: 0 0 percentage(1 / 3)
       max-width: 390px
+      z-index: 2
 
     &__fixed
       padding: $grid-gutter-half $grid-gutter-width
