@@ -1,14 +1,15 @@
 = form do |f|
   .container-fluid
-    .f-c-index-filters__inner
-      strong = t('.title')
+    .f-c-index-filters__wrap
+      strong.f-c-index-filters__title = t('.title')
 
-      - index_filters.keys.each do |key|
-        = select(f, key)
+      .f-c-index-filters__inner
+        - index_filters.keys.each do |key|
+          = select(f, key)
 
-      - if filtered?
-        .ml-g
-          == cell('folio/console/cancel', cancel_url, label: t('.cancel'))
+        - if filtered?
+          .ml-md-g.mb-2.mb-md-0
+            == cell('folio/console/cancel', cancel_url, label: t('.cancel'))
 
-      = f.input :by_query, as: :hidden,
-                           input_html: { value: controller.params[:by_query] }
+        = f.input :by_query, as: :hidden,
+                             input_html: { value: controller.params[:by_query] }

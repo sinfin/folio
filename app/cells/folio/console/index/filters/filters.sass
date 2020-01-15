@@ -3,15 +3,37 @@
   margin-top: - $spacer
   margin-bottom: $spacer
 
-  &__inner
-    display: flex
-    align-items: center
+  &__wrap
     padding: 4px 0
 
-  .form-group
-    flex: 0 0 210px
-    width: 210px
-    margin: 0 0 0 $grid-gutter-half
+  &__inner
+    flex: 1 1 auto
+
+  &__title
+    flex: 0 0 auto
+    margin-top: -4px
+    padding: $spacer 0
+    display: block
+
+  +media-breakpoint-up(md)
+    &__wrap
+      display: flex
+      align-items: center
+
+    &__inner
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+      margin-top: -2px
+      margin-bottom: -2px
+
+    &__title
+      padding: 4px 0
+
+    .form-group
+      flex: 0 0 210px
+      width: 210px
+      margin: 2px 0 2px $grid-gutter-half
 
   .selectize-control
     position: relative
