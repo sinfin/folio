@@ -42,6 +42,18 @@ module Folio::Console::DefaultActions
     respond_with folio_console_record, location: respond_with_location
   end
 
+  def discard
+    folio_console_record.discard
+    respond_with folio_console_record,
+                 location: request.referrer || url_for([:console, @klass])
+  end
+
+  def undiscard
+    folio_console_record.undiscard
+    respond_with folio_console_record,
+                 location: request.referrer || url_for([:console, @klass])
+  end
+
   def event
     event_name = params.require(:aasm_event).to_sym
     event = folio_console_record.aasm

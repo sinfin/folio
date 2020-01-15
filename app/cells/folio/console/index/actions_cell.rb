@@ -18,6 +18,21 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         confirm: true,
         url: safe_url_for([:console, model]),
       },
+      discard: {
+        name: :discard,
+        icon: 'trash-alt',
+        button: 'secondary',
+        method: :delete,
+        confirm: true,
+        url: safe_url_for([:discard, :console, model]),
+      },
+      undiscard: {
+        name: :undiscard,
+        icon: 'redo-alt',
+        button: 'secondary',
+        method: :post,
+        url: safe_url_for([:undiscard, :console, model]),
+      },
       edit: {
         name: :edit,
         icon: 'edit',

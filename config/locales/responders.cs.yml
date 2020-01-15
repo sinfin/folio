@@ -8,6 +8,12 @@ cs:
       destroy:
         alert: "%{resource_name} nelze smazat."
         notice: "%{resource_name} smazán(a)."
+      discard:
+        alert: "%{resource_name} nelze archivovat."
+        notice: "%{resource_name} arcivován(a)."
+      undiscard:
+        alert: "%{resource_name} nelze odarchivovat."
+        notice: "%{resource_name} odarchivován(a)."
       update:
         alert: "%{resource_name} nelze upravit."
         notice: "%{resource_name} upraven(a)."

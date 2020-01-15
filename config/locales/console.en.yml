@@ -9,11 +9,13 @@ en:
         cancel: Cancel
         close: Close
         destroy: Destroy
+        discard: Archive
         edit: Edit
         preview: Preview
         save: Save
         show: Show
         submit: Submit
+        undiscard: Unarchive
       alt_prompt: Alternative image caption
       api:
         documents:

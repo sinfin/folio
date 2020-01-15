@@ -9,11 +9,13 @@ cs:
         cancel: Zrušit
         close: Zavřít
         destroy: Smazat
+        discard: Archivovat
         edit: Upravit
         preview: Náhled
         save: Uložit
         show: Zobrazit
         submit: Uložit
+        undiscard: Odarchivovat
       alt_prompt: Alternativní popisek obrázku
       api:
         documents:

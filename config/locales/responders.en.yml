@@ -8,6 +8,12 @@ en:
       destroy:
         alert: "%{resource_name} could not be destroyed."
         notice: "%{resource_name} was successfully destroyed."
+      discard:
+        alert: "%{resource_name} could not be archived."
+        notice: "%{resource_name} was successfully archived."
+      undiscard:
+        alert: "%{resource_name} could not be unarchived."
+        notice: "%{resource_name} was successfully unarchived."
       update:
         alert: "%{resource_name} could not be updated."
         notice: "%{resource_name} was successfully updated."
