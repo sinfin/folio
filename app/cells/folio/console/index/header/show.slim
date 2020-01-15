@@ -57,6 +57,9 @@
       = new_button
         = render(:_new_button_label)
 
+- if options[:tabs]
+  == cell('folio/console/index/tabs', options[:tabs])
+
 - if options[:above_filters]
   == options[:above_filters]
 

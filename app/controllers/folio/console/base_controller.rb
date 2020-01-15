@@ -206,4 +206,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                             .join('.')
       send_data data, filename: filename
     end
+
+    def index_tabs
+    end
+
+    helper_method :index_tabs
 end

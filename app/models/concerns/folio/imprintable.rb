@@ -57,8 +57,9 @@ module Folio::Imprintable
         result.instance_variable_set(:@new_record, false)
 
         imprinted_model_associations.each do |k, h|
-          a = result.public_send(k).build(h)
-                                   .each { |a| a.instance_variable_set(:@new_record, false) }
+          result.public_send(k)
+                .build(h)
+                .each { |a| a.instance_variable_set(:@new_record, false) }
         end
 
         result
