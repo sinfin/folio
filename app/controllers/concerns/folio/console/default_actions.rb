@@ -43,16 +43,17 @@ module Folio::Console::DefaultActions
   end
 
   def event
-    event = params.require(:aasm_event).to_sym
+    event_name = params.require(:aasm_event).to_sym
+    event = folio_console_record.aasm
+                                .events(possible: true)
+                                .find { |e| e.name == event_name }
 
-    if folio_console_record.aasm
-                           .events(possible: true)
-                           .any? { |e| e.name == event }
-      folio_console_record.send("#{event}!")
+    if event && !event.options[:private]
+      folio_console_record.send("#{event_name}!")
       location = request.referer || respond_with_location
       respond_with folio_console_record, location: location
     else
-      human_event = AASM::Localizer.new.human_event_name(@klass, event)
+      human_event = AASM::Localizer.new.human_event_name(@klass, event_name)
 
       redirect_back fallback_location: url_for([:console, @klass]),
                     flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }

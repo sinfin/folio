@@ -9,6 +9,7 @@
 
       .dropdown-menu
         - model.aasm.events(possible: true).each do |event|
+          - next if event.options[:private]
           = form do |f|
             = f.input :aasm_event, \
                       as: :hidden, \
