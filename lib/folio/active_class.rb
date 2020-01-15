@@ -2,8 +2,8 @@
 
 module Folio::ActiveClass
   def active_class(*paths, start_with: true, base: '')
-    request_path = request.path.split('?').first
-    request_url = request.url.split('?').first
+    request_path = request.path.split('?').first || ''
+    request_url = request.url.split('?').first || ''
 
     active = paths.any? do |raw_path|
       next if raw_path.nil?
