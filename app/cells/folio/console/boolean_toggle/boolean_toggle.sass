@@ -1,6 +1,27 @@
 .f-c-boolean-toggle
-  width: 2.25rem
   position: relative
+  font-size: $font-size-sm
+
+  &:not(&--show-label)
+    width: 2.25rem
 
   .form-group
     margin: 0
+
+  &--show-label
+    padding-right: 2.5rem
+
+  &--show-label .custom-switch
+    padding-left: 0
+
+  &--show-label .custom-switch .custom-control-label
+    &:before
+      left: auto
+      right: -2.25rem
+
+    &:after
+      left: auto
+      right: calc(-2.25rem + 14px)
+
+  &--show-label .custom-switch .custom-control-input:checked ~ .custom-control-label::after
+    transform: translateX(0.75rem)
