@@ -1,5 +1,5 @@
 .f-c-state
-  - if model.aasm.events(possible: true).present? && active?
+  - if events.present? && active?
     - localizer = AASM::Localizer.new
 
     .dropdown
@@ -8,7 +8,7 @@
         = model.aasm.human_state
 
       .dropdown-menu
-        - model.aasm.events(possible: true).each do |event|
+        - events.each do |event|
           - next if event.options[:private]
           = form do |f|
             = f.input :aasm_event, \

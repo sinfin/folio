@@ -31,6 +31,11 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     end
   end
 
+  def events
+    @events ||= model.aasm.events(permitted: true)
+                          .reject { |e| e.options[:private] }
+  end
+
   def form(&block)
     opts = {
       method: :post,
