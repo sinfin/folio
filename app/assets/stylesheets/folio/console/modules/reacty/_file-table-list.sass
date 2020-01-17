@@ -100,17 +100,18 @@
       border-bottom: 1px solid $border-color
 
     &-wrap--image &__tr
-      padding-left: calc(50px)
+      padding-left: 50px + 15px
+
+    .f-c-file-table-wrap--image.f-c-file-table-wrap--mass-select &__tr
+      padding-left: 50px + 15px + 25px
 
     &__td
       padding: 0 0 0.25rem 0
       white-space: normal
       word-break: break-all
 
-    &-wrap--image &__td
-        padding-left: calc(50px)
-
-    &__td--image
+    &__td--image,
+    &__td--mass-select
       width: 0
       height: 0
       display: block
@@ -126,6 +127,15 @@
       top: 50%
       left: 0
       padding-left: 0
+      transform: translate(0, -50%)
+
+    .f-c-file-table-wrap--image.f-c-file-table-wrap--mass-select &__img-a
+      left: 25px
+
+    &__td--mass-select &__mass-select-checkbox
+      position: absolute
+      top: 50%
+      left: 0
       transform: translate(0, -50%)
 
     &__td--size

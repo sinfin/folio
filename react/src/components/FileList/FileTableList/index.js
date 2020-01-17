@@ -14,11 +14,18 @@ const FileTableList = ({
   massSelectVisible
 }) => {
   const classNames = ['f-c-file-table']
+  const wrapClassNames = ['f-c-file-table-wrap']
 
   if (fileTypeIsImage) {
     classNames.push('f-c-file-table--image')
+    wrapClassNames.push('f-c-file-table-wrap--image')
   } else {
     classNames.push('f-c-file-table--document')
+    wrapClassNames.push('f-c-file-table-wrap--document')
+  }
+
+  if (massSelect) {
+    wrapClassNames.push('f-c-file-table-wrap--mass-select')
   }
 
   if (onClick) {
@@ -26,7 +33,7 @@ const FileTableList = ({
   }
 
   return (
-    <div className='f-c-file-table-wrap'>
+    <div className={wrapClassNames.join(' ')}>
       {dropzoneTrigger && <DropzoneTrigger colSpan={fileTypeIsImage ? 5 : 4} />}
 
       <div className={classNames.join(' ')}>

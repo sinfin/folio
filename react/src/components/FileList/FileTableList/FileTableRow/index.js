@@ -29,11 +29,12 @@ const FileTableRow = ({
       onClick={persistedOnClick ? () => onClick(file) : undefined}
     >
       {massSelect && (
-        <div className='f-c-file-table__td pl-0'>
+        <div className='f-c-file-table__td f-c-file-table__td--mass-select pl-0'>
           <input
             type='checkbox'
             checked={file.massSelected || false}
             onChange={(e) => massSelect(file, !file.massSelected)}
+            className='f-c-file-table__mass-select-checkbox'
           />
         </div>
       )}

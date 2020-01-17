@@ -44,9 +44,9 @@ class FileFilter extends Component {
 
     return (
       <Wrap margined={margined} className='bg-100'>
-        <div className='row mb-n3'>
+        <div className='row'>
           <div className='col-12 col-sm-6 col-xl-3'>
-            <FormGroup>
+            <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>
               <InputWithSearchIcon
                 value={filters.file_name}
                 onChange={this.onInputChange}
@@ -57,7 +57,7 @@ class FileFilter extends Component {
           </div>
 
           <div className='col-12 col-sm-6 col-xl-3'>
-            <FormGroup>
+            <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>
               <InputWithSearchIcon
                 value={filters.placement}
                 onChange={this.onInputChange}
@@ -68,7 +68,7 @@ class FileFilter extends Component {
           </div>
 
           <div className='col-12 col-sm-6 col-xl-2'>
-            <FormGroup>
+            <FormGroup className='mb-2 mb-xl-0'>
               <Input
                 type='select'
                 value={filters.used}
@@ -86,7 +86,7 @@ class FileFilter extends Component {
           </div>
 
           <div className='col-12 col-sm-6 col-xl-3'>
-            <FormGroup className='form-group--react-select'>
+            <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
               <TagsInput
                 options={this.props.tags}
                 value={filters.tags}
@@ -99,7 +99,7 @@ class FileFilter extends Component {
 
           {filters.active && (
             <div className='col-12 col-xl-1'>
-              <FormGroup className='form-group--react-reset ml-auto text-center text-xl-right'>
+              <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ml-auto text-center text-xl-right'>
                 <button
                   type='button'
                   className='btn btn-danger fa fa-times'

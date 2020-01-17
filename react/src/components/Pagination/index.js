@@ -48,10 +48,10 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
   }
 
   return (
-    <PaginationWrap single={max === 1}>
-      <div className='f-c-pagination d-flex flex-wrap align-items-center pb-0 flex-grow-1'>
+    <PaginationWrap single={max === 1} className='d-sm-flex'>
+      <div className='f-c-pagination d-sm-flex flex-wrap align-items-center pb-0 flex-grow-1'>
         <div
-          className='mr-auto my-2 pr-g small'
+          className='mr-sm-auto my-2 pr-sm-g small text-center text-sm-left'
           dangerouslySetInnerHTML={{ __html: paginationInfo(pagination) }}
         />
 
@@ -83,7 +83,7 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
       </div>
 
       {fileTypeIsImage && (
-        <div className='ml-g'>
+        <div className='ml-auto mr-auto ml-sm-g mr-sm-0 text-center my-2 my-sm-0'>
           <DisplayButtons
             display={display}
             setCardsDisplay={setCardsDisplay}

@@ -1,0 +1,9 @@
+.pagination
+  justify-content: flex-end
+
+  +media-breakpoint-down(sm)
+    width: 100%
+    justify-content: center
+
+    .page-item:not(:first-child):not(:last-child):not(.active)
+      display: none
