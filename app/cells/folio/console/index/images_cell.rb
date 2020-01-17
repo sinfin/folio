@@ -7,7 +7,9 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
 
   def id_class_name
     # needed for separate lightboxes
-    "f-c-index-images--id-#{model.class.table_name}-#{model.id}"
+    if model.present?
+      "f-c-index-images--id-#{model.class.table_name}-#{model.id}"
+    end
   end
 
   def show
