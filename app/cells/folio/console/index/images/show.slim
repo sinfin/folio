@@ -6,6 +6,13 @@ div class=class_name class=id_class_name
       - else
         img.f-c-index-images__missing src=broken_src
 
+  - elsif options[:custom]
+    .f-c-index-images__item
+      - if model.present?
+        = image(model)
+      - else
+        img.f-c-index-images__missing src=broken_src
+
   - else
     - model.image_placements.first(3).each do |placement|
       .f-c-index-images__item

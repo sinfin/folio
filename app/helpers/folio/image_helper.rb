@@ -25,14 +25,20 @@ module Folio::ImageHelper
     retina_multiplier = options.delete(:retina_multiplier) || 2
     retina_variant = normal_variant.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
 
-    normal = placement.file.thumb(normal_variant).url
-    retina = placement.file.thumb(retina_variant).url
+    if placement.is_a?(Folio::FilePlacement::Base)
+      file = placement.file
+    else
+      file = placement
+    end
+
+    normal = file.thumb(normal_variant).url
+    retina = file.thumb(retina_variant).url
 
     img_tag_retina(normal,
                    retina,
                    options.reverse_merge(
-                     alt: placement.alt || '',
-                     title: placement.title,
+                     alt: placement.try(:alt) || '',
+                     title: placement.try(:title),
                      retina_multiplier: retina_multiplier,
                    ))
   end
@@ -61,14 +67,20 @@ module Folio::ImageHelper
     retina_multiplier = options.delete(:retina_multiplier) || 2
     retina_variant = normal_variant.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
 
-    normal = placement.file.thumb(normal_variant).url
-    retina = placement.file.thumb(retina_variant).url
+    if placement.is_a?(Folio::FilePlacement::Base)
+      file = placement.file
+    else
+      file = placement
+    end
+
+    normal = file.thumb(normal_variant).url
+    retina = file.thumb(retina_variant).url
 
     lazy_image(normal,
                retina,
                options.reverse_merge(
-                 alt: placement.alt,
-                 title: placement.title,
+                 alt: placement.try(:alt) || '',
+                 title: placement.try(:title),
                  retina_multiplier: retina_multiplier,
                ))
   end

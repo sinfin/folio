@@ -11,7 +11,7 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
   end
 
   def show
-    if options[:cover]
+    if options[:cover] || options[:custom]
       render
     else
       render if model.image_placements.present?
