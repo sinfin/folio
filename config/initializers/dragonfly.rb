@@ -75,8 +75,12 @@ Dragonfly.app.configure do
       # content
       {}
     else
-      photo = MiniExiftool.new(content.file, ignore_minor_errors: true, replace_invalid_chars: true)
-      photo.to_hash
+      begin
+        photo = MiniExiftool.new(content.file, ignore_minor_errors: true, replace_invalid_chars: true)
+        photo.to_hash
+      rescue MiniExiftool::Error
+        {}
+      end
     end
   end
 

@@ -93,12 +93,14 @@ const FileTableRow = ({
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>
-        <a // eslint-disable-line
-          href={file.links.edit}
-          target='_blank'
-          className='btn btn-secondary fa fa-edit'
-          rel='noopener noreferrer'
-        />
+        {(link && file.links) ? (
+          <a // eslint-disable-line
+            href={file.links.edit}
+            target='_blank'
+            className='btn btn-secondary fa fa-edit'
+            rel='noopener noreferrer'
+          />
+        ) : undefined}
       </div>
     </div>
   )

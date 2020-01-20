@@ -30,7 +30,10 @@ class Tags extends React.Component {
   }
 
   render () {
-    const tags = this.props.file.attributes.tags
+    let tags = []
+    if (this.props.file.attributes && this.props.file.tags) {
+      tags = this.props.file.tags
+    }
 
     return (
       <TagsWrap className='small mx-n2'>
