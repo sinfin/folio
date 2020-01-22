@@ -1,8 +1,14 @@
 read = (url) ->
-  localStorage?.getItem?(url)
+  time = localStorage?.getItem?('folioAntiCacheTime')
+  if time && Number(time) + 60 * 60 * 1000 > Number(new Date)
+    localStorage.getItem(url)
+  else
+    undefined
 
 write = (url, html) ->
-  localStorage?.setItem?(url, html)
+  if localStorage?.setItem?
+    localStorage.setItem('folioAntiCacheTime', Number(new Date))
+    localStorage.setItem?(url, html)
 
 swapItems = ($old, $new, immediate) ->
   $old.find('[data-anti-cache-item]').each ->
