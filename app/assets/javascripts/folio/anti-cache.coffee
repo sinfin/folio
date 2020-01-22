@@ -22,18 +22,17 @@ swapItems = ($old, $new, immediate) ->
   else
     setTimeout (-> $old.addClass('folio-anti-cache--done')), 0
 
+  saveAntiCacheHtml($old)
+
 fetchFresh = ($el, url) ->
   $.get url, (res) -> swapItems($el, $(res), false)
 
 performAntiCache = (e) ->
-  saveAntiCacheHtml()
   $body = $(e.originalEvent.data.newBody || 'body')
   window.performFolioAntiCache $body.find('[data-anti-cache]')
 
-saveAntiCacheHtml = ->
-  $('[data-anti-cache]').each ->
-    $el = $(this)
-    write $el.data('anti-cache'), $el.html()
+saveAntiCacheHtml = ($el) ->
+  write $el.data('anti-cache'), $el.prop('outerHTML')
 
 window.performFolioAntiCache = ($items) ->
   $items.each ->
