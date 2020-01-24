@@ -177,9 +177,23 @@
   &__insert-ul
     background: $secondary
     padding: $grid-gutter-width / 2
+    column-count: 1
+    column-gap: $grid-gutter-width
 
     &, .mi
       font-size: 14px
+
+    @media screen and (min-width: 600px)
+      column-count: 2
+
+    @media screen and (min-width: 900px)
+      column-count: 3
+
+    @media screen and (min-width: 1200px)
+      column-count: 4
+
+  &__insert-li
+    break-inside: avoid
 
   &__insert-a
     padding: 10px

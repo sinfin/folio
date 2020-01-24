@@ -10,9 +10,9 @@
 
     .f-c-atoms-previews__insert-inner
       .container
-        ul.f-c-atoms-previews__insert-ul.row.list-unstyled
+        ul.f-c-atoms-previews__insert-ul.list-unstyled
           - sorted_types.each do |klass|
-            li.f-c-atoms-previews__insert-li.col-6.col-md-3
+            li.f-c-atoms-previews__insert-li
               a.f-c-atoms-previews__insert-a[
                 href="##{klass.model_name.human}"
                 data-type=klass.to_s
