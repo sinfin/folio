@@ -57,7 +57,7 @@ if Rails.env.development?
 
   task :annotate do
     puts 'Annotating models...'
-    system 'bundle exec annotate'
+    system 'bundle exec annotate --models'
   end
 
   Rake::Task['db:migrate'].enhance do
