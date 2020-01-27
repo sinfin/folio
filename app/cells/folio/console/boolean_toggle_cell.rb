@@ -14,7 +14,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   def form(&block)
     opts = {
       url: url,
-      html: { class: class_name },
+      html: { class: class_name, id: nil },
     }
 
     simple_form_for(model, opts, &block)
