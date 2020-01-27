@@ -14,6 +14,10 @@ $('.simple_form')
   .one 'change', ->
     handler($(this))
 
+$('.f-c-dirty-simple-form')
+  .one 'change', ->
+    handler($(this))
+
 $('.f-c-simple-form-with-atoms__form')
   .one 'change', ->
     handler($(this).closest('form'))
