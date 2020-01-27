@@ -5,6 +5,7 @@ module Folio::ClearsPageCache
 
   included do
     after_commit :clear_page_cache!
+    after_touch :clear_page_cache!
   end
 
   module ClassMethods
