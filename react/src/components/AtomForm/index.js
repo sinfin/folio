@@ -202,17 +202,17 @@ class AtomForm extends React.PureComponent {
                     )}
 
                     {renderAsFlex ? (
-                      <div className='d-flex'>
+                      <div className='d-flex position-relative z-index-2'>
                         {singleAttachments}
                         <div className='flex-grow-1'>
                           {inputs}
                         </div>
                       </div>
                     ) : (
-                      <React.Fragment>
+                      <div className='position-relative z-index-2'>
                         {singleAttachments}
                         {inputs}
-                      </React.Fragment>
+                      </div>
                     )}
 
                     <MultiAttachments atom={atom} index={index} />

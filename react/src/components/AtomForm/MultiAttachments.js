@@ -7,7 +7,7 @@ export default function MultiAttachments ({ atom, index }) {
     <React.Fragment>
       {atom.record.meta.attachments.map((attachmentType) => (
         attachmentType.plural ? (
-          <div className='mt-4' key={attachmentType.key}>
+          <div className='mt-4 position-relative z-index-1' key={attachmentType.key}>
             <MultiAttachmentsSelect
               attachmentType={attachmentType}
               atom={atom}

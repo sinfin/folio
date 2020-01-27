@@ -32,4 +32,12 @@ export default styled.div`
   .card-outer:hover > .folio-console-nested-model-controls {
     opacity: 1;
   }
+
+  .z-index-1 {
+    z-index: 1;
+  }
+
+  .z-index-2 {
+    z-index: 2;
+  }
 `
