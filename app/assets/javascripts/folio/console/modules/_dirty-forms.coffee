@@ -9,7 +9,7 @@ handler = ($form) ->
   $form.on 'submit', -> $(window).off('beforeunload')
 
 $('.simple_form')
-  .filter(-> @className.match(/(new_|edit_)/))
+  .filter(-> @className.match(/(new_|edit_)/) or @className.indexOf('f-c-with-aside') isnt -1)
   .not('.f-c-simple-form-with-atoms')
   .one 'change', ->
     handler($(this))
