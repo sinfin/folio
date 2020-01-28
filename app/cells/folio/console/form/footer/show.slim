@@ -2,11 +2,11 @@ div class=class_name
   .container-fluid.d-flex.align-items-center
     - if back_path
       = link_to back_path, class: 'btn btn-outline mr-2 f-c-form-footer__btn'
-        i.fa.fa-undo
+        i.mi.mi--14 undo
         = t('folio.console.actions.cancel')
 
     = model.button :submit, \
-                   t('folio.console.actions.submit'), \
+                   submit_label, \
                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit '\
                           'mr-2'
 
