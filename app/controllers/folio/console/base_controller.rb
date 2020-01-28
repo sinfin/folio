@@ -46,7 +46,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
           if folio_console_record.new_record?
             add_breadcrumb I18n.t('folio.console.breadcrumbs.actions.new')
           else
-            add_breadcrumb(folio_console_record.to_label)
+            add_breadcrumb(folio_console_record.to_label,
+                           url_for([:edit, :console, folio_console_record]))
           end
         end
       rescue NoMethodError
