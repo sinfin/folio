@@ -5,7 +5,11 @@
   +mq-desktop-menu
     display: flex
     align-items: stretch
-    height: 100%
+    height: auto
+    min-height: 0
+    position: relative
+    overflow: hidden
+    flex: 1 1 100%
 
     &__main,
     &__aside
@@ -13,9 +17,7 @@
       flex-direction: column
       height: 100%
       position: relative
-
-      .f-c-with-aside__scroll
-        padding-bottom: 65px
+      min-height: 0
 
     &__main
       width: percentage(2 / 3)
@@ -35,18 +37,19 @@
       overflow-y: scroll
       -webkit-overflow-scrolling: touch
       padding: $grid-gutter-half $grid-gutter-width
-      flex: 1 1 auto
-
-  +media-breakpoint-up(xxl)
-    &__main,
-    &__aside
-      .f-c-with-aside__scroll
-        padding-bottom: 95px
+      flex: 0 1 100%
+      min-height: 0
+      position: relative
 
   +mq-mobile-menu
+    overflow-y: scroll
+    -webkit-overflow-scrolling: touch
+
     &__main
-      padding: $grid-gutter-half $grid-gutter-width
+      padding: $grid-gutter-half
 
     &__aside
+      padding-bottom: 65px
+
       .f-c-with-aside__scroll
-        padding: $grid-gutter-half $grid-gutter-width 65px
+        padding: $grid-gutter-half $grid-gutter-width
