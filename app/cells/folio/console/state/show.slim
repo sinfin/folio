@@ -14,8 +14,11 @@
             = f.input :aasm_event, \
                       as: :hidden, \
                       input_html: { value: event.name, id: nil }
-            button.f-c-state__state.dropdown-item type="submit"
-              = state_square(target_state(event))
+            button.f-c-state__state.dropdown-item[
+              type="submit"
+              data-confirm=confirm(event)
+            ]
+              = event_square(event)
               = localizer.human_event_name model.class, event.name
 
   - else

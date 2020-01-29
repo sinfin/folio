@@ -11,14 +11,23 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     @state ||= model.aasm.state_object_for_name(model.aasm_state.to_sym)
   end
 
-  def state_square(s = nil)
-    s ||= state
-    color = s.options[:color].presence || 'default'
-
+  def state_square_tag(s, color)
     content_tag(:span, '', class: 'f-c-state__state-square '\
                                   "f-c-state__state-square--color-#{color} "\
                                   "f-c-state__state-square--state-#{s.name} "\
                                   "f-c-state__state-square--model-#{model.class.table_name}")
+  end
+
+  def state_square(s = nil)
+    s ||= state
+    color = s.options[:color].presence || 'default'
+    state_square_tag(s, color)
+  end
+
+  def event_square(event)
+    s = target_state(event)
+    color = event.options[:color] || s.options[:color].presence || 'default'
+    state_square_tag(s, color)
   end
 
   def states
@@ -56,5 +65,11 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
   def active?
     options[:active] != false
+  end
+
+  def confirm(event)
+    if event.options[:confirm]
+      t('folio.console.confirmation')
+    end
   end
 end
