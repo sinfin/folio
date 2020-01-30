@@ -28,7 +28,7 @@ bindAutocomplete = ($elements) ->
 unbindAutocomplete = ($elements) ->
   $elements.autocomplete('destroy')
 
-bindRemoteAutocomplete = ($elements) ->
+window.folioConsoleBindRemoteAutocomplete = ($elements) ->
   $elements.each ->
     $this = $(this)
     $this.autocomplete
@@ -45,29 +45,29 @@ bindRemoteAutocomplete = ($elements) ->
         if $form.length
           setTimeout (-> $form.submit()), 0
 
-unbindRemoteAutocomplete = ($elements) ->
+window.folioConsoleUnbindRemoteAutocomplete = ($elements) ->
   $elements.off('change').autocomplete('destroy')
 
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->
     bindAutocomplete(insertedItem.find(AUTOCOMPLETE_SELECTOR))
-    bindRemoteAutocomplete(insertedItem.find(REMOTE_AUTOCOMPLETE_SELECTOR))
+    window.folioConsoleBindRemoteAutocomplete(insertedItem.find(REMOTE_AUTOCOMPLETE_SELECTOR))
 
   .on 'cocoon:before-remove', (e, item) ->
     unbindAutocomplete(item.find(AUTOCOMPLETE_SELECTOR))
-    unbindRemoteAutocomplete(item.find(REMOTE_AUTOCOMPLETE_SELECTOR))
+    window.folioConsoleUnbindRemoteAutocomplete(item.find(REMOTE_AUTOCOMPLETE_SELECTOR))
 
 if Turbolinks?
   $(document)
     .on 'turbolinks:load', ->
       bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-      bindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
+      window.folioConsoleBindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
 
     .on 'turbolinks:before-cache', ->
       unbindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-      unbindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
+      window.folioConsoleUnbindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
 
 else
   $ ->
     bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-    bindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
+    window.folioConsoleBindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
