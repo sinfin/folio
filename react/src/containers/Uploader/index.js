@@ -82,6 +82,7 @@ class Uploader extends Component {
       thumbnailMethod: 'contain',
       thumbnailWidth: 150,
       thumbnailHeight: 150,
+      timeout: 0,
       params
     }
   }
