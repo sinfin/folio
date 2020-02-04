@@ -16,6 +16,9 @@
     margin: - $spacer 0
     cursor: pointer
 
+    &:not(:last-child)
+      margin-right: $grid-gutter-width
+
   &__wrapper
     margin: 0
 
@@ -33,8 +36,12 @@
 
     .simple_form .form-group.datetime &.folio-console-date-picker
       padding-left: $input-height
-      padding-right: $input-btn-padding-x
+      padding-right: 0
       box-shadow: none !important
       border: none !important
       background: none !important
       cursor: pointer
+      max-width: 145px
+
+  &__featured
+    margin: 0

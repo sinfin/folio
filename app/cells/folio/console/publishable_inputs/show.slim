@@ -9,3 +9,10 @@
                 hint: false, \
                 wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
                 input_html: { class: 'f-c-publishable-inputs__input' }
+
+  - if f.object.respond_to?(:featured)
+    = f.input :featured, \
+              hint: false, \
+              label: render(:_featured_label).html_safe, \
+              wrapper_html: { class: 'f-c-publishable-inputs__featured' }, \
+              input_html: { class: 'f-c-publishable-inputs__featured-input' }
