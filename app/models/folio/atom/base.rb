@@ -20,9 +20,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   ATTACHMENTS = []
 
-  STRUCTURE = {
-    title: :string,
-  }
+  STRUCTURE = {}
 
   ASSOCIATIONS = {}
 
@@ -156,6 +154,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def self.console_icon
+  end
+
+  def self.contentable?
+    self::ATTACHMENTS.present? ||
+    self::STRUCTURE.present? ||
+    self::ASSOCIATIONS.present?
   end
 
   private

@@ -5,10 +5,13 @@ import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
 import timestamp from 'utils/timestamp'
 
+import { combineAtoms } from 'ducks/utils/atoms'
+
 // Constants
 
 const SET_ATOMS_DATA = 'atoms/SET_ATOMS_DATA'
 const NEW_ATOMS = 'atoms/NEW_ATOMS'
+const CREATE_CONTENTLESS_ATOM = 'atoms/CREATE_CONTENTLESS_ATOM'
 const EDIT_ATOMS = 'atoms/EDIT_ATOMS'
 const REMOVE_ATOMS = 'atoms/REMOVE_ATOMS'
 const VALIDATE_AND_SAVE_FORM_ATOMS = 'atoms/VALIDATE_AND_SAVE_FORM_ATOMS'
@@ -45,6 +48,10 @@ export function updateFormAtomValue (index, key, value) {
 
 export function newAtoms (rootKey, action, indices, atomType) {
   return { type: NEW_ATOMS, rootKey, action, indices, atomType }
+}
+
+export function createContentlessAtom (rootKey, action, indices, atomType) {
+  return { type: CREATE_CONTENTLESS_ATOM, rootKey, action, indices, atomType }
 }
 
 export function editAtoms (rootKey, indices) {
@@ -263,7 +270,8 @@ function * updateAtomPreviewsSaga () {
     takeEvery(REMOVE_ATOMS, updateAtomPreviews),
     takeEvery(MOVE_ATOMS_TO_INDEX, updateAtomPreviews),
     takeEvery(SAVE_FORM_ATOMS, updateAtomPreviews),
-    takeEvery(SET_ATOMS_DATA, updateAtomPreviews)
+    takeEvery(SET_ATOMS_DATA, updateAtomPreviews),
+    takeEvery(CREATE_CONTENTLESS_ATOM, updateAtomPreviews)
   ]
 }
 
@@ -437,6 +445,24 @@ function atomsReducer (state = initialState, action) {
         }
       }
 
+    case CREATE_CONTENTLESS_ATOM: {
+      const atoms = combineAtoms({
+        oldAtoms: state.atoms[action.rootKey],
+        newAtoms: [{ id: null, type: action.atomType, timestamp: timestamp(), data: {}, associations: {} }],
+        edit: false,
+        indices: action.indices,
+        formAction: action.action
+      })
+
+      return {
+        ...state,
+        atoms: {
+          ...state.atoms,
+          [action.rootKey]: atoms
+        }
+      }
+    }
+
     case SAVE_FORM_ATOMS: {
       const destroyedIds = {
         ...state.destroyedIds,
@@ -446,39 +472,13 @@ function atomsReducer (state = initialState, action) {
         ]
       }
 
-      let atoms = []
-      const newAtoms = state.form.atoms.map((atom) => ({
-        ...omit(atom.record, ['meta']),
-        timestamp: timestamp()
-      }))
-
-      switch (state.form.action) {
-        case 'prepend':
-          atoms = [...newAtoms, ...state.atoms[state.form.rootKey]]
-          break
-        case 'append':
-          atoms = [...state.atoms[state.form.rootKey], ...newAtoms]
-          break
-        default: {
-          if (state.form.edit) {
-            state.atoms[state.form.rootKey].forEach((atom, i) => {
-              if (state.form.indices.indexOf(i) === -1) {
-                atoms.push(atom)
-              } else if (i === state.form.indices[0]) {
-                atoms = [...atoms, ...newAtoms]
-              }
-            })
-          } else {
-            state.atoms[state.form.rootKey].forEach((atom, i) => {
-              if (state.form.indices.indexOf(i) === -1) {
-                atoms.push(atom)
-              } else if (i === state.form.indices[0]) {
-                atoms = [...atoms, ...newAtoms, atom]
-              }
-            })
-          }
-        }
-      }
+      const atoms = combineAtoms({
+        oldAtoms: state.atoms[state.form.rootKey],
+        newAtoms: state.form.atoms.map((atom) => ({ ...omit(atom.record, ['meta']), timestamp: timestamp() })),
+        edit: state.form.edit,
+        indices: state.form.indices,
+        formAction: state.form.action
+      })
 
       return {
         ...state,

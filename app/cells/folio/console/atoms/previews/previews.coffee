@@ -25,13 +25,13 @@ handleArrowClick = (e) ->
   $wrap = $this.closest('.f-c-atoms-previews__preview')
   indices = $wrap.data('indices')
   if $this.hasClass('f-c-atoms-previews__button--arrow-up')
-    return if $wrap.is(':first-child')
     $prev = $wrap.prevAll('.f-c-atoms-previews__preview').first()
+    return if $prev.length is 0
     targetIndex = $prev.data('indices')[0]
     action = 'prepend'
   else
-    return if $wrap.is(':last-child')
     $next = $wrap.nextAll('.f-c-atoms-previews__preview').first()
+    return if $next.length is 0
     nextIndices = $next.data('indices')
     targetIndex = nextIndices[nextIndices.length - 1]
     action = 'append'
@@ -139,6 +139,7 @@ handleInsertClick = (e) ->
     action: action
     indices: indices
     atomType: $a.data('type')
+    contentable: $a.attr('data-contentable') is 'true'
   window.top.postMessage(data, window.origin)
 
 sendResizeMessage = ->
@@ -185,6 +186,7 @@ updatePerex = (locale, value) ->
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick
   .on 'click', '.f-c-atoms-previews__button--edit', handleEditClick
+  .on 'click', '.f-c-atoms-previews__button--settings', handleEditClick
   .on 'click', '.f-c-atoms-previews__controls-overlay', handleOverlayClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
   .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick

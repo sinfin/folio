@@ -16,6 +16,7 @@
               a.f-c-atoms-previews__insert-a[
                 href="##{klass.model_name.human}"
                 data-type=klass.to_s
+                data-contentable=klass.contentable?.to_s
               ]
                 - if klass.console_icon
                   span.mi = klass.console_icon

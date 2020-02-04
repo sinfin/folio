@@ -20,7 +20,8 @@ import atomsReducer, {
   atomFormPlacementsUnselect,
   atomFormPlacementsSort,
   atomFormPlacementsChangeTitle,
-  atomFormPlacementsChangeAlt
+  atomFormPlacementsChangeAlt,
+  createContentlessAtom
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -334,5 +335,11 @@ describe('atomsReducer', () => {
     const filePlacement = state.form.atoms[0].record.image_placements_attributes[0]
     state = atomsReducer(state, atomFormPlacementsChangeAlt(0, 'image_placements_attributes', filePlacement, 'foo'))
     expect(state.form.atoms[0].record.image_placements_attributes[0].alt).toEqual('foo')
+  })
+
+  it('createContentlessAtom', () => {
+    state = atomsReducer(state, createContentlessAtom('atoms', 'prepend', [0], 'Dummy::Atom::DaVinci'))
+    expect(state.atoms.atoms[0].id).toEqual(null)
+    expect(state.atoms.atoms[0].type).toEqual('Dummy::Atom::DaVinci')
   })
 })

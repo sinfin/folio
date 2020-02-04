@@ -36,6 +36,7 @@
             .f-c-atoms-previews__preview.f-c-atoms-previews__preview--molecule[
               data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
               data-indices=indices
+              data-contentable=atoms.first.class.contentable?.to_s
             ]
               == cell(atoms.first.class.molecule_cell_name, atoms)
 
@@ -50,6 +51,7 @@
               .f-c-atoms-previews__preview.f-c-atoms-previews__preview--atom[
                 data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
                 data-indices=[index]
+                data-contentable=atom.class.contentable?.to_s
               ]
                 == cell(atom.class.cell_name, \
                         atom, \

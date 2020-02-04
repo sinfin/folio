@@ -5,6 +5,7 @@ import {
   addAtomToForm,
   atomsSelector,
   atomTypesSelector,
+  createContentlessAtom,
   newAtoms,
   editAtoms,
   removeAtoms,
@@ -45,7 +46,11 @@ class Atoms extends React.PureComponent {
     if (origin === window.origin) {
       switch (data.type) {
         case 'newAtoms': {
-          this.props.dispatch(newAtoms(data.rootKey, data.action, data.indices, data.atomType))
+          if (data.contentable) {
+            this.props.dispatch(newAtoms(data.rootKey, data.action, data.indices, data.atomType))
+          } else {
+            this.props.dispatch(createContentlessAtom(data.rootKey, data.action, data.indices, data.atomType))
+          }
           break
         }
         case 'editAtoms': {
