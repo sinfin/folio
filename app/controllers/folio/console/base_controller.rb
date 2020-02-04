@@ -194,14 +194,18 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    def render_csv(records)
+    def render_csv(records, class_name: nil, name: nil, separator: nil)
+      klass = class_name ? class_name.constantize : @klass
+
       data = ::CSV.generate(headers: true) do |csv|
-        csv << @klass.csv_attribute_names.map do |a|
-          @klass.human_attribute_name(a)
+        csv << klass.csv_attribute_names.map do |a|
+          klass.human_attribute_name(a)
         end
         records.each { |rec| csv << rec.csv_attributes }
       end
-      name = @klass.model_name.human(count: 2)
+
+      name = name || klass.model_name.human(count: 2)
+
       filename = "#{name}-#{Date.today}.csv".split('.')
                                             .map(&:parameterize)
                                             .join('.')
