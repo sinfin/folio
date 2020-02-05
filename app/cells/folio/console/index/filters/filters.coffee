@@ -1,5 +1,4 @@
 window.folioConsoleBindIndexFiltersAutocomplete = ($input) ->
-  console.log($input)
   # Don't autosubmit form
   $input.on 'change', (e) -> e.stopPropagation()
 
