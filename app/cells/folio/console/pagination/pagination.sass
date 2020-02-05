@@ -6,3 +6,75 @@
   .folio-console-react-modal &:first-child
     margin-top: 0
     padding-bottom: $spacer
+
+  &__nav
+    display: flex
+    align-items: center
+
+  &__pages
+    display: flex
+    align-items: center
+
+  &__page
+    position: relative
+    flex: 0 1 auto
+
+  &__page,
+  &__page a
+    color: #495057
+    text-decoration: none
+
+  &__page--with-ico,
+  &__page--with-ico a
+    color: #6C757E
+
+  &__page--page,
+  &__page--page a
+    display: block
+    line-height: 35px
+    width: 35px
+    height: 35px
+    border-radius: 100%
+    text-align: center
+
+  &__page--page,
+  &__page--prev,
+  &__page--next:not(&__page--disabled),
+  &__page--last
+    &:before
+      content: ''
+      height: 20px
+      border-left: 1px solid #CED4DA
+      width: 0
+      position: absolute
+      top: calc(50% - 10px)
+      left: 0
+      display: block
+
+  &__page--current:before,
+  &__page--current + &__page--page:before
+    display: none
+
+  &__page--current
+    background: #6C757E
+    color: $white
+    font-weight: $font-weight-bold
+    flex: 0 0 35px
+
+  &__ico
+    line-height: 35px
+    width: 28px
+    text-align: center
+    font-size: 14px
+
+  +media-breakpoint-down(sm)
+    &__nav
+      justify-content: center
+
+  @media screen and (max-width: 500px)
+    &__page
+      display: none
+
+    &__page--with-ico,
+    &__page--current
+      display: block
