@@ -54,20 +54,19 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    unless except.include?(:index)
-      before_action only: :index do
-        name = folio_console_record_variable_name(plural: true)
+    only = except.include?(:index) ? %i[merge] : %i[index merge]
+    before_action only: only do
+      name = folio_console_record_variable_name(plural: true)
 
-        if folio_console_collection_includes.present?
-          with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
-          instance_variable_set(name, with_include)
-        end
+      if folio_console_collection_includes.present?
+        with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
+        instance_variable_set(name, with_include)
+      end
 
-        if filter_params.present? &&
-           instance_variable_get(name).respond_to?(:filter_by_params)
-          filtered = instance_variable_get(name).filter_by_params(filter_params)
-          instance_variable_set(name, filtered)
-        end
+      if filter_params.present? &&
+         instance_variable_get(name).respond_to?(:filter_by_params)
+        filtered = instance_variable_get(name).filter_by_params(filter_params)
+        instance_variable_set(name, filtered)
       end
     end
 

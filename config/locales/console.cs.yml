@@ -152,6 +152,7 @@ cs:
           settings: Nastavení
           site_social_links: Odkazy
           audits: Historie verzí
+          merge: Sloučení duplikátů
         simple_form_with_atoms:
           editor: Editor
           settings: Nastavení

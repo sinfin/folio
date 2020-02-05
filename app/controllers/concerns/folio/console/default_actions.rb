@@ -16,6 +16,11 @@ module Folio::Console::DefaultActions
                           records)
   end
 
+  def merge
+    @folio_console_merge = @klass
+    index
+  end
+
   def create
     instance_variable_set(folio_console_record_variable_name,
                           @klass.create(folio_console_params))
