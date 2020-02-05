@@ -58,6 +58,20 @@ class AtomForm extends React.PureComponent {
     }
   }
 
+  componentWillMount () {
+    window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
+  }
+
+  componentWillUnmount () {
+    window.jQuery('.f-c-simple-form-with-atoms').off('submit', this.handleGlobalFormSubmission)
+  }
+
+  handleGlobalFormSubmission = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    this.props.validateAndSubmitGlobalForm()
+  }
+
   renderHint (text, molecule) {
     return (
       <AtomFormHint molecule={molecule}>

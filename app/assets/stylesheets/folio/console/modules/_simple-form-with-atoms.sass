@@ -3,6 +3,19 @@
   z-index: 3
   max-width: none
 
+  .folio-loader
+    position: fixed
+    z-index: 1002
+    display: none
+
+    +mq-desktop-menu
+      left: 220px
+      width: calc(100% - 220px)
+
+  &--submitting
+    .folio-loader
+      display: block
+
   &__form
     max-height: 30vh
     flex: 0 0 auto
@@ -107,24 +120,22 @@
   &__preview--initializing &__iframe
     visibility: hidden
 
+  &__overlay-dismiss,
   &__overlay
+    display: none
+    height: 100%
     position: fixed
-    z-index: 1000
     top: 0
-    left: 0
     right: 0
     bottom: 0
-    display: none
 
   &__overlay-dismiss
-    position: absolute
-    z-index: 1
-    top: 0
+    z-index: 998
     left: 0
     width: 100%
-    height: 100%
 
-  &__overlay-inner
+  &__overlay
+    z-index: 1000
     margin-left: auto
     background: $white
     margin-left: auto
@@ -133,10 +144,7 @@
     max-width: 75%
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.29)
     padding: $grid-gutter-width $grid-gutter-width 0
-    display: flex
     flex-direction: column
-    position: relative
-    z-index: 2
 
     +media-breakpoint-down(sm)
       max-width: 100%
@@ -148,8 +156,11 @@
     padding: 0 $grid-gutter-width (( $grid-gutter-width + 95px ))
     flex: 1 1 auto
 
-  &--editing-atom &__overlay
+  &--editing-atom &__overlay-dismiss
     display: block
+
+  &--editing-atom &__overlay
+    display: flex
 
   &__title
     padding-top: $spacer
@@ -189,9 +200,6 @@
     margin-left: 0 !important
     margin-right: 0 !important
     width: 100%
-
-  &--editing-atom .f-c-form-footer
-    pointer-events: none
 
   +media-breakpoint-down(sm)
     &__overlay-inner

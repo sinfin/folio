@@ -1,5 +1,5 @@
 import { mapValues, sortBy, omit } from 'lodash'
-import { takeEvery, call, select, put } from 'redux-saga/effects'
+import { takeEvery, takeLatest, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
@@ -15,6 +15,7 @@ const CREATE_CONTENTLESS_ATOM = 'atoms/CREATE_CONTENTLESS_ATOM'
 const EDIT_ATOMS = 'atoms/EDIT_ATOMS'
 const REMOVE_ATOMS = 'atoms/REMOVE_ATOMS'
 const VALIDATE_AND_SAVE_FORM_ATOMS = 'atoms/VALIDATE_AND_SAVE_FORM_ATOMS'
+const VALIDATE_AND_SUBMIT_GLOBAL_FORM = 'atoms/VALIDATE_AND_SUBMIT_GLOBAL_FORM'
 const SAVE_FORM_ATOMS = 'atoms/SAVE_FORM_ATOMS'
 const CLOSE_FORM_ATOM = 'atoms/CLOSE_FORM_ATOM'
 const UPDATE_FORM_ATOM_TYPE = 'atoms/UPDATE_FORM_ATOM_TYPE'
@@ -72,6 +73,10 @@ export function closeFormAtom () {
 
 export function validateAndSaveFormAtom () {
   return { type: VALIDATE_AND_SAVE_FORM_ATOMS }
+}
+
+export function validateAndSubmitGlobalForm () {
+  return { type: VALIDATE_AND_SUBMIT_GLOBAL_FORM }
 }
 
 export function saveFormAtoms () {
@@ -311,11 +316,26 @@ function * validateAndSaveFormAtomSaga () {
   yield takeEvery(VALIDATE_AND_SAVE_FORM_ATOMS, validateAndSaveFormAtomPerform)
 }
 
+function * validateAndSubmitGlobalFormPerform (action) {
+  yield validateAndSaveFormAtomPerform()
+  const form = yield select(atomsFormSelector)
+  if (form.rootKey) {
+    window.jQuery('.f-c-form-footer__btn--submit').prop('disabled', false)
+  } else {
+    window.jQuery('.f-c-simple-form-with-atoms').submit()
+  }
+}
+
+function * validateAndSubmitGlobalFormSaga () {
+  yield takeLatest(VALIDATE_AND_SUBMIT_GLOBAL_FORM, validateAndSubmitGlobalFormPerform)
+}
+
 export const atomsSagas = [
   updateAtomPreviewsSaga,
   showAtomsFormSaga,
   hideAtomsFormSaga,
-  validateAndSaveFormAtomSaga
+  validateAndSaveFormAtomSaga,
+  validateAndSubmitGlobalFormSaga
 ]
 
 // State

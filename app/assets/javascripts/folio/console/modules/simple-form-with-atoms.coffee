@@ -3,6 +3,9 @@ sendMessage = (data) ->
     @contentWindow.postMessage(data, window.origin)
 
 $(document)
+  .on 'submit', '.f-c-simple-form-with-atoms', (e) ->
+    $(this).addClass('f-c-simple-form-with-atoms--submitting')
+
   .on 'click', '.f-c-simple-form-with-atoms__overlay-dismiss', (e) ->
     e.preventDefault()
     window.postMessage({ type: 'closeForm' }, window.origin)

@@ -18,7 +18,8 @@ import {
   removeFormAtomAttachment,
   updateFormAtomAssociation,
   moveFormAtom,
-  removeFormAtom
+  removeFormAtom,
+  validateAndSubmitGlobalForm
 } from 'ducks/atoms'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
@@ -126,6 +127,7 @@ class Atoms extends React.PureComponent {
             addAtom={(type) => this.props.dispatch(addAtomToForm(type))}
             moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
+            validateAndSubmitGlobalForm={() => this.props.dispatch(validateAndSubmitGlobalForm())}
           />
         )}
       </React.Fragment>
