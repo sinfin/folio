@@ -44,10 +44,12 @@ editPerex = (locale) ->
 setHeight = ->
   $iframes = $('.f-c-simple-form-with-atoms__iframe')
   minHeight = 0
+
   $iframes.each ->
+    return unless @contentWindow.jQuery
     height = @contentWindow.jQuery('.f-c-atoms-previews').outerHeight(true)
-    if typeof height is 'number'
-      minHeight = Math.max(minHeight, height)
+    minHeight = Math.max(minHeight, height) if typeof height is 'number'
+
   $iframes.css('min-height', minHeight)
 
 receiveMessage = (e) ->

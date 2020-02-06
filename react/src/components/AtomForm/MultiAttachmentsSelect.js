@@ -111,6 +111,7 @@ const mapStateToProps = (state, props) => {
   const all = props.atom.record[props.attachmentType.key]
   const selected = []
   const deleted = []
+  const selectedFileIds = []
 
   if (all && all.length) {
     all.forEach((placement) => {
@@ -118,6 +119,7 @@ const mapStateToProps = (state, props) => {
         deleted.push(placement)
       } else {
         selected.push(placement)
+        selectedFileIds.push(placement.file_id)
       }
     })
   }
@@ -129,7 +131,6 @@ const mapStateToProps = (state, props) => {
     attachmentable: 'foo',
     placementType: props.attachmentType.key.replace('_attributes', '')
   }
-  const selectedFileIds = []
 
   return {
     filesKey,

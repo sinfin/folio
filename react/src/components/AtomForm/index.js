@@ -197,7 +197,7 @@ class AtomForm extends React.PureComponent {
 
             return (
               <AtomFormCardOuter
-                key={atom.record.id || atom.record.timestamp}
+                key={atom.record.id || atom.record.lodashId}
                 className={asMolecule ? 'card-outer' : undefined}
                 focused={index === this.state.focusedIndex}
               >

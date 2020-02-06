@@ -104,7 +104,7 @@ function SerializedAtoms ({ atoms, destroyedIds, namespace }) {
       {atoms.map((atom, index) => {
         return (
           <SerializedAtom
-            key={atom.id || atom.timestamp}
+            key={atom.id || atom.lodashId}
             atom={atom}
             index={index}
             namespace={namespace}

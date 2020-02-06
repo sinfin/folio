@@ -1,9 +1,8 @@
-import { mapValues, sortBy, omit } from 'lodash'
+import { mapValues, sortBy, omit, uniqueId } from 'lodash'
 import { takeEvery, takeLatest, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
-import timestamp from 'utils/timestamp'
 
 import { combineAtoms } from 'ducks/utils/atoms'
 
@@ -206,7 +205,7 @@ const serializeAtom = (state, atom) => {
     }
   })
 
-  return omit(base, ['meta', 'timestamp', 'data'])
+  return omit(base, ['meta', 'lodashId', 'data'])
 }
 
 export const serializedAtomsSelector = (state) => {
@@ -371,13 +370,11 @@ function atomsReducer (state = initialState, action) {
   switch (action.type) {
     case SET_ATOMS_DATA: {
       const atoms = {}
-      let i = 1
       Object.keys(action.data.atoms).forEach((atomsKey) => {
         atoms[atomsKey] = action.data.atoms[atomsKey].map((atom) => {
-          const timestamp = i += 1
           return {
             ...atom,
-            timestamp: timestamp
+            lodashId: uniqueId('atom_')
           }
         })
       })
@@ -406,7 +403,7 @@ function atomsReducer (state = initialState, action) {
                 id: null,
                 type: action.atomType,
                 data: {},
-                timestamp: timestamp(),
+                lodashId: uniqueId('atom_'),
                 meta: state.structures[action.atomType],
                 associations: {}
               }
@@ -468,7 +465,7 @@ function atomsReducer (state = initialState, action) {
     case CREATE_CONTENTLESS_ATOM: {
       const atoms = combineAtoms({
         oldAtoms: state.atoms[action.rootKey],
-        newAtoms: [{ id: null, type: action.atomType, timestamp: timestamp(), data: {}, associations: {} }],
+        newAtoms: [{ id: null, type: action.atomType, lodashId: uniqueId('atom_'), data: {}, associations: {} }],
         edit: false,
         indices: action.indices,
         formAction: action.action
@@ -494,7 +491,7 @@ function atomsReducer (state = initialState, action) {
 
       const atoms = combineAtoms({
         oldAtoms: state.atoms[state.form.rootKey],
-        newAtoms: state.form.atoms.map((atom) => ({ ...omit(atom.record, ['meta']), timestamp: timestamp() })),
+        newAtoms: state.form.atoms.map((atom) => ({ ...omit(atom.record, ['meta']), lodashId: uniqueId('atom_') })),
         edit: state.form.edit,
         indices: state.form.indices,
         formAction: state.form.action
@@ -547,7 +544,7 @@ function atomsReducer (state = initialState, action) {
                 id: null,
                 type: action.newType,
                 data: action.values,
-                timestamp: timestamp(),
+                lodashId: uniqueId('atom_'),
                 meta: state.structures[action.newType],
                 associations: {}
               }
@@ -720,7 +717,7 @@ function atomsReducer (state = initialState, action) {
                 id: null,
                 type: action.atomType,
                 data: {},
-                timestamp: timestamp(),
+                lodashId: uniqueId('atom_'),
                 meta: state.structures[action.atomType],
                 associations: {}
               }
