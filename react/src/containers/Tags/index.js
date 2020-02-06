@@ -29,17 +29,12 @@ class Tags extends React.Component {
   }
 
   render () {
-    let tags = []
-    if (this.props.file.attributes && this.props.file.tags) {
-      tags = this.props.file.tags
-    }
-
     return (
-      <div className='small mx-n2'>
-        {tags.map((tag) => (
+      <div className='small mx-n2 d-flex flex-wrap m-n1'>
+        {this.props.file.attributes.tags.map((tag) => (
           <Tag
             key={tag}
-            className='btn btn-sm btn-link'
+            className='btn btn-sm btn-link p-0 m-1'
             onClick={() => { this.onTagClick(tag) }}
           >
             {tag}
