@@ -18,9 +18,15 @@ swapItems = ($old, $new, immediate) ->
     $item.replaceWith(replacement)
 
   if immediate
-    $old.addClass('folio-anti-cache--done')
+    $old
+      .addClass('folio-anti-cache--done')
+      .trigger('folioAntiCacheDone')
   else
-    setTimeout (-> $old.addClass('folio-anti-cache--done')), 0
+    setTimeout (->
+      $old
+        .addClass('folio-anti-cache--done')
+        .trigger('folioAntiCacheDone')
+    ), 0
 
   saveAntiCacheHtml($old)
 
