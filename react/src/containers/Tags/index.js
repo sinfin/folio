@@ -8,7 +8,6 @@ import {
   setFilter
 } from 'ducks/filters'
 
-import TagsWrap from './styled/TagsWrap'
 import Tag from './styled/Tag'
 
 class Tags extends React.Component {
@@ -36,7 +35,7 @@ class Tags extends React.Component {
     }
 
     return (
-      <TagsWrap className='small mx-n2'>
+      <div className='small mx-n2'>
         {tags.map((tag) => (
           <Tag
             key={tag}
@@ -49,7 +48,7 @@ class Tags extends React.Component {
         <Tag className='btn btn-sm btn-link' onClick={this.onEditClick} >
           <span className='mi'>edit</span>
         </Tag>
-      </TagsWrap>
+      </div>
     )
   }
 }
