@@ -101,6 +101,12 @@ cs:
           header_link: Upravit odkazy
         link: Odkaz
         noLink: Bez odkazu (pouze obal)
+      merges:
+        form:
+          title: Sloučení
+          original: 'Cíl:'
+          duplicate: 'Duplikát:'
+          submit: Sloučit
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

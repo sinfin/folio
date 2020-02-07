@@ -1,0 +1,39 @@
+.f-c-merges-form-row
+  display: flex
+
+  & + &
+    border-top: 1px solid $border-color
+
+  &__col
+    flex: 0 0 50%
+    max-width: 50%
+    padding: $grid-gutter-half $grid-gutter-half $grid-gutter-half (( $grid-gutter-half + 23px ))
+    position: relative
+    margin: 0
+    display: block
+    cursor: pointer
+
+    &:hover
+      background: #e8edf1
+
+    &--left
+      padding-right: $grid-gutter-width
+
+    &--right
+      padding-left: $grid-gutter-width + 23px
+
+  &__input-outer
+    pointer-events: none
+
+  &__radio
+    position: absolute
+    top: 19px
+    left: $grid-gutter-half
+
+  &__radio:not(:checked) + &__input-inner
+    .form-control,
+    .form-text
+      opacity: 0.4
+
+  &__col--right &__radio
+    left: $grid-gutter-width

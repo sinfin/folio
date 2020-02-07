@@ -100,6 +100,12 @@ en:
           title: Tree structure
         link: Link
         noLink: No link (wrap only)
+      merges:
+        form:
+          title: Merge
+          original: 'Target:'
+          duplicate: 'Duplicate:'
+          submit: Merge
       nested_model_controls:
         destroy: Remove
       noTags: No tags

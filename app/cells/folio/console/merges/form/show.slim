@@ -1,0 +1,14 @@
+= form do |f|
+  h1 = t('.title')
+
+  .row
+    h2.h4.col.my-4
+      = t('.original')
+
+    h2.h4.col.my-4.f-c-merges-form__title-with-icon
+      i.mi.f-c-merges-form__title-icon chevron_left
+      = t('.duplicate')
+
+  .bg-100.mx-nh.f-c-merges-form__rows
+    - model.structure.each do |row|
+      == cell('folio/console/merges/form/row', merger: model, row: row, f: f)

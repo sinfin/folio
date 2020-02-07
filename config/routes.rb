@@ -62,6 +62,9 @@ Folio::Engine.routes.draw do
       end
     end
 
+    resource :merge, only: [:new, :show],
+                     path: 'merge/:klass/:original_id/:duplicate_id'
+
     resources :atoms, only: [:index] do
       collection do
         post :preview

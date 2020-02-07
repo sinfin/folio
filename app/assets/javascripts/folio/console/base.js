@@ -52,6 +52,7 @@
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search
+//= require folio/console/merges/form/row/row
 //= require folio/console/modules/_dirty-forms
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_multiselect
