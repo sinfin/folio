@@ -43,12 +43,17 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
   end
 
   def input_html
-    value = model.object.send(name).presence
-    value = value.join(', ') if value.is_a?(Array)
-    {
+    if options[:value]
+      value = options[:value]
+    else
+      value = model.object.send(name).presence
+      value = value.join(', ') if value.is_a?(Array)
+    end
+
+    (options[:input_html] || {}).merge(
       class: 'folio-console-tagsinput',
       value: value,
-    }
+    )
   end
 
   def wrapper_html

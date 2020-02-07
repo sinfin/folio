@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
+  class_name 'f-c-merges-form-row', :atoms?
+
   def f
     model[:f]
   end
@@ -21,6 +23,14 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
     model[:merger]
   end
 
+  def atoms?
+    if @atoms.nil?
+      @atoms = model[:row].is_a?(Hash) && model[:row][:as] == :atoms
+    else
+      @atoms
+    end
+  end
+
   # def hidden_input
   #   f.hidden_field row_key, name: row_key, class: 'f-c-merges-form-row__value', id: nil
   # end
@@ -29,8 +39,18 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
     input_html = { name: nil, id: nil, class: 'f-c-merges-form-row__input' }
     input_html[:value] = value unless value.nil?
 
-    f.input row_key, input_html: input_html,
-                     wrapper_html: { class: 'm-0' }
+    if row.is_a?(Hash)
+      case row[:as]
+      when :tags
+        cell('folio/console/tagsinput', f, value: value,
+                                           input_html: input_html).show
+      when :publishable_and_featured
+        cell('folio/console/publishable_inputs', f).show
+      end
+    else
+      f.input row_key, input_html: input_html,
+                       wrapper_html: { class: 'm-0' }
+    end
   end
 
   def original_input
@@ -38,7 +58,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   end
 
   def duplicate_input
-    input(value: merger.duplicate.send(row_key))
+    input(value: merger.duplicate.try(row_key))
   end
 
   def radio(target)

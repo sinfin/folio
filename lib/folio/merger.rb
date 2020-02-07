@@ -13,7 +13,8 @@ class Folio::Merger
     @targets = {}
 
     structure.each do |row|
-      @targets[row] = 'original'
+      key = row.is_a?(Hash) ? row[:key] : row
+      @targets[key] = 'original'
     end
   end
 end

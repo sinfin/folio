@@ -1,6 +1,10 @@
 .f-c-merges-form-row
   display: flex
 
+  &--atoms
+    background: $white
+    flex: 1 0 auto
+
   & + &
     border-top: 1px solid $border-color
 
@@ -12,6 +16,7 @@
     margin: 0
     display: block
     cursor: pointer
+    overflow: hidden
 
     &:hover
       background: #e8edf1
@@ -31,9 +36,10 @@
     left: $grid-gutter-half
 
   &__radio:not(:checked) + &__input-inner
-    .form-control,
-    .form-text
-      opacity: 0.4
+    opacity: 0.4
 
   &__col--right &__radio
     left: $grid-gutter-width
+
+  .f-c-publishable-inputs
+    margin-bottom: 0
