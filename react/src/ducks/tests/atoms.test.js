@@ -95,7 +95,7 @@ describe('atomsReducer', () => {
     expect(newState.form.atoms.length).toEqual(1)
     expect(newState.form.atoms[0].record.type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.form.atoms[0].record.associations).toEqual({})
-    expect(newState.form.atoms[0].record.timestamp).toBeTruthy()
+    expect(newState.form.atoms[0].record.lodashId).toBeTruthy()
     expect(newState.form.atoms[0].record.meta).toBeTruthy()
     expect(newState.form.edit).toEqual(false)
   })
@@ -127,7 +127,7 @@ describe('atomsReducer', () => {
     state = atomsReducer(state, updateFormAtomValue(0, 'text', 'text'))
     const ids = [0, 1].map((i) => {
       const atom = state.atoms['atoms'][i]
-      expect(atom.timestamp).toBeTruthy()
+      expect(atom.lodashId).toBeTruthy()
       expect(atom.id).toBeTruthy()
       expect(atom.type).not.toEqual('Dummy::Atom::DaVinci')
       return atom.id
@@ -137,13 +137,13 @@ describe('atomsReducer', () => {
     expect(newState.atoms['atoms'].length).toEqual(7)
     expect(newState.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
     expect(newState.atoms['atoms'][0].id).toEqual(null)
-    expect(newState.atoms['atoms'][0].timestamp).toBeTruthy()
+    expect(newState.atoms['atoms'][0].lodashId).toBeTruthy()
 
     const newIndices = [1, 2]
     newIndices.forEach((newIndex, index) => {
       const oldId = ids[index]
       const atom = newState.atoms['atoms'][newIndex]
-      expect(atom.timestamp).toBeTruthy()
+      expect(atom.lodashId).toBeTruthy()
       expect(atom.type).not.toEqual('Dummy::Atom::DaVinci')
       expect(atom.id).toEqual(oldId)
     })
@@ -157,7 +157,7 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'][0].type).not.toEqual('Dummy::Atom::DaVinci')
     expect(state.atoms['atoms'][0].data.content).not.toEqual('foo')
     expect(state.atoms['atoms'][0].id).toBeTruthy()
-    expect(state.atoms['atoms'][0].timestamp).toBeTruthy()
+    expect(state.atoms['atoms'][0].lodashId).toBeTruthy()
     expect(state.atoms['atoms'].length).toEqual(6)
     expect(state.form.destroyedIds).toEqual([oldId])
     expect(state.destroyedIds['atoms']).toEqual([])
@@ -167,7 +167,7 @@ describe('atomsReducer', () => {
     expect(state.atoms['atoms'][0].type).toEqual('Dummy::Atom::DaVinci')
     expect(state.atoms['atoms'][0].data.content).toEqual('foo')
     expect(state.atoms['atoms'][0].id).toEqual(null)
-    expect(state.atoms['atoms'][0].timestamp).toBeTruthy()
+    expect(state.atoms['atoms'][0].lodashId).toBeTruthy()
 
     expect(state.destroyedIds['atoms']).toEqual([oldId])
   })

@@ -39,3 +39,8 @@ bower_components/multiselect/test
 bower_components/spectrum/*
 !bower_components/spectrum/spectrum.css
 !bower_components/spectrum/spectrum.js
+
+bower_components/cleave.js/*
+!bower_components/cleave.js/dist
+bower_components/cleave.js/dist/*
+!bower_components/cleave.js/dist/cleave.js

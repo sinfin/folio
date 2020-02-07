@@ -32,6 +32,8 @@ SimpleForm::Inputs::StringInput.class_eval do
           input_html_classes << 'folio-console-string-input--remote-autocomplete'
         end
       end
+    elsif options[:numeral]
+      input_html_classes << 'folio-console-string-input--numeral'
     else
       input_html_classes.unshift('string')
       input_html_options[:type] ||= input_type if html5?

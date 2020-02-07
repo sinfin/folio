@@ -10,6 +10,7 @@
 //= require autosize/dist/autosize
 //= require spectrum/spectrum
 //= require js-cookie/src/js.cookie
+//= require cleave.js/dist/cleave
 
 //= require jquery-ui/jquery-ui
 //= require selectize/dist/js/standalone/selectize
