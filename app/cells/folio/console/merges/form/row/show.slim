@@ -2,11 +2,21 @@ div class=class_name
   .f-c-merges-form-row__col.f-c-merges-form-row__col--left
     .f-c-merges-form-row__input-outer
       = radio('original')
+
       .f-c-merges-form-row__input-inner
-        = original_input
+        - if atoms?
+          h2.h5.mt-0.mb-h = t('.atoms')
+          = atom_iframe('original')
+        - else
+          = original_input
 
   .f-c-merges-form-row__col.f-c-merges-form-row__col--right
     .f-c-merges-form-row__input-outer
       = radio('duplicate')
+
       .f-c-merges-form-row__input-inner
-        = duplicate_input
+        - if atoms?
+          h2.h5.mt-0.mb-h = t('.atoms')
+          = atom_iframe('duplicate')
+        - else
+          = duplicate_input

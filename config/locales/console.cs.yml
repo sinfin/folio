@@ -107,6 +107,8 @@ cs:
           original: 'Cíl:'
           duplicate: 'Duplikát:'
           submit: Sloučit
+          row:
+            atoms: CMS kapitoly
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

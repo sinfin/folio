@@ -1,9 +1,11 @@
 .f-c-merges-form-row
   display: flex
+  margin: 0 (( - $grid-gutter-half ))
+  background: $gray-100
 
   &--atoms
     background: $white
-    flex: 1 0 auto
+    padding: map-get($spacers, 2) 0
 
   & + &
     border-top: 1px solid $border-color
@@ -27,6 +29,9 @@
     &--right
       padding-left: $grid-gutter-width + 23px
 
+  &--atoms &__col:hover
+    background: $white
+
   &__input-outer
     pointer-events: none
 
@@ -38,8 +43,20 @@
   &__radio:not(:checked) + &__input-inner
     opacity: 0.4
 
+  &--atoms &__radio:not(:checked) + &__input-inner
+    opacity: 0.25
+
   &__col--right &__radio
     left: $grid-gutter-width
+
+  &__atoms-iframe
+    flex: 1 0 auto
+    width: 100%
+    position: relative
+    z-index: 1
+    border: 0
+    margin-left: -23px
+    margin-right: - $grid-gutter-half
 
   .f-c-publishable-inputs
     margin-bottom: 0

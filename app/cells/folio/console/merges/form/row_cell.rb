@@ -24,16 +24,9 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   end
 
   def atoms?
-    if @atoms.nil?
-      @atoms = model[:row].is_a?(Hash) && model[:row][:as] == :atoms
-    else
-      @atoms
-    end
+    return @atoms unless @atoms.nil?
+    @atoms = model[:row].is_a?(Hash) && model[:row][:as] == :atoms
   end
-
-  # def hidden_input
-  #   f.hidden_field row_key, name: row_key, class: 'f-c-merges-form-row__value', id: nil
-  # end
 
   def input(value: nil)
     input_html = { name: nil, id: nil, class: 'f-c-merges-form-row__input' }
@@ -45,7 +38,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
         cell('folio/console/tagsinput', f, value: value,
                                            input_html: input_html).show
       when :publishable_and_featured
-        cell('folio/console/publishable_inputs', f).show
+        cell('folio/console/publishable_inputs', f, no_input_ids: true).show
       end
     else
       f.input row_key, input_html: input_html,
@@ -67,5 +60,13 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
                      merger.targets[row_key] == target,
                      class: 'f-c-merges-form-row__radio',
                      id: nil)
+  end
+
+  def atom_iframe(target)
+    record = merger.send(target)
+    src = controller.placement_preview_console_atoms_path(record.class.to_s,
+                                                          record.id)
+    content_tag(:iframe, '', class: 'f-c-merges-form-row__atoms-iframe',
+                             src: src)
   end
 end

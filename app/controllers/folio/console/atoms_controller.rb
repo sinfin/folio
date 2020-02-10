@@ -38,6 +38,19 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     render :preview, layout: false
   end
 
+  def placement_preview
+    klass = params.require(:klass).safe_constantize
+    if klass < ActiveRecord::Base && klass.new.respond_to?(:atoms)
+      @non_interactive = true
+      @atoms = {
+        I18n.locale => klass.find(params[:id]).atoms_in_molecules || [],
+      }
+      render :preview
+    else
+      fail ActionController::ParameterMissing, :klass
+    end
+  end
+
   def validate
     res = params.require(:atoms)
                 .map do |raw|

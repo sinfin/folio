@@ -9,7 +9,7 @@ class Folio::Page::Merger < Folio::Merger
       :perex,
       :featured,
       { key: :tags, as: :tags },
-      { key: :atoms, as: :atoms }
+      { key: :atoms, as: :atoms },
     ]
   end
 end

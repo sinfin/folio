@@ -106,6 +106,8 @@ en:
           original: 'Target:'
           duplicate: 'Duplicate:'
           submit: Merge
+          row:
+            atoms: CMS chapters
       nested_model_controls:
         destroy: Remove
       noTags: No tags

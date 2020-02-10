@@ -67,6 +67,7 @@ Folio::Engine.routes.draw do
 
     resources :atoms, only: [:index] do
       collection do
+        get :placement_preview, path: 'placement_preview/:klass/:id'
         post :preview
         post :validate
       end

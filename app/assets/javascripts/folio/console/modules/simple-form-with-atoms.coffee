@@ -1,5 +1,5 @@
 sendMessage = (data) ->
-  $('.f-c-simple-form-with-atoms__iframe').each ->
+  $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe').each ->
     @contentWindow.postMessage(data, window.origin)
 
 $(document)
@@ -42,7 +42,7 @@ editPerex = (locale) ->
   $perex.focus()
 
 setHeight = ->
-  $iframes = $('.f-c-simple-form-with-atoms__iframe')
+  $iframes = $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe')
   minHeight = 0
 
   $iframes.each ->

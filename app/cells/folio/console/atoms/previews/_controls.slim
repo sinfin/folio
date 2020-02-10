@@ -1,34 +1,35 @@
-- I18n.with_locale(::Rails.application.config.folio_console_locale)
-  .f-c-atoms-previews__controls
-    .f-c-atoms-previews__controls-overlay
-    .f-c-atoms-previews__buttons
-      button.mi[
-        type="button"
-        class="f-c-atoms-previews__button"
-        class="f-c-atoms-previews__button--edit"
-      ]
-        ' edit
+- unless options[:non_interactive]
+  - I18n.with_locale(::Rails.application.config.folio_console_locale)
+    .f-c-atoms-previews__controls
+      .f-c-atoms-previews__controls-overlay
+      .f-c-atoms-previews__buttons
+        button.mi[
+          type="button"
+          class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--edit"
+        ]
+          ' edit
 
-      button.mi[
-        type="button"
-        class="f-c-atoms-previews__button"
-        class="f-c-atoms-previews__button--arrow"
-        class="f-c-atoms-previews__button--arrow-up"
-      ]
-        ' arrow_upward
+        button.mi[
+          type="button"
+          class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--arrow"
+          class="f-c-atoms-previews__button--arrow-up"
+        ]
+          ' arrow_upward
 
-      button.mi[
-        type="button"
-        class="f-c-atoms-previews__button"
-        class="f-c-atoms-previews__button--arrow"
-        class="f-c-atoms-previews__button--arrow-down"
-      ]
-        ' arrow_downward
+        button.mi[
+          type="button"
+          class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--arrow"
+          class="f-c-atoms-previews__button--arrow-down"
+        ]
+          ' arrow_downward
 
-      button.mi[
-        type="button"
-        class="f-c-atoms-previews__button"
-        class="f-c-atoms-previews__button--remove"
-      ]
-        ' delete
-    .f-c-atoms-previews__controls-mobile-overlay
+        button.mi[
+          type="button"
+          class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--remove"
+        ]
+          ' delete
+      .f-c-atoms-previews__controls-mobile-overlay

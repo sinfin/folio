@@ -6,15 +6,23 @@ class Folio::Merger
                 :klass,
                 :targets
 
-  def initialize(original, duplicate, klass:)
+  def initialize(original, duplicate, klass: nil)
     @original = original
     @duplicate = duplicate
-    @klass = klass
+    @klass = klass || default_klass
     @targets = {}
 
     structure.each do |row|
       key = row.is_a?(Hash) ? row[:key] : row
       @targets[key] = 'original'
     end
+  end
+
+  def atoms
+    nil
+  end
+
+  def default_klass
+    self.class.parent
   end
 end

@@ -9,6 +9,6 @@
       i.mi.f-c-merges-form__title-icon chevron_left
       = t('.duplicate')
 
-  .bg-100.mx-nh.f-c-merges-form__rows
+  .f-c-merges-form__rows
     - model.structure.each do |row|
       == cell('folio/console/merges/form/row', merger: model, row: row, f: f)
