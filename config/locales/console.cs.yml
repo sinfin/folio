@@ -111,6 +111,9 @@ cs:
           reload: Obnovit
           row:
             atoms: CMS kapitoly
+        create:
+          success: Záznamy byly sloučeny
+          failure: Záznamy se nepodařilo sloučit
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

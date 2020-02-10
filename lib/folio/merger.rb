@@ -6,6 +6,9 @@ class Folio::Merger
                 :klass,
                 :targets
 
+  ORIGINAL = 'original'
+  DUPLICATE = 'duplicate'
+
   def initialize(original, duplicate, klass: nil)
     @original = original
     @duplicate = duplicate
@@ -14,19 +17,19 @@ class Folio::Merger
 
     structure.each do |row|
       key = row.is_a?(Hash) ? row[:key] : row
-      @targets[key] = 'original'
+      @targets[key] = ORIGINAL
     end
   end
 
   def merge(params, bang: false)
-    @targets.merge!(params)
+    @targets.merge!(params.to_h.symbolize_keys)
 
     attrs = {}
 
     structure.each do |row|
       is_hash = row.is_a?(Hash)
       key = is_hash ? row[:key] : row
-      next if @targets[key] != 'duplicate'
+      next if @targets[key] != DUPLICATE
       if is_hash
         attrs = merge_hash_row(attrs, row)
       else
@@ -37,6 +40,7 @@ class Folio::Merger
     ActiveRecord::Base.transaction do
       merge_atoms
       merge_placements(bang: bang)
+      merge_custom_relations(bang: bang)
 
       if bang
         @original.update!(attrs)
@@ -50,6 +54,16 @@ class Folio::Merger
 
   def merge!(params)
     merge(params, bang: true)
+  end
+
+  def permitted_params
+    structure.map do |row|
+      if row.is_a?(Hash)
+        row[:key]
+      else
+        row
+      end
+    end
   end
 
   private
@@ -66,12 +80,14 @@ class Folio::Merger
             attrs[attr] = @duplicate.send(attr)
           end
         end
+      else
+        attrs = merge_custom_hash_row(attrs, row)
       end
       attrs
     end
 
     def merge_atoms
-      return unless @targets[:atoms] == 'duplicate'
+      return unless @targets[:atoms] == DUPLICATE
 
       if @original.class.respond_to?(:atom_locales)
         keys = @original.class.atom_locales.map { |locale| "#{locale}_atoms" }
@@ -89,7 +105,7 @@ class Folio::Merger
     def merge_placements(bang:)
       structure.each do |row|
         next unless row.is_a?(Hash)
-        next unless @targets[row[:key]] == 'duplicate'
+        next unless @targets[row[:key]] == DUPLICATE
 
         if row[:as] == :file_placement
           @original.send(row[:key]).try(:destroy)
@@ -111,6 +127,13 @@ class Folio::Merger
           end
         end
       end
+    end
+
+    def merge_custom_relations(bang:)
+    end
+
+    def merge_custom_hash_row(attrs, _row)
+      attrs
     end
 
     def original_type

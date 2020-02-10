@@ -38,7 +38,8 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
         cell('folio/console/tagsinput', f, value: value,
                                            input_html: input_html).show
       when :publishable_and_featured
-        cell('folio/console/publishable_inputs', f, no_input_ids: true).show
+        cell('folio/console/publishable_inputs', f, no_input_ids: true,
+                                                    no_input_names: true).show
       when :file_placement
         placement = merger.send(target).send(row[:key])
         cell('folio/console/file_placements/list', [placement]).show
@@ -50,15 +51,15 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   end
 
   def original_input
-    input(target: 'original')
+    input(target: Folio::Merger::ORIGINAL)
   end
 
   def duplicate_input
-    input(target: 'duplicate', value: merger.duplicate.try(row_key))
+    input(target: Folio::Merger::DUPLICATE, value: merger.duplicate.try(row_key))
   end
 
   def radio(target)
-    radio_button_tag(row_key,
+    radio_button_tag("merge[#{row_key}]",
                      target,
                      merger.targets[row_key] == target,
                      class: 'f-c-merges-form-row__radio',

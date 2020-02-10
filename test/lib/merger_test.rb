@@ -13,10 +13,10 @@ class Folio::MergerTest < ActiveSupport::TestCase
     merger = Folio::Page::Merger.new(original, duplicate)
 
     merger.merge!(
-      title: 'duplicate',
-      slug: 'original',
-      atoms: 'duplicate',
-      cover_placement: 'duplicate',
+      title: Folio::Merger::DUPLICATE,
+      slug: Folio::Merger::ORIGINAL,
+      atoms: Folio::Merger::DUPLICATE,
+      cover_placement: Folio::Merger::DUPLICATE,
     )
 
     assert_equal('bar', original.reload.title)

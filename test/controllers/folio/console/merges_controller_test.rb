@@ -31,10 +31,10 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
 
     post console_merge_path('Folio::Page', original, duplicate), params: {
       merge: {
-        title: 'duplicate',
+        title: Folio::Merger::DUPLICATE,
       }
     }
-    assert_response :success
+    assert_redirected_to url_for([:edit, :console, original])
 
     assert_equal('bar', original.reload.title)
     assert_not(Folio::Page.exists?(id: duplicate.id))

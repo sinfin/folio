@@ -110,6 +110,9 @@ en:
           reload: Reload
           row:
             atoms: CMS chapters
+        create:
+          success: Records have been merged
+          failure: Failed to merge records
       nested_model_controls:
         destroy: Remove
       noTags: No tags

@@ -6,10 +6,9 @@ class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
   end
 
   def input_html(class_name = nil)
-    if options[:no_input_ids]
-      { id: nil, class: class_name }
-    else
-      { class: class_name }
-    end
+    b = { class: class_name }
+    b[:id] = nil if options[:no_input_ids]
+    b[:name] = nil if options[:no_input_names]
+    b
   end
 end
