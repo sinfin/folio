@@ -106,6 +106,8 @@ en:
           original: 'Target:'
           duplicate: 'Duplicate:'
           submit: Merge
+          invalid: 'To merge records, the target needs to be valid. Fix the following errors and  refresh this page:'
+          reload: Reload
           row:
             atoms: CMS chapters
       nested_model_controls:

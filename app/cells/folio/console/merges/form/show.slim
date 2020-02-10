@@ -1,14 +1,39 @@
-= form do |f|
+.f-c-merges-form
   h1 = t('.title')
 
-  .row
-    h2.h4.col.my-4
-      = t('.original')
+  - if model.original.valid?
+    = form do |f|
 
-    h2.h4.col.my-4.f-c-merges-form__title-with-icon
-      i.mi.f-c-merges-form__title-icon chevron_left
-      = t('.duplicate')
+      .row
+        h2.h4.col.my-4
+          = t('.original')
 
-  .f-c-merges-form__rows
-    - model.structure.each do |row|
-      == cell('folio/console/merges/form/row', merger: model, row: row, f: f)
+        h2.h4.col.my-4.f-c-merges-form__title-with-icon
+          i.mi.f-c-merges-form__title-icon chevron_left
+          = t('.duplicate')
+
+      .f-c-merges-form__rows
+        - model.structure.each do |row|
+          == cell('folio/console/merges/form/row', merger: model, \
+                                                   row: row, \
+                                                   f: f)
+  - else
+    .f-c-merges-form__invalid.mt-3
+      p = t('.invalid')
+
+      .my-4.pb-3
+        == cell('folio/console/form/errors', nil, errors: model.original.errors)
+
+      .d-flex
+        a.btn.btn-primary.mr-2[
+          target="_blank"
+          href=url_for([:edit, :console, model.original])
+        ]
+          = t('folio.console.actions.edit')
+
+        button.btn.btn-outline[
+          onclick="javascript:window.location.reload(true)"
+          type="button"
+        ]
+          i.mi refresh
+          = t('.reload')

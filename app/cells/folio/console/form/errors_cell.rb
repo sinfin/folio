@@ -2,11 +2,15 @@
 
 class Folio::Console::Form::ErrorsCell < Folio::ConsoleCell
   def show
-    render if model.object.errors.present?
+    render if errors.present?
   end
 
   def full_messages
-    @full_messages ||= model.object.errors.full_messages
+    @full_messages ||= errors.full_messages
+  end
+
+  def errors
+    options[:errors] || model.object.errors
   end
 
   def field_name(key)

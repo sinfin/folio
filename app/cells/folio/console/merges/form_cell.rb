@@ -9,7 +9,7 @@ class Folio::Console::Merges::FormCell < Folio::ConsoleCell
       url: controller.console_merge_path(model.klass,
                                          model.original,
                                          model.duplicate),
-      html: { class: 'f-c-merges-form' },
+      html: { class: 'f-c-merges-form__form' },
     }
 
     simple_form_for(model.original, opts, &block)

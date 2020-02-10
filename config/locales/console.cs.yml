@@ -107,6 +107,8 @@ cs:
           original: 'Cíl:'
           duplicate: 'Duplikát:'
           submit: Sloučit
+          invalid: 'Pro sloučení je potřeba, aby byl cíl validní. Opravte prosím následující chyby a poté obnovte tuto stránku:'
+          reload: Obnovit
           row:
             atoms: CMS kapitoly
       nested_model_controls:

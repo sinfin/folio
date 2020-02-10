@@ -62,7 +62,7 @@ Folio::Engine.routes.draw do
       end
     end
 
-    resource :merge, only: [:new, :show],
+    resource :merge, only: [:new, :create],
                      path: 'merge/:klass/:original_id/:duplicate_id'
 
     resources :atoms, only: [:index] do

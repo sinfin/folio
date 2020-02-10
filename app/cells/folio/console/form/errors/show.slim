@@ -1,9 +1,10 @@
 .f-c-form-errors.alert.alert-danger
-  .font-weight-bold = model.error_notification
+  - if model
+    .font-weight-bold.mb-2 = model.error_notification
 
   ul
-    - model.object.errors.each_with_index do |field, i|
-      li.mt-2.d-flex.align-items-center
+    - errors.each_with_index do |field, i|
+      li.d-flex.align-items-center class=(i.zero? ? nil : 'mt-2')
         span.mr-3
           = full_messages[i]
 
