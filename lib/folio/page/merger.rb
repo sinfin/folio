@@ -12,4 +12,12 @@ class Folio::Page::Merger < Folio::Merger
       { key: :atoms, as: :atoms },
     ]
   end
+
+  private
+
+    def merge_custom_relations
+      @duplicate.menu_items.each do |mi|
+        mi.update!(target: @original)
+      end
+    end
 end

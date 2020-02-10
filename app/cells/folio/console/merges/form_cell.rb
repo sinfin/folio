@@ -10,6 +10,7 @@ class Folio::Console::Merges::FormCell < Folio::ConsoleCell
                                          model.original,
                                          model.duplicate),
       html: { class: 'f-c-merges-form__form' },
+      method: :post,
     }
 
     simple_form_for(model.original, opts, &block)

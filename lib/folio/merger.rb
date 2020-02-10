@@ -38,9 +38,10 @@ class Folio::Merger
     end
 
     ActiveRecord::Base.transaction do
+      update_atom_associations
       merge_atoms
-      merge_placements(bang: bang)
-      merge_custom_relations(bang: bang)
+      merge_placements
+      merge_custom_relations
 
       if bang
         @original.update!(attrs)
@@ -102,7 +103,7 @@ class Folio::Merger
       end
     end
 
-    def merge_placements(bang:)
+    def merge_placements
       structure.each do |row|
         next unless row.is_a?(Hash)
         next unless @targets[row[:key]] == DUPLICATE
@@ -111,25 +112,16 @@ class Folio::Merger
           @original.send(row[:key]).try(:destroy)
           duplicate_placement = @duplicate.send(row[:key])
           if duplicate_placement
-            if bang
-              duplicate_placement.update!(placement: @original)
-            else
-              duplicate_placement.update(placement: @original)
-            end
+            duplicate_placement.update!(placement: @original)
           end
         elsif row[:as] == :file_placements
-          if bang
-            @original.send(row[:key]).each(&:destroy!)
-            @duplicate.send(row[:key]).each { |fp| fp.update!(placement: @original) }
-          else
-            @original.send(row[:key]).each(&:destroy)
-            @duplicate.send(row[:key]).each { |fp| fp.update(placement: @original) }
-          end
+          @original.send(row[:key]).each(&:destroy!)
+          @duplicate.send(row[:key]).each { |fp| fp.update!(placement: @original) }
         end
       end
     end
 
-    def merge_custom_relations(bang:)
+    def merge_custom_relations
     end
 
     def merge_custom_hash_row(attrs, _row)
@@ -138,5 +130,21 @@ class Folio::Merger
 
     def original_type
       @original_type ||= @original.try(:type) || @klass.to_s
+    end
+
+    def update_atom_associations
+      Folio::Atom.types.each do |atom_klass|
+        atom_klass::ASSOCIATIONS.each do |key, class_names|
+          if class_names.include?(@klass.to_s)
+            atom_klass.where("folio_atoms.associations -> ? ->> 'type' = ?",
+                             key,
+                             @klass.to_s)
+                      .where("folio_atoms.associations -> ? ->> 'id' = ?",
+                             key,
+                             @duplicate.id.to_s)
+                      .each { |atom| atom.update!(key => @original) }
+          end
+        end
+      end
     end
 end

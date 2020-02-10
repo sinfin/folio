@@ -29,8 +29,12 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   end
 
   def input(target:, value: nil)
-    input_html = { name: nil, id: nil, class: 'f-c-merges-form-row__input' }
-    input_html[:value] = value unless value.nil?
+    input_html = {
+      name: nil,
+      id: nil,
+      class: 'f-c-merges-form-row__input',
+      value: value
+    }
 
     if row.is_a?(Hash)
       case row[:as]
@@ -51,11 +55,13 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   end
 
   def original_input
-    input(target: Folio::Merger::ORIGINAL)
+    input(target: Folio::Merger::ORIGINAL,
+          value: merger.original.try(row_key))
   end
 
   def duplicate_input
-    input(target: Folio::Merger::DUPLICATE, value: merger.duplicate.try(row_key))
+    input(target: Folio::Merger::DUPLICATE,
+          value: merger.duplicate.try(row_key))
   end
 
   def radio(target)

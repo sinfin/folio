@@ -17,6 +17,9 @@
           == cell('folio/console/merges/form/row', merger: model, \
                                                    row: row, \
                                                    f: f)
+
+      == cell('folio/console/form/footer', f, submit_label: t('.submit'))
+
   - else
     .f-c-merges-form__invalid.mt-3
       p = t('.invalid')

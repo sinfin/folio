@@ -12,6 +12,9 @@ class Folio::MergerTest < ActiveSupport::TestCase
     duplicate_cover = create(:folio_cover_placement, placement: duplicate)
     merger = Folio::Page::Merger.new(original, duplicate)
 
+    reference = create_atom(Dummy::Atom::DaVinci, page: duplicate)
+    assert_equal(duplicate, reference.page)
+
     merger.merge!(
       title: Folio::Merger::DUPLICATE,
       slug: Folio::Merger::ORIGINAL,
@@ -27,5 +30,7 @@ class Folio::MergerTest < ActiveSupport::TestCase
 
     assert_not(Folio::FilePlacement::Base.exists?(id: original_cover.id))
     assert_equal(original.id, duplicate_cover.reload.placement_id)
+
+    assert_equal(original, reference.reload.page)
   end
 end
