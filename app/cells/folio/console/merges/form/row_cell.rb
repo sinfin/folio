@@ -28,7 +28,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
     @atoms = model[:row].is_a?(Hash) && model[:row][:as] == :atoms
   end
 
-  def input(value: nil)
+  def input(target:, value: nil)
     input_html = { name: nil, id: nil, class: 'f-c-merges-form-row__input' }
     input_html[:value] = value unless value.nil?
 
@@ -39,6 +39,9 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
                                            input_html: input_html).show
       when :publishable_and_featured
         cell('folio/console/publishable_inputs', f, no_input_ids: true).show
+      when :file_placement
+        placement = merger.send(target).send(row[:key])
+        cell('folio/console/file_placements/list', [placement]).show
       end
     else
       f.input row_key, input_html: input_html,
@@ -47,11 +50,11 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   end
 
   def original_input
-    input
+    input(target: 'original')
   end
 
   def duplicate_input
-    input(value: merger.duplicate.try(row_key))
+    input(target: 'duplicate', value: merger.duplicate.try(row_key))
   end
 
   def radio(target)
@@ -68,5 +71,14 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
                                                           record.id)
     content_tag(:iframe, '', class: 'f-c-merges-form-row__atoms-iframe',
                              src: src)
+  end
+
+  def title?
+    if row.is_a?(Hash)
+      case row[:as]
+      when :file_placement
+        true
+      end
+    end
   end
 end

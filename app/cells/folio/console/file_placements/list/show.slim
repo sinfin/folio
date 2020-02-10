@@ -1,0 +1,7 @@
+.f-c-file-placements-list
+  - if images?
+    .f-c-file-list
+      - model.each do |placement|
+        .f-c-file-list__file
+          .f-c-file-list__img-wrap
+            img.f-c-file-list__img src=src(placement)

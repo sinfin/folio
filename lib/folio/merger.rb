@@ -36,13 +36,14 @@ class Folio::Merger
 
     ActiveRecord::Base.transaction do
       merge_atoms
+      merge_placements(bang: bang)
 
       if bang
         @original.update!(attrs)
-        @duplicate.destroy!
+        @duplicate.reload.destroy!
       else
         @original.update(attrs)
-        @duplicate.destroy
+        @duplicate.reload.destroy
       end
     end
   end
@@ -80,7 +81,39 @@ class Folio::Merger
 
       keys.each do |key|
         @original.send(key).destroy_all
-        @duplicate.send(key).update_all(placement_id: @original.id)
+        @duplicate.send(key).update_all(placement_id: @original.id,
+                                        placement_type: original_type)
       end
+    end
+
+    def merge_placements(bang:)
+      structure.each do |row|
+        next unless row.is_a?(Hash)
+        next unless @targets[row[:key]] == 'duplicate'
+
+        if row[:as] == :file_placement
+          @original.send(row[:key]).try(:destroy)
+          duplicate_placement = @duplicate.send(row[:key])
+          if duplicate_placement
+            if bang
+              duplicate_placement.update!(placement: @original)
+            else
+              duplicate_placement.update(placement: @original)
+            end
+          end
+        elsif row[:as] == :file_placements
+          if bang
+            @original.send(row[:key]).each(&:destroy!)
+            @duplicate.send(row[:key]).each { |fp| fp.update!(placement: @original) }
+          else
+            @original.send(row[:key]).each(&:destroy)
+            @duplicate.send(row[:key]).each { |fp| fp.update(placement: @original) }
+          end
+        end
+      end
+    end
+
+    def original_type
+      @original_type ||= @original.try(:type) || @klass.to_s
     end
 end

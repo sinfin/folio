@@ -8,6 +8,8 @@ div class=class_name
           h2.h5.mt-0.mb-h = t('.atoms')
           = atom_iframe('original')
         - else
+          - if title?
+            p = merger.klass.human_attribute_name(row_key)
           = original_input
 
   .f-c-merges-form-row__col.f-c-merges-form-row__col--right
@@ -19,4 +21,6 @@ div class=class_name
           h2.h5.mt-0.mb-h = t('.atoms')
           = atom_iframe('duplicate')
         - else
+          - if title?
+            p = merger.klass.human_attribute_name(row_key)
           = duplicate_input
