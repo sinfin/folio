@@ -40,7 +40,11 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
       end
     end
 
-    url_for([:console, model, h])
+    if options[:folio_console_merge]
+      url_for([:merge, :console, model, h])
+    else
+      url_for([:console, model, h])
+    end
   end
 
   def new_button(&block)

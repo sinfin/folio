@@ -115,6 +115,14 @@ en:
         create:
           success: Records have been merged.
           failure: Failed to merge records.
+        index:
+          header:
+            original: Target
+            duplicate: Duplicate
+          footer:
+            new_merge: Continue
+            original: 'Target:'
+            duplicate: 'Duplicate:'
       nested_model_controls:
         destroy: Remove
       noTags: No tags

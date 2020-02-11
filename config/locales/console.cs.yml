@@ -120,6 +120,10 @@ cs:
           header:
             original: Cíl
             duplicate: Duplikát
+          footer:
+            new_merge: Pokračovat ke sloučení
+            original: 'Cíl:'
+            duplicate: 'Duplikát:'
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

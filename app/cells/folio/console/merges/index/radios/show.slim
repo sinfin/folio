@@ -10,6 +10,7 @@
         type="radio"
         name="merge[#{key}]"
         value=model.id
+        data-slug=model.try(:slug)
         class="f-c-merges-index-radios__input"
         class="f-c-merges-index-radios__input--#{key}"
       ]

@@ -1,0 +1,37 @@
+.f-c-merges-index-footer
+  &__labels
+    display: flex
+
+  &__label
+    display: flex
+    align-items: center
+    margin-right: $grid-gutter-width
+
+    img
+      width: 32px
+      height: 32px
+      display: block
+      pointer-events: none
+      margin-right: 6px
+
+  &__label-inner
+    background: #f2f2f2
+    padding: 6px
+    margin: -10px 0
+    min-height: 44px
+    display: flex
+    align-items: center
+    min-width: 0
+
+  &__label-content
+    max-width: 120px
+    flex: 0 1 120px
+    display: block
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__label-remove
+    cursor: pointer
+    flex: 0 0 14px
+    margin-left: map-get($spacers, 2)
