@@ -9,6 +9,7 @@ module Folio::Console::ShowForHelper
              after_lambda: after_lambda,
              klass: @klass,
              block: block,
+             folio_console_merge: @folio_console_merge,
            }
   end
 

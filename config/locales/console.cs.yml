@@ -116,6 +116,10 @@ cs:
         create:
           success: Záznamy byly sloučeny.
           failure: Záznamy se nepodařilo sloučit.
+        index:
+          header:
+            original: Cíl
+            duplicate: Duplikát
       nested_model_controls:
         destroy: Odebrat
       noTags: Žádná klíčová slova

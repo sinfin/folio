@@ -1,0 +1,15 @@
+.f-c-merges-index-radios[
+  data-label=(model.try(:to_merge_label) || model.try(:to_label))
+]
+  - [Folio::Merger::ORIGINAL, Folio::Merger::DUPLICATE].each do |key|
+    label[
+      class="f-c-merges-index-radios__label"
+      class="f-c-merges-index-radios__label--#{key}"
+    ]
+      input[
+        type="radio"
+        name="merge[#{key}]"
+        value=model.id
+        class="f-c-merges-index-radios__input"
+        class="f-c-merges-index-radios__input--#{key}"
+      ]
