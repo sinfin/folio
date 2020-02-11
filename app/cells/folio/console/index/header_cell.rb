@@ -7,9 +7,17 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     model.model_name.human(count: 2)
   end
 
+  def query_url
+    if options[:folio_console_merge]
+      url_for([:merge, :console, model])
+    else
+      url_for([:console, model])
+    end
+  end
+
   def query_form(&block)
     opts = {
-      url: url_for([:console, model]),
+      url: query_url,
       method: :get,
       html: { class: 'f-c-index-header__form' },
     }

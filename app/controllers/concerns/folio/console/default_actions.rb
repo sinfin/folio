@@ -19,6 +19,7 @@ module Folio::Console::DefaultActions
   def merge
     @folio_console_merge = @klass
     index
+    render :index
   end
 
   def create
