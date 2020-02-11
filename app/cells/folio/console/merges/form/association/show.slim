@@ -1,0 +1,9 @@
+.f-c-merges-form-association
+  p = model[:reflection].klass.model_name.human(count: multi ? 2 : 1)
+
+  - if records.blank?
+    .text-muted = t('.empty')
+  - else
+    ul.list-styled
+      - records.to_a.flatten.each do |record|
+        li = record.to_label

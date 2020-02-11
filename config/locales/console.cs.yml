@@ -109,6 +109,8 @@ cs:
           submit: Sloučit
           invalid: 'Pro sloučení je potřeba, aby byl cíl validní. Opravte prosím následující chyby a poté obnovte tuto stránku:'
           reload: Obnovit
+          association:
+            empty: nevyplněno
           row:
             atoms: CMS kapitoly
         create:

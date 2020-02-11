@@ -108,6 +108,8 @@ en:
           submit: Merge
           invalid: 'To merge records, the target needs to be valid. Fix the following errors and  refresh this page:'
           reload: Reload
+          association:
+            empty: none
           row:
             atoms: CMS chapters
         create:

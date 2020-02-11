@@ -13,6 +13,11 @@ class Folio::Console::MergesController < Folio::Console::BaseController
         @merger = merger_klass.new(@klass.find(params.require(:original_id)),
                                    @klass.find(params.require(:duplicate_id)),
                                    klass: @klass)
+
+        add_breadcrumb @klass.model_name.human(count: 2),
+                       url_for([:console, @klass])
+
+        add_breadcrumb I18n.t('folio.console.merges.form.title')
         next
       end
     end

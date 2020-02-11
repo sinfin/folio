@@ -47,6 +47,13 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
       when :file_placement
         placement = merger.send(target).send(row[:key])
         cell('folio/console/file_placements/list', [placement]).show
+      when :file_placements
+        placements = merger.send(target).send(row[:key])
+        cell('folio/console/file_placements/list', placements).show
+      when :association
+        cell('folio/console/merges/form/association',
+             record: merger.send(target),
+             reflection: merger.klass.reflect_on_association(row_key)).show
       end
     else
       f.input row_key, input_html: input_html,
@@ -83,7 +90,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
   def title?
     if row.is_a?(Hash)
       case row[:as]
-      when :file_placement
+      when :file_placement, :file_placements
         true
       end
     end

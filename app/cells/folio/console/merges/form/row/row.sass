@@ -3,6 +3,10 @@
   margin: 0 (( - $grid-gutter-half ))
   background: $gray-100
 
+  +media-breakpoint-up(xxl)
+    margin-left: - $grid-gutter-width
+    margin-right: - $grid-gutter-width
+
   &--atoms
     background: $white
     padding: map-get($spacers, 2) 0
