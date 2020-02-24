@@ -46,10 +46,15 @@ class Folio::Merger
       if bang
         @original.update!(attrs)
         @duplicate.reload.destroy!
+        post_merge_update(bang: bang)
+        success = true
       else
-        @original.update(attrs)
+        success = @original.update(attrs)
         @duplicate.reload.destroy
+        success = success && (post_merge_update(bang: bang) != false)
       end
+
+      return success
     end
   end
 
@@ -122,6 +127,9 @@ class Folio::Merger
     end
 
     def merge_custom_relations
+    end
+
+    def post_merge_update(bang: false)
     end
 
     def merge_custom_hash_row(attrs, _row)
