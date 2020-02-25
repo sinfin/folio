@@ -2,6 +2,7 @@ CONFIG =
   locale: document.documentElement.lang
   sideBySide: true
   format: 'DD. MM. YYYY HH:mm'
+  keepInvalid: false
   icons:
     time: 'fa fa-clock',
     date: 'fa fa-calendar',
@@ -17,14 +18,26 @@ DATE_CONFIG = $.extend {}, CONFIG, format: 'DD. MM. YYYY'
 
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 
+dpChange = (e) ->
+  return unless e.date
+  @dataset.date = e.date.format()
+
 window.folioConsoleInitDatePicker = (el) ->
-  $(el).datetimepicker(DATE_CONFIG)
+  $el = $(el)
+  $el.val(moment($el.data('date')).format(DATE_CONFIG.format)) if $el.data('date')
+  $el.datetimepicker(DATE_CONFIG)
+  $el.on 'dp.change', dpChange
 
 window.folioConsoleInitDateTimePicker = (el) ->
-  $(el).datetimepicker(CONFIG)
+  $el = $(el)
+  $el.val(moment($el.data('date')).format(CONFIG.format)) if $el.data('date')
+  $el.datetimepicker(CONFIG)
+  $el.on 'dp.change', dpChange
 
 window.folioConsoleUnbindDatePicker = (el) ->
-  $(el).datetimepicker('destroy')
+  $(el)
+    .datetimepicker('destroy')
+    .off 'dp.change'
 
 bindDatePicker = ($elements) ->
   $elements.each ->

@@ -104,7 +104,15 @@ module Folio::Atom::MethodMissing
         self.data[name_without_operator.to_s] = value
       else
         val = (self.data || {})[name_without_operator.to_s]
-        is_bool ? val.present? : val
+        if is_bool
+          val.present?
+        elsif klass::STRUCTURE[name_without_operator] == :date
+          val ? Date.parse(val) : val
+        elsif klass::STRUCTURE[name_without_operator] == :datetime
+          val ? DateTime.parse(val) : val
+        else
+          val
+        end
       end
     end
 end

@@ -10,7 +10,7 @@ class DateInput extends React.PureComponent {
   }
 
   onChange = () => {
-    this.props.onChange({ target: this.inputRef.current })
+    this.props.onChange(this.inputRef.current.dataset.date)
   }
 
   focus () {
@@ -31,8 +31,14 @@ class DateInput extends React.PureComponent {
   componentWillUnmount () {
     if (window.folioConsoleUnbindDatePicker) {
       window.folioConsoleUnbindDatePicker(this.inputRef.current)
-      const $ = window.jQuery
-      $(this.inputRef.current).off('dp.change', this.onChange)
+    }
+  }
+
+  defaultValue () {
+    if (this.props.defaultValue) {
+      return new Date(this.props.defaultValue)
+    } else {
+      return ''
     }
   }
 
@@ -42,11 +48,12 @@ class DateInput extends React.PureComponent {
         <Input
           type='text'
           name={this.props.name}
-          defaultValue={this.props.defaultValue}
+          defaultValue={this.defaultValue()}
           onKeyPress={preventEnterSubmit}
           placeholder={this.props.placeholder}
           innerRef={this.inputRef}
           invalid={this.props.invalid}
+          data-date={this.props.defaultValue}
         />
       </div>
     )

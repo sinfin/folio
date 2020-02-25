@@ -5,6 +5,7 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
     value = @builder.object.public_send(attribute_name)
     if value.present?
       input_html_options[:value] = I18n.l(value, format: :console_short)
+      input_html_options['data-date'] = value
     end
 
     input_html_options[:class] ||= []
