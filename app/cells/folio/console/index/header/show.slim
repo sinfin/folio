@@ -58,7 +58,10 @@
         = render(:_new_button_label)
 
 - if options[:tabs]
-  == cell('folio/console/index/tabs', options[:tabs])
+  == cell('folio/console/index/tabs', \
+          options[:tabs], \
+          index_filters: controller.send(:index_filters), \
+          params: controller.params)
 
 - if options[:above_filters]
   == options[:above_filters]

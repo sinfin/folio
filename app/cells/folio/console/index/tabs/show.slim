@@ -3,7 +3,7 @@
     - model.each do |tab|
       li.nav-item
         a.nav-link[
-          href=tab[:href]
+          href=href(tab)
           class=active_class(tab[:href], start_with: false)
         ]
           = tab[:label]
