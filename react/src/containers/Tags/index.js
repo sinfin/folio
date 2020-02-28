@@ -31,7 +31,7 @@ class Tags extends React.Component {
   render () {
     return (
       <div className='small mx-n2 d-flex flex-wrap m-n1'>
-        {this.props.file.attributes.tags.map((tag) => (
+        {(this.props.file.attributes.tags || []).map((tag) => (
           <Tag
             key={tag}
             className='btn btn-sm btn-link p-0 m-1'
