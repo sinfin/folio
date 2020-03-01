@@ -30,3 +30,5 @@
 vendor/cache
 
 config/deploy/*/.env
+
+public/assets/*
