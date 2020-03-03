@@ -18,13 +18,23 @@ module Folio::Imprintable
 
       serialize imprint_field
 
+      # FIXME: fix this for nested hash
+      # AR's serializable_hash discards type attribute
+      # https://apidock.com/rails/ActiveModel/Serialization/serializable_hash
+      # https://apidock.com/rails/ActiveRecord/Serialization/serializable_hash
+      include_hash = {}
+      include.each do |i|
+        m = :type if association_class.reflect_on_association(i).klass.has_attribute?(:type)
+        include_hash[i] = { methods: m }
+      end
+      methods = :type if association_class.has_attribute?(:type)
       define_method(:"imprint_#{association}") do
-        write_attribute(imprint_field, send(association).as_json(include: include))
+        write_attribute(imprint_field, send(association).serializable_hash(include: include_hash, methods: methods))
       end
 
       define_method(:"imprint_#{association}!") do
         update_columns(
-          imprint_field => send(association).as_json(include: include)
+          imprint_field => send(association).serializable_hash(include: include_hash, methods: methods)
         )
       end
 
