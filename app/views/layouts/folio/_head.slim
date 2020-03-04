@@ -34,6 +34,8 @@ meta name="twitter:card" content="summary"
 = csrf_meta_tags
 
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+  = action_cable_meta_tag
+
   = stylesheet_link_tag('application', \
                         media: 'all', \
                         'data-turbolinks-track': 'reload')
