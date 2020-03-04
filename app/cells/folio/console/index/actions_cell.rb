@@ -65,15 +65,13 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     acts = []
     with_default = (options[:actions].presence || %i[edit destroy])
 
-    if with_default.include?(:destroy) && model.class.try(:indestructible?)
-      with_default = with_default.without(:destroy)
-    end
-
-    sort_array_hashes_first(with_default).map do |sym_or_hash|
+    sort_array_hashes_first(with_default).each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
+        next if sym_or_hash == :destroy && model.class.try(:indestructible?)
         acts << default_actions[sym_or_hash]
       elsif sym_or_hash.is_a?(Hash)
         sym_or_hash.each do |name, obj|
+          next if name == :destroy && model.class.try(:indestructible?)
           base = default_actions[name].presence || {}
           if obj.is_a?(Hash)
             acts << base.merge(obj)
@@ -85,7 +83,15 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     end
 
     acts.map do |action|
-      confirmation = action[:confirm] ? t('folio.console.confirmation') : nil
+      if action[:confirm]
+        if action[:confirm].is_a?(String)
+          confirmation = action[:confirm]
+        else
+          confirmation = t('folio.console.confirmation')
+        end
+      else
+        confirmation = nil
+      end
 
       opts = {
         title: t("folio.console.actions.#{action[:name]}"),
@@ -104,9 +110,9 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
 
   def sort_array_hashes_first(ary)
     ary.sort do |a, b|
-      if a.is_a?(Hash)
+      if a.is_a?(Hash) && default_actions.exclude?(a.keys.first)
         -1
-      elsif b.is_a?(Hash)
+      elsif b.is_a?(Hash) && default_actions.exclude?(b.keys.first)
         1
       else
         0
