@@ -37,6 +37,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                      'data-controller' => controller.class.to_s.underscore,
                      placeholder: blank_label(key),
                      value: controller.params[key]
+                   },
+                   wrapper_html: {
+                    class: 'f-c-index-filters__autocomplete-wrap'
                    }
     else
       f.input key, collection: collection(key),

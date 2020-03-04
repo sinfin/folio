@@ -8,12 +8,14 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass &&
        klass.respond_to?(:by_query) &&
        klass.new.respond_to?(:to_autocomplete_label)
-      ary = klass.by_query(q)
-                 .limit(25)
-                 .map(&:to_autocomplete_label)
-                 .compact
-                 .uniq
-                 .first(10)
+
+      ary = klass.all
+      ary = klass.by_query(q) if q.present?
+      ary = ary.limit(25)
+               .map(&:to_autocomplete_label)
+               .compact
+               .uniq
+               .first(10)
 
       render json: { data: ary }
     else

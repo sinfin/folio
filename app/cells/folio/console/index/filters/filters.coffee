@@ -5,7 +5,7 @@ window.folioConsoleBindIndexFiltersAutocomplete = ($input) ->
   $input
     .addClass('f-c-index-filters__autocomplete-input--bound')
     .autocomplete
-      minLength: 2
+      minLength: 0
       select: (e, ui) ->
         setTimeout (-> $input.closest('[data-auto-submit]').submit()), 0
       source: (request, response) ->
@@ -17,11 +17,14 @@ window.folioConsoleBindIndexFiltersAutocomplete = ($input) ->
             controller: $input.data('controller')
           success: (data) ->
             response(data.data)
+    .on 'focus.indexFiltersAutocomplete', ->
+      $input.autocomplete('search', $input.val())
 
 window.folioConsoleUnbindIndexFiltersAutocomplete = ($input) ->
   if $input.hasClass('f-c-index-filters__autocomplete-input--bound')
     $input
       .removeClass('f-c-index-filters__autocomplete-input--bound')
+      .off('focus.indexFiltersAutocomplete')
       .autocomplete('destroy')
 
 $ ->
