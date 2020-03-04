@@ -39,4 +39,17 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     assert_equal('bar', original.reload.title)
     assert_not(Folio::Page.exists?(id: duplicate.id))
   end
+
+  test 'redirects to given url on success' do
+    original = create(:folio_page, title: 'foo')
+    duplicate = create(:folio_page, title: 'bar')
+
+    url = '/foo/bar/baz'
+    post console_merge_path('Folio::Page', original, duplicate, url: url), params: {
+      merge: {
+        title: Folio::Merger::DUPLICATE,
+      }
+    }
+    assert_redirected_to url
+  end
 end
