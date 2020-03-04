@@ -1,9 +1,11 @@
 ul.nav.nav-tabs
-  - keys.each_with_index do |key, i|
+  - keys.each do |key|
+    - @folio_active_tab ||= key
+
     li.nav-item
       a.nav-link[
         data-toggle="tab"
         href="#tab-#{key}"
-        class=(i == 0 ? 'active' : nil)
+        class=(@folio_active_tab == key ? 'active' : nil)
       ]
         = t(".#{key}", default: @klass.try(:human_attribute_name, key))
