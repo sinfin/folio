@@ -3,6 +3,8 @@
 class Folio::Console::StateCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
+  class_name 'f-c-state', :small
+
   def show
     render if model.aasm_state.present?
   end
