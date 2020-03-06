@@ -5,7 +5,18 @@
   position: relative
   bottom: -1px
 
-  &__check
+  &__box
+    padding: 5px 15px
+    display: flex
+    align-items: center
+    position: relative
+    background: $gray-200
+    margin-right: $grid-gutter-half
+
+    &--active
+      background: #ccbed6
+
+  &__published
     margin-right: $spacer
     margin-bottom: 0
 
@@ -13,7 +24,7 @@
     position: relative
     display: flex
     align-items: center
-    margin: - $spacer 0
+    margin: (( - $spacer )) -15px (( - $spacer )) 0
     cursor: pointer
 
     &:not(:last-child)

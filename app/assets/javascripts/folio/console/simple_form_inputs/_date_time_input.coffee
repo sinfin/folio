@@ -24,13 +24,13 @@ dpChange = (e) ->
 
 window.folioConsoleInitDatePicker = (el) ->
   $el = $(el)
-  $el.val(moment($el.data('date')).format(DATE_CONFIG.format)) if $el.data('date')
+  $el.val(moment($el.data('date'), 'YYYYY-MM-DD h:mm:ss').format(DATE_CONFIG.format)) if $el.data('date')
   $el.datetimepicker(DATE_CONFIG)
   $el.on 'dp.change', dpChange
 
 window.folioConsoleInitDateTimePicker = (el) ->
   $el = $(el)
-  $el.val(moment($el.data('date')).format(CONFIG.format)) if $el.data('date')
+  $el.val(moment($el.data('date'), 'YYYYY-MM-DD h:mm:ss').format(CONFIG.format)) if $el.data('date')
   $el.datetimepicker(CONFIG)
   $el.on 'dp.change', dpChange
 

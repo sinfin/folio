@@ -19,6 +19,7 @@ module Dummy
     config.exceptions_app = self.routes
 
     config.folio_console_locale = I18n.default_locale
+    config.time_zone = 'Prague'
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

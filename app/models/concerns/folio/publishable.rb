@@ -36,7 +36,7 @@ module Folio::Publishable
         where("#{table_name}.published = ? AND "\
               "(#{table_name}.published_at IS NOT NULL AND #{table_name}.published_at <= ?)",
               true,
-              Time.now.change(sec: 0))
+              Time.zone.now.change(sec: 0))
       }
 
       scope :published_or_admin, -> (admin) { admin ? all : published }
@@ -45,7 +45,7 @@ module Folio::Publishable
         where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
               "(#{table_name}.published_at IS NULL OR #{table_name}.published_at > ?)",
               true,
-              Time.now.change(sec: 0))
+              Time.zone.now.change(sec: 0))
       }
 
       scope :by_published, -> (bool) {
@@ -59,17 +59,19 @@ module Folio::Publishable
         end
       }
 
-      before_save :auto_publish_now, if: :published_changed?
+      after_initialize :set_default_published_at
     end
 
     def published?
       published.present? &&
       published_at &&
-      published_at <= Time.now.change(sec: 0)
+      published_at <= Time.zone.now.change(sec: 0)
     end
 
-    def auto_publish_now
-      self.published_at = Time.now if published? && published_at.nil?
-    end
+    private
+
+      def set_default_published_at
+        self.published_at ||= Time.zone.now if new_record?
+      end
   end
 end
