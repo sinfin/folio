@@ -78,3 +78,10 @@
     &__page--with-ico,
     &__page--current
       display: block
+
+  .f-c-form-footer-spacer ~ &
+    position: relative
+    top: -$footer-height
+
+    +media-breakpoint-up(xxl)
+      top: -$footer-height-xxl
