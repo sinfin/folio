@@ -77,7 +77,7 @@ end
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
+#  sign_in_count          :integer          default("0"), not null
 #  current_sign_in_at     :datetime
 #  last_sign_in_at        :datetime
 #  current_sign_in_ip     :string
@@ -87,7 +87,7 @@ end
 #  first_name             :string
 #  last_name              :string
 #  role                   :string
-#  is_active              :boolean          default(TRUE)
+#  is_active              :boolean          default("true")
 #  invitation_token       :string
 #  invitation_created_at  :datetime
 #  invitation_sent_at     :datetime
@@ -95,7 +95,7 @@ end
 #  invitation_limit       :integer
 #  invited_by_type        :string
 #  invited_by_id          :bigint(8)
-#  invitations_count      :integer          default(0)
+#  invitations_count      :integer          default("0")
 #
 # Indexes
 #

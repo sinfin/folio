@@ -72,7 +72,7 @@ end
 #  email                          :string
 #  phone                          :string
 #  locale                         :string
-#  locales                        :string           default([]), is an Array
+#  locales                        :string           default("{}"), is an Array
 #  created_at                     :datetime         not null
 #  updated_at                     :datetime         not null
 #  google_analytics_tracking_code :string
@@ -80,7 +80,7 @@ end
 #  social_links                   :json
 #  address                        :text
 #  description                    :text
-#  turbo_mode                     :boolean          default(FALSE)
+#  turbo_mode                     :boolean          default("false")
 #  system_email                   :string
 #  system_email_copy              :string
 #  email_from                     :string

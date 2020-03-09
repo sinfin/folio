@@ -48,7 +48,7 @@ end
 #  file_uid        :string
 #  file_name       :string
 #  type            :string
-#  thumbnail_sizes :text             default({})
+#  thumbnail_sizes :text             default("--- {}\n")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  file_width      :integer

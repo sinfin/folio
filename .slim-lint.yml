@@ -4,3 +4,4 @@ linters:
 
 exclude:
   - 'lib/generators/folio/console/scaffold/templates/*'
+  - 'app/cells/folio/console/publishable_inputs/show.slim'
