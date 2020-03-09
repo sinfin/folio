@@ -8,18 +8,23 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
   end
 
   def href(tab)
+    query = []
+
     if options[:index_filters]
-      query = []
       (%i[by_query] + options[:index_filters].keys).each do |key|
         next if options[:params][key].blank?
         query << "#{key}=#{options[:params][key]}"
       end
-
-      if query.present?
-        return "#{tab[:href]}?#{query.join('&')}"
-      end
     end
 
-    tab[:href]
+    if options[:params][:page].present?
+      query << "page=#{options[:params][:page]}"
+    end
+
+    if query.present?
+      "#{tab[:href]}?#{query.join('&')}"
+    else
+      tab[:href]
+    end
   end
 end
