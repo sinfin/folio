@@ -17,7 +17,7 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
       end
     end
 
-    if options[:params][:page].present?
+    if options[:params] && options[:params][:page].present?
       query << "page=#{options[:params][:page]}"
     end
 
