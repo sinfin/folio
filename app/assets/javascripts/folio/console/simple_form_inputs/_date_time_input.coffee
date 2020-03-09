@@ -3,6 +3,9 @@ CONFIG =
   sideBySide: true
   format: 'DD. MM. YYYY HH:mm'
   keepInvalid: false
+  widgetPositioning:
+    horizontal: 'auto'
+    vertical: 'bottom'
   icons:
     time: 'fa fa-clock',
     date: 'fa fa-calendar',
