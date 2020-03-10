@@ -18,6 +18,11 @@ SimpleForm::Inputs::TextInput.class_eval do
       input_html_classes << 'f-c-js-atoms-placement-perex'
     end
 
+    if options[:content_templates]
+      input_html_options['data-content-templates'] = options[:content_templates].constantize.to_data_attribute
+      input_html_classes << 'folio-console-string-input--content-templates'
+    end
+
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
     @builder.text_area(attribute_name, merged_input_options)

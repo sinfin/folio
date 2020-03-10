@@ -12,6 +12,7 @@ module Folio::ContentTemplateFormMock
 end
 
 class Folio::ContentTemplate < Folio::ApplicationRecord
+  include Folio::InheritenceBaseNaming
   include Folio::Positionable
   include Folio::ContentTemplateFormMock
 
@@ -19,6 +20,22 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
 
   validates :type,
             presence: true
+
+  def base_class
+    Folio::ContentTemplate
+  end
+
+  def self.to_data_attribute
+    if Rails.application.config.folio_using_traco
+      ordered.map do |ct|
+        I18n.available_locales.map do |locale|
+          ct.send("content_#{locale}")
+        end
+      end.to_json
+    else
+      ordered.map { |ct| [ct.content] }.to_json
+    end
+  end
 end
 
 if Rails.env.development?

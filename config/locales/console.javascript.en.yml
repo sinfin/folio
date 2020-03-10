@@ -9,6 +9,7 @@ en:
         availableImages: Available images
         cancel: Cancel
         cancelChanges: Cancel changes?
+        contentTemplates: Templates
         create: Create
         destroy: Destroy
         download: Download
@@ -26,10 +27,10 @@ en:
         placementsLabel: Usage
         save: Save
         selectable: Selectable
+        selectDocument: Select document
         selected: Selected
         selectedDocuments: Selected documents
         selectedImages: Selected images
-        selectDocument: Select document
         selectImage: Select image
         selectPlaceholder: Select...
         title: Title

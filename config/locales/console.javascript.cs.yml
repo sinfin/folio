@@ -9,6 +9,7 @@ cs:
         availableImages: Dostupné obrázky
         cancel: Zrušit
         cancelChanges: Zahodit změny?
+        contentTemplates: Šablony
         create: Vytvořit
         destroy: Smazat
         download: Stáhnout
@@ -21,15 +22,15 @@ cs:
         menuItemUrl: Volný odkaz
         newUploadTags: Štítky pro nové soubory
         noResults: Žádné výsledky
-        paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
         paginationEmpty: Žádné záznamy
+        paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
         placementsLabel: Použití
         save: Uložit
         selectable: Volitelné
+        selectDocument: Zvolte dokument
         selected: Vybrané
         selectedDocuments: Vybrané dokumenty
         selectedImages: Vybrané obrázky
-        selectDocument: Zvolte dokument
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
         title: Název
