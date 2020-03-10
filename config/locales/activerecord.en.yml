@@ -9,6 +9,8 @@ en:
         content: Content
         perex: Perex
         title: Title
+      folio/content_template:
+        content: Content
       folio/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
@@ -80,6 +82,9 @@ en:
         other: Atoms
       folio/atom/text: Text
       folio/atom/title: Title
+      folio/content_template:
+        one: Content template
+        other: Content templates
       folio/document:
         one: Document
         other: Documents
@@ -126,6 +131,7 @@ en:
   attributes:
     aasm_state: State
     content: Content
+    count: Count
     cover_placement: Image
     description: Description
     email: E-mail

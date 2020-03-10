@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+class AddContentTemplateTranslations < ActiveRecord::Migration[5.2]
+  def change
+    rename_column :folio_content_templates, :content, :content_<%= I18n.default_locale %>
+
+    <%- (I18n.available_locales - [I18n.default_locale]).each do |locale| -%>
+    add_column :folio_content_templates, :content_<%= locale %>, :text
+    <%- end -%>
+  end
+end

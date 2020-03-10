@@ -17,6 +17,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                       Folio::Menu
                       Folio::Image
                       Folio::Document
+                      Folio::ContentTemplate
                     ]] +
                     runner_up_link_class_names +
                     folio_link_class_names +

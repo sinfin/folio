@@ -21,18 +21,20 @@ html.f-c-layout-html lang=I18n.locale
           = yield
           == cell('folio/console/pagination', @pagy)
 
-    - %w[Folio::Image Folio::Document].each do |klass|
-      - [true, false].each do |single|
-        .modal.folio-console-react-modal.fade[
-          data-klass=klass
-          data-multi=(single ? 'false' : 'true')
-        ]
-          .modal-dialog.modal-lg
-            .modal-content
-              .modal-body
-                = react_modal_for(klass, single: single)
+    - unless @no_react_modals
+      - %w[Folio::Image Folio::Document].each do |klass|
+        - [true, false].each do |single|
+          .modal.folio-console-react-modal.fade[
+            data-klass=klass
+            data-multi=(single ? 'false' : 'true')
+          ]
+            .modal-dialog.modal-lg
+              .modal-content
+                .modal-body
+                  = react_modal_for(klass, single: single)
 
-              button type="button" class="close" data-dismiss="modal" &times;
+                button type="button" class="close" data-dismiss="modal" &times;
+
     = yield :modals
 
     = render 'folio/console/partials/translations'

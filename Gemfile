@@ -32,6 +32,7 @@ group :development do
   gem 'rack-mini-profiler', require: false
   gem 'i18n-tasks'
   gem 'rubocop', '0.66.0'
+  gem 'rails-flog', require: 'flog'
 end
 
 group :development, :test do

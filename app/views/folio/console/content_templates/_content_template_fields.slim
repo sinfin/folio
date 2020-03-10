@@ -1,0 +1,12 @@
+.nested-fields.folio-console--compact
+  .card class=(f.object.new_record? ? 'card--fresh' : nil)
+    .card-body
+      .row.align-items-center.mb-n3
+        .col
+          == translated_inputs f, :content, label: false, \
+                                            hint: false, \
+                                            autosize: true, \
+                                            input_html: { rows: 1 }
+
+        .col-auto.pb-3
+          == cell('folio/console/nested_model_controls', f, no_margin: true)

@@ -17,6 +17,12 @@ Folio::Engine.routes.draw do
       post :set_positions, on: :collection
     end
 
+    resource :content_templates, only: [] do
+      get :index
+      get :edit, path: ':type/edit'
+      patch :update, path: ':type/update', as: :update
+    end
+
     resources :menus, only: [:edit, :update, :index]
 
     resources :images, only: %i[index edit update destroy] do

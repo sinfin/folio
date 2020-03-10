@@ -56,6 +56,9 @@ en:
         root: Console
         searches: Search
       confirmation: Are you sure?
+      content_templates:
+        update:
+          success: Templates updated.
       create: Create
       delete: Remove
       documents:

@@ -9,7 +9,7 @@ module Folio::Console::BaseHelper
   end
 
   def rendered_breadcrumbs
-    if @breadcrumbs.present?
+    if breadcrumbs.present?
       render_breadcrumbs(
         builder: Folio::Console::BootstrapBreadcrumbsBuilder
       )

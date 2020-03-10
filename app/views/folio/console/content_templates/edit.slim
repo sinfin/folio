@@ -1,0 +1,15 @@
+= simple_form_for @klass.new, \
+                  url: update_console_content_templates_path, \
+                  method: :patch do |f|
+  = form_header f
+
+  = f.simple_fields_for :content_templates, @content_templates do |g|
+    = render partial: 'content_template_fields', locals: { f: g }
+
+  .links
+    = link_to_add_association t('folio.console.actions.add'), \
+                              f, \
+                              :content_templates, \
+                              class: 'btn btn-success'
+
+  = form_footer f

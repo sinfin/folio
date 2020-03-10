@@ -70,7 +70,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    prepend_before_action except: :index do
+    prepend_before_action except: (except + [:index]) do
       name = folio_console_record_variable_name(plural: false)
 
       if folio_console_record_includes.present?

@@ -10,6 +10,8 @@ cs:
         perex: Perex
         target: Odkaz
         title: Název
+      folio/content_template:
+        content: Obsah
       folio/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
@@ -94,6 +96,10 @@ cs:
         other: Kapitol
       folio/atom/text: Text
       folio/atom/title: Titulek
+      folio/content_template:
+        one: Šablona obsahu
+        few: Šablony obsahu
+        other: Šablon obsahu
       folio/category:
         few: Kategorie
         one: Kategorie
@@ -158,6 +164,7 @@ cs:
     content: Obsah
     cover: Obrázek
     cover_placement: Obrázek
+    count: Počet
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
