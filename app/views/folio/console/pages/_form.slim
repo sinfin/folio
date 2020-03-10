@@ -15,7 +15,7 @@
       = react_picker(f, :cover_placement)
 
       .ml-md-g
-        == translated_inputs f, :title, folio_label: true, content_templates: 'Dummy::ContentTemplate::Title'
+        == translated_inputs f, :title, folio_label: true
         == translated_inputs f, :slug
 
     - collection = Folio::Page.recursive_subclasses_for_select
