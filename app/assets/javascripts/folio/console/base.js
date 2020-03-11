@@ -60,6 +60,7 @@
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal
+//= require folio/console/pagination/pagination
 //= require folio/console/publishable_inputs/publishable_inputs
 //= require folio/console/react_picker/react_picker
 //= require folio/console/single_file_select/single_file_select

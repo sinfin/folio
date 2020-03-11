@@ -15,6 +15,10 @@
     display: flex
     align-items: center
 
+  &--expanded &__pages
+    flex-wrap: wrap
+    padding: 0 $spacer
+
   &__page
     position: relative
     flex: 0 1 auto
@@ -61,11 +65,28 @@
     font-weight: $font-weight-bold
     flex: 0 0 35px
 
+  &__page--gap
+    cursor: pointer
+
+    .f-c-pagination--expanded &
+      display: none
+
+  &__page--in-gap
+    display: none
+
+    .f-c-pagination--expanded &
+      display: flex
+
   &__ico
     line-height: 35px
     width: 28px
     text-align: center
     font-size: 14px
+
+  &--expanded &__page:first-child,
+  &--expanded &__page--next
+    &:before
+      display: none
 
   +media-breakpoint-down(sm)
     &__nav
@@ -78,6 +99,10 @@
     &__page--with-ico,
     &__page--current
       display: block
+
+    &__page--next
+      &:before
+        display: none !important
 
   .f-c-form-footer-spacer ~ &
     position: relative
