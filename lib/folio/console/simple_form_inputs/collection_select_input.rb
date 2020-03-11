@@ -36,7 +36,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
   end
 
   def autocomplete_collection
-    if value = object.send(attribute_name)
+    if value = object.try(attribute_name)
       obj = reflection.class_name.constantize.find(value)
       [[obj.to_console_label, value]]
     else

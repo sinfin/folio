@@ -6,8 +6,8 @@ bindInputs = ($elements) ->
     $selectize
       .removeClass('form-control')
       .selectize
+        preload: 'focus'
         load: (q, callback) ->
-          return callback() unless q.length
           $.ajax
             url: $selectize.data('autocomplete-url')
             method: 'GET'
