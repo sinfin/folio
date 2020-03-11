@@ -89,6 +89,6 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
 
   def cancel_url
     model[:cancel_url] ||
-    url_for([:console, klass, by_query: controller.params[:by_query]])
+    request.path
   end
 end
