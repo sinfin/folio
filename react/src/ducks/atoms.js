@@ -690,7 +690,7 @@ function atomsReducer (state = initialState, action) {
                 record: {
                   ...atom.record,
                   associations: {
-                    ...atom.associations,
+                    ...atom.record.associations,
                     [action.associationKey]: action.record
                   }
                 }
