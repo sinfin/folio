@@ -1,6 +1,6 @@
 SELECTOR = '.f-c-collection-remote-select-input'
 
-bindInputs = ($elements) ->
+window.folioConsoleBindCollectionSelectInput = ($elements) ->
   $elements.each ->
     $selectize = $(this)
     $selectize
@@ -18,24 +18,24 @@ bindInputs = ($elements) ->
             success: (res) ->
               callback(res.data)
 
-unbindInputs = ($elements) ->
+window.folioConsoleUnbindCollectionSelectInput = ($elements) ->
   $elements.each -> @selectize?.destroy()
 
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->
-    bindInputs(insertedItem.find(SELECTOR))
+    window.folioConsoleBindCollectionSelectInput(insertedItem.find(SELECTOR))
 
   .on 'cocoon:before-remove', (e, item) ->
-    unbindInputs(item.find(SELECTOR))
+    window.folioConsoleUnbindCollectionSelectInput(item.find(SELECTOR))
 
 if Turbolinks?
   $(document)
     .on 'turbolinks:load', ->
-      bindInputs($(SELECTOR))
+      window.folioConsoleBindCollectionSelectInput($(SELECTOR))
 
     .on 'turbolinks:before-cache', ->
-      unbindInputs($(SELECTOR))
+      window.folioConsoleUnbindCollectionSelectInput($(SELECTOR))
 
 else
   $ ->
-    bindInputs($(SELECTOR))
+    window.folioConsoleBindCollectionSelectInput($(SELECTOR))
