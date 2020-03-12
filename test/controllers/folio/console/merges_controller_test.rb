@@ -52,4 +52,12 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     }
     assert_redirected_to url
   end
+
+  test 'original == duplicate' do
+    original = create(:folio_page, title: 'foo')
+
+    url = '/foo/bar/baz'
+    get new_console_merge_path('Folio::Page', original, original, url: url)
+    assert_redirected_to console_pages_path
+  end
 end

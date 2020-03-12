@@ -105,6 +105,7 @@ cs:
         link: Odkaz
         noLink: Bez odkazu (pouze obal)
       merges:
+        cannot_merge_into_itself: Duplikát nesmí být zároveň cílem.
         form:
           title: Sloučení
           original: 'Cíl:'

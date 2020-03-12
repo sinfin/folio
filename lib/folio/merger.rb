@@ -12,6 +12,11 @@ class Folio::Merger
   def initialize(original, duplicate, klass: nil)
     @original = original
     @duplicate = duplicate
+
+    if @original == @duplicate
+      fail 'Cannot merge record into itself'
+    end
+
     @klass = klass || default_klass
     @targets = {}
 

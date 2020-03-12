@@ -9,9 +9,18 @@ class Folio::Console::MergesController < Folio::Console::BaseController
       @klass = klass
       merger_klass = "#{class_name}::Merger".safe_constantize
 
+      original_id = params.require(:original_id)
+      duplicate_id = params.require(:duplicate_id)
+
+      if original_id == duplicate_id
+        flash[:alert] = I18n.t('folio.console.merges.cannot_merge_into_itself')
+        redirect_back fallback_location: url_for([:console, @klass])
+        next
+      end
+
       if merger_klass
-        @merger = merger_klass.new(@klass.find(params.require(:original_id)),
-                                   @klass.find(params.require(:duplicate_id)),
+        @merger = merger_klass.new(@klass.find(original_id),
+                                   @klass.find(duplicate_id),
                                    klass: @klass)
 
         add_breadcrumb @klass.model_name.human(count: 2),

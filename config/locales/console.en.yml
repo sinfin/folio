@@ -104,6 +104,7 @@ en:
         link: Link
         noLink: No link (wrap only)
       merges:
+        cannot_merge_into_itself: Duplicate cannot be the target
         form:
           title: Merge
           original: 'Target:'
