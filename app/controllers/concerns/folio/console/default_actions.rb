@@ -106,7 +106,7 @@ module Folio::Console::DefaultActions
 
     def respond_with_location
       if folio_console_record.destroyed?
-        url_for([:console, @klass])
+        request.referrer || url_for([:console, @klass])
       else
         if folio_console_record.persisted?
           begin
