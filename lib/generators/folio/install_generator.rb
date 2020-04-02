@@ -135,6 +135,7 @@ module Folio
           'app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass',
           'app/views/devise/mailer/invitation_instructions.html.erb',
           'app/views/devise/mailer/invitation_instructions.text.erb',
+          'app/views/devise/mailer/reset_password_instructions.html.erb',
           'app/views/home/index.slim',
           'app/views/folio/pages/show.slim',
           'app/views/folio/console/partials/_appended_menu_items.slim',
