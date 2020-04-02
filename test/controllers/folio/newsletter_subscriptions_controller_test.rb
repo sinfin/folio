@@ -19,7 +19,7 @@ module Folio
       assert_response(:success)
       html = Nokogiri::HTML(response.body)
       assert_equal 0, html.css('.folio-newsletter-subscription-form-message').size
-      assert_equal 1, html.css('.form-group-invalid #newsletter_subscription_email').size
+      assert_equal 1, html.css('.form-group-invalid .form-control.email').size
     end
 
     test 'valid' do
