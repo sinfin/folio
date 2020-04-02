@@ -193,3 +193,7 @@ cs:
     to_label: Název
     url: URL
     visit: Návštěva
+  errors:
+    attributes:
+      verified_captcha:
+        invalid: Potvrďte prosím, že nejste robot 🤖
