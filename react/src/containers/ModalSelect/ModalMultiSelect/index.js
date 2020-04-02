@@ -27,7 +27,7 @@ class ModalMultiSelect extends ModalSelect {
       return this.htmlForPlacement(placement, prefix, i)
     })
 
-    const deleted = this.props.filePlacements.deleted.map((placement, i) => {
+    const deleted = this.props.filePlacements.deleted.map((placement) => {
       i++
       const prefix = `${name}[${placementKey}_attributes][${date + i}]`
 
@@ -118,8 +118,9 @@ class ModalMultiSelect extends ModalSelect {
 
     $wrap.find('.folio-console-file-list__file, .folio-console-file-table__tr').each((_i, el) => {
       const $fields = $(el).find('input[type="hidden"]')
+      const id = getPlacementField($fields, 'id')
       placements.push({
-        id: Number(getPlacementField($fields, 'id')),
+        id: id ? Number(id) : null,
         file_id: Number(getPlacementField($fields, 'file_id')),
         alt: getPlacementField($fields, 'alt'),
         title: getPlacementField($fields, 'title'),
