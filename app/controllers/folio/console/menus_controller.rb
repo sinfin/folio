@@ -62,11 +62,11 @@ class Folio::Console::MenusController < Folio::Console::BaseController
     end
 
     def folio_console_collection_includes
-      [ :menu_items ]
+      []
     end
 
     def folio_console_record_includes
-      [ :menu_items ]
+      []
     end
 
     def serialize_menu_items
