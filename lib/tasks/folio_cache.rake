@@ -17,7 +17,7 @@ namespace :folio_cache do
   def clear_page_cache!
     return unless Rails.application.config.action_controller.perform_caching
     cache_dir = Rails.application.config.action_controller.page_cache_directory
-    return if cache_dir.to_s =~ /\/public\Z/ # do not delete whole /public folder
+    return if /\/public\Z/.match?(cache_dir.to_s) # do not delete whole /public folder
     return if cache_dir.blank? || !::File.exist?(cache_dir)
 
     Dir.mktmpdir do |tmp_dir|

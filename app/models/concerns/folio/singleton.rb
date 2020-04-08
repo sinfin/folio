@@ -30,7 +30,6 @@ module Folio::Singleton
   end
 
   private
-
     def validate_singularity
       if new_record?
         errors.add(:base, :invalid) if self.class.exists?

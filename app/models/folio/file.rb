@@ -86,7 +86,6 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   private
-
     def touch_placements
       file_placements.each(&:touch)
     end

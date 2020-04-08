@@ -71,7 +71,6 @@ class Folio::Console::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcru
   end
 
   private
-
     def should_render?
       @elements.any? || @options[:show_empty]
     end

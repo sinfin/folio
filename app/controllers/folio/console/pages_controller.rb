@@ -8,7 +8,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   end
 
   private
-
     def index_filters
       {
         by_type: Folio::Page.recursive_subclasses.map do |klass|

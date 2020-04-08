@@ -78,7 +78,6 @@ class Folio::Merger
   end
 
   private
-
     def default_klass
       self.class.parent
     end

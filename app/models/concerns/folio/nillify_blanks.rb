@@ -14,7 +14,6 @@ module Folio::NillifyBlanks
   end
 
   private
-
     def nillify_blanks
       attributes.each do |column, value|
         next if self.class.non_nillifiable_fields.include?(column)

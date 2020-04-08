@@ -69,7 +69,6 @@ module Folio::Publishable
     end
 
     private
-
       def set_default_published_at
         self.published_at ||= Time.zone.now if new_record?
       end

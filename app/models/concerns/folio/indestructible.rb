@@ -15,7 +15,6 @@ module Folio::Indestructible
   end
 
   private
-
     def before_destroy_indestructible
       unless force_destroy?
         errors.add(:base, :indestructible)

@@ -14,7 +14,6 @@ class Folio::Page::Merger < Folio::Merger
   end
 
   private
-
     def merge_custom_relations
       @duplicate.menu_items.each do |mi|
         mi.update!(target: @original)

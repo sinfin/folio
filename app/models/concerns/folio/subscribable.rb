@@ -16,7 +16,6 @@ module Folio::Subscribable
   end
 
   private
-
     def subscription_default_status
       nil
     end

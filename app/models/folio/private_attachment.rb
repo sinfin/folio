@@ -36,7 +36,6 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   end
 
   private
-
     def set_mime_type
       return unless file.present?
       return unless respond_to?(:mime_type)

@@ -40,7 +40,6 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   private
-
     def extract_placement_title_and_type
       if placement.present?
         if placement.class < Folio::Atom::Base

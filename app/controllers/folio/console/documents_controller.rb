@@ -6,7 +6,6 @@ class Folio::Console::DocumentsController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Document', except: %w[index]
 
   private
-
     def document_params
       file_params
     end

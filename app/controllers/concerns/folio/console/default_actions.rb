@@ -79,7 +79,6 @@ module Folio::Console::DefaultActions
   end
 
   private
-
     def folio_console_name_base(plural: false)
       if plural
         params[:controller].split('/').last

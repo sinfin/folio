@@ -55,7 +55,6 @@ module Folio
     end
 
     private
-
       # fix content_tag
       # https://github.com/trailblazer/cells-slim/issues/14
       def tag_builder

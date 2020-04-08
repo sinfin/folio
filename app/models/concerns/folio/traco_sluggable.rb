@@ -8,7 +8,6 @@ module Folio::TracoSluggable
   end
 
   private
-
     def set_missing_slugs
       I18n.available_locales.each do |locale|
         if send("slug_#{locale}").blank?

@@ -45,7 +45,6 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   private
-
     def clear_fragment_cache!
       Rails.cache.clear
     end

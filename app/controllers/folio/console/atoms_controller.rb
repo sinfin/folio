@@ -75,7 +75,6 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   end
 
   private
-
     def atom_params
       params.permit(atoms_strong_params)
     end

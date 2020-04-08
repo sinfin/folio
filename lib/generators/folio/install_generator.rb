@@ -217,7 +217,6 @@ module Folio
       end
 
       private
-
         def project_name
           @project_name ||= Rails.root.basename.to_s
         end

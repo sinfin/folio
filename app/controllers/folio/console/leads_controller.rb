@@ -20,7 +20,6 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
   end
 
   private
-
     def index_filters
       {
         by_state: Folio::Lead.aasm.states_for_select,

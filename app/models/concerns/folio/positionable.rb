@@ -15,7 +15,6 @@ module Folio::Positionable
   end
 
   private
-
     def set_position
       if self.position.nil?
         self.position = positionable_last_position + 1

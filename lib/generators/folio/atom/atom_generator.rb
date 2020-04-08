@@ -14,7 +14,6 @@ class Folio::AtomGenerator < Rails::Generators::NamedBase
   end
 
   private
-
     def classname_prefix
       Rails.application.class.name[0].downcase
     end

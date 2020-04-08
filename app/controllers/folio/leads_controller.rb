@@ -26,7 +26,6 @@ class Folio::LeadsController < Folio::ApplicationController
   end
 
   private
-
     def lead_params
       params.require(:lead).permit(:name,
                                    :email,

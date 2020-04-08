@@ -6,7 +6,7 @@ module Folio
 
     def perform(image, size, quality)
       return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
-      return if image.mime_type =~ /svg/
+      return if /svg/.match?(image.mime_type)
 
       image.thumbnail_sizes[size] = compute_sizes(image, size, quality)
       image.update!(thumbnail_sizes: image.thumbnail_sizes)
@@ -23,7 +23,6 @@ module Folio
     end
 
     private
-
       def compute_sizes(image, size, quality)
         return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
 

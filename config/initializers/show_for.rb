@@ -165,7 +165,6 @@ class ShowFor::Builder
   end
 
   private
-
     def resource_link(attr, url_for_args)
       attribute(attr) do
         if object.persisted?

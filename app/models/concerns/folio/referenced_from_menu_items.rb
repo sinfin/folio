@@ -12,7 +12,6 @@ module Folio::ReferencedFromMenuItems
   end
 
   private
-
     def destroy_menu_items_if_unpublished
       if try(:published?) == false && menu_items.present?
         menu_items.destroy_all

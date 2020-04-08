@@ -163,7 +163,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   private
-
     def klass
       # as type can be changed
       self.type.constantize

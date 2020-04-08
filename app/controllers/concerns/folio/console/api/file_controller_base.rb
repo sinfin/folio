@@ -46,7 +46,6 @@ module Folio::Console::Api::FileControllerBase
   end
 
   private
-
     def folio_console_collection_includes
       [:tags, :file_placements]
     end

@@ -48,7 +48,6 @@ class Folio::MenuItem < Folio::ApplicationRecord
   end
 
   private
-
     def validate_menu_allowed_types
       if menu.class.allowed_menu_item_classes.exclude?(self.class)
         errors.add(:type, :invalid)
