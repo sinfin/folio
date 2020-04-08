@@ -30,8 +30,6 @@ module Folio
       g.helper false
     end
 
-    config.autoload_paths << self.root.join('lib')
-    config.eager_load_paths << self.root.join('lib')
     config.assets.paths << self.root.join('app/cells')
     config.assets.paths << self.root.join('vendor/assets/javascripts')
     config.assets.paths << self.root.join('vendor/assets/bower_components')

@@ -38,8 +38,6 @@ require 'audited'
 require 'fast_jsonapi'
 require 'material_icons'
 
-require 'folio/console/simple_form_inputs/date_time_input'
-
 module Folio
   LANGUAGES = {
     cs: 'CZ',
