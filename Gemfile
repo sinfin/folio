@@ -31,7 +31,7 @@ group :development do
   gem 'puma'
   gem 'rack-mini-profiler', require: false
   gem 'i18n-tasks'
-  gem 'rubocop', '0.66.0', require: false
+  gem 'rubocop', require: false
   gem 'rails-flog', require: 'flog'
 end
 
