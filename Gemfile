@@ -33,6 +33,7 @@ group :development do
   gem 'i18n-tasks'
   gem 'rubocop', require: false
   gem 'rails-flog', require: 'flog'
+  gem 'bullet'
 end
 
 group :development, :test do
