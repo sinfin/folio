@@ -2,6 +2,7 @@
 
 class Folio::Console::Merges::FormCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include ActionView::Helpers::DateHelper
   include ActionView::Helpers::FormOptionsHelper
 
   def form(&block)

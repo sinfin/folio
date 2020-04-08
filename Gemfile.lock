@@ -42,7 +42,7 @@ PATH
       dragonfly-s3_data_store
       dropzonejs-rails
       fast_jsonapi
-      friendly_id (~> 5.2.4)
+      friendly_id (~> 5.3.0)
       gibbon
       invisible_captcha
       jquery-rails
@@ -274,7 +274,7 @@ GEM
       fog-core
       nokogiri (>= 1.5.11, < 2.0.0)
     formatador (0.2.5)
-    friendly_id (5.2.5)
+    friendly_id (5.3.0)
       activerecord (>= 4.0.0)
     geocoder (1.6.2)
     gibbon (3.3.3)
