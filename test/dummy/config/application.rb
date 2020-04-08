@@ -24,5 +24,13 @@ module Dummy
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+    overrides = "#{Rails.root}/app/overrides"
+    Rails.autoloaders.main.ignore(overrides)
+    config.to_prepare do
+      Dir.glob("#{overrides}/**/*_override.rb").each do |override|
+        load override
+      end
+    end
   end
 end

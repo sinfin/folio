@@ -170,6 +170,14 @@ module Folio
     I18n.default_locale = :cs
 
     config.folio_console_locale = I18n.default_locale
+
+    overrides = "#{Rails.root}/app/overrides"
+    Rails.autoloaders.main.ignore(overrides)
+    config.to_prepare do
+      Dir.glob("#{overrides}/**/*_override.rb").each do |override|
+        load override
+      end
+    end
         RUBY
         end
       end

@@ -14,11 +14,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  begin
-    config.mailer_sender = Folio::Site.instance.email
-  rescue StandardError
-    config.mailer_sender = 'noreply@noreply.noreply'
-  end
+  config.mailer_sender = 'noreply@noreply.noreply'
 
   # Configure the class responsible to send e-mails.
   config.mailer = 'Folio::DeviseMailer'

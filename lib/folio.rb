@@ -2,8 +2,6 @@
 
 require 'folio/engine'
 
-# TODO: rm the require
-
 require 'dotenv-rails'
 require 'friendly_id'
 require 'ancestry'

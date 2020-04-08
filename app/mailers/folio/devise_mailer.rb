@@ -5,4 +5,6 @@ class Folio::DeviseMailer < Devise::Mailer
   include DeviseInvitable::Controllers::Helpers
 
   layout 'folio/mailer'
+
+  default from: ->(*) { Folio::Site.instance.email }
 end
