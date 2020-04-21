@@ -13,6 +13,7 @@ function SerializedAttachment ({ prefix, attachmentKey, attachment, index, showI
         <input type='hidden' name={name('_destroy')} value='1' />
       ) : (
         <React.Fragment>
+          {(index || index === 0) ? <input type='hidden' name={name('position')} value={index + 1} /> : null}
           <input type='hidden' name={name('file_id')} value={attachment['file_id']} />
           <input type='hidden' name={name('alt')} value={attachment['alt'] || ''} />
           <input type='hidden' name={name('title')} value={attachment['title'] || ''} />
