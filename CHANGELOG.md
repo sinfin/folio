@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 2020-05-06
 ### Added
 - added `folio:pg_search_index_migration` generator
+- added `folio_unaccent` – immutable & indexable version of unaccent function
 
 ## 2019-08-06
 ### Added
