@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-05-06
+### Added
+- added `folio:pg_search_index_migration` generator
+
 ## 2019-08-06
 ### Added
 - added `Folio::DownloadsController` and `download_path`

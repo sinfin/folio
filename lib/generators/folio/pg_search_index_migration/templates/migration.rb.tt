@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
+  def change
+    add_index :<%= table_name %>, %[<%= expression %>], using: :gin, name: 'index_<%= table_name %>_on_public_search'
+  end
+end
