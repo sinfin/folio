@@ -212,6 +212,7 @@ module Folio
     end
   end
         RUBY
+        end
       end
 
       def test_settings
