@@ -13,7 +13,7 @@ class ConvertAtomFieldsToJson < ActiveRecord::Migration[5.2]
       }
 
       associations = {}
-      if atom.mode_type && atom.model_id
+      if atom.model_type && atom.model_id
         associations[:model] = {
           type: atom.model_type,
           id: atom.model_id,
