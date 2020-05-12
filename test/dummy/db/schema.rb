@@ -16,6 +16,8 @@ ActiveRecord::Schema.define(version: 2020_05_06_150757) do
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
+  create_folio_unaccent
+
   create_table "ahoy_events", force: :cascade do |t|
     t.integer "visit_id"
     t.bigint "account_id"
