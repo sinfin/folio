@@ -171,14 +171,21 @@ module Folio
 
     config.folio_console_locale = I18n.default_locale
 
-
-    overrides = "#{Rails.root}/app/overrides"
-    Rails.autoloaders.main.ignore(overrides)
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
+
+    overrides = [
+      Folio::Engine.root.join('app/overrides').to_s,
+      Rails.root.join('app/overrides').to_s,
+    ]
+
+    overrides.each { |override| Rails.autoloaders.main.ignore(override) }
+
     config.to_prepare do
-      Dir.glob("#{overrides}/**/*_override.rb").each do |override|
-        load override
+      overrides.each do |override|
+        Dir.glob("#{override}/**/*_override.rb").each do |file|
+          load file
+        end
       end
 
       Dir.glob("#{::Folio::Engine.root}/app/lib/folio/console/simple_form*/**.rb").each do |sf|
