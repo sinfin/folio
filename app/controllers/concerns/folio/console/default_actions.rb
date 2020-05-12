@@ -16,6 +16,10 @@ module Folio::Console::DefaultActions
                           records)
   end
 
+  def edit
+    folio_console_record.valid? if params[:prevalidate]
+  end
+
   def merge
     @folio_console_merge = @klass
     index
@@ -40,7 +44,28 @@ module Folio::Console::DefaultActions
 
   def update
     folio_console_record.update(folio_console_params)
-    respond_with folio_console_record, location: respond_with_location
+
+    respond_to do |format|
+      format.html do
+        respond_with folio_console_record, location: respond_with_location
+      end
+      format.json do
+        if folio_console_record.valid?
+          respond_with folio_console_record, location: respond_with_location
+        else
+          errors = [
+            {
+              status: 422,
+              title: I18n.t('flash.actions.update.alert',
+                            resource_name: @klass.model_name.human),
+              detail: invalid_flash_error,
+            }
+          ]
+
+          render json: { errors: errors }, status: 422
+        end
+      end
+    end
   end
 
   def destroy
@@ -62,19 +87,27 @@ module Folio::Console::DefaultActions
 
   def event
     event_name = params.require(:aasm_event).to_sym
-    event = folio_console_record.aasm
-                                .events(possible: true)
-                                .find { |e| e.name == event_name }
 
-    if event && !event.options[:private]
-      folio_console_record.send("#{event_name}!")
-      location = request.referer || respond_with_location
-      respond_with folio_console_record, location: location
+    if folio_console_record.valid?
+      event = folio_console_record.aasm
+                                  .events(possible: true)
+                                  .find { |e| e.name == event_name }
+
+      if event && !event.options[:private]
+        folio_console_record.send("#{event_name}!")
+        location = request.referer || respond_with_location
+        respond_with folio_console_record, location: location
+      else
+        human_event = AASM::Localizer.new.human_event_name(@klass, event_name)
+
+        redirect_back fallback_location: url_for([:console, @klass]),
+                      flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }
+      end
     else
-      human_event = AASM::Localizer.new.human_event_name(@klass, event_name)
-
-      redirect_back fallback_location: url_for([:console, @klass]),
-                    flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }
+      alert = I18n.t('flash.actions.update.alert',
+                     resource_name: @klass.model_name.human)
+      redirect_to respond_with_location(prevalidate: true),
+                  flash: { alert: alert }
     end
   end
 
@@ -103,17 +136,25 @@ module Folio::Console::DefaultActions
       send("#{folio_console_name_base}_params")
     end
 
-    def respond_with_location
+    def respond_with_location(prevalidate: nil)
       if folio_console_record.destroyed?
         request.referrer || url_for([:console, @klass])
       else
         if folio_console_record.persisted?
           begin
-            url_for([:edit, :console, folio_console_record])
+            url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
           rescue ActionController::UrlGenerationError, NoMethodError
-            url_for([:console, @klass])
+            url_for([:console, @klass, prevalidate: prevalidate ? 1 : nil])
           end
         end
       end
+    end
+
+    def invalid_flash_error
+      base = I18n.t('flash.actions.update.alert',
+                    resource_name: @klass.model_name.human)
+      folio_console_record.valid?
+      messages = folio_console_record.errors.full_messages
+      "#{base} #{messages.join(" ")}"
     end
 end
