@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'generators/folio/index_migration/index_migration_generator'
+require 'generators/folio/pg_search_index_migration/pg_search_index_migration_generator'
 
 module Folio
   class Folio::PgSearchIndexMigrationGeneratorTest < Rails::Generators::TestCase
