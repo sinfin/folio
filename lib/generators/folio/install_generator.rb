@@ -155,9 +155,6 @@ module Folio
         return if File.readlines(Rails.root.join('config/application.rb')).grep("Rails.root.join('lib')").any?
 
         inject_into_file 'config/application.rb', after: /config\.load_defaults.+\n/ do <<-'RUBY'
-    config.autoload_paths << Rails.root.join('lib')
-    config.eager_load_paths << Rails.root.join('lib')
-
     config.exceptions_app = self.routes
 
     config.time_zone = 'Prague'
@@ -173,6 +170,28 @@ module Folio
     I18n.default_locale = :cs
 
     config.folio_console_locale = I18n.default_locale
+
+    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
+    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
+
+    overrides = [
+      Folio::Engine.root.join('app/overrides').to_s,
+      Rails.root.join('app/overrides').to_s,
+    ]
+
+    overrides.each { |override| Rails.autoloaders.main.ignore(override) }
+
+    config.to_prepare do
+      overrides.each do |override|
+        Dir.glob("#{override}/**/*_override.rb").each do |file|
+          load file
+        end
+      end
+
+      Dir.glob("#{::Folio::Engine.root}/app/lib/folio/console/simple_form*/**.rb").each do |sf|
+        load sf
+      end
+    end
         RUBY
         end
       end
@@ -186,6 +205,20 @@ module Folio
             'config.action_mailer.delivery_method = :letter_opener',
             'config.action_mailer.perform_deliveries = true',
           ].join("\n  ")
+        end
+
+        inject_into_file 'config/environments/development.rb', after: /config\.action_mailer\.perform_deliveries = true/ do <<-'RUBY'
+  unless ENV['DISABLE_BULLET']
+    config.after_initialize do
+      Bullet.enable = true
+      Bullet.bullet_logger = true
+      Bullet.console = true
+      Bullet.rails_logger = true
+      Bullet.add_footer = true
+      Bullet.skip_html_injection = false
+    end
+  end
+        RUBY
         end
       end
 
@@ -217,7 +250,6 @@ module Folio
       end
 
       private
-
         def project_name
           @project_name ||= Rails.root.basename.to_s
         end

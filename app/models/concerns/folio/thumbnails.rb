@@ -116,7 +116,6 @@ module Folio::Thumbnails
   end
 
   private
-
     def reset_thumbnails
       fail_for_non_images
 

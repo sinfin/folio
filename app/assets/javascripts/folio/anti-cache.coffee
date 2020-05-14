@@ -43,6 +43,9 @@ performAntiCache = (e) ->
 saveAntiCacheHtml = ($el) ->
   write $el.data('anti-cache'), $el.prop('outerHTML')
 
+window.purgeFolioAntiCache = ->
+  localStorage?.removeItem?('folioAntiCacheTime')
+
 window.performFolioAntiCache = ($items) ->
   $items.each ->
     $el = $(this)
@@ -53,6 +56,10 @@ window.performFolioAntiCache = ($items) ->
 
     fetchFresh($el, url)
 
+init = (e) ->
+  purgeFolioAntiCache() if window.purgeFolioAntiCacheAfterLoad
+  performAntiCache(e)
+
 $(document)
-  .one 'turbolinks:load', performAntiCache
+  .one 'turbolinks:load', init
   .on 'turbolinks:before-render', performAntiCache

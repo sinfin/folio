@@ -18,10 +18,6 @@ module Folio
       ].each do |controller|
         controller.send(:include, Folio::DeviseExtension)
       end
-
-      Dir.glob(Rails.root + 'app/decorators/**/*_decorator*.rb').each do |c|
-        require_dependency(c)
-      end
     end
 
     config.generators do |g|
@@ -30,8 +26,6 @@ module Folio
       g.helper false
     end
 
-    config.autoload_paths << self.root.join('lib')
-    config.eager_load_paths << self.root.join('lib')
     config.assets.paths << self.root.join('app/cells')
     config.assets.paths << self.root.join('vendor/assets/javascripts')
     config.assets.paths << self.root.join('vendor/assets/bower_components')

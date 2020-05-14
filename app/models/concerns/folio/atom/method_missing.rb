@@ -36,7 +36,6 @@ module Folio::Atom::MethodMissing
   end
 
   private
-
     def method_missing_association(method_name, arguments)
       name_without_operator = method_name.to_s
                                          .gsub('=', '')

@@ -96,7 +96,6 @@ module Folio
     end
 
     private
-
       def react_files(file_type, selected_placements, attachmentable:, type:)
         @output_react_meta_data = true
 

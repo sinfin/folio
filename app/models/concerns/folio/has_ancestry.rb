@@ -34,7 +34,6 @@ module Folio::HasAncestry
   end
 
   private
-
     def validate_allowed_type
       return if parent.nil? || parent.class.try(:allowed_child_types).nil?
 

@@ -187,6 +187,8 @@ en:
         add_image: Add image
         add_video: Add video
         remove_video: Remove video
+      lazy_dom:
+        error: 'Failed to load data:'
   date:
     formats:
       console_short: "%d. %m. %Y"

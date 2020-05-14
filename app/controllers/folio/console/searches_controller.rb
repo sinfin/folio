@@ -13,7 +13,6 @@ class Folio::Console::SearchesController < Folio::Console::BaseController
   end
 
   private
-
     def html(js: false)
       results = PgSearch.multisearch(@query)
       if js

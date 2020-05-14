@@ -23,7 +23,6 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
 
       Folio::Console::Api::LinksController.class_eval do
         private
-
           def additional_links
             {
               Folio::MenuItem => Proc.new { |page| 'url' }

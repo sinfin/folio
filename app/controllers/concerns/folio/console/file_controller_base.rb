@@ -30,7 +30,6 @@ module Folio::Console::FileControllerBase
 
 
   private
-
     def file_params
       p = params.require(:file)
                 .permit(:tag_list,

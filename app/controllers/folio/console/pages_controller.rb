@@ -8,7 +8,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   end
 
   private
-
     def index_filters
       {
         by_type: Folio::Page.recursive_subclasses.map do |klass|
@@ -26,6 +25,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
     end
 
     def folio_console_record_includes
-      folio_console_atom_includes + folio_console_attachment_includes
+      [cover_placement: :file]
     end
 end

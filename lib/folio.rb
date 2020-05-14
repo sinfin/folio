@@ -2,8 +2,6 @@
 
 require 'folio/engine'
 
-# TODO: rm the require
-
 require 'dotenv-rails'
 require 'friendly_id'
 require 'ancestry'
@@ -37,8 +35,6 @@ require 'recaptcha'
 require 'audited'
 require 'fast_jsonapi'
 require 'material_icons'
-
-require 'folio/console/simple_form_inputs/date_time_input'
 
 module Folio
   LANGUAGES = {

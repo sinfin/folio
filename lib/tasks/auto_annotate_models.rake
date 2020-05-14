@@ -59,16 +59,12 @@ if Rails.env.development?
   end
 
   Rake::Task['db:migrate'].enhance do
-    begin
-      Rake::Task['app:annotate_models'].invoke
-    rescue RuntimeError
-    end
+    Rake::Task['app:annotate_models'].invoke
+  rescue RuntimeError
   end
 
   Rake::Task['db:rollback'].enhance do
-    begin
-      Rake::Task['app:annotate_models'].invoke
-    rescue RuntimeError
-    end
+    Rake::Task['app:annotate_models'].invoke
+  rescue RuntimeError
   end
 end

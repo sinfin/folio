@@ -9,7 +9,6 @@ module Folio::ApiControllerBase
   end
 
   private
-
     def render_json(data)
       render json: { data: data }, root: false
     end

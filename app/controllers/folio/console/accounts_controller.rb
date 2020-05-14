@@ -13,7 +13,6 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
   end
 
   private
-
     def account_params
       p = params.require(:account)
                 .permit(:role,

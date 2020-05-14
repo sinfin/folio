@@ -10,7 +10,6 @@ class Folio::Console::CellGenerator < Rails::Generators::NamedBase
   end
 
   private
-
     def classname_prefix
       'f-c'
     end

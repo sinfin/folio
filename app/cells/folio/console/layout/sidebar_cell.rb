@@ -45,11 +45,9 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         end
 
         paths = (class_name[:paths] || []).map do |p|
-          begin
-            controller.send(p)
-          rescue NoMethodError
-            controller.main_app.send(p)
-          end
+          controller.send(p)
+        rescue NoMethodError
+          controller.main_app.send(p)
         end
 
         link(label, path, paths: paths)

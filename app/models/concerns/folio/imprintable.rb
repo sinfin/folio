@@ -14,9 +14,8 @@ module Folio::Imprintable
       association_class = reflect_on_association(association).klass
       association_type = reflect_on_association(association).macro
       single_association = %i[belongs_to has_one].include?(association_type)
-      include = Array(include) unless include.nil?
 
-      serialize imprint_field
+      include = Array(include)
 
       # FIXME: fix this for nested hash
       # AR's serializable_hash discards type attribute

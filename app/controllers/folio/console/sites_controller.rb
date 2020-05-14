@@ -12,7 +12,6 @@ class Folio::Console::SitesController < Folio::Console::BaseController
   end
 
   private
-
     def site_params
       params.require(:site)
             .permit(:title,

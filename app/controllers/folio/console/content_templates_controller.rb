@@ -40,7 +40,6 @@ class Folio::Console::ContentTemplatesController < Folio::Console::BaseControlle
   end
 
   private
-
     def set_klass
       klass = params.require(:type).safe_constantize
 

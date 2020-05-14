@@ -6,7 +6,6 @@ module Folio::Shell
   extend ActiveSupport::Concern
 
   private
-
     def shell(*command)
       cmd = command.join(' ')
 

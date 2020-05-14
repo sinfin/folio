@@ -4,7 +4,6 @@ module Folio::Console::Includes
   extend ActiveSupport::Concern
 
   private
-
     def folio_console_collection_includes
       []
     end

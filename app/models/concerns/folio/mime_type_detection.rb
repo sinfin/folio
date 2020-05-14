@@ -6,7 +6,6 @@ module Folio::MimeTypeDetection
   include Folio::Shell
 
   private
-
     def get_mime_type(file)
       shell('file', '--brief', '--mime-type', file.path)
     end

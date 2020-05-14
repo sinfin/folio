@@ -1,0 +1,28 @@
+#bullet-footer
+  left: auto !important
+  right: 0
+  padding: 1rem !important
+  border-radius: 0 !important
+  font-size: 0.765625rem !important
+  font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace !important
+  border: 0 !important
+  color: #000 !important
+  background: rgba(247, 247, 247, 0.9) !important
+  box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.25) !important
+
+  span
+    display: none
+
+  &:before
+    content: 'Bullet debug information:'
+    display: block
+    font-weight: bold
+    margin-bottom: -0.25rem
+
+  &:after
+    content: "Disable this popup by setting ENV['DISABLE_BULLET']."
+    display: block
+    margin-top: 0.75rem
+
+  @media screen and (max-width: 1024px)
+    display: none

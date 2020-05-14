@@ -18,14 +18,12 @@ module Folio
         attr_reader :positions_model
 
         private
-
           def handles_set_positions_for(positions_model)
             @positions_model = positions_model
           end
       end
 
       private
-
         def set_position_params
           params.require(:positions)
         end

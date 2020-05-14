@@ -21,7 +21,6 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
   end
 
   private
-
     def page_links
       {
         Folio::Page => Proc.new { |page| main_app.url_for([page, only_path: true]) }

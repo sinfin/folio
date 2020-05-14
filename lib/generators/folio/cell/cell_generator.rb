@@ -10,7 +10,6 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
   end
 
   private
-
     def classname_prefix
       if name.start_with?('/')
         ''

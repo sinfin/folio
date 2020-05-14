@@ -58,7 +58,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   end
 
   protected
-
     def available_views
       ['index', 'edit', 'new', '_form']
     end

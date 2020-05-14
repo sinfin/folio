@@ -72,7 +72,6 @@ class Folio::Lead < Folio::ApplicationRecord
   end
 
   private
-
     def skip_note_validation?
       false
     end

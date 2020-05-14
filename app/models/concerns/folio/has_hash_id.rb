@@ -7,6 +7,9 @@ module Folio::HasHashId
     extend ::FriendlyId
     before_create :set_hash_id
     friendly_id :hash_id
+
+    validates :hash_id,
+              presence: true
   end
 
   def hash_id

@@ -1,0 +1,16 @@
+.f-c-lazy-dom
+  &__title
+    color: $danger
+    font-weight: $font-weight-bold
+
+  &--error
+    padding: 3rem 1.5rem
+    background: lighten($danger, 30%)
+    text-align: center
+
+  &--loading
+    min-height: 150px
+    position: relative
+
+  &:not(&--loading) .folio-loader
+    display: none

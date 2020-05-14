@@ -40,6 +40,9 @@ meta name="twitter:card" content="summary"
                         media: 'all', \
                         'data-turbolinks-track': 'reload')
 
+  - if Rails.env.development? && !ENV['DISABLE_BULLET']
+    = stylesheet_link_tag 'folio/bullet', media: 'all'
+
   == render partial: 'layouts/folio/analytics'
 
   = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload', \
@@ -52,3 +55,8 @@ meta name="twitter:card" content="summary"
   - if ENV['RECAPTCHA_SITE_KEY'].present? && \
        ENV['RECAPTCHA_SECRET_KEY'].present?
     script src="https://www.google.com/recaptcha/api.js" defer=true async=true
+
+  - if session[:folio_anti_cache_purge]
+    - session.delete(:folio_anti_cache_purge)
+    javascript:
+      window.purgeFolioAntiCacheAfterLoad = true

@@ -7,7 +7,6 @@ class Folio::Console::Api::BaseController < Folio::Console::BaseController
   before_action :api_authenticate_account!
 
   private
-
     def serializer_for(model)
       name = model.class.name.gsub('Folio::', '')
       serializer = "Folio::Console::#{name}Serializer".safe_constantize

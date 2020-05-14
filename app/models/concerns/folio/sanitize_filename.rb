@@ -4,7 +4,6 @@ module Folio::SanitizeFilename
   extend ActiveSupport::Concern
 
   private
-
     def sanitize_filename
       # file name can be blank when assigning via file_url
       return if file.name.blank?

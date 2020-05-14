@@ -53,7 +53,6 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
   end
 
   private
-
     def single?
       placement_key !~ /_placements/
     end

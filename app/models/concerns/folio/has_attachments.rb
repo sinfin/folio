@@ -70,7 +70,6 @@ module Folio::HasAttachments
   end
 
   private
-
     def touch_placements
       # this might touch some other placement types as well
       # but it does not matter as touching is safe

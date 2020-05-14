@@ -39,7 +39,6 @@ class Folio::Console::MenusController < Folio::Console::BaseController
   end
 
   private
-
     def menu_params
       params.require(:menu)
             .permit(menu_items_attributes: menu_items_attributes)
@@ -63,11 +62,11 @@ class Folio::Console::MenusController < Folio::Console::BaseController
     end
 
     def folio_console_collection_includes
-      [ :menu_items ]
+      []
     end
 
     def folio_console_record_includes
-      [ :menu_items ]
+      []
     end
 
     def serialize_menu_items

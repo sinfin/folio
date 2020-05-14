@@ -10,7 +10,6 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
   end
 
   private
-
     def newsletter_subscription_params
       params.require(:newsletter_subscription).permit(:email)
     end

@@ -78,9 +78,8 @@ class Folio::Merger
   end
 
   private
-
     def default_klass
-      self.class.parent
+      self.class.module_parent
     end
 
     def merge_hash_row(attrs, row)

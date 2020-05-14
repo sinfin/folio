@@ -26,7 +26,6 @@ module Folio::PagesControllerBase
   end
 
   private
-
     def render_page
       if @page.class.view_name
         render @page.class.view_name
