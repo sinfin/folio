@@ -5,15 +5,11 @@
 ActiveRecord::Migration.class_eval do
   def create_folio_unaccent
     sql = <<~SQL
-      CREATE OR REPLACE FUNCTION public.unaccent_immutable(regdictionary, text)
-        RETURNS text LANGUAGE c IMMUTABLE PARALLEL SAFE STRICT AS
-      '$libdir/unaccent', 'unaccent_dict';
-
       CREATE OR REPLACE FUNCTION public.folio_unaccent(text)
-        RETURNS text LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT AS
+        RETURNS text AS
       $func$
-      SELECT public.unaccent_immutable(regdictionary 'public.unaccent', $1)
-      $func$;
+      SELECT public.unaccent('public.unaccent', $1)
+      $func$  LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT;
     SQL
 
     version = select_value('SHOW server_version').to_f
