@@ -62,3 +62,7 @@ div class=class_name
               - index += 1
 
         = insert
+
+  - unless options[:non_interactive]
+    .f-c-atoms-previews__insert-spacer
+      = insert

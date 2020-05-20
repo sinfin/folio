@@ -28,7 +28,7 @@
 .f-c-atoms-previews
   $insert-bg: #6C757E
 
-  padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width 500px
+  padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width (( 105px + $grid-gutter-width ))
 
   &--non-interactive
     padding: $grid-gutter-width / 2
@@ -101,7 +101,6 @@
 
   &__insert
     width: 100%
-    height: 0
     position: relative
     top: -1rem
     z-index: 1
@@ -175,10 +174,7 @@
     display: inline-flex
 
   &__insert-inner
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
+    margin-bottom: -1rem
 
   &__insert-ul
     background: $secondary
@@ -225,6 +221,13 @@
 
   &__insert:not(&__insert--active) &__insert-inner
     display: none
+
+  &__insert-spacer
+    pointer-events: none
+    visibility: hidden
+
+  &__insert-spacer &__insert-inner
+    display: block !important
 
   html.media-breakpoint-up-lg &
     &__preview:hover,
