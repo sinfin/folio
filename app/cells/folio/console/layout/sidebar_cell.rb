@@ -34,9 +34,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       return if skip_link_class_names.include?(class_name)
 
       if class_name.is_a?(Hash) &&
-         class_name.try(:[], :klass) &&
-         class_name.try(:[], :path)
-        label = label_from(class_name[:klass].constantize)
+         (class_name[:klass] || class_name[:label]) &&
+         class_name[:path]
+
+        label = if class_name[:klass]
+          label_from(class_name[:klass].constantize)
+        elsif class_name[:label]
+          t(".#{class_name[:label]}")
+        end
 
         begin
           path = controller.send(class_name[:path])
