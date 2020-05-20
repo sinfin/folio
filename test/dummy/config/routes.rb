@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   mount Folio::Engine => '/'
 
+  resource :test, only: [:show]
+
   if Rails.application.config.folio_pages_translations
     scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
       if Rails.application.config.folio_pages_ancestry

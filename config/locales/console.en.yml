@@ -192,6 +192,8 @@ en:
   date:
     formats:
       console_short: "%d. %m. %Y"
+      console_group_by_day: '%a %-d. %B. %Y'
   time:
     formats:
       console_short: "%d. %m. %Y %H:%M"
+      console_group_by_day: '%a %-d. %B. %Y'

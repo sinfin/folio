@@ -1,0 +1,11 @@
+ruby:
+  @klass = Folio::Page
+  @pages = @klass.order(created_at: :desc)
+
+.test-index-show-for-regular
+  = index_show_for(@pages) do |s|
+    = s.attribute(:title)
+
+.test-index-show-for-group-by-day
+  = index_show_for(@pages, group_by_day: :created_at) do |s|
+    = s.attribute(:title)

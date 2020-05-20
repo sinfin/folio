@@ -1,0 +1,38 @@
+.f-c-group-by-day
+  position: relative
+
+  &__inner
+    background: #E6F4FA
+
+  &__date
+    display: inline-block
+    min-width: 135px
+    margin-right: $grid-gutter-half
+
+  +mq-desktop-menu
+    height: 31px
+    display: table-row
+
+    &__outer
+      display: table-cell
+
+    &__inner
+      width: 100%
+      position: absolute
+      left: 0
+      height: 31px
+      padding: 7px 0.75rem
+      border-bottom: $table-border-width solid $table-border-color
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+
+    &__export-link
+      color: $black
+      font-size: $font-size-base
+
+  +mq-mobile-menu
+    margin: $spacer (( - $spacer ))
+
+    &__inner
+      padding: 7px $spacer
