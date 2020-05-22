@@ -38,15 +38,6 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
   end
 end
 
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/content_template/**/*.rb'),
-    Rails.root.join('app/models/**/content_template/**/*.rb'),
-  ].each do |file|
-    require_dependency file
-  end
-end
-
 # == Schema Information
 #
 # Table name: folio_content_templates

@@ -52,15 +52,6 @@ class Folio::Menu < Folio::ApplicationRecord
   end
 end
 
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/menu/**/*.rb'),
-    Rails.root.join('app/models/**/menu/**/*.rb'),
-  ].each do |file|
-    require_dependency file
-  end
-end
-
 # == Schema Information
 #
 # Table name: folio_menus
