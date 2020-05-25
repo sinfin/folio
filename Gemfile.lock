@@ -54,7 +54,7 @@ PATH
       pg (~> 1.2.3)
       pg_search
       premailer-rails
-      rails (~> 6.0.2.2)
+      rails (>= 6.0.2.2)
       rails-i18n
       recaptcha (= 4.13.1)
       responders
