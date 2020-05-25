@@ -5,7 +5,14 @@
 
       .f-c-index-filters__inner
         - index_filters.keys.each do |key|
-          = select(f, key)
+          - if index_filters[key] == :date_range
+            .f-c-index-filters__date-range-input-wrap.form-group
+              = date_range_input(f, key)
+
+              span.mi.mi--16.f-c-index-filters__date-range-input-ico date_range
+
+          - else
+            = select(f, key)
 
         - if filtered?
           .ml-md-g.mb-2.mb-md-0

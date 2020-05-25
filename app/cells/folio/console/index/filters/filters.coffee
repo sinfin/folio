@@ -27,6 +27,77 @@ window.folioConsoleUnbindIndexFiltersAutocomplete = ($input) ->
       .off('focus.indexFiltersAutocomplete')
       .autocomplete('destroy')
 
+initDaterangepicker = ($input) ->
+  opts =
+    alwaysShowCalendars: true
+    autoApply: true
+    autoUpdateInput: false
+
+  if document.documentElement.lang is 'cs'
+    opts.locale = {
+      format: 'DD.MM.YYYY',
+      separator: ' - ',
+      applyLabel: 'Potvrdit',
+      cancelLabel: 'Zrušit',
+      fromLabel: 'Od',
+      toLabel: 'Do',
+      customRangeLabel: 'Vlastní',
+      weekLabel: 'W',
+      daysOfWeek: ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'],
+      monthNames: [ 'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec' ],
+      firstDay: 1,
+    }
+
+    opts.showCustomRangeLabel = true
+    opts.ranges = {
+      'Dnes': [
+         moment(),
+         moment()
+       ],
+      'Včera': [
+         moment().subtract(1, 'days'),
+         moment().subtract(1, 'days')
+       ],
+      'Tento týden': [
+         moment().startOf('week'),
+         moment().endOf('week')
+       ],
+      'Minulý týden': [
+         moment().subtract(1, 'week').startOf('week'),
+         moment().subtract(1, 'week').endOf('week'),
+       ],
+      'Posledních 30 dnů': [
+         moment().subtract(29, 'days'),
+         moment()
+       ],
+      'Tento měsíc': [
+         moment().startOf('month'),
+         moment().endOf('month')
+       ],
+      'Minulý měsíc': [
+         moment().subtract(1, 'month').startOf('month'),
+         moment().subtract(1, 'month').endOf('month'),
+       ],
+      'Tento rok': [
+         moment().startOf('year'),
+         moment().endOf('year')
+       ],
+      'Minulý rok': [
+         moment().subtract(1, 'year').startOf('year'),
+         moment().subtract(1, 'year').endOf('year'),
+       ]
+    }
+
+  $input.daterangepicker opts
+  $input.on 'apply.daterangepicker', (e, picker) ->
+    sd = picker.startDate
+    ed = picker.endDate
+    $input.val("#{sd.format(opts.locale.format)} - #{ed.format(opts.locale.format)}")
+    $input.closest('form').submit()
+
 $ ->
   $('.f-c-index-filters__autocomplete-input').each ->
     window.folioConsoleBindIndexFiltersAutocomplete($(this))
+
+  $('.f-c-index-filters__date-range-input').each ->
+    initDaterangepicker($(this))

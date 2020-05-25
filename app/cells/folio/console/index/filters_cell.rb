@@ -39,7 +39,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                      value: controller.params[key]
                    },
                    wrapper_html: {
-                    class: 'f-c-index-filters__autocomplete-wrap'
+                     class: 'f-c-index-filters__autocomplete-wrap'
                    }
     else
       f.input key, collection: collection(key),
@@ -90,5 +90,16 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def cancel_url
     model[:cancel_url] ||
     request.path
+  end
+
+  def date_range_input(f, key)
+    f.input key, label: false,
+                 input_html: {
+                   class: 'f-c-index-filters__date-range-input',
+                   value: controller.params[key],
+                   autocomplete: 'off',
+                   placeholder: t(".placeholders.#{key}", default: ''),
+                 },
+                 wrapper: false
   end
 end
