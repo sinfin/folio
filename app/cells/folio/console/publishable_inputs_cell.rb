@@ -20,4 +20,8 @@ class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
   def publishable_within?
     f.object.respond_to?(:published_from) && f.object.respond_to?(:published_until)
   end
+
+  def featurable_within?
+    f.object.respond_to?(:featured_from) && f.object.respond_to?(:featured_until)
+  end
 end
