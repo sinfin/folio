@@ -70,7 +70,7 @@ module Folio
           'public/500.html',
         ].each do |path|
           full_path = Rails.root.join(path)
-          File.delete(full_path) if File.exist?(full_path)
+          ::File.delete(full_path) if ::File.exist?(full_path)
         end
       end
 
@@ -152,7 +152,7 @@ module Folio
       end
 
       def application_settings
-        return if File.readlines(Rails.root.join('config/application.rb')).grep("Rails.root.join('lib')").any?
+        return if ::File.readlines(Rails.root.join('config/application.rb')).grep("Rails.root.join('lib')").any?
 
         inject_into_file 'config/application.rb', after: /config\.load_defaults.+\n/ do <<-'RUBY'
     config.exceptions_app = self.routes
@@ -245,7 +245,7 @@ module Folio
           'bin/bower',
           'bin/sprites'
         ].each do |file|
-          File.chmod(0775, Rails.root.join(file))
+          ::File.chmod(0775, Rails.root.join(file))
         end
       end
 
