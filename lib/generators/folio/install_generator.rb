@@ -17,7 +17,7 @@ module Folio
         gem 'route_translator'
         gem 'breadcrumbs_on_rails'
         gem 'sentry-raven'
-        gem 'pg', version: '~> 0.21.0'
+        gem 'pg', version: '~> 1.2.3'
         gem 'devise-i18n'
         gem 'rails-i18n'
         gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
@@ -58,6 +58,7 @@ module Folio
 
           gem 'better_errors'
           gem 'binding_of_caller'
+          gem 'bullet'
         end
       end
 
@@ -114,6 +115,7 @@ module Folio
           '.rubocop.yml',
           '.slim-lint.yml',
           'Guardfile',
+          'app/assets/config/manifest.js',
           'app/assets/images/sprites@1x/.keep',
           'app/assets/images/sprites@2x/.keep',
           'app/assets/javascripts/application.js',

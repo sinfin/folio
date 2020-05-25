@@ -3,6 +3,8 @@
 class AntiCacheController < ApplicationController
   def show
     case params['name']
+    when :foo
+      render plain: 'bar'
     else
       head 400
     end
