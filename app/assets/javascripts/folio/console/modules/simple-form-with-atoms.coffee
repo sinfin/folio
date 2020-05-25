@@ -3,6 +3,9 @@ sendMessage = (data) ->
     @contentWindow.postMessage(data, window.origin)
 
 $(document)
+  .one 'click', '.f-c-simple-form-with-atoms__form', (e) ->
+    $('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--expanded-form')
+
   .on 'submit', '.f-c-simple-form-with-atoms', (e) ->
     $(this).addClass('f-c-simple-form-with-atoms--submitting')
 

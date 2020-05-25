@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-Dir["#{Folio::Engine.root}/lib/folio/console/simple_form_components/*.rb"].each do |file|
+Dir["#{Folio::Engine.root}/app/lib/folio/console/simple_form_components/*.rb"].each do |file|
   load file
 end
 
-Dir["#{Folio::Engine.root}/lib/folio/console/simple_form_inputs/*.rb"].each do |file|
+Dir["#{Folio::Engine.root}/app/lib/folio/console/simple_form_inputs/*.rb"].each do |file|
   load file
 end
 

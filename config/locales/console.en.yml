@@ -189,6 +189,10 @@ en:
         remove_video: Remove video
       lazy_dom:
         error: 'Failed to load data:'
+      publishable_inputs:
+        from: from (optional)
+        to: to (optional)
+        at: date (optional)
   date:
     formats:
       console_short: "%d. %m. %Y"

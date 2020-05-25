@@ -9,6 +9,7 @@ en:
         availableImages: Available images
         cancel: Cancel
         cancelChanges: Cancel changes?
+        clearDate: Clear date
         contentTemplates: Templates
         create: Create
         destroy: Destroy

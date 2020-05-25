@@ -193,6 +193,11 @@ cs:
         remove_video: Odebrat video
       lazy_dom:
         error: 'Nepodařilo se načíst data:'
+      publishable_inputs:
+        from: od (nepovinné)
+        to: do (nepovinné)
+        at: k datu (nepovinné)
+
   date:
     formats:
       console_short: "%d. %m. %Y"

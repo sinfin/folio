@@ -9,6 +9,7 @@ cs:
         availableImages: Dostupné obrázky
         cancel: Zrušit
         cancelChanges: Zahodit změny?
+        clearDate: Vymazat datum
         contentTemplates: Šablony
         create: Vytvořit
         destroy: Smazat

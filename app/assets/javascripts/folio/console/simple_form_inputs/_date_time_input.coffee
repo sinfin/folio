@@ -25,22 +25,36 @@ dpChange = (e) ->
   return unless e.date
   @dataset.date = e.date.format()
 
+dpShow = (e) ->
+  $input = $(this)
+  picker = $input.data('DateTimePicker')
+  $picker = $input.siblings('.bootstrap-datetimepicker-widget')
+  if $picker.find('.bootstrap-datetimepicker-widget__reset-wrap').length is 0
+    $picker.append """
+      <div class="bootstrap-datetimepicker-widget__reset-wrap">
+        <button type="button" class="btn btn-danger btn-sm bootstrap-datetimepicker-widget__reset">#{window.FolioConsole.translations.clearDate}</button>
+      </div>
+    """
+
 window.folioConsoleInitDatePicker = (el) ->
   $el = $(el)
   $el.val(moment($el.data('date'), 'YYYYY-MM-DD h:mm:ss').format(DATE_CONFIG.format)) if $el.data('date')
   $el.datetimepicker(DATE_CONFIG)
+  $el.on 'dp.show', dpShow
   $el.on 'dp.change', dpChange
 
 window.folioConsoleInitDateTimePicker = (el) ->
   $el = $(el)
   $el.val(moment($el.data('date'), 'YYYYY-MM-DD h:mm:ss').format(CONFIG.format)) if $el.data('date')
   $el.datetimepicker(CONFIG)
+  $el.on 'dp.show', dpShow
   $el.on 'dp.change', dpChange
 
 window.folioConsoleUnbindDatePicker = (el) ->
   $(el)
     .datetimepicker('destroy')
     .off 'dp.change'
+    .off 'dp.show'
 
 bindDatePicker = ($elements) ->
   $elements.each ->
@@ -64,6 +78,16 @@ $(document)
       $(DATE_INPUT_SELECTOR).each ->
         picker = $(this).data('DateTimePicker')
         picker.hide() if picker
+
+  .on 'click', '.bootstrap-datetimepicker-widget__reset', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+    picker = $(this)
+      .closest('.form-group')
+      .find('.form-control')
+      .data('DateTimePicker')
+    picker.clear()
+    picker.hide()
 
   .on 'cocoon:after-insert', (e, insertedItem) ->
     bindDatePicker(insertedItem.find(DATE_INPUT_SELECTOR))

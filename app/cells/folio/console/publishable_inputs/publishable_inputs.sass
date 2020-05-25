@@ -41,6 +41,21 @@
         left: 0
         right: auto
 
+  .simple_form &__wrapper + &__wrapper &__input
+
+  .simple_form &__wrapper + &__wrapper
+    .folio-console-date-picker
+      padding-left: 25px !important
+
+    .d-flex
+      &:after
+        font-family: inherit !important
+        content: '-' !important
+        padding-bottom: 2px !important
+        width: 25px !important
+        justify-content: flex-start !important
+        padding-left: 6px !important
+
   &__input
     font-size: 11px
     margin-left: -5px
@@ -52,7 +67,11 @@
       border: none !important
       background: none !important
       cursor: pointer
-      max-width: 145px
+      max-width: 135px
+
+    &.form-control::placeholder
+      color: rgba($input-color, .7)
+      opacity: 1
 
   &__featured
     margin: 0
