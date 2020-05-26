@@ -36,9 +36,18 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
   end
 
   def autocomplete_collection
-    if value = object.try(attribute_name)
-      obj = reflection.class_name.constantize.find(value)
-      [[obj.to_console_label, value]]
+    value = object.try(attribute_name)
+
+    if value.present?
+      if value.is_a?(Array)
+        value.map do |val|
+          obj = reflection.class_name.constantize.find(val)
+          [obj.to_console_label, val]
+        end
+      else
+        obj = reflection.class_name.constantize.find(value)
+        [[obj.to_console_label, value]]
+      end
     else
       []
     end

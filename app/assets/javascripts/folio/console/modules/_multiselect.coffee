@@ -13,9 +13,12 @@ else
   normalize = (str) -> str.toLowerCase()
 
 bindMultiSelects = ->
-  $('select[multiple]').not('.f-c-js-manual').multiSelect
-    selectableHeader: text(window.FolioConsole.translations.selectable)
-    selectionHeader: text(window.FolioConsole.translations.selected)
+  $('select[multiple]')
+    .not('.f-c-js-manual')
+    .not('.f-c-collection-remote-select-input')
+    .multiSelect
+      selectableHeader: text(window.FolioConsole.translations.selectable)
+      selectionHeader: text(window.FolioConsole.translations.selected)
 
 if Turbolinks?
   $(document)
