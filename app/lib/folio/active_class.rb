@@ -25,10 +25,10 @@ module Folio::ActiveClass
     end
   end
 
-  def active_class_with_children(url, children, base: '')
+  def active_class_with_children(url, children, base: '', start_with: true)
     return active_class(url, base: base) if children.blank?
     paths = [url]
     children.each { |mi, _ch| paths << menu_url_for(mi) }
-    active_class(*paths, base: base, start_with: false)
+    active_class(*paths, base: base, start_with: start_with)
   end
 end
