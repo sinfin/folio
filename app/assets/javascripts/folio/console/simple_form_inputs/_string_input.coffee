@@ -67,7 +67,7 @@ window.folioConsoleBindNumeralInput = ($elements) ->
       .removeAttr('name')
       .prop('type', 'string')
     $this.after """<input type="hidden" name="#{name}" value="#{@value}">"""
-    cleave = new Cleave(this, cleaveOpts)
+    $this.data('cleave', new Cleave(this, cleaveOpts))
 
 window.folioConsoleUnbindNumeralInput = ($elements) ->
   $elements.each ->
@@ -76,15 +76,15 @@ window.folioConsoleUnbindNumeralInput = ($elements) ->
     $this.prop('type', $this.data('type')) if $this.data('type')
     $this.prop('name', $this.data('name')) if $this.data('name')
 
-    $hidden = $this.next('input[type="hidden"]')
-    if $hidden.length
-      $this.val($hidden.val())
-      $hidden.remove()
-
     cleave = $this.data('cleave')
     if cleave
       cleave.destroy()
       $this.data('cleave', null)
+
+    $hidden = $this.next('input[type="hidden"]')
+    if $hidden.length
+      $this.val($hidden.val())
+      $hidden.remove()
 
 window.folioConsoleBindNumeralInputIn = ($wrap) ->
   window.folioConsoleBindNumeralInput $wrap.find(NUMERAL_SELECTOR)
