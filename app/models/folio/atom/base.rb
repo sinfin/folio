@@ -191,6 +191,15 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
 end
 
+if Rails.env.development?
+  Dir[
+    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
+    Rails.root.join('app/models/**/atom/**/*.rb')
+  ].each do |file|
+    Rails.autoloaders.main.preload file
+  end
+end
+
 # == Schema Information
 #
 # Table name: folio_atoms
