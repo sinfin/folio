@@ -4,6 +4,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   include Folio::Atom::MethodMissing
   include Folio::HasAttachments
   include Folio::Positionable
+  include Folio::StiPreload
 
   KNOWN_STRUCTURE_TYPES = %i[
     string
@@ -33,7 +34,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
              polymorphic: true,
              touch: true,
              required: true
-
   scope :by_type, -> (type) { where(type: type.to_s) }
 
   before_save :set_data_for_search
@@ -162,6 +162,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     self::ASSOCIATIONS.present?
   end
 
+  def self.sti_paths
+    [
+      Folio::Engine.root.join('app/models/folio/atom'),
+      Rails.root.join('app/models/**/atom'),
+    ]
+  end
+
   private
     def klass
       # as type can be changed
@@ -189,15 +196,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     def set_data_for_search
       self.data_for_search = data.try(:values).try(:join, "\n").presence
     end
-end
-
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/atom/**/*.rb'),
-    Rails.root.join('app/models/**/atom/**/*.rb')
-  ].each do |file|
-    Rails.autoloaders.main.preload file
-  end
 end
 
 # == Schema Information

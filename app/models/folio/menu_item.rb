@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::MenuItem < Folio::ApplicationRecord
+  include Folio::StiPreload
+
   attribute :unique_id, :string
   attribute :parent_unique_id, :string
 
@@ -47,6 +49,13 @@ class Folio::MenuItem < Folio::ApplicationRecord
     true
   end
 
+  def self.sti_paths
+    [
+      Folio::Engine.root.join('app/models/folio/menu_item'),
+      Rails.root.join('app/models/**/menu_item'),
+    ]
+  end
+
   private
     def validate_menu_allowed_types
       if menu.class.allowed_menu_item_classes.exclude?(self.class)
@@ -68,13 +77,6 @@ class Folio::MenuItem < Folio::ApplicationRecord
         self.rails_path = nil
       end
     end
-end
-
-if Rails.env.development?
-  Dir["#{Folio::Engine.root}/app/models/folio/menu_item/*.rb",
-      'app/models/menu_item/*.rb'].each do |file|
-    Rails.autoloaders.main.preload file
-  end
 end
 
 # == Schema Information

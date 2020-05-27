@@ -15,6 +15,7 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
   include Folio::InheritenceBaseNaming
   include Folio::Positionable
   include Folio::ContentTemplateFormMock
+  include Folio::StiPreload
 
   self.table_name = 'folio_content_templates'
 
@@ -36,14 +37,12 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
       ordered.map { |ct| [ct.content] }.to_json
     end
   end
-end
 
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/content_template/**/*.rb'),
-    Rails.root.join('app/models/**/content_template/**/*.rb'),
-  ].each do |file|
-    Rails.autoloaders.main.preload file
+  def self.sti_paths
+    [
+      Folio::Engine.root.join('app/models/folio/content_template'),
+      Rails.root.join('app/models/**/content_template'),
+    ]
   end
 end
 

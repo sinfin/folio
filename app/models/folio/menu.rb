@@ -2,6 +2,7 @@
 
 class Folio::Menu < Folio::ApplicationRecord
   extend Folio::InheritenceBaseNaming
+  include Folio::StiPreload
 
   # Relations
   has_many :menu_items, -> { ordered }, dependent: :destroy
@@ -50,14 +51,12 @@ class Folio::Menu < Folio::ApplicationRecord
   def self.max_nesting_depth
     1
   end
-end
 
-if Rails.env.development?
-  Dir[
-    Folio::Engine.root.join('app/models/folio/menu/**/*.rb'),
-    Rails.root.join('app/models/**/menu/**/*.rb'),
-  ].each do |file|
-    Rails.autoloaders.main.preload file
+  def self.sti_paths
+    [
+      Folio::Engine.root.join('app/models/folio/menu'),
+      Rails.root.join('app/models/**/menu'),
+    ]
   end
 end
 
