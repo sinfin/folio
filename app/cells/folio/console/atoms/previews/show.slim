@@ -24,6 +24,13 @@ div class=class_name
                 = options[:perexes][locale || 'null']
             = label_perex_controls
 
+        - if options[:settings] && options[:settings][locale || 'null']
+          .f-c-atoms-previews__settings
+            - options[:settings][locale || 'null'].each do |key, value|
+              .f-c-atoms-previews__setting data-setting-key=key
+                == value
+                = label_perex_controls
+
         - index = 0
         - model[locale].each_with_index do |atoms_in_molecules, molecule_index|
           - molecule, atoms = atoms_in_molecules

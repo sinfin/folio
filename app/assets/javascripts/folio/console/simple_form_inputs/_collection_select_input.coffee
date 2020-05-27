@@ -8,6 +8,8 @@ window.folioConsoleBindCollectionSelectInput = ($elements) ->
       .selectize
         preload: 'focus'
         plugins: if $selectize[0].multiple then ['remove_button'] else []
+        onChange: (_value) ->
+          $selectize.trigger('change')
         load: (q, callback) ->
           $.ajax
             url: $selectize.data('autocomplete-url')

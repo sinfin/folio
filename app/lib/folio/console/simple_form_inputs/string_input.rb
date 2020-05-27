@@ -52,6 +52,9 @@ SimpleForm::Inputs::StringInput.class_eval do
       input_html_classes << 'f-c-js-atoms-placement-label'
     elsif options[:folio_perex]
       input_html_classes << 'f-c-js-atoms-placement-perex'
+    elsif options[:atom_setting]
+      input_html_classes << 'f-c-js-atoms-placement-setting'
+      input_html_options['data-atom-setting'] = options[:atom_setting]
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

@@ -16,6 +16,9 @@ SimpleForm::Inputs::TextInput.class_eval do
       input_html_classes << 'f-c-js-atoms-placement-label'
     elsif options[:folio_perex]
       input_html_classes << 'f-c-js-atoms-placement-perex'
+    elsif options[:atom_setting]
+      input_html_classes << 'f-c-js-atoms-placement-setting'
+      input_html_options['data-atom-setting'] = options[:atom_setting]
     end
 
     if options[:content_templates]

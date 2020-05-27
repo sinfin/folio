@@ -71,6 +71,14 @@ handleEditClick = (e) ->
           type: 'editPerex'
           locale: $wrap.closest('.f-c-atoms-previews__locale').data('locale')
         window.top.postMessage(data, window.origin)
+      else
+        $wrap = $this.closest('.f-c-atoms-previews__setting')
+        if $wrap.length
+          data =
+            type: 'editSetting'
+            setting: $wrap.data('setting-key')
+            locale: $wrap.closest('.f-c-atoms-previews__locale').data('locale')
+          window.top.postMessage(data, window.origin)
 
 handleOverlayClick = (e) ->
   $controls = $(this).closest('.f-c-atoms-previews__controls--active')

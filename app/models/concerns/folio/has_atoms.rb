@@ -16,6 +16,12 @@ module Folio::HasAtoms
                                     allow_destroy: true
     end
 
+    class_methods do
+      def atom_settings_fields
+        []
+      end
+    end
+
     def atoms_in_molecules
       Folio::Atom.atoms_in_molecules(atoms)
     end
@@ -76,6 +82,12 @@ module Folio::HasAtoms
       atom_locales.map do |locale|
         Folio::Atom.atom_image_placements(send("#{locale}_atoms"))
       end.flatten
+    end
+
+    class_methods do
+      def atom_settings_fields
+        []
+      end
     end
   end
 end

@@ -33,6 +33,9 @@ $(document)
       locale: $this.data('locale') or null
       value: $this.val()
 
+  .on 'change', '.f-c-js-atoms-placement-setting', (e) ->
+    window.postMessage({ type: 'refreshPreview' }, window.origin)
+
 editLabel = (locale) ->
   $label = $('.f-c-js-atoms-placement-label')
   $label = $label.filter("[data-locale='#{locale}']") if locale
@@ -43,6 +46,15 @@ editPerex = (locale) ->
   $perex = $('.f-c-js-atoms-placement-perex')
   $perex = $perex.filter("[data-locale='#{locale}']") if locale
   $perex.focus()
+
+editSetting = (locale, key) ->
+  $('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--expanded-form')
+  $setting = $('.f-c-js-atoms-placement-setting').filter("[data-atom-setting='#{key}']")
+  $setting = $setting.filter("[data-locale='#{locale}']") if locale
+  if $setting.hasClass('selectized')
+    $setting[0].selectize.focus()
+  else
+    $setting.focus()
 
 setHeight = ->
   $iframes = $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe')
@@ -61,5 +73,6 @@ receiveMessage = (e) ->
     when 'setHeight' then setHeight()
     when 'editLabel' then editLabel(e.data.locale)
     when 'editPerex' then editPerex(e.data.locale)
+    when 'editSetting' then editSetting(e.data.locale, e.data.setting)
 
 window.addEventListener('message', receiveMessage, false)

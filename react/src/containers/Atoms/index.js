@@ -19,7 +19,8 @@ import {
   updateFormAtomAssociation,
   moveFormAtom,
   removeFormAtom,
-  validateAndSubmitGlobalForm
+  validateAndSubmitGlobalForm,
+  refreshAtomPreviews
 } from 'ducks/atoms'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
@@ -70,6 +71,10 @@ class Atoms extends React.PureComponent {
           this.confirmedDirtyClose()
           break
         }
+        case 'refreshPreview': {
+          this.refreshPreview()
+          break
+        }
         default:
           // do nothing
       }
@@ -90,6 +95,10 @@ class Atoms extends React.PureComponent {
     if (confirm()) {
       this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
     }
+  }
+
+  refreshPreview = () => {
+    this.props.dispatch(refreshAtomPreviews())
   }
 
   handleFileTrigger ({ attachmentKey, data, index }) {

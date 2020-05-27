@@ -34,6 +34,21 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     locales = ['null'] + I18n.available_locales
     @labels = params.permit(labels: locales)[:labels]
     @perexes = params.permit(perexes: locales)[:perexes]
+    @settings = {}
+
+    if params[:settings].present?
+      @klass = params[:class_name].constantize
+      @klass.atom_settings_fields.each do |setting_definition|
+        value = params[:settings][setting_definition[:key]]
+        next if value.blank?
+        value.each do |locale, val|
+          @settings[locale] ||= {}
+          model = setting_definition[:model].call(val)
+          html = cell(setting_definition[:cell_name], model).show
+          @settings[locale][setting_definition[:key]] = html
+        end
+      end
+    end
 
     render :preview, layout: false
   end

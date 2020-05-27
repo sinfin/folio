@@ -71,6 +71,7 @@ module Folio
         namespace: namespace,
         structures: Folio::Atom.structures,
         placementType: f.object.class.to_s,
+        className: f.object.class.to_s,
       }
 
       content_tag(:div, nil, 'class': 'f-c-atoms folio-react-wrap',

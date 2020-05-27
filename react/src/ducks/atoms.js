@@ -31,6 +31,7 @@ const ATOM_FORM_PLACEMENTS_SELECT = 'atoms/ATOM_FORM_PLACEMENTS_SELECT'
 const ATOM_FORM_PLACEMENTS_UNSELECT = 'atoms/ATOM_FORM_PLACEMENTS_UNSELECT'
 const ATOM_FORM_PLACEMENTS_SORT = 'atoms/ATOM_FORM_PLACEMENTS_SORT'
 const ATOM_FORM_PLACEMENTS_CHANGE = 'atoms/ATOM_FORM_PLACEMENTS_CHANGE'
+const REFRESH_ATOM_PREVIEWS = 'atoms/REFRESH_ATOM_PREVIEWS'
 
 // Actions
 
@@ -134,6 +135,10 @@ export function atomFormPlacementsChangeAlt (index, attachmentKey, filePlacement
   return atomFormPlacementsChange(index, attachmentKey, filePlacement, 'alt', alt)
 }
 
+export function refreshAtomPreviews () {
+  return { type: REFRESH_ATOM_PREVIEWS }
+}
+
 // Selectors
 
 export const atomsSelector = (state) => ({
@@ -209,7 +214,9 @@ const serializeAtom = (state, atom) => {
 }
 
 export const serializedAtomsSelector = (state) => {
-  const h = {}
+  const h = {
+    class_name: state.atoms.className
+  }
   Object.keys(state.atoms.atoms).forEach((rootKey) => {
     h[`${rootKey}_attributes`] = state.atoms.atoms[rootKey].map((atom) => serializeAtom(state, atom))
   })
@@ -246,6 +253,19 @@ function * updateAtomPreviews (action) {
       serializedAtoms['perexes'][$perex.data('locale') || null] = $perex.val()
     })
   }
+  const $settings = $('.f-c-js-atoms-placement-setting')
+  if ($settings.length) {
+    serializedAtoms['settings'] = {}
+    $settings.each((i, setting) => {
+      const $setting = $(setting)
+      let val = $setting.val()
+      if ($setting.hasClass('selectized')) {
+        val = $setting[0].selectize.getValue()
+      }
+      serializedAtoms['settings'][$setting.data('atom-setting')] = serializedAtoms['settings'][$setting.data('atom-setting')] || {}
+      serializedAtoms['settings'][$setting.data('atom-setting')][$setting.data('locale') || null] = val
+    })
+  }
 
   const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
   $iframes.each((_i, iframe) => {
@@ -275,7 +295,8 @@ function * updateAtomPreviewsSaga () {
     takeEvery(MOVE_ATOMS_TO_INDEX, updateAtomPreviews),
     takeEvery(SAVE_FORM_ATOMS, updateAtomPreviews),
     takeEvery(SET_ATOMS_DATA, updateAtomPreviews),
-    takeEvery(CREATE_CONTENTLESS_ATOM, updateAtomPreviews)
+    takeEvery(CREATE_CONTENTLESS_ATOM, updateAtomPreviews),
+    takeEvery(REFRESH_ATOM_PREVIEWS, updateAtomPreviews)
   ]
 }
 
@@ -353,6 +374,7 @@ export const initialState = {
   namespace: null,
   structures: {},
   placementType: null,
+  className: null,
   form: {
     rootKey: null,
     indices: null,

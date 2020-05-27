@@ -15,6 +15,11 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
       end
     end
 
+    if options[:atom_setting]
+      iho[:class] = [iho[:class], 'f-c-js-atoms-placement-setting'].flatten
+      iho['data-atom-setting'] = options[:atom_setting]
+    end
+
     label_method, value_method = detect_collection_methods
     merged_input_options = merge_wrapper_options(iho, wrapper_options)
 
