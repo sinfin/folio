@@ -33,6 +33,8 @@ module Dummy
       Rails.root.join('app/overrides').to_s,
     ]
 
+    overrides.each { |override| Rails.autoloaders.main.ignore(override) }
+
     config.to_prepare do
       overrides.each do |override|
         Dir.glob("#{override}/**/*_override.rb").each do |file|
