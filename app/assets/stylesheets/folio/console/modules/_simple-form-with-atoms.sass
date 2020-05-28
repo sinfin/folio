@@ -310,3 +310,16 @@
 
     &--layout-horizontal &__title-arrow
       display: none
+
+.f-c-multi-select-component__card--placements
+  .f-c-js-atoms-placement-setting &
+    .card-header,
+    .card-body
+      transition: background-color .15s
+
+  .f-c-js-atoms-placement-setting--highlighted &
+    .card-header
+      background-color: $primary
+
+    .card-body
+      background-color: rgba($primary, 0.2)

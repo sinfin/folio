@@ -52,11 +52,14 @@ editSetting = (locale, key) ->
   else
     $setting = $('.f-c-js-atoms-placement-setting').filter("[data-atom-setting='#{key}']")
   $setting = $setting.filter("[data-locale='#{locale}']") if locale
-  selectTab($setting)
-  if $setting.hasClass('selectized')
-    $setting[0].selectize.focus()
-  else
-    $setting.focus()
+  if $setting.length
+    selectTab($setting)
+    setTimeout((-> $setting.addClass('f-c-js-atoms-placement-setting--highlighted')), 0)
+    setTimeout((-> $setting.removeClass('f-c-js-atoms-placement-setting--highlighted')), 300)
+    if $setting.hasClass('selectized')
+      $setting[0].selectize.focus()
+    else
+      $setting.focus()
 
 setHeight = ->
   $iframes = $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe')

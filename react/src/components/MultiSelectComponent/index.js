@@ -29,6 +29,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
         <Card
           highlighted
           header={window.FolioConsole.translations[`selected${this.props.filesKey}`]}
+          className='f-c-multi-select-component__card f-c-multi-select-component__card--placements'
         >
           <FilePlacementList
             filePlacements={this.props.filePlacements}
@@ -46,6 +47,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
           header={window.FolioConsole.translations[`available${this.props.filesKey}`]}
           headerUpload
           filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
+          className='f-c-multi-select-component__card f-c-multi-select-component__card--files'
         >
           <UploadTagger filesKey={this.props.filesKey} nested={this.props.nested} />
 
