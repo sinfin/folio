@@ -175,7 +175,7 @@ updatePerex = (locale, value) ->
   else
     $perex = $(".f-c-atoms-previews__locale .f-c-atoms-previews__perex")
   $perex.prop('hidden', value.length is 0)
-  $perex.find('.f-c-atoms-previews__perex-p').text(value)
+  $perex.find('.f-c-atoms-previews__perex-p').html(value)
 
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick

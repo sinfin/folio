@@ -58,6 +58,8 @@ editSetting = (locale, key) ->
     setTimeout((-> $setting.removeClass('f-c-js-atoms-placement-setting--highlighted')), 300)
     if $setting.hasClass('selectized')
       $setting[0].selectize.focus()
+    else if $setting.hasClass('redactor-source')
+      $R($setting[0], 'editor.startFocus')
     else
       $setting.focus()
 
