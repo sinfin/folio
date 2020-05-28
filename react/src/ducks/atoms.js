@@ -1,8 +1,10 @@
 import { mapValues, sortBy, omit, uniqueId } from 'lodash'
+import { delay } from 'redux-saga'
 import { takeEvery, takeLatest, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
+import getJsonFromMultiSelectDom from 'utils/getJsonFromMultiSelectDom'
 
 import { combineAtoms } from 'ducks/utils/atoms'
 
@@ -253,39 +255,59 @@ function * updateAtomPreviews (action) {
       serializedAtoms['perexes'][$perex.data('locale') || null] = $perex.val()
     })
   }
+  let settingsLoading = false
   const $settings = $('.f-c-js-atoms-placement-setting')
   if ($settings.length) {
     serializedAtoms['settings'] = {}
     $settings.each((i, setting) => {
       const $setting = $(setting)
-      let val = $setting.val()
-      if ($setting.hasClass('selectized')) {
-        val = $setting[0].selectize.getValue()
+      const key = $setting.data('atom-setting')
+      if (settingsLoading) return
+      if (key) {
+        let val
+        if ($setting.hasClass('selectized')) {
+          val = $setting[0].selectize.getValue()
+        } else if ($setting.hasClass('folio-react-wrap')) {
+          if ($setting.find('.folio-console-file-placement-list').length) {
+            val = getJsonFromMultiSelectDom($setting)
+          } else {
+            settingsLoading = true
+            return
+          }
+        } else {
+          val = $setting.val()
+        }
+        serializedAtoms['settings'][key] = serializedAtoms['settings'][key] || {}
+        serializedAtoms['settings'][key][$setting.data('locale') || null] = val
       }
-      serializedAtoms['settings'][$setting.data('atom-setting')] = serializedAtoms['settings'][$setting.data('atom-setting')] || {}
-      serializedAtoms['settings'][$setting.data('atom-setting')][$setting.data('locale') || null] = val
     })
   }
 
-  const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
-  $iframes.each((_i, iframe) => {
-    const callback = () => {
-      if (!iframe.contentWindow.jQuery) { return setTimeout(callback, 100) }
-      const $iframe = $(iframe)
-      const visibleLocale = $iframe.closest('.f-c-simple-form-with-atoms__preview').find('.f-c-atoms-locale-switch__button--active').data('locale')
-      const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
-      $body.html(html)
-      $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
-        const $el = iframe.contentWindow.jQuery(el)
-        $el.prop('hidden', $el.data('locale') && $el.data('locale') !== visibleLocale)
-      })
-      iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
-      $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
-    }
-    callback()
-  })
   if (action.type !== SET_ATOMS_DATA) {
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
+  }
+
+  if (settingsLoading) {
+    yield delay(100)
+    yield put(refreshAtomPreviews())
+  } else {
+    const html = yield (call(apiHtmlPost, '/console/atoms/preview', serializedAtoms))
+    $iframes.each((_i, iframe) => {
+      const callback = () => {
+        if (!iframe.contentWindow.jQuery) { return setTimeout(callback, 100) }
+        const $iframe = $(iframe)
+        const visibleLocale = $iframe.closest('.f-c-simple-form-with-atoms__preview').find('.f-c-atoms-locale-switch__button--active').data('locale')
+        const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)
+        $body.html(html)
+        $body.find('.f-c-atoms-previews__locale').each((_i, el) => {
+          const $el = iframe.contentWindow.jQuery(el)
+          $el.prop('hidden', $el.data('locale') && $el.data('locale') !== visibleLocale)
+        })
+        iframe.contentWindow.postMessage({ type: 'replacedHtml' }, window.origin)
+        $(iframe).parent().removeClass('f-c-simple-form-with-atoms__preview--initializing f-c-simple-form-with-atoms__preview--loading')
+      }
+      callback()
+    })
   }
 }
 

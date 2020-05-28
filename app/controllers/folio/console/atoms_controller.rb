@@ -36,16 +36,45 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     @perexes = params.permit(perexes: locales)[:perexes]
     @settings = {}
 
-    if params[:settings].present?
+    if params[:class_name].present?
       @klass = params[:class_name].constantize
-      @klass.atom_settings_fields.each do |setting_definition|
-        value = params[:settings][setting_definition[:key]]
-        next if value.blank?
-        value.each do |locale, val|
-          @settings[locale] ||= {}
-          model = setting_definition[:model].call(val)
-          html = cell(setting_definition[:cell_name], model).show
-          @settings[locale][setting_definition[:key]] = html
+      if @klass.atom_settings_fields.present?
+        @klass.atom_settings_fields.each do |setting_definition|
+          if setting_definition == :label
+            key = :label
+            value = @labels
+          elsif setting_definition == :perex
+            key = :perex
+            value = @perexes
+          else
+            key = setting_definition[:key]
+            value = params[:settings][key]
+          end
+
+          next if value.blank?
+
+          value.each do |locale, val|
+            @settings[locale] ||= {}
+
+            if setting_definition == :label || setting_definition == :perex
+              model = value[locale]
+              cell_name = "folio/console/atoms/previews/#{setting_definition}"
+            elsif setting_definition[:model] == :image_placements
+              model = val.map do |attrs|
+                Folio::FilePlacement::Image.new(attrs.permit(:file_id,
+                                                             :title,
+                                                             :alt,
+                                                             :position))
+              end
+              cell_name = setting_definition[:cell_name]
+            else
+              model = setting_definition[:model].call(val)
+              cell_name = setting_definition[:cell_name]
+            end
+
+            html = cell(cell_name, model).show
+            @settings[locale][key] = html
+          end
         end
       end
     end

@@ -33,24 +33,26 @@ $(document)
       locale: $this.data('locale') or null
       value: $this.val()
 
-  .on 'change', '.f-c-js-atoms-placement-setting', (e) ->
+  .on 'change folioCustomChange', '.f-c-js-atoms-placement-setting', (e) ->
     window.postMessage({ type: 'refreshPreview' }, window.origin)
 
-editLabel = (locale) ->
-  $label = $('.f-c-js-atoms-placement-label')
-  $label = $label.filter("[data-locale='#{locale}']") if locale
-  $label.focus()
+selectTab = ($el) ->
+  $tab = $el.closest('.tab-pane')
 
-editPerex = (locale) ->
-  $('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--expanded-form')
-  $perex = $('.f-c-js-atoms-placement-perex')
-  $perex = $perex.filter("[data-locale='#{locale}']") if locale
-  $perex.focus()
+  if $tab.length and !$tab.hasClass('active')
+    id = $tab.attr('id')
+    $('.nav-tabs .nav-link').filter(-> @href.split('#').pop() is id).click()
 
 editSetting = (locale, key) ->
   $('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--expanded-form')
-  $setting = $('.f-c-js-atoms-placement-setting').filter("[data-atom-setting='#{key}']")
+  if key == 'label'
+    $setting = $('.f-c-js-atoms-placement-label')
+  else if key == 'perex'
+    $setting = $('.f-c-js-atoms-placement-perex')
+  else
+    $setting = $('.f-c-js-atoms-placement-setting').filter("[data-atom-setting='#{key}']")
   $setting = $setting.filter("[data-locale='#{locale}']") if locale
+  selectTab($setting)
   if $setting.hasClass('selectized')
     $setting[0].selectize.focus()
   else
@@ -71,8 +73,7 @@ receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
     when 'setHeight' then setHeight()
-    when 'editLabel' then editLabel(e.data.locale)
-    when 'editPerex' then editPerex(e.data.locale)
     when 'editSetting' then editSetting(e.data.locale, e.data.setting)
+
 
 window.addEventListener('message', receiveMessage, false)

@@ -6,24 +6,6 @@ div class=class_name
         data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
         hidden=locale_hidden(locale)
       ]
-        - if options[:labels] && options[:labels][locale || 'null']
-          .f-c-atoms-previews__label.mb-5[
-            hidden=options[:labels][locale || 'null'].blank?
-          ]
-            .container
-              h1.f-c-atoms-previews__label-h1.m-0
-                = options[:labels][locale || 'null']
-            = label_perex_controls
-
-        - if options[:perexes] && options[:perexes][locale || 'null']
-          .f-c-atoms-previews__perex.mb-5.mt-n4[
-            hidden=options[:perexes][locale || 'null'].blank?
-          ]
-            .container
-              p.f-c-atoms-previews__perex-p.lead
-                = options[:perexes][locale || 'null']
-            = label_perex_controls
-
         - if options[:settings] && options[:settings][locale || 'null']
           .f-c-atoms-previews__settings
             - options[:settings][locale || 'null'].each do |key, value|

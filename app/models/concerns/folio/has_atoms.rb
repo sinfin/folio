@@ -18,7 +18,10 @@ module Folio::HasAtoms
 
     class_methods do
       def atom_settings_fields
-        []
+        [
+          :label,
+          :perex,
+        ]
       end
     end
 
@@ -86,7 +89,10 @@ module Folio::HasAtoms
 
     class_methods do
       def atom_settings_fields
-        []
+        [
+          :label,
+          :perex,
+        ]
       end
     end
   end

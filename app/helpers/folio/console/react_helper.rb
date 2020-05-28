@@ -4,20 +4,24 @@ module Folio
   module Console::ReactHelper
     def react_images(selected_placements = nil,
                      attachmentable: 'page',
-                     type: :image_placements)
+                     type: :image_placements,
+                     atom_setting: nil)
       react_files('Folio::Image',
                   selected_placements,
                   attachmentable: attachmentable,
-                  type: type)
+                  type: type,
+                  atom_setting: atom_setting)
     end
 
     def react_documents(selected_placements = nil,
                         attachmentable: 'page',
-                        type: :document_placements)
+                        type: :document_placements,
+                        atom_setting: nil)
       react_files('Folio::Document',
                   selected_placements,
                   attachmentable: attachmentable,
-                  type: type)
+                  type: type,
+                  atom_setting: atom_setting)
     end
 
     def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil)
@@ -97,7 +101,7 @@ module Folio
     end
 
     private
-      def react_files(file_type, selected_placements, attachmentable:, type:)
+      def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
         @output_react_meta_data = true
 
         if selected_placements.present?
@@ -115,13 +119,20 @@ module Folio
           placements = nil
         end
 
+        class_name = 'folio-react-wrap'
+
+        if atom_setting
+          class_name = "#{class_name} f-c-js-atoms-placement-setting"
+        end
+
         content_tag(:div, nil,
-          'class': 'folio-react-wrap',
+          'class': class_name,
           'data-original-placements': placements,
           'data-file-type': file_type,
           'data-mode': 'multi-select',
           'data-attachmentable': attachmentable,
           'data-placement-type': type,
+          'data-atom-setting': atom_setting,
         )
       end
   end
