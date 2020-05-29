@@ -22,7 +22,7 @@
   font-family: 'Font Awesome 5 Free Regular', 'Font Awesome 5 Free Solid';
   font-weight: 400;
   font-size: inherit;
-  content: "#{$symbol}";
+  content: fa-content($symbol);
   display: inline-block;
   text-rendering: auto;
 }
