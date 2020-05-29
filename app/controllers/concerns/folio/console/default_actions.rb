@@ -85,6 +85,22 @@ module Folio::Console::DefaultActions
                  location: request.referrer || url_for([:console, @klass])
   end
 
+  def ancestry
+    @klass.transaction do
+      params.require(:ancestry).each do |i, hash|
+        @klass.find(hash[:id])
+              .update!(position: hash[:position],
+                       parent_id: hash[:parent_id])
+      end
+    end
+
+    redirect_to url_for([:console, @klass]),
+                flash: { notice: I18n.t('folio.console.base_controller.ancestry.success') }
+  rescue
+    redirect_to url_for([:console, @klass]),
+                flash: { error: I18n.t('folio.console.base_controller.ancestry.error') }
+  end
+
   def event
     event_name = params.require(:aasm_event).to_sym
 

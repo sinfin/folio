@@ -7,6 +7,7 @@ import filePlacementsReducer from 'ducks/filePlacements'
 import filesReducer from 'ducks/files'
 import filtersReducer from 'ducks/filters'
 import menusReducer from 'ducks/menus'
+import ancestryReducer from 'ducks/ancestry'
 import modalReducer from 'ducks/modal'
 import uploadsReducer from 'ducks/uploads'
 
@@ -18,6 +19,7 @@ export default combineReducers({
   files: filesReducer,
   filters: filtersReducer,
   menus: menusReducer,
+  ancestry: ancestryReducer,
   modal: modalReducer,
   uploads: uploadsReducer
 })

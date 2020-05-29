@@ -32,17 +32,23 @@ module Folio
                                                 file_type: file_type)
     end
 
+    def react_ancestry(klass, max_nesting_depth: 2)
+      raw cell('folio/console/react_ancestry',
+               klass,
+               max_nesting_depth: max_nesting_depth)
+    end
+
     def react_modal_for(file_type, single: true)
       @output_react_meta_data = true
 
       if ['new', 'edit', 'create', 'update'].include?(action_name)
         mode = single ? 'modal-single-select' : 'modal-multi-select'
 
-        content_tag(:div, nil,
-          'class': 'folio-react-wrap',
-          'data-file-type': file_type,
-          'data-mode': mode,
-        )
+        content_tag(:div,
+                    nil,
+                    'class': 'folio-react-wrap',
+                    'data-file-type': file_type,
+                    'data-mode': mode)
       end
     end
 

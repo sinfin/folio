@@ -7,9 +7,11 @@ import createSagaMiddleware from 'redux-saga'
 import 'url-search-params-polyfill'
 
 import App from 'containers/App'
+import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import { setMode, setFileType } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
+import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
 import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
 import fileTypeToKey from 'utils/fileTypeToKey'
@@ -37,6 +39,17 @@ window.folioConsoleInitReact = (domRoot) => {
     ReactDOM.render((
       <Provider store={store}>
         <MenuFormApp />
+      </Provider>
+    ), domRoot)
+  } else if (domRoot.classList.contains('folio-react-wrap--ancestry')) {
+    store.dispatch(setAncestryData({
+      items: JSON.parse(domRoot.dataset.items),
+      maxNestingDepth: parseInt(domRoot.dataset.maxNestingDepth)
+    }))
+
+    ReactDOM.render((
+      <Provider store={store}>
+        <AncestryApp />
       </Provider>
     ), domRoot)
   } else {

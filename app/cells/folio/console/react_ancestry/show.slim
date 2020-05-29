@@ -1,0 +1,11 @@
+= form do |f|
+  - if items.any? { |i| !i[:valid] }
+    .alert.alert-danger
+      = t('.invalid')
+
+  div[
+    class="folio-react-wrap folio-react-wrap--ancestry"
+    data={ items: items.to_json, 'max-nesting-depth' => max_nesting_depth }
+  ]
+
+  = cell('folio/console/form/footer', f)

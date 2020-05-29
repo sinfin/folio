@@ -15,12 +15,13 @@ module Folio::HasAncestry
   class_methods do
     def arrange_as_array(options = {}, hash = nil)
       hash ||= arrange(options)
-
       arr = []
+
       hash.each do |page, children|
         arr << page
         arr += arrange_as_array(options, children) unless children.empty?
       end
+
       arr
     end
 

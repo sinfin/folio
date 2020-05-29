@@ -42,6 +42,9 @@ cs:
           title: Obsah
       base_controller:
         invalid_event: Nelze provést změnu stavu - %{event}.
+        ancestry:
+          success: Stromová struktura upravena.
+          error: Stromovou strukturu se nepodařilo upravit.
       breadcrumbs:
         actions:
           add: Přidat
@@ -197,6 +200,8 @@ cs:
         from: od (nepovinné)
         to: do (nepovinné)
         at: k datu (nepovinné)
+      react_ancestry:
+        invalid: Některé záznamy nejsou validní. Pro změnu struktury je potřeba je opravit. Ve stromové stuktuře jsou označeny červeně.
 
   date:
     formats:

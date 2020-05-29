@@ -42,6 +42,9 @@ en:
           title: Content
       base_controller:
         invalid_event: Cannot perform event - %{event}.
+        ancestry:
+          success: Tree structure updated.
+          error: Failed to update the tree structure.
       breadcrumbs:
         actions:
           add: Add
@@ -193,6 +196,8 @@ en:
         from: from (optional)
         to: to (optional)
         at: date (optional)
+      react_ancestry:
+        invalid: Some of the records are invalid. It's required to fix these first in order to change structure. Invalid records are marked red.
   date:
     formats:
       console_short: "%d. %m. %Y"
