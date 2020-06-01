@@ -102,7 +102,7 @@ module Folio
           'config/initializers/raven.rb',
           'config/initializers/smtp.rb',
           'config/routes.rb',
-          'lib/application_cell.rb',
+          'app/lib/application_cell.rb',
           'test/controllers/anti_cache_controller_test.rb',
         ].each { |f| template "#{f}.tt", f }
 
