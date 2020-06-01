@@ -172,6 +172,8 @@ module Folio
     I18n.default_locale = :cs
 
     config.folio_console_locale = I18n.default_locale
+    config.autoload_paths << Rails.root.join('app/lib')
+    config.eager_load_paths << Rails.root.join('app/lib')
 
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
@@ -190,6 +192,7 @@ module Folio
         end
       end
     end
+
         RUBY
         end
       end
@@ -206,6 +209,7 @@ module Folio
         end
 
         inject_into_file 'config/environments/development.rb', after: /config\.action_mailer\.perform_deliveries = true/ do <<-'RUBY'
+
   unless ENV['DISABLE_BULLET']
     config.after_initialize do
       Bullet.enable = true
@@ -216,6 +220,7 @@ module Folio
       Bullet.skip_html_injection = false
     end
   end
+
         RUBY
         end
       end
