@@ -25,7 +25,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def self.folio_console_controller_for(class_name, except: [])
+  def self.folio_console_controller_for(class_name, as: nil, except: [])
     klass = class_name.constantize
 
     if klass.private_method_defined?(:positionable_last_position)
@@ -35,7 +35,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     respond_to :json, only: %i[update]
 
-    load_and_authorize_resource(class: class_name, except: except)
+    load_and_authorize_resource(as, class: class_name,
+                                    except: except,
+                                    parent: (false if as.present?))
 
     before_action do
       add_breadcrumb(klass.model_name.human(count: 2),
