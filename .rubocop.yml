@@ -8,6 +8,7 @@ AllCops:
     - 'db/schema.rb'
     - 'test/dummy/db/schema.rb'
     - 'node_modules/**/*'
+    - 'lib/generators/folio/install_generator.rb'
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
