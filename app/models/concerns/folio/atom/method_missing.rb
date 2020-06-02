@@ -71,8 +71,10 @@ module Folio::Atom::MethodMissing
         else
           if assoc['type'].present? && assoc['id'].present?
             scope = assoc['type'].constantize
-            if arguments.size > 1
-              scope = scope.includes(*associations[1..-1])
+            if arguments.present? &&
+               arguments.first.present? &&
+               includes = arguments.first.try(:[], :includes)
+              scope = scope.includes(*includes)
             end
             scope.find(assoc['id'])
           else
