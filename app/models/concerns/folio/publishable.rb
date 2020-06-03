@@ -61,9 +61,15 @@ module Folio::Publishable
     end
 
     def published?
-      published.present? &&
-      published_at &&
-      published_at <= Time.zone.now.change(sec: 0)
+      if published.present?
+        if published_at.present?
+          published_at <= Time.zone.now.change(sec: 0)
+        else
+          true
+        end
+      else
+        false
+      end
     end
   end
 
@@ -104,11 +110,19 @@ module Folio::Publishable
     end
 
     def published?
-      published.present? &&
-      published_from &&
-      published_from <= Time.zone.now.change(sec: 0) &&
-      published_until &&
-      published_until >= Time.zone.now.change(sec: 0)
+      if published.present?
+        if published_from.present? && published_from >= Time.zone.now.change(sec: 0)
+          return false
+        end
+
+        if published_until.present? && published_until <= Time.zone.now.change(sec: 0)
+          return false
+        end
+
+        true
+      else
+        false
+      end
     end
   end
 end
