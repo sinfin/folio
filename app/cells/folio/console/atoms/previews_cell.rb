@@ -35,4 +35,9 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   def default_locale
     options[:default_locale].try(:to_sym) || I18n.default_locale
   end
+
+  def atom_cell(atom)
+    opts = (atom.cell_options.presence || {}).merge(console_preview: true)
+    cell(atom.class.cell_name, atom, opts)
+  end
 end

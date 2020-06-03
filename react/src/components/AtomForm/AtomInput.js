@@ -109,6 +109,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         type={type}
         className={classNames.join(' ')}
         rows={2}
+        async
       />
     )
   }
