@@ -45,23 +45,34 @@ selectTab = ($el) ->
 
 editSetting = (locale, key) ->
   $('.f-c-simple-form-with-atoms').addClass('f-c-simple-form-with-atoms--expanded-form')
+
   if key == 'label'
     $setting = $('.f-c-js-atoms-placement-label')
   else if key == 'perex'
     $setting = $('.f-c-js-atoms-placement-perex')
   else
     $setting = $('.f-c-js-atoms-placement-setting').filter("[data-atom-setting='#{key}']")
+
   $setting = $setting.filter("[data-locale='#{locale}']") if locale
+
   if $setting.length
     selectTab($setting)
-    setTimeout((-> $setting.addClass('f-c-js-atoms-placement-setting--highlighted')), 0)
-    setTimeout((-> $setting.removeClass('f-c-js-atoms-placement-setting--highlighted')), 300)
-    if $setting.hasClass('selectized')
-      $setting[0].selectize.focus()
-    else if $setting.hasClass('redactor-source')
-      $R($setting[0], 'editor.startFocus')
+    $scroll = $setting.closest('.f-c-simple-form-with-atoms__scroll')
+
+    callback = ->
+      setTimeout((-> $setting.addClass('f-c-js-atoms-placement-setting--highlighted')), 0)
+      setTimeout((-> $setting.removeClass('f-c-js-atoms-placement-setting--highlighted')), 300)
+      if $setting.hasClass('selectized')
+        $setting[0].selectize.focus()
+      else if $setting.hasClass('redactor-source')
+        $R($setting[0], 'editor.startFocus')
+      else
+        $setting.focus()
+
+    if $scroll.scrollTop() > $(window).height() / 2
+      $scroll.animate scrollTop: 0, callback
     else
-      $setting.focus()
+      callback()
 
 setHeight = ->
   $iframes = $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe')

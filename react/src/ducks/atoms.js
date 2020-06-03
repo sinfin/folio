@@ -283,7 +283,7 @@ function * updateAtomPreviews (action) {
     })
   }
 
-  if (action.type !== SET_ATOMS_DATA) {
+  if (action.type !== SET_ATOMS_DATA && action.type !== REFRESH_ATOM_PREVIEWS) {
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
   }
 
