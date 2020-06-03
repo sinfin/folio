@@ -10,8 +10,3 @@ $(document).on 'change', '.f-c-publishable-inputs__checkbox', ->
       now = moment()
       $input.val now.format(format)
       $input.data(now.format())
-  else
-    $parent
-      .find('.f-c-publishable-inputs__input')
-      .val('')
-      .data('')
