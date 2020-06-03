@@ -53,7 +53,6 @@ Folio::Engine.routes.draw do
         get :selectize
         get :react_select
       end
-      resources :links, only: %i[index]
       resources :images, only: %i[index create update] do
         collection do
           post :tag
