@@ -46,7 +46,7 @@ const FileTableRow = ({
           <div className='f-c-file-table__img-wrap'>
             {file.attributes.thumb && (
               <a
-                href={file.attributes.source_image}
+                href={file.attributes.source_url}
                 target='_blank'
                 className='f-c-file-table__img-a'
                 rel='noopener noreferrer'

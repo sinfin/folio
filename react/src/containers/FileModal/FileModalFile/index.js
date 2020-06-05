@@ -3,6 +3,7 @@ import React from 'react'
 import TagsInput from 'components/TagsInput'
 
 export default ({ fileModal, onTagsChange, closeFileModal, saveModal, tags }) => {
+  const isImage = fileModal.filesKey === 'images'
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 
@@ -14,12 +15,14 @@ export default ({ fileModal, onTagsChange, closeFileModal, saveModal, tags }) =>
       </div>
 
       <div className='modal-body'>
-        <div className='row'>
-          <div className='col-lg-7' />
-          <div className='col-lg-5'>
-            <div className='d-flex mb-3'>
+        <div className={isImage ? 'row' : undefined}>
+          {isImage && (
+            <div className='col-lg-7' />
+          )}
+          <div className={isImage ? 'col-lg-5' : undefined}>
+            <div className='d-flex flex-wrap mb-3'>
               <a
-                href={fileModal.file.attributes.source_image}
+                href={fileModal.file.attributes.source_url}
                 className='btn btn-secondary mr-sm-2'
                 target='_blank'
                 rel='noopener noreferrer'
@@ -29,12 +32,12 @@ export default ({ fileModal, onTagsChange, closeFileModal, saveModal, tags }) =>
                 {window.FolioConsole.translations.downloadOriginal}
               </a>
 
-              <button className='btn btn-secondary mr-sm-2' type="button">
+              <button className='btn btn-secondary mr-sm-2' type='button'>
                 <span className='fa fa-edit' />
                 {window.FolioConsole.translations.replace}
               </button>
 
-              <button className='btn btn-danger font-weight-bold1' type="button">
+              <button className='btn btn-danger font-weight-bold1' type='button'>
                 <span className='fa fa-trash-alt' />
                 {window.FolioConsole.translations.destroy}
               </button>

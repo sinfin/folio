@@ -80,7 +80,7 @@ class FilePlacement extends React.Component {
         {fileTypeIsImage && (
           <a
             className='folio-console-file-placement__img-wrap'
-            href={filePlacement.file.attributes.source_image}
+            href={filePlacement.file.attributes.source_url}
             target='_blank'
             rel='noopener noreferrer'
             onClick={(e) => e.stopPropagation()}
