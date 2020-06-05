@@ -14,6 +14,7 @@ en:
         create: Create
         destroy: Destroy
         download: Download
+        downloadOriginal: Download original
         fileNameFilter: Search by file name
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
@@ -26,6 +27,7 @@ en:
         paginationEmpty: No records
         paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
         placementsLabel: Usage
+        replace: Replace
         save: Save
         selectable: Selectable
         selectDocument: Select document

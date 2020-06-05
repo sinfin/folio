@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { without } from 'lodash'
 
-import { openModal } from 'ducks/modal'
+import { openFileModal } from 'ducks/fileModal'
 import {
   makeFiltersSelector,
   setFilter
@@ -13,7 +13,7 @@ import Tag from './styled/Tag'
 class Tags extends React.Component {
   onEditClick = (e) => {
     e.stopPropagation()
-    this.props.dispatch(openModal(this.props.file))
+    this.props.dispatch(openFileModal(this.props.file))
   }
 
   onTagClick (tag) {

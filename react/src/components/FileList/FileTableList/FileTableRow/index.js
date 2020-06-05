@@ -9,7 +9,7 @@ import FileUploadProgress from 'components/FileUploadProgress'
 const FileTableRow = ({
   file,
   filesKey,
-  link,
+  openInModal,
   fileTypeIsImage,
   onClick,
   massSelect
@@ -63,15 +63,7 @@ const FileTableRow = ({
 
       <div className='f-c-file-table__td f-c-file-table__td--main'>
         {fileTypeIsImage ? null : <FileUploadProgress progress={file.attributes.progress} />}
-
-        {(link && file.links) ? (
-          <a
-            href={file.links.edit}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {file.attributes.file_name}
-          </a>
-        ) : file.attributes.file_name}
+        <span onClick={() => openInModal(file)}>{file.attributes.file_name}</span>
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--size'>
@@ -93,10 +85,9 @@ const FileTableRow = ({
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>
-        {(link && file.links) ? (
-          <a // eslint-disable-line
-            href={file.links.edit}
-            target='_blank'
+        {openInModal ? (
+          <span
+            onClick={() => openInModal(file)}
             className='btn btn-secondary fa fa-edit'
             rel='noopener noreferrer'
           />

@@ -9,6 +9,8 @@ import {
   massSelect
 } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
+import { openFileModal } from 'ducks/fileModal'
+
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 
 import FileFilter from 'containers/FileFilter'
@@ -45,7 +47,7 @@ class IndexMode extends LazyLoadCheckingComponent {
                 massSelect={(file, select) => this.props.dispatch(massSelect(this.props.filesKey, file, select))}
                 massSelectVisible={this.props.filesStatus.massSelecting}
                 filesKey={this.props.filesKey}
-                link
+                openInModal={(file) => this.props.dispatch(openFileModal(this.props.filesKey, file))}
                 dropzoneTrigger
               />
             )}

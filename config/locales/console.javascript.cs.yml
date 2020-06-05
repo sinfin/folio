@@ -14,6 +14,7 @@ cs:
         create: Vytvořit
         destroy: Smazat
         download: Stáhnout
+        downloadOriginal: Stáhnout originál
         fileNameFilter: Hledat dle jména souboru
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
@@ -26,6 +27,7 @@ cs:
         paginationEmpty: Žádné záznamy
         paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
         placementsLabel: Použití
+        replace: Nahradit
         save: Uložit
         selectable: Volitelné
         selectDocument: Zvolte dokument

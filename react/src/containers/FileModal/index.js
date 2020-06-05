@@ -6,55 +6,52 @@ import ReactModal from 'react-modal'
 import { updateFile } from 'ducks/files'
 
 import {
-  closeModal,
-  changeModalTags,
-  modalSelector
-} from 'ducks/modal'
+  closeFileModal,
+  changeFileModalTags,
+  fileModalSelector
+} from 'ducks/fileModal'
 
 import { makeTagsSelector } from 'ducks/filters'
 
-import ModalFile from './ModalFile'
+import FileModalFile from './FileModalFile'
 
 ReactModal.setAppElement('body')
 
 class Modal extends Component {
-  closeModal = () => {
-    this.props.dispatch(closeModal())
-  }
-
   onTagsChange = (tags) => {
-    this.props.dispatch(changeModalTags(tags))
+    this.props.dispatch(changeFileModalTags(tags))
   }
 
   saveModal = () => {
-    const { modal } = this.props
+    const { fileModal } = this.props
 
     const attributes = {
-      tags: modal.newTags || []
+      tags: fileModal.newTags || []
     }
-    this.props.dispatch(updateFile(this.props.filesKey, modal.file, attributes))
-    this.props.dispatch(closeModal())
+    this.props.dispatch(updateFile(this.props.filesKey, fileModal.file, attributes))
+    this.props.dispatch(closeFileModal())
   }
 
-  closeModal = () => {
-    this.props.dispatch(closeModal())
+  closeFileModal = () => {
+    this.props.dispatch(closeFileModal())
   }
 
   render () {
-    const { modal, tags } = this.props
+    const { fileModal, tags } = this.props
+    const isOpen = fileModal.file !== null && (fileModal.loading || fileModal.loaded)
 
     return (
       <ReactModal
-        isOpen={modal.file !== null}
-        onRequestClose={this.closeModal}
+        isOpen={isOpen}
+        onRequestClose={this.closeFileModal}
         className='ReactModal'
       >
-        {modal.file && (
-          <ModalFile
-            modal={modal}
+        {fileModal.file && (
+          <FileModalFile
+            fileModal={fileModal}
             onTagsChange={this.onTagsChange}
             saveModal={this.saveModal}
-            closeModal={this.closeModal}
+            closeFileModal={this.closeFileModal}
             tags={tags}
           />
         )}
@@ -64,7 +61,7 @@ class Modal extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  modal: modalSelector(state),
+  fileModal: fileModalSelector(state),
   tags: makeTagsSelector(props.filesKey)(state)
 })
 

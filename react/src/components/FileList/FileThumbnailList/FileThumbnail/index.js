@@ -5,8 +5,7 @@ import FileUploadProgress from 'components/FileUploadProgress'
 import FileThumbnailHover from './FileThumbnailHover'
 import FileThumbnailMassCheckbox from './FileThumbnailMassCheckbox'
 
-const FileThumbnail = ({ file, link, onClick, selecting, massSelect, massSelectVisible }) => {
-  const Tag = link ? 'a' : 'div'
+const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSelect, massSelectVisible }) => {
   let className = 'f-c-file-list__file'
   const persistedOnClick = !file.attributes.uploading && onClick
 
@@ -17,9 +16,9 @@ const FileThumbnail = ({ file, link, onClick, selecting, massSelect, massSelectV
   }
 
   return (
-    <Tag
-      href={(link && file.links) ? file.links.edit : undefined}
+    <div
       className={className}
+      onClick={() => { console.log(file); openInModal(file) }}
     >
       <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }}>
         {file.attributes.thumb && (
@@ -56,7 +55,7 @@ const FileThumbnail = ({ file, link, onClick, selecting, massSelect, massSelectV
           selecting={selecting}
         />
       )}
-    </Tag>
+    </div>
   )
 }
 

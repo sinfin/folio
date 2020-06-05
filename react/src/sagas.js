@@ -6,5 +6,6 @@ import { filesSagas } from 'ducks/files'
 import { filtersSagas } from 'ducks/filters'
 import { uploadsSagas } from 'ducks/uploads'
 import { filePlacementsSagas } from 'ducks/filePlacements'
+import { fileModalSagas } from 'ducks/fileModal'
 
-export default concat(filesSagas, uploadsSagas, displaySagas, atomsSagas, filtersSagas, filePlacementsSagas)
+export default concat(filesSagas, uploadsSagas, displaySagas, atomsSagas, filtersSagas, filePlacementsSagas, fileModalSagas)

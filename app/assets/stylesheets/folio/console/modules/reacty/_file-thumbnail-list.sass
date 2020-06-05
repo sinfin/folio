@@ -43,6 +43,12 @@
     max-width: 100%
     max-height: 100%
 
+  &__file
+    cursor: pointer
+
+    &--uploading
+      cursor: default
+
   &__file-hover
     position: absolute
     top: 0
@@ -86,6 +92,9 @@
     line-height: 13px
     color: $white
     padding: 0 4px
+    display: inline-flex
+    align-items: center
+    justify-content: center
 
   +media-breakpoint-down(xs)
     &__file,

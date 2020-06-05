@@ -3,19 +3,18 @@ import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 
 import { getFiles, thumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
-import { openModal } from 'ducks/modal'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
 import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
 import ModalMultiSelect from 'containers/ModalSelect/ModalMultiSelect'
-import Modal from 'containers/Modal'
+import FileModal from 'containers/FileModal'
 import Atoms from 'containers/Atoms'
 
-import AppWrap from './styled/AppWrap'
+import FilesAppWrap from './styled/FilesAppWrap'
 
-class App extends Component {
+class FilesApp extends Component {
   componentWillMount () {
     if (this.shouldAutoLoadFiles()) {
       this.loadFiles(this.props.app.filesKey)
@@ -28,10 +27,6 @@ class App extends Component {
     if (!this.props.filesLoaded) {
       this.props.dispatch(getFiles(filesKey))
     }
-  }
-
-  openModal = (file) => {
-    this.props.dispatch(openModal(file))
   }
 
   listenOnActionCable () {
@@ -99,11 +94,11 @@ class App extends Component {
 
   render () {
     return (
-      <AppWrap className='folio-react-app'>
+      <FilesAppWrap className='folio-react-app'>
         {this.renderMode()}
 
-        <Modal filesKey={this.props.app.filesKey} />
-      </AppWrap>
+        <FileModal filesKey={this.props.app.filesKey} />
+      </FilesAppWrap>
     )
   }
 }
@@ -117,4 +112,4 @@ function mapDispatchToProps (dispatch) {
   return { dispatch }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(FilesApp)

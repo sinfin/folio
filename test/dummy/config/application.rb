@@ -41,10 +41,6 @@ module Dummy
           load file
         end
       end
-
-      Dir.glob("#{::Folio::Engine.root}/app/lib/folio/console/simple_form*/**.rb").each do |sf|
-        load sf
-      end
     end
   end
 end

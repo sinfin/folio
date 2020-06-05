@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import 'url-search-params-polyfill'
 
-import App from 'containers/App'
+import FilesApp from 'containers/FilesApp'
 import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import { setMode, setFileType } from 'ducks/app'
@@ -112,7 +112,7 @@ window.folioConsoleInitReact = (domRoot) => {
 
     ReactDOM.render((
       <Provider store={store}>
-        <App />
+        <FilesApp />
       </Provider>
     ), domRoot)
   }

@@ -7,7 +7,7 @@ const FileTableList = ({
   filesKey,
   files,
   dropzoneTrigger,
-  link,
+  openInModal,
   fileTypeIsImage,
   onClick,
   massSelect,
@@ -43,7 +43,7 @@ const FileTableList = ({
               key={file.id}
               filesKey={filesKey}
               file={file}
-              link={link}
+              openInModal={openInModal}
               fileTypeIsImage={fileTypeIsImage}
               onClick={onClick}
               massSelect={massSelect}
