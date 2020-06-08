@@ -15,6 +15,7 @@ cs:
         destroy: Smazat
         download: Stáhnout
         downloadOriginal: Stáhnout originál
+        editOffset: Upravit ořez
         fileNameFilter: Hledat dle jména souboru
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
@@ -29,6 +30,7 @@ cs:
         placementsLabel: Použití
         replace: Nahradit
         save: Uložit
+        saveOffset: Uložit ořez
         selectable: Volitelné
         selectDocument: Zvolte dokument
         selected: Vybrané
@@ -36,6 +38,7 @@ cs:
         selectedImages: Vybrané obrázky
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
+        thumbnailSizes: Vygenerované verze
         title: Název
         usageFilter: Hledat dle použití
         usagePlaceholder: Využití...

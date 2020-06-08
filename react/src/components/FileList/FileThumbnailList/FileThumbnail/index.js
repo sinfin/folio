@@ -18,7 +18,7 @@ const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSe
   return (
     <div
       className={className}
-      onClick={() => { console.log(file); openInModal(file) }}
+      onClick={() => openInModal(file)}
     >
       <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }}>
         {file.attributes.thumb && (

@@ -12,6 +12,7 @@
 //= require spectrum/spectrum
 //= require js-cookie/src/js.cookie
 //= require cleave.js/dist/cleave
+//= require jquery.kinetic/index
 
 //= require jquery-ui/jquery-ui
 //= require selectize/dist/js/standalone/selectize

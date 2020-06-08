@@ -15,6 +15,7 @@ en:
         destroy: Destroy
         download: Download
         downloadOriginal: Download original
+        editOffset: Crop
         fileNameFilter: Search by file name
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
@@ -29,6 +30,7 @@ en:
         placementsLabel: Usage
         replace: Replace
         save: Save
+        saveOffset: Save crop
         selectable: Selectable
         selectDocument: Select document
         selected: Selected
@@ -36,6 +38,7 @@ en:
         selectedImages: Selected images
         selectImage: Select image
         selectPlaceholder: Select...
+        thumbnailSizes: Generated thumbnails
         title: Title
         usageFilter: Search by usage
         usagePlaceholder: Využití...

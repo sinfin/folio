@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import ReactModal from 'react-modal'
 
 import { updateFile } from 'ducks/files'
-
-import {
+import { updateFileThumbnail,
   closeFileModal,
   changeFileModalTags,
   fileModalSelector
@@ -28,12 +27,16 @@ class Modal extends Component {
     const attributes = {
       tags: fileModal.newTags || []
     }
-    this.props.dispatch(updateFile(this.props.filesKey, fileModal.file, attributes))
+    this.props.dispatch(updateFile(this.props.filesKey, this.props.fileModal.file, attributes))
     this.props.dispatch(closeFileModal())
   }
 
   closeFileModal = () => {
     this.props.dispatch(closeFileModal())
+  }
+
+  updateThumbnail = (thumbKey, params) => {
+    this.props.dispatch(updateFileThumbnail(this.props.filesKey, this.props.fileModal.file, thumbKey, params))
   }
 
   render () {
@@ -52,6 +55,7 @@ class Modal extends Component {
             onTagsChange={this.onTagsChange}
             saveModal={this.saveModal}
             closeFileModal={this.closeFileModal}
+            updateThumbnail={this.updateThumbnail}
             tags={tags}
           />
         )}

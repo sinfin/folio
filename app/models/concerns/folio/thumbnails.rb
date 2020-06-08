@@ -21,16 +21,14 @@ module Folio::Thumbnails
     end
   end
 
-  # User w_x_h = 400x250# or similar
+  # Use w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 90, immediate: false)
+  def thumb(w_x_h, quality: 90, immediate: false, force: false, x: nil, y: nil)
     fail_for_non_images
     return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test?
 
-    if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
-      ret = OpenStruct.new(thumbnail_sizes[w_x_h])
-      ret.url = Dragonfly.app.remote_url_for(ret.uid)
-      ret
+    if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
+      OpenStruct.new(thumbnail_sizes[w_x_h])
     else
       if svg?
         url = file.remote_url
@@ -38,12 +36,10 @@ module Folio::Thumbnails
         height = file_height
       else
         if immediate || self.class.immediate_thumbnails
-          image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality)
-          ret = OpenStruct.new(image.thumbnail_sizes[w_x_h])
-          ret.url = Dragonfly.app.remote_url_for(ret.uid)
-          return ret
+          image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force: force, x: x, y: y)
+          return OpenStruct.new(image.thumbnail_sizes[w_x_h])
         else
-          Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality)
+          Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
           url = temporary_url(w_x_h)
         end
         width, height = w_x_h.split('x').map(&:to_i)
@@ -54,6 +50,8 @@ module Folio::Thumbnails
         url: url,
         width: width,
         height: height,
+        x: nil,
+        y: nil,
         quality: quality
       )
     end
@@ -68,6 +66,8 @@ module Folio::Thumbnails
       url: temporary_url(w_x_h),
       width: width,
       height: height,
+      x: nil,
+      y: nil,
       quality: quality
     )
   end

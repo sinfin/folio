@@ -1,0 +1,13 @@
+{
+  "name": "jquery.kinetic",
+  "_cacheHeaders": {
+    "ETag": "W/\"ef4a4a7149c22a04250e4dc60bdbc1b0d6fa9578fb2d9c0251d309e8646537c5\"",
+    "Content-Length": "3483",
+    "Content-Type": "text/plain; charset=utf-8"
+  },
+  "_release": "e-tag:W/\"ef4a4a7",
+  "main": "index.js",
+  "_source": "https://raw.githubusercontent.com/davetayls/jquery.kinetic/master/jquery.kinetic.js",
+  "_target": "*",
+  "_originalSource": "https://raw.githubusercontent.com/davetayls/jquery.kinetic/master/jquery.kinetic.js"
+}
