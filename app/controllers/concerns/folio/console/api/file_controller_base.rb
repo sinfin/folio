@@ -25,6 +25,11 @@ module Folio::Console::Api::FileControllerBase
     render_record(folio_console_record, Folio::Console::FileSerializer)
   end
 
+  def destroy
+    folio_console_record.destroy!
+    render json: { status: 200 }
+  end
+
   def tag
     tag_params = params.permit(file_ids: [], tags: [])
 

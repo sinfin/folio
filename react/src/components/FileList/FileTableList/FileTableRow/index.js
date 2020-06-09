@@ -14,6 +14,8 @@ const FileTableRow = ({
   onClick,
   massSelect
 }) => {
+  if (file._destroying) return null
+
   let className = 'f-c-file-table__tr'
   const persistedOnClick = !file.attributes.uploading && onClick
 

@@ -36,6 +36,14 @@ class Folio::Console::Api::DocumentsControllerTest < Folio::Console::BaseControl
     assert_equal(['foo'], json['data']['attributes']['tags'])
   end
 
+  test 'destroy' do
+    document = create(:folio_document)
+    assert Folio::Document.exists?(document.id)
+    delete url_for([:console, :api, document])
+    assert_response(:success)
+    assert_not Folio::Document.exists?(document.id)
+  end
+
   test 'tag' do
     documents = create_list(:folio_document, 2)
     assert_equal([], documents.first.tag_list)

@@ -1,14 +1,20 @@
 import React from 'react'
 
+import { makeConfirmed } from 'utils/confirmed'
+
 import TagsInput from 'components/TagsInput'
 import ThumbnailSizes from 'components/ThumbnailSizes'
 
 import MainImage from './styled/MainImage'
 
-export default ({ fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
+export default ({ deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
   const isImage = fileModal.filesKey === 'images'
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
+
+  const indestructible = !!fileModal.file.attributes.file_placements_count
+  const notAllowedCursor = indestructible ? 'cursor-not-allowed' : ''
+  const onDeleteClick = indestructible ? undefined : makeConfirmed(() => deleteFile(fileModal.file))
 
   return (
     <div className='modal-content'>
@@ -48,7 +54,13 @@ export default ({ fileModal, onTagsChange, closeFileModal, saveModal, updateThum
                 <span className='d-none d-sm-inline'>{window.FolioConsole.translations.replace}</span>
               </button>
 
-              <button className='btn btn-danger mb-2' type='button'>
+              <button
+                className={`btn btn-danger mb-2 ${notAllowedCursor}`}
+                type='button'
+                onClick={onDeleteClick}
+                disabled={indestructible}
+                title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
+              >
                 <span className='fa fa-trash-alt mr-0 mr-sm-2' />
                 <span className='d-none d-sm-inline font-weight-bold'>{window.FolioConsole.translations.destroy}</span>
               </button>

@@ -7,18 +7,28 @@ import filesReducer, {
   updatedFiles,
   updateFile,
   updateFileSuccess,
-  updateFileFailure
+  updateFileFailure,
+  deleteFile,
+  deleteFileFailure,
+  removedFiles
 } from '../files'
 
 import { IMAGES } from 'constants/tests/files'
 const fileMock = { id: '999', type: 'file', attributes: { id: 999, file_size: 326774, file_name: 'bar.jpg', type: 'Folio::Image', thumb: 'foo/bar.jpg', source_url: 'foo/bar.jpg', url: '/foo/bar.jpg', dominant_color: '#2F312F', tags: [], placements: [], extension: 'JPEG' }, links: { edit: '/console/images/999/edit' } }
 const firstThumb = IMAGES[0].attributes.thumb
+const pagination = {
+  from: 1,
+  to: IMAGES.length,
+  count: IMAGES.length,
+  page: 1,
+  pages: 1
+}
 
 describe('filesReducer', () => {
   let state
 
   beforeEach(() => {
-    state = filesReducer(initialState, getFilesSuccess('images', IMAGES))
+    state = filesReducer(initialState, getFilesSuccess('images', IMAGES, pagination))
   })
 
   it('getFiles', () => {
@@ -95,5 +105,16 @@ describe('filesReducer', () => {
     expect(state['images'].records[0].attributes.thumb).toEqual('/foo.jpg')
     state = filesReducer(state, updateFileFailure('images', image))
     expect(state['images'].records[0].attributes.thumb).not.toEqual('/foo.jpg')
+  })
+
+  it('deleteFile', () => {
+    const image = state['images'].records[0]
+    state = filesReducer(state, deleteFile('images', image))
+    expect(state['images'].records[0]._destroying).toEqual(true)
+    state = filesReducer(state, deleteFileFailure('images', image))
+    expect(state['images'].records[0]._destroying).toEqual(undefined)
+    expect(state['images'].records[0].id).toEqual(image.id)
+    state = filesReducer(state, removedFiles('images', [image.id]))
+    expect(state['images'].records[0].id).not.toEqual(image.id)
   })
 })

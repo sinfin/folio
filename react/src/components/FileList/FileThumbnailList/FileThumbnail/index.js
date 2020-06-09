@@ -6,6 +6,8 @@ import FileThumbnailHover from './FileThumbnailHover'
 import FileThumbnailMassCheckbox from './FileThumbnailMassCheckbox'
 
 const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSelect, massSelectVisible }) => {
+  if (file._destroying) return null
+
   let className = 'f-c-file-list__file'
   const persistedOnClick = !file.attributes.uploading && onClick
 

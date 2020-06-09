@@ -36,6 +36,14 @@ class Folio::Console::Api::ImagesControllerTest < Folio::Console::BaseController
     assert_equal(['foo'], json['data']['attributes']['tags'])
   end
 
+  test 'destroy' do
+    image = create(:folio_image)
+    assert Folio::Image.exists?(image.id)
+    delete url_for([:console, :api, image])
+    assert_response(:success)
+    assert_not Folio::Image.exists?(image.id)
+  end
+
   test 'tag' do
     images = create_list(:folio_image, 2)
     assert_equal([], images.first.tag_list)

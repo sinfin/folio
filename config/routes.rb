@@ -53,7 +53,7 @@ Folio::Engine.routes.draw do
         get :selectize
         get :react_select
       end
-      resources :images, only: %i[index create update] do
+      resources :images, only: %i[index create update destroy] do
         collection do
           post :tag
           delete :mass_destroy
@@ -62,7 +62,7 @@ Folio::Engine.routes.draw do
           post :update_file_thumbnail
         end
       end
-      resources :documents, only: %i[index create update] do
+      resources :documents, only: %i[index create update destroy] do
         collection do
           post :tag
           delete :mass_destroy

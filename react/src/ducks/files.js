@@ -14,6 +14,8 @@ const GET_FILES = 'files/GET_FILES'
 const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
 const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
+const DELETE_FILE = 'files/DELETE_FILE'
+const DELETE_FILE_FAILURE = 'files/DELETE_FILE_FAILURE'
 const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
@@ -48,6 +50,14 @@ export function updatedFiles (filesKey, files) {
 
 export function updateFile (filesKey, file, attributes) {
   return { type: UPDATE_FILE, filesKey, file, attributes }
+}
+
+export function deleteFile (filesKey, file) {
+  return { type: DELETE_FILE, filesKey, file }
+}
+
+export function deleteFileFailure (filesKey, file) {
+  return { type: DELETE_FILE_FAILURE, filesKey, file }
 }
 
 export function removedFiles (filesKey, ids) {
@@ -155,11 +165,29 @@ function * massDeleteSaga () {
   yield takeLatest(MASS_DELETE, massDeletePerform)
 }
 
+function * deleteFilePerform (action) {
+  try {
+    const res = yield call(apiDelete, `/console/api/${action.filesKey}/${action.file.id}`)
+    if (res.error) {
+      flashError(res.error)
+    } else {
+      yield put(removedFiles(action.filesKey, [action.file.id]))
+    }
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * deleteFileSaga () {
+  yield takeLatest(DELETE_FILE, deleteFilePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
   updateFileSaga,
   changeFilesPageSaga,
-  massDeleteSaga
+  massDeleteSaga,
+  deleteFileSaga
 ]
 
 // Selectors
@@ -415,12 +443,53 @@ function filesReducer (state = initialState, action) {
         }
       }
 
-    case REMOVED_FILES:
+    case REMOVED_FILES: {
+      const originalLength = state[action.filesKey].records.length
+      const records = state[action.filesKey].records.filter((record) => action.ids.indexOf(record.id) === -1)
       return {
         ...state,
         [action.filesKey]: {
           ...state[action.filesKey],
-          records: state[action.filesKey].records.filter((record) => action.ids.indexOf(record.id) === -1)
+          records,
+          pagination: {
+            ...state[action.filesKey].pagination,
+            to: records.length,
+            count: state[action.filesKey].pagination.count - (originalLength - records.length)
+          }
+        }
+      }
+    }
+
+    case DELETE_FILE:
+      return {
+        ...state,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.file.id) {
+              return {
+                ...record,
+                _destroying: true
+              }
+            } else {
+              return record
+            }
+          })
+        }
+      }
+
+    case DELETE_FILE_FAILURE:
+      return {
+        ...state,
+        [action.filesKey]: {
+          ...state[action.filesKey],
+          records: state[action.filesKey].records.map((record) => {
+            if (record.id === action.file.id) {
+              return { ...action.file }
+            } else {
+              return record
+            }
+          })
         }
       }
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ReactModal from 'react-modal'
 
-import { updateFile } from 'ducks/files'
+import { updateFile, deleteFile } from 'ducks/files'
 import { updateFileThumbnail,
   closeFileModal,
   changeFileModalTags,
@@ -39,6 +39,11 @@ class Modal extends Component {
     this.props.dispatch(updateFileThumbnail(this.props.filesKey, this.props.fileModal.file, thumbKey, params))
   }
 
+  deleteFile = (file) => {
+    this.closeFileModal()
+    this.props.dispatch(deleteFile(this.props.filesKey, file))
+  }
+
   render () {
     const { fileModal, tags } = this.props
     const isOpen = fileModal.file !== null && (fileModal.loading || fileModal.loaded)
@@ -56,6 +61,7 @@ class Modal extends Component {
             saveModal={this.saveModal}
             closeFileModal={this.closeFileModal}
             updateThumbnail={this.updateThumbnail}
+            deleteFile={this.deleteFile}
             tags={tags}
           />
         )}
