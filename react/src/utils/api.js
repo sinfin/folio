@@ -1,3 +1,5 @@
+import { flashSuccess, flashError } from 'utils/flash'
+
 const meta = document.querySelector('meta[name="csrf-token"]')
 
 export const CSRF = meta ? {
@@ -48,6 +50,17 @@ function responseToHtml (response) {
   return response.text()
 }
 
+function flashMessageFromMeta (response) {
+  if (typeof response === 'object' && response.meta && response.meta.flash) {
+    if (response.meta.flash.success) {
+      flashSuccess(response.meta.flash.success)
+    } else if (response.meta.flash.alert) {
+      flashError(response.meta.flash.alert)
+    }
+  }
+  return response
+}
+
 function api (method, url, body) {
   const data = {
     method,
@@ -57,7 +70,7 @@ function api (method, url, body) {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(checkResponse).then(responseToJson)
+  return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
 }
 
 export function apiPost (url, body) {
@@ -85,7 +98,7 @@ function htmlApi (method, url, body) {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(checkResponse).then(responseToHtml)
+  return fetch(url, data).then(checkResponse).then(responseToHtml).then(flashMessageFromMeta)
 }
 
 export function apiHtmlPost (url, body) {
@@ -100,5 +113,5 @@ export function apiFilePost (url, file) {
     body: file
   }
 
-  return fetch(url, data).then(checkResponse).then(responseToJson)
+  return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
 }

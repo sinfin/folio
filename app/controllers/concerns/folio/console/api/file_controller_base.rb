@@ -21,8 +21,21 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def update
-    folio_console_record.update(file_params)
-    render_record(folio_console_record, Folio::Console::FileSerializer)
+    if folio_console_record.update(file_params)
+      meta = {
+        flash: {
+          success: t('flash.actions.update.notice', resource_name: @klass.model_name.human)
+        }
+      }
+    else
+      meta = {
+        flash: {
+          alert: t('flash.actions.update.alert', resource_name: @klass.model_name.human)
+        }
+      }
+    end
+
+    render_record(folio_console_record, Folio::Console::FileSerializer, meta: meta)
   end
 
   def destroy

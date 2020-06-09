@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import ReactModal from 'react-modal'
 
 import { updateFile, deleteFile } from 'ducks/files'
-import { updateFileThumbnail,
+import {
+  updateFileThumbnail,
   closeFileModal,
   changeFileModalTags,
   fileModalSelector,

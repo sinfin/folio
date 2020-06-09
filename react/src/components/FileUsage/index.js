@@ -19,7 +19,7 @@ function FileUsage ({ file, updateThumbnail }) {
             {file.attributes.some_file_placements.map((filePlacement) => (
               <li key={filePlacement.id}>
                 {filePlacement.url ? (
-                  <a href={filePlacement.url} target='_blank' rel="noopener noreferrer">{filePlacement.label}</a>
+                  <a href={filePlacement.url} target='_blank' rel='noopener noreferrer'>{filePlacement.label}</a>
                 ) : filePlacement.label}
               </li>
             ))}
