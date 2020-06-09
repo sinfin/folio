@@ -11,6 +11,27 @@
 .ReactModal__Content
   width: 100%
   max-width: 1100px
+  max-height: 100%
+  flex: 0 1 auto
+  display: flex
+  flex-direction: column
 
   .modal-content
     padding: 0
+    flex: 0 1 auto
+    overflow: hidden
+
+  .modal-header,
+  .modal-footer
+    flex: 0 0 auto
+
+  .modal-body
+    overflow-y: auto
+    flex: 0 1 auto
+    max-height: 80vh
+
+    &:last-child
+      max-height: calc(100vh - 87px)
+
+      +media-breakpoint-down(md)
+        max-height: calc(100vh - 57px)

@@ -33,7 +33,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
         <button type='button' className='close' onClick={closeFileModal}>×</button>
       </div>
 
-      <div className='modal-body mb-n3'>
+      <div className='modal-body'>
         <div className={isImage ? 'row' : undefined}>
           {isImage && (
             <div className='col-lg-7 mb-3'>
