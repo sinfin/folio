@@ -21,13 +21,8 @@ class ThumbnailSize extends React.Component {
     const { thumb, thumbKey } = this.props
     const editable = thumbKey.indexOf('#') !== -1
 
-    let height = 140
-    let width = thumb.width * height / thumb.height
-
-    if (width > 140) {
-      width = 140
-      height = thumb.height * width / thumb.width
-    }
+    const height = 140
+    const width = thumb.width * height / thumb.height
 
     return (
       <div className='mr-g my-h position-relative' style={{ width: width }}>

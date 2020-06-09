@@ -65,4 +65,19 @@ class Folio::Console::Api::DocumentsControllerTest < Folio::Console::BaseControl
     delete url_for([:mass_destroy, :console, :api, Folio::Document, ids: ids])
     assert_equal(1, Folio::Document.count)
   end
+
+  test 'change_file' do
+    document = create(:folio_document)
+    assert_equal('empty.pdf', document.file_name)
+    post url_for([:change_file, :console, :api, document]), params: {
+      file: {
+        attributes: {
+          file: fixture_file_upload('test/fixtures/folio/test-black.gif'),
+        }
+      }
+    }
+    assert_response(:success)
+    json = JSON.parse(response.body)
+    assert_equal('test-black.gif', json['data']['attributes']['file_name'])
+  end
 end

@@ -54,8 +54,10 @@ module Folio::Console::Api::FileControllerBase
     old_thumbnail_versions = folio_console_record.thumbnail_sizes
 
     if folio_console_record.update(file_params)
-      old_thumbnail_versions.keys.each do |version|
-        folio_console_record.thumb(version, immediate: true)
+      if folio_console_record.is_a?(Folio::Image)
+        old_thumbnail_versions.keys.each do |version|
+          folio_console_record.thumb(version, immediate: true)
+        end
       end
     end
 
