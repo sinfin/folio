@@ -6,8 +6,9 @@ import TagsInput from 'components/TagsInput'
 import ThumbnailSizes from 'components/ThumbnailSizes'
 
 import MainImage from './styled/MainImage'
+import FileEditInput from './styled/FileEditInput'
 
-export default ({ deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
+export default ({ uploadNewFileInstead, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
   const isImage = fileModal.filesKey === 'images'
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
@@ -15,6 +16,12 @@ export default ({ deleteFile, fileModal, onTagsChange, closeFileModal, saveModal
   const indestructible = !!fileModal.file.attributes.file_placements_count
   const notAllowedCursor = indestructible ? 'cursor-not-allowed' : ''
   const onDeleteClick = indestructible ? undefined : makeConfirmed(() => deleteFile(fileModal.file))
+
+  const onEditClick = (e) => {
+    if (!window.confirm(window.FolioConsole.translations.confirmation)) {
+      e.preventDefault()
+    }
+  }
 
   return (
     <div className='modal-content'>
@@ -49,10 +56,12 @@ export default ({ deleteFile, fileModal, onTagsChange, closeFileModal, saveModal
                 <span className='d-none d-sm-inline'>{window.FolioConsole.translations.downloadOriginal}</span>
               </a>
 
-              <button className='btn btn-secondary mr-2 mb-2' type='button'>
+              <div className='btn btn-secondary mr-2 mb-2 position-relative overflow-hidden'>
                 <span className='fa fa-edit mr-0 mr-sm-2' />
                 <span className='d-none d-sm-inline'>{window.FolioConsole.translations.replace}</span>
-              </button>
+
+                <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
+              </div>
 
               <button
                 className={`btn btn-danger mb-2 ${notAllowedCursor}`}
@@ -89,6 +98,8 @@ export default ({ deleteFile, fileModal, onTagsChange, closeFileModal, saveModal
           </div>
         </div>
       </div>
+
+      {(fileModal.loading || fileModal.uploadingNew) && <span className='folio-loader' />}
     </div>
   )
 }

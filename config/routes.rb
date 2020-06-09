@@ -60,12 +60,16 @@ Folio::Engine.routes.draw do
         end
         member do
           post :update_file_thumbnail
+          post :change_file
         end
       end
       resources :documents, only: %i[index create update destroy] do
         collection do
           post :tag
           delete :mass_destroy
+        end
+        member do
+          post :change_file
         end
       end
     end

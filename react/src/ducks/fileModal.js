@@ -1,5 +1,8 @@
-import { apiPost } from 'utils/api'
 import { call, takeEvery, put } from 'redux-saga/effects'
+
+import { apiPost, apiFilePost } from 'utils/api'
+import { flashError } from 'utils/flash'
+import { updatedFiles } from 'ducks/files'
 
 // Constants
 
@@ -8,6 +11,8 @@ const CLOSE_FILE_MODAL = 'fileModal/CLOSE_FILE_MODAL'
 const CHANGE_FILE_MODAL_TAGS = 'fileModal/CHANGE_FILE_MODAL_TAGS'
 const UPDATE_FILE_THUMBNAIL = 'fileModal/UPDATE_FILE_THUMBNAIL'
 const UPDATED_FILE_MODAL_FILE = 'fileModal/UPDATED_FILE_MODAL_FILE'
+const UPLOAD_NEW_FILE_INSTEAD = 'fileModal/UPLOAD_NEW_FILE_INSTEAD'
+const UPLOAD_NEW_FILE_INSTEAD_SUCCESS = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_SUCCESS'
 
 // Actions
 
@@ -31,6 +36,14 @@ export function updatedFileModalFile (file) {
   return { type: UPDATED_FILE_MODAL_FILE, file }
 }
 
+export function uploadNewFileInstead (filesKey, file, fileIo) {
+  return { type: UPLOAD_NEW_FILE_INSTEAD, filesKey, file, fileIo }
+}
+
+export function uploadNewFileInsteadSuccess (file) {
+  return { type: UPLOAD_NEW_FILE_INSTEAD_SUCCESS, file }
+}
+
 // Selectors
 
 export const fileModalSelector = (state) => state.fileModal
@@ -47,18 +60,42 @@ function * loadFileForModalSaga () {
 
 function * updateFileThumbnailPerform (action) {
   if (action.filesKey !== 'images') return
-  const filesUrl = `/console/api/${action.filesKey}/${action.file.id}/update_file_thumbnail`
-  const response = yield call(apiPost, filesUrl, { ...action.params, thumb_key: action.thumbKey })
-  yield put(updatedFileModalFile(response.data))
+
+  try {
+    const url = `/console/api/${action.filesKey}/${action.file.id}/update_file_thumbnail`
+    const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
+    yield put(updatedFileModalFile(response.data))
+  } catch (e) {
+    flashError(e.message)
+  }
 }
 
 function * updateFileThumbnailSaga () {
   yield takeEvery(UPDATE_FILE_THUMBNAIL, updateFileThumbnailPerform)
 }
 
+function * uploadNewFileInsteadPerform (action) {
+  try {
+    const url = `/console/api/${action.filesKey}/${action.file.id}/change_file`
+    const data = new FormData()
+    data.append('file[attributes][file]', action.fileIo)
+    const response = yield call(apiFilePost, url, data)
+    yield put(updatedFileModalFile(response.data))
+    yield put(updatedFiles(action.filesKey, [response.data]))
+    yield put(uploadNewFileInsteadSuccess(response.data))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * uploadNewFileInsteadSaga () {
+  yield takeEvery(UPLOAD_NEW_FILE_INSTEAD, uploadNewFileInsteadPerform)
+}
+
 export const fileModalSagas = [
   loadFileForModalSaga,
-  updateFileThumbnailSaga
+  updateFileThumbnailSaga,
+  uploadNewFileInsteadSaga
 ]
 
 // State
@@ -68,7 +105,8 @@ const initialState = {
   filesKey: null,
   newTags: null,
   loading: false,
-  loaded: false
+  loaded: false,
+  uploadingNew: false
 }
 
 // Reducer
@@ -80,7 +118,8 @@ function modalReducer (state = initialState, action) {
         ...state,
         file: action.file,
         filesKey: action.filesKey,
-        loading: true
+        loading: false,
+        loaded: true
       }
 
     case CLOSE_FILE_MODAL:
@@ -112,10 +151,27 @@ function modalReducer (state = initialState, action) {
       }
 
     case UPDATED_FILE_MODAL_FILE: {
-      if (state.file.id === action.file.id) {
+      if (state.file && state.file.id === action.file.id) {
         return {
           ...state,
           file: action.file
+        }
+      } else {
+        return state
+      }
+    }
+
+    case UPLOAD_NEW_FILE_INSTEAD:
+      return {
+        ...state,
+        uploadingNew: true
+      }
+
+    case UPLOAD_NEW_FILE_INSTEAD_SUCCESS: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          uploadingNew: false
         }
       } else {
         return state

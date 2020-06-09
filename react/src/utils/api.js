@@ -91,3 +91,14 @@ function htmlApi (method, url, body) {
 export function apiHtmlPost (url, body) {
   return htmlApi('POST', url, body)
 }
+
+export function apiFilePost (url, file) {
+  const data = {
+    method: 'POST',
+    headers: { ...CSRF },
+    credentials: 'same-origin',
+    body: file
+  }
+
+  return fetch(url, data).then(checkResponse).then(responseToJson)
+}

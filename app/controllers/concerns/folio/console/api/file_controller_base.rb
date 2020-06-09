@@ -50,6 +50,18 @@ module Folio::Console::Api::FileControllerBase
     render json: { error: t('.failure', msg: e.message), status: 400 }
   end
 
+  def change_file
+    old_thumbnail_versions = folio_console_record.thumbnail_sizes
+
+    if folio_console_record.update(file_params)
+      old_thumbnail_versions.keys.each do |version|
+        folio_console_record.thumb(version, immediate: true)
+      end
+    end
+
+    render_record(folio_console_record, Folio::Console::FileSerializer)
+  end
+
   private
     def folio_console_collection_includes
       [:tags, :file_placements]
