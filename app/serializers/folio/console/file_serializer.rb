@@ -12,7 +12,9 @@ class Folio::Console::FileSerializer
              :file_width,
              :file_height,
              :type,
-             :thumbnail_sizes
+             :thumbnail_sizes,
+             :author,
+             :description
 
   attribute :thumb do |object|
     object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.is_a?(Folio::Image)

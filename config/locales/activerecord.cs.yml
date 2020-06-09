@@ -12,6 +12,9 @@ cs:
         title: Název
       folio/content_template:
         content: Obsah
+      folio/file:
+        author: Autor
+        description: Popis
       folio/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze

@@ -19,6 +19,8 @@ import FileModalFile from './FileModalFile'
 ReactModal.setAppElement('body')
 
 class Modal extends Component {
+  state = {}
+
   onTagsChange = (tags) => {
     this.props.dispatch(changeFileModalTags(tags))
   }
@@ -27,7 +29,9 @@ class Modal extends Component {
     const { fileModal } = this.props
 
     const attributes = {
-      tags: fileModal.newTags || []
+      tags: fileModal.newTags || [],
+      author: this.state.author || fileModal.file.attributes.author,
+      description: this.state.description || fileModal.file.attributes.description
     }
     this.props.dispatch(updateFile(this.props.filesKey, this.props.fileModal.file, attributes))
     this.props.dispatch(closeFileModal())
@@ -50,6 +54,10 @@ class Modal extends Component {
     this.props.dispatch(uploadNewFileInstead(this.props.filesKey, this.props.fileModal.file, fileIo))
   }
 
+  onValueChange = (key, value) => {
+    this.setState({ ...this.state, [key]: value })
+  }
+
   render () {
     const { fileModal, tags } = this.props
     const isOpen = fileModal.file !== null && (fileModal.loading || fileModal.loaded)
@@ -69,6 +77,7 @@ class Modal extends Component {
             updateThumbnail={this.updateThumbnail}
             deleteFile={this.deleteFile}
             uploadNewFileInstead={this.uploadNewFileInstead}
+            onValueChange={this.onValueChange}
             tags={tags}
           />
         )}

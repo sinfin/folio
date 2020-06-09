@@ -1,4 +1,6 @@
 import React from 'react'
+import { FormGroup, Label, Input } from 'reactstrap'
+import TextareaAutosize from 'react-autosize-textarea'
 
 import { makeConfirmed } from 'utils/confirmed'
 
@@ -9,7 +11,7 @@ import FileUsage from 'components/FileUsage'
 import MainImage from './styled/MainImage'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ uploadNewFileInstead, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
+export default ({ uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
   const isImage = fileModal.filesKey === 'images'
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
@@ -74,6 +76,14 @@ export default ({ uploadNewFileInstead, deleteFile, fileModal, onTagsChange, clo
               </button>
             </div>
 
+            <FormGroup>
+              <Label>{window.FolioConsole.translations.fileAuthor}</Label>
+              <Input
+                defaultValue={fileModal.file.attributes.author}
+                onChange={(e) => onValueChange('author', e.currentTarget.value)}
+              />
+            </FormGroup>
+
             <div className='form-group string optional file_tag_list'>
               <label className='control-label string optional'>
                 {window.FolioConsole.translations.tagsLabel}
@@ -90,6 +100,19 @@ export default ({ uploadNewFileInstead, deleteFile, fileModal, onTagsChange, clo
                 {window.FolioConsole.translations.tagsHint}
               </small>
             </div>
+
+            <FormGroup>
+              <Label>{window.FolioConsole.translations.fileDescription}</Label>
+              <TextareaAutosize
+                name='description'
+                defaultValue={fileModal.file.attributes.description}
+                onChange={(e) => onValueChange('description', e.currentTarget.value)}
+                type='text'
+                className='form-control'
+                rows={3}
+                async
+              />
+            </FormGroup>
 
             <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
               {window.FolioConsole.translations.save}
