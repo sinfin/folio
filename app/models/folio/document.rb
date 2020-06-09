@@ -21,6 +21,8 @@ end
 #  additional_data :json
 #  file_metadata   :json
 #  hash_id         :string
+#  author          :string
+#  description     :text
 #
 # Indexes
 #

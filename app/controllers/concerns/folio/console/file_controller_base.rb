@@ -35,6 +35,8 @@ module Folio::Console::FileControllerBase
                 .permit(:tag_list,
                         :type,
                         :file,
+                        :author,
+                        :description,
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?

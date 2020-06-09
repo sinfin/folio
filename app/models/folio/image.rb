@@ -48,7 +48,7 @@ end
 #  file_uid        :string
 #  file_name       :string
 #  type            :string
-#  thumbnail_sizes :text             default("--- {}\n")
+#  thumbnail_sizes :text             default({})
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  file_width      :integer
@@ -58,6 +58,8 @@ end
 #  additional_data :json
 #  file_metadata   :json
 #  hash_id         :string
+#  author          :string
+#  description     :text
 #
 # Indexes
 #
