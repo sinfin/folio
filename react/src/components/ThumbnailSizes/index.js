@@ -9,13 +9,13 @@ function ThumbnailSizes ({ file, updateThumbnail }) {
   if (keys.length === 0) return null
 
   return (
-    <div className='mt-5'>
-      <h4 className='mt-0'>Vygenerované verze</h4>
+    <React.Fragment>
+      <h4 className='mt-0'>{window.FolioConsole.translations.thumbnailSizes}</h4>
 
       <div className='d-flex flex-wrap'>
         {keys.map((key) => <ThumbnailSize key={key} thumbKey={key} thumb={thumbnailSizes[key]} file={file} updateThumbnail={updateThumbnail} />)}
       </div>
-    </div>
+    </React.Fragment>
   )
 }
 

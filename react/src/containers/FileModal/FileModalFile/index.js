@@ -4,6 +4,7 @@ import { makeConfirmed } from 'utils/confirmed'
 
 import TagsInput from 'components/TagsInput'
 import ThumbnailSizes from 'components/ThumbnailSizes'
+import FileUsage from 'components/FileUsage'
 
 import MainImage from './styled/MainImage'
 import FileEditInput from './styled/FileEditInput'
@@ -39,8 +40,6 @@ export default ({ uploadNewFileInstead, deleteFile, fileModal, onTagsChange, clo
               </div>
 
               <div className='mt-2 small'>{fileModal.file.attributes.file_width}×{fileModal.file.attributes.file_height} px</div>
-
-              <ThumbnailSizes file={fileModal.file} updateThumbnail={updateThumbnail} />
             </div>
           )}
           <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
@@ -95,6 +94,18 @@ export default ({ uploadNewFileInstead, deleteFile, fileModal, onTagsChange, clo
             <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
               {window.FolioConsole.translations.save}
             </button>
+          </div>
+        </div>
+
+        <div className={isImage ? 'row mt-3' : 'mt-3'}>
+          {isImage && (
+            <div className='col-lg-7 mb-3'>
+              <ThumbnailSizes file={fileModal.file} updateThumbnail={updateThumbnail} />
+            </div>
+          )}
+
+          <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
+            <FileUsage file={fileModal.file} />
           </div>
         </div>
       </div>

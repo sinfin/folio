@@ -41,6 +41,7 @@ en:
         selectPlaceholder: Select...
         thumbnailSizes: Generated thumbnails
         title: Title
+        usage: Usage
         usageFilter: Search by usage
         usagePlaceholder: Využití...
         usageUnused: Unused

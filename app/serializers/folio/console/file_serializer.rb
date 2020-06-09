@@ -51,6 +51,20 @@ class Folio::Console::FileSerializer
     object.file_placements.size
   end
 
+  attribute :some_file_placements do |object|
+    ary = []
+
+    object.file_placements.first(10).each do |file_placement|
+      label = label_for_placement(file_placement)
+      url = url_for_placement(file_placement)
+      if label && url
+        ary << { label: label, url: url, id: file_placement.id }
+      end
+    end
+
+    ary
+  end
+
   link :edit do |object|
     if object.persisted?
       Folio::Engine.routes
@@ -58,4 +72,31 @@ class Folio::Console::FileSerializer
                    .url_for([:edit, :console, object, only_path: true])
     end
   end
+
+  private
+    def self.url_for_placement(file_placement)
+      placement = file_placement.placement
+
+      if placement.is_a?(Folio::Atom::Base)
+        placement = placement.placement
+      end
+
+      Folio::Engine.app.url_helpers.url_for([:edit, :console, placement, only_path: true])
+    rescue StandardError
+      Folio::Engine.app.url_helpers.url_for([:console, placement, only_path: true])
+    rescue StandardError
+      nil
+    end
+
+    def self.label_for_placement(file_placement)
+      placement = file_placement.placement
+
+      if placement.is_a?(Folio::Atom::Base)
+        placement = placement.placement
+      end
+
+      "#{placement.class.model_name.human}: #{placement.to_label}"
+    rescue StandardError
+      nil
+    end
 end
