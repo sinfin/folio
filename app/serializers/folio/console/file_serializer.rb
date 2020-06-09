@@ -83,11 +83,23 @@ class Folio::Console::FileSerializer
         placement = placement.placement
       end
 
-      Folio::Engine.app.url_helpers.url_for([:edit, :console, placement, only_path: true])
-    rescue StandardError
-      Folio::Engine.app.url_helpers.url_for([:console, placement, only_path: true])
-    rescue StandardError
-      nil
+      begin
+        Folio::Engine.app.url_helpers.url_for([:edit, :console, placement, only_path: true])
+      rescue StandardError
+        begin
+          Folio::Engine.app.url_helpers.url_for([:console, placement, only_path: true])
+        rescue StandardError
+          begin
+            Rails.application.routes.url_helpers.url_for([:edit, :console, placement, only_path: true])
+          rescue StandardError
+            begin
+              Rails.application.routes.url_helpers.url_for([:console, placement, only_path: true])
+            rescue StandardError
+              nil
+            end
+          end
+        end
+      end
     end
 
     def self.label_for_placement(file_placement)
