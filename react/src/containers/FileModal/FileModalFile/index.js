@@ -11,7 +11,7 @@ import FileUsage from 'components/FileUsage'
 import MainImage from './styled/MainImage'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
   const isImage = fileModal.filesKey === 'images'
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
@@ -79,7 +79,7 @@ export default ({ uploadNewFileInstead, onValueChange, deleteFile, fileModal, on
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>
               <Input
-                defaultValue={fileModal.file.attributes.author}
+                value={formState.author || ''}
                 onChange={(e) => onValueChange('author', e.currentTarget.value)}
               />
             </FormGroup>
@@ -90,7 +90,7 @@ export default ({ uploadNewFileInstead, onValueChange, deleteFile, fileModal, on
               </label>
 
               <TagsInput
-                value={fileModal.newTags || fileModal.file.attributes.tags}
+                value={formState.tags}
                 options={tags}
                 onTagsChange={onTagsChange}
                 submit={saveModal}
@@ -105,7 +105,7 @@ export default ({ uploadNewFileInstead, onValueChange, deleteFile, fileModal, on
               <Label>{window.FolioConsole.translations.fileDescription}</Label>
               <TextareaAutosize
                 name='description'
-                defaultValue={fileModal.file.attributes.description}
+                value={formState.description || ''}
                 onChange={(e) => onValueChange('description', e.currentTarget.value)}
                 type='text'
                 className='form-control'
@@ -133,7 +133,7 @@ export default ({ uploadNewFileInstead, onValueChange, deleteFile, fileModal, on
         </div>
       </div>
 
-      {(fileModal.loading || fileModal.uploadingNew) && <span className='folio-loader' />}
+      {(fileModal.updating || fileModal.uploadingNew) && <span className='folio-loader' />}
     </div>
   )
 }

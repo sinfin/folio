@@ -1,18 +1,19 @@
-import { call, takeEvery, put } from 'redux-saga/effects'
+import { call, takeEvery, put, select } from 'redux-saga/effects'
 
 import { apiPost, apiFilePost } from 'utils/api'
 import { flashError } from 'utils/flash'
-import { updatedFiles } from 'ducks/files'
+import { updatedFiles, UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
 
 // Constants
 
 const OPEN_FILE_MODAL = 'fileModal/OPEN_FILE_MODAL'
 const CLOSE_FILE_MODAL = 'fileModal/CLOSE_FILE_MODAL'
-const CHANGE_FILE_MODAL_TAGS = 'fileModal/CHANGE_FILE_MODAL_TAGS'
 const UPDATE_FILE_THUMBNAIL = 'fileModal/UPDATE_FILE_THUMBNAIL'
 const UPDATED_FILE_MODAL_FILE = 'fileModal/UPDATED_FILE_MODAL_FILE'
 const UPLOAD_NEW_FILE_INSTEAD = 'fileModal/UPLOAD_NEW_FILE_INSTEAD'
 const UPLOAD_NEW_FILE_INSTEAD_SUCCESS = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_SUCCESS'
+const MARK_MODAL_FILE_AS_UPDATING = 'fileModal/MARK_MODAL_FILE_AS_UPDATING'
+const MARK_MODAL_FILE_AS_UPDATED = 'fileModal/MARK_MODAL_FILE_AS_UPDATED'
 
 // Actions
 
@@ -22,10 +23,6 @@ export function openFileModal (filesKey, file) {
 
 export function closeFileModal () {
   return { type: CLOSE_FILE_MODAL }
-}
-
-export function changeFileModalTags (tags) {
-  return { type: CHANGE_FILE_MODAL_TAGS, tags }
 }
 
 export function updateFileThumbnail (filesKey, file, thumbKey, params) {
@@ -42,6 +39,14 @@ export function uploadNewFileInstead (filesKey, file, fileIo) {
 
 export function uploadNewFileInsteadSuccess (file) {
   return { type: UPLOAD_NEW_FILE_INSTEAD_SUCCESS, file }
+}
+
+export function markModalFileAsUpdating (file) {
+  return { type: MARK_MODAL_FILE_AS_UPDATING, file }
+}
+
+export function markModalFileAsUpdated (file) {
+  return { type: MARK_MODAL_FILE_AS_UPDATED, file }
 }
 
 // Selectors
@@ -92,10 +97,26 @@ function * uploadNewFileInsteadSaga () {
   yield takeEvery(UPLOAD_NEW_FILE_INSTEAD, uploadNewFileInsteadPerform)
 }
 
+function * handleFileUpdatePerform (action) {
+  const fileModal = yield select(fileModalSelector)
+
+  if (action.file.id === fileModal.file.id) {
+    yield put(markModalFileAsUpdated(action.response || action.file))
+  }
+}
+
+function * handleFileUpdateSaga () {
+  yield [
+    takeEvery(UPDATE_FILE_SUCCESS, handleFileUpdatePerform),
+    takeEvery(UPDATE_FILE_FAILURE, handleFileUpdatePerform)
+  ]
+}
+
 export const fileModalSagas = [
   loadFileForModalSaga,
   updateFileThumbnailSaga,
-  uploadNewFileInsteadSaga
+  uploadNewFileInsteadSaga,
+  handleFileUpdateSaga
 ]
 
 // State
@@ -103,10 +124,8 @@ export const fileModalSagas = [
 const initialState = {
   file: null,
   filesKey: null,
-  newTags: null,
-  loading: false,
-  loaded: false,
-  uploadingNew: false
+  uploadingNew: false,
+  updating: false
 }
 
 // Reducer
@@ -115,21 +134,13 @@ function modalReducer (state = initialState, action) {
   switch (action.type) {
     case OPEN_FILE_MODAL:
       return {
-        ...state,
+        ...initialState,
         file: action.file,
-        filesKey: action.filesKey,
-        loading: false,
-        loaded: true
+        filesKey: action.filesKey
       }
 
     case CLOSE_FILE_MODAL:
       return initialState
-
-    case CHANGE_FILE_MODAL_TAGS:
-      return {
-        ...state,
-        newTags: action.tags
-      }
 
     case UPDATE_FILE_THUMBNAIL:
       return {
@@ -172,6 +183,29 @@ function modalReducer (state = initialState, action) {
         return {
           ...state,
           uploadingNew: false
+        }
+      } else {
+        return state
+      }
+    }
+
+    case MARK_MODAL_FILE_AS_UPDATING: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          updating: true
+        }
+      } else {
+        return state
+      }
+    }
+
+    case MARK_MODAL_FILE_AS_UPDATED: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          file: action.file,
+          updating: false
         }
       } else {
         return state

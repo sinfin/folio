@@ -7,9 +7,9 @@ import { updateFile, deleteFile } from 'ducks/files'
 import {
   updateFileThumbnail,
   closeFileModal,
-  changeFileModalTags,
   fileModalSelector,
-  uploadNewFileInstead
+  uploadNewFileInstead,
+  markModalFileAsUpdating
 } from 'ducks/fileModal'
 
 import { makeTagsSelector } from 'ducks/filters'
@@ -21,20 +21,37 @@ ReactModal.setAppElement('body')
 class Modal extends Component {
   state = {}
 
-  onTagsChange = (tags) => {
-    this.props.dispatch(changeFileModalTags(tags))
+  constructor (props) {
+    super(props)
+    if (props.fileModal.file) {
+      this.state = {
+        author: props.fileModal.file.attributes.author,
+        description: props.fileModal.file.attributes.description,
+        tags: props.fileModal.file.attributes.tags
+      }
+    } else {
+      this.state = { author: null, description: null, tags: [] }
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.fileModal.file) {
+      if (!prevProps.fileModal.file || (prevProps.fileModal.updating && this.props.fileModal.updating === false)) {
+        this.setState({
+          ...this.state,
+          author: this.props.fileModal.file.attributes.author,
+          description: this.props.fileModal.file.attributes.description,
+          tags: this.props.fileModal.file.attributes.tags
+        })
+      }
+    }
   }
 
   saveModal = () => {
     const { fileModal } = this.props
 
-    const attributes = {
-      tags: fileModal.newTags || [],
-      author: this.state.author || fileModal.file.attributes.author,
-      description: this.state.description || fileModal.file.attributes.description
-    }
-    this.props.dispatch(updateFile(this.props.filesKey, this.props.fileModal.file, attributes))
-    this.props.dispatch(closeFileModal())
+    this.props.dispatch(markModalFileAsUpdating(fileModal.file))
+    this.props.dispatch(updateFile(this.props.filesKey, fileModal.file, this.state))
   }
 
   closeFileModal = () => {
@@ -54,13 +71,17 @@ class Modal extends Component {
     this.props.dispatch(uploadNewFileInstead(this.props.filesKey, this.props.fileModal.file, fileIo))
   }
 
+  onTagsChange = (tags) => {
+    this.setState({ ...this.state, tags })
+  }
+
   onValueChange = (key, value) => {
     this.setState({ ...this.state, [key]: value })
   }
 
   render () {
     const { fileModal, tags } = this.props
-    const isOpen = fileModal.file !== null && (fileModal.loading || fileModal.loaded)
+    const isOpen = fileModal.file !== null
 
     return (
       <ReactModal
@@ -79,6 +100,7 @@ class Modal extends Component {
             uploadNewFileInstead={this.uploadNewFileInstead}
             onValueChange={this.onValueChange}
             tags={tags}
+            formState={this.state}
           />
         )}
       </ReactModal>
