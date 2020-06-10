@@ -49,7 +49,17 @@ Folio::Engine.routes.draw do
   resources :leads, only: %i[create]
   resources :newsletter_subscriptions, only: %i[create]
 
-  scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
+  def self.locale_scope_if_enabled
+    if Rails.application.config.folio_routes_localized
+      scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
+        yield
+      end
+    else
+      yield
+    end
+  end
+
+  locale_scope_if_enabled do
     get '/download/:hash_id/*name', to: 'downloads#show',
                                     as: :download,
                                     constraints: { name: /.*/ }
