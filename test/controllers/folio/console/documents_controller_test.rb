@@ -8,12 +8,6 @@ class Folio::Console::DocumentsControllerTest < Folio::Console::BaseControllerTe
     assert_response :success
   end
 
-  test 'edit' do
-    document = create(:folio_document)
-    get url_for([:edit, :console, document])
-    assert_response :success
-  end
-
   test 'update' do
     document = create(:folio_document)
     put url_for([:console, document]), params: {

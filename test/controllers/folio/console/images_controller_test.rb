@@ -8,12 +8,6 @@ class Folio::Console::ImagesControllerTest < Folio::Console::BaseControllerTest
     assert_response :success
   end
 
-  test 'edit' do
-    image = create(:folio_image)
-    get url_for([:edit, :console, image])
-    assert_response :success
-  end
-
   test 'update' do
     image = create(:folio_image)
     put url_for([:console, image]), params: {
