@@ -54,15 +54,6 @@ export function markModalFileAsUpdated (file) {
 export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
-function * loadFileForModal (action) {
-  // used to update atom previews via the data-atom-setting functionality
-  yield window.jQuery('.f-c-js-atoms-placement-setting.folio-react-wrap').trigger('folioCustomChange')
-}
-
-function * loadFileForModalSaga () {
-  yield takeEvery(OPEN_FILE_MODAL, loadFileForModal)
-}
-
 function * updateFileThumbnailPerform (action) {
   if (action.filesKey !== 'images') return
 
@@ -113,7 +104,6 @@ function * handleFileUpdateSaga () {
 }
 
 export const fileModalSagas = [
-  loadFileForModalSaga,
   updateFileThumbnailSaga,
   uploadNewFileInsteadSaga,
   handleFileUpdateSaga

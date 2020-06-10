@@ -160,6 +160,7 @@ setMediaQuery = (width) ->
 handleNewHtml = ->
   lazyloadAll()
   sendResizeMessage()
+  $(document).trigger('folioConsoleReplacedHtml')
 
 updateLabel = (locale, value) ->
   if locale
@@ -168,6 +169,7 @@ updateLabel = (locale, value) ->
     $label = $(".f-c-atoms-previews__locale .f-c-atoms-previews__label")
   $label.prop('hidden', value.length is 0)
   $label.find('.f-c-atoms-previews__label-h1').text(value)
+  $(document).trigger('folioConsoleUpdatedLabel')
 
 updatePerex = (locale, value) ->
   if locale
@@ -176,6 +178,7 @@ updatePerex = (locale, value) ->
     $perex = $(".f-c-atoms-previews__locale .f-c-atoms-previews__perex")
   $perex.prop('hidden', value.length is 0)
   $perex.find('.f-c-atoms-previews__perex-p').html(value)
+  $(document).trigger('folioConsoleUpdatedPerex')
 
 $(document)
   .on 'click', '.f-c-atoms-previews__button--arrow', handleArrowClick

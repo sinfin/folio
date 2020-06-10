@@ -91,12 +91,9 @@ function * triggerWrapChangeEvent (action) {
 
 function * triggerWrapChangeEventSaga () {
   yield [
-    takeEvery(SET_ORIGINAL_PLACEMENTS, triggerWrapChangeEvent),
     takeEvery(SELECT_FILE, triggerWrapChangeEvent),
     takeEvery(UNSELECT_FILE_PLACEMENT, triggerWrapChangeEvent),
     takeEvery(ON_SORT_END, triggerWrapChangeEvent),
-    takeEvery(SET_ATTACHMENTABLE, triggerWrapChangeEvent),
-    takeEvery(SET_PLACEMENT_TYPE, triggerWrapChangeEvent),
     takeEvery(CHANGE_TITLE, triggerWrapChangeEvent),
     takeEvery(CHANGE_ALT, triggerWrapChangeEvent)
   ]

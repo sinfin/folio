@@ -27,9 +27,10 @@ div class=class_name data-klass=options[:klass]
               data-indices=indices
               data-contentable=atoms.first.class.contentable?.to_s
             ]
-              == cell(atoms.first.class.molecule_cell_name, \
-                      atoms, \
-                      console_preview: true)
+              .f-c-atoms-previews__preview-inner
+                == cell(atoms.first.class.molecule_cell_name, \
+                        atoms, \
+                        console_preview: true)
 
               = controls
 
@@ -44,7 +45,8 @@ div class=class_name data-klass=options[:klass]
                 data-indices=[index]
                 data-contentable=atom.class.contentable?.to_s
               ]
-                = atom_cell(atom)
+                .f-c-atoms-previews__preview-inner
+                  = atom_cell(atom)
                 = controls
 
               - index += 1
