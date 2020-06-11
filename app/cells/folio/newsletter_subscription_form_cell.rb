@@ -6,7 +6,7 @@ module Folio
     include Engine.routes.url_helpers
 
     def newsletter_subscription
-      @newsletter_subscription ||= (model || NewsletterSubscription.new)
+      @newsletter_subscription ||= (model || NewsletterSubscription.new(mailchimp_tags: options[:mailchimp_tags]))
     end
 
     def submitted

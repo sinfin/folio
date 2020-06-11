@@ -12,7 +12,7 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
   private
 
     def newsletter_subscription_params
-      params.require(:newsletter_subscription).permit(:email)
+      params.require(:newsletter_subscription).permit(:email, :mailchimp_tags)
     end
 
     def cell_options_params

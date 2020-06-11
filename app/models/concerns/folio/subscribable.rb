@@ -26,6 +26,10 @@ module Folio::Subscribable
     end
 
     def subscription_tags
-      []
+      if respond_to?(:mailchimp_tags) && mailchimp_tags.present?
+        mailchimp_tags.split(',').map(&:strip)
+      else
+        []
+      end
     end
 end
