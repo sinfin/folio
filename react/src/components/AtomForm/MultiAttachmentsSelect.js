@@ -100,6 +100,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
         selectFile={this.selectFile}
         filesPagination={this.props.filesPagination}
         changeFilesPage={this.changeFilesPage}
+        openFileModal={(file) => this.props.openFileModal(this.props.filesKey, file)}
         shouldLoadFiles
         nested
       />

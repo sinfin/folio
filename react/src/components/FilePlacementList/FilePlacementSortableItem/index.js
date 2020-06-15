@@ -77,6 +77,8 @@ class FilePlacement extends React.Component {
       className = 'f-c-file-placement f-c-file-placement--document'
     }
 
+    const onEdit = () => { openFileModal(filePlacement.file) }
+
     return (
       <div className={className}>
         {fileTypeIsImage && (
@@ -93,7 +95,7 @@ class FilePlacement extends React.Component {
               <img src={filePlacement.file.attributes.thumb} className='f-c-file-placement__img' alt='' />
             </a>
 
-            {<FileHoverButtons edit onEdit={() => { openFileModal(filePlacement.file) }} />}
+            {<FileHoverButtons edit onEdit={onEdit} />}
           </div>
         )}
 
@@ -127,6 +129,7 @@ class FilePlacement extends React.Component {
           remove={this.unselect}
           moveUp={this.moveUp}
           moveDown={this.moveDown}
+          edit={onEdit}
         />
 
         {!this.props.nested && (

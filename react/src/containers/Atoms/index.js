@@ -22,6 +22,7 @@ import {
   validateAndSubmitGlobalForm,
   refreshAtomPreviews
 } from 'ducks/atoms'
+import { openFileModal } from 'ducks/fileModal'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
 import { confirm } from 'utils/confirmed'
@@ -137,6 +138,7 @@ class Atoms extends React.PureComponent {
             moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
             validateAndSubmitGlobalForm={() => this.props.dispatch(validateAndSubmitGlobalForm())}
+            openFileModal={(filesKey, file) => this.props.dispatch(openFileModal(filesKey, file))}
           />
         )}
       </React.Fragment>

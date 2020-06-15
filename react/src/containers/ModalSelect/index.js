@@ -20,6 +20,7 @@ class ModalSelect extends Component {
 
     if (this.fileModalSelector()) {
       $(document).on('click', this.fileModalSelector(), (e) => {
+        e.stopPropagation()
         this.props.openFileModal(this.props.filesKey, $(e.target).data('file'))
       })
     }

@@ -1,7 +1,6 @@
 import React from 'react'
 
 import SingleSelect from 'containers/SingleSelect'
-import truncate from 'utils/truncate'
 
 import { EVENT_NAME } from './constants'
 import ModalSelect from '../'
@@ -35,8 +34,7 @@ class ModalSingleSelect extends ModalSelect {
     if (this.selectingDocument()) {
       return `
         <div class="folio-console-thumbnail__inner">
-          <i class="folio-console-thumbnail__fa-icon fa fa-file-o"></i>
-          <strong class="folio-console-thumbnail__title">${truncate(file.attributes.file_name)}</strong>
+          <strong class="folio-console-thumbnail__title">${file.attributes.file_name}</strong>
           <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.attributes.file_name}" />
           <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit folio-console-react-picker__edit--document" type="button"></button>
           <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
@@ -95,7 +93,7 @@ class ModalSingleSelect extends ModalSelect {
       .find('.folio-console-react-picker__edit')
       .attr('data-file', JSON.stringify(file))
 
-    $fields.append($newFile)
+    $fields.html($newFile)
     $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
 
     this.jQueryModal().modal('hide')

@@ -2,8 +2,8 @@ import React from 'react'
 
 import { makeConfirmed } from 'utils/confirmed'
 
-const NestedModelControls = ({ moveUp, moveDown, remove, vertical }) => {
-  let btnGroupClassName = 'btn-group mr-3'
+const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
+  let btnGroupClassName = 'btn-group mr-1'
 
   if (vertical) {
     btnGroupClassName = 'btn-group btn-group-vertical align-items-center'
@@ -17,8 +17,16 @@ const NestedModelControls = ({ moveUp, moveDown, remove, vertical }) => {
     />
   )
 
+  const editButton = edit && (
+    <button
+      className={`btn btn-secondary f-c-nested-model-controls__edit fa fa-edit ${vertical ? '' : 'mr-1'}`}
+      type='button'
+      onClick={edit}
+    />
+  )
+
   return (
-    <div className='folio-console-nested-model-controls'>
+    <div className='f-c-nested-model-controls'>
       <div className={btnGroupClassName}>
         {moveUp && (
           <button
@@ -36,9 +44,11 @@ const NestedModelControls = ({ moveUp, moveDown, remove, vertical }) => {
           />
         )}
 
+        {vertical && editButton}
         {vertical && destroyButton}
       </div>
 
+      {!vertical && editButton}
       {!vertical && destroyButton}
     </div>
   )

@@ -52,6 +52,12 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
     base.join(' ')
   end
 
+  def serialized_file(fp)
+    Folio::Console::FileSerializer.new(fp.object.file)
+                                  .serializable_hash[:data]
+                                  .to_json
+  end
+
   private
     def single?
       placement_key !~ /_placements/

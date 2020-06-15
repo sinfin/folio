@@ -163,6 +163,7 @@ class AtomForm extends React.PureComponent {
                 atom={atom.record}
                 index={index}
                 remove={this.props.removeFormAtomAttachment}
+                openFileModal={this.props.openFileModal}
               />
             )
 
@@ -229,7 +230,11 @@ class AtomForm extends React.PureComponent {
                       </div>
                     )}
 
-                    <MultiAttachments atom={atom} index={index} />
+                    <MultiAttachments
+                      atom={atom}
+                      index={index}
+                      openFileModal={this.props.openFileModal}
+                    />
 
                     {atom.record.meta.hint && this.renderHint(atom.record.meta.hint, molecule)}
 

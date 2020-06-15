@@ -3,14 +3,16 @@ import { Button } from 'reactstrap'
 
 import { EVENT_NAME } from 'containers/ModalSelect/ModalSingleSelect/constants'
 import { FILE_TRIGGER_EVENT } from 'containers/Atoms/constants'
+import FileHoverButtons from 'components/FileHoverButtons'
 import SingleSelectTriggerWrap from './styled/SingleSelectTriggerWrap'
 
 function triggerModal (fileType, data) {
   window.jQuery(document).trigger(`${EVENT_NAME}/${fileType}`, [data])
 }
 
-function SingleSelectTrigger ({ data, attachmentType, remove, index }) {
+function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, index }) {
   const isDocument = attachmentType.file_type === 'Folio::Document'
+  const filesKey = isDocument ? 'documents' : 'images'
   const trigger = () => {
     const d = {
       index,
@@ -33,7 +35,7 @@ function SingleSelectTrigger ({ data, attachmentType, remove, index }) {
               <div className='folio-console-thumbnail__img-wrap'>
 
                 {isDocument ? (
-                  data.file.attributes.file_name
+                  <strong className='folio-console-thumbnail__title'>{data.file.attributes.file_name}</strong>
                 ) : (
                   <img
                     src={data.file.attributes.thumb}
@@ -42,10 +44,12 @@ function SingleSelectTrigger ({ data, attachmentType, remove, index }) {
                   />
                 )}
 
-                <div className='folio-console-hover-destroy'>
-                  <i className='fa fa-edit' onClick={trigger} />
-                  <i className='fa fa-times-circle' onClick={remove} />
-                </div>
+                <FileHoverButtons
+                  edit
+                  onEdit={() => openFileModal(filesKey, data.file)}
+                  destroy
+                  onDestroy={remove}
+                />
               </div>
             </div>
           </div>

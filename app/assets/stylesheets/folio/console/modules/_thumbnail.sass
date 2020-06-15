@@ -20,11 +20,8 @@ $thumbnail-size: 150px
   max-width: 100%
   background: $gray-200
 
-.folio-console-thumbnail__fa-icon
-  font-size: 30px
-  display: block
-  margin: 0 auto 10px
-  text-align: center
+  &:hover
+    background: darken($gray-200, 3%)
 
 .folio-console-thumbnail__img-wrap
   position: relative
@@ -51,3 +48,14 @@ $thumbnail-size: 150px
 
   &:hover
     text-decoration: underline
+
+.folio-console-thumbnail__title
+  display: block
+  max-width: 100%
+  max-height: 100%
+  overflow: hidden
+  font-size: $font-size-sm
+  text-overflow: ellipsis
+
+  .folio-console-thumbnail__img-wrap &
+    padding: 10px
