@@ -18,6 +18,12 @@ class ModalSelect extends Component {
       this.jQueryModal().modal('show')
     })
 
+    if (this.fileModalSelector()) {
+      $(document).on('click', this.fileModalSelector(), (e) => {
+        this.props.openFileModal(this.props.filesKey, $(e.target).data('file'))
+      })
+    }
+
     const eventName = this.eventName()
     if (eventName) {
       $(document).on(eventName, (e, eventData) => {
@@ -34,6 +40,9 @@ class ModalSelect extends Component {
 
   selector () {
     throw new Error('Not implemented')
+  }
+
+  fileModalSelector () {
   }
 
   eventName () {

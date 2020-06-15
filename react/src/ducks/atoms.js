@@ -268,7 +268,7 @@ function * updateAtomPreviews (action) {
         if ($setting.hasClass('selectized')) {
           val = $setting[0].selectize.getValue()
         } else if ($setting.hasClass('folio-react-wrap')) {
-          if ($setting.find('.folio-console-file-placement-list').length) {
+          if ($setting.find('.f-c-file-placement-list').length) {
             val = getJsonFromMultiSelectDom($setting)
           } else {
             settingsLoading = true

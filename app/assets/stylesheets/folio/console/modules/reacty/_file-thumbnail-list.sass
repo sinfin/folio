@@ -29,6 +29,30 @@
   &__file--fresh
     box-shadow: 0 0 0 5px #c1e1f2
 
+  &__file-btn
+    width: 24px !important
+    height: 24px
+    line-height: 24px !important
+    padding: 0
+    align-items: center
+    justify-content: center
+    position: absolute
+    right: 0
+    z-index: 3
+    font-size: 0.75rem !important
+    display: none
+
+    &--destroy
+      top: 0
+
+    &--edit
+      bottom: 0
+
+  &__file:hover &__file-btn,
+  .f-c-file-placement__img-wrap:hover &__file-btn,
+  .folio-console-thumbnail__inner &__file-btn
+    display: flex
+
   &__img-wrap,
   &__dropzone-trigger
     display: flex

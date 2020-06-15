@@ -40,6 +40,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
             fileTypeIsImage={fileTypeIsImage}
             filesKey={this.props.filesKey}
             nested={this.props.nested}
+            openFileModal={this.props.openFileModal}
           />
         </Card>
 
@@ -61,6 +62,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
               changeFilesPage={this.props.changeFilesPage}
               filesKey={this.props.filesKey}
               selecting='multiple'
+              openFileModal={this.props.openFileModal}
               dropzoneTrigger
             />
           )}

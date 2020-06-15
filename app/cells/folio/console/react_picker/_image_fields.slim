@@ -14,8 +14,18 @@
         .folio-console-thumbnail__img-wrap
           = image(fp)
 
-          .folio-console-hover-destroy
-            i.fa.fa-times-circle data-destroy-association=true
+          button[
+            type='button'
+            class='f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit'
+            class='folio-console-react-picker__edit folio-console-react-picker__edit--image'
+            data={ file: Folio::Console::FileSerializer.new(fp.object.file).serializable_hash[:data].to_json }
+          ]
+
+          button[
+            type='button'
+            class='f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times'
+            data-destroy-association=true
+          ]
 
       = fp.hidden_field :alt
       small.folio-console-thumbnail__alt

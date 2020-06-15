@@ -3,6 +3,7 @@ import { SortableElement } from 'react-sortable-hoc'
 
 import NestedModelControls from 'components/NestedModelControls'
 import FormGroup from 'components/FormGroup'
+import FileHoverButtons from 'components/FileHoverButtons'
 
 import filePlacementInputName from '../utils/filePlacementInputName'
 import HiddenInputs from './HiddenInputs'
@@ -65,32 +66,39 @@ class FilePlacement extends React.Component {
       attachmentable,
       placementType,
       position,
-      fileTypeIsImage
+      fileTypeIsImage,
+      openFileModal
     } = this.props
 
     let className
     if (fileTypeIsImage) {
-      className = 'folio-console-file-placement folio-console-file-placement--image'
+      className = 'f-c-file-placement f-c-file-placement--image'
     } else {
-      className = 'folio-console-file-placement folio-console-file-placement--document'
+      className = 'f-c-file-placement f-c-file-placement--document'
     }
 
     return (
       <div className={className}>
         {fileTypeIsImage && (
-          <a
-            className='folio-console-file-placement__img-wrap'
-            href={filePlacement.file.attributes.source_url}
-            target='_blank'
-            rel='noopener noreferrer'
-            onClick={(e) => e.stopPropagation()}
+          <div
+            className='f-c-file-placement__img-wrap'
           >
-            <img src={filePlacement.file.attributes.thumb} className='folio-console-file-placement__img' alt='' />
-          </a>
+            <a
+              className='f-c-file-placement__img-a'
+              href={filePlacement.file.attributes.source_url}
+              target='_blank'
+              rel='noopener noreferrer'
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img src={filePlacement.file.attributes.thumb} className='f-c-file-placement__img' alt='' />
+            </a>
+
+            {<FileHoverButtons edit onEdit={() => { openFileModal(filePlacement.file) }} />}
+          </div>
         )}
 
-        <div className='folio-console-file-placement__inputs'>
-          <div className='folio-console-file-placement__title'>
+        <div className='f-c-file-placement__inputs'>
+          <div className='f-c-file-placement__title'>
             <FormGroup
               placeholder={filePlacement.file.attributes.file_name}
               value={this.state.title}
@@ -102,7 +110,7 @@ class FilePlacement extends React.Component {
           </div>
 
           {fileTypeIsImage && (
-            <div className='folio-console-file-placement__alt'>
+            <div className='f-c-file-placement__alt'>
               <FormGroup
                 placeholder='alt'
                 value={this.state.alt}
@@ -130,7 +138,7 @@ class FilePlacement extends React.Component {
           />
         )}
 
-        <div className='folio-console-file-placement__handle'>
+        <div className='f-c-file-placement__handle'>
           <i className='fa fa-arrows-alt' />
         </div>
       </div>

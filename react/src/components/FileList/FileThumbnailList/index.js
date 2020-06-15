@@ -7,7 +7,7 @@ const FileThumbnailList = ({
   filesKey,
   files,
   dropzoneTrigger,
-  openInModal,
+  openFileModal,
   onClick,
   selecting,
   massSelect,
@@ -21,7 +21,7 @@ const FileThumbnailList = ({
         key={file.id}
         filesKey={filesKey}
         file={file}
-        openInModal={openInModal}
+        openFileModal={openFileModal}
         onClick={onClick}
         selecting={selecting}
         massSelect={massSelect}

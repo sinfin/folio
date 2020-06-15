@@ -16,6 +16,7 @@ import {
   changeAlt,
   makeFilePlacementsSelector
 } from 'ducks/filePlacements'
+import { openFileModal } from 'ducks/fileModal'
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import MultiSelectComponent from 'components/MultiSelectComponent'
@@ -49,6 +50,10 @@ class MultiSelect extends React.PureComponent {
     this.props.dispatch(changeFilesPage(this.props.filesKey, page))
   }
 
+  openFileModal = (file) => {
+    this.props.dispatch(openFileModal(this.props.filesKey, file))
+  }
+
   render () {
     return (
       <MultiSelectComponent
@@ -65,6 +70,7 @@ class MultiSelect extends React.PureComponent {
         selectFile={this.selectFile}
         filesPagination={this.props.filesPagination}
         changeFilesPage={this.changeFilesPage}
+        openFileModal={this.openFileModal}
         shouldLoadFiles
       />
     )

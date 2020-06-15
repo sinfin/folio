@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 
 import { getFiles, thumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
+import { openFileModal } from 'ducks/fileModal'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
@@ -44,6 +45,10 @@ class FilesApp extends Component {
     return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'modal-multi-select' && this.props.app.mode !== 'atoms'
   }
 
+  openFileModal = (filesKey, file) => {
+    this.props.dispatch(openFileModal(filesKey, file))
+  }
+
   renderMode () {
     const { mode, fileType, filesKey } = this.props.app
 
@@ -65,6 +70,7 @@ class FilesApp extends Component {
           fileType={fileType}
           filesKey={filesKey}
           loadFiles={this.loadFiles}
+          openFileModal={this.openFileModal}
         />
       )
     }

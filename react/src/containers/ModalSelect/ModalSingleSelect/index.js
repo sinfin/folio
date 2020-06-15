@@ -11,6 +11,14 @@ class ModalSingleSelect extends ModalSelect {
     return this.selectingDocument() ? '.folio-console-add-document' : '.folio-console-add-image'
   }
 
+  fileModalSelector () {
+    if (this.selectingDocument()) {
+      return '.folio-console-react-picker__edit--document'
+    } else {
+      return '.folio-console-react-picker__edit--image'
+    }
+  }
+
   eventName () {
     const append = this.selectingDocument() ? 'Folio::Document' : 'Folio::Image'
     return `${EVENT_NAME}/${append}`
@@ -30,10 +38,8 @@ class ModalSingleSelect extends ModalSelect {
           <i class="folio-console-thumbnail__fa-icon fa fa-file-o"></i>
           <strong class="folio-console-thumbnail__title">${truncate(file.attributes.file_name)}</strong>
           <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.attributes.file_name}" />
-          <div class="folio-console-hover-destroy">
-            <i class="fa fa-edit folio-console-thumbnail__title-edit"></i>
-            <i class="fa fa-times-circle" data-destroy-association></i>
-          </div>
+          <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit folio-console-react-picker__edit--document" type="button"></button>
+          <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
         </div>
       `
     } else {
@@ -41,9 +47,8 @@ class ModalSingleSelect extends ModalSelect {
         <div class="folio-console-thumbnail__inner">
           <div class="folio-console-thumbnail__img-wrap">
             <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.attributes.thumb)} alt="" />
-            <div class="folio-console-hover-destroy">
-              <i class="fa fa-times-circle" data-destroy-association></i>
-            </div>
+            <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit folio-console-react-picker__edit--image" type="button"></button>
+            <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
           </div>
         </div>
 
@@ -85,6 +90,10 @@ class ModalSingleSelect extends ModalSelect {
         ${this.fileTemplate(file, prefix)}
       </div>
     `)
+
+    $newFile
+      .find('.folio-console-react-picker__edit')
+      .attr('data-file', JSON.stringify(file))
 
     $fields.append($newFile)
     $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')

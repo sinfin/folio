@@ -1,14 +1,14 @@
-.folio-console-file-placement-list
+.f-c-file-placement-list
   margin: - $grid-gutter-half
   padding: $grid-gutter-half 0
 
-.folio-console-file-placement
+.f-c-file-placement
   display: flex
   align-items: center
   padding: (( $grid-gutter-half / 2 )) 0 (( $grid-gutter-half / 2 )) $grid-gutter-half
   transition: background .2s ease-in-out
 
-  .folio-console-nested-model-controls
+  .f-c-nested-model-controls
     margin-left: auto
     opacity: 0.1
     transition: $transition-base
@@ -41,90 +41,97 @@
       opacity: 1
 
   &:hover
-    .folio-console-nested-model-controls
+    .f-c-nested-model-controls
       opacity: 1
 
-.folio-console-file-placement__img-wrap
+.f-c-file-placement__img-wrap
+  width: 75px
+  height: 75px
+  margin-right: $grid-gutter-half
+  position: relative
+
+.f-c-file-placement__img-a
   display: flex
   flex: 0 0 75px
   width: 75px
   height: 75px
   align-items: center
   justify-content: center
-  margin-right: $grid-gutter-half
   cursor: zoom-in
   background: rgba(darken($success, 10%), 0.2)
+  position: relative
+  z-index: 1
 
-.folio-console-file-placement__img
+.f-c-file-placement__img
   max-width: 75px
   max-height: 75px
   display: block
 
-.folio-console-file-placement__title
+.f-c-file-placement__title
   flex: 1 1 auto
 
-.folio-console-file-placement__alt
+.f-c-file-placement__alt
   .form-control
     text-align: right
 
-.folio-console-file-placement__handle
+.f-c-file-placement__handle
   opacity: 0.1
   transition: $transition-base
   padding: $grid-gutter-half
   flex: 0 0 auto
   cursor: move
 
-  .folio-console-file-placement:hover &
+  .f-c-file-placement:hover &
     opacity: 1
 
-body > .folio-console-file-placement
+body > .f-c-file-placement
   background: rgba($white, .5)
   z-index: 9999
 
-  .folio-console-file-placement__handle,
-  .folio-console-nested-model-controls
+  .f-c-file-placement__handle,
+  .f-c-nested-model-controls
     opacity: 1
 
-.folio-console-file-placement__inputs
+.f-c-file-placement__inputs
   flex: 1 1 auto
   display: flex
 
 +media-breakpoint-only(md)
-  .folio-console-file-placement__alt
+  .f-c-file-placement__alt
     max-width: 150px
 
-  .folio-console-file-placement .folio-console-file-placement__alt .form-group .form-text
+  .f-c-file-placement .f-c-file-placement__alt .form-group .form-text
     left: 50%
     width: auto
     white-space: nowrap
     transform: translate(-50%, 0)
     padding: 0
 
-  .folio-console-file-placement .folio-console-file-placement__title .form-group .form-text
+  .f-c-file-placement .f-c-file-placement__title .form-group .form-text
     width: auto
     white-space: nowrap
     padding-right: 0
 
 +media-breakpoint-down(sm)
-  .folio-console-file-placement
+  .f-c-file-placement
     border: 1px solid $border-color
 
-  .folio-console-file-placement--image
+  .f-c-file-placement--image
     flex-wrap: wrap
 
     & + &
       border-top: 1px solid $success
 
-    .folio-console-file-placement__img-wrap
+    .f-c-file-placement__img-wrap
       order: 1
 
-    .folio-console-nested-model-controls
+    .f-c-nested-model-controls
       order: 2
 
-    .folio-console-file-placement__handle
+    .f-c-file-placement__handle
       order: 3
 
-    .folio-console-file-placement__inputs
+    .f-c-file-placement__inputs
       order: 4
       margin-top: $grid-gutter-half / 2
       display: block
@@ -133,10 +140,10 @@ body > .folio-console-file-placement
       .form-group
         margin-right: 0
 
-    .folio-console-file-placement__alt
+    .f-c-file-placement__alt
       .form-control
         text-align: left
 
 +media-breakpoint-down(xs)
-  .folio-console-file-placement--document .folio-console-nested-model-controls .btn-group
+  .f-c-file-placement--document .f-c-nested-model-controls .btn-group
     display: none

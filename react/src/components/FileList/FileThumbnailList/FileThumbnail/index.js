@@ -4,8 +4,9 @@ import LazyLoad from 'react-lazyload'
 import FileUploadProgress from 'components/FileUploadProgress'
 import FileThumbnailHover from './FileThumbnailHover'
 import FileThumbnailMassCheckbox from './FileThumbnailMassCheckbox'
+import FileHoverButtons from 'components/FileHoverButtons'
 
-const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSelect, massSelectVisible }) => {
+const FileThumbnail = ({ file, filesKey, onClick, selecting, massSelect, massSelectVisible, openFileModal }) => {
   if (file._destroying) return null
 
   let className = 'f-c-file-list__file'
@@ -20,7 +21,6 @@ const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSe
   return (
     <div
       className={className}
-      onClick={() => openInModal(file)}
     >
       <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }}>
         {file.attributes.thumb && (
@@ -35,6 +35,7 @@ const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSe
       </div>
 
       <FileUploadProgress progress={file.attributes.progress} />
+
       {massSelect ? (
         <React.Fragment>
           <FileThumbnailMassCheckbox
@@ -48,14 +49,19 @@ const FileThumbnail = ({ file, filesKey, openInModal, onClick, selecting, massSe
               {file.attributes.file_placements_count}
             </div>
           ) : null}
+
         </React.Fragment>
       ) : (
-        <FileThumbnailHover
-          progress={file.attributes.progress}
-          onClick={persistedOnClick}
-          file={file}
-          selecting={selecting}
-        />
+        <React.Fragment>
+          <FileThumbnailHover
+            progress={file.attributes.progress}
+            onClick={persistedOnClick}
+            file={file}
+            selecting={selecting}
+          />
+
+          {!file.attributes.uploading && <FileHoverButtons edit onEdit={() => { openFileModal(file) }} />}
+        </React.Fragment>
       )}
     </div>
   )
