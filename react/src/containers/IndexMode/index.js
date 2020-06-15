@@ -47,7 +47,7 @@ class IndexMode extends LazyLoadCheckingComponent {
                 massSelect={(file, select) => this.props.dispatch(massSelect(this.props.filesKey, file, select))}
                 massSelectVisible={this.props.filesStatus.massSelecting}
                 filesKey={this.props.filesKey}
-                openInModal={(file) => this.props.dispatch(openFileModal(this.props.filesKey, file))}
+                openFileModal={(file) => this.props.dispatch(openFileModal(this.props.filesKey, file))}
                 dropzoneTrigger
               />
             )}

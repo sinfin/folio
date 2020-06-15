@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import { makeFilesStatusSelector, makeFilesForListSelector, makeFilesPaginationSelector, changeFilesPage } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
+import { openFileModal } from 'ducks/fileModal'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
 import FileFilter from 'containers/FileFilter'
@@ -48,6 +49,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
               onClick={this.selectFile}
               pagination={this.props.filesPagination}
               changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
+              openFileModal={(file) => this.props.dispatch(openFileModal(this.props.filesKey, file))}
               filesKey={this.props.filesKey}
               selecting='single'
               dropzoneTrigger

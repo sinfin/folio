@@ -49,7 +49,6 @@ const FileThumbnail = ({ file, filesKey, onClick, selecting, massSelect, massSel
               {file.attributes.file_placements_count}
             </div>
           ) : null}
-
         </React.Fragment>
       ) : (
         <React.Fragment>
@@ -59,10 +58,10 @@ const FileThumbnail = ({ file, filesKey, onClick, selecting, massSelect, massSel
             file={file}
             selecting={selecting}
           />
-
-          {!file.attributes.uploading && <FileHoverButtons edit onEdit={() => { openFileModal(file) }} />}
         </React.Fragment>
       )}
+
+      {!file.attributes.uploading && <FileHoverButtons edit onEdit={() => { openFileModal(file) }} />}
     </div>
   )
 }
