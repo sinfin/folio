@@ -25,6 +25,8 @@ en:
       layout:
         sidebar:
           settings: Settings
+          search:
+            placeholder: Search
 
         header:
           sign_out: Sign out

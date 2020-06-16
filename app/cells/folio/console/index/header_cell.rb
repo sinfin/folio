@@ -8,7 +8,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_url
-    if options[:folio_console_merge]
+    if options[:query_url]
+      send(options[:query_url], model)
+    elsif options[:folio_console_merge]
       url_for([:merge, :console, model])
     else
       url_for([:console, model])
@@ -40,7 +42,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
       end
     end
 
-    if options[:folio_console_merge]
+    if options[:query_url]
+      send(options[:query_url], model, h)
+    elsif options[:folio_console_merge]
       url_for([:merge, :console, model, h])
     else
       url_for([:console, model, h])
@@ -48,7 +52,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def new_button(&block)
-    url = url_for([:console, model, action: :new])
+    url = options[:new_url] ? send(options[:new_url]) : url_for([:console, model, action: :new])
     html_opts = { title: t('.add'),
                   class: 'btn btn-success '\
                          'f-c-index-header__btn f-c-index-header__btn--new' }
@@ -62,14 +66,24 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def new_dropdown_links
     options[:types].map do |klass|
+      if options[:new_url]
+        url =send(options[:new_url])
+      else
+        url = url_for([:console, model, action: :new])
+      end
+
       {
         title: klass.model_name.human,
-        url: url_for([:console, model, action: :new, type: klass.to_s])
+        url: url,
       }
     end
   end
 
   def csv_path
     url_for([:console, model, format: :csv])
+  end
+
+  def title_url
+    options[:query_url] ? send(options[:query_url]) : url_for([:console, model])
   end
 end
