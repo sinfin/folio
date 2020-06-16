@@ -1,4 +1,5 @@
 import React from 'react'
+import { debounce } from 'lodash'
 
 import ReactSelect from 'react-select'
 import CreatableSelect from 'react-select/lib/Creatable'
@@ -37,14 +38,14 @@ class Select extends React.Component {
   render () {
     const { createable, value, options, onChange, innerRef, selectize, async, asyncData, ...rest } = this.props
     let SelectComponent = CreatableSelect
-    let loadOptions
+    let loadOptions, loadOptionsRaw
 
     if (!createable) SelectComponent = ReactSelect
 
     if (async) {
       SelectComponent = AsyncSelect
 
-      loadOptions = (inputValue, handle) => {
+      loadOptionsRaw = (inputValue, handle) => {
         let data = ''
         if (asyncData) {
           const params = new URLSearchParams()
@@ -59,6 +60,8 @@ class Select extends React.Component {
           .catch(() => handle([]))
           .then((res) => handle(res ? res.data : []))
       }
+
+      loadOptions = debounce(loadOptionsRaw, 300)
     }
 
     let formattedValue = null
