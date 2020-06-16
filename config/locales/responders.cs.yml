@@ -10,7 +10,7 @@ cs:
         notice: "%{resource_name} smazán(a)."
       discard:
         alert: "%{resource_name} nelze archivovat."
-        notice: "%{resource_name} arcivován(a)."
+        notice: "%{resource_name} archivován(a)."
       undiscard:
         alert: "%{resource_name} nelze odarchivovat."
         notice: "%{resource_name} odarchivován(a)."
