@@ -4,7 +4,7 @@ import DropzoneTrigger from './DropzoneTrigger'
 import FileTableRow from './FileTableRow'
 
 const FileTableList = ({
-  filesKey,
+  fileType,
   files,
   dropzoneTrigger,
   openFileModal,
@@ -41,7 +41,7 @@ const FileTableList = ({
           {files.map((file) => (
             <FileTableRow
               key={file.id}
-              filesKey={filesKey}
+              fileType={fileType}
               file={file}
               openFileModal={openFileModal}
               fileTypeIsImage={fileTypeIsImage}

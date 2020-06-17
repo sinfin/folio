@@ -23,11 +23,11 @@ import MultiSelectComponent from 'components/MultiSelectComponent'
 
 class MultiAttachmentsSelect extends React.PureComponent {
   getFiles = () => {
-    this.props.dispatch(getFiles(this.props.filesKey))
+    this.props.dispatch(getFiles(this.props.fileType))
   }
 
   changeFilesPage = (page) => {
-    this.props.dispatch(changeFilesPage(this.props.filesKey, page))
+    this.props.dispatch(changeFilesPage(this.props.fileType, page))
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
@@ -41,7 +41,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
     )
   }
 
-  onAltChange = (_filesKey, filePlacement, alt) => {
+  onAltChange = (_fileType, filePlacement, alt) => {
     this.props.dispatch(
       atomFormPlacementsChangeAlt(
         this.props.index,
@@ -52,7 +52,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
     )
   }
 
-  onTitleChange = (_filesKey, filePlacement, title) => {
+  onTitleChange = (_fileType, filePlacement, title) => {
     this.props.dispatch(
       atomFormPlacementsChangeTitle(
         this.props.index,
@@ -63,7 +63,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
     )
   }
 
-  unselectFilePlacement = (_filesKey, filePlacement) => {
+  unselectFilePlacement = (_fileType, filePlacement) => {
     this.props.dispatch(
       atomFormPlacementsUnselect(
         this.props.index,
@@ -86,7 +86,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
   render () {
     return (
       <MultiSelectComponent
-        filesKey={this.props.filesKey}
+        fileType={this.props.fileType}
         filesStatus={this.props.filesStatus}
         getFiles={this.getFiles}
         filePlacements={this.props.filePlacements}
@@ -99,7 +99,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
         selectFile={this.selectFile}
         filesPagination={this.props.filesPagination}
         changeFilesPage={this.changeFilesPage}
-        openFileModal={(file) => this.props.openFileModal(this.props.filesKey, file)}
+        openFileModal={(file) => this.props.openFileModal(this.props.fileType, file)}
         shouldLoadFiles
         nested
       />
@@ -124,7 +124,7 @@ const mapStateToProps = (state, props) => {
     })
   }
 
-  const filesKey = props.attachmentType['file_type']
+  const fileType = props.attachmentType['file_type']
   const filePlacements = {
     selected,
     deleted,
@@ -133,12 +133,12 @@ const mapStateToProps = (state, props) => {
   }
 
   return {
-    filesKey,
-    filesStatus: makeFilesStatusSelector(filesKey)(state),
+    fileType,
+    filesStatus: makeFilesStatusSelector(fileType)(state),
     displayAsThumbs: displayAsThumbsSelector(state),
-    filesPagination: makeFilesPaginationSelector(filesKey)(state),
+    filesPagination: makeFilesPaginationSelector(fileType)(state),
     filePlacements,
-    unselectedFilesForList: makeRawUnselectedFilesForListSelector(filesKey, selectedFileIds)(state)
+    unselectedFilesForList: makeRawUnselectedFilesForListSelector(fileType, selectedFileIds)(state)
   }
 }
 

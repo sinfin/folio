@@ -11,7 +11,7 @@ const FilePlacementSortableList = SortableContainer(({
   onAltChange,
   openFileModal,
   move,
-  filesKey,
+  fileType,
   nested
 }) => (
   <div className='f-c-file-placement-list'>
@@ -31,7 +31,7 @@ const FilePlacementSortableList = SortableContainer(({
         move={move}
         isFirst={index === 0}
         isLast={index === filePlacement.length - 1}
-        filesKey={filesKey}
+        fileType={fileType}
         nested={nested}
       />
     ))}

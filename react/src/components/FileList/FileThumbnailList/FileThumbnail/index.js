@@ -6,7 +6,7 @@ import FileThumbnailHover from './FileThumbnailHover'
 import FileThumbnailMassCheckbox from './FileThumbnailMassCheckbox'
 import FileHoverButtons from 'components/FileHoverButtons'
 
-const FileThumbnail = ({ file, filesKey, onClick, openFileModalOnClick, selecting, massSelect, massSelectVisible, openFileModal }) => {
+const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selecting, massSelect, massSelectVisible, openFileModal }) => {
   if (file._destroying) return null
 
   let className = 'f-c-file-list__file'

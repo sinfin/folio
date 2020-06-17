@@ -13,7 +13,7 @@ function downloadHref (filesUrl, massSelectedIds) {
   return `${filesUrl}/mass_download?ids=${massSelectedIds.join(',')}`
 }
 
-function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, filesKey, dispatchMassCancel, dispatchMassDelete, filesUrl }) {
+function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, fileType, dispatchMassCancel, dispatchMassDelete, filesUrl }) {
   if (massSelectedIds.length === 0) return null
   const indestructible = massSelectedIndestructibleIds.length > 0
   let notAllowedCursor = ''
@@ -33,7 +33,7 @@ function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, file
           className={`btn btn-danger d-block mr-2 mr-sm-g my-2 font-weight-bold ${notAllowedCursor}`}
           type='button'
           title={indestructible ? window.FolioConsole.translations.indestructibleFiles : window.FolioConsole.translations.destroy}
-          onClick={indestructible ? undefined : () => dispatchMassDelete(filesKey)}
+          onClick={indestructible ? undefined : () => dispatchMassDelete(fileType)}
           disabled={indestructible}
         >
           <span className='fa fa-trash' />
@@ -43,7 +43,7 @@ function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, file
         <a
           className='btn btn-secondary d-block mr-2 mr-sm-g my-2 font-weight-bold'
           href={downloadHref(filesUrl, massSelectedIds)}
-          onClick={() => dispatchMassCancel(filesKey)}
+          onClick={() => dispatchMassCancel(fileType)}
           target='_blank'
           rel='noopener noreferrer'
         >
@@ -56,7 +56,7 @@ function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, file
         <button
           className='btn-unbutton px-2 py-1'
           type='button'
-          onClick={() => dispatchMassCancel(filesKey)}
+          onClick={() => dispatchMassCancel(fileType)}
         >
           <span className='fa fa-times' />
         </button>
@@ -65,14 +65,14 @@ function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, file
   )
 }
 
-const mapStateToProps = (state, props) => makeMassSelectedIdsSelector(props.filesKey)(state)
+const mapStateToProps = (state, props) => makeMassSelectedIdsSelector(props.fileType)(state)
 
 function mapDispatchToProps (dispatch) {
   return {
-    dispatchMassCancel: (filesKey) => dispatch(massCancel(filesKey)),
-    dispatchMassDelete: (filesKey) => {
+    dispatchMassCancel: (fileType) => dispatch(massCancel(fileType)),
+    dispatchMassDelete: (fileType) => {
       if (window.confirm(window.FolioConsole.translations.removePrompt)) {
-        dispatch(massDelete(filesKey))
+        dispatch(massDelete(fileType))
       }
     }
   }

@@ -17,17 +17,17 @@ import Wrap from './styled/Wrap'
 class FileFilter extends Component {
   onInputChange = (e) => {
     this.props.dispatch(
-      setFilter(this.props.filesKey, e.target.name, e.target.value)
+      setFilter(this.props.fileType, e.target.name, e.target.value)
     )
   }
 
   onTagsChange = (tags) => {
-    this.props.dispatch(setFilter(this.props.filesKey, 'tags', tags))
+    this.props.dispatch(setFilter(this.props.fileType, 'tags', tags))
   }
 
   onReset = () => {
     this.props.dispatch(
-      resetFilters(this.props.filesKey)
+      resetFilters(this.props.fileType)
     )
   }
 
@@ -115,8 +115,8 @@ class FileFilter extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  filters: makeFiltersSelector(props.filesKey)(state),
-  tags: makeTagsSelector(props.filesKey)(state)
+  filters: makeFiltersSelector(props.fileType)(state),
+  tags: makeTagsSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

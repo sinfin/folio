@@ -17,7 +17,7 @@ import ModalTitleAndUpload from 'components/ModalTitleAndUpload'
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
     if (this.props.selectFile) {
-      this.props.selectFile(this.props.filesKey, file)
+      this.props.selectFile(this.props.fileType, file)
     } else if (window.folioConsoleInsertImage) {
       window.folioConsoleInsertImage(file)
     }
@@ -26,9 +26,9 @@ class SingleSelect extends LazyLoadCheckingComponent {
   renderHeader () {
     return (
       <Fragment>
-        {this.props.inModal && <ModalTitleAndUpload filesKey={this.props.filesKey} />}
-        <FileFilter filesKey={this.props.filesKey} />
-        <UploadTagger filesKey={this.props.filesKey} />
+        {this.props.inModal && <ModalTitleAndUpload fileType={this.props.fileType} />}
+        <FileFilter fileType={this.props.fileType} />
+        <UploadTagger fileType={this.props.fileType} />
       </Fragment>
     )
   }
@@ -41,16 +41,16 @@ class SingleSelect extends LazyLoadCheckingComponent {
         header={this.renderHeader()}
       >
         {this.props.filesStatus.loading ? <Loader standalone /> : (
-          <Uploader filesKey={this.props.filesKey}>
+          <Uploader fileType={this.props.fileType}>
             <FileList
               files={this.props.filesForList}
-              fileTypeIsImage={this.props.filesKey === 'Folio::Image'}
+              fileTypeIsImage={this.props.fileType === 'Folio::Image'}
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.selectFile}
               pagination={this.props.filesPagination}
-              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
-              openFileModal={(file) => this.props.dispatch(openFileModal(this.props.filesKey, file))}
-              filesKey={this.props.filesKey}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
+              openFileModal={(file) => this.props.dispatch(openFileModal(this.props.fileType, file))}
+              fileType={this.props.fileType}
               selecting='single'
               dropzoneTrigger
             />
@@ -62,10 +62,10 @@ class SingleSelect extends LazyLoadCheckingComponent {
 }
 
 const mapStateToProps = (state, props) => ({
-  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
-  filesForList: makeFilesForListSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.fileType)(state),
+  filesForList: makeFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

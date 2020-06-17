@@ -4,7 +4,7 @@ import DropzoneTrigger from './DropzoneTrigger'
 import FileThumbnail from './FileThumbnail'
 
 const FileThumbnailList = ({
-  filesKey,
+  fileType,
   files,
   dropzoneTrigger,
   openFileModal,
@@ -20,7 +20,7 @@ const FileThumbnailList = ({
     {files.map((file) => (
       <FileThumbnail
         key={file.id}
-        filesKey={filesKey}
+        fileType={fileType}
         file={file}
         openFileModal={openFileModal}
         onClick={onClick}

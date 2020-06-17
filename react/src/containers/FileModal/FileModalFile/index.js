@@ -13,7 +13,7 @@ import MainImage from './styled/MainImage'
 import FileEditInput from './styled/FileEditInput'
 
 export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
-  const isImage = fileTypeIsImage(fileModal.filesKey)
+  const isImage = fileTypeIsImage(fileModal.fileType)
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 

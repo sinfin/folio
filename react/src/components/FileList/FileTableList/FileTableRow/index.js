@@ -8,7 +8,7 @@ import FileUploadProgress from 'components/FileUploadProgress'
 
 const FileTableRow = ({
   file,
-  filesKey,
+  fileType,
   openFileModal,
   fileTypeIsImage,
   onClick,
@@ -85,7 +85,7 @@ const FileTableRow = ({
       )}
 
       <div className='f-c-file-table__td text-lg-right'>
-        <Tags file={file} filesKey={filesKey} />
+        <Tags file={file} fileType={fileType} />
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>

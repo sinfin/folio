@@ -28,64 +28,64 @@ const MASS_CANCEL = 'files/MASS_CANCEL'
 
 // Actions
 
-export function getFiles (filesKey, filesUrl, query = '') {
-  return { type: GET_FILES, filesKey, filesUrl, query }
+export function getFiles (fileType, filesUrl, query = '') {
+  return { type: GET_FILES, fileType, filesUrl, query }
 }
 
-export function getFilesSuccess (filesKey, records, pagination) {
-  return { type: GET_FILES_SUCCESS, filesKey, records, pagination }
+export function getFilesSuccess (fileType, records, pagination) {
+  return { type: GET_FILES_SUCCESS, fileType, records, pagination }
 }
 
-export function uploadedFile (filesKey, file) {
-  return { type: UPLOADED_FILE, filesKey, file }
+export function uploadedFile (fileType, file) {
+  return { type: UPLOADED_FILE, fileType, file }
 }
 
-export function thumbnailGenerated (filesKey, temporaryUrl, url) {
-  return { type: THUMBNAIL_GENERATED, filesKey, temporaryUrl, url }
+export function thumbnailGenerated (fileType, temporaryUrl, url) {
+  return { type: THUMBNAIL_GENERATED, fileType, temporaryUrl, url }
 }
 
-export function updatedFiles (filesKey, files) {
-  return { type: UPDATED_FILES, filesKey, files }
+export function updatedFiles (fileType, files) {
+  return { type: UPDATED_FILES, fileType, files }
 }
 
-export function updateFile (filesKey, file, attributes) {
-  return { type: UPDATE_FILE, filesKey, file, attributes }
+export function updateFile (fileType, file, attributes) {
+  return { type: UPDATE_FILE, fileType, file, attributes }
 }
 
-export function deleteFile (filesKey, file) {
-  return { type: DELETE_FILE, filesKey, file }
+export function deleteFile (fileType, file) {
+  return { type: DELETE_FILE, fileType, file }
 }
 
-export function deleteFileFailure (filesKey, file) {
-  return { type: DELETE_FILE_FAILURE, filesKey, file }
+export function deleteFileFailure (fileType, file) {
+  return { type: DELETE_FILE_FAILURE, fileType, file }
 }
 
-export function removedFiles (filesKey, ids) {
-  return { type: REMOVED_FILES, filesKey, ids }
+export function removedFiles (fileType, ids) {
+  return { type: REMOVED_FILES, fileType, ids }
 }
 
-export function updateFileSuccess (filesKey, file, response) {
-  return { type: UPDATE_FILE_SUCCESS, filesKey, file, response }
+export function updateFileSuccess (fileType, file, response) {
+  return { type: UPDATE_FILE_SUCCESS, fileType, file, response }
 }
 
-export function updateFileFailure (filesKey, file) {
-  return { type: UPDATE_FILE_FAILURE, filesKey, file }
+export function updateFileFailure (fileType, file) {
+  return { type: UPDATE_FILE_FAILURE, fileType, file }
 }
 
-export function changeFilesPage (filesKey, page) {
-  return { type: CHANGE_FILES_PAGE, filesKey, page }
+export function changeFilesPage (fileType, page) {
+  return { type: CHANGE_FILES_PAGE, fileType, page }
 }
 
-export function massSelect (filesKey, file, select) {
-  return { type: MASS_SELECT, filesKey, file, select }
+export function massSelect (fileType, file, select) {
+  return { type: MASS_SELECT, fileType, file, select }
 }
 
-export function massDelete (filesKey) {
-  return { type: MASS_DELETE, filesKey }
+export function massDelete (fileType) {
+  return { type: MASS_DELETE, fileType }
 }
 
-export function massCancel (filesKey) {
-  return { type: MASS_CANCEL, filesKey }
+export function massCancel (fileType) {
+  return { type: MASS_CANCEL, fileType }
 }
 
 // Sagas
@@ -94,7 +94,7 @@ function * getFilesPerform (action) {
   try {
     const filesUrl = `${action.filesUrl}?${action.query}`
     const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(action.filesKey, records.data, records.meta))
+    yield put(getFilesSuccess(action.fileType, records.data, records.meta))
   } catch (e) {
     flashError(e.message)
   }
@@ -117,10 +117,10 @@ function * updateFilePerform (action) {
       }
     }
     const response = yield call(apiPut, fullUrl, data)
-    yield put(updateFileSuccess(action.filesKey, action.file, response.data))
+    yield put(updateFileSuccess(action.fileType, action.file, response.data))
   } catch (e) {
     flashError(e.message)
-    yield put(updateFileFailure(action.filesKey, action.file))
+    yield put(updateFileFailure(action.fileType, action.file))
   }
 }
 
@@ -130,12 +130,12 @@ function * updateFileSaga () {
 
 function * changeFilesPagePerform (action) {
   try {
-    const filtersQuery = yield select(makeFiltersQuerySelector(action.filesKey))
+    const filtersQuery = yield select(makeFiltersQuerySelector(action.fileType))
     let query = `page=${action.page}`
     if (filtersQuery) {
       query = `${query}&${filtersQuery}`
     }
-    yield put(getFiles(action.filesKey, query))
+    yield put(getFiles(action.fileType, query))
   } catch (e) {
     flashError(e.message)
   }
@@ -147,7 +147,7 @@ function * changeFilesPageSaga () {
 
 function * massDeletePerform (action) {
   try {
-    const { massSelectedIds } = yield select(makeMassSelectedIdsSelector(action.filesKey))
+    const { massSelectedIds } = yield select(makeMassSelectedIdsSelector(action.fileType))
     const filesUrl = yield select(filesUrlSelector)
     const fullUrl = `${filesUrl}/mass_destroy?ids=${massSelectedIds.join(',')}`
     const res = yield call(apiDelete, fullUrl)
@@ -155,8 +155,8 @@ function * massDeletePerform (action) {
       flashError(res.error)
     } else {
       flashSuccess(res.data.message)
-      yield put(removedFiles(action.filesKey, massSelectedIds))
-      yield put(massCancel(action.filesKey))
+      yield put(removedFiles(action.fileType, massSelectedIds))
+      yield put(massCancel(action.fileType))
     }
   } catch (e) {
     flashError(e.message)
@@ -169,11 +169,11 @@ function * massDeleteSaga () {
 
 function * deleteFilePerform (action) {
   try {
-    const res = yield call(apiDelete, `/console/api/${action.filesKey}/${action.file.id}`)
+    const res = yield call(apiDelete, `/console/api/${action.fileType}/${action.file.id}`)
     if (res.error) {
       flashError(res.error)
     } else {
-      yield put(removedFiles(action.filesKey, [action.file.id]))
+      yield put(removedFiles(action.fileType, [action.file.id]))
     }
   } catch (e) {
     flashError(e.message)
@@ -194,28 +194,28 @@ export const filesSagas = [
 
 // Selectors
 
-export const makeFilesStatusSelector = (filesKey) => (state) => {
+export const makeFilesStatusSelector = (fileType) => (state) => {
   return {
-    loading: state.files[filesKey] && state.files[filesKey].loading,
-    loaded: state.files[filesKey] && state.files[filesKey].loaded,
-    massSelecting: state.files[filesKey].massSelectedIds.length > 0
+    loading: state.files[fileType] && state.files[fileType].loading,
+    loaded: state.files[fileType] && state.files[fileType].loaded,
+    massSelecting: state.files[fileType].massSelectedIds.length > 0
   }
 }
 
-export const makeFilesLoadedSelector = (filesKey) => (state) => {
-  return state.files[filesKey] && state.files[filesKey].loaded
+export const makeFilesLoadedSelector = (fileType) => (state) => {
+  return state.files[fileType] && state.files[fileType].loaded
 }
 
-export const makeMassSelectedIdsSelector = (filesKey) => (state) => {
+export const makeMassSelectedIdsSelector = (fileType) => (state) => {
   return {
-    massSelectedIds: state.files[filesKey].massSelectedIds,
-    massSelectedIndestructibleIds: state.files[filesKey].massSelectedIndestructibleIds
+    massSelectedIds: state.files[fileType].massSelectedIds,
+    massSelectedIndestructibleIds: state.files[fileType].massSelectedIndestructibleIds
   }
 }
 
-export const makeFilesSelector = (filesKey) => (state) => {
-  const selected = state.files[filesKey].massSelectedIds
-  return state.files[filesKey].records.map((file) => {
+export const makeFilesSelector = (fileType) => (state) => {
+  const selected = state.files[fileType].massSelectedIds
+  return state.files[fileType].records.map((file) => {
     if (file.id && selected.indexOf(file.id) !== -1) {
       return { ...file, massSelected: true }
     } else {
@@ -224,12 +224,12 @@ export const makeFilesSelector = (filesKey) => (state) => {
   })
 }
 
-export const makeFilesForListSelector = (filesKey) => (state) => {
-  const uploads = makeUploadsSelector(filesKey)(state)
+export const makeFilesForListSelector = (fileType) => (state) => {
+  const uploads = makeUploadsSelector(fileType)(state)
   let files
 
   if (uploads.uploadedIds.length) {
-    files = makeFilesSelector(filesKey)(state).map((file) => {
+    files = makeFilesSelector(fileType)(state).map((file) => {
       if (uploads.uploadedIds.indexOf(file.id) === -1) {
         return file
       } else {
@@ -237,7 +237,7 @@ export const makeFilesForListSelector = (filesKey) => (state) => {
       }
     })
   } else {
-    files = makeFilesSelector(filesKey)(state)
+    files = makeFilesSelector(fileType)(state)
   }
 
   return [
@@ -246,20 +246,20 @@ export const makeFilesForListSelector = (filesKey) => (state) => {
   ]
 }
 
-export const makeRawUnselectedFilesForListSelector = (filesKey, selectedIds) => (state) => {
-  const all = makeFilesForListSelector(filesKey)(state)
+export const makeRawUnselectedFilesForListSelector = (fileType, selectedIds) => (state) => {
+  const all = makeFilesForListSelector(fileType)(state)
   return filter(all, (file) => selectedIds.indexOf(String(file.id)) === -1)
 }
 
-export const makeUnselectedFilesForListSelector = (filesKey) => (state) => {
-  const all = makeFilesForListSelector(filesKey)(state)
-  const selectedIds = makeSelectedFileIdsSelector(filesKey)(state)
+export const makeUnselectedFilesForListSelector = (fileType) => (state) => {
+  const all = makeFilesForListSelector(fileType)(state)
+  const selectedIds = makeSelectedFileIdsSelector(fileType)(state)
 
   return filter(all, (file) => selectedIds.indexOf(String(file.id)) === -1)
 }
 
-export const makeFilesPaginationSelector = (filesKey) => (state) => {
-  return state.files[filesKey].pagination
+export const makeFilesPaginationSelector = (fileType) => (state) => {
+  return state.files[fileType].pagination
 }
 
 // State
@@ -283,16 +283,16 @@ const initialState = {}
 function filesReducer (rawState = initialState, action) {
   const state = rawState
 
-  if (action.filesKey && !state[action.filesKey]) {
-    state[action.filesKey] = { ...defaultFilesKeyState }
+  if (action.fileType && !state[action.fileType]) {
+    state[action.fileType] = { ...defaultFilesKeyState }
   }
 
   switch (action.type) {
     case GET_FILES:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           loading: true
         }
       }
@@ -300,8 +300,8 @@ function filesReducer (rawState = initialState, action) {
     case GET_FILES_SUCCESS:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           records: action.records,
           loading: false,
           loaded: true,
@@ -312,18 +312,18 @@ function filesReducer (rawState = initialState, action) {
     case UPLOADED_FILE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: [action.file, ...state[action.filesKey].records]
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: [action.file, ...state[action.fileType].records]
         }
       }
 
     case THUMBNAIL_GENERATED: {
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             if (record.attributes.thumb !== action.temporaryUrl) return record
             return {
               ...record,
@@ -340,9 +340,9 @@ function filesReducer (rawState = initialState, action) {
     case UPDATE_FILE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             if (record.id === action.file.id) {
               return {
                 ...record,
@@ -362,9 +362,9 @@ function filesReducer (rawState = initialState, action) {
     case UPDATE_FILE_SUCCESS:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             if (record.id === action.response.id) {
               return action.response
             } else {
@@ -377,9 +377,9 @@ function filesReducer (rawState = initialState, action) {
     case UPDATE_FILE_FAILURE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             if (record.id === action.file.id) {
               return { ...action.file }
             } else {
@@ -392,9 +392,9 @@ function filesReducer (rawState = initialState, action) {
     case UPDATED_FILES:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             const found = find(action.files, { id: record.id })
             return found || record
           })
@@ -404,8 +404,8 @@ function filesReducer (rawState = initialState, action) {
     case MASS_SELECT: {
       if (!action.file.id) return state
 
-      let massSelectedIds = state[action.filesKey].massSelectedIds
-      let massSelectedIndestructibleIds = state[action.filesKey].massSelectedIndestructibleIds
+      let massSelectedIds = state[action.fileType].massSelectedIds
+      let massSelectedIndestructibleIds = state[action.fileType].massSelectedIndestructibleIds
 
       if (action.select) {
         massSelectedIds = [...massSelectedIds, action.file.id]
@@ -423,8 +423,8 @@ function filesReducer (rawState = initialState, action) {
 
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           massSelectedIds,
           massSelectedIndestructibleIds
         }
@@ -434,24 +434,24 @@ function filesReducer (rawState = initialState, action) {
     case MASS_CANCEL:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           massSelectedIds: []
         }
       }
 
     case REMOVED_FILES: {
-      const originalLength = state[action.filesKey].records.length
-      const records = state[action.filesKey].records.filter((record) => action.ids.indexOf(record.id) === -1)
+      const originalLength = state[action.fileType].records.length
+      const records = state[action.fileType].records.filter((record) => action.ids.indexOf(record.id) === -1)
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           records,
           pagination: {
-            ...state[action.filesKey].pagination,
+            ...state[action.fileType].pagination,
             to: records.length,
-            count: state[action.filesKey].pagination.count - (originalLength - records.length)
+            count: state[action.fileType].pagination.count - (originalLength - records.length)
           }
         }
       }
@@ -460,9 +460,9 @@ function filesReducer (rawState = initialState, action) {
     case DELETE_FILE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             if (record.id === action.file.id) {
               return {
                 ...record,
@@ -478,9 +478,9 @@ function filesReducer (rawState = initialState, action) {
     case DELETE_FILE_FAILURE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: state[action.filesKey].records.map((record) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: state[action.fileType].records.map((record) => {
             if (record.id === action.file.id) {
               return { ...action.file }
             } else {

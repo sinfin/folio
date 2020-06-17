@@ -25,22 +25,22 @@ import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
   openFileModal = (file) => {
-    this.props.dispatch(openFileModal(this.props.filesKey, file))
+    this.props.dispatch(openFileModal(this.props.fileType, file))
   }
 
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
-    const fileTypeIsImageResult = fileTypeIsImage(this.props.filesKey)
+    const fileTypeIsImageResult = fileTypeIsImage(this.props.fileType)
 
     return (
       <div className='mt-n3'>
-        <Uploader filesKey={this.props.filesKey}>
+        <Uploader fileType={this.props.fileType}>
           <Card
-            filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImageResult} />}
+            filters={<FileFilter fileType={this.props.fileType} fileTypeIsImage={fileTypeIsImageResult} />}
           >
-            <UploadTagger filesKey={this.props.filesKey} />
+            <UploadTagger fileType={this.props.fileType} />
 
-            <FileMassActions filesKey={this.props.filesKey} filesUrl={this.props.filesUrl} />
+            <FileMassActions fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
 
             {this.props.filesStatus.loading ? <Loader standalone /> : (
               <FileList
@@ -48,10 +48,10 @@ class IndexMode extends LazyLoadCheckingComponent {
                 fileTypeIsImage={fileTypeIsImageResult}
                 displayAsThumbs={this.props.displayAsThumbs}
                 pagination={this.props.filesPagination}
-                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
-                massSelect={(file, select) => this.props.dispatch(massSelect(this.props.filesKey, file, select))}
+                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
+                massSelect={(file, select) => this.props.dispatch(massSelect(this.props.fileType, file, select))}
                 massSelectVisible={this.props.filesStatus.massSelecting}
-                filesKey={this.props.filesKey}
+                fileType={this.props.fileType}
                 openFileModal={this.openFileModal}
                 openFileModalOnClick
                 dropzoneTrigger
@@ -65,10 +65,10 @@ class IndexMode extends LazyLoadCheckingComponent {
 }
 
 const mapStateToProps = (state, props) => ({
-  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
-  filesForList: makeFilesForListSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.fileType)(state),
+  filesForList: makeFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -127,7 +127,7 @@ class ModalMultiSelect extends ModalSelect {
       })
     })
 
-    this.props.dispatch(setOriginalPlacements(this.props.filesKey, placements))
+    this.props.dispatch(setOriginalPlacements(this.props.fileType, placements))
   }
 
   renderHeader () {
@@ -154,14 +154,14 @@ class ModalMultiSelect extends ModalSelect {
         header={this.renderHeader()}
         footer={this.renderFooter()}
       >
-        <MultiSelect filesKey={this.props.filesKey} inModal />
+        <MultiSelect fileType={this.props.fileType} inModal />
       </ModalScroll>
     )
   }
 }
 
 const mapStateToProps = (state, props) => ({
-  filePlacements: makeFilePlacementsSelector(props.filesKey)(state)
+  filePlacements: makeFilePlacementsSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

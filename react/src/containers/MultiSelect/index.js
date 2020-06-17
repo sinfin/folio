@@ -23,41 +23,41 @@ import MultiSelectComponent from 'components/MultiSelectComponent'
 
 class MultiSelect extends React.PureComponent {
   selectFile = (file) => {
-    this.props.dispatch(selectFile(this.props.filesKey, file))
+    this.props.dispatch(selectFile(this.props.fileType, file))
   }
 
-  unselectFilePlacement = (filesKey, filePlacement) => {
-    this.props.dispatch(unselectFilePlacement(filesKey, filePlacement))
+  unselectFilePlacement = (fileType, filePlacement) => {
+    this.props.dispatch(unselectFilePlacement(fileType, filePlacement))
   }
 
   onSortEnd = ({ oldIndex, newIndex }) => {
-    this.props.dispatch(onSortEnd(this.props.filesKey, oldIndex, newIndex))
+    this.props.dispatch(onSortEnd(this.props.fileType, oldIndex, newIndex))
   }
 
   onTitleChange = (filePlacement, title) => {
-    this.props.dispatch(changeTitle(this.props.filesKey, filePlacement, title))
+    this.props.dispatch(changeTitle(this.props.fileType, filePlacement, title))
   }
 
   onAltChange = (filePlacement, alt) => {
-    this.props.dispatch(changeAlt(this.props.filesKey, filePlacement, alt))
+    this.props.dispatch(changeAlt(this.props.fileType, filePlacement, alt))
   }
 
   getFiles = () => {
-    this.props.dispatch(getFiles(this.props.filesKey))
+    this.props.dispatch(getFiles(this.props.fileType))
   }
 
   changeFilesPage = (page) => {
-    this.props.dispatch(changeFilesPage(this.props.filesKey, page))
+    this.props.dispatch(changeFilesPage(this.props.fileType, page))
   }
 
   openFileModal = (file) => {
-    this.props.dispatch(openFileModal(this.props.filesKey, file))
+    this.props.dispatch(openFileModal(this.props.fileType, file))
   }
 
   render () {
     return (
       <MultiSelectComponent
-        filesKey={this.props.filesKey}
+        fileType={this.props.fileType}
         filesStatus={this.props.filesStatus}
         getFiles={this.getFiles}
         filePlacements={this.props.filePlacements}
@@ -78,11 +78,11 @@ class MultiSelect extends React.PureComponent {
 }
 
 const mapStateToProps = (state, props) => ({
-  filePlacements: makeFilePlacementsSelector(props.filesKey)(state),
-  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
-  unselectedFilesForList: makeUnselectedFilesForListSelector(props.filesKey)(state),
+  filePlacements: makeFilePlacementsSelector(props.fileType)(state),
+  filesStatus: makeFilesStatusSelector(props.fileType)(state),
+  unselectedFilesForList: makeUnselectedFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

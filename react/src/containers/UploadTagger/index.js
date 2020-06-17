@@ -23,7 +23,7 @@ class UploadTagger extends React.PureComponent {
   }
 
   setUploadTags = () => {
-    this.props.dispatch(setUploadTags(this.props.filesKey, this.state.tags))
+    this.props.dispatch(setUploadTags(this.props.fileType, this.state.tags))
   }
 
   render () {
@@ -51,8 +51,8 @@ class UploadTagger extends React.PureComponent {
 }
 
 const mapStateToProps = (state, props) => ({
-  uploads: makeUploadsSelector(props.filesKey)(state),
-  tags: makeTagsSelector(props.filesKey)(state)
+  uploads: makeUploadsSelector(props.fileType)(state),
+  tags: makeTagsSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

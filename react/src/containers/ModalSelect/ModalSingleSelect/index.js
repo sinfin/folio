@@ -56,7 +56,7 @@ class ModalSingleSelect extends ModalSelect {
     }
   }
 
-  selectFile = (filesKey, file) => {
+  selectFile = (fileType, file) => {
     const $ = window.jQuery
     if (!$) return
 
@@ -103,7 +103,7 @@ class ModalSingleSelect extends ModalSelect {
     return (
       <SingleSelect
         selectFile={this.selectFile}
-        filesKey={this.props.filesKey}
+        fileType={this.props.fileType}
         inModal
       />
     )

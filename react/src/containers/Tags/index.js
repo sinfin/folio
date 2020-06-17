@@ -25,7 +25,7 @@ class Tags extends React.Component {
       tags = without(this.props.filters.tags, tag)
     }
 
-    this.props.dispatch(setFilter(this.props.filesKey, 'tags', tags))
+    this.props.dispatch(setFilter(this.props.fileType, 'tags', tags))
   }
 
   render () {
@@ -49,7 +49,7 @@ class Tags extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  filters: makeFiltersSelector(props.filesKey)(state)
+  filters: makeFiltersSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

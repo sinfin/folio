@@ -17,48 +17,48 @@ const CHANGE_ALT = 'filePlacements/CHANGE_ALT'
 
 // Actions
 
-export function setOriginalPlacements (filesKey, original) {
-  return { type: SET_ORIGINAL_PLACEMENTS, filesKey, original }
+export function setOriginalPlacements (fileType, original) {
+  return { type: SET_ORIGINAL_PLACEMENTS, fileType, original }
 }
 
-export function setAttachmentable (filesKey, attachmentable) {
-  return { type: SET_ATTACHMENTABLE, filesKey, attachmentable }
+export function setAttachmentable (fileType, attachmentable) {
+  return { type: SET_ATTACHMENTABLE, fileType, attachmentable }
 }
 
-export function selectFile (filesKey, file) {
-  return { type: SELECT_FILE, filesKey, file }
+export function selectFile (fileType, file) {
+  return { type: SELECT_FILE, fileType, file }
 }
 
-export function unselectFilePlacement (filesKey, filePlacement) {
-  return { type: UNSELECT_FILE_PLACEMENT, filesKey, filePlacement }
+export function unselectFilePlacement (fileType, filePlacement) {
+  return { type: UNSELECT_FILE_PLACEMENT, fileType, filePlacement }
 }
 
-export function onSortEnd (filesKey, oldIndex, newIndex) {
-  return { type: ON_SORT_END, filesKey, oldIndex, newIndex }
+export function onSortEnd (fileType, oldIndex, newIndex) {
+  return { type: ON_SORT_END, fileType, oldIndex, newIndex }
 }
 
-export function setPlacementType (filesKey, placementType) {
-  return { type: SET_PLACEMENT_TYPE, filesKey, placementType }
+export function setPlacementType (fileType, placementType) {
+  return { type: SET_PLACEMENT_TYPE, fileType, placementType }
 }
 
-export function changeTitle (filesKey, filePlacement, title) {
-  return { type: CHANGE_TITLE, filesKey, filePlacement, title }
+export function changeTitle (fileType, filePlacement, title) {
+  return { type: CHANGE_TITLE, fileType, filePlacement, title }
 }
 
-export function changeAlt (filesKey, filePlacement, alt) {
-  return { type: CHANGE_ALT, filesKey, filePlacement, alt }
+export function changeAlt (fileType, filePlacement, alt) {
+  return { type: CHANGE_ALT, fileType, filePlacement, alt }
 }
 
 // Selectors
 
-export const makeSelectedFileIdsSelector = (filesKey) => (state) => {
-  const base = state.filePlacements[filesKey]
+export const makeSelectedFileIdsSelector = (fileType) => (state) => {
+  const base = state.filePlacements[fileType]
   return base.selected.map((filePlacement) => String(filePlacement.file_id))
 }
 
-export const makeFilePlacementsSelector = (filesKey) => (state) => {
-  const base = state.filePlacements[filesKey]
-  const files = makeFilesSelector(filesKey)(state)
+export const makeFilePlacementsSelector = (fileType) => (state) => {
+  const base = state.filePlacements[fileType]
+  const files = makeFilesSelector(fileType)(state)
   const selectedIds = []
 
   const selected = base.selected.map((filePlacement) => {
@@ -127,8 +127,8 @@ function filePlacementsReducer (state = initialState, action) {
     case SET_ORIGINAL_PLACEMENTS:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           original: action.original,
           selected: action.original
         }
@@ -137,8 +137,8 @@ function filePlacementsReducer (state = initialState, action) {
     case SET_ATTACHMENTABLE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           attachmentable: action.attachmentable
         }
       }
@@ -146,10 +146,10 @@ function filePlacementsReducer (state = initialState, action) {
     case SELECT_FILE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           selected: [
-            ...state[action.filesKey].selected,
+            ...state[action.fileType].selected,
             {
               id: null,
               file_id: action.file.id,
@@ -163,9 +163,9 @@ function filePlacementsReducer (state = initialState, action) {
     case UNSELECT_FILE_PLACEMENT:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          selected: state[action.filesKey].selected.filter((filePlacement) => (
+        [action.fileType]: {
+          ...state[action.fileType],
+          selected: state[action.fileType].selected.filter((filePlacement) => (
             filePlacement.file_id !== action.filePlacement.file_id
           ))
         }
@@ -174,17 +174,17 @@ function filePlacementsReducer (state = initialState, action) {
     case ON_SORT_END:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          selected: arrayMove(state[action.filesKey].selected, action.oldIndex, action.newIndex)
+        [action.fileType]: {
+          ...state[action.fileType],
+          selected: arrayMove(state[action.fileType].selected, action.oldIndex, action.newIndex)
         }
       }
 
     case SET_PLACEMENT_TYPE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           placementType: action.placementType
         }
       }
@@ -192,9 +192,9 @@ function filePlacementsReducer (state = initialState, action) {
     case CHANGE_TITLE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          selected: state[action.filesKey].selected.map((filePlacement) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          selected: state[action.fileType].selected.map((filePlacement) => {
             if (filePlacement.file_id === action.filePlacement.file_id) {
               return {
                 ...filePlacement,
@@ -210,9 +210,9 @@ function filePlacementsReducer (state = initialState, action) {
     case CHANGE_ALT:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          selected: state[action.filesKey].selected.map((filePlacement) => {
+        [action.fileType]: {
+          ...state[action.fileType],
+          selected: state[action.fileType].selected.map((filePlacement) => {
             if (filePlacement.file_id === action.filePlacement.file_id) {
               return {
                 ...filePlacement,

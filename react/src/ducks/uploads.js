@@ -23,36 +23,36 @@ const idFromFile = (file) => {
 
 // Actions
 
-export function addedFile (filesKey, file) {
-  return { type: ADDED_FILE, filesKey, file }
+export function addedFile (fileType, file) {
+  return { type: ADDED_FILE, fileType, file }
 }
 
-export function thumbnail (filesKey, file, dataUrl) {
-  return { type: THUMBNAIL, filesKey, file, dataUrl }
+export function thumbnail (fileType, file, dataUrl) {
+  return { type: THUMBNAIL, fileType, file, dataUrl }
 }
 
-export function success (filesKey, file, response) {
-  return { type: SUCCESS, filesKey, file, response }
+export function success (fileType, file, response) {
+  return { type: SUCCESS, fileType, file, response }
 }
 
-export function finishedUpload (filesKey, file, uploadedFileId) {
-  return { type: FINISHED_UPLOAD, filesKey, file, uploadedFileId }
+export function finishedUpload (fileType, file, uploadedFileId) {
+  return { type: FINISHED_UPLOAD, fileType, file, uploadedFileId }
 }
 
-export function error (filesKey, file, error) {
-  return { type: ERROR, filesKey, file, error }
+export function error (fileType, file, error) {
+  return { type: ERROR, fileType, file, error }
 }
 
-export function progress (filesKey, file, percentage) {
-  return { type: PROGRESS, filesKey, file, percentage }
+export function progress (fileType, file, percentage) {
+  return { type: PROGRESS, fileType, file, percentage }
 }
 
-export function setUploadTags (filesKey, tags) {
-  return { type: SET_UPLOAD_TAGS, filesKey, tags }
+export function setUploadTags (fileType, tags) {
+  return { type: SET_UPLOAD_TAGS, fileType, tags }
 }
 
-export function clearUploadedIds (filesKey, ids) {
-  return { type: CLEAR_UPLOADED_IDS, filesKey, ids }
+export function clearUploadedIds (fileType, ids) {
+  return { type: CLEAR_UPLOADED_IDS, fileType, ids }
 }
 
 // Sagas
@@ -67,10 +67,10 @@ function * uploadsErrorSaga () {
 
 function * uploadedFilePerform (action) {
   const id = idFromFile(action.file)
-  const upload = yield select(makeUploadSelector(action.filesKey)(id))
+  const upload = yield select(makeUploadSelector(action.fileType)(id))
   const data = action.response.data
-  yield put(finishedUpload(action.filesKey, action.file, data.id))
-  yield put(uploadedFile(action.filesKey, {
+  yield put(finishedUpload(action.fileType, action.file, data.id))
+  yield put(uploadedFile(action.fileType, {
     ...data,
     attributes: {
       ...data.attributes,
@@ -84,13 +84,13 @@ function * uploadedFileSaga () {
 }
 
 function * setUploadTagsPerform (action) {
-  const { uploadedIds, uploadTags } = yield select(makeUploadsSelector(action.filesKey))
+  const { uploadedIds, uploadTags } = yield select(makeUploadsSelector(action.fileType))
   if (uploadedIds.length) {
     const fileType = yield select(fileTypeSelector)
     const url = fileType === 'Folio::Document' ? '/console/api/documents/tag' : '/console/api/images/tag'
     const response = yield call(apiPost, url, { file_ids: uploadedIds, tags: uploadTags })
-    yield put(updatedFiles(action.filesKey, response.data))
-    yield put(clearUploadedIds(action.filesKey, uploadedIds))
+    yield put(updatedFiles(action.fileType, response.data))
+    yield put(clearUploadedIds(action.fileType, uploadedIds))
   }
 }
 
@@ -106,12 +106,12 @@ export const uploadsSagas = [
 
 // Selectors
 
-export const makeUploadsSelector = (filesKey) => (state) => {
-  return state.uploads[filesKey]
+export const makeUploadsSelector = (fileType) => (state) => {
+  return state.uploads[fileType]
 }
 
-export const makeUploadSelector = (filesKey) => (id) => (state) => {
-  return state.uploads[filesKey].records[id]
+export const makeUploadSelector = (fileType) => (id) => (state) => {
+  return state.uploads[fileType].records[id]
 }
 
 // State
@@ -133,8 +133,8 @@ const initialState = {}
 function uploadsReducer (rawState = initialState, action) {
   const state = rawState
 
-  if (action.filesKey && !state[action.filesKey]) {
-    state[action.filesKey] = { ...defaultFilesKeyState }
+  if (action.fileType && !state[action.fileType]) {
+    state[action.fileType] = { ...defaultFilesKeyState }
   }
 
   const id = action.file ? idFromFile(action.file) : null
@@ -143,10 +143,10 @@ function uploadsReducer (rawState = initialState, action) {
     case ADDED_FILE:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           records: {
-            ...state[action.filesKey].records,
+            ...state[action.fileType].records,
             [id]: {
               id,
               attributes: {
@@ -164,18 +164,18 @@ function uploadsReducer (rawState = initialState, action) {
       }
 
     case THUMBNAIL: {
-      if (!state[action.filesKey].records[id]) return state
+      if (!state[action.fileType].records[id]) return state
 
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           records: {
-            ...state[action.filesKey].records,
+            ...state[action.fileType].records,
             [id]: {
-              ...state[action.filesKey].records[id],
+              ...state[action.fileType].records[id],
               attributes: {
-                ...state[action.filesKey].records[id].attributes,
+                ...state[action.fileType].records[id].attributes,
                 thumb: action.dataUrl
               }
             }
@@ -187,14 +187,14 @@ function uploadsReducer (rawState = initialState, action) {
     case PROGRESS:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           records: {
-            ...state[action.filesKey].records,
+            ...state[action.fileType].records,
             [id]: {
-              ...state[action.filesKey].records[id],
+              ...state[action.fileType].records[id],
               attributes: {
-                ...state[action.filesKey].records[id].attributes,
+                ...state[action.fileType].records[id].attributes,
                 progress: action.percentage
               }
             }
@@ -205,28 +205,28 @@ function uploadsReducer (rawState = initialState, action) {
     case FINISHED_UPLOAD:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           showTagger: true,
-          records: omit(state[action.filesKey].records, [id]),
-          uploadedIds: [...state[action.filesKey].uploadedIds, action.uploadedFileId]
+          records: omit(state[action.fileType].records, [id]),
+          uploadedIds: [...state[action.fileType].uploadedIds, action.uploadedFileId]
         }
       }
 
     case ERROR:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          records: omit(state[action.filesKey].records, [id])
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: omit(state[action.fileType].records, [id])
         }
       }
 
     case SET_UPLOAD_TAGS:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
+        [action.fileType]: {
+          ...state[action.fileType],
           uploadTags: action.tags,
           showTagger: false
         }
@@ -235,9 +235,9 @@ function uploadsReducer (rawState = initialState, action) {
     case CLEAR_UPLOADED_IDS:
       return {
         ...state,
-        [action.filesKey]: {
-          ...state[action.filesKey],
-          uploadedIds: without(state[action.filesKey].uploadedIds, ...action.ids)
+        [action.fileType]: {
+          ...state[action.fileType],
+          uploadedIds: without(state[action.fileType].uploadedIds, ...action.ids)
         }
       }
 
