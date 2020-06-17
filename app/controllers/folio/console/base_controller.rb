@@ -7,7 +7,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
 
-  before_action :authenticate_account!
+  before_action :custom_authenticate_account!
+
   before_action :add_root_breadcrumb
   before_action do
     I18n.locale = Rails.application.config.folio_console_locale
@@ -216,5 +217,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
         end
       end
     rescue NoMethodError
+    end
+
+    def custom_authenticate_account!
+      authenticate_account!
     end
 end
