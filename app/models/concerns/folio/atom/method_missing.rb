@@ -108,9 +108,9 @@ module Folio::Atom::MethodMissing
         if is_bool
           val.present?
         elsif klass::STRUCTURE[name_without_operator] == :date
-          val ? Date.parse(val) : val
+          val.present? ? Date.parse(val) : val
         elsif klass::STRUCTURE[name_without_operator] == :datetime
-          val ? DateTime.parse(val) : val
+          val.present? ? DateTime.parse(val) : val
         else
           val
         end
