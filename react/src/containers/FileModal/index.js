@@ -80,14 +80,14 @@ class Modal extends Component {
   }
 
   render () {
-    const { fileModal, tags } = this.props
+    const { fileModal, tags, readOnly } = this.props
     const isOpen = fileModal.file !== null
 
     return (
       <ReactModal
         isOpen={isOpen}
         onRequestClose={this.closeFileModal}
-        className='ReactModal'
+        className='ReactModal ReactModal--FileModal'
       >
         {fileModal.file && (
           <FileModalFile
@@ -101,6 +101,7 @@ class Modal extends Component {
             onValueChange={this.onValueChange}
             tags={tags}
             formState={this.state}
+            readOnly={readOnly}
           />
         )}
       </ReactModal>

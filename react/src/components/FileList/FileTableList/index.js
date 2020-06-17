@@ -66,6 +66,7 @@ class FileTableList extends React.Component {
                 fileTypeIsImage={fileTypeIsImage}
                 onClick={onClick}
                 massSelect={this.state.enabledMassSelect && massSelect}
+                readOnly={this.props.readOnly}
               />
             ))}
           </div>

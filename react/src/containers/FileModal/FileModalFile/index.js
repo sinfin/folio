@@ -8,11 +8,12 @@ import fileTypeIsImage from 'utils/fileTypeIsImage'
 import TagsInput from 'components/TagsInput'
 import ThumbnailSizes from 'components/ThumbnailSizes'
 import FileUsage from 'components/FileUsage'
+import PrettyTags from 'components/PrettyTags'
 
 import MainImage from './styled/MainImage'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags, readOnly }) => {
   const isImage = fileTypeIsImage(fileModal.fileType)
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
@@ -58,31 +59,39 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 <span className='d-none d-sm-inline'>{window.FolioConsole.translations.downloadOriginal}</span>
               </a>
 
-              <div className='btn btn-secondary mr-2 mb-2 position-relative overflow-hidden'>
-                <span className='fa fa-edit mr-0 mr-sm-2' />
-                <span className='d-none d-sm-inline'>{window.FolioConsole.translations.replace}</span>
+              {!readOnly && (
+                <div className='btn btn-secondary mr-2 mb-2 position-relative overflow-hidden'>
+                  <span className='fa fa-edit mr-0 mr-sm-2' />
+                  <span className='d-none d-sm-inline'>{window.FolioConsole.translations.replace}</span>
 
-                <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
-              </div>
+                  <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
+                </div>
+              )}
 
-              <button
-                className={`btn btn-danger mb-2 ${notAllowedCursor}`}
-                type='button'
-                onClick={onDeleteClick}
-                disabled={indestructible}
-                title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
-              >
-                <span className='fa fa-trash-alt mr-0 mr-sm-2' />
-                <span className='d-none d-sm-inline font-weight-bold'>{window.FolioConsole.translations.destroy}</span>
-              </button>
+              {!readOnly && (
+                <button
+                  className={`btn btn-danger mb-2 ${notAllowedCursor}`}
+                  type='button'
+                  onClick={onDeleteClick}
+                  disabled={indestructible}
+                  title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
+                >
+                  <span className='fa fa-trash-alt mr-0 mr-sm-2' />
+                  <span className='d-none d-sm-inline font-weight-bold'>{window.FolioConsole.translations.destroy}</span>
+                </button>
+              )}
             </div>
 
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>
-              <Input
-                value={formState.author || ''}
-                onChange={(e) => onValueChange('author', e.currentTarget.value)}
-              />
+              {readOnly ? (
+                formState.author ? <p className='m-0'>{formState.author}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+              ) : (
+                <Input
+                  value={formState.author || ''}
+                  onChange={(e) => onValueChange('author', e.currentTarget.value)}
+                />
+              )}
             </FormGroup>
 
             <div className='form-group string optional file_tag_list'>
@@ -90,34 +99,50 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 {window.FolioConsole.translations.tagsLabel}
               </label>
 
-              <TagsInput
-                value={formState.tags}
-                options={tags}
-                onTagsChange={onTagsChange}
-                submit={saveModal}
-              />
+              {readOnly ? (
+                formState.tags.length ? (
+                  <PrettyTags tags={formState.tags} />
+                ) : (
+                  <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                )
+              ) : (
+                <React.Fragment>
+                  <TagsInput
+                    value={formState.tags}
+                    options={tags}
+                    onTagsChange={onTagsChange}
+                    submit={saveModal}
+                  />
 
-              <small className='form-text'>
-                {window.FolioConsole.translations.tagsHint}
-              </small>
+                  <small className='form-text'>
+                    {window.FolioConsole.translations.tagsHint}
+                  </small>
+                </React.Fragment>
+              )}
             </div>
 
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileDescription}</Label>
-              <TextareaAutosize
-                name='description'
-                value={formState.description || ''}
-                onChange={(e) => onValueChange('description', e.currentTarget.value)}
-                type='text'
-                className='form-control'
-                rows={3}
-                async
-              />
+              {readOnly ? (
+                formState.description ? <p className='m-0'>{formState.description}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+              ) : (
+                <TextareaAutosize
+                  name='description'
+                  value={formState.description || ''}
+                  onChange={(e) => onValueChange('description', e.currentTarget.value)}
+                  type='text'
+                  className='form-control'
+                  rows={3}
+                  async
+                />
+              )}
             </FormGroup>
 
-            <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
-              {window.FolioConsole.translations.save}
-            </button>
+            {!readOnly && (
+              <button type='button' className='btn btn-primary px-4' onClick={saveModal}>
+                {window.FolioConsole.translations.save}
+              </button>
+            )}
           </div>
         </div>
 

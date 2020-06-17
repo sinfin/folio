@@ -9,7 +9,7 @@ import 'url-search-params-polyfill'
 import FilesApp from 'containers/FilesApp'
 import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
-import { setMode, setFileType, setFilesUrl } from 'ducks/app'
+import { setMode, setFileType, setFilesUrl, setReadOnly } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
@@ -66,6 +66,11 @@ window.folioConsoleInitReact = (domRoot) => {
       {
         key: 'filesUrl',
         action: setFilesUrl,
+        asJson: false
+      },
+      {
+        key: 'readOnly',
+        action: setReadOnly,
         asJson: false
       },
       {

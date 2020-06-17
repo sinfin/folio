@@ -6,7 +6,13 @@ function flash (message, className) {
     <i class="fa fa-mr fa-times-circle"></i>
     ${message}
   `
-  document.querySelector('.f-c-flash-wrap').appendChild(alert)
+
+  const modal = document.querySelector('.ReactModal--FileModal')
+  if (modal) {
+    modal.querySelector('.modal-content').insertBefore(alert, modal.querySelector('.modal-body'))
+  } else {
+    document.querySelector('.f-c-flash-wrap').appendChild(alert)
+  }
 }
 
 export function flashSuccess (message) {

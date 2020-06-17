@@ -13,7 +13,8 @@ const FileTableRow = ({
   openFileModal,
   fileTypeIsImage,
   onClick,
-  massSelect
+  massSelect,
+  readOnly
 }) => {
   if (file._destroying) return null
 
@@ -100,7 +101,7 @@ const FileTableRow = ({
         {openFileModal ? (
           <span
             onClick={(e) => { e.stopPropagation(); openFileModal(file) }}
-            className='btn btn-secondary fa fa-edit'
+            className={`btn fa ${readOnly ? 'btn-light fa-eye' : 'btn-secondary fa-edit'}`}
             rel='noopener noreferrer'
           />
         ) : undefined}

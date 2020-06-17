@@ -50,7 +50,7 @@ class FilesApp extends Component {
   }
 
   renderMode () {
-    const { mode, fileType, filesUrl } = this.props.app
+    const { mode, fileType, filesUrl, readOnly } = this.props.app
 
     if (mode === 'multi-select') {
       return <MultiSelect fileType={fileType} filesUrl={filesUrl} />
@@ -61,7 +61,7 @@ class FilesApp extends Component {
     }
 
     if (mode === 'index') {
-      return <IndexMode fileType={fileType} filesUrl={filesUrl} />
+      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} />
     }
 
     if (mode === 'modal-single-select') {
@@ -103,7 +103,7 @@ class FilesApp extends Component {
       <FilesAppWrap className='folio-react-app'>
         {this.renderMode()}
 
-        <FileModal fileType={this.props.app.fileType} />
+        <FileModal fileType={this.props.app.fileType} readOnly={this.props.app.readOnly} />
       </FilesAppWrap>
     )
   }

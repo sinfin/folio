@@ -10,27 +10,25 @@ const FileTableHeader = ({ fileTypeIsImage, massSelect }) => {
       )}
 
       {fileTypeIsImage ? (
-        <div className='f-c-file-table__td f-c-file-table__td--image py-0'>
-          img
-        </div>
+        <div className='f-c-file-table__td f-c-file-table__td--image py-0' />
       ) : (
         <div className='f-c-file-table__td f-c-file-table__td--extension'>
-          Typ
+          {window.FolioConsole.translations.fileTableHeaderType}
         </div>
       )}
 
       <div className='f-c-file-table__td f-c-file-table__td--main'>
-        Nazev souboru
+        {window.FolioConsole.translations.fileTableHeaderFileName}
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--size'>
-        Velikost
+        {window.FolioConsole.translations.fileTableHeaderFileSize}
       </div>
 
       {massSelect && <div className='f-c-file-table__td f-c-file-table__td--extension' />}
 
       <div className='f-c-file-table__td f-c-file-table__td--tags'>
-        Klicova slova
+        {window.FolioConsole.translations.fileTableHeaderTags}
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--actions pr-0' />
