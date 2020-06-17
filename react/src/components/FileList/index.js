@@ -17,10 +17,12 @@ const FileList = (props) => {
     />
   )
 
+  const displayAsThumbs = props.fileTypeIsImage && props.displayAsThumbs
+
   return (
     <React.Fragment>
       {pagination}
-      {(props.fileTypeIsImage && props.displayAsThumbs) ? FileThumbnailList(props) : FileTableList(props)}
+      {displayAsThumbs ? <FileThumbnailList {...props} /> : <FileTableList {...props} />}
       {pagination}
     </React.Fragment>
   )

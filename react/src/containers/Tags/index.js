@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { without } from 'lodash'
 
-import { openFileModal } from 'ducks/fileModal'
 import {
   makeFiltersSelector,
   setFilter
@@ -11,11 +10,6 @@ import {
 import Tag from './styled/Tag'
 
 class Tags extends React.Component {
-  onEditClick = (e) => {
-    e.stopPropagation()
-    this.props.dispatch(openFileModal(this.props.file))
-  }
-
   onTagClick (tag) {
     let tags
 
@@ -25,12 +19,12 @@ class Tags extends React.Component {
       tags = without(this.props.filters.tags, tag)
     }
 
-    this.props.dispatch(setFilter(this.props.fileType, 'tags', tags))
+    this.props.dispatch(setFilter(this.props.fileType, this.props.filesUrl, 'tags', tags))
   }
 
   render () {
     return (
-      <div className='small mx-n2 d-flex flex-wrap m-n1'>
+      <div className='small mx-n1 d-flex flex-wrap m-n1'>
         {(this.props.file.attributes.tags || []).map((tag) => (
           <Tag
             key={tag}
@@ -40,9 +34,6 @@ class Tags extends React.Component {
             {tag}
           </Tag>
         ))}
-        <Tag className='btn btn-sm btn-link' onClick={this.onEditClick} >
-          <span className='mi'>edit</span>
-        </Tag>
       </div>
     )
   }

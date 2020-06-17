@@ -27,6 +27,7 @@ export function resetFilters (fileType, filesUrl) {
 // Sagas
 
 function * updateFiltersPerform (action) {
+  console.log(action)
   try {
     // debounce by 750ms, using delay with takeLatest
     let query = ''

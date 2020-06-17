@@ -51,6 +51,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
               changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
               openFileModal={(file) => this.props.dispatch(openFileModal(this.props.fileType, file))}
               fileType={this.props.fileType}
+              filesUrl={this.props.filesUrl}
               selecting='single'
               dropzoneTrigger
             />

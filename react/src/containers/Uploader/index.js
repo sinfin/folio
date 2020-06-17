@@ -6,7 +6,6 @@ import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
 import { flashMessageFromApiErrors } from 'utils/flash'
-import fileKeyToType from 'utils/fileKeyToType'
 
 import Loader from 'components/Loader'
 import {
@@ -69,9 +68,8 @@ class Uploader extends Component {
 
   djsConfig () {
     const params = {}
-    const fileType = fileKeyToType(this.props.fileType)
-    params['file[type]'] = fileType
-    params['file[attributes][type]'] = fileType
+    params['file[type]'] = this.props.fileType
+    params['file[attributes][type]'] = this.props.fileType
     params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
 
     return {

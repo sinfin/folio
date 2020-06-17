@@ -62,6 +62,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
               pagination={this.props.filesPagination}
               changeFilesPage={this.props.changeFilesPage}
               fileType={this.props.fileType}
+              filesUrl={this.props.filesUrl}
               selecting='multiple'
               openFileModal={this.props.openFileModal}
               dropzoneTrigger
