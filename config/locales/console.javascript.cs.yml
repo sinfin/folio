@@ -17,6 +17,7 @@ cs:
         downloadOriginal: Stáhnout originál
         editOffset: Upravit ořez
         fileNameFilter: Hledat dle jména souboru
+        filePlacementsEmpty: Žádné vybrané soubory. Pro výběr klikněte na soubor níže.
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
         finalizing: Dokončuji
         indestructibleFile: Soubor má aktivní použití. Použité soubory nelze mazat.

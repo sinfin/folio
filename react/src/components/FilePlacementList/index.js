@@ -5,12 +5,16 @@ import filePlacementInputName from './utils/filePlacementInputName'
 
 const FilePlacementList = (props) => (
   <Fragment>
-    <FilePlacementSortableList
-      axis='xy'
-      distance={5}
-      move={props.onSortEnd}
-      {...props}
-    />
+    {props.filePlacements.selected.length > 0 ? (
+      <FilePlacementSortableList
+        axis='xy'
+        distance={5}
+        move={props.onSortEnd}
+        {...props}
+      />
+    ) : (
+      <div className='f-c-file-placement-list__empty'>{window.FolioConsole.translations.filePlacementsEmpty}</div>
+    )}
 
     {!props.nested && props.filePlacements.deleted.map((filePlacement) => (
       <div key={filePlacement.id}>

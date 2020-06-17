@@ -21,55 +21,55 @@ describe('filePlacementsReducer', () => {
   let state
 
   beforeEach(() => {
-    state = filePlacementsReducer(initialState, setOriginalPlacements('images', mockImages))
+    state = filePlacementsReducer(initialState, setOriginalPlacements('Folio::Image', mockImages))
   })
 
   it('setOriginalPlacements', () => {
-    expect(state['images'].original).toEqual(mockImages)
-    expect(state['images'].selected).toEqual(mockImages)
+    expect(state['Folio::Image'].original).toEqual(mockImages)
+    expect(state['Folio::Image'].selected).toEqual(mockImages)
   })
 
   it('setAttachmentable', () => {
-    state = filePlacementsReducer(state, setAttachmentable('images', 'menu'))
-    expect(state['images'].attachmentable).toEqual('menu')
+    state = filePlacementsReducer(state, setAttachmentable('Folio::Image', 'menu'))
+    expect(state['Folio::Image'].attachmentable).toEqual('menu')
   })
 
   it('selectFile', () => {
-    expect(state['images'].selected.length).toEqual(3)
-    state = filePlacementsReducer(state, selectFile('images', fileMock))
-    expect(state['images'].selected.length).toEqual(4)
+    expect(state['Folio::Image'].selected.length).toEqual(3)
+    state = filePlacementsReducer(state, selectFile('Folio::Image', fileMock))
+    expect(state['Folio::Image'].selected.length).toEqual(4)
   })
 
   it('unselectFilePlacement', () => {
-    expect(state['images'].selected.length).toEqual(3)
-    state = filePlacementsReducer(state, unselectFilePlacement('images', mockImages[0]))
-    expect(state['images'].selected.length).toEqual(2)
+    expect(state['Folio::Image'].selected.length).toEqual(3)
+    state = filePlacementsReducer(state, unselectFilePlacement('Folio::Image', mockImages[0]))
+    expect(state['Folio::Image'].selected.length).toEqual(2)
   })
 
   it('onSortEnd', () => {
-    expect(state['images'].selected[0].id).toEqual(1)
-    expect(state['images'].selected[1].id).toEqual(2)
-    expect(state['images'].selected[2].id).toEqual(3)
-    state = filePlacementsReducer(state, onSortEnd('images', 2, 0))
-    expect(state['images'].selected[0].id).toEqual(3)
-    expect(state['images'].selected[1].id).toEqual(1)
-    expect(state['images'].selected[2].id).toEqual(2)
+    expect(state['Folio::Image'].selected[0].id).toEqual(1)
+    expect(state['Folio::Image'].selected[1].id).toEqual(2)
+    expect(state['Folio::Image'].selected[2].id).toEqual(3)
+    state = filePlacementsReducer(state, onSortEnd('Folio::Image', 2, 0))
+    expect(state['Folio::Image'].selected[0].id).toEqual(3)
+    expect(state['Folio::Image'].selected[1].id).toEqual(1)
+    expect(state['Folio::Image'].selected[2].id).toEqual(2)
   })
 
   it('setPlacementType', () => {
-    state = filePlacementsReducer(state, setPlacementType('images', 'foo_placements'))
-    expect(state['images'].placementType).toEqual('foo_placements')
+    state = filePlacementsReducer(state, setPlacementType('Folio::Image', 'foo_placements'))
+    expect(state['Folio::Image'].placementType).toEqual('foo_placements')
   })
 
   it('changeTitle', () => {
-    expect(state['images'].selected[0]['title']).toEqual(undefined)
-    state = filePlacementsReducer(state, changeTitle('images', mockImages[0], 'foo'))
-    expect(state['images'].selected[0]['title']).toEqual('foo')
+    expect(state['Folio::Image'].selected[0]['title']).toEqual(undefined)
+    state = filePlacementsReducer(state, changeTitle('Folio::Image', mockImages[0], 'foo'))
+    expect(state['Folio::Image'].selected[0]['title']).toEqual('foo')
   })
 
   it('changeAlt', () => {
-    expect(state['images'].selected[0]['alt']).toEqual(undefined)
-    state = filePlacementsReducer(state, changeAlt('images', mockImages[0], 'foo'))
-    expect(state['images'].selected[0]['alt']).toEqual('foo')
+    expect(state['Folio::Image'].selected[0]['alt']).toEqual(undefined)
+    state = filePlacementsReducer(state, changeAlt('Folio::Image', mockImages[0], 'foo'))
+    expect(state['Folio::Image'].selected[0]['alt']).toEqual('foo')
   })
 })

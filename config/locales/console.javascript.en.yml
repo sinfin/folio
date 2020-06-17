@@ -17,6 +17,7 @@ en:
         downloadOriginal: Download original
         editOffset: Crop
         fileNameFilter: Search by file name
+        filePlacementsEmpty: No selected files. Click on the files under to select some.
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
         indestructibleFile: Files has active placements and therefore cannot be destroyed.

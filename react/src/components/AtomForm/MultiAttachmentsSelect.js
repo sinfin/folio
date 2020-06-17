@@ -23,7 +23,7 @@ import MultiSelectComponent from 'components/MultiSelectComponent'
 
 class MultiAttachmentsSelect extends React.PureComponent {
   getFiles = () => {
-    this.props.dispatch(getFiles(this.props.fileType))
+    this.props.dispatch(getFiles(this.props.fileType, this.props.filesUrl))
   }
 
   changeFilesPage = (page) => {
@@ -87,6 +87,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
     return (
       <MultiSelectComponent
         fileType={this.props.fileType}
+        filesUrl={this.props.filesUrl}
         filesStatus={this.props.filesStatus}
         getFiles={this.getFiles}
         filePlacements={this.props.filePlacements}
@@ -125,6 +126,7 @@ const mapStateToProps = (state, props) => {
   }
 
   const fileType = props.attachmentType['file_type']
+  const filesUrl = props.attachmentType['files_url']
   const filePlacements = {
     selected,
     deleted,
@@ -134,6 +136,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     fileType,
+    filesUrl,
     filesStatus: makeFilesStatusSelector(fileType)(state),
     displayAsThumbs: displayAsThumbsSelector(state),
     filesPagination: makeFilesPaginationSelector(fileType)(state),
