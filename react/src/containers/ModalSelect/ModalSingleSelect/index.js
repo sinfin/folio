@@ -79,7 +79,8 @@ class ModalSingleSelect extends ModalSelect {
 
     const name = this.inputName($el)
     const placementKey = $fields.data('placement-key')
-    const prefix = `${name}[${placementKey}_attributes]`
+    const attributesKey = `[${placementKey}_attributes]`
+    const prefix = `${name}${attributesKey}`.replace(`${attributesKey}${attributesKey}`, attributesKey)
 
     const $newFile = $(`
       <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingDocument() ? 'document' : 'image'}">
@@ -104,6 +105,7 @@ class ModalSingleSelect extends ModalSelect {
       <SingleSelect
         selectFile={this.selectFile}
         fileType={this.props.fileType}
+        filesUrl={this.props.filesUrl}
         inModal
       />
     )

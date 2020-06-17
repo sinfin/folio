@@ -34,9 +34,9 @@ class IndexMode extends LazyLoadCheckingComponent {
 
     return (
       <div className='mt-n3'>
-        <Uploader fileType={this.props.fileType}>
+        <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
           <Card
-            filters={<FileFilter fileType={this.props.fileType} fileTypeIsImage={fileTypeIsImageResult} />}
+            filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={fileTypeIsImageResult} />}
           >
             <UploadTagger fileType={this.props.fileType} />
 

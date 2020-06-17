@@ -27,7 +27,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
     return (
       <Fragment>
         {this.props.inModal && <ModalTitleAndUpload fileType={this.props.fileType} />}
-        <FileFilter fileType={this.props.fileType} />
+        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
         <UploadTagger fileType={this.props.fileType} />
       </Fragment>
     )
@@ -41,7 +41,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
         header={this.renderHeader()}
       >
         {this.props.filesStatus.loading ? <Loader standalone /> : (
-          <Uploader fileType={this.props.fileType}>
+          <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
             <FileList
               files={this.props.filesForList}
               fileTypeIsImage={this.props.fileType === 'Folio::Image'}

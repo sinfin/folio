@@ -53,11 +53,11 @@ class FilesApp extends Component {
     const { mode, fileType, filesUrl } = this.props.app
 
     if (mode === 'multi-select') {
-      return <MultiSelect fileType={fileType} />
+      return <MultiSelect fileType={fileType} filesUrl={filesUrl} />
     }
 
     if (mode === 'single-select') {
-      return <SingleSelect fileType={fileType} />
+      return <SingleSelect fileType={fileType} filesUrl={filesUrl} />
     }
 
     if (mode === 'index') {
@@ -68,6 +68,7 @@ class FilesApp extends Component {
       return (
         <ModalSingleSelect
           fileType={fileType}
+          filesUrl={filesUrl}
           loadFiles={this.loadFiles}
           openFileModal={this.openFileModal}
         />
@@ -78,6 +79,7 @@ class FilesApp extends Component {
       return (
         <ModalMultiSelect
           fileType={fileType}
+          filesUrl={filesUrl}
           loadFiles={this.loadFiles}
         />
       )

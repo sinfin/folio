@@ -17,17 +17,17 @@ import Wrap from './styled/Wrap'
 class FileFilter extends Component {
   onInputChange = (e) => {
     this.props.dispatch(
-      setFilter(this.props.fileType, e.target.name, e.target.value)
+      setFilter(this.props.fileType, this.props.filesUrl, e.target.name, e.target.value)
     )
   }
 
   onTagsChange = (tags) => {
-    this.props.dispatch(setFilter(this.props.fileType, 'tags', tags))
+    this.props.dispatch(setFilter(this.props.fileType, this.props.filesUrl, 'tags', tags))
   }
 
   onReset = () => {
     this.props.dispatch(
-      resetFilters(this.props.fileType)
+      resetFilters(this.props.fileType, this.props.filesUrl)
     )
   }
 
@@ -48,7 +48,7 @@ class FileFilter extends Component {
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>
               <InputWithSearchIcon
-                value={filters.file_name}
+                value={filters.file_name || ''}
                 onChange={this.onInputChange}
                 placeholder={window.FolioConsole.translations.fileNameFilter}
                 name='file_name'
@@ -59,7 +59,7 @@ class FileFilter extends Component {
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>
               <InputWithSearchIcon
-                value={filters.placement}
+                value={filters.placement || ''}
                 onChange={this.onInputChange}
                 placeholder={window.FolioConsole.translations.usageFilter}
                 name='placement'

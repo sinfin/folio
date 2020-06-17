@@ -207,15 +207,17 @@ export const makeFilesLoadedSelector = (fileType) => (state) => {
 }
 
 export const makeMassSelectedIdsSelector = (fileType) => (state) => {
+  const base = state.files[fileType] || defaultFilesKeyState
   return {
-    massSelectedIds: state.files[fileType].massSelectedIds,
-    massSelectedIndestructibleIds: state.files[fileType].massSelectedIndestructibleIds
+    massSelectedIds: base.massSelectedIds,
+    massSelectedIndestructibleIds: base.massSelectedIndestructibleIds
   }
 }
 
 export const makeFilesSelector = (fileType) => (state) => {
-  const selected = state.files[fileType].massSelectedIds
-  return state.files[fileType].records.map((file) => {
+  const base = state.files[fileType] || defaultFilesKeyState
+  const selected = base.massSelectedIds
+  return base.records.map((file) => {
     if (file.id && selected.indexOf(file.id) !== -1) {
       return { ...file, massSelected: true }
     } else {
@@ -259,7 +261,8 @@ export const makeUnselectedFilesForListSelector = (fileType) => (state) => {
 }
 
 export const makeFilesPaginationSelector = (fileType) => (state) => {
-  return state.files[fileType].pagination
+  const base = state.files[fileType] || defaultFilesKeyState
+  return base.pagination
 }
 
 // State

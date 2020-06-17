@@ -52,12 +52,12 @@ export function changeAlt (fileType, filePlacement, alt) {
 // Selectors
 
 export const makeSelectedFileIdsSelector = (fileType) => (state) => {
-  const base = state.filePlacements[fileType]
+  const base = state.filePlacements[fileType] || defaultFilePlacementsKeyState
   return base.selected.map((filePlacement) => String(filePlacement.file_id))
 }
 
 export const makeFilePlacementsSelector = (fileType) => (state) => {
-  const base = state.filePlacements[fileType]
+  const base = state.filePlacements[fileType] || defaultFilePlacementsKeyState
   const files = makeFilesSelector(fileType)(state)
   const selectedIds = []
 
@@ -105,24 +105,24 @@ export const filePlacementsSagas = [
 
 // State
 
-export const initialState = {
-  documents: {
-    original: [],
-    selected: [],
-    attachmentable: 'page',
-    placementType: 'document_placements'
-  },
-  images: {
-    original: [],
-    selected: [],
-    attachmentable: 'page',
-    placementType: 'image_placements'
-  }
+const defaultFilePlacementsKeyState = {
+  original: [],
+  selected: [],
+  attachmentable: 'page',
+  placementType: 'document_placements'
 }
+
+export const initialState = {}
 
 // Reducer
 
-function filePlacementsReducer (state = initialState, action) {
+function filePlacementsReducer (rawState = initialState, action) {
+  const state = rawState
+
+  if (action.fileType && !state[action.fileType]) {
+    state[action.fileType] = { ...defaultFilePlacementsKeyState }
+  }
+
   switch (action.type) {
     case SET_ORIGINAL_PLACEMENTS:
       return {

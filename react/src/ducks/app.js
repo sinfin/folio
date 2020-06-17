@@ -20,6 +20,7 @@ export function setFilesUrl (filesUrl) {
 
 // Selectors
 
+export const appSelector = (state) => state.app
 export const fileTypeSelector = (state) => state.app.fileType
 export const filesUrlSelector = (state) => state.app.filesUrl
 export const fileTypeIsImageSelector = (state) => state.app.fileType === 'Folio::Image'

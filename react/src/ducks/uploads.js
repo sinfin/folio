@@ -4,7 +4,7 @@ import { omit, without } from 'lodash'
 
 import { apiPost } from 'utils/api'
 import { uploadedFile, updatedFiles } from 'ducks/files'
-import { fileTypeSelector } from 'ducks/app'
+import { filesUrlSelector } from 'ducks/app'
 
 // Constants
 
@@ -86,8 +86,9 @@ function * uploadedFileSaga () {
 function * setUploadTagsPerform (action) {
   const { uploadedIds, uploadTags } = yield select(makeUploadsSelector(action.fileType))
   if (uploadedIds.length) {
-    const fileType = yield select(fileTypeSelector)
-    const url = fileType === 'Folio::Document' ? '/console/api/documents/tag' : '/console/api/images/tag'
+    // TODO check that we can do this
+    const filesUrl = yield select(filesUrlSelector)
+    const url = `${filesUrl}/tag`
     const response = yield call(apiPost, url, { file_ids: uploadedIds, tags: uploadTags })
     yield put(updatedFiles(action.fileType, response.data))
     yield put(clearUploadedIds(action.fileType, uploadedIds))
@@ -107,11 +108,13 @@ export const uploadsSagas = [
 // Selectors
 
 export const makeUploadsSelector = (fileType) => (state) => {
-  return state.uploads[fileType]
+  const base = state.uploads[fileType] || defaultUploadsKeyState
+  return base
 }
 
 export const makeUploadSelector = (fileType) => (id) => (state) => {
-  return state.uploads[fileType].records[id]
+  const base = state.uploads[fileType] || defaultUploadsKeyState
+  return base.records[id]
 }
 
 // State
@@ -119,7 +122,7 @@ export const makeUploadSelector = (fileType) => (id) => (state) => {
 const date = new Date()
 export const defaultTag = `${date.getFullYear()}/${date.getMonth() + 1}`
 
-const defaultFilesKeyState = {
+const defaultUploadsKeyState = {
   records: {},
   showTagger: false,
   uploadTags: [defaultTag],
@@ -134,7 +137,7 @@ function uploadsReducer (rawState = initialState, action) {
   const state = rawState
 
   if (action.fileType && !state[action.fileType]) {
-    state[action.fileType] = { ...defaultFilesKeyState }
+    state[action.fileType] = { ...defaultUploadsKeyState }
   }
 
   const id = action.file ? idFromFile(action.file) : null

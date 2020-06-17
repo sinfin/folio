@@ -12,16 +12,16 @@ const RESET_FILTERS = 'filters/RESET_FILTERS'
 
 // Actions
 
-export function setFilter (fileType, filter, value) {
-  return { type: SET_FILTER, fileType, filter, value }
+export function setFilter (fileType, filesUrl, filter, value) {
+  return { type: SET_FILTER, fileType, filesUrl, filter, value }
 }
 
-export function unsetFilter (fileType, filter) {
-  return setFilter(fileType, filter, filter === 'tags' ? [] : '')
+export function unsetFilter (fileType, filesUrl, filter) {
+  return setFilter(fileType, filesUrl, filter, filter === 'tags' ? [] : '')
 }
 
-export function resetFilters (fileType) {
-  return { type: RESET_FILTERS, fileType }
+export function resetFilters (fileType, filesUrl) {
+  return { type: RESET_FILTERS, fileType, filesUrl }
 }
 
 // Sagas
@@ -34,7 +34,7 @@ function * updateFiltersPerform (action) {
       yield delay(750)
       query = yield select(makeFiltersQuerySelector(action.fileType))
     }
-    yield put(getFiles(action.fileType, query))
+    yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
     flashError(e.message)
   }
@@ -54,11 +54,11 @@ export const filtersSagas = [
 // Selectors
 
 export const makeFiltersSelector = (fileType) => (state) => {
-  const filters = state.filters[fileType]
-  const active = !isEqual(filters, initialState[fileType])
+  const base = state.filters[fileType] || defaultFiltersKeysState
+  const active = !isEqual(base, defaultFiltersKeysState)
 
   return {
-    ...filters,
+    ...base,
     active
   }
 }
@@ -74,17 +74,19 @@ export const makeTagsSelector = (fileType) => (state) => {
 }
 
 export const makeFiltersQuerySelector = (fileType) => (state) => {
-  const filters = state.filters[fileType]
+  const base = state.filters[fileType] || defaultFiltersKeysState
   const params = new URLSearchParams()
-  Object.keys(filters).forEach((key) => {
-    let value = filters[key]
+
+  Object.keys(base).forEach((key) => {
+    let value = base[key]
     if (key === 'tags') {
-      value = filters[key].join(',')
+      value = base[key].join(',')
     }
     if (value) {
       params.set(`by_${key}`, value)
     }
   })
+
   return params.toString()
 }
 
@@ -95,22 +97,23 @@ export const makePlacementsSelector = (fileType) => (state) => {
 
 // State
 
-export const initialState = {
-  documents: {
-    file_name: '',
-    tags: [],
-    placement: ''
-  },
-  images: {
-    file_name: '',
-    tags: [],
-    placement: ''
-  }
+const defaultFiltersKeysState = {
+  file_name: '',
+  tags: [],
+  placement: ''
 }
+
+export const initialState = {}
 
 // Reducer
 
-function filtersReducer (state = initialState, action) {
+function filtersReducer (rawState = initialState, action) {
+  const state = rawState
+
+  if (action.fileType && !state[action.fileType]) {
+    state[action.fileType] = { ...defaultFiltersKeysState }
+  }
+
   switch (action.type) {
     case SET_FILTER: {
       const obj = omit(state[action.fileType], [action.filter])

@@ -63,7 +63,7 @@ class Uploader extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: `/console/api/${this.props.fileType}`
+      postUrl: this.props.filesUrl
     }
   }
 

@@ -1,5 +1,7 @@
 import { Component } from 'react'
 
+import fileTypeIsImage from 'utils/fileTypeIsImage'
+
 class ModalSelect extends Component {
   state = {
     el: null
@@ -11,7 +13,7 @@ class ModalSelect extends Component {
 
     $(document).on('click', this.selector(), (e) => {
       this.setState({ el: e.target })
-      this.props.loadFiles(this.props.fileType)
+      this.props.loadFiles(this.props.fileType, this.props.filesUrl)
       this.onOpen(e.target)
       this.jQueryModal().modal('show')
     })
@@ -27,7 +29,7 @@ class ModalSelect extends Component {
     if (eventName) {
       $(document).on(eventName, (e, eventData) => {
         this.setState(eventData)
-        this.props.loadFiles(this.props.fileType)
+        this.props.loadFiles(this.props.fileType, this.props.filesUrl)
         this.onOpen(e.target)
         this.jQueryModal().modal('show')
       })
@@ -48,7 +50,7 @@ class ModalSelect extends Component {
   }
 
   selectingDocument () {
-    return this.props.fileType === 'Folio::Document'
+    return !fileTypeIsImage(this.props.fileType)
   }
 
   fileTemplate (file, prefix) {
