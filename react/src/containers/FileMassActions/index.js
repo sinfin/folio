@@ -9,11 +9,11 @@ import {
 
 import FileMassActionsWrap from './styled/FileMassActionsWrap'
 
-function downloadHref (filesKey, massSelectedIds) {
-  return `/console/${filesKey}/mass_download?ids=${massSelectedIds.join(',')}`
+function downloadHref (filesUrl, massSelectedIds) {
+  return `${filesUrl}/mass_download?ids=${massSelectedIds.join(',')}`
 }
 
-function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, filesKey, dispatchMassCancel, dispatchMassDelete }) {
+function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, filesKey, dispatchMassCancel, dispatchMassDelete, filesUrl }) {
   if (massSelectedIds.length === 0) return null
   const indestructible = massSelectedIndestructibleIds.length > 0
   let notAllowedCursor = ''
@@ -42,7 +42,7 @@ function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, file
 
         <a
           className='btn btn-secondary d-block mr-2 mr-sm-g my-2 font-weight-bold'
-          href={downloadHref(filesKey, massSelectedIds)}
+          href={downloadHref(filesUrl, massSelectedIds)}
           onClick={() => dispatchMassCancel(filesKey)}
           target='_blank'
           rel='noopener noreferrer'

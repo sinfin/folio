@@ -18,15 +18,15 @@ import FilesAppWrap from './styled/FilesAppWrap'
 class FilesApp extends Component {
   componentWillMount () {
     if (this.shouldAutoLoadFiles()) {
-      this.loadFiles(this.props.app.filesKey)
+      this.loadFiles(this.props.app.fileType, this.props.app.filesUrl)
     }
     this.listenOnActionCable()
     window.addEventListener('checkLazyload', forceCheck)
   }
 
-  loadFiles = (filesKey) => {
+  loadFiles = (fileType, filesUrl) => {
     if (!this.props.filesLoaded) {
-      this.props.dispatch(getFiles(filesKey))
+      this.props.dispatch(getFiles(fileType, filesUrl))
     }
   }
 
@@ -50,7 +50,7 @@ class FilesApp extends Component {
   }
 
   renderMode () {
-    const { mode, fileType, filesKey } = this.props.app
+    const { mode, fileType, filesKey, filesUrl } = this.props.app
 
     if (mode === 'multi-select') {
       return <MultiSelect filesKey={filesKey} />
@@ -61,7 +61,7 @@ class FilesApp extends Component {
     }
 
     if (mode === 'index') {
-      return <IndexMode filesKey={filesKey} />
+      return <IndexMode filesKey={filesKey} filesUrl={filesUrl} />
     }
 
     if (mode === 'modal-single-select') {

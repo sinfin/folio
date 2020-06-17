@@ -119,24 +119,24 @@ export const makeUploadSelector = (filesKey) => (id) => (state) => {
 const date = new Date()
 export const defaultTag = `${date.getFullYear()}/${date.getMonth() + 1}`
 
-const initialState = {
-  images: {
-    records: {},
-    showTagger: false,
-    uploadTags: [defaultTag],
-    uploadedIds: []
-  },
-  documents: {
-    records: {},
-    showTagger: false,
-    uploadTags: [defaultTag],
-    uploadedIds: []
-  }
+const defaultFilesKeyState = {
+  records: {},
+  showTagger: false,
+  uploadTags: [defaultTag],
+  uploadedIds: []
 }
+
+const initialState = {}
 
 // Reducer
 
-function uploadsReducer (state = initialState, action) {
+function uploadsReducer (rawState = initialState, action) {
+  const state = rawState
+
+  if (action.filesKey && !state[action.filesKey]) {
+    state[action.filesKey] = { ...defaultFilesKeyState }
+  }
+
   const id = action.file ? idFromFile(action.file) : null
 
   switch (action.type) {

@@ -20,7 +20,6 @@ import {
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import MultiSelectComponent from 'components/MultiSelectComponent'
-import fileTypeToKey from 'utils/fileTypeToKey'
 
 class MultiAttachmentsSelect extends React.PureComponent {
   getFiles = () => {
@@ -125,7 +124,7 @@ const mapStateToProps = (state, props) => {
     })
   }
 
-  const filesKey = fileTypeToKey(props.attachmentType['file_type'])
+  const filesKey = props.attachmentType['file_type']
   const filePlacements = {
     selected,
     deleted,

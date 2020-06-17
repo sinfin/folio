@@ -3,6 +3,7 @@ import { FormGroup, Label, Input } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import { makeConfirmed } from 'utils/confirmed'
+import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 import TagsInput from 'components/TagsInput'
 import ThumbnailSizes from 'components/ThumbnailSizes'
@@ -12,7 +13,7 @@ import MainImage from './styled/MainImage'
 import FileEditInput from './styled/FileEditInput'
 
 export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags }) => {
-  const isImage = fileModal.filesKey === 'images'
+  const isImage = fileTypeIsImage(fileModal.filesKey)
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 

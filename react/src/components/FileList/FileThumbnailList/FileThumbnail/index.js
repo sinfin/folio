@@ -6,11 +6,14 @@ import FileThumbnailHover from './FileThumbnailHover'
 import FileThumbnailMassCheckbox from './FileThumbnailMassCheckbox'
 import FileHoverButtons from 'components/FileHoverButtons'
 
-const FileThumbnail = ({ file, filesKey, onClick, selecting, massSelect, massSelectVisible, openFileModal }) => {
+const FileThumbnail = ({ file, filesKey, onClick, openFileModalOnClick, selecting, massSelect, massSelectVisible, openFileModal }) => {
   if (file._destroying) return null
 
   let className = 'f-c-file-list__file'
   const persistedOnClick = !file.attributes.uploading && onClick
+  const persistedWrapOnClick = !file.attributes.uploading && openFileModalOnClick
+    ? () => openFileModal(file)
+    : undefined
 
   if (file.attributes.freshlyUploaded) {
     className = 'f-c-file-list__file f-c-file-list__file--fresh'
@@ -22,7 +25,7 @@ const FileThumbnail = ({ file, filesKey, onClick, selecting, massSelect, massSel
     <div
       className={className}
     >
-      <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }}>
+      <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }} onClick={persistedWrapOnClick}>
         {file.attributes.thumb && (
           <LazyLoad height={150} once overflow>
             <img

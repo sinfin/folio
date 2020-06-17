@@ -9,6 +9,7 @@ import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
 import FilePlacementList from 'components/FilePlacementList'
+import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 class MultiSelectComponent extends LazyLoadCheckingComponent {
   componentWillMount () {
@@ -22,7 +23,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
 
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
-    const fileTypeIsImage = this.props.filesKey === 'images'
+    const fileTypeIsImageResult = fileTypeIsImage(this.props.filesKey)
 
     return (
       <Uploader filesKey={this.props.filesKey}>
@@ -37,7 +38,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
             onAltChange={this.props.onAltChange}
             onTitleChange={this.props.onTitleChange}
             unselectFilePlacement={this.props.unselectFilePlacement}
-            fileTypeIsImage={fileTypeIsImage}
+            fileTypeIsImage={fileTypeIsImageResult}
             filesKey={this.props.filesKey}
             nested={this.props.nested}
             openFileModal={this.props.openFileModal}
@@ -47,7 +48,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
         <Card
           header={window.FolioConsole.translations[`available${this.props.filesKey}`]}
           headerUpload
-          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
+          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImageResult} />}
           className='f-c-multi-select-component__card f-c-multi-select-component__card--files'
         >
           <UploadTagger filesKey={this.props.filesKey} nested={this.props.nested} />

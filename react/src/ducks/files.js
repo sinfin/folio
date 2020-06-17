@@ -3,7 +3,7 @@ import { flashError, flashSuccess } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find, without } from 'lodash'
 
-import { fileTypeSelector } from 'ducks/app'
+import { filesUrlSelector } from 'ducks/app'
 import { makeUploadsSelector } from 'ducks/uploads'
 import { makeFiltersQuerySelector } from 'ducks/filters'
 import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
@@ -28,8 +28,8 @@ const MASS_CANCEL = 'files/MASS_CANCEL'
 
 // Actions
 
-export function getFiles (filesKey, query = '') {
-  return { type: GET_FILES, filesKey, query }
+export function getFiles (filesKey, filesUrl, query = '') {
+  return { type: GET_FILES, filesKey, filesUrl, query }
 }
 
 export function getFilesSuccess (filesKey, records, pagination) {
@@ -92,7 +92,7 @@ export function massCancel (filesKey) {
 
 function * getFilesPerform (action) {
   try {
-    const filesUrl = `/console/api/${action.filesKey}?${action.query}`
+    const filesUrl = `${action.filesUrl}?${action.query}`
     const records = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.filesKey, records.data, records.meta))
   } catch (e) {
@@ -108,15 +108,15 @@ function * getFilesSaga () {
 function * updateFilePerform (action) {
   try {
     const { file, attributes } = action
-    const fileType = yield select(fileTypeSelector)
-    const fileUrl = fileType === 'Folio::Document' ? `/console/api/documents/${file.id}` : `/console/api/images/${file.id}`
+    const filesUrl = yield select(filesUrlSelector)
+    const fullUrl = `${filesUrl}/${file.id}`
     const data = {
       file: {
         id: file.id,
         attributes
       }
     }
-    const response = yield call(apiPut, fileUrl, data)
+    const response = yield call(apiPut, fullUrl, data)
     yield put(updateFileSuccess(action.filesKey, action.file, response.data))
   } catch (e) {
     flashError(e.message)
@@ -148,7 +148,9 @@ function * changeFilesPageSaga () {
 function * massDeletePerform (action) {
   try {
     const { massSelectedIds } = yield select(makeMassSelectedIdsSelector(action.filesKey))
-    const res = yield call(apiDelete, `/console/api/${action.filesKey}/mass_destroy?ids=${massSelectedIds.join(',')}`)
+    const filesUrl = yield select(filesUrlSelector)
+    const fullUrl = `${filesUrl}/mass_destroy?ids=${massSelectedIds.join(',')}`
+    const res = yield call(apiDelete, fullUrl)
     if (res.error) {
       flashError(res.error)
     } else {
@@ -262,34 +264,29 @@ export const makeFilesPaginationSelector = (filesKey) => (state) => {
 
 // State
 
-const initialState = {
-  images: {
-    loading: false,
-    loaded: false,
-    records: [],
-    massSelectedIds: [],
-    massSelectedIndestructibleIds: [],
-    pagination: {
-      page: null,
-      pages: null
-    }
-  },
-  documents: {
-    loading: false,
-    loaded: false,
-    records: [],
-    massSelectedIds: [],
-    massSelectedIndestructibleIds: [],
-    pagination: {
-      page: null,
-      pages: null
-    }
+const defaultFilesKeyState = {
+  loading: false,
+  loaded: false,
+  records: [],
+  massSelectedIds: [],
+  massSelectedIndestructibleIds: [],
+  pagination: {
+    page: null,
+    pages: null
   }
 }
 
+const initialState = {}
+
 // Reducer
 
-function filesReducer (state = initialState, action) {
+function filesReducer (rawState = initialState, action) {
+  const state = rawState
+
+  if (action.filesKey && !state[action.filesKey]) {
+    state[action.filesKey] = { ...defaultFilesKeyState }
+  }
+
   switch (action.type) {
     case GET_FILES:
       return {

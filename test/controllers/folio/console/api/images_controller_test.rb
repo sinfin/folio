@@ -80,4 +80,11 @@ class Folio::Console::Api::ImagesControllerTest < Folio::Console::BaseController
     json = JSON.parse(response.body)
     assert_equal('test-black.gif', json['data']['attributes']['file_name'])
   end
+
+  test 'mass_download' do
+    images = create_list(:folio_image, 2)
+    ids = images.map(&:id).join(',')
+    get url_for([:mass_download, :console, :api, Folio::Image, ids: ids])
+    assert_response(:ok)
+  end
 end

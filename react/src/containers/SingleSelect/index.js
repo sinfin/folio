@@ -44,7 +44,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
           <Uploader filesKey={this.props.filesKey}>
             <FileList
               files={this.props.filesForList}
-              fileTypeIsImage={this.props.filesKey === 'images'}
+              fileTypeIsImage={this.props.filesKey === 'Folio::Image'}
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.selectFile}
               pagination={this.props.filesPagination}

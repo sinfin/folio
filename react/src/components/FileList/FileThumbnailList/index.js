@@ -9,6 +9,7 @@ const FileThumbnailList = ({
   dropzoneTrigger,
   openFileModal,
   onClick,
+  openFileModalOnClick,
   selecting,
   massSelect,
   massSelectVisible
@@ -23,6 +24,7 @@ const FileThumbnailList = ({
         file={file}
         openFileModal={openFileModal}
         onClick={onClick}
+        openFileModalOnClick={openFileModalOnClick}
         selecting={selecting}
         massSelect={massSelect}
         massSelectVisible={massSelectVisible}
