@@ -1,11 +1,17 @@
+$f-c-layout-header-background: #e9ecef !default
+$f-c-layout-header-color: $dark !default
+
 .f-c-layout-header
-  background: #e9ecef
+  background: $f-c-layout-header-background
   position: relative
 
   .breadcrumb
     border-radius: 0
     margin: 0 $grid-gutter-width 0 0
     background: transparent
+
+  &, &__sign-out-link, .breadcrumb-link
+    color: $f-c-layout-header-color
 
 .f-c-layout-header__inner
   display: flex
@@ -82,7 +88,7 @@
               margin-right: 4px
               position: relative
               top: -1px
-              color: $dark
+              color: $f-c-layout-header-color
               font-size: inherit
 
       &.active:last-child:nth-child(2)

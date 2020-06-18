@@ -26,9 +26,6 @@
       .folio-react-wrap[data-mode="index"] &
         display: none
 
-  &__td
-    white-space: nowrap
-
   &__tr--fresh,
   &__tr--fresh &__td
     background: #d3eaf6
@@ -39,8 +36,8 @@
   &--hover &__tr:not(&__tr--uploading):hover &__td
     background: $table-hover-bg
 
-  &__td--main
-    width: 100%
+  &__td:first-child
+    padding-left: 0
 
   &__img-wrap
     display: flex
@@ -71,6 +68,13 @@
     align-items: center
     justify-content: center
 
+  &__extension
+    font-size: $font-size-sm
+    background: #CED4DA
+    line-height: 20px
+    padding: 0 8px
+    display: inline-block
+
   +media-breakpoint-up(lg)
     .f-c-file-table-wrap
       overflow-x: auto
@@ -83,9 +87,27 @@
       padding: $table-cell-padding
       vertical-align: middle
       border-top: $table-border-width solid $table-border-color
+      white-space: nowrap
+
+      &--main,
+      &--tags
+        white-space: normal
+
+    &__tr--header &__td
+      border-top: 0
+      padding-top: 1rem
+      text-transform: uppercase
+      color: $table-head-color
+      font-size: $font-size-sm
 
     &__tr:last-child &__td
       border-bottom: $table-border-width solid $table-border-color
+
+    &__td--main
+      width: 50%
+
+    &__td--tags
+      width: 33%
 
     &__tbody
       display: table
@@ -97,10 +119,16 @@
 
     &__tr
       display: block
-      padding: 0.25rem
+      padding: 0.75rem 0
       position: relative
       min-height: 50px
       border-bottom: 1px solid $border-color
+
+    &__tr--header
+      display: none
+
+    &__tr--header + &__tr
+      border-top: 1px solid $border-color
 
     &-wrap--image &__tr
       padding-left: 50px + 15px
@@ -112,9 +140,15 @@
       padding-left: 50px + 15px + 25px
 
     &__td
-      padding: 0 0 0.25rem 0
+      padding: 0 0 0.5rem 0
       white-space: normal
       word-break: break-all
+
+      &:last-child
+        padding-bottom: 0
+
+      &--actions
+        padding-top: 0.1rem
 
     &__td--image,
     &__td--mass-select
@@ -146,7 +180,3 @@
 
     &__td--size
       display: inline-block
-
-      &:after
-        content: ' / '
-        display: inline

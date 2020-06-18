@@ -9,20 +9,20 @@ describe('filtersReducer', () => {
   let state
 
   beforeEach(() => {
-    state = filtersReducer(initialState, setFilter('images', 'tags', ['a']))
+    state = filtersReducer(initialState, setFilter('Folio::Image', '/console/api/images', 'tags', ['a']))
   })
 
   it('setFilter', () => {
-    expect(state['images'].tags).toEqual(['a'])
+    expect(state['Folio::Image'].tags).toEqual(['a'])
   })
 
   it('unsetFilter', () => {
-    state = filtersReducer(state, unsetFilter('images', 'tags'))
-    expect(state['images'].tags).toEqual([])
+    state = filtersReducer(state, unsetFilter('Folio::Image', '/console/api/images', 'tags'))
+    expect(state['Folio::Image'].tags).toEqual([])
   })
 
   it('resetFilters', () => {
-    state = filtersReducer(state, resetFilters('images'))
-    expect(state['images'].tags).toEqual([])
+    state = filtersReducer(state, resetFilters('Folio::Image', '/console/api/images'))
+    expect(state['Folio::Image'].tags).toEqual([])
   })
 })

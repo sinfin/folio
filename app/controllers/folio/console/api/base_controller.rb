@@ -3,7 +3,7 @@
 class Folio::Console::Api::BaseController < Folio::Console::BaseController
   include Folio::ApiControllerBase
 
-  skip_before_action :authenticate_account!
+  skip_before_action :custom_authenticate_account!
   before_action :api_authenticate_account!
 
   private

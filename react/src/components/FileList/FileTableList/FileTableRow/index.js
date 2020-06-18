@@ -8,11 +8,13 @@ import FileUploadProgress from 'components/FileUploadProgress'
 
 const FileTableRow = ({
   file,
-  filesKey,
+  fileType,
+  filesUrl,
   openFileModal,
   fileTypeIsImage,
   onClick,
-  massSelect
+  massSelect,
+  readOnly
 }) => {
   if (file._destroying) return null
 
@@ -24,6 +26,9 @@ const FileTableRow = ({
   } else if (file.attributes.uploading) {
     className = 'f-c-file-table__tr f-c-file-table__tr--uploading'
   }
+
+  let download = file.attributes.file_name
+  if (download.indexOf('.') === -1) { download = undefined }
 
   return (
     <div
@@ -41,7 +46,7 @@ const FileTableRow = ({
         </div>
       )}
 
-      {fileTypeIsImage && (
+      {fileTypeIsImage ? (
         <div className='f-c-file-table__td f-c-file-table__td--image py-0'>
           <FileUploadProgress progress={file.attributes.progress} />
 
@@ -61,17 +66,21 @@ const FileTableRow = ({
             )}
           </div>
         </div>
+      ) : (
+        <div className='f-c-file-table__td f-c-file-table__td--extension'>
+          <span className='f-c-file-table__extension'>{file.attributes.extension}</span>
+        </div>
       )}
 
       <div className='f-c-file-table__td f-c-file-table__td--main'>
         {fileTypeIsImage ? null : <FileUploadProgress progress={file.attributes.progress} />}
         {onClick ? file.attributes.file_name : (
-          <span onClick={() => openFileModal(file)}>{file.attributes.file_name}</span>
+          <span onClick={() => openFileModal(file)} className='cursor-pointer'>{file.attributes.file_name}{file.attributes.file_name}{file.attributes.file_name}</span>
         )}
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--size'>
-        {file.attributes.extension}, {numberToHumanSize(file.attributes.file_size)}
+        {numberToHumanSize(file.attributes.file_size)}
       </div>
 
       {massSelect && (
@@ -84,18 +93,26 @@ const FileTableRow = ({
         </div>
       )}
 
-      <div className='f-c-file-table__td text-lg-right'>
-        <Tags file={file} filesKey={filesKey} />
+      <div className='f-c-file-table__td f-c-file-table__td--tags'>
+        <Tags file={file} fileType={fileType} filesUrl={filesUrl} />
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>
         {openFileModal ? (
           <span
             onClick={(e) => { e.stopPropagation(); openFileModal(file) }}
-            className='btn btn-secondary fa fa-edit'
+            className={`btn fa ${readOnly ? 'btn-light fa-eye' : 'btn-secondary fa-edit'}`}
             rel='noopener noreferrer'
           />
         ) : undefined}
+
+        <a // eslint-disable-line
+          href={file.attributes.source_url}
+          className='btn btn-secondary fa fa-download ml-2'
+          target='_blank'
+          rel='noopener noreferrer'
+          download={download}
+        />
       </div>
     </div>
   )

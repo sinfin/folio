@@ -7,7 +7,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
 
-  before_action :authenticate_account!
+  before_action :custom_authenticate_account!
+
   before_action :add_root_breadcrumb
   before_action do
     I18n.locale = Rails.application.config.folio_console_locale
@@ -39,20 +40,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                     except: except,
                                     parent: (false if as.present?))
 
-    before_action do
-      add_breadcrumb(klass.model_name.human(count: 2),
-                     url_for([:console, klass]))
-
-      if folio_console_record
-        if folio_console_record.new_record?
-          add_breadcrumb I18n.t('folio.console.breadcrumbs.actions.new')
-        else
-          add_breadcrumb(folio_console_record.to_label,
-                         url_for([:edit, :console, folio_console_record]))
-        end
-      end
-    rescue NoMethodError
-    end
+    before_action :add_record_breadcrumbs
 
     only = except.include?(:index) ? %i[merge] : %i[index merge]
     before_action only: only do
@@ -112,7 +100,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def add_root_breadcrumb
-      add_breadcrumb '<i class="fa fa-home"></i>'.html_safe, console_root_path
+      add_breadcrumb '<i class="fa fa-home" style="min-width: 16px; min-height: 14px;"></i>'.html_safe, console_root_path
     end
 
     def additional_file_placements_strong_params_keys
@@ -215,4 +203,23 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     helper_method :index_tabs
+
+    def add_record_breadcrumbs
+      add_breadcrumb(@klass.model_name.human(count: 2),
+                     url_for([:console, @klass]))
+
+      if folio_console_record
+        if folio_console_record.new_record?
+          add_breadcrumb I18n.t('folio.console.breadcrumbs.actions.new')
+        else
+          add_breadcrumb(folio_console_record.to_label,
+                         url_for([:edit, :console, folio_console_record]))
+        end
+      end
+    rescue NoMethodError
+    end
+
+    def custom_authenticate_account!
+      authenticate_account!
+    end
 end

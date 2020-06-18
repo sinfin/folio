@@ -43,11 +43,13 @@ module Folio
 
       if ['new', 'edit', 'create', 'update'].include?(action_name)
         mode = single ? 'modal-single-select' : 'modal-multi-select'
+        url = url_for([:console, :api, file_type.constantize])
 
         content_tag(:div,
                     nil,
                     'class': 'folio-react-wrap',
                     'data-file-type': file_type,
+                    'data-files-url': url,
                     'data-mode': mode)
       end
     end
@@ -131,10 +133,13 @@ module Folio
           class_name = "#{class_name} f-c-js-atoms-placement-setting"
         end
 
+        url = url_for([:console, :api, file_type.constantize])
+
         content_tag(:div, nil,
           'class': class_name,
           'data-original-placements': placements,
           'data-file-type': file_type,
+          'data-files-url': url,
           'data-mode': 'multi-select',
           'data-attachmentable': attachmentable,
           'data-placement-type': type,

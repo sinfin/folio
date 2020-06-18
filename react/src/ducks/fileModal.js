@@ -17,24 +17,24 @@ const MARK_MODAL_FILE_AS_UPDATED = 'fileModal/MARK_MODAL_FILE_AS_UPDATED'
 
 // Actions
 
-export function openFileModal (filesKey, file) {
-  return { type: OPEN_FILE_MODAL, filesKey, file }
+export function openFileModal (fileType, file) {
+  return { type: OPEN_FILE_MODAL, fileType, file }
 }
 
 export function closeFileModal () {
   return { type: CLOSE_FILE_MODAL }
 }
 
-export function updateFileThumbnail (filesKey, file, thumbKey, params) {
-  return { type: UPDATE_FILE_THUMBNAIL, filesKey, file, thumbKey, params }
+export function updateFileThumbnail (fileType, file, thumbKey, params) {
+  return { type: UPDATE_FILE_THUMBNAIL, fileType, file, thumbKey, params }
 }
 
 export function updatedFileModalFile (file) {
   return { type: UPDATED_FILE_MODAL_FILE, file }
 }
 
-export function uploadNewFileInstead (filesKey, file, fileIo) {
-  return { type: UPLOAD_NEW_FILE_INSTEAD, filesKey, file, fileIo }
+export function uploadNewFileInstead (fileType, file, fileIo) {
+  return { type: UPLOAD_NEW_FILE_INSTEAD, fileType, file, fileIo }
 }
 
 export function uploadNewFileInsteadSuccess (file) {
@@ -55,10 +55,10 @@ export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
 function * updateFileThumbnailPerform (action) {
-  if (action.filesKey !== 'images') return
+  if (action.fileType !== 'images') return
 
   try {
-    const url = `/console/api/${action.filesKey}/${action.file.id}/update_file_thumbnail`
+    const url = `/console/api/${action.fileType}/${action.file.id}/update_file_thumbnail`
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {
@@ -72,12 +72,12 @@ function * updateFileThumbnailSaga () {
 
 function * uploadNewFileInsteadPerform (action) {
   try {
-    const url = `/console/api/${action.filesKey}/${action.file.id}/change_file`
+    const url = `/console/api/${action.fileType}/${action.file.id}/change_file`
     const data = new FormData()
     data.append('file[attributes][file]', action.fileIo)
     const response = yield call(apiFilePost, url, data)
     yield put(updatedFileModalFile(response.data))
-    yield put(updatedFiles(action.filesKey, [response.data]))
+    yield put(updatedFiles(action.fileType, [response.data]))
     yield put(uploadNewFileInsteadSuccess(response.data))
   } catch (e) {
     flashError(e.message)
@@ -113,7 +113,7 @@ export const fileModalSagas = [
 
 const initialState = {
   file: null,
-  filesKey: null,
+  fileType: null,
   uploadingNew: false,
   updating: false
 }
@@ -126,7 +126,7 @@ function modalReducer (state = initialState, action) {
       return {
         ...initialState,
         file: action.file,
-        filesKey: action.filesKey
+        fileType: action.fileType
       }
 
     case CLOSE_FILE_MODAL:

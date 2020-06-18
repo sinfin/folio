@@ -51,7 +51,7 @@ class Modal extends Component {
     const { fileModal } = this.props
 
     this.props.dispatch(markModalFileAsUpdating(fileModal.file))
-    this.props.dispatch(updateFile(this.props.filesKey, fileModal.file, this.state))
+    this.props.dispatch(updateFile(this.props.fileType, fileModal.file, this.state))
   }
 
   closeFileModal = () => {
@@ -59,16 +59,16 @@ class Modal extends Component {
   }
 
   updateThumbnail = (thumbKey, params) => {
-    this.props.dispatch(updateFileThumbnail(this.props.filesKey, this.props.fileModal.file, thumbKey, params))
+    this.props.dispatch(updateFileThumbnail(this.props.fileType, this.props.fileModal.file, thumbKey, params))
   }
 
   deleteFile = (file) => {
     this.closeFileModal()
-    this.props.dispatch(deleteFile(this.props.filesKey, file))
+    this.props.dispatch(deleteFile(this.props.fileType, file))
   }
 
   uploadNewFileInstead = (fileIo) => {
-    this.props.dispatch(uploadNewFileInstead(this.props.filesKey, this.props.fileModal.file, fileIo))
+    this.props.dispatch(uploadNewFileInstead(this.props.fileType, this.props.fileModal.file, fileIo))
   }
 
   onTagsChange = (tags) => {
@@ -80,14 +80,14 @@ class Modal extends Component {
   }
 
   render () {
-    const { fileModal, tags } = this.props
+    const { fileModal, tags, readOnly } = this.props
     const isOpen = fileModal.file !== null
 
     return (
       <ReactModal
         isOpen={isOpen}
         onRequestClose={this.closeFileModal}
-        className='ReactModal'
+        className='ReactModal ReactModal--FileModal'
       >
         {fileModal.file && (
           <FileModalFile
@@ -101,6 +101,7 @@ class Modal extends Component {
             onValueChange={this.onValueChange}
             tags={tags}
             formState={this.state}
+            readOnly={readOnly}
           />
         )}
       </ReactModal>
@@ -110,7 +111,7 @@ class Modal extends Component {
 
 const mapStateToProps = (state, props) => ({
   fileModal: fileModalSelector(state),
-  tags: makeTagsSelector(props.filesKey)(state)
+  tags: makeTagsSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

@@ -12,29 +12,30 @@ const RESET_FILTERS = 'filters/RESET_FILTERS'
 
 // Actions
 
-export function setFilter (filesKey, filter, value) {
-  return { type: SET_FILTER, filesKey, filter, value }
+export function setFilter (fileType, filesUrl, filter, value) {
+  return { type: SET_FILTER, fileType, filesUrl, filter, value }
 }
 
-export function unsetFilter (filesKey, filter) {
-  return setFilter(filesKey, filter, filter === 'tags' ? [] : '')
+export function unsetFilter (fileType, filesUrl, filter) {
+  return setFilter(fileType, filesUrl, filter, filter === 'tags' ? [] : '')
 }
 
-export function resetFilters (filesKey) {
-  return { type: RESET_FILTERS, filesKey }
+export function resetFilters (fileType, filesUrl) {
+  return { type: RESET_FILTERS, fileType, filesUrl }
 }
 
 // Sagas
 
 function * updateFiltersPerform (action) {
+  console.log(action)
   try {
     // debounce by 750ms, using delay with takeLatest
     let query = ''
     if (action.type === SET_FILTER) {
       yield delay(750)
-      query = yield select(makeFiltersQuerySelector(action.filesKey))
+      query = yield select(makeFiltersQuerySelector(action.fileType))
     }
-    yield put(getFiles(action.filesKey, query))
+    yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
     flashError(e.message)
   }
@@ -53,67 +54,70 @@ export const filtersSagas = [
 
 // Selectors
 
-export const makeFiltersSelector = (filesKey) => (state) => {
-  const filters = state.filters[filesKey]
-  const active = !isEqual(filters, initialState[filesKey])
+export const makeFiltersSelector = (fileType) => (state) => {
+  const base = state.filters[fileType] || defaultFiltersKeysState
+  const active = !isEqual(base, defaultFiltersKeysState)
 
   return {
-    ...filters,
+    ...base,
     active
   }
 }
 
-export const makeTagsSelector = (filesKey) => (state) => {
+export const makeTagsSelector = (fileType) => (state) => {
   const tags = window.FolioConsole.ReactMetaData.tags
 
-  const files = makeFilesSelector(filesKey)(state)
+  const files = makeFilesSelector(fileType)(state)
   files.forEach((file) => file.attributes.tags.forEach((tag) => {
     if (tags.indexOf(tag) === -1) tags.push(tag)
   }))
   return tags
 }
 
-export const makeFiltersQuerySelector = (filesKey) => (state) => {
-  const filters = state.filters[filesKey]
+export const makeFiltersQuerySelector = (fileType) => (state) => {
+  const base = state.filters[fileType] || defaultFiltersKeysState
   const params = new URLSearchParams()
-  Object.keys(filters).forEach((key) => {
-    let value = filters[key]
+
+  Object.keys(base).forEach((key) => {
+    let value = base[key]
     if (key === 'tags') {
-      value = filters[key].join(',')
+      value = base[key].join(',')
     }
     if (value) {
       params.set(`by_${key}`, value)
     }
   })
+
   return params.toString()
 }
 
-export const makePlacementsSelector = (filesKey) => (state) => {
+export const makePlacementsSelector = (fileType) => (state) => {
   // return window.FolioConsole.ReactMetaData.placements
   return []
 }
 
 // State
 
-export const initialState = {
-  documents: {
-    file_name: '',
-    tags: [],
-    placement: ''
-  },
-  images: {
-    file_name: '',
-    tags: [],
-    placement: ''
-  }
+const defaultFiltersKeysState = {
+  file_name: '',
+  tags: [],
+  placement: ''
 }
+
+export const initialState = {}
 
 // Reducer
 
-function filtersReducer (state = initialState, action) {
+function filtersReducer (rawState = initialState, action) {
+  const state = rawState
+
+  if (action.fileType && !state[action.fileType]) {
+    state[action.fileType] = { ...defaultFiltersKeysState }
+  }
+
   switch (action.type) {
     case SET_FILTER: {
-      const obj = omit(state[action.filesKey], [action.filter])
+      const obj = omit(state[action.fileType], [action.filter])
 
       if (action.value) {
         obj[action.filter] = action.value
@@ -121,7 +125,7 @@ function filtersReducer (state = initialState, action) {
 
       return {
         ...state,
-        [action.filesKey]: obj
+        [action.fileType]: obj
       }
     }
 

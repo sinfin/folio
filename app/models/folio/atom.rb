@@ -27,9 +27,18 @@ module Folio::Atom
         reflection = klass.reflections[key.to_s]
         plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
         file_type = reflection.source_reflection.options[:class_name]
+        files_url = nil
+        url_for_args = [:console, :api, file_type.constantize, only_path: true]
+
+        begin
+          files_url = Folio::Engine.app.url_helpers.url_for(url_for_args)
+        rescue StandardError
+          files_url = Rails.application.routes.url_helpers.url_for(url_for_args)
+        end
 
         {
           file_type: file_type,
+          files_url: files_url,
           key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
           label: klass.human_attribute_name(key),
           plural: plural,

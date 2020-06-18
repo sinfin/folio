@@ -6,7 +6,6 @@ import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
 import { flashMessageFromApiErrors } from 'utils/flash'
-import fileKeyToType from 'utils/fileKeyToType'
 
 import Loader from 'components/Loader'
 import {
@@ -45,16 +44,16 @@ class Uploader extends Component {
   dropzone = null
 
   eventHandlers () {
-    const { dispatch, filesKey } = this.props
+    const { dispatch, fileType } = this.props
 
     return {
-      addedfile: (file) => dispatch(addedFile(filesKey, file)),
-      thumbnail: (file, dataUrl) => dispatch(thumbnail(filesKey, file, dataUrl)),
-      success: (file, response) => dispatch(success(filesKey, file, response)),
+      addedfile: (file) => dispatch(addedFile(fileType, file)),
+      thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
+      success: (file, response) => dispatch(success(fileType, file, response)),
       error: (file, message) => {
-        dispatch(error(filesKey, file, flashMessageFromApiErrors(message)))
+        dispatch(error(fileType, file, flashMessageFromApiErrors(message)))
       },
-      uploadprogress: (file, percentage) => dispatch(progress(filesKey, file, Math.round(percentage))),
+      uploadprogress: (file, percentage) => dispatch(progress(fileType, file, Math.round(percentage))),
       init: (dropzone) => { this.dropzone = dropzone }
     }
   }
@@ -63,15 +62,14 @@ class Uploader extends Component {
     return {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: false,
-      postUrl: `/console/api/${this.props.filesKey}`
+      postUrl: this.props.filesUrl
     }
   }
 
   djsConfig () {
     const params = {}
-    const fileType = fileKeyToType(this.props.filesKey)
-    params['file[type]'] = fileType
-    params['file[attributes][type]'] = fileType
+    params['file[type]'] = this.props.fileType
+    params['file[attributes][type]'] = this.props.fileType
     params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
 
     return {
@@ -97,8 +95,8 @@ class Uploader extends Component {
   }
 
   render () {
-    const { filesKey } = this.props
-    if (!filesKey) return <Loader />
+    const { fileType } = this.props
+    if (!fileType) return <Loader />
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
@@ -117,7 +115,7 @@ class Uploader extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  uploads: makeUploadsSelector(props.filesKey)(state)
+  uploads: makeUploadsSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

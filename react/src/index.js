@@ -9,12 +9,11 @@ import 'url-search-params-polyfill'
 import FilesApp from 'containers/FilesApp'
 import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
-import { setMode, setFileType } from 'ducks/app'
+import { setMode, setFileType, setFilesUrl, setReadOnly } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
 import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
-import fileTypeToKey from 'utils/fileTypeToKey'
 
 import reducers from './reducers'
 import sagas from './sagas'
@@ -65,6 +64,16 @@ window.folioConsoleInitReact = (domRoot) => {
         asJson: false
       },
       {
+        key: 'filesUrl',
+        action: setFilesUrl,
+        asJson: false
+      },
+      {
+        key: 'readOnly',
+        action: setReadOnly,
+        asJson: false
+      },
+      {
         key: 'atoms',
         action: setAtomsData,
         asJson: true
@@ -97,15 +106,12 @@ window.folioConsoleInitReact = (domRoot) => {
     ]
 
     const fileType = domRoot.dataset.fileType
-    let filesKey
     if (fileType) {
-      filesKey = fileTypeToKey(fileType)
-
       KEYED_DOM_DATA.forEach(({ key, action, asJson }) => {
         let data = domRoot.dataset[key] || null
         if (data) {
           if (asJson) data = JSON.parse(data)
-          store.dispatch(action(filesKey, data))
+          store.dispatch(action(fileType, data))
         }
       })
     }

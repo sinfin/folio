@@ -25,6 +25,8 @@ cs:
       layout:
         sidebar:
           settings: Nastavení
+          search:
+            placeholder: Hledat
 
         header:
           sign_out: Odhlásit

@@ -1,6 +1,6 @@
 import { Component } from 'react'
 
-import fileTypeToKey from 'utils/fileTypeToKey'
+import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 class ModalSelect extends Component {
   state = {
@@ -13,7 +13,7 @@ class ModalSelect extends Component {
 
     $(document).on('click', this.selector(), (e) => {
       this.setState({ el: e.target })
-      this.props.loadFiles(fileTypeToKey(this.props.fileType))
+      this.props.loadFiles(this.props.fileType, this.props.filesUrl)
       this.onOpen(e.target)
       this.jQueryModal().modal('show')
     })
@@ -21,7 +21,7 @@ class ModalSelect extends Component {
     if (this.fileModalSelector()) {
       $(document).on('click', this.fileModalSelector(), (e) => {
         e.stopPropagation()
-        this.props.openFileModal(this.props.filesKey, $(e.target).data('file'))
+        this.props.openFileModal(this.props.fileType, $(e.target).data('file'))
       })
     }
 
@@ -29,7 +29,7 @@ class ModalSelect extends Component {
     if (eventName) {
       $(document).on(eventName, (e, eventData) => {
         this.setState(eventData)
-        this.props.loadFiles(fileTypeToKey(this.props.fileType))
+        this.props.loadFiles(this.props.fileType, this.props.filesUrl)
         this.onOpen(e.target)
         this.jQueryModal().modal('show')
       })
@@ -50,7 +50,7 @@ class ModalSelect extends Component {
   }
 
   selectingDocument () {
-    return this.props.fileType === 'Folio::Document'
+    return !fileTypeIsImage(this.props.fileType)
   }
 
   fileTemplate (file, prefix) {

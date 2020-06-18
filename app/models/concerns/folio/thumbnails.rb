@@ -57,6 +57,12 @@ module Folio::Thumbnails
     end
   end
 
+  def admin_thumb(immediate: false, force: false)
+    thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
+          immediate: immediate,
+          force: force)
+  end
+
   def thumb_in_test_env(w_x_h, quality: 90)
     width, height = w_x_h.split('x').map(&:to_i)
 

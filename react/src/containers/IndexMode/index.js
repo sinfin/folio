@@ -12,6 +12,7 @@ import { displayAsThumbsSelector } from 'ducks/display'
 import { openFileModal } from 'ducks/fileModal'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
+import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
@@ -23,31 +24,38 @@ import Loader from 'components/Loader'
 import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
+  openFileModal = (file) => {
+    this.props.dispatch(openFileModal(this.props.fileType, file))
+  }
+
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
-    const fileTypeIsImage = this.props.filesKey === 'images'
+    const fileTypeIsImageResult = fileTypeIsImage(this.props.fileType)
 
     return (
       <div className='mt-n3'>
-        <Uploader filesKey={this.props.filesKey}>
+        <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
           <Card
-            filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
+            filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={fileTypeIsImageResult} />}
           >
-            <UploadTagger filesKey={this.props.filesKey} />
+            <UploadTagger fileType={this.props.fileType} />
 
-            <FileMassActions filesKey={this.props.filesKey} />
+            <FileMassActions fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
 
             {this.props.filesStatus.loading ? <Loader standalone /> : (
               <FileList
                 files={this.props.filesForList}
-                fileTypeIsImage={fileTypeIsImage}
+                fileTypeIsImage={fileTypeIsImageResult}
                 displayAsThumbs={this.props.displayAsThumbs}
                 pagination={this.props.filesPagination}
-                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.filesKey, page))}
-                massSelect={(file, select) => this.props.dispatch(massSelect(this.props.filesKey, file, select))}
+                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
+                massSelect={(file, select) => this.props.dispatch(massSelect(this.props.fileType, file, select))}
                 massSelectVisible={this.props.filesStatus.massSelecting}
-                filesKey={this.props.filesKey}
-                openFileModal={(file) => this.props.dispatch(openFileModal(this.props.filesKey, file))}
+                fileType={this.props.fileType}
+                filesUrl={this.props.filesUrl}
+                readOnly={this.props.readOnly}
+                openFileModal={this.openFileModal}
+                openFileModalOnClick
                 dropzoneTrigger
               />
             )}
@@ -59,10 +67,10 @@ class IndexMode extends LazyLoadCheckingComponent {
 }
 
 const mapStateToProps = (state, props) => ({
-  filesStatus: makeFilesStatusSelector(props.filesKey)(state),
-  filesForList: makeFilesForListSelector(props.filesKey)(state),
+  filesStatus: makeFilesStatusSelector(props.fileType)(state),
+  filesForList: makeFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.filesKey)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

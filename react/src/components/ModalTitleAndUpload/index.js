@@ -1,5 +1,7 @@
 import React from 'react'
 
+import fileTypeIsImage from 'utils/fileTypeIsImage'
+
 class ModalTitleAndUpload extends React.PureComponent {
   triggerUpload = () => {
     window.jQuery('.folio-console-react-modal.show .folio-console-dropzone-trigger').click()
@@ -9,7 +11,7 @@ class ModalTitleAndUpload extends React.PureComponent {
     return (
       <div className='modal-header border-bottom-0 pr-5'>
         <h3 className='mr-g modal-title'>
-          {this.props.filesKey === 'documents' ? window.FolioConsole.translations.selectDocument : window.FolioConsole.translations.selectImage}
+          {fileTypeIsImage(this.props.fileType) ? window.FolioConsole.translations.selectImage : window.FolioConsole.translations.selectDocument }
         </h3>
 
         <button

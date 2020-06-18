@@ -1,6 +1,6 @@
 .f-c-index-header
   h1.f-c-index-header__h1
-    a.f-c-index-header__h1-a href=url_for([:console, model])
+    a.f-c-index-header__h1-a href=title_url
       = title
 
   - if model.respond_to?(:by_query) && options[:by_query] != false

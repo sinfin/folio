@@ -18,15 +18,15 @@ import FilesAppWrap from './styled/FilesAppWrap'
 class FilesApp extends Component {
   componentWillMount () {
     if (this.shouldAutoLoadFiles()) {
-      this.loadFiles(this.props.app.filesKey)
+      this.loadFiles(this.props.app.fileType, this.props.app.filesUrl)
     }
     this.listenOnActionCable()
     window.addEventListener('checkLazyload', forceCheck)
   }
 
-  loadFiles = (filesKey) => {
+  loadFiles = (fileType, filesUrl) => {
     if (!this.props.filesLoaded) {
-      this.props.dispatch(getFiles(filesKey))
+      this.props.dispatch(getFiles(fileType, filesUrl))
     }
   }
 
@@ -45,30 +45,30 @@ class FilesApp extends Component {
     return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'modal-multi-select' && this.props.app.mode !== 'atoms'
   }
 
-  openFileModal = (filesKey, file) => {
-    this.props.dispatch(openFileModal(filesKey, file))
+  openFileModal = (fileType, file) => {
+    this.props.dispatch(openFileModal(fileType, file))
   }
 
   renderMode () {
-    const { mode, fileType, filesKey } = this.props.app
+    const { mode, fileType, filesUrl, readOnly } = this.props.app
 
     if (mode === 'multi-select') {
-      return <MultiSelect filesKey={filesKey} />
+      return <MultiSelect fileType={fileType} filesUrl={filesUrl} />
     }
 
     if (mode === 'single-select') {
-      return <SingleSelect filesKey={filesKey} />
+      return <SingleSelect fileType={fileType} filesUrl={filesUrl} />
     }
 
     if (mode === 'index') {
-      return <IndexMode filesKey={filesKey} />
+      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} />
     }
 
     if (mode === 'modal-single-select') {
       return (
         <ModalSingleSelect
           fileType={fileType}
-          filesKey={filesKey}
+          filesUrl={filesUrl}
           loadFiles={this.loadFiles}
           openFileModal={this.openFileModal}
         />
@@ -79,7 +79,7 @@ class FilesApp extends Component {
       return (
         <ModalMultiSelect
           fileType={fileType}
-          filesKey={filesKey}
+          filesUrl={filesUrl}
           loadFiles={this.loadFiles}
         />
       )
@@ -103,7 +103,7 @@ class FilesApp extends Component {
       <FilesAppWrap className='folio-react-app'>
         {this.renderMode()}
 
-        <FileModal filesKey={this.props.app.filesKey} />
+        <FileModal fileType={this.props.app.fileType} readOnly={this.props.app.readOnly} />
       </FilesAppWrap>
     )
   }
@@ -111,7 +111,7 @@ class FilesApp extends Component {
 
 const mapStateToProps = (state, props) => ({
   app: state.app,
-  filesLoaded: makeFilesLoadedSelector(props.filesKey)(state)
+  filesLoaded: makeFilesLoadedSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

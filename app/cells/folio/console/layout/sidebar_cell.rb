@@ -37,10 +37,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
          (class_name[:klass] || class_name[:label]) &&
          class_name[:path]
 
-        label = if class_name[:klass]
-          label_from(class_name[:klass].constantize)
-        elsif class_name[:label]
+        label = if class_name[:label]
           t(".#{class_name[:label]}")
+        elsif class_name[:klass]
+          label_from(class_name[:klass].constantize)
+        else
+          ''
         end
 
         begin
@@ -55,22 +57,20 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           controller.main_app.send(p)
         end
 
-        link(label, path, paths: paths)
+        if class_name[:icon]
+          link(nil, path) do
+            concat(content_tag(:i, '', class: "#{class_name[:icon]} f-c-layout-sidebar__icon"))
+            concat(label)
+          end
+        else
+          link(label, path, paths: paths)
+        end
       else
         klass = class_name.constantize
 
-        if klass == Folio::Site
-          link(nil, controller.edit_console_site_path) do
-            concat(content_tag(:i,
-                               '',
-                               class: 'fa fa-cogs f-c-layout-sidebar__icon'))
-            concat(t('.settings'))
-          end
-        else
-          label = label_from(klass)
-          path = controller.url_for([:console, klass])
-          link(label, path)
-        end
+        label = label_from(klass)
+        path = controller.url_for([:console, klass])
+        link(label, path)
       end
     end
   end
@@ -98,9 +98,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         Folio::Lead
         Visit
       ],
-      %w[
-        Folio::Account
-        Folio::Site
+      [
+        'Folio::Account',
+        {
+          klass: 'Folio::Site',
+          icon: 'fa fa-cogs',
+          path: :console_site_path,
+          label: 'settings'
+        },
       ]
     ]
   end

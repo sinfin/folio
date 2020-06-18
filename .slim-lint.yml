@@ -3,5 +3,6 @@ linters:
     enabled: false
 
 exclude:
-  - 'lib/generators/folio/console/scaffold/templates/*'
   - 'app/cells/folio/console/publishable_inputs/show.slim'
+  - 'app/views/folio/console/partials/_translations.slim'
+  - 'lib/generators/folio/console/scaffold/templates/*'

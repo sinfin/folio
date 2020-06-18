@@ -67,14 +67,6 @@ class Folio::Console::FileSerializer
     ary
   end
 
-  link :edit do |object|
-    if object.persisted?
-      Folio::Engine.routes
-                   .url_helpers
-                   .url_for([:edit, :console, object, only_path: true])
-    end
-  end
-
   private
     def self.url_for_placement(file_placement)
       placement = file_placement.placement

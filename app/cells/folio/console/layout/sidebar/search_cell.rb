@@ -5,7 +5,7 @@ class Folio::Console::Layout::Sidebar::SearchCell < Folio::ConsoleCell
 
   def form(&block)
     opts = {
-      url: controller.console_search_path,
+      url: options[:url] || controller.console_search_path,
       method: :get,
       html: { class: 'f-c-layout-sidebar-search__form' },
     }
@@ -18,6 +18,7 @@ class Folio::Console::Layout::Sidebar::SearchCell < Folio::ConsoleCell
       class: 'f-c-layout-sidebar-search__input',
       value: params[:q].presence,
       autocomplete: 'off',
+      placeholder: t('.placeholder'),
     }
     wrapper_html = { class: 'f-c-layout-sidebar-search__form-group' }
     f.input :q, label: false, input_html: input_html, wrapper_html: wrapper_html

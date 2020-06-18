@@ -12,7 +12,7 @@ function triggerModal (fileType, data) {
 
 function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, index }) {
   const isDocument = attachmentType.file_type === 'Folio::Document'
-  const filesKey = isDocument ? 'documents' : 'images'
+  const fileType = isDocument ? 'documents' : 'images'
   const trigger = () => {
     const d = {
       index,
@@ -46,7 +46,7 @@ function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, ind
 
                 <FileHoverButtons
                   edit
-                  onEdit={() => openFileModal(filesKey, data.file)}
+                  onEdit={() => openFileModal(fileType, data.file)}
                   destroy
                   onDestroy={remove}
                 />

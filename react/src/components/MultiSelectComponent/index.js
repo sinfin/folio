@@ -9,26 +9,27 @@ import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
 import FilePlacementList from 'components/FilePlacementList'
+import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 class MultiSelectComponent extends LazyLoadCheckingComponent {
   componentWillMount () {
     if (this.props.shouldLoadFiles &&
         !this.props.filesStatus.loaded &&
         !this.props.filesStatus.loading &&
-        this.props.filesKey) {
-      this.props.getFiles(this.props.filesKey)
+        this.props.fileType) {
+      this.props.getFiles(this.props.fileType)
     }
   }
 
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
-    const fileTypeIsImage = this.props.filesKey === 'images'
+    const fileTypeIsImageResult = fileTypeIsImage(this.props.fileType)
 
     return (
-      <Uploader filesKey={this.props.filesKey}>
+      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
         <Card
           highlighted
-          header={window.FolioConsole.translations[`selected${this.props.filesKey}`]}
+          header={window.FolioConsole.translations[`selected${this.props.fileType}`]}
           className='f-c-multi-select-component__card f-c-multi-select-component__card--placements'
         >
           <FilePlacementList
@@ -37,20 +38,20 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
             onAltChange={this.props.onAltChange}
             onTitleChange={this.props.onTitleChange}
             unselectFilePlacement={this.props.unselectFilePlacement}
-            fileTypeIsImage={fileTypeIsImage}
-            filesKey={this.props.filesKey}
+            fileTypeIsImage={fileTypeIsImageResult}
+            fileType={this.props.fileType}
             nested={this.props.nested}
             openFileModal={this.props.openFileModal}
           />
         </Card>
 
         <Card
-          header={window.FolioConsole.translations[`available${this.props.filesKey}`]}
+          header={window.FolioConsole.translations[`available${this.props.fileType}`]}
           headerUpload
-          filters={<FileFilter filesKey={this.props.filesKey} fileTypeIsImage={fileTypeIsImage} />}
+          filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={fileTypeIsImageResult} />}
           className='f-c-multi-select-component__card f-c-multi-select-component__card--files'
         >
-          <UploadTagger filesKey={this.props.filesKey} nested={this.props.nested} />
+          <UploadTagger fileType={this.props.fileType} nested={this.props.nested} />
 
           {this.props.filesStatus.loading ? <Loader standalone /> : (
             <FileList
@@ -60,7 +61,8 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
               onClick={this.props.selectFile}
               pagination={this.props.filesPagination}
               changeFilesPage={this.props.changeFilesPage}
-              filesKey={this.props.filesKey}
+              fileType={this.props.fileType}
+              filesUrl={this.props.filesUrl}
               selecting='multiple'
               openFileModal={this.props.openFileModal}
               dropzoneTrigger
