@@ -21,11 +21,15 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def input(f)
+    input_html = { class: 'f-c-boolean-toggle__input', id: id }
+
+    input_html[:checked] = true if input_checked?
+
     f.input(attribute, wrapper: :custom_boolean_switch,
                        label: "<span>#{input_label}</span>".html_safe,
                        hint: false,
-                       input_html: { class: 'f-c-boolean-toggle__input',
-                                     id: id })
+                       as: :boolean,
+                       input_html: input_html)
   end
 
   def attribute
@@ -48,5 +52,8 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
     else
       ''
     end
+  end
+
+  def input_checked?
   end
 end
