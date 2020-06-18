@@ -68,14 +68,14 @@ const FileTableRow = ({
         </div>
       ) : (
         <div className='f-c-file-table__td f-c-file-table__td--extension'>
+          <FileUploadProgress progress={file.attributes.progress} />
           <span className='f-c-file-table__extension'>{file.attributes.extension}</span>
         </div>
       )}
 
       <div className='f-c-file-table__td f-c-file-table__td--main'>
-        {fileTypeIsImage ? null : <FileUploadProgress progress={file.attributes.progress} />}
         {onClick ? file.attributes.file_name : (
-          <span onClick={() => openFileModal(file)} className='cursor-pointer'>{file.attributes.file_name}{file.attributes.file_name}{file.attributes.file_name}</span>
+          <span onClick={() => openFileModal(file)} className='cursor-pointer'>{file.attributes.file_name}</span>
         )}
       </div>
 
@@ -98,21 +98,25 @@ const FileTableRow = ({
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>
-        {openFileModal ? (
-          <span
-            onClick={(e) => { e.stopPropagation(); openFileModal(file) }}
-            className={`btn fa ${readOnly ? 'btn-light fa-eye' : 'btn-secondary fa-edit'}`}
-            rel='noopener noreferrer'
-          />
-        ) : undefined}
+        {file.attributes.uploading ? null : (
+          <React.Fragment>
+            {openFileModal ? (
+              <span
+                onClick={(e) => { e.stopPropagation(); openFileModal(file) }}
+                className={`btn fa ${readOnly ? 'btn-light fa-eye' : 'btn-secondary fa-edit'}`}
+                rel='noopener noreferrer'
+              />
+            ) : undefined}
 
-        <a // eslint-disable-line
-          href={file.attributes.source_url}
-          className='btn btn-secondary fa fa-download ml-2'
-          target='_blank'
-          rel='noopener noreferrer'
-          download={download}
-        />
+            <a // eslint-disable-line
+              href={file.attributes.source_url}
+              className='btn btn-secondary fa fa-download ml-2'
+              target='_blank'
+              rel='noopener noreferrer'
+              download={download}
+            />
+          </React.Fragment>
+        )}
       </div>
     </div>
   )

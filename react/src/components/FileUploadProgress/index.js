@@ -18,9 +18,9 @@ const FileUploadProgress = ({ progress }) => {
         style={{ width: `${progress || 0}%` }}
       />
 
-      <span className='folio-console-file-upload-progress__inner'>
+      <div className='folio-console-file-upload-progress__inner'>
         {message}
-      </span>
+      </div>
     </span>
   )
 }
