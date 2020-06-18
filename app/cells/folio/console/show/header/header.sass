@@ -15,3 +15,13 @@
     display: flex
     flex-wrap: wrap
     align-items: center
+
+  +media-breakpoint-down(xs)
+    &__right
+      flex: 0 0 auto
+
+    &__btn-ico
+      margin-right: 0 !important
+
+    &__btn-text
+      display: none

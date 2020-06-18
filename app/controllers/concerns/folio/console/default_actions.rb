@@ -158,6 +158,12 @@ module Folio::Console::DefaultActions
       else
         if folio_console_record.persisted?
           begin
+            if action_name == 'create'
+              url_for([:console, folio_console_record])
+            else
+              url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
+            end
+          rescue ActionController::UrlGenerationError, NoMethodError
             url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
           rescue ActionController::UrlGenerationError, NoMethodError
             url_for([:console, @klass, prevalidate: prevalidate ? 1 : nil])
