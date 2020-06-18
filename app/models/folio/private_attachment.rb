@@ -11,7 +11,8 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   end
 
   belongs_to :attachmentable, polymorphic: true,
-                              touch: true
+                              touch: true,
+                              required: false
 
   # Validations
   validates :file,

@@ -9,6 +9,7 @@ module Folio::HasPrivateAttachments
                                    as: :attachmentable,
                                    foreign_key: :attachmentable_id,
                                    dependent: :destroy
+
     accepts_nested_attributes_for :private_attachments, allow_destroy: true,
                                                         reject_if: :all_blank
   end

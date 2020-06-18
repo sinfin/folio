@@ -58,6 +58,7 @@ module Folio
 
           gem 'better_errors'
           gem 'binding_of_caller'
+          gem 'rails-flog', require: 'flog'
           gem 'bullet'
         end
       end
