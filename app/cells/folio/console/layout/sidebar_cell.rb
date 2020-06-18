@@ -103,7 +103,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         {
           klass: 'Folio::Site',
           icon: 'fa fa-cogs',
-          path: :console_site_path,
+          path: :edit_console_site_path,
           label: 'settings'
         },
       ]
