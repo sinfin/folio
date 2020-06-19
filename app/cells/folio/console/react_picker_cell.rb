@@ -7,11 +7,6 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
     model
   end
 
-  def file_type_slug
-    base = options[:file_type].demodulize.downcase
-    single? ? base : base.pluralize
-  end
-
   def placement_key
     options[:placement_key]
   end
@@ -27,27 +22,27 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
     end
   end
 
+  def react_type
+    @react_type ||= options[:file_type].constantize.react_type
+  end
+
   def render_fields
-    render("_#{file_type_slug}_fields")
+    if react_type == 'image'
+      render('_image_fields')
+    else
+      render('_document_fields')
+    end
   end
 
   def image(fp, class_name = '')
     if fp.object && fp.object.file
-      url = fp.object
-              .file
-              .thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
-              .url
+      url = fp.object.file.admin_thumb.url
       image_tag(url, class: "folio-console-thumbnail__img #{class_name}")
     end
   end
 
   def class_name
-    base = ['folio-console-react-picker']
-    if single?
-      base << 'folio-console-react-picker--single'
-    else
-      base << 'folio-console-react-picker--multi'
-    end
+    base = ['folio-console-react-picker', 'folio-console-react-picker--single']
     base << 'folio-console-react-picker--error' if form_errors.present?
     base.join(' ')
   end
@@ -59,17 +54,9 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
   end
 
   private
-    def single?
-      placement_key !~ /_placements/
-    end
-
     def picked?
-      placements = f.object.send(placement_key)
-      return false if placements.blank?
-      if single?
-        !placements.marked_for_destruction?
-      else
-        placements.all? { |p| !p.marked_for_destruction? }
-      end
+      placement = f.object.send(placement_key)
+      return false if placement.blank?
+      !placement.marked_for_destruction?
     end
 end

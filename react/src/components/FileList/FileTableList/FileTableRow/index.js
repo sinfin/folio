@@ -80,7 +80,9 @@ const FileTableRow = ({
       </div>
 
       <div className='f-c-file-table__td f-c-file-table__td--size'>
-        {numberToHumanSize(file.attributes.file_size)}
+        <div className='f-c-file-table__td-min-height'>
+          {numberToHumanSize(file.attributes.file_size)}
+        </div>
       </div>
 
       {massSelect && (

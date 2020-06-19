@@ -6,13 +6,13 @@ import {
   makeFilesForListSelector,
   makeFilesPaginationSelector,
   changeFilesPage,
-  massSelect
+  massSelect,
+  makeFilesReactTypeIsImageSelector
 } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 import { openFileModal } from 'ducks/fileModal'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent'
-import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 import FileFilter from 'containers/FileFilter'
 import Uploader from 'containers/Uploader'
@@ -30,13 +30,12 @@ class IndexMode extends LazyLoadCheckingComponent {
 
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
-    const fileTypeIsImageResult = fileTypeIsImage(this.props.fileType)
 
     return (
       <div className='mt-n3'>
         <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
           <Card
-            filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={fileTypeIsImageResult} />}
+            filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} />}
           >
             <UploadTagger fileType={this.props.fileType} />
 
@@ -45,7 +44,7 @@ class IndexMode extends LazyLoadCheckingComponent {
             {this.props.filesStatus.loading ? <Loader standalone /> : (
               <FileList
                 files={this.props.filesForList}
-                fileTypeIsImage={fileTypeIsImageResult}
+                fileTypeIsImage={this.props.fileTypeIsImage}
                 displayAsThumbs={this.props.displayAsThumbs}
                 pagination={this.props.filesPagination}
                 changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
@@ -70,7 +69,8 @@ const mapStateToProps = (state, props) => ({
   filesStatus: makeFilesStatusSelector(props.fileType)(state),
   filesForList: makeFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state),
+  fileTypeIsImage: makeFilesReactTypeIsImageSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

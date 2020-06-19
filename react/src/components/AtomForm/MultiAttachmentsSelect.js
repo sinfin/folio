@@ -6,7 +6,8 @@ import {
   makeFilesStatusSelector,
   makeFilesPaginationSelector,
   changeFilesPage,
-  makeRawUnselectedFilesForListSelector
+  makeRawUnselectedFilesForListSelector,
+  makeFilesReactTypeIsImageSelector
 } from 'ducks/files'
 
 import {
@@ -89,6 +90,7 @@ class MultiAttachmentsSelect extends React.PureComponent {
         fileType={this.props.fileType}
         filesUrl={this.props.filesUrl}
         filesStatus={this.props.filesStatus}
+        fileTypeIsImage={this.props.fileTypeIsImage}
         getFiles={this.getFiles}
         filePlacements={this.props.filePlacements}
         onSortEnd={this.onSortEnd}
@@ -140,6 +142,7 @@ const mapStateToProps = (state, props) => {
     filesStatus: makeFilesStatusSelector(fileType)(state),
     displayAsThumbs: displayAsThumbsSelector(state),
     filesPagination: makeFilesPaginationSelector(fileType)(state),
+    fileTypeIsImage: makeFilesReactTypeIsImageSelector(fileType)(state),
     filePlacements,
     unselectedFilesForList: makeRawUnselectedFilesForListSelector(fileType, selectedFileIds)(state)
   }

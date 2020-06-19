@@ -23,15 +23,11 @@ html.f-c-layout-html lang=I18n.locale
 
     - unless @no_react_modals
       - %w[Folio::Image Folio::Document].each do |klass|
-        - [true, false].each do |single|
-          .modal.folio-console-react-modal.fade[
-            data-klass=klass
-            data-multi=(single ? 'false' : 'true')
-          ]
-            .modal-dialog.modal-lg
-              .modal-content
-                .modal-body
-                  = react_modal_for(klass, single: single)
+        .modal.folio-console-react-modal.fade data-klass=klass
+          .modal-dialog.modal-lg
+            .modal-content
+              .modal-body
+                = react_modal_for(klass)
 
                 button type="button" class="close" data-dismiss="modal" &times;
 
@@ -42,6 +38,8 @@ html.f-c-layout-html lang=I18n.locale
       = render 'folio/console/partials/react_meta_data'
 
     = render 'folio/partials/photoswipe'
+
+    = render 'folio/console/partials/application_above_javascripts'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
       = javascript_include_tag 'folio/console/base'

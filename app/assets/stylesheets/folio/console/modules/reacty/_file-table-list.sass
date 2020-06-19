@@ -12,9 +12,6 @@
     position: relative
     min-width: 100%
 
-    .modal-body &
-      margin: 0 (( - $modal-inner-padding )) (( - $modal-inner-padding ))
-
     .folio-console-dropzone-trigger
       +unbutton
       background: $table-hover-bg
@@ -92,6 +89,11 @@
       &--main,
       &--tags
         white-space: normal
+
+    &__td-min-height
+      min-height: 35px
+      display: flex
+      align-items: center
 
     &__tr--header &__td
       border-top: 0

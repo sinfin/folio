@@ -1,7 +1,5 @@
 import { Component } from 'react'
 
-import fileTypeIsImage from 'utils/fileTypeIsImage'
-
 class ModalSelect extends Component {
   state = {
     el: null
@@ -49,8 +47,8 @@ class ModalSelect extends Component {
   eventName () {
   }
 
-  selectingDocument () {
-    return !fileTypeIsImage(this.props.fileType)
+  selectingImage () {
+    return this.props.reactType === 'image'
   }
 
   fileTemplate (file, prefix) {

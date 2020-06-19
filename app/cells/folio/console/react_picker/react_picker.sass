@@ -1,24 +1,8 @@
 .folio-console-react-picker
-  &--single
-    min-width: 150px
+  min-width: 150px
 
-    .folio-console-has-nested ~ .folio-console-react-picker__button
-      display: none
-
-  &--multi
-    padding: 1rem
-    background: #f7f7f7
-    border-radius: $border-radius
-    margin-top: 1rem
-
-    .folio-console-react-picker__button
-      margin-top: $grid-gutter-half
-
-    .f-c-file-table__td--main
-      padding-left: 0
-
-    .f-c-file-table__td:last-child
-      padding-right: 0
+  .folio-console-has-nested ~ .folio-console-react-picker__button
+    display: none
 
   &--error
     color: $danger
@@ -34,6 +18,5 @@
     &.folio-console-has-nested
       display: flex
 
-  .folio-console-react-picker--single &
-    .nested-fields
-      margin: 0
+  .nested-fields
+    margin: 0

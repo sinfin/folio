@@ -1,7 +1,7 @@
 import { apiGet, apiPut, apiDelete } from 'utils/api'
 import { flashError, flashSuccess } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
-import { filter, find, without } from 'lodash'
+import { filter, find, without, omit } from 'lodash'
 
 import { filesUrlSelector } from 'ducks/app'
 import { makeUploadsSelector } from 'ducks/uploads'
@@ -32,8 +32,8 @@ export function getFiles (fileType, filesUrl, query = '') {
   return { type: GET_FILES, fileType, filesUrl, query }
 }
 
-export function getFilesSuccess (fileType, records, pagination) {
-  return { type: GET_FILES_SUCCESS, fileType, records, pagination }
+export function getFilesSuccess (fileType, records, meta) {
+  return { type: GET_FILES_SUCCESS, fileType, records, meta }
 }
 
 export function uploadedFile (fileType, file) {
@@ -265,6 +265,15 @@ export const makeFilesPaginationSelector = (fileType) => (state) => {
   return base.pagination
 }
 
+export const makeFilesReactTypeSelector = (fileType) => (state) => {
+  const base = state.files[fileType] || defaultFilesKeyState
+  return base.reactType
+}
+
+export const makeFilesReactTypeIsImageSelector = (fileType) => (state) => {
+  return makeFilesReactTypeSelector(fileType)(state) === 'image'
+}
+
 // State
 
 const defaultFilesKeyState = {
@@ -273,6 +282,7 @@ const defaultFilesKeyState = {
   records: [],
   massSelectedIds: [],
   massSelectedIndestructibleIds: [],
+  reactType: 'document',
   pagination: {
     page: null,
     pages: null
@@ -308,7 +318,8 @@ function filesReducer (rawState = initialState, action) {
           records: action.records,
           loading: false,
           loaded: true,
-          pagination: action.pagination
+          pagination: omit(action.meta, ['react_type']),
+          reactType: action.meta.react_type
         }
       }
 

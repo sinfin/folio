@@ -9,7 +9,6 @@ import Loader from 'components/Loader'
 import Card from 'components/Card'
 import FileList from 'components/FileList'
 import FilePlacementList from 'components/FilePlacementList'
-import fileTypeIsImage from 'utils/fileTypeIsImage'
 
 class MultiSelectComponent extends LazyLoadCheckingComponent {
   componentWillMount () {
@@ -23,7 +22,6 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
 
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
-    const fileTypeIsImageResult = fileTypeIsImage(this.props.fileType)
 
     return (
       <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
@@ -38,7 +36,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
             onAltChange={this.props.onAltChange}
             onTitleChange={this.props.onTitleChange}
             unselectFilePlacement={this.props.unselectFilePlacement}
-            fileTypeIsImage={fileTypeIsImageResult}
+            fileTypeIsImage={this.props.fileTypeIsImage}
             fileType={this.props.fileType}
             nested={this.props.nested}
             openFileModal={this.props.openFileModal}
@@ -48,7 +46,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
         <Card
           header={window.FolioConsole.translations[`available${this.props.fileType}`]}
           headerUpload
-          filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={fileTypeIsImageResult} />}
+          filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} />}
           className='f-c-multi-select-component__card f-c-multi-select-component__card--files'
         >
           <UploadTagger fileType={this.props.fileType} nested={this.props.nested} />
@@ -56,7 +54,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
           {this.props.filesStatus.loading ? <Loader standalone /> : (
             <FileList
               files={this.props.unselectedFilesForList}
-              fileTypeIsImage={fileTypeIsImage}
+              fileTypeIsImage={this.props.fileTypeIsImage}
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.props.selectFile}
               pagination={this.props.filesPagination}
