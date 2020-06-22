@@ -5,7 +5,7 @@ $(document).on 'change', '.f-c-publishable-inputs__checkbox', ->
 
   if @checked
     $input = $parent.find('.f-c-publishable-inputs__input').first()
-    unless $input.val()
+    if $input.length and not $input.val()
       format = $input.data('DateTimePicker').options().format
       now = moment()
       $input.val now.format(format)

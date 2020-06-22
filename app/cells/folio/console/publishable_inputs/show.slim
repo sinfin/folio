@@ -51,3 +51,13 @@
                     hint: false, \
                     wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
                     input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.to'))
+
+  - if options[:additional_fields].present?
+    - options[:additional_fields].each do |field|
+      .f-c-publishable-inputs__box[
+        class="f-c-publishable-inputs__box--#{field}"
+        class=(f.object.send(field) ? 'f-c-publishable-inputs__box--active' : nil)
+      ]
+        = f.input field, hint: false, \
+                         input_html: input_html('f-c-publishable-inputs__checkbox'), \
+                         wrapper_html: { class: 'f-c-publishable-inputs__published' }
