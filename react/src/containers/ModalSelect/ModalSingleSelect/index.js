@@ -7,51 +7,44 @@ import ModalSelect from '../'
 
 class ModalSingleSelect extends ModalSelect {
   selector () {
-    return this.selectingDocument() ? '.folio-console-add-document' : '.folio-console-add-image'
+    return `.f-c-add-file[data-file-type="${this.props.fileType}"]`
   }
 
   fileModalSelector () {
-    if (this.selectingDocument()) {
-      return '.folio-console-react-picker__edit--document'
-    } else {
-      return '.folio-console-react-picker__edit--image'
-    }
+    return `.folio-console-react-picker__edit[data-file-type="${this.props.fileType}"]`
   }
 
   eventName () {
-    const append = this.selectingDocument() ? 'Folio::Document' : 'Folio::Image'
-    return `${EVENT_NAME}/${append}`
+    return `${EVENT_NAME}/${this.props.fileType}`
   }
 
   jQueryModal () {
     const $ = window.jQuery
-    return $('.folio-console-react-modal')
-      .filter(`[data-klass="${this.props.fileType}"]`)
-      .filter('[data-multi="false"]')
+    return $('.folio-console-react-modal').filter(`[data-klass="${this.props.fileType}"]`)
   }
 
   fileTemplate (file, prefix) {
-    if (this.selectingDocument()) {
-      return `
-        <div class="folio-console-thumbnail__inner">
-          <strong class="folio-console-thumbnail__title">${file.attributes.file_name}</strong>
-          <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.attributes.file_name}" />
-          <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit folio-console-react-picker__edit--document" type="button"></button>
-          <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
-        </div>
-      `
-    } else {
+    if (this.selectingImage()) {
       return `
         <div class="folio-console-thumbnail__inner">
           <div class="folio-console-thumbnail__img-wrap">
             <img class="folio-console-thumbnail__img" src=${window.encodeURI(file.attributes.thumb)} alt="" />
-            <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit folio-console-react-picker__edit--image" type="button"></button>
+            <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit" data-file-type="${this.props.fileType}" type="button"></button>
             <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
           </div>
         </div>
 
         <input type="hidden" name="${prefix}[alt]" value="" />
         <small class="folio-console-thumbnail__alt">alt:</small>
+      `
+    } else {
+      return `
+        <div class="folio-console-thumbnail__inner">
+          <strong class="folio-console-thumbnail__title">${file.attributes.file_name}</strong>
+          <input type="hidden" name="${prefix}[title]" value="" data-file-name="${file.attributes.file_name}" />
+          <button class="f-c-file-list__file-btn f-c-file-list__file-btn--edit btn btn-secondary fa fa-edit folio-console-react-picker__edit" data-file-type="${this.props.fileType}" type="button"></button>
+          <button class="f-c-file-list__file-btn f-c-file-list__file-btn--destroy btn btn-danger fa fa-times" data-destroy-association="" type="button"></button>
+        </div>
       `
     }
   }
@@ -83,7 +76,7 @@ class ModalSingleSelect extends ModalSelect {
     const prefix = `${name}${attributesKey}`.replace(`${attributesKey}${attributesKey}`, attributesKey)
 
     const $newFile = $(`
-      <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingDocument() ? 'document' : 'image'}">
+      <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingImage() ? 'image' : 'document'} f-c-add-file cursor-pointer" data-file-type="${fileType}">
         <input type="hidden" name="${prefix}[_destroy]" value="0" />
         <input type="hidden" name="${prefix}[file_id]" value="${file.id}" />
         ${this.fileTemplate(file, prefix)}
@@ -96,6 +89,11 @@ class ModalSingleSelect extends ModalSelect {
 
     $fields.html($newFile)
     $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
+
+    const $setting = $fields.closest('[data-atom-setting]')
+    if ($setting.length) {
+      window.postMessage({ type: 'refreshPreview' })
+    }
 
     this.jQueryModal().modal('hide')
   }

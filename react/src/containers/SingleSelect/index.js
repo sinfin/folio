@@ -1,7 +1,13 @@
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
-import { makeFilesStatusSelector, makeFilesForListSelector, makeFilesPaginationSelector, changeFilesPage } from 'ducks/files'
+import {
+  makeFilesStatusSelector,
+  makeFilesForListSelector,
+  makeFilesPaginationSelector,
+  changeFilesPage,
+  makeFilesReactTypeIsImageSelector
+} from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 import { openFileModal } from 'ducks/fileModal'
 
@@ -26,7 +32,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
   renderHeader () {
     return (
       <Fragment>
-        {this.props.inModal && <ModalTitleAndUpload fileType={this.props.fileType} />}
+        {this.props.inModal && <ModalTitleAndUpload fileType={this.props.fileType} fileTypeIsImage={this.props.fileTypeIsImage} />}
         <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
         <UploadTagger fileType={this.props.fileType} />
       </Fragment>
@@ -44,7 +50,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
           <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
             <FileList
               files={this.props.filesForList}
-              fileTypeIsImage={this.props.fileType === 'Folio::Image'}
+              fileTypeIsImage={this.props.fileTypeIsImage}
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.selectFile}
               pagination={this.props.filesPagination}
@@ -66,7 +72,8 @@ const mapStateToProps = (state, props) => ({
   filesStatus: makeFilesStatusSelector(props.fileType)(state),
   filesForList: makeFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state),
+  fileTypeIsImage: makeFilesReactTypeIsImageSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

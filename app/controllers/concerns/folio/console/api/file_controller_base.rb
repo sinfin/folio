@@ -14,6 +14,7 @@ module Folio::Console::Api::FileControllerBase
       from: pagy.from,
       to: pagy.to,
       count: pagy.count,
+      react_type: @klass.react_type,
     }
     render_records(records, Folio::Console::FileSerializer, meta: meta)
   end

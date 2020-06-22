@@ -5,8 +5,9 @@
     .nested-fields[
       class="folio-console-thumbnail"
       class="folio-console-thumbnail--document"
-      class="folio-console-add-#{file_type_slug}"
+      class="f-c-add-file"
       class="cursor-pointer"
+      data-file-type=options[:file_type]
     ]
       = fp.hidden_field :_destroy, value: 0
       = fp.hidden_field :file_id
@@ -23,8 +24,8 @@
           class='f-c-file-list__file-btn f-c-file-list__file-btn--edit'
           class='btn btn-secondary fa fa-edit'
           class='folio-console-react-picker__edit'
-          class='folio-console-react-picker__edit--document'
-          data={ file: serialized_file(fp) }
+          data={ file: serialized_file(fp), \
+                 'file-type' => options[:file_type] }
         ]
 
         button[

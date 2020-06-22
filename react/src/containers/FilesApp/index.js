@@ -9,7 +9,6 @@ import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
 import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
-import ModalMultiSelect from 'containers/ModalSelect/ModalMultiSelect'
 import FileModal from 'containers/FileModal'
 import Atoms from 'containers/Atoms'
 
@@ -42,7 +41,7 @@ class FilesApp extends Component {
   }
 
   shouldAutoLoadFiles () {
-    return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'modal-multi-select' && this.props.app.mode !== 'atoms'
+    return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'atoms'
   }
 
   openFileModal = (fileType, file) => {
@@ -50,7 +49,7 @@ class FilesApp extends Component {
   }
 
   renderMode () {
-    const { mode, fileType, filesUrl, readOnly } = this.props.app
+    const { mode, fileType, filesUrl, readOnly, reactType } = this.props.app
 
     if (mode === 'multi-select') {
       return <MultiSelect fileType={fileType} filesUrl={filesUrl} />
@@ -69,18 +68,9 @@ class FilesApp extends Component {
         <ModalSingleSelect
           fileType={fileType}
           filesUrl={filesUrl}
+          reactType={reactType}
           loadFiles={this.loadFiles}
           openFileModal={this.openFileModal}
-        />
-      )
-    }
-
-    if (mode === 'modal-multi-select') {
-      return (
-        <ModalMultiSelect
-          fileType={fileType}
-          filesUrl={filesUrl}
-          loadFiles={this.loadFiles}
         />
       )
     }

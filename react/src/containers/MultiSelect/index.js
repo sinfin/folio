@@ -6,7 +6,8 @@ import {
   makeFilesStatusSelector,
   makeUnselectedFilesForListSelector,
   makeFilesPaginationSelector,
-  changeFilesPage
+  changeFilesPage,
+  makeFilesReactTypeIsImageSelector
 } from 'ducks/files'
 import {
   selectFile,
@@ -59,6 +60,8 @@ class MultiSelect extends React.PureComponent {
       <MultiSelectComponent
         fileType={this.props.fileType}
         filesStatus={this.props.filesStatus}
+        filesUrl={this.props.filesUrl}
+        fileTypeIsImage={this.props.fileTypeIsImage}
         getFiles={this.getFiles}
         filePlacements={this.props.filePlacements}
         onSortEnd={this.onSortEnd}
@@ -82,7 +85,8 @@ const mapStateToProps = (state, props) => ({
   filesStatus: makeFilesStatusSelector(props.fileType)(state),
   unselectedFilesForList: makeUnselectedFilesForListSelector(props.fileType)(state),
   displayAsThumbs: displayAsThumbsSelector(state),
-  filesPagination: makeFilesPaginationSelector(props.fileType)(state)
+  filesPagination: makeFilesPaginationSelector(props.fileType)(state),
+  fileTypeIsImage: makeFilesReactTypeIsImageSelector(props.fileType)(state)
 })
 
 function mapDispatchToProps (dispatch) {

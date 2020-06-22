@@ -85,6 +85,10 @@ class Folio::File < Folio::ApplicationRecord
     [Folio::PrivateAttachment]
   end
 
+  def self.react_type
+    'document'
+  end
+
   private
     def touch_placements
       file_placements.each(&:touch)

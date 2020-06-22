@@ -38,3 +38,6 @@ $(document)
 
   .on 'click', '.folio-console-react-picker .f-c-file-list__file-btn--destroy', (e) ->
     e.stopPropagation()
+
+  .on 'single-nested-change', '.folio-console-react-picker[data-atom-setting] .folio-console-react-picker__files', (e) ->
+    window.postMessage({ type: 'refreshPreview' })

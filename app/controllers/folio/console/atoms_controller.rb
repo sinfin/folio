@@ -31,52 +31,20 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       @atoms[key] = Folio::Atom.atoms_in_molecules(atoms)
     end
 
-    locales = ['null'] + I18n.available_locales
-    @labels = params.permit(labels: locales)[:labels]
-    @perexes = params.permit(perexes: locales)[:perexes]
-    @settings = {}
-
     if params[:class_name].present?
       @klass = params[:class_name].constantize
-      if @klass.atom_settings_fields.present?
-        @klass.atom_settings_fields.each do |setting_definition|
-          if setting_definition == :label
-            key = :label
-            value = @labels
-          elsif setting_definition == :perex
-            key = :perex
-            value = @perexes
-          else
-            key = setting_definition[:key]
-            value = params[:settings][key]
-          end
+      @settings = {}
 
-          next if value.blank?
-
-          value.each do |locale, val|
-            @settings[locale] ||= {}
-
-            if setting_definition == :label || setting_definition == :perex
-              model = value[locale]
-              cell_name = "folio/console/atoms/previews/#{setting_definition}"
-            elsif setting_definition[:model] == :image_placements
-              model = val.map do |attrs|
-                Folio::FilePlacement::Image.new(attrs.permit(:file_id,
-                                                             :title,
-                                                             :alt,
-                                                             :position))
-              end
-              cell_name = setting_definition[:cell_name]
-            else
-              model = setting_definition[:model].call(val)
-              cell_name = setting_definition[:cell_name]
-            end
-
-            html = cell(cell_name, model).show
-            @settings[locale][key] = html
-          end
+      @klass.atom_settings_from_params(params[:settings])
+            .each do |locale, data|
+        @settings[locale] ||= {}
+        data.each do |h|
+          html = cell(h[:cell_name], h[:model]).show
+          @settings[locale][h[:key]] = html
         end
       end
+    else
+      @settings = {}
     end
 
     render :preview, layout: false

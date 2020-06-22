@@ -2,6 +2,7 @@
 
 const SET_MODE = 'app/SET_MODE'
 const SET_FILE_TYPE = 'app/SET_FILE_TYPE'
+const SET_FILE_REACT_TYPE = 'app/SET_FILE_REACT_TYPE'
 const SET_FILES_URL = 'app/SET_FILES_URL'
 const SET_READ_ONLY = 'app/SET_READ_ONLY'
 const SET_NO_FILE_USAGE = 'app/SET_NO_FILE_USAGE'
@@ -14,6 +15,10 @@ export function setMode (mode) {
 
 export function setFileType (fileType) {
   return { type: SET_FILE_TYPE, fileType }
+}
+
+export function setFileReactType (reactType) {
+  return { type: SET_FILE_REACT_TYPE, reactType }
 }
 
 export function setFilesUrl (filesUrl) {
@@ -33,7 +38,6 @@ export function setNoFileUsage () {
 export const appSelector = (state) => state.app
 export const fileTypeSelector = (state) => state.app.fileType
 export const filesUrlSelector = (state) => state.app.filesUrl
-export const fileTypeIsImageSelector = (state) => state.app.fileType === 'Folio::Image'
 export const fileUsageSelector = (state) => state.app.fileUsage
 
 // State
@@ -60,6 +64,12 @@ function appReducer (state = initialState, action) {
       return {
         ...state,
         fileType: action.fileType
+      }
+
+    case SET_FILE_REACT_TYPE:
+      return {
+        ...state,
+        reactType: action.reactType
       }
 
     case SET_FILES_URL:

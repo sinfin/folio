@@ -32,6 +32,10 @@ class Folio::Image < Folio::File
     metadata_compose(['LocationName', 'SubLocation', 'City', 'ProvinceState', 'CountryName'])
   end
 
+  def self.react_type
+    'image'
+  end
+
   private
     def metadata_compose(tags)
       string_arr = tags.collect { |tag| file_metadata.try('[]', tag) }.compact.uniq

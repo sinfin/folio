@@ -16,6 +16,10 @@ class Folio::Console::FileSerializer
              :author,
              :description
 
+  attribute :react_type do |object|
+    object.class.react_type
+  end
+
   attribute :thumb do |object|
     object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.is_a?(Folio::Image)
   end

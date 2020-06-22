@@ -1,8 +1,54 @@
 # frozen_string_literal: true
 
 module Folio::HasAtoms
+  module Commons
+    extend ActiveSupport::Concern
+
+    class_methods do
+      def atom_settings_from_params(params)
+        settings = {}
+
+        settings = atom_settings_label_from_params(settings, params)
+        settings = atom_settings_perex_from_params(settings, params)
+
+        settings
+      end
+
+      def atom_settings_label_from_params(settings, params)
+        if params[:label].present?
+          params[:label].each do |locale, label|
+            settings[locale] ||= []
+            settings[locale] << {
+              cell_name: 'folio/console/atoms/previews/label',
+              model: label,
+              key: :label,
+            }
+          end
+        end
+
+        settings
+      end
+
+      def atom_settings_perex_from_params(settings, params)
+        if params[:perex].present?
+          params[:perex].each do |locale, perex|
+            settings[locale] ||= []
+            settings[locale] << {
+              cell_name: 'folio/console/atoms/previews/perex',
+              model: perex,
+              key: :perex,
+            }
+          end
+        end
+
+        settings
+      end
+    end
+  end
+
   module Basic
     extend ActiveSupport::Concern
+    include Commons
 
     included do
       has_many :atoms, -> { ordered },
@@ -14,15 +60,6 @@ module Folio::HasAtoms
       accepts_nested_attributes_for :atoms,
                                     reject_if: :all_blank,
                                     allow_destroy: true
-    end
-
-    class_methods do
-      def atom_settings_fields
-        [
-          :label,
-          :perex,
-        ]
-      end
     end
 
     def atoms_in_molecules
@@ -40,6 +77,7 @@ module Folio::HasAtoms
 
   module Localized
     extend ActiveSupport::Concern
+    include Commons
 
     included do
       atom_locales.each do |locale|
@@ -85,15 +123,6 @@ module Folio::HasAtoms
       atom_locales.map do |locale|
         Folio::Atom.atom_image_placements(send("#{locale}_atoms"))
       end.flatten
-    end
-
-    class_methods do
-      def atom_settings_fields
-        [
-          :label,
-          :perex,
-        ]
-      end
     end
   end
 end

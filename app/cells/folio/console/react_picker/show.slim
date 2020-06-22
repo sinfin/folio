@@ -2,30 +2,25 @@
   class=class_name
   data-alt-prompt=t('folio.console.alt_prompt')
   data-file-title-prompt=t('folio.console.file_title_prompt')
+  data-atom-setting=options[:atom_setting]
 ]
   label.folio-console-react-picker__label
     = title
 
   .folio-console-react-picker__files[
     data-placement-key=placement_key
-    data-cocoon-single-nested=single?
+    data-cocoon-single-nested=true
     class=(picked? ? 'folio-console-has-nested': nil)
   ]
     = render_fields
 
   .folio-console-react-picker__button
-    button.btn[
+    button.btn.btn-success[
       type="button"
-      class="folio-console-add-#{file_type_slug}"
-      class=(single? ? 'btn-success' : 'btn-secondary')
+      class="f-c-add-file"
+      data-file-type=options[:file_type]
     ]
-      - if single?
-        = t('.add')
-      - else
-        - if options[:file_type] == 'Folio::Document'
-          = t('folio.console.documents_management')
-        - else
-          = t('folio.console.gallery_management')
+      = t('.add')
 
   - if form_errors
     .folio-console-react-picker__errors
