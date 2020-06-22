@@ -23,12 +23,13 @@ module Folio::Console::ReactHelper
                 atom_setting: atom_setting)
   end
 
-  def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil)
+  def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil, atom_setting: nil)
     @output_react_meta_data = true
 
     raw cell('folio/console/react_picker', f, placement_key: placement_key,
                                               title: title,
-                                              file_type: file_type)
+                                              file_type: file_type,
+                                              atom_setting: atom_setting)
   end
 
   def react_ancestry(klass, max_nesting_depth: 2)

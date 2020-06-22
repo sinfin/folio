@@ -90,6 +90,11 @@ class ModalSingleSelect extends ModalSelect {
     $fields.html($newFile)
     $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
 
+    const $setting = $fields.closest('[data-atom-setting]')
+    if ($setting.length) {
+      window.postMessage({ type: 'refreshPreview' })
+    }
+
     this.jQueryModal().modal('hide')
   }
 

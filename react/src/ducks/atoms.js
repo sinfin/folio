@@ -5,6 +5,7 @@ import { takeEvery, takeLatest, call, select, put } from 'redux-saga/effects'
 import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
 import getJsonFromMultiSelectDom from 'utils/getJsonFromMultiSelectDom'
+import getJsonFromReactPicker from 'utils/getJsonFromReactPicker'
 
 import { combineAtoms } from 'ducks/utils/atoms'
 
@@ -239,26 +240,27 @@ function * updateAtomPreviews (action) {
   })
   const serializedAtoms = yield select(serializedAtomsSelector)
 
+  serializedAtoms['settings'] = {}
+
   const $labels = $('.f-c-js-atoms-placement-label')
   if ($labels.length) {
-    serializedAtoms['labels'] = {}
+    serializedAtoms['settings']['label'] = {}
     $labels.each((i, label) => {
       const $label = $(label)
-      serializedAtoms['labels'][$label.data('locale') || null] = $label.val()
+      serializedAtoms['settings']['label'][$label.data('locale') || null] = $label.val()
     })
   }
   const $perexes = $('.f-c-js-atoms-placement-perex')
   if ($perexes.length) {
-    serializedAtoms['perexes'] = {}
+    serializedAtoms['settings']['perex'] = {}
     $perexes.each((i, perex) => {
       const $perex = $(perex)
-      serializedAtoms['perexes'][$perex.data('locale') || null] = $perex.val()
+      serializedAtoms['settings']['perex'][$perex.data('locale') || null] = $perex.val()
     })
   }
   let settingsLoading = false
   const $settings = $('.f-c-js-atoms-placement-setting')
   if ($settings.length) {
-    serializedAtoms['settings'] = {}
     $settings.each((i, setting) => {
       const $setting = $(setting)
       const key = $setting.data('atom-setting')
@@ -267,9 +269,14 @@ function * updateAtomPreviews (action) {
         let val
         if ($setting.hasClass('selectized')) {
           val = $setting[0].selectize.getValue()
+        } else if ($setting.hasClass('folio-console-react-picker')) {
+          val = getJsonFromReactPicker($setting)
         } else if ($setting.hasClass('folio-react-wrap')) {
           if ($setting.find('.f-c-file-placement-list').length) {
             val = getJsonFromMultiSelectDom($setting)
+            if (val.length === 0) val = null
+          } else if ($setting.find('.f-c-file-placement-list__empty').length) {
+            val = null
           } else {
             settingsLoading = true
             return
@@ -277,8 +284,11 @@ function * updateAtomPreviews (action) {
         } else {
           val = $setting.val()
         }
-        serializedAtoms['settings'][key] = serializedAtoms['settings'][key] || {}
-        serializedAtoms['settings'][key][$setting.data('locale') || null] = val
+
+        if (val) {
+          serializedAtoms['settings'][key] = serializedAtoms['settings'][key] || {}
+          serializedAtoms['settings'][key][$setting.data('locale') || null] = val
+        }
       }
     })
   }

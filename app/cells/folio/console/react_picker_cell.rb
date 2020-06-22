@@ -44,6 +44,7 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
   def class_name
     base = ['folio-console-react-picker', 'folio-console-react-picker--single']
     base << 'folio-console-react-picker--error' if form_errors.present?
+    base << 'f-c-js-atoms-placement-setting' if options[:atom_setting]
     base.join(' ')
   end
 
