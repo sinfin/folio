@@ -159,7 +159,7 @@ module Folio::Console::DefaultActions
         if folio_console_record.persisted?
           begin
             if action_name == 'create'
-              url_for([:console, folio_console_record])
+              url_for([:console, folio_console_record, action: :show])
             else
               url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
             end
