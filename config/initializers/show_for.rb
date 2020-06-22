@@ -59,6 +59,16 @@ ShowFor.setup do |config|
 end
 
 class ShowFor::Builder
+  def toggle(attr)
+    attribute(attr) do
+      if object.persisted?
+        template.cell('folio/console/boolean_toggle',
+                      object,
+                      attribute: attr).show.try(:html_safe)
+      end
+    end
+  end
+
   def featured_toggle
     toggle(:featured)
   end
@@ -178,16 +188,6 @@ class ShowFor::Builder
 
           url = template.controller.url_for(url_for_args)
           template.link_to(content, url)
-        end
-      end
-    end
-
-    def toggle(attr)
-      attribute(attr) do
-        if object.persisted?
-          template.cell('folio/console/boolean_toggle',
-                        object,
-                        attribute: attr).show.try(:html_safe)
         end
       end
     end
