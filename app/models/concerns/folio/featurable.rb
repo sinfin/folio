@@ -6,6 +6,8 @@ module Folio::Featurable
 
     included do
       scope :featured, -> { where(featured: true) }
+
+      folio_by_scopes_for :featured
     end
   end
 
@@ -22,16 +24,7 @@ module Folio::Featurable
               Time.zone.now.change(sec: 0))
       }
 
-      scope :by_featured, -> (bool) {
-        case bool
-        when true, 'true'
-          featured
-        when false, 'false'
-          unfeatured
-        else
-          all
-        end
-      }
+      folio_by_scopes_for :featured
     end
 
     def featured?
