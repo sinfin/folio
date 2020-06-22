@@ -32,7 +32,7 @@ dpShow = (e) ->
   if $picker.find('.bootstrap-datetimepicker-widget__reset-wrap').length is 0
     $picker.append """
       <div class="bootstrap-datetimepicker-widget__reset-wrap">
-        <button type="button" class="btn btn-danger btn-sm bootstrap-datetimepicker-widget__reset">#{window.FolioConsole.translations.clearDate}</button>
+        <span class="f-c-with-icon text-danger bootstrap-datetimepicker-widget__reset cursor-pointer"><span class="fa fa-trash-alt"></span> #{window.FolioConsole.translations.clearDate}</span>
       </div>
     """
 
