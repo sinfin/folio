@@ -52,8 +52,8 @@ export function updateFile (fileType, file, attributes) {
   return { type: UPDATE_FILE, fileType, file, attributes }
 }
 
-export function deleteFile (fileType, file) {
-  return { type: DELETE_FILE, fileType, file }
+export function deleteFile (fileType, filesUrl, file) {
+  return { type: DELETE_FILE, fileType, filesUrl, file }
 }
 
 export function deleteFileFailure (fileType, file) {
@@ -169,7 +169,7 @@ function * massDeleteSaga () {
 
 function * deleteFilePerform (action) {
   try {
-    const res = yield call(apiDelete, `/console/api/${action.fileType}/${action.file.id}`)
+    const res = yield call(apiDelete, `${action.filesUrl}/${action.file.id}`)
     if (res.error) {
       flashError(res.error)
     } else {

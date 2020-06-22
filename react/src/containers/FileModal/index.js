@@ -64,7 +64,7 @@ class Modal extends Component {
 
   deleteFile = (file) => {
     this.closeFileModal()
-    this.props.dispatch(deleteFile(this.props.fileType, file))
+    this.props.dispatch(deleteFile(this.props.fileType, this.props.filesUrl, file))
   }
 
   uploadNewFileInstead = (fileIo) => {

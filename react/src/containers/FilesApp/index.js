@@ -93,7 +93,7 @@ class FilesApp extends Component {
       <FilesAppWrap className='folio-react-app'>
         {this.renderMode()}
 
-        <FileModal fileType={this.props.app.fileType} readOnly={this.props.app.readOnly} />
+        <FileModal fileType={this.props.app.fileType} filesUrl={this.props.app.filesUrl} readOnly={this.props.app.readOnly} />
       </FilesAppWrap>
     )
   }
