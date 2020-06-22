@@ -72,8 +72,8 @@ export function updateFileFailure (fileType, file) {
   return { type: UPDATE_FILE_FAILURE, fileType, file }
 }
 
-export function changeFilesPage (fileType, page) {
-  return { type: CHANGE_FILES_PAGE, fileType, page }
+export function changeFilesPage (fileType, filesUrl, page) {
+  return { type: CHANGE_FILES_PAGE, fileType, filesUrl, page }
 }
 
 export function massSelect (fileType, file, select) {
@@ -135,7 +135,7 @@ function * changeFilesPagePerform (action) {
     if (filtersQuery) {
       query = `${query}&${filtersQuery}`
     }
-    yield put(getFiles(action.fileType, query))
+    yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
     flashError(e.message)
   }

@@ -7,7 +7,7 @@ module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    pagy, records = pagy(folio_console_records.ordered, items: 100)
+    pagy, records = pagy(folio_console_records.ordered, items: 60)
     meta = {
       page: pagy.page,
       pages: pagy.pages,

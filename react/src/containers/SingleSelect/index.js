@@ -54,7 +54,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
               displayAsThumbs={this.props.displayAsThumbs}
               onClick={this.selectFile}
               pagination={this.props.filesPagination}
-              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, this.props.filesUrl, page))}
               openFileModal={(file) => this.props.dispatch(openFileModal(this.props.fileType, file))}
               fileType={this.props.fileType}
               filesUrl={this.props.filesUrl}

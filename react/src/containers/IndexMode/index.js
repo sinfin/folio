@@ -47,7 +47,7 @@ class IndexMode extends LazyLoadCheckingComponent {
                 fileTypeIsImage={this.props.fileTypeIsImage}
                 displayAsThumbs={this.props.displayAsThumbs}
                 pagination={this.props.filesPagination}
-                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, page))}
+                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, this.props.filesUrl, page))}
                 massSelect={(file, select) => this.props.dispatch(massSelect(this.props.fileType, file, select))}
                 massSelectVisible={this.props.filesStatus.massSelecting}
                 fileType={this.props.fileType}
