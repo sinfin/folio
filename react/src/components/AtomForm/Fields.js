@@ -3,6 +3,8 @@ import { FormGroup, FormText, Label } from 'reactstrap'
 
 import formGroupClassName from './utils/formGroupClassName'
 import AtomInput from './AtomInput'
+import CharacterCounter from './CharacterCounter'
+import EmptyFormText from './EmptyFormText'
 
 export default function Fields ({ atom, index, onChange, onValueChange }) {
   const { meta } = atom.record
@@ -51,6 +53,10 @@ export default function Fields ({ atom, index, onChange, onValueChange }) {
             {atom.errors[key] && (
               <FormText className='invalid-feedback' color='danger'>{atom.errors[key]}</FormText>
             )}
+
+            <EmptyFormText hasErrors={atom.errors[key]} structure={meta.structure[key]} />
+
+            {meta.structure[key].character_counter && <CharacterCounter value={atom.record.data[key]} />}
           </FormGroup>
         )
       })}

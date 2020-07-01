@@ -16,6 +16,12 @@ export default function formGroupClassName (key, errors = {}, structure = {}) {
       classNames.push('color')
     } else if (structure[key].type === 'boolean') {
       classNames.push('mb-3')
+    } else if (structure[key].type === 'richtext') {
+      classNames.push('redactor')
+    }
+
+    if (structure[key].character_counter) {
+      classNames.push('f-c-string-input-character-counter__parent')
     }
   }
 

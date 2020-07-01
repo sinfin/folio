@@ -109,7 +109,7 @@ describe('filesReducer', () => {
 
   it('deleteFile', () => {
     const image = state['Folio::Image'].records[0]
-    state = filesReducer(state, deleteFile('Folio::Image', image))
+    state = filesReducer(state, deleteFile('Folio::Image', '/console/api/images', image))
     expect(state['Folio::Image'].records[0]._destroying).toEqual(true)
     state = filesReducer(state, deleteFileFailure('Folio::Image', image))
     expect(state['Folio::Image'].records[0]._destroying).toEqual(undefined)

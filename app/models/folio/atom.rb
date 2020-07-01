@@ -15,6 +15,7 @@ module Folio::Atom
           label: klass.human_attribute_name(key),
           hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
           type: value,
+          character_counter: value == :text,
         }
 
         if value.is_a?(Array)
