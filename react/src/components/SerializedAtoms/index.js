@@ -62,6 +62,7 @@ function SerializedAssociations ({ atom, prefix }) {
       {Object.keys(atom.meta.associations).map((key) => {
         const record = atom.associations[key]
         let id, type
+
         if (record) {
           id = record.id
           type = record.type

@@ -54,12 +54,12 @@ module Folio::Atom::MethodMissing
           if arguments[0].is_a?(Hash)
             self.associations[name_for_association.to_s] = {
               'id' => arguments[0][:id],
-              'type' => arguments[0][:type],
+              'type' => arguments[0][:type].constantize.base_class.name,
             }
           else
             self.associations[name_for_association.to_s] = {
               'id' => arguments[0].id,
-              'type' => arguments[0].class.name,
+              'type' => arguments[0].class.base_class.name,
             }
           end
         end
