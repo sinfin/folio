@@ -39,6 +39,11 @@ SimpleForm::Inputs::StringInput.class_eval do
       input_html_options[:type] ||= input_type if html5?
     end
 
+    if options[:character_counter]
+      input_html_classes << 'f-c-string-input--character-counter'
+      input_html_options['data-character-counter'] = options[:character_counter]
+    end
+
     if options[:content_templates]
       input_html_options['data-content-templates'] = options[:content_templates].constantize.to_data_attribute
       input_html_classes << 'folio-console-string-input--content-templates'

@@ -12,6 +12,11 @@ SimpleForm::Inputs::TextInput.class_eval do
       input_html_options['data-locale'] = options[:locale]
     end
 
+    if options[:character_counter]
+      input_html_classes << 'f-c-string-input--character-counter'
+      input_html_options['data-character-counter'] = options[:character_counter]
+    end
+
     if options[:folio_label]
       input_html_classes << 'f-c-js-atoms-placement-label'
     elsif options[:folio_perex]

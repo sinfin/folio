@@ -21,10 +21,10 @@
 //= require redactor
 
 //= require ./redactor/_cs
-//= require ./redactor/_imagemanager
-//= require ./redactor/_video
-//= require ./redactor/_table
 //= require ./redactor/_button
+//= require ./redactor/_character_counter
+//= require ./redactor/_table
+//= require ./redactor/_video
 //= require ./redactor/_init
 
 //= require folio/cable
@@ -68,6 +68,7 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/tagsinput/tagsinput
 
+//= require folio/console/simple_form_inputs/_character_counter_input
 //= require folio/console/simple_form_inputs/_collection_select_input
 //= require folio/console/simple_form_inputs/_color_input
 //= require folio/console/simple_form_inputs/_date_time_input

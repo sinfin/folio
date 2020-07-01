@@ -43,6 +43,7 @@ en:
         selectedImages: Selected images
         selectImage: Select image
         selectPlaceholder: Select...
+        shortForCharacter: chr.
         thumbnailSizes: Generated thumbnails
         title: Title
         usage: Usage

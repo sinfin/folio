@@ -1,18 +1,12 @@
 ADVANCED_OPTIONS =
-  plugins: ['imagemanager', 'video', 'table', 'button']
-  imageUploadParam: 'file[file]'
-  imageData:
-    elements: 'input[name="authenticity_token"]'
-    'file[type]': 'Folio::Image'
-  imageUpload: '/console/images.json'
-  imageManagerJson: '/console/images.json'
+  plugins: ['video', 'table', 'button', 'character_counter']
   toolbarFixed: true
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
 
 OPTIONS =
-  plugins: ['table', 'button']
+  plugins: ['table', 'button', 'character_counter']
   buttonsHide: ['file', 'image']
   toolbarFixed: true
   lang: document.documentElement.lang
