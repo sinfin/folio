@@ -24,4 +24,10 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
       p.delete(:password) unless p[:password].present?
       p
     end
+
+    def index_filters
+      {
+        by_role: @klass.roles_for_select
+      }
+    end
 end

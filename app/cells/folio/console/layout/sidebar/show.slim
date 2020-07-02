@@ -10,9 +10,10 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
     = render(:_prepended)
 
     - link_groups.each do |group|
-      ul.f-c-layout-sidebar__ul
-        - group.each do |link|
-          li.f-c-layout-sidebar__li
-            = link
+      - if group.present?
+        ul.f-c-layout-sidebar__ul
+          - group.each do |link|
+            li.f-c-layout-sidebar__li
+              = link
 
     = render(:_appended)

@@ -37,6 +37,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
          (class_name[:klass] || class_name[:label]) &&
          class_name[:path]
 
+        if class_name[:klass]
+          return if controller.cannot?(:read, class_name[:klass].constantize)
+        end
+
         label = if class_name[:label]
           t(".#{class_name[:label]}")
         elsif class_name[:klass]
@@ -58,15 +62,18 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         end
 
         if class_name[:icon]
-          link(nil, path) do
+          link(nil, path, active_start_with: class_name[:active_start_with]) do
             concat(content_tag(:i, '', class: "#{class_name[:icon]} f-c-layout-sidebar__icon"))
             concat(label)
           end
         else
-          link(label, path, paths: paths)
+          link(label, path, paths: paths,
+                            active_start_with: class_name[:active_start_with])
         end
       else
         klass = class_name.constantize
+
+        return if controller.cannot?(:read, klass)
 
         label = label_from(klass)
         path = controller.url_for([:console, klass])
@@ -75,10 +82,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
   end
 
-  def link(label, path, paths: [], &block)
+  def link(label, path, paths: [], active_start_with: true, &block)
     active = ([path] + paths).any? do |p|
       start = p.split('?').first
-      request.path.start_with?(start) || request.url.start_with?(start)
+      if active_start_with
+        request.path.start_with?(start) || request.url.start_with?(start)
+      else
+        request.path == p || request.url == p
+      end
     end
 
     class_names = ['f-c-layout-sidebar__a']

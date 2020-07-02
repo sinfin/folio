@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Account < Folio::ApplicationRecord
-  ROLES = %w( superuser manager ).freeze
-
   devise :database_authenticatable,
          :recoverable,
          :rememberable,
@@ -10,7 +8,7 @@ class Folio::Account < Folio::ApplicationRecord
          :validatable,
          :invitable
 
-  validates :role, inclusion: ROLES
+  validate :validate_role
   validates :first_name, :last_name, presence: true
 
   # Scopes
@@ -30,6 +28,10 @@ class Folio::Account < Folio::ApplicationRecord
     else
       where(is_active: true)
     end
+  }
+
+  scope :by_role, -> (role) {
+    where(role: role)
   }
 
   def superuser?
@@ -62,9 +64,36 @@ class Folio::Account < Folio::ApplicationRecord
     super && self.is_active?
   end
 
+  def human_role_name
+    if role
+      self.class.human_role_name(role)
+    end
+  end
+
   def self.clears_page_cache_on_save?
     false
   end
+
+  def self.roles
+    %w[superuser manager]
+  end
+
+  def self.roles_for_select
+    roles.map do |role|
+      [human_attribute_name("role/#{role}"), role]
+    end
+  end
+
+  def self.human_role_name(role)
+    human_attribute_name("role/#{role}")
+  end
+
+  private
+    def validate_role
+      if self.class.roles.exclude?(role)
+        self.errors.add :role, :invalid
+      end
+    end
 end
 
 # == Schema Information

@@ -5,6 +5,8 @@ cs:
       folio/account:
         full_name: Jméno
         role: Uživatelská role
+        role/superuser: Administrátor
+        role/manager: Manažer
       folio/atom/base:
         content: Obsah
         perex: Perex
