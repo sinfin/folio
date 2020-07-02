@@ -60,16 +60,26 @@ class AtomForm extends React.PureComponent {
 
   componentWillMount () {
     window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
+    window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
   }
 
   componentWillUnmount () {
     window.jQuery('.f-c-simple-form-with-atoms').off('submit', this.handleGlobalFormSubmission)
+    window.jQuery(document).off('keydown.fcAtomForm', this.onKeydown)
   }
 
   handleGlobalFormSubmission = (e) => {
     e.preventDefault()
     e.stopPropagation()
     this.props.validateAndSubmitGlobalForm()
+  }
+
+  onKeydown = (e) => {
+    if (e.keyCode === 13 && e.ctrlKey) {
+      e.preventDefault()
+      this.props.saveFormAtoms()
+      return false
+    }
   }
 
   renderHint (text, molecule) {
