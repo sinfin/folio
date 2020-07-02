@@ -6,6 +6,8 @@
         i.mi.mi--14 undo
         = t('folio.console.actions.cancel')
 
+    = options[:pre_submit_content]
+
     = model.button :submit, \
                    submit_label, \
                    class: 'f-c-form-footer__btn f-c-form-footer__btn--submit '\
@@ -14,3 +16,5 @@
     .f-c-form-footer__ribbon.text-danger.f-c-with-icon
       span.mi.f-c-form-footer__ribbon-icon warning
       span = t('.dirty_forms')
+
+    = options[:post_submit_content]

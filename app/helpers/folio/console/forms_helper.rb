@@ -77,11 +77,14 @@ module Folio::Console::FormsHelper
                            layout_class,
                            expanded_class].compact.join(' ')
 
+    form_footer_options = opts.delete(:form_footer_options) || {}
+
     render layout: 'folio/console/partials/simple_form_with_atoms',
            locals: {
              model: model,
              opts: opts,
              layout_code: layout_code,
+             form_footer_options: form_footer_options,
            },
            &block
   end
