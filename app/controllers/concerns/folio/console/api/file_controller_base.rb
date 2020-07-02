@@ -76,9 +76,23 @@ module Folio::Console::Api::FileControllerBase
           folio_console_record.thumb(version, immediate: true)
         end
       end
+
+      meta = {
+        flash: {
+          success: t('flash.actions.update.notice', resource_name: @klass.model_name.human)
+        }
+      }
+    else
+      meta = {
+        flash: {
+          alert: t('flash.actions.update.alert', resource_name: @klass.model_name.human)
+        }
+      }
     end
 
-    render_record(folio_console_record, Folio::Console::FileSerializer)
+    render_record(folio_console_record,
+                  Folio::Console::FileSerializer,
+                  meta: meta)
   end
 
   def mass_download

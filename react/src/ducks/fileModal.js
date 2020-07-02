@@ -33,8 +33,8 @@ export function updatedFileModalFile (file) {
   return { type: UPDATED_FILE_MODAL_FILE, file }
 }
 
-export function uploadNewFileInstead (fileType, file, fileIo) {
-  return { type: UPLOAD_NEW_FILE_INSTEAD, fileType, file, fileIo }
+export function uploadNewFileInstead (fileType, filesUrl, file, fileIo) {
+  return { type: UPLOAD_NEW_FILE_INSTEAD, fileType, filesUrl, file, fileIo }
 }
 
 export function uploadNewFileInsteadSuccess (file) {
@@ -72,7 +72,7 @@ function * updateFileThumbnailSaga () {
 
 function * uploadNewFileInsteadPerform (action) {
   try {
-    const url = `/console/api/${action.fileType}/${action.file.id}/change_file`
+    const url = `${action.filesUrl}/${action.file.id}/change_file`
     const data = new FormData()
     data.append('file[attributes][file]', action.fileIo)
     const response = yield call(apiFilePost, url, data)

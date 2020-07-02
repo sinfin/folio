@@ -66,7 +66,7 @@ class Modal extends Component {
   }
 
   uploadNewFileInstead = (fileIo) => {
-    this.props.dispatch(uploadNewFileInstead(this.props.fileType, this.props.fileModal.file, fileIo))
+    this.props.dispatch(uploadNewFileInstead(this.props.fileType, this.props.filesUrl, this.props.fileModal.file, fileIo))
   }
 
   onTagsChange = (tags) => {
