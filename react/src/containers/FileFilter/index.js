@@ -4,7 +4,6 @@ import { FormGroup, Input } from 'reactstrap'
 
 import {
   makeFiltersSelector,
-  makeTagsSelector,
   setFilter,
   resetFilters
 } from 'ducks/filters'
@@ -94,7 +93,6 @@ class FileFilter extends Component {
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
               <TagsInput
-                options={this.props.tags}
                 value={filters.tags}
                 onTagsChange={this.onTagsChange}
                 noAutofocus
@@ -122,7 +120,6 @@ class FileFilter extends Component {
 
 const mapStateToProps = (state, props) => ({
   filters: makeFiltersSelector(props.fileType)(state),
-  tags: makeTagsSelector(props.fileType)(state),
   fileUsage: fileUsageSelector(state)
 })
 

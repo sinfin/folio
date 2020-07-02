@@ -10,9 +10,11 @@ import FileUsage from 'components/FileUsage'
 import PrettyTags from 'components/PrettyTags'
 
 import MainImage from './styled/MainImage'
+import MainImageOuter from './styled/MainImageOuter'
+import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, tags, readOnly }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, readOnly }) => {
   const isImage = fileModal.file.attributes.react_type === 'image'
   let download = fileModal.file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
@@ -38,9 +40,16 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
         <div className={isImage ? 'row' : undefined}>
           {isImage && (
             <div className='col-lg-7 mb-3'>
-              <div className='d-flex align-items-center justify-content-center' style={{ backgroundColor: fileModal.file.attributes.dominant_color }}>
-                <MainImage src={fileModal.file.attributes.source_url} />
-              </div>
+              <MainImageOuter>
+                <div style={{
+                  backgroundColor: fileModal.file.attributes.dominant_color,
+                  paddingTop: `${100 * fileModal.file.attributes.file_height / fileModal.file.attributes.file_width}%`
+                }} />
+
+                <MainImageInner>
+                  <MainImage src={fileModal.file.attributes.source_url} />
+                </MainImageInner>
+              </MainImageOuter>
 
               <div className='mt-2 small'>{fileModal.file.attributes.file_width}×{fileModal.file.attributes.file_height} px</div>
             </div>
@@ -108,7 +117,6 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 <React.Fragment>
                   <TagsInput
                     value={formState.tags}
-                    options={tags}
                     onTagsChange={onTagsChange}
                     submit={saveModal}
                   />

@@ -38,11 +38,9 @@ class ThumbnailSize extends React.Component {
           />
         ) : (
           <div>
-            {thumb._saving ? (
-              <div style={{ height: height, width: width, backgroundColor: '#495057' }} />
-            ) : (
-              <img src={this.props.thumb.url} style={{ height: height, width: width }} alt={thumbKey} />
-            )}
+            <div style={{ height: height, width: width, backgroundColor: '#495057' }}>
+              {thumb._saving ? null : <img src={this.props.thumb.url} style={{ height: height, width: width }} alt={thumbKey} />}
+            </div>
 
             <div className='mt-2 pt-1 small'>{thumbKey}</div>
 

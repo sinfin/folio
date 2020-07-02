@@ -14,6 +14,10 @@ export default {
       boxShadow: state.isFocused ? '0 0 0 0.2rem rgba(33, 148, 210, 0.25)' : base.boxShadow
     }
   }),
+  menuList: (base) => ({
+    ...base,
+    maxHeight: '304px'
+  }),
   dropdownIndicator: (base) => ({
     ...base,
     padding: '6px'

@@ -3,7 +3,7 @@ import { delay } from 'redux-saga'
 import { takeLatest, put, select } from 'redux-saga/effects'
 
 import { flashError } from 'utils/flash'
-import { makeFilesSelector, getFiles } from 'ducks/files'
+import { getFiles } from 'ducks/files'
 
 // Constants
 
@@ -27,7 +27,6 @@ export function resetFilters (fileType, filesUrl) {
 // Sagas
 
 function * updateFiltersPerform (action) {
-  console.log(action)
   try {
     // debounce by 750ms, using delay with takeLatest
     let query = ''
@@ -62,16 +61,6 @@ export const makeFiltersSelector = (fileType) => (state) => {
     ...base,
     active
   }
-}
-
-export const makeTagsSelector = (fileType) => (state) => {
-  const tags = window.FolioConsole.ReactMetaData.tags
-
-  const files = makeFilesSelector(fileType)(state)
-  files.forEach((file) => file.attributes.tags.forEach((tag) => {
-    if (tags.indexOf(tag) === -1) tags.push(tag)
-  }))
-  return tags
 }
 
 export const makeFiltersQuerySelector = (fileType) => (state) => {

@@ -12,8 +12,6 @@ import {
   markModalFileAsUpdating
 } from 'ducks/fileModal'
 
-import { makeTagsSelector } from 'ducks/filters'
-
 import FileModalFile from './FileModalFile'
 
 ReactModal.setAppElement('body')
@@ -80,7 +78,7 @@ class Modal extends Component {
   }
 
   render () {
-    const { fileModal, tags, readOnly } = this.props
+    const { fileModal, readOnly } = this.props
     const isOpen = fileModal.file !== null
 
     return (
@@ -99,7 +97,6 @@ class Modal extends Component {
             deleteFile={this.deleteFile}
             uploadNewFileInstead={this.uploadNewFileInstead}
             onValueChange={this.onValueChange}
-            tags={tags}
             formState={this.state}
             readOnly={readOnly}
           />
@@ -110,8 +107,7 @@ class Modal extends Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  fileModal: fileModalSelector(state),
-  tags: makeTagsSelector(props.fileType)(state)
+  fileModal: fileModalSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

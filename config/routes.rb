@@ -39,6 +39,10 @@ Folio::Engine.routes.draw do
     resource :site, only: %i[edit update]
 
     namespace :api do
+      resource :tags, only: [] do
+        get :react_select
+      end
+
       resource :autocomplete, only: %i[show] do
         get :field
         get :selectize

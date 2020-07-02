@@ -20,22 +20,8 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
     end
   end
 
-  def tag_collection
-    if options[:tag_context]
-      base = ActsAsTaggableOn::Tag.for_context(:topics)
-    else
-      base = ActsAsTaggableOn::Tag.all
-    end
-
-    base.order(name: :asc).pluck(:name)
-  end
-
   def name
     options[:name] || list_attribute_name
-  end
-
-  def collection
-    options[:collection] || tag_collection
   end
 
   def allow_creation
@@ -51,7 +37,7 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
     end
 
     (options[:input_html] || {}).merge(
-      class: 'folio-console-tagsinput',
+      class: 'f-c-tagsinput',
       value: value,
     )
   end
@@ -59,7 +45,7 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
   def wrapper_html
     {
       'data-allow-create': allow_creation,
-      'data-collection': collection.join(', '),
+      'data-context': options[:tag_context],
     }
   end
 end

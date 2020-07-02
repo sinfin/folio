@@ -7,27 +7,45 @@ makeItems = (string) ->
     []
 
 init = ->
-  $inputs = $('.folio-console-tagsinput').not('.folio-console-selectize--bound')
+  $inputs = $('.f-c-tagsinput')
   return if $inputs.length is 0
 
   $inputs.each ->
-    $this = $(this)
-    $formGroup = $this.closest('.form-group')
+    $selectize = $(this)
+    $formGroup = $selectize.closest('.form-group')
 
     if $formGroup.data('allow-create')
       createOption = optionMapper
     else
       createOption = false
 
-    $this.selectize
+    $selectize.selectize
       dropdownParent: 'body'
       labelField: 'value'
       searchField: 'value'
       delimiter: ', '
       plugins: ['remove_button']
       create: createOption
-      options: makeItems($formGroup.data('collection'))
+      createFilter: (val) ->
+        return false if @items.indexOf(val) isnt -1
+        valid = true
+        @currentResults.items.forEach (item) ->
+          valid = valid and item.id isnt val
+        return valid
       maxOptions: 50000
+      preload: 'focus'
+      onChange: (_value) ->
+        $selectize.trigger('change')
+      load: (q, callback) ->
+        $.ajax
+          url: '/console/api/tags/react_select'
+          method: 'GET'
+          data:
+            q: q
+          error: ->
+            callback()
+          success: (res) ->
+            callback(res.data.map(optionMapper))
       render:
         option_create: (data, escape) ->
           """
@@ -38,7 +56,7 @@ init = ->
           """
 
 dispose = ->
-  $('.folio-console-tagsinput').each ->
+  $('.f-c-tagsinput').each ->
     @selectize?.destroy()
 
 if Turbolinks?

@@ -24,8 +24,6 @@ module Folio::Console::ReactHelper
   end
 
   def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil, atom_setting: nil)
-    @output_react_meta_data = true
-
     raw cell('folio/console/react_picker', f, placement_key: placement_key,
                                               title: title,
                                               file_type: file_type,
@@ -39,8 +37,6 @@ module Folio::Console::ReactHelper
   end
 
   def react_modal_for(file_type)
-    @output_react_meta_data = true
-
     if ['new', 'edit', 'create', 'update'].include?(action_name)
       klass = file_type.constantize
       begin
@@ -60,8 +56,6 @@ module Folio::Console::ReactHelper
   end
 
   def console_form_atoms(f)
-    @output_react_meta_data = true
-
     if f.object.class.respond_to?(:atom_locales)
       atoms = {}
       destroyed_ids = {}
@@ -96,26 +90,7 @@ module Folio::Console::ReactHelper
                            'data-atoms': data.to_json)
   end
 
-  def react_meta_data
-    {
-      tags: react_meta_data_tags,
-    }.to_json
-  end
-
-  def react_meta_data_tags
-    key = [
-      'folio/console/react_meta_data_tags',
-      Folio::File.maximum(:updated_at),
-    ]
-
-    Rails.cache.fetch(key, expires_in: 1.day) do
-      Folio::File.tag_counts.order(:name).pluck(:name)
-    end
-  end
-
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
-    @output_react_meta_data = true
-
     if selected_placements.present?
       placements = selected_placements.ordered.map do |fp|
         {

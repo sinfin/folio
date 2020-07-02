@@ -2,8 +2,9 @@ import React from 'react'
 import { debounce } from 'lodash'
 
 import ReactSelect from 'react-select'
-import CreatableSelect from 'react-select/lib/Creatable'
-import AsyncSelect from 'react-select/lib/Async'
+import CreatableSelect from 'react-select/creatable'
+import AsyncSelect from 'react-select/async'
+import AsyncCreatableSelect from 'react-select/async-creatable'
 
 import { apiGet } from 'utils/api'
 
@@ -35,18 +36,40 @@ class Select extends React.Component {
     }
   }
 
+  isValidNewOption = (inputValue, selectValue, selectOptions) => {
+    if (!inputValue) return false
+    let isValid = true
+
+    selectValue.forEach((opt) => {
+      if (opt.value === inputValue) isValid = false
+    })
+
+    if (isValid) {
+      selectOptions.forEach((opt) => {
+        if (opt.value === inputValue) isValid = false
+      })
+    }
+
+    return isValid
+  }
+
   render () {
-    const { createable, value, options, onChange, innerRef, selectize, async, asyncData, ...rest } = this.props
+    const { createable, value, options, onChange, innerRef, selectize, async, asyncData, defaultOptions, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
     if (!createable) SelectComponent = ReactSelect
 
     if (async) {
-      SelectComponent = AsyncSelect
+      if (createable) {
+        SelectComponent = AsyncCreatableSelect
+      } else {
+        SelectComponent = AsyncSelect
+      }
 
       loadOptionsRaw = (inputValue, handle) => {
         let data = ''
+
         if (asyncData) {
           const params = new URLSearchParams()
           Object.keys(asyncData).forEach((key) => {
@@ -56,12 +79,23 @@ class Select extends React.Component {
           if (data !== '') data = `&${data}`
         }
 
-        apiGet(`${async}&q=${inputValue}${data}`)
+        const join = async.indexOf('?') === -1 ? '?' : '&'
+        apiGet(`${async}${join}q=${inputValue}${data}`)
           .catch(() => handle([]))
-          .then((res) => handle(res ? res.data : []))
+          .then((res) => {
+            if (res) {
+              if (selectize) {
+                handle(res.data)
+              } else {
+                handle(formatOptions(res.data))
+              }
+            } else {
+              handle([])
+            }
+          })
       }
 
-      loadOptions = debounce(loadOptionsRaw, 300)
+      loadOptions = debounce(loadOptionsRaw, 300, { leading: true, trailing: true })
     }
 
     let formattedValue = null
@@ -80,7 +114,8 @@ class Select extends React.Component {
         className='react-select-container'
         classNamePrefix='react-select'
         value={formattedValue}
-        options={options ? formatOptions(options) : []}
+        options={options ? formatOptions(options) : undefined}
+        defaultOptions={defaultOptions}
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
         createable={createable}
@@ -92,6 +127,7 @@ class Select extends React.Component {
         isClearable
         placeholder={window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
+        isValidNewOption={this.isValidNewOption}
         {...rest}
       />
     )
