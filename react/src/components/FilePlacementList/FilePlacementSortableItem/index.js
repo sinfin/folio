@@ -1,9 +1,11 @@
 import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
+import { FormGroup, Input, FormText } from 'reactstrap'
 
 import NestedModelControls from 'components/NestedModelControls'
-import FormGroup from 'components/FormGroup'
 import FileHoverButtons from 'components/FileHoverButtons'
+
+import preventEnterSubmit from 'utils/preventEnterSubmit'
 
 import filePlacementInputName from '../utils/filePlacementInputName'
 import HiddenInputs from './HiddenInputs'
@@ -101,26 +103,34 @@ class FilePlacement extends React.Component {
 
         <div className='f-c-file-placement__inputs'>
           <div className='f-c-file-placement__title'>
-            <FormGroup
-              placeholder={filePlacement.file.attributes.file_name}
-              value={this.state.title}
-              onChange={this.onTitleChange}
-              onBlur={this.onTitleBlur}
-              name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
-              hint={window.FolioConsole.translations.fileTitleHint}
-            />
+            <FormGroup>
+              <Input
+                placeholder={filePlacement.file.attributes.file_name}
+                value={this.state.title || ''}
+                onChange={this.onTitleChange}
+                onBlur={this.onTitleBlur}
+                onKeyPress={preventEnterSubmit}
+                name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
+              />
+
+              <FormText>{window.FolioConsole.translations.fileTitleHint}</FormText>
+            </FormGroup>
           </div>
 
           {fileTypeIsImage && (
             <div className='f-c-file-placement__alt'>
-              <FormGroup
-                placeholder='alt'
-                value={this.state.alt}
-                onChange={this.onAltChange}
-                onBlur={this.onAltBlur}
-                name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
-                hint={window.FolioConsole.translations.altHint}
-              />
+              <FormGroup>
+                <Input
+                  placeholder='alt'
+                  value={this.state.alt || ''}
+                  onChange={this.onAltChange}
+                  onBlur={this.onAltBlur}
+                  onKeyPress={preventEnterSubmit}
+                  name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
+                />
+
+                <FormText>{window.FolioConsole.translations.altHint}</FormText>
+              </FormGroup>
             </div>
           )}
         </div>
