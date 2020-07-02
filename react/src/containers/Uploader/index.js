@@ -82,6 +82,7 @@ class Uploader extends Component {
       thumbnailHeight: 150,
       timeout: 0,
       parallelUploads: 5,
+      maxFilesize: 4096,
       params
     }
   }
