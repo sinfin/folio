@@ -66,15 +66,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def new_dropdown_links
     options[:types].map do |klass|
-      if options[:new_url]
-        url =send(options[:new_url])
-      else
-        url = url_for([:console, model, action: :new])
-      end
-
       {
         title: klass.model_name.human,
-        url: url,
+        url: url_for([:console, model, action: :new, type: klass.to_s]),
       }
     end
   end
