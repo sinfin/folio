@@ -5,10 +5,10 @@ import DisplayButtons from 'containers/DisplayButtons'
 
 import PaginationWrap from './styled/PaginationWrap'
 
-const makeOnClick = (number, changeFilesPage) => (e) => {
+const makeOnClick = (number, changePage) => (e) => {
   e.preventDefault()
   e.stopPropagation()
-  changeFilesPage(number)
+  changePage(number)
 }
 
 function paginationInfo (pagination) {
@@ -19,7 +19,7 @@ function paginationInfo (pagination) {
   }
 }
 
-function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, setThumbsDisplay, display, fileTypeIsImage }) {
+function PaginationComponent ({ changePage, pagination, setCardsDisplay, setThumbsDisplay, display, fileTypeIsImage }) {
   const active = pagination.page
   const min = 1
   const max = pagination.pages
@@ -62,7 +62,7 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
             <div className='f-c-pagination__nav'>
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {prevActive ? (
-                  <a href='#1' onClick={makeOnClick(1, changeFilesPage)}>
+                  <a href='#1' onClick={makeOnClick(1, changePage)}>
                     <span className='f-c-pagination__ico fa fa-fast-backward' />
                   </a>
                 ) : (
@@ -72,7 +72,7 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
 
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {prevActive ? (
-                  <a href={`#${prev}`} onClick={makeOnClick(prev, changeFilesPage)}>
+                  <a href={`#${prev}`} onClick={makeOnClick(prev, changePage)}>
                     <span className='f-c-pagination__ico fa fa-step-backward' />
                   </a>
                 ) : (
@@ -86,7 +86,7 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
                     <span>&hellip;</span>
                   ) : (
                     number === active ? number : (
-                      <a href={`#${number}`} onClick={makeOnClick(number, changeFilesPage)}>
+                      <a href={`#${number}`} onClick={makeOnClick(number, changePage)}>
                         {number}
                       </a>
                     )
@@ -96,7 +96,7 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
 
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {nextActive ? (
-                  <a href={`#${next}`} onClick={makeOnClick(next, changeFilesPage)}>
+                  <a href={`#${next}`} onClick={makeOnClick(next, changePage)}>
                     <span className='f-c-pagination__ico fa fa-step-forward' />
                   </a>
                 ) : (
@@ -106,7 +106,7 @@ function PaginationComponent ({ changeFilesPage, pagination, setCardsDisplay, se
 
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {nextActive ? (
-                  <a href='#1' onClick={makeOnClick(max, changeFilesPage)}>
+                  <a href='#1' onClick={makeOnClick(max, changePage)}>
                     <span className='f-c-pagination__ico fa fa-fast-forward' />
                   </a>
                 ) : (

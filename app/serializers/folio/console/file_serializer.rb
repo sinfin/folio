@@ -14,7 +14,8 @@ class Folio::Console::FileSerializer
              :type,
              :thumbnail_sizes,
              :author,
-             :description
+             :description,
+             :file_placements_size
 
   attribute :react_type do |object|
     object.class.react_type
@@ -52,61 +53,4 @@ class Folio::Console::FileSerializer
     object.file_name.presence ||
     "#{object.class.model_name.human} ##{object.id}"
   end
-
-  attribute :file_placements_count do |object|
-    object.file_placements.size
-  end
-
-  attribute :some_file_placements do |object|
-    ary = []
-
-    object.file_placements.first(10).each do |file_placement|
-      label = label_for_placement(file_placement)
-      url = url_for_placement(file_placement)
-      if label && url
-        ary << { label: label, url: url, id: file_placement.id }
-      end
-    end
-
-    ary
-  end
-
-  private
-    def self.url_for_placement(file_placement)
-      placement = file_placement.placement
-
-      if placement.is_a?(Folio::Atom::Base)
-        placement = placement.placement
-      end
-
-      begin
-        Folio::Engine.app.url_helpers.url_for([:edit, :console, placement, only_path: true])
-      rescue StandardError
-        begin
-          Folio::Engine.app.url_helpers.url_for([:console, placement, only_path: true])
-        rescue StandardError
-          begin
-            Rails.application.routes.url_helpers.url_for([:edit, :console, placement, only_path: true])
-          rescue StandardError
-            begin
-              Rails.application.routes.url_helpers.url_for([:console, placement, only_path: true])
-            rescue StandardError
-              nil
-            end
-          end
-        end
-      end
-    end
-
-    def self.label_for_placement(file_placement)
-      placement = file_placement.placement
-
-      if placement.is_a?(Folio::Atom::Base)
-        placement = placement.placement
-      end
-
-      "#{placement.class.model_name.human}: #{placement.to_label}"
-    rescue StandardError
-      nil
-    end
 end

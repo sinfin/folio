@@ -47,15 +47,6 @@
               class="f-c-pagination__page--gap"
             ] &hellip;
 
-            - previous = model.series[index - 1].to_i + 1
-            - following = model.series[index + 1].to_i - 1
-            - (previous..following).each do |page|
-              span.f-c-pagination__page[
-                class="f-c-pagination__page--page"
-                class="f-c-pagination__page--in-gap"
-              ]
-                = link.call(page)
-
       - if model.next
         span.f-c-pagination__page[
           class="f-c-pagination__page--with-ico"

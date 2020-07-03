@@ -12,7 +12,7 @@ const FileList = (props) => {
   const pagination = (
     <Pagination
       pagination={props.pagination}
-      changeFilesPage={props.changeFilesPage}
+      changePage={props.changeFilesPage}
       fileTypeIsImage={props.fileTypeIsImage}
     />
   )

@@ -9,7 +9,8 @@ import {
   closeFileModal,
   fileModalSelector,
   uploadNewFileInstead,
-  markModalFileAsUpdating
+  markModalFileAsUpdating,
+  changeFilePlacementsPage
 } from 'ducks/fileModal'
 
 import FileModalFile from './FileModalFile'
@@ -69,6 +70,10 @@ class Modal extends Component {
     this.props.dispatch(uploadNewFileInstead(this.props.fileType, this.props.filesUrl, this.props.fileModal.file, fileIo))
   }
 
+  changeFilePlacementsPage = (page) => {
+    this.props.dispatch(changeFilePlacementsPage(this.props.fileModal.file, page))
+  }
+
   onTagsChange = (tags) => {
     this.setState({ ...this.state, tags })
   }
@@ -98,6 +103,7 @@ class Modal extends Component {
             uploadNewFileInstead={this.uploadNewFileInstead}
             onValueChange={this.onValueChange}
             formState={this.state}
+            changeFilePlacementsPage={this.changeFilePlacementsPage}
             readOnly={readOnly}
           />
         )}

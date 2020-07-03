@@ -1,6 +1,6 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
 
-import { apiPost, apiFilePost } from 'utils/api'
+import { apiGet, apiPost, apiFilePost } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { updatedFiles, UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
 
@@ -14,6 +14,8 @@ const UPLOAD_NEW_FILE_INSTEAD = 'fileModal/UPLOAD_NEW_FILE_INSTEAD'
 const UPLOAD_NEW_FILE_INSTEAD_SUCCESS = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_SUCCESS'
 const MARK_MODAL_FILE_AS_UPDATING = 'fileModal/MARK_MODAL_FILE_AS_UPDATING'
 const MARK_MODAL_FILE_AS_UPDATED = 'fileModal/MARK_MODAL_FILE_AS_UPDATED'
+const LOADED_FILE_MODAL_PLACEMENTS = 'fileModal/LOADED_FILE_MODAL_PLACEMENTS'
+const CHANGE_FILE_PLACEMENTS_PAGE = 'fileModal/CHANGE_FILE_PLACEMENTS_PAGE'
 
 // Actions
 
@@ -47,6 +49,14 @@ export function markModalFileAsUpdating (file) {
 
 export function markModalFileAsUpdated (file) {
   return { type: MARK_MODAL_FILE_AS_UPDATED, file }
+}
+
+export function loadedFileModalPlacements (file, filePlacements, meta) {
+  return { type: LOADED_FILE_MODAL_PLACEMENTS, file, filePlacements, meta }
+}
+
+export function changeFilePlacementsPage (file, page) {
+  return { type: CHANGE_FILE_PLACEMENTS_PAGE, file, page }
 }
 
 // Selectors
@@ -103,10 +113,40 @@ function * handleFileUpdateSaga () {
   ]
 }
 
+function * openFileModalPerform (action) {
+  try {
+    const url = `/console/api/files/${action.file.id}/file_placements`
+    const response = yield call(apiGet, url)
+    yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * openFileModalSaga () {
+  yield takeEvery(OPEN_FILE_MODAL, openFileModalPerform)
+}
+
+function * changeFilePlacementsPagePerform (action) {
+  try {
+    const url = `/console/api/files/${action.file.id}/file_placements?page=${action.page}`
+    const response = yield call(apiGet, url)
+    yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * changeFilePlacementsPageSaga () {
+  yield takeEvery(CHANGE_FILE_PLACEMENTS_PAGE, changeFilePlacementsPagePerform)
+}
+
 export const fileModalSagas = [
   updateFileThumbnailSaga,
   uploadNewFileInsteadSaga,
-  handleFileUpdateSaga
+  handleFileUpdateSaga,
+  openFileModalSaga,
+  changeFilePlacementsPageSaga
 ]
 
 // State
@@ -115,7 +155,15 @@ const initialState = {
   file: null,
   fileType: null,
   uploadingNew: false,
-  updating: false
+  updating: false,
+  filePlacements: {
+    loading: false,
+    records: [],
+    pagination: {
+      page: null,
+      pages: null
+    }
+  }
 }
 
 // Reducer
@@ -126,7 +174,11 @@ function modalReducer (state = initialState, action) {
       return {
         ...initialState,
         file: action.file,
-        fileType: action.fileType
+        fileType: action.fileType,
+        filePlacements: {
+          ...initialState.filePlacements,
+          loading: true,
+        }
       }
 
     case CLOSE_FILE_MODAL:
@@ -196,6 +248,35 @@ function modalReducer (state = initialState, action) {
           ...state,
           file: action.file,
           updating: false
+        }
+      } else {
+        return state
+      }
+    }
+
+    case LOADED_FILE_MODAL_PLACEMENTS: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          filePlacements: {
+            loading: false,
+            records: action.filePlacements,
+            pagination: action.meta,
+          }
+        }
+      } else {
+        return state
+      }
+    }
+
+    case CHANGE_FILE_PLACEMENTS_PAGE: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          filePlacements: {
+            ...state.filePlacements,
+            loading: true,
+          }
         }
       } else {
         return state

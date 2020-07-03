@@ -93,8 +93,8 @@ export function massCancel (fileType) {
 function * getFilesPerform (action) {
   try {
     const filesUrl = `${action.filesUrl}?${action.query}`
-    const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(action.fileType, records.data, records.meta))
+    const response = yield call(apiGet, filesUrl)
+    yield put(getFilesSuccess(action.fileType, response.data, response.meta))
   } catch (e) {
     flashError(e.message)
   }
@@ -424,13 +424,13 @@ function filesReducer (rawState = initialState, action) {
       if (action.select) {
         massSelectedIds = [...massSelectedIds, action.file.id]
 
-        if (action.file.attributes.file_placements_count) {
+        if (action.file.attributes.file_placements_size) {
           massSelectedIndestructibleIds = [...massSelectedIndestructibleIds, action.file.id]
         }
       } else {
         massSelectedIds = without(massSelectedIds, action.file.id)
 
-        if (action.file.attributes.file_placements_count) {
+        if (action.file.attributes.file_placements_size) {
           massSelectedIndestructibleIds = without(massSelectedIndestructibleIds, action.file.id)
         }
       }

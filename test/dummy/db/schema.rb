@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_121255) do
+ActiveRecord::Schema.define(version: 2020_07_03_064450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,10 +143,12 @@ ActiveRecord::Schema.define(version: 2020_06_09_121255) do
     t.string "hash_id"
     t.string "author"
     t.text "description"
+    t.integer "file_placements_size"
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
     t.index ["type"], name: "index_folio_files_on_type"
+    t.index ["updated_at"], name: "index_folio_files_on_updated_at"
   end
 
   create_table "folio_leads", force: :cascade do |t|

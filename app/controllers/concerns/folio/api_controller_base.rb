@@ -39,10 +39,17 @@ module Folio::ApiControllerBase
       end
     end
 
-    def render_records(models, serializer = nil, include: [], meta: nil)
+    def json_from_records(models, serializer = nil, include: [], meta: nil)
       serializer ||= serializer_for(models.first)
-      render json: serializer.new(models, include: include, meta: meta)
-                             .serializable_hash
+      serializer.new(models, include: include, meta: meta)
+                .serializable_hash
+    end
+
+    def render_records(models, serializer = nil, include: [], meta: nil)
+      render json: json_from_records(models,
+                                     serializer,
+                                     include: include,
+                                     meta: meta)
     end
 
     def render_invalid(model)
@@ -68,5 +75,15 @@ module Folio::ApiControllerBase
       serializer = "#{model.class.name}Serializer".safe_constantize
       fail ArgumentError.new('Unknown serializer') if serializer.nil?
       serializer
+    end
+
+    def meta_from_pagy(pagy_data)
+      {
+        page: pagy_data.page,
+        pages: pagy_data.pages,
+        from: pagy_data.from,
+        to: pagy_data.to,
+        count: pagy_data.count,
+      }
     end
 end

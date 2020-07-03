@@ -14,14 +14,15 @@ import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, readOnly }) => {
-  const isImage = fileModal.file.attributes.react_type === 'image'
-  let download = fileModal.file.attributes.file_name
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, readOnly, changeFilePlacementsPage }) => {
+  const file = fileModal.file
+  const isImage = file.attributes.react_type === 'image'
+  let download = file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 
-  const indestructible = !!fileModal.file.attributes.file_placements_count
+  const indestructible = !!file.attributes.file_placements_size
   const notAllowedCursor = indestructible ? 'cursor-not-allowed' : ''
-  const onDeleteClick = indestructible ? undefined : makeConfirmed(() => deleteFile(fileModal.file))
+  const onDeleteClick = indestructible ? undefined : makeConfirmed(() => deleteFile(file))
 
   const onEditClick = (e) => {
     if (!window.confirm(window.FolioConsole.translations.confirmation)) {
@@ -32,7 +33,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
   return (
     <div className='modal-content'>
       <div className='modal-header'>
-        <strong className='modal-title'>{fileModal.file.attributes.file_name}</strong>
+        <strong className='modal-title'>{file.attributes.file_name}</strong>
         <button type='button' className='close' onClick={closeFileModal}>×</button>
       </div>
 
@@ -42,22 +43,22 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             <div className='col-lg-7 mb-3'>
               <MainImageOuter>
                 <div style={{
-                  backgroundColor: fileModal.file.attributes.dominant_color,
-                  paddingTop: `${100 * fileModal.file.attributes.file_height / fileModal.file.attributes.file_width}%`
+                  backgroundColor: file.attributes.dominant_color,
+                  paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%`
                 }} />
 
                 <MainImageInner>
-                  <MainImage src={fileModal.file.attributes.source_url} />
+                  <MainImage src={file.attributes.source_url} />
                 </MainImageInner>
               </MainImageOuter>
 
-              <div className='mt-2 small'>{fileModal.file.attributes.file_width}×{fileModal.file.attributes.file_height} px</div>
+              <div className='mt-2 small'>{file.attributes.file_width}×{file.attributes.file_height} px</div>
             </div>
           )}
           <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
             <div className='d-flex flex-wrap mb-2'>
               <a
-                href={fileModal.file.attributes.source_url}
+                href={file.attributes.source_url}
                 className='btn btn-secondary mr-2 mb-2'
                 target='_blank'
                 rel='noopener noreferrer'
@@ -156,12 +157,12 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
         <div className={isImage ? 'row mt-3' : 'mt-3'}>
           {isImage && (
             <div className='col-lg-7 mb-3'>
-              <ThumbnailSizes file={fileModal.file} updateThumbnail={updateThumbnail} />
+              <ThumbnailSizes file={file} updateThumbnail={updateThumbnail} />
             </div>
           )}
 
           <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
-            <FileUsage file={fileModal.file} />
+            <FileUsage filePlacements={fileModal.filePlacements} changeFilePlacementsPage={changeFilePlacementsPage} />
           </div>
         </div>
       </div>

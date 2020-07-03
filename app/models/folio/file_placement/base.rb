@@ -13,6 +13,8 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   after_save :extract_placement_title_and_type
   after_touch :extract_placement_title_and_type
+  after_create :update_file_file_placements_size
+  after_destroy :update_file_file_placements_size
 
   def to_label
     title.presence || file.try(:file_name) || 'error: empty file'
@@ -61,6 +63,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
           end
         end
       end
+    end
+
+    def update_file_file_placements_size
+      file.try(:update_file_placements_size!)
     end
 end
 

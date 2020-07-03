@@ -48,6 +48,10 @@ Folio::Engine.routes.draw do
         get :selectize
         get :react_select
       end
+
+      resources :file_placements, only: %i[index],
+                                  path: 'files/:file_id/file_placements'
+
       resources :images, only: %i[index create update destroy] do
         collection do
           post :tag

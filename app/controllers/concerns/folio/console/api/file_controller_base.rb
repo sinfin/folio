@@ -7,16 +7,15 @@ module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    pagy, records = pagy(folio_console_records.ordered, items: 60)
-    meta = {
-      page: pagy.page,
-      pages: pagy.pages,
-      from: pagy.from,
-      to: pagy.to,
-      count: pagy.count,
-      react_type: @klass.react_type,
-    }
-    render_records(records, Folio::Console::FileSerializer, meta: meta)
+    if params[:page].nil? || params[:page] == '1'
+      json = Rails.cache.fetch(index_cache_key, expires_in: 1.day) do
+        index_json
+      end
+    else
+      json = index_json
+    end
+
+    render json: json
   end
 
   def create
@@ -138,5 +137,16 @@ module Folio::Console::Api::FileControllerBase
       end
 
       p
+    end
+
+    def index_json
+      pagination, records = pagy(folio_console_records.ordered, items: 60)
+      meta = meta_from_pagy(pagination).merge(react_type: @klass.react_type)
+
+      json_from_records(records, Folio::Console::FileSerializer, meta: meta)
+    end
+
+    def index_cache_key
+      "folio/console/api/file/#{@klass.model_name.plural}/index/#{@klass.count}/#{@klass.maximum(:updated_at)}"
     end
 end

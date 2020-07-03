@@ -47,9 +47,9 @@ const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selectin
             file={file}
           />
 
-          {file.attributes.file_placements_count ? (
+          {file.attributes.file_placements_size ? (
             <div className='f-c-file-list__file-placements-count'>
-              {file.attributes.file_placements_count}
+              {file.attributes.file_placements_size}
             </div>
           ) : null}
         </React.Fragment>
