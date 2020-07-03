@@ -237,7 +237,11 @@ module Folio
           "\n  config.action_controller.page_cache_directory = Rails.root.join('public', 'cached_pages')"
         end
 
-        gsub_file 'config/environments/production.rb', 'config.assets.js_compressor = :uglifier', 'config.assets.js_compressor = Uglifier.new(harmony: true)'
+        gsub_file 'config/environments/production.rb', 'config.assets.js_compressor = :uglifier', 'config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6'
+      end
+
+      def staging_settings
+        gsub_file 'config/environments/staging.rb', 'config.assets.js_compressor = :uglifier', 'config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6'
       end
 
       def setup_routes

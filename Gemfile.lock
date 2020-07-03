@@ -523,6 +523,8 @@ GEM
     tzinfo (1.2.7)
       thread_safe (~> 0.1)
     uber (0.1.0)
+    uglifier (4.2.0)
+      execjs (>= 0.3.0, < 3)
     unicode-display_width (1.7.0)
     unicode_utils (1.4.0)
     uniform_notifier (1.13.0)
@@ -571,6 +573,7 @@ DEPENDENCIES
   rubyzip
   selenium-webdriver
   sqlite3
+  uglifier
 
 BUNDLED WITH
    2.1.4

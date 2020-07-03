@@ -9,7 +9,7 @@ rootDir="$( dirname "$0" )/../.."
 
   js=../app/assets/javascripts/folio/console/react.js
   touch $js
-  echo '' > $js
+  echo '// folioSkipUglifier' > $js
 
   for file in build/static/js/*.js; do
     cat $file >> $js
