@@ -30,7 +30,7 @@ PATH
       cells-rails (= 0.1.0)
       cells-slim (= 0.0.6)
       cocoon
-      coffee-rails
+      coffee-rails (~> 5.0)
       countries
       devise
       devise-bootstrap-views
