@@ -2,14 +2,18 @@
 
 class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
   def url
-    options[:url] || url
+    options[:url] || default_url
   end
 
   def as
     options[:as] || model.class.table_name.gsub('folio_', '')
   end
 
-  def url
+  def attribute
+    options[:attribute] || :position
+  end
+
+  def default_url
     controller.url_for([:set_positions, :console, model.class])
   end
 end

@@ -1,7 +1,8 @@
-= hidden_field_tag :position, model.position,
+= hidden_field_tag attribute, model.send(attribute), \
                               class: 'folio-console-input-position'
-= hidden_field_tag :id, model.id,
-                        class: 'folio-console-input-id'
+= hidden_field_tag :id, model.id, \
+                        class: 'folio-console-input-id', \
+                        'data-attribute' => attribute
 
 .btn-group[
   role="group"

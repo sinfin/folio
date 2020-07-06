@@ -43,11 +43,14 @@ getTr = ($btn) ->
 post = (tr, url) ->
   data = {}
 
-  data[tr.btn.find('.folio-console-input-id').val()] =
-    position: tr.target.find('.folio-console-input-position').val()
+  $id = tr.btn.find('.folio-console-input-id')
+  attribute = $id.data('attribute')
 
-  data[tr.target.find('.folio-console-input-id').val()] =
-    position: tr.btn.find('.folio-console-input-position').val()
+  data[tr.btn.find('.folio-console-input-id').val()] = {}
+  data[tr.btn.find('.folio-console-input-id').val()][attribute] = tr.target.find('.folio-console-input-position').val()
+
+  data[tr.target.find('.folio-console-input-id').val()] = {}
+  data[tr.target.find('.folio-console-input-id').val()][attribute] = tr.btn.find('.folio-console-input-position').val()
 
   tr.btn.addClass('folio-console-loading')
   tr.target.addClass('folio-console-loading')
