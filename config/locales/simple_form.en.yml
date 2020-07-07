@@ -9,7 +9,6 @@ en:
     hints:
       defaults:
         alt: Image alternative text. Displayed on image loading failure.
-        content: Main content. If you need to add more structured content, you can add <strong>chapters</strong> bellow.
         featured: Used to display a page on the homepage or other selections.
         locale: Language variant
         meta_description: SEO, Optional. This description appears on a search engine page.
@@ -31,7 +30,7 @@ en:
     placeholders:
       defaults:
         by_query: Search...
-        content: Formatted text with images, tables, etc.
+        content: Formatted rich text
         meta_description: Recommended size is under 250 characters.
         meta_title: 'e.g.: Our team'
         perex: One or more paragraphs of unformatted text, sepearated by a blank line.

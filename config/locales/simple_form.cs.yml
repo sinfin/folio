@@ -9,7 +9,6 @@ cs:
     hints:
       defaults:
         alt: Alternativní text obrázku. Zobrazuje se v případě nenačtení obrázku.
-        content: Hlavní obsah. Pokud potřebujete doplnit další strukturovaný obsah, je možné pokračovat níže přidáváním <strong>Kapitol</strong>.
         featured: Bývá využito pro zobrazení stránky na homepage nebo v jiných výběrech.
         locale: Jazyková verze.
         meta_description: Nepovinný údaj. Tato varianta perexu se může objevit v popisu ve vyhledávačích. Důležité pro SEO.
@@ -35,7 +34,7 @@ cs:
     placeholders:
       defaults:
         by_query: Hledat...
-        content: Textový článek s možností formátování, vkládání obrázků, tabulek apod.
+        content: Textový obsah s možností formátování
         meta_description: Alternativní popis obsahu stránky doporučujeme napsat tak, aby se vše podstatné vešlo do 250 znaků textu.
         meta_title: 'Např.: Nabídka specializovaných služeb'
         perex: Jeden, nebo více odstavců neformátovaného textu oddělených prázdným řádkem.
