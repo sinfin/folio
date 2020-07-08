@@ -19,7 +19,4 @@ meta[
   - unless ENV['REACT_DEV']
     = stylesheet_link_tag 'folio/console/react', media: 'all'
 
-  - if Rails.env.development? && !ENV['DISABLE_BULLET']
-    = stylesheet_link_tag 'folio/bullet', media: 'all'
-
 = csrf_meta_tags

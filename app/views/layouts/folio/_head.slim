@@ -40,9 +40,6 @@ meta name="twitter:card" content="summary"
                         media: 'all', \
                         'data-turbolinks-track': 'reload')
 
-  - if Rails.env.development? && !ENV['DISABLE_BULLET']
-    = stylesheet_link_tag 'folio/bullet', media: 'all'
-
   == render partial: 'layouts/folio/analytics'
 
   = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload', \
