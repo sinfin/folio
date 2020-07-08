@@ -11,6 +11,11 @@ class Folio::Console::SitesController < Folio::Console::BaseController
     respond_with @site, location: edit_console_site_path
   end
 
+  def clear_cache
+    Rails.cache.clear
+    redirect_to edit_console_site_path, flash: { notice: t('.success') }
+  end
+
   private
     def site_params
       params.require(:site)

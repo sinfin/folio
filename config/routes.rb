@@ -36,7 +36,9 @@ Folio::Engine.routes.draw do
     resources :accounts
     resources :visits, only: %i[index show]
     resource :search, only: %i[show]
-    resource :site, only: %i[edit update]
+    resource :site, only: %i[edit update] do
+      post :clear_cache
+    end
 
     namespace :api do
       resource :tags, only: [] do

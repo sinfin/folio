@@ -186,6 +186,11 @@ en:
         add: Add
       really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
+      sites:
+        form:
+          clear_cache: Clear cache
+        clear_cache:
+          success: Cache was cleared successfully.
       single_file_select:
         add_image: Add image
         add_video: Add video

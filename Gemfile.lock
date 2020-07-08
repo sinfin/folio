@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/sinfin/actionpack-page_caching.git
-  revision: b8b88df8b4243637a7b89c698f31c2bc02ea2eac
-  specs:
-    actionpack-page_caching (1.1.1)
-      actionpack (>= 4.0.0, < 7)
-
-GIT
   remote: https://github.com/sinfin/premailer.git
   revision: 4f14229876c7f226ebb175b9cfaaf8c361169819
   specs:
@@ -161,9 +154,6 @@ GEM
       rails (>= 5.0)
     browser (2.7.1)
     builder (3.2.4)
-    bullet (6.1.0)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.11)
     byebug (11.1.1)
     cancancan (3.1.0)
     capybara (2.18.0)
@@ -527,7 +517,6 @@ GEM
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.7.0)
     unicode_utils (1.4.0)
-    uniform_notifier (1.13.0)
     user_agent_parser (2.6.0)
     warden (1.2.8)
       rack (>= 2.0.6)
@@ -544,11 +533,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack-page_caching!
   annotate
   better_errors
   binding_of_caller
-  bullet
   byebug
   capybara (~> 2.13)
   factory_bot

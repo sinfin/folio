@@ -190,6 +190,11 @@ cs:
         add: Přidat
       really_delete: Jste si jist, že chcete smazat "%{title}"?
       remove_confirmation: Odebrat?
+      sites:
+        form:
+          clear_cache: Smazat cache
+        clear_cache:
+          success: Cache byla úspěšně smazána.
       single_file_select:
         add_image: Přidat obrázek
         add_video: Přidat video

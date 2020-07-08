@@ -1,4 +1,10 @@
-= form_header f
+ruby:
+  cache_clear_button = link_to(t('.clear_cache'),
+                               clear_cache_console_site_path,
+                               method: :post,
+                               class: 'btn btn-warning')
+
+= form_header f, right: cache_clear_button
 
 = tabs [:content, :settings, :site_social_links]
 
