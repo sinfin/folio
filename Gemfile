@@ -15,8 +15,7 @@ gem 'mini_racer', platforms: :ruby
 gem 'premailer', github: 'sinfin/premailer'
 gem 'premailer-rails'
 gem 'rubyzip'
-
-gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
+gem 'rack-mini-profiler'
 
 group :test do
   gem 'minitest', '5.10.3'
@@ -29,11 +28,9 @@ end
 
 group :development do
   gem 'puma'
-  gem 'rack-mini-profiler', require: false
   gem 'i18n-tasks'
   gem 'rubocop', require: false
   gem 'rails-flog', require: 'flog'
-  gem 'bullet'
 end
 
 group :development, :test do

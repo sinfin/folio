@@ -3,7 +3,6 @@
 class Folio::ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  include Folio::ClearsPageCache
   include Folio::Filterable
   include Folio::NillifyBlanks
   include Folio::RecursiveSubclasses

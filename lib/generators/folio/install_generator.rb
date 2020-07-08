@@ -26,6 +26,7 @@ module Folio
         gem 'premailer-rails'
         gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'rubyzip'
+        gem 'rack-mini-profiler'
 
         gem_group :test do
           gem 'factory_bot'
@@ -54,12 +55,10 @@ module Folio
           gem 'capistrano-rails', require: false
           gem 'capistrano-sinfin', git: 'git@bitbucket.org:Sinfin/capistrano-sinfin.git', branch: 'master'
           gem 'capistrano-serviceman', github: 'Sinfin/capistrano-serviceman', branch: 'master'
-          gem 'rack-mini-profiler', require: false
 
           gem 'better_errors'
           gem 'binding_of_caller'
           gem 'rails-flog', require: 'flog'
-          gem 'bullet'
         end
       end
 
@@ -208,22 +207,6 @@ module Folio
             'config.action_mailer.perform_deliveries = true',
           ].join("\n  ")
         end
-
-        inject_into_file 'config/environments/development.rb', after: /config\.action_mailer\.perform_deliveries = true/ do <<-'RUBY'
-
-  unless ENV['DISABLE_BULLET']
-    config.after_initialize do
-      Bullet.enable = true
-      Bullet.bullet_logger = true
-      Bullet.console = true
-      Bullet.rails_logger = true
-      Bullet.add_footer = true
-      Bullet.skip_html_injection = false
-    end
-  end
-
-        RUBY
-        end
       end
 
       def test_settings
@@ -233,10 +216,6 @@ module Folio
       end
 
       def production_settings
-        inject_into_file 'config/environments/production.rb', after: /config\.action_controller\.perform_caching\s*=\s*true/ do
-          "\n  config.action_controller.page_cache_directory = Rails.root.join('public', 'cached_pages')"
-        end
-
         gsub_file 'config/environments/production.rb', 'config.assets.js_compressor = :uglifier', 'config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6'
       end
 

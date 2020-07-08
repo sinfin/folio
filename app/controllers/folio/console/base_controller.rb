@@ -13,7 +13,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
   before_action do
     I18n.locale = Rails.application.config.folio_console_locale
   end
-  # TODO: before_action :authorize_account!
+
+  before_action do
+    if (params[:rmp] && account_signed_in?) || ENV['FORCE_MINI_PROFILER']
+      Rack::MiniProfiler.authorize_request
+    end
+  end
 
   layout 'folio/console/application'
   self.responder = Folio::Console::ApplicationResponder
