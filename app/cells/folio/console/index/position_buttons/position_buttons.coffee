@@ -20,6 +20,8 @@ switchRows = (tr) ->
   else
     tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
 
+  tr.btn.closest('.f-c-show-for-index').trigger('folioConsoleSwitchedRows')
+
 getTr = ($btn) ->
   $btnTr = $btn.closest('.f-c-show-for__row')
 
