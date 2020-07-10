@@ -210,6 +210,10 @@ cs:
         audited_dropdown:
           toggle: Historie verzí
           current: (současná verze)
+        audited_bar:
+          version: 'Verze:'
+          restore: Obnovit tuto verzi
+          show_current: Zobrazit současnou verzi
 
   date:
     formats:
