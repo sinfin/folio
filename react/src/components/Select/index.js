@@ -19,7 +19,11 @@ class Select extends React.Component {
     if (this.props.selectize) {
       return this.props.onChange(value)
     } else if (this.props.isMulti) {
-      return this.props.onChange(value.map((item) => item.value))
+      if (value) {
+        return this.props.onChange(value.map((item) => item.value))
+      } else {
+        return this.props.onChange([])
+      }
     } else {
       return this.props.onChange(value ? value.value : null)
     }
