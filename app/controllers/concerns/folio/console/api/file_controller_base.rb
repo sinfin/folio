@@ -7,7 +7,10 @@ module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    if params[:page].nil? || params[:page] == '1'
+    can_cache = (params[:page].nil? || params[:page] == '1') &&
+                filter_params.to_h.all? { |k, v| v.blank? }
+
+    if can_cache
       json = Rails.cache.fetch(index_cache_key, expires_in: 1.day) do
         index_json
       end
