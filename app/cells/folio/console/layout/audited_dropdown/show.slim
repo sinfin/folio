@@ -1,0 +1,19 @@
+.f-c-layout-audited-dropdown.dropdown
+  .f-c-layout-audited-dropdown__toggle.dropdown-toggle[
+    data-toggle="dropdown"
+  ]
+    span.small = t('.toggle')
+
+  .dropdown-menu.dropdown-menu-right.f-c-layout-audited-dropdown__menu.py-0
+    - model.each_with_index do |version, i|
+      a.dropdown-item.f-c-layout-audited-dropdown__item.py-2[
+        href="#"
+        class=item_class_name(i)
+      ]
+        .f-c-layout-audited-dropdown__label
+          = l(version.audit.created_at, format: :short)
+          - if i == 0
+            '  #{t('.current')}
+
+        .small
+          = version.audit.user.try(:to_label)

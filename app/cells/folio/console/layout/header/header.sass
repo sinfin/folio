@@ -18,9 +18,11 @@ $f-c-layout-header-color: $dark !default
   align-items: stretch
 
 .f-c-layout-header__sign-out-link
-  margin-left: auto
   display: flex
   align-items: center
+
+  .breadcrumb + &
+    margin-left: auto
 
   +plain-hover-focus
     color: inherit

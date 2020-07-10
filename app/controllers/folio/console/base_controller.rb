@@ -73,6 +73,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
         rescue ActiveRecord::RecordNotFound
         end
       end
+
+      if instance_variable_get(name).respond_to?(:revisions)
+        @audited_revisions = instance_variable_get(name).revisions.reverse
+      end
     end
 
     prepend_before_action do

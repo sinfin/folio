@@ -9,6 +9,9 @@
     .f-c-layout-header__inner
       = model
 
+      == cell('folio/console/layout/audited_dropdown', \
+              options[:audited_revisions])
+
       = link_to log_out_path, \
                 method: :delete, \
                 class: 'f-c-layout-header__sign-out-link f-c-with-icon'

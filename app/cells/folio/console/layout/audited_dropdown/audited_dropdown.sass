@@ -1,0 +1,26 @@
+.f-c-layout-audited-dropdown
+  margin-left: auto
+  align-self: center
+
+  &__toggle
+    display: flex
+    align-items: center
+    padding: 0 $grid-gutter-half
+    line-height: 35px
+    cursor: pointer
+
+  &__menu
+    max-height: 400px
+    overflow-y: auto
+
+  &__item
+    &--link
+      border-top: 1px solid $border-color
+
+    &--active
+      +plain-hover-focus
+        background: rgba(230, 244, 250, 0.6)
+        color: $dark
+
+  &__item--active &__label
+    font-weight: $font-weight-bold
