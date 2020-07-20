@@ -16,4 +16,12 @@ class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
   def default_url
     controller.url_for([:set_positions, :console, model.class])
   end
+
+  def input_class_name
+    if model.class.try(:folio_positionable_descending?)
+      'f-c-index-position__input f-c-index-position__input--descending'
+    else
+      'f-c-index-position__input'
+    end
+  end
 end

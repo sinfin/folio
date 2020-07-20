@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::Positionable
+module Folio::PositionableDescending
   extend ActiveSupport::Concern
 
   included do
@@ -8,15 +8,15 @@ module Folio::Positionable
     validates :position, presence: true
 
     # Scopes
-    scope :ordered, -> { order(position: :asc) }
+    scope :ordered, -> { order(position: :desc) }
 
     # Callbacks
     before_validation :set_position
   end
 
   class_methods do
-    def positionable_descending?
-      false
+    def folio_positionable_descending?
+      true
     end
   end
 
@@ -36,6 +36,6 @@ module Folio::Positionable
     end
 
     def positionable_last_record
-      self.class.ordered.last
+      self.class.ordered.first
     end
 end

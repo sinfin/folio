@@ -1,11 +1,11 @@
 rowChildren = ($row) ->
-  id = $row.find('.folio-console-input-id').val()
+  id = $row.find('.f-c-index-position__id').val()
   $row.nextAll("tr[data-parent='#{id}']")
 
 switchRows = (tr) ->
   inputs =
-    btn: tr.btn.find('.folio-console-input-position')
-    target: tr.target.find('.folio-console-input-position')
+    btn: tr.btn.find('.f-c-index-position__input')
+    target: tr.target.find('.f-c-index-position__input')
 
   pos =
     btn: inputs.btn.val()
@@ -15,10 +15,16 @@ switchRows = (tr) ->
   inputs.target.val pos.btn
 
   # using past value
-  if parseInt(pos.btn) > parseInt(pos.target)
-    tr.btn.add(rowChildren(tr.btn)).insertBefore tr.target
+  if inputs.btn.hasClass('f-c-index-position__input--descending')
+    if parseInt(pos.btn) > parseInt(pos.target)
+      tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
+    else
+      tr.btn.add(rowChildren(tr.btn)).insertBefore tr.target
   else
-    tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
+    if parseInt(pos.btn) > parseInt(pos.target)
+      tr.btn.add(rowChildren(tr.btn)).insertBefore tr.target
+    else
+      tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
 
   tr.btn.closest('.f-c-show-for-index').trigger('folioConsoleSwitchedRows')
 
@@ -45,14 +51,14 @@ getTr = ($btn) ->
 post = (tr, url) ->
   data = {}
 
-  $id = tr.btn.find('.folio-console-input-id')
+  $id = tr.btn.find('.f-c-index-position__id')
   attribute = $id.data('attribute')
 
-  data[tr.btn.find('.folio-console-input-id').val()] = {}
-  data[tr.btn.find('.folio-console-input-id').val()][attribute] = tr.target.find('.folio-console-input-position').val()
+  data[tr.btn.find('.f-c-index-position__id').val()] = {}
+  data[tr.btn.find('.f-c-index-position__id').val()][attribute] = tr.target.find('.f-c-index-position__input').val()
 
-  data[tr.target.find('.folio-console-input-id').val()] = {}
-  data[tr.target.find('.folio-console-input-id').val()][attribute] = tr.btn.find('.folio-console-input-position').val()
+  data[tr.target.find('.f-c-index-position__id').val()] = {}
+  data[tr.target.find('.f-c-index-position__id').val()][attribute] = tr.btn.find('.f-c-index-position__input').val()
 
   tr.btn.addClass('folio-console-loading')
   tr.target.addClass('folio-console-loading')
