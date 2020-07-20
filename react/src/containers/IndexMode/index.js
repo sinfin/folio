@@ -25,7 +25,7 @@ import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
   openFileModal = (file) => {
-    this.props.dispatch(openFileModal(this.props.fileType, file))
+    this.props.dispatch(openFileModal(this.props.fileType, this.props.filesUrl, file))
   }
 
   render () {

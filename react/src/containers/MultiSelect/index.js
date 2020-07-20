@@ -52,7 +52,7 @@ class MultiSelect extends React.PureComponent {
   }
 
   openFileModal = (file) => {
-    this.props.dispatch(openFileModal(this.props.fileType, file))
+    this.props.dispatch(openFileModal(this.props.fileType, this.props.filesUrl, file))
   }
 
   render () {

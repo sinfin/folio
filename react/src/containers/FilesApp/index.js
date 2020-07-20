@@ -44,8 +44,8 @@ class FilesApp extends Component {
     return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'atoms'
   }
 
-  openFileModal = (fileType, file) => {
-    this.props.dispatch(openFileModal(fileType, file))
+  openFileModal = (fileType, filesUrl, file) => {
+    this.props.dispatch(openFileModal(fileType, filesUrl, file))
   }
 
   renderMode () {

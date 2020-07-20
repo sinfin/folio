@@ -11,8 +11,11 @@ function triggerModal (fileType, data) {
 }
 
 function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, index }) {
-  const isDocument = attachmentType.file_type === 'Folio::Document'
-  const fileType = isDocument ? 'documents' : 'images'
+  const present = data && !data._destroy
+  const filesUrl = attachmentType.files_url
+  const asImage = present && data.file.attributes.react_type === 'image'
+  const fileType = attachmentType.file_type
+
   const trigger = () => {
     const d = {
       index,
@@ -21,8 +24,6 @@ function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, ind
     }
     triggerModal(attachmentType.file_type, d)
   }
-
-  const present = data && !data._destroy
 
   return (
     <SingleSelectTriggerWrap className='form-group folio-console-react-picker folio-console-react-picker--single'>
@@ -34,19 +35,19 @@ function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, ind
             <div className='folio-console-thumbnail__inner'>
               <div className='folio-console-thumbnail__img-wrap'>
 
-                {isDocument ? (
-                  <strong className='folio-console-thumbnail__title'>{data.file.attributes.file_name}</strong>
-                ) : (
+                {asImage ? (
                   <img
                     src={data.file.attributes.thumb}
                     className='folio-console-thumbnail__img'
                     alt={data.file.attributes.file_name}
                   />
+                ) : (
+                  <strong className='folio-console-thumbnail__title'>{data.file.attributes.file_name}</strong>
                 )}
 
                 <FileHoverButtons
                   edit
-                  onEdit={() => openFileModal(fileType, data.file)}
+                  onEdit={() => openFileModal(fileType, filesUrl, data.file)}
                   destroy
                   onDestroy={remove}
                 />
