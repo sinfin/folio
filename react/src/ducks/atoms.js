@@ -305,6 +305,7 @@ function * updateAtomPreviews (action) {
     $iframes.each((_i, iframe) => {
       const callback = () => {
         if (!iframe.contentWindow.jQuery) { return setTimeout(callback, 100) }
+        iframe.contentWindow.postMessage({ type: 'willReplaceHtml' }, window.origin)
         const $iframe = $(iframe)
         const visibleLocale = $iframe.closest('.f-c-simple-form-with-atoms__preview').find('.f-c-atoms-locale-switch__button--active').data('locale')
         const $body = iframe.contentWindow.jQuery(iframe.contentDocument.body)

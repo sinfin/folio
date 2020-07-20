@@ -162,6 +162,9 @@ handleNewHtml = ->
   sendResizeMessage()
   $(document).trigger('folioConsoleReplacedHtml')
 
+handleWillReplaceHtml = ->
+  $(document).trigger('folioConsoleWillReplaceHtml')
+
 updateLabel = (locale, value) ->
   if locale
     $label = $(".f-c-atoms-previews__locale[data-locale='#{locale}'] .f-c-atoms-previews__label")
@@ -199,6 +202,7 @@ receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
     when 'replacedHtml' then handleNewHtml()
+    when 'willReplaceHtml' then handleWillReplaceHtml()
     when 'selectLocale' then selectLocale(e.data.locale)
     when 'setMediaQuery' then setMediaQuery(e.data.width)
     when 'updateLabel' then updateLabel(e.data.locale, e.data.value)
