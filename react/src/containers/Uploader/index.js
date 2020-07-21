@@ -70,7 +70,7 @@ class Uploader extends Component {
     const params = {}
     params['file[type]'] = this.props.fileType
     params['file[attributes][type]'] = this.props.fileType
-    params['file[attributes][tag_list]'] = this.props.uploads.uploadTags.join(',')
+    params['file[attributes][tag_list]'] = this.props.uploads.uploadAttributes.tags.join(',')
 
     return {
       headers: CSRF,

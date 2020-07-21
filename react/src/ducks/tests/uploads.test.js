@@ -5,7 +5,7 @@ import uploadsReducer, {
   finishedUpload,
   error,
   progress,
-  setUploadTags,
+  setUploadAttributes,
   clearUploadedIds,
   defaultTag
 } from '../uploads'
@@ -50,10 +50,10 @@ describe('uploadsReducer', () => {
     expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.progress).toEqual(25)
   })
 
-  it('setUploadTags', () => {
-    expect(state['Folio::Image'].uploadTags).toEqual([defaultTag])
-    state = uploadsReducer(state, setUploadTags('Folio::Image', ['foo']))
-    expect(state['Folio::Image'].uploadTags).toEqual(['foo'])
+  it('setUploadAttributes', () => {
+    expect(state['Folio::Image'].uploadAttributes.tags).toEqual([defaultTag])
+    state = uploadsReducer(state, setUploadAttributes('Folio::Image', { tags: ['foo'] }))
+    expect(state['Folio::Image'].uploadAttributes.tags).toEqual(['foo'])
     expect(state['Folio::Image'].showTagger).toEqual(false)
   })
 
