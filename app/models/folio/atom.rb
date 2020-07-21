@@ -47,14 +47,26 @@ module Folio::Atom
       end
 
       associations = {}
-      klass::ASSOCIATIONS.each do |key, model_class_names|
+      klass::ASSOCIATIONS.each do |key, association|
+        if association.is_a?(Hash)
+          class_names = association[:klasses].join(',')
+          scope = association[:scope]
+          order_scope = association[:order_scope]
+        else
+          class_names = association.join(',')
+          scope = nil
+          order_scope = nil
+        end
+
         url = Folio::Engine.routes
                            .url_helpers
                            .url_for([:react_select,
                                      :console,
                                      :api,
                                      :autocomplete,
-                                     class_names: model_class_names.join(','),
+                                     class_names: class_names,
+                                     scope: scope,
+                                     order_scope: order_scope,
                                      only_path: true])
 
         associations[key] = {
