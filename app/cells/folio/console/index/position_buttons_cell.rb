@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
+  class_name 'f-c-index-position', :descending?
+
   def url
     options[:url] || default_url
   end
@@ -17,11 +19,7 @@ class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
     controller.url_for([:set_positions, :console, model.class])
   end
 
-  def input_class_name
-    if model.class.try(:folio_positionable_descending?)
-      'f-c-index-position__input f-c-index-position__input--descending'
-    else
-      'f-c-index-position__input'
-    end
+  def descending?
+    options[:descending] || model.class.try(:positionable_descending?)
   end
 end

@@ -15,7 +15,7 @@ module Folio::PositionableDescending
   end
 
   class_methods do
-    def folio_positionable_descending?
+    def positionable_descending?
       true
     end
   end

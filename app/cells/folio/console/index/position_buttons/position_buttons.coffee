@@ -15,7 +15,7 @@ switchRows = (tr) ->
   inputs.target.val pos.btn
 
   # using past value
-  if inputs.btn.hasClass('f-c-index-position__input--descending')
+  if inputs.btn.closest('.f-c-index-position--descending').length
     if parseInt(pos.btn) > parseInt(pos.target)
       tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
     else
@@ -26,7 +26,7 @@ switchRows = (tr) ->
     else
       tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
 
-  tr.btn.closest('.f-c-show-for-index').trigger('folioConsoleSwitchedRows')
+  tr.btn.closest('.f-c-show-for-index').trigger('folioConsoleUpdatedRowsOrder')
 
 getTr = ($btn) ->
   $btnTr = $btn.closest('.f-c-show-for__row')
@@ -75,6 +75,66 @@ post = (tr, url) ->
       tr.btn.removeClass('folio-console-loading')
       tr.target.removeClass('folio-console-loading')
 
+makeSortableUpdate = ($sortable) -> ->
+  $sortable.trigger('folioConsoleUpdatedRowsOrder')
+  positions = []
+  $positions = $sortable.find('.f-c-index-position')
+  $positions.addClass('folio-console-loading')
+
+  $positions.each ->
+    positions.push(parseInt($(this).find('.f-c-index-position__input').val()))
+
+  if $sortable.find('.f-c-index-position--descending').length
+    positions.sort (a, b) -> b - a
+  else
+    positions.sort (a, b) -> a - b
+
+  data = {}
+  $positions.each (i, el) ->
+    position = positions[i]
+    $position = $(el)
+    $id = $position.find('.f-c-index-position__id')
+    $input = $position.find('.f-c-index-position__input')
+
+    id = $id.val()
+    attribute = $id.data('attribute')
+
+    data[id] = {}
+    data[id][attribute] = position
+    $input.val(position)
+
+  ajax = $.ajax({
+    url: $positions.first().data('url')
+    type: 'POST'
+    data: { positions: data }
+  })
+
+  ajax
+    .fail ->
+      $positions
+        .removeClass('folio-console-loading')
+        .addClass('f-c-index-position--failed')
+    .done ->
+      $positions.removeClass('folio-console-loading')
+
+indexPositionSortable = ->
+  $sortable = $('.f-c-show-for-index')
+  return if $sortable.find('.f-c-index-position__button--handle').length < 2
+  $sortable.sortable
+    axis: 'y'
+    handle: '.f-c-index-position__button--handle'
+    items: '.f-c-show-for__row:not(:first-child)'
+    placeholder: 'f-c-show-for__sortable-placeholder'
+    update: makeSortableUpdate($sortable)
+    start: (e, ui) ->
+      $another = $sortable.find('.f-c-show-for__row:not(.ui-sortable-helper)')
+      $cells = $another.find('.f-c-show-for__cell')
+      ui.item.find('.f-c-show-for__cell').each (i, cell) ->
+        $(cell).width($cells.eq(i).width())
+
+    stop: (e, ui) ->
+      ui.item.find('.f-c-show-for__cell').css('width', '')
+
 $(document).on 'click', '.f-c-index-position__button', (e) ->
   e.preventDefault()
   $btn = $(this)
@@ -83,4 +143,6 @@ $(document).on 'click', '.f-c-index-position__button', (e) ->
   return unless tr
   return if tr.btn.hasClass('folio-console-loading')
   return if tr.target.hasClass('folio-console-loading')
-  post(tr, $btn.data('url'))
+  post(tr, $btn.closest('.f-c-index-position').data('url'))
+
+$ indexPositionSortable

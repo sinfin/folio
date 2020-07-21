@@ -79,8 +79,10 @@ class ShowFor::Builder
 
   def position_controls
     attribute(:position) do
-      template.cell('folio/console/index/position_buttons', object).show
-                                                                   .html_safe
+      if object.persisted?
+        template.cell('folio/console/index/position_buttons', object).show
+                                                                     .html_safe
+      end
     end
   end
 
