@@ -33,8 +33,7 @@ function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, ind
         <div className='folio-console-react-picker__files'>
           <div className='folio-console-thumbnail folio-console-thumbnail--image'>
             <div className='folio-console-thumbnail__inner'>
-              <div className='folio-console-thumbnail__img-wrap'>
-
+              <div className='folio-console-thumbnail__img-wrap cursor-pointer' onClick={trigger}>
                 {asImage ? (
                   <img
                     src={data.file.attributes.thumb}
@@ -42,7 +41,9 @@ function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, ind
                     alt={data.file.attributes.file_name}
                   />
                 ) : (
-                  <strong className='folio-console-thumbnail__title'>{data.file.attributes.file_name}</strong>
+                  <strong className='folio-console-thumbnail__title'>
+                    {data.file.attributes.file_name}
+                  </strong>
                 )}
 
                 <FileHoverButtons

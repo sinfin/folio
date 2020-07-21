@@ -13,4 +13,8 @@ export default styled.div`
     margin-bottom: -15px;
     ${(props) => props.single ? 'display: none;' : ''}
   }
+
+  .f-c-file-table-wrap + & {
+    margin-top: 0;
+  }
 `

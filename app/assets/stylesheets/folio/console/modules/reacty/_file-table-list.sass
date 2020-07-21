@@ -27,10 +27,10 @@
   &__tr--fresh &__td
     background: #d3eaf6
 
-  &--hover &__tr:not(&__tr--uploading) &__td
+  &--hover &__tr:not(&__tr--uploading):not(&__tr--header) &__td
     cursor: pointer
 
-  &--hover &__tr:not(&__tr--uploading):hover &__td
+  &--hover &__tr:not(&__tr--uploading):not(&__tr--header):hover &__td
     background: $table-hover-bg
 
   &__td:first-child
