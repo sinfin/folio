@@ -9,4 +9,3 @@ $(document).on 'change', '.f-c-publishable-inputs__checkbox', ->
       format = $input.data('DateTimePicker').options().format
       now = moment()
       $input.val now.format(format)
-      $input.data(now.format())
