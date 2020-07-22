@@ -99,7 +99,7 @@ Dragonfly.app.configure do
               secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
               url_scheme: ENV.fetch('S3_SCHEME'),
               region: ENV.fetch('S3_REGION'),
-              root_path: "#{ENV.fetch('PROJECT_NAME')}/#{Rails.env}/files",
+              root_path: "#{ENV.fetch('PROJECT_NAME')}/#{ENV.fetch('DRAGONFLY_RAILS_ENV') { Rails.env }}/files",
               fog_storage_options: { path_style: true }
   end
 end
