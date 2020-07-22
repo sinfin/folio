@@ -10,6 +10,9 @@ html.f-c-layout-html lang=I18n.locale
       == cell('folio/console/layout/header', rendered_breadcrumbs)
       == cell('folio/console/flash', flash)
 
+      - if content_for?(:under_flash)
+        = yield(:under_flash)
+
       - if content_for?(:with_aside)
         = yield(:with_aside)
 
