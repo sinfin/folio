@@ -38,7 +38,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
     end
 
     def find_site
-      @site = Folio::Site.instance
+      @site = current_site
     end
 
     def add_site_breadcrumb

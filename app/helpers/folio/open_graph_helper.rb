@@ -26,7 +26,7 @@ module Folio::OpenGraphHelper
   end
 
   def og_site_name
-    Folio::Site.instance.domain
+    current_site.domain
   end
 
   def og_url

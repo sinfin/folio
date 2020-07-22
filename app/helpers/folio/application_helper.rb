@@ -7,7 +7,7 @@ module Folio::ApplicationHelper
     if title.present?
       base = [
         title,
-        Folio::Site.instance.title,
+        current_site.title,
       ]
 
       if Rails.application.config.folio_public_page_title_reversed
@@ -16,13 +16,13 @@ module Folio::ApplicationHelper
 
       base.join(" #{I18n.t('head.title.separator')} ")
     else
-      Folio::Site.instance.title
+      current_site.title
     end
   end
 
   def public_page_description
     text = @public_page_description.presence ||
-           Folio::Site.instance.description.presence
+           current_site.description.presence
 
     if text.present?
       truncate(strip_tags(text), length: 300)
