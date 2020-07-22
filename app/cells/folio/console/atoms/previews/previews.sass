@@ -46,12 +46,27 @@ $fa-font-path: 'font-awesome/webfonts' !default
       margin-bottom: 0
 
   &__preview-placeholder
-    height: 50px
     background: #E6F4FA
+    position: relative
+    z-index: 2
 
-  .ui-sortable-helper &__preview-inner > *
-    margin-top: 0 !important
-    margin-bottom: 0 !important
+    .f-c-atoms-previews__controls
+      visibility: hidden !important
+
+    .f-c-atoms-previews__preview-inner
+      > *
+        margin: 0 !important
+
+    &--scaled
+      height: 130px
+      .f-c-atoms-previews__preview-inner
+        opacity: 0.5
+        transform-origin: center top
+        position: relative
+        top: 15px
+
+  .ui-sortable-helper
+    display: none !important
 
   &__locale
     position: relative
@@ -258,11 +273,16 @@ $fa-font-path: 'font-awesome/webfonts' !default
       .f-c-atoms-previews__controls
         visibility: visible
 
-    .ui-sortable--dragging .f-c-atoms-previews__controls
-      visibility: hidden
+    .ui-sortable--dragging
+      cursor: move
 
-    .ui-sortable--dragging &__preview.ui-sortable-helper .f-c-atoms-previews__controls
+    .ui-sortable--dragging .f-c-atoms-previews__controls
       visibility: visible
+
+    .ui-sortable--dragging .f-c-atoms-previews__settings .f-c-atoms-previews__controls,
+    .ui-sortable--dragging .f-c-atoms-previews__buttons,
+    .ui-sortable--dragging .f-c-atoms-previews__insert
+      visibility: hidden
 
     &__controls-mobile-overlay
       display: none

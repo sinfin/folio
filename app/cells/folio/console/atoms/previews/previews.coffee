@@ -165,10 +165,12 @@ bindSortables = ->
     $this = $(this)
     $this.sortable
       axis: 'y'
+      helper: 'clone'
       handle: '.f-c-atoms-previews__button--handle'
       items: '.f-c-atoms-previews__preview'
       placeholder: 'f-c-atoms-previews__preview-placeholder'
       scrollSensitivity: scrollSensitivity
+      tolerance: 'pointer'
       update: (e, ui) ->
         $wrap = ui.item
         indices = $wrap.data('indices')
@@ -193,11 +195,22 @@ bindSortables = ->
         window.top.postMessage(data, window.origin)
 
       start: (e, ui) ->
-        ui.placeholder.height(ui.item.height())
+        ui.placeholder
+          .html(ui.item.html())
+
+        height = ui.placeholder.height()
+        scale = Math.round(100 * 100 / height) / 100
+
+        ui.placeholder
+          .find('.f-c-atoms-previews__preview-inner')
+          .css('transform', "scale(#{scale})")
+
+        ui.placeholder
+          .addClass('f-c-atoms-previews__preview-placeholder--scaled')
+
         $this.addClass('ui-sortable--dragging')
 
-      start: (e, ui) ->
-        ui.placeholder.height(ui.item.height())
+      stop: (e, ui) ->
         $this.removeClass('ui-sortable--dragging')
 
 unbindSortables = ->
