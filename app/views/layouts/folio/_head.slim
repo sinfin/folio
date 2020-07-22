@@ -43,8 +43,7 @@ meta name="twitter:card" content="summary"
   == render partial: 'layouts/folio/analytics'
 
   = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload', \
-                                          defer: true, \
-                                          async: true
+                                          defer: true
 
   - if ENV['RECAPTCHA_SITE_KEY'].present? && \
        ENV['RECAPTCHA_SECRET_KEY'].present?
