@@ -1,3 +1,5 @@
+$fa-font-path: 'font-awesome/webfonts' !default
+
 @import 'font-awesome/scss/fontawesome'
 @import 'folio/console/variables'
 @import 'folio-bootstrap/scss/functions'
@@ -43,6 +45,17 @@
     &:last-of-type > :first-child
       margin-bottom: 0
 
+  &__preview-placeholder
+    height: 50px
+    background: #E6F4FA
+
+  .ui-sortable-helper &__preview-inner > *
+    margin-top: 0 !important
+    margin-bottom: 0 !important
+
+  &__locale
+    position: relative
+
   &__controls
     position: absolute
     top: -10px
@@ -85,6 +98,12 @@
 
     &--arrow
       +button-variant($white, $white)
+      +plain-hover-focus
+        border-color: #BFC4C4
+
+    &--handle
+      +button-variant($white, $white)
+      cursor: move
       +plain-hover-focus
         border-color: #BFC4C4
 
@@ -239,6 +258,12 @@
       .f-c-atoms-previews__controls
         visibility: visible
 
+    .ui-sortable--dragging .f-c-atoms-previews__controls
+      visibility: hidden
+
+    .ui-sortable--dragging &__preview.ui-sortable-helper .f-c-atoms-previews__controls
+      visibility: visible
+
     &__controls-mobile-overlay
       display: none
 
@@ -257,6 +282,9 @@
 
       &:first-child
         margin-left: 0
+
+      &--handle
+        display: none
 
     &__buttons
       position: absolute
