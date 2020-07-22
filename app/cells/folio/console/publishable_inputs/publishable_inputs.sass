@@ -6,8 +6,10 @@
   bottom: -1px
 
   &__box
-    padding: 5px 15px
+    padding: 0 15px
     display: flex
+    flex-wrap: wrap
+    justify-content: center
     align-items: center
     position: relative
     background: $gray-200
@@ -17,15 +19,26 @@
     &--active
       background: #ccbed6
 
-  &__published
+  &__published,
+  &__additional
     margin-right: $spacer
     margin-bottom: 0
+
+    &:last-child
+      margin-right: 0
+
+  &__published,
+  &__additional,
+  &__featured,
+  &__date
+    padding-top: 5px
+    padding-bottom: 5px
 
   &__date
     position: relative
     display: flex
     align-items: center
-    margin: (( - $spacer )) -15px (( - $spacer )) 0
+    margin: 0 -15px 0 0
     cursor: pointer
 
     &:not(:last-child)
@@ -41,8 +54,7 @@
         color: $black
         left: 0
         right: auto
-
-  .simple_form &__wrapper + &__wrapper &__input
+        height: 21px !important
 
   .simple_form &__wrapper + &__wrapper
     .folio-console-date-picker
@@ -60,6 +72,9 @@
   &__input
     font-size: 11px
     margin-left: -5px
+    padding-top: 0
+    padding-bottom: 0
+    height: 21px
 
     .simple_form .form-group.datetime &.folio-console-date-picker
       padding-left: $input-height
