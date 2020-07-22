@@ -26,8 +26,6 @@ ruby:
     = render partial: 'folio/console/sites/additional_form_fields', \
              locals: { f: f }
 
-    = f.input :turbo_mode
-
   = tab :settings
     = f.input :domain
     = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \

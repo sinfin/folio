@@ -29,7 +29,6 @@ cs:
         email_from: Adresa, ze které budou odesílány informační a jiné zpravy..
         system_email: Adresa(y), na které budou odesílány systémové zprávy. Vícero adres oddělte čárkou.
         system_email_copy:  Adresa(y), na které budou odesílány kopie systémových zpráv. Vícero adres oddělte čárkou.
-        turbo_mode: Vypne trackování návštěv, čímž se výrazně omezí zátěž serveru v období vysoké návštěvnosti.
     'no': Ne
     placeholders:
       defaults:

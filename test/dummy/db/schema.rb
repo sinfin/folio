@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_16_152824) do
+ActiveRecord::Schema.define(version: 2020_07_22_072411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,7 +264,6 @@ ActiveRecord::Schema.define(version: 2020_07_16_152824) do
     t.json "social_links"
     t.text "address"
     t.text "description"
-    t.boolean "turbo_mode", default: false
     t.string "system_email"
     t.string "system_email_copy"
     t.string "email_from"

@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-07-22
+### Removed
+- removed `turbo_mode` from `Site` 
+- removed `non_turbo.js`
+
 ## 2020-05-06
 ### Added
 - added `folio:pg_search_index_migration` generator
