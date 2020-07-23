@@ -5,7 +5,10 @@ module Folio
     queue_as :default
 
     def perform(image, size, quality, x: nil, y: nil, force: false)
-      thumbnail_sizes = (image.thumbnail_sizes || {})
+      # need to reload here because of parallel jobs
+      image.reload
+
+      thumbnail_sizes = image.thumbnail_sizes || {}
       present_uid = thumbnail_sizes[size] && thumbnail_sizes[size][:uid]
       return if !force && present_uid
       return if /svg/.match?(image.mime_type)
@@ -14,7 +17,13 @@ module Folio
 
       new_thumb = make_thumb(image, size, quality, x: x, y: y)
       new_thumb[:url] = Dragonfly.app.datastore.url_for(new_thumb[:uid])
-      image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
+
+      # need to reload here because of parallel jobs
+      image.with_lock do
+        image.reload
+        thumbnail_sizes = image.thumbnail_sizes || {}
+        image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
+      end
 
       ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
         temporary_url: image.temporary_url(size),
