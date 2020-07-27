@@ -66,6 +66,7 @@
 //= require folio/console/publishable_inputs/publishable_inputs
 //= require folio/console/react_picker/react_picker
 //= require folio/console/single_file_select/single_file_select
+//= require folio/console/state/state
 //= require folio/console/tagsinput/tagsinput
 
 //= require folio/console/simple_form_inputs/_character_counter_input

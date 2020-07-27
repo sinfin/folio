@@ -27,6 +27,13 @@ cs:
           mass_destroy:
             success: Obrázky smazány
             failure: Obrázky se nepodařilo smazat - %{msg}
+        aasm:
+          failure_title: Neúspěch
+          failure_detail: Nepodařilo se změnit stav záznamu.
+          invalid_event_title: Neplatná změna
+          invalid_event_detail: Změnu záznamu nelze provést.
+          invalid_record_title: Neplatný záznam
+          invalid_record_detail: Záznam nelze uložit. Před změnou stavu jej opravte.
       atoms:
         form_header:
           settings: Nastavení

@@ -45,6 +45,10 @@ Folio::Engine.routes.draw do
         get :react_select
       end
 
+      resource :aasm, only: [], controller: 'aasm' do
+        post :event
+      end
+
       resource :autocomplete, only: %i[show] do
         get :field
         get :selectize

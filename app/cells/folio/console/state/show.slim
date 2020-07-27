@@ -8,18 +8,28 @@ div class=class_name class=(options[:small] ? 'small' : nil)
         = model.aasm.human_state
 
       .dropdown-menu
-        - events.each do |event|
-          - next if event.options[:private]
-          = form do |f|
-            = f.input :aasm_event, \
-                      as: :hidden, \
-                      input_html: { value: event.name, id: nil }
-            button.f-c-state__state.dropdown-item[
-              type="submit"
+        - if options[:remote]
+          - events.each do |event|
+            - next if event.options[:private]
+            span.f-c-state__state.f-c-state__state--trigger.dropdown-item[
               data-confirm=confirm(event)
+              data-url=remote_url_for(event)
             ]
               = event_square(event)
               = localizer.human_event_name model.class, event.name
+        - else
+          - events.each do |event|
+            - next if event.options[:private]
+            = form do |f|
+              = f.input :aasm_event, \
+                        as: :hidden, \
+                        input_html: { value: event.name, id: nil }
+              button.f-c-state__state.dropdown-item[
+                type="submit"
+                data-confirm=confirm(event)
+              ]
+                = event_square(event)
+                = localizer.human_event_name model.class, event.name
 
   - else
     .f-c-state__state
