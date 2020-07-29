@@ -7,7 +7,11 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   end
 
   def default_actions
-    locale = model.try(:locale) || I18n.default_locale
+    if I18n.available_locales.size > 1
+      locale = model.try(:locale) || I18n.default_locale
+    else
+      locale = nil
+    end
 
     @default_actions ||= {
       destroy: {
