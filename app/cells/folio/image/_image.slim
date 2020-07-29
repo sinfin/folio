@@ -2,9 +2,8 @@
   img.f-image__img[
     src=data[:src]
     srcset=data[:srcset]
-    data-alt=data[:alt]
     title=data[:title]
-    alt=''
+    alt=(data[:alt] || '')
   ]
 - else
   img.f-image__img.f-lazyload[
