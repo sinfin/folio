@@ -1,0 +1,16 @@
+- if not_lazy?
+  img.f-image__img[
+    src=data[:src]
+    srcset=data[:srcset]
+    data-alt=data[:alt]
+    title=data[:title]
+    alt=''
+  ]
+- else
+  img.f-image__img.f-lazyload[
+    data-src=data[:src]
+    data-srcset=data[:srcset]
+    data-alt=data[:alt]
+    data-title=data[:title]
+    alt=''
+  ]

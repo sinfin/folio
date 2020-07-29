@@ -32,4 +32,4 @@ window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
   else
     $ init
 
-window.makeFolioLazyLoad '.folio-lazyload'
+window.makeFolioLazyLoad '.f-lazyload'

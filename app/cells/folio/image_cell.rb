@@ -9,12 +9,42 @@ class Folio::ImageCell < Folio::ApplicationCell
     render if size
   end
 
-  def image
-    if options[:lazy] == false
-      image_from(model, size, opts)
-    else
-      lazy_image_from(model, size, opts)
+  def data
+    @data ||= begin
+      if model.is_a?(Folio::FilePlacement::Base)
+        file = model.file
+      else
+        file = model
+      end
+
+      retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+      normal = file.thumb(size)
+      retina = file.thumb(retina_size)
+
+      use_webp = normal[:webp_url] && retina[:webp_url]
+
+      h = {
+        normal: normal,
+        retina: retina,
+        alt: model.try(:alt) || '',
+        title: model.try(:title),
+        use_webp: use_webp,
+        src: normal.url,
+        srcset: "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x",
+      }
+
+      if use_webp
+        h[:webp_src] = normal.webp_src
+        h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+      end
+
+      h
     end
+  end
+
+  def retina_multiplier
+    @retina_multiplier ||= options[:retina_multiplier] || 2
   end
 
   def not_lazy?
@@ -23,9 +53,8 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def opts
     {
-      class: 'f-image__img',
-      alt: options[:alt] || model.try(:alt) || '',
-      lazyload_class: options[:lazyload_class]
+      lazyload_class: options[:lazyload_class],
+      retina_multiplier: options[:retina_multiplier] || 2,
     }
   end
 

@@ -1,8 +1,12 @@
 *tag
   - if options[:image]
     = options[:image]
-  - elsif model
-    = image
+  - elsif model && data
+    - if data[:use_webp]
+      = render(:_picture)
+    - else
+      = render(:_image)
+
   - else
     span.f-image__fallback
       = render(:_fallback_svg)
