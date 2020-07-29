@@ -18,19 +18,21 @@ class window.FolioLightbox
 
   bind: (data) ->
     @unbind()
-    $(document).on "click.#{@eventIdentifier}", @full_selector, (e) =>
+    that = this
+
+    $(document).on "click.#{@eventIdentifier}", @full_selector, (e) ->
       e.preventDefault()
-      $img = $(e.target)
+      $img = $(this)
 
       options =
-        index: $img.index(@full_selector)
+        index: $img.index(that.full_selector)
         bgOpacity: 0.7
         showHideOpacity: true
         history: false
-        errorMsg: @pswp().data('error-msg')
+        errorMsg: that.pswp().data('error-msg')
 
-      @photoSwipe = new PhotoSwipe(@pswp()[0], PhotoSwipeUI_Default, data || @items(), options)
-      @photoSwipe.init()
+      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, data || that.items(), options)
+      that.photoSwipe.init()
 
   items: ->
     items = []
