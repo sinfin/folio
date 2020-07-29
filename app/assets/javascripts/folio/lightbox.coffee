@@ -1,3 +1,4 @@
+#= require folio/webp
 #= require photoswipe/dist/photoswipe
 #= require photoswipe/dist/photoswipe-ui-default
 
@@ -47,10 +48,13 @@ class window.FolioLightbox
     return null unless $el.length
 
     item =
-      src: $el.data('lightbox-src')
       w: parseInt($el.data('lightbox-width'))
       h: parseInt($el.data('lightbox-height'))
     item.title = $el.data('lightbox-title') or $el.next('figcaption').text()
+
+    item.src = $el.data('lightbox-webp-src') if window.FolioWebpSupported
+    item.src ||= $el.data('lightbox-src')
+
     item
 
   unbind: ->
