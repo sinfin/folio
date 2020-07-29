@@ -50,7 +50,7 @@ Dragonfly.app.configure do
       content
     else
       content.shell_update do |old_path, new_path|
-        "jpegtran -optimize -outfile #{new_path} #{old_path}"  # The command sent to the command line
+        "jpegtran -optimize -outfile #{new_path} #{old_path}"
       end
     end
   end
@@ -59,12 +59,18 @@ Dragonfly.app.configure do
     fail 'Missing gifsicle binary.' if shell('which', 'gifsicle').blank?
     size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
     content.shell_update do |old_path, new_path|
-      "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"  # The command sent to the command line
+      "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
     end
   end
 
   processor :add_white_background do |content, *args|
     content.process! :convert, '-background white -alpha remove'
+  end
+
+  processor :convert_to_webp do |content, *args|
+    content.shell_update ext: 'webp' do |old_path, new_path|
+      "cwebp #{old_path} -o #{new_path}"
+    end
   end
 
   analyser :metadata do |content|

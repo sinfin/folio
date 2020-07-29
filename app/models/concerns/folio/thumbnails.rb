@@ -126,6 +126,15 @@ module Folio::Thumbnails
     save!
   end
 
+  def recreate_all_thumbnails!
+    thumbnail_sizes.each do |size, data|
+      thumb(size, quality: data[:quality],
+                  force: true,
+                  x: data[:x],
+                  y: data[:y])
+    end
+  end
+
   private
     def reset_thumbnails
       fail_for_non_images
