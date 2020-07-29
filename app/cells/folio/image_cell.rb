@@ -96,11 +96,15 @@ class Folio::ImageCell < Folio::ApplicationCell
     options[:size]
   end
 
+  def additional_class_names
+    options[:class]
+  end
+
   def tag
     class_names = class_name
 
-    if options[:class]
-      class_names = "#{class_names} #{options[:class]}"
+    if additional_class_names
+      class_names = "#{class_names} #{additional_class_names}"
     end
 
     h = {
