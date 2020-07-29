@@ -5,7 +5,12 @@ require 'mini_magick'
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 
-  IMAGE_MIME_TYPES = %w[image/png image/jpeg image/gif image/bmp image/svg image/svg+xml]
+  IMAGE_MIME_TYPES = %w[image/png
+                        image/jpeg
+                        image/gif
+                        image/bmp
+                        image/svg
+                        image/svg+xml]
 
   included do
     serialize :thumbnail_sizes, Hash

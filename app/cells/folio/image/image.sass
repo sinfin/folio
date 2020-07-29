@@ -1,0 +1,48 @@
+.f-image
+  position: relative
+  overflow: hidden
+  display: block
+
+  &__img
+    display: block
+    position: absolute
+    height: auto
+    width: 100%
+    top: 0
+    left: 0
+    z-index: 2
+
+  &__spacer
+    display: block
+    padding-top: 100%
+    background: rgba(122, 122, 122, 0.045)
+    z-index: 1
+
+  &__img.loaded + &__spacer,
+  &--not-lazy &__spacer
+    visibility: hidden
+
+  &__fallback
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 2
+    background: #f9f9f9
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__fallback-svg
+    width: 40px
+    height: 40px
+    display: block
+    opacity: 0.3
+
+  &--centered
+    margin-left: auto
+    margin-right: auto
+
+  &--lightboxable
+    cursor: zoom-in

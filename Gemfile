@@ -16,6 +16,7 @@ gem 'premailer', github: 'sinfin/premailer'
 gem 'premailer-rails'
 gem 'rubyzip'
 gem 'rack-mini-profiler'
+gem 'turbolinks'
 
 group :test do
   gem 'minitest', '5.10.3'

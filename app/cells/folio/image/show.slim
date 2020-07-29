@@ -1,0 +1,10 @@
+*tag
+  - if options[:image]
+    = options[:image]
+  - elsif model
+    = image
+  - else
+    span.f-image__fallback
+      = render(:_fallback_svg)
+
+  span.f-image__spacer style=spacer_style

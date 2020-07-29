@@ -32,13 +32,19 @@ class window.FolioLightbox
       @photoSwipe.init()
 
   items: ->
-    $(@selector).map(@item.bind(this)).toArray()
+    items = []
+    $(@selector).each (i, el) =>
+      item = @item(i, el)
+      items.push(item) if item
+    items
 
   item: (index, el) ->
-    if el.tagName.toLowerCase() is 'img'
-      $el = $(el)
-    else
-      $el = $(el).find('img')
+    $el = $(el)
+
+    unless $el.data('lightbox-src')
+      $el = $(el).find('[data-lightbox-src]')
+
+    return null unless $el.length
 
     item =
       src: $el.data('lightbox-src')
