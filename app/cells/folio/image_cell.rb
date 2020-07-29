@@ -3,7 +3,7 @@
 class Folio::ImageCell < Folio::ApplicationCell
   include Folio::CellLightbox
 
-  class_name 'f-image', :centered, :not_lazy?, :lightboxable?
+  class_name 'f-image', :centered, :not_lazy?, :lightboxable?, :contain
 
   def show
     render if size
@@ -117,8 +117,12 @@ class Folio::ImageCell < Folio::ApplicationCell
       h[:tag] = :a
       h[:href] = options[:href]
     elsif model && options[:lightbox]
-      h = h.merge(lightbox(model))
-      h['data-lightbox-title'] ||= options[:title] || model.try(:title)
+      if model.is_a?(Folio::FilePlacement::Base)
+        h = h.merge(lightbox(model))
+        h['data-lightbox-title'] ||= options[:title] || model.try(:title)
+      else
+        h = h.merge(lightbox_from_image(model))
+      end
     end
 
     h

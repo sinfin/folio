@@ -1,6 +1,8 @@
 = index_header
 
 = index_show_for(@pages) do |s|
+  = s.cover
+  = s.images
   = s.edit_link :title
   = s.locale_flag if Rails.application.config.folio_pages_translations
   = s.type

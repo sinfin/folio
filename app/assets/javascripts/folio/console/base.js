@@ -31,6 +31,8 @@
 //= require folio/cable
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/image/image
+
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-prompt-file-input
 //= require folio/console/_cocoon-set-position
@@ -47,7 +49,6 @@
 //= require folio/console/atoms/locale_switch/locale_switch
 //= require folio/console/atoms/settings_header/settings_header
 //= require folio/console/boolean_toggle/boolean_toggle
-//= require folio/console/file_list/file_list
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header

@@ -25,6 +25,10 @@ class Folio::Console::FileSerializer
     object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.is_a?(Folio::Image)
   end
 
+  attribute :webp_thumb do |object|
+    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.is_a?(Folio::Image)
+  end
+
   attribute :source_url do |object|
     object.file.remote_url
   end

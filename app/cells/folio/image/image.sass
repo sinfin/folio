@@ -1,3 +1,7 @@
+=internet-explorer
+  @media screen and (-ms-high-contrast: none), (-ms-high-contrast: active)
+    @content
+
 .f-image
   position: relative
   overflow: hidden
@@ -46,3 +50,15 @@
 
   &--lightboxable
     cursor: zoom-in
+
+  &--contain
+    height: 100%
+    width: 100%
+
+  &--contain &__img
+    width: 100%
+    height: 100%
+    object-fit: contain
+
+    +internet-explorer
+      height: auto

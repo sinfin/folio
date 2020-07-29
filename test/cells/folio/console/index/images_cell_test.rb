@@ -12,9 +12,9 @@ class Folio::Console::Index::ImagesCellTest < Folio::Console::CellTest
     page.images << image
     page.images << image
     html = cell('folio/console/index/images', page).(:show)
-    assert_equal 3, html.find_all('.f-c-index-images__img').size
+    assert_equal 3, html.find_all('.f-c-index-images__item').size
 
     html = cell('folio/console/index/images', page, cover: true).(:show)
-    assert_equal 1, html.find_all('.f-c-index-images__img').size
+    assert_equal 1, html.find_all('.f-c-index-images__item').size
   end
 end
