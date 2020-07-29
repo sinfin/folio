@@ -28,7 +28,7 @@ module Folio::Thumbnails
 
   # Use w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 90, immediate: false, force: false, x: nil, y: nil)
+  def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
     fail_for_non_images
     return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test?
 
