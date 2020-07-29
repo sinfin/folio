@@ -2,6 +2,8 @@ import React from 'react'
 
 import Scroller from './Scroller'
 
+import { RawPicture } from 'components/Picture'
+
 class ThumbnailSize extends React.Component {
   constructor (props) {
     super(props)
@@ -39,7 +41,7 @@ class ThumbnailSize extends React.Component {
         ) : (
           <div>
             <div style={{ height: height, width: width, backgroundColor: '#495057' }}>
-              {thumb._saving ? null : <img src={this.props.thumb.url} style={{ height: height, width: width }} alt={thumbKey} />}
+              {thumb._saving ? null : <RawPicture src={this.props.thumb.url} webpSrc={this.props.thumb.webp_url} imageStyle={{ height: height, width: width }} alt={thumbKey} />}
             </div>
 
             <div className='mt-2 pt-1 small'>{thumbKey}</div>

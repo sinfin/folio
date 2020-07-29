@@ -5,6 +5,7 @@ import { EVENT_NAME } from 'containers/ModalSelect/ModalSingleSelect/constants'
 import { FILE_TRIGGER_EVENT } from 'containers/Atoms/constants'
 import FileHoverButtons from 'components/FileHoverButtons'
 import SingleSelectTriggerWrap from './styled/SingleSelectTriggerWrap'
+import Picture from 'components/Picture'
 
 function triggerModal (fileType, data) {
   window.jQuery(document).trigger(`${EVENT_NAME}/${fileType}`, [data])
@@ -35,9 +36,9 @@ function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, ind
             <div className='folio-console-thumbnail__inner'>
               <div className='folio-console-thumbnail__img-wrap cursor-pointer' onClick={trigger}>
                 {asImage ? (
-                  <img
-                    src={data.file.attributes.thumb}
-                    className='folio-console-thumbnail__img'
+                  <Picture
+                    file={data.file}
+                    imageClassName='folio-console-thumbnail__img'
                     alt={data.file.attributes.file_name}
                   />
                 ) : (
