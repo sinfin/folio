@@ -10,6 +10,8 @@ class Folio::ImageCell < Folio::ApplicationCell
   end
 
   def data
+    return nil unless model.present?
+
     @data ||= begin
       if model.is_a?(Folio::FilePlacement::Base)
         file = model.file
@@ -74,25 +76,19 @@ class Folio::ImageCell < Folio::ApplicationCell
   end
 
   def spacer_ratio
-    if thumb
-      width = thumb.width
-      height = thumb.height
-    else
-      width, height = size.split('x').map(&:to_i)
-    end
+    @spacer_ratio ||= begin
+      if data
+        width = data[:normal].width
+        height = data[:normal].height
+      else
+        width, height = size.split('x').map(&:to_i)
+      end
 
-    if width != 0 && height != 0
-      height.to_f / width
-    else
-      0
-    end
-  end
-
-  def thumb
-    if @thumb.nil?
-      @thumb = model.try(:file).try(:thumb, size) || false
-    else
-      @thumb
+      if width != 0 && height != 0
+        height.to_f / width
+      else
+        0
+      end
     end
   end
 

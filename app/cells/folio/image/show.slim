@@ -1,7 +1,7 @@
 *tag
   - if options[:image]
     = options[:image]
-  - elsif model && data
+  - elsif data
     - if data[:use_webp]
       = render(:_picture)
     - else
