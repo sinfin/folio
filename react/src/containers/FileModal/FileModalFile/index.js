@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, Label, Input } from 'reactstrap'
+import { FormGroup, Label } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import { makeConfirmed } from 'utils/confirmed'
@@ -8,6 +8,9 @@ import TagsInput from 'components/TagsInput'
 import ThumbnailSizes from 'components/ThumbnailSizes'
 import FileUsage from 'components/FileUsage'
 import PrettyTags from 'components/PrettyTags'
+import AutocompleteInput from 'components/AutocompleteInput'
+
+import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 
 import MainImage from './styled/MainImage'
 import MainImageOuter from './styled/MainImageOuter'
@@ -96,9 +99,11 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               {readOnly ? (
                 formState.author ? <p className='m-0'>{formState.author}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
               ) : (
-                <Input
+                <AutocompleteInput
                   value={formState.author || ''}
                   onChange={(e) => onValueChange('author', e.currentTarget.value)}
+                  name='author'
+                  url={AUTHOR_AUTOCOMPLETE_URL}
                 />
               )}
             </FormGroup>
@@ -120,6 +125,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                     value={formState.tags}
                     onTagsChange={onTagsChange}
                     submit={saveModal}
+                    noAutofocus
                   />
 
                   <small className='form-text'>

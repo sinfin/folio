@@ -34,6 +34,7 @@ window.folioConsoleBindRemoteAutocomplete = ($elements) ->
   $elements.each ->
     $this = $(this)
     $this.autocomplete
+      minLength: 0
       source: (request, response) ->
         $.ajax
           url: $this.data('remote-autocomplete')
@@ -43,12 +44,19 @@ window.folioConsoleBindRemoteAutocomplete = ($elements) ->
           success: (data) ->
             response(data.data)
       select: (e, ui) ->
+        setTimeout (-> $this.trigger('remoteAutocompleteDidSelect')), 0
         $form = $this.closest('[data-auto-submit], .f-c-index-header__form')
         if $form.length
           setTimeout (-> $form.submit()), 0
 
+    $this.on 'focus.folioConsoleRemoteAutocomplete', ->
+      $this.autocomplete('search')
+
 window.folioConsoleUnbindRemoteAutocomplete = ($elements) ->
-  $elements.off('change').autocomplete('destroy')
+  $elements
+    .off('change')
+    .off('focus.folioConsoleRemoteAutocomplete')
+    .autocomplete('destroy')
 
 cleaveOpts =
   numeral: true

@@ -38,13 +38,14 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
   def field
     klass = params.require(:klass).safe_constantize
-    q = params.require(:q)
     field = params.require(:field)
+    q = params[:q]
 
     if klass && klass.column_names.include?(field)
-      ary = klass.unscope(:order)
-                 .where("#{field} ILIKE ?", "%#{q}%")
-                 .limit(10)
+      scope = klass.unscope(:order)
+      scope = scope.where("#{field} ILIKE ?", "%#{q}%") if q.present?
+
+      ary = scope.limit(10)
                  .select("DISTINCT(#{field})")
                  .map { |r| r.send(field) }
                  .compact

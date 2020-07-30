@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { FormGroup, Input } from 'reactstrap';
+import { FormGroup } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import {
@@ -9,14 +9,19 @@ import {
   closeTagger
 } from 'ducks/uploads'
 
+import AutocompleteInput from 'components/AutocompleteInput'
 import TagsInput from 'components/TagsInput'
 
+import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
+
+const DEFAULT_STATE = {
+  tags: [],
+  author: null,
+  description: null,
+}
+
 class UploadTagger extends React.PureComponent {
-  state = {
-    tags: [],
-    author: null,
-    description: null,
-  }
+  state = { ...DEFAULT_STATE }
 
   constructor (props) {
     super(props)
@@ -37,10 +42,12 @@ class UploadTagger extends React.PureComponent {
 
   setUploadAttributes = () => {
     this.props.dispatch(setUploadAttributes(this.props.fileType, this.state))
+    this.setState({ ...DEFAULT_STATE })
   }
 
   close = () => {
     this.props.dispatch(closeTagger(this.props.fileType))
+    this.setState({ ...DEFAULT_STATE })
   }
 
   render () {
@@ -51,11 +58,12 @@ class UploadTagger extends React.PureComponent {
         <p>{window.FolioConsole.translations.newFilesAttributes}</p>
         <div className="row">
           <FormGroup className="col-md-6 pr-md-2">
-            <Input
-              value={this.state.author || ''}
+            <AutocompleteInput
+              value={this.state.author}
               name='author'
               onChange={this.onInputChange}
               placeholder={window.FolioConsole.translations.fileAuthor}
+              url={AUTHOR_AUTOCOMPLETE_URL}
               autoFocus
             />
           </FormGroup>
