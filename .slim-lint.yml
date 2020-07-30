@@ -4,5 +4,6 @@ linters:
 
 exclude:
   - 'app/cells/folio/console/publishable_inputs/show.slim'
+  - 'app/cells/folio/image/_fallback_svg.slim'
   - 'app/views/folio/console/partials/_translations.slim'
   - 'lib/generators/folio/console/scaffold/templates/*'

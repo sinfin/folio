@@ -13,10 +13,12 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
   end
 
   def show
-    if options[:cover] || options[:custom]
-      render
+    if options[:cover]
+      render if model && model.cover_placement
+    elsif options[:custom]
+      render if model
     else
-      render if model.image_placements.present?
+      render if model && model.image_placements.present?
     end
   end
 
