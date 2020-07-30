@@ -43,12 +43,21 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
     if klass && klass.column_names.include?(field)
       scope = klass.unscope(:order)
-      scope = scope.where("#{field} ILIKE ?", "%#{q}%") if q.present?
 
-      ary = scope.limit(10)
-                 .select("DISTINCT(#{field})")
-                 .map { |r| r.send(field) }
-                 .compact
+      if q.present?
+        if scope.respond_to?("by_#{field}")
+          scope = scope.send("by_#{field}", q)
+        else
+          scope = scope.where("#{field} ILIKE ?", "%#{q}%")
+        end
+      end
+
+      ary = scope.group(field)
+                 .unscope(:order)
+                 .order('count_id DESC')
+                 .limit(10)
+                 .count('id')
+                 .keys
 
       render json: { data: ary }
     else

@@ -55,6 +55,13 @@ class Folio::File < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  pg_search_scope :by_author,
+                  against: [:author],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
   before_save :set_mime_type
   before_destroy :check_usage_before_destroy
   after_save :touch_placements
