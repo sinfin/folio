@@ -18,6 +18,10 @@ module Folio::ApplicationControllerBase
     helper_method :current_site
   end
 
+  def default_url_options
+    { only_path: true }
+  end
+
   def url_for(options = nil)
     if Rails.application.config.folio_pages_ancestry &&
        options &&
