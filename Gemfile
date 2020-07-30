@@ -17,6 +17,7 @@ gem 'premailer-rails'
 gem 'rubyzip'
 gem 'rack-mini-profiler'
 gem 'turbolinks'
+gem 'uglifier', '>= 1.3.0'
 
 group :test do
   gem 'minitest', '5.10.3'

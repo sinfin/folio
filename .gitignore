@@ -14,3 +14,4 @@ test/dummy/vendor/assets/redactor/*.css
 test/dummy/vendor/assets/redactor/*.js
 
 /react/src/ducks/files.js
+/test/dummy/node_modules/
