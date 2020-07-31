@@ -62,7 +62,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def label_for_key(key)
-    clear_key = key.to_s.gsub(/\Aby_/, '').gsub(/_query\z/, '')
+    clear_key = key.to_s.delete_prefix('by_').delete_suffix('_query')
     klass.human_attribute_name(clear_key)
   end
 
