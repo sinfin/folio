@@ -20,7 +20,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         button: 'danger',
         method: :delete,
         confirm: true,
-        url: safe_url_for([:console, model]),
+        url: -> { safe_url_for([:console, model]) },
       },
       discard: {
         name: :discard,
@@ -28,33 +28,33 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         button: 'secondary',
         method: :delete,
         confirm: true,
-        url: safe_url_for([:discard, :console, model]),
+        url: -> { safe_url_for([:discard, :console, model]) },
       },
       undiscard: {
         name: :undiscard,
         icon: 'redo-alt',
         button: 'secondary',
         method: :post,
-        url: safe_url_for([:undiscard, :console, model]),
+        url: -> { safe_url_for([:undiscard, :console, model]) },
       },
       edit: {
         name: :edit,
         icon: 'edit',
         button: 'secondary',
-        url: safe_url_for([:edit, :console, model]),
+        url: -> { safe_url_for([:edit, :console, model]) },
       },
       show: {
         name: :show,
         icon: 'eye',
         button: 'light',
-        url: safe_url_for([:console, model]),
+        url: -> { safe_url_for([:console, model]) },
       },
       preview: {
         name: :preview,
         icon: 'eye',
         button: 'light',
         target: '_blank',
-        url: safe_url_for([model, locale: locale]),
+        url: -> { safe_url_for([model, locale: locale]) },
       },
       arrange: {
         name: :arrange,
@@ -106,7 +106,8 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       }
 
       begin
-        link_to('', action[:url], opts)
+        url = action[:url].is_a?(Proc) ? action[:url].call : action[:url]
+        link_to('', url, opts)
       rescue ActionController::UrlGenerationError
       end
     end.compact
