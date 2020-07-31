@@ -6,7 +6,7 @@ export function RawPicture ({ src, webpSrc, className, imageClassName, alt, imag
       <picture className={className}>
         <source
           srcSet={webpSrc}
-          type="image/webp"
+          type='image/webp'
         />
         <img
           src={src}
@@ -35,6 +35,6 @@ export default function Picture ({ file, className, alt, imageStyle, imageClassN
     alt,
     className,
     imageClassName,
-    imageStyle,
+    imageStyle
   })
 }

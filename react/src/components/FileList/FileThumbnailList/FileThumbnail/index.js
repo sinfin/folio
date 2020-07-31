@@ -31,7 +31,7 @@ const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selectin
           <LazyLoad height={150} once overflow>
             <Picture
               file={file}
-              className="f-c-file-list__picture"
+              className='f-c-file-list__picture'
               imageClassName='f-c-file-list__img'
               alt={file.attributes.file_name}
             />

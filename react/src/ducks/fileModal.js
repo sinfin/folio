@@ -178,7 +178,7 @@ function modalReducer (state = initialState, action) {
         filesUrl: action.filesUrl,
         filePlacements: {
           ...initialState.filePlacements,
-          loading: true,
+          loading: true
         }
       }
 
@@ -262,7 +262,7 @@ function modalReducer (state = initialState, action) {
           filePlacements: {
             loading: false,
             records: action.filePlacements,
-            pagination: action.meta,
+            pagination: action.meta
           }
         }
       } else {
@@ -276,7 +276,7 @@ function modalReducer (state = initialState, action) {
           ...state,
           filePlacements: {
             ...state.filePlacements,
-            loading: true,
+            loading: true
           }
         }
       } else {
