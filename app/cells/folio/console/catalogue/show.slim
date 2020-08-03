@@ -10,13 +10,18 @@
 
         = header_html
 
-      - model[:records].each do |rec|
+      - model[:records].each_with_index do |rec, i|
+        = before_lambda.call(rec, model[:records], i) if before_lambda
+
         .f-c-catalogue__row
           - if model[:merge]
             .f-c-catalogue__cell.f-c-catalogue__cell--merge
               == cell('folio/console/merges/index/radios', rec)
 
           = record_html(rec)
+
+        = after_lambda.call(rec, model[:records], i) if after_lambda
+
   - else
     == cell('folio/console/index/no_records', klass)
 

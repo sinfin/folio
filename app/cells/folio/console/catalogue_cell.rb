@@ -155,4 +155,44 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         'f-c-catalogue--merge'
       end
     end
+
+    def before_lambda
+      return @before_lambda unless @before_lambda.nil?
+
+      if model[:before_lambda]
+        @before_lambda = model[:before_lambda]
+      elsif model[:group_by_day]
+        @before_lambda_label = model[:group_by_day_label_before]
+        @before_lambda_label_lambda = model[:group_by_day_label_lambda]
+        @before_lambda = -> (rec, collection, i) do
+          date = rec.send(model[:group_by_day])
+          day = date.try(:beginning_of_day)
+
+          return if day.blank?
+
+          if i > 0
+            prev_day = collection[i - 1].send(model[:group_by_day]).try(:beginning_of_day)
+          else
+            prev_day = nil
+          end
+
+          return if day == prev_day
+
+          cell('folio/console/group_by_day_header',
+               scope: model[:records],
+               date: date,
+               attribute: model[:group_by_day],
+               before_label: @before_lambda_label,
+               label_lambda: @before_lambda_label_lambda,
+               klass: klass).show.try(:html_safe)
+        end
+      else
+        @before_lambda = false
+      end
+    end
+
+    def after_lambda
+      return @after_lambda unless @after_lambda.nil?
+      @after_lambda = model[:after_lambda] || false
+    end
 end
