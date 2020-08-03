@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-08-03
+### Removed
+- removed `index_show_for`
+
+### Added
+- added `catalogue` instead
+
 ## 2020-07-22
 ### Removed
 - removed `turbo_mode` from `Site` 
