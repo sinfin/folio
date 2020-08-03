@@ -1,0 +1,10 @@
+.f-c-catalogue
+  .f-c-catalogue__table
+    .f-c-catalogue__header
+      = header_html
+
+    - model[:records].each do |record|
+      / - model[:block].call(self)
+      == cell('folio/console/catalogue/row',
+              record: record,
+              block: model[:block])

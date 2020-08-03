@@ -7,4 +7,9 @@ module Folio::Console::IndexHelper
     opts[:folio_console_merge] ||= @folio_console_merge
     cell('folio/console/index/header', @klass, opts).show.html_safe
   end
+
+  def catalogue(records, options = {}, &block)
+    model = options.merge(records: records, block: block)
+    cell('folio/console/catalogue', model).show.html_safe
+  end
 end
