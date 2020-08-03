@@ -26,17 +26,17 @@ switchRows = (tr) ->
     else
       tr.btn.add(rowChildren(tr.btn)).insertAfter tr.target
 
-  tr.btn.closest('.f-c-show-for-index').trigger('folioConsoleUpdatedRowsOrder')
+  tr.btn.closest('.f-c-catalogue__table').trigger('folioConsoleUpdatedRowsOrder')
 
 getTr = ($btn) ->
-  $btnTr = $btn.closest('.f-c-show-for__row')
+  $btnTr = $btn.closest('.f-c-catalogue__row')
 
   switch $btn.data('direction')
     when 'up'
-      $targetTr = $btnTr.prevAll(".f-c-show-for__row:first")
+      $targetTr = $btnTr.prevAll(".f-c-catalogue__row:first")
 
     when 'down'
-      $targetTr = $btnTr.nextAll(".f-c-show-for__row:first")
+      $targetTr = $btnTr.nextAll(".f-c-catalogue__row:first")
 
     else
       return null
@@ -118,22 +118,22 @@ makeSortableUpdate = ($sortable) -> ->
       $positions.removeClass('folio-console-loading')
 
 indexPositionSortable = ->
-  $sortable = $('.f-c-show-for-index')
+  $sortable = $('.f-c-catalogue__table')
   return if $sortable.find('.f-c-index-position__button--handle').length < 2
   $sortable.sortable
     axis: 'y'
     handle: '.f-c-index-position__button--handle'
-    items: '.f-c-show-for__row:not(:first-child)'
-    placeholder: 'f-c-show-for__sortable-placeholder'
+    items: '.f-c-catalogue__row:not(:first-child)'
+    placeholder: 'f-c-catalogue__sortable-placeholder'
     update: makeSortableUpdate($sortable)
     start: (e, ui) ->
-      $another = $sortable.find('.f-c-show-for__row:not(.ui-sortable-helper)')
-      $cells = $another.find('.f-c-show-for__cell')
-      ui.item.find('.f-c-show-for__cell').each (i, cell) ->
+      $another = $sortable.find('.f-c-catalogue__row:not(.ui-sortable-helper)')
+      $cells = $another.find('.f-c-catalogue__cell')
+      ui.item.find('.f-c-catalogue__cell').each (i, cell) ->
         $(cell).width($cells.eq(i).width())
 
     stop: (e, ui) ->
-      ui.item.find('.f-c-show-for__cell').css('width', '')
+      ui.item.find('.f-c-catalogue__cell').css('width', '')
 
 $(document).on 'click', '.f-c-index-position__button', (e) ->
   e.preventDefault()

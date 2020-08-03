@@ -36,13 +36,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, &block)
+  def attribute(name = nil, value = nil, class_name: nil, &block)
     content = nil
 
     if rendering_header?
       @header_html += content_tag(:div,
                                   label_for(name),
-                                  class: cell_class_name(name))
+                                  class: cell_class_name(name, class_name: class_name))
     else
       if block_given?
         content = block.call(self.record)
@@ -54,7 +54,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       @record_html += content_tag(:div,
                                   "#{tbody_label_for(name)}#{value_div}",
-                                  class: cell_class_name(name))
+                                  class: cell_class_name(name, class_name: class_name))
     end
   end
 
@@ -91,7 +91,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def toggle(attr)
-    attribute(attr) do
+    attribute(attr, class_name: 'toggle') do
       cell('folio/console/boolean_toggle', record, attribute: attr)
     end
   end
@@ -115,7 +115,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def state(active: true)
-    cell('folio/console/state', record, active: active)
+    attribute(:state) do
+      cell('folio/console/state', record, active: active)
+    end
+  end
+
+  def position_controls(opts = {})
+    attribute(:position, class_name: 'position-buttons') do
+      cell('folio/console/index/position_buttons', record, opts)
+    end
   end
 
   private
@@ -134,21 +142,31 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil)
+    def cell_class_name(attr = nil, class_name: '')
+      full = ''
+
       if rendering_header?
+        full += ' f-c-catalogue__label'
         base = 'f-c-catalogue__header-cell'
-        if attr.present?
-          "f-c-catalogue__label #{base} #{base}--#{attr}"
-        else
-          "f-c-catalogue__label #{base}"
-        end
       else
         base = 'f-c-catalogue__cell'
-        attr.present? ? "#{base} #{base}--#{attr}" : base
       end
+
+      if attr
+        full += " #{base} #{base}--#{attr}"
+      else
+        full += " #{base}"
+      end
+
+      if class_name
+        full += " #{base}--#{class_name}"
+      end
+
+      full
     end
 
-    def label_for(attr)
+    def label_for(attr = nil)
+      return nil if attr.nil?
       return @labels[attr] unless @labels[attr].nil?
 
       @labels[attr] ||= begin

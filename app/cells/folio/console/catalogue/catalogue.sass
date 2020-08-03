@@ -7,6 +7,18 @@
     white-space: nowrap
     font-size: $font-size-sm
 
+  &__sortable-placeholder
+    height: 67px
+
+    &:after
+      content: ''
+      position: absolute
+      left: 0
+      width: 100%
+      height: 67px
+      background: #E6F4FA
+      display: block
+
   +mq-desktop-menu
     &__table
       display: table
@@ -30,6 +42,20 @@
 
     &__cell-label
       display: none
+
+    &__header-cell--position-buttons,
+    &__cell--position-buttons
+      width: 103px
+
+    &__header-cell--actions,
+    &__cell--actions
+      width: 1px
+      white-space: nowrap
+
+    &__header-cell--toggle,
+    &__cell--toggle
+      width: 36px
+      white-space: nowrap
 
     &__header-cell--merge,
     &__cell--merge
