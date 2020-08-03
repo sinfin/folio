@@ -1,10 +1,11 @@
 .f-c-catalogue
-  .f-c-catalogue__table
-    .f-c-catalogue__header
-      = header_html
+  - if model && model[:records].present?
+    .f-c-catalogue__table
+      .f-c-catalogue__header
+        = header_html
 
-    - model[:records].each do |record|
-      / - model[:block].call(self)
-      == cell('folio/console/catalogue/row',
-              record: record,
-              block: model[:block])
+      - model[:records].each do |rec|
+        .f-c-catalogue__row
+          = record_html(rec)
+  - else
+    == cell('folio/console/index/no_records', klass)
