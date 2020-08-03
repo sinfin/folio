@@ -1,4 +1,6 @@
 .f-c-catalogue
+  position: relative
+
   &__label
     text-transform: uppercase
     color: $table-head-color
@@ -29,7 +31,26 @@
     &__cell-label
       display: none
 
+    &__header-cell--merge,
+    &__cell--merge
+      border-bottom: 0
+      width: 140px
+      background: transparent
+      padding: 0
+
+    &__cell--merge
+      background: $table-accent-bg
+
   +mq-mobile-menu
+    &--merge
+      padding-left: 140px
+      padding-top: 46px
+
+    &__cell--merge
+      position: absolute
+      left: -140px
+      top: $spacer
+
     &__header
       display: none
 

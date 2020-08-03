@@ -14,7 +14,10 @@ Folio::Engine.routes.draw do
     resources :dashboard, only: :index
 
     resources :pages, except: %i[show] do
-      post :set_positions, on: :collection
+      collection do
+        post :set_positions
+        get :merge
+      end
     end
 
     resource :content_templates, only: [] do

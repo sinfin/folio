@@ -149,4 +149,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                   label_for(attr),
                   class: 'f-c-catalogue__label f-c-catalogue__cell-label')
     end
+
+    def wrap_class_name
+      if model[:merge]
+        'f-c-catalogue--merge'
+      end
+    end
 end
