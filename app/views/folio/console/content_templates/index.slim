@@ -4,8 +4,8 @@
 
 = catalogue(@content_template_classes)
   ruby:
-    attribute(:title) { |record| record.model_name.human(count: 2) }
-    attribute(:count) { |record| record.count }
+    attribute(:title) { record.model_name.human(count: 2) }
+    attribute(:count) { record.count }
     actions(edit: Proc.new { |record| controller.edit_console_content_templates_path(type: record.to_s) })
 
 / .f-c-show-for-index-wrap

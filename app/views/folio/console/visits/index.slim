@@ -4,5 +4,5 @@
   ruby:
     attribute :id
     attribute :started_at
-    attribute(:events) { |record| record.ahoy_events.size }
+    attribute(:events) { record.ahoy_events.size }
     actions :show, :destroy
