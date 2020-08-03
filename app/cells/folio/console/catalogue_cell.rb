@@ -102,6 +102,22 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def audit_user
+    attribute(:user, record.try(:audit).try(:user).try(:full_name))
+  end
+
+  def email(attr = :email)
+    attribute(attr) do
+      e = record.public_send(attr)
+      icon = mail_to(e, '', class: 'fa fa--small ml-1 fa-envelope')
+      "#{e} #{icon}"
+    end
+  end
+
+  def state(active: true)
+    cell('folio/console/state', record, active: active)
+  end
+
   private
     def resource_link(url_for_args, attr = nill)
       attribute(attr) do

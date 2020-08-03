@@ -1,9 +1,10 @@
-= index_show_for(revisions) do |s|
-  = s.attribute(:created_at, in: :audit, format: :short, label: nil)
-  = s.attribute(:title)
-  = s.attribute(:slug)
-  = s.attribute(:meta_title)
-  = s.attribute(:published)
-  = s.attribute(:published_at)
-  = s.attribute(:featured)
-  = s.audit_user
+= catalogue(revisions)
+  ruby:
+    attribute(:created_at, in: :audit, format: :short, label: nil)
+    attribute(:title)
+    attribute(:slug)
+    attribute(:meta_title)
+    attribute(:published)
+    attribute(:published_at)
+    attribute(:featured)
+    audit_user

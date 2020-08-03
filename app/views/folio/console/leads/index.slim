@@ -1,9 +1,10 @@
 = index_header csv: true
 
-= index_show_for(@leads) do |s|
-  = s.email
-  = s.attribute(:name)
-  = s.attribute(:created_at)
-  = s.state
+= catalogue(@leads)
+  ruby:
+    email
+    attribute(:name)
+    attribute(:created_at)
+    state
 
-  = s.actions :show, :edit, :destroy
+    actions :show, :edit, :destroy

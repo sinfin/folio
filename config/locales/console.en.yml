@@ -52,6 +52,10 @@ en:
         ancestry:
           success: Tree structure updated.
           error: Failed to update the tree structure.
+      blank: "Not specified"
+      boolean:
+        "yes": "Yes"
+        "no": "No"
       breadcrumbs:
         actions:
           add: Add

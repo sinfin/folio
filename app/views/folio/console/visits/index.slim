@@ -1,8 +1,8 @@
 = index_header
 
-= index_show_for @visits do |s|
-  = s.attribute(:id)
-  = s.attribute(:started_at)
-  = s.attribute(:events)
-    = s.object.ahoy_events.size
-  = s.actions :show, :destroy
+= catalogue @visits
+  ruby:
+    attribute :id
+    attribute :started_at
+    attribute(:events) { |record| record.ahoy_events.size }
+    actions :show, :destroy

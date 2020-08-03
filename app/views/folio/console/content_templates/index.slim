@@ -2,30 +2,36 @@
   h1.f-c-index-header__h1
     = @klass.model_name.human(count: 2)
 
-.f-c-show-for-index-wrap
-  .f-c-show-for-index
-    - ([nil] + @content_template_classes).each do |klass|
-      .show_for.f-c-show-for__row
-        .f-c-show-for__cell
-          .f-c-show-for__label.text-body
-            = @klass.human_attribute_name(:title)
+= catalogue(@content_template_classes)
+  ruby:
+    attribute(:title) { |record| record.model_name.human(count: 2) }
+    attribute(:count) { |record| record.count }
+    actions(edit: Proc.new { |record| controller.edit_console_content_templates_path(type: record.to_s) })
 
-          - if klass
-            .f-c-show-for__content
-              = klass.model_name.human(count: 2)
+/ .f-c-show-for-index-wrap
+/   .f-c-show-for-index
+/     - ([nil] + @content_template_classes).each do |klass|
+/       .show_for.f-c-show-for__row
+/         .f-c-show-for__cell
+/           .f-c-show-for__label.text-body
+/             = @klass.human_attribute_name(:title)
 
-        .f-c-show-for__cell
-          .f-c-show-for__label.text-body
-            = @klass.human_attribute_name(:count)
+/           - if klass
+/             .f-c-show-for__content
+/               = klass.model_name.human(count: 2)
 
-          - if klass
-            .f-c-show-for__content
-              = klass.count
+/         .f-c-show-for__cell
+/           .f-c-show-for__label.text-body
+/             = @klass.human_attribute_name(:count)
 
-        .f-c-show-for__cell
-          - if klass
-            .f-c-show-for__content
-              .f-c-index-actions
-                a.btn.btn-secondary.fa.fa-edit[
-                  href=edit_console_content_templates_path(type: klass.to_s)
-                ]
+/           - if klass
+/             .f-c-show-for__content
+/               = klass.count
+
+/         .f-c-show-for__cell
+/           - if klass
+/             .f-c-show-for__content
+/               .f-c-index-actions
+/                 a.btn.btn-secondary.fa.fa-edit[
+/                   href=edit_console_content_templates_path(type: klass.to_s)
+/                 ]

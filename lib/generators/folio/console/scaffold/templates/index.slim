@@ -1,5 +1,6 @@
 = index_header
 
-= index_show_for(@<%= instance_variable_name(plural: true) %>) do |s|
-  = s.edit_link :to_label
-  = s.actions
+= catalogue(@<%= instance_variable_name(plural: true) %>)
+  ruby:
+    edit_link :to_label
+    actions

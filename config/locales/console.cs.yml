@@ -52,6 +52,10 @@ cs:
         ancestry:
           success: Stromová struktura upravena.
           error: Stromovou strukturu se nepodařilo upravit.
+      blank: Neuvedeno
+      boolean:
+        "yes": "Ano"
+        "no": "Ne"
       breadcrumbs:
         actions:
           add: Přidat

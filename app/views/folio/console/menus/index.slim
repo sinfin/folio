@@ -1,10 +1,8 @@
 = index_header by_query: false
 
-= index_show_for(@menus) do |s|
-  = s.edit_link :type
-  = s.locale_flag
-
-  = s.attribute :menu_items
-    = s.object.menu_items.size
-
-  = s.actions
+= catalogue(@menus)
+  ruby:
+    edit_link :type
+    locale_flag
+    attribute(:menu_items) { |record| record.menu_items.size }
+    actions
