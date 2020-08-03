@@ -128,7 +128,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   private
     def resource_link(url_for_args, attr = nill)
-      attribute(attr) do
+      attribute(attr, class_name: 'spacey') do
         if block_given?
           content = yield(record)
         elsif attr == :type

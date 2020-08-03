@@ -19,7 +19,7 @@
       background: #E6F4FA
       display: block
 
-  +mq-desktop-menu
+  +mq-desktop-catalogue
     &__table
       display: table
       width: 100%
@@ -67,7 +67,7 @@
     &__cell--merge
       background: $table-accent-bg
 
-  +mq-mobile-menu
+  +mq-mobile-catalogue
     &--merge
       padding-left: 140px
       padding-top: 46px
@@ -77,25 +77,55 @@
       left: -140px
       top: $spacer
 
+    &__cell
+      display: flex
+      align-items: center
+
+    &__cell-label,
+    &__cell-value
+      flex: 0 0 50%
+      max-width: 50%
+
+    &__cell-label
+      padding-right: $spacer / 2
+      padding-top: 1.5px
+
+    &__cell-value
+      padding-left: $spacer / 2
+
+    &__cell-label:empty
+      display: none
+
+    &__cell-label:empty + &__cell-value
+      padding-left: 0
+
+    &__cell + &__cell
+      margin-top: $spacer
+
+    &__cell--spacey
+      display: block
+
+    &__cell--spacey &__cell-label
+      margin-bottom: $spacer / 4
+      padding-right: 0
+      max-width: none
+
+    &__cell--spacey &__cell-value
+      padding-left: 0
+      max-width: none
+
     &__header
       display: none
 
     &__row
       display: block
-      width: 100%
-      border: $table-border-width solid $table-border-color
-      margin: 0 0 $spacer
-      padding: $spacer calc(#{2 * $spacer} + #{$input-height-border} + #{$input-height-inner}) $spacer $spacer
+      margin: 0 (( - $grid-gutter-half ))
+      padding: $spacer
       position: relative
 
-    &__cell + &__cell
-      margin-top: $spacer / 2
+      &:last-child
+        border-bottom: $table-border-width solid $table-border-color
 
-    &__cell--actions
-      position: absolute
-      top: $spacer
-      right: $spacer
-      bottom: $spacer
-
-    &__cell + &__cell--actions
-      margin-top: 0
+    &__header + &__row,
+    &__row + &__row
+      border-top: $table-border-width solid $table-border-color

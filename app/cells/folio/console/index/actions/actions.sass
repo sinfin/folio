@@ -1,21 +1,9 @@
 .f-c-index-actions
-  text-align: right
+  display: flex
 
-  +mq-desktop-menu
-    display: flex
+  .btn + .btn
+    margin-left: $table-cell-padding
+
+  +mq-desktop-catalogue
     justify-content: flex-end
-
-    .btn + .btn
-      margin-left: $table-cell-padding
-
-  +mq-mobile-menu
-    display: flex
-    flex-direction: column
-    justify-content: center
-    position: absolute
-    top: 0
-    bottom: 0
-    right: 0
-
-    .btn + .btn
-      margin-top: $table-cell-padding
+    text-align: right
