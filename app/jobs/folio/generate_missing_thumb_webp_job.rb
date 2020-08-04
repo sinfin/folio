@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
-  queue_as :default
+  queue_as :slow
 
   def perform(image)
     return if /svg/.match?(image.mime_type)
