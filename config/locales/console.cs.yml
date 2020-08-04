@@ -54,8 +54,10 @@ cs:
           error: Stromovou strukturu se nepodařilo upravit.
       blank: Neuvedeno
       boolean:
-        "yes": "Ano"
-        "no": "Ne"
+        'yes': "Ano"
+        'no': "Ne"
+        'true': "Ano"
+        'false': "Ne"
       breadcrumbs:
         actions:
           add: Přidat

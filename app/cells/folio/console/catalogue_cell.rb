@@ -36,13 +36,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, &block)
     content = nil
 
     if rendering_header?
       @header_html += content_tag(:div,
                                   label_for(name),
-                                  class: cell_class_name(name, class_name: class_name))
+                                  class: cell_class_name(name, class_name: class_name, spacey: spacey))
     else
       if block_given?
         content = block.call(self.record)
@@ -54,8 +54,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       @record_html += content_tag(:div,
                                   "#{tbody_label_for(name)}#{value_div}",
-                                  class: cell_class_name(name, class_name: class_name))
+                                  class: cell_class_name(name, class_name: class_name, spacey: spacey))
     end
+  end
+
+  def association(name)
+    attribute(name, record.send(name).try(:to_label))
   end
 
   def type
@@ -107,15 +111,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def email(attr = :email)
-    attribute(attr) do
+    attribute(attr, spacey: true) do
       e = record.public_send(attr)
       icon = mail_to(e, '', class: 'fa fa--small ml-1 fa-envelope')
       "#{e} #{icon}"
     end
   end
 
-  def state(active: true)
-    attribute(:state) do
+  def state(active: true, spacey: false)
+    attribute(:state, spacey: spacey) do
       cell('folio/console/state', record, active: active)
     end
   end
@@ -126,9 +130,19 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def cover
+    attribute(:cover) do
+      cell('folio/console/index/images', record, cover: true)
+    end
+  end
+
+  def boolean(name)
+    attribute(name, I18n.t("folio.console.boolean.#{record.send(name)}"))
+  end
+
   private
     def resource_link(url_for_args, attr = nill)
-      attribute(attr, class_name: 'spacey') do
+      attribute(attr, spacey: true) do
         if block_given?
           content = yield(record)
         elsif attr == :type
@@ -142,7 +156,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil, class_name: '')
+    def cell_class_name(attr = nil, class_name: '', spacey: false)
       full = ''
 
       if rendering_header?
@@ -162,6 +176,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         full += " #{base}--#{class_name}"
       end
 
+      if spacey
+        full += " #{base}--spacey"
+      end
+
       full
     end
 
@@ -170,7 +188,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       return @labels[attr] unless @labels[attr].nil?
 
       @labels[attr] ||= begin
-        if attr == :actions
+        if %i[actions cover].include?(attr)
           ''
         else
           klass.human_attribute_name(attr)

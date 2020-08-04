@@ -4,7 +4,7 @@ div class=class_name class=id_class_name
       = admin_image(model.cover_placement, class: 'f-c-index-images__img')
 
   - elsif options[:custom]
-    .f-c-index-images__item(*lightbox(model))
+    .f-c-index-images__item(*lightbox_from_image(model))
       = admin_image(model)
 
   - else

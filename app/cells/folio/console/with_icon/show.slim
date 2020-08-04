@@ -1,0 +1,13 @@
+*tag
+  - if options[:reversed]
+    span.f-c-with-icon__span = model
+    - if options[:mi]
+      i.mi = options[:mi]
+    - elsif options[:fa]
+      i.fa class="fa-#{options[:fa]}"
+  - else
+    - if options[:mi]
+      i.mi = options[:mi]
+    - elsif options[:fa]
+      i.fa class="fa-#{options[:fa]}"
+    span.f-c-with-icon__span = model

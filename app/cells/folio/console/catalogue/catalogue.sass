@@ -4,7 +4,6 @@
   &__label
     text-transform: uppercase
     color: $table-head-color
-    white-space: nowrap
     font-size: $font-size-sm
 
   &__sortable-placeholder
@@ -47,6 +46,12 @@
     &__cell--position-buttons
       width: 103px
 
+    &__header-cell--cover,
+    &__cell--cover
+      width: 35px
+      max-width: 35px
+      box-sizing: content-box
+
     &__header-cell--actions,
     &__cell--actions
       width: 1px
@@ -56,6 +61,9 @@
     &__cell--toggle
       width: 36px
       white-space: nowrap
+
+    &__cell--toggle .f-c-boolean-toggle
+      margin: 0 auto
 
     &__header-cell--merge,
     &__cell--merge
@@ -80,6 +88,10 @@
     &__cell
       display: flex
       align-items: center
+      width: 100%
+      flex: 0 0 auto
+      order: 3
+      margin-top: $spacer
 
     &__cell-label,
     &__cell-value
@@ -99,11 +111,12 @@
     &__cell-label:empty + &__cell-value
       padding-left: 0
 
-    &__cell + &__cell
-      margin-top: $spacer
+    &__cell--cover
+      order: 1
 
     &__cell--spacey
       display: block
+      order: 2
 
     &__cell--spacey &__cell-label
       margin-bottom: $spacer / 4
@@ -118,9 +131,10 @@
       display: none
 
     &__row
-      display: block
+      display: flex
+      flex-direction: column
       margin: 0 (( - $grid-gutter-half ))
-      padding: $spacer
+      padding: 0 $spacer $spacer
       position: relative
 
       &:last-child

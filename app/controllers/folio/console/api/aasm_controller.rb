@@ -14,7 +14,11 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
 
         if event && !event.options[:private]
           record.send("#{event_name}!")
-          opts = params[:cell_options].permit(:small, :active, :remote)
+          opts = {
+            small: params[:cell_options][:small].presence,
+            active: params[:cell_options][:active].presence,
+            remote: params[:cell_options][:remote].presence,
+          }
           render json: {
             data: cell('folio/console/state', record, opts).show,
             meta: {

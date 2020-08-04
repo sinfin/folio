@@ -56,6 +56,8 @@ en:
       boolean:
         "yes": "Yes"
         "no": "No"
+        "true": "Yes"
+        "false": "No"
       breadcrumbs:
         actions:
           add: Add
