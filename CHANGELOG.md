@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-08-04
+### Added
+- added table style and config for `show_for`
+
 ## 2020-08-03
 ### Removed
 - removed `index_show_for`

@@ -2,11 +2,14 @@
 
 = show_for(@lead) do |s|
   = s.attribute(:name)
-  = s.email
+  = s.attribute(:email)
+    = mail_to(s.object.email, s.object.email)
   = s.attribute(:phone)
   = s.attribute(:note)
   = s.attribute(:url)
-  = s.visit
+  = s.attribute(:visit)
+    - if s.object.visit
+      = link_to(s.object.visit.to_label, url_for([:console, s.object.visit]))
 
   - if s.object.additional_data.present?
     - s.object.additional_data.each do |key, value|

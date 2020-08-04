@@ -18,6 +18,7 @@ gem 'rubyzip'
 gem 'rack-mini-profiler'
 gem 'turbolinks'
 gem 'uglifier', '>= 1.3.0'
+gem 'show_for'
 
 group :test do
   gem 'minitest', '5.10.3'
