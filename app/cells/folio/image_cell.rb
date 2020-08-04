@@ -3,7 +3,13 @@
 class Folio::ImageCell < Folio::ApplicationCell
   include Folio::CellLightbox
 
-  class_name 'f-image', :centered, :not_lazy?, :lightboxable?, :contain
+  class_name 'f-image', :centered,
+                        :not_lazy?,
+                        :lightboxable?,
+                        :contain,
+                        :cover,
+                        :hover_zoom,
+                        :fixed_height
 
   def show
     render if size
@@ -61,12 +67,46 @@ class Folio::ImageCell < Folio::ApplicationCell
   end
 
   def wrap_style
-    width = options[:max_width] || size.split('x').first
+    styles = []
 
-    if width.present?
-      width = "#{width}px" unless width.to_s.match?(/%|none/)
-      "max-width: #{width}"
+    if options[:fixed_height]
+      if data && data[:normal]
+        desktop_height = data[:normal].height
+        mobile_height = (data[:normal].height * self.class.fixed_height_mobile_ratio).round
+      else
+        desktop_height = options[:fixed_height][:desktop]
+        mobile_height = options[:fixed_height][:mobile]
+      end
+
+      desktop = [
+        data[:normal].try(:width) || fixed_height_default_width,
+        options[:fixed_height][:max_desktop_width],
+      ].compact.min.round
+
+      mobile = [
+        (data[:normal].try(:width) || fixed_height_default_width) * self.class.fixed_height_mobile_ratio,
+        options[:fixed_height][:max_mobile_width]
+      ].compact.min.round
+
+      styles << "max-width: #{desktop}px"
+      styles << "min-width: #{desktop}px"
+      styles << "min-height: #{desktop_height}px"
+      styles << "width: #{mobile}px"
+      styles << "height: #{mobile_height}px"
+    else
+      if options[:max_height]
+        width = (options[:max_height] / spacer_ratio).round(4)
+      else
+        width = options[:max_width] || size.split('x').first
+      end
+
+      if width.present?
+        width = "#{width}px" unless width.to_s.match?(/%|none/)
+        styles << "max-width: #{width}"
+      end
     end
+
+    styles.join(';')
   end
 
   def spacer_style
@@ -116,7 +156,7 @@ class Folio::ImageCell < Folio::ApplicationCell
     if options[:href]
       h[:tag] = :a
       h[:href] = options[:href]
-    elsif model && options[:lightbox]
+    elsif model && lightboxable?
       if model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
         h['data-lightbox-title'] ||= options[:title] || model.try(:title)
@@ -130,5 +170,13 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def lightboxable?
     options[:lightbox]
+  end
+
+  def self.fixed_height_mobile_ratio
+    0.862
+  end
+
+  def self.fixed_height_default_width
+    160
   end
 end
