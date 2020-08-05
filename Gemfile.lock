@@ -13,6 +13,7 @@ PATH
     folio (0.1.0)
       aasm
       acts-as-taggable-on (~> 6.0)
+      after_commit_everywhere
       ahoy_matey (~> 2)
       ancestry
       audited (~> 4.7)
@@ -62,7 +63,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.0.8)
+    aasm (5.1.0)
       concurrent-ruby (~> 1.0)
     actioncable (6.0.3.2)
       actionpack (= 6.0.3.2)
@@ -123,6 +124,8 @@ GEM
       activerecord (>= 5.0, < 6.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    after_commit_everywhere (0.1.5)
+      activerecord (>= 4.2)
     ahoy_matey (2.2.1)
       addressable
       browser (~> 2.0)
@@ -134,8 +137,8 @@ GEM
       safely_block (>= 0.2.1)
       user_agent_parser
     anbt-sql-formatter (0.1.0)
-    ancestry (3.0.7)
-      activerecord (>= 3.2.0)
+    ancestry (3.1.0)
+      activerecord (>= 4.2.0)
     annotate (3.1.1)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
@@ -379,7 +382,7 @@ GEM
     puma (4.3.5)
       nio4r (~> 2.0)
     rack (2.2.3)
-    rack-mini-profiler (2.0.3)
+    rack-mini-profiler (2.0.4)
       rack (>= 1.2.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -444,8 +447,8 @@ GEM
       rubocop-ast (>= 0.1.0, < 1.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.2.0)
-      parser (>= 2.7.0.1)
+    rubocop-ast (0.3.0)
+      parser (>= 2.7.1.4)
     rubocop-performance (1.7.1)
       rubocop (>= 0.82.0)
     rubocop-rails (2.7.1)

@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cells-rails', '0.1.0'
   s.add_dependency 'ahoy_matey', '~> 2'
   s.add_dependency 'rails-i18n'
+  s.add_dependency 'after_commit_everywhere'
   s.add_dependency 'aasm'
   s.add_dependency 'recaptcha', '4.13.1'
   s.add_dependency 'nokogiri'
