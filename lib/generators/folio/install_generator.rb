@@ -9,7 +9,7 @@ module Folio
 
       def add_gems
         gem 'dotenv-rails'
-        gem 'autoprefixer-rails', '9.8.6'
+        gem 'autoprefixer-rails', '9.8.5'
         gem 'slim-rails'
         gem 'cells'
         gem 'cells-slim', '0.0.6'
