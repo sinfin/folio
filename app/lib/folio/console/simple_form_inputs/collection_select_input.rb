@@ -10,6 +10,8 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
 
       if options[:remote] == true
         iho['data-autocomplete-url'] = autocomplete_url
+      elsif options[:remote].is_a?(Hash)
+        iho['data-autocomplete-url'] = autocomplete_url(options[:remote])
       else
         iho['data-autocomplete-url'] = options[:remote]
       end
@@ -29,7 +31,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
     )
   end
 
-  def autocomplete_url
+  def autocomplete_url(opts = {})
     Folio::Engine.routes
                  .url_helpers
                  .url_for([:selectize,
@@ -37,6 +39,8 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
                            :api,
                            :autocomplete,
                            klass: reflection.class_name,
+                           scope: opts[:scope],
+                           order_scope: opts[:order_scope],
                            only_path: true])
   end
 
