@@ -9,7 +9,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :contain,
                         :cover,
                         :hover_zoom,
-                        :fixed_height
+                        :fixed_height,
+                        :small
 
   def show
     render if size
