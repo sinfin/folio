@@ -1,7 +1,7 @@
 /! Root element of PhotoSwipe. Must have class pswp.
 .f-photoswipe.pswp[
   aria-hidden="true"
-  data-error-msg="#{t('.error')}"
+  data-error-msg=ERB::Util.html_escape(t('.error'))
   role="dialog"
   tabindex="-1"
 ]
