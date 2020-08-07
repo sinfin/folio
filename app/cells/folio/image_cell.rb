@@ -10,7 +10,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :cover,
                         :hover_zoom,
                         :fixed_height,
-                        :small
+                        :small,
+                        :cloned
 
   def show
     render if size

@@ -1,1 +1,1 @@
-window.makeFolioLightbox('.f-image--lightboxable')
+window.makeFolioLightbox('.f-image--lightboxable:not(.f-image--cloned)')
