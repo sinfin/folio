@@ -34,3 +34,7 @@ window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
     $ init
 
 window.makeFolioLazyLoad '.f-lazyload'
+
+window.updateAllFolioLazyLoadInstances = ->
+  return unless window.folioLazyloadInstances
+  window.folioLazyloadInstances.forEach (instance) -> instance.update()
