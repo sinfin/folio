@@ -58,8 +58,16 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def association(name)
-    attribute(name, record.send(name).try(:to_label))
+  def association(name, separator: ', ')
+    assoc = record.send(name)
+
+    if assoc.is_a?(Enumerable)
+      val = assoc.map(&:to_label).join(separator)
+    else
+      val = assoc.to_label
+    end
+
+    attribute(name, val)
   end
 
   def type
