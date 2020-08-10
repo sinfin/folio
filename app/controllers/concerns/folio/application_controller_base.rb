@@ -11,11 +11,13 @@ module Folio::ApplicationControllerBase
 
     layout 'folio/application'
 
-    before_action do
-      I18n.locale = params[:locale] || current_site.locale
-    end
+    before_action :set_i18n_locale
 
     helper_method :current_site
+  end
+
+  def set_i18n_locale
+    I18n.locale = params[:locale] || current_site.locale
   end
 
   def default_url_options
