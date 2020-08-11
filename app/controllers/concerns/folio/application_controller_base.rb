@@ -11,9 +11,17 @@ module Folio::ApplicationControllerBase
 
     layout 'folio/application'
 
-    before_action do
-      I18n.locale = params[:locale] || Folio::Site.instance.locale
-    end
+    before_action :set_i18n_locale
+
+    helper_method :current_site
+  end
+
+  def set_i18n_locale
+    I18n.locale = params[:locale] || current_site.locale
+  end
+
+  def default_url_options
+    { only_path: true }
   end
 
   def url_for(options = nil)
@@ -24,6 +32,10 @@ module Folio::ApplicationControllerBase
     else
       super(options)
     end
+  end
+
+  def current_site
+    @current_site ||= Folio::Site.instance
   end
 
   private

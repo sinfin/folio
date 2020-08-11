@@ -1,0 +1,113 @@
+@import 'folio/utilities'
+
+$folio-image-fallback-background: #f9f9f9 !default
+
+=internet-explorer
+  @media screen and (-ms-high-contrast: none), (-ms-high-contrast: active)
+    @content
+
+.f-image
+  position: relative
+  overflow: hidden
+  display: block
+
+  &__img
+    display: block
+    position: absolute
+    height: auto
+    width: 100%
+    top: 0
+    left: 0
+    z-index: 2
+
+  &__spacer
+    display: block
+    padding-top: 100%
+    background: rgba(122, 122, 122, 0.045)
+    z-index: 1
+
+  &--loaded &__spacer,
+  &--not-lazy &__spacer
+    visibility: hidden
+
+  &__fallback
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    z-index: 2
+    background: $folio-image-fallback-background
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__fallback-svg
+    width: 40px
+    height: 40px
+    display: block
+    opacity: 0.3
+
+  &--small &__fallback-svg
+    width: 16px
+    height: 16px
+
+  &--centered
+    margin-left: auto
+    margin-right: auto
+
+  &--lightboxable
+    cursor: zoom-in
+
+  &--contain
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &--contain &__picture
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &--contain &__picture,
+  &--contain &__spacer,
+  &--cover &__spacer,
+  &--fixed-height &__spacer
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    padding-top: 0 !important
+
+  &--contain &__img
+    max-width: 100%
+    max-height: 100%
+    position: static
+    width: auto
+    height: auto
+
+  &--cover &__img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+    +internet-explorer
+      height: auto
+
+  &--hover-zoom &__img
+    transition: transform .2s
+
+    a:hover &, figure:hover &, &:hover
+      transform: scale(1.05)
+
+  &--fixed-height
+    +mq-desktop-menu
+      width: auto !important
+      height: auto !important
+
+    +mq-mobile-menu
+      min-width: 0 !important
+      max-width: none !important
+      min-height: 0 !important
+      max-height: none !important

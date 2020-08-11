@@ -18,3 +18,15 @@ window.FolioConsole.flash = (msg, type = 'success') ->
 
 window.FolioConsole.clearFlashes = ->
   $('.f-c-flash-wrap').html('')
+
+window.FolioConsole.flashMessageFromMeta = (response) ->
+  if typeof response is 'object' and response.meta and response.meta.flash
+    if response.meta.flash.success
+      window.FolioConsole.flash response.meta.flash.success
+    else if response.meta.flash.alert
+      window.FolioConsole.flash response.meta.flash.alert, 'alert'
+
+window.FolioConsole.flashMessageFromApiErrors = (response) ->
+  if typeof response is 'object' and response.errors
+    flash = response.errors.map (obj) -> "#{obj.title} #{obj.detail}"
+    window.FolioConsole.flash flash, 'alert'

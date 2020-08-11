@@ -5,6 +5,6 @@
 
     ul.list-unstyled.d-flex.flex-wrap.d-atom-gallery__list.mx-n2
       - model.image_placements.each do |image_placement|
-        li.p-2
+        li.p-2 style="width: 150px;"
           - size = Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
-          img.d-atom-gallery__img src=image_placement.file.thumb(size).url
+          = image image_placement, size, lightbox: true

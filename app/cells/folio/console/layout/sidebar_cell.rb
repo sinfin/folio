@@ -2,7 +2,7 @@
 
 class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def site_name
-    Folio::Site.instance.title
+    current_site.title
   end
 
   def link_groups

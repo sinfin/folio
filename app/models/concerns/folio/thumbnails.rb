@@ -5,7 +5,12 @@ require 'mini_magick'
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 
-  IMAGE_MIME_TYPES = %w[image/png image/jpeg image/gif image/bmp image/svg image/svg+xml]
+  IMAGE_MIME_TYPES = %w[image/png
+                        image/jpeg
+                        image/gif
+                        image/bmp
+                        image/svg
+                        image/svg+xml]
 
   included do
     serialize :thumbnail_sizes, Hash
@@ -23,7 +28,7 @@ module Folio::Thumbnails
 
   # Use w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 90, immediate: false, force: false, x: nil, y: nil)
+  def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
     fail_for_non_images
     return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test?
 
@@ -119,6 +124,15 @@ module Folio::Thumbnails
   def clear_thumbnails!
     delete_thumbnails
     save!
+  end
+
+  def recreate_all_thumbnails!
+    thumbnail_sizes.each do |size, data|
+      thumb(size, quality: data[:quality],
+                  force: true,
+                  x: data[:x],
+                  y: data[:y])
+    end
   end
 
   private

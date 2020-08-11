@@ -8,10 +8,16 @@ module Folio::Positionable
     validates :position, presence: true
 
     # Scopes
-    scope :ordered, -> { order(position: :asc, created_at: :desc) }
+    scope :ordered, -> { order(position: :asc) }
 
     # Callbacks
     before_validation :set_position
+  end
+
+  class_methods do
+    def positionable_descending?
+      false
+    end
   end
 
   private

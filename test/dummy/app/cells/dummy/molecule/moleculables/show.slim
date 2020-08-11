@@ -3,15 +3,15 @@
     ul.list-unstyled.row
       - model.each do |atom|
         li.col.d-flex.align-items-center
-          .mr-3.d-flex.align-items-center.justify-content-center[
-            style="width: 50px; height: 50px;"
+          .mr-3[
+            style="width: 250px"
           ]
-            = cover(atom)
+            = image(atom.cover_placement, size)
 
           = atom.title
 
           - atom.image_placements.each do |ip|
-            .ml-3.d-flex.align-items-center.justify-content-center[
-              style="width: 50px; height: 50px;"
+            .ml-3[
+              style="width: 250px"
             ]
-              = thumb(ip)
+              = image ip, size

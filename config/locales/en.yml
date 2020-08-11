@@ -44,9 +44,8 @@ en:
     newsletter_subscription_form:
       message: Submitted!
       submit: Submit
-    partials:
-      photoswipe:
-        error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
+    photoswipe:
+      error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:
       settings:
         title: Settings

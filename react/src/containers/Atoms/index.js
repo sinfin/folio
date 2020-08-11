@@ -138,7 +138,7 @@ class Atoms extends React.PureComponent {
             moveFormAtom={(from, to) => this.props.dispatch(moveFormAtom(from, to))}
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
             validateAndSubmitGlobalForm={() => this.props.dispatch(validateAndSubmitGlobalForm())}
-            openFileModal={(fileType, file) => this.props.dispatch(openFileModal(fileType, file))}
+            openFileModal={(fileType, filesUrl, file) => this.props.dispatch(openFileModal(fileType, filesUrl, file))}
           />
         )}
       </React.Fragment>

@@ -14,7 +14,10 @@ Folio::Engine.routes.draw do
     resources :dashboard, only: :index
 
     resources :pages, except: %i[show] do
-      post :set_positions, on: :collection
+      collection do
+        post :set_positions
+        get :merge
+      end
     end
 
     resource :content_templates, only: [] do
@@ -43,6 +46,10 @@ Folio::Engine.routes.draw do
     namespace :api do
       resource :tags, only: [] do
         get :react_select
+      end
+
+      resource :aasm, only: [], controller: 'aasm' do
+        post :event
       end
 
       resource :autocomplete, only: %i[show] do

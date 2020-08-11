@@ -19,16 +19,16 @@ const CHANGE_FILE_PLACEMENTS_PAGE = 'fileModal/CHANGE_FILE_PLACEMENTS_PAGE'
 
 // Actions
 
-export function openFileModal (fileType, file) {
-  return { type: OPEN_FILE_MODAL, fileType, file }
+export function openFileModal (fileType, filesUrl, file) {
+  return { type: OPEN_FILE_MODAL, fileType, filesUrl, file }
 }
 
 export function closeFileModal () {
   return { type: CLOSE_FILE_MODAL }
 }
 
-export function updateFileThumbnail (fileType, file, thumbKey, params) {
-  return { type: UPDATE_FILE_THUMBNAIL, fileType, file, thumbKey, params }
+export function updateFileThumbnail (fileType, filesUrl, file, thumbKey, params) {
+  return { type: UPDATE_FILE_THUMBNAIL, fileType, filesUrl, file, thumbKey, params }
 }
 
 export function updatedFileModalFile (file) {
@@ -65,10 +65,10 @@ export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
 function * updateFileThumbnailPerform (action) {
-  if (action.fileType !== 'images') return
+  if (action.file.attributes.react_type !== 'image') return
 
   try {
-    const url = `/console/api/${action.fileType}/${action.file.id}/update_file_thumbnail`
+    const url = `${action.filesUrl}/${action.file.id}/update_file_thumbnail`
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {
@@ -175,9 +175,10 @@ function modalReducer (state = initialState, action) {
         ...initialState,
         file: action.file,
         fileType: action.fileType,
+        filesUrl: action.filesUrl,
         filePlacements: {
           ...initialState.filePlacements,
-          loading: true,
+          loading: true
         }
       }
 
@@ -261,7 +262,7 @@ function modalReducer (state = initialState, action) {
           filePlacements: {
             loading: false,
             records: action.filePlacements,
-            pagination: action.meta,
+            pagination: action.meta
           }
         }
       } else {
@@ -275,7 +276,7 @@ function modalReducer (state = initialState, action) {
           ...state,
           filePlacements: {
             ...state.filePlacements,
-            loading: true,
+            loading: true
           }
         }
       } else {

@@ -30,4 +30,12 @@ class Folio::ApplicationCell < Cell::ViewModel
   def url_for(options)
     controller.url_for(options)
   end
+
+  def current_site
+    controller.current_site
+  end
+
+  def image(placement, size, opts = {})
+    cell('folio/image', placement, opts.merge(size: size))
+  end
 end

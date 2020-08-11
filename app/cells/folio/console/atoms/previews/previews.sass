@@ -1,3 +1,5 @@
+$fa-font-path: 'font-awesome/webfonts' !default
+
 @import 'font-awesome/scss/fontawesome'
 @import 'folio/console/variables'
 @import 'folio-bootstrap/scss/functions'
@@ -5,7 +7,7 @@
 @import 'folio-bootstrap/scss/mixins'
 @import 'folio/console/plugin-overrides/font-awesome'
 @import 'folio/console/modules/font-awesome'
-@import 'folio/console/modules/with-icon'
+@import 'folio/console/with_icon/with_icon'
 @import 'folio/utilities'
 @import 'material_icons'
 
@@ -42,6 +44,32 @@
 
     &:last-of-type > :first-child
       margin-bottom: 0
+
+  &__preview-placeholder
+    background: #E6F4FA
+    position: relative
+    z-index: 2
+
+    .f-c-atoms-previews__controls
+      visibility: hidden !important
+
+    .f-c-atoms-previews__preview-inner
+      > *
+        margin: 0 !important
+
+    &--scaled
+      height: 130px
+      .f-c-atoms-previews__preview-inner
+        opacity: 0.5
+        transform-origin: center top
+        position: relative
+        top: 15px
+
+  .ui-sortable-helper
+    display: none !important
+
+  &__locale
+    position: relative
 
   &__controls
     position: absolute
@@ -85,6 +113,12 @@
 
     &--arrow
       +button-variant($white, $white)
+      +plain-hover-focus
+        border-color: #BFC4C4
+
+    &--handle
+      +button-variant($white, $white)
+      cursor: move
       +plain-hover-focus
         border-color: #BFC4C4
 
@@ -239,6 +273,17 @@
       .f-c-atoms-previews__controls
         visibility: visible
 
+    .ui-sortable--dragging
+      cursor: move
+
+    .ui-sortable--dragging .f-c-atoms-previews__controls
+      visibility: visible
+
+    .ui-sortable--dragging .f-c-atoms-previews__settings .f-c-atoms-previews__controls,
+    .ui-sortable--dragging .f-c-atoms-previews__buttons,
+    .ui-sortable--dragging .f-c-atoms-previews__insert
+      visibility: hidden
+
     &__controls-mobile-overlay
       display: none
 
@@ -257,6 +302,9 @@
 
       &:first-child
         margin-left: 0
+
+      &--handle
+        display: none
 
     &__buttons
       position: absolute

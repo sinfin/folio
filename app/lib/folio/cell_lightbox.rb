@@ -6,22 +6,27 @@ module Folio::CellLightbox
   LIGHTBOX_SIZE = '1920x1080>'
 
   def lightbox(placement)
-    thumb = placement.file.thumb(LIGHTBOX_SIZE)
-    {
-      'data-lightbox-src': thumb.url,
-      'data-lightbox-width': thumb.width,
-      'data-lightbox-height': thumb.height,
-      'data-lightbox-title': placement.try(:title),
-    }
+    if placement && placement.file
+      lightbox_from_image(placement.file).merge(
+        'data-lightbox-title' => placement.try(:title),
+      )
+    else
+      {}
+    end
   end
 
   def lightbox_from_image(file)
-    thumb = file.thumb(LIGHTBOX_SIZE)
-    {
-      'data-lightbox-src': thumb.url,
-      'data-lightbox-width': thumb.width,
-      'data-lightbox-height': thumb.height,
-    }
+    if file
+      thumb = file.thumb(LIGHTBOX_SIZE)
+      {
+        'data-lightbox-src' => thumb.url,
+        'data-lightbox-webp-src' => thumb.webp_url,
+        'data-lightbox-width' => thumb.width,
+        'data-lightbox-height' => thumb.height,
+      }
+    else
+      {}
+    end
   end
 
   def lightbox_image_data(placements, json: true)
@@ -30,6 +35,7 @@ module Folio::CellLightbox
 
       {
         src: thumb.url,
+        webp_src: thumb.webp_url,
         w: thumb.width,
         h: thumb.height,
         title: placement.try(:title),

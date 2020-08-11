@@ -1,6 +1,26 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-08-05
+### Added
+- extended remote collection select input to accept a hash with scope names `remote: { scope: :my_scope, order_scope: :my_order_scope }`
+
+## 2020-08-04
+### Added
+- added table style and config for `show_for`
+
+## 2020-08-03
+### Removed
+- removed `index_show_for`
+
+### Added
+- added `catalogue` instead
+
+## 2020-07-22
+### Removed
+- removed `turbo_mode` from `Site` 
+- removed `non_turbo.js`
+
 ## 2020-05-06
 ### Added
 - added `folio:pg_search_index_migration` generator

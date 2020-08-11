@@ -9,7 +9,7 @@
   = f.input :type, collection: collection, \
                    include_blank: false
 
-  = f.input :locale, collection: Folio::Site.instance.locales,
+  = f.input :locale, collection: current_site.locales,
                      include_blank: false
 
 - else

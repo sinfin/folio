@@ -3,7 +3,7 @@
 class Folio::Console::StateCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
-  class_name 'f-c-state', :small
+  class_name 'f-c-state', :small, :remote
 
   def show
     render if model.aasm_state.present?
@@ -73,5 +73,16 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     if event.options[:confirm]
       t('folio.console.confirmation')
     end
+  end
+
+  def remote_url_for(event)
+    controller.folio.event_console_api_aasm_path(klass: model.class.to_s,
+                                                 id: model.id,
+                                                 aasm_event: event.name,
+                                                 cell_options: {
+                                                   active: options[:active],
+                                                   remote: options[:remote],
+                                                   small: options[:small],
+                                                 })
   end
 end

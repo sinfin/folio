@@ -19,11 +19,11 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
     end
 
     def model_resource_name
-      super.gsub(/\A_/, '')
+      super.delete_prefix('_')
     end
 
     def class_name
-      super.gsub(/\A::/, '')
+      super.delete_prefix('::')
     end
 
     def dashed_resource_name
@@ -31,7 +31,7 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
     end
 
     def cell_name
-      "#{global_namespace_path}#{name.gsub(/\A\//, '')}"
+      "#{global_namespace_path}#{name.delete_prefix('/')}"
     end
 
     def global_namespace_path

@@ -5,16 +5,13 @@
   &:not(&--show-label)
     width: 2.25rem
 
-  .form-group
-    margin: 0
-
   &--show-label
     padding-right: 2.5rem
 
-  &--show-label .custom-switch
+  &--show-label &__switch
     padding-left: 0
 
-  &--show-label .custom-switch .custom-control-label
+  &--show-label &__label
     &:before
       left: auto
       right: -2.25rem
@@ -23,5 +20,5 @@
       left: auto
       right: calc(-2.25rem + 14px)
 
-  &--show-label .custom-switch .custom-control-input:checked ~ .custom-control-label::after
+  &--show-label &__input:checked ~ &__label::after
     transform: translateX(0.75rem)

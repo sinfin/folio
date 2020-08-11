@@ -58,7 +58,11 @@ class Modal extends Component {
   }
 
   updateThumbnail = (thumbKey, params) => {
-    this.props.dispatch(updateFileThumbnail(this.props.fileType, this.props.fileModal.file, thumbKey, params))
+    this.props.dispatch(updateFileThumbnail(this.props.fileModal.fileType,
+      this.props.fileModal.filesUrl,
+      this.props.fileModal.file,
+      thumbKey,
+      params))
   }
 
   deleteFile = (file) => {

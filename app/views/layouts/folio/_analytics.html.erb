@@ -1,4 +1,4 @@
-<% if (Rails.env.production? && Folio::Site.instance.google_analytics_tracking_code.present?) || ENV['DEV_GOOGLE_ANALYTICS'] %>
+<% if (Rails.env.production? && current_site.google_analytics_tracking_code.present?) || ENV['DEV_GOOGLE_ANALYTICS'] %>
 <!-- Google Analytics -->
 <script type="text/javascript">
   // Google Analytics
@@ -11,7 +11,7 @@
   ga('require', 'displayfeatures');
   ga('require', 'linkid', 'linkid.js');
 
-  ga('create', '<%= Folio::Site.instance.google_analytics_tracking_code %>', 'auto');
+  ga('create', '<%= current_site.google_analytics_tracking_code %>', 'auto');
 
   ga('send', 'pageview');
 </script>
@@ -20,7 +20,7 @@
 <% end %>
 
 <!-- Facebook Pixel -->
-<% if Rails.env.production? && !Folio::Site.instance.facebook_pixel_code.blank? %>
+<% if Rails.env.production? && !current_site.facebook_pixel_code.blank? %>
 <script type="text/javascript">
   // Facebook tracker
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -29,7 +29,7 @@
   t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
   document,'script','//connect.facebook.net/en_US/fbevents.js');
   // Insert Your Facebook Pixel ID below.
-  fbq('init', '<%= Folio::Site.instance.facebook_pixel_code %>');
+  fbq('init', '<%= current_site.facebook_pixel_code %>');
   fbq('track', 'PageView');
 </script>
 <% else %>

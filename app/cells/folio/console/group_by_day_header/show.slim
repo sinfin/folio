@@ -6,9 +6,10 @@ aside.f-c-group-by-day.small
 
       span.f-c-group-by-day__label
         - if model[:label_lambda]
-          = model[:label_lambda].call(records.size)
+          = model[:label_lambda].call(count)
         - else
           = model[:before_label]
-          strong<> = records.size
-          = records.first.class.model_name.human(count: records.size)
+          strong<> = count
+          - if model[:klass]
+            = model[:klass].model_name.human(count: count)
           = model[:after_label]

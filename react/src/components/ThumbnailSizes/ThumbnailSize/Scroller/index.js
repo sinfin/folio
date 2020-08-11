@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Picture from 'components/Picture'
+
 class Scroller extends React.Component {
   constructor (props) {
     super(props)
@@ -66,7 +68,7 @@ class Scroller extends React.Component {
     return (
       <div>
         <div ref={this.scrollRef} style={{ width: this.props.width, height: this.props.height, overflow: 'hidden' }}>
-          <img src={this.props.file.attributes.source_url} style={this.state.imageStyle} alt='' />
+          <Picture file={this.props.file} imageStyle={this.state.imageStyle} />
         </div>
 
         <div className='mt-2 pt-1 small'>{this.props.thumbKey}</div>

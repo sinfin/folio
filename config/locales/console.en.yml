@@ -27,6 +27,13 @@ en:
           mass_destroy:
             success: Images destroyed
             failure: Failed to destroy images - %{msg}
+        aasm:
+          failure_title: Failure
+          failure_detail: Failed to change the state.
+          invalid_event_title: Invalid change
+          invalid_event_detail: Such a change cannot be done
+          invalid_record_title: Invalid record
+          invalid_record_detail: Record cannot be saved. Correct it before changing state.
       atoms:
         form_header:
           settings: Settings
@@ -45,6 +52,12 @@ en:
         ancestry:
           success: Tree structure updated.
           error: Failed to update the tree structure.
+      blank: "Not specified"
+      boolean:
+        "yes": "Yes"
+        "no": "No"
+        "true": "Yes"
+        "false": "No"
       breadcrumbs:
         actions:
           add: Add

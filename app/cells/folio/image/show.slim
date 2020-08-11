@@ -1,0 +1,14 @@
+*tag
+  - if options[:image]
+    = options[:image]
+  - elsif data
+    - if data[:use_webp]
+      = render(:_picture)
+    - else
+      = render(:_image)
+
+  - else
+    span.f-image__fallback
+      = render(:_fallback_svg)
+
+  span.f-image__spacer style=spacer_style

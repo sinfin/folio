@@ -16,13 +16,14 @@
               = model.send(key)
 
       - model.class.attachment_placements.each_with_index do |key, i|
-        - if file = model.send(key).try(:file)
-          li
-            h5.mt-3.mb-2
-              = model.class.human_attribute_name(model.class::ATTACHMENTS[i])
+        - if placement = model.send(key)
+          - if file = placement.try(:file)
+            li style="width: 250px;"
+              h5.mt-3.mb-2
+                = model.class.human_attribute_name(model.class::ATTACHMENTS[i])
 
-            - if file.is_a?(Folio::Image)
-              - size = Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
-              img src=file.thumb(size).url
-            - else
-              = file.file_name
+              - if file.is_a?(Folio::Image)
+                - size = Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+                = image placement, size
+              - else
+                = file.file_name

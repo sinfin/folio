@@ -1,6 +1,4 @@
 # frozen_string_literal: true
 
-module Folio
-  class ApplicationJob < ActiveJob::Base
-  end
+class Folio::ApplicationJob < ActiveJob::Base
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_03_064450) do
+ActiveRecord::Schema.define(version: 2020_07_30_181721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,6 +144,8 @@ ActiveRecord::Schema.define(version: 2020_07_03_064450) do
     t.string "author"
     t.text "description"
     t.integer "file_placements_size"
+    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
+    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
@@ -197,6 +199,7 @@ ActiveRecord::Schema.define(version: 2020_07_03_064450) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "visit_id"
+    t.string "mailchimp_tags"
     t.index ["visit_id"], name: "index_folio_newsletter_subscriptions_on_visit_id"
   end
 
@@ -263,7 +266,6 @@ ActiveRecord::Schema.define(version: 2020_07_03_064450) do
     t.json "social_links"
     t.text "address"
     t.text "description"
-    t.boolean "turbo_mode", default: false
     t.string "system_email"
     t.string "system_email_copy"
     t.string "email_from"
@@ -314,6 +316,7 @@ ActiveRecord::Schema.define(version: 2020_07_03_064450) do
   create_table "tags", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "taggings_count", default: 0
+    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((name)::text, ''::text)))", name: "index_tags_on_by_query", using: :gin
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 

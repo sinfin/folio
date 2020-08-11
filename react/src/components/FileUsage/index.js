@@ -1,6 +1,6 @@
 import React from 'react'
 
-import FileUsageList from './FileUsageList';
+import FileUsageList from './FileUsageList'
 
 function FileUsage ({ filePlacements, changeFilePlacementsPage }) {
   return (

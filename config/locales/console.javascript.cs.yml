@@ -10,6 +10,7 @@ cs:
         cancel: Zrušit
         cancelChanges: Zahodit změny?
         clearDate: Vymazat datum
+        close: Zavřít
         contentTemplates: Šablony
         create: Vytvořit
         destroy: Smazat
@@ -29,7 +30,7 @@ cs:
         link: Odkaz
         loading: Načítám...
         menuItemUrl: Volný odkaz
-        newUploadTags: Štítky pro nové soubory
+        newFilesAttributes: 'Nastavení nahraných souborů (nepovinné):'
         noResults: Žádné výsledky
         paginationEmpty: Žádné záznamy
         paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem

@@ -39,7 +39,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
     if row.is_a?(Hash)
       case row[:as]
       when :tags
-        cell('folio/console/tagsinput', f, value: value,
+        cell('folio/console/tagsinput', f, value: value.pluck(:name).join(', '),
                                            input_html: input_html).show
       when :publishable_and_featured
         cell('folio/console/publishable_inputs', f, no_input_ids: true,

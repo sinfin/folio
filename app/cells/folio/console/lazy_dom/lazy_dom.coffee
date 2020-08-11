@@ -8,6 +8,7 @@ $ ->
       url: $this.data('lazy-dom-url')
       success: (data) ->
         $this.html(data)
+        window.updateAllFolioLazyLoadInstances()
       error: (jxHr) ->
         $this.html("<p class=\"f-c-lazy-dom__title\">#{$this.data('error')}</p>#{jxHr.status}: #{jxHr.statusText}")
         $this.addClass('f-c-lazy-dom--error')

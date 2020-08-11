@@ -14,8 +14,9 @@ const SUCCESS = 'uploads/SUCCESS'
 const ERROR = 'uploads/ERROR'
 const FINISHED_UPLOAD = 'uploads/FINISHED_UPLOAD'
 const PROGRESS = 'uploads/PROGRESS'
-const SET_UPLOAD_TAGS = 'uploads/SET_UPLOAD_TAGS'
+const SET_UPLOAD_ATTRIBUTES = 'uploads/SET_UPLOAD_ATTRIBUTES'
 const CLEAR_UPLOADED_IDS = 'uploads/CLEAR_UPLOADED_IDS'
+const CLOSE_TAGGER = 'uploads/CLOSE_TAGGER'
 
 const idFromFile = (file) => {
   return [file.name, file.lastModified, file.size].join('|')
@@ -47,12 +48,16 @@ export function progress (fileType, file, percentage) {
   return { type: PROGRESS, fileType, file, percentage }
 }
 
-export function setUploadTags (fileType, tags) {
-  return { type: SET_UPLOAD_TAGS, fileType, tags }
+export function setUploadAttributes (fileType, attributes) {
+  return { type: SET_UPLOAD_ATTRIBUTES, fileType, attributes }
 }
 
 export function clearUploadedIds (fileType, ids) {
   return { type: CLEAR_UPLOADED_IDS, fileType, ids }
+}
+
+export function closeTagger (fileType) {
+  return { type: CLOSE_TAGGER, fileType }
 }
 
 // Sagas
@@ -83,26 +88,26 @@ function * uploadedFileSaga () {
   yield takeLatest(SUCCESS, uploadedFilePerform)
 }
 
-function * setUploadTagsPerform (action) {
-  const { uploadedIds, uploadTags } = yield select(makeUploadsSelector(action.fileType))
+function * setUploadAttributesPerform (action) {
+  const { uploadedIds, uploadAttributes } = yield select(makeUploadsSelector(action.fileType))
   if (uploadedIds.length) {
     // TODO check that we can do this
     const filesUrl = yield select(filesUrlSelector)
     const url = `${filesUrl}/tag`
-    const response = yield call(apiPost, url, { file_ids: uploadedIds, tags: uploadTags })
+    const response = yield call(apiPost, url, { ...uploadAttributes, file_ids: uploadedIds })
     yield put(updatedFiles(action.fileType, response.data))
     yield put(clearUploadedIds(action.fileType, uploadedIds))
   }
 }
 
-function * setUploadTagsSaga () {
-  yield takeEvery(SET_UPLOAD_TAGS, setUploadTagsPerform)
+function * setUploadAttributesSaga () {
+  yield takeEvery(SET_UPLOAD_ATTRIBUTES, setUploadAttributesPerform)
 }
 
 export const uploadsSagas = [
   uploadsErrorSaga,
   uploadedFileSaga,
-  setUploadTagsSaga
+  setUploadAttributesSaga
 ]
 
 // Selectors
@@ -125,7 +130,11 @@ export const defaultTag = `${date.getFullYear()}/${date.getMonth() + 1}`
 const defaultUploadsKeyState = {
   records: {},
   showTagger: false,
-  uploadTags: [defaultTag],
+  uploadAttributes: {
+    tags: [defaultTag],
+    author: null,
+    description: null
+  },
   uploadedIds: []
 }
 
@@ -157,7 +166,9 @@ function uploadsReducer (rawState = initialState, action) {
                 file_size: action.file.size,
                 file_name: action.file.name,
                 extension: action.file.type.split('/').pop().toUpperCase(),
-                tags: state.uploadTags,
+                tags: state[action.fileType].uploadAttributes.tags,
+                author: state[action.fileType].uploadAttributes.author,
+                description: state[action.fileType].uploadAttributes.description,
                 thumb: null,
                 progress: 0
               }
@@ -225,12 +236,12 @@ function uploadsReducer (rawState = initialState, action) {
         }
       }
 
-    case SET_UPLOAD_TAGS:
+    case SET_UPLOAD_ATTRIBUTES:
       return {
         ...state,
         [action.fileType]: {
           ...state[action.fileType],
-          uploadTags: action.tags,
+          uploadAttributes: action.attributes,
           showTagger: false
         }
       }
@@ -241,6 +252,15 @@ function uploadsReducer (rawState = initialState, action) {
         [action.fileType]: {
           ...state[action.fileType],
           uploadedIds: without(state[action.fileType].uploadedIds, ...action.ids)
+        }
+      }
+
+    case CLOSE_TAGGER:
+      return {
+        ...state,
+        [action.fileType]: {
+          ...defaultUploadsKeyState,
+          records: state[action.fileType].records
         }
       }
 

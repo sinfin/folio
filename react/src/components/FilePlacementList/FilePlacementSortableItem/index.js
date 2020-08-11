@@ -4,6 +4,7 @@ import { FormGroup, Input, FormText } from 'reactstrap'
 
 import NestedModelControls from 'components/NestedModelControls'
 import FileHoverButtons from 'components/FileHoverButtons'
+import Picture from 'components/Picture'
 
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
@@ -94,7 +95,7 @@ class FilePlacement extends React.Component {
               rel='noopener noreferrer'
               onClick={(e) => e.stopPropagation()}
             >
-              <img src={filePlacement.file.attributes.thumb} className='f-c-file-placement__img' alt='' />
+              <Picture file={filePlacement.file} imageClassName='f-c-file-placement__img' />
             </a>
 
             {<FileHoverButtons edit onEdit={onEdit} />}

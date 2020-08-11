@@ -4,9 +4,7 @@ html lang=I18n.locale
     = render partial: 'layouts/folio/head'
     = render partial: 'layouts/folio/favicon'
 
-    == cell('folio/browser_update')
-
   body
     = yield
 
-    = render 'folio/partials/photoswipe'
+    == cell('folio/photoswipe')

@@ -3,8 +3,6 @@
 class Folio::Site < Folio::ApplicationRecord
   include Folio::Singleton
 
-  after_commit :clear_fragment_cache!
-
   # Validations
   validates :title, :email, :locale, :locales,
             presence: true
@@ -45,10 +43,6 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   private
-    def clear_fragment_cache!
-      Rails.cache.clear
-    end
-
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
         send(:"#{attr}_array").each do |email|
@@ -79,7 +73,6 @@ end
 #  social_links                   :json
 #  address                        :text
 #  description                    :text
-#  turbo_mode                     :boolean          default(FALSE)
 #  system_email                   :string
 #  system_email_copy              :string
 #  email_from                     :string

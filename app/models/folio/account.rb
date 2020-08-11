@@ -11,9 +11,6 @@ class Folio::Account < Folio::ApplicationRecord
   validate :validate_role
   validates :first_name, :last_name, presence: true
 
-  # Scopes
-  default_scope { order(created_at: :desc) }
-
   pg_search_scope :by_query,
                   against: %i[first_name last_name email],
                   ignoring: :accents,
@@ -21,6 +18,7 @@ class Folio::Account < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  scope :ordered, -> { order(created_at: :desc) }
 
   scope :by_is_active, -> (b) {
     unless b.nil?

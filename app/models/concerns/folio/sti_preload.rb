@@ -21,8 +21,8 @@ module Folio::StiPreload
       def preload_sti
         sti_paths.each do |sti_path|
           Dir["#{sti_path}/**/*.rb"].each do |path|
-            relative_path = path.sub(/.*\/app\/models\//, '').sub(/\.rb\z/, '')
-            classified = "#{relative_path}/X".classify.gsub(/::X\z/, '')
+            relative_path = path.sub(/.*\/app\/models\//, '').delete_suffix('.rb')
+            classified = "#{relative_path}/X".classify.delete_suffix('::X')
             if classified.safe_constantize
               logger.debug("Preloading STI type #{classified}")
             else

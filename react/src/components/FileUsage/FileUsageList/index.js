@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Pagination from 'components/Pagination';
+import Pagination from 'components/Pagination'
 import Loader from 'components/Loader'
 
 function FileUsageList ({ filePlacements, changeFilePlacementsPage }) {

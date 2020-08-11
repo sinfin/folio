@@ -10,6 +10,7 @@ en:
         cancel: Cancel
         cancelChanges: Cancel changes?
         clearDate: Clear date
+        close: Close
         contentTemplates: Templates
         create: Create
         destroy: Destroy
@@ -28,7 +29,7 @@ en:
         link: Link
         loading: Loading...
         menuItemUrl: Custom URL
-        newUploadTags: Tags for new files
+        newFilesAttributes: 'Uploaded files settings (optional):'
         noResults: No results
         paginationEmpty: No records
         paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total

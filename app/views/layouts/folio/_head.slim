@@ -18,10 +18,10 @@ meta[
 - if public_page_canonical_url.present?
   link rel="canonical" href=public_page_canonical_url
 
-meta property="og:title"        content=public_page_title
+meta property="og:title"        content=og_title
 
-- if public_page_description.present?
-  meta property="og:description"  content=public_page_description
+- if og_description.present?
+  meta property="og:description"  content=og_description
 
 meta property="og:site_name"    content=og_site_name
 meta property="og:url"          content=og_url
@@ -43,19 +43,8 @@ meta name="twitter:card" content="summary"
   == render partial: 'layouts/folio/analytics'
 
   = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload', \
-                                          defer: true, \
-                                          async: true
-
-  - unless Folio::Site.instance.turbo_mode?
-    = javascript_include_tag 'non_turbo', 'data-turbolinks-track' => 'reload', \
-                                          defer: true, \
-                                          async: true
+                                          defer: true
 
   - if ENV['RECAPTCHA_SITE_KEY'].present? && \
        ENV['RECAPTCHA_SECRET_KEY'].present?
     script src="https://www.google.com/recaptcha/api.js" defer=true async=true
-
-  - if session[:folio_anti_cache_purge]
-    - session.delete(:folio_anti_cache_purge)
-    javascript:
-      window.purgeFolioAntiCacheAfterLoad = true

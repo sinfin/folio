@@ -5,28 +5,28 @@ require 'show_for'
 # Use this setup block to configure all options available in ShowFor.
 ShowFor.setup do |config|
   # The tag which wraps show_for calls.
-  config.show_for_tag = :div
+  config.show_for_tag = :table
 
   # The DOM class set for show_for tag. Default is nil
-  config.show_for_class = 'f-c-show-for__row'
+  config.show_for_class = 'table table-bordered f-c-show-for'
 
   # The tag which wraps each attribute/association call. Default is :p.
-  config.wrapper_tag = :div
+  config.wrapper_tag = :tr
 
   # The DOM class set for the wrapper tag. Default is :wrapper.
-  config.wrapper_class = 'f-c-show-for__cell'
+  config.wrapper_class = nil
 
   # The tag used to wrap each label. Default is :strong.
-  config.label_tag = :div
+  config.label_tag = :td
 
   # The DOM class of each label tag. Default is :label.
-  config.label_class = 'f-c-show-for__label text-body'
+  config.label_class = 'small text-uppercase text-body text-nowrap f-c-show-for__label'
 
   # The tag used to wrap each content (value). Default is nil.
-  config.content_tag = :div
+  config.content_tag = :td
 
   # The DOM class of each content tag. Default is :content.
-  config.content_class = 'f-c-show-for__content'
+  config.content_class = 'f-c-show-for__content w-100'
 
   # The DOM class set for blank content tags. Default is "blank".
   config.blank_content_class = 'blank text-muted'
@@ -41,7 +41,7 @@ ShowFor.setup do |config|
   # config.collection_tag = :div
 
   # The DOM class set for the collection tag. Default is :collection.
-  config.collection_class = 'f-c-show-for__collection'
+  config.collection_class = nil
 
   # The default iterator to be used when invoking a collection/association.
   # config.default_collection_proc = lambda { |value| "<li>#{ERB::Util.h(value)}</li>".html_safe }
@@ -56,139 +56,4 @@ ShowFor.setup do |config|
   # If you want to wrap the text inside a label (e.g. to append a semicolon),
   # specify label_proc - it will be automatically called, passing in the label text.
   # config.label_proc = lambda { |l| l + ":" }
-end
-
-class ShowFor::Builder
-  def toggle(attr)
-    attribute(attr) do
-      if object.persisted?
-        template.cell('folio/console/boolean_toggle',
-                      object,
-                      attribute: attr).show.try(:html_safe)
-      end
-    end
-  end
-
-  def featured_toggle
-    toggle(:featured)
-  end
-
-  def published_toggle
-    toggle(:published)
-  end
-
-  def position_controls
-    attribute(:position) do
-      template.cell('folio/console/index/position_buttons', object).show
-                                                                   .html_safe
-    end
-  end
-
-  def type
-    attribute(:type) do
-      object.class.model_name.human
-    end
-  end
-
-  def email(attr = :email)
-    attribute(attr) do
-      if object.persisted? && object.public_send(attr).present?
-        [
-          object.public_send(attr),
-          template.mail_to(object.public_send(attr),
-                           '',
-                           class: 'fa fa--small ml-1 fa-envelope'),
-        ].join(' ').html_safe
-      end
-    end
-  end
-
-  def edit_link(attr = nil, &block)
-    resource_link(attr, [:edit, :console, object], &block)
-  end
-
-  def show_link(attr = nil, &block)
-    resource_link(attr, [:console, object], &block)
-  end
-
-  def locale_flag
-    attribute(:locale) do
-      template.country_flag(object.locale) if object.locale
-    end
-  end
-
-  def visit
-    attribute(:visit) do
-      if object.persisted?
-        if object.visit.present?
-          template.link_to(object.visit.to_label,
-                           template.controller.url_for([:console, object.visit]))
-        end
-      end
-    end
-  end
-
-  def state(active: true)
-    attribute(:aasm_state) do
-      if object.persisted?
-        template.cell('folio/console/state',
-                      object,
-                      active: active).show.try(:html_safe)
-      end
-    end
-  end
-
-  def actions(*act)
-    attribute('') do
-      if object.persisted?
-        template.cell('folio/console/index/actions',
-                      object,
-                      actions: act).show.try(:html_safe)
-      end
-    end
-  end
-
-  def cover
-    attribute(:cover) do
-      if object.persisted?
-        template.cell('folio/console/index/images',
-                      object,
-                      cover: true).show.try(:html_safe)
-      end
-    end
-  end
-
-  def images
-    attribute(:images) do
-      if object.persisted?
-        template.cell('folio/console/index/images', object).show.try(:html_safe)
-      end
-    end
-  end
-
-  def audit_user(opts = {})
-    opts[:label] ||= Folio::Account.model_name.human
-
-    attribute(:user, opts) do
-      object.try(:audit).try(:user).try(:full_name)
-    end
-  end
-
-  private
-    def resource_link(attr, url_for_args)
-      attribute(attr) do
-        if object.persisted?
-          if block_given?
-            content = yield(object)
-          elsif attr == :type
-            content = object.class.model_name.human
-          else
-            content = object.public_send(attr)
-          end
-
-          url = template.controller.url_for(url_for_args)
-          template.link_to(content, url)
-        end
-      end
-    end
 end

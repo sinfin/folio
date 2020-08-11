@@ -39,7 +39,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
             .each do |locale, data|
         @settings[locale] ||= {}
         data.each do |h|
-          html = cell(h[:cell_name], h[:model]).show
+          html = cell(h[:cell_name], h[:model], h[:options] || {}).show
           @settings[locale][h[:key]] = html
         end
       end

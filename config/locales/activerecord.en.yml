@@ -50,7 +50,6 @@ en:
         social_links/pinterest: Pinterest
         social_links/twitter: Twitter
         social_links/youtube: Youtube
-        turbo_mode: Turbo mode
       visit:
         events: Events
         id: Id

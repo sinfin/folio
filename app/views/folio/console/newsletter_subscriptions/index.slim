@@ -1,7 +1,8 @@
 = index_header csv: true
 
-= index_show_for(@newsletter_subscriptions) do |s|
-  = s.email(:email)
-  = s.attribute(:created_at)
-  = s.visit
-  = s.actions :destroy
+= catalogue(@newsletter_subscriptions)
+  ruby:
+    email(:email)
+    attribute(:created_at)
+    visit
+    actions :destroy

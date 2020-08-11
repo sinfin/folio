@@ -1,0 +1,8 @@
+doctype html
+html lang=I18n.locale
+  head
+    = render partial: 'layouts/folio/head'
+
+  body
+    = yield
+    == cell('folio/photoswipe')

@@ -3,6 +3,7 @@ import LazyLoad from 'react-lazyload'
 
 import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'containers/Tags'
+import Picture from 'components/Picture'
 
 import FileUploadProgress from 'components/FileUploadProgress'
 
@@ -60,7 +61,7 @@ const FileTableRow = ({
                 onClick={(e) => e.stopPropagation()}
               >
                 <LazyLoad height={50} once overflow>
-                  <img src={file.attributes.thumb} className='f-c-file-table__img' alt='' />
+                  <Picture file={file} imageClassName='f-c-file-table__img' />
                 </LazyLoad>
               </a>
             )}

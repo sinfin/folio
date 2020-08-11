@@ -3,10 +3,6 @@
 class Folio::Console::PagesController < Folio::Console::BaseController
   folio_console_controller_for 'Folio::Page'
 
-  def index
-    @pages = @pages.ordered
-  end
-
   private
     def index_filters
       {

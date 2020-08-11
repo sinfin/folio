@@ -1,27 +1,36 @@
-= hidden_field_tag attribute, model.send(attribute), \
-                              class: 'folio-console-input-position'
-= hidden_field_tag :id, model.id, \
-                        class: 'folio-console-input-id', \
-                        'data-attribute' => attribute
-
-.btn-group[
-  role="group"
-  class="f-c-index-position__button-group"
+div[
+  data-url=url
+  class=class_name
 ]
-  button.btn.btn-sm.btn-outline[
-    class="f-c-index-position__button"
-    class="fa fa-arrow-up"
-    type="button"
-    data-direction="up"
-    data-url=url
-  ]
+  = hidden_field_tag attribute, model.send(attribute), \
+                                class: 'f-c-index-position__input'
 
-  button.btn.btn-sm.btn-outline[
-    class="f-c-index-position__button"
-    class="fa fa-arrow-down"
-    type="button"
-    data-direction="down"
-    data-url=url
-  ]
+  = hidden_field_tag :id, model.id, \
+                          class: 'f-c-index-position__id', \
+                          'data-attribute' => attribute
 
-  span.folio-loader.folio-loader--small.folio-loader--transparent
+  .btn-group[
+    role="group"
+    class="f-c-index-position__button-group"
+  ]
+    button.btn.btn-sm.btn-outline[
+      class="f-c-index-position__button"
+      class="fa fa-arrow-up"
+      type="button"
+      data-direction="up"
+    ]
+
+    button.btn.btn-sm.btn-outline[
+      class="f-c-index-position__button"
+      class="fa fa-arrow-down"
+      type="button"
+      data-direction="down"
+    ]
+
+    span.btn.btn-sm.btn-outline[
+      class="f-c-index-position__button"
+      class="f-c-index-position__button--handle"
+      class="fa fa-grip-lines"
+    ]
+
+    span.folio-loader.folio-loader--small.folio-loader--transparent

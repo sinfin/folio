@@ -1,4 +1,5 @@
 #= require jquery
+#= require jquery-ui/jquery-ui
 #= require folio/cable
 #= require folio/lazyload
 #= require folio/console/atoms/previews/main_app
@@ -157,10 +158,74 @@ setMediaQuery = (width) ->
       .addClass('media-breakpoint-down-md')
       .removeClass('media-breakpoint-up-lg')
 
+bindSortables = ->
+  scrollSensitivity = Math.max(200, $(window).height() / 6)
+
+  $('.f-c-atoms-previews__locale').each ->
+    $this = $(this)
+    $this.sortable
+      axis: 'y'
+      helper: 'clone'
+      handle: '.f-c-atoms-previews__button--handle'
+      items: '.f-c-atoms-previews__preview'
+      placeholder: 'f-c-atoms-previews__preview-placeholder'
+      scrollSensitivity: scrollSensitivity
+      tolerance: 'pointer'
+      update: (e, ui) ->
+        $wrap = ui.item
+        indices = $wrap.data('indices')
+        $prev = $wrap.prevAll('.f-c-atoms-previews__preview').first()
+        if $prev.length
+          prevIndices = $prev.data('indices')
+          targetIndex = prevIndices[prevIndices.length - 1]
+          action = 'append'
+        else
+          $next = $wrap.nextAll('.f-c-atoms-previews__preview').first()
+          return if $next.length  is 0
+          targetIndex = $next.data('indices')[0]
+          action = 'prepend'
+
+        data =
+          rootKey: $wrap.data('root-key')
+          indices: indices
+          targetIndex: targetIndex
+          action: action
+          type: 'moveAtomsToIndex'
+
+        window.top.postMessage(data, window.origin)
+
+      start: (e, ui) ->
+        ui.placeholder
+          .html(ui.item.html())
+
+        height = ui.placeholder.height()
+        scale = Math.round(100 * 100 / height) / 100
+
+        ui.placeholder
+          .find('.f-c-atoms-previews__preview-inner')
+          .css('transform', "scale(#{scale})")
+
+        ui.placeholder
+          .addClass('f-c-atoms-previews__preview-placeholder--scaled')
+
+        $this.addClass('ui-sortable--dragging')
+
+      stop: (e, ui) ->
+        $this.removeClass('ui-sortable--dragging')
+
+unbindSortables = ->
+  $('.f-c-atoms-previews__locale.ui-sortable').each ->
+    $(this).sortable('destroy')
+
 handleNewHtml = ->
+  bindSortables()
   lazyloadAll()
   sendResizeMessage()
   $(document).trigger('folioConsoleReplacedHtml')
+
+handleWillReplaceHtml = ->
+  unbindSortables()
+  $(document).trigger('folioConsoleWillReplaceHtml')
 
 updateLabel = (locale, value) ->
   if locale
@@ -199,6 +264,7 @@ receiveMessage = (e) ->
   return if e.origin isnt window.origin
   switch e.data.type
     when 'replacedHtml' then handleNewHtml()
+    when 'willReplaceHtml' then handleWillReplaceHtml()
     when 'selectLocale' then selectLocale(e.data.locale)
     when 'setMediaQuery' then setMediaQuery(e.data.width)
     when 'updateLabel' then updateLabel(e.data.locale, e.data.value)

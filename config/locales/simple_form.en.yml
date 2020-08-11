@@ -24,8 +24,6 @@ en:
       node:
         code: Optional internal node specification.
         parent_id: If using tree structure, parent page/category is selected here.
-      site:
-        turbo_mode: Turns off visit tracking which reduces the server-load.
     'no': 'No'
     placeholders:
       defaults:

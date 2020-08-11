@@ -20,7 +20,7 @@ module Folio::PregenerateThumbnails
       return unless respond_to?(:placement)
       versions = placement.class.try(:pregenerated_thumbnails)
       return if versions.blank?
-      versions.each do |version, quality|
+      versions.uniq.each do |version, quality|
         if quality.present?
           file.thumb(version, quality: quality)
         else

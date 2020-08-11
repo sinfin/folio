@@ -28,27 +28,6 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     index_filters.keys.any? { |key| controller.params[key].present? }
   end
 
-  def select(f, key)
-    if index_filters[key].is_a?(String)
-      f.input key, label: false,
-                   input_html: {
-                     class: 'f-c-index-filters__autocomplete-input',
-                     'data-url' => index_filters[key],
-                     'data-controller' => controller.class.to_s.underscore,
-                     placeholder: blank_label(key),
-                     value: controller.params[key]
-                   },
-                   wrapper_html: {
-                     class: 'f-c-index-filters__autocomplete-wrap'
-                   }
-    else
-      f.input key, collection: collection(key),
-                   include_blank: blank_label(key),
-                   selected: controller.params[key],
-                   label: false
-    end
-  end
-
   def collection(key)
     base = index_filters[key].map do |value|
       if value == true
@@ -83,7 +62,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def label_for_key(key)
-    clear_key = key.to_s.gsub(/\Aby_/, '').gsub(/_query\z/, '')
+    clear_key = key.to_s.delete_prefix('by_').delete_suffix('_query')
     klass.human_attribute_name(clear_key)
   end
 
@@ -101,5 +80,37 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: t(".placeholders.#{key}", default: ''),
                  },
                  wrapper: false
+  end
+
+  def select(f, key)
+    data = index_filters[key]
+
+    if data.is_a?(String)
+      autocomplete_select(f, key, url: data)
+    elsif data.is_a?(Hash)
+      url = controller.folio.console_api_autocomplete_path(klass: data[:klass],
+                                                           scope: data[:scope],
+                                                           order_scope: data[:order_scope])
+      autocomplete_select(f, key, url: url)
+    else
+      f.input key, collection: collection(key),
+                   include_blank: blank_label(key),
+                   selected: controller.params[key],
+                   label: false
+    end
+  end
+
+  def autocomplete_select(f, key, url:)
+    f.input key, label: false,
+                 input_html: {
+                   class: 'f-c-index-filters__autocomplete-input',
+                   'data-url' => url,
+                   'data-controller' => controller.class.to_s.underscore,
+                   placeholder: blank_label(key),
+                   value: controller.params[key]
+                 },
+                 wrapper_html: {
+                   class: 'f-c-index-filters__autocomplete-wrap'
+                 }
   end
 end

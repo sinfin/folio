@@ -1,3 +1,4 @@
+#= require folio/webp
 #= require photoswipe/dist/photoswipe
 #= require photoswipe/dist/photoswipe-ui-default
 
@@ -17,34 +18,45 @@ class window.FolioLightbox
 
   bind: (data) ->
     @unbind()
-    $(document).on "click.#{@eventIdentifier}", @full_selector, (e) =>
+    that = this
+
+    $(document).on "click.#{@eventIdentifier}", @full_selector, (e) ->
       e.preventDefault()
-      $img = $(e.target)
+      $img = $(this)
 
       options =
-        index: $img.index(@full_selector)
+        index: $img.index(that.full_selector)
         bgOpacity: 0.7
         showHideOpacity: true
         history: false
-        errorMsg: @pswp().data('error-msg')
+        errorMsg: that.pswp().data('error-msg')
 
-      @photoSwipe = new PhotoSwipe(@pswp()[0], PhotoSwipeUI_Default, data || @items(), options)
-      @photoSwipe.init()
+      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, data || that.items(), options)
+      that.photoSwipe.init()
 
   items: ->
-    $(@selector).map(@item.bind(this)).toArray()
+    items = []
+    $(@selector).each (i, el) =>
+      item = @item(i, el)
+      items.push(item) if item
+    items
 
   item: (index, el) ->
-    if el.tagName.toLowerCase() is 'img'
-      $el = $(el)
-    else
-      $el = $(el).find('img')
+    $el = $(el)
+
+    unless $el.data('lightbox-src')
+      $el = $(el).find('[data-lightbox-src]')
+
+    return null unless $el.length
 
     item =
-      src: $el.data('lightbox-src')
       w: parseInt($el.data('lightbox-width'))
       h: parseInt($el.data('lightbox-height'))
     item.title = $el.data('lightbox-title') or $el.next('figcaption').text()
+
+    item.src = $el.data('lightbox-webp-src') if window.FolioWebpSupported
+    item.src ||= $el.data('lightbox-src')
+
     item
 
   unbind: ->

@@ -5,6 +5,7 @@ import FileUploadProgress from 'components/FileUploadProgress'
 import FileThumbnailHover from './FileThumbnailHover'
 import FileThumbnailMassCheckbox from './FileThumbnailMassCheckbox'
 import FileHoverButtons from 'components/FileHoverButtons'
+import Picture from 'components/Picture'
 
 const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selecting, massSelect, massSelectVisible, openFileModal }) => {
   if (file._destroying) return null
@@ -28,9 +29,10 @@ const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selectin
       <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }} onClick={persistedWrapOnClick}>
         {file.attributes.thumb && (
           <LazyLoad height={150} once overflow>
-            <img
-              src={file.attributes.thumb}
-              className='f-c-file-list__img'
+            <Picture
+              file={file}
+              className='f-c-file-list__picture'
+              imageClassName='f-c-file-list__img'
               alt={file.attributes.file_name}
             />
           </LazyLoad>

@@ -5,12 +5,15 @@ class Folio::Console::GroupByDayHeaderCell < Folio::ConsoleCell
     render if model[:date].present?
   end
 
-  def records
-    return @records unless @records.nil?
+  def count
+    return @count unless @count.nil?
 
     date = model[:date].to_date
-    @records = model[:scope].select do |record|
-      record.send(model[:attribute]).to_date == date
-    end
+    @count = model[:scope].unscope(:limit, :offset)
+                          .where("#{model[:attribute]} > ?",
+                                 date.beginning_of_day)
+                          .where("#{model[:attribute]} < ?",
+                                 date.end_of_day)
+                          .count
   end
 end
