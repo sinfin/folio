@@ -79,7 +79,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
                   end
                 end
 
-    render json: res
+    render json: res, root: false
   end
 
   def default_url_options
