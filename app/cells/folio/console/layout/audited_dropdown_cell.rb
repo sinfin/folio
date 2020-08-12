@@ -12,4 +12,8 @@ class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
       'f-c-layout-audited-dropdown__item--link'
     end
   end
+
+  def version_url(version)
+    url_for([:revision, :console, version, version: version.audit.version])
+  end
 end

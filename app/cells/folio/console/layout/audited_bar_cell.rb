@@ -7,7 +7,7 @@ class Folio::Console::Layout::AuditedBarCell < Folio::ConsoleCell
 
   def restore_link
     link_to(t('.restore'),
-            '#foo',
+            url_for([:restore, :console, model, version: model.audit.version]),
             method: :post,
             'data-confirm' => t('folio.console.confirmation'),
             class: 'btn btn-secondary font-weight-bold mr-g my-1')

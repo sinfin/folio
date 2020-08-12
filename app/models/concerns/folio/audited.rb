@@ -14,7 +14,8 @@ module Folio::Audited
       # https://github.com/collectiveidea/audited/blob/master/lib/audited/auditor.rb#L125
       # monkey patch: add related audit to revision
       define_method(:revisions) do |from_version = 1|
-        targeted_audits = audits.from_version(from_version)
+        targeted_audits = audits
+        targeted_audits = targeted_audits.from_version(from_version) if from_version > 1
 
         return [] unless targeted_audits
 

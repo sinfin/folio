@@ -52,6 +52,8 @@ cs:
         ancestry:
           success: Stromová struktura upravena.
           error: Stromovou strukturu se nepodařilo upravit.
+        restore:
+          success: Verze obnovena.
       blank: Neuvedeno
       boolean:
         'yes': "Ano"
