@@ -20,11 +20,9 @@ module Folio
         gem 'pg', version: '~> 1.2.3'
         gem 'devise-i18n'
         gem 'rails-i18n'
-        gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'mini_racer'
         gem 'premailer', github: 'sinfin/premailer'
         gem 'premailer-rails'
-        gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
         gem 'rubyzip'
         gem 'rack-mini-profiler'
 
@@ -80,30 +78,30 @@ module Folio
           '.env.sample',
           'app/views/layouts/folio/application.slim',
           'bin/sprites',
-          'config/sitemap.rb',
-          'config/schedule.rb',
           'config/database.yml',
           'config/locales/activerecord.cs.yml',
           'config/locales/activerecord.en.yml',
+          'config/schedule.rb',
+          'config/sitemap.rb',
           'db/seeds.rb',
           'vendor/assets/bower.json',
         ].each { |f| template "#{f}.erb", f }
 
         [
-          'test/factories.rb',
-          'test/test_helper.rb',
           'app/controllers/anti_cache_controller.rb',
           'app/controllers/application_controller.rb',
-          'app/controllers/pages_controller.rb',
           'app/controllers/errors_controller.rb',
           'app/controllers/home_controller.rb',
+          'app/controllers/pages_controller.rb',
+          'app/lib/application_cell.rb',
           'app/models/application_record.rb',
           'config/initializers/assets.rb',
           'config/initializers/raven.rb',
           'config/initializers/smtp.rb',
           'config/routes.rb',
-          'app/lib/application_cell.rb',
           'test/controllers/anti_cache_controller_test.rb',
+          'test/factories.rb',
+          'test/test_helper.rb',
         ].each { |f| template "#{f}.tt", f }
 
         template '.env.sample.erb', '.env'
@@ -114,13 +112,11 @@ module Folio
           '.gitignore',
           '.rubocop.yml',
           '.slim-lint.yml',
-          'Guardfile',
           'app/assets/config/manifest.js',
           'app/assets/images/sprites@1x/.keep',
           'app/assets/images/sprites@2x/.keep',
           'app/assets/javascripts/application.js',
           'app/assets/javascripts/folio/console/main_app.coffee',
-          'app/cells/folio/console/atoms/previews/main_app.coffee',
           'app/assets/stylesheets/_cells.scss.erb',
           'app/assets/stylesheets/_custom_bootstrap.sass',
           'app/assets/stylesheets/_fonts.scss',
@@ -130,19 +126,21 @@ module Folio
           'app/assets/stylesheets/application.sass',
           'app/assets/stylesheets/folio/console/_main_app.sass',
           'app/assets/stylesheets/modules/.keep',
-          'app/assets/stylesheets/modules/_turbolinks.sass',
           'app/assets/stylesheets/modules/_bootstrap-overrides.sass',
+          'app/assets/stylesheets/modules/_turbolinks.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/_type.sass',
           'app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass',
+          'app/cells/folio/console/atoms/previews/main_app.coffee',
           'app/views/devise/mailer/invitation_instructions.html.erb',
           'app/views/devise/mailer/invitation_instructions.text.erb',
           'app/views/devise/mailer/reset_password_instructions.html.erb',
-          'app/views/home/index.slim',
-          'app/views/folio/pages/show.slim',
           'app/views/folio/console/partials/_appended_menu_items.slim',
           'app/views/folio/console/partials/_prepended_menu_items.slim',
+          'app/views/folio/pages/show.slim',
+          'app/views/home/index.slim',
           'bin/bower',
           'config/secrets.yml',
+          'Guardfile',
           'lib/tasks/auto_annotate_models.rake',
           'vendor/assets/bower_components/.keep',
           'vendor/assets/redactor/redactor.css',
