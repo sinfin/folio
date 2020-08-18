@@ -41,14 +41,18 @@ module Folio
           gem 'bcrypt_pbkdf', version: '< 2.0'
           gem 'ed25519'
 
-          gem 'pry-rails'
-          gem 'rubocop-rails_config'
-          gem 'guard-rubocop'
-          gem 'guard-coffeelint'
-          gem 'guard-slimlint'
+          gem "rubocop"
+          gem "rubocop-minitest"
+          gem "rubocop-performance"
+          gem "rubocop-rails"
+          gem "rubocop-rails_config"
+          gem "rubocop-rake"
           gem 'annotate'
-          gem 'slack-notifier'
+          gem 'guard-rubocop'
+          gem 'guard-slimlint'
           gem 'letter_opener'
+          gem 'pry-rails'
+          gem 'slack-notifier'
 
           gem 'capistrano-rails', require: false
           gem 'capistrano-sinfin', git: 'git@bitbucket.org:Sinfin/capistrano-sinfin.git', branch: 'master'
