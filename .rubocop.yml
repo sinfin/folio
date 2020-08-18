@@ -1,18 +1,23 @@
 inherit_gem:
-  rubocop-rails_config:
-    - config/rails.yml
+  rubocop-rails_config: config/rails.yml
+
+require:
+  - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
 
 AllCops:
   TargetRubyVersion: 2.6.6
+  NewCops: enable
   Exclude:
+    - 'app/assets/**/*'
+    - 'data/**/*'
     - 'db/schema.rb'
-    - 'test/dummy/db/schema.rb'
-    - 'node_modules/**/*'
     - 'lib/generators/folio/install_generator.rb'
-
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-  SupportedStyles:
-    - single_quotes
-    - double_quotes
-  ConsistentQuotesInMultiline: false
+    - 'lib/tasks/auto_annotate_models.rake'
+    - 'lib/templates/lib/tasks/auto_annotate_models.rake'
+    - 'react/**/*'
+    - 'test/dummy/db/schema.rb'
+    - 'tmp/**/*'
+    - 'vendor/**/*'

@@ -32,7 +32,6 @@ end
 group :development do
   gem 'puma'
   gem 'i18n-tasks'
-  gem 'rubocop', require: false
   gem 'rails-flog', require: 'flog'
 end
 

@@ -1,17 +1,12 @@
-inherit_gem:
-  rubocop-rails_config:
-    - config/rails.yml
+require:
+  - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rake
 
 AllCops:
-  TargetRubyVersion: 2.4.1
+  TargetRubyVersion: 2.6.6
+  NewCops: enable
   Exclude:
     - 'db/schema.rb'
     - 'test/dummy/db/schema.rb'
-    - 'node_modules/**/*'
-
-Style/StringLiterals:
-  EnforcedStyle: single_quotes
-  SupportedStyles:
-    - single_quotes
-    - double_quotes
-  ConsistentQuotesInMultiline: false
