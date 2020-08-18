@@ -19,5 +19,6 @@ AllCops:
     - 'lib/templates/lib/tasks/auto_annotate_models.rake'
     - 'react/**/*'
     - 'test/dummy/db/schema.rb'
+    - 'test/dummy/public/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'

@@ -199,7 +199,6 @@ ActiveRecord::Schema.define(version: 2020_07_30_181721) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "visit_id"
-    t.string "mailchimp_tags"
     t.index ["visit_id"], name: "index_folio_newsletter_subscriptions_on_visit_id"
   end
 

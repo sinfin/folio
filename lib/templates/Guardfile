@@ -17,7 +17,7 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
-guard :rubocop, cli: ['--auto-correct'] do
+guard :rubocop, cli: ["--auto-correct"] do
   watch(%r{^(app|test)/.+\.rb$})
   watch(%r{^lib/.+\.(rb|rake)$})
 

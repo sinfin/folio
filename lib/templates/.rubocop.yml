@@ -1,3 +1,6 @@
+inherit_gem:
+  rubocop-rails_config: config/rails.yml
+
 require:
   - rubocop-minitest
   - rubocop-performance
@@ -11,3 +14,5 @@ AllCops:
     - 'db/schema.rb'
     - 'lib/tasks/auto_annotate_models.rake'
     - 'test/dummy/db/schema.rb'
+    - 'node_modules/**/*'
+    - 'public/**/*'
