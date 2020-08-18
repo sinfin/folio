@@ -17,6 +17,8 @@ AllCops:
     - 'lib/generators/folio/install_generator.rb'
     - 'lib/tasks/auto_annotate_models.rake'
     - 'lib/templates/lib/tasks/auto_annotate_models.rake'
+    - 'node_modules/**/*'
+    - 'public/**/*'
     - 'react/**/*'
     - 'test/dummy/db/schema.rb'
     - 'test/dummy/public/**/*'
