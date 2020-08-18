@@ -4,16 +4,14 @@ require "test_helper"
 
 class Folio::Console::StateCellTest < Folio::Console::CellTest
   test "show" do
-    I18n.with_locale(:en) do
-      lead = create(:folio_lead)
-      html = cell("folio/console/state", lead).(:show)
-      assert_equal("To be handled", html.find(".dropdown-toggle").text)
-      assert_equal("Handle", html.find(".dropdown-item").text)
+    lead = create(:folio_lead)
 
-      lead.handle!
-      html = cell("folio/console/state", lead).(:show)
-      assert_equal("Handled", html.find(".dropdown-toggle").text)
-      assert_equal("Unhandle", html.find(".dropdown-item").text)
-    end
+    html = cell("folio/console/state", lead).(:show)
+    assert_match("aasm_event=handle", html.find(".dropdown-item").native["data-url"])
+
+    lead.handle!
+
+    html = cell("folio/console/state", lead).(:show)
+    assert_match("aasm_event=unhandle", html.find(".dropdown-item").native["data-url"])
   end
 end
