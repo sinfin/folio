@@ -68,8 +68,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       if folio_console_record_includes.present?
         begin
-          instance_variable_set(name, klass.includes(*folio_console_record_includes)
-                                           .find(params[:id]))
+          scope = klass.includes(*folio_console_record_includes)
+          scope = scope.friendly if scope.respond_to?(:friendly)
+          instance_variable_set(name, scope.find(params[:id]))
         rescue ActiveRecord::RecordNotFound
         end
       end
