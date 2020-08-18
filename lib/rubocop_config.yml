@@ -12,6 +12,7 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'app/assets/**/*'
+    - 'bin/*'
     - 'data/**/*'
     - 'db/schema.rb'
     - 'lib/generators/folio/install_generator.rb'
