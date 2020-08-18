@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'boot'
+require_relative "boot"
 
-require 'rails/all'
+require "rails/all"
 
 Bundler.require(*Rails.groups)
-require 'folio'
+require "folio"
 
 module Dummy
   class Application < Rails::Application
@@ -19,7 +19,7 @@ module Dummy
     config.exceptions_app = self.routes
 
     config.folio_console_locale = I18n.default_locale
-    config.time_zone = 'Prague'
+    config.time_zone = "Prague"
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -29,8 +29,8 @@ module Dummy
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
 
     overrides = [
-      Folio::Engine.root.join('app/overrides').to_s,
-      Rails.root.join('app/overrides').to_s,
+      Folio::Engine.root.join("app/overrides").to_s,
+      Rails.root.join("app/overrides").to_s,
     ]
 
     overrides.each { |override| Rails.autoloaders.main.ignore(override) }

@@ -32,13 +32,13 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
     SQL
 
     [
-      ['folio_atoms', 'placement_type'],
-      ['folio_atoms', 'model_type'],
-      ['folio_file_placements', 'placement_type'],
-      ['folio_menu_items', 'target_type'],
-      ['friendly_id_slugs', 'sluggable_type'],
-      ['pg_search_documents', 'searchable_type'],
-      ['taggings', 'taggable_type'],
+      ["folio_atoms", "placement_type"],
+      ["folio_atoms", "model_type"],
+      ["folio_file_placements", "placement_type"],
+      ["folio_menu_items", "target_type"],
+      ["friendly_id_slugs", "sluggable_type"],
+      ["pg_search_documents", "searchable_type"],
+      ["taggings", "taggable_type"],
     ].each do |table, col|
       conn.execute <<~SQL
         UPDATE #{table}
@@ -57,7 +57,7 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
     # convert content to Text atoms
     columns = Folio::Page.column_names.grep(/content.*/)
 
-    puts 'Converting node contents to atoms'
+    puts "Converting node contents to atoms"
 
     Folio::Page.find_each do |node|
       if node.try(:content).present? || node.try("content_#{I18n.default_locale}").present?
@@ -70,16 +70,16 @@ class ReworkFolioNodes < ActiveRecord::Migration[5.2]
         end
 
         if values.blank?
-          print '-'
+          print "-"
           next
         end
 
         atom = Folio::Atom::Text.new(values.merge(placement: node,
                                                   position: -1))
         if atom.save(validate: false)
-          print '.'
+          print "."
         else
-          print 'x'
+          print "x"
         end
       end
     end

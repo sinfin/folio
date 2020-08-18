@@ -18,12 +18,12 @@
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
 guard :rubocop, cli: ['--auto-correct'] do
-  watch(/^(app|test)\/.+\.rb$/)
-  watch(/^lib\/.+\.(rb|rake)$/)
+  watch(%r{^(app|test)/.+\.rb$})
+  watch(%r{^lib/.+\.(rb|rake)$})
 
   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 end
 
 guard :slimlint, notify_on: :failure do
-  watch(/^app\/.+(\.slim)$/)
+  watch(%r{^app/.+(\.slim)$})
 end

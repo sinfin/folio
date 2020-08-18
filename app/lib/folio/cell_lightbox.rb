@@ -3,12 +3,12 @@
 module Folio::CellLightbox
   include Folio::ImageHelper
 
-  LIGHTBOX_SIZE = '1920x1080>'
+  LIGHTBOX_SIZE = "1920x1080>"
 
   def lightbox(placement)
     if placement && placement.file
       lightbox_from_image(placement.file).merge(
-        'data-lightbox-title' => placement.try(:title),
+        "data-lightbox-title" => placement.try(:title),
       )
     else
       {}
@@ -19,10 +19,10 @@ module Folio::CellLightbox
     if file
       thumb = file.thumb(LIGHTBOX_SIZE)
       {
-        'data-lightbox-src' => thumb.url,
-        'data-lightbox-webp-src' => thumb.webp_url,
-        'data-lightbox-width' => thumb.width,
-        'data-lightbox-height' => thumb.height,
+        "data-lightbox-src" => thumb.url,
+        "data-lightbox-webp-src" => thumb.webp_url,
+        "data-lightbox-width" => thumb.width,
+        "data-lightbox-height" => thumb.height,
       }
     else
       {}

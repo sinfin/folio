@@ -24,10 +24,10 @@ class Folio::Console::ReactAncestryCell < Folio::ConsoleCell
   def form(&block)
     opts = {
       url: url_for([:ancestry, :console, model]),
-      html: { class: 'f-c-react-ancestry f-c-dirty-simple-form' },
+      html: { class: "f-c-react-ancestry f-c-dirty-simple-form" },
       method: :post,
     }
 
-    simple_form_for('', opts, &block)
+    simple_form_for("", opts, &block)
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Folio::Atom::BaseTest < ActiveSupport::TestCase
   class PageReferenceAtom < Folio::Atom::Base
@@ -9,7 +9,7 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     }
   end
 
-  test 'associations' do
+  test "associations" do
     page = create(:folio_page)
     atom1 = PageReferenceAtom.create!(page: page, placement: page)
     assert_equal(atom1.page, page)

@@ -22,44 +22,44 @@ SimpleForm::Inputs::StringInput.class_eval do
           remote_autocomplete = Folio::Engine.app.url_helpers.url_for(opts)
         end
 
-        input_html_classes << 'folio-console-string-input'
+        input_html_classes << "folio-console-string-input"
 
         if collection
-          input_html_options['data-autocomplete'] = collection
-          input_html_classes << 'folio-console-string-input--autocomplete'
+          input_html_options["data-autocomplete"] = collection
+          input_html_classes << "folio-console-string-input--autocomplete"
         elsif remote_autocomplete
-          input_html_options['data-remote-autocomplete'] = remote_autocomplete
-          input_html_classes << 'folio-console-string-input--remote-autocomplete'
+          input_html_options["data-remote-autocomplete"] = remote_autocomplete
+          input_html_classes << "folio-console-string-input--remote-autocomplete"
         end
       end
     elsif options[:numeral]
-      input_html_classes << 'folio-console-string-input--numeral'
+      input_html_classes << "folio-console-string-input--numeral"
     else
-      input_html_classes.unshift('string')
+      input_html_classes.unshift("string")
       input_html_options[:type] ||= input_type if html5?
     end
 
     if options[:character_counter]
-      input_html_classes << 'f-c-string-input--character-counter'
-      input_html_options['data-character-counter'] = options[:character_counter]
+      input_html_classes << "f-c-string-input--character-counter"
+      input_html_options["data-character-counter"] = options[:character_counter]
     end
 
     if options[:content_templates]
-      input_html_options['data-content-templates'] = options[:content_templates].constantize.to_data_attribute
-      input_html_classes << 'folio-console-string-input--content-templates'
+      input_html_options["data-content-templates"] = options[:content_templates].constantize.to_data_attribute
+      input_html_classes << "folio-console-string-input--content-templates"
     end
 
     if options[:locale]
-      input_html_options['data-locale'] = options[:locale]
+      input_html_options["data-locale"] = options[:locale]
     end
 
     if options[:folio_label]
-      input_html_classes << 'f-c-js-atoms-placement-label'
+      input_html_classes << "f-c-js-atoms-placement-label"
     elsif options[:folio_perex]
-      input_html_classes << 'f-c-js-atoms-placement-perex'
+      input_html_classes << "f-c-js-atoms-placement-perex"
     elsif options[:atom_setting]
-      input_html_classes << 'f-c-js-atoms-placement-setting'
-      input_html_options['data-atom-setting'] = options[:atom_setting]
+      input_html_classes << "f-c-js-atoms-placement-setting"
+      input_html_options["data-atom-setting"] = options[:atom_setting]
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

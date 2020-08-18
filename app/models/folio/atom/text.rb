@@ -9,7 +9,7 @@ class Folio::Atom::Text < Folio::Atom::Base
             presence: true
 
   def self.cell_name
-    'folio/atom/text'
+    "folio/atom/text"
   end
 
   def self.console_icon

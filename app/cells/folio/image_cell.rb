@@ -3,7 +3,7 @@
 class Folio::ImageCell < Folio::ApplicationCell
   include Folio::CellLightbox
 
-  class_name 'f-image', :centered,
+  class_name "f-image", :centered,
                         :not_lazy?,
                         :lightboxable?,
                         :contain,
@@ -37,7 +37,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       h = {
         normal: normal,
         retina: retina,
-        alt: model.try(:alt) || '',
+        alt: model.try(:alt) || "",
         title: model.try(:title),
         use_webp: use_webp,
         src: normal.url,
@@ -99,7 +99,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       if options[:max_height]
         width = (options[:max_height] / spacer_ratio).round(4)
       else
-        width = options[:max_width] || size.split('x').first
+        width = options[:max_width] || size.split("x").first
       end
 
       if width.present?
@@ -108,7 +108,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       end
     end
 
-    styles.join(';')
+    styles.join(";")
   end
 
   def spacer_style
@@ -123,7 +123,7 @@ class Folio::ImageCell < Folio::ApplicationCell
         width = data[:normal].width
         height = data[:normal].height
       else
-        width, height = size.split('x').map(&:to_i)
+        width, height = size.split("x").map(&:to_i)
       end
 
       if width != 0 && height != 0
@@ -161,7 +161,7 @@ class Folio::ImageCell < Folio::ApplicationCell
     elsif model && lightboxable?
       if model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
-        h['data-lightbox-title'] ||= options[:title] || model.try(:title)
+        h["data-lightbox-title"] ||= options[:title] || model.try(:title)
       else
         h = h.merge(lightbox_from_image(model))
       end

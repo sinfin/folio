@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
-  class_name 'f-c-boolean-toggle', :show_label
+  class_name "f-c-boolean-toggle", :show_label
 
   def show
     render if attribute.present? && url.present?
@@ -25,7 +25,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
     if options[:show_label]
       "#{options[:show_label]}:"
     else
-      ''
+      ""
     end
   end
 

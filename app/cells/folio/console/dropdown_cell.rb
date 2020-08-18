@@ -20,6 +20,6 @@ class Folio::Console::DropdownCell < Folio::ConsoleCell
   end
 
   def class_name
-    model[:class_name] || 'btn btn-secondary'
+    model[:class_name] || "btn btn-secondary"
   end
 end

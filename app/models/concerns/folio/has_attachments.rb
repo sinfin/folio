@@ -4,32 +4,32 @@ module Folio::HasAttachments
   extend ActiveSupport::Concern
 
   included do
-    has_many :file_placements, class_name: 'Folio::FilePlacement::Base',
+    has_many :file_placements, class_name: "Folio::FilePlacement::Base",
                                as: :placement,
                                dependent: :destroy
 
     has_many :files,
              source: :file,
-             class_name: 'Folio::File',
+             class_name: "Folio::File",
              through: :file_placements
 
     after_save :touch_placements
 
     has_many_placements(:images,
                         placements_key: :image_placements,
-                        placement: 'Folio::FilePlacement::Image')
+                        placement: "Folio::FilePlacement::Image")
 
     has_many_placements(:documents,
                         placements_key: :document_placements,
-                        placement: 'Folio::FilePlacement::Document')
+                        placement: "Folio::FilePlacement::Document")
 
     has_one_placement(:cover,
                       placement_key: :cover_placement,
-                      placement: 'Folio::FilePlacement::Cover')
+                      placement: "Folio::FilePlacement::Cover")
 
     has_one_placement(:document,
                       placement_key: :document_placement,
-                      placement: 'Folio::FilePlacement::SingleDocument')
+                      placement: "Folio::FilePlacement::SingleDocument")
   end
 
   class_methods do

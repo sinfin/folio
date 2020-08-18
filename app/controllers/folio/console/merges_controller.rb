@@ -13,7 +13,7 @@ class Folio::Console::MergesController < Folio::Console::BaseController
       duplicate_id = params.require(:duplicate_id)
 
       if original_id == duplicate_id
-        flash[:alert] = I18n.t('folio.console.merges.cannot_merge_into_itself')
+        flash[:alert] = I18n.t("folio.console.merges.cannot_merge_into_itself")
         redirect_back fallback_location: url_for([:console, @klass])
         next
       end
@@ -26,7 +26,7 @@ class Folio::Console::MergesController < Folio::Console::BaseController
         add_breadcrumb @klass.model_name.human(count: 2),
                        url_for([:console, @klass])
 
-        add_breadcrumb I18n.t('folio.console.merges.form.title')
+        add_breadcrumb I18n.t("folio.console.merges.form.title")
         next
       end
     end
@@ -39,14 +39,14 @@ class Folio::Console::MergesController < Folio::Console::BaseController
 
   def create
     if @merger.merge(params.require(:merge).permit(@merger.permitted_params))
-      flash[:notice] = t('.success')
+      flash[:notice] = t(".success")
       if params[:url]
         redirect_to params[:url]
       else
         redirect_to url_for([:edit, :console, @merger.original])
       end
     else
-      flash.now[:alert] = t('.failure')
+      flash.now[:alert] = t(".failure")
       render :new
     end
   end

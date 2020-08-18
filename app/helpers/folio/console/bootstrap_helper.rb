@@ -3,19 +3,19 @@
 module Folio
   module Console::BootstrapHelper
     def nav_item_link_to(model_or_string, path, opts = {}, active = false, &block)
-      if model_or_string.class.name == 'String'
+      if model_or_string.class.name == "String"
         title = model_or_string
       else
         title = model_or_string.model_name.human(count: 2)
       end
 
-      active_or_subpath = request.fullpath.start_with?(path.split('?').first)
+      active_or_subpath = request.fullpath.start_with?(path.split("?").first)
 
-      klass = 'nav-item'
-      klass += ' active' if active || active_or_subpath
+      klass = "nav-item"
+      klass += " active" if active || active_or_subpath
 
-      opts[:class] = opts[:class].to_s + ' nav-link'
-      opts[:class] += ' active'  if active || active_or_subpath
+      opts[:class] = opts[:class].to_s + " nav-link"
+      opts[:class] += " active"  if active || active_or_subpath
 
       if block_given?
         content_tag :li, class: klass do
@@ -29,8 +29,8 @@ module Folio
     end
 
     def btn_to_js(title, opts = {})
-      opts = opts.merge class: 'btn btn-light'
-      link_to title, '#', opts
+      opts = opts.merge class: "btn btn-light"
+      link_to title, "#", opts
     end
 
     def tab_href(record)
@@ -47,11 +47,11 @@ module Folio
       end
 
       vars[:opts] = opts
-      render partial: 'folio/console/partials/card', locals: vars
+      render partial: "folio/console/partials/card", locals: vars
     end
 
-    def dropdown(title, links, class_name: 'btn btn-secondary', menu_align: :right)
-      cell('folio/console/dropdown', title: title,
+    def dropdown(title, links, class_name: "btn btn-secondary", menu_align: :right)
+      cell("folio/console/dropdown", title: title,
                                      links: links,
                                      class_name: class_name,
                                      menu_align: menu_align).show
@@ -59,7 +59,7 @@ module Folio
     end
 
     def progress_bar(value, text = nil)
-      render partial: 'admin/partials/progress_bar', locals: {
+      render partial: "admin/partials/progress_bar", locals: {
         progress: value,
         text: text
       }
@@ -67,7 +67,7 @@ module Folio
 
     def fieldset(legend = nil, &block)
       text = capture(&block)
-      render 'admin/partials/fieldset', legend: legend, body: text
+      render "admin/partials/fieldset", legend: legend, body: text
     end
   end
 end

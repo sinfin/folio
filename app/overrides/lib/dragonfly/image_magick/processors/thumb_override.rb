@@ -13,11 +13,11 @@ Dragonfly::ImageMagick::Processors::Thumb.class_eval do
       resize_and_crop_args_extended($1, $2, $3, opts: opts)
     when ::Dragonfly::ImageMagick::Processors::Thumb::CROP_GEOMETRY
       crop_args(
-        'width' => $1,
-        'height' => $2,
-        'x' => $3,
-        'y' => $4,
-        'gravity' => $5
+        "width" => $1,
+        "height" => $2,
+        "x" => $3,
+        "y" => $4,
+        "gravity" => $5
       )
     else raise ArgumentError, "Didn't recognise the geometry string #{geometry}"
     end
@@ -27,10 +27,10 @@ Dragonfly::ImageMagick::Processors::Thumb.class_eval do
     def resize_and_crop_args_extended(width, height, gravity, opts: {})
       x = 0
       y = 0
-      gravity_str = ''
+      gravity_str = ""
 
-      ox = opts[:x] || opts['x']
-      oy = opts[:y] || opts['y']
+      ox = opts[:x] || opts["x"]
+      oy = opts[:y] || opts["y"]
 
       if ox || oy
         if ox

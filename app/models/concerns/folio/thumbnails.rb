@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'mini_magick'
+require "mini_magick"
 
 module Folio::Thumbnails
   extend ActiveSupport::Concern
@@ -47,7 +47,7 @@ module Folio::Thumbnails
           Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
           url = temporary_url(w_x_h)
         end
-        width, height = w_x_h.split('x').map(&:to_i)
+        width, height = w_x_h.split("x").map(&:to_i)
       end
       OpenStruct.new(
         uid: nil,
@@ -69,7 +69,7 @@ module Folio::Thumbnails
   end
 
   def thumb_in_test_env(w_x_h, quality: 90)
-    width, height = w_x_h.split('x').map(&:to_i)
+    width, height = w_x_h.split("x").map(&:to_i)
 
     OpenStruct.new(
       uid: nil,
@@ -109,7 +109,7 @@ module Folio::Thumbnails
   def animated_gif?
     return false unless gif?
     return false unless self.respond_to?(:additional_data)
-    additional_data['animated'].presence || false
+    additional_data["animated"].presence || false
   end
 
   def largest_thumb_key
@@ -152,7 +152,7 @@ module Folio::Thumbnails
     end
 
     def fail_for_non_images
-      fail 'You can only thumbnail images.' unless has_attribute?('thumbnail_sizes')
+      fail "You can only thumbnail images." unless has_attribute?("thumbnail_sizes")
     end
 
     def mime_type_image?
@@ -177,10 +177,10 @@ module Folio::Thumbnails
       dominant_color = MiniMagick::Tool::Convert.new do |convert|
         convert.merge! [
           file.path,
-          '+dither',
-          '-colors', '1',
-          '-unique-colors',
-          'txt:'
+          "+dither",
+          "-colors", "1",
+          "-unique-colors",
+          "txt:"
         ]
       end
 

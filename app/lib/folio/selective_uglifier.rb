@@ -2,7 +2,7 @@
 
 class Folio::SelectiveUglifier < Uglifier
   def compress(string)
-    if string.start_with?('// folioSkipUglifier')
+    if string.start_with?("// folioSkipUglifier")
       string
     else
       super(string)

@@ -18,12 +18,12 @@ class Folio::ApplicationCell < Cell::ViewModel
 
       keys.each do |key|
         if try(key) || options[key]
-          safe_key = key.to_s.gsub('_', '-').gsub('?', '')
+          safe_key = key.to_s.gsub("_", "-").gsub("?", "")
           class_names << "#{base}--#{safe_key}"
         end
       end
 
-      class_names.join(' ')
+      class_names.join(" ")
     end
   end
 
@@ -36,6 +36,6 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def image(placement, size, opts = {})
-    cell('folio/image', placement, opts.merge(size: size))
+    cell("folio/image", placement, opts.merge(size: size))
   end
 end

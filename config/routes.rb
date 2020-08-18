@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 Folio::Engine.routes.draw do
-  get 'errors/not_found'
+  get "errors/not_found"
 
-  get 'errors/internal_server_error'
+  get "errors/internal_server_error"
 
-  devise_for :accounts, class_name: 'Folio::Account', module: 'folio/accounts'
+  devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
 
-  root to: 'home#index'
+  root to: "home#index"
 
   namespace :console do
-    root to: 'dashboard#index'
+    root to: "dashboard#index"
     resources :dashboard, only: :index
 
     resources :pages, except: %i[show] do
@@ -22,8 +22,8 @@ Folio::Engine.routes.draw do
 
     resource :content_templates, only: [] do
       get :index
-      get :edit, path: ':type/edit'
-      patch :update, path: ':type/update', as: :update
+      get :edit, path: ":type/edit"
+      patch :update, path: ":type/update", as: :update
     end
 
     resources :menus, only: [:edit, :update, :index]
@@ -48,7 +48,7 @@ Folio::Engine.routes.draw do
         get :react_select
       end
 
-      resource :aasm, only: [], controller: 'aasm' do
+      resource :aasm, only: [], controller: "aasm" do
         post :event
       end
 
@@ -59,7 +59,7 @@ Folio::Engine.routes.draw do
       end
 
       resources :file_placements, only: %i[index],
-                                  path: 'files/:file_id/file_placements'
+                                  path: "files/:file_id/file_placements"
 
       resources :images, only: %i[index create update destroy] do
         collection do
@@ -85,11 +85,11 @@ Folio::Engine.routes.draw do
     end
 
     resource :merge, only: [:new, :create],
-                     path: 'merge/:klass/:original_id/:duplicate_id'
+                     path: "merge/:klass/:original_id/:duplicate_id"
 
     resources :atoms, only: [:index] do
       collection do
-        get :placement_preview, path: 'placement_preview/:klass/:id'
+        get :placement_preview, path: "placement_preview/:klass/:id"
         post :preview
         post :validate
       end
@@ -100,8 +100,8 @@ Folio::Engine.routes.draw do
   resources :leads, only: %i[create]
   resources :newsletter_subscriptions, only: %i[create]
 
-  scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
-    get '/download/:hash_id/*name', to: 'downloads#show',
+  scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
+    get "/download/:hash_id/*name", to: "downloads#show",
                                     as: :download,
                                     constraints: { name: /.*/ }
   end

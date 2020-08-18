@@ -5,7 +5,7 @@ module Folio::ContentTemplateFormMock
 
   included do
     # mock for simple_fields_for
-    has_many :content_templates, class_name: 'Folio::ContentTemplate',
+    has_many :content_templates, class_name: "Folio::ContentTemplate",
                                  foreign_key: :id
     accepts_nested_attributes_for :content_templates
   end
@@ -17,7 +17,7 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
   include Folio::ContentTemplateFormMock
   include Folio::StiPreload
 
-  self.table_name = 'folio_content_templates'
+  self.table_name = "folio_content_templates"
 
   validates :type,
             presence: true
@@ -40,8 +40,8 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
 
   def self.sti_paths
     [
-      Folio::Engine.root.join('app/models/folio/content_template'),
-      Rails.root.join('app/models/**/content_template'),
+      Folio::Engine.root.join("app/models/folio/content_template"),
+      Rails.root.join("app/models/**/content_template"),
     ]
   end
 end

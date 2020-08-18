@@ -30,12 +30,12 @@ module Folio
 
     def note_label
       return options[:note_label] if options[:note_label]
-      t('.note') if model
+      t(".note") if model
     end
 
     def message
       return options[:message] if options[:message]
-      t('.message')
+      t(".message")
     end
 
     def note_rows

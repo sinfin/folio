@@ -12,8 +12,8 @@ ActiveRecord::Migration.class_eval do
       $func$  LANGUAGE sql IMMUTABLE PARALLEL SAFE STRICT;
     SQL
 
-    version = select_value('SHOW server_version').to_f
-    sql = sql.gsub('PARALLEL SAFE ', '') if version <= 9.5
+    version = select_value("SHOW server_version").to_f
+    sql = sql.gsub("PARALLEL SAFE ", "") if version <= 9.5
 
     execute sql
   end

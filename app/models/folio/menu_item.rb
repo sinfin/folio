@@ -12,7 +12,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
   belongs_to :target, optional: true, polymorphic: true
   # target shortcut for including, be careful with that
   belongs_to :page, optional: true,
-                    class_name: 'Folio::Page',
+                    class_name: "Folio::Page",
                     foreign_key: :target_id
 
   # Scopes
@@ -51,8 +51,8 @@ class Folio::MenuItem < Folio::ApplicationRecord
 
   def self.sti_paths
     [
-      Folio::Engine.root.join('app/models/folio/menu_item'),
-      Rails.root.join('app/models/**/menu_item'),
+      Folio::Engine.root.join("app/models/folio/menu_item"),
+      Rails.root.join("app/models/**/menu_item"),
     ]
   end
 

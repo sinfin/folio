@@ -4,9 +4,9 @@
 class Folio::LeadMailerPreview < ActionMailer::Preview
   def notification_email
     unless Folio::Lead.exists?
-      Folio::Lead.create!(email: 'foo@bar.baz',
-                          phone: '+420 123456789',
-                          note: 'Hello')
+      Folio::Lead.create!(email: "foo@bar.baz",
+                          phone: "+420 123456789",
+                          note: "Hello")
     end
 
     Folio::LeadMailer.notification_email(Folio::Lead.first).tap do |email|

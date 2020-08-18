@@ -36,11 +36,11 @@
 #
 class Folio::Console::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcrumbs::Builder
   def render
-    return '' unless should_render?
+    return "" unless should_render?
 
     container_tag = @options.fetch(:container_tag, :ol)
 
-    @context.content_tag container_tag, class: 'breadcrumb' do
+    @context.content_tag container_tag, class: "breadcrumb" do
       @elements.collect do |element|
         render_element(element)
       end.join.html_safe
@@ -60,8 +60,8 @@ class Folio::Console::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcru
 
     item_tag = @options.fetch(:tag, :li)
 
-    @context.content_tag(item_tag, class: ['breadcrumb-item', ('active' if current)]) do
-      opts = element.options.merge(class: 'breadcrumb-link')
+    @context.content_tag(item_tag, class: ["breadcrumb-item", ("active" if current)]) do
+      opts = element.options.merge(class: "breadcrumb-link")
       if current
         name
       else

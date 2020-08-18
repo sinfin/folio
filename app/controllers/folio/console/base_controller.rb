@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'csv'
+require "csv"
 
 class Folio::Console::BaseController < Folio::ApplicationController
   include Pagy::Backend
@@ -15,17 +15,17 @@ class Folio::Console::BaseController < Folio::ApplicationController
   end
 
   before_action do
-    if (params[:rmp] && account_signed_in?) || ENV['FORCE_MINI_PROFILER']
+    if (params[:rmp] && account_signed_in?) || ENV["FORCE_MINI_PROFILER"]
       Rack::MiniProfiler.authorize_request
     end
   end
 
-  layout 'folio/console/application'
+  layout "folio/console/application"
   self.responder = Folio::Console::ApplicationResponder
   respond_to :html
   respond_to :json, only: %i[update]
 
-  TYPE_ID_DELIMITER = ' -=- '
+  TYPE_ID_DELIMITER = " -=- "
 
   # rescue_from CanCan::AccessDenied do |exception|
   #   redirect_to dashboard_path, alert: exception.message
@@ -204,9 +204,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       name = name || klass.model_name.human(count: 2)
 
-      filename = "#{name}-#{Date.today}.csv".split('.')
+      filename = "#{name}-#{Date.today}.csv".split(".")
                                             .map(&:parameterize)
-                                            .join('.')
+                                            .join(".")
       send_data data, filename: filename
     end
 
@@ -221,7 +221,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
       if folio_console_record
         if folio_console_record.new_record?
-          add_breadcrumb I18n.t('folio.console.breadcrumbs.actions.new')
+          add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
         else
           add_breadcrumb(folio_console_record.to_label,
                          url_for([:edit, :console, folio_console_record]))

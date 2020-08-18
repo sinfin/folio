@@ -13,9 +13,9 @@ class ConvertCoverPlacementsToFileSti < ActiveRecord::Migration[5.2]
         WHERE
           folio_files.type = 'Folio::#{key}'
       SQL
-      ids = raw_ids.pluck('id').join(',')
+      ids = raw_ids.pluck("id").join(",")
 
-      if ids != ''
+      if ids != ""
         conn.execute <<~SQL
           UPDATE folio_file_placements
           SET
@@ -26,7 +26,7 @@ class ConvertCoverPlacementsToFileSti < ActiveRecord::Migration[5.2]
       end
     end
 
-    cover_placements = conn.exec_query('SELECT * FROM folio_cover_placements')
+    cover_placements = conn.exec_query("SELECT * FROM folio_cover_placements")
                            .to_hash
 
     cover_placements.each do |cover_placement|

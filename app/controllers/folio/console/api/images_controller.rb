@@ -2,7 +2,7 @@
 
 class Folio::Console::Api::ImagesController < Folio::Console::Api::BaseController
   include Folio::Console::Api::FileControllerBase
-  folio_console_controller_for 'Folio::Image'
+  folio_console_controller_for "Folio::Image"
 
   def update_file_thumbnail
     thumb_key = params.require(:thumb_key)

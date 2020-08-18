@@ -9,4 +9,5 @@ AllCops:
   NewCops: enable
   Exclude:
     - 'db/schema.rb'
+    - 'lib/tasks/auto_annotate_models.rake'
     - 'test/dummy/db/schema.rb'

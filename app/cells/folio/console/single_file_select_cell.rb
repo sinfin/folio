@@ -24,15 +24,15 @@ class Folio::Console::SingleFileSelectCell < Folio::ConsoleCell
   end
 
   def wrap_class
-    'folio-console-single-file-select--has-file' if filled?
+    "folio-console-single-file-select--has-file" if filled?
   end
 
   def file_class
-    'form-control folio-console-single-file-select-file'
+    "form-control folio-console-single-file-select-file"
   end
 
   def destroy_class
-    'folio-console-single-file-select__destroy'
+    "folio-console-single-file-select__destroy"
   end
 
   def filled?

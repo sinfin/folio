@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'dragonfly'
-require 'dragonfly/s3_data_store'
-require 'open3'
+require "dragonfly"
+require "dragonfly/s3_data_store"
+require "open3"
 
 Dragonfly.logger = Rails.logger
 Rails.application.middleware.use Dragonfly::Middleware
@@ -14,7 +14,7 @@ if defined?(ActiveRecord::Base)
 end
 
 def shell(*command)
-  cmd = command.join(' ')
+  cmd = command.join(" ")
 
   stdout, stderr, status = Open3.capture3(*command)
 
@@ -29,7 +29,7 @@ Dragonfly.app.configure do
   plugin :imagemagick
 
   processor :cmyk_to_srgb do |content, *args|
-    if /CMYK/.match?(shell('identify', content.file.path))
+    if /CMYK/.match?(shell("identify", content.file.path))
       content.shell_update escape: false do |old_path, new_path|
         cmyk_icc = "#{Folio::Engine.root}/data/icc_profiles/PSOuncoated_v3_FOGRA52.icc"
         srgb_icc = "#{Folio::Engine.root}/data/icc_profiles/sRGB_v4_ICC_preference.icc"
@@ -39,12 +39,12 @@ Dragonfly.app.configure do
   end
 
   processor :flatten do |content, *args|
-    content.process! :convert, '-flatten'
+    content.process! :convert, "-flatten"
   end
 
   processor :jpegoptim do |content, *args|
-    if shell('which', 'jpegtran').blank?
-      msg = 'Missing jpegtran binary. Thumbnail not optimized.'
+    if shell("which", "jpegtran").blank?
+      msg = "Missing jpegtran binary. Thumbnail not optimized."
       Raven.capture_message msg if defined?(Raven)
       logger.error msg if defined?(logger)
       content
@@ -56,7 +56,7 @@ Dragonfly.app.configure do
   end
 
   processor :animated_gif_resize do |content, raw_size, *args|
-    fail 'Missing gifsicle binary.' if shell('which', 'gifsicle').blank?
+    fail "Missing gifsicle binary." if shell("which", "gifsicle").blank?
     size = raw_size.match(/\d+x\d+/)[0] # get rid of resize options which gifsicle doesn't understand
     content.shell_update do |old_path, new_path|
       "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
@@ -64,18 +64,18 @@ Dragonfly.app.configure do
   end
 
   processor :add_white_background do |content, *args|
-    content.process! :convert, '-background white -alpha remove'
+    content.process! :convert, "-background white -alpha remove"
   end
 
   processor :convert_to_webp do |content, *args|
-    content.shell_update ext: 'webp' do |old_path, new_path|
+    content.shell_update ext: "webp" do |old_path, new_path|
       "cwebp #{old_path} -o #{new_path}"
     end
   end
 
   analyser :metadata do |content|
-    if shell('which', 'exiftool').blank?
-      msg = 'Missing ExifTool binary. Metadata not processed.'
+    if shell("which", "exiftool").blank?
+      msg = "Missing ExifTool binary. Metadata not processed."
       Raven.capture_message msg if defined?(Raven)
       logger.error msg if defined?(logger)
       # content
@@ -92,19 +92,19 @@ Dragonfly.app.configure do
 
   secret Rails.application.secrets.dragonfly_secret
 
-  url_format '/media/:job/:sha/:name'
+  url_format "/media/:job/:sha/:name"
 
-  if Rails.env.test? || (Rails.env.development? && !ENV['DEV_S3_DRAGONFLY'])
+  if Rails.env.test? || (Rails.env.development? && !ENV["DEV_S3_DRAGONFLY"])
     datastore :file,
               root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
-              server_root: Rails.root.join('public')
+              server_root: Rails.root.join("public")
   else
     datastore :s3,
-              bucket_name: ENV.fetch('S3_BUCKET_NAME'),
-              access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
-              secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
-              url_scheme: ENV.fetch('S3_SCHEME'),
-              region: ENV.fetch('S3_REGION'),
+              bucket_name: ENV.fetch("S3_BUCKET_NAME"),
+              access_key_id: ENV.fetch("AWS_ACCESS_KEY_ID"),
+              secret_access_key: ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+              url_scheme: ENV.fetch("S3_SCHEME"),
+              region: ENV.fetch("S3_REGION"),
               root_path: "#{ENV.fetch('PROJECT_NAME')}/#{ENV.fetch('DRAGONFLY_RAILS_ENV') { Rails.env }}/files",
               fog_storage_options: { path_style: true }
   end

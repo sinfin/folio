@@ -8,8 +8,8 @@ module Folio::ImageHelper
   end
 
   def img_tag_retina_static(path, options = {})
-    split_path = path.split('.')
-    retina_path = split_path.first(split_path.size - 1).join('.') + '@2x.' + split_path.last
+    split_path = path.split(".")
+    retina_path = split_path.first(split_path.size - 1).join(".") + "@2x." + split_path.last
 
     normal = image_path(path)
     retina = image_path(retina_path)
@@ -37,7 +37,7 @@ module Folio::ImageHelper
     img_tag_retina(normal,
                    retina,
                    options.reverse_merge(
-                     alt: placement.try(:alt) || '',
+                     alt: placement.try(:alt) || "",
                      title: placement.try(:title),
                      retina_multiplier: retina_multiplier,
                    ))
@@ -45,22 +45,22 @@ module Folio::ImageHelper
 
   def lazy_image(normal, retina = nil, options = {})
     retina_multiplier = options.delete(:retina_multiplier) || 2
-    lazyload_class = options.delete(:lazyload_class) || 'folio-lazyload'
+    lazyload_class = options.delete(:lazyload_class) || "folio-lazyload"
 
-    options['data-src'] = normal
+    options["data-src"] = normal
     if retina
-      options['data-srcset'] = "#{normal} 1x, #{retina} #{retina_multiplier}x"
+      options["data-srcset"] = "#{normal} 1x, #{retina} #{retina_multiplier}x"
     end
 
     if options[:alt].present?
-      options['data-alt'] = options.delete(:alt)
+      options["data-alt"] = options.delete(:alt)
     end
 
-    options[:alt] = ''
+    options[:alt] = ""
     options[:class] = "#{lazyload_class} #{options[:class] || ''}"
     options[:style] = "visibility: hidden; #{options[:style] || ''}"
 
-    image_tag '', options
+    image_tag "", options
   end
 
   def lazy_image_from(placement, normal_variant, options = {})
@@ -79,7 +79,7 @@ module Folio::ImageHelper
     lazy_image(normal,
                retina,
                options.reverse_merge(
-                 alt: placement.try(:alt) || '',
+                 alt: placement.try(:alt) || "",
                  title: placement.try(:title),
                  retina_multiplier: retina_multiplier,
                ))

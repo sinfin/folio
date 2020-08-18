@@ -11,7 +11,7 @@ module Folio::AtomsHelper
       else
         render "folio/atoms/#{atom.partial_name}", data: atom
       end
-    end.compact.join('').html_safe
+    end.compact.join("").html_safe
   end
 
   def render_atoms_in_molecules(atoms_in_molecules, only: [], except: [])
@@ -40,6 +40,6 @@ module Folio::AtomsHelper
       else
         render_atoms(atoms)
       end
-    end.compact.join('').html_safe
+    end.compact.join("").html_safe
   end
 end

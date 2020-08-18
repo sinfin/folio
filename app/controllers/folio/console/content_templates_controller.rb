@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::ContentTemplatesController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::ContentTemplate', except: %w[index edit update]
+  folio_console_controller_for "Folio::ContentTemplate", except: %w[index edit update]
   before_action { @no_react_modals = true }
   before_action :set_klass, only: %i[edit update]
 
@@ -20,7 +20,7 @@ class Folio::Console::ContentTemplatesController < Folio::Console::BaseControlle
         destroy = dup.delete(:_destroy)
         id = dup.delete(:id)
 
-        if destroy == '1'
+        if destroy == "1"
           if id
             @klass.find(id).destroy!
           end
@@ -35,7 +35,7 @@ class Folio::Console::ContentTemplatesController < Folio::Console::BaseControlle
       end
     end
 
-    flash.notice = t('.success')
+    flash.notice = t(".success")
     redirect_to action: :edit
   end
 

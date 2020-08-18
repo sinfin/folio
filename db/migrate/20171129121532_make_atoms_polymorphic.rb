@@ -6,7 +6,7 @@ class MakeAtomsPolymorphic < ActiveRecord::Migration[5.1]
 
     Folio::Atom::Base.find_each do |atom|
       atom.placement_id = atom.node_id
-      atom.placement_type = 'Folio::Page'
+      atom.placement_type = "Folio::Page"
       atom.save!
     end
 

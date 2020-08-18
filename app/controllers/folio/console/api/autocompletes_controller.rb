@@ -54,9 +54,9 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       ary = scope.group(field)
                  .unscope(:order)
-                 .order('count_id DESC')
+                 .order("count_id DESC")
                  .limit(10)
-                 .count('id')
+                 .count("id")
                  .keys
 
       render json: { data: ary }
@@ -91,7 +91,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   end
 
   def react_select
-    class_names = params.require(:class_names).split(',')
+    class_names = params.require(:class_names).split(",")
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]

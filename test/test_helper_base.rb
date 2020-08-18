@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'rails/test_help'
-require 'capybara/rails'
-require 'capybara/minitest'
-require 'rack_session_access/capybara'
-require 'cells'
-require 'cells-rails'
-require 'cells-slim'
-require 'factory_bot'
-require Folio::Engine.root.join('test/create_atom_helper')
+require "rails/test_help"
+require "capybara/rails"
+require "capybara/minitest"
+require "rack_session_access/capybara"
+require "cells"
+require "cells-rails"
+require "cells-slim"
+require "factory_bot"
+require Folio::Engine.root.join("test/create_atom_helper")
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.

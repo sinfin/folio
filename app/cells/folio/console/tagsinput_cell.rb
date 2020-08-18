@@ -33,11 +33,11 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
       value = options[:value]
     else
       value = model.object.send(name).presence
-      value = value.join(', ') if value.is_a?(Array)
+      value = value.join(", ") if value.is_a?(Array)
     end
 
     (options[:input_html] || {}).merge(
-      class: 'f-c-tagsinput',
+      class: "f-c-tagsinput",
       value: value,
     )
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::LeadsController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::Lead'
+  folio_console_controller_for "Folio::Lead"
 
   def index
     @leads = @leads.ordered.includes(:visit)
@@ -14,8 +14,8 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
 
   def mass_handle
     @leads = Folio::Lead.not_handled.where(id: params.require(:leads))
-    @leads.update_all(aasm_state: 'handled')
-    flash.notice = t('.success')
+    @leads.update_all(aasm_state: "handled")
+    flash.notice = t(".success")
     respond_with @leads
   end
 

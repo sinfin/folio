@@ -38,7 +38,7 @@ class Folio::Site < Folio::ApplicationRecord
     define_method("#{attr}_array") do
       return [] if send(attr).nil?
 
-      send(attr).gsub(' ', '').split(',')
+      send(attr).gsub(" ", "").split(",")
     end
   end
 

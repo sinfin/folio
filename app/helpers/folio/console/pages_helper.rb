@@ -6,7 +6,7 @@ module Folio::Console::PagesHelper
       links = ancestors.collect do |page|
         link_to(page.title, edit_console_page_path(page))
       end
-      links.join(' / ')
+      links.join(" / ")
     end
   end
 
@@ -14,7 +14,7 @@ module Folio::Console::PagesHelper
     new_button(
       new_console_page_path(parent: parent.id),
       label: Folio::Page.model_name.human,
-      title: t('folio.console.pages.page_row.add_child_page')
+      title: t("folio.console.pages.page_row.add_child_page")
     )
   end
 

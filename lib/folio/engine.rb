@@ -26,9 +26,9 @@ module Folio
       g.helper false
     end
 
-    config.assets.paths << self.root.join('app/cells')
-    config.assets.paths << self.root.join('vendor/assets/javascripts')
-    config.assets.paths << self.root.join('vendor/assets/bower_components')
+    config.assets.paths << self.root.join("app/cells")
+    config.assets.paths << self.root.join("vendor/assets/javascripts")
+    config.assets.paths << self.root.join("vendor/assets/bower_components")
     config.assets.precompile += %w[
       folio/console/base.css
       folio/console/base.js
@@ -53,16 +53,16 @@ module Folio
 
     initializer :append_migrations do |app|
       unless app.root.to_s.include? root.to_s
-        config.paths['db/migrate'].expanded.each do |expanded_path|
-          app.config.paths['db/migrate'] << expanded_path
+        config.paths["db/migrate"].expanded.each do |expanded_path|
+          app.config.paths["db/migrate"] << expanded_path
         end
       end
     end
 
     initializer :add_watchable_cell_i18n_files do |app|
       dirs = {
-        Folio::Engine.root.join('app/cells').to_s => ['.yml'],
-        Rails.root.join('app/cells').to_s => ['.yml']
+        Folio::Engine.root.join("app/cells").to_s => [".yml"],
+        Rails.root.join("app/cells").to_s => [".yml"]
       }
       cells_i18n_reloader = app.config.file_watcher.new([], dirs) do
         I18n.reload!

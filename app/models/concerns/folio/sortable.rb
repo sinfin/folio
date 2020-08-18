@@ -6,7 +6,7 @@ module Folio::Sortable
   included do
     def self.sortable_by(*args)
       if args.map { |a| !a.is_a? Symbol }.any?
-        raise ArgumentError.new('Only symbols are allowed')
+        raise ArgumentError.new("Only symbols are allowed")
       end
 
       args.each do |column|

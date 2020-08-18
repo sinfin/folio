@@ -33,7 +33,7 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
       thumbnail = Dragonfly.app.fetch(data[:uid])
 
       webp = thumbnail.convert_to_webp
-      webp.name = Pathname(webp.name || 'webp').sub_ext('.webp').to_s
+      webp.name = Pathname(webp.name || "webp").sub_ext(".webp").to_s
       webp_uid = webp.store
 
       data.merge(

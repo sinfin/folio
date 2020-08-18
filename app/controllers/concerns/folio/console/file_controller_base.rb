@@ -17,7 +17,7 @@ module Folio::Console::FileControllerBase
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?
-        p[:tag_list] = p.delete(:tags).join(',')
+        p[:tag_list] = p.delete(:tags).join(",")
       end
 
       p

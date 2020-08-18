@@ -3,8 +3,8 @@
 class Folio::Console::FileSerializer
   include FastJsonapi::ObjectSerializer
 
-  ADMIN_THUMBNAIL_SIZE = '250x250'
-  ADMIN_RETINA_THUMBNAIL_SIZE = '500x500'
+  ADMIN_THUMBNAIL_SIZE = "250x250"
+  ADMIN_RETINA_THUMBNAIL_SIZE = "500x500"
 
   attributes :id,
              :file_size,
@@ -40,7 +40,7 @@ class Folio::Console::FileSerializer
   attribute :dominant_color do |object|
     if object.is_a?(Folio::Image)
       if object.additional_data
-        object.additional_data['dominant_color']
+        object.additional_data["dominant_color"]
       end
     end
   end

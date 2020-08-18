@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::MenusController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::Menu'
+  folio_console_controller_for "Folio::Menu"
 
   def edit
     serialize_menu_items
@@ -89,7 +89,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
                       record.try(:title) ||
                       record.model_name.human
 
-        label = [record.model_name.human, record_name].compact.join(' / ')
+        label = [record.model_name.human, record_name].compact.join(" / ")
 
         serialized_menu_paths << {
           title: ActionController::Base.helpers.truncate(label, length: 50),

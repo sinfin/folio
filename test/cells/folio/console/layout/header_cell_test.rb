@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Folio::Console::Layout::HeaderCellTest < Folio::Console::CellTest
-  test 'show' do
-    html = cell('folio/console/layout/header', nil).(:show)
-    assert html.has_css?('.f-c-layout-header')
+  test "show" do
+    html = cell("folio/console/layout/header", nil).(:show)
+    assert html.has_css?(".f-c-layout-header")
   end
 end

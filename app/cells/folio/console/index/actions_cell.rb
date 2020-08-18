@@ -16,50 +16,50 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     @default_actions ||= {
       destroy: {
         name: :destroy,
-        icon: 'trash-alt',
-        button: 'danger',
+        icon: "trash-alt",
+        button: "danger",
         method: :delete,
         confirm: true,
         url: -> (record) { safe_url_for([:console, record]) },
       },
       discard: {
         name: :discard,
-        icon: 'trash-alt',
-        button: 'secondary',
+        icon: "trash-alt",
+        button: "secondary",
         method: :delete,
         confirm: true,
         url: -> (record) { safe_url_for([:discard, :console, record]) },
       },
       undiscard: {
         name: :undiscard,
-        icon: 'redo-alt',
-        button: 'secondary',
+        icon: "redo-alt",
+        button: "secondary",
         method: :post,
         url: -> (record) { safe_url_for([:undiscard, :console, record]) },
       },
       edit: {
         name: :edit,
-        icon: 'edit',
-        button: 'secondary',
+        icon: "edit",
+        button: "secondary",
         url: -> (record) { safe_url_for([:edit, :console, record]) },
       },
       show: {
         name: :show,
-        icon: 'eye',
-        button: 'light',
+        icon: "eye",
+        button: "light",
         url: -> (record) { safe_url_for([:console, record]) },
       },
       preview: {
         name: :preview,
-        icon: 'eye',
-        button: 'light',
-        target: '_blank',
+        icon: "eye",
+        button: "light",
+        target: "_blank",
         url: -> (record) { safe_url_for([record, locale: locale]) },
       },
       arrange: {
         name: :arrange,
-        icon: 'list',
-        button: 'light',
+        icon: "list",
+        button: "light",
         url: nil,
       },
     }
@@ -91,7 +91,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         if action[:confirm].is_a?(String)
           confirmation = action[:confirm]
         else
-          confirmation = t('folio.console.confirmation')
+          confirmation = t("folio.console.confirmation")
         end
       else
         confirmation = nil
@@ -107,7 +107,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
 
       begin
         url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
-        link_to('', url, opts)
+        link_to("", url, opts)
       rescue ActionController::UrlGenerationError
       end
     end.compact

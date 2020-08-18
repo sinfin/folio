@@ -11,7 +11,7 @@ class Dummy::Atom::Gallery < Folio::Atom::Base
             presence: true
 
   def self.cell_name
-    'dummy/atom/gallery'
+    "dummy/atom/gallery"
   end
 
   def self.console_icon

@@ -46,7 +46,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         elsif class_name[:klass]
           label_from(class_name[:klass].constantize)
         else
-          ''
+          ""
         end
 
         begin
@@ -63,7 +63,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
         if class_name[:icon]
           link(nil, path, active_start_with: class_name[:active_start_with]) do
-            concat(content_tag(:i, '', class: "#{class_name[:icon]} f-c-layout-sidebar__icon"))
+            concat(content_tag(:i, "", class: "#{class_name[:icon]} f-c-layout-sidebar__icon"))
             concat(label)
           end
         else
@@ -84,7 +84,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def link(label, path, paths: [], active_start_with: true, &block)
     active = ([path] + paths).any? do |p|
-      start = p.split('?').first
+      start = p.split("?").first
       if active_start_with
         request.path.start_with?(start) || request.url.start_with?(start)
       else
@@ -92,8 +92,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     end
 
-    class_names = ['f-c-layout-sidebar__a']
-    class_names << 'f-c-layout-sidebar__a--active' if active
+    class_names = ["f-c-layout-sidebar__a"]
+    class_names << "f-c-layout-sidebar__a--active" if active
 
     if block_given?
       link_to(path, class: class_names, &block)
@@ -110,12 +110,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         Visit
       ],
       [
-        'Folio::Account',
+        "Folio::Account",
         {
-          klass: 'Folio::Site',
-          icon: 'fa fa-cogs',
+          klass: "Folio::Site",
+          icon: "fa fa-cogs",
           path: :edit_console_site_path,
-          label: 'settings'
+          label: "settings"
         },
       ]
     ]

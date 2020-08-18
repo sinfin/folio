@@ -5,7 +5,7 @@ module Folio::Console::IndexHelper
     opts[:pagy] ||= @pagy
     opts[:tabs] ||= index_tabs
     opts[:folio_console_merge] ||= @folio_console_merge
-    cell('folio/console/index/header', @klass, opts).show.html_safe
+    cell("folio/console/index/header", @klass, opts).show.html_safe
   end
 
   def catalogue(records, options = {}, &block)
@@ -13,6 +13,6 @@ module Folio::Console::IndexHelper
                           block: block,
                           klass: @klass,
                           merge: @folio_console_merge)
-    cell('folio/console/catalogue', model).show.html_safe
+    cell("folio/console/catalogue", model).show.html_safe
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::AccountsController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::Account'
+  folio_console_controller_for "Folio::Account"
 
   def index
     @pagy, @accounts = pagy(@accounts)

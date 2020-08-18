@@ -13,9 +13,9 @@ module Folio::Publishable
 
       scope :by_published, -> (bool) {
         case bool
-        when true, 'true'
+        when true, "true"
           published
-        when false, 'false'
+        when false, "false"
           unpublished
         else
           all
@@ -50,9 +50,9 @@ module Folio::Publishable
 
       scope :by_published, -> (bool) {
         case bool
-        when true, 'true'
+        when true, "true"
           published
-        when false, 'false'
+        when false, "false"
           unpublished
         else
           all
@@ -99,9 +99,9 @@ module Folio::Publishable
 
       scope :by_published, -> (bool) {
         case bool
-        when true, 'true'
+        when true, "true"
           published
-        when false, 'false'
+        when false, "false"
           unpublished
         else
           all

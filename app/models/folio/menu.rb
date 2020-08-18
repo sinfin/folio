@@ -54,8 +54,8 @@ class Folio::Menu < Folio::ApplicationRecord
 
   def self.sti_paths
     [
-      Folio::Engine.root.join('app/models/folio/menu'),
-      Rails.root.join('app/models/**/menu'),
+      Folio::Engine.root.join("app/models/folio/menu"),
+      Rails.root.join("app/models/**/menu"),
     ]
   end
 end

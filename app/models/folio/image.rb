@@ -14,31 +14,31 @@ class Folio::Image < Folio::File
 
   # Get from metadata
   def title
-    metadata_compose(['Headline', 'Title'])
+    metadata_compose(["Headline", "Title"])
   end
 
   def caption
-    metadata_compose(['Caption', 'Description', 'Abstract'])
+    metadata_compose(["Caption", "Description", "Abstract"])
   end
 
   def keywords
-    metadata_compose(['Keywords'])
+    metadata_compose(["Keywords"])
   end
 
   def geo_location
     # Geographic location, e.g.: Limerick, Ireland
-    metadata_compose(['LocationName', 'SubLocation', 'City', 'ProvinceState', 'CountryName'])
+    metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
   end
 
   def self.react_type
-    'image'
+    "image"
   end
 
   private
     def metadata_compose(tags)
-      string_arr = tags.collect { |tag| file_metadata.try('[]', tag) }.compact.uniq
+      string_arr = tags.collect { |tag| file_metadata.try("[]", tag) }.compact.uniq
       return nil if string_arr.size == 0
-      string_arr.join(', ')
+      string_arr.join(", ")
     end
 end
 

@@ -56,7 +56,7 @@ module Folio::ApiControllerBase
       errors = model.errors.full_messages.map do |msg|
         {
           status: 400,
-          title: 'ActiveRecord::RecordInvalid',
+          title: "ActiveRecord::RecordInvalid",
           detail: msg,
         }
       end
@@ -73,7 +73,7 @@ module Folio::ApiControllerBase
 
     def serializer_for(model)
       serializer = "#{model.class.name}Serializer".safe_constantize
-      fail ArgumentError.new('Unknown serializer') if serializer.nil?
+      fail ArgumentError.new("Unknown serializer") if serializer.nil?
       serializer
     end
 

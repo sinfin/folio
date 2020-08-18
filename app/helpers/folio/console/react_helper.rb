@@ -2,10 +2,10 @@
 
 module Folio::Console::ReactHelper
   def react_images(selected_placements = nil,
-                   attachmentable: 'page',
+                   attachmentable: "page",
                    type: :image_placements,
                    atom_setting: nil)
-    react_files('Folio::Image',
+    react_files("Folio::Image",
                 selected_placements,
                 attachmentable: attachmentable,
                 type: type,
@@ -13,31 +13,31 @@ module Folio::Console::ReactHelper
   end
 
   def react_documents(selected_placements = nil,
-                      attachmentable: 'page',
+                      attachmentable: "page",
                       type: :document_placements,
                       atom_setting: nil)
-    react_files('Folio::Document',
+    react_files("Folio::Document",
                 selected_placements,
                 attachmentable: attachmentable,
                 type: type,
                 atom_setting: atom_setting)
   end
 
-  def react_picker(f, placement_key, file_type: 'Folio::Image', title: nil, atom_setting: nil)
-    raw cell('folio/console/react_picker', f, placement_key: placement_key,
+  def react_picker(f, placement_key, file_type: "Folio::Image", title: nil, atom_setting: nil)
+    raw cell("folio/console/react_picker", f, placement_key: placement_key,
                                               title: title,
                                               file_type: file_type,
                                               atom_setting: atom_setting)
   end
 
   def react_ancestry(klass, max_nesting_depth: 2)
-    raw cell('folio/console/react_ancestry',
+    raw cell("folio/console/react_ancestry",
              klass,
              max_nesting_depth: max_nesting_depth)
   end
 
   def react_modal_for(file_type)
-    if ['new', 'edit', 'create', 'update'].include?(action_name)
+    if ["new", "edit", "create", "update"].include?(action_name)
       klass = file_type.constantize
       begin
         url = url_for([:console, :api, klass])
@@ -47,11 +47,11 @@ module Folio::Console::ReactHelper
 
       content_tag(:div,
                   nil,
-                  'class': 'folio-react-wrap',
+                  'class': "folio-react-wrap",
                   'data-file-type': file_type,
                   'data-files-url': url,
                   'data-react-type': klass.react_type,
-                  'data-mode': 'modal-single-select')
+                  'data-mode': "modal-single-select")
     end
   end
 
@@ -85,8 +85,8 @@ module Folio::Console::ReactHelper
       className: f.object.class.to_s,
     }
 
-    content_tag(:div, nil, 'class': 'f-c-atoms folio-react-wrap',
-                           'data-mode': 'atoms',
+    content_tag(:div, nil, 'class': "f-c-atoms folio-react-wrap",
+                           'data-mode': "atoms",
                            'data-atoms': data.to_json)
   end
 
@@ -106,7 +106,7 @@ module Folio::Console::ReactHelper
       placements = nil
     end
 
-    class_name = 'folio-react-wrap'
+    class_name = "folio-react-wrap"
 
     if atom_setting
       class_name = "#{class_name} f-c-js-atoms-placement-setting"
@@ -126,7 +126,7 @@ module Folio::Console::ReactHelper
       'data-file-type': file_type,
       'data-files-url': url,
       'data-react-type': klass.react_type,
-      'data-mode': 'multi-select',
+      'data-mode': "multi-select",
       'data-attachmentable': attachmentable,
       'data-placement-type': type,
       'data-atom-setting': atom_setting,

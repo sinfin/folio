@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'open3'
+require "open3"
 
 module Folio::Shell
   extend ActiveSupport::Concern
 
   private
     def shell(*command)
-      cmd = command.join(' ')
+      cmd = command.join(" ")
 
       stdout, stderr, status = Open3.capture3(*command)
 

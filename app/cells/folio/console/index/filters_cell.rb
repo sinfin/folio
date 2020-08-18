@@ -17,11 +17,11 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       method: :get,
       url: request.path,
       html: {
-        class: 'f-c-index-filters f-c-anti-container-fluid',
-        'data-auto-submit' => true,
+        class: "f-c-index-filters f-c-anti-container-fluid",
+        "data-auto-submit" => true,
       }
     }
-    simple_form_for '', opts, &block
+    simple_form_for "", opts, &block
   end
 
   def filtered?
@@ -31,9 +31,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def collection(key)
     base = index_filters[key].map do |value|
       if value == true
-        [t('true'), true]
+        [t("true"), true]
       elsif value == false
-        [t('false'), false]
+        [t("false"), false]
       elsif !value.is_a?(Array)
         [value, value]
       else
@@ -62,7 +62,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def label_for_key(key)
-    clear_key = key.to_s.delete_prefix('by_').delete_suffix('_query')
+    clear_key = key.to_s.delete_prefix("by_").delete_suffix("_query")
     klass.human_attribute_name(clear_key)
   end
 
@@ -74,10 +74,10 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def date_range_input(f, key)
     f.input key, label: false,
                  input_html: {
-                   class: 'f-c-index-filters__date-range-input',
+                   class: "f-c-index-filters__date-range-input",
                    value: controller.params[key],
-                   autocomplete: 'off',
-                   placeholder: t(".placeholders.#{key}", default: ''),
+                   autocomplete: "off",
+                   placeholder: t(".placeholders.#{key}", default: ""),
                  },
                  wrapper: false
   end
@@ -103,14 +103,14 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def autocomplete_select(f, key, url:)
     f.input key, label: false,
                  input_html: {
-                   class: 'f-c-index-filters__autocomplete-input',
-                   'data-url' => url,
-                   'data-controller' => controller.class.to_s.underscore,
+                   class: "f-c-index-filters__autocomplete-input",
+                   "data-url" => url,
+                   "data-controller" => controller.class.to_s.underscore,
                    placeholder: blank_label(key),
                    value: controller.params[key]
                  },
                  wrapper_html: {
-                   class: 'f-c-index-filters__autocomplete-wrap'
+                   class: "f-c-index-filters__autocomplete-wrap"
                  }
   end
 end

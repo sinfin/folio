@@ -8,10 +8,10 @@ class Folio::Console::Api::BaseController < Folio::Console::BaseController
 
   private
     def serializer_for(model)
-      name = model.class.name.gsub('Folio::', '')
+      name = model.class.name.gsub("Folio::", "")
       serializer = "Folio::Console::#{name}Serializer".safe_constantize
       serializer ||= "#{name}Serializer".safe_constantize
-      fail ArgumentError.new('Unknown serializer') if serializer.nil?
+      fail ArgumentError.new("Unknown serializer") if serializer.nil?
       serializer
     end
 

@@ -6,14 +6,14 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
     document
   ]
 
-  STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }].merge(fruit: [nil, 'apple', 'banana'])
+  STRUCTURE = Hash[Folio::Atom::Base::KNOWN_STRUCTURE_TYPES.map { |t| [t, t] }].merge(fruit: [nil, "apple", "banana"])
 
   ASSOCIATIONS = {
     page: %w[Folio::Page],
   }
 
   def self.cell_name
-    'dummy/atom/da_vinci'
+    "dummy/atom/da_vinci"
   end
 
   def self.console_icon

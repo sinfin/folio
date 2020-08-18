@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class AuditedPage < Folio::Page
   include Folio::Audited
@@ -10,17 +10,17 @@ end
 
 class Folio::AuditedTest < ActiveSupport::TestCase
   setup do
-    @page = AuditedPage.create(title: 'Foo')
+    @page = AuditedPage.create(title: "Foo")
   end
 
-  test 'audits' do
+  test "audits" do
     assert_equal 1, @page.audits.count
 
-    @page.update(title: 'Bar')
+    @page.update(title: "Bar")
     assert_equal 2, @page.audits.count
   end
 
-  test 'revisions have audits' do
+  test "revisions have audits" do
     assert @page.revisions.first.audit
   end
 end

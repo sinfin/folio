@@ -2,8 +2,8 @@
 
 class Visit < Folio::ApplicationRecord
   # Relations
-  has_many :ahoy_events, class_name: 'Ahoy::Event'
-  belongs_to :account, class_name: 'Folio::Account', optional: true
+  has_many :ahoy_events, class_name: "Ahoy::Event"
+  belongs_to :account, class_name: "Folio::Account", optional: true
 
   # Scopes
   default_scope -> { order(started_at: :desc) }
@@ -15,7 +15,7 @@ class Visit < Folio::ApplicationRecord
   scope :by_query, -> (q) {
     if q.present?
       args = ["%#{q}%"] * 4
-      where('referrer ILIKE ? OR landing_page ILIKE ? OR country ILIKE ? OR city ILIKE ?', *args)
+      where("referrer ILIKE ? OR landing_page ILIKE ? OR country ILIKE ? OR city ILIKE ?", *args)
     else
       where(nil)
     end

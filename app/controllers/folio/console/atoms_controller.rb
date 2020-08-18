@@ -3,7 +3,7 @@
 class Folio::Console::AtomsController < Folio::Console::BaseController
   include Rails.application.routes.url_helpers
 
-  layout 'folio/console/atoms'
+  layout "folio/console/atoms"
 
   def index
   end
@@ -12,17 +12,17 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
     @atoms = {}
 
     (I18n.available_locales + [nil]).each do |locale|
-      key = locale ? "#{locale}_atoms_attributes" : 'atoms_attributes'
+      key = locale ? "#{locale}_atoms_attributes" : "atoms_attributes"
       atoms = atom_params[key]
       next if atoms.nil?
       @atoms[locale] = []
       atoms.each do |attrs|
-        next if attrs['destroyed']
-        next if attrs['_destroy']
+        next if attrs["destroyed"]
+        next if attrs["_destroy"]
         props = attrs.to_h
-                     .without('id', 'placement_id')
+                     .without("id", "placement_id")
                      .merge(placement: attrs[:placement_type].constantize.new)
-        @atoms[locale] << attrs['type'].constantize
+        @atoms[locale] << attrs["type"].constantize
                                        .new(props)
       end
     end
