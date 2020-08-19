@@ -15,6 +15,7 @@ AllCops:
     - 'bin/*'
     - 'data/**/*'
     - 'db/schema.rb'
+    - 'frontend/**/*'
     - 'lib/generators/folio/install_generator.rb'
     - 'lib/tasks/auto_annotate_models.rake'
     - 'lib/templates/lib/tasks/auto_annotate_models.rake'
