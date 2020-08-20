@@ -27,7 +27,3 @@ set :environment_variable, "RAILS_ENV"
 every 1.day, at: "4:30 am", roles: [:app] do
   rake "-s sitemap:refresh"
 end
-
-every 1.minute do
-  rake "folio_cache:conditional_clear"
-end
