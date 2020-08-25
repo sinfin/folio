@@ -1,20 +1,20 @@
-.f-c-show-header
+div class=class_name
   = render(:_title)
 
   .f-c-show-header__right
     - if model.respond_to?(:aasm_state)
-      .mr-h
+      .mr-h.flex-shrink-0
         == cell('folio/console/state', model)
 
     - if edit_url
-      a.ml-h href=edit_url class=edit_class_name
+      a.ml-lg-h.flex-shrink-0 href=edit_url class=edit_class_name
         i.fa.fa-edit.f-c-show-header__btn-ico
         span.f-c-show-header__btn-text = t('folio.console.actions.edit')
 
     - if destroy_url
       = link_to destroy_url, \
                 method: :delete, \
-                'class' => "ml-h #{destroy_class_name}", \
+                'class' => "ml-h flex-shrink-0 #{destroy_class_name}", \
                 'data-confirm' => t('folio.console.confirmation')
         i.fa.fa-trash.f-c-show-header__btn-ico
         span.f-c-show-header__btn-text = t('folio.console.actions.destroy')
