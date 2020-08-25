@@ -63,8 +63,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     if assoc.is_a?(Enumerable)
       val = assoc.map(&:to_label).join(separator)
-    else
+    elsif assoc.respond_to?(:to_label)
       val = assoc.to_label
+    else
+      val = nil
     end
 
     attribute(name, val)
@@ -148,6 +150,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(name, I18n.t("folio.console.boolean.#{record.send(name)}"))
   end
 
+  def color(name)
+    attribute(nil,
+              "",
+              class_name: ["color-border", "color-border-#{name}"])
+  end
+
   private
     def resource_link(url_for_args, attr = nill)
       attribute(attr, spacey: true) do
@@ -181,7 +189,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       if class_name
-        full += " #{base}--#{class_name}"
+        if class_name.is_a?(Array)
+          class_name.each do |str|
+            full += " #{base}--#{str}"
+          end
+        else
+          full += " #{base}--#{class_name}"
+        end
       end
 
       if spacey

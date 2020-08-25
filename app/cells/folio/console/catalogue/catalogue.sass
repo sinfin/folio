@@ -1,4 +1,10 @@
+$catalogue-orange: $orange !default
+$catalogue-red: $red !default
+$catalogue-green: $green !default
+
 .f-c-catalogue
+  $this: &
+
   position: relative
 
   &__label
@@ -17,6 +23,23 @@
       height: 67px
       background: #E6F4FA
       display: block
+
+  &__cell--color-border
+    &,
+    #{$this}__row:hover &
+      background: $table-accent-bg !important
+
+    &-orange,
+    #{$this}__row:hover &-orange
+      background: $catalogue-orange !important
+
+    &-red,
+    #{$this}__row:hover &-red
+      background: $catalogue-red !important
+
+    &-green,
+    #{$this}__row:hover &-green
+      background: $catalogue-green !important
 
   +mq-desktop-catalogue
     &__table
@@ -75,6 +98,11 @@
     &__cell--merge
       background: $table-accent-bg
 
+    &__header-cell--color-border,
+    &__cell--color-border
+      padding: 0
+      width: 10px
+
   +mq-mobile-catalogue
     &--merge
       padding-left: 140px
@@ -90,7 +118,7 @@
       align-items: center
       width: 100%
       flex: 0 0 auto
-      order: 3
+      order: 4
       margin-top: $spacer
 
     &__cell-label,
@@ -112,11 +140,11 @@
       padding-left: 0
 
     &__cell--cover
-      order: 1
+      order: 2
 
     &__cell--spacey
       display: block
-      order: 2
+      order: 3
 
     &__cell--spacey &__cell-label
       margin-bottom: $spacer / 4
@@ -126,6 +154,14 @@
     &__cell--spacey &__cell-value
       padding-left: 0
       max-width: none
+
+    &__cell--color-border
+      position: absolute
+      top: $spacer
+      left: 0
+      width: 5px
+      height: calc(100% - #{2 * $spacer})
+      margin: 0
 
     &__header
       display: none
