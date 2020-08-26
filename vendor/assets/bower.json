@@ -5,7 +5,7 @@
   ],
   "version": "0.0.0",
   "dependencies": {
-    "folio-bootstrap": "https://github.com/twbs/bootstrap.git",
+    "folio-bootstrap": "https://github.com/twbs/bootstrap.git#v4.5.2",
     "jquery-ui": "^1.12.1",
     "popper.js": "https://unpkg.com/popper.js",
     "vanilla-lazyload": "^11.0.6",

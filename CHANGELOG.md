@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-08-26
+### Changed
+- updated bootstrap to 4.5.2
+
 ## 2020-08-18
 ### Changed
 - changed rubocop and guard configuration, see `install_generator.rb` for proper gems and templates for guard/rubocop configs
