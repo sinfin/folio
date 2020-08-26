@@ -107,6 +107,7 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def set_mime_type
+      return unless will_save_change_to_file_uid?
       return unless file.present?
       return unless respond_to?(:mime_type)
       self.mime_type = get_mime_type(file)
