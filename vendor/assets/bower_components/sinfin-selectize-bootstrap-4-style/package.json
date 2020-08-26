@@ -1,0 +1,31 @@
+{
+  "name": "selectizebootstrap",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "https://github.com/papakay/selectize-bootstrap-4-style",
+  "license": "The MIT license",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "eslint": "^6.0.1",
+    "gulp": "^4.0.1"
+  },
+  "devDependencies": {
+    "@hapi/cryptiles": "^4.2.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-watch": "^5.0.1",
+    "install": "^0.10.4",
+    "lodash": "^4.17.14",
+    "minimatch": "^3.0.4",
+    "randomatic": "^3.1.1",
+    "minimist": ">=1.2.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kehinde Alabi"
+}
