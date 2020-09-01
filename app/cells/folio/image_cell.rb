@@ -12,7 +12,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :fixed_height,
                         :small,
                         :cloned,
-                        :round
+                        :round,
+                        :static?
 
   def show
     render if size
@@ -22,35 +23,46 @@ class Folio::ImageCell < Folio::ApplicationCell
     return nil unless model.present?
 
     @data ||= begin
-      if model.is_a?(Folio::FilePlacement::Base)
-        file = model.file
+      if static?
+        {
+          alt: "",
+          src: model[:normal],
+          srcset: "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x",
+          webp_src: model[:webp_normal],
+          webp_srcset: "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x",
+          use_webp: true,
+        }
       else
-        file = model
+        if model.is_a?(Folio::FilePlacement::Base)
+          file = model.file
+        else
+          file = model
+        end
+
+        retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+        normal = file.thumb(size)
+        retina = file.thumb(retina_size)
+
+        use_webp = normal[:webp_url] && retina[:webp_url]
+
+        h = {
+          normal: normal,
+          retina: retina,
+          alt: model.try(:alt) || "",
+          title: model.try(:title),
+          use_webp: use_webp,
+          src: normal.url,
+          srcset: "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x",
+        }
+
+        if use_webp
+          h[:webp_src] = normal.webp_src
+          h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+        end
+
+        h
       end
-
-      retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
-
-      normal = file.thumb(size)
-      retina = file.thumb(retina_size)
-
-      use_webp = normal[:webp_url] && retina[:webp_url]
-
-      h = {
-        normal: normal,
-        retina: retina,
-        alt: model.try(:alt) || "",
-        title: model.try(:title),
-        use_webp: use_webp,
-        src: normal.url,
-        srcset: "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x",
-      }
-
-      if use_webp
-        h[:webp_src] = normal.webp_src
-        h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
-      end
-
-      h
     end
   end
 
@@ -120,7 +132,7 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def spacer_ratio
     @spacer_ratio ||= begin
-      if data
+      if data && data[:normal]
         width = data[:normal].width
         height = data[:normal].height
       else
@@ -173,6 +185,10 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def lightboxable?
     options[:lightbox]
+  end
+
+  def static?
+    model.is_a?(Hash)
   end
 
   def self.fixed_height_mobile_ratio
