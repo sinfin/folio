@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::DropdownCell < Folio::ConsoleCell
-  include Folio::Console::BootstrapHelper
-
   def show
     render if links.present?
   end

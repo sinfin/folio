@@ -140,8 +140,6 @@ module Folio
           "app/views/devise/mailer/invitation_instructions.html.erb",
           "app/views/devise/mailer/invitation_instructions.text.erb",
           "app/views/devise/mailer/reset_password_instructions.html.erb",
-          "app/views/folio/console/partials/_appended_menu_items.slim",
-          "app/views/folio/console/partials/_prepended_menu_items.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
           "bin/bower",
