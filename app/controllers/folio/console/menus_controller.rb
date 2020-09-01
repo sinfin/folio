@@ -93,7 +93,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
 
         serialized_menu_paths << {
           title: ActionController::Base.helpers.truncate(label, length: 50),
-          target_type: record.try(:type) || record.class.to_s,
+          target_type: record.class.base_class.to_s,
           target_id: record.id,
         }
       end
