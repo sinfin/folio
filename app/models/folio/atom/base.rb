@@ -27,6 +27,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   self.table_name = 'folio_atoms'
 
+  audited associated_with: :placement, if: :placement_has_audited_atoms?
+
   attr_readonly :type
   after_initialize :validate_structure
 
@@ -195,6 +197,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
     def set_data_for_search
       self.data_for_search = data.try(:values).try(:join, "\n").presence
+    end
+
+    def placement_has_audited_atoms?
+      placement.class.has_audited_atoms?
     end
 end
 

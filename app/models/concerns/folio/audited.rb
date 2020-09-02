@@ -29,5 +29,14 @@ module Folio::Audited
         end
       end
     end
+
+    def has_audited_atoms?
+      false
+    end
+
+    def has_audited_atoms
+      has_associated_audits
+      define_singleton_method(:has_audited_atoms?) { true }
+    end
   end
 end

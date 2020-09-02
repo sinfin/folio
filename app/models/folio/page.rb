@@ -27,6 +27,7 @@ class Folio::Page < Folio::ApplicationRecord
     end
 
     audited only: translated + other
+    has_audited_atoms
   end
 
   if Rails.application.config.folio_pages_translations
