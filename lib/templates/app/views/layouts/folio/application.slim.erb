@@ -5,6 +5,7 @@ html lang=I18n.locale
     = render partial: 'layouts/folio/favicon'
 
   body
-    = yield
+    .<%= project_classnames_prefix %>-layout-main
+      = yield
 
     == cell('folio/photoswipe')

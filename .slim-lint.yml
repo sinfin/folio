@@ -7,3 +7,4 @@ exclude:
   - 'app/cells/folio/image/_fallback_svg.slim'
   - 'app/views/folio/console/partials/_translations.slim'
   - 'lib/generators/folio/console/scaffold/templates/*'
+  - 'lib/templates/app/views/home/ui.slim'

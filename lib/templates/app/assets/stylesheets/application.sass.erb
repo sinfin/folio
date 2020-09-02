@@ -1,6 +1,6 @@
 @import 'custom_bootstrap'
 @import 'fonts'
-@import 'sprites'
+@import 'icons'
 @import 'folio/utilities'
 @import 'modules/turbolinks'
 @import 'modules/bootstrap-overrides'
@@ -11,16 +11,19 @@ html
   overflow-y: scroll
 
 body
-  height: 100%
   min-width: 320px
   min-height: 100%
   display: flex
   flex-direction: column
 
-[data-lightbox-src]
-  cursor: zoom-in
+.<%= project_classnames_prefix %>-layout-main
+  position: relative
+  z-index: 1
+  flex: 1 0 auto
 
-@import 'cells'
+@import '../../cells/folio/**/*'
+@import '../../cells/<%= project_name %>/**/*'
+
 @import 'folio/lead_form/lead_form'
 @import 'folio/newsletter_subscription_form/newsletter_subscription_form'
 @import 'folio/lazyload'

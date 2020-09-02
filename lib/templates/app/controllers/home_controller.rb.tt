@@ -3,4 +3,10 @@
 class HomeController < ApplicationController
   def index
   end
+
+  def ui
+    unless Rails.env.development?
+      redirect_to "/"
+    end
+  end
 end

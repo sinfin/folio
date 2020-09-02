@@ -18,7 +18,6 @@ module Folio
         gem "route_translator"
         gem "breadcrumbs_on_rails"
         gem "sentry-raven"
-        gem "pg", version: "~> 1.2.3"
         gem "devise-i18n"
         gem "rails-i18n"
         gem "mini_racer"
@@ -82,8 +81,9 @@ module Folio
       def copy_templates
         [
           ".env.sample",
+          "app/assets/stylesheets/_icons.scss",
+          "app/assets/stylesheets/application.sass",
           "app/views/layouts/folio/application.slim",
-          "bin/sprites",
           "config/database.yml",
           "config/locales/activerecord.cs.yml",
           "config/locales/activerecord.en.yml",
@@ -119,21 +119,19 @@ module Folio
           ".rubocop.yml",
           ".slim-lint.yml",
           "app/assets/config/manifest.js",
-          "app/assets/images/sprites@1x/.keep",
-          "app/assets/images/sprites@2x/.keep",
           "app/assets/javascripts/application.js",
           "app/assets/javascripts/folio/console/main_app.coffee",
-          "app/assets/stylesheets/_cells.scss.erb",
           "app/assets/stylesheets/_custom_bootstrap.sass",
           "app/assets/stylesheets/_fonts.scss",
           "app/assets/stylesheets/_print.sass",
-          "app/assets/stylesheets/_sprites.scss",
           "app/assets/stylesheets/_variables.sass",
-          "app/assets/stylesheets/application.sass",
           "app/assets/stylesheets/folio/console/_main_app.sass",
+          "app/assets/stylesheets/icons/_data.scss",
           "app/assets/stylesheets/modules/.keep",
           "app/assets/stylesheets/modules/_bootstrap-overrides.sass",
           "app/assets/stylesheets/modules/_turbolinks.sass",
+          "app/assets/stylesheets/modules/bootstrap-overrides/_buttons.sass",
+          "app/assets/stylesheets/modules/bootstrap-overrides/_forms.sass",
           "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",
           "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
           "app/cells/folio/console/atoms/previews/main_app.coffee",
@@ -142,6 +140,7 @@ module Folio
           "app/views/devise/mailer/reset_password_instructions.html.erb",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
+          "app/views/home/ui.slim",
           "bin/bower",
           "config/secrets.yml",
           "Guardfile",
@@ -154,10 +153,18 @@ module Folio
         copy_file Folio::Engine.root.join(".ruby-version"), ".ruby-version"
       end
 
-      def application_settings
-        return if ::File.readlines(Rails.root.join("config/application.rb")).grep("Rails.root.join("lib")").any?
+      def mkdir_folders
+        [
+          ::Rails.root.join("app/cells/#{project_name}")
+        ].each do |path|
+          FileUtils.mkdir_p path
+        end
+      end
 
-        inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-"RUBY"
+      def application_settings
+        return if ::File.readlines(Rails.root.join("config/application.rb")).grep('Rails.root.join("lib")').any?
+
+        inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'
     config.exceptions_app = self.routes
 
     config.time_zone = "Prague"
@@ -199,8 +206,6 @@ module Folio
       end
 
       def development_settings
-        gsub_file "config/environments/development.rb", /# Don"t care if the mailer can"t send.*\n/, "
-
         gsub_file "config/environments/development.rb", /  config\.action_mailer\.raise_delivery_errors = false/ do
           [
             "config.action_mailer.raise_delivery_errors = true",
@@ -220,14 +225,9 @@ module Folio
         gsub_file "config/environments/production.rb", "config.assets.js_compressor = :uglifier", "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6"
       end
 
-      def setup_routes
-        route "mount Folio::Engine => "/""
-      end
-
       def chmod_files
         [
           "bin/bower",
-          "bin/sprites"
         ].each do |file|
           ::File.chmod(0775, Rails.root.join(file))
         end
