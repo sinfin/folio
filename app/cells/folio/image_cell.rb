@@ -27,10 +27,10 @@ class Folio::ImageCell < Folio::ApplicationCell
         {
           alt: "",
           src: model[:normal],
-          srcset: "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x",
+          srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
           webp_src: model[:webp_normal],
-          webp_srcset: "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x",
-          use_webp: true,
+          webp_srcset: model[:webp_retina] ? "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x" : nil,
+          use_webp: !!model[:webp_normal],
         }
       else
         if model.is_a?(Folio::FilePlacement::Base)
