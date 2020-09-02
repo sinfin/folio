@@ -83,6 +83,7 @@ module Folio
           ".env.sample",
           "app/assets/stylesheets/_icons.scss",
           "app/assets/stylesheets/application.sass",
+          "app/assets/stylesheets/modules/_atoms.sass",
           "app/assets/stylesheets/modules/_rich-text.sass",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
