@@ -27,7 +27,9 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   self.table_name = 'folio_atoms'
 
-  audited associated_with: :placement, if: :placement_has_audited_atoms?
+  audited associated_with: :placement,
+          except: [:data_for_search],
+          if: :placement_has_audited_atoms?
 
   attr_readonly :type
   after_initialize :validate_structure
@@ -169,6 +171,11 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       Folio::Engine.root.join('app/models/folio/atom'),
       Rails.root.join('app/models/**/atom'),
     ]
+  end
+
+  # audited fix
+  def self.default_ignored_attributes
+    super - [inheritance_column]
   end
 
   private
