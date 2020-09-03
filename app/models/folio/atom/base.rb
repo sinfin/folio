@@ -42,6 +42,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   before_save :set_data_for_search
 
+  validates :type, presence: true
+
   def self.cell_name
     nil
   end
@@ -181,7 +183,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   private
     def klass
       # as type can be changed
-      self.type.constantize
+      type ? self.type.constantize : self.class
     end
 
     def positionable_last_record
