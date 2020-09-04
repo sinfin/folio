@@ -126,9 +126,19 @@ class Folio::ImageCell < Folio::ApplicationCell
   end
 
   def spacer_style
-    if spacer_ratio != 0
-      "padding-top: #{(100 * spacer_ratio).round(4)}%"
+    s = ""
+
+    if spacer_dominant_color?
+      img = model
+      img = model.file if model.is_a?(Folio::FilePlacement::Base)
+      s += "background-color: #{img.additional_data['dominant_color']};"
     end
+
+    if spacer_ratio != 0
+      s += "padding-top: #{(100 * spacer_ratio).round(4)}%;"
+    end
+
+    s
   end
 
   def spacer_ratio
@@ -190,6 +200,10 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def static?
     model.is_a?(Hash)
+  end
+
+  def spacer_dominant_color?
+    options[:dominant_color]
   end
 
   def self.fixed_height_mobile_ratio
