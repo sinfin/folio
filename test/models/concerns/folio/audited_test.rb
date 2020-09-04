@@ -34,7 +34,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
     # version 5
     @page.update!(title: 'v5')
-    @page.atoms << Folio::Atom::Text.new(content: 'atom 3 v4')
+    @page.atoms << Folio::Atom::Text.new(content: 'atom 3 v5')
 
     # revision version 1
     revision = @page.revisions.first
@@ -61,5 +61,16 @@ class Folio::AuditedTest < ActiveSupport::TestCase
     assert_equal 'v4', revision.title
     assert_equal 1, atoms.size
     assert_equal 2, @page.atoms.count
+
+    # restore v3
+    revision = @page.audits.third.revision
+    revision.reconstruct_atoms
+    revision.save!
+
+    @page.reload
+
+    assert_equal 'v3', @page.title
+    assert_equal 'atom 1 v3', @page.atoms.first.content
+    assert_equal 'atom 2 v3', @page.atoms.second.content
   end
 end

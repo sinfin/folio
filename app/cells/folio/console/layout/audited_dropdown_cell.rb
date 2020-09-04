@@ -14,6 +14,6 @@ class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
   end
 
   def version_url(version)
-    url_for([:revision, :console, version, version: version.audit.version])
+    url_for([:revision, :console, version, version: version.audit_version])
   end
 end

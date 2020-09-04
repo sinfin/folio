@@ -40,8 +40,8 @@ module Folio::Audited
 
       define_method(:reconstruct_atoms) do
         self.atoms = atoms.map do |a|
-          atom_audit = a.audits.order(placement_version: :desc, version: :desc)
-                               .where('placement_version <= ?', audit.version)
+          atom_audit = a.audits.reorder(placement_version: :desc, version: :desc)
+                               .where('placement_version <= ?', audit_version)
                                .first
 
           if atom_audit.nil?
@@ -57,8 +57,8 @@ module Folio::Audited
         revived = []
         Audited::Audit.where(associated: self, auditable_type: 'Folio::Atom::Base')
                       .where.not(auditable_id: atoms.ids)
-                      .order(placement_version: :desc, version: :desc)
-                      .where('placement_version <= ?', audit.version)
+                      .reorder(placement_version: :desc, version: :desc)
+                      .where('placement_version <= ?', audit_version)
                       .each do |a|
           if revived.exclude?(a.auditable_id)
             association(:atoms).add_to_target(a.revision, true) if a.action != 'destroy'

@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2020_09_03_112932) do
     t.index ["associated_type", "associated_id"], name: "associated_index"
     t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
+    t.index ["placement_version"], name: "index_audits_on_placement_version"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
   end
