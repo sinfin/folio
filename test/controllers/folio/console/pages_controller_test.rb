@@ -43,13 +43,13 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     assert page.has_css?(".alert-success")
   end
 
-  test 'revision' do
+  test "revision" do
     page = create(:folio_page)
     get url_for([:revision, :console, page, version: 1])
     assert_response :success
   end
 
-  test 'revive' do
+  test "revive" do
     page = create(:folio_page)
     post url_for([:restore, :console, page, version: 1])
     assert_redirected_to url_for([:edit, :console, page])

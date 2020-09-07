@@ -111,7 +111,7 @@ module Folio::Console::DefaultActions
     @audited_revision.save!
 
     redirect_to url_for([:edit, :console, @audited_revision]),
-                flash: { notice: I18n.t('folio.console.base_controller.restore.success') }
+                flash: { notice: I18n.t("folio.console.base_controller.restore.success") }
   end
 
   def event

@@ -21,8 +21,8 @@ Folio::Engine.routes.draw do
 
       member do
         if Rails.application.config.folio_pages_audited
-          get :revision, path: 'revision/:version'
-          post :restore, path: 'restore/:version'
+          get :revision, path: "revision/:version"
+          post :restore, path: "restore/:version"
         end
       end
     end

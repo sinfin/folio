@@ -7,9 +7,9 @@ class Folio::Console::Layout::AuditedDropdownCell < Folio::ConsoleCell
 
   def item_class_name(i)
     if i == 0
-      'f-c-layout-audited-dropdown__item--active'
+      "f-c-layout-audited-dropdown__item--active"
     else
-      'f-c-layout-audited-dropdown__item--link'
+      "f-c-layout-audited-dropdown__item--link"
     end
   end
 
