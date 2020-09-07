@@ -3,9 +3,14 @@
 
   + .f-c-layout-main-container,
   + form
-    pointer-events: none
     cursor: not-allowed
-    user-select: none
+
+    > div
+      pointer-events: none
+      user-select: none
+
+    .f-c-form-footer
+      display: none
 
   &__link
     text-decoration: underline
