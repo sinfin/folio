@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::PagesController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::Page'
+  folio_console_controller_for "Folio::Page"
 
   private
     def index_filters
@@ -15,7 +15,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
 
     def page_params
       params.require(:page)
-            .permit(*(Folio::Page.column_names - ['id'] + ['tag_list']),
+            .permit(*(Folio::Page.column_names - ["id"] + ["tag_list"]),
                     *atoms_strong_params,
                     *file_placements_strong_params)
     end

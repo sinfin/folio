@@ -21,13 +21,9 @@
 
 # Learn more: http://github.com/javan/whenever
 
-set :environment_variable, 'RACK_ENV'
-set :environment_variable, 'RAILS_ENV'
+set :environment_variable, "RACK_ENV"
+set :environment_variable, "RAILS_ENV"
 
-every 1.day, at: '4:30 am', roles: [:app] do
-  rake '-s sitemap:refresh'
-end
-
-every 1.minute do
-  rake 'folio_cache:conditional_clear'
+every 1.day, at: "4:30 am", roles: [:app] do
+  rake "-s sitemap:refresh"
 end

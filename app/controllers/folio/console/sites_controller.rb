@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::SitesController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::Site'
+  folio_console_controller_for "Folio::Site"
 
   before_action :find_site
   before_action :add_site_breadcrumb
@@ -13,7 +13,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
   def clear_cache
     Rails.cache.clear
-    redirect_to edit_console_site_path, flash: { notice: t('.success') }
+    redirect_to edit_console_site_path, flash: { notice: t(".success") }
   end
 
   private

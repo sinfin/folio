@@ -11,7 +11,7 @@ class Folio::Console::Merges::FormCell < Folio::ConsoleCell
                                          model.original,
                                          model.duplicate,
                                          url: params[:url]),
-      html: { class: 'f-c-merges-form__form' },
+      html: { class: "f-c-merges-form__form" },
       method: :post,
     }
 

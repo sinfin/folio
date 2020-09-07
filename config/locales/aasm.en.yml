@@ -3,6 +3,7 @@ en:
   activerecord:
     attributes:
       aasm_state: State
+
       folio/lead:
         aasm_state/submitted: To be handled
         aasm_state/handled: Handled

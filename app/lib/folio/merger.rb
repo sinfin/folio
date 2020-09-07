@@ -6,15 +6,15 @@ class Folio::Merger
                 :klass,
                 :targets
 
-  ORIGINAL = 'original'
-  DUPLICATE = 'duplicate'
+  ORIGINAL = "original"
+  DUPLICATE = "duplicate"
 
   def initialize(original, duplicate, klass: nil)
     @original = original
     @duplicate = duplicate
 
     if @original == @duplicate
-      fail 'Cannot merge record into itself'
+      fail "Cannot merge record into itself"
     end
 
     @klass = klass || default_klass

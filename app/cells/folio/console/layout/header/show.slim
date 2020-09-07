@@ -13,7 +13,7 @@
               options[:audited_revisions])
 
       = link_to log_out_path, \
-                method: :delete, \
+                method: Devise.sign_out_via, \
                 class: 'f-c-layout-header__sign-out-link f-c-with-icon'
         i.fa.fa-sign-out-alt.f-c-layout-header__sign-out-link-icon
         span.f-c-layout-header__sign-out-link__label = t('.sign_out')

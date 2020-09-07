@@ -9,7 +9,7 @@ module Folio::ApplicationControllerBase
 
     protect_from_forgery with: :exception
 
-    layout 'folio/application'
+    layout "folio/application"
 
     before_action :set_i18n_locale
 
@@ -48,7 +48,7 @@ module Folio::ApplicationControllerBase
         parts << page
       end
 
-      path = parts.reverse.map(&:slug).join('/')
+      path = parts.reverse.map(&:slug).join("/")
       main_app.page_path(path: path)
     end
 

@@ -3,7 +3,7 @@
 class Folio::Console::StateCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
-  class_name 'f-c-state', :small, :remote
+  class_name "f-c-state", :small, :remote
 
   def show
     render if model.aasm_state.present?
@@ -14,7 +14,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def state_square_tag(s, color)
-    content_tag(:span, '', class: 'f-c-state__state-square '\
+    content_tag(:span, "", class: "f-c-state__state-square "\
                                   "f-c-state__state-square--color-#{color} "\
                                   "f-c-state__state-square--state-#{s.name} "\
                                   "f-c-state__state-square--model-#{model.class.table_name}")
@@ -22,13 +22,13 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
   def state_square(s = nil)
     s ||= state
-    color = s.options[:color].presence || 'default'
+    color = s.options[:color].presence || "default"
     state_square_tag(s, color)
   end
 
   def event_square(event)
     s = target_state(event)
-    color = event.options[:color] || s.options[:color].presence || 'default'
+    color = event.options[:color] || s.options[:color].presence || "default"
     state_square_tag(s, color)
   end
 
@@ -37,7 +37,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
       {
         name: state.name,
         human_name: state.human_name,
-        color: state.options.color.presence || 'default',
+        color: state.options.color.presence || "default",
       }
     end
   end
@@ -52,7 +52,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
       method: :post,
       url: options[:url] || url_for([:event, :console, model]),
     }
-    simple_form_for '', opts, &block
+    simple_form_for "", opts, &block
   end
 
   def target_state(event)
@@ -71,7 +71,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
   def confirm(event)
     if event.options[:confirm]
-      t('folio.console.confirmation')
+      t("folio.console.confirmation")
     end
   end
 

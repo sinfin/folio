@@ -30,13 +30,13 @@ module Folio::PagesControllerBase
       if @page.class.view_name
         render @page.class.view_name
       else
-        render 'folio/pages/show'
+        render "folio/pages/show"
       end
     end
 
     def find_page
       if Rails.application.config.folio_pages_ancestry
-        path = params[:path].split('/')
+        path = params[:path].split("/")
 
         set_nested_page(pages_scope, path.shift, last: path.size == 1)
 

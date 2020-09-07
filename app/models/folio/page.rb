@@ -68,7 +68,7 @@ class Folio::Page < Folio::ApplicationRecord
   scope :featured,  -> { where(featured: true) }
 
   scope :by_type, -> (type) {
-    if type == 'Folio::Page'
+    if type == "Folio::Page"
       where(type: [type, nil])
     else
       where(type: type)
@@ -78,7 +78,7 @@ class Folio::Page < Folio::ApplicationRecord
   # Multi-search
   multisearchable against: begin
                     if Rails.application.config.folio_using_traco &&
-                       ActiveRecord::Base.connection.table_exists?('folio_pages')
+                       ActiveRecord::Base.connection.table_exists?("folio_pages")
                       I18n.available_locales.map do |locale|
                         "title_#{locale}"
                       end
@@ -92,30 +92,30 @@ class Folio::Page < Folio::ApplicationRecord
 
   pg_search_scope :by_query,
                   against: begin
-                    if Rails.application.config.folio_using_traco && ActiveRecord::Base.connection.table_exists?('folio_pages')
+                    if Rails.application.config.folio_using_traco && ActiveRecord::Base.connection.table_exists?("folio_pages")
                       weighted = {}
                       self.column_names.each do |column|
                         if /\A(title|perex)_/.match?(column)
                           if /title/.match?(column)
-                            weighted[column] = 'A'
+                            weighted[column] = "A"
                           elsif /perex/.match?(column)
-                            weighted[column] = 'B'
+                            weighted[column] = "B"
                           else
-                            weighted[column] = 'C'
+                            weighted[column] = "C"
                           end
                         end
                       end
                       weighted
                     else
                       {
-                        title: 'A',
-                        perex: 'B',
+                        title: "A",
+                        perex: "B",
                       }
                     end
                   rescue ActiveRecord::NoDatabaseError
                     {
-                      title: 'A',
-                      perex: 'B',
+                      title: "A",
+                      perex: "B",
                     }
                   end,
                   associated_against: begin
@@ -146,7 +146,7 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   def self.view_name
-    'folio/pages/show'
+    "folio/pages/show"
   end
 
   def self.public?

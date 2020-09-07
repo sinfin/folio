@@ -20,17 +20,17 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
             remote: params[:cell_options][:remote].presence,
           }
           render json: {
-            data: cell('folio/console/state', record, opts).show,
+            data: cell("folio/console/state", record, opts).show,
             meta: {
               flash: {
-                success: I18n.t('flash.actions.event.notice')
+                success: I18n.t("flash.actions.event.notice")
               }
             } }
         else
-          render_failure('invalid_event')
+          render_failure("invalid_event")
         end
       else
-        render_failure('invalid_record')
+        render_failure("invalid_record")
       end
     else
       render_failure
@@ -38,7 +38,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
   end
 
   private
-    def render_failure(base = 'failure')
+    def render_failure(base = "failure")
       render json: {
         errors: [
           {

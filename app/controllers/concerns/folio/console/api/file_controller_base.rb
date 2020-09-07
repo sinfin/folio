@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'tempfile'
-require 'zip'
+require "tempfile"
+require "zip"
 
 module Folio::Console::Api::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    can_cache = (params[:page].nil? || params[:page] == '1') &&
+    can_cache = (params[:page].nil? || params[:page] == "1") &&
                 filter_params.to_h.all? { |k, v| v.blank? }
 
     if can_cache
@@ -30,13 +30,13 @@ module Folio::Console::Api::FileControllerBase
     if folio_console_record.update(file_params)
       meta = {
         flash: {
-          success: t('flash.actions.update.notice', resource_name: @klass.model_name.human)
+          success: t("flash.actions.update.notice", resource_name: @klass.model_name.human)
         }
       }
     else
       meta = {
         flash: {
-          alert: t('flash.actions.update.alert', resource_name: @klass.model_name.human)
+          alert: t("flash.actions.update.alert", resource_name: @klass.model_name.human)
         }
       }
     end
@@ -64,11 +64,11 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def mass_destroy
-    ids = params.require(:ids).split(',')
+    ids = params.require(:ids).split(",")
     @klass.where(id: ids).each(&:destroy!)
-    render json: { data: { message: t('.success') }, status: 200 }
+    render json: { data: { message: t(".success") }, status: 200 }
   rescue StandardError => e
-    render json: { error: t('.failure', msg: e.message), status: 400 }
+    render json: { error: t(".failure", msg: e.message), status: 400 }
   end
 
   def change_file
@@ -83,13 +83,13 @@ module Folio::Console::Api::FileControllerBase
 
       meta = {
         flash: {
-          success: t('flash.actions.update.notice', resource_name: @klass.model_name.human)
+          success: t("flash.actions.update.notice", resource_name: @klass.model_name.human)
         }
       }
     else
       meta = {
         flash: {
-          alert: t('flash.actions.update.alert', resource_name: @klass.model_name.human)
+          alert: t("flash.actions.update.alert", resource_name: @klass.model_name.human)
         }
       }
     end
@@ -100,10 +100,10 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def mass_download
-    ids = params.require(:ids).split(',')
+    ids = params.require(:ids).split(",")
     files = @klass.where(id: ids)
 
-    tmp_zip_file = Tempfile.new('folio-files')
+    tmp_zip_file = Tempfile.new("folio-files")
 
     Zip::File.open(tmp_zip_file.path, Zip::File::CREATE) do |zip|
       files.each do |file|
@@ -114,7 +114,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     zip_data = File.read(tmp_zip_file.path)
-    send_data(zip_data, type: 'application/zip',
+    send_data(zip_data, type: "application/zip",
                         filename: "#{@klass.model_name.human(count: 2)}-#{Time.zone.now.to_i}.zip")
   end
 
@@ -138,7 +138,7 @@ module Folio::Console::Api::FileControllerBase
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?
-        p[:tag_list] = p.delete(:tags).join(',')
+        p[:tag_list] = p.delete(:tags).join(",")
       end
 
       p

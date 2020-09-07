@@ -20,3 +20,8 @@ meta[
     = stylesheet_link_tag 'folio/console/react', media: 'all'
 
 = csrf_meta_tags
+
+- if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+  = preload_link_tag font_path("font-awesome/webfonts/fa-regular-400.woff2")
+  = preload_link_tag font_path("font-awesome/webfonts/fa-solid-900.woff2")
+  = preload_link_tag font_path('MaterialIcons-Regular.woff2')

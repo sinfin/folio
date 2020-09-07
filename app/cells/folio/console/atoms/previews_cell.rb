@@ -3,7 +3,7 @@
 class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   include Folio::AtomsHelper
 
-  class_name 'f-c-atoms-previews', :non_interactive
+  class_name "f-c-atoms-previews", :non_interactive
 
   def show
     render if model.is_a?(Hash)

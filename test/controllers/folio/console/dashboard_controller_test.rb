@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 module Folio
   class Console::DashboardControllerTest < Console::BaseControllerTest
     include Engine.routes.url_helpers
 
-    test 'should or should not get index' do
+    test "should or should not get index" do
       get console_root_url
       assert_redirected_to console_pages_path
 

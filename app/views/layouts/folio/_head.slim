@@ -1,3 +1,6 @@
+- stylesheet ||= 'application'
+- javascript ||= 'application'
+
 meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
 meta charset="utf-8"
 meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
@@ -36,14 +39,14 @@ meta name="twitter:card" content="summary"
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
   = action_cable_meta_tag
 
-  = stylesheet_link_tag('application', \
+  = stylesheet_link_tag(stylesheet, \
                         media: 'all', \
                         'data-turbolinks-track': 'reload')
 
   == render partial: 'layouts/folio/analytics'
 
-  = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload', \
-                                          defer: true
+  = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \
+                                       defer: true
 
   - if ENV['RECAPTCHA_SITE_KEY'].present? && \
        ENV['RECAPTCHA_SECRET_KEY'].present?

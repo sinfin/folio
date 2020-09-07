@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlagComponent
-  CDN = 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.9.0/flags'
+  CDN = "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.9.0/flags"
 
   def flag(wrapper_options = nil)
     @flag ||= begin

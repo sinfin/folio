@@ -3,7 +3,7 @@
 class Folio::ImageCell < Folio::ApplicationCell
   include Folio::CellLightbox
 
-  class_name 'f-image', :centered,
+  class_name "f-image", :centered,
                         :not_lazy?,
                         :lightboxable?,
                         :contain,
@@ -11,7 +11,9 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :hover_zoom,
                         :fixed_height,
                         :small,
-                        :cloned
+                        :cloned,
+                        :round,
+                        :static?
 
   def show
     render if size
@@ -21,35 +23,47 @@ class Folio::ImageCell < Folio::ApplicationCell
     return nil unless model.present?
 
     @data ||= begin
-      if model.is_a?(Folio::FilePlacement::Base)
-        file = model.file
+      if static?
+        use_webp = model[:webp_normal] && model[:webp_retina]
+        {
+          alt: "",
+          src: model[:normal],
+          srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
+          webp_src: model[:webp_normal],
+          webp_srcset: use_webp ? "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x" : nil,
+          use_webp: use_webp,
+        }
       else
-        file = model
+        if model.is_a?(Folio::FilePlacement::Base)
+          file = model.file
+        else
+          file = model
+        end
+
+        retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+        normal = file.thumb(size)
+        retina = file.thumb(retina_size)
+
+        use_webp = normal[:webp_url] && retina[:webp_url]
+
+        h = {
+          normal: normal,
+          retina: retina,
+          alt: model.try(:alt) || "",
+          title: model.try(:title),
+          use_webp: use_webp,
+          src: normal.url,
+          srcset: "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x",
+        }
+
+        if use_webp
+          h[:webp_src] = normal.webp_src
+          h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+        end
+
+        h
       end
-
-      retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
-
-      normal = file.thumb(size)
-      retina = file.thumb(retina_size)
-
-      use_webp = normal[:webp_url] && retina[:webp_url]
-
-      h = {
-        normal: normal,
-        retina: retina,
-        alt: model.try(:alt) || '',
-        title: model.try(:title),
-        use_webp: use_webp,
-        src: normal.url,
-        srcset: "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x",
-      }
-
-      if use_webp
-        h[:webp_src] = normal.webp_src
-        h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
-      end
-
-      h
     end
   end
 
@@ -99,7 +113,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       if options[:max_height]
         width = (options[:max_height] / spacer_ratio).round(4)
       else
-        width = options[:max_width] || size.split('x').first
+        width = options[:max_width] || size.split("x").first
       end
 
       if width.present?
@@ -108,22 +122,32 @@ class Folio::ImageCell < Folio::ApplicationCell
       end
     end
 
-    styles.join(';')
+    styles.join(";")
   end
 
   def spacer_style
-    if spacer_ratio != 0
-      "padding-top: #{(100 * spacer_ratio).round(4)}%"
+    s = ""
+
+    if spacer_dominant_color?
+      img = model
+      img = model.file if model.is_a?(Folio::FilePlacement::Base)
+      s += "background-color: #{img.additional_data['dominant_color']};"
     end
+
+    if spacer_ratio != 0
+      s += "padding-top: #{(100 * spacer_ratio).round(4)}%;"
+    end
+
+    s
   end
 
   def spacer_ratio
     @spacer_ratio ||= begin
-      if data
+      if data && data[:normal]
         width = data[:normal].width
         height = data[:normal].height
       else
-        width, height = size.split('x').map(&:to_i)
+        width, height = size.split("x").map(&:to_i)
       end
 
       if width != 0 && height != 0
@@ -161,7 +185,7 @@ class Folio::ImageCell < Folio::ApplicationCell
     elsif model && lightboxable?
       if model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
-        h['data-lightbox-title'] ||= options[:title] || model.try(:title)
+        h["data-lightbox-title"] ||= options[:title] || model.try(:title)
       else
         h = h.merge(lightbox_from_image(model))
       end
@@ -172,6 +196,14 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def lightboxable?
     options[:lightbox]
+  end
+
+  def static?
+    model.is_a?(Hash)
+  end
+
+  def spacer_dominant_color?
+    options[:dominant_color]
   end
 
   def self.fixed_height_mobile_ratio

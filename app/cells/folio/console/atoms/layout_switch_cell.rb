@@ -6,12 +6,12 @@ class Folio::Console::Atoms::LayoutSwitchCell < Folio::ConsoleCell
   end
 
   def default_layout
-    model.presence || 'vertical'
+    model.presence || "vertical"
   end
 
   def active_class(layout)
     if layout == default_layout
-      'f-c-atoms-layout-switch__button--active'
+      "f-c-atoms-layout-switch__button--active"
     end
   end
 end

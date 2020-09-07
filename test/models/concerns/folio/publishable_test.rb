@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Folio::PublishableTest < ActiveSupport::TestCase
-  test 'with_date' do
+  test "with_date" do
     assert_equal(0, Folio::Page.published.count)
     assert_equal(0, Folio::Page.unpublished.count)
     assert_equal(0, Folio::Page.published_or_admin(true).count)

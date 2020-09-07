@@ -2,7 +2,7 @@
 
 module Folio::ApplicationHelper
   def public_page_title
-    title = @public_page_title.presence || I18n.t('head.title.default')
+    title = @public_page_title.presence || I18n.t("head.title.default")
 
     if title.present?
       base = [

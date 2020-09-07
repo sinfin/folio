@@ -20,7 +20,7 @@ class Folio::ConsoleCell < Folio::ApplicationCell
   end
 
   def admin_image(placement, opts = {})
-    cell('folio/image',
+    cell("folio/image",
          placement,
          opts.merge(size: Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
                     contain: true))

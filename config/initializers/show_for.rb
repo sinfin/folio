@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'show_for'
+require "show_for"
 
 # Use this setup block to configure all options available in ShowFor.
 ShowFor.setup do |config|
@@ -8,7 +8,7 @@ ShowFor.setup do |config|
   config.show_for_tag = :table
 
   # The DOM class set for show_for tag. Default is nil
-  config.show_for_class = 'table table-bordered f-c-show-for'
+  config.show_for_class = "table table-bordered f-c-show-for"
 
   # The tag which wraps each attribute/association call. Default is :p.
   config.wrapper_tag = :tr
@@ -20,22 +20,22 @@ ShowFor.setup do |config|
   config.label_tag = :td
 
   # The DOM class of each label tag. Default is :label.
-  config.label_class = 'small text-uppercase text-body text-nowrap f-c-show-for__label'
+  config.label_class = "small text-uppercase text-body text-nowrap f-c-show-for__label"
 
   # The tag used to wrap each content (value). Default is nil.
   config.content_tag = :td
 
   # The DOM class of each content tag. Default is :content.
-  config.content_class = 'f-c-show-for__content w-100'
+  config.content_class = "f-c-show-for__content w-100"
 
   # The DOM class set for blank content tags. Default is "blank".
-  config.blank_content_class = 'blank text-muted'
+  config.blank_content_class = "blank text-muted"
 
   # Skip blank attributes instead of generating with a default message. Default is false.
   # config.skip_blanks = true
 
   # The separator between label and content. Default is "<br />".
-  config.separator = ''
+  config.separator = ""
 
   # The tag used to wrap collections. Default is :ul.
   # config.collection_tag = :div

@@ -2,6 +2,4 @@
 
 class PagesController < ApplicationController
   include Folio::PagesControllerBase
-
-  caches_page :show
 end

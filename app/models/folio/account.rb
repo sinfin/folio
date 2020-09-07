@@ -33,11 +33,11 @@ class Folio::Account < Folio::ApplicationRecord
   }
 
   def superuser?
-    role == 'superuser'
+    role == "superuser"
   end
 
   def manager?
-    role == 'manager'
+    role == "manager"
   end
 
   def full_name
@@ -49,7 +49,7 @@ class Folio::Account < Folio::ApplicationRecord
   end
 
   def remember_me
-    super.nil? ? '1' : super
+    super.nil? ? "1" : super
   end
 
   alias :to_label :full_name

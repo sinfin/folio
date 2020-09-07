@@ -31,7 +31,7 @@ window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
         instance.destroy() for instance in window.folioLazyloadInstances
         window.folioLazyloadInstances = []
   else
-    $ init
+    $ -> setTimeout(init, 0)
 
 window.makeFolioLazyLoad '.f-lazyload'
 

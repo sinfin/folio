@@ -105,4 +105,4 @@ window.makeFolioLightbox = (selector, opts = {}) ->
 
       window.folioLightboxInstances = []
   else
-    $ init
+    $ -> setTimeout(init, 0)

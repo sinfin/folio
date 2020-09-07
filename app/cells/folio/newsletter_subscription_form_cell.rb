@@ -15,22 +15,22 @@ module Folio
 
     def submit_text
       return options[:submit_text] unless options[:submit_text].nil?
-      t('.submit')
+      t(".submit")
     end
 
     def message
       return options[:message] unless options[:message].nil?
-      t('.message')
+      t(".message")
     end
 
     def button_class
       return options[:button_class] unless options[:button_class].nil?
-      'btn'
+      "btn"
     end
 
     def wrap_class
-      base = 'folio-newsletter-subscription-form-wrap'
-      base += ' folio-newsletter-subscription-form-submitted' if submitted
+      base = "folio-newsletter-subscription-form-wrap"
+      base += " folio-newsletter-subscription-form-submitted" if submitted
       base
     end
 

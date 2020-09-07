@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
   include Folio::Engine.routes.url_helpers
@@ -81,12 +81,12 @@ class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
     @page = create(:folio_page)
   end
 
-  test 'root page should get show' do
+  test "root page should get show" do
     get url_for(@page)
     assert_response :ok
   end
 
-  test 'slug change -> redirect' do
+  test "slug change -> redirect" do
     old_slug = @page.slug
 
     get url_for(@page)
@@ -108,7 +108,7 @@ class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'public?' do
+  test "public?" do
     get url_for(@page)
     assert_response :ok
 

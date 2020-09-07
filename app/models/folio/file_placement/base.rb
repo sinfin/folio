@@ -4,7 +4,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   include Folio::Taggable
   include PgSearch::Model
 
-  self.table_name = 'folio_file_placements'
+  self.table_name = "folio_file_placements"
 
   scope :ordered, -> { order(position: :asc) }
 
@@ -17,7 +17,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   after_destroy :update_file_file_placements_size
 
   def to_label
-    title.presence || file.try(:file_name) || 'error: empty file'
+    title.presence || file.try(:file_name) || "error: empty file"
   end
 
   def self.folio_file_placement(class_name, name = nil)
@@ -33,12 +33,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   def self.folio_image_placement(name = nil)
     include Folio::PregenerateThumbnails
-    folio_file_placement('Folio::Image', name)
+    folio_file_placement("Folio::Image", name)
     self.class_eval { alias :image :file }
   end
 
   def self.folio_document_placement(name = nil)
-    folio_file_placement('Folio::Document', name)
+    folio_file_placement("Folio::Document", name)
   end
 
   private
@@ -55,7 +55,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
                   source.try(:title) ||
                   source.try(:name)
 
-          pl_title = [source.class.model_name.human, title].join(' - ')
+          pl_title = [source.class.model_name.human, title].join(" - ")
 
           if title.present?
             update_columns(placement_title: pl_title,

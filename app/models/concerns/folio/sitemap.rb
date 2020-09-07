@@ -59,7 +59,7 @@ module Folio::Sitemap
       end
 
       def to_sitemap_caption
-        [self.placement_title, self.title, self.file.to_sitemap_caption].compact.join(' / ')
+        [self.placement_title, self.title, self.file.to_sitemap_caption].compact.join(" / ")
       end
 
       def to_sitemap(size)

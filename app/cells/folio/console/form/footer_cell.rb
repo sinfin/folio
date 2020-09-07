@@ -8,11 +8,11 @@ class Folio::Console::Form::FooterCell < Folio::ConsoleCell
 
   def submit_label
     if options[:submit_continue]
-      t('folio.console.actions.continue')
+      t("folio.console.actions.continue")
     elsif options[:submit_label].present?
       options[:submit_label]
     else
-      t('folio.console.actions.submit')
+      t("folio.console.actions.submit")
     end
   end
 end

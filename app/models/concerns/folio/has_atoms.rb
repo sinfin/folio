@@ -19,7 +19,7 @@ module Folio::HasAtoms
           params[:label].each do |locale, label|
             settings[locale] ||= []
             settings[locale] << {
-              cell_name: 'folio/console/atoms/previews/label',
+              cell_name: "folio/console/atoms/previews/label",
               model: label,
               key: :label,
             }
@@ -34,7 +34,7 @@ module Folio::HasAtoms
           params[:perex].each do |locale, perex|
             settings[locale] ||= []
             settings[locale] << {
-              cell_name: 'folio/console/atoms/previews/perex',
+              cell_name: "folio/console/atoms/previews/perex",
               model: perex,
               key: :perex,
             }
@@ -52,7 +52,7 @@ module Folio::HasAtoms
 
     included do
       has_many :atoms, -> { ordered },
-                       class_name: 'Folio::Atom::Base',
+                       class_name: "Folio::Atom::Base",
                        as: :placement,
                        inverse_of: :placement,
                        dependent: :destroy
@@ -82,7 +82,7 @@ module Folio::HasAtoms
     included do
       atom_locales.each do |locale|
         has_many "#{locale}_atoms".to_sym, -> { ordered.where(locale: locale) },
-                                           class_name: 'Folio::Atom::Base',
+                                           class_name: "Folio::Atom::Base",
                                            as: :placement,
                                            inverse_of: :placement,
                                            dependent: :destroy

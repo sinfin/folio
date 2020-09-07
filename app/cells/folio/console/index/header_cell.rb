@@ -21,10 +21,10 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     opts = {
       url: query_url,
       method: :get,
-      html: { class: 'f-c-index-header__form' },
+      html: { class: "f-c-index-header__form" },
     }
 
-    simple_form_for('', opts, &block)
+    simple_form_for("", opts, &block)
   end
 
   def query_autocomplete
@@ -53,9 +53,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def new_button(&block)
     url = options[:new_url] ? send(options[:new_url]) : url_for([:console, model, action: :new])
-    html_opts = { title: t('.add'),
-                  class: 'btn btn-success '\
-                         'f-c-index-header__btn f-c-index-header__btn--new' }
+    html_opts = { title: t(".add"),
+                  class: "btn btn-success "\
+                         "f-c-index-header__btn f-c-index-header__btn--new" }
     link_to(url, html_opts, &block)
   rescue NoMethodError
   end

@@ -9,8 +9,8 @@ module Folio::DragonflyFormatValidation
                          of: :file,
                          in: formats,
                          message: proc { |actual, model|
-                           I18n.t('activerecord.errors.messages.file_format',
-                                  types: formats.join(', '))
+                           I18n.t("activerecord.errors.messages.file_format",
+                                  types: formats.join(", "))
                          }
     end
   end

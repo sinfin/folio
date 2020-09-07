@@ -54,7 +54,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                                         frame: 0,
                                         x: x,
                                         y: y)
-                           .encode('jpg', "-quality #{quality}")
+                           .encode("jpg", "-quality #{quality}")
                            .jpegoptim
         end
 
@@ -69,7 +69,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                                       frame: 0,
                                       x: x,
                                       y: y)
-                         .encode('jpg', "-quality #{quality}")
+                         .encode("jpg", "-quality #{quality}")
                          .jpegoptim
       else
         thumbnail = image.file
@@ -77,7 +77,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                                       frame: 0,
                                       x: x,
                                       y: y)
-                         .encode('jpg', "-quality #{quality}")
+                         .encode("jpg", "-quality #{quality}")
                          .cmyk_to_srgb
                          .jpegoptim
 
@@ -99,7 +99,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
       if make_webp
         webp = thumbnail.convert_to_webp
-        webp.name = Pathname(webp.name).sub_ext('.webp').to_s
+        webp.name = Pathname(webp.name).sub_ext(".webp").to_s
 
         webp_uid = webp.store
 

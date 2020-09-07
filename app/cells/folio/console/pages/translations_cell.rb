@@ -17,8 +17,8 @@ class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
   end
 
   def ul_class
-    return 'nav nav-pills' if options[:as_pills]
-    'folio-console-pages-translations-inline'
+    return "nav nav-pills" if options[:as_pills]
+    "folio-console-pages-translations-inline"
   end
 
   def edit_link(page)
@@ -42,9 +42,9 @@ class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
 
   def active_class(path)
     if current_page?(path)
-      'nav-link active'
+      "nav-link active"
     else
-      'nav-link'
+      "nav-link"
     end
   end
 
@@ -57,6 +57,6 @@ class Folio::Console::Pages::TranslationsCell < Folio::ConsoleCell
   end
 
   def translate_message(locale)
-    t(".confirm_#{locale}", default: t('.confirm', language: locale))
+    t(".confirm_#{locale}", default: t(".confirm", language: locale))
   end
 end

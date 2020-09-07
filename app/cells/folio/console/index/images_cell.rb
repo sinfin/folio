@@ -3,7 +3,7 @@
 class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
   include Folio::CellLightbox
 
-  class_name 'f-c-index-images', :cover, :gallery
+  class_name "f-c-index-images", :cover, :gallery
 
   def id_class_name
     # needed for separate lightboxes

@@ -12,7 +12,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   # Relations
-  has_many :file_placements, class_name: 'Folio::FilePlacement::Base'
+  has_many :file_placements, class_name: "Folio::FilePlacement::Base"
   has_many :placements, through: :file_placements
 
   # Validations
@@ -23,9 +23,9 @@ class Folio::File < Folio::ApplicationRecord
   scope :ordered, -> { order(created_at: :desc) }
   scope :by_placement, -> (placement_title) { order(created_at: :desc) }
   scope :by_used, -> (used) do
-    if used == 'used'
+    if used == "used"
       joins(:file_placements)
-    elsif used == 'unused'
+    elsif used == "unused"
       left_joins(:file_placements).where(folio_file_placements: { id: nil })
     else
       all
@@ -33,7 +33,7 @@ class Folio::File < Folio::ApplicationRecord
   end
   scope :by_tags, -> (tags) do
     if tags.is_a?(String)
-      tagged_with(tags.split(','))
+      tagged_with(tags.split(","))
     else
       tagged_with(tags)
     end
@@ -98,7 +98,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def self.react_type
-    'document'
+    "document"
   end
 
   private
@@ -107,6 +107,7 @@ class Folio::File < Folio::ApplicationRecord
     end
 
     def set_mime_type
+      return unless will_save_change_to_file_uid?
       return unless file.present?
       return unless respond_to?(:mime_type)
       self.mime_type = get_mime_type(file)

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/selectize.bootstrap4.css">
+	<title>Selectize Bootstrap 4</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" href="#">Selectize Bs4 Example</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarNav">
+	</div>
+</nav>
+
+<div class="container mt-4">
+	<div class="row justify-content-center">
+		<div class="col-lg-6">
+			<form method="post" class="needs-validation" novalidate>
+				<!-- <div class="form-group">
+					<div class="input-group input-group-lg">
+						<div class="input-group-prepend">
+              <span class="input-group-text">Prepend 1</span>
+						</div>
+						<select class="form-control single-select">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+						<div class="input-group-prepend">
+              <span class="input-group-text">Prepend 2</span>
+						</div>
+						<select class="form-control single-select">
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+					</div>
+				</div> -->
+
+        <div class="form-group">
+          <label>Form Input 1</label>
+          <select name="select1" class="form-control single-select" placeholder="Select an Option..." required>
+            <option value="">Select an Option...</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+            <option value="4">Option 4</option>
+          </select>
+          <div class="invalid-feedback">
+            Please select a valid option.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Form Input 2</label>
+          <select name="select2" class="form-control single-select" placeholder="Select an Option..." required>
+            <option value="">Select an Option...</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+            <option value="4">Option 4</option>
+          </select>
+          <div class="invalid-feedback">
+            Please select a valid option.
+          </div>
+        </div>
+
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script src="js/jquery/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/selectize/standalone/selectize.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$('.single-select').selectize();
+	});
+
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+</body>
+</html>

@@ -6,20 +6,20 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
 
     if options[:remote]
       options[:collection] = autocomplete_collection
-      iho[:class] = [iho[:class], 'f-c-collection-remote-select-input'].flatten
+      iho[:class] = [iho[:class], "f-c-collection-remote-select-input"].flatten
 
       if options[:remote] == true
-        iho['data-autocomplete-url'] = autocomplete_url
+        iho["data-autocomplete-url"] = autocomplete_url
       elsif options[:remote].is_a?(Hash)
-        iho['data-autocomplete-url'] = autocomplete_url(options[:remote])
+        iho["data-autocomplete-url"] = autocomplete_url(options[:remote])
       else
-        iho['data-autocomplete-url'] = options[:remote]
+        iho["data-autocomplete-url"] = options[:remote]
       end
     end
 
     if options[:atom_setting]
-      iho[:class] = [iho[:class], 'f-c-js-atoms-placement-setting'].flatten
-      iho['data-atom-setting'] = options[:atom_setting]
+      iho[:class] = [iho[:class], "f-c-js-atoms-placement-setting"].flatten
+      iho["data-atom-setting"] = options[:atom_setting]
     end
 
     label_method, value_method = detect_collection_methods

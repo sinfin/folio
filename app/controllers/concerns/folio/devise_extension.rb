@@ -9,9 +9,9 @@ module Folio::DeviseExtension
 
   def layout_by_resource
     if resource_name == :account
-      'folio/console/devise'
+      "folio/console/devise"
     else
-      'devise'
+      "devise"
     end
   end
 end

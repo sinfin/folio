@@ -3,7 +3,7 @@
 module Folio::OpenGraphHelper
   def og_image
     return @og_image if @og_image.present?
-    path = defined?(og_image_fallback) ? og_image_fallback : '/fb-share.png'
+    path = defined?(og_image_fallback) ? og_image_fallback : "/fb-share.png"
     image_url(path, host: request.base_url)
   rescue Sprockets::Rails::Helper::AssetNotFound
     nil
@@ -30,6 +30,6 @@ module Folio::OpenGraphHelper
   end
 
   def og_url
-    request.original_url.gsub('http://', 'https://')
+    request.original_url.gsub("http://", "https://")
   end
 end

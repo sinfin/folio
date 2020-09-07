@@ -38,14 +38,6 @@ class Folio::Menu < Folio::ApplicationRecord
     {}
   end
 
-  def self.allowed_menu_item_classes
-    Folio::MenuItem.recursive_subclasses
-  end
-
-  def self.allowed_menu_item_classes_for_select
-    type_collection_for_select(self.allowed_menu_item_classes)
-  end
-
   # Used for UI/controllers only
   # no model validations as that would get complex fast
   def self.max_nesting_depth
@@ -54,8 +46,8 @@ class Folio::Menu < Folio::ApplicationRecord
 
   def self.sti_paths
     [
-      Folio::Engine.root.join('app/models/folio/menu'),
-      Rails.root.join('app/models/**/menu'),
+      Folio::Engine.root.join("app/models/folio/menu"),
+      Rails.root.join("app/models/**/menu"),
     ]
   end
 end

@@ -5,7 +5,7 @@ module Folio::HasPrivateAttachments
 
   included do
     has_many :private_attachments, -> { ordered },
-                                   class_name: 'Folio::PrivateAttachment',
+                                   class_name: "Folio::PrivateAttachment",
                                    as: :attachmentable,
                                    foreign_key: :attachmentable_id,
                                    dependent: :destroy

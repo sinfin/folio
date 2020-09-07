@@ -27,14 +27,14 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
   end
 
   def render_fields
-    if react_type == 'image'
-      render('_image_fields')
+    if react_type == "image"
+      render("_image_fields")
     else
-      render('_document_fields')
+      render("_document_fields")
     end
   end
 
-  def image(fp, class_name = '')
+  def image(fp, class_name = "")
     if fp.object && fp.object.file
       url = fp.object.file.admin_thumb.url
       image_tag(url, class: "folio-console-thumbnail__img #{class_name}")
@@ -42,10 +42,10 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
   end
 
   def class_name
-    base = ['folio-console-react-picker', 'folio-console-react-picker--single']
-    base << 'folio-console-react-picker--error' if form_errors.present?
-    base << 'f-c-js-atoms-placement-setting' if options[:atom_setting]
-    base.join(' ')
+    base = ["folio-console-react-picker", "folio-console-react-picker--single"]
+    base << "folio-console-react-picker--error" if form_errors.present?
+    base << "f-c-js-atoms-placement-setting" if options[:atom_setting]
+    base.join(" ")
   end
 
   def serialized_file(fp)

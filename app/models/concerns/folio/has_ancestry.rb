@@ -39,7 +39,7 @@ module Folio::HasAncestry
       return if parent.nil? || parent.class.try(:allowed_child_types).nil?
 
       if parent.class.allowed_child_types.exclude? self.class
-        errors.add(:type, 'is not allowed')
+        errors.add(:type, "is not allowed")
       end
     end
 

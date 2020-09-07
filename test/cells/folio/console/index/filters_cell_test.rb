@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Folio::Console::Index::FiltersCellTest < Folio::Console::CellTest
-  test 'show' do
+  test "show" do
     index_filters = {
       by_published: [
-        ['All', nil],
-        ['Published', 'published'],
-        ['Unpublished', 'unpublished'],
+        ["All", nil],
+        ["Published", "published"],
+        ["Unpublished", "unpublished"],
       ]
     }
-    html = cell('folio/console/index/filters', index_filters: index_filters,
+    html = cell("folio/console/index/filters", index_filters: index_filters,
                                                klass: Folio::Page).(:show)
 
     assert_equal 1,

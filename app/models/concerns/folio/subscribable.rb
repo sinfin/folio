@@ -8,7 +8,7 @@ module Folio::Subscribable
   end
 
   def subscribe
-    if !Rails.env.test? && (!Rails.env.development? || ENV['DEV_MAILCHIMP'])
+    if !Rails.env.test? && (!Rails.env.development? || ENV["DEV_MAILCHIMP"])
       Folio::Mailchimp::SubscribeJob.perform_later(self, status: subscription_default_status,
                                                        merge_vars: subscription_merge_vars,
                                                        tags: subscription_tags)

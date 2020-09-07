@@ -8,6 +8,6 @@ class SavingFolioCell < Folio::ApplicationCell
       value = options[opt]
       next unless value
       %{<input type="hidden" name="cell_options[#{opt}]" value="#{html_escape(value)}">}
-    end.compact.join('')
+    end.compact.join("")
   end
 end

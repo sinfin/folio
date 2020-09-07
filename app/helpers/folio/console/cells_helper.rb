@@ -5,16 +5,16 @@ module Folio
   module Console::CellsHelper
     def boolean_toggle(model, attribute, options = {})
       opts = options.merge(attribute: attribute)
-      cell('folio/console/boolean_toggle', model, opts).show
+      cell("folio/console/boolean_toggle", model, opts).show
                                                        .try(:html_safe)
     end
 
     def nested_model_controls(model, options = {})
-      cell('folio/console/nested_model_controls', model, options).show.html_safe
+      cell("folio/console/nested_model_controls", model, options).show.html_safe
     end
 
     def index_position_buttons(model, options = {})
-      cell('folio/console/index/position_buttons', model,
+      cell("folio/console/index/position_buttons", model,
                                                    options).show.html_safe
     end
 
@@ -31,12 +31,12 @@ module Folio
     end
 
     def single_file_select(f, attr_name = :file, as: :file)
-      cell('folio/console/single_file_select', f, attr_name: attr_name,
+      cell("folio/console/single_file_select", f, attr_name: attr_name,
                                                   as: as).show.html_safe
     end
 
     def show_header(model, opts = {})
-      cell('folio/console/show/header', model, opts).show.html_safe
+      cell("folio/console/show/header", model, opts).show.html_safe
     end
 
     def form_header(f, opts = {}, &block)
@@ -44,11 +44,11 @@ module Folio
         opts[:right] = capture(&block)
       end
 
-      cell('folio/console/form/header', f, opts).show.html_safe
+      cell("folio/console/form/header", f, opts).show.html_safe
     end
 
     def form_footer(f, opts = {})
-      cell('folio/console/form/footer', f, opts).show.html_safe
+      cell("folio/console/form/footer", f, opts).show.html_safe
     end
   end
 end

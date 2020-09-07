@@ -12,7 +12,7 @@ module Folio
         label = [
           show_model_names ? record.model_name.human : nil,
           record_name,
-        ].compact.join(' / ')
+        ].compact.join(" / ")
 
         value = [
           record.try(:type) || record.class.to_s,

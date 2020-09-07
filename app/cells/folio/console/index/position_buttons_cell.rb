@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
-  class_name 'f-c-index-position', :descending?
+  class_name "f-c-index-position", :descending?
 
   def url
     options[:url] || default_url
   end
 
   def as
-    options[:as] || model.class.table_name.gsub('folio_', '')
+    options[:as] || model.class.table_name.gsub("folio_", "")
   end
 
   def attribute

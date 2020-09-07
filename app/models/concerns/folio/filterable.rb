@@ -33,9 +33,9 @@ module Folio::Filterable
         scope "by_#{key}".to_sym, -> (arg) do
           if type_for_attribute(key.to_s).type == :boolean
             case arg
-            when true, 'true'
+            when true, "true"
               where(key => true)
-            when false, 'false'
+            when false, "false"
               where(key => [nil, false])
             else
               all

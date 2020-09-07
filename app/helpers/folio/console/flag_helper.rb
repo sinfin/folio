@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Folio::Console::FlagHelper
-  CDN = 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.9.0/flags'
+  CDN = "https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.9.0/flags"
 
   def country_flag(locale)
     code = Folio::LANGUAGES[locale.to_sym]
     return locale unless code
     image_tag("#{CDN}/4x3/#{code.downcase}.svg",
               alt: code,
-              class: 'folio-console-flag')
+              class: "folio-console-flag")
   end
 
   def locale_to_label(locale, short: false)
@@ -21,7 +21,7 @@ module Folio::Console::FlagHelper
     [
       text,
       country_flag(locale)
-    ].join(' ').html_safe
+    ].join(" ").html_safe
   end
 
   def flag_checkboxes

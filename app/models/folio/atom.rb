@@ -19,7 +19,7 @@ module Folio::Atom
         }
 
         if value.is_a?(Array)
-          structure[key][:type] = 'collection'
+          structure[key][:type] = "collection"
           structure[key][:collection] = value
         end
       end
@@ -49,11 +49,11 @@ module Folio::Atom
       associations = {}
       klass::ASSOCIATIONS.each do |key, association|
         if association.is_a?(Hash)
-          class_names = association[:klasses].join(',')
+          class_names = association[:klasses].join(",")
           scope = association[:scope]
           order_scope = association[:order_scope]
         else
-          class_names = association.join(',')
+          class_names = association.join(",")
           scope = nil
           order_scope = nil
         end
@@ -133,7 +133,7 @@ module Folio::Atom
     label = [
       show_model_names ? record.model_name.human : nil,
       record.to_console_label,
-    ].compact.join(' / ')
+    ].compact.join(" / ")
 
     {
       id: record.id,

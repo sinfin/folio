@@ -25,7 +25,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   ASSOCIATIONS = {}
 
-  self.table_name = 'folio_atoms'
+  self.table_name = "folio_atoms"
 
   audited associated_with: :placement,
           except: [:data_for_search],
@@ -170,8 +170,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def self.sti_paths
     [
-      Folio::Engine.root.join('app/models/folio/atom'),
-      Rails.root.join('app/models/**/atom'),
+      Folio::Engine.root.join("app/models/folio/atom"),
+      Rails.root.join("app/models/**/atom"),
     ]
   end
 

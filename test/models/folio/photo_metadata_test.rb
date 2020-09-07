@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 module Folio
   class PhotoMetadataTest < ActiveSupport::TestCase
-    test 'load exif and iptc metadata' do
+    test "load exif and iptc metadata" do
       image = ::Folio::Image.new
-      image.file = Rails.root.join('..', 'fixtures', 'folio', 'photos', 'night.jpg')
+      image.file = Rails.root.join("..", "fixtures", "folio", "photos", "night.jpg")
       image.save!
 
       assert_not_nil image.file_metadata
-      assert_equal image.file_metadata['Keywords'], ['city', 'light', 'night', 'prague']
+      assert_equal image.file_metadata["Keywords"], ["city", "light", "night", "prague"]
     end
 
-    test 'load metadata from different file types' do
-      photo_dir = Rails.root.join('..', 'fixtures', 'folio', 'photos')
+    test "load metadata from different file types" do
+      photo_dir = Rails.root.join("..", "fixtures", "folio", "photos")
       Dir.glob("#{photo_dir}/**/*").grep(/\.[jpg|JPG|tiff|TIFF]/).each do |photo|
         image = ::Folio::Image.new
         image.file = ::File.new(photo)

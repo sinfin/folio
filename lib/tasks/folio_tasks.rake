@@ -3,14 +3,14 @@
 namespace :folio do
   task seed_test_account: :environment do
     if Rails.env.development?
-      if Folio::Account.find_by(email: 'test@test.test')
+      if Folio::Account.find_by(email: "test@test.test")
         puts "Account test@test.test already exists."
       else
-        Folio::Account.create!(email: 'test@test.test',
-                               password: 'test@test.test',
+        Folio::Account.create!(email: "test@test.test",
+                               password: "test@test.test",
                                role: :superuser,
-                               first_name: 'Test',
-                               last_name: 'Dummy')
+                               first_name: "Test",
+                               last_name: "Dummy")
         puts "Created test@test.test account."
       end
     end
@@ -29,14 +29,14 @@ namespace :folio do
       end
 
       Folio::FilePlacement::Document.where(id: ids)
-                                    .update_all(type: 'Folio::FilePlacement::SingleDocument')
+                                    .update_all(type: "Folio::FilePlacement::SingleDocument")
     end
 
     task reset_file_file_placements_size: :environment do |t|
       Rails.logger.silence do
         Folio::File.where(file_placements_size: nil).find_each do |file|
           file.update_file_placements_size!
-          print('.')
+          print(".")
         end
       end
     end

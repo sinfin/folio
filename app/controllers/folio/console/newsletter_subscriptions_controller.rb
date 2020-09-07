@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::NewsletterSubscriptionsController < Folio::Console::BaseController
-  folio_console_controller_for 'Folio::NewsletterSubscription'
+  folio_console_controller_for "Folio::NewsletterSubscription"
 
   def index
     @newsletter_subscriptions = @newsletter_subscriptions.includes(:visit)

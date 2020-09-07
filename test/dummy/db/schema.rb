@@ -171,7 +171,6 @@ ActiveRecord::Schema.define(version: 2020_09_03_112932) do
 
   create_table "folio_menu_items", force: :cascade do |t|
     t.bigint "menu_id"
-    t.string "type"
     t.string "ancestry"
     t.string "title"
     t.string "rails_path"
@@ -185,7 +184,6 @@ ActiveRecord::Schema.define(version: 2020_09_03_112932) do
     t.index ["ancestry"], name: "index_folio_menu_items_on_ancestry"
     t.index ["menu_id"], name: "index_folio_menu_items_on_menu_id"
     t.index ["target_type", "target_id"], name: "index_folio_menu_items_on_target_type_and_target_id"
-    t.index ["type"], name: "index_folio_menu_items_on_type"
   end
 
   create_table "folio_menus", force: :cascade do |t|

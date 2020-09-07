@@ -22,7 +22,7 @@ class Folio::LeadsController < Folio::ApplicationController
 
     Folio::LeadMailer.notification_email(@lead).deliver_later if success
 
-    render html: cell('folio/lead_form', @lead, cell_options_params)
+    render html: cell("folio/lead_form", @lead, cell_options_params)
   end
 
   private
@@ -50,8 +50,8 @@ class Folio::LeadsController < Folio::ApplicationController
     end
 
     def check_recaptcha_if_needed(lead)
-      if ENV['RECAPTCHA_SITE_KEY'].present? &&
-         ENV['RECAPTCHA_SECRET_KEY'].present?
+      if ENV["RECAPTCHA_SITE_KEY"].present? &&
+         ENV["RECAPTCHA_SECRET_KEY"].present?
         lead.verified_captcha = verify_recaptcha(model: lead)
       end
 

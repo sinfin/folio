@@ -6,13 +6,13 @@ class Folio::Console::DestroyButtonCell < Folio::ConsoleCell
   end
 
   def button
-    link_to(label, url, class: 'f-c-destroy-button btn btn-danger',
+    link_to(label, url, class: "f-c-destroy-button btn btn-danger",
                         method: :delete,
                         'data-confirm': question)
   end
 
   def label
-    t('folio.console.actions.destroy')
+    t("folio.console.actions.destroy")
   end
 
   def url
@@ -20,6 +20,6 @@ class Folio::Console::DestroyButtonCell < Folio::ConsoleCell
   end
 
   def question
-    t('folio.console.really_delete', title: model.to_label)
+    t("folio.console.really_delete", title: model.to_label)
   end
 end

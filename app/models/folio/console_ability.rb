@@ -7,10 +7,10 @@ class Folio::ConsoleAbility
     account ||= Folio::Account.new
 
     case account.role
-    when 'manager'
+    when "manager"
       can :manage, :all
-      cannot :manage, Folio::Account, role: 'superuser'
-    when 'superuser'
+      cannot :manage, Folio::Account, role: "superuser"
+    when "superuser"
       can :manage, :all
     end
   end

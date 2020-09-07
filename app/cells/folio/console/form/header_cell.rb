@@ -6,6 +6,6 @@ class Folio::Console::Form::HeaderCell < Folio::ConsoleCell
   end
 
   def translations
-    cell('folio/console/pages/translations', record, as_pills: true)
+    cell("folio/console/pages/translations", record, as_pills: true)
   end
 end

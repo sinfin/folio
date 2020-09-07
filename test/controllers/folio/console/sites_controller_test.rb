@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Folio::Console::SitesControllerTest < Folio::Console::BaseControllerTest
   include Folio::Engine.routes.url_helpers
 
-  test 'edit' do
+  test "edit" do
     get edit_console_site_path
     assert_response :ok
   end
 
-  test 'update' do
-    assert_not_equal 'foo', Folio::Site.instance.title
+  test "update" do
+    assert_not_equal "foo", Folio::Site.instance.title
     put console_site_path, params: {
       site: {
-        title: 'foo',
+        title: "foo",
       }
     }
-    assert_equal 'foo', Folio::Site.instance.title
+    assert_equal "foo", Folio::Site.instance.title
   end
 end

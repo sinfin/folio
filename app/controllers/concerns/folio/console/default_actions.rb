@@ -11,7 +11,7 @@ module Folio::Console::DefaultActions
     end
 
     pagy, records = pagy(records)
-    instance_variable_set('@pagy', pagy)
+    instance_variable_set("@pagy", pagy)
     instance_variable_set(folio_console_record_variable_name(plural: true),
                           records)
   end
@@ -56,7 +56,7 @@ module Folio::Console::DefaultActions
           errors = [
             {
               status: 422,
-              title: I18n.t('flash.actions.update.alert',
+              title: I18n.t("flash.actions.update.alert",
                             resource_name: @klass.model_name.human),
               detail: invalid_flash_error,
             }
@@ -95,10 +95,10 @@ module Folio::Console::DefaultActions
     end
 
     redirect_to url_for([:console, @klass]),
-                flash: { notice: I18n.t('folio.console.base_controller.ancestry.success') }
+                flash: { notice: I18n.t("folio.console.base_controller.ancestry.success") }
   rescue
     redirect_to url_for([:console, @klass]),
-                flash: { error: I18n.t('folio.console.base_controller.ancestry.error') }
+                flash: { error: I18n.t("folio.console.base_controller.ancestry.error") }
   end
 
   def revision
@@ -130,10 +130,10 @@ module Folio::Console::DefaultActions
         human_event = AASM::Localizer.new.human_event_name(@klass, event_name)
 
         redirect_back fallback_location: url_for([:console, @klass]),
-                      flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }
+                      flash: { error: I18n.t("folio.console.base_controller.invalid_event", event: human_event) }
       end
     else
-      alert = I18n.t('flash.actions.update.alert',
+      alert = I18n.t("flash.actions.update.alert",
                      resource_name: @klass.model_name.human)
       redirect_to respond_with_location(prevalidate: true),
                   flash: { alert: alert }
@@ -143,9 +143,9 @@ module Folio::Console::DefaultActions
   private
     def folio_console_name_base(plural: false)
       if plural
-        params[:controller].split('/').last
+        params[:controller].split("/").last
       else
-        params[:controller].split('/').last.singularize
+        params[:controller].split("/").last.singularize
       end
     end
 
@@ -171,7 +171,7 @@ module Folio::Console::DefaultActions
       else
         if folio_console_record.persisted?
           begin
-            if action_name == 'create'
+            if action_name == "create"
               url_for([:console, folio_console_record, action: :show])
             else
               url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
@@ -186,7 +186,7 @@ module Folio::Console::DefaultActions
     end
 
     def invalid_flash_error
-      base = I18n.t('flash.actions.update.alert',
+      base = I18n.t("flash.actions.update.alert",
                     resource_name: @klass.model_name.human)
       folio_console_record.valid?
       messages = folio_console_record.errors.full_messages

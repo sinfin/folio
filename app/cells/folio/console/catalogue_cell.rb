@@ -17,7 +17,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def header_html
     return @header_html if @header_html
     @record = model[:records].first
-    @header_html = ''
+    @header_html = ""
     instance_eval(&model[:block])
     @header_html
   end
@@ -26,7 +26,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     @header_html = nil
 
     @record = rec
-    @record_html = ''
+    @record_html = ""
     instance_eval(&model[:block])
     @record_html
   end
@@ -50,7 +50,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         content = value || record.send(name)
       end
 
-      value_div = content_tag(:div, content, class: 'f-c-catalogue__cell-value')
+      value_div = content_tag(:div, content, class: "f-c-catalogue__cell-value")
 
       @record_html += content_tag(:div,
                                   "#{tbody_label_for(name)}#{value_div}",
@@ -58,13 +58,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def association(name, separator: ', ')
+  def association(name, separator: ", ")
     assoc = record.send(name)
 
     if assoc.is_a?(Enumerable)
       val = assoc.map(&:to_label).join(separator)
-    else
+    elsif assoc.respond_to?(:to_label)
       val = assoc.to_label
+    else
+      val = nil
     end
 
     attribute(name, val)
@@ -103,14 +105,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def toggle(attr)
-    attribute(attr, class_name: 'toggle') do
-      cell('folio/console/boolean_toggle', record, attribute: attr)
+    attribute(attr, class_name: "toggle") do
+      cell("folio/console/boolean_toggle", record, attribute: attr)
     end
   end
 
   def actions(*act)
     attribute(:actions) do
-      cell('folio/console/index/actions', record, actions: act)
+      cell("folio/console/index/actions", record, actions: act)
     end
   end
 
@@ -121,31 +123,37 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def email(attr = :email)
     attribute(attr, spacey: true) do
       e = record.public_send(attr)
-      icon = mail_to(e, '', class: 'fa fa--small ml-1 fa-envelope')
+      icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
       "#{e} #{icon}"
     end
   end
 
   def state(active: true, spacey: false)
     attribute(:state, spacey: spacey) do
-      cell('folio/console/state', record, active: active)
+      cell("folio/console/state", record, active: active)
     end
   end
 
   def position_controls(opts = {})
-    attribute(:position, class_name: 'position-buttons') do
-      cell('folio/console/index/position_buttons', record, opts)
+    attribute(:position, class_name: "position-buttons") do
+      cell("folio/console/index/position_buttons", record, opts)
     end
   end
 
   def cover
     attribute(:cover) do
-      cell('folio/console/index/images', record, cover: true)
+      cell("folio/console/index/images", record, cover: true)
     end
   end
 
   def boolean(name)
     attribute(name, I18n.t("folio.console.boolean.#{record.send(name)}"))
+  end
+
+  def color(name)
+    attribute(nil,
+              "",
+              class_name: ["color-border", "color-border-#{name}"])
   end
 
   private
@@ -164,14 +172,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil, class_name: '', spacey: false)
-      full = ''
+    def cell_class_name(attr = nil, class_name: "", spacey: false)
+      full = ""
 
       if rendering_header?
-        full += ' f-c-catalogue__label'
-        base = 'f-c-catalogue__header-cell'
+        full += " f-c-catalogue__label"
+        base = "f-c-catalogue__header-cell"
       else
-        base = 'f-c-catalogue__cell'
+        base = "f-c-catalogue__cell"
       end
 
       if attr
@@ -181,7 +189,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       if class_name
-        full += " #{base}--#{class_name}"
+        if class_name.is_a?(Array)
+          class_name.each do |str|
+            full += " #{base}--#{str}"
+          end
+        else
+          full += " #{base}--#{class_name}"
+        end
       end
 
       if spacey
@@ -197,7 +211,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       @labels[attr] ||= begin
         if %i[actions cover].include?(attr)
-          ''
+          ""
         else
           klass.human_attribute_name(attr)
         end
@@ -207,12 +221,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     def tbody_label_for(attr)
       content_tag(:div,
                   label_for(attr),
-                  class: 'f-c-catalogue__label f-c-catalogue__cell-label')
+                  class: "f-c-catalogue__label f-c-catalogue__cell-label")
     end
 
     def wrap_class_name
       if model[:merge]
-        'f-c-catalogue--merge'
+        "f-c-catalogue--merge"
       end
     end
 
@@ -238,7 +252,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
           return if day == prev_day
 
-          cell('folio/console/group_by_day_header',
+          cell("folio/console/group_by_day_header",
                scope: model[:records],
                date: date,
                attribute: model[:group_by_day],

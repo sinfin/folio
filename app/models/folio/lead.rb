@@ -30,8 +30,8 @@ class Folio::Lead < Folio::ApplicationRecord
                   }
 
   aasm do
-    state :submitted, initial: true, color: 'red'
-    state :handled, color: 'green'
+    state :submitted, initial: true, color: "red"
+    state :handled, color: "green"
 
     event :handle do
       transitions from: :submitted, to: :handled

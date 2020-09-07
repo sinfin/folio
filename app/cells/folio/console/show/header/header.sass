@@ -4,7 +4,10 @@
   border-bottom: 1px solid $hr-border-color
   display: flex
   align-items: center
-  flex-wrap: wrap
+
+  &--no-border
+    border-bottom: 0
+    padding-bottom: 0
 
   &__h1
     margin: 0 $grid-gutter-width 0 0
@@ -13,8 +16,21 @@
     margin-left: auto
     padding-top: 5px
     display: flex
-    flex-wrap: wrap
     align-items: center
+
+  +media-breakpoint-up(md)
+    &__h1
+      flex: 1
+
+  +media-breakpoint-down(md)
+    display: block
+
+    &__h1
+      flex: 0 0 100%
+      margin-bottom: $spacer / 2
+
+    &__right
+      flex-wrap: wrap
 
   +media-breakpoint-down(xs)
     &__right

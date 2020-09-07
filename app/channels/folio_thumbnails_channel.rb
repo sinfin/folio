@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FolioThumbnailsChannel < ApplicationCable::Channel
-  STREAM = 'folio_thumbnails'
+  STREAM = "folio_thumbnails"
 
   def subscribed
     stream_from STREAM
