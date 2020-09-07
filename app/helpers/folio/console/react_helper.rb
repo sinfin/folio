@@ -61,12 +61,28 @@ module Folio::Console::ReactHelper
       destroyed_ids = {}
       f.object.class.atom_locales.each do |locale|
         key = "#{locale}_atoms"
-        atoms[key] = f.object.send(key).to_a.map(&:to_h)
+        atoms[key] = []
         destroyed_ids[key] = []
+
+        f.object.send(key).to_a.each do |atom|
+          if atom.marked_for_destruction?
+            destroyed_ids[key] << atom.id
+          else
+            atoms[key] << atom.to_h
+          end
+        end
       end
     else
-      atoms = { atoms: f.object.atoms.to_a.map(&:to_h) }
+      atoms = { atoms: [] }
       destroyed_ids = { atoms: [] }
+
+      f.object.atoms.to_a.each do |atom|
+        if atom.marked_for_destruction?
+          destroyed_ids[:atoms] << atom.id
+        else
+          atoms[:atoms] << atom.to_h
+        end
+      end
     end
 
     if f.lookup_model_names.size == 1
