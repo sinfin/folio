@@ -23,7 +23,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
             data: cell("folio/console/state", record, opts).show,
             meta: {
               flash: {
-                success: I18n.t('flash.actions.event.notice', resource_name: record.model_name.human)
+                success: I18n.t("flash.actions.event.notice", resource_name: record.model_name.human)
               }
             } }
         else
