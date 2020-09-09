@@ -129,10 +129,16 @@ class Folio::ImageCell < Folio::ApplicationCell
   def spacer_style
     s = ""
 
-    if spacer_dominant_color?
-      img = model
-      img = model.file if model.is_a?(Folio::FilePlacement::Base)
-      s += "background-color: #{img.additional_data['dominant_color']};"
+    if options[:spacer_background]
+      if options[:spacer_background].is_a?(String)
+        s += "background-color: #{options[:spacer_background]};"
+      elsif options[:spacer_background] == false
+        s += "background-color: transparent;"
+      elsif options[:spacer_background] == true
+        img = model
+        img = model.file if model.is_a?(Folio::FilePlacement::Base)
+        s += "background-color: #{img.additional_data['dominant_color']};"
+      end
     end
 
     if spacer_ratio != 0
@@ -201,10 +207,6 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def static?
     model.is_a?(Hash)
-  end
-
-  def spacer_dominant_color?
-    options[:dominant_color]
   end
 
   def self.fixed_height_mobile_ratio
