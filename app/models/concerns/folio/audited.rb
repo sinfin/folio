@@ -66,6 +66,9 @@ module Folio::Audited
           end
         end
 
+        # fixes atoms order
+        define_singleton_method(:atoms) { super().sort_by(&:position) }
+
         self.atoms
       end
     end
