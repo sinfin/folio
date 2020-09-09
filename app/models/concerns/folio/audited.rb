@@ -38,6 +38,20 @@ module Folio::Audited
       has_associated_audits
       define_singleton_method(:has_audited_atoms?) { true }
 
+      define_method(:write_audit) do |attrs|
+        super(attrs)
+        @audit_written = true
+      end
+
+      # save audit if only atoms has changes
+      before_update do
+        if !@audit_written && atoms.any? { |a| a.changed? }
+          write_audit(action: "update",
+                      audited_changes: {},
+                      comment: audit_comment)
+        end
+      end
+
       define_method(:reconstruct_atoms) do
         self.atoms = atoms.map do |a|
           atom_audit = a.audits.reorder(placement_version: :desc, version: :desc)
