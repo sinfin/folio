@@ -232,7 +232,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       @audited_revision = audit.revision
       @audited_revision.audit = audit
 
-      if @audited_revision.class.has_audited_atoms?
+      if @audited_revision.class.try(:has_audited_atoms?)
         @audited_revision.reconstruct_atoms
       end
     end

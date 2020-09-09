@@ -209,7 +209,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
 
     def placement_has_audited_atoms?
-      placement.class.has_audited_atoms?
+      placement.class.try(:has_audited_atoms?)
     end
 end
 
