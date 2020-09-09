@@ -10,6 +10,7 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :cover,
                         :hover_zoom,
                         :fixed_height,
+                        :fixed_height_fluid,
                         :small,
                         :cloned,
                         :round,
@@ -85,23 +86,23 @@ class Folio::ImageCell < Folio::ApplicationCell
   def wrap_style
     styles = []
 
-    if options[:fixed_height]
+    if o = (options[:fixed_height_fluid] || options[:fixed_height])
       if data && data[:normal]
         desktop_height = data[:normal].height
         mobile_height = (data[:normal].height * self.class.fixed_height_mobile_ratio).round
       else
-        desktop_height = options[:fixed_height][:desktop]
-        mobile_height = options[:fixed_height][:mobile]
+        desktop_height = o[:desktop]
+        mobile_height = o[:mobile]
       end
 
       desktop = [
         data[:normal].try(:width) || fixed_height_default_width,
-        options[:fixed_height][:max_desktop_width],
+        o[:max_desktop_width],
       ].compact.min.round
 
       mobile = [
         (data[:normal].try(:width) || fixed_height_default_width) * self.class.fixed_height_mobile_ratio,
-        options[:fixed_height][:max_mobile_width]
+        o[:max_mobile_width]
       ].compact.min.round
 
       styles << "max-width: #{desktop}px"
