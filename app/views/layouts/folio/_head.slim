@@ -1,5 +1,6 @@
 - stylesheet ||= 'application'
 - javascript ||= 'application'
+- skip_javascript ||= false
 
 meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
 meta charset="utf-8"
@@ -45,9 +46,10 @@ meta name="twitter:card" content="summary"
 
   == render partial: 'layouts/folio/analytics'
 
-  = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \
-                                       defer: true
+  - unless skip_javascript
+    = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \
+                                         defer: true
 
-  - if ENV['RECAPTCHA_SITE_KEY'].present? && \
-       ENV['RECAPTCHA_SECRET_KEY'].present?
-    script src="https://www.google.com/recaptcha/api.js" defer=true async=true
+    - if ENV['RECAPTCHA_SITE_KEY'].present? && \
+         ENV['RECAPTCHA_SECRET_KEY'].present?
+      script src="https://www.google.com/recaptcha/api.js" defer=true async=true
