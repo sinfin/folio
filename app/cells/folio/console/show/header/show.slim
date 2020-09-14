@@ -6,8 +6,17 @@ div class=class_name
       .mr-h.flex-shrink-0
         == cell('folio/console/state', model)
 
+    - if options[:add]
+      a.ml-lg-h.flex-shrink-0.btn.btn-success href=options[:add][:href]
+        i.fa.fa-plus.f-c-show-header__btn-ico
+        span.f-c-show-header__btn-text = options[:add][:label]
+
     - if edit_url
-      a.ml-lg-h.flex-shrink-0 href=edit_url class=edit_class_name
+      a.ml-h.flex-shrink-0[
+        href=edit_url
+        class=edit_class_name
+        class=(options[:add] ? 'ml-h' : 'ml-lg-h')
+      ]
         i.fa.fa-edit.f-c-show-header__btn-ico
         span.f-c-show-header__btn-text = t('folio.console.actions.edit')
 
