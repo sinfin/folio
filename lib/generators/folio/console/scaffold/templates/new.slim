@@ -1,3 +1,8 @@
+<%- if has_atoms? -%>
+= simple_form_for_with_atoms([:console, @<%= instance_variable_name %>], \
+                             url: main_app.url_for([:console, @<%= instance_variable_name %>])) do |f|
+<%- else -%>
 = simple_form_for([:console, @<%= instance_variable_name %>], \
                   url: main_app.url_for([:console, @<%= instance_variable_name %>])) do |f|
+<%- end -%>
   = render 'form', f: f
