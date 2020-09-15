@@ -1,11 +1,7 @@
-- show_audited = Rails.application.config.folio_pages_audited && \
-                 f.object.revisions.size > 1
-
 - show_translations = Rails.application.config.folio_pages_translations && \
                       f.object.persisted?
 
-= tabs [:content, \
-        (:audits if show_audited)].compact
+= tabs [:content]
 
 .tab-content
   = tab :content
@@ -42,7 +38,3 @@
     == cell('folio/console/tagsinput', f)
     = translated_inputs f, :meta_title
     = translated_inputs f, :meta_description, autosize: true
-
-  - if show_audited
-    = tab :audits
-      = console_audits_table(f.object)

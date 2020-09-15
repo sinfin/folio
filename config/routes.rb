@@ -18,6 +18,13 @@ Folio::Engine.routes.draw do
         post :set_positions
         get :merge
       end
+
+      member do
+        if Rails.application.config.folio_pages_audited
+          get :revision, path: "revision/:version"
+          post :restore, path: "restore/:version"
+        end
+      end
     end
 
     resource :content_templates, only: [] do

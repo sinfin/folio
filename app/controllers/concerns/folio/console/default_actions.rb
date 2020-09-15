@@ -101,6 +101,19 @@ module Folio::Console::DefaultActions
                 flash: { error: I18n.t("folio.console.base_controller.ancestry.error") }
   end
 
+  def revision
+    instance_variable_set(folio_console_record_variable_name, @audited_revision)
+
+    render :edit
+  end
+
+  def restore
+    @audited_revision.save!
+
+    redirect_to url_for([:edit, :console, @audited_revision]),
+                flash: { notice: I18n.t("folio.console.base_controller.restore.success") }
+  end
+
   def event
     event_name = params.require(:aasm_event).to_sym
 

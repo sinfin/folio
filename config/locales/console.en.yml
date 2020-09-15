@@ -216,6 +216,15 @@ en:
         at: date (optional)
       react_ancestry:
         invalid: Some of the records are invalid. It's required to fix these first in order to change structure. Invalid records are marked red.
+      layout:
+        audited_dropdown:
+          toggle: Version history
+          current: (current version)
+        audited_bar:
+          version: 'Version:'
+          restore: Restore this version
+          show_current: Show current version
+
   date:
     formats:
       console_short: "%d. %m. %Y"

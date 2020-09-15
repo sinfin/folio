@@ -52,6 +52,8 @@ cs:
         ancestry:
           success: Stromová struktura upravena.
           error: Stromovou strukturu se nepodařilo upravit.
+        restore:
+          success: Verze obnovena.
       blank: Neuvedeno
       boolean:
         'yes': "Ano"
@@ -194,7 +196,6 @@ cs:
           gallery: Galerie
           settings: Nastavení
           site_social_links: Odkazy
-          audits: Historie verzí
           merge: Sloučení duplikátů
         simple_form_with_atoms:
           editor: Editor
@@ -220,6 +221,14 @@ cs:
         at: k datu (nepovinné)
       react_ancestry:
         invalid: Některé záznamy nejsou validní. Pro změnu struktury je potřeba je opravit. Ve stromové stuktuře jsou označeny červeně.
+      layout:
+        audited_dropdown:
+          toggle: Historie verzí
+          current: (současná verze)
+        audited_bar:
+          version: 'Verze:'
+          restore: Obnovit tuto verzi
+          show_current: Zobrazit současnou verzi
 
   date:
     formats:

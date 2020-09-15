@@ -39,6 +39,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       handles_set_positions_for klass
     end
 
+    if klass.method_defined?(:revisions)
+      before_action :load_revisions, only: [:edit]
+      before_action :find_revision, only: [:revision, :restore]
+    end
+
     respond_to :json, only: %i[update]
 
     load_and_authorize_resource(as, class: class_name,
@@ -215,6 +220,22 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     helper_method :index_tabs
+
+    def load_revisions
+      if folio_console_record && folio_console_record.respond_to?(:revisions)
+        @audited_revisions = folio_console_record.revisions.reverse
+      end
+    end
+
+    def find_revision
+      audit = folio_console_record.audits.find_by_version!(params[:version])
+      @audited_revision = audit.revision
+      @audited_revision.audit = audit
+
+      if @audited_revision.class.try(:has_audited_atoms?)
+        @audited_revision.reconstruct_atoms
+      end
+    end
 
     def add_record_breadcrumbs
       add_breadcrumb(@klass.model_name.human(count: 2),

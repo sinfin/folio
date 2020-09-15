@@ -27,6 +27,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   self.table_name = "folio_atoms"
 
+  audited associated_with: :placement,
+          except: [:data_for_search],
+          if: :placement_has_audited_atoms?
+
   attr_readonly :type
   after_initialize :validate_structure
 
@@ -37,6 +41,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   scope :by_type, -> (type) { where(type: type.to_s) }
 
   before_save :set_data_for_search
+
+  validates :type, presence: true
 
   def self.cell_name
     nil
@@ -169,10 +175,15 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     ]
   end
 
+  # audited fix
+  def self.default_ignored_attributes
+    super - [inheritance_column]
+  end
+
   private
     def klass
       # as type can be changed
-      self.type.constantize
+      type ? self.type.constantize : self.class
     end
 
     def positionable_last_record
@@ -195,6 +206,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
     def set_data_for_search
       self.data_for_search = data.try(:values).try(:join, "\n").presence
+    end
+
+    def placement_has_audited_atoms?
+      placement.class.try(:has_audited_atoms?)
     end
 end
 

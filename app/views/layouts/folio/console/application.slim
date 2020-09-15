@@ -7,8 +7,13 @@ html.f-c-layout-html lang=I18n.locale
     == cell('folio/console/layout/sidebar')
 
     .f-c-layout-main#f-c-layout-main
-      == cell('folio/console/layout/header', rendered_breadcrumbs)
+      == cell('folio/console/layout/header', \
+              rendered_breadcrumbs, \
+              audited_revisions: @audited_revisions)
+
       == cell('folio/console/flash', flash)
+
+      == cell('folio/console/layout/audited_bar', @audited_revision)
 
       - if content_for?(:under_flash)
         = yield(:under_flash)
