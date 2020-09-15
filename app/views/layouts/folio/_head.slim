@@ -1,6 +1,7 @@
 - stylesheet ||= 'application'
 - javascript ||= 'application'
 - skip_javascript ||= false
+- meta_viewport ||= "width=device-width, initial-scale=1, shrink-to-fit=no"
 
 meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
 meta charset="utf-8"
@@ -14,10 +15,7 @@ title = public_page_title
     content=public_page_description
   ]
 
-meta[
-  name="viewport"
-  content="width=device-width, initial-scale=1, shrink-to-fit=no"
-]
+meta name="viewport" content=meta_viewport
 
 - if public_page_canonical_url.present?
   link rel="canonical" href=public_page_canonical_url
