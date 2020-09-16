@@ -140,9 +140,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def cover
+  def cover(options = {})
     attribute(:cover) do
-      cell("folio/console/index/images", record, cover: true)
+      cell("folio/console/index/images", record, options.merge(cover: true))
     end
   end
 
