@@ -1,4 +1,4 @@
-.f-c-catalogue class=wrap_class_name
+div class=wrap_class_name
   - if model[:merge]
     == cell('folio/console/merges/index/header')
 
@@ -32,6 +32,8 @@
 
   - else
     == cell('folio/console/index/no_records', klass)
+
+  span.folio-loader.f-c-catalogue__loader
 
 - if model[:merge]
   == cell('folio/console/merges/index/footer', klass)

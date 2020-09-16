@@ -3,34 +3,35 @@ div[
   class=class_name
 ]
   = hidden_field_tag attribute, model.send(attribute), \
-                                class: 'f-c-index-position__input'
+                                class: 'f-c-index-position-buttons__input'
 
   = hidden_field_tag :id, model.id, \
-                          class: 'f-c-index-position__id', \
+                          class: 'f-c-index-position-buttons__id', \
                           'data-attribute' => attribute
 
   .btn-group[
     role="group"
-    class="f-c-index-position__button-group"
+    class="f-c-index-position-buttons__button-group"
   ]
     button.btn.btn-sm.btn-outline[
-      class="f-c-index-position__button"
+      class="f-c-index-position-buttons__button"
       class="fa fa-arrow-up"
       type="button"
       data-direction="up"
     ]
 
     button.btn.btn-sm.btn-outline[
-      class="f-c-index-position__button"
+      class="f-c-index-position-buttons__button"
       class="fa fa-arrow-down"
       type="button"
       data-direction="down"
     ]
 
-    span.btn.btn-sm.btn-outline[
-      class="f-c-index-position__button"
-      class="f-c-index-position__button--handle"
-      class="fa fa-grip-lines"
-    ]
+    - unless options[:ancestry]
+      span.btn.btn-sm.btn-outline[
+        class="f-c-index-position-buttons__button"
+        class="f-c-index-position-buttons__button--handle"
+        class="fa fa-grip-lines"
+      ]
 
     span.folio-loader.folio-loader--small.folio-loader--transparent

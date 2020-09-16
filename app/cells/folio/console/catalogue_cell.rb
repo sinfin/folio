@@ -135,10 +135,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def position_controls(opts = {})
-    unless model[:ancestry]
-      attribute(:position, class_name: "position-buttons") do
-        cell("folio/console/index/position_buttons", record, opts)
-      end
+    attribute(:position, class_name: "position-buttons") do
+      cell("folio/console/index/position_buttons",
+           record,
+           opts.merge(ancestry: model[:ancestry]))
     end
   end
 
@@ -227,9 +227,17 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
 
     def wrap_class_name
+      cn = "f-c-catalogue"
+
       if model[:merge]
-        "f-c-catalogue--merge"
+        cn += " f-c-catalogue--merge"
       end
+
+      if model[:ancestry]
+        cn += " f-c-catalogue--ancestry"
+      end
+
+      cn
     end
 
     def before_lambda

@@ -13,11 +13,6 @@ module Folio
       cell("folio/console/nested_model_controls", model, options).show.html_safe
     end
 
-    def index_position_buttons(model, options = {})
-      cell("folio/console/index/position_buttons", model,
-                                                   options).show.html_safe
-    end
-
     def single_image_select(f, attr_name = :file)
       single_file_select(f, attr_name, as: :image)
     end

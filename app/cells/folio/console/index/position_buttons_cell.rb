@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
-  class_name "f-c-index-position", :descending?
+  class_name "f-c-index-position-buttons", :descending?, :ancestry, :regular?
 
   def url
     options[:url] || default_url
@@ -21,5 +21,9 @@ class Folio::Console::Index::PositionButtonsCell < Folio::ConsoleCell
 
   def descending?
     options[:descending] || model.class.try(:positionable_descending?)
+  end
+
+  def regular?
+    !options[:ancestry]
   end
 end

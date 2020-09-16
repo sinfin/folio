@@ -7,6 +7,13 @@ $catalogue-green: $green !default
 
   position: relative
 
+  &__loader
+    display: none
+    z-index: 2
+
+  &--loading &__loader
+    display: block
+
   &__label
     text-transform: uppercase
     color: $table-head-color
