@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-09-16
+### Added
+- added ancestry support to catalogue via `ancestry: true` option
+
 ## 2020-09-01
 ### Removed
 - removed `:page` pseudo relation from menu items and updated to_label accordingly

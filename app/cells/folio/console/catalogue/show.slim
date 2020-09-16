@@ -10,17 +10,25 @@
 
         = header_html
 
-      - model[:records].each_with_index do |rec, i|
-        = before_lambda.call(rec, model[:records], i) if before_lambda
+      - if model[:ancestry]
+        - model[:records].each do |rec, children|
+          .f-c-catalogue__row.f-c-catalogue__row--ancestry-root data-depth="0"
+            = record_html(rec)
 
-        .f-c-catalogue__row
-          - if model[:merge]
-            .f-c-catalogue__cell.f-c-catalogue__cell--merge
-              == cell('folio/console/merges/index/radios', rec)
+          = render_ancestry_children(children)
 
-          = record_html(rec)
+      - else
+        - model[:records].each_with_index do |rec, i|
+          = before_lambda.call(rec, model[:records], i) if before_lambda
 
-        = after_lambda.call(rec, model[:records], i) if after_lambda
+          .f-c-catalogue__row
+            - if model[:merge]
+              .f-c-catalogue__cell.f-c-catalogue__cell--merge
+                == cell('folio/console/merges/index/radios', rec)
+
+            = record_html(rec)
+
+          = after_lambda.call(rec, model[:records], i) if after_lambda
 
   - else
     == cell('folio/console/index/no_records', klass)

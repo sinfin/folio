@@ -103,6 +103,37 @@ $catalogue-green: $green !default
       padding: 0
       width: 10px
 
+    &__row--ancestry-root &__cell
+      background: $table-accent-bg
+
+    &__row--ancestry-child:hover &__cell
+      background: $white
+
+    &__row--ancestry-depth-1 &__cell:first-child
+      padding-left: $table-cell-padding + 1 * 2 * $spacer
+
+    &__row--ancestry-depth-2 &__cell:first-child
+      padding-left: $table-cell-padding + 2 * 2 * $spacer
+
+    &__row--ancestry-depth-3 &__cell:first-child
+      padding-left: $table-cell-padding + 3 * 2 * $spacer
+
+    &__row--ancestry-depth-4 &__cell:first-child
+      padding-left: $table-cell-padding + 4 * 2 * $spacer
+
+    &__row--ancestry-depth-5 &__cell:first-child
+      padding-left: $table-cell-padding + 5 * 2 * $spacer
+
+    &__row--ancestry-child &__cell:first-child &__cell-value
+      &:before
+        +material-icon-style
+        position: absolute
+        content: 'subdirectory_arrow_right'
+        margin-left: - 2 * $spacer
+        margin-top: $spacer / 2
+        color: $text-muted
+        font-size: 18px
+
   +mq-mobile-catalogue
     &--merge
       padding-left: 140px
@@ -179,3 +210,28 @@ $catalogue-green: $green !default
     &__header + &__row,
     &__row + &__row
       border-top: $table-border-width solid $table-border-color
+
+    &__row--ancestry-child
+      &:before
+        +material-icon-style
+        position: absolute
+        top: 50%
+        margin-left: - 2 * $spacer
+        margin-top: -9px
+        content: 'subdirectory_arrow_right'
+        color: $text-muted
+
+    &__row--ancestry-depth-1
+      padding-left: $spacer + 1 * 2 * $spacer
+
+    &__row--ancestry-depth-2
+      padding-left: $spacer + 2 * 2 * $spacer
+
+    &__row--ancestry-depth-3
+      padding-left: $spacer + 3 * 2 * $spacer
+
+    &__row--ancestry-depth-4
+      padding-left: $spacer + 4 * 2 * $spacer
+
+    &__row--ancestry-depth-5
+      padding-left: $spacer + 5 * 2 * $spacer

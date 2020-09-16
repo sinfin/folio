@@ -135,8 +135,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def position_controls(opts = {})
-    attribute(:position, class_name: "position-buttons") do
-      cell("folio/console/index/position_buttons", record, opts)
+    unless model[:ancestry]
+      attribute(:position, class_name: "position-buttons") do
+        cell("folio/console/index/position_buttons", record, opts)
+      end
     end
   end
 
@@ -268,5 +270,24 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     def after_lambda
       return @after_lambda unless @after_lambda.nil?
       @after_lambda = model[:after_lambda] || false
+    end
+
+    def render_ancestry_children(children, depth = 1)
+      html = ""
+
+      if children.present?
+        children.each do |child, subchildren|
+          html += content_tag(:div,
+                              record_html(child),
+                              class: "f-c-catalogue__row "\
+                                     "f-c-catalogue__row--ancestry-child "\
+                                     "f-c-catalogue__row--ancestry-depth-#{depth}",
+                              "data-depth" => depth)
+
+          html += render_ancestry_children(subchildren, depth + 1)
+        end
+      end
+
+      html
     end
 end
