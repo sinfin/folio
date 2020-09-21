@@ -31,4 +31,19 @@ class Folio::SessionAttachmentTest < ActiveSupport::TestCase
     assert_not Dummy::SessionAttachment::Image.new(web_session_id: id,
                                                    file: doc).valid?
   end
+
+  test "clear_unpaired!" do
+    id = "123"
+    image = Folio::Engine.root.join("test/fixtures/folio/test.gif")
+    sa = Dummy::SessionAttachment::Image.create!(file: image,
+                                                 web_session_id: id)
+    assert_equal(1, Folio::SessionAttachment::Base.count)
+
+    Folio::SessionAttachment::Base.clear_unpaired!
+    assert_equal(1, Folio::SessionAttachment::Base.count)
+
+    sa.update_column(:created_at, 3.days.ago)
+    Folio::SessionAttachment::Base.clear_unpaired!
+    assert_equal(0, Folio::SessionAttachment::Base.count)
+  end
 end

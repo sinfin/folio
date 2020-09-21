@@ -6,6 +6,8 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   include Folio::SanitizeFilename
   include Folio::StiPreload
 
+  STALE_PERIOD = 1.day
+
   self.table_name = "folio_session_attachments"
 
   dragonfly_accessor :file do
@@ -83,6 +85,10 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   def self.valid_types
     recursive_subclasses.reject { |k| k.to_s.start_with?("Folio::") }
+  end
+
+  def self.clear_unpaired!
+    unpaired.where("created_at < ?", STALE_PERIOD.ago).destroy_all
   end
 
   private
