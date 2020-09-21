@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 2020_09_21_065618) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["hash_id"], name: "index_folio_session_attachments_on_hash_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_session_attachments_on_placement"
+    t.index ["type"], name: "index_folio_session_attachments_on_type"
     t.index ["visit_id"], name: "index_folio_session_attachments_on_visit_id"
     t.index ["web_session_id"], name: "index_folio_session_attachments_on_web_session_id"
   end

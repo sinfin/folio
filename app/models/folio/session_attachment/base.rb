@@ -2,15 +2,25 @@
 
 class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   include Folio::HasHashId
+  include Folio::RecursiveSubclasses
   include Folio::SanitizeFilename
+  include Folio::StiPreload
 
   self.table_name = "folio_session_attachments"
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
+
+    storage_options do |attachment|
+      {
+        headers: { "x-amz-acl" => "private" },
+        path: "session_attachments/#{hash_id}/#{sanitize_filename}",
+      }
+    end
   end
 
   scope :ordered, -> { order(id: :desc) }
+  scope :unpaired, -> { where(placement: nil) }
 
   validate :validate_type
 
@@ -30,7 +40,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   def to_h
     {
-      id: id,
+      id: hash_id,
       file_name: file_name,
       file_size: file_size,
       file_mime_type: file_mime_type,
@@ -51,6 +61,28 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   def self.hash_id_length
     16
+  end
+
+  def self.model_name
+    @_model_name ||= begin
+      base = ActiveModel::Name.new(Folio::SessionAttachment)
+      ActiveModel::Name.new(self).tap do |name|
+        %w(param_key singular_route_key route_key).each do |key|
+          name.instance_variable_set("@#{key}", base.public_send(key))
+        end
+      end
+    end
+  end
+
+  def self.sti_paths
+    [
+      Folio::Engine.root.join("app/models/folio/session_attachment"),
+      Rails.root.join("app/models/**/session_attachment"),
+    ]
+  end
+
+  def self.valid_types
+    recursive_subclasses.reject { |k| k.to_s.start_with?("Folio::") }
   end
 
   private
@@ -89,6 +121,7 @@ end
 #
 #  index_folio_session_attachments_on_hash_id         (hash_id)
 #  index_folio_session_attachments_on_placement       (placement_type,placement_id)
+#  index_folio_session_attachments_on_type            (type)
 #  index_folio_session_attachments_on_visit_id        (visit_id)
 #  index_folio_session_attachments_on_web_session_id  (web_session_id)
 #

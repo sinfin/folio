@@ -1,0 +1,10 @@
+.container
+  h2.mt-5.mb-4 Document
+
+  == cell('folio/session_attachments/dropzone',
+          Dummy::SessionAttachment::Document)
+
+  h2.mt-5.mb-4 Image
+
+  == cell('folio/session_attachments/dropzone',
+          Dummy::SessionAttachment::Image)

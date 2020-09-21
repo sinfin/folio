@@ -8,6 +8,9 @@ en:
     invalid_format: Invalid format
   'false': false
   folio:
+    dropzone:
+      destroy_failure: Failed to destroy the attachment.
+      prompt: Select files
     errors:
       show:
         back_to_home: back to the homepage

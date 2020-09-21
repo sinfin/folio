@@ -10,7 +10,7 @@ class CreateFolioSessionAttachments < ActiveRecord::Migration[6.0]
       t.bigint :file_size
       t.string :file_mime_type
 
-      t.string :type
+      t.string :type, index: true
 
       t.string :web_session_id, index: true
       t.jsonb :thumbnail_sizes, default: {}

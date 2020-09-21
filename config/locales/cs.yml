@@ -8,6 +8,9 @@ cs:
     invalid_format: Nepodporovaný formát
   'false': Ne
   folio:
+    dropzone:
+      destroy_failure: Soubor se nepodařilo odstranit.
+      prompt: Vybrat soubory
     errors:
       show:
         back_to_home: zpět na homepage
