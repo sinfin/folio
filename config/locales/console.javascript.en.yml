@@ -22,6 +22,7 @@ en:
         fileTableHeaderFileName: File name
         fileTableHeaderFileSize: Size
         fileTableHeaderTags: Keywords
+        fileTableHeaderType: Type
         fileTitleHint: File title as displayed on the web (fallback to file name).
         finalizing: Finalizing
         indestructibleFile: Files has active placements and therefore cannot be destroyed.

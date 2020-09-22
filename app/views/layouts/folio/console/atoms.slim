@@ -5,6 +5,7 @@ html.f-c-layout-atoms__html lang=Rails.application.config.folio_console_locale
     = stylesheet_link_tag('application', media: 'all')
     = stylesheet_link_tag('folio/console/atoms/previews/previews', media: 'all')
     = javascript_include_tag 'folio/console/atoms/previews/previews'
+    = render partial: 'layouts/folio/console/atoms/additional_head'
 
   body.f-c-layout-atoms__body
     = yield
