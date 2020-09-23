@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_21_065618) do
+ActiveRecord::Schema.define(version: 2020_09_23_100138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -259,12 +259,13 @@ ActiveRecord::Schema.define(version: 2020_09_21_065618) do
     t.string "file_mime_type"
     t.string "type"
     t.string "web_session_id"
-    t.jsonb "thumbnail_sizes", default: {}
     t.bigint "visit_id"
     t.string "placement_type"
     t.bigint "placement_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "file_width"
+    t.integer "file_height"
     t.index ["hash_id"], name: "index_folio_session_attachments_on_hash_id"
     t.index ["placement_type", "placement_id"], name: "index_folio_session_attachments_on_placement"
     t.index ["type"], name: "index_folio_session_attachments_on_type"
