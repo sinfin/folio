@@ -46,7 +46,7 @@ PATH
       nokogiri
       pagy
       pg (~> 1.2.3)
-      pg_search
+      pg_search (= 2.3.2)
       premailer-rails
       rails (>= 6.0.2.2)
       rails-i18n
