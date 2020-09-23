@@ -190,7 +190,9 @@ class Folio::ImageCell < Folio::ApplicationCell
       h[:tag] = :a
       h[:href] = options[:href]
     elsif model && lightboxable?
-      if model.is_a?(Folio::FilePlacement::Base)
+      if options[:lightbox].is_a?(Hash)
+        h = h.merge(options[:lightbox])
+      elsif model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
         h["data-lightbox-title"] ||= options[:title] || model.try(:title)
       else

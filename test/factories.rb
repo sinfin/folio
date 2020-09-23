@@ -105,4 +105,14 @@ FactoryBot.define do
     title { "MenuItem" }
     position { 0 }
   end
+
+  factory :folio_session_attachment_image,
+          class: "Dummy::SessionAttachment::Image" do
+    file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
+    web_session_id { "web_session_id" }
+  end
+
+  factory :folio_session_attachment_document,
+          parent: :folio_session_attachment_image,
+          class: "Dummy::SessionAttachment::Document"
 end

@@ -1,0 +1,34 @@
+.f-c-session-attachments-list
+  - if as_images?
+    .f-c-file-list
+      - model.each do |attachment|
+        .f-c-file-list__file
+          .f-c-file-list__img-wrap[
+            class="folio-console-single-file-select__clearable"
+          ]
+            = image_for(attachment)
+  - else
+    .f-c-file-table-wrap
+      .f-c-file-table.f-c-file-table--document
+        .f-c-file-table__tbody
+          - model.each do |attachment|
+            .f-c-file-table__tr
+              div[
+                class="f-c-file-table__td"
+                class="f-c-file-table__td--main"
+              ]
+                = attachment.file_name
+
+              div[
+                class="f-c-file-table__td"
+                class="f-c-file-table__td--size"
+                class="folio-console-single-file-select__clearable"
+              ]
+                = number_to_human_size(attachment.file_size)
+
+              div[
+                class="f-c-file-table__td"
+                class="f-c-file-table__td--extension"
+                class="folio-console-single-file-select__clearable"
+              ]
+                = attachment.file_extension
