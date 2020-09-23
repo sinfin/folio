@@ -11,6 +11,14 @@ module Folio::Audited
     def audited(opts = {})
       super(opts)
 
+      define_singleton_method(:audited_view_name) do
+        opts[:view_name] || :show
+      end
+
+      define_singleton_method(:audited_restorable?) do
+        opts[:restore] == false ? false : true
+      end
+
       # https://github.com/collectiveidea/audited/blob/master/lib/audited/auditor.rb#L125
       # monkey patch: add related audit to revision
       define_method(:revisions) do |from_version = 1|

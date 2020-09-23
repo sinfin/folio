@@ -7,8 +7,8 @@
   .dropdown-menu.dropdown-menu-right.f-c-layout-audited-dropdown__menu.py-0
     - model.each_with_index do |version, i|
       a.dropdown-item.f-c-layout-audited-dropdown__item.py-2[
-        href=version_url(version)
-        class=item_class_name(i)
+        href=version_url(version, i)
+        class=item_class_name(version, i)
       ]
         .f-c-layout-audited-dropdown__label
           = l(version.audit.created_at, format: :short)

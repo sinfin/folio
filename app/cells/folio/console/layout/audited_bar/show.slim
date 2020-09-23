@@ -7,7 +7,5 @@
 
       = restore_link
 
-      a.f-c-layout-audited-bar__link.my-1[
-        href=url_for([:edit, :console, model])
-        target="_blank"
-      ] = t('.show_current')
+      a.f-c-layout-audited-bar__link.my-1 href=show_url
+        = t('.show_current')

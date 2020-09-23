@@ -40,7 +40,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     if klass.method_defined?(:revisions)
-      before_action :load_revisions, only: [:edit]
+      before_action :load_revisions, only: [klass.audited_view_name, :revision]
       before_action :find_revision, only: [:revision, :restore]
     end
 

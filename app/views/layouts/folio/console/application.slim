@@ -9,7 +9,8 @@ html.f-c-layout-html lang=I18n.locale
     .f-c-layout-main#f-c-layout-main
       == cell('folio/console/layout/header', \
               rendered_breadcrumbs, \
-              audited_revisions: @audited_revisions)
+              audited_revisions: @audited_revisions,
+              audited_revision: @audited_revision)
 
       == cell('folio/console/flash', flash)
 

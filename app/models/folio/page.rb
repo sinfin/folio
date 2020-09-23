@@ -26,7 +26,7 @@ class Folio::Page < Folio::ApplicationRecord
       end.flatten
     end
 
-    audited only: translated + other
+    audited only: translated + other, view_name: :edit
     has_audited_atoms
   end
 

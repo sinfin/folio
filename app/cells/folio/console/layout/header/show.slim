@@ -10,7 +10,8 @@
       = model
 
       == cell('folio/console/layout/audited_dropdown', \
-              options[:audited_revisions])
+              options[:audited_revisions],
+              audited_revision: options[:audited_revision])
 
       = link_to log_out_path, \
                 method: Devise.sign_out_via, \
