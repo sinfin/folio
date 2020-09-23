@@ -33,7 +33,6 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :placement, polymorphic: true,
                          optional: true,
-                         inverse_of: :session_attachments,
                          touch: true
 
   before_save :set_file_mime_type
@@ -46,7 +45,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
       file_name: file_name,
       file_size: file_size,
       file_mime_type: file_mime_type,
-      thumb: thumb,
+      thumb: to_h_thumb,
     }
   end
 
@@ -58,7 +57,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
     end
   end
 
-  def thumb
+  def to_h_thumb
   end
 
   def self.hash_id_length

@@ -9,7 +9,7 @@ class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
 
   validate_file_format ALLOWED_FORMATS
 
-  def thumb
+  def to_h_thumb
     file.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE, immediate: true).url
   end
 end
