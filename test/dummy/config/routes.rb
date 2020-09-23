@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   mount Folio::Engine => "/"
 
   resource :test, only: [:show]
+  get "/dropzone", to: "home#dropzone"
 
   if Rails.application.config.folio_pages_translations
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do

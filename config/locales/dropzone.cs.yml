@@ -1,0 +1,14 @@
+---
+cs:
+  folio:
+    dropzone:
+      dictDefaultMessage: "Vybrat soubory"
+      dictFallbackMessage: "Prohlížec nepodporuje drag'n'drop nahrávání souborů.does not support drag'n'drop file uploads."
+      dictFallbackText: "Pro nahrání souborů použijte formulář níže."
+      dictFileTooBig: "Soubor je příliš veliký ({{filesize}}MiB). Maximální velikost: {{maxFilesize}}MiB."
+      dictInvalidFileType: "Tento druh souboru není povolen."
+      dictResponseError: "Odpověd serveru: {{statusCode}}"
+      dictUploadCanceled: "Nahrávání zrušeno"
+      dictCancelUploadConfirmation: "Zrušit nahrávání?"
+      dictMaxFilesExceeded: "Nelze nahrát více souborů."
+      destroy_failure: Soubor se nepodařilo odstranit.

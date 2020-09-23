@@ -4,4 +4,6 @@
 
 //= require folio/lazyload
 //= require folio/lightbox
+
+//= require folio/dropzone/dropzone
 //= require folio/image/image

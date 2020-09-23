@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_03_112932) do
+ActiveRecord::Schema.define(version: 2020_09_21_065618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -249,6 +249,27 @@ ActiveRecord::Schema.define(version: 2020_09_03_112932) do
     t.string "hash_id"
     t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
     t.index ["type"], name: "index_folio_private_attachments_on_type"
+  end
+
+  create_table "folio_session_attachments", force: :cascade do |t|
+    t.string "hash_id"
+    t.string "file_uid"
+    t.string "file_name"
+    t.bigint "file_size"
+    t.string "file_mime_type"
+    t.string "type"
+    t.string "web_session_id"
+    t.jsonb "thumbnail_sizes", default: {}
+    t.bigint "visit_id"
+    t.string "placement_type"
+    t.bigint "placement_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["hash_id"], name: "index_folio_session_attachments_on_hash_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_session_attachments_on_placement"
+    t.index ["type"], name: "index_folio_session_attachments_on_type"
+    t.index ["visit_id"], name: "index_folio_session_attachments_on_visit_id"
+    t.index ["web_session_id"], name: "index_folio_session_attachments_on_web_session_id"
   end
 
   create_table "folio_sites", force: :cascade do |t|
