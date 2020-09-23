@@ -11,11 +11,12 @@ class Folio::DropzoneCell < Folio::ApplicationCell
       "create-url" => model[:create_url],
       "destroy-url" => model[:destroy_url],
       "create-thumbnails" => model[:create_thumbnails] ? "true" : nil,
-      "prompt" => prompt,
       "param-name" => param_name,
       "file-formats" => file_formats,
       "records" => records,
       "destroy-failure" => destroy_failure,
+      "max-file-size" => model[:max_file_size],
+      "dict" => dict.to_json,
     }
   end
 
@@ -35,15 +36,27 @@ class Folio::DropzoneCell < Folio::ApplicationCell
     end
   end
 
-  def prompt
-    model[:prompt].presence || t(".prompt")
-  end
-
   def destroy_failure
     model[:destroy_failure].presence || t(".destroy_failure")
   end
 
   def param_name
     model[:param_name] || "file"
+  end
+
+  def dict
+    {
+      dictDefaultMessage: model[:prompt].presence || t(".dictDefaultMessage"),
+      dictFallbackMessage: t(".dictFallbackMessage"),
+      dictFallbackText: t(".dictFallbackText"),
+      dictFileTooBig: t(".dictFileTooBig"),
+      dictInvalidFileType: t(".dictInvalidFileType"),
+      dictResponseError: t(".dictResponseError"),
+      dictCancelUpload: "",
+      dictUploadCanceled: t(".dictUploadCanceled"),
+      dictCancelUploadConfirmation: t(".dictCancelUploadConfirmation"),
+      dictRemoveFile: "",
+      dictMaxFilesExceeded: t(".dictMaxFilesExceeded"),
+    }
   end
 end
