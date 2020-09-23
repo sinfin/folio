@@ -15,7 +15,7 @@ PATH
       acts-as-taggable-on (~> 6.0)
       after_commit_everywhere
       ahoy_matey (~> 2)
-      ancestry
+      ancestry (= 3.1.0)
       audited (~> 4.7)
       breadcrumbs_on_rails
       cancancan (~> 3.0)
