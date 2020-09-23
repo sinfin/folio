@@ -15,10 +15,6 @@ class Folio::Console::Layout::AuditedBarCell < Folio::ConsoleCell
   end
 
   def show_url
-    if model.class.audited_view_name == :show
-      url_for([:console, model])
-    else
-      url_for([model.class.audited_view_name, :console, model])
-    end
+    url_for([:console, model, action: model.class.audited_view_name])
   end
 end

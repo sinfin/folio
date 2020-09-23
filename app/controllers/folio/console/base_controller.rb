@@ -247,10 +247,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
         else
           begin
             add_breadcrumb(folio_console_record.to_label,
-                           url_for([:console, folio_console_record]))
+                           url_for([:console, folio_console_record, action: :show]))
           rescue StandardError
             add_breadcrumb(folio_console_record.to_label,
-                           url_for([:edit, :console, folio_console_record]))
+                           url_for([:console, folio_console_record, action: :edit]))
           end
         end
       end
