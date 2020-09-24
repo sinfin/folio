@@ -2,6 +2,8 @@
 #= require photoswipe/dist/photoswipe
 #= require photoswipe/dist/photoswipe-ui-default
 
+window.makeFolioLightboxCalls = []
+
 class window.FolioLightbox
   constructor: (selector, additionalSelector = false, data = null) ->
     @selector = selector
@@ -74,6 +76,9 @@ class window.FolioLightbox
 window.makeFolioLightbox = (selector, opts = {}) ->
   window.folioLightboxInstances ?= []
 
+  window.makeFolioLightboxCalls ?= []
+  window.makeFolioLightboxCalls.push([selector, opts])
+
   init = ->
     $items = $(selector)
     return if $items.length is 0
@@ -106,3 +111,10 @@ window.makeFolioLightbox = (selector, opts = {}) ->
       window.folioLightboxInstances = []
   else
     $ -> setTimeout(init, 0)
+
+window.updateAllFolioLightboxInstances = ->
+  window.folioLightboxInstances.forEach (instance) -> instance.destroy()
+  window.folioLightboxInstances = []
+
+  window.makeFolioLightboxCalls.forEach (call) ->
+    window.makeFolioLightbox(call[0], call[1])
