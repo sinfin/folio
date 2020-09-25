@@ -112,14 +112,18 @@ class Folio::ImageCell < Folio::ApplicationCell
       styles << "height: #{mobile_height}px"
     else
       if options[:max_height]
-        width = (options[:max_height] / spacer_ratio).round(4)
+        max_width = (options[:max_height] / spacer_ratio).round(4)
       else
-        width = options[:max_width] || size.split("x").first
+        max_width = options[:max_width] || size.split("x").first
       end
 
-      if width.present?
-        width = "#{width}px" unless width.to_s.match?(/%|none/)
-        styles << "max-width: #{width}"
+      if max_width.present?
+        max_width = "#{max_width}px" unless max_width.to_s.match?(/%|none/)
+        styles << "max-width: #{max_width}"
+      end
+
+      if options[:fixed_width]
+        styles << "width: #{options[:fixed_width]}"
       end
     end
 
