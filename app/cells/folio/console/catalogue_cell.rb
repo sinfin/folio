@@ -36,13 +36,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, &block)
     content = nil
 
     if rendering_header?
       @header_html += content_tag(:div,
                                   label_for(name),
-                                  class: cell_class_name(name, class_name: class_name, spacey: spacey))
+                                  class: cell_class_name(name, class_name: class_name, spacey: spacey, compact: compact))
     else
       if block_given?
         content = block.call(self.record)
@@ -111,7 +111,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def actions(*act)
-    attribute(:actions) do
+    attribute(:actions, compact: true) do
       cell("folio/console/index/actions", record, actions: act)
     end
   end
@@ -174,7 +174,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil, class_name: "", spacey: false)
+    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false)
       full = ""
 
       if rendering_header?
@@ -202,6 +202,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       if spacey
         full += " #{base}--spacey"
+      end
+
+      if compact
+        full += " #{base}--compact"
       end
 
       full

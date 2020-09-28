@@ -51,7 +51,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       },
       preview: {
         name: :preview,
-        icon: "eye",
+        icon: "external-link-alt",
         button: "light",
         target: "_blank",
         url: -> (record) { safe_url_for([record, locale: locale]) },
