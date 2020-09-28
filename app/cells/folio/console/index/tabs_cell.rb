@@ -27,4 +27,13 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
       tab[:href]
     end
   end
+
+  def label(tab)
+    label = tab[:label]
+
+    # TODO: color badge
+    label += " (#{tab[:count]})" if tab[:count].present?
+
+    label
+  end
 end
