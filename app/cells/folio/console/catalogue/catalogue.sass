@@ -242,3 +242,34 @@ $catalogue-green: $green !default
 
     &__row--ancestry-depth-5
       padding-left: $spacer + 5 * 2 * $spacer
+
+  &__cell, &__header-cell
+    +media-breakpoint-down(xs)
+      &--media_query-sm,
+      &--media_query-md,
+      &--media_query-lg,
+      &--media_query-xl,
+      &--media_query-xxl
+        display: none
+
+    +media-breakpoint-down(sm)
+      &--media_query-md,
+      &--media_query-lg,
+      &--media_query-xl,
+      &--media_query-xxl
+        display: none
+
+    +media-breakpoint-down(md)
+      &--media_query-lg,
+      &--media_query-xl,
+      &--media_query-xxl
+        display: none
+
+    +media-breakpoint-down(lg)
+      &--media_query-xl,
+      &--media_query-xxl
+        display: none
+
+    +media-breakpoint-down(xl)
+      &--media_query-xxl
+        display: none
