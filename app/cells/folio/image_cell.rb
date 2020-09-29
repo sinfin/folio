@@ -141,7 +141,10 @@ class Folio::ImageCell < Folio::ApplicationCell
       elsif options[:spacer_background] == true
         img = model
         img = model.file if model.is_a?(Folio::FilePlacement::Base)
-        s += "background-color: #{img.additional_data['dominant_color']};"
+
+        if img && img.additional_data
+          s += "background-color: #{img.additional_data['dominant_color']};"
+        end
       end
     end
 
