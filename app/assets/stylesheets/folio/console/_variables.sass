@@ -43,6 +43,9 @@ $enable-validation-icons: false !default
 
 $link-color: $blue !default
 
+$line-height-base: 1.5 !default
+$border-width: 1px !default
+
 // Components
 //
 // Define common padding and border radius sizes and more.
@@ -100,6 +103,23 @@ $breadcrumb-divider: "/" !default
 
 // Forms
 $form-text-margin-top: 0.5rem !default
+
+
+$input-btn-padding-y: .375rem !default
+$input-btn-padding-x: .75rem !default
+$input-btn-border-width: $border-width !default
+$input-border-width: $input-btn-border-width !default
+$input-height-border: $input-border-width * 2 !default
+
+$input-btn-line-height: $line-height-base !default
+$input-line-height: $input-btn-line-height !default
+$input-padding-y: $input-btn-padding-y !default
+$input-padding-x: $input-btn-padding-x !default
+$input-height-inner: $input-line-height * 1rem + $input-padding-y * 2 !default
+$input-height-inner-half: $input-line-height * .5rem + $input-padding-y !default
+$input-height-inner-quarter: $input-line-height * .25rem + $input-padding-y / 2 !default
+
+$input-height: calc(#{$input-line-height * 1rem + $input-padding-y} + #{2 * $input-height-border}) !default
 
 // Spacers
 $grid-gutter-width: 30px !default
