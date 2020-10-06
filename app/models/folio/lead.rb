@@ -56,6 +56,10 @@ class Folio::Lead < Folio::ApplicationRecord
     false
   end
 
+  def self.console_sidebar_count
+    by_state('submitted').count
+  end
+
   def csv_attributes
     self.class.csv_attribute_names.map do |attr|
       case attr
