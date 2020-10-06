@@ -71,24 +71,44 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
   end
 
   def layout
-    @layout ||= (options[:layout] || default_layout)
+    @layout ||= begin
+      if options[:layout]
+        if options[:layout].is_a?(String)
+          JSON.parse(options[:layout]).symbolize_keys
+        else
+          options[:layout]
+        end
+      else
+        default_layout
+      end
+    end
   end
 
   def default_layout
     {
       rows: [
-        %i[email phone],
-        %i[note],
+        %w[email phone],
+        %w[note],
       ]
     }
   end
 
   def input_for(f, col)
-    if col == :note
+    if col == :note || col == "note"
       f.input(col, label: note_label,
                    input_html: { rows: note_rows, value: note_value })
     else
       f.input(col, label: t(".#{col}"))
     end
+  end
+
+  def remember_option(opt)
+    if opt == :layout
+      val = layout.to_json
+    else
+      val = options[opt]
+    end
+
+    ERB::Util.html_escape(val)
   end
 end

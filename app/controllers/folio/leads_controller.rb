@@ -7,9 +7,6 @@ class Folio::LeadsController < Folio::ApplicationController
     :name,
     :note_label,
     :note_rows,
-    :above_submit_content,
-    :next_to_submit_content,
-    :under_submit_content,
     :layout,
   ]
 

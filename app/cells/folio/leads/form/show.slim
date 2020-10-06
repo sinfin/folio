@@ -5,7 +5,7 @@ div class=class_name data-failure=t('.failure')
         input[
           type="hidden"
           name="cell_options[#{opt}]"
-          value=ERB::Util.html_escape(options[opt])
+          value=remember_option(opt)
         ]
 
     = additional_data_input(f)
