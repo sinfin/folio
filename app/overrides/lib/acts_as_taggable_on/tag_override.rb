@@ -2,6 +2,7 @@
 
 ActsAsTaggableOn::Tag.class_eval do
   include PgSearch::Model
+  include Folio::ToLabel
 
   pg_search_scope :by_query,
                   against: %i[name],
