@@ -1,0 +1,16 @@
+.container
+  h2.mt-5.mb-4 Default
+
+  == cell('folio/leads/form')
+
+  h2.mt-5.mb-4 Side by side
+
+  == cell('folio/leads/form',
+          nil,
+          layout: { cols: [%i[email phone], %i[note]], flex: true })
+
+  h2.mt-5.mb-4 Fields
+
+  == cell('folio/leads/form',
+          nil,
+          layout: { cols: [%i[note], %i[name email]], flex: true })

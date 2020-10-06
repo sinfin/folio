@@ -10,6 +10,7 @@ class Folio::LeadsController < Folio::ApplicationController
     :above_submit_content,
     :next_to_submit_content,
     :under_submit_content,
+    :layout,
   ]
 
   def create
@@ -22,7 +23,7 @@ class Folio::LeadsController < Folio::ApplicationController
 
     Folio::LeadMailer.notification_email(@lead).deliver_later if success
 
-    render html: cell("folio/lead_form", @lead, cell_options_params)
+    render html: cell("folio/leads/form", @lead, cell_options_params)
   end
 
   private

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio
-  class NewsletterSubscriptionFormCell < SavingFolioCell
+  class NewsletterSubscriptionFormCell < ApplicationCell
     include SimpleForm::ActionViewExtensions::FormHelper
     include Engine.routes.url_helpers
 

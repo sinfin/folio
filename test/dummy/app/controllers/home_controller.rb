@@ -6,4 +6,7 @@ class HomeController < ApplicationController
 
   def dropzone
   end
+
+  def lead_form
+  end
 end

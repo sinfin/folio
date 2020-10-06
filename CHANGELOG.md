@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-10-06
+### Changed
+- updated lead form cell - changed from `folio/lead_form` to `folio/leads/form` and `.folio-lead-form` to `.folio-leads-form`
+
 ## 2020-09-21
 ### Added
 - added session attachment model and views

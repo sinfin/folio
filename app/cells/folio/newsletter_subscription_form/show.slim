@@ -3,11 +3,17 @@ div class=wrap_class
                     url: newsletter_subscriptions_path, \
                     html: { class: 'folio-newsletter-subscription-form' } do |f|
 
+    - remember_option_keys.each do |opt|
+      - if options[opt]
+        input[
+          type="hidden"
+          name="cell_options[#{opt}]"
+          value=ERB::Util.html_escape(options[opt])
+        ]
+
     = f.input :email, as: :email, \
                       label: options[:label],
                       input_html: { placeholder: options[:placeholder] }
-
-    = hidden_options
 
     button type='submit' class=button_class == submit_text
 

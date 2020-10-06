@@ -2,23 +2,23 @@
 
 require "test_helper"
 
-class LeadFormCellTest < Cell::TestCase
+class Folio::Leads::FormCellTest < Cell::TestCase
   test "show" do
-    html = cell("folio/lead_form").(:show)
+    html = cell("folio/leads/form").(:show)
     assert html.has_css?("form")
 
-    html = cell("folio/lead_form",
+    html = cell("folio/leads/form",
                 build(:folio_lead, email: "a")).(:show)
     assert html.has_css?("form")
   end
 
   test "shows success message" do
-    html = cell("folio/lead_form", create(:folio_lead)).(:show)
-    assert html.has_css?(".folio-lead-form-submitted")
+    html = cell("folio/leads/form", create(:folio_lead)).(:show)
+    assert html.has_css?(".f-leads-form--submitted")
   end
 
   test "shows note from option" do
-    html = cell("folio/lead_form", nil, note: "foo").(:show)
+    html = cell("folio/leads/form", nil, note: "foo").(:show)
     assert_equal "foo", html.find("textarea").value
   end
 end

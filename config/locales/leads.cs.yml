@@ -1,0 +1,12 @@
+---
+cs:
+  folio:
+    leads:
+      form:
+        email: E-mail
+        failure: Zprávu se nepodařilo odeslat. Zkuste to prosíme později.
+        message: Děkujeme za zaslání Vaší zprávy!
+        name: Jméno
+        note: Zpráva
+        phone: Telefon
+        submit: Odeslat

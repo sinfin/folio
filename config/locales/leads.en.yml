@@ -1,0 +1,12 @@
+---
+en:
+  folio:
+    leads:
+      form:
+        email: E-mail
+        failure: Failed to send the message. Please try again later.
+        message: Thanks for your message!
+        name: Name
+        note: Message
+        phone: Phone
+        submit: Submit

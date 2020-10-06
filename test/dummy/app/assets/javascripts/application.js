@@ -7,3 +7,4 @@
 
 //= require folio/dropzone/dropzone
 //= require folio/image/image
+//= require folio/leads/form/form
