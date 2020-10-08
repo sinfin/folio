@@ -4,7 +4,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
   def title
-    model.model_name.human(count: 2)
+    options[:title] || model.model_name.human(count: 2)
   end
 
   def query_url
