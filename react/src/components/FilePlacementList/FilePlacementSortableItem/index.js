@@ -1,12 +1,13 @@
 import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
-import { FormGroup, Input, FormText } from 'reactstrap'
+import { FormGroup, FormText } from 'reactstrap'
+import TextareaAutosize from 'react-autosize-textarea'
 
 import NestedModelControls from 'components/NestedModelControls'
 import FileHoverButtons from 'components/FileHoverButtons'
 import Picture from 'components/Picture'
 
-import preventEnterSubmit from 'utils/preventEnterSubmit'
+import preventLineBreaks from 'utils/preventLineBreaks'
 
 import filePlacementInputName from '../utils/filePlacementInputName'
 import HiddenInputs from './HiddenInputs'
@@ -105,13 +106,16 @@ class FilePlacement extends React.Component {
         <div className='f-c-file-placement__inputs'>
           <div className='f-c-file-placement__title'>
             <FormGroup>
-              <Input
+              <TextareaAutosize
                 placeholder={filePlacement.file.attributes.file_name}
                 value={this.state.title || ''}
                 onChange={this.onTitleChange}
                 onBlur={this.onTitleBlur}
-                onKeyPress={preventEnterSubmit}
+                onKeyPress={preventLineBreaks}
                 name={filePlacementInputName('title', filePlacement, attachmentable, placementType)}
+                rows={1}
+                className='form-control'
+                async
               />
 
               <FormText>{window.FolioConsole.translations.fileTitleHint}</FormText>
@@ -121,13 +125,16 @@ class FilePlacement extends React.Component {
           {fileTypeIsImage && (
             <div className='f-c-file-placement__alt'>
               <FormGroup>
-                <Input
+                <TextareaAutosize
                   placeholder='alt'
                   value={this.state.alt || ''}
                   onChange={this.onAltChange}
                   onBlur={this.onAltBlur}
-                  onKeyPress={preventEnterSubmit}
+                  onKeyPress={preventLineBreaks}
                   name={filePlacementInputName('alt', filePlacement, attachmentable, placementType)}
+                  rows={1}
+                  className='form-control'
+                  async
                 />
 
                 <FormText>{window.FolioConsole.translations.altHint}</FormText>
