@@ -12,7 +12,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def url
-    url_for([:console, model, format: :json])
+    options[:url] || url_for([:console, model, format: :json])
   rescue StandardError
     nil
   end

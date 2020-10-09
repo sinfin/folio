@@ -51,7 +51,7 @@ module Folio::Console::DefaultActions
       end
       format.json do
         if folio_console_record.valid?
-          respond_with folio_console_record, location: respond_with_location
+          render json: {}, status: 200
         else
           errors = [
             {

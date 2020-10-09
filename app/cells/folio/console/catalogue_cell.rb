@@ -102,17 +102,17 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def featured_toggle
-    toggle(:featured)
+  def featured_toggle(opts = {})
+    toggle(:featured, opts)
   end
 
-  def published_toggle
-    toggle(:published)
+  def published_toggle(opts = {})
+    toggle(:published, opts)
   end
 
-  def toggle(attr)
+  def toggle(attr, opts = {})
     attribute(attr, class_name: "toggle") do
-      cell("folio/console/boolean_toggle", record, attribute: attr)
+      cell("folio/console/boolean_toggle", record, opts.merge(attribute: attr))
     end
   end
 

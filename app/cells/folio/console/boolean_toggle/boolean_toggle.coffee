@@ -13,6 +13,7 @@ $(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
   $.ajax
     url: url
     data: data
+    dataType: 'json'
     method: 'PATCH'
     success: ->
       $wrap.removeClass('f-c-boolean-toggle--loading')
