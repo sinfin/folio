@@ -12,6 +12,10 @@ class Folio::Console::Show::HeaderCell < Folio::ConsoleCell
     options[:edit_class_name] || "btn btn-outline"
   end
 
+  def preview_url
+    options[:preview_url]
+  end
+
   def destroy_url
     options[:destroy_url]
   end
