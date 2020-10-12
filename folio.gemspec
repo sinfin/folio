@@ -59,7 +59,6 @@ Gem::Specification.new do |s|
   s.add_dependency "audited", "~> 4.7"
   s.add_dependency "premailer-rails"
   s.add_dependency "fast_jsonapi"
-  s.add_dependency "material_icons"
   s.add_dependency "discard"
 
   s.add_dependency "dragonfly"

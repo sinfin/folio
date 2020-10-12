@@ -34,7 +34,6 @@ require "aasm"
 require "recaptcha"
 require "audited"
 require "fast_jsonapi"
-require "material_icons"
 
 module Folio
   LANGUAGES = {

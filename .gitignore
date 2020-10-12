@@ -15,3 +15,8 @@ test/dummy/vendor/assets/redactor/*.js
 
 /react/src/ducks/files.js
 /test/dummy/node_modules/
+
+/vendor/assets/bower_components/material-design-icons/*
+!/vendor/assets/bower_components/material-design-icons/font
+/vendor/assets/bower_components/material-design-icons/font/*
+!/vendor/assets/bower_components/material-design-icons/font/MaterialIcons-Regular.ttf
