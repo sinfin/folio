@@ -20,6 +20,9 @@
                   data-contentable=klass.contentable?.to_s
                 ]
                   - if klass.console_icon
-                    span.mi = klass.console_icon
+                    - if klass.console_icon.to_s.starts_with?('fa-')
+                      span.fa class=klass.console_icon
+                    - else
+                      span.mi = klass.console_icon
 
                   = klass.model_name.human

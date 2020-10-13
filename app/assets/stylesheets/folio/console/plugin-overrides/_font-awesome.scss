@@ -18,6 +18,16 @@
        asset-url('#{$fa-font-path}/fa-regular-400.svg#fontawesome') format('svg');
 }
 
+@font-face {
+  font-family: 'Font Awesome 5 Free Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: $fa-font-display;
+  src: asset-url('#{$fa-font-path}/fa-brands-400.woff2') format('woff2'),
+       asset-url('#{$fa-font-path}/fa-brands-400.woff') format('woff'),
+       asset-url('#{$fa-font-path}/fa-brands-400.svg#fontawesome') format('svg');
+}
+
 @mixin pseudo-font-awesome-icon($symbol) {
   font-family: 'Font Awesome 5 Free Regular', 'Font Awesome 5 Free Solid';
   font-weight: 400;
@@ -40,6 +50,16 @@
 .fa,
 .far {
   font-family: 'Font Awesome 5 Free Regular', 'Font Awesome 5 Free Solid';
+  font-weight: 400;
+  font-size: inherit;
+
+  &--small {
+    font-size: 11px;
+  }
+}
+
+.fab {
+  font-family: 'Font Awesome 5 Free Brands';
   font-weight: 400;
   font-size: inherit;
 
