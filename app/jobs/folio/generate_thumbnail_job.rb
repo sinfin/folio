@@ -44,14 +44,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         if Rails.application.config.folio_dragonfly_keep_png
           thumbnail = image.file
                            .thumb(size, format: :png,
-                                        frame: 0,
                                         x: x,
                                         y: y)
         else
           thumbnail = image.file
                            .add_white_background
                            .thumb(size, format: :jpg,
-                                        frame: 0,
                                         x: x,
                                         y: y)
                            .encode("jpg", "-quality #{quality}")
@@ -63,10 +61,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail = image.file
                          .animated_gif_resize(size)
       elsif /pdf/.match?(image.try(:mime_type))
+        # "frame" option has to be set as string key
+        # https://github.com/markevans/dragonfly/issues/483
         thumbnail = image.file
                          .add_white_background
                          .thumb(size, format: :jpg,
-                                      frame: 0,
+                                      "frame" => 0,
                                       x: x,
                                       y: y)
                          .encode("jpg", "-quality #{quality}")
@@ -74,7 +74,6 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       else
         thumbnail = image.file
                          .thumb(size, format: :jpg,
-                                      frame: 0,
                                       x: x,
                                       y: y)
                          .encode("jpg", "-quality #{quality}")
