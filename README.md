@@ -8,7 +8,7 @@ Copy `redactor.js` and `redactor.css` to `test/dummy/vendor/assets/redactor`.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'folio'
+gem 'folio', github: 'sinfin/folio'
 ```
 
 And then execute:
