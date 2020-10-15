@@ -50,6 +50,7 @@ module Folio
         else
           thumbnail = image.file
                            .thumb(size, 'format' => :jpg, 'frame' => 0)
+                           .auto_orient
                            .cmyk_to_srgb
                            .encode('jpg', "-quality #{quality}")
                            .jpegoptim
