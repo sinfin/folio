@@ -76,6 +76,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                          .thumb(size, format: :jpg,
                                       x: x,
                                       y: y)
+                         .auto_orient
                          .encode("jpg", "-quality #{quality}")
                          .cmyk_to_srgb
                          .jpegoptim

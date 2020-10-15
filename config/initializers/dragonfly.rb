@@ -42,6 +42,10 @@ Dragonfly.app.configure do
     content.process! :convert, "-flatten"
   end
 
+  processor :auto_orient do |content, *args|
+    content.process! :convert, '-auto-orient'
+  end
+
   processor :jpegoptim do |content, *args|
     if shell("which", "jpegtran").blank?
       msg = "Missing jpegtran binary. Thumbnail not optimized."
