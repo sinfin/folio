@@ -43,7 +43,7 @@ Dragonfly.app.configure do
   end
 
   processor :auto_orient do |content, *args|
-    content.process! :convert, '-auto-orient'
+    content.process! :convert, "-auto-orient"
   end
 
   processor :jpegoptim do |content, *args|
