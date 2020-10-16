@@ -50,6 +50,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                     except: except,
                                     parent: (false if as.present?))
 
+    before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs
 
     only = except.include?(:index) ? %i[merge] : %i[index merge]
@@ -237,10 +238,13 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    def add_record_breadcrumbs
+    def add_collection_breadcrumbs
       add_breadcrumb(@klass.model_name.human(count: 2),
                      url_for([:console, @klass]))
+    rescue NoMethodError
+    end
 
+    def add_record_breadcrumbs
       if folio_console_record
         if folio_console_record.new_record?
           add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
