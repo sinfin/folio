@@ -6,7 +6,7 @@ en:
       short: "%d %m %Y"
   dragonfly:
     invalid_format: Invalid format
-  'false': false
+  'false': "No"
   folio:
     errors:
       show:
@@ -61,4 +61,4 @@ en:
     formats:
       short_with_seconds: "%d %m %Y, %H:%M:%S"
       short: "%d %m %Y %H:%M"
-  'true': true
+  'true': "Yes"
