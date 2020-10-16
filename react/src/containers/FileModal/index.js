@@ -17,7 +17,7 @@ import FileModalFile from './FileModalFile'
 
 ReactModal.setAppElement('body')
 
-class Modal extends Component {
+class FileModal extends Component {
   state = {}
 
   constructor (props) {
@@ -50,7 +50,7 @@ class Modal extends Component {
     const { fileModal } = this.props
 
     this.props.dispatch(markModalFileAsUpdating(fileModal.file))
-    this.props.dispatch(updateFile(this.props.fileType, fileModal.file, this.state))
+    this.props.dispatch(updateFile(this.props.fileModal.fileType, fileModal.file, this.state))
   }
 
   closeFileModal = () => {
@@ -67,11 +67,11 @@ class Modal extends Component {
 
   deleteFile = (file) => {
     this.closeFileModal()
-    this.props.dispatch(deleteFile(this.props.fileType, this.props.filesUrl, file))
+    this.props.dispatch(deleteFile(this.props.fileModal.fileType, this.props.fileModal.filesUrl, file))
   }
 
   uploadNewFileInstead = (fileIo) => {
-    this.props.dispatch(uploadNewFileInstead(this.props.fileType, this.props.filesUrl, this.props.fileModal.file, fileIo))
+    this.props.dispatch(uploadNewFileInstead(this.props.fileModal.fileType, this.props.fileModal.filesUrl, this.props.fileModal.file, fileIo))
   }
 
   changeFilePlacementsPage = (page) => {
@@ -124,4 +124,4 @@ function mapDispatchToProps (dispatch) {
   return { dispatch }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modal)
+export default connect(mapStateToProps, mapDispatchToProps)(FileModal)
