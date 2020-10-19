@@ -28,12 +28,9 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
     end
   end
 
-  def label(tab)
-    label = tab[:label]
-
-    # TODO: color badge
-    label += " (#{tab[:count]})" if tab[:count].present?
-
-    label
+  def count_class_name(color = nil)
+    if color
+      "f-c-index-tabs__count--#{color}"
+    end
   end
 end

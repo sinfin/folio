@@ -19,20 +19,12 @@
     width: 12px
     height: 12px
     display: block
-    background: #e9ecef
+    background: $background-color-default
     margin: 0 10px 0 0
 
-    &--color-red
-      background: #f0655d
-
-    &--color-green
-      background: #589e92
-
-    &--color-yellow
-      background: #facd35
-
-    &--color-dark
-      background: #212529
+    @each $name, $color in $background-colors
+      &--color-#{$name}
+        background: $color
 
   &--small &__state-square
     margin-right: 5px
