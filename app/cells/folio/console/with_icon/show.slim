@@ -2,12 +2,16 @@
   - if options[:reversed]
     span.f-c-with-icon__span = model
     - if options[:mi]
-      i.mi = options[:mi]
+      i.mi class=mi_class_name
+        = options[:mi]
     - elsif options[:fa]
-      i.fa class="fa-#{options[:fa]}"
+      i.fa class=fa_class_name
+
   - else
     - if options[:mi]
-      i.mi = options[:mi]
+      i.mi class=mi_class_name
+        = options[:mi]
     - elsif options[:fa]
-      i.fa class="fa-#{options[:fa]}"
+      i.fa class=fa_class_name
+
     span.f-c-with-icon__span = model

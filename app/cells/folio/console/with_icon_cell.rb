@@ -13,4 +13,20 @@ class Folio::Console::WithIconCell < Folio::ConsoleCell
 
     h
   end
+
+  def mi_class_name
+    if options[:mi] && options[:size]
+      "mi--#{options[:size]}"
+    end
+  end
+
+  def fa_class_name
+    str = "fa-#{options[:fa]}"
+
+    if options[:size]
+      str += " fa--#{options[:size]}"
+    end
+
+    str
+  end
 end
