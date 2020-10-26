@@ -144,15 +144,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     false
   end
 
-  def self.form_hints
-    prefix = "simple_form.hints.#{name.underscore}"
-    {
-      title: I18n.t("#{prefix}.title", default: nil),
-      perex: I18n.t("#{prefix}.perex", default: nil),
-      content: I18n.t("#{prefix}.content", default: nil),
-    }
-  end
-
   def self.attachment_placements
     self::ATTACHMENTS.map do |key|
       self.reflections[key.to_s].options[:through]

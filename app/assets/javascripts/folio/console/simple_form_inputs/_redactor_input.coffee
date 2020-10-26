@@ -1,9 +1,23 @@
-REDACTOR_SELECTOR = '.folio-console-redactor-input'
+REDACTOR_SELECTOR = '.f-c-redactor-input'
 
 bindRedactor = ($elements) ->
   $elements.each ->
-    advanced = @classList.contains('folio-console-redactor-input--advanced')
-    window.folioConsoleInitRedactor(this, advanced: advanced)
+    advanced = @classList.contains('f-c-redactor-input--advanced')
+    additional = {}
+
+    if @classList.contains('f-c-js-atoms-placement-perex')
+      additional =
+        callbacks:
+          keyup: ->
+            data =
+              type: 'updatePerex'
+              locale: null
+              value: @source.getCode()
+
+            $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe').each ->
+              @contentWindow.postMessage(data, window.origin)
+
+    window.folioConsoleInitRedactor(this, { advanced: advanced }, additional)
 
 unbindRedactor = ($elements) ->
   $elements.each -> window.folioConsoleDestroyRedactor(this)

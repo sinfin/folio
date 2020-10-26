@@ -22,18 +22,18 @@ SimpleForm::Inputs::StringInput.class_eval do
           remote_autocomplete = Folio::Engine.app.url_helpers.url_for(opts)
         end
 
-        input_html_classes << "folio-console-string-input"
+        input_html_classes << "f-c-string-input"
 
         if collection
           input_html_options["data-autocomplete"] = collection
-          input_html_classes << "folio-console-string-input--autocomplete"
+          input_html_classes << "f-c-string-input--autocomplete"
         elsif remote_autocomplete
           input_html_options["data-remote-autocomplete"] = remote_autocomplete
-          input_html_classes << "folio-console-string-input--remote-autocomplete"
+          input_html_classes << "f-c-string-input--remote-autocomplete"
         end
       end
     elsif options[:numeral]
-      input_html_classes << "folio-console-string-input--numeral"
+      input_html_classes << "f-c-string-input--numeral"
     else
       input_html_classes.unshift("string")
       input_html_options[:type] ||= input_type if html5?
@@ -46,7 +46,7 @@ SimpleForm::Inputs::StringInput.class_eval do
 
     if options[:content_templates]
       input_html_options["data-content-templates"] = options[:content_templates].constantize.to_data_attribute
-      input_html_classes << "folio-console-string-input--content-templates"
+      input_html_classes << "f-c-string-input--content-templates"
     end
 
     if options[:locale]

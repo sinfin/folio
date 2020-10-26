@@ -1,7 +1,7 @@
-REMOTE_AUTOCOMPLETE_SELECTOR = '.folio-console-string-input--remote-autocomplete'
-AUTOCOMPLETE_SELECTOR = '.folio-console-string-input--autocomplete'
-NUMERAL_SELECTOR = '.folio-console-string-input--numeral'
-CONTENT_TEMPLATES_SELECTOR = '.folio-console-string-input--content-templates'
+REMOTE_AUTOCOMPLETE_SELECTOR = '.f-c-string-input--remote-autocomplete'
+AUTOCOMPLETE_SELECTOR = '.f-c-string-input--autocomplete'
+NUMERAL_SELECTOR = '.f-c-string-input--numeral'
+CONTENT_TEMPLATES_SELECTOR = '.f-c-string-input--content-templates'
 
 $.widget 'ui.autocomplete', $.ui.autocomplete,
   _renderMenu: ($ul, items) ->

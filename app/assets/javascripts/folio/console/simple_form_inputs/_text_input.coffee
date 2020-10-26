@@ -1,4 +1,4 @@
-AUTOSIZE_SELECTOR = '.folio-console-text-input--autosize'
+AUTOSIZE_SELECTOR = '.f-c-text-input--autosize'
 
 bindAutosize = ($elements) ->
   autosize($elements)

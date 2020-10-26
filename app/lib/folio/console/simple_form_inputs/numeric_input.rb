@@ -10,7 +10,7 @@ SimpleForm::Inputs::NumericInput.class_eval do
     end
 
     if options[:numeral]
-      input_html_classes << "folio-console-string-input--numeral"
+      input_html_classes << "f-c-string-input--numeral"
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
