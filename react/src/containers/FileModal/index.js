@@ -50,7 +50,7 @@ class FileModal extends Component {
     const { fileModal } = this.props
 
     this.props.dispatch(markModalFileAsUpdating(fileModal.file))
-    this.props.dispatch(updateFile(this.props.fileModal.fileType, fileModal.file, this.state))
+    this.props.dispatch(updateFile(this.props.fileModal.fileType, this.props.fileModal.filesUrl, fileModal.file, this.state))
   }
 
   closeFileModal = () => {

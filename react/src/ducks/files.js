@@ -48,8 +48,8 @@ export function updatedFiles (fileType, files) {
   return { type: UPDATED_FILES, fileType, files }
 }
 
-export function updateFile (fileType, file, attributes) {
-  return { type: UPDATE_FILE, fileType, file, attributes }
+export function updateFile (fileType, filesUrl, file, attributes) {
+  return { type: UPDATE_FILE, fileType, filesUrl, file, attributes }
 }
 
 export function deleteFile (fileType, filesUrl, file) {
@@ -107,8 +107,7 @@ function * getFilesSaga () {
 
 function * updateFilePerform (action) {
   try {
-    const { file, attributes } = action
-    const filesUrl = yield select(filesUrlSelector)
+    const { file, filesUrl, attributes } = action
     const fullUrl = `${filesUrl}/${file.id}`
     const data = {
       file: {

@@ -72,7 +72,7 @@ describe('filesReducer', () => {
   it('updateFile', () => {
     expect(state['Folio::Image'].records[0].attributes.updating).toEqual(undefined)
     expect(state['Folio::Image'].records[0].attributes.tags).toEqual([])
-    state = filesReducer(state, updateFile('Folio::Image', state['Folio::Image'].records[0], { tags: ['foo'] }))
+    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', state['Folio::Image'].records[0], { tags: ['foo'] }))
     expect(state['Folio::Image'].records[0].attributes.updating).toEqual(true)
     expect(state['Folio::Image'].records[0].attributes.tags).toEqual(['foo'])
   })
@@ -80,13 +80,13 @@ describe('filesReducer', () => {
   it('updateFile', () => {
     expect(state['Folio::Image'].records[0].attributes.updating).toEqual(undefined)
     expect(state['Folio::Image'].records[0].attributes.tags).toEqual([])
-    state = filesReducer(state, updateFile('Folio::Image', state['Folio::Image'].records[0], { tags: ['foo'] }))
+    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', state['Folio::Image'].records[0], { tags: ['foo'] }))
     expect(state['Folio::Image'].records[0].attributes.updating).toEqual(true)
     expect(state['Folio::Image'].records[0].attributes.tags).toEqual(['foo'])
   })
 
   it('updateFileSuccess', () => {
-    state = filesReducer(state, updateFile('Folio::Image', state['Folio::Image'].records[0], { thumb: '/foo.jpg' }))
+    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', state['Folio::Image'].records[0], { thumb: '/foo.jpg' }))
     const response = {
       ...IMAGES[0],
       attributes: {
@@ -101,7 +101,7 @@ describe('filesReducer', () => {
 
   it('updateFileFailure', () => {
     const image = state['Folio::Image'].records[0]
-    state = filesReducer(state, updateFile('Folio::Image', image, { thumb: '/foo.jpg' }))
+    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', image, { thumb: '/foo.jpg' }))
     expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
     state = filesReducer(state, updateFileFailure('Folio::Image', image))
     expect(state['Folio::Image'].records[0].attributes.thumb).not.toEqual('/foo.jpg')
