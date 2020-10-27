@@ -33,6 +33,8 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
 
     if params[:class_name].present?
       @klass = params[:class_name].constantize
+
+      @default_locale = @klass.atom_default_locale_from_params(params[:settings])
       @settings = {}
 
       @klass.atom_settings_from_params(params[:settings])
@@ -44,6 +46,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
         end
       end
     else
+      @default_locale = I18n.default_locale
       @settings = {}
     end
 

@@ -43,6 +43,10 @@ module Folio::HasAtoms
 
         settings
       end
+
+      def atom_default_locale_from_params(_params)
+        I18n.default_locale
+      end
     end
   end
 
