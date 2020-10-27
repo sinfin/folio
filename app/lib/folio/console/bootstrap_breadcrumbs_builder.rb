@@ -62,10 +62,10 @@ class Folio::Console::BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcru
 
     @context.content_tag(item_tag, class: ["breadcrumb-item", ("active" if current)]) do
       opts = element.options.merge(class: "breadcrumb-link")
-      if current
-        name
-      else
+      if path.present?
         @context.link_to(name, path, opts)
+      else
+        name
       end
     end
   end
