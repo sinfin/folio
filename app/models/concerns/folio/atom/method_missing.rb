@@ -76,7 +76,7 @@ module Folio::Atom::MethodMissing
                includes = arguments.first.try(:[], :includes)
               scope = scope.includes(*includes)
             end
-            scope.find(assoc["id"])
+            scope.find_by_id(assoc["id"])
           else
             nil
           end
