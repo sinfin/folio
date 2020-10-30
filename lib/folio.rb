@@ -38,6 +38,7 @@ require "fast_jsonapi"
 module Folio
   LANGUAGES = {
     cs: "CZ",
+    sk: "SK",
     de: "DE",
     pl: "PL",
     es: "ES",

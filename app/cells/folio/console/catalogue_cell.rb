@@ -36,18 +36,19 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, &block)
     content = nil
 
     full_class_name = cell_class_name(name,
                                       class_name: class_name,
                                       spacey: spacey,
                                       compact: compact,
-                                      media_query: media_query)
+                                      media_query: media_query,
+                                      skip_desktop_header: skip_desktop_header)
 
     if rendering_header?
       @header_html += content_tag(:div,
-                                  label_for(name),
+                                  label_for(name, skip_desktop_header: skip_desktop_header),
                                   class: full_class_name)
     else
       if block_given?
@@ -97,7 +98,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def locale_flag
-    attribute(:locale) do
+    attribute(:locale, compact: true, skip_desktop_header: true) do
       country_flag(record.locale) if record.locale
     end
   end
@@ -180,7 +181,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil)
+    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil, skip_desktop_header: false)
       full = ""
 
       if rendering_header?
@@ -214,6 +215,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         full += " #{base}--compact"
       end
 
+      if skip_desktop_header
+        full += " #{base}--skip-desktop-header"
+      end
+
       if media_query
         full += " #{base}--media_query-#{media_query}"
       end
@@ -221,7 +226,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       full
     end
 
-    def label_for(attr = nil)
+    def label_for(attr = nil, skip_desktop_header: false)
+      return "" if skip_desktop_header
       return nil if attr.nil?
       return @labels[attr] unless @labels[attr].nil?
 
