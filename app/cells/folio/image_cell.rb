@@ -41,26 +41,30 @@ class Folio::ImageCell < Folio::ApplicationCell
           file = model
         end
 
-        retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
-
         normal = file.thumb(size)
-        retina = file.thumb(retina_size)
-
-        use_webp = normal[:webp_url] && retina[:webp_url]
 
         h = {
           normal: normal,
-          retina: retina,
+          src: normal.url,
           alt: model.try(:alt) || "",
           title: model.try(:title),
-          use_webp: use_webp,
-          src: normal.url,
-          srcset: "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x",
         }
 
-        if use_webp
-          h[:webp_src] = normal.webp_src
-          h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+        unless /svg/.match?(file.mime_type)
+          retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+          retina = file.thumb(retina_size)
+
+          use_webp = normal[:webp_url] && retina[:webp_url]
+
+          h[:retina] = retina
+          h[:use_webp] = use_webp
+          h[:srcset] = "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x"
+
+          if use_webp
+            h[:webp_src] = normal.webp_src
+            h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+          end
         end
 
         h
