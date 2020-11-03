@@ -59,6 +59,16 @@ $folio-image-fallback-background: #f9f9f9 !default
   &--lightboxable
     cursor: zoom-in
 
+  &--contain
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &--contain &__picture
+    display: flex
+    align-items: center
+    justify-content: center
+
   &--contain &__picture,
   &--contain &__spacer,
   &--cover &__spacer,
@@ -73,10 +83,7 @@ $folio-image-fallback-background: #f9f9f9 !default
   &--contain &__img
     max-width: 100%
     max-height: 100%
-    position: absolute
-    top: 50%
-    left: 50%
-    transform: translate(-50%, -50%)
+    position: static
     width: auto
     height: auto
 
@@ -93,10 +100,6 @@ $folio-image-fallback-background: #f9f9f9 !default
 
     a:hover &, figure:hover &, &:hover
       transform: scale(1.05)
-
-  &--hover-zoom.f-image--contain &__img
-    a:hover &, figure:hover &, &:hover
-      transform: translate(-50%, -50%) scale(1.05)
 
   &--fixed-height
     +mq-desktop-menu
