@@ -19,6 +19,8 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  after_create :subscribe
+
   def title
     email
   end
