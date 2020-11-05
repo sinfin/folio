@@ -7,27 +7,27 @@
                             input_html: input_html('f-c-publishable-inputs__checkbox'), \
                             wrapper_html: { class: 'f-c-publishable-inputs__published' }
 
-    - if publishable_with_date?
-      .f-c-publishable-inputs__date
-        = f.input :published_at, \
-                  label: false, \
-                  hint: false, \
-                  wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
-                  input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.at'))
+      - if publishable_with_date?
+        .f-c-publishable-inputs__date
+          = f.input :published_at, \
+                    label: false, \
+                    hint: false, \
+                    wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
+                    input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.at'))
 
-    - elsif publishable_within?
-      .f-c-publishable-inputs__date
-        = f.input :published_from, \
-                  label: false, \
-                  hint: false, \
-                  wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
-                  input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.from'))
+      - elsif publishable_within?
+        .f-c-publishable-inputs__date
+          = f.input :published_from, \
+                    label: false, \
+                    hint: false, \
+                    wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
+                    input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.from'))
 
-        = f.input :published_until, \
-                  label: false, \
-                  hint: false, \
-                  wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
-                  input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.to'))
+          = f.input :published_until, \
+                    label: false, \
+                    hint: false, \
+                    wrapper_html: { class: 'f-c-publishable-inputs__wrapper' }, \
+                    input_html: input_html('f-c-publishable-inputs__input', placeholder: t('.to'))
 
   - if f.object.respond_to?(:featured)
     .f-c-publishable-inputs__box.f-c-publishable-inputs__box--featured[
