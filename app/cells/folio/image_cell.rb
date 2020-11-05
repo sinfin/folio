@@ -122,7 +122,23 @@ class Folio::ImageCell < Folio::ApplicationCell
       end
 
       if max_width.present?
-        max_width = "#{max_width}px" unless max_width.to_s.match?(/%|none/)
+        unless max_width.to_s.match?(/%|none/)
+          file = model
+
+          if model.is_a?(Folio::FilePlacement::Base)
+            file = model.file
+          end
+
+          if file.respond_to?(:file_width)
+            max_width_i = max_width.to_i
+            if max_width_i > 0
+              max_width = [max_width_i, file.file_width].min
+            end
+          end
+
+          max_width = "#{max_width}px"
+        end
+
         styles << "max-width: #{max_width}"
       end
 
