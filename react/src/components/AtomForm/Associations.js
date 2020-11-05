@@ -11,7 +11,7 @@ class Associations extends React.PureComponent {
   }
 
   render () {
-    const { atom, asyncData, index, onBlur, onChange, onFocus } = this.props
+    const { atom, asyncData, index, onBlur, onChange, onFocus, settingsUrlData } = this.props
     const { associations } = atom.record.meta
 
     return (
@@ -29,6 +29,7 @@ class Associations extends React.PureComponent {
               onBlur={onBlur}
               onFocus={onFocus}
               innerRef={this.selectRef}
+              settingsUrlData={settingsUrlData}
               defaultOptions
               selectize
             />

@@ -124,6 +124,13 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             scope = scope.unscope(:order).send(p_order)
           end
 
+          params.keys.each do |key|
+            next unless key.starts_with?("by_atom_setting_")
+            if scope.respond_to?(key)
+              scope = scope.send(key, params[key])
+            end
+          end
+
           response += scope.first(30).map do |record|
             text = record.to_console_label
             text = "#{klass.model_name.human} - #{text}" if show_model_names

@@ -4,10 +4,9 @@ import { takeEvery, takeLatest, call, select, put } from 'redux-saga/effects'
 
 import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
-import getJsonFromMultiSelectDom from 'utils/getJsonFromMultiSelectDom'
-import getJsonFromReactPicker from 'utils/getJsonFromReactPicker'
 
 import { combineAtoms } from 'ducks/utils/atoms'
+import settingsToHash from 'utils/settingsToHash'
 
 // Constants
 
@@ -258,46 +257,17 @@ function * updateAtomPreviews (action) {
       serializedAtoms['settings']['perex'][$perex.data('locale') || null] = $perex.val()
     })
   }
-  let settingsLoading = false
-  const $settings = $('.f-c-js-atoms-placement-setting')
-  if ($settings.length) {
-    $settings.each((i, setting) => {
-      const $setting = $(setting)
-      const key = $setting.data('atom-setting')
-      if (settingsLoading) return
-      if (key) {
-        let val
-        if ($setting.hasClass('selectized')) {
-          val = $setting[0].selectize.getValue()
-        } else if ($setting.hasClass('folio-console-react-picker')) {
-          val = getJsonFromReactPicker($setting)
-        } else if ($setting.hasClass('folio-react-wrap')) {
-          if ($setting.find('.f-c-file-placement-list').length) {
-            val = getJsonFromMultiSelectDom($setting)
-            if (val.length === 0) val = null
-          } else if ($setting.find('.f-c-file-placement-list__empty').length) {
-            val = null
-          } else {
-            settingsLoading = true
-            return
-          }
-        } else {
-          val = $setting.val()
-        }
 
-        if (val) {
-          serializedAtoms['settings'][key] = serializedAtoms['settings'][key] || {}
-          serializedAtoms['settings'][key][$setting.data('locale') || null] = val
-        }
-      }
-    })
+  serializedAtoms['settings'] = {
+    ...serializedAtoms['settings'],
+    ...settingsToHash()
   }
 
   if (action.type !== SET_ATOMS_DATA && action.type !== REFRESH_ATOM_PREVIEWS) {
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
   }
 
-  if (settingsLoading) {
+  if (serializedAtoms.loading) {
     yield delay(100)
     yield put(refreshAtomPreviews())
   } else {

@@ -58,7 +58,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { createable, value, options, onChange, innerRef, selectize, async, asyncData, defaultOptions, ...rest } = this.props
+    const { createable, value, options, onChange, innerRef, selectize, async, asyncData, settingsUrlData, defaultOptions, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -73,15 +73,22 @@ class Select extends React.Component {
 
       loadOptionsRaw = (inputValue, handle) => {
         let data = ''
+        const params = new URLSearchParams()
 
         if (asyncData) {
-          const params = new URLSearchParams()
           Object.keys(asyncData).forEach((key) => {
             params.set(`atom_form_fields[${key}]`, asyncData[key])
           })
-          data = params.toString()
-          if (data !== '') data = `&${data}`
         }
+
+        if (settingsUrlData) {
+          Object.keys(settingsUrlData).forEach((key) => {
+            params.set(key, settingsUrlData[key])
+          })
+        }
+
+        data = params.toString()
+        if (data !== '') data = `&${data}`
 
         const join = async.indexOf('?') === -1 ? '?' : '&'
         apiGet(`${async}${join}q=${inputValue}${data}`)

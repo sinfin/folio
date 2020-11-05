@@ -4,6 +4,8 @@ import { isEqual } from 'lodash'
 
 import NestedModelControls from 'components/NestedModelControls'
 
+import settingsToHash from 'utils/settingsToHash'
+
 import Associations from './Associations'
 import Fields from './Fields'
 import MultiAttachments from './MultiAttachments'
@@ -111,6 +113,24 @@ class AtomForm extends React.PureComponent {
       }
     })
 
+    const settingsUrlData = {}
+    const settingsHash = settingsToHash()
+    Object.keys(settingsHash).forEach((key) => {
+      if (key !== 'loading') {
+        Object.keys(settingsHash[key]).forEach((locale) => {
+          let fullKey
+
+          if (locale && locale !== 'null') {
+            fullKey = `by_atom_setting_${key}_${locale}`
+          } else {
+            fullKey = `by_atom_setting_${key}`
+          }
+
+          settingsUrlData[fullKey] = settingsHash[key][locale]
+        })
+      }
+    })
+
     if (molecule) {
       Object.keys(this.props.structures).forEach((type) => {
         if (this.props.structures[type].molecule === molecule) {
@@ -192,6 +212,7 @@ class AtomForm extends React.PureComponent {
               <Associations
                 atom={atom}
                 asyncData={asMolecule ? asyncData : undefined}
+                settingsUrlData={settingsUrlData}
                 onChange={this.onAssociationChange}
                 onBlur={() => { this.setState({ focusedIndex: null }) }}
                 onFocus={() => { this.setState({ focusedIndex: index }) }}
