@@ -12,6 +12,11 @@ class Dummy::Atom::DaVinci < Folio::Atom::Base
     page: %w[Folio::Page],
   }
 
+  FORM_LAYOUT = [
+    ["ATTACHMENTS", "ASSOCIATIONS"],
+    "STRUCTURE",
+  ]
+
   def self.cell_name
     "dummy/atom/da_vinci"
   end

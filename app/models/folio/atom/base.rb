@@ -25,6 +25,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   ASSOCIATIONS = {}
 
+  FORM_LAYOUT = [
+    "ATTACHMENTS",
+    "ASSOCIATIONS",
+    "STRUCTURE",
+  ]
+
   self.table_name = "folio_atoms"
 
   audited associated_with: :placement,

@@ -1,10 +1,11 @@
 import React from 'react'
 
 import SingleSelectTrigger from 'components/SingleSelectTrigger'
+import SingleAttachmentsWrap from './styled/SingleAttachmentsWrap'
 
 export default function SingleAttachments ({ attachments, atom, remove, index, openFileModal }) {
   return (
-    <div className='d-flex'>
+    <SingleAttachmentsWrap>
       {attachments.map((attachmentType) => (
         attachmentType.plural ? null : (
           <SingleSelectTrigger
@@ -17,6 +18,6 @@ export default function SingleAttachments ({ attachments, atom, remove, index, o
           />
         )
       ))}
-    </div>
+    </SingleAttachmentsWrap>
   )
 }

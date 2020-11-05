@@ -12,6 +12,8 @@ import SingleAttachments from './SingleAttachments'
 import AtomFormWrap from './styled/AtomFormWrap'
 import AtomFormHint from './styled/AtomFormHint'
 import AtomFormCardOuter from './styled/AtomFormCardOuter'
+import AtomFormCardCol from './styled/AtomFormCardCol'
+import AtomFormCardRow from './styled/AtomFormCardRow'
 
 class AtomForm extends React.PureComponent {
   state = { focusedIndex: null }
@@ -178,33 +180,44 @@ class AtomForm extends React.PureComponent {
             )
 
             const inputs = (
-              <React.Fragment>
-                <Fields
-                  atom={atom}
-                  onChange={this.onChange}
-                  onValueChange={this.onValueChange}
-                  index={index}
-                />
-
-                <Associations
-                  atom={atom}
-                  asyncData={asMolecule ? asyncData : undefined}
-                  onChange={this.onAssociationChange}
-                  onBlur={() => { this.setState({ focusedIndex: null }) }}
-                  onFocus={() => { this.setState({ focusedIndex: index }) }}
-                  index={index}
-                />
-              </React.Fragment>
+              <Fields
+                atom={atom}
+                onChange={this.onChange}
+                onValueChange={this.onValueChange}
+                index={index}
+              />
             )
 
-            let renderAsFlex = false
-            if (Object.keys(atom.record.meta.attachments).length === 1) {
-              if (!atom.record.meta.attachments[0].plural) {
-                if (Object.keys(atom.record.meta.structure).length <= 3) {
-                  renderAsFlex = true
+            const associations = (
+              <Associations
+                atom={atom}
+                asyncData={asMolecule ? asyncData : undefined}
+                onChange={this.onAssociationChange}
+                onBlur={() => { this.setState({ focusedIndex: null }) }}
+                onFocus={() => { this.setState({ focusedIndex: index }) }}
+                index={index}
+              />
+            )
+
+            const fillOutput = (ary) => (
+              ary.map((row) => {
+                if (typeof row === 'string') {
+                  if (row === 'ASSOCIATIONS') {
+                    return <AtomFormCardCol key={row} above>{associations}</AtomFormCardCol>
+                  } else if (row === 'STRUCTURE') {
+                    return <AtomFormCardCol key={row}>{inputs}</AtomFormCardCol>
+                  } else if (row === 'ATTACHMENTS') {
+                    return <AtomFormCardCol key={row} narrow>{singleAttachments}</AtomFormCardCol>
+                  }
+                } else if (typeof row === 'object') {
+                  return <AtomFormCardRow key={row.join('-')}>{fillOutput(row)}</AtomFormCardRow>
                 }
-              }
-            }
+
+                return null
+              })
+            )
+
+            const output = fillOutput(atom.record.meta.form_layout)
 
             return (
               <AtomFormCardOuter
@@ -226,19 +239,7 @@ class AtomForm extends React.PureComponent {
                       </div>
                     )}
 
-                    {renderAsFlex ? (
-                      <div className='d-flex position-relative z-index-2'>
-                        {singleAttachments}
-                        <div className='flex-grow-1'>
-                          {inputs}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className='position-relative z-index-2'>
-                        {singleAttachments}
-                        {inputs}
-                      </div>
-                    )}
+                    {output}
 
                     <MultiAttachments
                       atom={atom}

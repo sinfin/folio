@@ -81,6 +81,7 @@ module Folio::Atom
         attachments: attachments,
         hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil),
         structure: structure,
+        form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,
         molecule: klass.molecule_cell_name,
         molecule_singleton: klass.molecule_singleton,
