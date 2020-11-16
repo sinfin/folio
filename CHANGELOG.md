@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-11-16
+### Changed
+- updated console cell styles import - add `@import '../../../../cells/folio/console/**/*'` to `app/assets/stylesheets/folio/console/_main_app.sass`
+
 ## 2020-11-05
 ### Added
 - added `FORM_LAYOUT` to atoms
