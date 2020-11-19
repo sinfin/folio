@@ -57,3 +57,18 @@ ShowFor.setup do |config|
   # specify label_proc - it will be automatically called, passing in the label text.
   # config.label_proc = lambda { |l| l + ":" }
 end
+
+class ShowFor::Builder
+  def email(attr = :email)
+    attribute(attr) do
+      if object.persisted? && object.public_send(attr).present?
+        [
+          object.public_send(attr),
+          template.mail_to(object.public_send(attr),
+                           "",
+                           class: "fa fa--small ml-1 fa-envelope"),
+        ].join(" ").html_safe
+      end
+    end
+  end
+end

@@ -36,12 +36,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, &block)
     content = nil
 
     full_class_name = cell_class_name(name,
                                       class_name: class_name,
                                       spacey: spacey,
+                                      small: small,
                                       compact: compact,
                                       media_query: media_query,
                                       skip_desktop_header: skip_desktop_header)
@@ -91,10 +92,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     resource_link([:console, record], attr, &block)
   end
 
-  def date(attr = nil)
+  def date(attr = nil, small: false)
     val = record.send(attr)
     val = l(val, format: :short) if val.present?
-    attribute(attr, val)
+    attribute(attr, val, small: small)
   end
 
   def locale_flag
@@ -181,7 +182,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil, skip_desktop_header: false)
+    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false)
       full = ""
 
       if rendering_header?
@@ -205,6 +206,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         else
           full += " #{base}--#{class_name}"
         end
+      end
+
+      if small
+        full += " #{base}--small"
       end
 
       if spacey

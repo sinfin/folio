@@ -11,6 +11,9 @@ div class=class_name
         i.fa.fa-plus.f-c-show-header__btn-ico
         span.f-c-show-header__btn-text = options[:add][:label]
 
+    - if options[:right]
+      == options[:right]
+
     - if preview_url
       a.btn.btn-light.ml-lg-h href=preview_url target="_blank"
         i.fa.fa-external-link-alt.f-c-show-header__btn-ico
