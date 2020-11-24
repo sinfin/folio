@@ -2,27 +2,24 @@ SELECTOR = '.f-c-collection-remote-select-input'
 
 window.folioConsoleBindCollectionSelectInput = ($elements) ->
   $elements.each ->
-    $selectize = $(this)
-    $selectize
-      .removeClass('form-control')
-      .selectize
-        preload: 'focus'
-        plugins: if $selectize[0].multiple then ['remove_button'] else []
-        onChange: (_value) ->
-          $selectize.trigger('change')
-        load: (q, callback) ->
-          $.ajax
-            url: $selectize.data('autocomplete-url')
-            method: 'GET'
-            data:
-              q: q
-            error: ->
-              callback()
-            success: (res) ->
-              callback(res.data)
+    $select = $(this)
+    $select
+      .select2
+        width: "100%"
+        language: document.documentElement.lang
+        allowClear: true
+        placeholder:
+          id: ""
+          text: $select.data("placeholder")
+        ajax:
+          url: $select.data("url")
+          dataType: "JSON"
+          minimumInputLength: 0
+          cache: false
+          data: (params) -> { q: params.term }
 
 window.folioConsoleUnbindCollectionSelectInput = ($elements) ->
-  $elements.each -> @selectize?.destroy()
+  $elements.each -> @select?.destroy()
 
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->

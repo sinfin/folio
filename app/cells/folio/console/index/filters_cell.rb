@@ -88,10 +88,17 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     if data.is_a?(String)
       autocomplete_select(f, key, url: data)
     elsif data.is_a?(Hash)
-      url = controller.folio.console_api_autocomplete_path(klass: data[:klass],
-                                                           scope: data[:scope],
-                                                           order_scope: data[:order_scope])
-      autocomplete_select(f, key, url: url)
+      if data[:autocomplete]
+        url = controller.folio.console_api_autocomplete_path(klass: data[:klass],
+                                                             scope: data[:scope],
+                                                             order_scope: data[:order_scope])
+        autocomplete_select(f, key, url: url)
+      else
+        url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
+                                                                     scope: data[:scope],
+                                                                     order_scope: data[:order_scope])
+        select2_select(f, key, data, url: url)
+      end
     else
       f.input key, collection: collection(key),
                    include_blank: blank_label(key),
@@ -111,6 +118,26 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                  },
                  wrapper_html: {
                    class: "f-c-index-filters__autocomplete-wrap"
+                 }
+  end
+
+  def select2_select(f, key, data, url:)
+    collection = []
+
+    if controller.params[key].present?
+      record = data[:klass].constantize.find(controller.params[key])
+      collection << [record.to_console_label, record.id, selected: true]
+    end
+
+    f.input key, collection: collection,
+                 label: false,
+                 remote: url,
+                 input_html: {
+                   class: "f-c-index-filters__select2-input",
+                   "data-placeholder" => "#{label_for_key(key)}...",
+                 },
+                 wrapper_html: {
+                   class: "f-c-index-filters__select2-wrap"
                  }
   end
 end

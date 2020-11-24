@@ -44,3 +44,6 @@ bower_components/cleave.js/*
 !bower_components/cleave.js/dist
 bower_components/cleave.js/dist/*
 !bower_components/cleave.js/dist/cleave.js
+
+bower_components/select2/*
+!bower_components/select2/dist

@@ -86,7 +86,32 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       render_selectize_options(scope.limit(25))
     else
-      render json: { data: [] }
+      render_selectize_options([])
+    end
+  end
+
+  def select2
+    klass = params.require(:klass).safe_constantize
+    q = params[:q]
+    p_scope = params[:scope]
+    p_order = params[:order_scope]
+
+    if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
+      scope = klass.all
+
+      if p_scope.present? && scope.respond_to?(p_scope)
+        scope = scope.send(p_scope)
+      end
+
+      scope = scope.by_query(q) if q.present?
+
+      if p_order.present? && scope.respond_to?(p_order)
+        scope = scope.unscope(:order).send(p_order)
+      end
+
+      render_select2_options(scope.limit(25))
+    else
+      render_select2_options([])
     end
   end
 

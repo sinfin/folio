@@ -62,6 +62,7 @@ Folio::Engine.routes.draw do
       resource :autocomplete, only: %i[show] do
         get :field
         get :selectize
+        get :select2
         get :react_select
       end
 

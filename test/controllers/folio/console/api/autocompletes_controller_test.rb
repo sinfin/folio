@@ -38,6 +38,24 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal(401, json["errors"][0]["status"])
   end
 
+  test "select2" do
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal([], json["results"])
+
+    create(:folio_page, title: "Foo bar baz")
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "foo")
+    json = JSON.parse(response.body)
+    assert_equal(1, json["results"].size)
+    assert_equal("Foo bar baz", json["results"][0]["text"])
+
+    @admin.forget_me!
+    sign_out @admin
+    get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "a")
+    json = JSON.parse(response.body)
+    assert_equal(401, json["errors"][0]["status"])
+  end
+
   test "react_select" do
     get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "foo")
     json = JSON.parse(response.body)
