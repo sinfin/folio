@@ -12,8 +12,9 @@ class DateInput extends React.PureComponent {
   onChange = () => {
     const that = this
     setTimeout(() => {
-      const val = that.inputRef.current.value
-      that.props.onChange(val === '' ? null : val)
+      let val = that.inputRef.current.dataset.date
+      if (val === '' || val === 'null') val = null
+      that.props.onChange(val)
     }, 0)
   }
 
@@ -38,25 +39,17 @@ class DateInput extends React.PureComponent {
     }
   }
 
-  defaultValue () {
-    if (this.props.defaultValue) {
-      return new Date(this.props.defaultValue)
-    } else {
-      return ''
-    }
-  }
-
   render () {
     return (
       <div className='d-flex flex-row justify-content-between align-items-center'>
         <Input
           type='text'
           name={this.props.name}
-          defaultValue={this.defaultValue()}
           onKeyPress={preventEnterSubmit}
           placeholder={this.props.placeholder}
           innerRef={this.inputRef}
           invalid={this.props.invalid}
+          defaultValue={this.props.defaultValue || ''}
           data-date={this.props.defaultValue}
         />
       </div>

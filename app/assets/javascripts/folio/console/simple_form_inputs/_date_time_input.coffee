@@ -21,9 +21,11 @@ DATE_CONFIG = $.extend {}, CONFIG, format: 'DD. MM. YYYY'
 
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 
-dpChange = (e) ->
-  return unless e.date
-  @dataset.date = e.date.format()
+makeDpChange = (config) -> (e) ->
+  if e.date
+    @dataset.date = moment(e.date).format()
+  else
+    @dataset.date = null
 
 dpShow = (e) ->
   $input = $(this)
@@ -38,17 +40,18 @@ dpShow = (e) ->
 
 window.folioConsoleInitDatePicker = (el) ->
   $el = $(el)
-  $el.val(moment($el.data('date'), 'YYYYY-MM-DD h:mm:ss').format(DATE_CONFIG.format)) if $el.data('date')
+  $el.val(moment($el.data('date')).format(DATE_CONFIG.format)) if $el.data('date')
   $el.datetimepicker(DATE_CONFIG)
   $el.on 'dp.show', dpShow
-  $el.on 'dp.change', dpChange
+  $el.on 'dp.change', makeDpChange(DATE_CONFIG)
 
 window.folioConsoleInitDateTimePicker = (el) ->
   $el = $(el)
-  $el.val(moment($el.data('date'), 'YYYYY-MM-DD h:mm:ss').format(CONFIG.format)) if $el.data('date')
+  console.log($el.data('date'))
+  $el.val(moment($el.data('date')).format(CONFIG.format)) if $el.data('date')
   $el.datetimepicker(CONFIG)
   $el.on 'dp.show', dpShow
-  $el.on 'dp.change', dpChange
+  $el.on 'dp.change', makeDpChange(CONFIG)
 
 window.folioConsoleUnbindDatePicker = (el) ->
   $(el)

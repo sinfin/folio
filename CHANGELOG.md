@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-11-25
+### Changed
+- updated `:date` and `:datetime` atoms to store the value as a date/datettime instead of a string
+
 ## 2020-11-16
 ### Changed
 - updated console cell styles import - add `@import '../../../../cells/folio/console/**/*'` to `app/assets/stylesheets/folio/console/_main_app.sass`

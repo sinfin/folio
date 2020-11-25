@@ -89,6 +89,8 @@ module Folio::Atom::MethodMissing
                                          .gsub("=", "")
                                          .to_sym
       is_bool = klass::STRUCTURE[name_without_operator] == :boolean
+      is_date = klass::STRUCTURE[name_without_operator] == :date
+      is_datetime = klass::STRUCTURE[name_without_operator] == :datetime
 
       if method_name.to_s.include?("=")
         self.data ||= {}
@@ -100,6 +102,16 @@ module Folio::Atom::MethodMissing
           else
             value = value.present?
           end
+        elsif is_date || is_datetime
+          begin
+            value = Time.zone.parse(value)
+          rescue StandardError
+            value = nil
+          end
+
+          if value && is_date
+            value = value.to_date
+          end
         end
 
         self.data[name_without_operator.to_s] = value
@@ -107,10 +119,16 @@ module Folio::Atom::MethodMissing
         val = (self.data || {})[name_without_operator.to_s]
         if is_bool
           val.present?
-        elsif klass::STRUCTURE[name_without_operator] == :date
-          val.present? ? Date.parse(val) : val
-        elsif klass::STRUCTURE[name_without_operator] == :datetime
-          val.present? ? DateTime.parse(val) : val
+        elsif is_date || is_datetime
+          if val.present?
+            begin
+              Time.zone.parse(val)
+            rescue StandardError
+              nil
+            end
+          else
+            val
+          end
         else
           val
         end
