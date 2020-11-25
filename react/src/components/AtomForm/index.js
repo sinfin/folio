@@ -244,7 +244,7 @@ class AtomForm extends React.PureComponent {
               <AtomFormCardOuter
                 key={atom.record.id || atom.record.lodashId}
                 className={asMolecule ? 'card-outer' : undefined}
-                focused={index === this.state.focusedIndex}
+                focused={index === this.state.focusedIndex || atom.record.meta.molecule_singleton}
               >
                 <div className={asMolecule ? 'card' : undefined}>
                   <div className={asMolecule ? 'card-body mb-n3' : undefined}>

@@ -10,7 +10,11 @@ class DateInput extends React.PureComponent {
   }
 
   onChange = () => {
-    this.props.onChange(this.inputRef.current.dataset.date)
+    const that = this
+    setTimeout(() => {
+      const val = that.inputRef.current.value
+      that.props.onChange(val === '' ? null : val)
+    }, 0)
   }
 
   focus () {
@@ -24,11 +28,11 @@ class DateInput extends React.PureComponent {
       window.folioConsoleInitDateTimePicker(this.inputRef.current)
     }
 
-    const $ = window.jQuery
-    $(this.inputRef.current).on('dp.change', this.onChange)
+    window.jQuery(this.inputRef.current).on('dp.change', this.onChange)
   }
 
   componentWillUnmount () {
+    window.jQuery(this.inputRef.current).off('dp.change', this.onChange)
     if (window.folioConsoleUnbindDatePicker) {
       window.folioConsoleUnbindDatePicker(this.inputRef.current)
     }
