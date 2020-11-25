@@ -1,3 +1,7 @@
 linters:
   RuboCop:
     enabled: false
+
+  LineLength:
+    exclude:
+      - "app/views/home/ui.slim"
