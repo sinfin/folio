@@ -73,7 +73,7 @@ Dragonfly.app.configure do
 
   processor :convert_to_webp do |content, *args|
     content.shell_update ext: "webp" do |old_path, new_path|
-      "cwebp #{old_path} -o #{new_path}"
+      "cwebp -q 85 #{old_path} -o #{new_path}"
     end
   end
 
