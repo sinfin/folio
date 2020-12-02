@@ -40,9 +40,5 @@ meta name="twitter:card" content="summary"
 = javascript_include_tag 'application', 'data-turbolinks-track' => 'reload', \
                                         defer: true
 
-- unless @site.turbo_mode?
-  = javascript_include_tag 'non_turbo', 'data-turbolinks-track' => 'reload', \
-                                        defer: true
-
 - if ENV['RECAPTCHA_SITE_KEY'].present? && ENV['RECAPTCHA_SECRET_KEY'].present?
   script src="https://www.google.com/recaptcha/api.js" defer=true
