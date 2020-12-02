@@ -1,69 +1,94 @@
 # frozen_string_literal: true
 
-module Folio
-  class GenerateThumbnailJob < ApplicationJob
-    queue_as :default
+class Folio::GenerateThumbnailJob < Folio::ApplicationJob
+  queue_as :default
 
-    def perform(image, size, quality)
-      return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
-      return if image.mime_type =~ /svg/
+  def perform(image, size, quality, x: nil, y: nil, force: false)
+    return if /svg/.match?(image.mime_type)
 
-      image.thumbnail_sizes[size] = compute_sizes(image, size, quality)
-      image.update!(thumbnail_sizes: image.thumbnail_sizes)
+    # need to reload here because of parallel jobs
+    image.reload
 
-      ActionCable.server.broadcast(::FolioThumbnailsChannel::STREAM,
-        temporary_url: image.temporary_url(size),
-        temporary_s3_url: image.temporary_s3_url(size),
-        url: image.thumbnail_sizes[size][:url],
-        width: image.thumbnail_sizes[size][:width],
-        height: image.thumbnail_sizes[size][:height]
-      )
+    thumbnail_sizes = image.thumbnail_sizes || {}
+    present_uid = thumbnail_sizes[size] && thumbnail_sizes[size][:uid]
+    return if !force && present_uid
 
-      image
+    Dragonfly.app.datastore.destroy(present_uid) if present_uid
+
+    new_thumb = make_thumb(image, size, quality, x: x, y: y)
+
+    # need to reload here because of parallel jobs
+    image.with_lock do
+      image.reload
+      thumbnail_sizes = image.thumbnail_sizes || {}
+      image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
     end
 
-    private
+    ActionCable.server.broadcast(FolioThumbnailsChannel::STREAM,
+      temporary_url: image.temporary_url(size),
+      temporary_s3_url: image.temporary_s3_url(size),
+      url: new_thumb[:url],
+      webp_url: new_thumb[:webp_url],
+      width: new_thumb[:width],
+      height: new_thumb[:height],
+    )
 
-      def compute_sizes(image, size, quality)
-        return if image.thumbnail_sizes[size] && image.thumbnail_sizes[size][:uid]
+    image
+  end
 
-        if /png/.match?(image.try(:mime_type))
-          if Rails.application.config.folio_dragonfly_keep_png
-            thumbnail = image.file
-                             .thumb(size, 'format' => :png, 'frame' => 0)
-          else
-            thumbnail = image.file
-                             .add_white_background
-                             .thumb(size, 'format' => :jpg, 'frame' => 0)
-                             .encode('jpg', "-quality #{quality}")
-                             .jpegoptim
-          end
-        elsif image.animated_gif?
+  private
+    def make_thumb(image, size, quality, x: nil, y: nil)
+      if /png/.match?(image.try(:mime_type))
+        if Rails.application.config.folio_dragonfly_keep_png
           thumbnail = image.file
-                           .animated_gif_resize(size)
-        elsif /pdf/.match?(image.try(:mime_type))
-          thumbnail = image.file
-                           .add_white_background
-                           .thumb(size, 'format' => :jpg, 'frame' => 0)
-                           .encode('jpg', "-quality #{quality}")
-                           .jpegoptim
+                           .thumb(size, format: :png,
+                                        x: x,
+                                        y: y)
         else
           thumbnail = image.file
-                           .thumb(size, 'format' => :jpg, 'frame' => 0)
-                           .auto_orient
-                           .cmyk_to_srgb
-                           .encode('jpg', "-quality #{quality}")
+                           .add_white_background
+                           .thumb(size, format: :jpg,
+                                        x: x,
+                                        y: y)
+                           .encode("jpg", "-quality #{quality}")
                            .jpegoptim
         end
-
-        {
-          uid: thumbnail.store,
-          signature: thumbnail.signature,
-          url: thumbnail.url,
-          width: thumbnail.width,
-          height: thumbnail.height,
-          quality: quality
-        }
+      elsif image.animated_gif?
+        thumbnail = image.file
+                         .animated_gif_resize(size)
+      elsif /pdf/.match?(image.try(:mime_type))
+        # "frame" option has to be set as string key
+        # https://github.com/markevans/dragonfly/issues/483
+        thumbnail = image.file
+                         .add_white_background
+                         .thumb(size, format: :jpg,
+                                      "frame" => 0,
+                                      x: x,
+                                      y: y)
+                         .encode("jpg", "-quality #{quality}")
+                         .jpegoptim
+      else
+        thumbnail = image.file
+                         .thumb(size, format: :jpg,
+                                      x: x,
+                                      y: y)
+                         .auto_orient
+                         .encode("jpg", "-quality #{quality}")
+                         .cmyk_to_srgb
+                         .jpegoptim
       end
-  end
+
+      uid = thumbnail.store
+
+      {
+        uid: uid,
+        signature: thumbnail.signature,
+        url: Dragonfly.app.datastore.url_for(uid),
+        width: thumbnail.width,
+        height: thumbnail.height,
+        quality: quality,
+        x: x,
+        y: y,
+      }
+    end
 end
