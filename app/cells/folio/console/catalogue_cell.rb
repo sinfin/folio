@@ -98,9 +98,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(attr, val, small: small)
   end
 
-  def locale_flag
-    attribute(:locale, compact: true, skip_desktop_header: true) do
-      country_flag(record.locale) if record.locale
+  def locale_flag(locale_attr = :locale)
+    attribute(locale_attr, compact: true, skip_desktop_header: true) do
+      if record.send(locale_attr)
+        content_tag(:div,
+                    country_flag(record.send(locale_attr)),
+                    class: "d-flex align-items-center justify-content-center")
+      end
     end
   end
 

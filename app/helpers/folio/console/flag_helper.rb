@@ -5,7 +5,7 @@ module Folio::Console::FlagHelper
 
   def country_flag(locale)
     code = Folio::LANGUAGES[locale.to_sym]
-    return locale unless code
+    code ||= locale
     image_tag("#{CDN}/4x3/#{code.downcase}.svg",
               alt: code,
               class: "folio-console-flag")
