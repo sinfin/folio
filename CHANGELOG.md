@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-12-02
+### Added
+- respect `:modal` option on AASM events
+
 ## 2020-11-25
 ### Changed
 - updated `:date` and `:datetime` atoms to store the value as a date/datettime instead of a string

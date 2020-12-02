@@ -76,7 +76,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def remote_url_for(event)
-    controller.folio.event_console_api_aasm_path(klass: model.class.to_s,
+    controller.folio.event_console_api_aasm_path(klass: klass,
                                                  id: model.id,
                                                  aasm_event: event.name,
                                                  cell_options: {
@@ -84,5 +84,9 @@ class Folio::Console::StateCell < Folio::ConsoleCell
                                                    remote: options[:remote],
                                                    small: options[:small],
                                                  })
+  end
+
+  def klass
+    @klass ||= model.class.to_s
   end
 end

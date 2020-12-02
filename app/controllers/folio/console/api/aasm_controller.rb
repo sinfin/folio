@@ -13,6 +13,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
                       .find { |e| e.name == event_name }
 
         if event && !event.options[:private]
+          record = handle_record_before_event(record)
           record.send("#{event_name}!")
           opts = {
             small: params[:cell_options][:small].presence,
@@ -50,30 +51,7 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
       }, status: 422
     end
 
-  #   if folio_console_record.valid?
-  #     event = folio_console_record.aasm
-  #                                 .events(possible: true)
-  #                                 .find { |e| e.name == event_name }
-
-  #     if event && !event.options[:private]
-  #       folio_console_record.send("#{event_name}!")
-  #       location = request.referer || respond_with_location
-  #       respond_with folio_console_record, location: location
-  #     else
-  #       human_event = AASM::Localizer.new.human_event_name(@klass, event_name)
-
-  #       redirect_back fallback_location: url_for([:console, @klass]),
-  #                     flash: { error: I18n.t('folio.console.base_controller.invalid_event', event: human_event) }
-  #     end
-  #   else
-  #     alert = I18n.t('flash.actions.update.alert',
-  #                    resource_name: @klass.model_name.human)
-  #     redirect_to respond_with_location(prevalidate: true),
-  #                 flash: { alert: alert }
-  #   end
-
-  #   render json: { data: scope }
-  # else
-  #   render json: { data: [] }
-  # end
+    def handle_record_before_event(record)
+      record
+    end
 end

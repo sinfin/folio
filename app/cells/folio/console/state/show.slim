@@ -25,8 +25,12 @@ div class=class_name class=(options[:small] ? 'small' : nil)
           - events.each do |event|
             - next if event.options[:private]
             span.f-c-state__state.f-c-state__state--trigger.dropdown-item[
-              data-confirm=confirm(event)
+              data-confirmation=confirm(event)
               data-url=remote_url_for(event)
+              data-modal=event.options[:modal]
+              data-event-name=event.name
+              data-klass=klass
+              data-id=model.id
             ]
               = event_square(event)
               = localizer.human_event_name model.class, event.name

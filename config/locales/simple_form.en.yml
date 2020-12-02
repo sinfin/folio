@@ -24,6 +24,8 @@ en:
       node:
         code: Optional internal node specification.
         parent_id: If using tree structure, parent page/category is selected here.
+      notesvilla_note:
+        state_change_mail_text: The text [link to note] will be replaced by the public note link.
     'no': 'No'
     placeholders:
       defaults:
