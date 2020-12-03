@@ -1,0 +1,38 @@
+div class=class_name
+  - if attachment.present?
+    - if options[:minimal]
+      a.mi.mi--16.text-body.text-decoration-none[
+        href=href
+        target="_blank"
+      ]
+        ' insert_drive_file
+    - else
+      .d-flex.align-items-center
+        a.mr-3.btn.btn-outline-secondary href=href target="_blank"
+          span.mi insert_drive_file
+          = t('.download')
+
+        .f-c-private-attachments-single-dropzone__upload.mr-3 data=upload_data
+          span.f-c-private-attachments-single-dropzone__upload-ico[
+            class="fa fa-edit text-black"
+          ]
+
+        .f-c-private-attachments-single-dropzone__destroy data=destroy_data
+          span.fa.fa-trash
+
+  - else
+    .f-c-private-attachments-single-dropzone__upload data=upload_data
+      - if options[:minimal]
+        span.f-c-private-attachments-single-dropzone__upload-ico[
+          class="mi mi--16 text-black"
+        ]
+          ' attach_file
+      - else
+        .f-c-private-attachments-single-dropzone__upload-btn[
+          data=upload_data
+          class="btn btn-outline-secondary"
+        ]
+          span.mi attach_file
+          = t('.upload')
+
+  span.folio-loader.f-c-private-attachments-single-dropzone__loader

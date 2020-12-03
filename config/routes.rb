@@ -66,6 +66,8 @@ Folio::Engine.routes.draw do
         get :react_select
       end
 
+      resources :private_attachments, only: %i[create destroy]
+
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
 

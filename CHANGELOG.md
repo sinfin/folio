@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-12-03
+### Added
+- private attachments api controller
+- private attachments single_dropzone cell
+- private_attachment method to catalogue
+
 ## 2020-12-02
 ### Added
 - respect `:modal` option on AASM events

@@ -36,13 +36,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, &block)
     content = nil
 
     full_class_name = cell_class_name(name,
                                       class_name: class_name,
                                       spacey: spacey,
                                       small: small,
+                                      aligned: aligned,
                                       compact: compact,
                                       media_query: media_query,
                                       skip_desktop_header: skip_desktop_header)
@@ -99,11 +100,9 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def locale_flag(locale_attr = :locale)
-    attribute(locale_attr, compact: true, skip_desktop_header: true) do
+    attribute(locale_attr, compact: true, aligned: true) do
       if record.send(locale_attr)
-        content_tag(:div,
-                    country_flag(record.send(locale_attr)),
-                    class: "d-flex align-items-center justify-content-center")
+        country_flag(record.send(locale_attr))
       end
     end
   end
@@ -170,6 +169,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
               class_name: ["color-border", "color-border-#{name}"])
   end
 
+  def private_attachment(name, type, opts = {})
+    attribute(name, compact: true, aligned: true) do
+      cell("folio/console/private_attachments/single_dropzone",
+           record,
+           opts.merge(name: name, minimal: true, type: type))
+    end
+  end
+
   private
     def resource_link(url_for_args, attr = nill)
       attribute(attr, spacey: true) do
@@ -186,7 +193,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
     end
 
-    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false)
+    def cell_class_name(attr = nil, class_name: "", spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false)
       full = ""
 
       if rendering_header?
@@ -222,6 +229,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       if compact
         full += " #{base}--compact"
+      end
+
+      if aligned
+        full += " #{base}--aligned"
       end
 
       if skip_desktop_header

@@ -224,6 +224,10 @@ en:
           version: 'Version:'
           restore: Restore this version
           show_current: Show current version
+      private_attachments:
+        single_dropzone:
+          download: Download
+          upload: Upload
 
   date:
     formats:

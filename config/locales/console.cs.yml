@@ -229,6 +229,10 @@ cs:
           version: 'Verze:'
           restore: Obnovit tuto verzi
           show_current: Zobrazit současnou verzi
+      private_attachments:
+        single_dropzone:
+          download: Stáhnout
+          upload: Nahrát
 
   date:
     formats:
