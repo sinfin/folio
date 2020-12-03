@@ -5,6 +5,7 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   include Folio::MimeTypeDetection
   include Folio::Positionable
   include Folio::SanitizeFilename
+  extend Folio::InheritenceBaseNaming
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
