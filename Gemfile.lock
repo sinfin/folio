@@ -57,6 +57,7 @@ PATH
       simple_form
       sitemap_generator
       slim
+      traco
       whenever
 
 GEM
@@ -518,6 +519,8 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    traco (5.0.0)
+      activerecord (>= 3.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)

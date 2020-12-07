@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::ContentTemplateTest < ActiveSupport::TestCase
+class Folio::EmailTemplateTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

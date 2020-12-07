@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_23_100138) do
+ActiveRecord::Schema.define(version: 2020_12_07_124052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,16 @@ ActiveRecord::Schema.define(version: 2020_09_23_100138) do
     t.datetime "updated_at", null: false
     t.index ["position"], name: "index_folio_content_templates_on_position"
     t.index ["type"], name: "index_folio_content_templates_on_type"
+  end
+
+  create_table "folio_email_templates", force: :cascade do |t|
+    t.string "title"
+    t.string "mailer"
+    t.string "action"
+    t.string "subject_en"
+    t.text "body_en"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "folio_file_placements", force: :cascade do |t|
