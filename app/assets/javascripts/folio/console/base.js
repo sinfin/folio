@@ -14,6 +14,7 @@
 //= require cleave.js/dist/cleave
 //= require jquery.kinetic/index
 //= require dropzone/dist/dropzone
+//= require clipboard/dist/clipboard
 
 //= require jquery-ui/jquery-ui
 //= require selectize/dist/js/standalone/selectize
@@ -52,6 +53,7 @@
 //= require folio/console/atoms/locale_switch/locale_switch
 //= require folio/console/atoms/settings_header/settings_header
 //= require folio/console/boolean_toggle/boolean_toggle
+//= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header

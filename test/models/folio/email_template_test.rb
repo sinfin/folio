@@ -14,19 +14,21 @@ class Folio::EmailTemplateTest < ActiveSupport::TestCase
 
   test "validate bodies" do
     et = build(:folio_email_template,
-               body_cs: nil,
-               body_en: "body_en")
+               body_text_cs: nil,
+               body_text_en: "body_text_en")
     assert_not et.valid?
-    assert_equal [:body_cs], et.errors.keys
-    assert_equal [{ error: :blank }], et.errors.details[:body_cs]
+    assert_equal [:body_text_cs], et.errors.keys
+    assert_equal [{ error: :blank }], et.errors.details[:body_text_cs]
 
     et = build(:folio_email_template,
-               body_cs: "foo",
-               body_en: "foo {KEYWORD} bar",
+               body_text_cs: "foo",
+               body_text_en: "foo {KEYWORD} bar",
+               body_html_cs: "foo {KEYWORD} bar",
+               body_html_en: "foo {KEYWORD} bar",
                required_keywords: %w[KEYWORD],
                optional_keywords: %w[])
     assert_not et.valid?
-    assert_equal [:body_cs], et.errors.keys
-    assert_equal [{ error: :missing_keyword }], et.errors.details[:body_cs]
+    assert_equal [:body_text_cs], et.errors.keys
+    assert_equal [{ error: :missing_keyword }], et.errors.details[:body_text_cs]
   end
 end

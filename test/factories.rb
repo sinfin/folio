@@ -123,8 +123,10 @@ FactoryBot.define do
     title { "title" }
     subject_cs { "subject_cs" }
     subject_en { "subject_en" }
-    body_cs { "body_cs" }
-    body_en { "body_en" }
+    body_html_cs { "body_html_cs" }
+    body_html_en { "body_html_en" }
+    body_text_cs { "body_text_cs" }
+    body_text_en { "body_text_en" }
     optional_keywords { [] }
     required_keywords { [] }
   end

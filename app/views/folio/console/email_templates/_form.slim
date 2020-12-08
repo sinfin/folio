@@ -22,7 +22,10 @@
         table.table.table-bordered
           - ary.each do |label, keyword|
             tr
-              th style="width: 33%;" = "{#{keyword}}"
+              th style="width: 33%;"
+                .d-flex.align-items-center
+                  = "{#{keyword}}"
+                  == cell('folio/console/clipboard_copy', "{#{keyword}}")
               td = label
 
 = form_footer f
