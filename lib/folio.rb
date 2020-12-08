@@ -34,6 +34,7 @@ require "aasm"
 require "recaptcha"
 require "audited"
 require "fast_jsonapi"
+require "traco"
 
 module Folio
   LANGUAGES = {

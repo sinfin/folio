@@ -75,6 +75,25 @@ class Folio::Page < Folio::ApplicationRecord
     end
   }
 
+  def self.by_query_associated_against
+    if Rails.application.config.folio_using_traco
+      h = {}
+      I18n.available_locales.each do |locale|
+        h["#{locale}_atoms".to_sym] = %i[data_for_search]
+      end
+      h
+
+      h.merge(
+        file_placements: %i[title alt],
+      )
+    else
+      {
+        atoms: %i[data_for_search],
+        file_placements: %i[title alt],
+      }
+    end
+  end
+
   # Multi-search
   multisearchable against: begin
                     if Rails.application.config.folio_using_traco &&
@@ -134,25 +153,6 @@ class Folio::Page < Folio::ApplicationRecord
 
   def self.public?
     true
-  end
-
-  def self.by_query_associated_against
-    if Rails.application.config.folio_using_traco
-      h = {}
-      I18n.available_locales.each do |locale|
-        h["#{locale}_atoms".to_sym] = %i[data_for_search]
-      end
-      h
-
-      h.merge(
-        file_placements: %i[title alt],
-      )
-    else
-      {
-        atoms: %i[data_for_search],
-        file_placements: %i[title alt],
-      }
-    end
   end
 end
 

@@ -1,0 +1,13 @@
+= form_header f
+
+= tabs [:content]
+
+.tab-content
+  = tab :content
+    .row
+      .col-md-6
+        = f.input :title
+        = f.input :subject
+        = f.input :body, as: :redactor
+
+= form_footer f

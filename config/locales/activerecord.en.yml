@@ -117,6 +117,9 @@ en:
       folio/site:
         one: Site
         other: Sites
+      folio/email_template:
+        one: Email template
+        other: Email templates
       tag:
         one: Tag
         other: Tags

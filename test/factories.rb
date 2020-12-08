@@ -115,4 +115,13 @@ FactoryBot.define do
   factory :folio_session_attachment_document,
           parent: :folio_session_attachment_image,
           class: "Dummy::SessionAttachment::Document"
+
+  factory :folio_email_template,
+          class: "Folio::EmailTemplate" do
+    mailer { "DeviseMailer" }
+    action { "reset_password_instructions" }
+    title { "title" }
+    subject { "subject" }
+    body { "body" }
+  end
 end
