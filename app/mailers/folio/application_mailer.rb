@@ -2,6 +2,7 @@
 
 class Folio::ApplicationMailer < ActionMailer::Base
   include Folio::Engine.routes.url_helpers
+  include Folio::MailerEmailTemplates
 
   default from: -> { Folio::Site.instance.email_from.presence || Folio::Site.instance.email }
   layout "folio/mailer"

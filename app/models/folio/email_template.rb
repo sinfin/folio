@@ -46,6 +46,28 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
     h
   end
 
+  def all_keywords
+    ary = []
+    ary += required_keywords if required_keywords.present?
+    ary += optional_keywords if optional_keywords.present?
+    ary
+  end
+
+  def render_html(data, locale: nil)
+    locale ||= I18n.default_locale
+    render_string(send("body_#{locale}"), data)
+  end
+
+  def render_text(data, locale: nil)
+    locale ||= I18n.default_locale
+    render_string(send("body_#{locale}"), data)
+  end
+
+  def render_subject(data, locale: nil)
+    locale ||= I18n.default_locale
+    render_string(send("subject_#{locale}"), data)
+  end
+
   def self.locales
     locales = []
 
@@ -86,6 +108,16 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
           end
         end
       end
+    end
+
+    def render_string(str, data)
+      result = str
+
+      data.each do |keyword, value|
+        result = result.gsub("{#{keyword}}", value)
+      end
+
+      result
     end
 end
 

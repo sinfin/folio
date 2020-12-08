@@ -109,7 +109,7 @@
       @_init(data)
 
     _init: (data) ->
-      @parse("<p class=\"redactor-component folio-redactor-button\"><a href=\"#{data.link}\">#{data.text}</a></p>")
+      @parse("<p class=\"redactor-component folio-redactor-button\"><a class=\"btn btn-primary\" href=\"#{data.link}\">#{data.text}</a></p>")
       @attr
         'data-redactor-type': 'button'
         'tabindex': '-1'
