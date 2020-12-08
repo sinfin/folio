@@ -36,15 +36,12 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
       [:required, required_keywords],
     ].each do |key, keywords|
       if keywords.present?
-        keywords.map do |keyword|
+        keywords.sort.map do |keyword|
           label = self.class.human_attribute_name("keyword/#{keyword}")
           h[key] << [label, keyword]
         end
       end
     end
-
-    h[:required].sort_by!(&:first)
-    h[:optional].sort_by!(&:first)
 
     h
   end
@@ -117,7 +114,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
       result = str
 
       data.each do |keyword, value|
-        result = result.gsub("{#{keyword}}", value)
+        result = result.gsub("{#{keyword}}", value.to_s)
       end
 
       result

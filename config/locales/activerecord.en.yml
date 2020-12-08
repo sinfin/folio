@@ -55,11 +55,19 @@ en:
         subject: Subject
         body_html: Message in HTML
         body_text: Message in plain text
-        keyword/USER_EMAIL: User e-mail
-        keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
-        keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
-        keyword/ROOT_URL: Root URL of the website
         keyword/DOMAIN: Domain of the website
+        keyword/FOLIO_LEAD_CONSOLE_URL: Lead form console URL
+        keyword/FOLIO_LEAD_CREATED_AT: Date and time the lead form was submitted
+        keyword/FOLIO_LEAD_EMAIL: E-mail entered in the lead form
+        keyword/FOLIO_LEAD_ID: Lead form ID
+        keyword/FOLIO_LEAD_NAME: Name entered in the lead form
+        keyword/FOLIO_LEAD_NOTE: Note entered in the lead form
+        keyword/FOLIO_LEAD_PHONE: Phone entered in the lead form
+        keyword/FOLIO_LEAD_URL: Submission URL
+        keyword/ROOT_URL: Root URL of the website
+        keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
+        keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
+        keyword/USER_EMAIL: User e-mail
       visit:
         events: Events
         id: Id

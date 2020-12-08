@@ -10,20 +10,8 @@ class Folio::DeviseMailer < Devise::Mailer
   default from: ->(*) { Folio::Site.instance.email }
 
   def devise_mail(record, action, opts = {}, &block)
-    @email_template = email_template_for(action, mailer: "Devise::Mailer")
-
-    if @email_template.present?
-      @data ||= {}
-      @data["USER_EMAIL"] = record.email
-      @data["ROOT_URL"] = root_url(only_path: false)
-      @data["DOMAIN"] = Folio::Site.instance.domain
-
-      opts[:template_path] = "folio/email_templates"
-      opts[:template_name] = "mail"
-      opts[:subject] = @email_template.render_subject(@data)
-    end
-
-    super(record, action, opts, &block)
+    full_opts = devise_opts_from_template(opts, action, record)
+    super(record, action, full_opts, &block)
   end
 
   def reset_password_instructions(record, token, opts = {})

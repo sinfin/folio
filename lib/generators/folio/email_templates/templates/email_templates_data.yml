@@ -91,3 +91,60 @@
     {USER_ACCEPT_INVITATION_URL}
 
     If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link above and set your password.
+
+- mailer: Folio::LeadMailer
+  action: notification_email
+  optional_keywords:
+    - ROOT_URL
+    - DOMAIN
+    - FOLIO_LEAD_ID
+    - FOLIO_LEAD_EMAIL
+    - FOLIO_LEAD_PHONE
+    - FOLIO_LEAD_NOTE
+    - FOLIO_LEAD_CREATED_AT
+    - FOLIO_LEAD_NAME
+    - FOLIO_LEAD_URL
+    - FOLIO_LEAD_CONSOLE_URL
+  title_cs: Formuláře - nový formulář
+  title_en: Leads - new lead
+  subject_cs: "{DOMAIN} - nový formulář"
+  subject_en: "{DOMAIN} - new lead"
+  body_html_cs: |
+    <p><strong>E-mail:</strong><br>{FOLIO_LEAD_EMAIL}</p>
+    <p><strong>Telefon:</strong><br>{FOLIO_LEAD_PHONE}</p>
+    <p><strong>URL:</strong><br>{FOLIO_LEAD_URL}</p>
+    <p><strong>Odesláno:</strong><br>{FOLIO_LEAD_CREATED_AT}</p>
+    <p><strong>Poznámka:</strong><br>{FOLIO_LEAD_NOTE}</p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{FOLIO_LEAD_CONSOLE_URL}">Zobrazit v administraci</a></p>
+
+  body_html_en: |
+    <p><strong>E-mail:</strong><br>{FOLIO_LEAD_EMAIL}</p>
+    <p><strong>Phone:</strong><br>{FOLIO_LEAD_PHONE}</p>
+    <p><strong>URL:</strong><br>{FOLIO_LEAD_URL}</p>
+    <p><strong>Submitted:</strong><br>{FOLIO_LEAD_CREATED_AT}</p>
+    <p><strong>Note:</strong><br>{FOLIO_LEAD_NOTE}</p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{FOLIO_LEAD_CONSOLE_URL}">Show in console</a></p>
+  body_text_cs: |
+    E-mail: {FOLIO_LEAD_EMAIL}
+    Telefon: {FOLIO_LEAD_PHONE}
+    URL: {FOLIO_LEAD_URL}
+
+    Poznámka:
+
+    {FOLIO_LEAD_NOTE}
+
+    ---------------------------
+
+    Zasláno: {FOLIO_LEAD_CREATED_AT}
+  body_text_en: |
+    E-mail: {FOLIO_LEAD_EMAIL}
+    Phone: {FOLIO_LEAD_PHONE}
+    URL: {FOLIO_LEAD_URL}
+
+    Note:
+
+    {FOLIO_LEAD_NOTE}
+
+    ---------------------------
+
+    Submitted: {FOLIO_LEAD_CREATED_AT}

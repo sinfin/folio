@@ -1,30 +1,16 @@
 # frozen_string_literal: true
 
 class Folio::LeadMailer < Folio::ApplicationMailer
-  def self.email_to(_lead)
-    self.system_email
-  end
-
-  def self.email_cc(_lead)
-    self.system_email_copy
-  end
-
-  def self.email_subject(lead)
-    "#{Folio::Site.instance.title} #{Folio::Lead.model_name.human} ##{lead.id}"
-  end
-
-  def self.email_from(lead)
-    lead.email.presence || Folio::Site.instance.email
-  end
-
   def notification_email(lead)
-    @lead = lead
-    @console_link = true
-    @subject = self.class.email_subject(lead)
-
-    mail(to: self.class.email_to(lead),
-         cc: self.class.email_cc(lead),
-         subject: @subject,
-         from: self.class.email_from(lead))
+    email_template_mail(
+      FOLIO_LEAD_ID: lead.id,
+      FOLIO_LEAD_EMAIL: lead.email,
+      FOLIO_LEAD_PHONE: lead.phone,
+      FOLIO_LEAD_NOTE: lead.note,
+      FOLIO_LEAD_CREATED_AT: lead.created_at ? l(lead.created_at, format: :short) : "",
+      FOLIO_LEAD_NAME: lead.name,
+      FOLIO_LEAD_URL: lead.url,
+      FOLIO_LEAD_CONSOLE_URL: url_for([:console, lead]),
+    )
   end
 end

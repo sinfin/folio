@@ -62,11 +62,19 @@ cs:
         subject: Předmět
         body_html: Obsah zprávy v HTML
         body_text: Obsah zprávy v textové verzi
-        keyword/USER_EMAIL: E-mail uživatele
-        keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
-        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
-        keyword/ROOT_URL: URL adresa domovské stránky
         keyword/DOMAIN: Doména
+        keyword/FOLIO_LEAD_CONSOLE_URL: Adresa náhledu formuláře v administraci
+        keyword/FOLIO_LEAD_CREATED_AT: Datum a čas odeslání formuláře
+        keyword/FOLIO_LEAD_EMAIL: E-mail vyplněný ve formuláři
+        keyword/FOLIO_LEAD_ID: Id formuláře
+        keyword/FOLIO_LEAD_NAME: Jméno vyplněné ve formuláři
+        keyword/FOLIO_LEAD_NOTE: Poznámka vyplněná ve formuláři
+        keyword/FOLIO_LEAD_PHONE: Telefon vyplněný ve formuláři
+        keyword/FOLIO_LEAD_URL: Adresa, ze které byl odeslán formulář
+        keyword/ROOT_URL: URL adresa domovské stránky
+        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
+        keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
+        keyword/USER_EMAIL: E-mail uživatele
       visit:
         events: Události
         id: Id
