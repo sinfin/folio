@@ -116,13 +116,15 @@ ActiveRecord::Schema.define(version: 2020_12_07_132157) do
     t.string "mailer"
     t.string "action"
     t.string "subject_en"
-    t.text "body_en"
+    t.text "body_html_en"
+    t.text "body_text_en"
     t.jsonb "required_keywords"
     t.jsonb "optional_keywords"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "subject_cs"
-    t.text "body_cs"
+    t.text "body_html_cs"
+    t.text "body_text_cs"
     t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end
 

@@ -54,6 +54,9 @@ en:
         keyword/USER_EMAIL: User e-mail
         keyword/CHANGE_PASSWORD_URL: URL used to set new password
         missing_keyword: does not contain the {%{keyword}} keyword
+        subject: Subject
+        body_html: Message in HTML
+        body_text: Message in plain text
       visit:
         events: Events
         id: Id

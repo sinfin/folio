@@ -61,6 +61,9 @@ cs:
         keyword/USER_EMAIL: E-mail uživatele
         keyword/CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
+        subject: Předmět
+        body_html: Obsah zprávy v HTML
+        body_text: Obsah zprávy v textové verzi
       visit:
         events: Události
         id: Id

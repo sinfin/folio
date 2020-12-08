@@ -10,7 +10,8 @@ class CreateFolioEmailTemplates < ActiveRecord::Migration[6.0]
       t.string :action
 
       t.string :subject_en
-      t.text :body_en
+      t.text :body_html_en
+      t.text :body_text_en
 
       t.jsonb :required_keywords
       t.jsonb :optional_keywords

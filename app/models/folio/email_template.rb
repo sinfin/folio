@@ -55,12 +55,12 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
 
   def render_html(data, locale: nil)
     locale ||= I18n.default_locale
-    render_string(send("body_#{locale}"), data)
+    render_string(send("body_html_#{locale}"), data)
   end
 
   def render_text(data, locale: nil)
     locale ||= I18n.default_locale
-    render_string(send("body_#{locale}"), data)
+    render_string(send("body_text_#{locale}"), data)
   end
 
   def render_subject(data, locale: nil)
@@ -131,13 +131,15 @@ end
 #  mailer            :string
 #  action            :string
 #  subject_en        :string
-#  body_en           :text
+#  body_html_en      :text
+#  body_text_en      :text
 #  required_keywords :jsonb
 #  optional_keywords :jsonb
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  subject_cs        :string
-#  body_cs           :text
+#  body_html_cs      :text
+#  body_text_cs      :text
 #
 # Indexes
 #

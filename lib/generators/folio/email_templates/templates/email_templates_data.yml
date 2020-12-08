@@ -8,20 +8,37 @@
   title_en: Users - password reset
   subject_cs: Instrukce k nastavení nového hesla
   subject_en: Reset password instructions
-  body_cs: |
-    <p>Ahoj {USER_EMAIL}!</p>
+  body_html_cs: |
+    <p>Dobrý den,</p>
 
-    <p>Někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.</p>
+    <p>někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a href="{CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
 
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.</p>
 
-  body_en: |
-    <p>Hello {USER_EMAIL}!</p>
+  body_html_en: |
+    <p>Hello!</p>
 
     <p>Someone has requested a link to change your password, and you can do this through the link below.</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a href="{CHANGE_PASSWORD_URL}">Change my password</a></p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{CHANGE_PASSWORD_URL}">Change my password</a></p>
 
     <p>If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.</p>
+  body_text_cs: |
+    Dobrý den,
+
+    někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.
+
+    {CHANGE_PASSWORD_URL}
+
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.
+
+  body_text_en: |
+    Hello!
+
+    Someone has requested a link to change your password, and you can do this through the link below.
+
+    {CHANGE_PASSWORD_URL}
+
+    If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.
