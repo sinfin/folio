@@ -118,24 +118,7 @@ class Folio::Page < Folio::ApplicationRecord
                       perex: "B",
                     }
                   end,
-                  associated_against: begin
-                    if Rails.application.config.folio_using_traco
-                      h = {}
-                      I18n.available_locales.each do |locale|
-                        h["#{locale}_atoms".to_sym] = %i[data_for_search]
-                      end
-                      h
-
-                      h.merge(
-                        file_placements: %i[title alt],
-                      )
-                    else
-                      {
-                        atoms: %i[data_for_search],
-                        file_placements: %i[title alt],
-                      }
-                    end
-                  end,
+                  associated_against: self.by_query_associated_against,
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }
@@ -151,6 +134,25 @@ class Folio::Page < Folio::ApplicationRecord
 
   def self.public?
     true
+  end
+
+  def self.by_query_associated_against
+    if Rails.application.config.folio_using_traco
+      h = {}
+      I18n.available_locales.each do |locale|
+        h["#{locale}_atoms".to_sym] = %i[data_for_search]
+      end
+      h
+
+      h.merge(
+        file_placements: %i[title alt],
+      )
+    else
+      {
+        atoms: %i[data_for_search],
+        file_placements: %i[title alt],
+      }
+    end
   end
 end
 

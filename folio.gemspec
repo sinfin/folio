@@ -60,7 +60,6 @@ Gem::Specification.new do |s|
   s.add_dependency "premailer-rails"
   s.add_dependency "fast_jsonapi"
   s.add_dependency "discard"
-  s.add_dependency "traco"
 
   s.add_dependency "dragonfly"
   s.add_dependency "dragonfly-s3_data_store"

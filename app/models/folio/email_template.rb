@@ -23,4 +23,6 @@ end
 #  body_en    :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  subject_cs :string
+#  body_cs    :text
 #

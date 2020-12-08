@@ -111,6 +111,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       ],
       [
         "Folio::Account",
+        "Folio::EmailTemplate",
         {
           klass: "Folio::Site",
           icon: "fa fa-cogs",
