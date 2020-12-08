@@ -58,12 +58,15 @@ cs:
         social_links/twitter: Twitter
         social_links/youtube: Youtube
       folio/email_template:
-        keyword/USER_EMAIL: E-mail uživatele
-        keyword/CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
         subject: Předmět
         body_html: Obsah zprávy v HTML
         body_text: Obsah zprávy v textové verzi
+        keyword/USER_EMAIL: E-mail uživatele
+        keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
+        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
+        keyword/ROOT_URL: URL adresa domovské stránky
+        keyword/DOMAIN: Doména
       visit:
         events: Události
         id: Id

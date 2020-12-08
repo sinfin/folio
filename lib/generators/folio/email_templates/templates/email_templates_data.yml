@@ -2,8 +2,10 @@
   action: reset_password_instructions
   optional_keywords:
     - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
   required_keywords:
-    - CHANGE_PASSWORD_URL
+    - USER_CHANGE_PASSWORD_URL
   title_cs: Uživatelské účty - obnova hesla
   title_en: Users - password reset
   subject_cs: Instrukce k nastavení nového hesla
@@ -13,7 +15,7 @@
 
     <p>někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
 
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.</p>
 
@@ -22,7 +24,7 @@
 
     <p>Someone has requested a link to change your password, and you can do this through the link below.</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{CHANGE_PASSWORD_URL}">Change my password</a></p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CHANGE_PASSWORD_URL}">Change my password</a></p>
 
     <p>If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.</p>
   body_text_cs: |
@@ -30,7 +32,7 @@
 
     někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.
 
-    {CHANGE_PASSWORD_URL}
+    {USER_CHANGE_PASSWORD_URL}
 
     Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.
 
@@ -39,6 +41,53 @@
 
     Someone has requested a link to change your password, and you can do this through the link below.
 
-    {CHANGE_PASSWORD_URL}
+    {USER_CHANGE_PASSWORD_URL}
 
     If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.
+
+- mailer: Devise::Mailer
+  action: invitation_instructions
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+  required_keywords:
+    - USER_ACCEPT_INVITATION_URL
+  title_cs: Uživatelské účty - pozvánka
+  title_en: Users - invitation
+  subject_cs: Pozvánka
+  subject_en: Invitation instructions
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>byli jste pozváni na web <a href="{ROOT_URL}">{DOMAIN}</a>. Pozvánku můžete přijmout kliknutím na odkaz níže.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Přijmout pozvánku</a></p>
+
+    <p>Pokud si nepřejete pozvánku využít, ignorujte tento e-mail. Uživatelský účet vám nebude zřízen, dokud nekliknete na odkaz výše a nenastavíte si heslo.</p>
+
+  body_html_en: |
+    <p>Hello!</p>
+
+    <p>Someone has invited you to <a href="{ROOT_URL}">{DOMAIN}</a>, you can accept it through the link below.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Accept invitation</a></p>
+
+    <p>If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link above and set your password.</p>
+  body_text_cs: |
+    Dobrý den,
+
+    byli jste pozváni na web {ROOT_URL}. Pozvánku můžete přijmout kliknutím na odkaz níže.
+
+    {USER_ACCEPT_INVITATION_URL}
+
+    Pokud si nepřejete pozvánku využít, ignorujte tento e-mail. Uživatelský účet vám nebude zřízen, dokud nekliknete na odkaz výše a nenastavíte si heslo.
+
+  body_text_en: |
+    Hello!
+
+    Someone has invited you to {ROOT_URL}, you can accept it through the link below.
+
+    {USER_ACCEPT_INVITATION_URL}
+
+    If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link above and set your password.

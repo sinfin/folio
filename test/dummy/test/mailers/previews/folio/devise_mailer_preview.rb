@@ -7,4 +7,11 @@ class Folio::DeviseMailerPreview < ActionMailer::Preview
       Premailer::Rails::Hook.perform(email)
     end
   end
+
+  def invitation_instructions
+    Folio::DeviseMailer.invitation_instructions(Folio::Account.last,
+                                                "INVITATION_TOKEN").tap do |email|
+      Premailer::Rails::Hook.perform(email)
+    end
+  end
 end

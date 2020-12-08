@@ -51,12 +51,15 @@ en:
         social_links/twitter: Twitter
         social_links/youtube: Youtube
       folio/email_template:
-        keyword/USER_EMAIL: User e-mail
-        keyword/CHANGE_PASSWORD_URL: URL used to set new password
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject
         body_html: Message in HTML
         body_text: Message in plain text
+        keyword/USER_EMAIL: User e-mail
+        keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
+        keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
+        keyword/ROOT_URL: Root URL of the website
+        keyword/DOMAIN: Domain of the website
       visit:
         events: Events
         id: Id

@@ -43,6 +43,9 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
       end
     end
 
+    h[:required].sort_by!(&:first)
+    h[:optional].sort_by!(&:first)
+
     h
   end
 

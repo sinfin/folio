@@ -2,7 +2,10 @@ REDACTOR_SELECTOR = '.f-c-redactor-input'
 
 bindRedactor = ($elements) ->
   $elements.each ->
-    advanced = @classList.contains('f-c-redactor-input--advanced')
+    opts =
+      advanced: @classList.contains('f-c-redactor-input--advanced')
+      email: @classList.contains('f-c-redactor-input--email')
+
     additional = {}
 
     if @classList.contains('f-c-js-atoms-placement-perex')
@@ -17,7 +20,7 @@ bindRedactor = ($elements) ->
             $('.f-c-simple-form-with-atoms__iframe, .f-c-merges-form-row__atoms-iframe').each ->
               @contentWindow.postMessage(data, window.origin)
 
-    window.folioConsoleInitRedactor(this, { advanced: advanced }, additional)
+    window.folioConsoleInitRedactor(this, opts, additional)
 
 unbindRedactor = ($elements) ->
   $elements.each -> window.folioConsoleDestroyRedactor(this)

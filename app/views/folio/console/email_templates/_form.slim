@@ -8,7 +8,7 @@
 
     = f.input :title, hint: false
     = translated_inputs_for_locales f, :subject, locales
-    = translated_inputs_for_locales f, :body_html, locales, as: :redactor
+    = translated_inputs_for_locales f, :body_html, locales, as: :email_redactor
     = translated_inputs_for_locales f, :body_text, locales, autosize: true
 
     h2.mt-5 = t(".keywords.title")

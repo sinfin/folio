@@ -15,6 +15,8 @@ class Folio::DeviseMailer < Devise::Mailer
     if @email_template.present?
       @data ||= {}
       @data["USER_EMAIL"] = record.email
+      @data["ROOT_URL"] = root_url(only_path: false)
+      @data["DOMAIN"] = Folio::Site.instance.domain
 
       opts[:template_path] = "folio/email_templates"
       opts[:template_name] = "mail"
@@ -24,30 +26,24 @@ class Folio::DeviseMailer < Devise::Mailer
     super(record, action, opts, &block)
   end
 
-  def confirmation_instructions(record, token, opts = {})
-    super(record, token, opts)
-  end
-
   def reset_password_instructions(record, token, opts = {})
     @data = {
-      "CHANGE_PASSWORD_URL" => scoped_url_method(record,
-                                                 :edit_password_url,
-                                                 record,
-                                                 reset_password_token: token)
+      "USER_CHANGE_PASSWORD_URL" => scoped_url_method(record,
+                                                      :edit_password_url,
+                                                      record,
+                                                      reset_password_token: token)
     }
     super(record, token, opts)
   end
 
-  def unlock_instructions(record, token, opts = {})
+  def invitation_instructions(record, token, opts = {})
+    @data = {
+      "USER_ACCEPT_INVITATION_URL" => scoped_url_method(record,
+                                                        :accept_invitation_url,
+                                                        record,
+                                                        invitation_token: token)
+    }
     super(record, token, opts)
-  end
-
-  def email_changed(record, opts = {})
-    super(record, opts)
-  end
-
-  def password_change(record, opts = {})
-    super(record, opts)
   end
 
   private

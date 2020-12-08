@@ -13,9 +13,23 @@ OPTIONS =
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
 
+EMAIL_OPTIONS =
+  plugins: ['button', 'character_counter']
+  buttonsHide: ['file', 'image', 'format', 'deleted', 'lists']
+  toolbarFixed: true
+  lang: document.documentElement.lang
+  formatting: []
+
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')
-  opts = if options.advanced then ADVANCED_OPTIONS else OPTIONS
+
+  if options.advanced
+    opts = ADVANCED_OPTIONS
+  else if options.email
+    opts = EMAIL_OPTIONS
+  else
+    opts = OPTIONS
+
   $R(node, $.extend({}, opts, additional))
 
 window.folioConsoleDestroyRedactor = (node) ->
