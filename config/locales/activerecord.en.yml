@@ -50,6 +50,10 @@ en:
         social_links/pinterest: Pinterest
         social_links/twitter: Twitter
         social_links/youtube: Youtube
+      folio/email_template:
+        keyword/USER_EMAIL: User e-mail
+        keyword/CHANGE_PASSWORD_URL: URL used to set new password
+        missing_keyword: does not contain the {%{keyword}} keyword
       visit:
         events: Events
         id: Id

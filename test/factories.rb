@@ -118,10 +118,14 @@ FactoryBot.define do
 
   factory :folio_email_template,
           class: "Folio::EmailTemplate" do
-    mailer { "DeviseMailer" }
-    action { "reset_password_instructions" }
+    mailer { "mailer" }
+    action { "action" }
     title { "title" }
-    subject { "subject" }
-    body { "body" }
+    subject_cs { "subject_cs" }
+    subject_en { "subject_en" }
+    body_cs { "body_cs" }
+    body_en { "body_en" }
+    optional_keywords { [] }
+    required_keywords { [] }
   end
 end

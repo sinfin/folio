@@ -1,0 +1,27 @@
+- mailer: Devise::Mailer
+  action: reset_password_instructions
+  optional_keywords:
+    - USER_EMAIL
+  required_keywords:
+    - CHANGE_PASSWORD_URL
+  title_cs: Uživatelské účty - obnova hesla
+  title_en: Users - password reset
+  subject_cs: Instrukce k nastavení nového hesla
+  subject_en: Reset password instructions
+  body_cs: |
+    <p>Ahoj {USER_EMAIL}!</p>
+
+    <p>Někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a href="{CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
+
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.</p>
+
+  body_en: |
+    <p>Hello {USER_EMAIL}!</p>
+
+    <p>Someone has requested a link to change your password, and you can do this through the link below.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a href="{CHANGE_PASSWORD_URL}">Change my password</a></p>
+
+    <p>If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.</p>

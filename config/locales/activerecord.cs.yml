@@ -57,6 +57,10 @@ cs:
         social_links/pinterest: Pinterest
         social_links/twitter: Twitter
         social_links/youtube: Youtube
+      folio/email_template:
+        keyword/USER_EMAIL: E-mail uživatele
+        keyword/CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
+        missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
       visit:
         events: Události
         id: Id

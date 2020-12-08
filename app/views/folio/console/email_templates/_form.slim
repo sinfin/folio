@@ -4,10 +4,24 @@
 
 .tab-content
   = tab :content
-    .row
-      .col-md-6
-        = f.input :title
-        = f.input :subject
-        = f.input :body, as: :redactor
+    - locales = @klass.locales
+
+    = f.input :title, hint: false
+    = translated_inputs_for_locales f, :subject, locales
+    = translated_inputs_for_locales f, :body, locales, as: :redactor
+
+    h2.mt-5 = t(".keywords.title")
+
+    p = t('.keywords.paragraph')
+
+    - f.object.human_keywords.each do |key, ary|
+      - if ary.present?
+        h3 = t(".keywords.#{key}")
+
+        table.table.table-bordered
+          - ary.each do |label, keyword|
+            tr
+              th style="width: 33%;" = "{#{keyword}}"
+              td = label
 
 = form_footer f

@@ -112,14 +112,18 @@ ActiveRecord::Schema.define(version: 2020_12_07_132157) do
 
   create_table "folio_email_templates", force: :cascade do |t|
     t.string "title"
+    t.string "slug"
     t.string "mailer"
     t.string "action"
     t.string "subject_en"
     t.text "body_en"
+    t.jsonb "required_keywords"
+    t.jsonb "optional_keywords"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "subject_cs"
     t.text "body_cs"
+    t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end
 
   create_table "folio_file_placements", force: :cascade do |t|

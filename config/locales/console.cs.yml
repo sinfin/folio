@@ -209,6 +209,13 @@ cs:
           clear_cache: Smazat cache
         clear_cache:
           success: Cache byla úspěšně smazána.
+      email_templates:
+        form:
+          keywords:
+            title: Používání klíčových slov
+            paragraph: Klíčová slova umožňují vkládat do e-mailu dynamické prvky, které je potřeba systémově generovat. Pro použití je potřeba vložit klíčové slovo i se závorkami kdekoliv do textu. Během odesílání e-mailu pak dojde k nahrazení daným dynamickým prvkem.
+            required: Povinná klíčová slova
+            optional: Další klíčová slova
       single_file_select:
         add_image: Přidat obrázek
         add_video: Přidat video
