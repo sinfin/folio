@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-12-09
+### Added
+- [email templates](https://github.com/sinfin/folio/wiki/Email-templates)
+
 ## 2020-12-03
 ### Added
 - private attachments api controller

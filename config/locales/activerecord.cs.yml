@@ -62,6 +62,12 @@ cs:
         subject: Předmět
         body_html: Obsah zprávy v HTML
         body_text: Obsah zprávy v textové verzi
+        subject_cs: Předmět
+        body_html_cs: Obsah zprávy v HTML
+        body_text_cs: Obsah zprávy v textové verzi
+        subject_en: Předmět
+        body_html_en: Obsah zprávy v HTML
+        body_text_en: Obsah zprávy v textové verzi
         keyword/DOMAIN: Doména
         keyword/FOLIO_LEAD_CONSOLE_URL: Adresa náhledu formuláře v administraci
         keyword/FOLIO_LEAD_CREATED_AT: Datum a čas odeslání formuláře

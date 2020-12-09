@@ -144,6 +144,7 @@ module Folio
           "app/views/home/ui.slim",
           "bin/bower",
           "config/secrets.yml",
+          "data/email_templates_data.yml",
           "Guardfile",
           "lib/tasks/auto_annotate_models.rake",
           "vendor/assets/bower_components/.keep",

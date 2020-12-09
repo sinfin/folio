@@ -20,7 +20,7 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
       elsif ::Rails.application.config.folio_using_traco
         I18n.available_locales
       else
-        nil
+        []
       end
     end
   end

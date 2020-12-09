@@ -55,6 +55,12 @@ en:
         subject: Subject
         body_html: Message in HTML
         body_text: Message in plain text
+        subject_cs: Subject
+        body_html_cs: Message in HTML
+        body_text_cs: Message in plain text
+        subject_en: Subject
+        body_html_en: Message in HTML
+        body_text_en: Message in plain text
         keyword/DOMAIN: Domain of the website
         keyword/FOLIO_LEAD_CONSOLE_URL: Lead form console URL
         keyword/FOLIO_LEAD_CREATED_AT: Date and time the lead form was submitted

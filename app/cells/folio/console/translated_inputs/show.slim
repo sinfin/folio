@@ -1,13 +1,16 @@
 - if translations.present?
-  .f-c-translated-inputs
-    = f.label key
+  - if translations.size == 1
+    = f.input "#{key}_#{translations.first}", *args
+  - else
+    .f-c-translated-inputs
+      = f.label key
 
-    .row
-      - translations.each do |locale|
-        .col-md.f-c-translated-inputs__col
-          = f.input "#{key}_#{locale}".to_sym, *args_with_locale(locale)
+      .row
+        - translations.each do |locale|
+          .col-md.f-c-translated-inputs__col
+            = f.input "#{key}_#{locale}".to_sym, *args_with_locale(locale)
 
-    = f.hint key
+      = f.hint key
 
 - else
   = f.input key, *args
