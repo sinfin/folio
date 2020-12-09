@@ -6,8 +6,8 @@ class Folio::EmailTemplatesGenerator < Rails::Generators::Base
 
   def seed_records
     [
+      Rails.root.join("data/email_templates_data.yml"),
       File.expand_path("templates/email_templates_data.yml", __dir__),
-      Rails.root.join("data/email_templates_data.yml")
     ].each do |path|
       next unless File.exist?(path)
       yaml_data = YAML.load_file(path)
