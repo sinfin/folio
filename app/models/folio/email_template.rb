@@ -46,13 +46,6 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
     h
   end
 
-  def all_keywords
-    ary = []
-    ary += required_keywords if required_keywords.present?
-    ary += optional_keywords if optional_keywords.present?
-    ary
-  end
-
   def render_html(data, locale: nil)
     locale ||= I18n.default_locale
     render_string(send("body_html_#{locale}"), data)
