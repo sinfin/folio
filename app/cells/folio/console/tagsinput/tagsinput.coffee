@@ -42,6 +42,7 @@ init = ->
           method: 'GET'
           data:
             q: q
+            context: $selectize.data('context')
           error: ->
             callback()
           success: (res) ->

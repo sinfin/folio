@@ -39,6 +39,7 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
     (options[:input_html] || {}).merge(
       class: "f-c-tagsinput",
       value: value,
+      "data-context" => options[:tag_context],
     )
   end
 
