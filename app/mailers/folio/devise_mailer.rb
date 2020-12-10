@@ -42,6 +42,9 @@ class Folio::DeviseMailer < Devise::Mailer
         scoped = "user"
       end
 
-      send(method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_"), *args)
+      method_name = method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
+      send(method_name, *args)
+    rescue StandardError
+      main_app.send(method_name, *args)
     end
 end
