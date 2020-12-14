@@ -33,8 +33,7 @@ class Folio::Node < Folio::ApplicationRecord
                 uniqueness: { scope: [:ancestry] }
     end
   else
-    friendly_id :title, use: %i[slugged scoped history],
-                        scope: [:locale, :ancestry]
+    friendly_id :title, use: %i[slugged history]
 
     validates :title,
               presence: true
