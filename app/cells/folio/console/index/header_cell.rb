@@ -9,7 +9,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def query_url
     if options[:query_url]
-      send(options[:query_url], model)
+      send(options[:query_url])
     elsif options[:folio_console_merge]
       url_for([:merge, :console, model])
     else
@@ -29,7 +29,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def query_autocomplete
     if model.new.respond_to?(:to_label)
-      controller.console_api_autocomplete_path(klass: model.to_s)
+      controller.folio.console_api_autocomplete_path(klass: model.to_s)
     end
   end
 
@@ -43,7 +43,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     end
 
     if options[:query_url]
-      send(options[:query_url], model, h)
+      send(options[:query_url], h)
     elsif options[:folio_console_merge]
       url_for([:merge, :console, model, h])
     else
