@@ -1,0 +1,9 @@
+- unless @no_react_modals
+  - %w[Folio::Image Folio::Document].each do |klass|
+    .modal.folio-console-react-modal.fade data-klass=klass
+      .modal-dialog.modal-lg
+        .modal-content
+          .modal-body
+            = react_modal_for(klass)
+
+            button type="button" class="close" data-dismiss="modal" &times;

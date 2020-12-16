@@ -39,10 +39,15 @@ module Folio::Console::ReactHelper
   def react_modal_for(file_type)
     if ["new", "edit", "create", "update"].include?(action_name)
       klass = file_type.constantize
+
       begin
         url = url_for([:console, :api, klass])
       rescue StandardError
-        url = main_app.url_for([:console, :api, klass])
+        if file_type.start_with?("Folio::")
+          url = folio.url_for([:console, :api, klass])
+        else
+          url = main_app.url_for([:console, :api, klass])
+        end
       end
 
       content_tag(:div,
