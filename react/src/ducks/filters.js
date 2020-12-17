@@ -87,6 +87,23 @@ export const placementsSelector = (state) => {
   return placements
 }
 
+export const filtersQuerySelector = (state) => {
+  const base = state.filters
+  const params = new URLSearchParams()
+
+  Object.keys(base).forEach((key) => {
+    let value = base[key]
+    if (key === 'tags') {
+      value = base[key].join(',')
+    }
+    if (value) {
+      params.set(`by_${key}`, value)
+    }
+  })
+
+  return params.toString()
+}
+
 // State
 
 const initialState = {

@@ -1,10 +1,10 @@
 import { apiGet, apiPut } from 'utils/api'
 import { flashError } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
-import { filter, find } from 'lodash'
+import { filter, find, omit } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
-import { filteredFilesSelector } from 'ducks/filters'
+import { filteredFilesSelector, filtersQuerySelector } from 'ducks/filters'
 import { uploadsSelector } from 'ducks/uploads'
 import { selectedFileIdsSelector } from 'ducks/filePlacements'
 
@@ -18,15 +18,16 @@ const UPDATE_FILE = 'files/UPDATE_FILE'
 const UPDATE_FILE_SUCCESS = 'files/UPDATE_FILE_SUCCESS'
 const UPDATE_FILE_FAILURE = 'files/UPDATE_FILE_FAILURE'
 const UPDATED_FILES = 'files/UPDATED_FILES'
+const CHANGE_FILES_PAGE = 'files/CHANGE_FILES_PAGE'
 
 // Actions
 
-export function getFiles () {
-  return { type: GET_FILES }
+export function getFiles (query = '') {
+  return { type: GET_FILES, query }
 }
 
-export function getFilesSuccess (records) {
-  return { type: GET_FILES_SUCCESS, records }
+export function getFilesSuccess (records, meta) {
+  return { type: GET_FILES_SUCCESS, records, meta }
 }
 
 export function uploadedFile (file) {
@@ -53,14 +54,19 @@ export function updateFileFailure (file) {
   return { type: UPDATE_FILE_FAILURE, file }
 }
 
+export function changeFilesPage (page) {
+  return { type: CHANGE_FILES_PAGE, page }
+}
+
 // Sagas
 
 function * getFilesPerform (action) {
   try {
     const fileType = yield select(fileTypeSelector)
-    const filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
-    const records = yield call(apiGet, filesUrl)
-    yield put(getFilesSuccess(records))
+    let filesUrl = fileType === 'Folio::Document' ? '/console/documents.json' : '/console/images.json'
+    if (action.query) filesUrl += `?${action.query}`
+    const response = yield call(apiGet, filesUrl)
+    yield put(getFilesSuccess(response.data, response.meta))
   } catch (e) {
     flashError(e.message)
   }
@@ -87,9 +93,27 @@ function * updateFileSaga (): Generator<*, *, *> {
   yield takeEvery(UPDATE_FILE, updateFilePerform)
 }
 
+function * changeFilesPagePerform (action) {
+  try {
+    const filtersQuery = yield select(filtersQuerySelector)
+    let query = `page=${action.page}`
+    if (filtersQuery) {
+      query = `${query}&${filtersQuery}`
+    }
+    yield put(getFiles(query))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * changeFilesPageSaga () {
+  yield takeLatest(CHANGE_FILES_PAGE, changeFilesPagePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
   updateFileSaga,
+  changeFilesPageSaga,
 ]
 
 // Selectors
@@ -135,6 +159,10 @@ export const unselectedFilesForListSelector = (state) => {
   return filter(all, (file) => selectedIds.indexOf(file.id) === -1)
 }
 
+export const filesPaginationSelector = (state) => {
+  return state.files.pagination
+}
+
 // State
 
 const initialState = {
@@ -142,6 +170,10 @@ const initialState = {
   loaded: false,
   filesUrl: '/console/files.json',
   records: [],
+  pagination: {
+    page: null,
+    pages: null
+  }
 }
 
 // Reducer
@@ -160,6 +192,7 @@ function filesReducer (state = initialState, action) {
         records: action.records,
         loading: false,
         loaded: true,
+        pagination: omit(action.meta, ['react_type']),
       }
 
     case UPLOADED_FILE:

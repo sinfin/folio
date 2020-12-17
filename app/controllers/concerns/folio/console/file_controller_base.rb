@@ -13,15 +13,10 @@ module Folio::Console::FileControllerBase
     respond_to do |format|
       format.html
       format.json do
-        cache_key = [self.class.to_s, Folio::File.maximum(:updated_at)]
+        pagination, records = pagy(find_files, items: 60)
+        meta = meta_from_pagy(pagination)
 
-        files_json = Rails.cache.fetch(cache_key, expires_in: 1.day) do
-          find_files.map do |file|
-            Folio::FileSerializer.new(file, root: false).serializable_hash
-          end.to_json
-        end
-
-        render plain: files_json
+        render json: json_from_records(records, meta: meta)
       end
     end
   end
@@ -114,5 +109,26 @@ module Folio::Console::FileControllerBase
       else
         console_documents_path
       end
+    end
+
+    def json_from_records(models, meta: nil)
+      data = models.map do |file|
+        Folio::FileSerializer.new(file, root: false).serializable_hash
+      end
+
+      {
+        data: data,
+        meta: meta,
+      }
+    end
+
+    def meta_from_pagy(pagy_data)
+      {
+        page: pagy_data.page,
+        pages: pagy_data.pages,
+        from: pagy_data.from,
+        to: pagy_data.to,
+        count: pagy_data.count,
+      }
     end
 end

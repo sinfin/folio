@@ -12,6 +12,8 @@ cs:
         finalizing: Dokončuji
         newUploadTags: Štítky pro nové soubory
         noResults: Žádné výsledky
+        paginationEmpty: Žádné záznamy
+        paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
         placementsLabel: Použití
         save: Uložit
         selectedDocuments: Vybrané dokumenty

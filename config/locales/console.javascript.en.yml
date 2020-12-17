@@ -12,6 +12,8 @@ en:
         finalizing: Finalizing
         newUploadTags: Tags for new files
         noResults: No results
+        paginationEmpty: No records
+        paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
         placementsLabel: Usage
         save: Save
         selectedDocuments: Selected documents

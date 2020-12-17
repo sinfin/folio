@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { fileTypeIsImageSelector } from 'ducks/app'
-import { filesLoadingSelector, filesForListSelector } from 'ducks/files'
+import { filesLoadingSelector, filesForListSelector, filesPaginationSelector, changeFilesPage } from 'ducks/files'
 import { displayAsThumbsSelector } from 'ducks/display'
 
 import LazyLoadCheckingComponent from 'utils/LazyLoadCheckingComponent';
@@ -44,6 +44,8 @@ class SingleSelect extends LazyLoadCheckingComponent {
             fileTypeIsImage={this.props.fileTypeIsImage}
             displayAsThumbs={this.props.displayAsThumbs}
             onClick={this.selectFile}
+            pagination={this.props.filesPagination}
+            changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
             selecting='single'
             overflowingParent
             dropzoneTrigger
@@ -59,6 +61,7 @@ const mapStateToProps = (state) => ({
   filesForList: filesForListSelector(state),
   fileTypeIsImage: fileTypeIsImageSelector(state),
   displayAsThumbs: displayAsThumbsSelector(state),
+  filesPagination: filesPaginationSelector(state),
 })
 
 export default connect(mapStateToProps, null)(SingleSelect)
