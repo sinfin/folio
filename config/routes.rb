@@ -38,6 +38,12 @@ Folio::Engine.routes.draw do
     resources :visits, only: %i[index show]
     resources :links, only: %i[index]
     resource :site
+
+    namespace :api do
+      resource :tags, only: [] do
+        get :react_select
+      end
+    end
   end
 
   resource :csrf, only: %i[show], controller: :csrf

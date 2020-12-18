@@ -18,24 +18,21 @@ import {
 import { fileTypeIsImageSelector } from 'ducks/app'
 
 import TagsInput from 'components/TagsInput'
-import Select from 'components/Select'
 
 import Wrap from './styled/Wrap'
 import DisplayButtons from './DisplayButtons'
 
 class FileFilter extends Component {
   onNameChange = (e) => {
-    this.props.dispatch(
-      setFilter('name', e.target.value)
-    )
+    this.props.dispatch(setFilter('name', e.target.value))
   }
 
   onTagsChange = (tags) => {
     this.props.dispatch(setFilter('tags', tags))
   }
 
-  onPlacementChange = (placement) => {
-    this.props.dispatch(setFilter('placement', placement))
+  onPlacementChange = (e) => {
+    this.props.dispatch(setFilter('placement', e.target.value))
   }
 
   onReset = () => {
@@ -64,7 +61,7 @@ class FileFilter extends Component {
         <div className='form-group'>
           <input
             className='form-control'
-            value={filters.name}
+            value={filters.name || ''}
             onChange={this.onNameChange}
             placeholder='File name'
           />
@@ -81,13 +78,11 @@ class FileFilter extends Component {
         </div>
 
         <div className='form-group form-group--react-select'>
-          <Select
-            options={this.props.placements}
-            value={filters.placement}
+          <input
+            className='form-control'
+            value={filters.placement || ''}
             onChange={this.onPlacementChange}
-            defaultValue={null}
             placeholder={window.FolioConsole.translations.placementsLabel}
-            isClearable
           />
         </div>
 

@@ -32,24 +32,24 @@ class SingleSelect extends LazyLoadCheckingComponent {
   }
 
   render () {
-    if (this.props.filesLoading) return <Loader />
-
     return (
       <ModalScroll
         header={this.renderHeader()}
       >
         <Uploader>
-          <FileList
-            files={this.props.filesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            onClick={this.selectFile}
-            pagination={this.props.filesPagination}
-            changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
-            selecting='single'
-            overflowingParent
-            dropzoneTrigger
-          />
+          {this.props.filesLoading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.filesForList}
+              fileTypeIsImage={this.props.fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              onClick={this.selectFile}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
+              selecting='single'
+              overflowingParent
+              dropzoneTrigger
+            />
+          )}
         </Uploader>
       </ModalScroll>
     )

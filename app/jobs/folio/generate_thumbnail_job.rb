@@ -50,7 +50,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                            .thumb(size, format: :jpg,
                                         x: x,
                                         y: y)
-                           .encode("jpg", "-quality #{quality}")
+                           .encode('jpg', "-quality #{quality}")
                            .jpegoptim
         end
       elsif image.animated_gif?
@@ -62,10 +62,10 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail = image.file
                          .add_white_background
                          .thumb(size, format: :jpg,
-                                      "frame" => 0,
+                                      'frame' => 0,
                                       x: x,
                                       y: y)
-                         .encode("jpg", "-quality #{quality}")
+                         .encode('jpg', "-quality #{quality}")
                          .jpegoptim
       else
         thumbnail = image.file
@@ -73,7 +73,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                                       x: x,
                                       y: y)
                          .auto_orient
-                         .encode("jpg", "-quality #{quality}")
+                         .encode('jpg', "-quality #{quality}")
                          .cmyk_to_srgb
                          .jpegoptim
       end

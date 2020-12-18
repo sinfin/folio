@@ -15,8 +15,6 @@ import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
   render () {
-    if (this.props.filesLoading) return <Loader />
-
     return (
       <Uploader>
         <Card
@@ -24,15 +22,17 @@ class IndexMode extends LazyLoadCheckingComponent {
         >
           <UploadTagger />
 
-          <FileList
-            files={this.props.filesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            pagination={this.props.filesPagination}
-            changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
-            link
-            dropzoneTrigger
-          />
+          {this.props.filesLoading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.filesForList}
+              fileTypeIsImage={this.props.fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
+              link
+              dropzoneTrigger
+            />
+          )}
         </Card>
       </Uploader>
     )

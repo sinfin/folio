@@ -35,7 +35,8 @@ class TagsInput extends React.Component {
         innerRef={this.selectRef}
         createable={!this.props.notCreatable}
         value={this.props.value}
-        options={this.props.options}
+        defaultOptions
+        async='/console/api/tags/react_select'
         isMulti
       />
     )

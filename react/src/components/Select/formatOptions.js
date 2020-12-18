@@ -1,1 +1,7 @@
-export default (values) => values.map((value) => ({ value, label: value }))
+export default (values) => {
+  if (values) {
+    return values.map((value) => ({ value, label: value }))
+  } else {
+    return values
+  }
+}

@@ -63,9 +63,10 @@ export const filePlacementsSelector = (state) => {
   const selected = base.selected.map((filePlacement) => {
     selectedIds.push(filePlacement.id)
     const file = find(files, { id: filePlacement.file_id })
-    return {
-      ...filePlacement,
-      file: file,
+    if (file) {
+      return { ...filePlacement, file: file }
+    } else {
+      return filePlacement
     }
   })
 

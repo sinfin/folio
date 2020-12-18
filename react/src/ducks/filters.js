@@ -1,6 +1,9 @@
 import { isEqual } from 'lodash'
+import { delay } from 'redux-saga'
+import { takeLatest, put, select } from 'redux-saga/effects'
 
-import { filesSelector } from 'ducks/files'
+import { flashError } from 'utils/flash'
+import { filesSelector, getFiles } from 'ducks/files'
 
 // Constants
 
@@ -20,6 +23,33 @@ export function unsetFilter (filter) {
 export function resetFilters () {
   return { type: RESET_FILTERS }
 }
+
+// Sagas
+
+function * updateFiltersPerform (action) {
+  try {
+    // debounce by 750ms, using delay with takeLatest
+    let query = ''
+    if (action.type === SET_FILTER) {
+      yield delay(750)
+      query = yield select(filtersQuerySelector)
+    }
+    yield put(getFiles(query))
+  } catch (e) {
+    flashError(e.message)
+  }
+}
+
+function * updateFiltersSaga () {
+  yield [
+    takeLatest(SET_FILTER, updateFiltersPerform),
+    takeLatest(RESET_FILTERS, updateFiltersPerform)
+  ]
+}
+
+export const filtersSagas = [
+  updateFiltersSaga
+]
 
 // Selectors
 

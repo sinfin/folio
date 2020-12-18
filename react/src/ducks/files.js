@@ -4,7 +4,7 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find, omit } from 'lodash'
 
 import { fileTypeSelector } from 'ducks/app'
-import { filteredFilesSelector, filtersQuerySelector } from 'ducks/filters'
+import { filtersQuerySelector } from 'ducks/filters'
 import { uploadsSelector } from 'ducks/uploads'
 import { selectedFileIdsSelector } from 'ducks/filePlacements'
 
@@ -135,7 +135,7 @@ export const filesForListSelector = (state) => {
   let files
 
   if (uploads.uploadedIds.length) {
-    files = filteredFilesSelector(state).map((file) => {
+    files = filesSelector(state).map((file) => {
       if (uploads.uploadedIds.indexOf(file.id) === -1) {
         return file
       } else {
@@ -143,7 +143,7 @@ export const filesForListSelector = (state) => {
       }
     })
   } else {
-    files = filteredFilesSelector(state)
+    files = filesSelector(state)
   }
 
   return [

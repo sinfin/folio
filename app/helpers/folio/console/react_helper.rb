@@ -48,6 +48,7 @@ module Folio
               file_id: fp.file.id,
               alt: fp.alt,
               title: fp.title,
+              file: Folio::FileSerializer.new(fp.file, root: false).serializable_hash,
             }
           end.to_json
         else

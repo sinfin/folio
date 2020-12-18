@@ -41,8 +41,6 @@ class MultiSelect extends LazyLoadCheckingComponent {
   onAltChange = (filePlacement, alt) => this.props.dispatch(changeAlt(filePlacement, alt))
 
   render() {
-    if (this.props.filesLoading) return <Loader />
-
     const headerKey = this.props.fileTypeIsImage ? 'Images' : 'Documents'
 
     return (
@@ -67,16 +65,18 @@ class MultiSelect extends LazyLoadCheckingComponent {
         >
           <UploadTagger />
 
-          <FileList
-            files={this.props.unselectedFilesForList}
-            fileTypeIsImage={this.props.fileTypeIsImage}
-            displayAsThumbs={this.props.displayAsThumbs}
-            onClick={this.selectFile}
-            pagination={this.props.filesPagination}
-            changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
-            selecting='multiple'
-            dropzoneTrigger
-          />
+          {this.props.filesLoading ? <Loader standalone /> : (
+            <FileList
+              files={this.props.unselectedFilesForList}
+              fileTypeIsImage={this.props.fileTypeIsImage}
+              displayAsThumbs={this.props.displayAsThumbs}
+              onClick={this.selectFile}
+              pagination={this.props.filesPagination}
+              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(page))}
+              selecting='multiple'
+              dropzoneTrigger
+            />
+          )}
         </Card>
       </Uploader>
     )

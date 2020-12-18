@@ -13,7 +13,13 @@ module Folio::Console::FileControllerBase
     respond_to do |format|
       format.html
       format.json do
-        pagination, records = pagy(find_files, items: 60)
+        files = find_files
+
+        if filter_params.present?
+          files = files.filter_by_params(filter_params)
+        end
+
+        pagination, records = pagy(files, items: 60)
         meta = meta_from_pagy(pagination)
 
         render json: json_from_records(records, meta: meta)
@@ -130,5 +136,9 @@ module Folio::Console::FileControllerBase
         to: pagy_data.to,
         count: pagy_data.count,
       }
+    end
+
+    def filter_params
+      params.permit(:by_name, :by_tags, :by_placement)
     end
 end

@@ -1,9 +1,10 @@
 import React from 'react'
 
-function Loader () {
+import StyledLoader from './styled/StyledLoader'
+
+function Loader ({ standalone }) {
   return (
-    <div className='folio-loader'>
-    </div>
+    <StyledLoader className='folio-loader' standalone={standalone} />
   )
 }
 

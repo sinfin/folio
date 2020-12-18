@@ -10,6 +10,10 @@ module Folio
       Devise::UnlocksController.layout 'folio/console/devise'
       Devise::PasswordsController.layout 'folio/console/devise'
 
+      Dir.glob(Folio::Engine.root + 'app/decorators/**/*_decorator*.rb').each do |c|
+        require_dependency(c)
+      end
+
       Dir.glob(Rails.root + 'app/decorators/**/*_decorator*.rb').each do |c|
         require_dependency(c)
       end
