@@ -2,7 +2,6 @@
 
 require 'test_helper'
 
-<% module_namespacing do -%>
 class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Console::BaseControllerTest
   test 'index' do
     get url_for([:console, <%= class_name %>])
@@ -51,4 +50,3 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
     assert_not(<%= class_name %>.exists?(id: model.id))
   end
 end
-<% end -%>

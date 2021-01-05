@@ -66,6 +66,11 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       :slim
     end
 
+    def class_name
+      super.gsub("Folio::Blog::Folio::Blog::", "Folio::Blog::")
+           .gsub("Folio::Console::Folio::Console::", "Folio::Console::")
+    end
+
     def attributes_names
       super.presence || fallback_attributes_names
     end
