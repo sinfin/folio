@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "faker"
-
 def force_destroy(klass)
   klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 end
@@ -51,7 +49,7 @@ about = Folio::Page.create!(title: "O nás",
 about.cover = unsplash_pic
 3.times { about.images << unsplash_pic }
 about.image_placements.each { |ip|
-  name = Faker::Name.name
+  name = "Lorem Ipsum"
   ip.update_attributes!(alt: name, title: "Portrait of #{name}")
 }
 
@@ -90,20 +88,6 @@ if Rails.env.development?
                          role: :superuser,
                          first_name: "Test",
                          last_name: "Dummy")
-end
-
-nestable_menu = Dummy::Menu::Nestable.create!(locale: :cs)
-Folio::MenuItem.create!(menu: nestable_menu,
-                        title: "Reference",
-                        target: reference,
-                        position: 0)
-wrap = Folio::MenuItem.create!(menu: nestable_menu,
-                               title: "Wrap",
-                               position: 1)
-[reference, about].each do |target|
-  Folio::MenuItem.create!(menu: nestable_menu,
-                          target: target,
-                          parent: wrap)
 end
 
 Folio::Lead.create!(name: "Test lead",

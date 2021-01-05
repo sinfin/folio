@@ -12,6 +12,10 @@ module Dummy
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration should go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded.
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 
@@ -20,10 +24,6 @@ module Dummy
 
     config.folio_console_locale = I18n.default_locale
     config.time_zone = "Prague"
-
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
 
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
