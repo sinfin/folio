@@ -3,6 +3,7 @@
 module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
   include Folio::SetMetaVariables
+  include Folio::HasCurrentSite
 
   included do
     include Pagy::Backend
