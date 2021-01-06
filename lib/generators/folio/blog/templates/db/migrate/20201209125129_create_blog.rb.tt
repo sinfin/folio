@@ -7,7 +7,7 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.string :slug
       t.text :perex
 
-      t.string :locale
+      t.string :locale, default: "en"
 
       t.string :meta_title
       t.text :meta_description
@@ -32,10 +32,9 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.string :slug
       t.text :perex
 
-      t.string :locale
+      t.string :locale, default: "en"
 
       t.boolean :published
-      t.datetime :published_at
 
       t.integer :articles_count
 
@@ -48,11 +47,10 @@ class CreateBlog < ActiveRecord::Migration[6.0]
     add_index :<%= application_dir_namespace %>_blog_categories, :slug
     add_index :<%= application_dir_namespace %>_blog_categories, :locale
     add_index :<%= application_dir_namespace %>_blog_categories, :published
-    add_index :<%= application_dir_namespace %>_blog_categories, :published_at
 
     create_join_table :<%= application_dir_namespace %>_blog_categories, :<%= application_dir_namespace %>_blog_articles do |t|
-      t.index :<%= application_dir_namespace %>_blog_category_id
-      t.index :<%= application_dir_namespace %>_blog_article_id
+      t.index :<%= application_dir_namespace %>_blog_category_id, name: :index_blog_articles_categories_on_blog_category_id
+      t.index :<%= application_dir_namespace %>_blog_article_id, name: :index_blog_articles_categories_on_blog_article_id
     end
   end
 end

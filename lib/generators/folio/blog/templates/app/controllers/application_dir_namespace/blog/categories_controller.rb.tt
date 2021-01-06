@@ -4,15 +4,15 @@ class <%= application_module %>::Blog::CategoriesController < ApplicationControl
   before_action :find_category, only: [:show, :preview]
 
   def show
-    if @article.published?
-      force_correct_path(url_for(@article))
+    if @category.published?
+      force_correct_path(url_for(@category))
     else
       redirect_to action: :preview
     end
   end
 
   def preview
-    if @article.published?
+    if @category.published?
       redirect_to action: :show
     else
       render :show
@@ -21,8 +21,8 @@ class <%= application_module %>::Blog::CategoriesController < ApplicationControl
 
   private
     def find_category
-      scope = <%= application_module %>::Blog::Category.published_or_admin(account_signed_in?)
-              <%= app_module_spacing %>                .includes(cover_placement: :file)
-              <%= app_module_spacing %>                .friendly.find(params[:id])
+      @category = <%= application_module %>::Blog::Category.published_or_admin(account_signed_in?)
+                  <%= app_module_spacing %>                .includes(cover_placement: :file)
+                  <%= app_module_spacing %>                .friendly.find(params[:id])
     end
 end

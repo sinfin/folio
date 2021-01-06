@@ -1,0 +1,52 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Folio::Console::<%= application_module %>::Blog::ArticlesControllerTest < Folio::Console::BaseControllerTest
+  test "index" do
+    get url_for([:console, <%= application_module %>::Blog::Article])
+    assert_response :success
+    create(:<%= application_dir_namespace %>_blog_article)
+    get url_for([:console, <%= application_module %>::Blog::Article])
+    assert_response :success
+  end
+
+  test "new" do
+    get url_for([:console, <%= application_module %>::Blog::Article, action: :new])
+    assert_response :success
+  end
+
+  test "edit" do
+    model = create(:<%= application_dir_namespace %>_blog_article)
+    get url_for([:edit, :console, model])
+    assert_response :success
+  end
+
+  test "create" do
+    params = build(:<%= application_dir_namespace %>_blog_article).serializable_hash
+    assert_equal(0, <%= application_module %>::Blog::Article.count)
+    post url_for([:console, <%= application_module %>::Blog::Article]), params: {
+      <%= application_dir_namespace %>_blog_article: params,
+    }
+    assert_equal(1, <%= application_module %>::Blog::Article.count, "Creates record")
+  end
+
+  test "update" do
+    model = create(:<%= application_dir_namespace %>_blog_article)
+    assert_not_equal("Title", model.title)
+    put url_for([:console, model]), params: {
+      <%= application_dir_namespace %>_blog_article: {
+        title: "Title",
+      },
+    }
+    assert_redirected_to url_for([:edit, :console, model])
+    assert_equal("Title", model.reload.title)
+  end
+
+  test "destroy" do
+    model = create(:<%= application_dir_namespace %>_blog_article)
+    delete url_for([:console, model])
+    assert_redirected_to url_for([:console, <%= application_module %>::Blog::Article])
+    assert_not(<%= application_module %>::Blog::Article.exists?(id: model.id))
+  end
+end

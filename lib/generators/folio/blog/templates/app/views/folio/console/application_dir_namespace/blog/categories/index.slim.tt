@@ -1,0 +1,9 @@
+= index_header
+
+= catalogue(@categories)
+  ruby:
+    cover
+    edit_link :to_label
+    attribute(:articles_count)
+    published_toggle
+    actions

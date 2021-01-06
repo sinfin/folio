@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+class Folio::Console::<%= application_module %>::Blog::CategoriesController < Folio::Console::BaseController
+  folio_console_controller_for "<%= application_module %>::Blog::Category"
+
+  private
+    def category_params
+      params.require(:<%= application_dir_namespace %>_blog_category)
+            .permit(*(@klass.column_names - ["id"]),
+                    *file_placements_strong_params)
+    end
+
+    def index_filters
+      {
+        by_published: [true, false],
+      }
+    end
+
+    def folio_console_collection_includes
+      []
+    end
+
+    def folio_console_record_includes
+      []
+    end
+end

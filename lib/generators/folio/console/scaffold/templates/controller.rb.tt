@@ -8,7 +8,7 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
       params.fetch(:<%= singular_table_name %>, {})
       <%- else -%>
       params.require(:<%= singular_table_name %>)
-            .permit(<%= form_attribute_names.map { |name| ":#{name}" }.join(",\n                    ") %>)
+            .permit(*(@klass.column_names - ["id"]))
       <%- end -%>
     end
 

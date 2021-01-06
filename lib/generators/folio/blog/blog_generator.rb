@@ -39,6 +39,29 @@ class Folio::BlogGenerator < Rails::Generators::Base
     end
   end
 
+  def add_factories
+    return if File.read('test/factories.rb').include?("#{application_dir_namespace}_blog_article")
+
+    content = <<~'RUBY'
+      factory :application_dir_namespace_blog_article, class: "application_module::Blog::Article" do
+        sequence(:title) { |i| "Article title #{i + 1}" }
+        perex { "perex" }
+      end
+
+      factory :application_dir_namespace_blog_category, class: "application_module::Blog::Category" do
+        sequence(:title) { |i| "Category title #{i + 1}" }
+      end
+
+    RUBY
+
+    content = content.gsub('application_dir_namespace', application_dir_namespace)
+                     .gsub('application_module', application_module.to_s)
+
+    inject_into_file 'test/factories.rb', after: "FactoryBot.define do\n" do
+      content
+    end
+  end
+
   private
 
     def application_module

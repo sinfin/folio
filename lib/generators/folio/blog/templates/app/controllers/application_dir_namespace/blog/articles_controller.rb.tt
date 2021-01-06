@@ -34,9 +34,9 @@ class <%= application_module %>::Blog::ArticlesController < ApplicationControlle
 
   private
     def find_article
-      scope = <%= application_module %>::Blog::Article.published_or_admin(account_signed_in?)
-              <%= app_module_spacing %>               .includes(cover_placement: :file)
-              <%= app_module_spacing %>               .friendly.find(params[:id])
+      @article = <%= application_module %>::Blog::Article.published_or_admin(account_signed_in?)
+                 <%= app_module_spacing %>               .includes(cover_placement: :file)
+                 <%= app_module_spacing %>               .friendly.find(params[:id])
 
       set_meta_variables(@article)
     end

@@ -16,6 +16,54 @@ namespace :folio do
     end
   end
 
+  task seed_blog: :environment do
+    require "faker"
+
+    images = Folio::Image.tagged_with('seed')
+
+    if images.blank?
+      images = 3.times.map do
+        image = Folio::Image.new
+        scale = 0.5 + rand / 2
+        w = (scale * 2560).to_i
+        h = (scale * 1440).to_i
+        image.file_url = "https://picsum.photos/#{w}/#{h}/?random"
+        image.tag_list = "seed, unplash"
+        image.save!
+        image
+      end
+    end
+
+    application_module = Rails.application.class.parent
+    article_klass = "#{application_module}::Blog::Article".constantize
+    category_klass = "#{application_module}::Blog::Category".constantize
+
+    if Rails.env.development?
+      category_klass.destroy_all
+      article_klass.destroy_all
+    end
+
+    "#{application_module}::Blog".constantize.available_locales.each do |locale|
+      categories = 5.times.map do |i|
+        category_klass.create!(locale: locale,
+                               title: Faker::Hipster.words(number: rand(1..4), supplemental: false).join(' ').capitalize,
+                               cover: images.sample,
+                               published: !i.zero?)
+      end
+
+      25.times do |i|
+        article_klass.create!(locale: locale,
+                              title: Faker::Hipster.sentence,
+                              perex: Faker::Hipster.paragraph,
+                              cover: images.sample,
+                              primary_category: (categories + [nil]).sample,
+                              categories: categories.sample(rand(0..categories.size)),
+                              published: !i.zero?,
+                              published_at: Time.zone.now - rand(0..30).days - rand(0..500).minutes)
+      end
+    end
+  end
+
   namespace :upgrade do
     task atom_document_placements: :environment do
       ids = []

@@ -3,7 +3,7 @@
 class <%= application_module %>::Blog::Category < ApplicationRecord
   extend FriendlyId
   include Folio::HasAttachments
-  include Folio::Publishable::WithDate
+  include Folio::Publishable::Basic
 
   friendly_id :title, use: %i[slugged history]
 
@@ -30,7 +30,7 @@ class <%= application_module %>::Blog::Category < ApplicationRecord
   validates :slug, uniqueness: true
 
   validates :locale,
-            presence: I18n.available_locales.map(&:to_s)
+            presence: <%= application_module %>::Blog.available_locales
 
   after_save :update_articles_count, prepend: true
   after_touch :update_articles_count, prepend: true
