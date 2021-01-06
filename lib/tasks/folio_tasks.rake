@@ -37,18 +37,31 @@ namespace :folio do
     application_module = Rails.application.class.parent
     article_klass = "#{application_module}::Blog::Article".constantize
     category_klass = "#{application_module}::Blog::Category".constantize
+    page_klass = "#{application_module}::Page::Blog".constantize
 
     if Rails.env.development?
       category_klass.destroy_all
       article_klass.destroy_all
     end
 
-    "#{application_module}::Blog".constantize.available_locales.each do |locale|
+    if page_klass.exists?
+      page = page_klass.instance
+    else
+      page = page_klass.create!(published: true, published_at: 1.minute.ago, title: "Blog")
+    end
+
+    page.update!(perex: nil, published: true, published_at: 1.minute.ago)
+    page.atoms.destroy_all
+
+    locales = "#{application_module}::Blog".constantize.available_locales
+
+    locales.each do |locale|
       categories = 5.times.map do |i|
         category_klass.create!(locale: locale,
                                title: Faker::Hipster.words(number: rand(1..4), supplemental: false).join(' ').capitalize,
                                cover: images.sample,
-                               published: !i.zero?)
+                               published: !i.zero?,
+                               featured: i > 1)
       end
 
       25.times do |i|
@@ -61,6 +74,38 @@ namespace :folio do
                               published: !i.zero?,
                               published_at: Time.zone.now - rand(0..30).days - rand(0..500).minutes)
       end
+
+      if locales.size > 1
+        atoms = page.atoms(locale)
+        atom_locale = locale
+      else
+        atoms = page.atoms
+        atom_locale = nil
+      end
+
+      position = 0
+
+      Notesvilla::Atom::Blog::Articles::Latest.create!(position: position += 1,
+                                                       placement: page,
+                                                       locale: atom_locale)
+
+      featured_categories = category_klass.all.sample(2)
+
+      Notesvilla::Atom::Blog::Categories::LatestArticles.create!(position: position += 1,
+                                                                 placement: page,
+                                                                 locale: atom_locale,
+                                                                 category: featured_categories.first,
+                                                                 background: true)
+
+      Notesvilla::Atom::Blog::Categories::Featured.create!(position: position += 1,
+                                                           placement: page,
+                                                           locale: atom_locale,
+                                                           title: 'Featured topics')
+
+      Notesvilla::Atom::Blog::Categories::LatestArticles.create!(position: position + 1,
+                                                                 placement: page,
+                                                                 locale: atom_locale,
+                                                                 category: featured_categories.second)
     end
   end
 
