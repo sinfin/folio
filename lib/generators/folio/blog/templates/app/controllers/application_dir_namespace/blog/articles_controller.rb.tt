@@ -6,6 +6,7 @@ class <%= application_module %>::Blog::ArticlesController < ApplicationControlle
   def index
     articles = <%= application_module %>::Blog::Article.published
                <%= app_module_spacing %>               .ordered
+               <%= app_module_spacing %>               .by_locale(I18n.locale)
                <%= app_module_spacing %>               .includes(:published_categories,
                                                                  cover_placement: :file)
 
@@ -35,6 +36,7 @@ class <%= application_module %>::Blog::ArticlesController < ApplicationControlle
   private
     def find_article
       @article = <%= application_module %>::Blog::Article.published_or_admin(account_signed_in?)
+                 <%= app_module_spacing %>               .by_locale(I18n.locale)
                  <%= app_module_spacing %>               .includes(cover_placement: :file)
                  <%= app_module_spacing %>               .friendly.find(params[:id])
 

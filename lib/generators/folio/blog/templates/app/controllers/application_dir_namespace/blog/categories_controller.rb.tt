@@ -23,6 +23,7 @@ class <%= application_module %>::Blog::CategoriesController < ApplicationControl
     def find_category
       @category = <%= application_module %>::Blog::Category.published_or_admin(account_signed_in?)
                   <%= app_module_spacing %>                .includes(cover_placement: :file)
+                  <%= app_module_spacing %>                .by_locale(I18n.locale)
                   <%= app_module_spacing %>                .friendly.find(params[:id])
     end
 end

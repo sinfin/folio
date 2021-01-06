@@ -14,10 +14,11 @@ class Folio::Console::<%= application_module %>::Blog::ArticlesController < Foli
 
     def index_filters
       {
+        <%- if I18n.available_locales.size > 1 -%>by_locale: <%= application_module %>::Blog.available_locales,<%- end -%>
+        by_published: [true, false],
         by_category_id: <%= application_module %>::Blog::Category.ordered.map do |cat|
           [cat.to_label, cat.id]
         end,
-        by_published: [true, false],
       }
     end
 

@@ -53,6 +53,7 @@ class <%= application_module %>::Blog::Article < ApplicationRecord
 
   scope :ordered, -> { order(published_at: :desc) }
   scope :featured, -> { where(featured: true) }
+  scope :by_locale, -> (locale) { where(locale: locale) }
   scope :by_category_id, -> (id) { joins(:categories).where(<%= application_dir_namespace %>_blog_categories: { id: id }) }
 
   def published_at_with_fallback

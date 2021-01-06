@@ -12,6 +12,7 @@ class Folio::Console::<%= application_module %>::Blog::CategoriesController < Fo
 
     def index_filters
       {
+        <%- if I18n.available_locales.size > 1 -%>by_locale: <%= application_module %>::Blog.available_locales,<%- end -%>
         by_published: [true, false],
       }
     end

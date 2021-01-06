@@ -49,6 +49,7 @@ class <%= application_module %>::Blog::Category < ApplicationRecord
   multisearchable against: [:title],
                   ignoring: :accents
 
+  scope :by_locale, -> (locale) { where(locale: locale) }
   scope :ordered, -> { order(title: :asc) }
 
   private
