@@ -1,0 +1,58 @@
+# frozen_string_literal: true
+
+class CreateBlog < ActiveRecord::Migration[6.0]
+  def change
+    create_table :<%= application_dir_namespace %>_blog_articles do |t|
+      t.string :title
+      t.string :slug
+      t.text :perex
+
+      t.string :locale
+
+      t.string :meta_title
+      t.text :meta_description
+
+      t.boolean :featured
+      t.boolean :published
+      t.datetime :published_at
+
+      t.belongs_to :primary_category
+
+      t.timestamps
+    end
+
+    add_index :<%= application_dir_namespace %>_blog_articles, :slug
+    add_index :<%= application_dir_namespace %>_blog_articles, :locale
+    add_index :<%= application_dir_namespace %>_blog_articles, :featured
+    add_index :<%= application_dir_namespace %>_blog_articles, :published
+    add_index :<%= application_dir_namespace %>_blog_articles, :published_at
+
+    create_table :<%= application_dir_namespace %>_blog_categories do |t|
+      t.string :title
+      t.string :slug
+      t.text :perex
+
+      t.string :locale
+
+      t.boolean :published
+      t.datetime :published_at
+
+      t.integer :articles_count
+
+      t.string :meta_title
+      t.text :meta_description
+
+      t.timestamps
+    end
+
+    add_index :<%= application_dir_namespace %>_blog_categories, :slug
+    add_index :<%= application_dir_namespace %>_blog_categories, :locale
+    add_index :<%= application_dir_namespace %>_blog_categories, :published
+    add_index :<%= application_dir_namespace %>_blog_categories, :published_at
+
+    create_join_table :<%= application_dir_namespace %>_blog_categories, :<%= application_dir_namespace %>_blog_articles do |t|
+      t.index :<%= application_dir_namespace %>_blog_category_id
+      t.index :<%= application_dir_namespace %>_blog_article_id
+    end
+  end
+end

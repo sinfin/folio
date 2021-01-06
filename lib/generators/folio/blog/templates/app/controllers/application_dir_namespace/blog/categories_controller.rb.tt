@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+class <%= application_module %>::Blog::CategoriesController < ApplicationController
+  before_action :find_category, only: [:show, :preview]
+
+  def show
+    if @article.published?
+      force_correct_path(url_for(@article))
+    else
+      redirect_to action: :preview
+    end
+  end
+
+  def preview
+    if @article.published?
+      redirect_to action: :show
+    else
+      render :show
+    end
+  end
+
+  private
+    def find_category
+      scope = <%= application_module %>::Blog::Category.published_or_admin(account_signed_in?)
+              <%= app_module_spacing %>                .includes(cover_placement: :file)
+              <%= app_module_spacing %>                .friendly.find(params[:id])
+    end
+end

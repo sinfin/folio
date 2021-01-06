@@ -1,0 +1,70 @@
+# frozen_string_literal: true
+
+class <%= application_module %>::Blog::Article < ApplicationRecord
+  extend FriendlyId
+  include Folio::HasAttachments
+  include Folio::Publishable::WithDate
+  include Folio::HasAtoms::Basic
+
+  friendly_id :title, use: %i[slugged history]
+
+  belongs_to :primary_category, class_name: "<%= application_module %>::Blog::Category",
+                                inverse_of: :primary_articles,
+                                foreign_key: :primary_category_id
+
+  has_and_belongs_to_many :categories,
+                          -> { ordered },
+                          foreign_key: :<%= application_dir_namespace %>_blog_article_id,
+                          association_foreign_key: :<%= application_dir_namespace %>_blog_category_id
+
+  has_and_belongs_to_many :published_categories,
+                          -> { published.ordered },
+                          class_name: "<%= application_module %>::Blog::Category",
+                          foreign_key: :<%= application_dir_namespace %>_blog_article_id,
+                          association_foreign_key: :<%= application_dir_namespace %>_blog_category_id
+
+  # Validations
+  validates :title,
+            :slug,
+            :perex,
+            presence: true
+  validates :slug, uniqueness: true
+
+  validates :locale,
+            presence: I18n.available_locales.map(&:to_s)
+
+  after_save :add_primary_category_to_categories
+  after_save :touch_categories
+
+  # Scopes
+  pg_search_scope :by_query,
+                  against: {
+                    title: "A",
+                    perex: "B"
+                  },
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
+  multisearchable against: [:title],
+                  ignoring: :accents
+
+  scope :ordered, -> { order(published_at: :desc) }
+  scope :featured, -> { where(featured: true) }
+
+  def published_at_with_fallback
+    published_at || created_at
+  end
+
+  private
+    def add_primary_category_to_categories
+      if primary_category && !categories.exists?(id: primary_category.id)
+        self.categories << primary_category
+      end
+    end
+
+    def touch_categories
+      categories.find_each(&:touch)
+    end
+end
