@@ -19,7 +19,7 @@ namespace :folio do
   task seed_blog: :environment do
     require "faker"
 
-    images = Folio::Image.tagged_with('seed')
+    images = Folio::Image.tagged_with("seed")
 
     if images.blank?
       images = 3.times.map do
@@ -58,7 +58,7 @@ namespace :folio do
     locales.each do |locale|
       categories = 5.times.map do |i|
         category_klass.create!(locale: locale,
-                               title: Faker::Hipster.words(number: rand(1..2), supplemental: false).join(' ').capitalize,
+                               title: Faker::Hipster.words(number: rand(1..2), supplemental: false).join(" ").capitalize,
                                cover: images.sample,
                                published: !i.zero?,
                                featured: i > 1)
@@ -83,29 +83,34 @@ namespace :folio do
         atom_locale = nil
       end
 
+      atoms.destroy_all
       position = 0
 
-      Notesvilla::Atom::Blog::Articles::Latest.create!(position: position += 1,
-                                                       placement: page,
-                                                       locale: atom_locale)
+      "#{application_module}::Atom::Blog::Articles::Latest".constantize
+                                                           .create!(position: position += 1,
+                                                                    placement: page,
+                                                                    locale: atom_locale)
 
       featured_categories = category_klass.all.sample(2)
 
-      Notesvilla::Atom::Blog::Categories::LatestArticles.create!(position: position += 1,
-                                                                 placement: page,
-                                                                 locale: atom_locale,
-                                                                 category: featured_categories.first,
-                                                                 background: true)
+      "#{application_module}::Atom::Blog::Categories::LatestArticles".constantize
+                                                                     .create!(position: position += 1,
+                                                                              placement: page,
+                                                                              locale: atom_locale,
+                                                                              category: featured_categories.first,
+                                                                              background: true)
 
-      Notesvilla::Atom::Blog::Categories::Featured.create!(position: position += 1,
-                                                           placement: page,
-                                                           locale: atom_locale,
-                                                           title: 'Featured topics')
+      "#{application_module}::Atom::Blog::Categories::Featured".constantize
+                                                               .create!(position: position += 1,
+                                                                        placement: page,
+                                                                        locale: atom_locale,
+                                                                        title: "Featured topics")
 
-      Notesvilla::Atom::Blog::Categories::LatestArticles.create!(position: position + 1,
-                                                                 placement: page,
-                                                                 locale: atom_locale,
-                                                                 category: featured_categories.second)
+      "#{application_module}::Atom::Blog::Categories::LatestArticles".constantize
+                                                                     .create!(position: position + 1,
+                                                                              placement: page,
+                                                                              locale: atom_locale,
+                                                                              category: featured_categories.second)
     end
   end
 
