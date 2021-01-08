@@ -58,7 +58,7 @@ namespace :folio do
     locales.each do |locale|
       categories = 5.times.map do |i|
         category_klass.create!(locale: locale,
-                               title: Faker::Hipster.words(number: rand(1..4), supplemental: false).join(' ').capitalize,
+                               title: Faker::Hipster.words(number: rand(1..2), supplemental: false).join(' ').capitalize,
                                cover: images.sample,
                                published: !i.zero?,
                                featured: i > 1)

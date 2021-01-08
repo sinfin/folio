@@ -9,7 +9,8 @@ class <%= application_module %>::Blog::Category < ApplicationRecord
 
   has_many :primary_articles, class_name: "<%= application_module %>::Blog::Article",
                               inverse_of: :primary_category,
-                              foreign_key: :primary_category_id
+                              foreign_key: :primary_category_id,
+                              dependent: :nullify
 
   has_and_belongs_to_many :articles,
                           -> { ordered },
