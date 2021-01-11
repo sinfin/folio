@@ -2,7 +2,7 @@ div class=class_name
   = render(:_title)
 
   .f-c-show-header__right
-    - if model.respond_to?(:aasm_state)
+    - if model.respond_to?(:aasm)
       .mr-h.flex-shrink-0
         == cell('folio/console/state', model)
 
