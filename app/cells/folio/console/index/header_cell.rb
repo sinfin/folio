@@ -74,7 +74,11 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def csv_path
-    url_for([:console, model, format: :csv])
+    if options[:csv] == true
+      url_for([:console, model, format: :csv])
+    else
+      options[:csv]
+    end
   end
 
   def title_url

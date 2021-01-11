@@ -212,7 +212,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         csv << klass.csv_attribute_names.map do |a|
           klass.human_attribute_name(a)
         end
-        records.each { |rec| csv << rec.csv_attributes }
+        records.each { |rec| csv << rec.csv_attributes(self) }
       end
 
       name = name || klass.model_name.human(count: 2)
