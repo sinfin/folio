@@ -14,15 +14,21 @@ class Folio::EmailTemplatesGenerator < Rails::Generators::Base
       next unless yaml_data
 
       yaml_data.each do |raw|
-        if Folio::EmailTemplate.exists?(mailer: raw["mailer"], action: raw["action"])
-          unless Rails.env.test?
-            puts "Skipping existing email template for #{raw["mailer"]}##{raw["action"]}"
+        msg_action = 'Adding'
+        if em = Folio::EmailTemplate.find_by(mailer: raw["mailer"], action: raw["action"])
+          if ENV["FORCE"]
+            msg_action = 'Overwriting (FORCE=1)'
+            em.destroy!
+          else
+            unless Rails.env.test?
+              puts "Skipping existing email template for #{raw["mailer"]}##{raw["action"]}"
+            end
+            next
           end
-          next
         end
 
         unless Rails.env.test?
-          puts "Adding email template for #{raw["mailer"]}##{raw["action"]}"
+          puts "#{msg_action} email template for #{raw["mailer"]}##{raw["action"]}"
         end
 
         data = raw.slice(*Folio::EmailTemplate.column_names)
