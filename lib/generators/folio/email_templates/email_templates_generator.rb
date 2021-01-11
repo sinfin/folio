@@ -14,10 +14,10 @@ class Folio::EmailTemplatesGenerator < Rails::Generators::Base
       next unless yaml_data
 
       yaml_data.each do |raw|
-        msg_action = 'Adding'
+        msg_action = "Adding"
         if em = Folio::EmailTemplate.find_by(mailer: raw["mailer"], action: raw["action"])
           if ENV["FORCE"]
-            msg_action = 'Overwriting (FORCE=1)'
+            msg_action = "Overwriting (FORCE=1)"
             em.destroy!
           else
             unless Rails.env.test?

@@ -32,6 +32,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
   # end
 
   def self.folio_console_controller_for(class_name, as: nil, except: [])
+    as_s = as.present? ? as.to_s : nil
+
+    define_method :folio_console_controller_for_as do
+      as_s
+    end
+
     klass = class_name.constantize
 
     if klass.private_method_defined?(:positionable_last_position)

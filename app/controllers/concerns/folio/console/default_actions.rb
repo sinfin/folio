@@ -141,10 +141,18 @@ module Folio::Console::DefaultActions
 
   private
     def folio_console_name_base(plural: false)
-      if plural
-        params[:controller].split("/").last
+      if try(:folio_console_controller_for_as).present?
+        if plural
+          folio_console_controller_for_as.pluralize
+        else
+          folio_console_controller_for_as
+        end
       else
-        params[:controller].split("/").last.singularize
+        if plural
+          params[:controller].split("/").last
+        else
+          params[:controller].split("/").last.singularize
+        end
       end
     end
 
