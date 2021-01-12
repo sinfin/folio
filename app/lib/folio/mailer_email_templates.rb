@@ -17,8 +17,8 @@ module Folio::MailerEmailTemplates
     @data = sym_data.stringify_keys
     @email_template = email_template_for!
 
-    @data["ROOT_URL"] = root_url(only_path: false)
-    @data["DOMAIN"] = Folio::Site.instance.domain
+    @data[:ROOT_URL] = root_url(only_path: false)
+    @data[:DOMAIN] = Folio::Site.instance.domain
 
     opts[:subject] = @email_template.render_subject(@data)
     opts[:to] ||= self.class.system_email
@@ -36,9 +36,9 @@ module Folio::MailerEmailTemplates
 
     if @email_template.present?
       @data ||= {}
-      @data["ROOT_URL"] = root_url(only_path: false)
-      @data["DOMAIN"] = Folio::Site.instance.domain
-      @data["USER_EMAIL"] = record.email
+      @data[:ROOT_URL] = root_url(only_path: false)
+      @data[:DOMAIN] = Folio::Site.instance.domain
+      @data[:USER_EMAIL] = record.email
 
       opts[:subject] = @email_template.render_subject(@data)
       opts[:template_path] = "folio/email_templates"
