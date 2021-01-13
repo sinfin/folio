@@ -6,10 +6,11 @@ cs:
       gap: "&hellip;"
     info:
       single_page:
-        zero: "Žádný %{item_name} nenalezen"
-        one: "Zobrazuji <b>1</b> %{item_name}"
-        other: "Zobrazuji <b>všech %{count}</b> %{item_name}"
-      multiple_pages: "Zobrazuji %{item_name} <b>%{from}-%{to}</b> z <b>%{count}</b> celkem"
+        zero: "Žádný záznam nenalezen"
+        one: "Zobrazuji <b>1</b> záznam"
+        few: "Zobrazuji <b>%{count}</b> záznamy"
+        other: "Zobrazuji <b>všech %{count}</b> záznamů"
+      multiple_pages: "Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem"
       no_items: Žádný záznam nenalezen
     compact:
       page: Stránka

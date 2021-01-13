@@ -2,71 +2,70 @@
   .mr-md-auto.my-2.text-center.text-md-left.pr-md-g
     == pagy_info(model)
 
-  .my-2
-    .f-c-pagination__nav
-      - if model.prev
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--first"
-        ]
-          = link.call(1, icon('fast-backward'))
+  - if model.pages > 1
+    .my-2
+      .f-c-pagination__nav
+        - if model.prev
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--first"
+          ]
+            = link.call(1, icon('fast-backward'))
 
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--prev"
-        ]
-          = link.call(model.prev, icon('step-backward'))
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--prev"
+          ]
+            = link.call(model.prev, icon('step-backward'))
 
-      - else
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--first f-c-pagination__page--disabled"
-        ]
-          = icon('fast-backward')
+        - else
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--first f-c-pagination__page--disabled"
+          ]
+            = icon('fast-backward')
 
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--prev f-c-pagination__page--disabled"
-        ]
-          = icon('step-backward')
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--prev f-c-pagination__page--disabled"
+          ]
+            = icon('step-backward')
 
-      .f-c-pagination__pages
-        / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
-        - model.series.each_with_index do |item, index|
-          - if item.is_a?(Integer)          # page link
-            span.f-c-pagination__page.f-c-pagination__page--page
-              = link.call(item)
+        .f-c-pagination__pages
+          / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
+          - model.series.each_with_index do |item, index|
+            - if item.is_a?(Integer)          # page link
+              span.f-c-pagination__page.f-c-pagination__page--page
+                = link.call(item)
 
-          - elsif item.is_a?(String)        # current page
-            span.f-c-pagination__page.f-c-pagination__page--page[
-              class="f-c-pagination__page--current"
-            ] = item
+            - elsif item.is_a?(String)        # current page
+              span.f-c-pagination__page.f-c-pagination__page--page[
+                class="f-c-pagination__page--current"
+              ] = item
 
-          - elsif item == :gap              # page gap
-            span.f-c-pagination__page.f-c-pagination__page--page[
-              class="f-c-pagination__page--gap"
-            ] &hellip;
+            - elsif item == :gap              # page gap
+              span.f-c-pagination__page.f-c-pagination__page--page[
+                class="f-c-pagination__page--gap"
+              ] &hellip;
 
-      - if model.next
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--next"
-        ] == link.call(model.next, icon('step-forward'))
+        - if model.next
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--next"
+          ] == link.call(model.next, icon('step-forward'))
 
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--last"
-        ] == link.call(model.last, icon('fast-forward'))
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--last"
+          ] == link.call(model.last, icon('fast-forward'))
 
-      - else
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--next f-c-pagination__page--disabled"
-        ] = icon('step-forward')
+        - else
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--next f-c-pagination__page--disabled"
+          ] = icon('step-forward')
 
-        span.f-c-pagination__page[
-          class="f-c-pagination__page--with-ico"
-          class="f-c-pagination__page--last f-c-pagination__page--disabled"
-        ] = icon('fast-forward')
-
-    / == pagy_nav(model)
+          span.f-c-pagination__page[
+            class="f-c-pagination__page--with-ico"
+            class="f-c-pagination__page--last f-c-pagination__page--disabled"
+          ] = icon('fast-forward')
