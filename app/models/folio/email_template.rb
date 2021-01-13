@@ -15,6 +15,8 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
             uniqueness: { scope: %i[mailer] },
             presence: true
 
+  scope :ordered, -> { order(:title) }
+
   translates :subject, :body
 
   def to_label
