@@ -4,7 +4,7 @@ class Folio::Console::PaginationCell < Folio::ConsoleCell
   include Pagy::Frontend
 
   def show
-    render if model.present?
+    render if model.present? && model.count > 0
   end
 
   def link
