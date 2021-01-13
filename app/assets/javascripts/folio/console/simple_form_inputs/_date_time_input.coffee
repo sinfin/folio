@@ -47,7 +47,6 @@ window.folioConsoleInitDatePicker = (el) ->
 
 window.folioConsoleInitDateTimePicker = (el) ->
   $el = $(el)
-  console.log($el.data('date'))
   $el.val(moment($el.data('date')).format(CONFIG.format)) if $el.data('date')
   $el.datetimepicker(CONFIG)
   $el.on 'dp.show', dpShow

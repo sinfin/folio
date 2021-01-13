@@ -48,7 +48,11 @@ export default function Fields ({ atom, index, onChange, onValueChange }) {
               />
             )}
 
-            {meta.structure[key].hint && <FormText>{meta.structure[key].hint}</FormText>}
+            {meta.structure[key].hint && (
+              <FormText>
+                {meta.structure[key].hint.split(/\n/).map((part, i) => <div key={i}>{part}</div>)}
+              </FormText>
+            )}
 
             {atom.errors[key] && (
               <FormText className='invalid-feedback' color='danger'>{atom.errors[key]}</FormText>
