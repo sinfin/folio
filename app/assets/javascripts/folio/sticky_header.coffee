@@ -24,7 +24,7 @@ window.makeFolioStickyHeader = (opts = {}) ->
 
       $(document.body).attr('data-affix', progress)
 
-  $(document).on 'turbolinks:before-cache', ->
+  $(document).on 'turbolinks:before-render', ->
     $window.scrollTop(0)
     $(document.body).attr('data-affix', 0)
 

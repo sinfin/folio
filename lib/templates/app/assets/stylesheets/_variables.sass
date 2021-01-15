@@ -19,7 +19,8 @@ $white: #ffffff
 
 $spacer: 1rem
 $grid-gutter-width: 30px
-$spacers: ( h: $grid-gutter-width / 2, g: $grid-gutter-width, a: 2.5 * $spacer, ma: 2 * $spacer )
+$grid-gutter-half: $grid-gutter-width / 2
+$spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, a: 2.5 * $spacer, ma: 2 * $spacer )
 
 $body-color: $black
 $font-weight-bold: bold
@@ -101,9 +102,9 @@ $input-btn-padding-x-lg: 55px
 $input-btn-font-size-lg: 18px
 $input-btn-line-height-lg: 23 / 18
 
-$btn-border-radius: 20px
-$btn-border-radius-lg: 28px
-$btn-border-radius-sm: 12px
+$btn-border-radius: $border-radius
+$btn-border-radius-lg: $border-radius-lg
+$btn-border-radius-sm: $border-radius-sm
 $btn-font-weight: $font-weight-bold
 
 $input-border-width: 1px
