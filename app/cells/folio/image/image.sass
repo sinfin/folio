@@ -1,5 +1,7 @@
 @import 'folio/utilities'
 
+$folio-image-fallback-color: #000000 !default
+$folio-image-fallback-svg-opacity: 0.3 !default
 $folio-image-fallback-background: #f9f9f9 !default
 
 =internet-explorer
@@ -41,12 +43,13 @@ $folio-image-fallback-background: #f9f9f9 !default
     display: flex
     align-items: center
     justify-content: center
+    color: $folio-image-fallback-color
 
   &__fallback-svg
     width: 40px
     height: 40px
     display: block
-    opacity: 0.3
+    opacity: $folio-image-fallback-svg-opacity
 
   &--small &__fallback-svg
     width: 16px
