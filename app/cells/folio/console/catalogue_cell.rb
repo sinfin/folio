@@ -67,7 +67,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def association(name, separator: ", ")
+  def association(name, separator: ", ", small: false)
     assoc = record.send(name)
 
     if assoc.is_a?(Enumerable)
@@ -78,7 +78,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       val = nil
     end
 
-    attribute(name, val)
+    attribute(name, val, small: small)
   end
 
   def type
