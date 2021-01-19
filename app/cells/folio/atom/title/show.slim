@@ -1,3 +1,4 @@
 .folio-atom.folio-atom-title
   .container
-    h2 = model.title
+    *{ tag: model.tag_with_fallback }
+      = model.title
