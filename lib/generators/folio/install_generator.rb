@@ -104,6 +104,7 @@ module Folio
           "app/lib/application_cell.rb",
           "app/models/application_record.rb",
           "config/initializers/assets.rb",
+          "config/initializers/folio.rb",
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
           "config/routes.rb",
