@@ -153,12 +153,12 @@ class Folio::ImageCell < Folio::ApplicationCell
   def spacer_style
     s = ""
 
-    if options[:spacer_background]
-      if options[:spacer_background].is_a?(String)
-        s += "background-color: #{options[:spacer_background]};"
-      elsif options[:spacer_background] == false
+    if spacer_background_option_with_default
+      if spacer_background_option_with_default.is_a?(String)
+        s += "background-color: #{spacer_background_option_with_default};"
+      elsif spacer_background_option_with_default == false
         s += "background-color: transparent;"
-      elsif options[:spacer_background] == true
+      elsif spacer_background_option_with_default == true
         img = model
         img = model.file if model.is_a?(Folio::FilePlacement::Base)
 
@@ -244,5 +244,13 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def self.fixed_height_default_width
     160
+  end
+
+  def spacer_background_option_with_default
+    if options[:spacer_background].nil?
+      ::Rails.application.config.folio_image_spacer_background_fallback
+    else
+      options[:spacer_background]
+    end
   end
 end

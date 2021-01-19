@@ -50,6 +50,7 @@ module Folio
     config.folio_console_sidebar_runner_up_link_class_names = []
     config.folio_console_sidebar_skip_link_class_names = []
     config.folio_server_names = []
+    config.folio_image_spacer_background_fallback = nil
 
     initializer :append_migrations do |app|
       unless app.root.to_s.include? root.to_s
