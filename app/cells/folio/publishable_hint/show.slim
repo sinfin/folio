@@ -1,2 +1,2 @@
 .folio-publishable-hint
-  = t('.hint')
+  = options[:hint].presence || t('.hint')
