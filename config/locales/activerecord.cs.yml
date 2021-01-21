@@ -11,7 +11,7 @@ cs:
         content: Obsah
         perex: Perex
         target: Odkaz
-        title: Název
+        title: Titulek
       folio/atom/title:
         title: Text
         tag: Druh titulku
