@@ -3,7 +3,7 @@
 class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseController
   def show
     klass = params.require(:klass).safe_constantize
-    q = params.require(:q)
+    q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
 

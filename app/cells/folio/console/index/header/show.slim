@@ -26,11 +26,7 @@
         - if controller.send(:index_filters).present?
           - controller.send(:index_filters).keys.each do |key|
             - if controller.params[key].present?
-              = f.input(key, as: :hidden, \
-                             input_html: { \
-                                value: controller.params[key], \
-                                id: nil, \
-                             })
+              = f.hidden_field key, value: controller.params[key], id: nil
 
   - if options[:csv]
     a.btn.btn-secondary.f-c-index-header__btn href=csv_path

@@ -62,7 +62,11 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def label_for_key(key)
-    clear_key = key.to_s.delete_prefix("by_").delete_suffix("_query")
+    clear_key = key.to_s
+                   .delete_prefix("by_")
+                   .delete_suffix("_query")
+                   .delete_suffix("_id")
+
     klass.human_attribute_name(clear_key)
   end
 
