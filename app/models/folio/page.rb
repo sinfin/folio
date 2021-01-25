@@ -151,8 +151,16 @@ class Folio::Page < Folio::ApplicationRecord
     "folio/pages/show"
   end
 
+  def self.public_rails_path
+    nil
+  end
+
   def self.public?
-    true
+    if public_rails_path.present?
+      false
+    else
+      true
+    end
   end
 end
 

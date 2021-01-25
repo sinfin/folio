@@ -114,6 +114,22 @@ class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
 
     @page.becomes!(NonPublicPage)
     @page.save!
-    assert_raises(ActiveRecord::RecordNotFound) { get url_for(@page.reload) }
+    assert_raises(ActiveRecord::RecordNotFound) { get url_for(@page) }
+  end
+
+  class ::NonPublicRedirectPage < Folio::Page
+    def self.public_rails_path
+      :root_path
+    end
+  end
+
+  test "public_rails_path" do
+    get url_for(@page)
+    assert_response :ok
+
+    @page.becomes!(NonPublicRedirectPage)
+    @page.save!
+    get url_for(@page)
+    assert_redirected_to(root_path)
   end
 end

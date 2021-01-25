@@ -58,7 +58,13 @@ module Folio::PagesControllerBase
         add_breadcrumb @page.title, url_for(@page)
       end
 
-      fail ActiveRecord::RecordNotFound unless @page.class.public?
+      unless @page.class.public?
+        if @page.class.public_rails_path
+          redirect_to send(@page.class.public_rails_path)
+        else
+          fail ActiveRecord::RecordNotFound
+        end
+      end
     end
 
     def add_meta
