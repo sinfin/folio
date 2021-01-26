@@ -108,6 +108,7 @@ module Folio
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
           "config/routes.rb",
+          "public/maintenance.html",
           "test/controllers/anti_cache_controller_test.rb",
           "test/factories.rb",
           "test/test_helper.rb",
