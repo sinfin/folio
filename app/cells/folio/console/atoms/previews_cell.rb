@@ -22,9 +22,21 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def sorted_types
-    Folio::Atom.types
-               .reject { |klass| klass.molecule_secondary }
-               .sort_by { |klass| I18n.transliterate(klass.model_name.human) }
+    ary = Folio::Atom.types
+                     .reject { |klass| klass.molecule_secondary }
+                     .sort_by { |klass| I18n.transliterate(klass.model_name.human) }
+
+    h = { featured: [], regular: [] }
+
+    ary.each do |klass|
+      if klass.console_featured?
+        h[:featured] << klass
+      else
+        h[:regular] << klass
+      end
+    end
+
+    h
   end
 
   def locale_hidden(locale)

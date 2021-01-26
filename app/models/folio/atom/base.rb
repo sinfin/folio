@@ -159,6 +159,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   def self.console_icon
   end
 
+  def self.console_featured?
+    false
+  end
+
   def self.contentable?
     self::ATTACHMENTS.present? ||
     self::STRUCTURE.present? ||

@@ -15,6 +15,10 @@ class Folio::Atom::Text < Folio::Atom::Base
   def self.console_icon
     :format_align_left
   end
+
+  def self.console_featured?
+    true
+  end
 end
 
 # == Schema Information

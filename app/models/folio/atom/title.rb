@@ -26,6 +26,10 @@ class Folio::Atom::Title < Folio::Atom::Base
   def self.console_icon
     :text_fields
   end
+
+  def self.console_featured?
+    true
+  end
 end
 
 # == Schema Information

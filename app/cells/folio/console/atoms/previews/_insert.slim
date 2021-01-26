@@ -11,18 +11,20 @@
 
       .f-c-atoms-previews__insert-inner
         .container
-          ul.f-c-atoms-previews__insert-ul.list-unstyled
-            - sorted_types.each do |klass|
-              li.f-c-atoms-previews__insert-li
-                a.f-c-atoms-previews__insert-a[
-                  href="##{klass.model_name.human}"
-                  data-type=klass.to_s
-                  data-contentable=klass.contentable?.to_s
-                ]
-                  - if klass.console_icon
-                    - if klass.console_icon.to_s.starts_with?('fa-')
-                      span.fa class=klass.console_icon
-                    - else
-                      span.mi = klass.console_icon
+          - sorted_types.each do |key, items|
+            - if items.present?
+              ul.f-c-atoms-previews__insert-ul.list-unstyled
+                - items.each do |klass|
+                  li.f-c-atoms-previews__insert-li
+                    a.f-c-atoms-previews__insert-a[
+                      href="##{klass.model_name.human}"
+                      data-type=klass.to_s
+                      data-contentable=klass.contentable?.to_s
+                    ]
+                      - if klass.console_icon
+                        - if klass.console_icon.to_s.starts_with?('fa-')
+                          span.fa class=klass.console_icon
+                        - else
+                          span.mi = klass.console_icon
 
-                  = klass.model_name.human
+                      = klass.model_name.human
