@@ -60,16 +60,11 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
   }
 
   const onChangeFn = makeOnChange(path, node, onChange)
-  // let className = 'form-inline f-c-menus-form__form'
-
-  // if (node.style) {
-  //   className = `${className} folio-react-wrap__menu-form-inline--style-${node.style}`
-  // }
 
   return (
     <MenuItemWrap className='form-inline f-c-menus-form__form'>
       <div className='f-c-menus-form__form-item'>
-        <Label className='mr-h'>{window.FolioConsole.translations.title}:</Label>
+        <span className='fa fa--18 fa-font mr-2' />
 
         <Input
           value={node.title || ''}
@@ -79,7 +74,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
       </div>
 
       <div className='f-c-menus-form__form-item'>
-        <Label className='mr-h'>{window.FolioConsole.translations.link}:</Label>
+        <span className='fa fa--18 fa-link mr-2' />
 
         <Input
           type='select'
@@ -92,7 +87,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
 
       {node.url !== null && (
         <div className='f-c-menus-form__form-item'>
-          <Label className='mr-h'>URL:</Label>
+          <span className='fa fa--18 fa-external-link-alt mr-2' />
 
           <Input
             type='string'
@@ -105,7 +100,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
 
       {styleOptions.length > 0 && (
         <div className={`f-c-menus-form__form-item f-c-menus-form__form-item--style-${node.style || ''}`}>
-          <Label className='mr-h'>{window.FolioConsole.translations.menuItemStyle}:</Label>
+          <span className='fa fa--18 fa-palette mr-2' />
 
           <Input
             type='select'
@@ -118,7 +113,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
         </div>
       )}
 
-      <div className='f-c-menus-form__form-item'>
+      <div className='f-c-menus-form__form-item px-h'>
         <FormGroup check>
           <Label check>
             <Input
