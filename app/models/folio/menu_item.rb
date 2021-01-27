@@ -24,10 +24,27 @@ class Folio::MenuItem < Folio::ApplicationRecord
   before_validation :set_specific_relations
 
   def to_label
-    return title if title.present?
-    return target.try(:title) || target.try(:to_label) if target.present?
-    return menu.class.rails_paths[rails_path.to_sym] if rails_path.present?
-    self.class.model_name.human
+    label = nil
+
+    if title.present?
+      return title
+    elsif target_id.present?
+      self.class.target_types.each do |as, hash|
+        next if label
+        rec = send(as)
+        if rec
+          label ||= rec.try(:title) || rec.try(:to_label)
+        end
+      end
+
+      label ||= target.try(:title) || target.try(:to_label)
+    elsif rails_path.present?
+      label ||= menu.class.rails_paths[rails_path.to_sym]
+    else
+      label ||= self.class.model_name.human
+    end
+
+    label
   end
 
   def to_h
@@ -44,9 +61,12 @@ class Folio::MenuItem < Folio::ApplicationRecord
     }
   end
 
-  def self.class_names
+  def self.target_types
     {
-      "Folio::Page" => "folio_page_id",
+      page: {
+        foreign_key: "folio_page_id",
+        class_name: "Folio::Page",
+      }
     }
   end
 
@@ -73,13 +93,18 @@ class Folio::MenuItem < Folio::ApplicationRecord
     end
 
     def set_specific_relations
-      self.class.class_names.each do |class_name, key|
-        self.send("#{key}=", nil)
+      tt = self.class.target_types
+
+      tt.each do |_key, h|
+        self.send("#{h[:foreign_key]}=", nil)
       end
 
-      if target_type.present? && target_id.present? && self.class.class_names[target_type]
-        key = self.class.class_names[target_type]
-        self.send("#{key}=", target_id)
+      if target_type.present? && target_id.present? && tt.present?
+        tt.values.each do |h|
+          if h[:class_name] == target_type
+            self.send("#{h[:foreign_key] }=", target_id)
+          end
+        end
       end
     end
 end
