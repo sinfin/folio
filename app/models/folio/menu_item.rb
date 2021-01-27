@@ -9,13 +9,19 @@ class Folio::MenuItem < Folio::ApplicationRecord
   belongs_to :menu, touch: true, required: true
   belongs_to :target, optional: true, polymorphic: true
 
+  belongs_to :page, class_name: "Folio::Page",
+                    optional: true,
+                    foreign_key: :folio_page_id
+
   # Scopes
   scope :ordered, -> { order(position: :asc) }
 
   # Validations
   validate :validate_menu_available_targets_and_paths
+  validate :validate_style
 
   before_validation :nullify_empty_rails_path
+  before_validation :set_specific_relations
 
   def to_label
     return title if title.present?
@@ -37,6 +43,12 @@ class Folio::MenuItem < Folio::ApplicationRecord
     }
   end
 
+  def self.class_names
+    {
+      "Folio::Page" => "folio_page_id",
+    }
+  end
+
   private
     def validate_menu_available_targets_and_paths
       if target && menu.available_targets.map { |t| [t.id, t.class.name] }.exclude?([target.id, target.class.name])
@@ -47,9 +59,26 @@ class Folio::MenuItem < Folio::ApplicationRecord
       end
     end
 
+    def validate_style
+      if style.present? && menu.class.styles.exclude?(style)
+        errors.add(:style, :invalid)
+      end
+    end
+
     def nullify_empty_rails_path
       if rails_path.is_a?(String) && rails_path.blank?
         self.rails_path = nil
+      end
+    end
+
+    def set_specific_relations
+      self.class.class_names.each do |class_name, key|
+        self.send("#{key}=", nil)
+      end
+
+      if target_type.present? && target_id.present? && self.class.class_names[target_type]
+        key = self.class.class_names[target_type]
+        self.send("#{key}=", target_id)
       end
     end
 end
@@ -58,18 +87,20 @@ end
 #
 # Table name: folio_menu_items
 #
-#  id          :bigint(8)        not null, primary key
-#  menu_id     :bigint(8)
-#  ancestry    :string
-#  title       :string
-#  rails_path  :string
-#  position    :integer
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  target_type :string
-#  target_id   :bigint(8)
-#  url         :string
-#  open_in_new :boolean
+#  id            :bigint(8)        not null, primary key
+#  menu_id       :bigint(8)
+#  ancestry      :string
+#  title         :string
+#  rails_path    :string
+#  position      :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  target_type   :string
+#  target_id     :bigint(8)
+#  url           :string
+#  open_in_new   :boolean
+#  style         :string
+#  folio_page_id :integer
 #
 # Indexes
 #

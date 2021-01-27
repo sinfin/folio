@@ -34,6 +34,10 @@ class Folio::Menu < Folio::ApplicationRecord
     self.class.max_nesting_depth > 1
   end
 
+  def self.styles
+    []
+  end
+
   def self.rails_paths
     {}
   end

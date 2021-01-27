@@ -2,43 +2,44 @@
 
 require "test_helper"
 
-module Folio
-  class MenuItemTest < ActiveSupport::TestCase
-    class StrictMenu < Menu
-      def self.allowed_menu_item_classes
-        []
-      end
+class Folio::MenuItemTest < ActiveSupport::TestCase
+  class MenuWithRailsPaths < ::Folio::Menu
+    def self.rails_paths
+      {
+        root_path: "foo",
+      }
+    end
+  end
+
+  test "requires target/rails_path" do
+    menu = MenuWithRailsPaths.create!(locale: :cs)
+    assert menu
+
+    item = build(:folio_menu_item, menu: menu)
+    assert_not item.valid?
+    assert item.errors[:target]
+  end
+
+  test "respects menu available targets and rails_paths" do
+    menu = MenuWithRailsPaths.create!(locale: :cs)
+
+    assert create(:folio_menu_item, menu: menu, rails_path: "root_path")
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      create(:folio_menu_item, menu: menu, target: menu)
     end
 
-    class MenuWithRailsPaths < Menu
-      def self.rails_paths
-        {
-          root_path: "foo",
-        }
-      end
+    assert_raises(ActiveRecord::RecordInvalid) do
+      create(:folio_menu_item, menu: menu, rails_path: "nope_path")
     end
+  end
 
-    test "respects menu allowed types" do
-      strict_menu = StrictMenu.create!(locale: :cs)
-      assert strict_menu
-
-      item = build(:folio_menu_item, menu: strict_menu)
-      assert_not item.valid?
-    end
-
-    test "respects menu available targets and rails_paths" do
-      menu = MenuWithRailsPaths.create!(locale: :cs)
-
-      assert create(:folio_menu_item, menu: menu, rails_path: "root_path")
-
-      assert_raises(ActiveRecord::RecordInvalid) do
-        create(:folio_menu_item, menu: menu, target: menu)
-      end
-
-      assert_raises(ActiveRecord::RecordInvalid) do
-        create(:folio_menu_item, menu: menu, rails_path: "nope_path")
-      end
-    end
+  test "set_specific_relations" do
+    menu = create(:folio_menu)
+    page = create(:folio_page)
+    menu_item = create(:folio_menu_item, menu: menu, target: page)
+    assert_equal(page.id, menu_item.folio_page_id)
+    assert_equal(page, menu_item.page)
   end
 end
 
