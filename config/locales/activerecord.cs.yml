@@ -30,6 +30,13 @@ cs:
         locale: Jazyková verze
         type: Druh menu
         menu_items: Odkazy
+        style: Styl
+        style/nil: Výchozí
+        style/red: Červená
+        style/green: Zelená
+        style/blue: Modrá
+        style/yellow: Žlutá
+        style/gray: Šedá
       folio/menu_item:
         open_in_new: V novém okně?
         target: Odkaz

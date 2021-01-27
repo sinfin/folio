@@ -16,6 +16,7 @@ function SerializedMenuItem ({ item, index }) {
       <input type='hidden' name={name('rails_path')} value={railsPath} />
       <input type='hidden' name={name('url')} value={item['url'] || ''} />
       <input type='hidden' name={name('open_in_new')} value={item['open_in_new'] ? '1' : '0'} />
+      <input type='hidden' name={name('style')} value={item['style'] || ''} />
       <input type='hidden' name={name('target_id')} value={item['target_id'] || ''} />
       <input type='hidden' name={name('target_type')} value={item['target_type'] || ''} />
       <input type='hidden' name={name('parent_unique_id')} value={item.parentUniqueId || ''} />

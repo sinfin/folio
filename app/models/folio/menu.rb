@@ -38,6 +38,20 @@ class Folio::Menu < Folio::ApplicationRecord
     []
   end
 
+  def self.styles_for_react_select
+    if self.styles.present?
+      nil_ary = [[human_attribute_name("style/nil"), ""]]
+      nil_ary + self.styles.without(:nil).map do |style|
+        [
+          human_attribute_name("style/#{style.nil? ? "nil" : style}"),
+          style,
+        ]
+      end
+    else
+      []
+    end
+  end
+
   def self.rails_paths
     {}
   end

@@ -32,6 +32,7 @@ window.folioConsoleInitReact = (domRoot) => {
     store.dispatch(setMenusData({
       paths: JSON.parse(domRoot.dataset.menupaths),
       items: JSON.parse(domRoot.dataset.menuitems),
+      styles: JSON.parse(domRoot.dataset.menustyles),
       maxNestingDepth: parseInt(domRoot.dataset.menudepth)
     }))
 

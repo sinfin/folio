@@ -13,6 +13,8 @@ const makeOnChange = (path, node, onChange) => (e) => {
 
   if (e.target.name === 'openInNew') {
     newNode.open_in_new = e.target.checked
+  } else if (e.target.name === 'style') {
+    newNode.style = e.target.value || null
   } else if (e.target.value === MENU_ITEM_URL || e.target.name === 'url') {
     newNode.target_id = null
     newNode.target_type = null
@@ -40,7 +42,7 @@ const makeOnChange = (path, node, onChange) => (e) => {
   onChange(path, newNode)
 }
 
-function MenuItem ({ node, path, onChange, options, remove }) {
+function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) {
   let linkValue = node.rails_path
 
   if (node.url !== null) {
@@ -52,31 +54,38 @@ function MenuItem ({ node, path, onChange, options, remove }) {
   }
 
   const onChangeFn = makeOnChange(path, node, onChange)
+  // let className = 'form-inline f-c-menus-form__form'
+
+  // if (node.style) {
+  //   className = `${className} folio-react-wrap__menu-form-inline--style-${node.style}`
+  // }
 
   return (
-    <MenuItemWrap className='form-inline'>
-      <Label className='mr-h'>{window.FolioConsole.translations.title}:</Label>
+    <MenuItemWrap className='form-inline f-c-menus-form__form'>
+      <div className='f-c-menus-form__form-item'>
+        <Label className='mr-h'>{window.FolioConsole.translations.title}:</Label>
 
-      <Input
-        className='mr-g'
-        value={node.title || ''}
-        onChange={(e) => onChange(path, { ...node, title: e.target.value })}
-        autoFocus={node.id === null}
-      />
+        <Input
+          value={node.title || ''}
+          onChange={(e) => onChange(path, { ...node, title: e.target.value })}
+          autoFocus={node.id === null}
+        />
+      </div>
 
-      <Label className='mr-h'>{window.FolioConsole.translations.link}:</Label>
+      <div className='f-c-menus-form__form-item'>
+        <Label className='mr-h'>{window.FolioConsole.translations.link}:</Label>
 
-      <Input
-        type='select'
-        value={linkValue || ''}
-        onChange={onChangeFn}
-        className='mr-g'
-      >
-        {options}
-      </Input>
+        <Input
+          type='select'
+          value={linkValue || ''}
+          onChange={onChangeFn}
+        >
+          {linkOptions}
+        </Input>
+      </div>
 
       {node.url !== null && (
-        <React.Fragment>
+        <div className='f-c-menus-form__form-item'>
           <Label className='mr-h'>URL:</Label>
 
           <Input
@@ -84,29 +93,47 @@ function MenuItem ({ node, path, onChange, options, remove }) {
             value={node.url}
             onChange={onChangeFn}
             name='url'
-            className='mr-g'
           />
-        </React.Fragment>
+        </div>
       )}
 
-      <FormGroup check className='mr-g'>
-        <Label check>
+      {styleOptions.length > 0 && (
+        <div className={`f-c-menus-form__form-item f-c-menus-form__form-item--style-${node.style || ''}`}>
+          <Label className='mr-h'>{window.FolioConsole.translations.menuItemStyle}:</Label>
+
           <Input
-            type='checkbox'
-            checked={!!node.open_in_new}
+            type='select'
+            value={node.style || ''}
             onChange={onChangeFn}
-            name='openInNew'
-          />{' '}
+            name='style'
+          >
+            {styleOptions}
+          </Input>
+        </div>
+      )}
 
-          {window.FolioConsole.translations.menuItemOpenInNew}
-        </Label>
-      </FormGroup>
+      <div className='f-c-menus-form__form-item'>
+        <FormGroup check>
+          <Label check>
+            <Input
+              type='checkbox'
+              checked={!!node.open_in_new}
+              onChange={onChangeFn}
+              name='openInNew'
+            />{' '}
 
-      <button
-        className='btn btn-danger fa fa-times'
-        type='button'
-        onClick={makeConfirmed(() => remove(path, node))}
-      />
+            {window.FolioConsole.translations.menuItemOpenInNew}
+          </Label>
+        </FormGroup>
+      </div>
+
+      <div className='f-c-menus-form__form-item f-c-menus-form__form-item--destroy'>
+        <button
+          className='btn btn-danger fa fa-times'
+          type='button'
+          onClick={makeConfirmed(() => remove(path, node))}
+        />
+      </div>
     </MenuItemWrap>
   )
 }

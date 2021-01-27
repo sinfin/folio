@@ -23,6 +23,12 @@ en:
         locale: Version
         type: Type
         menu_items: Links
+        style: Style
+        style/red: Red
+        style/green: Green
+        style/blue: Blue
+        style/yellow: Yellow
+        style/gray: Gray
       folio/menu_item:
         open_in_new: Open in new tab?
         target: Link

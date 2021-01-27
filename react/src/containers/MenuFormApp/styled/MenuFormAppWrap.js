@@ -10,6 +10,6 @@ export default styled.div`
   }
 
   .rst__rowContents {
-    padding: 10px 30px;
+    padding: 0;
   }
 `

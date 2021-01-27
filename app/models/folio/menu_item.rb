@@ -40,6 +40,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
       title: title,
       url: url,
       open_in_new: open_in_new,
+      style: style,
     }
   end
 

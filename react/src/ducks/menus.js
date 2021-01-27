@@ -36,6 +36,7 @@ export const menusSelector = (state) => state.menus
 const initialState = {
   paths: {},
   items: [],
+  styles: [],
   maxNestingDepth: 1,
   removedIds: []
 }
@@ -51,7 +52,8 @@ const makeItem = () => ({
   title: null,
   children: [],
   uniqueId: uniqueId(),
-  expanded: true
+  expanded: true,
+  style: null
 })
 
 // Reducer

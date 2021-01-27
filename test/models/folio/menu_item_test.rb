@@ -11,6 +11,12 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
     end
   end
 
+  class StylableMenu < ::Folio::Menu
+    def self.styles
+      %w[red]
+    end
+  end
+
   test "requires target/rails_path" do
     menu = MenuWithRailsPaths.create!(locale: :cs)
     assert menu
@@ -40,6 +46,20 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
     menu_item = create(:folio_menu_item, menu: menu, target: page)
     assert_equal(page.id, menu_item.folio_page_id)
     assert_equal(page, menu_item.page)
+  end
+
+  test "validate_style" do
+    menu = StylableMenu.create!(locale: :cs)
+    page = create(:folio_page)
+
+    assert build(:folio_menu_item, menu: menu, target: page, style: nil).valid?
+    assert build(:folio_menu_item, menu: menu, target: page, style: "red").valid?
+    assert_not build(:folio_menu_item, menu: menu, target: page, style: "foo").valid?
+
+    menu = create(:folio_menu)
+    assert build(:folio_menu_item, menu: menu, target: page, style: nil).valid?
+    assert_not build(:folio_menu_item, menu: menu, target: page, style: "red").valid?
+    assert_not build(:folio_menu_item, menu: menu, target: page, style: "foo").valid?
   end
 end
 

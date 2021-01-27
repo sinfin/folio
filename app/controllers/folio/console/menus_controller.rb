@@ -45,20 +45,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
     end
 
     def menu_items_attributes
-      [
-        :id,
-        :title,
-        :target_id,
-        :target_type,
-        :position,
-        :type,
-        :rails_path,
-        :unique_id,
-        :parent_unique_id,
-        :url,
-        :open_in_new,
-        :_destroy,
-      ]
+      Folio::MenuItem.column_names + %w[unique_id parent_unique_id _destroy]
     end
 
     def folio_console_collection_includes

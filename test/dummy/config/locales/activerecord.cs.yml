@@ -1,0 +1,5 @@
+cs:
+  activerecord:
+    models:
+      dummy/menu/stylable: Menu se stylama
+      dummy/menu/nestable: Menu stromové

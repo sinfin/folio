@@ -31,13 +31,20 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
   const itemOnChange = makeOnMenuItemChange(menus.items)
   const itemOnRemove = makeOnMenuItemRemove(menus.items)
 
-  const options = [
+  const styleOptions = []
+  menus.styles.forEach((ary) => {
+    styleOptions.push(
+      <option key={ary[1]} value={ary[1]}>{ary[0]}</option>
+    )
+  })
+
+  const linkOptions = [
     <option key='no-link' value=''>{window.FolioConsole.translations.menuNoLink}</option>,
     <option key={MENU_ITEM_URL} value={MENU_ITEM_URL}>{window.FolioConsole.translations.menuItemUrl}</option>
   ]
   menus.paths.forEach((path, i) => {
     const value = path.rails_path || `${path.target_type} -=- ${path.target_id}`
-    options.push(
+    linkOptions.push(
       <option
         key={i}
         value={value}
@@ -56,7 +63,16 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
         onChange={onChange}
         isVirtualized={false}
         generateNodeProps={({ node, path }) => ({
-          title: <MenuItem node={node} path={path} onChange={itemOnChange} options={options} remove={itemOnRemove} />
+          title: (
+            <MenuItem
+              node={node}
+              path={path}
+              onChange={itemOnChange}
+              linkOptions={linkOptions}
+              styleOptions={styleOptions}
+              remove={itemOnRemove}
+            />
+          )
         })}
       />
 
