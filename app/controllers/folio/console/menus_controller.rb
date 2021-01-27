@@ -65,7 +65,8 @@ class Folio::Console::MenusController < Folio::Console::BaseController
       serialized_menu_paths = []
       @menu.class.rails_paths.each do |path, title|
         serialized_menu_paths << {
-          title: "#{t('folio.console.menus.link')} - #{title}",
+          title: title,
+          label: "#{t('folio.console.menus.link')} - #{title}",
           rails_path: path,
         }
       end
@@ -79,7 +80,8 @@ class Folio::Console::MenusController < Folio::Console::BaseController
         label = [record.model_name.human, record_name].compact.join(" / ")
 
         serialized_menu_paths << {
-          title: ActionController::Base.helpers.truncate(label, length: 50),
+          title: record_name,
+          label: ActionController::Base.helpers.truncate(label, length: 50),
           target_type: record.class.base_class.to_s,
           target_id: record.id,
         }

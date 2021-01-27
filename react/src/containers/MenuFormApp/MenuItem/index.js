@@ -37,6 +37,12 @@ const makeOnChange = (path, node, onChange) => (e) => {
       newNode.rails_path = null
       newNode.url = null
     }
+
+    const option = e.target.querySelector('option:checked')
+
+    if (!newNode.title && option) {
+      newNode.title = option.dataset.title
+    }
   }
 
   onChange(path, newNode)

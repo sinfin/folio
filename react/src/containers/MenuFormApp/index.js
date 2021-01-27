@@ -48,8 +48,9 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
       <option
         key={i}
         value={value}
+        data-title={path.title}
       >
-        {path.title}
+        {path.label}
       </option>
     )
   })
