@@ -29,6 +29,7 @@ en:
         indestructibleFiles: Some of the selected files have active placements and therefore cannot be destroyed.
         link: Link
         loading: Loading...
+        menuItemUrl: Custom URL
         newFilesAttributes: 'Uploaded files settings (optional):'
         noResults: No results
         paginationEmpty: No records

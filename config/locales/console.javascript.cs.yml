@@ -29,6 +29,7 @@ cs:
         indestructibleFiles: Některé z vybraných souborů jsou použité. Použité soubory nelze mazat.
         link: Odkaz
         loading: Načítám...
+        menuItemUrl: Volný odkaz
         newFilesAttributes: 'Nastavení nahraných souborů (nepovinné):'
         noResults: Žádné výsledky
         paginationEmpty: Žádné záznamy
