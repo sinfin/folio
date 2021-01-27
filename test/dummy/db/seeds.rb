@@ -1,36 +1,60 @@
 # frozen_string_literal: true
 
-def force_destroy(klass)
-  klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+if Rails.env.development?
+  ActiveJob::Base.queue_adapter = :inline
 end
 
-Folio::Atom::Base.destroy_all
-Folio::Account.destroy_all
-Folio::Lead.destroy_all
-Folio::File.destroy_all
+def destroy_all(klass)
+  puts "Destroying #{klass}"
+  klass.destroy_all
+  puts "Destroyed #{klass}"
+end
+
+def force_destroy(klass)
+  puts "Destroying #{klass}"
+  klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+  puts "Destroyed #{klass}"
+end
+
+destroy_all Folio::Atom::Base
+destroy_all Folio::Account
+destroy_all Folio::Lead
+destroy_all Folio::File
 force_destroy Folio::Menu
 force_destroy Folio::Page
 force_destroy Folio::Site
 
 def unsplash_pic(square = false)
+  puts "Creating unsplash pic"
+
   image = Folio::Image.new
   scale = 0.5 + rand / 2
   w = (scale * 2560).to_i
   h = (square ? scale * 2560 : scale * 1440).to_i
   image.file_url = "https://picsum.photos/#{w}/#{h}/?random"
+  image.tag_list = "unsplash, seed"
   image.save!
+
+  puts "Created unsplash pic"
+
   image
 end
 
 def file_pic(file_instance)
+  puts "Creating file pic"
+
   image = Folio::Image.new
   image.file = file_instance
   image.save!
+
+  puts "Created file pic"
+
   image
 end
 
 2.times { unsplash_pic }
 
+puts "Creating Folio::Site"
 Folio::Site.create!(title: "Sinfin.digital",
                     domain: "sinfin.localhost",
                     locale: "cs",
@@ -42,18 +66,20 @@ Folio::Site.create!(title: "Sinfin.digital",
                       instagram: "https://www.instagram.com/",
                       twitter: "https://www.twitter.com/",
                     })
+puts "Created Folio::Site"
 
+puts "Creating about page"
 about = Folio::Page.create!(title: "O nás",
                             published: true,
                             published_at: 1.month.ago)
-about.cover = unsplash_pic
-3.times { about.images << unsplash_pic }
+about.cover = Folio::Image.first
 about.image_placements.each { |ip|
   name = "Lorem Ipsum"
   ip.update_attributes!(alt: name, title: "Portrait of #{name}")
 }
+puts "Created about page"
 
-
+puts "Creating more pages"
 night_sky = Folio::Page.create!(title: "Noční obloha", published: true, published_at: 1.month.ago, locale: :cs)
 night_photo = File.new(Folio::Engine.root.join("test/fixtures/folio/photos/night.jpg"))
 night_sky.cover = file_pic(night_photo)
@@ -69,7 +95,9 @@ vyvolejto.cover = file_pic(iptc_test)
 
 Folio::Page.create!(title: "Hidden", published: false)
 Folio::Page.create!(title: "DAM", published: true)
+puts "Created more pages"
 
+puts "Creating Folio::Menu::Page"
 menu = Folio::Menu::Page.create!(locale: :cs)
 
 Folio::MenuItem.create!(menu: menu,
@@ -81,16 +109,62 @@ Folio::MenuItem.create!(menu: menu,
                         title: "About",
                         target: about,
                         position: 1)
+puts "Created Folio::Menu::Page"
+
+puts "Creating Dummy::Menu::Nestable"
+menu = Dummy::Menu::Nestable.create!(locale: :cs)
+
+root = Folio::MenuItem.create!(menu: menu,
+                               title: "Reference",
+                               target: reference,
+                               position: 0)
+
+child = Folio::MenuItem.create!(menu: menu,
+                                title: "Podreference",
+                                target: reference,
+                                position: 1,
+                                parent: root)
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "Podreference",
+                        target: reference,
+                        position: 2,
+                        parent: child)
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "About",
+                        target: about,
+                        position: 3)
+puts "Created Dummy::Menu::Nestable"
+
+puts "Creating Dummy::Menu::Stylable"
+menu = Dummy::Menu::Stylable.create!(locale: :cs)
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "Reference",
+                        target: reference,
+                        position: 0)
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "About red",
+                        target: about,
+                        position: 1,
+                        style: "red")
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "About",
+                        target: about,
+                        position: 1)
+puts "Created Dummy::Menu::Stylable"
 
 if Rails.env.development?
+  puts "Creating test@test.test account"
+
   Folio::Account.create!(email: "test@test.test",
                          password: "test@test.test",
                          role: :superuser,
                          first_name: "Test",
                          last_name: "Dummy")
-end
 
-Folio::Lead.create!(name: "Test lead",
-                    email: "test@lead.test",
-                    note: "Hello",
-                    additional_data: { test: "test", boolean: false })
+  puts "Created test@test.test account"
+end
