@@ -42,7 +42,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
 
     if klass && klass.column_names.include?(field)
-      scope = klass.unscope(:order)
+      scope = klass.unscope(:order).where.not(field => nil)
 
       if q.present?
         if scope.respond_to?("by_#{field}")
