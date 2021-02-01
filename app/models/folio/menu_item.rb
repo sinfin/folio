@@ -29,15 +29,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
     if title.present?
       return title
     elsif target_id.present?
-      self.class.target_types.each do |as, hash|
-        next if label
-        rec = send(as)
-        if rec
-          label ||= rec.try(:title) || rec.try(:to_label)
-        end
-      end
-
-      label ||= target.try(:title) || target.try(:to_label)
+      label ||= sti_aware_target.try(:title) || sti_aware_target.try(:to_label)
     elsif rails_path.present?
       label ||= menu.class.rails_paths[rails_path.to_sym]
     else
@@ -45,6 +37,17 @@ class Folio::MenuItem < Folio::ApplicationRecord
     end
 
     label
+  end
+
+  def sti_aware_target
+    found = nil
+
+    self.class.target_types.each do |as, hash|
+      next if found
+      found = send(as)
+    end
+
+    found || target
   end
 
   def to_h
