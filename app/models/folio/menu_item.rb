@@ -29,7 +29,8 @@ class Folio::MenuItem < Folio::ApplicationRecord
     if title.present?
       return title
     elsif target_id.present?
-      label ||= sti_aware_target.try(:title) || sti_aware_target.try(:to_label)
+      label ||= eager_load_aware_target.try(:title)
+      label ||= eager_load_aware_target.try(:to_label)
     elsif rails_path.present?
       label ||= menu.class.rails_paths[rails_path.to_sym]
     else
@@ -39,7 +40,7 @@ class Folio::MenuItem < Folio::ApplicationRecord
     label
   end
 
-  def sti_aware_target
+  def eager_load_aware_target
     found = nil
 
     self.class.target_types.each do |as, hash|
