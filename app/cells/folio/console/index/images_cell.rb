@@ -17,6 +17,8 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
       render if model
     elsif options[:custom]
       render if model
+    elsif options[:private_attachment]
+      render if model && model.file.present?
     else
       render if model && model.image_placements.present?
     end

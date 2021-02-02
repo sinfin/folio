@@ -29,6 +29,18 @@ module Folio::CellLightbox
     end
   end
 
+  def lightbox_from_private_attachment(pa)
+    if pa && pa.mime_type && pa.mime_type.starts_with?("image/")
+      {
+        "data-lightbox-src" => pa.file.url,
+        "data-lightbox-width" => pa.file_width,
+        "data-lightbox-height" => pa.file_height,
+      }
+    else
+      {}
+    end
+  end
+
   def lightbox_image_data(placements, json: true)
     data = placements.map do |placement|
       thumb = placement.file.thumb(LIGHTBOX_SIZE)

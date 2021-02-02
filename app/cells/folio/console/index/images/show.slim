@@ -8,6 +8,10 @@ div class=class_name class=id_class_name
     .f-c-index-images__item(*lightbox_from_image(model))
       = admin_image(model, small: true)
 
+  - elsif options[:private_attachment]
+    .f-c-index-images__item(*lightbox_from_private_attachment(model))
+      = admin_image({ normal: model.file.url }, small: true)
+
   - else
     - model.image_placements.first(3).each do |placement|
       .f-c-index-images__item(*lightbox(placement))
