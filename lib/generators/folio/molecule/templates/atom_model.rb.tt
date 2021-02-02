@@ -8,7 +8,7 @@ class <%= global_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
   ASSOCIATIONS = {}
 
   def self.molecule_cell_name
-    '<%= molecule_cell_name %>'
+    "<%= molecule_cell_name %>"
   end
 
   def self.console_icon

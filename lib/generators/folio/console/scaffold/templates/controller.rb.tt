@@ -1,5 +1,5 @@
 class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::BaseController
-  folio_console_controller_for '<%= class_name %>'
+  folio_console_controller_for "<%= class_name %>"
 
   private
 

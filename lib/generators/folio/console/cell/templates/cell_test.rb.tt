@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class <%= global_namespace %>::<%= class_name %>CellTest < Folio::Console::CellTest
-  test 'show' do
-    html = cell('<%= cell_name %>', nil).(:show)
-    assert html.has_css?('.<%= classname_prefix %>-<%= dashed_resource_name %>')
+  test "show" do
+    html = cell("<%= cell_name %>", nil).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-<%= dashed_resource_name %>")
   end
 end
