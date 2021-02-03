@@ -159,8 +159,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   def self.console_icon
   end
 
-  def self.console_featured?
-    false
+  def self.console_insert_row
+    1
   end
 
   def self.contentable?

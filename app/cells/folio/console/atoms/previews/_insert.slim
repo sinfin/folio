@@ -11,7 +11,7 @@
 
       .f-c-atoms-previews__insert-inner
         .container
-          - sorted_types.each do |key, items|
+          - sorted_types.each do |_key, items|
             - if items.present?
               ul.f-c-atoms-previews__insert-ul.list-unstyled
                 - items.each do |klass|

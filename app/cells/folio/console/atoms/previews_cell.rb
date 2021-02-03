@@ -26,15 +26,16 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
                      .reject { |klass| klass.molecule_secondary }
                      .sort_by { |klass| I18n.transliterate(klass.model_name.human) }
 
-    h = { featured: [], regular: [] }
+    tmp = {}
 
     ary.each do |klass|
-      if klass.console_featured?
-        h[:featured] << klass
-      else
-        h[:regular] << klass
-      end
+      tmp[klass.console_insert_row] ||= []
+      tmp[klass.console_insert_row] << klass
     end
+
+    h = {}
+
+    tmp.keys.sort.each { |key| h[key] = tmp[key] }
 
     h
   end

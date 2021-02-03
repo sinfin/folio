@@ -215,9 +215,9 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
   &__insert-ul
     background: $secondary
-    padding: $grid-gutter-width / 2
-    column-count: 1
-    column-gap: $grid-gutter-width
+    padding: $grid-gutter-width / 2 0
+    display: flex
+    flex-wrap: wrap
 
     & + &
       border-top: 1px solid rgba($white, 0.3)
@@ -225,23 +225,27 @@ $fa-font-path: 'font-awesome/webfonts' !default
     &, .mi, .fa
       font-size: 14px
 
+  &__insert-li
+    flex: 0 0 100%
+    padding: 0 $grid-gutter-width / 2
+    display: flex
+    flex-direction: column
+
     @media screen and (min-width: 600px)
-      column-count: 2
+      flex-basis: 50%
 
     @media screen and (min-width: 900px)
-      column-count: 3
+      flex-basis: 33.3333%
 
     @media screen and (min-width: 1200px)
-      column-count: 4
-
-  &__insert-li
-    break-inside: avoid
+      flex-basis: 25%
 
   &__insert-a
     padding: 10px
     width: 100%
     display: flex
     align-items: center
+    flex: 1 0 auto
 
     .mi, .fa
       margin-right: 7px

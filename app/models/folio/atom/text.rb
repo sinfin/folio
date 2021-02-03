@@ -16,8 +16,8 @@ class Folio::Atom::Text < Folio::Atom::Base
     :format_align_left
   end
 
-  def self.console_featured?
-    true
+  def self.console_insert_row
+    0
   end
 end
 

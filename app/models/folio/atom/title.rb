@@ -27,8 +27,8 @@ class Folio::Atom::Title < Folio::Atom::Base
     :text_fields
   end
 
-  def self.console_featured?
-    true
+  def self.console_insert_row
+    0
   end
 end
 
