@@ -8,9 +8,9 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
   end
 
   def cell
-    template "cell.rb.tt", "app/cells/#{global_namespace_path}/molecule/#{plural_name}_cell.rb"
-    template "cell.slim.tt", "app/cells/#{global_namespace_path}/molecule/#{plural_name}/show.slim"
-    template "cell_test.rb.tt", "test/cells/#{global_namespace_path}/molecule/#{plural_name}_cell_test.rb"
+    template "cell.rb.tt", "app/cells/#{global_namespace_path}/molecule/#{name}_cell.rb"
+    template "cell.slim.tt", "app/cells/#{global_namespace_path}/molecule/#{name}/show.slim"
+    template "cell_test.rb.tt", "test/cells/#{global_namespace_path}/molecule/#{name}_cell_test.rb"
   end
 
   private
@@ -19,15 +19,15 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
     end
 
     def plural_dashed_resource_name
-      plural_name.gsub("_", "-")
+      name.gsub(/[_\/]/, "-")
     end
 
     def dashed_resource_name
-      model_resource_name.gsub("_", "-")
+      model_resource_name.gsub(/[_\/]/, "-")
     end
 
     def molecule_name
-      class_name.pluralize
+      class_name
     end
 
     def molecule_class_name
@@ -35,7 +35,7 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
     end
 
     def molecule_cell_name
-      "#{global_namespace_path}/molecule/#{plural_name}"
+      "#{global_namespace_path}/molecule/#{name}"
     end
 
     def global_namespace_path
