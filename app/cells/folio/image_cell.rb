@@ -11,7 +11,6 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :hover_zoom,
                         :fixed_height,
                         :fixed_height_fluid,
-                        :small,
                         :cloned,
                         :round,
                         :static?
