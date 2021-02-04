@@ -2,7 +2,7 @@
 
 class CreateAhoyEvents < ActiveRecord::Migration[5.1]
   def change
-    unless table_exists?(:ahoy_events)
+    if defined?(Ahoy) && !table_exists?(:ahoy_events)
       create_table :ahoy_events do |t|
         t.integer :visit_id
 

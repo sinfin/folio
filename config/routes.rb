@@ -44,7 +44,6 @@ Folio::Engine.routes.draw do
     end
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
-    resources :visits, only: %i[index show]
     resources :email_templates, only: %i[index edit update]
     resource :search, only: %i[show]
     resource :site, only: %i[edit update] do

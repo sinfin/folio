@@ -80,17 +80,6 @@ en:
         keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
-      visit:
-        events: Events
-        id: Id
-        landing_page: Landing page
-        referrer: Referrer
-        started_at: Started at
-        utm_campaign: UTM campaign
-        utm_content: UTM content
-        utm_medium: UTM medium
-        utm_source: UTM source
-        utm_term: UTM term
     errors:
       messages:
         indestructible: The record cannot be removed.
@@ -153,9 +142,6 @@ en:
       tag:
         one: Tag
         other: Tags
-      visit:
-        one: Visit
-        other: Visits
     state_machines:
       folio/lead:
         state:
@@ -191,7 +177,6 @@ en:
     title: Title
     to_label: Label
     url: URL
-    visit: Visit
   errors:
     attributes:
       verified_captcha:

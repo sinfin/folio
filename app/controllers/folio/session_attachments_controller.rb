@@ -6,7 +6,6 @@ class Folio::SessionAttachmentsController < Folio::ApplicationController
   def create
     attachment = klass.new(attachment_params)
     attachment.web_session_id = session.id.public_id
-    attachment.visit = current_visit
     attachment.save!
 
     render json: attachment.to_h

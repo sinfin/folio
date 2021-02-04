@@ -1,8 +1,24 @@
 # frozen_string_literal: true
 
-class CreateVisits < ActiveRecord::Migration[5.1]
-  def change
-    if defined?(Ahoy) && !table_exists?(:visits)
+class DropUnwantedAhoy < ActiveRecord::Migration[6.0]
+  def up
+    %i[folio_leads folio_newsletter_subscriptions folio_session_attachments].each do |key|
+      if column_exists?(key, :visit_id)
+        remove_reference key, :visit
+      end
+    end
+
+    if !defined?(Visit) && table_exists?(:visits)
+      drop_table :visits
+    end
+
+    if !defined?(Ahoy::Event) && table_exists?(:ahoy_events)
+      drop_table :ahoy_events
+    end
+  end
+
+  def down
+    if defined?(Visit) && !table_exists?(:visits)
       create_table :visits do |t|
         t.string :visit_token
         t.string :visitor_token
@@ -58,6 +74,23 @@ class CreateVisits < ActiveRecord::Migration[5.1]
       end
 
       add_index :visits, [:visit_token], unique: true
+    end
+
+    if defined?(Ahoy::Event) && !table_exists?(:ahoy_events)
+      create_table :ahoy_events do |t|
+        t.integer :visit_id
+
+        # user
+        t.belongs_to :account
+        # add t.string :user_type if polymorphic
+
+        t.string :name
+        t.jsonb :properties
+        t.timestamp :time
+      end
+
+      add_index :ahoy_events, [:visit_id, :name]
+      add_index :ahoy_events, [:name, :time]
     end
   end
 end

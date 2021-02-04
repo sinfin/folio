@@ -29,7 +29,6 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   validates :web_session_id, :file,
             presence: true
 
-  belongs_to :visit, optional: true
   belongs_to :user, optional: true
   belongs_to :placement, polymorphic: true,
                          optional: true,
@@ -115,7 +114,6 @@ end
 #  file_mime_type :string
 #  type           :string
 #  web_session_id :string
-#  visit_id       :bigint(8)
 #  placement_type :string
 #  placement_id   :bigint(8)
 #  created_at     :datetime         not null
@@ -128,6 +126,5 @@ end
 #  index_folio_session_attachments_on_hash_id         (hash_id)
 #  index_folio_session_attachments_on_placement       (placement_type,placement_id)
 #  index_folio_session_attachments_on_type            (type)
-#  index_folio_session_attachments_on_visit_id        (visit_id)
 #  index_folio_session_attachments_on_web_session_id  (web_session_id)
 #

@@ -6,8 +6,6 @@ class Folio::Lead < Folio::ApplicationRecord
 
   attr_accessor :verified_captcha
 
-  belongs_to :visit, optional: true
-
   # Validations
   validates_format_of :email, with: Folio::EMAIL_REGEXP,
                               unless: :skip_email_validation?
@@ -101,9 +99,4 @@ end
 #  url             :string
 #  additional_data :json
 #  aasm_state      :string           default("submitted")
-#  visit_id        :bigint(8)
-#
-# Indexes
-#
-#  index_folio_leads_on_visit_id  (visit_id)
 #

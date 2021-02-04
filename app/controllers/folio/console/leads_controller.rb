@@ -4,7 +4,7 @@ class Folio::Console::LeadsController < Folio::Console::BaseController
   folio_console_controller_for "Folio::Lead"
 
   def index
-    @leads = @leads.ordered.includes(:visit)
+    @leads = @leads.ordered
 
     respond_with(@leads) do |format|
       format.html { @pagy, @leads = pagy(@leads) }

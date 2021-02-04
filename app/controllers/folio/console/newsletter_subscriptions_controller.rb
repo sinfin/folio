@@ -4,7 +4,7 @@ class Folio::Console::NewsletterSubscriptionsController < Folio::Console::BaseCo
   folio_console_controller_for "Folio::NewsletterSubscription"
 
   def index
-    @newsletter_subscriptions = @newsletter_subscriptions.includes(:visit)
+    @newsletter_subscriptions = @newsletter_subscriptions
 
     respond_with(@newsletter_subscriptions) do |format|
       format.html do

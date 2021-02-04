@@ -11,8 +11,7 @@ class Folio::LeadsController < Folio::ApplicationController
   ]
 
   def create
-    lead = Folio::Lead.new(lead_params.merge(url: request.referrer,
-                                             visit: current_visit))
+    lead = Folio::Lead.new(lead_params.merge(url: request.referrer))
 
     @lead = check_recaptcha_if_needed(lead)
 

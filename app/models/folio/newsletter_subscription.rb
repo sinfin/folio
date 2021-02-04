@@ -3,9 +3,6 @@
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
   include Folio::Subscribable
 
-  # Relations
-  belongs_to :visit, optional: true
-
   # Validations
   validates_format_of :email, with: Folio::EMAIL_REGEXP
 
@@ -48,9 +45,4 @@ end
 #  email      :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  visit_id   :bigint(8)
-#
-# Indexes
-#
-#  index_folio_newsletter_subscriptions_on_visit_id  (visit_id)
 #

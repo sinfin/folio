@@ -49,7 +49,6 @@ Gem::Specification.new do |s|
   s.add_dependency "cells"
   s.add_dependency "cells-slim", "0.0.6"
   s.add_dependency "cells-rails", "0.1.0"
-  s.add_dependency "ahoy_matey", "~> 2"
   s.add_dependency "rails-i18n"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "aasm"

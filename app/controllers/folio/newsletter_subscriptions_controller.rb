@@ -2,7 +2,7 @@
 
 class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
   def create
-    attrs = newsletter_subscription_params.merge(visit: current_visit)
+    attrs = newsletter_subscription_params
     @newsletter_subscription = Folio::NewsletterSubscription.new(attrs)
     @newsletter_subscription.save
 

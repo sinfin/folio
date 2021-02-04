@@ -107,7 +107,6 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       %w[
         Folio::NewsletterSubscription
         Folio::Lead
-        Visit
       ],
       [
         "Folio::Account",
