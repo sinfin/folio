@@ -122,7 +122,7 @@ const mapStateToProps = (state, props) => {
         deleted.push(placement)
       } else {
         selected.push(placement)
-        selectedFileIds.push(placement.file_id)
+        selectedFileIds.push(String(placement.file_id))
       }
     })
   }
