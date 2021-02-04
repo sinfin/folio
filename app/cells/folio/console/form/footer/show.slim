@@ -2,9 +2,17 @@
 .f-c-form-footer
   .container-fluid.d-flex.align-items-center
     - if back_path
-      = link_to back_path, class: 'btn btn-outline mr-2 f-c-form-footer__btn'
+      a.btn.btn-outline.mr-2.f-c-form-footer__btn href=back_path
         i.mi.mi--14 undo
         = t('folio.console.actions.cancel')
+
+    - if preview_path
+      a.btn.btn-outline.mr-2.f-c-form-footer__btn[
+        href=preview_path
+        target="_blank"
+      ]
+        i.mi.mi--14 visibility
+        = t('folio.console.actions.preview')
 
     = options[:pre_submit_content]
 
