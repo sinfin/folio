@@ -38,6 +38,6 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def as
-    options[:as] || model.class.base_class.model_name.param_key
+    options[:as] || model.class.model_name.param_key
   end
 end
