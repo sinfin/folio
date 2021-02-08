@@ -245,7 +245,7 @@ cs:
           title: Transport - %{class_label}
           download: Stáhnout
         in:
-          title: Nahradit z YAML
+          title: Vytvořit z YAML
           title_with_class: Nahradit z YAML - %{class_label}
           alert: 'Upozornění: Nahrazení obsahu ze souboru YAML je nevratná akce a původní obsah bude nenávratně ztracen.'
         transport:
