@@ -16,7 +16,7 @@ module Folio
         Devise::InvitationsController,
         DeviseInvitable::RegistrationsController,
       ].each do |controller|
-        controller.send(:include, Folio::DeviseExtension)
+        controller.send(:include, ::Folio::DeviseExtension)
       end
     end
 
@@ -42,6 +42,7 @@ module Folio
     config.folio_pages_audited = false
     config.folio_pages_translations = false
     config.folio_pages_ancestry = false
+    config.folio_users_confirmable = true
     config.folio_console_locale = :cs
     config.folio_console_dashboard_redirect = :console_pages_path
     config.folio_console_sidebar_link_class_names = nil
