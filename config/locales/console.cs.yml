@@ -240,6 +240,12 @@ cs:
         single_dropzone:
           download: Stáhnout
           upload: Nahrát
+      transports:
+        out:
+          title: Transport - %{class_label} - %{label}
+          download: Stáhnout
+      clipboard_copy:
+        copy: Kopírovat
 
   date:
     formats:

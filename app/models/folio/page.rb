@@ -9,6 +9,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
+  include Folio::Transportable::Model
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited

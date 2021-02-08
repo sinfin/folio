@@ -3,8 +3,6 @@
 require "test_helper"
 
 class Folio::Console::SitesControllerTest < Folio::Console::BaseControllerTest
-  include Folio::Engine.routes.url_helpers
-
   test "edit" do
     get edit_console_site_path
     assert_response :ok

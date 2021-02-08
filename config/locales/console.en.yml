@@ -235,6 +235,12 @@ en:
         single_dropzone:
           download: Download
           upload: Upload
+      transports:
+        out:
+          title: Transport - %{class_label} - %{label}
+          download: Download
+      clipboard_copy:
+        copy: Copy
 
   date:
     formats:

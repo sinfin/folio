@@ -8,6 +8,8 @@ module Folio::HasAttachments
                                as: :placement,
                                dependent: :destroy
 
+    accepts_nested_attributes_for :file_placements, allow_destroy: true
+
     has_many :files,
              source: :file,
              class_name: "Folio::File",

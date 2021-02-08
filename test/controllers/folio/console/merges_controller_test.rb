@@ -3,8 +3,6 @@
 require "test_helper"
 
 class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
-  include Folio::Engine.routes.url_helpers
-
   test "new" do
     original = create(:folio_page)
     duplicate = create(:folio_page)

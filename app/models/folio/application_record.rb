@@ -6,6 +6,6 @@ class Folio::ApplicationRecord < ActiveRecord::Base
   include Folio::Filterable
   include Folio::NillifyBlanks
   include Folio::RecursiveSubclasses
-  include Folio::ToLabel
   include Folio::Sortable
+  include Folio::ToLabel
 end
