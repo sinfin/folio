@@ -27,7 +27,9 @@ class Folio::Transportable::Importer
 
   def import!
     @record.transaction do
+      attachments_data = build_attachments(@hash)
       @record.assign_attributes(@hash[:attributes].without(:id))
+      @record.assign_attributes(attachments_data) if attachments_data.present?
       update_atoms
       @record.save
     end
@@ -52,19 +54,22 @@ class Folio::Transportable::Importer
 
       if atoms_hash.present?
         atoms_hash.each do |atom_data|
-          collection.build(build_attachments(atom_data))
+          attachments = build_attachments(atom_data)
+          collection.build(atom_data.without(:attachments).merge(attachments))
         end
       end
     end
 
     def build_attachments(data)
+      h = {}
+
       if data[:attachments].present?
         data[:attachments].each do |reflection_key, reflection_data|
           next unless reflection_data
           attributes_key = "#{reflection_key}_attributes".to_sym
 
           if reflection_data.is_a?(Array)
-            data[attributes_key] = reflection_data.map do |file_placement_data|
+            h[attributes_key] = reflection_data.map do |file_placement_data|
               {
                 file_id: file_for_attachment(file_placement_data[:file]).id,
                 alt: file_placement_data[:alt],
@@ -73,7 +78,7 @@ class Folio::Transportable::Importer
               }
             end
           else
-            data[attributes_key] = {
+            h[attributes_key] = {
               file_id: file_for_attachment(reflection_data[:file]).id,
               alt: reflection_data[:alt],
               title: reflection_data[:title],
@@ -83,7 +88,7 @@ class Folio::Transportable::Importer
         end
       end
 
-      data.without(:attachments)
+      h
     end
 
     def file_for_attachment(file_data)
