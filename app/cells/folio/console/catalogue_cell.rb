@@ -177,6 +177,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def transportable_dropdown
+    return unless ::Rails.application.config.folio_show_transportable_frontend
+    return unless record.try(:transportable?)
+    attribute(:transportable_dropdown, compact: true, skip_desktop_header: true) do
+      cell("folio/console/transportable/dropdown", record)
+    end
+  end
+
   private
     def resource_link(url_for_args, attr = nill)
       attribute(attr, spacey: true) do

@@ -1,4 +1,12 @@
-h1 = t('.title')
+- if rec = (@importer && @importer.record) || @record
+  h1 = t('.title_with_class')
+  h2 = rec.to_label
+
+  .alert.alert-danger
+    = t('.alert')
+
+- else
+  h1 = t('.title')
 
 - if @importer && @importer.record && !@importer.record.valid?
   .mb-4

@@ -56,6 +56,10 @@
       = new_button
         = render(:_new_button_label)
 
+  - if show_transportable_dropdown?
+    .f-c-index-header__transportable-dropdown
+      == cell('folio/console/transportable/dropdown', model)
+
 - if options[:tabs]
   == cell('folio/console/index/tabs', \
           options[:tabs], \

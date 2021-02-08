@@ -1,4 +1,6 @@
-h1 = t('.title', label: @record.to_label, class_label: @record.model_name.human)
+h1 = t('.title', class_label: @record.model_name.human)
+
+h2 = @record.to_label
 
 .my-4.d-flex
   .mr-g

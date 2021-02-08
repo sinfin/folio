@@ -237,13 +237,20 @@ en:
           upload: Upload
       transports:
         out:
-          title: Transport - %{class_label} - %{label}
+          title: Transport - %{class_label}
           download: Download
         in:
-          title: Transport
+          title: Replace from YAML
+          title_with_class: Replace from YAML - %{class_label}
+          alert: 'Warning: Replacing from YAML is an irreversible action and the original content will be lost.'
         transport:
-          success: Record was successfully transported
-          failure: Failed to transport the record
+          success: Record was successfully replaced
+          failure: Failed to replace the record
+      transportable:
+        dropdown:
+          in: Replace from YAML
+          out: Save to YAML
+          in_new: Create new from YAML
       clipboard_copy:
         copy: Copy
 
