@@ -1,5 +1,5 @@
 - if rec = (@importer && @importer.record) || @record
-  h1 = t('.title_with_class')
+  h1 = t('.title_with_class', class_label: @record.class.model_name.human)
   h2 = rec.to_label
 
   .alert.alert-danger

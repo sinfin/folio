@@ -4,7 +4,7 @@ h2 = @record.to_label
 
 .my-4.d-flex
   .mr-g
-    == cell('folio/console/clipboard_copy', @yaml, as_button: true)
+    == cell('folio/console/clipboard_copy', h(@yaml), as_button: true)
 
   a.btn.btn-secondary href=download_console_transport_path target="_blank"
     span.mi get_app
@@ -12,4 +12,4 @@ h2 = @record.to_label
 
 pre
   code
-    = @yaml
+    = h(@yaml)
