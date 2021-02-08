@@ -54,8 +54,8 @@ Folio::Engine.routes.draw do
       get :out, path: "out/:class_name/:id"
       get :download, path: "download/:class_name/:id"
 
-      post :in
-      post :transport
+      get :in, path: "in(/:class_name/:id)"
+      post :transport, path: "transport(/:class_name/:id)"
     end
 
     namespace :api do

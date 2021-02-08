@@ -244,6 +244,11 @@ cs:
         out:
           title: Transport - %{class_label} - %{label}
           download: Stáhnout
+        in:
+          title: Transport
+        transport:
+          success: Záznam byl úspěšně transportován
+          failure: Záznam se nepodařilo transportovat
       clipboard_copy:
         copy: Kopírovat
 

@@ -239,6 +239,11 @@ en:
         out:
           title: Transport - %{class_label} - %{label}
           download: Download
+        in:
+          title: Transport
+        transport:
+          success: Record was successfully transported
+          failure: Failed to transport the record
       clipboard_copy:
         copy: Copy
 

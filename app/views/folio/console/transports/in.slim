@@ -1,0 +1,19 @@
+h1 = t('.title')
+
+- if @importer && @importer.record && !@importer.record.valid?
+  .mb-4
+    == cell('folio/console/form/errors',
+            nil,
+            errors: @importer.record.errors,
+            buttons: false)
+
+= simple_form_for "",
+                  url: transport_console_transport_path(class_name: @class_name,
+                                                        id: @id) do |f|
+  code
+    = f.input :yaml_string, as: :text,
+                            autosize: true,
+                            label: false,
+                            input_html: { value: @yaml_string }
+
+  = f.button :submit

@@ -8,10 +8,11 @@
         span.mr-3
           = full_messages[i]
 
-        button.btn.btn-sm.btn-danger[
-          class="f-c-form-errors__button"
-          class="f-c-form-errors__button--hidden"
-          type="button"
-          data-error-field=field_name(field.first)
-        ]
-          = t('.fix')
+        - if options[:buttons] != false
+          button.btn.btn-sm.btn-danger[
+            class="f-c-form-errors__button"
+            class="f-c-form-errors__button--hidden"
+            type="button"
+            data-error-field=field_name(field.first)
+          ]
+            = t('.fix')

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-class Folio::Transportable::Transporter
+class Folio::Transportable::Exporter
   def initialize(record)
-    unless record.class.base_class.try(:transportable?) &&
+    unless record &&
+           record.class.try(:transportable?) &&
            record.try(:transportable?)
       fail StandardError, "Non-transportable record"
     end
@@ -57,23 +58,46 @@ class Folio::Transportable::Transporter
       if record.respond_to?(:file_placements)
         h = {}
 
-        record.file_placements.each do |fp|
-          h[fp.class] ||= []
-          h[fp.class] << {
-            file_id: fp.file_id,
-            file_source: fp.file.file.remote_url,
-            file_type: fp.file.type,
-            file_attributes: {
-              author: fp.file.author,
-              description: fp.file.description,
-            },
-            alt: fp.alt,
-            title: fp.title,
-          }
+        record.class.reflections.each do |key, reflection|
+          if key != "file_placements" && reflection.options && reflection.options[:class_name] && reflection.options[:class_name].include?("::FilePlacement::")
+            if reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
+              collection = record.send(key)
+
+              if collection.present?
+                h[key] = []
+
+                record.send(key).each do |fp|
+                  h[key] << file_placement_to_hash(fp)
+                end
+              end
+            else
+              fp = record.send(key)
+
+              if fp
+                h[key] = file_placement_to_hash(fp)
+              end
+            end
+          end
         end
 
         h
       end
+    end
+
+    def file_placement_to_hash(fp)
+      {
+        file: {
+          id: fp.file_id,
+          file_url: fp.file.file.remote_url,
+          type: fp.file.type,
+          file_uid: fp.file.file_uid,
+          author: fp.file.author,
+          description: fp.file.description,
+        },
+        alt: fp.alt,
+        title: fp.title,
+        position: fp.position,
+      }
     end
 
     def attributes_hash
