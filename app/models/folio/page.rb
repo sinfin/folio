@@ -148,6 +148,21 @@ class Folio::Page < Folio::ApplicationRecord
     title
   end
 
+  def nested_page_path
+    if Rails.application.config.folio_pages_ancestry
+      page = self
+      parts = [page]
+
+      while page = page.parent
+        parts << page
+      end
+
+      parts.reverse.map(&:slug).join("/")
+    else
+      nil
+    end
+  end
+
   def self.view_name
     "folio/pages/show"
   end

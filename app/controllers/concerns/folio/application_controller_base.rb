@@ -42,15 +42,7 @@ module Folio::ApplicationControllerBase
   private
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)
-
-      parts = [page]
-
-      while page = page.parent
-        parts << page
-      end
-
-      path = parts.reverse.map(&:slug).join("/")
-      main_app.page_path(path: path)
+      main_app.page_path(path: page.nested_page_path)
     end
 
     def force_correct_path(correct_path_or_url)
