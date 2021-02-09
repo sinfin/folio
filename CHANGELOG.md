@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-02-09
+### Added
+- added transportable functionality - download to yaml/override from yaml
+
 ## 2020-02-04
 ### Removed
 - removed ahoy
