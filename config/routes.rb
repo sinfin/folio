@@ -7,6 +7,11 @@ Folio::Engine.routes.draw do
 
   devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
 
+  if Rails.env.test?
+    # needed for console controller tests
+    devise_for :users, class_name: "Folio::User"
+  end
+
   root to: "home#index"
 
   namespace :console do
@@ -48,6 +53,13 @@ Folio::Engine.routes.draw do
     resource :search, only: %i[show]
     resource :site, only: %i[edit update] do
       post :clear_cache
+    end
+
+    resources :users do
+      member do
+        get :send_reset_password_email
+        get :impersonate
+      end
     end
 
     namespace :api do

@@ -176,6 +176,10 @@ cs:
         one: Šablona e-mailu
         few: Šablony e-mailů
         other: Šablon e-mailů
+      folio/user:
+        one: Uživatel
+        few: Uživatelé
+        other: Uživatelů
       tag:
         few: Tagy
         one: Tag

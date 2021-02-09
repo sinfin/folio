@@ -1,0 +1,8 @@
+= index_header
+
+= catalogue(@users)
+  ruby:
+    email
+    date(:last_sign_in_at, small: true)
+    attribute(:sign_in_count)
+    actions
