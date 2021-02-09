@@ -46,7 +46,7 @@ module Folio::HasAncestry
     def set_position
       if self.position.nil?
         last = self.siblings.ordered.last
-        self.position = !last.nil? ? last.position + 1 : 0
+        self.position = !last.nil? ? last.try(:position) || 0 + 1 : 0
       end
     end
 end

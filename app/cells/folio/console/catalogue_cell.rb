@@ -82,7 +82,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def type
-    attribute(:type, record.class.model_name.human)
+    attribute(:type) { record.class.model_name.human }
   end
 
   def edit_link(attr = nil, &block)
@@ -94,9 +94,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def date(attr = nil, small: false)
-    val = record.send(attr)
-    val = l(val, format: :short) if val.present?
-    attribute(attr, val, small: small)
+    attribute(attr, small: small) do
+      val = record.send(attr)
+      l(val, format: :short) if val.present?
+    end
   end
 
   def locale_flag(locale_attr = :locale)

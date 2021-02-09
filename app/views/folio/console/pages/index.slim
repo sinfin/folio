@@ -1,6 +1,6 @@
 = index_header
 
-= catalogue(@pages)
+= catalogue(@catalogue_model, @catalogue_options)
   ruby:
     edit_link :title
     locale_flag if Rails.application.config.folio_pages_translations

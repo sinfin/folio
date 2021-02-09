@@ -140,12 +140,16 @@ $catalogue-green: $green !default
       padding-left: $table-cell-padding + 5 * 2 * $spacer
 
     &__row--ancestry-child &__cell:first-child &__cell-value
+      position: relative
+
       &:before
         +material-icon-style
         position: absolute
+        top: 0
+        bottom: 0
         content: 'subdirectory_arrow_right'
-        margin-left: - 2 * $spacer
-        margin-top: $spacer / 2
+        left: - 2 * $spacer
+        height: auto
         color: $text-muted
         font-size: 18px
 
