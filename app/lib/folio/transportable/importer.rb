@@ -108,7 +108,6 @@ class Folio::Transportable::Importer
                           author: file_data[:author],
                           description: file_data[:description],
                           file_url: file_data[:file_url],
-                          file_uid: file_data[:file_uid],
                           additional_data: { file_uid: file_data[:file_uid] })
     end
 end
