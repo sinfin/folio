@@ -30,7 +30,9 @@ window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   else
     opts = OPTIONS
 
-  $R(node, $.extend({}, opts, additional))
+  window.folioConsoleRedactorOptionsOverride ||= {}
+
+  $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride))
 
 window.folioConsoleDestroyRedactor = (node) ->
   $R(node, 'destroy')
