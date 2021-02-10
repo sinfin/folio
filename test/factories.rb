@@ -134,5 +134,6 @@ FactoryBot.define do
   factory :folio_user, class: "Folio::User" do
     sequence(:email) { |i| "email-#{i}@email.email" }
     password { "password" }
+    confirmed_at { Time.now }
   end
 end

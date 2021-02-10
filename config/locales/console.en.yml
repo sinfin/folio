@@ -204,6 +204,11 @@ en:
           clear_cache: Clear cache
         clear_cache:
           success: Cache was cleared successfully.
+      users:
+        send_reset_password_email:
+          success: Email with instructions for password reset has been sent
+        impersonate:
+          success: Logged in as user "%{label}"
       email_templates:
         form:
           keywords:

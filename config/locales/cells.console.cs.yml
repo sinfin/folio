@@ -34,3 +34,8 @@ cs:
       searches:
         results:
           title: Výsledky vyhledávání
+
+      users:
+        header_actions:
+          login: Přihlásit se
+          reset_password: Reset hesla

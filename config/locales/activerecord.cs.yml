@@ -91,6 +91,9 @@ cs:
         keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_EMAIL: E-mail uživatele
+      folio/user:
+        last_sign_in_at: Poslední přihlášení
+        sign_in_count: Počet přihlášení
     errors:
       messages:
         indestructible: Záznam není možné odstranit.

@@ -1,6 +1,8 @@
+= show_header @user, destroy_url: url_for([:console, @user]),
+                     right: cell('folio/console/users/header_actions',
+                                 @user)
 = show_for @user do |s|
   = s.email
-  = s.attribute :email
   = s.attribute :sign_in_count
   = s.attribute :last_sign_in_at
   = s.attribute :created_at

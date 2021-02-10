@@ -80,6 +80,9 @@ en:
         keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
+      folio/user:
+        last_sign_in_at: Last sign in
+        sign_in_count: Sign in count
     errors:
       messages:
         indestructible: The record cannot be removed.
@@ -139,6 +142,9 @@ en:
       folio/email_template:
         one: Email template
         other: Email templates
+      folio/user:
+        one: User
+        other: Users
       tag:
         one: Tag
         other: Tags
