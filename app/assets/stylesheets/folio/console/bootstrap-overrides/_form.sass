@@ -11,3 +11,19 @@
 .form-group-invalid
   .invalid-feedback
     display: block
+
+@keyframes formControlHinted
+  0%
+    box-shadow: none
+    transform: none
+
+  50%
+    transform: scale(1.05)
+    background-color: $input-btn-focus-color
+
+  100%
+    box-shadow: none
+    transform: none
+
+.form-control--hinted
+  animation: formControlHinted 0.5s 1 ease-in-out
