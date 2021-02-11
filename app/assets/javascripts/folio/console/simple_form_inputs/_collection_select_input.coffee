@@ -19,7 +19,7 @@ window.folioConsoleBindCollectionSelectInput = ($elements) ->
           data: (params) -> { q: params.term }
 
 window.folioConsoleUnbindCollectionSelectInput = ($elements) ->
-  $elements.each -> @select?.destroy()
+  $elements.each -> $(this).select2('destroy')
 
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->

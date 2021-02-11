@@ -73,8 +73,15 @@ module Folio::ApiControllerBase
 
     def render_select2_options(models)
       ary = models.map do |model|
-        { id: model.id, text: model.to_console_label }
+        h = { id: model.id, text: model.to_console_label }
+
+        if form_select_data = model.try(:form_select_data)
+          h.merge(form_select_data)
+        else
+          h
+        end
       end
+
       render json: { results: ary }
     end
 
