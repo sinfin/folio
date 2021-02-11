@@ -48,7 +48,7 @@ $ ->
       else
         offset = $formGroup.offset().top
 
-      $scroll = $formGroup.closest('.f-c-with-aside__scroll')
+      $scroll = $formGroup.closest('.f-c-with-aside__scroll, .f-c-simple-form-with-atoms__scroll')
       if $scroll.length is 0
         $scroll = $formGroup.closest('.f-c-layout-main-container')
 

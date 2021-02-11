@@ -59,7 +59,7 @@ class Folio::Merger
         success = success && (post_merge_update(bang: bang) != false)
       end
 
-      return success
+      success
     end
   end
 

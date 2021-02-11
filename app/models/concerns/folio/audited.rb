@@ -83,7 +83,7 @@ module Folio::Audited
                       .where("placement_version <= ?", audit_version)
                       .each do |a|
           if revived.exclude?(a.auditable_id)
-            association(:atoms).add_to_target(a.revision, true) if a.action != "destroy"
+            association(:atoms).add_to_target(a.revision, skip_callbacks: true) if a.action != "destroy"
             revived << a.auditable_id
           end
         end

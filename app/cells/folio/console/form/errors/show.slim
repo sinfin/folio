@@ -3,16 +3,16 @@
     .font-weight-bold.mb-2 = model.error_notification
 
   ul
-    - errors.each_with_index do |field, i|
+    - errors.each_with_index do |error, i|
       li.d-flex.align-items-center class=(i.zero? ? nil : 'mt-2')
         span.mr-3
-          = full_messages[i]
+          = error.full_message
 
         - if options[:buttons] != false
           button.btn.btn-sm.btn-danger[
             class="f-c-form-errors__button"
             class="f-c-form-errors__button--hidden"
             type="button"
-            data-error-field=field_name(field.first)
+            data-error-field=error.attribute
           ]
             = t('.fix')

@@ -6,7 +6,6 @@ class Folio::Page < Folio::ApplicationRecord
   include PgSearch::Model
   include Folio::Taggable
   include Folio::HasAttachments
-  include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
   include Folio::Transportable::Model
