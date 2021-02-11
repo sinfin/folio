@@ -36,7 +36,7 @@ module Folio
       folio/console/react/main.css
     ]
 
-    config.folio_dragonfly_keep_png = false
+    config.folio_dragonfly_keep_png = true
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
     config.folio_pages_audited = false
