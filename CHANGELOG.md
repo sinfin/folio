@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-02-11
+### Added
+- added `redactor: :perex` and `folio_pages_perex_richtext` configuration
+
 ## 2020-02-09
 ### Added
 - added transportable functionality - download to yaml/override from yaml

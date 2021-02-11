@@ -5,6 +5,10 @@ class RedactorInput < SimpleForm::Inputs::TextInput
     input_html_options[:class] ||= []
     input_html_options[:class] << " f-c-redactor-input"
 
+    if options[:redactor]
+      input_html_options[:class] << " f-c-redactor-input--#{options[:redactor]}"
+    end
+
     if options[:folio_label]
       input_html_options[:class] << "f-c-js-atoms-placement-label"
     elsif options[:folio_perex]
