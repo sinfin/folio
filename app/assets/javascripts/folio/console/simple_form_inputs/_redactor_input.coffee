@@ -5,6 +5,7 @@ bindRedactor = ($elements) ->
     opts =
       advanced: @classList.contains('f-c-redactor-input--advanced')
       email: @classList.contains('f-c-redactor-input--email')
+      perex: @classList.contains('f-c-redactor-input--perex')
 
     additional = {}
 

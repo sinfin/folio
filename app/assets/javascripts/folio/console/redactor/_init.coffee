@@ -20,6 +20,14 @@ EMAIL_OPTIONS =
   lang: document.documentElement.lang
   formatting: []
 
+PEREX_OPTIONS =
+  plugins: ['character_counter']
+  buttonsHide: ['file', 'image', 'html', 'format', 'bold', 'italic', 'deleted', 'lists']
+  breakline: true
+  toolbarFixed: true
+  lang: document.documentElement.lang
+  linkNewTab: true
+
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')
 
@@ -27,10 +35,14 @@ window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
     opts = ADVANCED_OPTIONS
   else if options.email
     opts = EMAIL_OPTIONS
+  else if options.perex
+    opts = PEREX_OPTIONS
   else
     opts = OPTIONS
 
-  $R(node, $.extend({}, opts, additional))
+  window.folioConsoleRedactorOptionsOverride ||= {}
+
+  $R(node, $.extend({}, opts, additional, window.folioConsoleRedactorOptionsOverride))
 
 window.folioConsoleDestroyRedactor = (node) ->
   $R(node, 'destroy')

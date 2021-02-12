@@ -5,7 +5,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
     iho = input_html_options || {}
 
     if options[:remote]
-      options[:collection] ||= autocomplete_collection
+      options[:collection] = autocomplete_collection
       iho[:class] = [iho[:class], "f-c-collection-remote-select-input"].flatten
 
       if options[:remote] == true
@@ -51,11 +51,17 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
       if value.is_a?(Array)
         value.map do |val|
           obj = reflection.class_name.constantize.find(val)
-          [obj.to_console_label, val]
+          ary = [obj.to_console_label, val]
+          ary << obj.form_select_data if obj.try(:form_select_data)
+
+          ary
         end
       else
         obj = reflection.class_name.constantize.find(value)
-        [[obj.to_console_label, value]]
+        ary = [obj.to_console_label, value]
+        ary << obj.form_select_data if obj.try(:form_select_data)
+
+        [ary]
       end
     else
       []

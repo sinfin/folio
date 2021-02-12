@@ -27,7 +27,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
     belongs_to :placement, polymorphic: true,
                            inverse_of: name,
-                           required: true,
+                           required: false,
                            touch: true
   end
 

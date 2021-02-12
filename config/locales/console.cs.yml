@@ -245,6 +245,24 @@ cs:
         single_dropzone:
           download: Stáhnout
           upload: Nahrát
+      transports:
+        out:
+          title: Transport - %{class_label}
+          download: Stáhnout
+        in:
+          title: Vytvořit z YAML
+          title_with_class: Nahradit z YAML - %{class_label}
+          alert: 'Upozornění: Nahrazení obsahu ze souboru YAML je nevratná akce a původní obsah bude nenávratně ztracen.'
+        transport:
+          success: Záznam byl úspěšně nahrazen
+          failure: Záznam se nepodařilo nahradit
+      transportable:
+        dropdown:
+          in: Nahradit z YAML
+          out: Uložit do YAML
+          in_new: Vytvořit nový z YAML
+      clipboard_copy:
+        copy: Kopírovat
 
   date:
     formats:

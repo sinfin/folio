@@ -36,13 +36,14 @@ module Folio
       folio/console/react/main.css
     ]
 
-    config.folio_dragonfly_keep_png = false
+    config.folio_dragonfly_keep_png = true
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
     config.folio_pages_audited = false
     config.folio_pages_translations = false
     config.folio_pages_ancestry = false
     config.folio_users_confirmable = true
+    config.folio_pages_perex_richtext = false
     config.folio_console_locale = :cs
     config.folio_console_dashboard_redirect = :console_pages_path
     config.folio_console_sidebar_link_class_names = nil
@@ -52,6 +53,7 @@ module Folio
     config.folio_console_sidebar_skip_link_class_names = []
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
+    config.folio_show_transportable_frontend = false
 
     initializer :append_migrations do |app|
       unless app.root.to_s.include? root.to_s

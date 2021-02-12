@@ -2,18 +2,18 @@
   +unbutton
 
 .btn
+  display: inline-flex
+  align-items: center
+  text-align: center
+  justify-content: center
+
   .fa
-    font-size: 80%
-    line-height: 1
+    font-size: inherit
     margin: 0 7px 0 0
-    position: relative
-    top: -1px
 
   .mi
-    font-size: 20px
-    margin: -5px 7px 0 0
-    position: relative
-    top: 5px
+    font-size: inherit
+    margin: -5px 7px -5px 0
 
   .mi--14
     top: 1px
@@ -22,8 +22,10 @@
   width: $input-height
   font-size: $font-size-sm
   line-height: $btn-fa-line-height
-  text-align: center
   padding: 0
+
+.btn.mi
+  font-size: 20px
 
 .btn-light
   +plain-hover-focus

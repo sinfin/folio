@@ -17,9 +17,15 @@ window.folioConsoleBindCollectionSelectInput = ($elements) ->
           minimumInputLength: 0
           cache: false
           data: (params) -> { q: params.term }
+        templateSelection: (data, container) ->
+          $el = $(data.element)
+          Object.keys(data).forEach (key) ->
+            if key.indexOf('data-') is 0
+              $el.attr(key, data[key])
+          return data.text
 
 window.folioConsoleUnbindCollectionSelectInput = ($elements) ->
-  $elements.each -> @select?.destroy()
+  $elements.each -> $(this).select2('destroy')
 
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->

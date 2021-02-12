@@ -62,6 +62,14 @@ Folio::Engine.routes.draw do
       end
     end
 
+    resource :transport, only: [] do
+      get :out, path: "out/:class_name/:id"
+      get :download, path: "download/:class_name/:id"
+
+      get :in, path: "in(/:class_name/:id)"
+      post :transport, path: "transport(/:class_name/:id)"
+    end
+
     namespace :api do
       resource :tags, only: [] do
         get :react_select

@@ -1,6 +1,19 @@
 span.f-c-clipboard-copy data-clipboard-text=model
-  span.f-c-clipboard-copy__ico.mi
-    ' content_copy
+  - if options[:as_button]
+    span.btn.btn-primary.f-c-clipboard-copy__btn
+      .f-c-clipboard-copy__icons
+        span.f-c-clipboard-copy__ico.mi
+          ' content_copy
 
-  span.f-c-clipboard-copy__done.mi
-    ' done
+        span.f-c-clipboard-copy__done.mi
+          ' done
+
+      = t('.copy')
+
+  - else
+    span.f-c-clipboard-copy__span
+      span.f-c-clipboard-copy__ico.mi
+        ' content_copy
+
+      span.f-c-clipboard-copy__done.mi
+        ' done

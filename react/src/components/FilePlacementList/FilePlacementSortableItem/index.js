@@ -119,6 +119,8 @@ class FilePlacement extends React.Component {
               />
 
               <FormText>{window.FolioConsole.translations.fileTitleHint}</FormText>
+
+              <span className='fa fa-edit text-muted f-c-file-placement__edit-ico' />
             </FormGroup>
           </div>
 
@@ -138,6 +140,8 @@ class FilePlacement extends React.Component {
                 />
 
                 <FormText>{window.FolioConsole.translations.altHint}</FormText>
+
+                <span className='fa fa-edit text-muted f-c-file-placement__edit-ico' />
               </FormGroup>
             </div>
           )}

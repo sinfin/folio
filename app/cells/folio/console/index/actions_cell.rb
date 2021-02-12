@@ -72,10 +72,12 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     sort_array_hashes_first(with_default).each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
         next if sym_or_hash == :destroy && model.class.try(:indestructible?)
+        next unless controller.can?(sym_or_hash, model)
         acts << default_actions[sym_or_hash]
       elsif sym_or_hash.is_a?(Hash)
         sym_or_hash.each do |name, obj|
           next if name == :destroy && model.class.try(:indestructible?)
+          next unless controller.can?(name, model)
           base = default_actions[name].presence || {}
           if obj.is_a?(Hash)
             acts << base.merge(obj)

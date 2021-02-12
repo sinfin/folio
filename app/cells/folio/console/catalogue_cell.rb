@@ -82,7 +82,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def type
-    attribute(:type, record.class.model_name.human)
+    attribute(:type) { record.class.model_name.human }
   end
 
   def edit_link(attr = nil, &block)
@@ -94,9 +94,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def date(attr = nil, small: false)
-    val = record.send(attr)
-    val = l(val, format: :short) if val.present?
-    attribute(attr, val, small: small)
+    attribute(attr, small: small) do
+      val = record.send(attr)
+      l(val, format: :short) if val.present?
+    end
   end
 
   def locale_flag(locale_attr = :locale)
@@ -112,7 +113,11 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def published_toggle(opts = {})
-    toggle(:published, opts)
+    if !rendering_header? && controller.cannot?(:publish, record)
+      boolean(:published)
+    else
+      toggle(:published, opts)
+    end
   end
 
   def toggle(attr, opts = {})
@@ -174,6 +179,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       cell("folio/console/private_attachments/single_dropzone",
            record,
            opts.merge(name: name, minimal: true, type: type))
+    end
+  end
+
+  def transportable_dropdown
+    return unless ::Rails.application.config.folio_show_transportable_frontend
+    return unless record.try(:transportable?)
+    attribute(:transportable_dropdown, compact: true, skip_desktop_header: true) do
+      cell("folio/console/transportable/dropdown", record)
     end
   end
 

@@ -3,8 +3,6 @@
 require "test_helper"
 
 class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
-  include Folio::Engine.routes.url_helpers
-
   test "index" do
     get url_for([:console, Folio::Page])
     assert_response :success

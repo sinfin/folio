@@ -102,6 +102,31 @@ body > .f-c-file-placement
 .f-c-file-placement__inputs
   flex: 1 1 auto
   display: flex
+  align-items: center
+
+.f-c-file-placement__title
+  .form-control
+    padding-left: 20px
+
+.f-c-file-placement__alt
+  .form-control
+    padding-right: 20px
+
+.f-c-file-placement__edit-ico
+  position: absolute
+  top: 50%
+  margin-top: -6px
+  pointer-events: none
+  font-size: 12px
+
+  .form-control:focus ~ &
+    visibility: hidden
+
+  .f-c-file-placement__title &
+    left: 0
+
+  .f-c-file-placement__alt &
+    right: 0
 
 +media-breakpoint-only(md)
   .f-c-file-placement__alt

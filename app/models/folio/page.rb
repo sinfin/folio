@@ -9,6 +9,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::ReferencedFromMenuItems
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
+  include Folio::Transportable::Model
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited
@@ -145,6 +146,21 @@ class Folio::Page < Folio::ApplicationRecord
 
   def to_label
     title
+  end
+
+  def nested_page_path
+    if Rails.application.config.folio_pages_ancestry
+      page = self
+      parts = [page]
+
+      while page = page.parent
+        parts << page
+      end
+
+      parts.reverse.map(&:slug).join("/")
+    else
+      nil
+    end
   end
 
   def self.view_name

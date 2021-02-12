@@ -84,4 +84,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def title_url
     options[:query_url] ? send(options[:query_url]) : url_for([:console, model])
   end
+
+  def show_transportable_dropdown?
+    ::Rails.application.config.folio_show_transportable_frontend &&
+    model.try(:transportable?)
+  end
 end
