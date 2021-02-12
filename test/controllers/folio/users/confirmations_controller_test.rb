@@ -2,12 +2,10 @@
 
 require "test_helper"
 
-module Folio
-  class Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
-    include Engine.routes.url_helpers
+class Folio::Users::ConfirmationsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
 
-    # test "the truth" do
-    #   assert true
-    # end
-  end
+  # test "the truth" do
+  #   assert true
+  # end
 end

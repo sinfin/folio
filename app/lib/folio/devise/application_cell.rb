@@ -38,4 +38,16 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
       f.button :submit, label, class: "f-devise__submit-btn"
     end
   end
+
+  def email_input(f)
+    f.input :email, input_html: { autofocus: true,
+                                  autocomplete: "email",
+                                  value: f.object.email.presence || "@" }
+  end
+
+  def password_input(f, field, opts = {})
+    cell("folio/devise/password_input",
+         f,
+         opts.merge(field: field))
+  end
 end

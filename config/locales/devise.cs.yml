@@ -14,3 +14,12 @@ cs:
         new:
           title: Přihlášení
           sign_in: Přihlásit se
+
+      passwords:
+        new:
+          title: Zapomenuté heslo
+          reset_password: Poslat instrukce pro obnovení hesla
+
+        edit:
+          title: Změna hesla
+          change_password: Nastavit nové heslo

@@ -2,17 +2,9 @@
   = form do |f|
     = title
 
-    = f.input :email,
-              input_html: { \
-                autofocus: true, \
-                autocomplete: 'email', \
-                value: f.object.email || '@', \
-              }
+    == email_input(f)
 
-    == cell('folio/devise/password_input',
-            f,
-            field: :password,
-            autocomplete: 'current-password')
+    == password_input(f, :password, autocomplete: 'current-password')
 
     = submit_button(f, t('.sign_in'))
 

@@ -94,6 +94,9 @@ cs:
       folio/user:
         last_sign_in_at: Poslední přihlášení
         sign_in_count: Počet přihlášení
+        password: Heslo
+        password_confirmation: Heslo (kontrola)
+
     errors:
       messages:
         indestructible: Záznam není možné odstranit.

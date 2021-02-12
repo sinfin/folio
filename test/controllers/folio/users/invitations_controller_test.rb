@@ -2,12 +2,54 @@
 
 require "test_helper"
 
-module Folio
-  class Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
-    include Engine.routes.url_helpers
+class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
 
-    # test "the truth" do
-    #   assert true
-    # end
+  test "new" do
+    create(:folio_site)
+    sign_in create(:folio_user)
+
+    assert_raises(ActionController::MethodNotAllowed) do
+      get new_user_invitation_path
+    end
+  end
+
+  test "create" do
+    create(:folio_site)
+    sign_in create(:folio_user)
+
+
+    assert_raises(ActionController::MethodNotAllowed) do
+      post user_invitation_path, params: {
+        user: {
+          email: "email@email.email"
+        }
+      }
+    end
+  end
+
+  test "edit" do
+    create(:folio_site)
+    user = Folio::User.invite!(email: "email@email.email")
+    get accept_user_invitation_path(invitation_token: user.raw_invitation_token)
+    assert_response(:ok)
+  end
+
+  test "update" do
+    create(:folio_site)
+
+    user = Folio::User.invite!(email: "email@email.email")
+    assert_not user.invitation_accepted?
+
+    put user_invitation_path, params: {
+      user: {
+        invitation_token: user.raw_invitation_token,
+        password: "new-password",
+        password_confirmation: "new-password",
+      }
+    }
+
+    assert_redirected_to root_path
+    assert user.reload.invitation_accepted?
   end
 end
