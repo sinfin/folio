@@ -4,6 +4,7 @@ linters:
 
 exclude:
   - 'app/cells/folio/console/publishable_inputs/show.slim'
+  - 'app/cells/folio/devise/password_input/show.slim'
   - 'app/cells/folio/image/_fallback_svg.slim'
   - 'app/views/folio/console/partials/_translations.slim'
   - 'app/views/layouts/folio/console/_head.slim'

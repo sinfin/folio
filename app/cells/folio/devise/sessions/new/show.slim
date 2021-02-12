@@ -1,0 +1,25 @@
+.f-devise-sessions-new
+  = form do |f|
+    = title
+
+    = f.input :email,
+              input_html: { \
+                autofocus: true, \
+                autocomplete: 'email', \
+                value: f.object.email || '@', \
+              }
+
+    == cell('folio/devise/password_input',
+            f,
+            field: :password,
+            autocomplete: 'current-password')
+
+    = submit_button(f, t('.sign_in'))
+
+    .f-devise__under-submit-links
+      = forgotten_password_link
+
+    span.folio-loader.f-devise__loader
+
+  .f-devise__bottom-button-wrap
+    == register_button

@@ -9,11 +9,6 @@ Folio::Engine.routes.draw do
     devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
   end
 
-  if Rails.env.test?
-    # needed for console controller tests
-    devise_for :users, class_name: "Folio::User"
-  end
-
   root to: "home#index"
 
   namespace :console do

@@ -3,7 +3,14 @@ cs:
   folio:
     devise:
       submit: Odeslat
+      forgotten_password_link: Zapomenuté heslo?
+      register_button: Vytvořit nový účet
 
       invitations:
         edit:
           title: Nastavte si heslo
+
+      sessions:
+        new:
+          title: Přihlášení
+          sign_in: Přihlásit se
