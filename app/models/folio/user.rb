@@ -13,8 +13,10 @@ class Folio::User < Folio::ApplicationRecord
     invitable
   ]
   selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
+  selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 
-  devise(*selected_device_modules)
+  devise(*selected_device_modules,
+         omniauth_providers: Rails.application.config.folio_users_omniauth_providers)
 
   pg_search_scope :by_query,
                   against: [:email],

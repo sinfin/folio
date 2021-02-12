@@ -5,7 +5,9 @@ Folio::Engine.routes.draw do
 
   get "errors/internal_server_error"
 
-  devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+  unless Rails.application.config.folio_users
+    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+  end
 
   if Rails.env.test?
     # needed for console controller tests

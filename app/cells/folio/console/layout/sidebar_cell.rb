@@ -104,6 +104,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def folio_link_class_names
     [
+      ::Rails.application.config.folio_users ? %w[Folio::User] : nil,
       %w[
         Folio::NewsletterSubscription
         Folio::Lead
@@ -118,7 +119,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           label: "settings"
         },
       ]
-    ]
+    ].compact
   end
 
   def prepended_link_class_names
