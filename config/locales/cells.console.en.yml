@@ -34,8 +34,3 @@ en:
       searches:
         results:
           title: Search results
-
-      users:
-        header_actions:
-          login: Login
-          reset_password: Reset password

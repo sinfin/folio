@@ -4,22 +4,6 @@ module Folio
   class Engine < ::Rails::Engine
     isolate_namespace Folio
 
-    config.to_prepare do
-      [
-        Devise::ConfirmationsController,
-        Devise::OmniauthCallbacksController,
-        Devise::PasswordsController,
-        Devise::RegistrationsController,
-        Devise::SessionsController,
-        Devise::UnlocksController,
-
-        Devise::InvitationsController,
-        DeviseInvitable::RegistrationsController,
-      ].each do |controller|
-        controller.send(:include, ::Folio::DeviseExtension)
-      end
-    end
-
     config.generators do |g|
       g.stylesheets false
       g.javascripts false

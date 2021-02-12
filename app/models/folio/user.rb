@@ -27,8 +27,28 @@ class Folio::User < Folio::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
+  def full_name
+    if first_name.present? || last_name.present?
+      "#{first_name} #{last_name}".strip
+    else
+      email
+    end
+  end
+
   def to_label
-    email
+    full_name
+  end
+
+  def to_console_label
+    if (first_name.present? || last_name.present?) && email.present?
+      "#{full_name} <#{email}>"
+    else
+      to_label
+    end
+  end
+
+  def remember_me
+    super.nil? ? "1" : super
   end
 end
 
@@ -37,7 +57,7 @@ end
 # Table name: folio_users
 #
 #  id                     :bigint(8)        not null, primary key
-#  email                  :string           default(""), not null
+#  email                  :string
 #  encrypted_password     :string           default(""), not null
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
@@ -51,6 +71,8 @@ end
 #  confirmed_at           :datetime
 #  confirmation_sent_at   :datetime
 #  unconfirmed_email      :string
+#  first_name             :string
+#  last_name              :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  invitation_token       :string
@@ -65,7 +87,7 @@ end
 # Indexes
 #
 #  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
-#  index_folio_users_on_email                              (email) UNIQUE
+#  index_folio_users_on_email                              (email)
 #  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
 #  index_folio_users_on_invited_by_id                      (invited_by_id)
 #  index_folio_users_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)

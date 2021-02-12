@@ -1,0 +1,9 @@
+---
+cs:
+  folio:
+    devise:
+      submit: Odeslat
+
+      invitations:
+        edit:
+          title: Nastavte si heslo

@@ -209,6 +209,9 @@ en:
           success: Email with instructions for password reset has been sent
         impersonate:
           success: Logged in as user "%{label}"
+        header_actions:
+          impersonate: Login as user
+          send_reset_password_email: Send password reset email
       email_templates:
         form:
           keywords:
