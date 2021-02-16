@@ -16,7 +16,12 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   end
 
   def create
-    @user = @klass.invite!(user_params)
+    @user = @klass.new(user_params.merge(skip_password_validation: 1))
+
+    if @user.valid?
+      @user = @klass.invite!(user_params)
+    end
+
     respond_with @user, location: respond_with_location
   end
 

@@ -3,6 +3,9 @@
 class Folio::User < Folio::ApplicationRecord
   include Folio::Filterable
 
+  # used to validate before inviting from console in /console/users/new
+  attribute :skip_password_validation, :boolean, default: false
+
   selected_device_modules = %i[
     database_authenticatable
     registerable
@@ -28,7 +31,8 @@ class Folio::User < Folio::ApplicationRecord
   scope :ordered, -> { order(id: :desc) }
 
   validates :first_name, :last_name,
-            presence: true
+            presence: true,
+            if: :validate_first_name_and_last_name?
 
   def full_name
     if first_name.present? || last_name.present?
@@ -53,6 +57,19 @@ class Folio::User < Folio::ApplicationRecord
   def remember_me
     super.nil? ? "1" : super
   end
+
+  private
+    def validate_first_name_and_last_name?
+      true
+    end
+
+    def password_required?
+      if skip_password_validation?
+        false
+      else
+        super
+      end
+    end
 end
 
 # == Schema Information

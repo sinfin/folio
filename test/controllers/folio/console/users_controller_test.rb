@@ -25,9 +25,19 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
   test "create" do
     params = build(:folio_user).serializable_hash
     assert_equal(0, Folio::User.count)
+
+    post url_for([:console, Folio::User]), params: {
+      user: {
+        email: "foo@bar.baz",
+      }
+    }
+
+    assert_equal(0, Folio::User.count, "Cannot invite without valid fields (first/last name)")
+
     post url_for([:console, Folio::User]), params: {
       user: params,
     }
+
     assert_equal(1, Folio::User.count, "Creates record")
   end
 
@@ -40,7 +50,12 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
       },
     }
     assert_redirected_to url_for([:edit, :console, model])
-    assert_equal("foo@bar.com", model.reload.unconfirmed_email)
+
+    if Rails.application.config.folio_users_confirmable
+      assert_equal("foo@bar.com", model.reload.unconfirmed_email)
+    else
+      assert_equal("foo@bar.com", model.reload.email)
+    end
   end
 
   test "destroy" do

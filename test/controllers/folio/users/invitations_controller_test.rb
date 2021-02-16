@@ -38,7 +38,9 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   test "update" do
     create(:folio_site)
 
-    user = Folio::User.invite!(email: "email@email.email")
+    user = Folio::User.invite!(email: "email@email.email",
+                               first_name: "a",
+                               last_name: "b")
     assert_not user.invitation_accepted?
 
     put user_invitation_path, params: {
