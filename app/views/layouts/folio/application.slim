@@ -7,6 +7,10 @@ html lang=I18n.locale
   body
     == cell('folio/console/flash', flash)
 
+    .container.pt-4.mb-5.text-center
+      a.h1.mt-0.text-body.text-decoration-none href="/"
+        ' Folio Test::Dummy application
+
     = yield
 
     == cell('folio/devise/modal')

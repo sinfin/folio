@@ -5,7 +5,7 @@ class Folio::Devise::Sessions::NewCell < Folio::Devise::ApplicationCell
     opts = {
       url: controller.session_path(resource_name),
       as: resource_name,
-      html: { class: "f-devise-sessions-new__form" },
+      html: { class: model[:modal] ? "f-devise-modal__form" : nil },
     }
 
     simple_form_for(resource, opts, &block)

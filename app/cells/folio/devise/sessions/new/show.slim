@@ -2,6 +2,8 @@
   = form do |f|
     = title
 
+    == cell('folio/devise/flash', model[:flash])
+
     == email_input(f)
 
     == password_input(f, :password, autocomplete: 'current-password')
