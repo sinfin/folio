@@ -1,0 +1,26 @@
+.f-devise-registrations-new
+  = form do |f|
+    = title
+
+    - @f = f
+
+    = render(:_top)
+
+    .f-devise__row
+      .f-devise__col
+        == email_input(f, label: t('.email_label'))
+
+    .f-devise__row
+      .f-devise__col
+        == password_input(f, :password, autocomplete: 'current-password')
+
+    = render(:_bottom)
+
+    = submit_button(f, t('.sign_up'))
+
+    - @f = nil
+
+    span.folio-loader.f-devise__loader
+
+  .f-devise__bottom-action-wrap
+    == sign_in_link

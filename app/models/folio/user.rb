@@ -27,6 +27,9 @@ class Folio::User < Folio::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
 
+  validates :first_name, :last_name,
+            presence: true
+
   def full_name
     if first_name.present? || last_name.present?
       "#{first_name} #{last_name}".strip

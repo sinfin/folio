@@ -5,7 +5,67 @@ require "test_helper"
 class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
-  # test "the truth" do
-  #   assert true
-  # end
+  def setup
+    create(:folio_site)
+
+    @params = {
+      email: "email@email.email",
+      password: "password",
+      first_name: "Name",
+      last_name: "Surname",
+    }
+
+    @user = create(:folio_user, @params)
+  end
+
+  test "new" do
+    get new_user_registration_path
+    assert_response(:ok)
+  end
+
+  test "create" do
+    assert_equal(1, Folio::User.count)
+    post user_registration_path, params: { user: @params }
+    assert_response(:ok)
+    assert_equal(1, Folio::User.count)
+
+    post user_registration_path, params: { user: @params.merge(email: "other@email.email") }
+    assert_redirected_to(root_path)
+    assert_equal(2, Folio::User.count)
+  end
+
+  test "edit" do
+    sign_in @user
+    get edit_user_registration_path
+    assert_response(:ok)
+  end
+
+  test "update" do
+    sign_in @user
+    patch user_registration_path, params: {
+      user: {
+        email: "new@email.email",
+      }
+    }
+    assert_response(:ok)
+    assert_not_equal("new@email.email", @user.reload.email)
+
+    sign_in @user
+    patch user_registration_path, params: {
+      user: {
+        email: "new@email.email",
+        current_password: "password",
+      }
+    }
+    assert_redirected_to root_path
+    assert_equal("new@email.email", @user.reload.email)
+  end
+
+  test "destroy" do
+    assert_equal(1, Folio::User.count)
+    sign_in @user
+    delete user_registration_path
+    assert_redirected_to root_path
+    assert_equal(0, Folio::User.count)
+  end
 end

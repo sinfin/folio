@@ -5,6 +5,7 @@ cs:
       submit: Odeslat
       forgotten_password_link: Zapomenuté heslo?
       register_button: Vytvořit nový účet
+      sign_in_link: Již u nás máte účet? <a href="%{href}">Přihlašte se</a>
 
       invitations:
         edit:
@@ -23,3 +24,17 @@ cs:
         edit:
           title: Změna hesla
           change_password: Nastavit nové heslo
+
+      registrations:
+        new:
+          email_label: E-mail (slouží pro přihlášení)
+          sign_up: Vytvořit účet
+          title: Registrace
+
+        edit:
+          update: Uložit
+          title: Osobní údaje
+          title_password: Změna hesla
+          new_password: Nové heslo
+          new_password_confirmation: Nové heslo (kontrola)
+          pending_reconfirmation: Čekáme na potvrzení změny na %{email}

@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+module Folio
+  module DeviseMapping
+    private
+      def default_controllers(options)
+        mod = options[:module] || "devise"
+
+        options[:controllers] ||= {}
+        options[:controllers][:registrations] = "#{mod}/registrations"
+
+        super
+      end
+  end
+end
+
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -323,6 +338,8 @@ Devise.setup do |config|
   unless Rails.application.config.folio_users
     config.router_name = :folio
   end
+
+  Devise::Mapping.send :prepend, Folio::DeviseMapping
 
   #
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,

@@ -202,6 +202,7 @@ cs:
     cover: Obrázek
     cover_placement: Obrázek
     count: Počet
+    current_password: Aktuální heslo pro kontrolu
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
@@ -209,7 +210,7 @@ cs:
     featured: Zvýrazněno
     file: Soubor
     figcaption: Popisek
-    first_name: Křestní jméno
+    first_name: Jméno
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení

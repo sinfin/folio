@@ -27,7 +27,7 @@ module Folio
     config.folio_pages_translations = false
     config.folio_pages_ancestry = false
     config.folio_users = false
-    config.folio_users_confirmable = true
+    config.folio_users_confirmable = false
     config.folio_users_omniauth_providers = %i[facebook google twitter]
     config.folio_pages_perex_richtext = false
     config.folio_console_locale = :cs
