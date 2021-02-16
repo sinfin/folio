@@ -45,10 +45,12 @@ $(document)
         path = $form.closest('.n-devise-modal').data('after-sign-in-path')
         if path
           window.location.href = path
+        else if res.data.url
+          window.location.href = res.data.url
         else
           window.location.reload()
 
       error: (jxHr) ->
         $form
-          .closest('.f-devise-sessions-new')
+          .closest('.f-devise-sessions-new, .f-devise-registrations-new')
           .replaceWith(jxHr.responseJSON.data)

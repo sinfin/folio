@@ -1,5 +1,16 @@
 ---
 cs:
+  devise:
+    sessions:
+      signed_in: Přihlášení proběhlo úspěšně.
+      signed_out: Odhlášení proběhlo úspěšně.
+    registrations:
+      signed_up: Registrace proběhla úspěšně.
+      signed_up_but_inactive: Registrace proběhla úspěšně.. Bohužel se nemůžete přihlásit, protože Váš účet ještě není aktivován.
+      signed_up_but_locked: Registrace proběhla úspěšně.. Bohužel se nemůžete přihlásit, protože Váš účet je zamknutý.
+      signed_up_but_unconfirmed: Byl vám zaslán potvrzovací e-mail. Pro dokončení klikněte na aktivační odkaz zaslaný na Váš e-mail.
+      update_needs_confirmation: Úspěšně jste aktualizovali svůj účet, ale ještě musíte ověřit svou novou e-mailovou adresu. Zkontrolujte svou schránku a klikněte na odkaz pro dokončení ověření Vaší nové e-mailové adresy.
+      updated: Váš účet byl úspěšně aktualizován.
   folio:
     devise:
       submit: Odeslat
@@ -39,3 +50,8 @@ cs:
           new_password: Nové heslo
           new_password_confirmation: Nové heslo (kontrola)
           pending_reconfirmation: Čekáme na potvrzení změny na %{email}
+
+    users:
+      registrations:
+        create:
+          failure: Účet se nepodařilo vytvořit. Prosíme zkontrolujte označená pole.

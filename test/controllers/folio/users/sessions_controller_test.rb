@@ -16,12 +16,22 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     @user = create(:folio_user, @params)
   end
 
-  test "sign_in redirect to console root" do
+  test "new" do
+    get new_user_session_path
+    assert_response(:ok)
+  end
+
+  test "create" do
     post user_session_path, params: { user: @params }
     assert_redirected_to root_path
   end
 
-  test "sign_out redirect to sign_in page" do
+  test "ajax create" do
+    post user_session_path(format: :json), params: { user: @params }
+    assert_response(:ok)
+  end
+
+  test "destroy" do
     sign_in @user
     get destroy_user_session_path
     assert_redirected_to new_user_session_path

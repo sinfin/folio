@@ -2,6 +2,8 @@
   = form do |f|
     = title
 
+    == cell('folio/devise/flash', model[:flash])
+
     - @f = f
 
     = render(:_top)
