@@ -1,0 +1,46 @@
+---
+en:
+  folio:
+    devise:
+      submit: Submit
+      forgotten_password_link: Forgotten password?
+      register_button: Create new account
+      sign_in_link: Have an account?
+      sign_in_link_inner: Sign in
+
+      invitations:
+        edit:
+          title: Set your password
+
+      sessions:
+        new:
+          title: Sign in
+          sign_in: Sign in
+
+      passwords:
+        new:
+          title: Forgotten password
+          reset_password: Send reset password instructions
+
+        edit:
+          title: Password update
+          change_password: Set my password
+
+      registrations:
+        new:
+          email_label: E-mail (used for signing in)
+          sign_up: Create account
+          title: Sign up
+
+        edit:
+          update: Update
+          title: Account information
+          title_password: Password update
+          new_password: New password
+          new_password_confirmation: New password (confirmation)
+          pending_reconfirmation: We're waiting for you to confirm the change to %{email}
+
+    users:
+      registrations:
+        create:
+          failure: Failed to create an account. Please check the marked fields bellow.
