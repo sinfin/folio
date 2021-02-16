@@ -1,0 +1,21 @@
+.modal.f-devise-modal role="dialog" tabindex="-1"
+  .modal-dialog[
+    role="document"
+    class="modal-#{model && model[:size].presence || 'md'}"
+  ]
+    .modal-content[
+      class="f-devise-modal__content"
+      class="f-devise-modal__content--sessions"
+      class="f-devise-modal__content--active"
+    ]
+      .modal-body
+        == cell('folio/devise/sessions/new', devise_model)
+        = render(:_close)
+
+    .modal-content[
+      class="f-devise-modal__content"
+      class="f-devise-modal__content--registrations"
+    ]
+      .modal-body
+        == cell('folio/devise/registrations/new', devise_model)
+        = render(:_close)

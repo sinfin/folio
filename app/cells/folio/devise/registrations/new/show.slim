@@ -23,4 +23,8 @@
     span.folio-loader.f-devise__loader
 
   .f-devise__bottom-action-wrap
-    == sign_in_link
+    = t("folio.devise.sign_in_link")
+    a.f-devise-modal-aware-link<>[
+      href=controller.new_session_path(resource_name)
+    ]
+      = t("folio.devise.sign_in_link_inner")

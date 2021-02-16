@@ -1,1 +1,42 @@
-h1 home#index
+.container-fluid
+  h1 home#index
+
+  - if Rails.application.config.folio_users
+    .mt-5.row
+      - if user_signed_in?
+        .col-auto
+          a.btn.btn-secondary href=edit_user_registration_path
+            ' Edit registration
+
+        .col-auto
+          a.btn.btn-secondary href=edit_user_registration_path(pw: 1)
+            ' Change password
+
+        .col-auto
+          a.btn.btn-danger href=destroy_user_session_path
+            ' Sign out
+
+      - else
+        .col-auto
+          a.btn.btn-primary href=new_user_session_path Sign in
+
+        .col-auto
+          a.btn.btn-secondary href=new_user_registration_path Sign up
+
+        .col-auto
+          button.btn.btn-primary[
+            type="button"
+            data-toggle="modal"
+            data-target=Folio::Devise::ModalCell::CLASS_NAME
+            data-action="sign_in"
+          ]
+            ' Sign in (modal)
+
+        .col-auto
+          button.btn.btn-secondary[
+              type="button"
+              data-toggle="modal"
+              data-target=Folio::Devise::ModalCell::CLASS_NAME
+              data-action="sign_up"
+            ]
+            ' Sign up (modal)

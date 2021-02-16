@@ -5,7 +5,8 @@ cs:
       submit: Odeslat
       forgotten_password_link: Zapomenuté heslo?
       register_button: Vytvořit nový účet
-      sign_in_link: Již u nás máte účet? <a href="%{href}">Přihlašte se</a>
+      sign_in_link: Již u nás máte účet?
+      sign_in_link_inner: Přihlašte se
 
       invitations:
         edit:

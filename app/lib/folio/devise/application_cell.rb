@@ -35,7 +35,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def register_button
     link_to(t("folio.devise.register_button"),
             controller.new_registration_path(resource_name),
-            class: register_button_class_name)
+            class: "f-devise-modal-aware-link #{register_button_class_name}")
   end
 
   def submit_button(f, label)

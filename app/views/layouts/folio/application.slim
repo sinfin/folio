@@ -4,11 +4,10 @@ html lang=I18n.locale
     = render partial: 'layouts/folio/head'
     = render partial: 'layouts/folio/favicon'
 
-    == cell('folio/browser_update')
-
   body
     == cell('folio/console/flash', flash)
 
     = yield
 
+    == cell('folio/devise/modal')
     == cell('folio/photoswipe')
