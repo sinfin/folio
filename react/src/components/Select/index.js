@@ -58,7 +58,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { createable, value, options, onChange, innerRef, selectize, async, asyncData, settingsUrlData, defaultOptions, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, settingsUrlData, defaultOptions, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -119,23 +119,29 @@ class Select extends React.Component {
       }
     }
 
+    let handledOptions
+    if (options) {
+      handledOptions = formatOptions(options)
+    } else if (rawOptions) {
+      handledOptions = rawOptions
+    }
+
     return (
       <SelectComponent
         name='form-field-name'
         className='react-select-container'
         classNamePrefix='react-select'
         value={formattedValue}
-        options={options ? formatOptions(options) : undefined}
+        options={handledOptions}
         defaultOptions={defaultOptions}
         formatCreateLabel={formatCreateLabel}
         onChange={this.onChange}
-        createable={createable}
         noOptionsMessage={makeNoOptionsMessage(options)}
         ref={innerRef}
         styles={selectStyles}
         loadOptions={loadOptions}
         onKeyDown={this.onKeyDown}
-        isClearable
+        isClearable={typeof isClearable === "undefined" ? true : isClearable}
         placeholder={window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}

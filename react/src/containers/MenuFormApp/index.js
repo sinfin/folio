@@ -39,20 +39,17 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
   })
 
   const linkOptions = [
-    <option key='no-link' value=''>{window.FolioConsole.translations.menuNoLink}</option>,
-    <option key={MENU_ITEM_URL} value={MENU_ITEM_URL}>{window.FolioConsole.translations.menuItemUrl}</option>
+    { value: '', label: window.FolioConsole.translations.menuNoLink },
+    { value: MENU_ITEM_URL, label: window.FolioConsole.translations.menuItemUrl }
   ]
+
   menus.paths.forEach((path, i) => {
     const value = path.rails_path || `${path.target_type} -=- ${path.target_id}`
-    linkOptions.push(
-      <option
-        key={i}
-        value={value}
-        data-title={path.title}
-      >
-        {path.label}
-      </option>
-    )
+    linkOptions.push({
+      value: value,
+      title: path.title,
+      label: path.label
+    })
   })
 
   return (
