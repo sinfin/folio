@@ -6,15 +6,15 @@ module Folio
 
     config.to_prepare do
       [
-        Devise::ConfirmationsController,
-        Devise::OmniauthCallbacksController,
-        Devise::PasswordsController,
-        Devise::RegistrationsController,
-        Devise::SessionsController,
-        Devise::UnlocksController,
+        ::Devise::ConfirmationsController,
+        ::Devise::OmniauthCallbacksController,
+        ::Devise::PasswordsController,
+        ::Devise::RegistrationsController,
+        ::Devise::SessionsController,
+        ::Devise::UnlocksController,
 
-        Devise::InvitationsController,
-        DeviseInvitable::RegistrationsController,
+        ::Devise::InvitationsController,
+        ::DeviseInvitable::RegistrationsController,
       ].each do |controller|
         controller.send(:include, Folio::DeviseExtension)
       end
