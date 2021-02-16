@@ -11,6 +11,10 @@ class Folio::Console::MenusController < Folio::Console::BaseController
     @klass.transaction do
       dict = {}
 
+      if menu_params[:title]
+        @menu.update!(title: menu_params[:title])
+      end
+
       if menu_params[:menu_items_attributes]
         menu_params[:menu_items_attributes].each do |_i, mia|
           if mia[:id].blank?
@@ -39,9 +43,20 @@ class Folio::Console::MenusController < Folio::Console::BaseController
   end
 
   private
+    def index_filters
+      {
+        by_type: Folio::Menu.recursive_subclasses(include_self: false).map do |klass|
+                   [klass.model_name.human, klass]
+                 end,
+      }
+    end
+
     def menu_params
+      p = %i[title]
+      p += %i[type locale] if action_name == "create"
+
       params.require(:menu)
-            .permit(menu_items_attributes: menu_items_attributes)
+            .permit(*p, menu_items_attributes: menu_items_attributes)
     end
 
     def menu_items_attributes

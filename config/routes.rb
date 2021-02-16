@@ -33,7 +33,7 @@ Folio::Engine.routes.draw do
       patch :update, path: ":type/update", as: :update
     end
 
-    resources :menus, only: [:edit, :update, :index]
+    resources :menus, except: %i[show]
 
     resources :images, only: %i[index]
     resources :documents, only: %i[index]
