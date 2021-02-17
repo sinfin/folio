@@ -21,8 +21,18 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       end
     end
 
+    if params[:q].present?
+      qq = I18n.transliterate(params[:q]).downcase
+    else
+      qq = nil
+    end
+
     rails_paths.each do |path, label|
-      next if params[:q].present? && !label.include?(params[:q])
+      if qq.present?
+        matcher = I18n.transliterate(label).downcase
+        next unless matcher.include?(qq)
+      end
+
       links << {
         label: label,
         url: main_app.public_send(path),
