@@ -9,20 +9,11 @@
     published_toggle
     date(:published_at)
 
+    preview_path = nil
     if record.is_a?(Folio::Page)
-      if record.nested_page_path
-        if controller.main_app.respond_to?(:page_path)
-          preview_url = controller.main_app.page_path(record.nested_page_path)
-        else
-          preview_url = nil
-        end
-      else
-        preview_url = url_for(record)
-      end
-    else
-      preview_url = nil
+      preview_path = controller.main_app.page_path(record.to_preview_param)
     end
 
-    actions({ preview: preview_url }, :edit, :destroy)
+    actions({ preview: preview_path }, :edit, :destroy)
 
     transportable_dropdown
