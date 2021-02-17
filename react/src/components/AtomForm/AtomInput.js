@@ -49,6 +49,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         defaultValue={defaultValue}
         onChange={(html) => onValueChange(index, html, key)}
         invalid={Boolean(atom.errors[key])}
+        scrollTarget=".f-c-atom-form-toolbar-fix-parent"
       />
     )
   }
