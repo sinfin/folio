@@ -2,6 +2,9 @@
 
 if Rails.application.config.folio_users
   require "omniauth"
+  require "omniauth-facebook"
+  require "omniauth-twitter"
+  require "omniauth-google-oauth2"
 
   Rails.application.config.middleware.use OmniAuth::Builder do
     Rails.application.config.folio_users_omniauth_providers.each do |provider|

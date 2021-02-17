@@ -1,0 +1,14 @@
+.f-devise-omniauth
+  - if model.present?
+    p.f-devise-omniauth__p = t(".#{model}")
+
+  .f-devise-omniauth__buttons
+    - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
+      a.btn.btn-outline-primary.btn-xs-block.f-devise-omniauth__button[
+        href=url_for_key(key)
+      ]
+        = render("_#{key}")
+        = t("folio.devise.omniauth.providers.#{key}")
+
+  - if model.present?
+    p.f-devise-omniauth__p = t(".or")

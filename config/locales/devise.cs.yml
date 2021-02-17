@@ -51,6 +51,16 @@ cs:
           new_password_confirmation: Nové heslo (kontrola)
           pending_reconfirmation: Čekáme na potvrzení změny na %{email}
 
+      omniauth:
+        providers:
+          facebook: Facebook
+          google_oauth2: Google
+          twitter: Twitter
+
+        sessions: "Přihlašte se pomocí:"
+        registrations: "Zaregistujte se pomocí:"
+        or: "Nebo:"
+
     users:
       registrations:
         create:

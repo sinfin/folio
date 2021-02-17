@@ -31,12 +31,13 @@
 
       = render(:_bottom)
 
-    .f-devise__group
-      .f-devise__row
-        .f-devise__col
-          == password_input(f,
-                            :current_password,
-                            autocomplete: 'current-password')
+    - if f.object.send(:password_required?)
+      .f-devise__group
+        .f-devise__row
+          .f-devise__col
+            == password_input(f,
+                              :current_password,
+                              autocomplete: 'current-password')
 
     = submit_button(f, t('.update'))
 

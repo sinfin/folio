@@ -28,6 +28,10 @@ class Folio::User < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  has_many :authentications, class_name: "Folio::Omniauth::Authentication",
+                             foreign_key: :folio_user_id,
+                             dependent: :destroy
+
   scope :ordered, -> { order(id: :desc) }
 
   validates :first_name, :last_name,
@@ -43,7 +47,13 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def to_label
-    full_name
+    if first_name.present? || last_name.present?
+      full_name
+    elsif nickname.present?
+      nickname
+    else
+      email
+    end
   end
 
   def to_console_label
@@ -60,11 +70,13 @@ class Folio::User < Folio::ApplicationRecord
 
   private
     def validate_first_name_and_last_name?
-      true
+      if nickname.present?
+        false
+      end
     end
 
     def password_required?
-      if skip_password_validation?
+      if skip_password_validation? || authentications.present?
         false
       else
         super
@@ -103,6 +115,7 @@ end
 #  invited_by_type        :string
 #  invited_by_id          :bigint(8)
 #  invitations_count      :integer          default(0)
+#  nickname               :string
 #
 # Indexes
 #

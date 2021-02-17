@@ -5,6 +5,9 @@ linters:
 exclude:
   - 'app/cells/folio/console/publishable_inputs/show.slim'
   - 'app/cells/folio/devise/modal/_close.slim'
+  - 'app/cells/folio/devise/omniauth/_facebook.slim'
+  - 'app/cells/folio/devise/omniauth/_google_oauth2.slim'
+  - 'app/cells/folio/devise/omniauth/_twitter.slim'
   - 'app/cells/folio/devise/password_input/show.slim'
   - 'app/cells/folio/image/_fallback_svg.slim'
   - 'app/views/folio/console/partials/_translations.slim'

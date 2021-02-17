@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_08_140011) do
+ActiveRecord::Schema.define(version: 2021_02_17_120247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,19 @@ ActiveRecord::Schema.define(version: 2021_02_08_140011) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "folio_omniauth_authentications", force: :cascade do |t|
+    t.bigint "folio_user_id"
+    t.string "uid"
+    t.string "provider"
+    t.string "email"
+    t.string "nickname"
+    t.string "access_token"
+    t.json "raw_info"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["folio_user_id"], name: "index_folio_omniauth_authentications_on_folio_user_id"
+  end
+
   create_table "folio_pages", force: :cascade do |t|
     t.string "title"
     t.string "slug"
@@ -323,6 +336,7 @@ ActiveRecord::Schema.define(version: 2021_02_08_140011) do
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
+    t.string "nickname"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true

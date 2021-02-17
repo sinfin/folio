@@ -40,6 +40,15 @@ en:
           new_password_confirmation: New password (confirmation)
           pending_reconfirmation: We're waiting for you to confirm the change to %{email}
 
+      omniauth:
+        providers:
+          facebook: Facebook
+          google_oauth2: Google
+          twitter: Twitter
+        sessions: "Sign in via:"
+        registrations: "Sign up via:"
+        or: "Or:"
+
     users:
       registrations:
         create:

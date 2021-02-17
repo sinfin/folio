@@ -96,6 +96,7 @@ cs:
         sign_in_count: Počet přihlášení
         password: Heslo
         password_confirmation: Heslo (kontrola)
+        nickname: Přezdívka
 
     errors:
       messages:
