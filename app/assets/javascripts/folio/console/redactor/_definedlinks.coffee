@@ -33,9 +33,9 @@
 
       if $modal.find('.redactor-defined-links').length is 0
         @$urlInput.wrap '<div class=\'row\'></div>'
-        @$urlInput.wrap '<div class=\'col-md-6\'></div>'
+        @$urlInput.wrap '<div class=\'col-md-8\'></div>'
         $row = @$urlInput.closest('.row')
-        $row.prepend '<div class="col-md-6"><select class="form-control redactor-defined-links" /></div>'
+        $row.prepend '<div class="col-md-4"><select class="form-control redactor-defined-links" /></div>'
 
       @links = []
 
@@ -62,7 +62,14 @@
           .val(e.params.data.id)
           .addClass('form-control--hinted')
 
+        $linkText = $modal.find('#modal-link-text')
+        if $linkText.length and not $linkText.val()
+          $linkText
+            .val(e.params.data['data-title'])
+            .addClass('form-control--hinted')
+
         setTimeout (=>
+          $linkText.removeClass('form-control--hinted')
           @$urlInput.removeClass('form-control--hinted') if @$urlInput
         ), 1000
 

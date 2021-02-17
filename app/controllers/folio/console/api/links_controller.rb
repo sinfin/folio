@@ -13,13 +13,21 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
 
       scope.limit(10).each do |item|
         next if item.class.try(:public?) == false
-        links << { text: record_label(item), id: url_proc.call(item) }
+        links << {
+          text: record_label(item),
+          id: url_proc.call(item),
+          "data-title" => item.try(:to_label)
+        }
       end
     end
 
     rails_paths.each do |path, label|
       next if params[:q].present? && !label.include?(params[:q])
-      links << { text: label, id: main_app.public_send(path) }
+      links << {
+        text: label,
+        id: main_app.public_send(path),
+        title: label,
+      }
     end
 
     sorted_links = links.sort_by { |link| I18n.transliterate(link[:text]) }

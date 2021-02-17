@@ -141,7 +141,7 @@ class Select extends React.Component {
         styles={selectStyles}
         loadOptions={loadOptions}
         onKeyDown={this.onKeyDown}
-        isClearable={typeof isClearable === "undefined" ? true : isClearable}
+        isClearable={typeof isClearable === 'undefined' ? true : isClearable}
         placeholder={window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}

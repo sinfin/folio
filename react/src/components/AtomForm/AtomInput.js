@@ -5,6 +5,7 @@ import TextareaAutosize from 'react-autosize-textarea'
 import RichTextEditor from 'components/RichTextEditor'
 import ColorInput from 'components/ColorInput'
 import DateInput from 'components/DateInput'
+import UrlInput from 'components/UrlInput'
 
 import preventEnterSubmit from 'utils/preventEnterSubmit'
 
@@ -49,7 +50,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         defaultValue={defaultValue}
         onChange={(html) => onValueChange(index, html, key)}
         invalid={Boolean(atom.errors[key])}
-        scrollTarget=".f-c-atom-form-toolbar-fix-parent"
+        scrollTarget='.f-c-atom-form-toolbar-fix-parent'
       />
     )
   }
@@ -62,6 +63,19 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         onChange={(colorString) => onValueChange(index, colorString, key)}
         invalid={Boolean(atom.errors[key])}
         type={type}
+      />
+    )
+  }
+
+  if (type === 'url') {
+    return (
+      <UrlInput
+        name={key}
+        defaultValue={defaultValue}
+        onValueChange={(url) => onValueChange(index, url, key)}
+        onChange={(e) => onChange(e, index, key)}
+        onKeyPress={preventEnterSubmit}
+        invalid={Boolean(atom.errors[key])}
       />
     )
   }
