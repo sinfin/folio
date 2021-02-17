@@ -24,7 +24,14 @@ class UrlInput extends React.PureComponent {
         dataType: 'JSON',
         minimumInputLength: 0,
         cache: false,
-        data: (params) => ({ q: params.term })
+        data: (params) => ({ q: params.term }),
+        processResults: (data, params) => ({
+          results: data.data.map((h) => ({
+            ...h,
+            id: h.url,
+            text: h.label
+          }))
+        })
       }
     })
 

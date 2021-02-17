@@ -8,18 +8,18 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
   test "index" do
     I18n.with_locale(:cs) do
       get console_api_links_path
-      assert_equal([], JSON.parse(response.body)["data"])
+      assert_equal([], response.parsed_body["data"])
 
       page = create(:folio_page, title: "Foo", slug: "foo")
       get console_api_links_path
-      assert_equal([{ "name" => "Stránka - Foo", "url" => "/foo" }],
-                   JSON.parse(response.body)["data"])
+      assert_equal([{ "label" => "Stránka - Foo", "url" => "/foo", "title" => "Foo" }],
+                   response.parsed_body["data"])
 
       create(:folio_page, title: "Bar", slug: "bar")
       get console_api_links_path
-      assert_equal([{ "name" => "Stránka - Bar", "url" => "/bar" },
-                    { "name" => "Stránka - Foo", "url" => "/foo" }],
-                   JSON.parse(response.body)["data"])
+      assert_equal([{ "label" => "Stránka - Bar", "url" => "/bar", "title" => "Bar" },
+                    { "label" => "Stránka - Foo", "url" => "/foo", "title" => "Foo" }],
+                   response.parsed_body["data"])
 
       Folio::Console::Api::LinksController.class_eval do
         private
@@ -39,11 +39,11 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
       create(:folio_menu_item, title: "Test", target: page)
 
       get console_api_links_path
-      assert_equal([{ "name" => "Homepage", "url" => "/" },
-                    { "name" => "Odkaz - Test", "url" => "url" },
-                    { "name" => "Stránka - Bar", "url" => "/bar" },
-                    { "name" => "Stránka - Foo", "url" => "/foo" }],
-                   JSON.parse(response.body)["data"])
+      assert_equal([{ "label" => "Homepage", "url" => "/", "title" => "Homepage" },
+                    { "label" => "Odkaz - Test", "url" => "url", "title" => "Test" },
+                    { "label" => "Stránka - Bar", "url" => "/bar", "title" => "Bar" },
+                    { "label" => "Stránka - Foo", "url" => "/foo", "title" => "Foo" }],
+                   response.parsed_body["data"])
     end
   end
 end

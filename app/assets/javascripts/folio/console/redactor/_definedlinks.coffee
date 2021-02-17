@@ -50,22 +50,23 @@
           minimumInputLength: 0
           cache: false
           data: (params) -> { q: params.term }
-        templateSelection: (data, container) ->
-          $el = $(data.element)
-          Object.keys(data).forEach (key) ->
-            if key.indexOf('data-') is 0
-              $el.attr(key, data[key])
-          return data.text
+          processResults: (data, params) ->
+            {
+              results: data.data.map (h) ->
+                h.id = h.url
+                h.text = h.label
+                h
+            }
 
       @$select.on 'select2:select', (e) =>
         @$urlInput
-          .val(e.params.data.id)
+          .val(e.params.data.url)
           .addClass('form-control--hinted')
 
         $linkText = $modal.find('#modal-link-text')
         if $linkText.length and not $linkText.val()
           $linkText
-            .val(e.params.data['data-title'])
+            .val(e.params.data.title)
             .addClass('form-control--hinted')
 
         setTimeout (=>
