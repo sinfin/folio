@@ -50,6 +50,14 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def update_resource(resource, params)
+    if resource.authentications.blank?
+      resource.update_with_password(params)
+    else
+      resource.update(params)
+    end
+  end
+
   def is_flashing_format?
     if @force_flash
       true

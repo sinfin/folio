@@ -68,18 +68,18 @@ class Folio::User < Folio::ApplicationRecord
     super.nil? ? "1" : super
   end
 
+  def password_required?
+    if skip_password_validation? || authentications.present?
+      false
+    else
+      !persisted? || !password.nil? || !password_confirmation.nil?
+    end
+  end
+
   private
     def validate_first_name_and_last_name?
       if nickname.present?
         false
-      end
-    end
-
-    def password_required?
-      if skip_password_validation? || authentications.present?
-        false
-      else
-        super
       end
     end
 end
