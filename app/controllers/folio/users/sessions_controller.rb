@@ -1,6 +1,21 @@
 # frozen_string_literal: true
 
 class Folio::Users::SessionsController < Devise::SessionsController
+  def new
+    if params[:pending] && session[:pending_folio_authentication_id]
+      timestamp = Time.zone.parse(session[:pending_folio_authentication_id]["timestamp"])
+
+      if timestamp > 1.hour.ago
+        @pending_authentication = Folio::Omniauth::Authentication.find_by(id: session[:pending_folio_authentication_id]["id"])
+        super unless @pending_authentication
+      else
+        super
+      end
+    else
+      super
+    end
+  end
+
   def create
     respond_to do |format|
       format.html { super }

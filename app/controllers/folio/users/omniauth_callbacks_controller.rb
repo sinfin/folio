@@ -33,8 +33,11 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
         if user = auth.find_or_create_user!
           sign_in_and_redirect user
         else
-          session[:pending_folio_authentication_id] = auth.id
-          redirect_to new_user_registration_path(pending: 1)
+          session[:pending_folio_authentication_id] = {
+            timestamp: Time.zone.now,
+            id: auth.id,
+          }
+          redirect_to main_app.new_user_session_path(pending: 1)
         end
       end
     end

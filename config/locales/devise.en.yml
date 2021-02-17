@@ -49,6 +49,13 @@ en:
         registrations: "Sign up via:"
         or: "Or:"
 
+      omniauth_conflict:
+        title: Sign in
+        conflict: You have already signed in via “%{email}” before.
+        instructions: Please complete the login verification by <strong>clicking on the link in the email</strong> we've sent you.
+        resend: No e-mail received?
+        resend_link: Resend
+
     users:
       registrations:
         create:

@@ -1,4 +1,7 @@
 .f-devise
-  == cell('folio/devise/sessions/new',
-          resource: resource,
-          resource_name: resource_name)
+  - if @pending_authentication
+    == cell('folio/devise/omniauth_conflict', @pending_authentication)
+  - else
+    == cell('folio/devise/sessions/new',
+            resource: resource,
+            resource_name: resource_name)
