@@ -1,14 +1,15 @@
 ADVANCED_OPTIONS =
-  plugins: ['video', 'table', 'button', 'character_counter']
+  plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks']
   toolbarFixed: true
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
 
 OPTIONS =
-  plugins: ['table', 'button', 'character_counter']
+  plugins: ['table', 'button', 'character_counter', 'definedlinks']
   buttonsHide: ['file', 'image']
   toolbarFixed: true
+  definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
@@ -21,7 +22,7 @@ EMAIL_OPTIONS =
   formatting: []
 
 PEREX_OPTIONS =
-  plugins: ['character_counter']
+  plugins: ['character_counter', 'definedlinks']
   buttonsHide: ['file', 'image', 'html', 'format', 'bold', 'italic', 'deleted', 'lists']
   breakline: true
   toolbarFixed: true

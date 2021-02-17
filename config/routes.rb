@@ -79,6 +79,8 @@ Folio::Engine.routes.draw do
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
 
+      resources :links, only: %i[index]
+
       resources :images, only: %i[index create update destroy] do
         collection do
           post :tag
