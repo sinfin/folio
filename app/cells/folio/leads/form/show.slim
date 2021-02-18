@@ -25,14 +25,18 @@ div class=class_name data-failure=t('.failure')
             .col-sm.f-leads-form__col class="f-leads-form__col--#{col}"
               = input_for(f, col)
 
-    - if ENV['RECAPTCHA_SITE_KEY'].present? && \
-         ENV['RECAPTCHA_SECRET_KEY'].present?
-      .f-leads-form__recaptcha.form-group
-        = recaptcha_tags(script: false)
-        = f.error :verified_captcha, class: 'text-danger'
+    .f-leads-form__bottom
+      - if ENV['RECAPTCHA_SITE_KEY'].present? && \
+           ENV['RECAPTCHA_SECRET_KEY'].present?
+        .f-leads-form__recaptcha.form-group
+          = recaptcha_tags(script: false)
+          = f.error :verified_captcha, class: 'text-danger'
 
-    button.btn.btn-primary.f-leads-form__submit type="submit"
-      = t('.submit')
+      .f-leads-form__submit-wrap
+        button.btn.btn-primary.f-leads-form__submit type="submit"
+          = t('.submit')
+
+        == options[:next_to_submit]
 
   - if submitted?
     .f-leads-form__message

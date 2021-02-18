@@ -64,10 +64,7 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
   end
 
   def additional_data_input(f)
-    f.input(:additional_data, as: :hidden,
-                              input_html: {
-                                value: lead.additional_data.try(:to_json)
-                              })
+    f.hidden_field :additional_data, value: lead.additional_data.try(:to_json)
   end
 
   def layout
