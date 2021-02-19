@@ -14,6 +14,9 @@ class CreateFolioOmniauthAuthentications < ActiveRecord::Migration[6.0]
 
       t.json :raw_info
 
+      t.string :conflict_token
+      t.integer :conflict_user_id
+
       t.timestamps
     end
 

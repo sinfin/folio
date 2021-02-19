@@ -12,6 +12,10 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
             format: { with: Folio::EMAIL_REGEXP },
             if: :email?
 
+  validates :conflict_token,
+            uniqueness: true,
+            if: :conflict_token?
+
   def human_provider
     I18n.t("folio.devise.omniauth.providers.#{provider}")
   end
@@ -26,6 +30,18 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
     end
 
     if existing_user
+      conflict_token = nil
+
+      loop do
+        conflict_token = SecureRandom.urlsafe_base64(16)
+                                     .gsub(/-|_/, ("a".."z").to_a[rand(26)])
+
+        break unless self.class.exists?(conflict_token: conflict_token)
+      end
+
+      update_columns(conflict_user_id: existing_user.id,
+                     conflict_token: conflict_token)
+
       false
     else
       Folio::User.create!(password: Devise.friendly_token[0, 20],
@@ -55,16 +71,18 @@ end
 #
 # Table name: folio_omniauth_authentications
 #
-#  id            :bigint(8)        not null, primary key
-#  folio_user_id :bigint(8)
-#  uid           :string
-#  provider      :string
-#  email         :string
-#  nickname      :string
-#  access_token  :string
-#  raw_info      :json
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id               :bigint(8)        not null, primary key
+#  folio_user_id    :bigint(8)
+#  uid              :string
+#  provider         :string
+#  email            :string
+#  nickname         :string
+#  access_token     :string
+#  raw_info         :json
+#  conflict_token   :string
+#  conflict_user_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 # Indexes
 #

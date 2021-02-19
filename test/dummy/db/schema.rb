@@ -215,6 +215,8 @@ ActiveRecord::Schema.define(version: 2021_02_17_120247) do
     t.string "nickname"
     t.string "access_token"
     t.json "raw_info"
+    t.string "conflict_token"
+    t.integer "conflict_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["folio_user_id"], name: "index_folio_omniauth_authentications_on_folio_user_id"

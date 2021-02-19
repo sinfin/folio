@@ -1,5 +1,14 @@
 ---
 en:
+  devise:
+    mailer:
+      omniauth_conflict:
+        subject: Complete the login verification
+        greeting: Hello!
+        instructions: "to finish signing in via %{provider} click the link bellow:"
+        button: Sign in
+        footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
+
   folio:
     devise:
       submit: Submit
@@ -16,6 +25,7 @@ en:
         new:
           title: Sign in
           sign_in: Sign in
+          invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.
 
       passwords:
         new:

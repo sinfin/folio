@@ -34,6 +34,23 @@ class Folio::DeviseMailer < Devise::Mailer
     super(record, token, opts)
   end
 
+  def omniauth_conflict(authentication, opts = {})
+    @authentication = authentication
+    @record = Folio::User.find(authentication.conflict_user_id)
+
+    initialize_from_record(@record)
+
+
+    @data = {
+      USER_CONFLICT_PROVIDER: authentication.human_provider,
+      USER_CONFLICT_RESOLVE_URL: scoped_url_method(@record,
+                                                   :new_session_url,
+                                                   conflict_token: authentication.conflict_token)
+    }
+
+    mail headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"))
+  end
+
   private
     def scoped_url_method(record, method, *args)
       if record.is_a?(Folio::Account)

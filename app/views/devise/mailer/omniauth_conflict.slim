@@ -1,0 +1,9 @@
+p = t('.greeting')
+
+p = t('.instructions', provider: @data[:USER_CONFLICT_PROVIDER])
+
+p class="redactor-component folio-redactor-button" data-redactor-type="button"
+  a class="btn btn-primary" href=@data[:USER_CONFLICT_RESOLVE_URL]
+    = t('.button')
+
+p = t('.footer')
