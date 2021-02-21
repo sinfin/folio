@@ -27,7 +27,7 @@ class ConvertCoverPlacementsToFileSti < ActiveRecord::Migration[5.2]
     end
 
     cover_placements = conn.exec_query("SELECT * FROM folio_cover_placements")
-                           .to_hash
+    cover_placements = cover_placements.try(:to_hash) || cover_placements.to_h
 
     cover_placements.each do |cover_placement|
       conn.execute <<~SQL
