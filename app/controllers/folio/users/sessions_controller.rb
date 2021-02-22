@@ -26,7 +26,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
         @pending_authentication = Folio::Omniauth::Authentication.find_by(id: session[:pending_folio_authentication_id]["id"])
 
         if @pending_authentication
-          Folio::DeviseMailer.omniauth_conflict(@pending_authentication).deliver_later
+          Rails.application.config.devise.mailer.omniauth_conflict(@pending_authentication).deliver_later
         end
 
         super unless @pending_authentication

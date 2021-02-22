@@ -10,7 +10,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
     sign_in create(:folio_user)
 
     assert_raises(ActionController::MethodNotAllowed) do
-      get new_user_invitation_path
+      get main_app.new_user_invitation_path
     end
   end
 
@@ -20,7 +20,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
 
 
     assert_raises(ActionController::MethodNotAllowed) do
-      post user_invitation_path, params: {
+      post main_app.user_invitation_path, params: {
         user: {
           email: "email@email.email"
         }
@@ -31,7 +31,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   test "edit" do
     create(:folio_site)
     user = Folio::User.invite!(email: "email@email.email")
-    get accept_user_invitation_path(invitation_token: user.raw_invitation_token)
+    get main_app.accept_user_invitation_path(invitation_token: user.raw_invitation_token)
     assert_response(:ok)
   end
 
@@ -43,7 +43,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
                                last_name: "b")
     assert_not user.invitation_accepted?
 
-    put user_invitation_path, params: {
+    put main_app.user_invitation_path, params: {
       user: {
         invitation_token: user.raw_invitation_token,
         password: "new-password",
@@ -51,7 +51,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to root_path
+    assert_redirected_to main_app.root_path
     assert user.reload.invitation_accepted?
   end
 end
