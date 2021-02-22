@@ -29,8 +29,6 @@ class Folio::ApplicationCell < Cell::ViewModel
 
   def url_for(options)
     controller.url_for(options)
-  rescue StandardError
-    controller.main_app.url_for(options)
   end
 
   def current_site
