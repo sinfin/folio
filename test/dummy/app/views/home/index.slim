@@ -7,8 +7,8 @@
         = show_for current_user do |s|
           = s.email
           = s.attribute(:nickname)
-          = s.association(:authentications) do |auth|
-            li #{auth.human_provider} / #{l(auth.created_at, format: :short)}
+          = s.attribute(:authentications)
+            == cell('folio/devise/omniauth/authentications/list', current_user)
 
         .mt-4.row
           .col-auto

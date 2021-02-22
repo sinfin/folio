@@ -58,6 +58,13 @@ en:
         sessions: "Sign in via:"
         registrations: "Sign up via:"
         or: "Or:"
+        authentications:
+          list:
+            missing: Unlinked
+            link: Link
+            unlink: Unlink
+          destroy:
+            success: Account was unlinked.
 
       omniauth_conflict:
         title: Sign in

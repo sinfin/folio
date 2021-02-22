@@ -9,6 +9,12 @@ Folio::Engine.routes.draw do
     devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
   end
 
+  namespace :devise do
+    namespace :omniauth do
+      resource :authentication, only: %i[destroy]
+    end
+  end
+
   root to: "home#index"
 
   namespace :console do

@@ -69,6 +69,13 @@ cs:
         sessions: "Přihlašte se pomocí:"
         registrations: "Zaregistujte se pomocí:"
         or: "Nebo:"
+        authentications:
+          list:
+            missing: Nepřipojeno
+            link: Připojit
+            unlink: Odpojit
+          destroy:
+            success: Účet úspěšně odpojen.
 
       omniauth_conflict:
         title: Přihlášení

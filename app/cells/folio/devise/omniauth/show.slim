@@ -8,7 +8,7 @@
         href=url_for_key(key)
         class=omniauth_button_class_name
       ]
-        = render("_#{key}")
+        == cell('folio/devise/omniauth/icon', key, size: 24)
         = t("folio.devise.omniauth.providers.#{key}")
 
   - if model.present?
