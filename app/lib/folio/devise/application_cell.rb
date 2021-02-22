@@ -45,8 +45,9 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def email_input(f, opts = {})
-    f.input :email, opts.merge(input_html: {
-                                autofocus: true,
+    f.input :email, opts.merge(required: true,
+                               input_html: {
+                                autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
                                 autocomplete: "email",
                                 value: f.object.email.presence || "@"
                               })
@@ -62,5 +63,12 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     f.input field, opts.merge(input_html: {
       value: f.object.send(field).presence || params[resource_name].try(:[], field)
     })
+  end
+
+  def omniauth_button_class_name
+    "btn btn-outline-primary btn-xs-block"
+  end
+
+  def registrations_perex
   end
 end

@@ -10,6 +10,9 @@ $(document)
         .first()
         .addClass('f-devise-modal__content--active')
 
+  .on 'shown.bs.modal', '.f-devise-modal', (e) ->
+    $(this).find('[autofocus]:visible').first().focus()
+
   .on 'show.bs.modal', '.f-devise-modal', (e) ->
     $btn = $(e.relatedTarget)
     $modal = $(this)

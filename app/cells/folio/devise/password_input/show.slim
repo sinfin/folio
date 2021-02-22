@@ -1,5 +1,5 @@
 .f-devise-password-input.form-group
-  = model.label options[:label].presence || options[:field]
+  = model.label options[:label].presence || options[:field], required: true
 
   .f-devise-password-input__wrap
     = input

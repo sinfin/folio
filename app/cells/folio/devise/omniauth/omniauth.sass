@@ -16,9 +16,13 @@
   +media-breakpoint-up(sm)
     &__buttons
       display: flex
+      flex-wrap: wrap
+      margin-bottom: - $spacer
+      margin-right: - $spacer
 
-    &__button + &__button
-      margin-left: $spacer
+    &__button
+      margin-right: $spacer
+      margin-bottom: $spacer
 
   +media-breakpoint-down(xs)
     &__button

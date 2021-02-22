@@ -4,8 +4,9 @@
 
   .f-devise-omniauth__buttons
     - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
-      a.btn.btn-outline-primary.btn-xs-block.f-devise-omniauth__button[
+      a.f-devise-omniauth__button[
         href=url_for_key(key)
+        class=omniauth_button_class_name
       ]
         = render("_#{key}")
         = t("folio.devise.omniauth.providers.#{key}")

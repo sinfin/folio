@@ -2,6 +2,9 @@
   = form do |f|
     = title
 
+    - if registrations_perex
+      p.f-devise__perex = registrations_perex
+
     == cell('folio/devise/flash', model[:flash])
 
     == cell('folio/devise/omniauth', 'registrations')
@@ -12,7 +15,7 @@
 
     .f-devise__row
       .f-devise__col
-        == email_input(f, label: t('.email_label'))
+        == email_input(f, autofocus: false, label: t('.email_label'))
 
     .f-devise__row
       .f-devise__col
