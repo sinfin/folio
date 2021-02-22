@@ -51,7 +51,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to main_app.root_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_accept_path)
     assert user.reload.invitation_accepted?
   end
 end

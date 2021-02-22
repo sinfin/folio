@@ -44,7 +44,7 @@ class Folio::Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
         password_confirmation: "new-password",
       }
     }
-    assert_redirected_to main_app.root_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
 
     user.reload
 

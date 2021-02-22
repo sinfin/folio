@@ -75,13 +75,11 @@ class Folio::Users::SessionsController < Devise::SessionsController
   end
 
   def after_sign_in_path_for(_resource)
-    root_path
+    send(Rails.application.config.folio_users_after_sign_in_path)
   end
 
   def after_sign_out_path_for(_resource)
-    new_user_session_path
-  rescue ActionController::UrlGenerationError
-    main_app.new_user_session_path
+    send(Rails.application.config.folio_users_after_sign_out_path)
   end
 
   def is_flashing_format?

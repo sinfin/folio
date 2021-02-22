@@ -23,7 +23,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "create" do
     post main_app.user_session_path, params: { user: @params }
-    assert_redirected_to main_app.root_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
   end
 
   test "ajax create" do
@@ -65,7 +65,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_nil(auth.reload.folio_user_id)
 
     get main_app.new_user_session_path(conflict_token: auth.conflict_token)
-    assert_redirected_to main_app.root_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
 
     assert_equal(user.id, auth.reload.folio_user_id)
   end

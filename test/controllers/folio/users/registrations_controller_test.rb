@@ -25,7 +25,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
 
   test "create" do
     post main_app.user_registration_path, params: { user: @params.merge(email: "other@email.email") }
-    assert_redirected_to(main_app.root_path)
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_up_path)
     assert Folio::User.exists?(email: "other@email.email")
   end
 
@@ -63,7 +63,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
         current_password: "password",
       }
     }
-    assert_redirected_to main_app.root_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
     assert_equal("new@email.email", @user.reload.email)
   end
 
@@ -71,7 +71,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     assert_equal(1, Folio::User.count)
     sign_in @user
     delete main_app.user_registration_path
-    assert_redirected_to main_app.root_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_out_path)
     assert_equal(0, Folio::User.count)
   end
 end

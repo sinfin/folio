@@ -86,6 +86,10 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def after_sign_out_path_for(_resource)
+    send(Rails.application.config.folio_users_after_sign_out_path)
+  end
+
   private
     def sign_up_params
       params.require(:user).permit(:first_name, :last_name).to_h.merge(super)

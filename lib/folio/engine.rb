@@ -26,9 +26,6 @@ module Folio
     config.folio_pages_audited = false
     config.folio_pages_translations = false
     config.folio_pages_ancestry = false
-    config.folio_users = false
-    config.folio_users_confirmable = false
-    config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter]
     config.folio_pages_perex_richtext = false
     config.folio_console_locale = :cs
     config.folio_console_dashboard_redirect = :console_pages_path
@@ -40,6 +37,14 @@ module Folio
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
     config.folio_show_transportable_frontend = false
+
+    config.folio_users = false
+    config.folio_users_confirmable = false
+    config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter]
+    config.folio_users_after_sign_in_path = :root_path
+    config.folio_users_after_sign_up_path = :root_path
+    config.folio_users_after_sign_out_path = :new_user_session_path
+    config.folio_users_after_accept_path = :root_path
 
     initializer :append_migrations do |app|
       unless app.root.to_s.include? root.to_s
