@@ -1,8 +1,17 @@
 = show_header @user, destroy_url: url_for([:console, @user]),
                      right: cell('folio/console/users/header_actions',
                                  @user)
-= show_for @user do |s|
-  = s.email
-  = s.attribute :sign_in_count
-  = s.attribute :last_sign_in_at
-  = s.attribute :created_at
+.row
+  .col-lg-8
+    = show_for @user do |s|
+      = s.email
+      = s.attribute :sign_in_count
+      = s.attribute :last_sign_in_at
+      = s.attribute :created_at
+
+  - if @user.admin_note.present?
+    .col-lg-4
+      .card
+        .card-body.bg-postit-note
+          .mb-n3
+            = simple_format @user.admin_note

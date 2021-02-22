@@ -92,11 +92,12 @@ cs:
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:
+        admin_note: Poznámka (viditelná jen adminstrátory)
         last_sign_in_at: Poslední přihlášení
-        sign_in_count: Počet přihlášení
+        nickname: Přezdívka
         password: Heslo
         password_confirmation: Heslo (kontrola)
-        nickname: Přezdívka
+        sign_in_count: Počet přihlášení
 
     errors:
       messages:

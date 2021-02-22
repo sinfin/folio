@@ -105,6 +105,7 @@ end
 #  unconfirmed_email      :string
 #  first_name             :string
 #  last_name              :string
+#  admin_note             :text
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  invitation_token       :string
