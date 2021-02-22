@@ -24,14 +24,20 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
   end
 
   test "create" do
-    assert_equal(1, Folio::User.count)
-    post main_app.user_registration_path, params: { user: @params }
-    assert_response(:ok)
-    assert_equal(1, Folio::User.count)
-
     post main_app.user_registration_path, params: { user: @params.merge(email: "other@email.email") }
     assert_redirected_to(main_app.root_path)
-    assert_equal(2, Folio::User.count)
+    assert Folio::User.exists?(email: "other@email.email")
+  end
+
+  test "create_invalid" do
+    post main_app.user_registration_path, params: {
+      user: {
+        email: "third@email.email",
+        password: "password",
+      }
+    }
+    assert_not Folio::User.exists?(email: "third@email.email")
+    assert_response(:ok)
   end
 
   test "edit" do

@@ -78,9 +78,7 @@ class Folio::User < Folio::ApplicationRecord
 
   private
     def validate_first_name_and_last_name?
-      if nickname.present?
-        false
-      end
+      authentications.blank? || nickname.blank?
     end
 end
 

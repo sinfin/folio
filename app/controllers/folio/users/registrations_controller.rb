@@ -2,16 +2,36 @@
 
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
   def create
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
+
+    build_resource(sign_up_params)
+
+    resource.save
+
     respond_to do |format|
-      format.html { super }
+      format.html do
+        # need to override devise invitable here with devise default
+
+        yield resource if block_given?
+
+        if resource.persisted?
+          if resource.active_for_authentication?
+            set_flash_message! :notice, :signed_up
+            sign_up(resource_name, resource)
+            respond_with resource, location: after_sign_up_path_for(resource)
+          else
+            set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
+            expire_data_after_sign_in!
+            respond_with resource, location: after_inactive_sign_up_path_for(resource)
+          end
+        else
+          clean_up_passwords resource
+          set_minimum_password_length
+          respond_with resource
+        end
+      end
 
       format.json do
-        devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
-
-        build_resource(sign_up_params)
-
-        resource.save
-
         if resource.persisted?
           @force_flash = true
 
