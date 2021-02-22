@@ -14,7 +14,8 @@ class Folio::Devise::Omniauth::Authentications::ListCell < Folio::Devise::Applic
   end
 
   def url_for_key(key)
-    controller.main_app.send("user_#{key}_omniauth_authorize_path")
+    url = controller.main_app.send("user_#{key}_omniauth_authorize_path")
+    controller.folio.users_comeback_path(to: url)
   end
 
   def can_remove_auth?

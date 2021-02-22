@@ -17,7 +17,7 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
             if: :conflict_token?
 
   def human_provider
-    I18n.t("folio.devise.omniauth.providers.#{provider}")
+    self.class.human_provider(provider)
   end
 
   def find_or_create_user!
@@ -49,6 +49,10 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
                           authentications: [self],
                           email: email)
     end
+  end
+
+  def self.human_provider(provider)
+    I18n.t("folio.devise.omniauth.providers.#{provider}", default: "Oauth")
   end
 
   def self.from_request(request)

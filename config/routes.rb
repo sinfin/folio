@@ -15,6 +15,10 @@ Folio::Engine.routes.draw do
     end
   end
 
+  namespace :users do
+    get "/comeback", to: "comebacks#show"
+  end
+
   root to: "home#index"
 
   namespace :console do

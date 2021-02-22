@@ -12,8 +12,11 @@ class Folio::Devise::Omniauth::AuthenticationsController < Folio::ApplicationCon
                 .where(provider: provider)
                 .destroy_all
 
+    msg = t(".success",
+            provider: Folio::Omniauth::Authentication.human_provider(provider))
+
     redirect_back fallback_location: fallback_location,
-                  flash: { success: t(".success") }
+                  flash: { success: msg }
   end
 
   def fallback_location

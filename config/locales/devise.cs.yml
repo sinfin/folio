@@ -75,7 +75,7 @@ cs:
             link: Připojit
             unlink: Odpojit
           destroy:
-            success: Účet úspěšně odpojen.
+            success: "%{provider} účet úspěšně odpojen."
 
       omniauth_conflict:
         title: Přihlášení
@@ -88,3 +88,6 @@ cs:
       registrations:
         create:
           failure: Účet se nepodařilo vytvořit. Prosíme zkontrolujte označená pole.
+
+      omniauth_callbacks:
+        added_provider: "%{provider} účet úspěšně připojen."

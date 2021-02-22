@@ -27,8 +27,16 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           auth.user = current_user
           auth.save!
 
-          redirect_to target_url
+          if current_user.reload.authentications.where(provider: auth.provider).size == 1
+            msg = t("folio.users.omniauth_callbacks.added_provider",
+                    provider: auth.human_provider)
+            redirect_to target_url, flash: { success: msg }
+          else
+            set_flash_message!(:notice, :signed_in)
+            redirect_to target_url
+          end
         else
+          set_flash_message!(:notice, :signed_in)
           redirect_to target_url
         end
       else

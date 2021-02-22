@@ -64,7 +64,7 @@ en:
             link: Link
             unlink: Unlink
           destroy:
-            success: Account was unlinked.
+            success: "%{provider} account unlinked."
 
       omniauth_conflict:
         title: Sign in
@@ -77,3 +77,6 @@ en:
       registrations:
         create:
           failure: Failed to create an account. Please check the marked fields bellow.
+
+      omniauth_callbacks:
+        added_provider: "%{provider} account linked."
