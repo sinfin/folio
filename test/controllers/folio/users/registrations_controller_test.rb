@@ -19,30 +19,30 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
   end
 
   test "new" do
-    get new_user_registration_path
+    get main_app.new_user_registration_path
     assert_response(:ok)
   end
 
   test "create" do
     assert_equal(1, Folio::User.count)
-    post user_registration_path, params: { user: @params }
+    post main_app.user_registration_path, params: { user: @params }
     assert_response(:ok)
     assert_equal(1, Folio::User.count)
 
-    post user_registration_path, params: { user: @params.merge(email: "other@email.email") }
-    assert_redirected_to(root_path)
+    post main_app.user_registration_path, params: { user: @params.merge(email: "other@email.email") }
+    assert_redirected_to(main_app.root_path)
     assert_equal(2, Folio::User.count)
   end
 
   test "edit" do
     sign_in @user
-    get edit_user_registration_path
+    get main_app.edit_user_registration_path
     assert_response(:ok)
   end
 
   test "update" do
     sign_in @user
-    patch user_registration_path, params: {
+    patch main_app.user_registration_path, params: {
       user: {
         email: "new@email.email",
       }
@@ -51,21 +51,21 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     assert_not_equal("new@email.email", @user.reload.email)
 
     sign_in @user
-    patch user_registration_path, params: {
+    patch main_app.user_registration_path, params: {
       user: {
         email: "new@email.email",
         current_password: "password",
       }
     }
-    assert_redirected_to root_path
+    assert_redirected_to main_app.root_path
     assert_equal("new@email.email", @user.reload.email)
   end
 
   test "destroy" do
     assert_equal(1, Folio::User.count)
     sign_in @user
-    delete user_registration_path
-    assert_redirected_to root_path
+    delete main_app.user_registration_path
+    assert_redirected_to main_app.root_path
     assert_equal(0, Folio::User.count)
   end
 end
