@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Users::SessionsController < Devise::SessionsController
+  include Folio::Users::DeviseUserPaths
+
   def new
     if params[:conflict_token].present?
       authentication = Folio::Omniauth::Authentication.find_by(conflict_token: params[:conflict_token])
@@ -72,14 +74,6 @@ class Folio::Users::SessionsController < Devise::SessionsController
         end
       end
     end
-  end
-
-  def after_sign_in_path_for(_resource)
-    send(Rails.application.config.folio_users_after_sign_in_path)
-  end
-
-  def after_sign_out_path_for(_resource)
-    send(Rails.application.config.folio_users_after_sign_out_path)
   end
 
   def is_flashing_format?

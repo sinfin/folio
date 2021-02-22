@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  include Folio::Users::DeviseUserPaths
+
   def facebook
     bind_user_and_redirect(root_url)
   end

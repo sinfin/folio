@@ -43,8 +43,10 @@ module Folio
     config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter]
     config.folio_users_after_sign_in_path = :root_path
     config.folio_users_after_sign_up_path = :root_path
+    config.folio_users_after_update_path_for = :root_path
     config.folio_users_after_sign_out_path = :new_user_session_path
     config.folio_users_after_accept_path = :root_path
+    config.folio_users_signed_in_root_path = :root_path
 
     initializer :append_migrations do |app|
       unless app.root.to_s.include? root.to_s

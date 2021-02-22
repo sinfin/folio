@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
+  include Folio::Users::DeviseUserPaths
+
   def create
     devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
 
@@ -84,10 +86,6 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
     else
       super
     end
-  end
-
-  def after_sign_out_path_for(_resource)
-    send(Rails.application.config.folio_users_after_sign_out_path)
   end
 
   private
