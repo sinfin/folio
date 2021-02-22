@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require Folio::Engine.root.join("test/controllers/folio/console/users_controller_test").to_s
+
+class Folio::Console::<%= application_module %>::UsersControllerTest < Folio::Console::UsersControllerTest
+end
