@@ -29,7 +29,7 @@
 //= require ./redactor/_character_counter
 //= require ./redactor/_table
 //= require ./redactor/_video
-
+//= require ./redactor/_definedlinks
 //= require ./redactor/_init
 
 //= require folio/cable

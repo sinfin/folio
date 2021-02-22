@@ -163,6 +163,14 @@ class Folio::Page < Folio::ApplicationRecord
     end
   end
 
+  def to_preview_param
+    if Rails.application.config.folio_pages_ancestry
+      nested_page_path
+    else
+      to_param
+    end
+  end
+
   def self.view_name
     "folio/pages/show"
   end

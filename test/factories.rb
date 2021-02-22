@@ -87,6 +87,7 @@ FactoryBot.define do
 
   factory :folio_menu, class: "Folio::Menu::Page" do
     locale { :cs }
+    sequence(:title) { |i| "Menu #{i}" }
 
     factory :folio_menu_with_menu_items do
       transient do

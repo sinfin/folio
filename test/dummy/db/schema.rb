@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 2021_02_17_120247) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "locale"
+    t.string "title"
     t.index ["type"], name: "index_folio_menus_on_type"
   end
 

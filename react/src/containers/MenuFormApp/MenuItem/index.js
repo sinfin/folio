@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormGroup, Input, Label } from 'reactstrap'
 import { makeConfirmed } from 'utils/confirmed'
+import Select from 'components/Select'
 
 import { MENU_ITEM_URL } from 'ducks/menus'
 
@@ -11,38 +12,32 @@ const makeOnChange = (path, node, onChange) => (e) => {
     ...node
   }
 
-  if (e.target.name === 'openInNew') {
-    newNode.open_in_new = e.target.checked
-  } else if (e.target.name === 'style') {
-    newNode.style = e.target.value || null
-  } else if (e.target.value === MENU_ITEM_URL || e.target.name === 'url') {
-    newNode.target_id = null
-    newNode.target_type = null
-    newNode.rails_path = null
-    if (e.target.name === 'url') {
-      newNode.url = e.target.value
-    } else {
+  if (typeof e.value === 'string') {
+    if (e.value === MENU_ITEM_URL) {
+      newNode.target_id = null
+      newNode.target_type = null
+      newNode.rails_path = null
       newNode.url = ''
-    }
-  } else {
-    if (e.target.value.indexOf(' -=- ') === -1) {
-      newNode.rails_path = e.target.value
+    } else if (e.value.indexOf(' -=- ') === -1) {
+      newNode.rails_path = e.value
       newNode.target_id = null
       newNode.target_type = null
       newNode.url = null
     } else {
-      const [type, id] = e.target.value.split(' -=- ')
+      const [type, id] = e.value.split(' -=- ')
       newNode.target_id = id
       newNode.target_type = type
       newNode.rails_path = null
       newNode.url = null
     }
 
-    const option = e.target.querySelector('option:checked')
-
-    if (!newNode.title && option) {
-      newNode.title = option.dataset.title
-    }
+    newNode.title = e.title
+  } else if (e.target.name === 'openInNew') {
+    newNode.open_in_new = e.target.checked
+  } else if (e.target.name === 'style') {
+    newNode.style = e.target.value || null
+  } else if (e.target.name === 'url') {
+    newNode.url = e.target.value
   }
 
   onChange(path, newNode)
@@ -59,6 +54,12 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
     linkValue = `${node.target_type} -=- ${node.target_id}`
   }
 
+  let linkValueHash
+  linkOptions.forEach((opt) => {
+    if (opt.value === linkValue) {
+      linkValueHash = opt
+    }
+  })
   const onChangeFn = makeOnChange(path, node, onChange)
 
   return (
@@ -76,13 +77,14 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
       <div className='f-c-menus-form__form-item'>
         <span className='fa fa--18 fa-link mr-2' />
 
-        <Input
-          type='select'
-          value={linkValue || ''}
+        <Select
+          value={linkValueHash}
           onChange={onChangeFn}
-        >
-          {linkOptions}
-        </Input>
+          rawOptions={linkOptions}
+          createable={false}
+          isClearable={false}
+          selectize
+        />
       </div>
 
       {node.url !== null && (

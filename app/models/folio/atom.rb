@@ -13,7 +13,7 @@ module Folio::Atom
       klass::STRUCTURE.each do |key, value|
         structure[key] = {
           label: klass.human_attribute_name(key),
-          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil).try(:html_safe),
           type: value,
           character_counter: value == :text,
         }
@@ -70,7 +70,7 @@ module Folio::Atom
                                      only_path: true])
 
         associations[key] = {
-          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil).try(:html_safe),
           label: klass.human_attribute_name(key),
           url: url,
         }
@@ -79,7 +79,7 @@ module Folio::Atom
       str[klass.to_s] = {
         associations: associations,
         attachments: attachments,
-        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil),
+        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil).try(:html_safe),
         structure: structure,
         form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,

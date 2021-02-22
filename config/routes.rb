@@ -35,7 +35,7 @@ Folio::Engine.routes.draw do
       patch :update, path: ":type/update", as: :update
     end
 
-    resources :menus, only: [:edit, :update, :index]
+    resources :menus, except: %i[show]
 
     resources :images, only: %i[index]
     resources :documents, only: %i[index]
@@ -87,6 +87,8 @@ Folio::Engine.routes.draw do
 
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
+
+      resources :links, only: %i[index]
 
       resources :images, only: %i[index create update destroy] do
         collection do

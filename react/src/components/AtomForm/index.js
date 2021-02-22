@@ -90,7 +90,7 @@ class AtomForm extends React.PureComponent {
     return (
       <AtomFormHint molecule={molecule}>
         <span className='mi'>info</span>
-        {text.split(/\n/).map((part, i) => <p key={i}>{part}</p>)}
+        {text.split(/\n/).map((part, i) => <p key={i} dangerouslySetInnerHTML={{ __html: part }} />)}
       </AtomFormHint>
     )
   }
