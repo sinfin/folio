@@ -129,8 +129,8 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     collection = []
 
     if controller.params[key].present?
-      record = data[:klass].constantize.find(controller.params[key])
-      collection << [record.to_console_label, record.id, selected: true]
+      record = data[:klass].constantize.find_by_id(controller.params[key])
+      collection << [record.to_console_label, record.id, selected: true] if record
     end
 
     f.input key, collection: collection,
