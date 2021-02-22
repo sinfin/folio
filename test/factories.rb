@@ -138,35 +138,4 @@ FactoryBot.define do
     first_name { "first_name" }
     last_name { "last_name" }
   end
-
-  factory :folio_omniauth_authentication, class: "Folio::Omniauth::Authentication" do
-    sequence(:email) { |i| "auth-#{i}@email.email" }
-    sequence(:nickname) { |i| "Auth #{i}" }
-
-    to_create do |instance|
-      o = OpenStruct.new(
-        provider: "facebook",
-        uid: "1234567890123456",
-        info: OpenStruct.new(
-          "email": instance.email,
-          "name": instance.nickname,
-          "image": "http://placekitten.com/200/300"
-        ),
-        credentials: OpenStruct.new(
-          "token": "EAAJK7OgLFysBACykjlr7olJguYwq0dN8VbysLsD4koeM8mlvohNjvlpK0YhtwiU8O3kdpDZCZAFAUFGtvdWa5S2458ZCzLKO0ZBeb1RG1tTA9vZBpmEbPZARB1CFZAbfopXZCVlEuBBYKowfC0JWEIiJZBEWglDdx9kvuZCg30OTAtrgZDZD",
-          "expires_at": 1618746336,
-          "expires": true
-        ),
-        extra: OpenStruct.new(
-          raw_info: {
-            "name" => instance.nickname,
-            "email" => instance.email,
-            "id" => "1234567890123456",
-          }
-        )
-      )
-
-      Folio::Omniauth::Authentication.from_omniauth_auth(o)
-    end
-  end
 end

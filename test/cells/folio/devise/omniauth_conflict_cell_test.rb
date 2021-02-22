@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Devise::OmniauthConflictCellTest < Cell::TestCase
   test "show" do
-    auth = create(:folio_omniauth_authentication)
+    auth = create_omniauth_authentication("foo@foo.foo", "foo")
     html = cell("folio/devise/omniauth_conflict", auth).(:show)
     assert html.has_css?(".f-devise-omniauth-conflict")
   end
