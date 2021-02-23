@@ -93,23 +93,25 @@ cs:
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:
         admin_note: Poznámka (viditelná jen adminstrátory)
+        authentications: Propojení
         last_sign_in_at: Poslední přihlášení
         nickname: Přezdívka
         password: Heslo
         password_confirmation: Heslo (kontrola)
         sign_in_count: Počet přihlášení
       folio/address/base:
-       name: Jméno
-       address_line_1: Ulice a číslo
-       address_line_2: Druhý řádek adresy
-       zip: PSČ
-       city: Město
-       country_code: Země
-       state: Stát
-       identification_number: IČO
-       vat_identification_number: DIČ
-       phone: Telefon
-       email: E-mail
+        address_line_1: Ulice a číslo
+        address_line_2: Druhý řádek adresy
+        city: Město
+        company_name: Název firmy
+        country_code: Země
+        email: E-mail
+        identification_number: IČO
+        name: Jméno
+        phone: Telefon
+        state: Stát
+        vat_identification_number: DIČ
+        zip: PSČ
 
     errors:
       messages:

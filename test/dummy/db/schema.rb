@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2021_02_23_053129) do
 
   create_table "folio_addresses", force: :cascade do |t|
     t.string "name"
+    t.string "company_name"
     t.string "address_line_1"
     t.string "address_line_2"
     t.string "zip"

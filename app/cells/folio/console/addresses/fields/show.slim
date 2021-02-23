@@ -8,7 +8,12 @@
           = model.input toggle
 
         = html_safe_fields_for model, key, build: true do |g|
-          = g.input :name
+          .row
+            .col-md-6
+              = g.input :name
+            .col-md-6
+              = g.input :company_name
+
           = g.input :address_line_1
           = g.input :address_line_2
 

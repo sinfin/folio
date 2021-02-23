@@ -4,6 +4,7 @@ class CreateFolioAddresses < ActiveRecord::Migration[6.0]
   def change
     create_table :folio_addresses do |t|
       t.string :name
+      t.string :company_name
 
       t.string :address_line_1
       t.string :address_line_2

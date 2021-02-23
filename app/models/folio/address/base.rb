@@ -5,16 +5,12 @@ class Folio::Address::Base < Folio::ApplicationRecord
 
   self.table_name = "folio_addresses"
 
-  validates :city,
-            :name,
-            :address_line_1,
+  validates :address_line_1,
+            :city,
             :zip,
+            :country_code,
             :type,
             presence: true
-
-  validates :country_code,
-            presence: true,
-            if: :should_validate_country_code?
 
   audited only: %i[city country_code name street zip]
 
@@ -45,6 +41,7 @@ end
 #
 #  id                        :bigint(8)        not null, primary key
 #  name                      :string
+#  company_name              :string
 #  address_line_1            :string
 #  address_line_2            :string
 #  zip                       :string

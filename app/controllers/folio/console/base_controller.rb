@@ -189,6 +189,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       base = %i[id
                 _destroy
                 name
+                company_name
                 address_line_1
                 address_line_2
                 zip

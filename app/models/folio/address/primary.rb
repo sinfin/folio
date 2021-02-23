@@ -9,6 +9,7 @@ end
 #
 #  id                        :bigint(8)        not null, primary key
 #  name                      :string
+#  company_name              :string
 #  address_line_1            :string
 #  address_line_2            :string
 #  zip                       :string
