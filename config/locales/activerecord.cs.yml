@@ -91,6 +91,28 @@ cs:
         keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_EMAIL: E-mail uživatele
+      folio/user:
+        admin_note: Poznámka (viditelná jen adminstrátory)
+        authentications: Propojení
+        last_sign_in_at: Poslední přihlášení
+        nickname: Přezdívka
+        password: Heslo
+        password_confirmation: Heslo (kontrola)
+        sign_in_count: Počet přihlášení
+      folio/address/base:
+        address_line_1: Ulice a číslo
+        address_line_2: Druhý řádek adresy
+        city: Město
+        company_name: Název firmy
+        country_code: Země
+        email: E-mail
+        identification_number: IČO
+        name: Jméno
+        phone: Telefon
+        state: Stát
+        vat_identification_number: DIČ
+        zip: PSČ
+
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
@@ -176,30 +198,48 @@ cs:
         one: Šablona e-mailu
         few: Šablony e-mailů
         other: Šablon e-mailů
+      folio/user:
+        one: Uživatel
+        few: Uživatelé
+        other: Uživatelů
       tag:
         few: Tagy
         one: Tag
         other: Tagů
+      folio/address/base:
+        few: Adresy
+        one: Adresa
+        other: Adres
+      folio/address/primary:
+        few: Adresy - hlavní
+        one: Adresa - hlavní
+        other: Adres - hlavní
+      folio/address/secondary:
+        few: Adresy - doplňková
+        one: Adresa - doplňková
+        other: Adres - doplňková
     state_machines:
       folio/lead:
         state:
           states:
             handled: Vyřízený
             submitted: Nevyřízený
+
   attributes:
     aasm_state: Stav
     content: Obsah
+    count: Počet
     cover: Obrázek
     cover_placement: Obrázek
-    count: Počet
+    current_password: Aktuální heslo pro kontrolu
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
     email: E-mail
     featured: Zvýrazněno
-    file: Soubor
     figcaption: Popisek
-    first_name: Křestní jméno
+    file: Soubor
+    first_name: Jméno
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
@@ -210,15 +250,19 @@ cs:
     perex: Perex
     phone: Telefon
     position: Pořadí
+    primary_address: Adresa - hlavní
     private_attachments: Soubory
     published: Zveřejněno
     published_at: Zveřejněno k datu
+    secondary_address: Adresa - doplňková
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
     title: Název
     to_label: Název
     url: URL
+    use_secondary_address: Použít doplňkovou adresu
+
   errors:
     attributes:
       verified_captcha:

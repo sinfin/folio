@@ -1,0 +1,15 @@
+.f-c-users-header-actions
+  a.btn.btn-info[
+    href=url_for([:impersonate, :console, model])
+    target="_blank"
+    data-confirm=t('folio.console.confirmation')
+  ]
+    span.mi face
+    = t('.impersonate')
+
+  a.btn.btn-warning.ml-h[
+    href=url_for([:send_reset_password_email, :console, model])
+    data-confirm=t('folio.console.confirmation')
+  ]
+    span.mi lock
+    = t('.send_reset_password_email')

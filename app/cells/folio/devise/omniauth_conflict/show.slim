@@ -1,0 +1,11 @@
+.f-devise-omniauth-conflict
+  = title
+
+  p.f-devise__danger = t('.conflict', email: model.email)
+
+  p == t('.instructions')
+
+  p
+    = t('.resend')
+    a<> href=request.fullpath
+      = t('.resend_link')

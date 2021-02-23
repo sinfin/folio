@@ -1,0 +1,93 @@
+---
+cs:
+  devise:
+    sessions:
+      signed_in: Přihlášení proběhlo úspěšně.
+      signed_out: Odhlášení proběhlo úspěšně.
+    registrations:
+      signed_up: Registrace proběhla úspěšně.
+      signed_up_but_inactive: Registrace proběhla úspěšně.. Bohužel se nemůžete přihlásit, protože Váš účet ještě není aktivován.
+      signed_up_but_locked: Registrace proběhla úspěšně.. Bohužel se nemůžete přihlásit, protože Váš účet je zamknutý.
+      signed_up_but_unconfirmed: Byl vám zaslán potvrzovací e-mail. Pro dokončení klikněte na aktivační odkaz zaslaný na Váš e-mail.
+      update_needs_confirmation: Úspěšně jste aktualizovali svůj účet, ale ještě musíte ověřit svou novou e-mailovou adresu. Zkontrolujte svou schránku a klikněte na odkaz pro dokončení ověření Vaší nové e-mailové adresy.
+      updated: Váš účet byl úspěšně aktualizován.
+    mailer:
+      omniauth_conflict:
+        subject: Dokončení přihlášení
+        greeting: Dobrý den,
+        instructions: "pro dokončení %{provider} přihlášení klikněte na odkaz níže:"
+        button: Dokončit přihlášení
+        footer: Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.
+
+  folio:
+    devise:
+      submit: Odeslat
+      forgotten_password_link: Zapomenuté heslo?
+      register_button: Vytvořit nový účet
+      sign_in_link: Již u nás máte účet?
+      sign_in_link_inner: Přihlašte se
+
+      invitations:
+        edit:
+          title: Nastavte si heslo
+
+      sessions:
+        new:
+          title: Přihlášení
+          sign_in: Přihlásit se
+          invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.
+
+      passwords:
+        new:
+          title: Zapomenuté heslo
+          reset_password: Poslat instrukce pro obnovení hesla
+
+        edit:
+          title: Změna hesla
+          change_password: Nastavit nové heslo
+
+      registrations:
+        new:
+          email_label: E-mail (slouží pro přihlášení)
+          sign_up: Vytvořit účet
+          title: Registrace
+
+        edit:
+          update: Uložit
+          title: Osobní údaje
+          title_password: Změna hesla
+          new_password: Nové heslo
+          new_password_confirmation: Nové heslo (kontrola)
+          pending_reconfirmation: Čekáme na potvrzení změny na %{email}
+
+      omniauth:
+        providers:
+          facebook: Facebook
+          google_oauth2: Google
+          twitter: Twitter
+
+        sessions: "Přihlašte se pomocí:"
+        registrations: "Zaregistujte se pomocí:"
+        or: "Nebo:"
+        authentications:
+          list:
+            missing: Nepřipojeno
+            link: Připojit
+            unlink: Odpojit
+          destroy:
+            success: "%{provider} účet úspěšně odpojen."
+
+      omniauth_conflict:
+        title: Přihlášení
+        conflict: V minulosti jste se již přihlašoval pomocí e-mailu “%{email}”.
+        instructions: Posíme o dokončení přihlášení <strong>ověření pomocí kliknutí na odkaz v mailu</strong>, který jsme vám zaslali.
+        resend: E-mail nepřišel?
+        resend_link: Zaslat znovu
+
+    users:
+      registrations:
+        create:
+          failure: Účet se nepodařilo vytvořit. Prosíme zkontrolujte označená pole.
+
+      omniauth_callbacks:
+        added_provider: "%{provider} účet úspěšně připojen."

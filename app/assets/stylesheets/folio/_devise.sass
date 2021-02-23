@@ -1,0 +1,40 @@
+$folio-devise-form-control-max-width: 290px !default
+$folio-devise-modal-max-width: 640px !default
+
+.f-devise
+  .form-control
+    max-width: $folio-devise-form-control-max-width
+
+  &__loader
+    display: none
+
+  .f-devise-modal__form--loading &__loader
+    display: flex
+
+  &__submit-wrap
+    margin-top: 2 * $spacer
+
+  &__submit-btn
+    padding-left: 2.5 * $spacer
+    padding-right: 2.5 * $spacer
+
+  &__under-submit-links
+    margin-top: $spacer
+    font-size: $font-size-sm
+
+  &__bottom-action-wrap
+    margin-top: 2 * $spacer
+
+  &__group
+    margin: 2 * $spacer 0
+
+  &__row
+    display: flex
+    flex-wrap: wrap
+    margin: 0 (( - $grid-gutter-width / 2))
+
+  &__col
+    padding: 0 $grid-gutter-width / 2
+    flex: 1 1 auto
+
+@import '../../../cells/folio/devise/**/*'

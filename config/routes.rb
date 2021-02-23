@@ -5,7 +5,19 @@ Folio::Engine.routes.draw do
 
   get "errors/internal_server_error"
 
-  devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+  unless Rails.application.config.folio_users
+    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+  end
+
+  namespace :devise do
+    namespace :omniauth do
+      resource :authentication, only: %i[destroy]
+    end
+  end
+
+  namespace :users do
+    get "/comeback", to: "comebacks#show"
+  end
 
   root to: "home#index"
 
@@ -48,6 +60,13 @@ Folio::Engine.routes.draw do
     resource :search, only: %i[show]
     resource :site, only: %i[edit update] do
       post :clear_cache
+    end
+
+    resources :users do
+      member do
+        get :send_reset_password_email
+        get :impersonate
+      end
     end
 
     resource :transport, only: [] do

@@ -16,6 +16,8 @@ module Dummy
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    Rails.application.config.folio_users = true
+
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs
 

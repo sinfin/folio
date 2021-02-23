@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_16_115118) do
+ActiveRecord::Schema.define(version: 2021_02_23_053129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,25 @@ ActiveRecord::Schema.define(version: 2021_02_16_115118) do
     t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
+  end
+
+  create_table "folio_addresses", force: :cascade do |t|
+    t.string "name"
+    t.string "company_name"
+    t.string "address_line_1"
+    t.string "address_line_2"
+    t.string "zip"
+    t.string "city"
+    t.string "country_code"
+    t.string "state"
+    t.string "identification_number"
+    t.string "vat_identification_number"
+    t.string "phone"
+    t.string "email"
+    t.string "type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["type"], name: "index_folio_addresses_on_type"
   end
 
   create_table "folio_atoms", force: :cascade do |t|
@@ -208,6 +227,21 @@ ActiveRecord::Schema.define(version: 2021_02_16_115118) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "folio_omniauth_authentications", force: :cascade do |t|
+    t.bigint "folio_user_id"
+    t.string "uid"
+    t.string "provider"
+    t.string "email"
+    t.string "nickname"
+    t.string "access_token"
+    t.json "raw_info"
+    t.string "conflict_token"
+    t.integer "conflict_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["folio_user_id"], name: "index_folio_omniauth_authentications_on_folio_user_id"
+  end
+
   create_table "folio_pages", force: :cascade do |t|
     t.string "title"
     t.string "slug"
@@ -295,6 +329,48 @@ ActiveRecord::Schema.define(version: 2021_02_16_115118) do
     t.string "system_email_copy"
     t.string "email_from"
     t.index ["domain"], name: "index_folio_sites_on_domain"
+  end
+
+  create_table "folio_users", force: :cascade do |t|
+    t.string "email"
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.string "first_name"
+    t.string "last_name"
+    t.text "admin_note"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.string "invited_by_type"
+    t.bigint "invited_by_id"
+    t.integer "invitations_count", default: 0
+    t.string "nickname"
+    t.boolean "use_secondary_address", default: false
+    t.bigint "primary_address_id"
+    t.bigint "secondary_address_id"
+    t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_folio_users_on_email"
+    t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
+    t.index ["invited_by_id"], name: "index_folio_users_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_users_on_invited_by_type_and_invited_by_id"
+    t.index ["primary_address_id"], name: "index_folio_users_on_primary_address_id"
+    t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
+    t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|

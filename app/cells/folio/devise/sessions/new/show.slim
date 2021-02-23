@@ -1,0 +1,21 @@
+.f-devise-sessions-new
+  = form do |f|
+    = title
+
+    == cell('folio/devise/flash', model[:flash])
+
+    == cell('folio/devise/omniauth', 'sessions')
+
+    == email_input(f)
+
+    == password_input(f, :password, autocomplete: 'current-password')
+
+    = submit_button(f, t('.sign_in'))
+
+    .f-devise__under-submit-links
+      = forgotten_password_link
+
+    span.folio-loader.f-devise__loader
+
+  .f-devise__bottom-action-wrap
+    == register_button

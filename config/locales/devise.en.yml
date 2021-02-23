@@ -1,0 +1,82 @@
+---
+en:
+  devise:
+    mailer:
+      omniauth_conflict:
+        subject: Complete the login verification
+        greeting: Hello!
+        instructions: "to finish signing in via %{provider} click the link bellow:"
+        button: Sign in
+        footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
+
+  folio:
+    devise:
+      submit: Submit
+      forgotten_password_link: Forgotten password?
+      register_button: Create new account
+      sign_in_link: Have an account?
+      sign_in_link_inner: Sign in
+
+      invitations:
+        edit:
+          title: Set your password
+
+      sessions:
+        new:
+          title: Sign in
+          sign_in: Sign in
+          invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.
+
+      passwords:
+        new:
+          title: Forgotten password
+          reset_password: Send reset password instructions
+
+        edit:
+          title: Password update
+          change_password: Set my password
+
+      registrations:
+        new:
+          email_label: E-mail (used for signing in)
+          sign_up: Create account
+          title: Sign up
+
+        edit:
+          update: Update
+          title: Account information
+          title_password: Password update
+          new_password: New password
+          new_password_confirmation: New password (confirmation)
+          pending_reconfirmation: We're waiting for you to confirm the change to %{email}
+
+      omniauth:
+        providers:
+          facebook: Facebook
+          google_oauth2: Google
+          twitter: Twitter
+        sessions: "Sign in via:"
+        registrations: "Sign up via:"
+        or: "Or:"
+        authentications:
+          list:
+            missing: Unlinked
+            link: Link
+            unlink: Unlink
+          destroy:
+            success: "%{provider} account unlinked."
+
+      omniauth_conflict:
+        title: Sign in
+        conflict: You have already signed in via “%{email}” before.
+        instructions: Please complete the login verification by <strong>clicking on the link in the email</strong> we've sent you.
+        resend: No e-mail received?
+        resend_link: Resend
+
+    users:
+      registrations:
+        create:
+          failure: Failed to create an account. Please check the marked fields bellow.
+
+      omniauth_callbacks:
+        added_provider: "%{provider} account linked."

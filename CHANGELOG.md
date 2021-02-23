@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-02-23
+### Added
+- added users and addresses
+- added custom devise views for user
+
 ## 2020-02-17
 ### Added
 - added `url` type to atom structure

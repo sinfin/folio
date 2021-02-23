@@ -131,4 +131,12 @@ FactoryBot.define do
     optional_keywords { [] }
     required_keywords { [] }
   end
+
+  factory :folio_user, class: "Folio::User" do
+    sequence(:email) { |i| "email-#{i}@email.email" }
+    password { "password" }
+    confirmed_at { Time.now }
+    first_name { "first_name" }
+    last_name { "last_name" }
+  end
 end

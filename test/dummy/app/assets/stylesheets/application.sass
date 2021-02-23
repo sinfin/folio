@@ -1,12 +1,19 @@
+$enable-validation-icons: false
+
+@import './variables'
 @import 'folio-bootstrap/scss/bootstrap'
 
 @import 'folio/lazyload'
 @import 'folio/lightbox'
 @import 'folio/loader'
+@import 'folio/devise'
 
 @import 'folio/dropzone/dropzone'
 @import 'folio/image/image'
 @import 'folio/leads/form/form'
+
+h1, .h1
+  margin: 0 0 2 * $spacer
 
 .folio-atom,
 .d-atom
@@ -15,3 +22,8 @@
 .folio-redactor-button a
   @extend .btn
   @extend .btn-primary
+
+.f-devise
+  padding: 0 $grid-gutter-width / 2
+  max-width: 645px
+  margin: $grid-gutter-width auto

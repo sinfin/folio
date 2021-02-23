@@ -14,4 +14,12 @@ class Folio::DeviseMailerPreview < ActionMailer::Preview
       Premailer::Rails::Hook.perform(email)
     end
   end
+
+  def omniauth_conflict
+    auth = Folio::Omniauth::Authentication.where.not(conflict_user_id: nil, conflict_token: nil).first
+
+    Folio::DeviseMailer.omniauth_conflict(auth).tap do |email|
+      Premailer::Rails::Hook.perform(email)
+    end
+  end
 end

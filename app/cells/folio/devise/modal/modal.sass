@@ -1,0 +1,30 @@
+.f-devise-modal
+  .modal-dialog
+    max-width: $folio-devise-modal-max-width
+
+  .f-devise__title
+    padding-right: 40px + $grid-gutter-width / 2
+    margin-top: 0
+    font-size: $h3-font-size
+
+  &__content:not(&__content--active)
+    display: none
+
+  &__close
+    position: absolute
+    top: 0
+    right: 0
+    border: 0
+    background: transparent
+    padding: 10px
+    appearance: none
+    cursor: pointer
+
+    &, &:hover, &:focus
+      outline: 0
+      box-shadow: none
+
+  &__close-svg
+    width: 30px
+    height: 30px
+    display: block

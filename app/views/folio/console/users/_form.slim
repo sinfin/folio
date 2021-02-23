@@ -1,0 +1,26 @@
+= form_header f
+
+= tabs [:content]
+
+.tab-content
+  = tab :content
+    .row
+      .col-lg-8
+        = f.input :email
+
+        .row
+          .col-md-6
+            = f.input :first_name
+          .col-md-6
+            = f.input :last_name
+
+      .col-lg-4
+        = f.input :admin_note,
+                  autosize: true,
+                  input_html: { class: "bg-postit-note", rows: 4 }
+
+    .row
+      .col-lg-8
+        == cell('folio/console/addresses/fields', f)
+
+= form_footer f
