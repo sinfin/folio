@@ -2,6 +2,7 @@
 
 class Folio::User < Folio::ApplicationRecord
   include Folio::Filterable
+  include Folio::HasAddresses
 
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
@@ -115,6 +116,9 @@ end
 #  invited_by_id          :bigint(8)
 #  invitations_count      :integer          default(0)
 #  nickname               :string
+#  use_secondary_address  :boolean          default(FALSE)
+#  primary_address_id     :bigint(8)
+#  secondary_address_id   :bigint(8)
 #
 # Indexes
 #
@@ -123,5 +127,7 @@ end
 #  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
 #  index_folio_users_on_invited_by_id                      (invited_by_id)
 #  index_folio_users_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)
+#  index_folio_users_on_primary_address_id                 (primary_address_id)
 #  index_folio_users_on_reset_password_token               (reset_password_token) UNIQUE
+#  index_folio_users_on_secondary_address_id               (secondary_address_id)
 #

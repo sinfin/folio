@@ -19,4 +19,8 @@
                   autosize: true,
                   input_html: { class: "bg-postit-note", rows: 4 }
 
+    .row
+      .col-lg-8
+        == cell('folio/console/addresses/fields', f)
+
 = form_footer f

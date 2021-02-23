@@ -25,6 +25,7 @@ PATH
       cocoon
       coffee-rails (~> 5.0)
       countries
+      country_select
       devise
       devise-bootstrap-views
       devise-i18n
@@ -195,6 +196,9 @@ GEM
       i18n_data (~> 0.10.0)
       sixarm_ruby_unaccent (~> 1.1)
       unicode_utils (~> 1.4)
+    country_select (4.0.0)
+      countries (~> 3.0)
+      sort_alphabetical (~> 1.0)
     crass (1.0.6)
     css_parser (1.9.0)
       addressable
@@ -523,6 +527,8 @@ GEM
     slim_lint (0.20.2)
       rubocop (>= 0.78.0)
       slim (>= 3.0, < 5.0)
+    sort_alphabetical (1.1.0)
+      unicode_utils (>= 1.2.2)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)

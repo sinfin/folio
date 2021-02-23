@@ -98,6 +98,18 @@ cs:
         password: Heslo
         password_confirmation: Heslo (kontrola)
         sign_in_count: Počet přihlášení
+      folio/address/base:
+       name: Jméno
+       address_line_1: Ulice a číslo
+       address_line_2: Druhý řádek adresy
+       zip: PSČ
+       city: Město
+       country_code: Země
+       state: Stát
+       identification_number: IČO
+       vat_identification_number: DIČ
+       phone: Telefon
+       email: E-mail
 
     errors:
       messages:
@@ -192,26 +204,39 @@ cs:
         few: Tagy
         one: Tag
         other: Tagů
+      folio/address/base:
+        few: Adresy
+        one: Adresa
+        other: Adres
+      folio/address/primary:
+        few: Adresy - hlavní
+        one: Adresa - hlavní
+        other: Adres - hlavní
+      folio/address/secondary:
+        few: Adresy - doplňková
+        one: Adresa - doplňková
+        other: Adres - doplňková
     state_machines:
       folio/lead:
         state:
           states:
             handled: Vyřízený
             submitted: Nevyřízený
+
   attributes:
     aasm_state: Stav
     content: Obsah
+    count: Počet
     cover: Obrázek
     cover_placement: Obrázek
-    count: Počet
     current_password: Aktuální heslo pro kontrolu
     description: Popisek
     document_placement: Dokument
     document_placements: Dokumenty
     email: E-mail
     featured: Zvýrazněno
-    file: Soubor
     figcaption: Popisek
+    file: Soubor
     first_name: Jméno
     image_placements: Obrázky
     is_active: Aktivní
@@ -223,15 +248,19 @@ cs:
     perex: Perex
     phone: Telefon
     position: Pořadí
+    primary_address: Adresa - hlavní
     private_attachments: Soubory
     published: Zveřejněno
     published_at: Zveřejněno k datu
+    secondary_address: Adresa - doplňková
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
     title: Název
     to_label: Název
     url: URL
+    use_secondary_address: Použít doplňkovou adresu
+
   errors:
     attributes:
       verified_captcha:

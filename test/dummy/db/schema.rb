@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_17_120247) do
+ActiveRecord::Schema.define(version: 2021_02_23_053129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,24 @@ ActiveRecord::Schema.define(version: 2021_02_17_120247) do
     t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
+  end
+
+  create_table "folio_addresses", force: :cascade do |t|
+    t.string "name"
+    t.string "address_line_1"
+    t.string "address_line_2"
+    t.string "zip"
+    t.string "city"
+    t.string "country_code"
+    t.string "state"
+    t.string "identification_number"
+    t.string "vat_identification_number"
+    t.string "phone"
+    t.string "email"
+    t.string "type"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["type"], name: "index_folio_addresses_on_type"
   end
 
   create_table "folio_atoms", force: :cascade do |t|
@@ -341,12 +359,17 @@ ActiveRecord::Schema.define(version: 2021_02_17_120247) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "nickname"
+    t.boolean "use_secondary_address", default: false
+    t.bigint "primary_address_id"
+    t.bigint "secondary_address_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_folio_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_folio_users_on_invited_by_type_and_invited_by_id"
+    t.index ["primary_address_id"], name: "index_folio_users_on_primary_address_id"
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
+    t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|

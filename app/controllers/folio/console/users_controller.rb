@@ -32,7 +32,8 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
     def user_params
       params.require(:user)
-            .permit(*(@klass.column_names - ["id"]))
+            .permit(*(@klass.column_names - ["id"]),
+                    *addresses_strong_params)
     end
 
     def index_filters
