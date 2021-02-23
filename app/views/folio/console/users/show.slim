@@ -8,6 +8,8 @@
       = s.attribute :sign_in_count
       = s.attribute :last_sign_in_at
       = s.attribute :created_at
+      = s.attribute :authentications
+        == cell('folio/console/authentications/list', s.object)
 
   - if @user.admin_note.present?
     .col-lg-4
