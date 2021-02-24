@@ -2,5 +2,5 @@
 cs:
   activerecord:
     models:
-      dummy/atom/title: Nadpis
       dummy/atom/text: Text (odstavce, tabulky, apod.)
+      dummy/atom/title: Nadpis

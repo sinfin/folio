@@ -2,5 +2,5 @@
 en:
   activerecord:
     models:
-      dummy/atom/title: Title
       dummy/atom/text: Text (paragraphs, tables, etc.)
+      dummy/atom/title: Title

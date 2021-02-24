@@ -7,7 +7,7 @@ class <%= global_namespace %>::Atom::Title < Folio::Atom::Base
 
   STRUCTURE = {
     title: :string,
-    tag: allowed_tags,
+    tag: ALLOWED_TAGS,
   }
 
   ASSOCIATIONS = {}
@@ -18,7 +18,7 @@ class <%= global_namespace %>::Atom::Title < Folio::Atom::Base
             presence: true
 
   def tag_with_fallback
-    tag.presence || self.class.allowed_tags.first
+    tag.presence || self.class::ALLOWED_TAGS.first
   end
 
   def self.cell_name
