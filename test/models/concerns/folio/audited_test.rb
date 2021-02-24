@@ -16,11 +16,11 @@ class Folio::AuditedTest < ActiveSupport::TestCase
   test "audited model & atoms" do
     # version 1
     @page = AuditedPage.create(title: "v1")
-    @page.atoms << Folio::Atom::Text.new(content: "atom 1 v2")
+    @page.atoms << Dummy::Atom::Text.new(content: "atom 1 v2")
 
     # version 2
     @page.update!(title: "v2")
-    @page.atoms << Folio::Atom::Text.new(content: "atom 2 v2")
+    @page.atoms << Dummy::Atom::Text.new(content: "atom 2 v2")
 
     # version 3
     @page.atoms.load
@@ -34,7 +34,7 @@ class Folio::AuditedTest < ActiveSupport::TestCase
 
     # version 5
     @page.update!(title: "v5")
-    @page.atoms << Folio::Atom::Text.new(content: "atom 3 v5")
+    @page.atoms << Dummy::Atom::Text.new(content: "atom 3 v5")
 
     # revision version 1
     revision = @page.revisions.first

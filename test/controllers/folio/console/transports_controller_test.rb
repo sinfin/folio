@@ -68,7 +68,7 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
 
   test "transport existing" do
     page = create(:folio_page, slug: "old-slug", title: "Old title")
-    create_atom(Folio::Atom::Text, :content, placement: page)
+    create_atom(Dummy::Atom::Text, :content, placement: page)
     id = page.id
     assert_equal(1, page.atoms.count)
 

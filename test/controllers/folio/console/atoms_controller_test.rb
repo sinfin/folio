@@ -9,7 +9,7 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
   end
 
   test "preview" do
-    post preview_console_atoms_path, params: JSON.parse('{"atoms_attributes":[{"id":1,"type":"Folio::Atom::Text","position":1,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":2,"type":"Folio::Atom::Text","position":2,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":3,"type":"Folio::Atom::Text","position":3,"placement_type":"Folio::Page","placement_id":1,"data":null,"_destroy":true,"content":"lorem ipsum"}]}')
+    post preview_console_atoms_path, params: JSON.parse('{"atoms_attributes":[{"id":1,"type":"Dummy::Atom::Text","position":1,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":2,"type":"Dummy::Atom::Text","position":2,"placement_type":"Folio::Page","placement_id":1,"data":null,"content":"lorem ipsum"},{"id":3,"type":"Dummy::Atom::Text","position":3,"placement_type":"Folio::Page","placement_id":1,"data":null,"_destroy":true,"content":"lorem ipsum"}]}')
     assert_response(:ok)
   end
 
