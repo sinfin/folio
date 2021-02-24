@@ -14,11 +14,13 @@ div class=class_name data-klass=options[:klass]
                 = label_perex_controls
 
         - index = 0
+        - insert_after_str = nil
         - model[locale].each_with_index do |atoms_in_molecules, molecule_index|
           - molecule, atoms = atoms_in_molecules
 
           - if molecule
-            = insert
+            = insert(before: atoms.first.class.to_s, after: insert_after_str)
+            - insert_after_str = atoms.first.class.to_s
 
             - indices = Array.new(atoms.size) { |i| i + index }
 
@@ -26,6 +28,7 @@ div class=class_name data-klass=options[:klass]
               data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
               data-indices=indices
               data-contentable=atoms.first.class.contentable?.to_s
+              data-atom-klass=atoms.first.class.to_s
             ]
               .f-c-atoms-previews__preview-inner
                 == cell(atoms.first.class.molecule_cell_name, \
@@ -38,12 +41,14 @@ div class=class_name data-klass=options[:klass]
 
           - else
             - atoms.each_with_index do |atom, atom_index|
-              = insert
+              = insert(before: atom.class.to_s, after: insert_after_str)
+              - insert_after_str = atom.class.to_s
 
               .f-c-atoms-previews__preview.f-c-atoms-previews__preview--atom[
                 data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
                 data-indices=[index]
                 data-contentable=atom.class.contentable?.to_s
+                data-atom-klass=atom.class.to_s
               ]
                 .f-c-atoms-previews__preview-inner
                   = atom_cell(atom)
@@ -51,7 +56,7 @@ div class=class_name data-klass=options[:klass]
 
               - index += 1
 
-        = insert
+        = insert(after: insert_after_str)
 
   - unless options[:non_interactive]
     .f-c-atoms-previews__insert-spacer

@@ -134,17 +134,17 @@ $fa-font-path: 'font-awesome/webfonts' !default
     z-index: 1
 
   &__insert
-    width: 100%
-    position: relative
-    top: -1rem
-    z-index: 1
+    position: absolute
+    left: 0
+    right: 0
+    z-index: 3
     opacity: 0
     font-weight: 400
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
     letter-spacing: normal
 
-    &:last-child
-      top: 1rem
+    &--active
+      position: relative
 
     &:hover
       opacity: 1
@@ -209,9 +209,6 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
   &__insert:last-of-type &__insert-hint-big-btn
     display: inline-flex
-
-  &__insert-inner
-    margin-bottom: -1rem
 
   &__insert-ul
     background: $secondary

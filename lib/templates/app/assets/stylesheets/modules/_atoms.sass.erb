@@ -21,6 +21,12 @@
   position: relative
   z-index: 1
 
+.f-c-atoms-previews__insert-hint
+  margin-top: map-get($spacers, a) / 2
+
+  +media-breakpoint-down(md)
+    margin-top: map-get($spacers, ma) / 2
+
 = rm-atom-margin($direction)
   margin-#{$direction}: -1 * map-get($spacers, a)
 
