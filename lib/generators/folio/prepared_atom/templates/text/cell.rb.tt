@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Atom::TextCell < Folio::ApplicationCell
+class <%= global_namespace %>::Atom::<%= class_name %>Cell < ApplicationCell
   include Folio::CstypoHelper
 
   def show
@@ -18,7 +18,7 @@ class Folio::Atom::TextCell < Folio::ApplicationCell
   def content_with_table
     parsed = Nokogiri::HTML::DocumentFragment.parse(model.content)
     parsed.search("table")
-          .wrap('<div class="folio-atom-text__table-wrap" />')
+          .wrap('<div class="<%= classname_prefix %>-atom-<%= dashed_resource_name %>__table-wrap" />')
     parsed.to_html
   end
 end

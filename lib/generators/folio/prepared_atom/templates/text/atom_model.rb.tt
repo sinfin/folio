@@ -1,15 +1,19 @@
 # frozen_string_literal: true
 
-class Folio::Atom::Text < Folio::Atom::Base
+class <%= global_namespace %>::Atom::Text < Folio::Atom::Base
+  ATTACHMENTS = %i[]
+
   STRUCTURE = {
     content: :richtext,
   }
+
+  ASSOCIATIONS = {}
 
   validates :content,
             presence: true
 
   def self.cell_name
-    "folio/atom/text"
+    "<%= atom_cell_name %>"
   end
 
   def self.console_icon

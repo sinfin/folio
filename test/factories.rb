@@ -34,12 +34,6 @@ FactoryBot.define do
 
   factory :folio_page_cookies, parent: :folio_page, class: "Folio::Page::Cookies"
 
-  factory :folio_atom, class: "Folio::Atom::Text" do
-    type { "Folio::Atom::Text" }
-    association :placement, factory: :folio_page
-    content { "<p>Officiis perferendis commodi. Asperiores quas et. Veniam qui est.</p>" }
-  end
-
   factory :folio_document_placement, class: "Folio::FilePlacement::Document" do
     association :file, factory: :folio_document
     association :placement, factory: :folio_page

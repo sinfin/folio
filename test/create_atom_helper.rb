@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def create_atom(klass = Folio::Atom::Text, *fill_attrs, **data_attrs)
+def create_atom(klass, *fill_attrs, **data_attrs)
   attrs = data_attrs.merge(type: klass.to_s)
   attrs[:placement] ||= create(:folio_page)
 
