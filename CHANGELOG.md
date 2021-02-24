@@ -6,7 +6,6 @@ All notable changes to this project will be documented in this file.
 - removed `Folio::Atom::Text` and `Folio::Atom::Title`
 ### Added
 - added folio:prepared_atom generator 
-- added `folio_upgrade_checker` initializer
 - started creating/updating `config/locales/atom.LOCALE.yml` for atom model names in generators
 
 ## 2020-02-23
