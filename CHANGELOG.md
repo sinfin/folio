@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-02-24
+### Removed
+- removed `Folio::Atom::Text` and `Folio::Atom::Title`
+### Added
+- added folio:prepared_atom generator 
+- added `folio_upgrade_checker` initializer
+
+
 ## 2020-02-23
 ### Added
 - added users and addresses
