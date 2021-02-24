@@ -103,8 +103,6 @@ en:
       folio/atom:
         one: Atom
         other: Atoms
-      folio/atom/text: Text
-      folio/atom/title: Title
       folio/content_template:
         one: Content template
         other: Content templates

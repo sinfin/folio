@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
+
 class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
+  include Folio::GeneratorBase
+
   source_root File.expand_path("templates", __dir__)
 
-  PREPARED_ATOMS = %w[
-    text
-    title
-  ]
+  PREPARED_ATOMS = {
+    text: {
+      cs: "Text (odstavce, tabulky, apod.)",
+      en: "Text (paragraphs, tables, etc.)"
+    },
+    title: {
+      cs: "Nadpis",
+      en: "Title"
+    }
+  }
 
   class UnknownAtomKey < StandardError; end
 
   def create
-    if name.blank? || PREPARED_ATOMS.exclude?(name)
-      raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{PREPARED_ATOMS.join(', ')}"
+    if name.blank? || PREPARED_ATOMS.keys.exclude?(name.to_sym)
+      raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{PREPARED_ATOMS.keys.join(', ')}"
     end
 
     template "#{name}/atom_model.rb.tt", "app/models/#{global_namespace_path}/atom/#{name}.rb"
@@ -29,30 +39,12 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     if File.exist?("#{root}/#{name}.sass.tt")
       template "#{name}/#{name}.sass.tt", "app/cells/#{global_namespace_path}/atom/#{name}/#{name}.sass"
     end
+
+    add_atom_to_i18n_ymls(PREPARED_ATOMS[name.to_sym])
   end
 
   private
     def name
       super.downcase
-    end
-
-    def classname_prefix
-      Rails.application.class.name[0].downcase
-    end
-
-    def dashed_resource_name
-      model_resource_name.gsub("_", "-")
-    end
-
-    def atom_cell_name
-      "#{global_namespace_path}/atom/#{name}"
-    end
-
-    def global_namespace_path
-      global_namespace.underscore
-    end
-
-    def global_namespace
-      Rails.application.class.name.deconstantize
     end
 end

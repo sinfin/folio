@@ -143,8 +143,6 @@ cs:
         few: Kapitoly
         one: Kapitola
         other: Kapitol
-      folio/atom/text: Text
-      folio/atom/title: Titulek
       folio/content_template:
         one: Šablona obsahu
         few: Šablony obsahu
