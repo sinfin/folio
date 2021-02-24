@@ -100,17 +100,20 @@ showInsertHint = (e) ->
   $(this)
     .closest('.f-c-atoms-previews__insert')
     .addClass('f-c-atoms-previews__insert--active')
+    .closest('.f-c-atoms-previews__locale')
+    .addClass('f-c-atoms-previews__locale--active-insert')
 
-hideInsertHint = (e) ->
-  e.preventDefault()
-  $(this)
+hideInsert = ($insert) ->
+  $insert
     .removeClass('f-c-atoms-previews__insert--active')
+    .closest('.f-c-atoms-previews__locale')
+    .removeClass('f-c-atoms-previews__locale--active-insert')
 
 handleInsertClick = (e) ->
   e.preventDefault()
   $a = $(this)
   $insert = $a.closest('.f-c-atoms-previews__insert')
-  $insert.removeClass('f-c-atoms-previews__insert--active')
+  hideInsert($insert)
   $wrap = $insert.next('.f-c-atoms-previews__preview')
   indices = $wrap.data('indices')
   action = 'splice'
@@ -254,9 +257,10 @@ $(document)
   .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick
   .on 'click', '.f-c-atoms-previews__insert-hint', showInsertHint
   .on 'click', '.f-c-atoms-previews__controls-mobile-overlay', handleMobileclick
-  .on 'mouseleave', '.f-c-atoms-previews__insert', hideInsertHint
   .on 'click', 'a, button', (e) -> e.preventDefault()
   .on 'form', 'submit', (e) -> e.preventDefault()
+  .on 'mouseleave', '.f-c-atoms-previews__insert', (e) ->
+    hideInsert($(this))
 
 $(window).on 'resize orientationchange', sendResizeMessage
 

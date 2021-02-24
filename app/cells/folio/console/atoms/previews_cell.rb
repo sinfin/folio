@@ -18,9 +18,14 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
       nil
     else
       @insert_inner ||= render(:_inner_insert)
+
+      class_name = "f-c-atoms-previews__insert"
+      class_name += " #{class_name}--first" if after.nil?
+      class_name += " #{class_name}--last" if before.nil?
+
       content_tag(:div,
                   @insert_inner,
-                  class: "f-c-atoms-previews__insert",
+                  class: class_name,
                   "data-before" => before,
                   "data-after" => after)
     end

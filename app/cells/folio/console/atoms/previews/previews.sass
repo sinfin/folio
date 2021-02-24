@@ -142,6 +142,7 @@ $fa-font-path: 'font-awesome/webfonts' !default
     font-weight: 400
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
     letter-spacing: normal
+    min-height: 20px
 
     &--active
       position: relative
@@ -149,11 +150,12 @@ $fa-font-path: 'font-awesome/webfonts' !default
     &:hover
       opacity: 1
 
-  &__insert:last-of-type
+  &__insert--last
     opacity: 1
+    position: relative
 
     &:not(:only-child)
-      margin-top: $grid-gutter-width
+      margin-top: 2 * $grid-gutter-width
 
   &__insert-hint
     position: absolute
@@ -187,9 +189,6 @@ $fa-font-path: 'font-awesome/webfonts' !default
     margin-left: -10px
     z-index: 2
 
-  &__insert:last-of-type &__insert-hint-btn
-    display: none
-
   &__insert-hint-big-btn
     +button-style
     +button-variant($secondary, $secondary)
@@ -207,7 +206,10 @@ $fa-font-path: 'font-awesome/webfonts' !default
     .mi
       font-size: 16px
 
-  &__insert:last-of-type &__insert-hint-big-btn
+  &__insert--last &__insert-hint-btn
+    display: none
+
+  &__insert--last &__insert-hint-big-btn
     display: inline-flex
 
   &__insert-ul
@@ -265,8 +267,15 @@ $fa-font-path: 'font-awesome/webfonts' !default
     display: none
 
   &__insert-spacer
+    margin-top: 100px
     pointer-events: none
     visibility: hidden
+
+  &__locale--active-insert + &__insert-spacer
+    display: none
+
+  &__insert-spacer &__insert
+    position: relative !important
 
   &__insert-spacer &__insert-inner
     display: block !important
