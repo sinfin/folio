@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 
-class Folio::Atom::Title < Folio::Atom::Base
-  def self.allowed_tags
-    %w[H2 H3 H4]
-  end
+class <%= global_namespace %>::Atom::Title < Folio::Atom::Base
+  ALLOWED_TAGS = %w[H2 H3 H4]
+
+  ATTACHMENTS = %i[]
 
   STRUCTURE = {
     title: :string,
     tag: allowed_tags,
   }
 
+  ASSOCIATIONS = {}
+
+  after_initialize { self.tag ||= self.class::ALLOWED_TAGS.first }
+
   validates :title,
             presence: true
-
-  after_initialize { self.tag ||= self.class.allowed_tags.first }
 
   def tag_with_fallback
     tag.presence || self.class.allowed_tags.first
   end
 
   def self.cell_name
-    "folio/atom/title"
+    "<%= atom_cell_name %>"
   end
 
   def self.console_icon
