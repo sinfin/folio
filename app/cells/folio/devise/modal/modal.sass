@@ -1,13 +1,16 @@
 .f-devise-modal
-  .modal-dialog
+  &__dialog
     max-width: $folio-devise-modal-max-width
+
+  &__dialog--registrations
+    max-width: $folio-devise-modal-registrations-max-width
 
   .f-devise__title
     padding-right: 40px + $grid-gutter-width / 2
     margin-top: 0
     font-size: $h3-font-size
 
-  &__content:not(&__content--active)
+  &__dialog:not(&__dialog--active)
     display: none
 
   &__close
@@ -28,3 +31,7 @@
     width: 30px
     height: 30px
     display: block
+
+  .f-devise-password-input__wrap,
+  .f-devise__col
+    max-width: 100%

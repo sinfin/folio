@@ -1,14 +1,14 @@
 $(document)
   .on 'click', '.f-devise-modal-aware-link', (e) ->
-    $content = $(this).closest('.f-devise-modal__content--active')
+    $dialog = $(this).closest('.f-devise-modal__dialog--active')
 
-    if $content.length
+    if $dialog.length
       e.preventDefault()
-      $content
-        .removeClass('f-devise-modal__content--active')
-        .siblings('.f-devise-modal__content')
+      $dialog
+        .removeClass('f-devise-modal__dialog--active')
+        .siblings('.f-devise-modal__dialog')
         .first()
-        .addClass('f-devise-modal__content--active')
+        .addClass('f-devise-modal__dialog--active')
 
   .on 'shown.bs.modal', '.f-devise-modal', (e) ->
     $(this).find('[autofocus]:visible').first().focus()
@@ -23,16 +23,16 @@ $(document)
     if $btn.data('action')
       if $btn.data('action') is 'sign_in'
         $modal
-          .find('.f-devise-modal__content')
-          .removeClass('f-devise-modal__content--active')
-          .filter('.f-devise-modal__content--sessions')
-          .addClass('f-devise-modal__content--active')
+          .find('.f-devise-modal__dialog')
+          .removeClass('f-devise-modal__dialog--active')
+          .filter('.f-devise-modal__dialog--sessions')
+          .addClass('f-devise-modal__dialog--active')
       else if $btn.data('action') is 'sign_up'
         $modal
-          .find('.f-devise-modal__content')
-          .removeClass('f-devise-modal__content--active')
-          .filter('.f-devise-modal__content--registrations')
-          .addClass('f-devise-modal__content--active')
+          .find('.f-devise-modal__dialog')
+          .removeClass('f-devise-modal__dialog--active')
+          .filter('.f-devise-modal__dialog--registrations')
+          .addClass('f-devise-modal__dialog--active')
 
   .on 'submit', '.f-devise-modal__form', (e) ->
     e.preventDefault()

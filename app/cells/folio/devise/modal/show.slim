@@ -1,20 +1,21 @@
 .modal.f-devise-modal role="dialog" tabindex="-1"
   .modal-dialog[
     role="document"
+    class="f-devise-modal__dialog"
+    class="f-devise-modal__dialog--sessions"
+    class="f-devise-modal__dialog--active"
   ]
-    .modal-content[
-      class="f-devise-modal__content"
-      class="f-devise-modal__content--sessions"
-      class="f-devise-modal__content--active"
-    ]
+    .modal-content
       .modal-body
         == cell('folio/devise/sessions/new', devise_model)
         = render(:_close)
 
-    .modal-content[
-      class="f-devise-modal__content"
-      class="f-devise-modal__content--registrations"
-    ]
+  .modal-dialog[
+    role="document"
+    class="f-devise-modal__dialog"
+    class="f-devise-modal__dialog--registrations"
+  ]
+    .modal-content
       .modal-body
         == cell('folio/devise/registrations/new', devise_model)
         = render(:_close)
