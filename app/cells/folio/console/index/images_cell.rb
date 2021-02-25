@@ -27,4 +27,12 @@ class Folio::Console::Index::ImagesCell < Folio::ConsoleCell
   def gallery
     !options[:cover]
   end
+
+  def size(hash = {})
+    if options[:size]
+      hash.merge(style: "width: #{options[:size]}; height: #{options[:size]};")
+    else
+      hash
+    end
+  end
 end
