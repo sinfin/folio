@@ -37,4 +37,13 @@ class Folio::FileTest < ActiveSupport::TestCase
     create_atom(Dummy::Atom::DaVinci, cover: image)
     assert_not image.destroy
   end
+
+  test "by_file_name pg scope" do
+    create(:folio_image, file_name: "foo.jpg")
+    file1 = create(:folio_image, file_name: "foo_bar.jpg")
+    file2 = create(:folio_image, file_name: "foo-bar.jpg")
+
+    assert_equal [file1], Folio::File.by_file_name("foo_bar")
+    assert_equal [file2], Folio::File.by_file_name("foo-bar")
+  end
 end

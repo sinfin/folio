@@ -39,8 +39,8 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
-  pg_search_scope :by_file_name,
-                  against: [:file_name],
+  pg_search_scope :by_file_name_for_search,
+                  against: [:file_name_for_search],
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }
@@ -62,7 +62,13 @@ class Folio::File < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
+  # workaround for filenames with dashes & underscores
+  scope :by_file_name, -> (query) do
+    by_file_name_for_search(sanitize_filename_for_search(query))
+  end
+
   before_save :set_mime_type
+  before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :touch_placements
 
@@ -101,6 +107,11 @@ class Folio::File < Folio::ApplicationRecord
     "document"
   end
 
+  def self.sanitize_filename_for_search(string)
+    string.to_s.gsub("-", "{d}")
+               .gsub("_", "{u}")
+  end
+
   private
     def touch_placements
       file_placements.each(&:touch)
@@ -111,6 +122,10 @@ class Folio::File < Folio::ApplicationRecord
       return unless file.present?
       return unless respond_to?(:mime_type)
       self.mime_type = get_mime_type(file)
+    end
+
+    def set_file_name_for_search
+      self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
 
     def check_usage_before_destroy
@@ -139,14 +154,15 @@ end
 #  author               :string
 #  description          :text
 #  file_placements_size :integer
+#  file_name_for_search :string
 #
 # Indexes
 #
-#  index_folio_files_on_by_author     (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
-#  index_folio_files_on_by_file_name  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))) USING gin
-#  index_folio_files_on_created_at    (created_at)
-#  index_folio_files_on_file_name     (file_name)
-#  index_folio_files_on_hash_id       (hash_id)
-#  index_folio_files_on_type          (type)
-#  index_folio_files_on_updated_at    (updated_at)
+#  index_folio_files_on_by_author                (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))) USING gin
+#  index_folio_files_on_by_file_name_for_search  (to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))) USING gin
+#  index_folio_files_on_created_at               (created_at)
+#  index_folio_files_on_file_name                (file_name)
+#  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_type                     (type)
+#  index_folio_files_on_updated_at               (updated_at)
 #

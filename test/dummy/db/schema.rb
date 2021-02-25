@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_23_053129) do
+ActiveRecord::Schema.define(version: 2021_02_25_135419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -172,8 +172,9 @@ ActiveRecord::Schema.define(version: 2021_02_23_053129) do
     t.string "author"
     t.text "description"
     t.integer "file_placements_size"
+    t.string "file_name_for_search"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
-    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
+    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
     t.index ["hash_id"], name: "index_folio_files_on_hash_id"
