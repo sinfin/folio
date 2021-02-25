@@ -41,6 +41,7 @@ en:
           email_label: E-mail (used for signing in)
           sign_up: Create account
           title: Sign up
+          gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
 
         edit:
           update: Update

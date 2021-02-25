@@ -71,4 +71,8 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
 
   def registrations_perex
   end
+
+  def registration_gdpr_content
+    content_tag(:p, t(".gdpr_content"))
+  end
 end

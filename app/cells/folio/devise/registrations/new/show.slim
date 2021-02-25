@@ -5,6 +5,9 @@
     - if registrations_perex
       p.f-devise__perex = registrations_perex
 
+    .f-devise-registrations-new__gdpr-content
+      == registration_gdpr_content
+
     == cell('folio/devise/flash', model[:flash])
 
     == cell('folio/devise/omniauth', 'registrations')
