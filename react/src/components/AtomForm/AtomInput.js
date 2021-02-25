@@ -37,8 +37,8 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
   React.useEffect(() => {
     if (type === 'collection') {
       const { collection } = structure[key]
-      if (collection && !defaultValue && defaultValue !== collection[0]) {
-        onValueChange(index, collection[0], key)
+      if (collection && !defaultValue && defaultValue !== collection[0][1]) {
+        onValueChange(index, collection[0][1], key)
       }
     }
   }, [type, onValueChange, defaultValue, key, structure, index])
@@ -102,8 +102,8 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         onKeyPress={preventEnterSubmit}
         invalid={Boolean(atom.errors[key])}
       >
-        {structure[key].collection.map((value) => (
-          <option key={value} value={value}>{value}</option>
+        {structure[key].collection.map((ary) => (
+          <option key={ary[1] || ''} value={ary[1] || ''}>{ary[0]}</option>
         ))}
       </Input>
     )

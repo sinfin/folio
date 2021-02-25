@@ -20,7 +20,12 @@ module Folio::Atom
 
         if value.is_a?(Array)
           structure[key][:type] = "collection"
-          structure[key][:collection] = value
+          structure[key][:collection] = value.map do |option|
+            [
+              klass.human_attribute_name("#{key}/#{option.presence || 'nil'}"),
+              option
+            ]
+          end
         end
       end
 

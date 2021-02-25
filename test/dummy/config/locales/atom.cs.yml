@@ -1,6 +1,12 @@
 ---
 cs:
   activerecord:
+    attributes:
+      dummy/atom/da_vinci:
+        fruit: Ovoce
+        fruit/nil: Žádné
+        fruit/apple: Jablko
+        fruit/banana: Banán
     models:
       dummy/atom/text: Text (odstavce, tabulky, apod.)
       dummy/atom/title: Nadpis
