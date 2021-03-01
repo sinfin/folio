@@ -24,13 +24,24 @@ class Folio::ImageCell < Folio::ApplicationCell
 
     @data ||= begin
       if static?
-        use_webp = model[:webp_normal] && model[:webp_retina]
+        use_webp = model[:webp_normal].present?
+
+        if model[:webp_normal].present?
+          if model[:webp_retina].present?
+            webp_srcset = "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x"
+          else
+            webp_srcset = model[:webp_normal]
+          end
+        else
+          webp_srcset = nil
+        end
+
         {
           alt: "",
           src: model[:normal],
           srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
           webp_src: model[:webp_normal],
-          webp_srcset: use_webp ? "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x" : nil,
+          webp_srcset: webp_srcset,
           use_webp: use_webp,
         }
       else
