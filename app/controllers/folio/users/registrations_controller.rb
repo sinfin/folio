@@ -54,7 +54,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
           clean_up_passwords resource
           set_minimum_password_length
 
-          message = t(".failure")
+          message = t("folio.users.registrations.create.failure")
 
           errors = [{ status: 401, title: "Unauthorized", detail: message }]
           cell_flash = ActionDispatch::Flash::FlashHash.new
