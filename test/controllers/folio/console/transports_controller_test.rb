@@ -56,7 +56,7 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
 
     sign_in @admin
     post transport_console_transport_path, params: {
-      yaml_string: hash.to_yaml,
+      yaml_string: hash.to_yaml(line_width: -1),
     }
     page = Folio::Page.last
     assert(Folio::Page.last)
@@ -85,7 +85,7 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
 
     sign_in @admin
     post transport_console_transport_path(class_name: "Folio::Page", id: id), params: {
-      yaml_string: hash.to_yaml,
+      yaml_string: hash.to_yaml(line_width: -1),
     }
 
     page.reload

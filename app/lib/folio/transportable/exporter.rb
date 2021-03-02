@@ -23,7 +23,7 @@ class Folio::Transportable::Exporter
   end
 
   def to_yaml
-    to_hash.deep_stringify_keys.to_yaml
+    to_hash.deep_stringify_keys.to_yaml(line_width: -1)
   end
 
   private

@@ -67,7 +67,7 @@ module Folio::GeneratorBase
         hash[locale.to_s]["activerecord"]["models"] = Hash[ sorted ]
 
         File.open(path, "w") do |f|
-          f.write hash.to_yaml
+          f.write hash.to_yaml(line_width: -1)
         end
       end
     end
