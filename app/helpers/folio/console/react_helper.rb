@@ -154,7 +154,7 @@ module Folio::Console::ReactHelper
     )
   end
 
-  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: nil)
+  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     if atom_setting
@@ -172,7 +172,7 @@ module Folio::Console::ReactHelper
     through_klass = reflection.class_name.constantize
 
     param_base = "#{klass.model_name.param_key}[#{through}_attributes]"
-    items = f.object.send(through).ordered.map do |record|
+    items = f.object.send(through).map do |record|
       through_record = through_klass.find(record.send(reflection.foreign_key))
 
       {

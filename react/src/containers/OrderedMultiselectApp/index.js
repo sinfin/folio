@@ -26,24 +26,28 @@ class OrderedMultiselectApp extends React.Component {
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const url = `${orderedMultiselect.url}&without=${without}`
 
+    // using key={without} forces Select to reload default options
+
     return (
       <div className='f-c-r-ordered-multiselect-app'>
-        <SortableTree
-          maxDepth={1}
-          rowHeight={34}
-          treeData={orderedMultiselect.items}
-          onChange={(items) => { dispatch(updateItems(items)) }}
-          isVirtualized={false}
-          generateNodeProps={({ node, path }) => ({
-            title: (
-              <Item
-                node={node}
-                path={path}
-                remove={(item) => { dispatch(removeItem(item)) }}
-              />
-            )
-          })}
-        />
+        {orderedMultiselect.items.length ? (
+          <SortableTree
+            maxDepth={1}
+            rowHeight={34}
+            treeData={orderedMultiselect.items}
+            onChange={(items) => { dispatch(updateItems(items)) }}
+            isVirtualized={false}
+            generateNodeProps={({ node, path }) => ({
+              title: (
+                <Item
+                  node={node}
+                  path={path}
+                  remove={(item) => { dispatch(removeItem(item)) }}
+                />
+              )
+            })}
+          />
+        ) : null}
 
         <Select
           onChange={this.onSelect}
@@ -51,6 +55,7 @@ class OrderedMultiselectApp extends React.Component {
           isClearable={false}
           async={url}
           placeholder={window.FolioConsole.translations.addPlaceholder}
+          key={without}
           defaultOptions
           selectize
         />
