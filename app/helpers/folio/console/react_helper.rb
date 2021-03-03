@@ -172,14 +172,13 @@ module Folio::Console::ReactHelper
     through_klass = reflection.class_name.constantize
 
     param_base = "#{klass.model_name.param_key}[#{through}_attributes]"
-    items = f.object.send(through).map do |record|
+    items = f.object.send(through).ordered.map do |record|
       through_record = through_klass.find(record.send(reflection.foreign_key))
 
       {
         id: record.id,
         label: through_record.to_console_label,
         value: through_record.id,
-        position: record.try(:position),
         _destroy: false,
       }
     end
@@ -198,7 +197,7 @@ module Folio::Console::ReactHelper
     content_tag(:div, class: "form-group") do
       concat(f.label relation_name)
       concat(
-        content_tag(:div, nil,
+        content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
           "class" => class_name,
           "data-param-base" => param_base,
           "data-foreign-key" => reflection.foreign_key,

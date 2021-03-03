@@ -8,7 +8,7 @@ function Item ({ path, node, remove }) {
 
       <span
         className='text-danger fa fa-trash-alt f-c-r-ordered-multiselect-app__item-destroy'
-        onClick={makeConfirmed(() => remove(path, node))}
+        onClick={makeConfirmed(() => remove(node))}
       />
     </div>
   )

@@ -1,7 +1,7 @@
-.f-c-r-ordered-multiselect-app
+.folio-react-wrap--ordered-multiselect
   +font-size($input-font-size)
-  +border-radius($input-border-radius, 0);
-  +box-shadow($input-box-shadow);
+  +border-radius($input-border-radius, 0)
+  +box-shadow($input-box-shadow)
   background: $input-bg
   color: $input-color
   border: $input-border-width solid $input-border-color
@@ -9,7 +9,10 @@
   font-family: $input-font-family
   font-weight: $input-font-weight
   line-height: $input-line-height
+  min-height: 55px
+  position: relative
 
+.f-c-r-ordered-multiselect-app
   &__item
     display: flex
     padding-left: $spacer

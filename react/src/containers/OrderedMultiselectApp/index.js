@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import SortableTree, { removeNodeAtPath } from 'react-sortable-tree'
-import { Button } from 'reactstrap'
+import SortableTree from 'react-sortable-tree'
 
 import 'react-sortable-tree/style.css'
 
@@ -15,25 +14,21 @@ import {
 import Item from './Item'
 import Serialized from './Serialized'
 
-const getNodeKey = ({ treeIndex }) => treeIndex
-
-function OrderedMultiselectApp ({ orderedMultiselect, onChange, makeOnMenuItemChange, makeOnMenuItemRemove, add }) {
-  const itemOnRemove = makeOnMenuItemRemove(orderedMultiselect.items)
-
+function OrderedMultiselectApp ({ orderedMultiselect, dispatch }) {
   return (
     <div className='f-c-r-ordered-multiselect-app'>
       <SortableTree
         maxDepth={1}
         rowHeight={34}
         treeData={orderedMultiselect.items}
-        onChange={onChange}
+        onChange={(items) => { dispatch(updateItems(items)) }}
         isVirtualized={false}
         generateNodeProps={({ node, path }) => ({
           title: (
             <Item
               node={node}
               path={path}
-              remove={itemOnRemove}
+              remove={(item) => { dispatch(removeItem(item)) }}
             />
           )
         })}
@@ -49,17 +44,7 @@ const mapStateToProps = (state, props) => ({
 })
 
 function mapDispatchToProps (dispatch) {
-  return {
-    add: () => { dispatch(addItem()) },
-    onChange: (treeData) => { dispatch(updateItems(treeData)) },
-    makeOnMenuItemRemove: (items) => (path, removed) => {
-      const tree = removeNodeAtPath({ treeData: items, path, getNodeKey })
-
-      dispatch(
-        removeItem(tree, removed)
-      )
-    }
-  }
+  return { dispatch }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderedMultiselectApp)
