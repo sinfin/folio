@@ -5,8 +5,6 @@ import Select from 'components/Select'
 
 import { MENU_ITEM_URL } from 'ducks/menus'
 
-import MenuItemWrap from './styled/MenuItemWrap'
-
 const makeOnChange = (path, node, onChange) => (e) => {
   const newNode = {
     ...node
@@ -63,7 +61,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
   const onChangeFn = makeOnChange(path, node, onChange)
 
   return (
-    <MenuItemWrap className='form-inline f-c-menus-form__form'>
+    <div className='form-inline f-c-menus-form__form'>
       <div className='f-c-menus-form__form-item'>
         <span className='fa fa--18 fa-font mr-2' />
 
@@ -137,7 +135,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
           onClick={makeConfirmed(() => remove(path, node))}
         />
       </div>
-    </MenuItemWrap>
+    </div>
   )
 }
 

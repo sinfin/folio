@@ -172,7 +172,7 @@ module Folio::Console::ReactHelper
     through_klass = reflection.class_name.constantize
 
     param_base = "#{klass.model_name.param_key}[#{through}_attributes]"
-    records = f.object.send(through).map do |record|
+    items = f.object.send(through).map do |record|
       through_record = through_klass.find(record.send(reflection.foreign_key))
 
       {
@@ -195,12 +195,17 @@ module Folio::Console::ReactHelper
                                  order_scope: order_scope,
                                  only_path: true])
 
-    content_tag(:div, nil,
-      "class" => class_name,
-      "data-param-base" => param_base,
-      "data-foreign-key" => reflection.foreign_key,
-      "data-records" => records.to_json,
-      "data-url" => url,
-    )
+    content_tag(:div, class: "form-group") do
+      concat(f.label relation_name)
+      concat(
+        content_tag(:div, nil,
+          "class" => class_name,
+          "data-param-base" => param_base,
+          "data-foreign-key" => reflection.foreign_key,
+          "data-items" => items.to_json,
+          "data-url" => url,
+        )
+      )
+    end
   end
 end

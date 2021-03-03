@@ -9,11 +9,13 @@ import 'url-search-params-polyfill'
 import FilesApp from 'containers/FilesApp'
 import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
+import OrderedMultiselectApp from 'containers/OrderedMultiselectApp'
 import { setMode, setFileType, setFilesUrl, setReadOnly, setNoFileUsage, setFileReactType } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
 import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
+import { setOrderedMultiselectData } from 'ducks/orderedMultiselect'
 
 import reducers from './reducers'
 import sagas from './sagas'
@@ -39,6 +41,19 @@ window.folioConsoleInitReact = (domRoot) => {
     ReactDOM.render((
       <Provider store={store}>
         <MenuFormApp />
+      </Provider>
+    ), domRoot)
+  } else if (domRoot.classList.contains('folio-react-wrap--ordered-multiselect')) {
+    store.dispatch(setOrderedMultiselectData({
+      items: JSON.parse(domRoot.dataset.items),
+      paramBase: domRoot.dataset.paramBase,
+      foreignKey: domRoot.dataset.foreignKey,
+      url: domRoot.dataset.url
+    }))
+
+    ReactDOM.render((
+      <Provider store={store}>
+        <OrderedMultiselectApp />
       </Provider>
     ), domRoot)
   } else if (domRoot.classList.contains('folio-react-wrap--ancestry')) {
