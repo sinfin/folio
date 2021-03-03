@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-03-03
+### Added
+- added `react_ordered_multiselect` for has_many through relations with positionable
+
 ## 2020-02-24
 ### Removed
 - removed `Folio::Atom::Text` and `Folio::Atom::Title`
