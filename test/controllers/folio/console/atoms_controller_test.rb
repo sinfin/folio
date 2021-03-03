@@ -17,7 +17,7 @@ class Folio::Console::AtomsControllerTest < Folio::Console::BaseControllerTest
     post validate_console_atoms_path, params: {
       atoms: [
         {
-          type: "Dummy::Atom::Gallery",
+          type: "Dummy::Atom::Images",
           placement_type: "Folio::Page",
           placement_id: create(:folio_page).id,
         }
