@@ -1,4 +1,4 @@
-.d-atom-images
+.<%= classname_prefix %>-atom-images
   overflow: hidden
 
   &__col
@@ -19,7 +19,6 @@
 
   &__bottom-figcaption
     margin-top: $grid-gutter-width / 2
-    padding-top: $grid-gutter-width / 2
     display: block
 
   +media-breakpoint-down(sm)

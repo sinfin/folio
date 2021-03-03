@@ -42,17 +42,32 @@ module Folio::GeneratorBase
       I18n.available_locales.each do |locale|
         path = Rails.root.join("config/locales/atom.#{locale}.yml")
         i18n_key = "#{global_namespace_path}/atom/#{name}"
-        i18n_value = values[locale] || values[:en] || name.capitalize
+        i18n_value = values[locale] || values[:en]
 
-        new_hash = {
-          locale.to_s => {
-            "activerecord" => {
-              "models" => {
-                i18n_key => i18n_value
+        if i18n_value.is_a?(Hash)
+          new_hash = {
+            locale.to_s => {
+              "activerecord" => {
+                "attributes" => {
+                  i18n_key => i18n_value[:attributes].stringify_keys,
+                },
+                "models" => {
+                  i18n_key => i18n_value[:name],
+                }
               }
             }
           }
-        }
+        else
+          new_hash = {
+            locale.to_s => {
+              "activerecord" => {
+                "models" => {
+                  i18n_key => i18n_value || name
+                }
+              }
+            }
+          }
+        end
 
         if File.exist?(path)
           hash = YAML.load_file(path).deep_merge(new_hash)

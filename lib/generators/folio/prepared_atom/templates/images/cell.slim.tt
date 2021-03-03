@@ -1,0 +1,32 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images
+  .container
+    - if model.same_width
+      .row.<%= classname_prefix %>-atom-images__row
+        - model.image_placements.each do |placement|
+          figure.<%= classname_prefix %>-atom-images__col[
+            class="col-#{col_number}"
+            class="<%= classname_prefix %>-atom-images__col--#{col_number}"
+          ]
+            = image(placement,
+                    "#{grid_width}x#{grid_width * 3 / 4}#",
+                    hover_zoom: true,
+                    title: placement.title.presence,
+                    alt: placement.alt.presence,
+                    lightbox: true,
+                    class: '<%= classname_prefix %>-atom-images__col-image')
+
+    - else
+      .<%= classname_prefix %>-atom-images__dynamic
+        - model.image_placements.each do |placement|
+          .<%= classname_prefix %>-atom-images__dynamic-item style=dynamic_style(placement)
+            = image(placement,
+                    "x#{DYNAMIC_THUMB_HEIGHT}",
+                    hover_zoom: true,
+                    title: placement.title.presence,
+                    alt: placement.alt.presence,
+                    lightbox: true,
+                    class: '<%= classname_prefix %>-atom-images__dynamic-image',
+                    max_width: dynamic_max_width(placement))
+
+    - if model.title.present?
+      figcaption.<%= classname_prefix %>-atom-images__bottom-figcaption = cstypo model.title

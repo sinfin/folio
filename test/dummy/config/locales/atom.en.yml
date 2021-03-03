@@ -2,6 +2,10 @@
 en:
   activerecord:
     models:
-      dummy/atom/images: Images
+      dummy/atom/images: Images (gallery)
       dummy/atom/text: Text (paragraphs, tables, etc.)
       dummy/atom/title: Title
+    attributes:
+      dummy/atom/images:
+        same_width: Align to grid
+        title: Caption under the gallery
