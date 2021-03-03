@@ -18,11 +18,22 @@ import Serialized from './Serialized'
 
 class OrderedMultiselectApp extends React.Component {
   onSelect = (item) => {
+    window.jQuery('.f-c-r-ordered-multiselect-app').trigger('change.folioDirtyForms')
     this.props.dispatch(addItem(item))
   }
 
+  update = (items) => {
+    window.jQuery('.f-c-r-ordered-multiselect-app').trigger('change.folioDirtyForms')
+    this.props.dispatch(updateItems(items))
+  }
+
+  removeItem = (item) => {
+    window.jQuery('.f-c-r-ordered-multiselect-app').trigger('change.folioDirtyForms')
+    this.props.dispatch(removeItem(item))
+  }
+
   render () {
-    const { orderedMultiselect, dispatch } = this.props
+    const { orderedMultiselect } = this.props
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
     const url = `${orderedMultiselect.url}&without=${without}`
 
@@ -35,14 +46,14 @@ class OrderedMultiselectApp extends React.Component {
             maxDepth={1}
             rowHeight={34}
             treeData={orderedMultiselect.items}
-            onChange={(items) => { dispatch(updateItems(items)) }}
+            onChange={this.update}
             isVirtualized={false}
             generateNodeProps={({ node, path }) => ({
               title: (
                 <Item
                   node={node}
                   path={path}
-                  remove={(item) => { dispatch(removeItem(item)) }}
+                  remove={this.removeItem}
                 />
               )
             })}
