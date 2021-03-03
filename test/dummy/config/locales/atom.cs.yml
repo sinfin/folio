@@ -8,5 +8,6 @@ cs:
         fruit/apple: Jablko
         fruit/banana: Banán
     models:
+      dummy/atom/images: Obrázky (galerie)
       dummy/atom/text: Text (odstavce, tabulky, apod.)
       dummy/atom/title: Nadpis

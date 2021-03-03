@@ -1,0 +1,5 @@
+  - @atoms.each do |key, atom|
+    .container
+      h2 = key
+
+    == cell(atom.class.cell_name, atom)

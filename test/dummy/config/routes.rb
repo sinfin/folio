@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resource :test, only: [:show]
   get "/dropzone", to: "home#dropzone"
   get "/lead_form", to: "home#lead_form"
+  get "/gallery", to: "home#gallery"
 
   if Rails.application.config.folio_pages_translations
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
