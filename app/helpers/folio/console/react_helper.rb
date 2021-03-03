@@ -185,7 +185,7 @@ module Folio::Console::ReactHelper
 
     url = Folio::Engine.routes
                        .url_helpers
-                       .url_for([:select2,
+                       .url_for([:selectize,
                                  :console,
                                  :api,
                                  :autocomplete,

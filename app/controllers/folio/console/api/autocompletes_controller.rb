@@ -70,12 +70,17 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
+    p_without = params[:without]
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
 
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)
+      end
+
+      if p_without.present?
+        scope = scope.where.not(id: p_without.split(","))
       end
 
       scope = scope.by_query(q) if q.present?
@@ -95,12 +100,17 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
+    p_without = params[:without]
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
 
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)
+      end
+
+      if p_without.present?
+        scope = scope.where.not(id: p_without.split(","))
       end
 
       scope = scope.by_query(q) if q.present?
@@ -120,6 +130,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
+    p_without = params[:without]
 
     if class_names
       response = []
@@ -133,6 +144,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
           if p_scope.present? && scope.respond_to?(p_scope)
             scope = scope.send(p_scope)
+          end
+
+          if p_without.present?
+            scope = scope.where.not(id: p_without.split(","))
           end
 
           if q.present?

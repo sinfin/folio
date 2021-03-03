@@ -66,7 +66,12 @@ module Folio::ApiControllerBase
 
     def render_selectize_options(models)
       ary = models.map do |model|
-        { id: model.id, text: model.to_console_label, value: model.id }
+        {
+          id: model.id,
+          text: model.to_console_label,
+          label: model.to_console_label,
+          value: model.id
+        }
       end
       render json: { data: ary }
     end

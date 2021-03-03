@@ -58,7 +58,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, settingsUrlData, defaultOptions, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, settingsUrlData, defaultOptions, placeholder, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -142,7 +142,7 @@ class Select extends React.Component {
         loadOptions={loadOptions}
         onKeyDown={this.onKeyDown}
         isClearable={typeof isClearable === 'undefined' ? true : isClearable}
-        placeholder={window.FolioConsole.translations.selectPlaceholder}
+        placeholder={placeholder || window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}
         isValidNewOption={this.isValidNewOption}
         {...rest}

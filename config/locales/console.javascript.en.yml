@@ -5,6 +5,7 @@ en:
       javascript:
         add: Add
         addMenuItem: Add link
+        addPlaceholder: Add...
         availableDocuments: Available documents
         availableImages: Available images
         cancel: Cancel

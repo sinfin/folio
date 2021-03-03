@@ -39,6 +39,7 @@ function Serialized ({ orderedMultiselect }) {
           item={item}
           index={index()}
           paramBase={paramBase}
+          foreignKey={foreignKey}
         />
       ))}
 
@@ -48,7 +49,6 @@ function Serialized ({ orderedMultiselect }) {
           key={id}
           index={index()}
           paramBase={paramBase}
-          foreignKey={foreignKey}
         />
       ))}
     </div>

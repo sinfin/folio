@@ -15,8 +15,8 @@ export function setOrderedMultiselectData (data) {
   return { type: SET_ORDERED_MULTISELECT_DATA, data }
 }
 
-export function addItem () {
-  return { type: ADD_ITEM }
+export function addItem (item) {
+  return { type: ADD_ITEM, item }
 }
 
 export function updateItems (items) {
@@ -66,7 +66,13 @@ function orderedMultiselectReducer (state = initialState, action) {
       return {
         ...state,
         items: [
-          ...state.items
+          ...state.items,
+          {
+            id: null,
+            label: action.item.label,
+            value: action.item.id,
+            uniqueId: uniqueId()
+          }
         ]
       }
 
