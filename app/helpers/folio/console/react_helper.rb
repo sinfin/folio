@@ -52,11 +52,11 @@ module Folio::Console::ReactHelper
 
       content_tag(:div,
                   nil,
-                  'class': "folio-react-wrap",
-                  'data-file-type': file_type,
-                  'data-files-url': url,
-                  'data-react-type': klass.react_type,
-                  'data-mode': "modal-single-select")
+                  "class" => "folio-react-wrap",
+                  "data-file-type" => file_type,
+                  "data-files-url" => url,
+                  "data-react-type" => klass.react_type,
+                  "data-mode" => "modal-single-select")
     end
   end
 
@@ -106,9 +106,9 @@ module Folio::Console::ReactHelper
       className: f.object.class.to_s,
     }
 
-    content_tag(:div, nil, 'class': "f-c-atoms folio-react-wrap",
-                           'data-mode': "atoms",
-                           'data-atoms': data.to_json)
+    content_tag(:div, nil, "class" => "f-c-atoms folio-react-wrap",
+                           "data-mode" => "atoms",
+                           "data-atoms" => data.to_json)
   end
 
   def react_files(file_type, selected_placements, attachmentable:, type:, atom_setting: nil)
@@ -142,15 +142,65 @@ module Folio::Console::ReactHelper
     end
 
     content_tag(:div, nil,
-      'class': class_name,
-      'data-original-placements': placements,
-      'data-file-type': file_type,
-      'data-files-url': url,
-      'data-react-type': klass.react_type,
-      'data-mode': "multi-select",
-      'data-attachmentable': attachmentable,
-      'data-placement-type': type,
-      'data-atom-setting': atom_setting,
+      "class" => class_name,
+      "data-original-placements" => placements,
+      "data-file-type" => file_type,
+      "data-files-url" => url,
+      "data-react-type" => klass.react_type,
+      "data-mode" => "multi-select",
+      "data-attachmentable" => attachmentable,
+      "data-placement-type" => type,
+      "data-atom-setting" => atom_setting,
+    )
+  end
+
+  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: nil)
+    class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
+
+    if atom_setting
+      class_name = "#{class_name} f-c-js-atoms-placement-setting"
+    end
+
+    klass = f.object.class
+    reflection = klass.reflections[relation_name.to_s]
+    through = reflection.options[:through]
+
+    if through.nil?
+      fail StandardError, "Only supported for :through relations"
+    end
+
+    through_klass = reflection.class_name.constantize
+
+    param_base = "#{klass.model_name.param_key}[#{through}_attributes]"
+    records = f.object.send(through).map do |record|
+      through_record = through_klass.find(record.send(reflection.foreign_key))
+
+      {
+        id: record.id,
+        label: through_record.to_console_label,
+        value: through_record.id,
+        position: record.try(:position),
+        _destroy: false,
+      }
+    end
+
+    url = Folio::Engine.routes
+                       .url_helpers
+                       .url_for([:select2,
+                                 :console,
+                                 :api,
+                                 :autocomplete,
+                                 klass: through_klass.to_s,
+                                 scope: scope,
+                                 order_scope: order_scope,
+                                 only_path: true])
+
+    content_tag(:div, nil,
+      "class" => class_name,
+      "data-param-base" => param_base,
+      "data-foreign-key" => reflection.foreign_key,
+      "data-records" => records.to_json,
+      "data-url" => url,
     )
   end
 end
