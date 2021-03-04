@@ -125,10 +125,21 @@ class Folio::ImageCell < Folio::ApplicationCell
       styles << "width: #{mobile}px"
       styles << "height: #{mobile_height}px"
     else
+      max_height = nil
+
       if options[:max_height]
         max_width = (options[:max_height] / spacer_ratio).round(4)
       else
-        max_width = options[:max_width] || size.split("x").first
+        if options[:max_width]
+          max_width = options[:max_width]
+        else
+          if thumbnail_width
+            max_width = thumbnail_width
+            max_height = "#{thumbnail_height}px" if thumbnail_height
+          else
+            max_width = size.split("x").first
+          end
+        end
       end
 
       if max_width.present?
@@ -150,6 +161,10 @@ class Folio::ImageCell < Folio::ApplicationCell
         end
 
         styles << "max-width: #{max_width}"
+      end
+
+      if max_height.present?
+        styles << "max-height: #{max_height}"
       end
 
       if options[:fixed_width]
@@ -221,6 +236,8 @@ class Folio::ImageCell < Folio::ApplicationCell
       tag: :div,
       class: class_names,
       style: wrap_style,
+      "data-width" => thumbnail_width,
+      "data-height" => thumbnail_height,
     }
 
     if options[:href]
@@ -261,6 +278,42 @@ class Folio::ImageCell < Folio::ApplicationCell
       ::Rails.application.config.folio_image_spacer_background_fallback
     else
       options[:spacer_background]
+    end
+  end
+
+  def thumbnail_size
+    if @thumbnail_size.nil?
+      file = nil
+      file = model if model.is_a?(Folio::File)
+      file = model.file if model.is_a?(Folio::FilePlacement::Base)
+
+      if file
+        t = file.thumb(size)
+        @thumbnail_size = {
+          width: t.width,
+          height: t.height,
+        }
+      else
+        @thumbnail_size = false
+      end
+    else
+      @thumbnail_size.presence
+    end
+  end
+
+  def thumbnail_width
+    if @thumbnail_width.nil?
+      @thumbnail_width = thumbnail_size.try(:[], :width)
+    else
+      @thumbnail_width.presence
+    end
+  end
+
+  def thumbnail_height
+    if @thumbnail_height.nil?
+      @thumbnail_height = thumbnail_size.try(:[], :height)
+    else
+      @thumbnail_height.presence
     end
   end
 end
