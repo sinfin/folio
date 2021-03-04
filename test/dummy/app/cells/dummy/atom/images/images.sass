@@ -1,36 +1,38 @@
 .d-atom-images
   overflow: hidden
 
-  &__col
-    margin: 0
+  &__row
+    padding-left: $grid-gutter-width / 4
+    padding-right: $grid-gutter-width / 4
 
-  &__col--6:nth-child(n + 3),
-  &__col--4:nth-child(n + 4)
-    margin-top: $grid-gutter-width
+  &__col
+    padding-left: $grid-gutter-width / 4
+    padding-right: $grid-gutter-width / 4
+    margin-bottom: 0
+
+    &:nth-child(n + 5)
+      margin-top: $grid-gutter-width / 2
 
   &__dynamic
-    display: flex
-    flex-wrap: wrap
-    margin: - floor($grid-gutter-width / 4)
-
-  &__dynamic-item
-    margin: floor($grid-gutter-width / 4)
     position: relative
+    overflow: hidden
+
+  &__loader-wrap
+    background: $white
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 2
+
+  &__loader
+    max-height: 150px
+
+  &__dynamic--loaded &__loader-wrap
+    display: none
 
   &__bottom-figcaption
     margin-top: $grid-gutter-width / 2
     padding-top: $grid-gutter-width / 2
     display: block
-
-  +media-breakpoint-down(sm)
-    &__row
-      padding-left: $grid-gutter-width / 4
-      padding-right: $grid-gutter-width / 4
-
-    &__col
-      padding-left: $grid-gutter-width / 4
-      padding-right: $grid-gutter-width / 4
-
-    &__col--6:nth-child(n + 3),
-    &__col--4:nth-child(n + 4)
-      margin-top: $grid-gutter-width / 2

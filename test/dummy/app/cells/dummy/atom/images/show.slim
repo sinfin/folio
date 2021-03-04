@@ -3,12 +3,9 @@
     - if model.same_width
       .row.d-atom-images__row
         - model.image_placements.each do |placement|
-          figure.d-atom-images__col[
-            class="col-#{col_number}"
-            class="d-atom-images__col--#{col_number}"
-          ]
+          figure.col-3.d-atom-images__col
             = image(placement,
-                    "#{grid_width}x#{grid_width * 3 / 4}#",
+                    "#{GRID_SIZE}x#{GRID_SIZE}#",
                     hover_zoom: true,
                     title: placement.title.presence,
                     alt: placement.alt.presence,
@@ -16,17 +13,26 @@
                     class: 'd-atom-images__col-image')
 
     - else
-      .d-atom-images__dynamic
+      .d-atom-images__dynamic[
+        data-target-height=DYNAMIC_TARGET_HEIGHT
+        data-margin=DYNAMIC_MARGIN
+      ]
         - model.image_placements.each do |placement|
-          .d-atom-images__dynamic-item style=dynamic_style(placement)
+          - data = dynamic_item_data(placement)
+          .d-atom-images__dynamic-item[
+            style="width: #{data[:width]}px"
+            data-ratio=data[:ratio]
+          ]
             = image(placement,
-                    "x#{DYNAMIC_THUMB_HEIGHT}",
+                    dynamic_geometry,
                     hover_zoom: true,
                     title: placement.title.presence,
                     alt: placement.alt.presence,
                     lightbox: true,
-                    class: 'd-atom-images__dynamic-image',
-                    max_width: dynamic_max_width(placement))
+                    class: 'd-atom-images__dynamic-image')
+
+        .d-atom-images__loader-wrap
+          span.folio-loader.d-atom-images__loader
 
     - if model.title.present?
       figcaption.d-atom-images__bottom-figcaption = cstypo model.title
