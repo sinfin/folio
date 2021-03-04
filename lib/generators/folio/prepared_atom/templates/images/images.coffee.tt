@@ -6,15 +6,15 @@ else
   bound = false
 
   alignWrap = ($wrap) ->
-    height = $wrap.data('target-height')
+    height = parseFloat($wrap.data('target-height'))
     ratios = []
     $items = $wrap.find('.<%= classname_prefix %>-atom-images__dynamic-item')
-    $items.each -> ratios.push($(this).data('ratio'))
+    $items.each -> ratios.push(parseFloat($(this).data('ratio')))
 
     result = window.flickrJustifiedLayout ratios,
       containerWidth: $wrap.width()
       containerPadding: 0
-      boxSpacing: $wrap.data('margin')
+      boxSpacing: parseFloat($wrap.data('margin'))
       targetRowHeight: height
 
     $wrap.css('height', result.containerHeight)
