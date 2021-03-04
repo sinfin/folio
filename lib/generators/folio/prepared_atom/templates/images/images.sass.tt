@@ -17,6 +17,10 @@
     position: relative
     overflow: hidden
 
+  &__dynamic-image
+    max-width: 100% !important
+    max-height: none !important
+
   &__loader-wrap
     background: $white
     position: absolute
@@ -34,5 +38,4 @@
 
   &__bottom-figcaption
     margin-top: $grid-gutter-width / 2
-    padding-top: $grid-gutter-width / 2
     display: block

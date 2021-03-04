@@ -3,6 +3,8 @@ if not window.flickrJustifiedLayout
 else if not window.folioDebounce
   console.error("Missing window.folioDebounce - add 'folio/debounce' to application.js")
 else
+  bound = false
+
   alignWrap = ($wrap) ->
     height = $wrap.data('target-height')
     ratios = []
@@ -40,7 +42,7 @@ else
       handleWraps($wraps)
       $(window).on 'resize.<%= classname_prefix %>AtomImages orientationchange.<%= classname_prefix %>AtomImages', debouncedHandleWraps
 
-    .on 'turbolinks:before-cache', ->
+    .on 'turbolinks:before-render', ->
       return unless bound
       bound = false
       $(window).off 'resize.<%= classname_prefix %>AtomImages orientationchange.<%= classname_prefix %>AtomImages', debouncedHandleWraps
