@@ -6,12 +6,14 @@ module Folio
       extend ActiveSupport::Concern
 
       def set_positions
-        if self.class.positions_model.update(set_position_params.keys,
-                                             set_position_params.values)
-          render json: {}
-        else
-          head 406
+        model = self.class.positions_model
+
+        model.where(id: set_position_params.keys).each do |record|
+          position = set_position_params[record.id.to_s]["position"]
+          record.positionable_sql_update(position)
         end
+
+        render json: {}
       end
 
       module ClassMethods
