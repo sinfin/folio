@@ -49,7 +49,8 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
                                input_html: {
                                 autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
                                 autocomplete: "email",
-                                value: f.object.email.presence || "@"
+                                value: f.object.email.presence || "@",
+                                id: nil,
                               })
   end
 
@@ -61,7 +62,8 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
 
   def attribute_input(f, field, opts = {})
     f.input field, opts.merge(input_html: {
-      value: f.object.send(field).presence || params[resource_name].try(:[], field)
+      value: f.object.send(field).presence || params[resource_name].try(:[], field),
+      id: nil,
     })
   end
 

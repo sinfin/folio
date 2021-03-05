@@ -5,7 +5,10 @@ class Folio::Devise::Registrations::NewCell < Folio::Devise::ApplicationCell
     opts = {
       url: controller.registration_path(resource_name),
       as: resource_name,
-      html: { class: model[:modal] ? "f-devise-modal__form" : nil },
+      html: {
+        class: model[:modal] ? "f-devise-modal__form" : nil,
+        id: nil
+      },
     }
 
     simple_form_for(resource, opts, &block)

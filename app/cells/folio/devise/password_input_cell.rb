@@ -8,7 +8,8 @@ class Folio::Devise::PasswordInputCell < Folio::Devise::ApplicationCell
                 required: true,
                 input_html: {
                   autocomplete: options[:autocomplete],
-                  class: "f-devise-password-input__input"
+                  class: "f-devise-password-input__input",
+                  id: nil,
                 }
   end
 end
