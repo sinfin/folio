@@ -134,6 +134,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     end
 
     f.input key, collection: collection,
+                 force_collection: true,
                  label: false,
                  remote: url,
                  input_html: {
