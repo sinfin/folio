@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Folio::Console::<%= class_name.pluralize %>::CatalogueCellTest < Folio::Console::CellTest
+  test "show" do
+    html = cell("<%= cell_name %>", nil).(:show)
+    assert html.has_css?(".<%= cell_css_class_name %>")
+  end
+end

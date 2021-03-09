@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2020-03-09
+### Added
+- added `folio:console:catalogue` generator
+
 ## 2020-03-03
 ### Added
 - added `react_ordered_multiselect` for has_many through relations with positionable

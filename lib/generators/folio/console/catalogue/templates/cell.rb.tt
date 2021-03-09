@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+class Folio::Console::<%= class_name.pluralize %>::CatalogueCell < Folio::ConsoleCell
+  include Folio::Console::IndexHelper
+
+  def show
+    @klass = <%= class_name %>
+    render
+  end
+end

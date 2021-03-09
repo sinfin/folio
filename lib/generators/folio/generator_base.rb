@@ -7,11 +7,11 @@ module Folio::GeneratorBase
     end
 
     def plural_dashed_resource_name
-      name.gsub(/[_\/]/, "-")
+      dashed_resource_name.pluralize
     end
 
     def dashed_resource_name
-      model_resource_name.gsub("_", "-")
+      model_resource_name.gsub("_", "-").gsub("::", "-")
     end
 
     def atom_cell_name
