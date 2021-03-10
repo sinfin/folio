@@ -8,33 +8,11 @@
           = model.input toggle
 
         = html_safe_fields_for model, key, build: true do |g|
-          .row
-            .col-md-6
-              = g.input :name
-            .col-md-6
-              = g.input :company_name
-
-          = g.input :address_line_1
-          = g.input :address_line_2
-
-          .row
-            .col-md-7
-              = g.input :city
-            .col-md-5
-              = g.input :zip
-
-          = g.input :country_code
-
-          = g.input :state
-
-          .row
-            .col-md-6
-              = g.input :identification_number
-            .col-md-6
-              = g.input :vat_identification_number
-
-          .row
-            .col-md-6
-              = g.input :email
-            .col-md-6
-              = g.input :phone
+          - g.object.class.fields_layout.each do |row|
+            - if row.is_a?(Hash)
+              .row
+                - row.each do |key, col|
+                  div class="col-md-#{col}"
+                    = g.input key
+            - elsif row.is_a?(Symbol)
+              = g.input row

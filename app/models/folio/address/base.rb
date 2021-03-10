@@ -29,6 +29,36 @@ class Folio::Address::Base < Folio::ApplicationRecord
     ]
   end
 
+  def self.fields_layout
+    [
+      { name: 6, company_name: 6 },
+      :address_line_1,
+      :address_line_2,
+      { city: 7, zip: 5 },
+      :country_code,
+      :state,
+      { identification_number: 6, vat_identification_number: 6 },
+      { email: 6, phone: 6 },
+    ]
+  end
+
+  def self.show_for_attributes
+    %i[
+      name
+      company_name
+      address_line_1
+      address_line_2
+      city
+      zip
+      country_code
+      state
+      identification_number
+      vat_identification_number
+      phone
+      email
+    ]
+  end
+
   private
     def should_validate_country_code?
       true
