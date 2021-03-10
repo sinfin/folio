@@ -59,6 +59,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
     ]
   end
 
+  def self.priority_countries
+    []
+  end
+
   private
     def should_validate_country_code?
       true

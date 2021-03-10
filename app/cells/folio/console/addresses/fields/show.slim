@@ -2,10 +2,13 @@
   .row
     - cols.each do |klass, key, toggle|
       .col-lg-6
-        h2 = klass.model_name.human
+        .d-flex.flex-wrap[
+          class=(toggle ? "align-items-end" : nil)
+        ]
+          h2.mr-auto.pr-g = klass.model_name.human
 
-        - if toggle
-          = model.input toggle
+          - if toggle
+            = model.input toggle, wrapper_html: { class: 'pb-1' }
 
         = html_safe_fields_for model, key, build: true do |g|
           - g.object.class.fields_layout.each do |row|
@@ -13,6 +16,6 @@
               .row
                 - row.each do |key, col|
                   div class="col-md-#{col}"
-                    = g.input key
+                    = input(g, key)
             - elsif row.is_a?(Symbol)
-              = g.input row
+              = input(g, row)
