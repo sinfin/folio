@@ -18,19 +18,17 @@ class Folio::DeviseMailer < Devise::Mailer
     @data = {
       USER_CHANGE_PASSWORD_URL: scoped_url_method(record,
                                                   :edit_password_url,
-                                                  record,
                                                   reset_password_token: token)
     }
     super(record, token, opts)
   end
 
   def invitation_instructions(record, token, opts = {})
-    @data = {
-      USER_ACCEPT_INVITATION_URL: scoped_url_method(record,
-                                                    :accept_invitation_url,
-                                                    record,
-                                                    invitation_token: token)
-    }
+    @data ||= {}
+    @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
+                                                           :accept_invitation_url,
+                                                           invitation_token: token)
+
     super(record, token, opts)
   end
 
