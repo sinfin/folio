@@ -45,6 +45,26 @@ Easily scaffold console controller and views for existing models.
 ```bash
 $ rails generate folio:console:scaffold ModelName
 ```
+Then add correct routes to `config/routes`
+```
+scope module: :folio do
+  namespace :console do
+    ...
+    resources :model_names
+    ...
+  end
+end
+```
+and update Folio console config (`config/initializers/folio.rb`) to see this `ModelName` in console menu
+```
+Rails.application.config.folio_console_sidebar_link_class_names = [
+  %w[
+    ...
+    ModelName
+  ],
+  %w[...]
+  ....
+```
 
 ## Contributing
 
