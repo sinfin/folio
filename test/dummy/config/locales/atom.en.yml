@@ -9,3 +9,15 @@ en:
       dummy/atom/images:
         same_width: Align to grid
         title: Caption under the gallery
+      dummy/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/red: Red
+        highlight/gray: Gray
+      dummy/atom/title:
+        tag: Tag
+        tag/H1: H1
+        tag/H2: H2
+        tag/H3: H3
+        tag/H4: H4
+        tag/H5: H5

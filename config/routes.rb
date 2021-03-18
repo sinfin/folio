@@ -140,6 +140,7 @@ Folio::Engine.routes.draw do
   resources :newsletter_subscriptions, only: %i[create]
   resources :session_attachments, only: %i[create index destroy],
                                   as: :folio_session_attachments
+  get "/atoms-showcase", to: "atoms/showcase#show"
 
   scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
     get "/download/:hash_id/*name", to: "downloads#show",

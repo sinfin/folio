@@ -1,0 +1,37 @@
+- type: Dummy::Atom::Text
+  content: true
+
+- type: Dummy::Atom::Text
+  content: true
+  highlight: 'gray'
+  _showcase: "highlight: gray"
+
+- type: Dummy::Atom::Text
+  content: true
+  highlight: 'red'
+  _showcase: "highlight: red"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H1
+  _showcase: "tag: H1"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H2
+  _showcase: "tag: H2"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H3
+  _showcase: "tag: H3"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H4
+  _showcase: "tag: H4"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H5
+  _showcase: "tag: H5"

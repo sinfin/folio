@@ -45,16 +45,21 @@ module Folio::GeneratorBase
         i18n_value = values[locale] || values[:en]
 
         if i18n_value.is_a?(Hash)
+          attributes_hash = {}
+
+          if i18n_value[:attributes].present?
+            attributes_hash["attributes"] = {
+              i18n_key => i18n_value[:attributes].stringify_keys,
+            }
+          end
+
           new_hash = {
             locale.to_s => {
-              "activerecord" => {
-                "attributes" => {
-                  i18n_key => i18n_value[:attributes].stringify_keys,
-                },
+              "activerecord" => attributes_hash.merge(
                 "models" => {
                   i18n_key => i18n_value[:name],
                 }
-              }
+              )
             }
           }
         else

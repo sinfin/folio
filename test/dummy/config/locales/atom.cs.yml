@@ -10,6 +10,18 @@ cs:
       dummy/atom/images:
         same_width: Zarovnat do mřížky
         title: Popisek pod galerií
+      dummy/atom/text:
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/red: Červené
+        highlight/gray: Šedé
+      dummy/atom/title:
+        tag: Tag
+        tag/H1: H1
+        tag/H2: H2
+        tag/H3: H3
+        tag/H4: H4
+        tag/H5: H5
     models:
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/text: Text (odstavce, tabulky, apod.)

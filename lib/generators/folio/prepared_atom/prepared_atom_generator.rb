@@ -11,21 +11,45 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     text: {
       cs: {
         name: "Text (odstavce, tabulky, apod.)",
-        attributes: {},
+        attributes: {
+          "highlight" => "Zvýraznění",
+          "highlight/nil" => "Žádné",
+          "highlight/red" => "Červené",
+          "highlight/gray" => "Šedé",
+        },
       },
       en: {
         name: "Text (paragraphs, tables, etc.)",
-        attributes: {},
+        attributes: {
+          "highlight" => "Highlight",
+          "highlight/nil" => "None",
+          "highlight/red" => "Red",
+          "highlight/gray" => "Gray",
+        },
       },
     },
     title: {
       cs: {
         name: "Nadpis",
-        attributes: {},
+        attributes: {
+          "tag" => "Tag",
+          "tag/H1" => "H1",
+          "tag/H2" => "H2",
+          "tag/H3" => "H3",
+          "tag/H4" => "H4",
+          "tag/H5" => "H5",
+        },
       },
       en: {
         name: "Title",
-        attributes: {},
+        attributes: {
+          "tag" => "Tag",
+          "tag/H1" => "H1",
+          "tag/H2" => "H2",
+          "tag/H3" => "H3",
+          "tag/H4" => "H4",
+          "tag/H5" => "H5",
+        },
       },
     },
     images: {

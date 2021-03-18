@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::<%= class_name %>Cell < ApplicationCell
+class Dummy::Atom::TextCell < ApplicationCell
   include Folio::CstypoHelper
 
   def show
@@ -18,7 +18,7 @@ class <%= global_namespace %>::Atom::<%= class_name %>Cell < ApplicationCell
   def content_with_table
     parsed = Nokogiri::HTML::DocumentFragment.parse(model.content)
     parsed.search("table")
-          .wrap('<div class="<%= classname_prefix %>-atom-<%= dashed_resource_name %>__table-wrap" />')
+          .wrap('<div class="d-atom-text__table-wrap" />')
     parsed.to_html
   end
 
@@ -28,7 +28,7 @@ class <%= global_namespace %>::Atom::<%= class_name %>Cell < ApplicationCell
 
   def highlight_class_name
     if highlight?
-      "p-3 <%= classname_prefix %>-atom-text__highlight <%= classname_prefix %>-atom-text__highlight--#{model.highlight} <%= classname_prefix %>-rich-text--chomp"
+      "p-3 d-atom-text__highlight d-atom-text__highlight--#{model.highlight} d-rich-text--chomp"
     end
   end
 end
