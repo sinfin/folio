@@ -67,7 +67,6 @@ module Folio
 
       def rm_rails_new_stuff
         [
-          "app/assets/stylesheets/application.css",
           "app/views/layouts/application.html.erb",
           "public/404.html",
           "public/422.html",
@@ -81,10 +80,6 @@ module Folio
       def copy_templates
         [
           ".env.sample",
-          "app/assets/stylesheets/_icons.scss",
-          "app/assets/stylesheets/application.sass",
-          "app/assets/stylesheets/modules/_atoms.sass",
-          "app/assets/stylesheets/modules/_rich-text.sass",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
           "config/locales/activerecord.cs.yml",
@@ -123,21 +118,6 @@ module Folio
           ".rubocop.yml",
           ".slim-lint.yml",
           "app/assets/config/manifest.js",
-          "app/assets/javascripts/application.js",
-          "app/assets/javascripts/folio/console/main_app.coffee",
-          "app/assets/stylesheets/_custom_bootstrap.sass",
-          "app/assets/stylesheets/_fonts.scss",
-          "app/assets/stylesheets/_print.sass",
-          "app/assets/stylesheets/_variables.sass",
-          "app/assets/stylesheets/folio/console/_main_app.sass",
-          "app/assets/stylesheets/icons/_data.scss",
-          "app/assets/stylesheets/modules/_bootstrap-overrides.sass",
-          "app/assets/stylesheets/modules/_turbolinks.sass",
-          "app/assets/stylesheets/modules/bootstrap-overrides/_buttons.sass",
-          "app/assets/stylesheets/modules/bootstrap-overrides/_forms.sass",
-          "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",
-          "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
-          "app/cells/folio/console/atoms/previews/main_app.coffee",
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
@@ -233,6 +213,10 @@ module Folio
         ].each do |file|
           ::File.chmod(0775, Rails.root.join(file))
         end
+      end
+
+      def run_assets_generator
+        generate "folio:assets"
       end
 
       private

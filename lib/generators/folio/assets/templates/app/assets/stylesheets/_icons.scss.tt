@@ -23,25 +23,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a.<%= project_classnames_prefix %>-ico {
+a.<%= classname_prefix %>-ico {
   @include plain-hover-focus {
     text-decoration: none;
   }
 }
 
-.<%= project_classnames_prefix %>-ico {
+.<%= classname_prefix %>-ico {
   @include icon-style;
 }
 
-.<%= project_classnames_prefix %>-ico--14 {
+.<%= classname_prefix %>-ico--14 {
   font-size: 14px;
 }
 
-.<%= project_classnames_prefix %>-ico--18 {
+.<%= classname_prefix %>-ico--18 {
   font-size: 18px;
 }
 
-.<%= project_classnames_prefix %>-ico--20 {
+.<%= classname_prefix %>-ico--20 {
   font-size: 20px;
 }
 

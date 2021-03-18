@@ -1,6 +1,6 @@
-.<%= project_classnames_prefix %>-atom,
-.<%= project_classnames_prefix %>-molecule,
-.<%= project_classnames_prefix %>-atom-spaced
+.<%= classname_prefix %>-atom,
+.<%= classname_prefix %>-molecule,
+.<%= classname_prefix %>-atom-spaced
   margin-top: map-get($spacers, a)
   margin-bottom: map-get($spacers, a)
 
@@ -8,7 +8,7 @@
     margin-top: map-get($spacers, ma)
     margin-bottom: map-get($spacers, ma)
 
-.<%= project_classnames_prefix %>-atom--padded
+.<%= classname_prefix %>-atom--padded
   padding-top: map-get($spacers, a)
   padding-bottom: map-get($spacers, a)
 
@@ -16,8 +16,8 @@
     padding-top: map-get($spacers, ma)
     padding-bottom: map-get($spacers, ma)
 
-.<%= project_classnames_prefix %>-atom,
-.<%= project_classnames_prefix %>-molecule
+.<%= classname_prefix %>-atom,
+.<%= classname_prefix %>-molecule
   position: relative
   z-index: 1
 

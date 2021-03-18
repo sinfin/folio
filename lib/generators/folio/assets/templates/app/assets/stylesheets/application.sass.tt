@@ -25,13 +25,13 @@ body
   display: flex
   flex-direction: column
 
-.<%= project_classnames_prefix %>-layout-main
+.<%= classname_prefix %>-layout-main
   position: relative
   z-index: 1
   flex: 1 0 auto
 
 @import '../../cells/folio/**/*'
-@import '../../cells/<%= project_name %>/**/*'
+@import '../../cells/<%= global_namespace_path %>/**/*'
 
 @media print
   @import 'print'
