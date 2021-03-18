@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Atoms::ShowcaseCell < Folio::ApplicationCell
+class Folio::Ui::AtomsCell < Folio::ApplicationCell
   def show
     if File.exist?(self.class.data_path)
       render

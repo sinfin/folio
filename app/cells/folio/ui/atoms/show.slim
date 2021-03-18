@@ -1,27 +1,27 @@
-.f-atoms-showcase
+.f-ui-atoms
   .px-h
     - page.atoms_in_molecules.each do |molecule, atoms|
       - if molecule.present?
-        .row.border-top.f-atoms-showcase__row id=atoms.first.type
-          == cell('folio/atoms/showcase/sidebar',
+        .row.border-top.f-ui-atoms__row id=atoms.first.type
+          == cell('folio/ui/atoms/sidebar',
                   atoms.first,
                   molecule: molecule)
 
           .col-lg-10.py-atom.px-lg-4
-            .f-atoms-showcase__molecule[
+            .f-ui-atoms__molecule[
               class=container_class_name_for_atom(atoms.first)
             ]
               div class="#{::Rails.application.class.name[0].downcase}-atoms"
                 == cell(molecule, atoms)
       - else
         - atoms.each do |atom|
-          .row.border-top.f-atoms-showcase__row id=atom.type
-            == cell('folio/atoms/showcase/sidebar',
+          .row.border-top.f-ui-atoms__row id=atom.type
+            == cell('folio/ui/atoms/sidebar',
                     atom,
                     molecule: molecule)
 
             .col-lg-10.py-atom.px-lg-4
-              .f-atoms-showcase__atom[
+              .f-ui-atoms__atom[
                 class=container_class_name_for_atom(atom)
               ]
                 div class="#{::Rails.application.class.name[0].downcase}-atoms"
