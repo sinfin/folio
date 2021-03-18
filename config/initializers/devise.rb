@@ -4,7 +4,7 @@ module Folio
   module DeviseMapping
     private
       def default_controllers(options)
-        mod = options[:module] || "devise"
+        mod = options[:registrations_module] || options[:module] || "devise"
 
         options[:controllers] ||= {}
         options[:controllers][:registrations] = "#{mod}/registrations"
