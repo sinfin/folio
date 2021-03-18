@@ -1,42 +1,37 @@
-$enable-validation-icons: false
-
-@import './variables'
-@import 'folio-bootstrap/scss/bootstrap'
-
-@import 'modules/bootstrap-overrides/mixins/type'
-
-@import 'folio/lazyload'
-@import 'folio/lightbox'
-@import 'folio/loader'
-@import 'folio/devise'
-
-@import 'folio/dropzone/dropzone'
-@import 'folio/image/image'
-@import 'folio/ui/atoms/atoms'
-@import 'folio/leads/form/form'
-
+@import 'custom_bootstrap'
+@import 'fonts'
+@import 'icons'
+@import 'folio/utilities'
+@import 'modules/turbolinks'
+@import 'modules/bootstrap-overrides'
+@import 'modules/atoms'
 @import 'modules/rich-text'
 
-h1, .h1
-  margin: 0 0 2 * $spacer
+@import 'folio/leads/form/form'
+@import 'folio/newsletter_subscription_form/newsletter_subscription_form'
+@import 'folio/lazyload'
+@import 'folio/lightbox'
+@import 'folio/image/image'
+@import 'folio/publishable_hint/publishable_hint'
 
-.d-atoms
-  > :first-child
-    margin-top: 0 !important
+html
+  height: 100%
+  min-width: 320px
+  overflow-y: scroll
 
-  > :last-child
-    margin-bottom: 0 !important
+body
+  min-width: 320px
+  min-height: 100%
+  display: flex
+  flex-direction: column
 
-.d-atom
-  margin: 0 0 map-get($spacers, atom)
+.d-layout-main
+  position: relative
+  z-index: 1
+  flex: 1 0 auto
 
-.folio-redactor-button a
-  @extend .btn
-  @extend .btn-primary
-
-.f-devise
-  padding: 0 $grid-gutter-width / 2
-  max-width: 645px
-  margin: $grid-gutter-width auto
-
+@import '../../cells/folio/**/*'
 @import '../../cells/dummy/**/*'
+
+@media print
+  @import 'print'

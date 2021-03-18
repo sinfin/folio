@@ -1,0 +1,48 @@
+@font-face {
+  font-family: 'icomoon';
+  src: font-url('icomoon.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@mixin icon-style {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a.d-ico {
+  @include plain-hover-focus {
+    text-decoration: none;
+  }
+}
+
+.d-ico {
+  @include icon-style;
+}
+
+.d-ico--14 {
+  font-size: 14px;
+}
+
+.d-ico--18 {
+  font-size: 18px;
+}
+
+.d-ico--20 {
+  font-size: 20px;
+}
+
+@import 'icons/data';

@@ -1,0 +1,30 @@
+.container-fluid.px-g.mx-g
+  h1 UI Kit
+
+hr
+
+.container-fluid.px-g.mx-g
+  h2 Color scheme
+
+  .row
+    .col-lg-6
+      p.small Main colors
+
+      .d-flex
+        - main_colors.each do |color|
+          div[
+            class="bg-#{color}"
+            style="width: 210px; height: 70px; margin: 0 10px 10px 0"
+            title=color
+          ]
+
+    .col-lg-6
+      p.small Additional colors
+
+      .d-flex.flex-wrap
+        - additional_colors.each do |color|
+          div[
+            class="bg-#{color}"
+            style="width: 70px; height: 70px; margin: 0 10px 10px 0"
+            title=color
+          ]

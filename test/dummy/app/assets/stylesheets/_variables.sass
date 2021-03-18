@@ -1,15 +1,185 @@
-$gray-100: #F3F6F6
-$gray: #cccccc
-$modal-inner-padding: 2rem
-$grid-gutter-width: 30px
-$grid-gutter-half: $grid-gutter-width / 2
+$enable-responsive-font-sizes: false
+
+$font-size-base-px: 16px
+$mobile-font-size-base-px: 14px
+
+@function strip-unit($number)
+  @if type-of($number) == 'number' and not unitless($number)
+    @return $number / ($number * 0 + 1)
+  @return $number
+
+@function px-to-rem($px)
+  @return 1rem * strip-unit($px) / strip-unit($font-size-base-px)
+
+@function mobile-px-to-rem($px)
+  @return 1rem * strip-unit($px) / strip-unit($mobile-font-size-base-px)
+
+$black: #000000
+$white: #ffffff
+
+$blue: #4C84FD
+$red: #F0655D
+$purple: #5D2382
+$green: #589E92
+$orange: #FF9A52
+$yellow: #FAE52C
+
+$light-gray: #F3F6F6
+$medium-gray: #EBEEEE
+$gray: #C7CBCC
+$dark-gray: #434343
+
+$dark: $dark-gray
+$primary: $black
+
+$theme-colors: ( blue: $blue, red: $red, purple: $purple, green: $green, orange: $orange, yellow: $yellow, light-gray: $light-gray, medium-gray: $medium-gray, gray: $gray, dark-gray: $dark-gray )
 
 $spacer: 1rem
-$spacers: ( atom: 2 * $spacer, matom: 1.5 * $spacer, g: $grid-gutter-width, h: $grid-gutter-half )
+$grid-gutter-width: 30px
+$grid-gutter-half: $grid-gutter-width / 2
+$spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, a: $grid-gutter-width, ma: 20px )
 
-$font-size-media-breakpoint: sm
+$body-color: $dark
+$font-weight-normal: 400
+$font-weight-medium: 500
+$font-weight-bold: 700
+
+$headings-color: $black
+$headings-font-weight: $font-weight-bold
+$headings-letter-spacing: normal
+$headings-line-height: normal
+$headings-margin-top: $spacer / 2
+$headings-margin-bottom: $spacer
+
+$font-family-sans-serif-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+$font-family-sans-serif: Open Sans, $font-family-sans-serif-default
+
+$link-color: inherit
+$link-decoration: underline
+$link-hover-color: inherit
+$link-hover-decoration: none
+
+$font-size-media-breakpoint: md
+
+$font-size-base: px-to-rem($font-size-base-px)
+$mobile-font-size-base: mobile-px-to-rem($mobile-font-size-base-px)
+$line-height-base: 22 / 16
+
+$font-size-lg: px-to-rem(19px)
+$mobile-font-size-lg: mobile-px-to-rem(17px)
+$line-height-lg: 28 / 19
+$mobile-line-height-lg: 25 / 17
+
 $font-size-sm-px: 14px
 $font-size-sm: px-to-rem($font-size-sm-px)
-$mobile-font-size-sm: mobile-px-to-rem(14px)
-$line-height-sm: 16.8 / 13
-$mobile-line-height-sm: 16.8 / 14
+$mobile-font-size-sm: mobile-px-to-rem(13px)
+$line-height-sm: 18 / 14
+$mobile-line-height-sm: 17 / 13
+
+$h1-font-size: px-to-rem(50px)
+$h1-line-height: 60 / 50
+$h1-margin-top: 0
+$h1-margin-bottom: $spacer
+$mobile-h1-font-size: mobile-px-to-rem(32px)
+$mobile-h1-line-height: 38.4 / 32
+$mobile-h1-margin-top: 0
+$mobile-h1-margin-bottom: $spacer
+
+$h2-font-size: px-to-rem(34px)
+$h2-line-height: 40.8 / 31
+$h2-margin-top: 2 * $spacer
+$h2-margin-bottom: $spacer
+$mobile-h2-font-size: mobile-px-to-rem(22px)
+$mobile-h2-line-height: 28.6 / 22
+$mobile-h2-margin-top: 2 * $spacer
+$mobile-h2-margin-bottom: $spacer
+
+$h3-font-size: px-to-rem(26px)
+$h3-line-height: 31.2 / 26
+$h3-margin-top: 2 * $spacer
+$h3-margin-bottom: $spacer
+$mobile-h3-font-size: mobile-px-to-rem(20px)
+$mobile-h3-line-height: 24 / 20
+$mobile-h3-margin-top: 2 * $spacer
+$mobile-h3-margin-bottom: $spacer
+
+$h4-font-size: px-to-rem(20px)
+$h4-line-height: 24 / 20
+$h4-margin-top: 2 * $spacer
+$h4-margin-bottom: $spacer
+$mobile-h4-font-size: mobile-px-to-rem(18px)
+$mobile-h4-line-height: 21.6 / 18
+$mobile-h4-margin-top: 2 * $spacer
+$mobile-h4-margin-bottom: $spacer
+
+$title-large-font-size: px-to-rem(23px)
+$title-large-line-height: 1.2
+$title-large-margin-top: $spacer
+$title-large-margin-bottom: $spacer
+$mobile-title-large-font-size: mobile-px-to-rem(18px)
+
+$h1-margin-top: $spacer
+$h1-margin-bottom: $spacer
+
+$enable-validation-icons: false
+
+$border-color: rgba(0, 0, 0, 0.3)
+
+$border-radius: 0
+$border-radius-lg: 0
+$border-radius-sm: 0
+
+$input-btn-focus-box-shadow: none
+$input-border-color: $gray
+$input-focus-border-color: $black
+
+$input-btn-padding-y: 10px
+$input-btn-padding-x: 40px
+$input-btn-font-size: 20px
+$input-btn-line-height: 1.2
+
+$input-btn-padding-y-sm: 3px
+$input-btn-padding-x-sm: 6px
+$input-btn-font-size-sm: 12px
+$input-btn-line-height-sm: 17 / 12
+
+$input-btn-padding-y-lg: 17px
+$input-btn-padding-x-lg: 55px
+$input-btn-font-size-lg: 18px
+$input-btn-line-height-lg: 23 / 18
+
+$btn-border-radius: $border-radius
+$btn-border-radius-lg: $border-radius-lg
+$btn-border-radius-sm: $border-radius-sm
+$btn-font-weight: $font-weight-bold
+
+$input-color: $body-color
+$input-placeholder-color: $gray
+$input-font-size: 20px
+
+$input-padding-x: 10px
+$input-padding-y: 7px
+
+$input-border-width: 0
+$input-height-border: 2px
+
+$input-height-inner: 48px
+$input-height: $input-height-inner + $input-height-border
+
+$input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-sm) + $input-btn-padding-y-sm * 2
+$input-height-sm: $input-height-inner-sm + $input-height-border
+
+$input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2
+$input-height-lg: $input-height-inner + $input-height-border
+
+$custom-select-indicator-padding: 18px
+
+$transition-easing: ease-in-out
+$transition-duration: .25s
+$transition-base: all $transition-duration $transition-easing
+
+$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1105px, xxl: 1440px)
+
+$hr-border-color: $border-color
+
+$modal-inner-padding: px-to-rem(30px)
