@@ -6,6 +6,7 @@
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
 
+//= require folio/devise
 //= require folio/lazyload
 //= require folio/lightbox
 //= require folio/debounce
