@@ -2,6 +2,8 @@
   font-size: $input-btn-font-size
   text-transform: uppercase
   min-height: $input-height
+  display: inline-flex
+  align-items: center
 
 .btn-sm
   font-size: $input-btn-font-size-sm
@@ -45,3 +47,26 @@
 
 .btn-secondary
   @extend %btn-secondary
+
+%btn-tag
+  background-color: rgba($black, 0.1)
+  border: 0
+  color: #515151
+  min-height: 24px
+  padding: 2px 10px
+  text-transform: none
+  font-weight: $font-weight-normal
+
+  &:focus, &.focus,
+  &:hover, &.active
+    &:not(:disabled):not(.disabled)
+      color: #515151
+      background-color: rgba($black, 0.15)
+
+  &.disabled, &:disabled
+    background-color: rgba($black, 0.1)
+    color: #515151
+    opacity: 1
+
+.btn-tag
+  @extend %btn-tag

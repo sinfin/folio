@@ -3,6 +3,7 @@
 class Folio::UiCell < Folio::ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
+  include Pagy::Backend
 
   def show
     if model.present?
@@ -27,5 +28,24 @@ class Folio::UiCell < Folio::ApplicationCell
 
   def button_sizes
     [nil, "btn-sm", "btn-lg"]
+  end
+
+  def global_namespace
+    @global_namespace ||= ::Rails.application.class.name.deconstantize
+  end
+
+  def global_namespace_path
+    @global_namespace_path ||= global_namespace.underscore
+  end
+
+  def pagy_model
+    pagy, _pages = pagy(Folio::Page.all, items: 1)
+    pagy
+  end
+
+  def missing_cell(cell_key)
+    content_tag(:p,
+                "No #{cell_key} cell. Run <code>rails g folio:ui #{cell_key}</code> to create one.",
+                class: "text-danger")
   end
 end

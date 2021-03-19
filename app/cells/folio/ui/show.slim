@@ -156,3 +156,32 @@
 
                 button.btn class="btn-#{variant} #{size}" type="button" disabled=true
                   ' Button disabled
+
+      .col-md-6
+        p.small.mt-3.mb-0 btn btn-tag
+
+        .d-flex.flex-wrap
+          .mr-g.mt-3
+            p.small Normal
+
+            button.btn.btn-tag type="button"
+              ' Button label
+
+          .mr-g.mt-3
+            p.small Hover / Pressed
+
+            button.btn.btn-tag.active type="button"
+              ' Button active
+
+          .mr-g.mt-3
+            p.small Disabled
+
+            button.btn.btn-tag type="button" disabled=true
+              ' Button disabled
+
+    h3 Pagination
+
+    - if "#{global_namespace}::Ui::Pagy".safe_constantize
+      == cell("#{global_namespace_path}/ui/pagy", pagy_model)
+    - else
+      = missing_cell("pagy")
