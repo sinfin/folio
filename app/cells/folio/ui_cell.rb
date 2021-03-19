@@ -43,6 +43,14 @@ class Folio::UiCell < Folio::ApplicationCell
     pagy
   end
 
+  def tabs_model
+    [
+      { href: "#", active: true, label: "Current tab" },
+      { href: "#", label: "Another tab" },
+      { href: "#", label: "Another tab" },
+    ]
+  end
+
   def missing_cell(cell_key)
     content_tag(:p,
                 "No #{cell_key} cell. Run <code>rails g folio:ui #{cell_key}</code> to create one.",
