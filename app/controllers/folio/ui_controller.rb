@@ -6,6 +6,11 @@ class Folio::UiController < Folio::BaseController
   def ui
   end
 
+  def mobile_typo
+    @mobile_typo = true
+    render :ui
+  end
+
   def atoms
   end
 end

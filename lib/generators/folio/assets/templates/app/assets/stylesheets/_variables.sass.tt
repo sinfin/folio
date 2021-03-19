@@ -31,6 +31,7 @@ $dark-gray: #434343
 
 $dark: $dark-gray
 $primary: $black
+$text-muted: $gray
 
 $theme-colors: ( blue: $blue, red: $red, purple: $purple, green: $green, orange: $orange, yellow: $yellow, light-gray: $light-gray, medium-gray: $medium-gray, gray: $gray, dark-gray: $dark-gray )
 
@@ -76,50 +77,44 @@ $mobile-font-size-sm: mobile-px-to-rem(13px)
 $line-height-sm: 18 / 14
 $mobile-line-height-sm: 17 / 13
 
-$h1-font-size: px-to-rem(50px)
-$h1-line-height: 60 / 50
+$h1-font-size: px-to-rem(44px)
+$h1-line-height: 50 / 44
 $h1-margin-top: 0
 $h1-margin-bottom: $spacer
-$mobile-h1-font-size: mobile-px-to-rem(32px)
-$mobile-h1-line-height: 38.4 / 32
+$mobile-h1-font-size: mobile-px-to-rem(30px)
+$mobile-h1-line-height: 41 / 30
 $mobile-h1-margin-top: 0
 $mobile-h1-margin-bottom: $spacer
 
-$h2-font-size: px-to-rem(34px)
-$h2-line-height: 40.8 / 31
+$h2-font-size: px-to-rem(32px)
+$h2-line-height: 44 / 32
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$mobile-h2-font-size: mobile-px-to-rem(22px)
-$mobile-h2-line-height: 28.6 / 22
+$mobile-h2-font-size: mobile-px-to-rem(24px)
+$mobile-h2-line-height: 33 / 24
 $mobile-h2-margin-top: 2 * $spacer
 $mobile-h2-margin-bottom: $spacer
 
-$h3-font-size: px-to-rem(26px)
-$h3-line-height: 31.2 / 26
+$h3-font-size: px-to-rem(20px)
+$h3-line-height: 30 / 20
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$mobile-h3-font-size: mobile-px-to-rem(20px)
-$mobile-h3-line-height: 24 / 20
+$mobile-h3-font-size: mobile-px-to-rem(19px)
+$mobile-h3-line-height: 26 / 19
 $mobile-h3-margin-top: 2 * $spacer
 $mobile-h3-margin-bottom: $spacer
 
-$h4-font-size: px-to-rem(20px)
-$h4-line-height: 24 / 20
+$h4-font-size: px-to-rem(19px)
+$h4-line-height: 26 / 19
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$mobile-h4-font-size: mobile-px-to-rem(18px)
-$mobile-h4-line-height: 21.6 / 18
+$mobile-h4-font-size: mobile-px-to-rem(17px)
+$mobile-h4-line-height: 24 / 17
 $mobile-h4-margin-top: 2 * $spacer
 $mobile-h4-margin-bottom: $spacer
 
-$title-large-font-size: px-to-rem(23px)
-$title-large-line-height: 1.2
-$title-large-margin-top: $spacer
-$title-large-margin-bottom: $spacer
-$mobile-title-large-font-size: mobile-px-to-rem(18px)
-
-$h1-margin-top: $spacer
-$h1-margin-bottom: $spacer
+$lead-font-size: $font-size-lg
+$lead-font-weight: $font-weight-normal
 
 $enable-validation-icons: false
 
@@ -135,8 +130,8 @@ $input-focus-border-color: $black
 
 $input-btn-padding-y: 10px
 $input-btn-padding-x: 40px
-$input-btn-font-size: 20px
-$input-btn-line-height: 1.2
+$input-btn-font-size: 14px
+$input-btn-line-height: 1.29
 
 $input-btn-padding-y-sm: 3px
 $input-btn-padding-x-sm: 6px
@@ -154,16 +149,16 @@ $btn-border-radius-sm: $border-radius-sm
 $btn-font-weight: $font-weight-bold
 
 $input-color: $body-color
-$input-placeholder-color: $gray
-$input-font-size: 20px
+$input-placeholder-color: rgba($body-color, 0.5)
+$input-font-size: 16px
 
 $input-padding-x: 10px
-$input-padding-y: 7px
+$input-padding-y: 5px
 
-$input-border-width: 0
+$input-border-width: 1px
 $input-height-border: 2px
 
-$input-height-inner: 48px
+$input-height-inner: 38px
 $input-height: $input-height-inner + $input-height-border
 
 $input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-sm) + $input-btn-padding-y-sm * 2
@@ -171,6 +166,8 @@ $input-height-sm: $input-height-inner-sm + $input-height-border
 
 $input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2
 $input-height-lg: $input-height-inner + $input-height-border
+
+$btn-disabled-opacity: 0.15
 
 $custom-select-indicator-padding: 18px
 

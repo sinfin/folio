@@ -141,8 +141,9 @@ Folio::Engine.routes.draw do
   resources :session_attachments, only: %i[create index destroy],
                                   as: :folio_session_attachments
 
-  get "/folio/ui/atoms", to: "ui#atoms"
   get "/folio/ui", to: "ui#ui"
+  get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
+  get "/folio/ui/atoms", to: "ui#atoms"
 
   scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
     get "/download/:hash_id/*name", to: "downloads#show",

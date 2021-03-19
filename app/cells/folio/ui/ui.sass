@@ -1,0 +1,19 @@
+.f-ui
+  padding-bottom: 100px
+
+  &__typo-col
+    display: flex
+    flex-direction: column
+
+  &__typo-iframe
+    border: 0
+    overflow: auto
+    flex: 1 0 auto
+
+  &__focused-input
+    color: $input-focus-color
+    background-color: $input-focus-bg
+    border-color: $input-focus-border-color
+    outline: 0
+    @if $enable-shadows
+      @include box-shadow($input-box-shadow, $input-focus-box-shadow)

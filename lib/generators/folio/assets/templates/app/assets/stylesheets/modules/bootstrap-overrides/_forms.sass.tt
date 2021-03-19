@@ -6,3 +6,6 @@
 
 .form-control-lg
   font-size: $input-btn-font-size-lg
+
+.form-group abbr
+  text-decoration: none
