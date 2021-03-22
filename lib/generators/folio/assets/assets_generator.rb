@@ -29,7 +29,6 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "app/assets/stylesheets/_variables.sass",
       "app/assets/stylesheets/application.sass",
       "app/assets/stylesheets/folio/console/_main_app.sass",
-      "app/assets/stylesheets/icons/_data.scss",
       "app/assets/stylesheets/modules/_atoms.sass",
       "app/assets/stylesheets/modules/_bootstrap-overrides.sass",
       "app/assets/stylesheets/modules/_rich-text.sass",
@@ -39,6 +38,15 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
       "app/cells/folio/console/atoms/previews/main_app.coffee",
+      "bin/icons",
     ].each { |f| template "#{f}.tt", f }
+  end
+
+  def copy_icons
+    base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
+    Dir[::Folio::Engine.root.join("lib/generators/folio/assets/templates/data/icons/*.svg")].each do |svg|
+      path = svg.to_s.gsub(base, "")
+      copy_file path, path
+    end
   end
 end

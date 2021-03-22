@@ -1,5 +1,8 @@
 {
   "name": "dummy",
   "private": true,
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "fantasticon": "^1.1.3"
+  }
 }

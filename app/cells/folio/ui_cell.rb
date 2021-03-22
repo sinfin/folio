@@ -56,4 +56,15 @@ class Folio::UiCell < Folio::ApplicationCell
                 "No #{cell_key} cell. Run <code>rails g folio:ui #{cell_key}</code> to create one.",
                 class: "text-danger")
   end
+
+  def icons
+    path = ::Rails.root.join("app/assets/stylesheets/_icons.scss")
+
+    if File.exist?(path)
+      str = File.read(path)
+      str.scan(/^.+-ui-icon--.+:before/).to_a.map do |selector|
+        selector.gsub(/:.*$/, "").gsub(/^\./, "").split("--")
+      end
+    end
+  end
 end

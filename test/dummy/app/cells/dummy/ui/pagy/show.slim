@@ -5,14 +5,14 @@
         class="d-ui-pagy__page--with-ico"
         class="d-ui-pagy__page--prev"
       ]
-        = link.call(model.prev, "<", 'aria-label="previous"')
+        = link.call(model.prev, icon("fast_rewind"), 'aria-label="previous"')
     - else
       span.d-ui-pagy__page[
         class="d-ui-pagy__page--with-ico"
         class="d-ui-pagy__page--prev"
         class="d-ui-pagy__page--disabled"
       ]
-        ' <
+        = icon("fast_rewind")
 
     .d-ui-pagy__pages
       / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
@@ -37,11 +37,11 @@
         class="d-ui-pagy__page--with-ico"
         class="d-ui-pagy__page--next"
       ]
-        == link.call(model.next, ">", 'aria-label="next"')
+        == link.call(model.next, icon("fast_forward"), 'aria-label="next"')
     - else
       span.d-ui-pagy__page[
         class="d-ui-pagy__page--with-ico"
         class="d-ui-pagy__page--next"
         class="d-ui-pagy__page--disabled"
       ]
-        ' >
+        = icon("fast_forward")

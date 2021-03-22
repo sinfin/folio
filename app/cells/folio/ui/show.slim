@@ -179,6 +179,17 @@
             button.btn.btn-tag type="button" disabled=true
               ' Button disabled
 
+    h3 Icons
+
+    - if icons.present?
+      - icons.each do |common, key|
+        span.mr-3.font-size-lg[
+          class="#{common} #{common}--#{key}"
+          title=key
+        ]
+    - else
+      ' No icons found in app/assets/stylesheets/_icons.scss
+
     h3 Pagination
 
     - if "#{global_namespace}::Ui::Pagy".safe_constantize
