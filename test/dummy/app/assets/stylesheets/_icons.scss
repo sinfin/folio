@@ -27,12 +27,36 @@ $icons-font: "icons";
 }
 
 $icons-map: (
-  fast_forward: "\f101",
-  fast_rewind: "\f102",
+  arrow_drop_down: "\f101",
+  check_circle: "\f102",
+  chevron_right: "\f103",
+  close: "\f104",
+  fast_forward: "\f105",
+  fast_rewind: "\f106",
+  info: "\f107",
+  search: "\f108",
+  user: "\f109",
+  warning: "\f10a",
 );
 
 .d-ui-icon {
   @include icon-style;
+}
+
+.d-ui-icon--arrow_drop_down:before {
+  content: map-get($icons-map, "arrow_drop_down");
+}
+
+.d-ui-icon--check_circle:before {
+  content: map-get($icons-map, "check_circle");
+}
+
+.d-ui-icon--chevron_right:before {
+  content: map-get($icons-map, "chevron_right");
+}
+
+.d-ui-icon--close:before {
+  content: map-get($icons-map, "close");
 }
 
 .d-ui-icon--fast_forward:before {
@@ -41,4 +65,20 @@ $icons-map: (
 
 .d-ui-icon--fast_rewind:before {
   content: map-get($icons-map, "fast_rewind");
+}
+
+.d-ui-icon--info:before {
+  content: map-get($icons-map, "info");
+}
+
+.d-ui-icon--search:before {
+  content: map-get($icons-map, "search");
+}
+
+.d-ui-icon--user:before {
+  content: map-get($icons-map, "user");
+}
+
+.d-ui-icon--warning:before {
+  content: map-get($icons-map, "warning");
 }
