@@ -1,6 +1,7 @@
 ---
 cs:
   all: Všechny
+  more: Více
   date:
     formats:
       short: "%d. %m. %Y"

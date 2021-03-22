@@ -91,6 +91,7 @@
     display: flex
     align-items: center
     justify-content: center
+    flex: 0 0 auto
 
   &__search-icon
     font-size: 32px
@@ -98,6 +99,31 @@
   +mq-desktop-menu
     &__inner
       display: flex
+
+    &__menu
+      display: flex
+      align-items: stretch
+      overflow: hidden
+      flex: 1 1 auto
+      min-width: 0
+      position: relative
+
+      &:after
+        content: ""
+        display: block
+        position: absolute
+        top: 0
+        right: 0
+        bottom: 0
+        width: 50px
+        background: linear-gradient(90deg, rgba($black, 0) 0%, rgba($black, 1) 85%)
+        z-index: 2
+
+    &__menu--bound
+      overflow: visible
+
+      &:after
+        display: none
 
     &__menu-ul
       display: flex
@@ -109,8 +135,12 @@
       display: flex
       align-items: stretch
 
+      &--collapsed
+        display: none
+
     &__menu-a
       position: relative
+      white-space: nowrap
 
       &:before
         content: ""
@@ -140,7 +170,7 @@
       min-width: 290px
       box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3)
 
-    &__menu-li:last-child &__menu-children-ul
+    &__menu-li:nth-child(n + 5) &__menu-children-ul
       left: auto
       right: 0
 
@@ -167,10 +197,19 @@
       background: $dark-gray
       margin-left: - $grid-gutter-half
       margin-right: - $grid-gutter-half
+      display: none
+      order: 2
+      width: calc(100% + #{$grid-gutter-width})
+
+    &__menu-input:checked + & &__menu
+      display: block
 
     &__menu-arrow
       padding-left: $grid-gutter-half
       margin-left: auto
+
+    &__menu-li--more
+      display: none
 
     &__menu-li--expanded &__menu-arrow:before
       transform: rotate(180deg)
@@ -187,13 +226,6 @@
       padding: $grid-gutter-half 0
       border-top: 1px solid rgba($white, 0.2)
 
-    &__menu-ul
-      display: none
-      order: 2
-      width: 100%
-
-    &__menu-input:checked + & &__menu-ul
-      display: block
 
     &__menu-li:first-child &__menu-a
       border-top: 0

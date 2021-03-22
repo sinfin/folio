@@ -12,20 +12,32 @@ input[
           = ::Rails.application.class.to_s.deconstantize
 
       - if menu
-        ul.d-ui-header__menu-ul
-          - menu.menu_items.includes(:page).arrange.each do |menu_item, children|
-            li.d-ui-header__menu-li
-              *link_tag(menu_item, "d-ui-header__menu-a", children)
-                = cstypo menu_item.to_label
-                - if children.present?
-                  = icon("arrow_drop_down", class: "d-ui-header__menu-arrow")
+        .d-ui-header__menu
+          ul.d-ui-header__menu-ul
+            - menu.menu_items.includes(:page).arrange.each do |menu_item, children|
+              li.d-ui-header__menu-li
+                *link_tag(menu_item, "d-ui-header__menu-a", children)
+                  span.d-ui-header__menu-span
+                    = cstypo menu_item.to_label
 
-              - if children.present?
-                ul.d-ui-header__menu-children-ul
-                  - children.each do |child, _children|
-                    li.d-ui-header__menu-children-li
-                      *link_tag(child, "d-ui-header__menu-children-a")
-                        = cstypo child.to_label
+                  - if children.present?
+                    = icon("arrow_drop_down", class: "d-ui-header__menu-arrow")
+
+                - if children.present?
+                  ul.d-ui-header__menu-children-ul
+                    - children.each do |child, _children|
+                      li.d-ui-header__menu-children-li
+                        *link_tag(child, "d-ui-header__menu-children-a")
+                          span.d-ui-header__menu-span = cstypo child.to_label
+
+            li.d-ui-header__menu-li.d-ui-header__menu-li--more[
+              hidden=true
+            ]
+              span.d-ui-header__menu-a
+                = t('.more', default: t('more'))
+                = icon("arrow_drop_down", class: "d-ui-header__menu-arrow")
+
+              ul.d-ui-header__menu-children-ul
 
       a.d-ui-header__search-a href="/"
         = icon("search", class: "d-ui-header__search-icon")

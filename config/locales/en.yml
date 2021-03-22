@@ -1,6 +1,7 @@
 ---
 en:
   all: All
+  more: More
   date:
     formats:
       short: "%d %m %Y"
