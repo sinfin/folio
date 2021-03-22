@@ -33,6 +33,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "app/assets/stylesheets/modules/_bootstrap-overrides.sass",
       "app/assets/stylesheets/modules/_rich-text.sass",
       "app/assets/stylesheets/modules/_turbolinks.sass",
+      "app/assets/stylesheets/modules/bootstrap-overrides/_alert.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_buttons.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_forms.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",

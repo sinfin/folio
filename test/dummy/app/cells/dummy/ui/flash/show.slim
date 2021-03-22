@@ -1,0 +1,17 @@
+.d-ui-flash
+  - if model.present?
+    - model.each do |msg_type, message|
+      .alert.alert-dismissible.fade.show.d-ui-flash__alert[
+        class=bootstrap_class_for(msg_type)
+        role="alert"
+      ]
+        .container
+          .d-ui-flash__inner
+            - if i = icon_for(msg_type)
+              = icon(i, class: "d-ui-flash__ico")
+
+            .d-ui-flash__text
+              = message
+
+            button.d-ui-flash__close type="button"
+              = icon("close", class: "d-ui-flash__close-ico")

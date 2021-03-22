@@ -67,4 +67,12 @@ class Folio::UiCell < Folio::ApplicationCell
       end
     end
   end
+
+  def flash_models
+    %i[notice success warning alert].map do |key|
+      flash_hash = ActionDispatch::Flash::FlashHash.new
+      flash_hash[key] = key
+      flash_hash
+    end
+  end
 end

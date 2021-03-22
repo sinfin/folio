@@ -203,3 +203,13 @@
       == cell("#{global_namespace_path}/ui/tabs", tabs_model)
     - else
       = missing_cell("tabs")
+
+    h3 Flash
+
+    - if "#{global_namespace}::Ui::Flash".safe_constantize
+      .row
+        - flash_models.each do |flash_model|
+          .col-md-6.mb-g
+            == cell("#{global_namespace_path}/ui/flash", flash_model)
+    - else
+      = missing_cell("flash")
