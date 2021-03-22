@@ -1,0 +1,18 @@
+doctype html
+html lang=I18n.locale
+  head
+    = render partial: 'layouts/folio/head'
+    = render partial: 'layouts/folio/favicon'
+
+    - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+      = preload_link_tag font_path('icons.woff2')
+
+  body
+    == cell('dummy/ui/header')
+
+    == cell('dummy/ui/flash', flash)
+
+    .d-layout-main
+      = yield
+
+    == cell('folio/photoswipe')

@@ -112,7 +112,7 @@ Folio::MenuItem.create!(menu: menu,
 puts "Created Folio::Menu::Page"
 
 puts "Creating Dummy::Menu::Nestable"
-menu = Dummy::Menu::Nestable.create!(locale: :cs)
+menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable")
 
 root = Folio::MenuItem.create!(menu: menu,
                                title: "Reference",
@@ -138,7 +138,7 @@ Folio::MenuItem.create!(menu: menu,
 puts "Created Dummy::Menu::Nestable"
 
 puts "Creating Dummy::Menu::Stylable"
-menu = Dummy::Menu::Stylable.create!(locale: :cs)
+menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable")
 
 Folio::MenuItem.create!(menu: menu,
                         title: "Reference",
@@ -156,6 +156,46 @@ Folio::MenuItem.create!(menu: menu,
                         target: about,
                         position: 1)
 puts "Created Dummy::Menu::Stylable"
+
+puts "Creating Dummy::Menu::Header"
+menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header")
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "UI Kit",
+                        url: "/folio/ui",
+                        position: 1)
+
+Folio::MenuItem.create!(menu: menu,
+                        title: "Atoms",
+                        url: "/folio/ui/atoms",
+                        position: 2)
+
+mi = Folio::MenuItem.create!(menu: menu,
+                             title: "Nestable non-link",
+                             position: 3)
+
+3.times do |i|
+  Folio::MenuItem.create!(menu: menu,
+                          title: "Child #{i + 1}",
+                          url: "/",
+                          position: i + 1,
+                          parent: mi)
+end
+
+mi = Folio::MenuItem.create!(menu: menu,
+                             title: "Nestable link",
+                             url: "/",
+                             position: 3)
+
+3.times do |i|
+  Folio::MenuItem.create!(menu: menu,
+                          title: "Child #{i + 1}",
+                          url: "/",
+                          position: i + 1,
+                          parent: mi)
+end
+
+puts "Created Dummy::Menu::Header"
 
 if Rails.env.development?
   puts "Creating test@test.test account"

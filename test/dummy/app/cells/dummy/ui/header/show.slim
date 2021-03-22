@@ -1,0 +1,40 @@
+input[
+  hidden=true
+  class=MENU_INPUT_ID
+  id=MENU_INPUT_ID
+  type="checkbox"
+]
+
+.d-ui-header
+  .container-fluid
+    .d-ui-header__inner
+      a.d-ui-header__text-logo.h3 href="/"
+          = ::Rails.application.class.to_s.deconstantize
+
+      - if menu
+        ul.d-ui-header__menu-ul
+          - menu.menu_items.includes(:page).arrange.each do |menu_item, children|
+            li.d-ui-header__menu-li
+              *link_tag(menu_item, "d-ui-header__menu-a", children)
+                = cstypo menu_item.to_label
+                - if children.present?
+                  = icon("arrow_drop_down", class: "d-ui-header__menu-arrow")
+
+              - if children.present?
+                ul.d-ui-header__menu-children-ul
+                  - children.each do |child, _children|
+                    li.d-ui-header__menu-children-li
+                      *link_tag(child, "d-ui-header__menu-children-a")
+                        = cstypo child.to_label
+
+      a.d-ui-header__search-a href="/"
+        = icon("search", class: "d-ui-header__search-icon")
+
+      - if menu
+        label.d-ui-header__menu-toggle for=MENU_INPUT_ID
+          .d-ui-header__menu-toggle-inner
+            - 4.times do |i|
+              span[
+                class="d-ui-header__menu-toggle-span"
+                class="d-ui-header__menu-toggle-span--#{i + 1}"
+              ]
