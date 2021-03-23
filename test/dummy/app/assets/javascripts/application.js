@@ -17,3 +17,4 @@
 
 //= require dummy/ui/flash/flash
 //= require dummy/ui/menu/menu
+//= require dummy/ui/navigation/navigation

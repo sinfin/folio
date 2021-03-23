@@ -1,0 +1,28 @@
+.d-ui-navigation
+  .d-ui-navigation__menu
+    == cell('dummy/ui/menu', model, theme: :light)
+
+  .d-ui-navigation__select
+    select.form-control.d-ui-navigation__select-input
+      - menu_items.each do |menu_item, children|
+        - if children.present?
+          optgroup label=menu_item.to_label
+            - children.each do |child, _x|
+              - path = menu_url_for(child)
+              option[
+                selected=!!active_class(path, start_with: true)
+                value=path
+              ]
+                = menu_item.to_label
+        - else
+          - path = menu_url_for(menu_item)
+          option[
+            selected=!!active_class(path, start_with: true)
+            value=path
+          ]
+            = menu_item.to_label
+
+    - if active_menu_item
+      .d-ui-navigation__select-overlay
+        = active_menu_item.to_label
+        = icon("arrow_drop_down", class: "d-ui-navigation__select-arrow")

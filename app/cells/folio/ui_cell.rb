@@ -75,4 +75,8 @@ class Folio::UiCell < Folio::ApplicationCell
       flash_hash
     end
   end
+
+  def navigation_model
+    Folio::Menu.order(updated_at: :desc).first
+  end
 end

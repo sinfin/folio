@@ -213,3 +213,10 @@
             == cell("#{global_namespace_path}/ui/flash", flash_model)
     - else
       = missing_cell("flash")
+
+    h3 Navigation
+
+    - if "#{global_namespace}::Ui::Navigation".safe_constantize
+      == cell("#{global_namespace_path}/ui/navigation", navigation_model)
+    - else
+      = missing_cell("navigation")

@@ -1,4 +1,6 @@
-.d-ui-menu
+.d-ui-menu[
+  class="d-ui-menu--theme-#{options[:theme] || 'dark'}"
+]
   ul.d-ui-menu__ul
     - model.menu_items.includes(:page).arrange.each do |menu_item, children|
       li.d-ui-menu__li
