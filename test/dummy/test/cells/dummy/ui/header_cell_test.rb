@@ -6,5 +6,9 @@ class Dummy::Ui::HeaderCellTest < Cell::TestCase
   test "show" do
     html = cell("dummy/ui/header", nil).(:show)
     assert html.has_css?(".d-ui-header")
+
+    Dummy::Menu::Header.create!(locale: :en)
+    html = cell("dummy/ui/header", nil).(:show)
+    assert html.has_css?(".d-ui-header")
   end
 end

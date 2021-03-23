@@ -14,25 +14,6 @@
   &__menu-input
     display: none
 
-  &__menu-a
-    display: flex
-    align-items: center
-    padding: $grid-gutter-half
-
-  &__menu-a,
-  &__menu-children-a
-    text-transform: uppercase
-    text-decoration: none
-
-    &--active
-      font-weight: $font-weight-bold
-
-  &__menu-arrow
-    font-size: 22px
-
-  &__menu-arrow:before
-    transition: $transition-base
-
   &__menu-toggle
     min-height: 32px
     width: 32px
@@ -102,87 +83,8 @@
 
     &__menu
       display: flex
-      align-items: stretch
-      overflow: hidden
       flex: 1 1 auto
       min-width: 0
-      position: relative
-
-      &:after
-        content: ""
-        display: block
-        position: absolute
-        top: 0
-        right: 0
-        bottom: 0
-        width: 50px
-        background: linear-gradient(90deg, rgba($black, 0) 0%, rgba($black, 1) 85%)
-        z-index: 2
-
-    &__menu--bound
-      overflow: visible
-
-      &:after
-        display: none
-
-    &__menu-ul
-      display: flex
-      align-items: stretch
-
-    &__menu-li
-      position: relative
-      margin-right: 10px
-      display: flex
-      align-items: stretch
-
-      &--collapsed
-        display: none
-
-    &__menu-a
-      position: relative
-      white-space: nowrap
-
-      &:before
-        content: ""
-        background: $white
-        height: 5px
-        position: absolute
-        right: 0
-        bottom: 0
-        left: 0
-        display: block
-        opacity: 0
-
-    &__menu-a:hover:before,
-    &__menu-a--active:before
-      opacity: 1
-
-    &__menu-a--active
-      font-weight: $font-weight-bold
-
-    &__menu-children-ul
-      position: absolute
-      top: 100%
-      margin-top: -10px
-      left: 0
-      z-index: 2
-      background: $dark-gray
-      min-width: 290px
-      box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3)
-
-    &__menu-li:nth-child(n + 5) &__menu-children-ul
-      left: auto
-      right: 0
-
-    &__menu-children-a
-      display: block
-      padding: $grid-gutter-half $grid-gutter-width
-
-      &:hover
-        font-weight: $font-weight-bold
-
-    &__menu-li:not(:hover) &__menu-children-ul
-      display: none
 
     &__menu-toggle
       display: none
@@ -203,36 +105,6 @@
 
     &__menu-input:checked + & &__menu
       display: block
-
-    &__menu-arrow
-      padding-left: $grid-gutter-half
-      margin-left: auto
-
-    &__menu-li--more
-      display: none
-
-    &__menu-li--expanded &__menu-arrow:before
-      transform: rotate(180deg)
-
-    &__menu-li:not(&__menu-li--expanded) &__menu-children-ul
-      display: none
-
-    &__menu-a
-      min-width: 0
-      border-top: 1px solid rgba($white, 0.2)
-
-    &__menu-children-a
-      display: block
-      padding: $grid-gutter-half 0
-      border-top: 1px solid rgba($white, 0.2)
-
-
-    &__menu-li:first-child &__menu-a
-      border-top: 0
-
-    &__menu-children-ul
-      padding-left: $grid-gutter-width
-      padding-right: $grid-gutter-half
 
   +media-breakpoint-down(xs)
     &__menu
