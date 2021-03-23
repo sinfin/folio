@@ -1,0 +1,17 @@
+.container-fluid
+  max-width: $container-fluid-max-width
+  padding-left: map-get($spacers, gg)
+  padding-right: map-get($spacers, gg)
+
+  & &
+    padding-left: 0
+    padding-right: 0
+    max-width: 100%
+
+  +media-breakpoint-down(lg)
+    padding-left: $grid-gutter-width
+    padding-right: $grid-gutter-width
+
+  +media-breakpoint-down(sm)
+    padding-left: $grid-gutter-half
+    padding-right: $grid-gutter-half

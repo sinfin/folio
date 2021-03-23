@@ -65,6 +65,9 @@ Folio::Site.create!(title: "Sinfin.digital",
                       facebook: "https://www.facebook.com/",
                       instagram: "https://www.instagram.com/",
                       twitter: "https://www.twitter.com/",
+                      linkedin: "https://www.linkedin.com/",
+                      youtube: "https://www.youtube.com/",
+                      pinterest: "https://www.pinterest.com/",
                     })
 puts "Created Folio::Site"
 
@@ -196,6 +199,19 @@ mi = Folio::MenuItem.create!(menu: menu,
 end
 
 puts "Created Dummy::Menu::Header"
+
+puts "Creating Dummy::Menu::Footer"
+
+menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer")
+
+3.times do |i|
+  Folio::MenuItem.create!(menu: menu,
+                          title: "Footer link #{i + 1}",
+                          url: "/",
+                          position: i + 1)
+end
+
+puts "Created Dummy::Menu::Footer"
 
 if Rails.env.development?
   puts "Creating test@test.test account"

@@ -1,0 +1,11 @@
+cs:
+  dummy:
+    ui:
+      disclaimer:
+        text: Odesláním souhlasíte se %{link}.
+        link: zásadami ochrany osobních údajů
+
+      footer:
+        copyright: © Copyright info %{year}
+        follow_us: Sledujte nás
+        newsletter: Newsletter

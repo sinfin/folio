@@ -1,4 +1,6 @@
 .d-ui-menu
+  $a-padding: $grid-gutter-half
+
   flex: 1 1 auto
   min-width: 0
   background: $black
@@ -9,7 +11,7 @@
   &__a
     display: flex
     align-items: center
-    padding: $grid-gutter-half
+    padding: $a-padding
     text-transform: uppercase
     text-decoration: none
 
@@ -63,7 +65,7 @@
 
     &__ul > &__li
       position: relative
-      margin-right: 10px
+      margin-right: map-get($spacers, s) - 2 * $a-padding
       display: flex
       align-items: stretch
 

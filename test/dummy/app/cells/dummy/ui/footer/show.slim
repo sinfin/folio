@@ -1,0 +1,27 @@
+.d-ui-footer
+  .container-fluid
+    .d-ui-footer__row
+      .d-ui-footer__left.mb-s
+        .h4.mt-0 = t('.newsletter')
+
+        == cell('folio/newsletter_subscriptions/form')
+
+        == cell('dummy/ui/disclaimer')
+
+      .d-ui-footer__right.mb-s
+        .h4.mt-0 = t('.follow_us')
+
+        .mx-nh.d-flex.flex-wrap
+          - social_links.each do |key, link|
+            = icon(key, href: link, class: 'd-ui-footer__social-ico')
+
+    .d-ui-footer__copyright
+      .d-flex.flex-wrap.pt-g.pb-h
+        .mr-s.mb-h
+          = t('.copyright', year: Time.zone.now.year)
+
+        - if menu
+          - menu.menu_items.includes(:page).each do |menu_item|
+            .mr-s.mb-h
+              a href=menu_url_for(menu_item)
+                = menu_item.to_label

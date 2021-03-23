@@ -40,7 +40,7 @@ $theme-colors: ( blue: $blue, red: $red, purple: $purple, green: $green, orange:
 $spacer: 1rem
 $grid-gutter-width: 30px
 $grid-gutter-half: $grid-gutter-width / 2
-$spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, a: $grid-gutter-width, ma: 20px )
+$spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, s: 40px, a: $grid-gutter-width, ma: 20px )
 
 $body-color: $dark
 $font-weight-normal: 400
@@ -178,6 +178,7 @@ $transition-duration: .25s
 $transition-base: all $transition-duration $transition-easing
 
 $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1105px, xxl: 1440px)
+$container-fluid-max-width: 1920px
 
 $hr-border-color: $border-color
 

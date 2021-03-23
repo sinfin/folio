@@ -53,6 +53,8 @@
   font-size: $h4-font-size
   line-height: $h4-line-height
   font-weight: $headings-font-weight
+  text-transform: uppercase
+  letter-spacing: 1px
 
   +media-breakpoint-down($font-size-media-breakpoint)
     font-size: $mobile-h4-font-size

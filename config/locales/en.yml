@@ -42,9 +42,10 @@ en:
         de: german
         en: english
         es: spanish
-    newsletter_subscription_form:
-      message: Submitted!
-      submit: Submit
+    newsletter_subscriptions:
+      form:
+        message: Submitted!
+        submit: Submit
     photoswipe:
       error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:

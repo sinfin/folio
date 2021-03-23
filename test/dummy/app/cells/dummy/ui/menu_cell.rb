@@ -8,16 +8,6 @@ class Dummy::Ui::MenuCell < ApplicationCell
     render if model.present?
   end
 
-  def menu_url_for(menu_item)
-    if menu_item.url.present?
-      menu_item.url
-    elsif menu_item.eager_load_aware_target.present?
-      url_for(menu_item.eager_load_aware_target)
-    elsif menu_item.rails_path.present?
-      controller.send(menu_item.rails_path)
-    end
-  end
-
   def link_tag(menu_item, children = nil)
     class_name = "d-ui-menu__a"
 

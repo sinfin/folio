@@ -13,7 +13,7 @@
 
 //= require folio/leads/form/form
 //= require folio/image/image
-//= require folio/newsletter_subscription_form/newsletter_subscription_form
+//= require folio/newsletter_subscriptions/form/form
 
 //= require dummy/ui/flash/flash
 //= require dummy/ui/menu/menu
