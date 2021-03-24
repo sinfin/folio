@@ -37,17 +37,23 @@ class Dummy::SeedGenerator
 
     copy_file(atom_path, template_atom_dir.join("#{atom_basename}.tt"))
 
-    # FileUtils.mkdir_p template_atom_dir.join(name)
-    # Dir[Rails.root.join("app/cells/dummy/ui/#{name}/*")].each do |path|
-    #   copy_file(path, template_atom_dir.join(name, "#{File.basename(path)}.tt"))
-    # end
+    template_atom_cell_dir = template_atom_dir.join("cell")
 
-    # test_path = Rails.root.join("test/cells/dummy/ui/#{name}_cell_test.rb")
-    # if File.exists?(test_path)
-    #   copy_file(test_path, template_atom_dir.join("#{name}_cell_test.rb.tt"))
-    # else
-    #   puts "M #{relative_path(test_path)}"
-    # end
+    FileUtils.mkdir_p template_atom_cell_dir
+
+    atom_cell_path = Rails.root.join("app/cells/dummy/atom/#{name}_cell.rb")
+    copy_file(atom_cell_path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+
+    Dir[Rails.root.join("app/cells/dummy/atom/#{name}/*")].each do |path|
+      copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
+    end
+
+    test_path = Rails.root.join("test/cells/dummy/atom/#{name}_cell_test.rb")
+    if File.exists?(test_path)
+      copy_file(test_path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+    else
+      puts "M #{relative_path(test_path)}"
+    end
   end
 
   def i18n_yamls(path)
@@ -76,7 +82,10 @@ class Dummy::SeedGenerator
 
     def replace_names(str)
       str.gsub("Dummy::", "<%= global_namespace %>::")
-         .gsub("d-ui-", "<%= classname_prefix %>-ui-")
+         .gsub("d-ui", "<%= classname_prefix %>-ui")
+         .gsub("d-atom", "<%= classname_prefix %>-atom")
+         .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
+         .gsub(".dAtom", ".<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= global_namespace_path %>/ui")
          .gsub(%r{dummy/atom/\w+}, "<%= atom_cell_name %>")
     end

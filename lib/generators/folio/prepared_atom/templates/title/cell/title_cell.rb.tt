@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::<%= class_name %>Cell < ApplicationCell
+class <%= global_namespace %>::Atom::TitleCell < ApplicationCell
   include Folio::CstypoHelper
 end
