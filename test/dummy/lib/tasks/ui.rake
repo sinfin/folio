@@ -53,9 +53,9 @@ namespace :dummy do
     end
 
     Dir[Rails.root.join('config/locales/ui.*.yml')].each do |yaml_path|
-      text = File.read(yaml_path)
-      replaced = text.gsub('dummy:', '<%= global_namespace_path %>')
-      yaml_to = templates_path.join("#{File.basename(yaml_path)}.tt")
+      hash = YAML.load_file(yaml_path)
+      replaced = hash[hash.keys.first]["dummy"]["ui"].to_yaml
+      yaml_to = templates_path.join("#{File.basename(yaml_path)}")
 
       if File.exists?(yaml_to) && File.read(yaml_to) == replaced
         puts "I #{relative_path.call(yaml_to)}"
