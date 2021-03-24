@@ -83,7 +83,6 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
       prefix = ""
     end
 
-
     template "#{name}/atom_model.rb.tt", "#{prefix}app/models/#{global_namespace_path}/atom/#{name}.rb"
     template "#{name}/cell.rb.tt", "#{prefix}app/cells/#{global_namespace_path}/atom/#{name}_cell.rb"
     template "#{name}/cell.slim.tt", "#{prefix}app/cells/#{global_namespace_path}/atom/#{name}/show.slim"
