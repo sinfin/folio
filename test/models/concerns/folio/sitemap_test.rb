@@ -3,6 +3,14 @@
 require "test_helper"
 
 class Folio::SitemapTest < ActiveSupport::TestCase
+  class CoverAtom < Folio::Atom::Base
+    ATTACHMENTS = %i[cover]
+  end
+
+  class ImagesAtom < Folio::Atom::Base
+    ATTACHMENTS = %i[images]
+  end
+
   test "base" do
     image_count = 0
     page = create(:folio_page)
@@ -10,10 +18,10 @@ class Folio::SitemapTest < ActiveSupport::TestCase
     page.cover = create(:folio_image)
     image_count += 1
 
-    create_atom(Dummy::Atom::DaVinci, :cover, placement: page)
+    create_atom(CoverAtom, :cover, placement: page)
     image_count += 1
 
-    create_atom(Dummy::Atom::DaVinci, :images, placement: page)
+    create_atom(ImagesAtom, :images, placement: page)
     image_count += 1
 
     Folio::Image.find_each do |img|
