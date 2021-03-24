@@ -44,19 +44,18 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     ].each { |f| template "#{f}.tt", f }
   end
 
-  def copy_icons
+  def copy_files
     base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
-    Dir[::Folio::Engine.root.join("lib/generators/folio/assets/templates/data/icons/*.svg")].each do |svg|
-      path = svg.to_s.gsub(base, "")
-      copy_file path, path
-    end
-  end
 
-  def copy_fonts
-    base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
-    Dir[::Folio::Engine.root.join("lib/generators/folio/assets/templates/app/assets/fonts/*")].each do |font|
-      path = font.to_s.gsub(base, "")
-      copy_file path, path
+    %w[
+      lib/generators/folio/assets/templates/data/icons/*.svg
+      lib/generators/folio/assets/templates/app/assets/fonts/*
+      lib/generators/folio/assets/templates/public/*
+    ].each do |key|
+      Dir[::Folio::Engine.root.join(key)].each do |full_path|
+        path = full_path.to_s.gsub(base, "")
+        copy_file path, path
+      end
     end
   end
 end
