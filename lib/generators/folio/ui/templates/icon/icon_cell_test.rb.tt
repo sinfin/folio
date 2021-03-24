@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Ui::IconCellTest < Cell::TestCase
+  test "show" do
+    html = cell("<%= global_namespace_path %>/ui/icon", "fast_forward").(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-icon")
+    assert html.has_css?(".<%= classname_prefix %>-ui-icon--fast_forward")
+  end
+end

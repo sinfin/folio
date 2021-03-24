@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Ui::NavigationCellTest < Cell::TestCase
+  test "show" do
+    menu = <%= global_namespace %>::Menu::Header.create!(locale: :en)
+
+    html = cell("<%= global_namespace_path %>/ui/navigation", menu).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-navigation")
+  end
+end

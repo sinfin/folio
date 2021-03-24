@@ -1,0 +1,6 @@
+svg[
+  viewBox="0 0 #{default_size[:width]} #{default_size[:height]}"
+  style=style
+  class=class_names
+]
+  use xlink:href="#{image_path('svg_sprite.svg')}##{model}"

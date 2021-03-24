@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+class <%= global_namespace %>::Ui::HeaderCell < ApplicationCell
+  MENU_INPUT_ID = "<%= classname_prefix %>-ui-header__menu-input"
+
+  def menu
+    @menu ||= <%= global_namespace %>::Menu::Header.instance(fail_on_missing: false)
+  end
+end

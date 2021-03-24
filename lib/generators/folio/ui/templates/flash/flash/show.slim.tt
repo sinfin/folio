@@ -1,0 +1,18 @@
+.<%= classname_prefix %>-ui-flash
+  - if model.present?
+    - model.each do |msg_type, message|
+      .alert.alert-dismissible.fade.show.<%= classname_prefix %>-ui-flash__alert[
+        class=bootstrap_class_for(msg_type)
+        role="alert"
+      ]
+        .container
+          .<%= classname_prefix %>-ui-flash__inner
+            - if i = icon_for(msg_type)
+              .<%= classname_prefix %>-ui-flash__ico
+                = icon(i, height: 22)
+
+            .<%= classname_prefix %>-ui-flash__text
+              = message
+
+            button.<%= classname_prefix %>-ui-flash__close type="button"
+              = icon(:close, height: 22)
