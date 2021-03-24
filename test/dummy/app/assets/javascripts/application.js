@@ -10,7 +10,6 @@
 //= require folio/debounce
 //= require folio/lazyload
 //= require folio/lightbox
-//= require folio/svg4everybody
 
 //= require folio/leads/form/form
 //= require folio/image/image

@@ -20,12 +20,9 @@
       font-weight: $font-weight-bold
 
   &__arrow
-    font-size: 22px
-
-  &__arrow:before
     transition: $transition-base
 
-  &__li--expanded &__arrow:before
+  &__li--expanded &__arrow
     transform: rotate(180deg)
 
   &__mq
@@ -148,8 +145,10 @@
       display: block
 
     &__arrow
-      padding-left: $grid-gutter-half
       margin-left: auto
+
+    &__span
+      margin-right: $grid-gutter-half
 
     &__li--more
       display: none

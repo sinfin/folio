@@ -25,4 +25,6 @@
     - if active_menu_item
       .d-ui-navigation__select-overlay
         = active_menu_item.to_label
-        = icon("arrow_drop_down", class: "d-ui-navigation__select-arrow")
+        = icon(:arrow_drop_down,
+               class: "d-ui-navigation__select-arrow",
+               height: 22)

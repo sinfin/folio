@@ -13,11 +13,13 @@
     position: relative
 
   &__ico
-    font-size: 22px
     position: absolute
     top: 0
     left: 0
     bottom: 0
+    display: flex
+    align-items: center
+    justify-content: center
 
   &__ico + &__text
     padding-left: 22px + $grid-gutter-half
@@ -29,9 +31,7 @@
     bottom: 0
     right: 0
     color: inherit
-
-  &__close-ico
-    font-size: 22px
     width: 60px
-    height: 100%
+    display: flex
     justify-content: flex-end
+    align-items: center

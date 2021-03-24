@@ -10,11 +10,11 @@ class Dummy::Ui::FlashCell < ApplicationCell
   }.freeze
 
   ICONS = {
-    alert: "warning",
-    error: "warning",
-    notice: "info",
-    success: "check_circle",
-    warning: "warning",
+    alert: :warning,
+    error: :warning,
+    notice: :info,
+    success: :check_circle,
+    warning: :warning,
   }.freeze
 
   def bootstrap_class_for(msg_type)

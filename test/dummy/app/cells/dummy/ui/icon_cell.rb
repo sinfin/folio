@@ -13,14 +13,35 @@ class Dummy::Ui::IconCell < ApplicationCell
 
   def class_names
     str = "d-ui-icon d-ui-icon--#{model}"
-    str += " #{size_class_name}" if size_class_name
     str += " #{options[:class]}" if options[:class]
     str
   end
 
-  def size_class_name
-    if options[:size]
-      "d-ui-icon--#{options[:size]}"
+  def style
+    if options[:width]
+      width = option_size_to_str(options[:width])
+
+      if options[:height]
+        height = option_size_to_str(options[:height])
+      else
+        height = "auto"
+      end
+    elsif options[:height]
+      width = "auto"
+      height = option_size_to_str(options[:height])
+    else
+      width = "#{default_size[:width]}px"
+      height = "#{default_size[:height]}px"
+    end
+
+    "width: #{width}; height: #{height}"
+  end
+
+  def option_size_to_str(val)
+    if val.is_a?(Numeric)
+      "#{val}px"
+    else
+      val
     end
   end
 end
