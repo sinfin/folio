@@ -51,4 +51,12 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       copy_file path, path
     end
   end
+
+  def copy_fonts
+    base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
+    Dir[::Folio::Engine.root.join("lib/generators/folio/assets/templates/app/assets/fonts/*")].each do |font|
+      path = font.to_s.gsub(base, "")
+      copy_file path, path
+    end
+  end
 end

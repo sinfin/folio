@@ -44,4 +44,9 @@ javascript:
 - if @mobile_only
   javascript:
     document.body.innerHTML = document.querySelector('.f-ui__typo').outerHTML
-    document.documentElement.style.overflow = "auto"
+    document.documentElement.style.overflow = 'auto'
+
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.innerHTML = document.querySelector('.f-ui__typo').outerHTML
+      document.documentElement.style.overflow = 'auto'
+    })
