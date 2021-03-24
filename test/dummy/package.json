@@ -3,6 +3,6 @@
   "private": true,
   "dependencies": {},
   "devDependencies": {
-    "fantasticon": "^1.1.3"
+    "svg-sprite": "^1.5.0"
   }
 }

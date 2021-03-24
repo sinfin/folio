@@ -1,6 +1,5 @@
 @import 'custom_bootstrap'
 @import 'fonts'
-@import 'icons'
 @import 'folio/utilities'
 @import 'modules/turbolinks'
 @import 'modules/bootstrap-overrides'

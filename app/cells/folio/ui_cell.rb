@@ -58,14 +58,8 @@ class Folio::UiCell < Folio::ApplicationCell
   end
 
   def icons
-    path = ::Rails.root.join("app/assets/stylesheets/_icons.scss")
-
-    if File.exist?(path)
-      str = File.read(path)
-      str.scan(/^.+-ui-icon--.+:before/).to_a.map do |selector|
-        selector.gsub(/:.*$/, "").gsub(/^\./, "").split("--")
-      end
-    end
+    Dummy::Ui::IconCell::ICONS.keys
+  rescue StandardError
   end
 
   def flash_models

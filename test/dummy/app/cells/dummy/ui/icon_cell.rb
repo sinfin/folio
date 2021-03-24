@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::IconCell < ApplicationCell
+  ICONS = YAML.load_file(::Rails.root.join('data/icons.yaml')).deep_symbolize_keys
+
   def show
-    content_tag(tag, "", class: class_names, href: options[:href])
+    render if model.present? && default_size
   end
 
-  def tag
-    options[:href] ? :a : :span
+  def default_size
+    @default_size ||= ICONS[model]
   end
 
   def class_names

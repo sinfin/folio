@@ -7,9 +7,10 @@
 //= require folio-bootstrap/js/dist/modal
 
 //= require folio/devise
+//= require folio/debounce
 //= require folio/lazyload
 //= require folio/lightbox
-//= require folio/debounce
+//= require folio/svg4everybody
 
 //= require folio/leads/form/form
 //= require folio/image/image
