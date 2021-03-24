@@ -16,10 +16,7 @@ module Folio::HasAddresses
       accepts_nested_attributes_for key,
                                     allow_destroy: true,
                                     reject_if: -> (attributes) {
-                                      attributes.with_indifferent_access
-                                                .except(:country_code)
-                                                .values
-                                                .all?(&:blank?)
+                                      send("reject_#{key}_attributes?", attributes)
                                     }
 
       validates key,
@@ -28,6 +25,23 @@ module Folio::HasAddresses
     end
 
     before_validation :unset_unwanted_secondary_address
+  end
+
+  module ClassMethods
+    def reject_address_attributes?(attributes)
+      attributes.with_indifferent_access
+                .except(:country_code)
+                .values
+                .all?(&:blank?)
+    end
+
+    def reject_primary_address_attributes?(attributes)
+      reject_address_attributes?(attributes)
+    end
+
+    def reject_secondary_address_attributes?(attributes)
+      reject_address_attributes?(attributes)
+    end
   end
 
   private
