@@ -1,0 +1,21 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/red: Red
+        highlight/gray: Gray
+    models:
+      dummy/atom/text: Text (paragraphs, tables, etc.)
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/text:
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/red: Červené
+        highlight/gray: Šedé
+    models:
+      dummy/atom/text: Text (odstavce, tabulky, apod.)

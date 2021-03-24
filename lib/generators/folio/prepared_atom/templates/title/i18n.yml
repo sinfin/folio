@@ -1,0 +1,25 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/title:
+        tag: Tag
+        tag/H1: H1
+        tag/H2: H2
+        tag/H3: H3
+        tag/H4: H4
+        tag/H5: H5
+    models:
+      dummy/atom/title: Title
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/title:
+        tag: Tag
+        tag/H1: H1
+        tag/H2: H2
+        tag/H3: H3
+        tag/H4: H4
+        tag/H5: H5
+    models:
+      dummy/atom/title: Nadpis

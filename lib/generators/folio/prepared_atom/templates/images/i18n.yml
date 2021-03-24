@@ -1,0 +1,17 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/images:
+        same_width: Align to grid
+        title: Caption under the gallery
+    models:
+      dummy/atom/images: Images (gallery)
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/images:
+        same_width: Zarovnat do mřížky
+        title: Popisek pod galerií
+    models:
+      dummy/atom/images: Obrázky (galerie)

@@ -1,10 +1,6 @@
 ---
 en:
   activerecord:
-    models:
-      dummy/atom/images: Images (gallery)
-      dummy/atom/text: Text (paragraphs, tables, etc.)
-      dummy/atom/title: Title
     attributes:
       dummy/atom/images:
         same_width: Align to grid
@@ -21,3 +17,7 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+    models:
+      dummy/atom/images: Images (gallery)
+      dummy/atom/text: Text (paragraphs, tables, etc.)
+      dummy/atom/title: Title

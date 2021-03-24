@@ -23,18 +23,12 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
   class UnknownCell < StandardError; end
 
   def create
-    if name.blank? || name == 'all'
+    if name == "all"
       keys = CELLS.keys
     elsif CELLS.keys.include?(name.to_sym)
       keys = [name.to_sym]
     else
       raise UnknownCell, "Unknown cell #{name}. Allowed keys: #{CELLS.keys.join(', ')}"
-    end
-
-    if global_namespace == "Dummy"
-      prefix = "test/dummy/"
-    else
-      prefix = ""
     end
 
     base = ::Folio::Engine.root.join("lib/generators/folio/ui/templates/").to_s
@@ -62,7 +56,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
       app_path = Rails.root.join("config/locales/ui.#{locale}.yml")
       template_path = Folio::Engine.root.join("lib/generators/folio/ui/templates/ui.#{locale}.yml")
 
-      unless File.exists?(template_path)
+      unless File.exist?(template_path)
         puts "Missing #{template_path.to_s.delete_prefix(Folio::Engine.root.to_s)}"
       else
         new_hash = {

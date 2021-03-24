@@ -8,7 +8,7 @@ class Dummy::SeedGenerator
 
   def from_cell_path(cell_path)
     cell_basename = File.basename(cell_path)
-    name = cell_basename.gsub('_cell.rb', '')
+    name = cell_basename.gsub("_cell.rb", "")
 
     template_cell_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_cell_dir
@@ -21,7 +21,7 @@ class Dummy::SeedGenerator
     end
 
     test_path = Rails.root.join("test/cells/dummy/ui/#{name}_cell_test.rb")
-    if File.exists?(test_path)
+    if File.exist?(test_path)
       copy_file(test_path, template_cell_dir.join("#{name}_cell_test.rb.tt"))
     else
       puts "M #{relative_path(test_path)}"
@@ -30,7 +30,7 @@ class Dummy::SeedGenerator
 
   def from_atom_path(atom_path)
     atom_basename = File.basename(atom_path)
-    name = atom_basename.gsub('.rb', '')
+    name = atom_basename.gsub(".rb", "")
 
     template_atom_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_atom_dir
@@ -49,20 +49,47 @@ class Dummy::SeedGenerator
     end
 
     test_path = Rails.root.join("test/cells/dummy/atom/#{name}_cell_test.rb")
-    if File.exists?(test_path)
+    if File.exist?(test_path)
       copy_file(test_path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
     else
       puts "M #{relative_path(test_path)}"
     end
+
+    i18n_values = {}
+
+    Dir[Rails.root.join('config/locales/atom.*.yml')].each do |path|
+      hash = YAML.load_file(path)
+      locale = hash.keys.first
+      i18n_values[locale] = {
+        "activerecord" => {
+          "attributes" => {
+            "dummy/atom/#{name}" => hash[locale]["activerecord"]["attributes"]["dummy/atom/#{name}"],
+          },
+          "models" => {
+            "dummy/atom/#{name}" => hash[locale]["activerecord"]["models"]["dummy/atom/#{name}"],
+          },
+        }
+      }
+    end
+
+    i18n_yml = i18n_values.to_yaml(line_width: -1)
+    i18n_path = template_atom_dir.join("i18n.yml")
+
+    if File.exist?(i18n_path) && File.read(i18n_path) == i18n_yml
+      puts "I #{relative_path(i18n_path)}"
+    else
+      File.write(i18n_path, i18n_yml)
+      puts "W #{relative_path(i18n_path)}"
+    end
   end
 
-  def i18n_yamls(path)
+  def ui_i18n_yamls(path)
     Dir[path].each do |yaml_path|
       hash = YAML.load_file(yaml_path)
-      replaced = hash[hash.keys.first]["dummy"]["ui"].to_yaml
+      replaced = hash[hash.keys.first]["dummy"]["ui"].to_yaml(line_width: -1)
       yaml_to = @templates_path.join("#{File.basename(yaml_path)}")
 
-      if File.exists?(yaml_to) && File.read(yaml_to) == replaced
+      if File.exist?(yaml_to) && File.read(yaml_to) == replaced
         puts "I #{relative_path(yaml_to)}"
       else
         File.write(yaml_to, replaced)
@@ -77,7 +104,7 @@ class Dummy::SeedGenerator
     end
 
     def relative_path(path)
-      path.to_s.gsub(/\A#{root}\//, '')
+      path.to_s.gsub(/\A#{root}\//, "")
     end
 
     def replace_names(str)
@@ -94,7 +121,7 @@ class Dummy::SeedGenerator
       text = File.read(from)
       replaced = replace_names(text)
 
-      if File.exists?(to) && File.read(to) == replaced
+      if File.exist?(to) && File.read(to) == replaced
         puts "I #{relative_path(to)}"
       else
         File.write(to, replaced)
@@ -106,19 +133,19 @@ end
 namespace :dummy do
   namespace :seed_generators do
     task ui: :environment do
-      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join('lib/generators/folio/ui/templates'))
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/ui/templates"))
 
-      Dir[Rails.root.join('app/cells/dummy/ui/**/*_cell.rb')].each do |cell_path|
+      Dir[Rails.root.join("app/cells/dummy/ui/**/*_cell.rb")].each do |cell_path|
         gen.from_cell_path(cell_path)
       end
 
-      gen.i18n_yamls(Rails.root.join('config/locales/ui.*.yml'))
+      gen.ui_i18n_yamls(Rails.root.join("config/locales/ui.*.yml"))
     end
 
     task prepared_atom: :environment do
-      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join('lib/generators/folio/prepared_atom/templates'))
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates"))
 
-      Dir[Rails.root.join('app/models/dummy/atom/**/*.rb')].each do |atom_path|
+      Dir[Rails.root.join("app/models/dummy/atom/**/*.rb")].each do |atom_path|
         gen.from_atom_path(atom_path)
       end
     end

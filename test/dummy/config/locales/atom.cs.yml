@@ -2,11 +2,6 @@
 cs:
   activerecord:
     attributes:
-      dummy/atom/da_vinci:
-        fruit: Ovoce
-        fruit/nil: Žádné
-        fruit/apple: Jablko
-        fruit/banana: Banán
       dummy/atom/images:
         same_width: Zarovnat do mřížky
         title: Popisek pod galerií

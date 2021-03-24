@@ -2,6 +2,10 @@
 
 module Folio::GeneratorBase
   private
+    def atom_name
+      @atom_name || name
+    end
+
     def classname_prefix
       Rails.application.class.name[0].downcase
     end
@@ -15,7 +19,7 @@ module Folio::GeneratorBase
     end
 
     def atom_cell_name
-      "#{global_namespace_path}/atom/#{name}"
+      "#{global_namespace_path}/atom/#{atom_name}"
     end
 
     def molecule_name
@@ -27,7 +31,7 @@ module Folio::GeneratorBase
     end
 
     def molecule_cell_name
-      "#{global_namespace_path}/molecule/#{name}"
+      "#{global_namespace_path}/molecule/#{atom_name}"
     end
 
     def global_namespace_path
@@ -41,33 +45,17 @@ module Folio::GeneratorBase
     def add_atom_to_i18n_ymls(values = {})
       I18n.available_locales.each do |locale|
         path = Rails.root.join("config/locales/atom.#{locale}.yml")
-        i18n_key = "#{global_namespace_path}/atom/#{name}"
-        i18n_value = values[locale] || values[:en]
+        i18n_key = "#{global_namespace_path}/atom/#{atom_name}"
+        i18n_value = values[locale] || values[locale.to_s] || values[:en]
 
         if i18n_value.is_a?(Hash)
-          attributes_hash = {}
-
-          if i18n_value[:attributes].present?
-            attributes_hash["attributes"] = {
-              i18n_key => i18n_value[:attributes].stringify_keys,
-            }
-          end
-
-          new_hash = {
-            locale.to_s => {
-              "activerecord" => attributes_hash.merge(
-                "models" => {
-                  i18n_key => i18n_value[:name],
-                }
-              )
-            }
-          }
+          new_hash = { locale.to_s => i18n_value }
         else
           new_hash = {
             locale.to_s => {
               "activerecord" => {
                 "models" => {
-                  i18n_key => i18n_value || name
+                  i18n_key => i18n_value || atom_name
                 }
               }
             }
