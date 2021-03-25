@@ -41,18 +41,18 @@ class Dummy::SeedGenerator
 
     FileUtils.mkdir_p template_atom_cell_dir
 
-    atom_cell_path = Rails.root.join("app/cells/dummy/atom/#{name}_cell.rb")
-    copy_file(atom_cell_path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+    %w[atom molecule].each do |key|
+      Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
+        copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+      end
 
-    Dir[Rails.root.join("app/cells/dummy/atom/#{name}/*")].each do |path|
-      copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
-    end
+      Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}/*")].each do |path|
+        copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
+      end
 
-    test_path = Rails.root.join("test/cells/dummy/atom/#{name}_cell_test.rb")
-    if File.exist?(test_path)
-      copy_file(test_path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
-    else
-      puts "M #{relative_path(test_path)}"
+      Dir[Rails.root.join("test/cells/dummy/#{key}/#{name}_cell_test.rb")].each do |path|
+        copy_file(path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+      end
     end
 
     i18n_values = {}
