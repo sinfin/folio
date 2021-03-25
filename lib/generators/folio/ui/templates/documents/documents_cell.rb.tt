@@ -17,4 +17,10 @@ class <%= global_namespace %>::Ui::DocumentsCell < ApplicationCell
     size = number_to_human_size(placement.file.file_size)
     "#{placement.to_label} (#{[ext, size].compact.join(', ')})"
   end
+
+  def download_path(*args)
+    controller.download_path(*args)
+  rescue NoMethodError
+    controller.main_app.download_path(*args)
+  end
 end

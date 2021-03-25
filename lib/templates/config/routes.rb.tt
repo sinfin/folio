@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   get "/422", to: "errors#page422", via: :all
   get "/500", to: "errors#page500", via: :all
 
+  get '/download/:hash_id/*name', to: 'downloads#show',
+                                  as: :download,
+                                  constraints: { name: /.*/ }
+
   scope "/:locale", locale: /#{I18n.available_locales.join("|")}/ do
     resources :pages, only: [:show], path: "" do
       member { get :preview }

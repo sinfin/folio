@@ -4,8 +4,10 @@ require "test_helper"
 
 class Dummy::Molecule::DocumentsCellTest < Cell::TestCase
   test "show" do
+    documents = create_list(:folio_document, 1)
+
     atoms = Array.new(2) do
-      create_atom(Dummy::Atom::Documents)
+      create_atom(Dummy::Atom::Documents, documents: documents)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)
