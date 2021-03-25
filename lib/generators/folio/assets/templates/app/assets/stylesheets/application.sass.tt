@@ -15,6 +15,7 @@
 @import 'folio/newsletter_subscriptions/form/form'
 @import 'folio/publishable_hint/publishable_hint'
 @import 'folio/ui/ui'
+@import 'folio/ui/atoms/atoms'
 
 html
   height: 100%

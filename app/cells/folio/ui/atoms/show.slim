@@ -1,5 +1,8 @@
 .f-ui-atoms
   .px-h
+    h1.mt-0.mb-a
+      a.text-decoration-none href="/folio/ui/atoms" UI Kit / Atoms
+
     - page.atoms_in_molecules.each do |molecule, atoms|
       - if molecule.present?
         .row.border-top.f-ui-atoms__row id=atoms.first.type

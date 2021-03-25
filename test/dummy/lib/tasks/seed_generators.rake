@@ -57,7 +57,7 @@ class Dummy::SeedGenerator
 
     i18n_values = {}
 
-    Dir[Rails.root.join('config/locales/atom.*.yml')].each do |path|
+    Dir[Rails.root.join("config/locales/atom.*.yml")].each do |path|
       hash = YAML.load_file(path)
       locale = hash.keys.first
       i18n_values[locale] = {
