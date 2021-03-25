@@ -1,0 +1,32 @@
+.d-with-icon
+  display: inline-flex
+  align-items: center
+
+  .d-ui-icon
+    margin-right: 7px
+
+  &--reversed
+    .d-ui-icon
+      margin-right: 0
+      margin-left: 7px
+
+a.d-with-icon
+  text-decoration: none
+
+  .d-ui-icon, span
+    text-decoration: none
+
+  +hover-focus
+    &, .d-ui-icon
+      text-decoration: none
+
+    span
+      text-decoration: underline
+
+  &--underlined
+    span:not(.d-ui-icon)
+      text-decoration: underline
+
+    +hover-focus
+      span:not(.d-ui-icon)
+        text-decoration: none

@@ -48,3 +48,15 @@
 - type: Dummy::Atom::TextWithImage
   content: long
   cover: true
+
+- type: Dummy::Atom::Documents
+  documents: true
+  title: "Documents"
+
+- type: Dummy::Atom::Documents
+  documents: true
+  title: "Other documents"
+
+- type: Dummy::Atom::Documents
+  documents: true
+  title: "More documents"

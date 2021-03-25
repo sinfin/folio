@@ -1,0 +1,32 @@
+.<%= classname_prefix %>-with-icon
+  display: inline-flex
+  align-items: center
+
+  .<%= classname_prefix %>-ui-icon
+    margin-right: 7px
+
+  &--reversed
+    .<%= classname_prefix %>-ui-icon
+      margin-right: 0
+      margin-left: 7px
+
+a.<%= classname_prefix %>-with-icon
+  text-decoration: none
+
+  .<%= classname_prefix %>-ui-icon, span
+    text-decoration: none
+
+  +hover-focus
+    &, .<%= classname_prefix %>-ui-icon
+      text-decoration: none
+
+    span
+      text-decoration: underline
+
+  &--underlined
+    span:not(.<%= classname_prefix %>-ui-icon)
+      text-decoration: underline
+
+    +hover-focus
+      span:not(.<%= classname_prefix %>-ui-icon)
+        text-decoration: none

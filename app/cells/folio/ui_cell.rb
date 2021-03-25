@@ -73,4 +73,12 @@ class Folio::UiCell < Folio::ApplicationCell
   def navigation_model
     Folio::Menu.order(updated_at: :desc).first
   end
+
+  def documents_model
+    documents = Folio::Document.last(3)
+
+    documents.map do |doc|
+      Folio::FilePlacement::Document.new(file: doc)
+    end
+  end
 end

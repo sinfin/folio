@@ -21,6 +21,9 @@ fast_forward:
 fast_rewind:
   width: 24
   height: 24
+file:
+  width: 24
+  height: 24
 info:
   width: 24
   height: 24

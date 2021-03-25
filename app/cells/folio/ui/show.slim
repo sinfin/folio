@@ -220,3 +220,13 @@
       == cell("#{global_namespace_path}/ui/navigation", navigation_model)
     - else
       = missing_cell("navigation")
+
+    h3 Documents
+
+    - if "#{global_namespace}::Ui::Documents".safe_constantize
+      - if documents_model.present?
+        == cell("#{global_namespace_path}/ui/documents", documents_model)
+      - else
+        p.text-danger No documents - upload some to preview
+    - else
+      = missing_cell("documents")
