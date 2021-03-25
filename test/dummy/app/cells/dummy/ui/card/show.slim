@@ -1,0 +1,20 @@
+.d-ui-card class=size_class_name
+  .container-fluid
+    .d-ui-card__inner
+      - if model[:cover_placement]
+        = image(model[:cover_placement], thumb_size, class: 'd-ui-card__image')
+
+      .d-ui-card__content
+        - if model[:title].present?
+          *title_tag
+            = cstypo model[:title]
+
+        - if model[:content].present?
+          .d-ui-card__content-content.d-rich-text.d-rich-text--chomp[
+            class=content_content_class_name
+          ]
+            == cstypo model[:content]
+
+        - unless model[:small]
+          a.btn.btn-primary.d-ui-card__button href=model[:href]
+            = model[:button_label]

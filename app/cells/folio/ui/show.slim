@@ -1,11 +1,11 @@
 .f-ui
-  .container-fluid.px-g
+  .container-fluid
     h1.mt-0.mb-a
       a.text-decoration-none href="/folio/ui" UI Kit
 
   hr
 
-  .container-fluid.px-g
+  .container-fluid
     h2 Color scheme
 
     .row
@@ -33,7 +33,7 @@
 
   hr
 
-  .container-fluid.px-g
+  .container-fluid
     h2 Typography
 
     .row.f-ui__typo-row
@@ -52,7 +52,7 @@
 
   hr
 
-  .container-fluid.px-g
+  .container-fluid
     h2 UI elements
 
     h3 Input fields
@@ -230,3 +230,20 @@
         p.text-danger No documents - upload some to preview
     - else
       = missing_cell("documents")
+
+    h3 Cards
+
+    h4 Large
+
+    - card_variants.each do |variant|
+      == cell('dummy/ui/card', variant)
+
+    h4 Medium
+
+    - card_variants.each do |variant|
+      == cell('dummy/ui/card', variant.merge(medium: true))
+
+    h4 Small
+
+    - card_variants.each do |variant|
+      == cell('dummy/ui/card', variant.merge(small: true))

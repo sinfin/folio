@@ -69,7 +69,8 @@ $font-size-base: px-to-rem($font-size-base-px)
 $mobile-font-size-base: mobile-px-to-rem($mobile-font-size-base-px)
 $line-height-base: 22 / 16
 
-$font-size-lg: px-to-rem(19px)
+$font-size-lg-px: 19px
+$font-size-lg: px-to-rem($font-size-lg-px)
 $mobile-font-size-lg: mobile-px-to-rem(17px)
 $line-height-lg: 28 / 19
 $mobile-line-height-lg: 25 / 17
@@ -175,8 +176,10 @@ $btn-disabled-opacity: 0.15
 $custom-select-indicator-padding: 18px
 
 $transition-easing: ease-in-out
-$transition-duration: .25s
+$transition-duration: .15s
 $transition-base: all $transition-duration $transition-easing
+
+$btn-transition: none
 
 $container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1105px, xxl: 1440px)
 $container-fluid-max-width: 1920px

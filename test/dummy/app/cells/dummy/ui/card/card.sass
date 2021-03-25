@@ -1,0 +1,113 @@
+$ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
+
+.d-ui-card
+  margin: $grid-gutter-width 0
+
+  &__inner
+    background-color: $white
+    position: relative
+
+  &--size-medium &__inner
+    max-width: 420px
+
+  &__title
+    margin-top: 0
+
+  &--size-large &__title
+    margin-bottom: $grid-gutter-half
+
+  &--size-large &__content-content
+    margin-bottom: $grid-gutter-width
+
+  &--size-medium &__content-content
+    margin-bottom: map-get($spacers, 3)
+
+  &__button
+    &:before
+      content: ''
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      z-index: 2
+
+  &--size-large &__inner:hover &__title,
+  &--size-medium &__inner:hover &__title
+    text-decoration: underline
+
+  &--size-medium &__inner:hover
+    background-color: $light-gray
+
+  &--size-medium &__content
+    padding: $grid-gutter-width
+
+  &--size-medium &__inner
+    box-shadow: $ui-card-box-shadow
+
+  &--size-small &__inner
+    display: flex
+    align-items: center
+
+  &--size-small &__image
+    flex: 0 0 83px
+    margin-right: $grid-gutter-width
+    align-self: stretch
+
+  &--size-small &__title
+    color: $black
+    text-decoration: underline
+    margin-bottom: map-get($spacers, 2)
+
+    &:last-child
+      margin-bottom: 0
+
+  &--size-small:hover &__title
+    text-decoration: none
+
+  +media-breakpoint-down(sm)
+    &__button
+      display: flex
+      width: 100%
+
+    &--size-large &__image
+      margin: 0 auto $grid-gutter-width
+
+    &--size-large &__title,
+    &--size-medium &__title
+      text-align: center
+
+  +media-breakpoint-down(xs)
+    &--size-large &__image
+      margin-left: - $grid-gutter-half
+      margin-right: - $grid-gutter-half
+
+  +media-breakpoint-up(md)
+    &--size-large
+      margin: map-get($spacers, gg) 0
+
+    &--size-large &__inner,
+    &--size-medium &__inner
+      box-shadow: $ui-card-box-shadow
+
+    &--size-large &__content
+      padding: map-get($spacers, gg)
+
+    &--size-large &__inner
+      display: flex
+
+    &--size-large &__image
+      flex: 0 0 percentage(645 / 1320)
+      max-width: 645px
+      max-height: 100% !important
+      align-self: stretch
+
+      .f-image__img
+        height: 100%
+        width: 100%
+        object-fit: cover
+
+    &--size-large &__content
+      flex: 1 1 auto
+      min-width: 0
+      align-self: center

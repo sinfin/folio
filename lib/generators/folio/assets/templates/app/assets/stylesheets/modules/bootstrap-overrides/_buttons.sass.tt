@@ -4,6 +4,8 @@
   min-height: $input-height
   display: inline-flex
   align-items: center
+  justify-content: center
+  text-align: center
 
 .btn-sm
   font-size: $input-btn-font-size-sm

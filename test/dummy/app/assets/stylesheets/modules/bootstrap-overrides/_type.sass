@@ -41,3 +41,7 @@ small,
 
 ul
   +unlist
+
+@for $lines from 1 to 5
+  .text-line-clamp-#{$lines}
+    +line-clamp($lines)
