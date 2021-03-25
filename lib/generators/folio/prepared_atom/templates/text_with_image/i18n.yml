@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/text_with_image: 
+    models:
+      dummy/atom/text_with_image: Text with image
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/text_with_image: 
+    models:
+      dummy/atom/text_with_image: Text s obrázkem

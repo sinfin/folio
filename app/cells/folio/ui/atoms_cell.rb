@@ -73,7 +73,11 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
       end
 
       %w[content].each do |key|
-        attrs[key] = "<p>#{Faker::Hipster.paragraph}</p>" if attrs[key] == true
+        if attrs[key] == true
+          attrs[key] = "<p>#{Faker::Hipster.paragraph}</p>"
+        elsif attrs[key] == "long"
+          attrs[key] = 3.times.map { "<p>#{Faker::Hipster.paragraph}</p>" }.join("")
+        end
       end
 
       atom = @page.atoms.build(attrs)

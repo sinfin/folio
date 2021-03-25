@@ -44,3 +44,7 @@
 
 - type: Dummy::Atom::Quotation
   text: true
+
+- type: Dummy::Atom::TextWithImage
+  content: long
+  cover: true

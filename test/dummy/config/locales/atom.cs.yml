@@ -23,4 +23,5 @@ cs:
       dummy/atom/perex: Perex
       dummy/atom/quotation: Zvýrazněná citace
       dummy/atom/text: Text (odstavce, tabulky, apod.)
+      dummy/atom/text_with_image: Text s obrázkem
       dummy/atom/title: Nadpis

@@ -1,0 +1,10 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-text-with-image
+  .container-fluid
+    .<%= classname_prefix %>-atom-text-with-image__inner
+      - if model.cover_placement
+        = image(model.cover_placement,
+                THUMB_SIZE,
+                class: '<%= classname_prefix %>-atom-text-with-image__cover')
+
+      .<%= classname_prefix %>-atom-text-with-image__content.m-rich-text
+        == cstypo model.content
