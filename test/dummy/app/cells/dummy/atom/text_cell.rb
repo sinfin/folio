@@ -26,7 +26,7 @@ class Dummy::Atom::TextCell < ApplicationCell
 
   def highlight_class_name
     if highlight?
-      "p-3 d-atom-text__highlight d-atom-text__highlight--#{model.highlight} d-rich-text--chomp"
+      "p-gg d-atom-text__highlight d-atom-text__highlight--#{model.highlight} d-rich-text--chomp"
     end
   end
 end
