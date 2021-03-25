@@ -18,7 +18,7 @@ cs:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/documents: Documents
+      dummy/atom/documents: Soubory (výpis)
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/navigation: Menu
       dummy/atom/perex: Perex

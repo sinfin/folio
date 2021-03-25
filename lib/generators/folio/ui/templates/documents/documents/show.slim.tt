@@ -1,0 +1,16 @@
+.<%= classname_prefix %>-ui-documents
+  - if options[:title].present?
+    .h4.mt-0 = cstypo(options[:title])
+
+
+  ul.<%= classname_prefix %>-ui-documents__ul
+    - model.each do |placement|
+      - doc = placement.file
+      li.<%= classname_prefix %>-ui-documents__li
+        a.<%= classname_prefix %>-ui-documents__a.d-with-icon.d-with-icon--underlined.text-black[
+          href=controller.download_path(doc, doc.file_name, locale: :cs)
+          target="_blank"
+        ]
+          = icon(:file)
+          span
+            = label(placement)

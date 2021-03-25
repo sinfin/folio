@@ -7,21 +7,17 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
   source_root File.expand_path("templates", __dir__)
 
-  PREPARED_ATOMS = %i[
-    text
-    title
-    images
-  ]
-
   class UnknownAtomKey < StandardError; end
 
   def create
+    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.starts_with?(".") }
+
     if name == "all"
-      keys = PREPARED_ATOMS
-    elsif PREPARED_ATOMS.include?(name.to_sym)
+      keys = allowed_keys
+    elsif allowed_keys.include?(name)
       keys = [name.to_sym]
     else
-      raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{PREPARED_ATOMS.join(', ')}"
+      raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{allowed_keys.join(', ')}"
     end
 
     base = ::Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates/").to_s
@@ -34,19 +30,22 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
         template relative_path, "app/models/#{global_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
+      is_molecule = File.read("#{base}#{key}/#{key}.rb.tt").match?("self.molecule")
+      cell_directory = is_molecule ? "molecule" : "atom"
+
       Dir["#{base}#{key}/cell/#{key}_cell.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{global_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "app/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
       end
 
       Dir["#{base}#{key}/cell/#{key}_cell_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/cells/#{global_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "test/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
       end
 
       Dir["#{base}#{key}/cell/#{key}/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{global_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "app/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
       end
 
       i18n_path = "#{base}#{key}/i18n.yml"

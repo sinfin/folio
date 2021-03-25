@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/documents: 
+    models:
+      dummy/atom/documents: Documents (list)
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/documents: 
+    models:
+      dummy/atom/documents: Soubory (výpis)
