@@ -121,9 +121,7 @@ en:
       folio/menu:
         one: Menu
         other: Menus
-      folio/menu/page:
-        one: Menu
-        other: Menus
+      folio/menu/page: Menu
       folio/menu_item:
         one: Link
         other: Links

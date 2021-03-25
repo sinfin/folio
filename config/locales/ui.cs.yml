@@ -1,0 +1,6 @@
+---
+cs:
+  folio:
+    ui:
+      atoms:
+        invalid: Nevalidní atom

@@ -19,5 +19,6 @@ cs:
         tag/H5: H5
     models:
       dummy/atom/images: Obrázky (galerie)
+      dummy/atom/navigation: Menu
       dummy/atom/text: Text (odstavce, tabulky, apod.)
       dummy/atom/title: Nadpis

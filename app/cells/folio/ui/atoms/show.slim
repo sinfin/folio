@@ -27,7 +27,13 @@
               .f-ui-atoms__atom[
                 class=container_class_name_for_atom(atom)
               ]
-                div class="#{::Rails.application.class.name[0].downcase}-atoms"
-                  == cell(atom.class.cell_name,
-                          atom,
-                          atom.cell_options.presence || {})
+                - if atom.valid?
+                  div class="#{classname_prefix}-atoms"
+                    == cell(atom.class.cell_name,
+                            atom,
+                            atom.cell_options.presence || {})
+                - else
+                  .container-fluid.py-a
+                    .text-danger
+                      p: strong = t('.invalid')
+                      p = atom.errors.full_messages.join(" ")

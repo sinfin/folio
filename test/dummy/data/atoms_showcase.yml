@@ -35,3 +35,6 @@
   title: true
   tag: H5
   _showcase: "tag: H5"
+
+- type: Dummy::Atom::Navigation
+  menu: true

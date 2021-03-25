@@ -19,5 +19,6 @@ en:
         tag/H5: H5
     models:
       dummy/atom/images: Images (gallery)
+      dummy/atom/navigation: Navigation
       dummy/atom/text: Text (paragraphs, tables, etc.)
       dummy/atom/title: Title

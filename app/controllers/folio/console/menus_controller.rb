@@ -3,6 +3,10 @@
 class Folio::Console::MenusController < Folio::Console::BaseController
   folio_console_controller_for "Folio::Menu"
 
+  def new
+    @menu = @klass.new(type: params[:type])
+  end
+
   def edit
     serialize_menu_items
   end

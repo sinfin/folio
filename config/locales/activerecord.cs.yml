@@ -171,10 +171,7 @@ cs:
         few: Menu
         one: Menu
         other: Menu
-      folio/menu/page:
-        few: Menu
-        one: Menu
-        other: Menu
+      folio/menu/page: Menu
       folio/menu_item:
         few: Odkazy
         one: Odkaz

@@ -1,6 +1,6 @@
-cs:
+en:
   activerecord:
     models:
       dummy/menu/stylable: Menu se stylama
       dummy/menu/nestable: Menu stromové
-      dummy/menu/navigation: Submenu ve stránce
+      dummy/menu/navigation: Page submenu

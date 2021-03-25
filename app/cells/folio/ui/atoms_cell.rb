@@ -56,7 +56,15 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
       attrs["issue"] = issue if attrs["issue"]
       attrs["serial"] = serial if attrs["serial"]
-      attrs["menu"] = menu if attrs["menu"]
+
+      if attrs["menu"]
+        menu = attrs["type"].constantize::ASSOCIATIONS[:menu].first.constantize.last
+        if menu
+          attrs["menu"] = menu
+        else
+          attrs.delete("menu")
+        end
+      end
 
       attrs["title"] = Faker::Hipster.sentence if attrs["title"] == true
 
@@ -82,5 +90,9 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
     else
       "container-fluid"
     end
+  end
+
+  def classname_prefix
+    @classname_prefix ||= ::Rails.application.class.name[0].downcase
   end
 end
