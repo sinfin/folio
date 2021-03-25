@@ -20,5 +20,6 @@ cs:
     models:
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/navigation: Menu
+      dummy/atom/perex: Perex
       dummy/atom/text: Text (odstavce, tabulky, apod.)
       dummy/atom/title: Nadpis

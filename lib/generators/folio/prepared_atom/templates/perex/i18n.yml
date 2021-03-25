@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/perex: 
+    models:
+      dummy/atom/perex: Perex
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/perex: 
+    models:
+      dummy/atom/perex: Perex

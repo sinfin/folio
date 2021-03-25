@@ -2,7 +2,6 @@
 
 class Dummy::Ui::NavigationCell < ApplicationCell
   include Folio::ActiveClass
-  include Folio::CstypoHelper
 
   def menu_items
     @menu_items ||= model.menu_items.includes(:page).arrange

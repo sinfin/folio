@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::TextCell < ApplicationCell
-  include Folio::CstypoHelper
-
   def show
     render if model.content.present?
   end

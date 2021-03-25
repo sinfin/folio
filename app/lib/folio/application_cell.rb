@@ -3,6 +3,7 @@
 class Folio::ApplicationCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
+  include Folio::CstypoHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 

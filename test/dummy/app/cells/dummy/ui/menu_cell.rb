@@ -2,7 +2,6 @@
 
 class Dummy::Ui::MenuCell < ApplicationCell
   include Folio::ActiveClass
-  include Folio::CstypoHelper
 
   def show
     render if model.present?

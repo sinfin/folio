@@ -68,7 +68,7 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
       attrs["title"] = Faker::Hipster.sentence if attrs["title"] == true
 
-      %w[description].each do |key|
+      %w[description text].each do |key|
         attrs[key] = Faker::Hipster.paragraph if attrs[key] == true
       end
 
