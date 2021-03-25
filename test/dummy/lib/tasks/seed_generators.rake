@@ -124,6 +124,7 @@ class Dummy::SeedGenerator
       if File.exist?(to) && File.read(to) == replaced
         puts "I #{relative_path(to)}"
       else
+        FileUtils.mkdir_p File.dirname(to)
         File.write(to, replaced)
         puts "W #{relative_path(to)}"
       end
@@ -132,6 +133,11 @@ end
 
 namespace :dummy do
   namespace :seed_generators do
+    task all: :environment do
+      Rake::Task["dummy:seed_generators:ui"].invoke
+      Rake::Task["dummy:seed_generators:prepared_atom"].invoke
+    end
+
     task ui: :environment do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/ui/templates"))
 
