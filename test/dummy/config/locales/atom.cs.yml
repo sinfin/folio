@@ -21,5 +21,6 @@ cs:
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/navigation: Menu
       dummy/atom/perex: Perex
+      dummy/atom/quotation: Zvýrazněná citace
       dummy/atom/text: Text (odstavce, tabulky, apod.)
       dummy/atom/title: Nadpis

@@ -26,7 +26,7 @@ class <%= global_namespace %>::Atom::TextCell < ApplicationCell
 
   def highlight_class_name
     if highlight?
-      "p-3 <%= classname_prefix %>-atom-text__highlight <%= classname_prefix %>-atom-text__highlight--#{model.highlight} <%= classname_prefix %>-rich-text--chomp"
+      "p-gg <%= classname_prefix %>-atom-text__highlight <%= classname_prefix %>-atom-text__highlight--#{model.highlight} <%= classname_prefix %>-rich-text--chomp"
     end
   end
 end

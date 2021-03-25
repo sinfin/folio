@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/quotation: 
+    models:
+      dummy/atom/quotation: Quotation
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/quotation: 
+    models:
+      dummy/atom/quotation: Zvýrazněná citace

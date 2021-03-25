@@ -55,7 +55,7 @@ module Folio::GeneratorBase
             locale.to_s => {
               "activerecord" => {
                 "models" => {
-                  i18n_key => i18n_value || atom_name
+                  i18n_key => i18n_value || atom_name.capitalize
                 }
               }
             }
@@ -63,7 +63,7 @@ module Folio::GeneratorBase
         end
 
         if File.exist?(path)
-          hash = YAML.load_file(path).deep_merge(new_hash)
+          hash = new_hash.deep_merge(YAML.load_file(path))
           puts "Updating #{path}"
         else
           hash = new_hash
@@ -73,6 +73,12 @@ module Folio::GeneratorBase
         # sort keys alphabetically
         sorted = hash[locale.to_s]["activerecord"]["models"].sort_by { |key, _v| key }
         hash[locale.to_s]["activerecord"]["models"] = Hash[ sorted ]
+
+        sorted = hash[locale.to_s]["activerecord"]["attributes"].sort_by { |key, _v| key }
+        hash[locale.to_s]["activerecord"]["attributes"] = Hash[ sorted ]
+
+        sorted = hash[locale.to_s]["activerecord"].sort_by { |key, _v| key }
+        hash[locale.to_s]["activerecord"] = Hash[ sorted ]
 
         File.open(path, "w") do |f|
           f.write hash.to_yaml(line_width: -1)

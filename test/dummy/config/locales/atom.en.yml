@@ -21,5 +21,6 @@ en:
       dummy/atom/images: Images (gallery)
       dummy/atom/navigation: Navigation
       dummy/atom/perex: Perex
+      dummy/atom/quotation: Quotation
       dummy/atom/text: Text (paragraphs, tables, etc.)
       dummy/atom/title: Title

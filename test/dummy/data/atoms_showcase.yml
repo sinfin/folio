@@ -41,3 +41,6 @@
 
 - type: Dummy::Atom::Perex
   text: true
+
+- type: Dummy::Atom::Quotation
+  text: true
