@@ -20,6 +20,7 @@ class Dummy::Ui::CardCellTest < Cell::TestCase
       %i[content title],
       %i[content],
       %i[title],
+      %i[],
     ].map do |keys|
       model = card_model.slice(*keys, :href, :button_label)
       %i[large medium small].each do |size|

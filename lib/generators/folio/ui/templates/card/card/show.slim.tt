@@ -1,5 +1,5 @@
 .<%= classname_prefix %>-ui-card class=size_class_name
-  .container-fluid
+  .container-fluid.<%= classname_prefix %>-ui-card__container
     .<%= classname_prefix %>-ui-card__inner
       - if model[:cover_placement]
         = image(model[:cover_placement], thumb_size, class: '<%= classname_prefix %>-ui-card__image')

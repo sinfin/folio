@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Ui::CardCellTest < Cell::TestCase
+class Dummy::Ui::CardListCellTest < Cell::TestCase
   test "show" do
     card_model = {
       title: "This is a section title",
@@ -12,23 +12,22 @@ class <%= global_namespace %>::Ui::CardCellTest < Cell::TestCase
       cover_placement: create(:folio_cover_placement),
     }
 
-    [
-      %i[cover_placement content title],
-      %i[cover_placement content],
-      %i[cover_placement title],
-      %i[cover_placement],
-      %i[content title],
-      %i[content],
-      %i[title],
-      %i[],
-    ].map do |keys|
-      model = card_model.slice(*keys, :href, :button_label)
-      %i[large medium small].each do |size|
-        model_with_size = model.merge(size => true)
-        html = cell("<%= global_namespace_path %>/ui/card", model_with_size).(:show)
-        assert html.has_css?(".<%= classname_prefix %>-ui-card")
-        assert html.has_css?(".<%= classname_prefix %>-ui-card--size-#{size}")
+    %i[large medium small].each do |size|
+      model = [
+        %i[cover_placement content title],
+        %i[cover_placement content],
+        %i[cover_placement title],
+        %i[cover_placement],
+        %i[content title],
+        %i[content],
+        %i[title],
+        %i[],
+      ].map do |keys|
+        card_model.slice(*keys, :href, :button_label).merge(size => true)
       end
+
+      html = cell("dummy/ui/card_list", model).(:show)
+      assert html.has_css?(".d-ui-card-list")
     end
   end
 end

@@ -235,15 +235,12 @@
 
     h4 Large
 
-    - card_variants.each do |variant|
-      == cell('dummy/ui/card', variant)
+    == cell('dummy/ui/card_list', card_variants)
 
     h4 Medium
 
-    - card_variants.each do |variant|
-      == cell('dummy/ui/card', variant.merge(medium: true))
+    == cell('dummy/ui/card_list', card_variants(medium: true))
 
     h4 Small
 
-    - card_variants.each do |variant|
-      == cell('dummy/ui/card', variant.merge(small: true))
+    == cell('dummy/ui/card_list', card_variants(small: true))

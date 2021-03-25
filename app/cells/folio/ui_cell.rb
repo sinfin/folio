@@ -96,7 +96,7 @@ class Folio::UiCell < Folio::ApplicationCell
     }
   end
 
-  def card_variants
+  def card_variants(opts = {})
     [
       %i[cover_placement content title],
       %i[cover_placement content],
@@ -105,8 +105,9 @@ class Folio::UiCell < Folio::ApplicationCell
       %i[content title],
       %i[content],
       %i[title],
+      %i[],
     ].map do |keys|
-      card_model.slice(*keys, :href, :button_label)
+      card_model.slice(*keys, :href, :button_label).merge(opts)
     end
   end
 end

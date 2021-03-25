@@ -65,6 +65,13 @@ $ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
   &--size-small:hover &__title
     text-decoration: none
 
+  &--size-medium,
+  &--size-medium &__container,
+  &--size-medium &__inner
+    display: flex
+    flex-direction: column
+    flex: 1 0 auto
+
   +media-breakpoint-down(sm)
     &__button
       display: flex
