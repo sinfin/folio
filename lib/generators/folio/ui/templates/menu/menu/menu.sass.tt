@@ -48,7 +48,7 @@
       background: linear-gradient(90deg, rgba($black, 0) 0%, rgba($black, 1) 85%)
       z-index: 2
 
-    &--theme-light &:after
+    &--theme-light:after
       background: linear-gradient(90deg, rgba($light-gray, 0) 0%, rgba($light-gray, 1) 85%)
 
     &--bound

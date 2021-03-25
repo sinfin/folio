@@ -1,5 +1,5 @@
 .<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images
-  .container
+  .container-fluid
     - if model.same_width
       .row.<%= classname_prefix %>-atom-images__row
         - model.image_placements.each do |placement|

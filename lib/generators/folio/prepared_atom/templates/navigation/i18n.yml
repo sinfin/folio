@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/atom/navigation: 
+    models:
+      dummy/atom/navigation: Navigation
+cs:
+  activerecord:
+    attributes:
+      dummy/atom/navigation: 
+    models:
+      dummy/atom/navigation: Menu
