@@ -117,6 +117,15 @@ $mobile-h4-line-height: 24 / 17
 $mobile-h4-margin-top: 2 * $spacer
 $mobile-h4-margin-bottom: $spacer
 
+$h5-font-size: px-to-rem(18px)
+$h5-line-height: 22 / 18
+$h5-margin-top: 2 * $spacer
+$h5-margin-bottom: $spacer
+$mobile-h5-font-size: mobile-px-to-rem(16px)
+$mobile-h5-line-height: 19 / 16
+$mobile-h5-margin-top: 2 * $spacer
+$mobile-h5-margin-bottom: $spacer
+
 $lead-font-size: $font-size-lg
 $lead-font-weight: $font-weight-normal
 

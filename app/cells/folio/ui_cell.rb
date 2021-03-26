@@ -14,6 +14,10 @@ class Folio::UiCell < Folio::ApplicationCell
     end
   end
 
+  def typo_titles
+    %w[h1 h2 h3 h4 h5]
+  end
+
   def main_colors
     %w[blue primary]
   end
