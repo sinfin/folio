@@ -145,9 +145,7 @@ Folio::Engine.routes.draw do
   get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
   get "/folio/ui/atoms", to: "ui#atoms"
 
-  scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
-    get "/download/:hash_id/*name", to: "downloads#show",
-                                    as: :download,
-                                    constraints: { name: /.*/ }
-  end
+  get "/download/:hash_id/*name", to: "downloads#show",
+                                  as: :download,
+                                  constraints: { name: /.*/ }
 end

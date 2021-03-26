@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+# https://stackoverflow.com/a/44002150/910868
+require Rails.root.join("app/models/<%= global_namespace_path %>")

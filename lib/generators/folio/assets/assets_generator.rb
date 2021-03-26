@@ -42,6 +42,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
       "app/cells/folio/console/atoms/previews/main_app.coffee",
       "bin/icons",
+      "package.json",
     ].each { |f| template "#{f}.tt", f }
   end
 
@@ -57,6 +58,14 @@ class Folio::AssetsGenerator < Rails::Generators::Base
         path = full_path.to_s.gsub(base, "")
         copy_file path, path
       end
+    end
+  end
+
+  def chmod_files
+    [
+      "bin/icons",
+    ].each do |file|
+      ::File.chmod(0775, Rails.root.join(file))
     end
   end
 end

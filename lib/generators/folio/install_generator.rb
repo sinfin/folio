@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
+
 module Folio
   module Generators
     class InstallGenerator < Rails::Generators::Base
+      include ::Folio::GeneratorBase
+
       desc "Creates folio initializer, routes and copies locale files to your application."
 
       source_root Folio::Engine.root.join("lib/templates")
@@ -24,16 +28,12 @@ module Folio
         gem "premailer", github: "sinfin/premailer"
         gem "premailer-rails"
         gem "rubyzip"
-        gem "rack-mini-profiler"
         gem "uglifier", ">= 1.3.0"
+        gem "faker", require: false
 
         gem_group :test do
           gem "factory_bot"
           gem "rack_session_access"
-        end
-
-        gem_group :development, :test do
-          gem "faker", require: false
         end
 
         gem_group :development do
@@ -58,6 +58,7 @@ module Folio
           gem "capistrano-rails", require: false
           gem "capistrano-sinfin", git: "git@bitbucket.org:Sinfin/capistrano-sinfin.git", branch: "master"
           gem "capistrano-serviceman", github: "Sinfin/capistrano-serviceman", branch: "master"
+          gem "capistrano3-puma", "~> 4.0.0"
 
           gem "better_errors"
           gem "binding_of_caller"
@@ -80,36 +81,36 @@ module Folio
       def copy_templates
         [
           ".env.sample",
-          "app/views/layouts/folio/application.slim",
-          "config/database.yml",
-          "config/locales/activerecord.cs.yml",
-          "config/locales/activerecord.en.yml",
-          "config/schedule.rb",
-          "config/sitemap.rb",
-          "db/seeds.rb",
-          "vendor/assets/bower.json",
-        ].each { |f| template "#{f}.erb", f }
-
-        [
-          "app/controllers/anti_cache_controller.rb",
           "app/controllers/application_controller.rb",
           "app/controllers/errors_controller.rb",
           "app/controllers/home_controller.rb",
           "app/controllers/pages_controller.rb",
           "app/lib/application_cell.rb",
           "app/models/application_record.rb",
+          "app/models/global_namespace_path.rb",
+          "app/models/global_namespace_path/page/homepage.rb",
+          "app/views/layouts/folio/application.slim",
+          "config/database.yml",
           "config/initializers/assets.rb",
           "config/initializers/folio.rb",
+          "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
+          "config/locales/activerecord.cs.yml",
+          "config/locales/activerecord.en.yml",
           "config/routes.rb",
+          "config/schedule.rb",
+          "config/sitemap.rb",
+          "data/seed/pages/homepage.yml",
+          "db/seeds.rb",
+          "lib/tasks/developer_tools.rake",
           "public/maintenance.html",
-          "test/controllers/anti_cache_controller_test.rb",
           "test/factories.rb",
           "test/test_helper.rb",
-        ].each { |f| template "#{f}.tt", f }
+          "vendor/assets/bower.json",
+        ].each { |f| template "#{f}.tt", f.gsub("global_namespace_path", global_namespace_path) }
 
-        template ".env.sample.erb", ".env"
+        template ".env.sample.tt", ".env"
       end
 
       def copy_files
@@ -121,7 +122,6 @@ module Folio
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
-          "app/views/home/ui.slim",
           "bin/bower",
           "config/secrets.yml",
           "data/email_templates_data.yml",

@@ -58,7 +58,7 @@ class Folio::UiCell < Folio::ApplicationCell
   end
 
   def icons
-    Dummy::Ui::IconCell::ICONS.keys
+    "#{global_namespace}::Ui::IconCell".constantize::ICONS.keys
   rescue StandardError
   end
 

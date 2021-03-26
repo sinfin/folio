@@ -1,0 +1,66 @@
+# frozen_string_literal: true
+
+if Rails.env.development?
+  ActiveJob::Base.queue_adapter = :inline
+end
+
+def destroy_all(klass)
+  puts "Destroying #{klass}"
+  klass.destroy_all
+  puts "Destroyed #{klass}"
+end
+
+def force_destroy(klass)
+  puts "Destroying #{klass}"
+  klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+  puts "Destroyed #{klass}"
+end
+
+destroy_all Folio::Account
+destroy_all Folio::Atom::Base
+destroy_all Folio::File
+force_destroy Folio::Menu
+force_destroy Folio::Page
+force_destroy Folio::Site
+
+def unsplash_pic(square = false)
+  puts "Creating unsplash pic"
+
+  image = Folio::Image.new
+  image.file_url = 'https://unsplash.it/2560/#{square ? 2560 : 1440}/?random'
+  image.tag_list = "unsplash, seed"
+  image.save!
+
+  puts "Created unsplash pic"
+
+  image
+end
+
+if Rails.env.development?
+  puts "Creating test@test.test account"
+
+  Folio::Account.create!(email: 'test@test.test',
+                         password: 'test@test.test',
+                         role: :superuser,
+                         first_name: 'Test',
+                         last_name: 'Dummy')
+
+  puts "Created test@test.test account"
+end
+
+puts "Creating Folio::Site"
+site = Folio::Site.new(title: '<%= project_name %>',
+                       domain: '<%= project_name %>.localhost',
+                       locale: 'cs',
+                       locales: ['cs'],
+                       email: 'foo@bar.baz',
+                       phone: '+420 123 456 789',
+                       social_links: {
+                         facebook: 'https://www.facebook.com/<%= project_name %>/',
+                         google_map: 'https://www.google.com/maps',
+                       },
+                       address: "foo 123\n123 45 bar")
+site.save!
+puts "Created Folio::Site"
+
+Rake::Task["developer_tools:seed_singleton_pages"].invoke

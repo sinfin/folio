@@ -186,7 +186,7 @@
       - if icons.present?
         - icons.each do |key|
           span.mr-3 title=key
-            == cell('dummy/ui/icon', key)
+            == cell("#{global_namespace_path}/ui/icon", key)
       - else
         ' No icons found in app/assets/stylesheets/_icons.scss
 
@@ -235,12 +235,12 @@
 
     h4 Large
 
-    == cell('dummy/ui/card_list', card_variants)
+    == cell("#{global_namespace_path}/ui/card_list", card_variants)
 
     h4 Medium
 
-    == cell('dummy/ui/card_list', card_variants(medium: true))
+    == cell("#{global_namespace_path}/ui/card_list", card_variants(medium: true))
 
     h4 Small
 
-    == cell('dummy/ui/card_list', card_variants(small: true))
+    == cell("#{global_namespace_path}/ui/card_list", card_variants(small: true))
