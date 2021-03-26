@@ -101,6 +101,7 @@ module Folio
           "config/routes.rb",
           "config/schedule.rb",
           "config/sitemap.rb",
+          "data/atoms_showcase.yml"
           "data/seed/pages/homepage.yml",
           "db/seeds.rb",
           "lib/tasks/developer_tools.rake",

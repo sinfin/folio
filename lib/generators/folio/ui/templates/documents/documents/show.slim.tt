@@ -2,7 +2,6 @@
   - if options[:title].present?
     .h4.mt-0 = cstypo(options[:title])
 
-
   ul.<%= classname_prefix %>-ui-documents__ul
     - model.each do |placement|
       - doc = placement.file

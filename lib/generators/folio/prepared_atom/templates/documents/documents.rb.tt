@@ -13,7 +13,7 @@ class <%= global_namespace %>::Atom::Documents < Folio::Atom::Base
             presence: true
 
   def self.molecule_cell_name
-    "dummy/molecule/documents"
+    "<%= molecule_cell_name %>"
   end
 
   def self.console_icon

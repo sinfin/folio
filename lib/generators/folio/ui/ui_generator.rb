@@ -7,28 +7,17 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
   source_root File.expand_path("templates", __dir__)
 
-  CELLS = {
-    disclaimer: {},
-    flash: {},
-    footer: {},
-    header: {},
-    ico: {},
-    icon: {},
-    menu: {},
-    navigation: {},
-    pagy: {},
-    tabs: {},
-  }
-
   class UnknownCell < StandardError; end
 
   def create
+    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates")).reject { |name| name.starts_with?(".") }
+
     if name == "all"
-      keys = CELLS.keys
-    elsif CELLS.keys.include?(name.to_sym)
+      keys = allowed_keys
+    elsif allowed_keys.include?(name)
       keys = [name.to_sym]
     else
-      raise UnknownCell, "Unknown cell #{name}. Allowed keys: #{CELLS.keys.join(', ')}"
+      raise UnknownCell, "Unknown cell #{name}. Allowed keys: #{allowed_keys.keys.join(', ')}"
     end
 
     base = ::Folio::Engine.root.join("lib/generators/folio/ui/templates/").to_s
@@ -47,6 +36,11 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
       Dir["#{base}#{key}/#{key}/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
         template relative_path, "app/cells/#{global_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+      end
+
+      Dir["#{base}#{key}/models/**/*.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, relative_path.delete_prefix("#{key}/models/").gsub("global_namespace_path", global_namespace_path).delete_suffix(".tt")
       end
     end
   end

@@ -217,7 +217,10 @@
     h3 Navigation
 
     - if "#{global_namespace}::Ui::Navigation".safe_constantize
-      == cell("#{global_namespace_path}/ui/navigation", navigation_model)
+      - if navigation_model
+        == cell("#{global_namespace_path}/ui/navigation", navigation_model)
+      - else
+        p.text-danger Missing menu - create a Folio::Menu to preview
     - else
       = missing_cell("navigation")
 

@@ -1,0 +1,62 @@
+- type: <%= global_namespace %>::Atom::Text
+  content: true
+
+- type: <%= global_namespace %>::Atom::Text
+  content: true
+  highlight: 'gray'
+  _showcase: "highlight: gray"
+
+- type: <%= global_namespace %>::Atom::Text
+  content: true
+  highlight: 'red'
+  _showcase: "highlight: red"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H1
+  _showcase: "tag: H1"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H2
+  _showcase: "tag: H2"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H3
+  _showcase: "tag: H3"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H4
+  _showcase: "tag: H4"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H5
+  _showcase: "tag: H5"
+
+- type: <%= global_namespace %>::Atom::Navigation
+  menu: true
+
+- type: <%= global_namespace %>::Atom::Perex
+  text: true
+
+- type: <%= global_namespace %>::Atom::Quotation
+  text: true
+
+- type: <%= global_namespace %>::Atom::TextWithImage
+  content: long
+  cover: true
+
+- type: <%= global_namespace %>::Atom::Documents
+  documents: true
+  title: "Documents"
+
+- type: <%= global_namespace %>::Atom::Documents
+  documents: true
+  title: "Other documents"
+
+- type: <%= global_namespace %>::Atom::Documents
+  documents: true
+  title: "More documents"

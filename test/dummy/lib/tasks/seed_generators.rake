@@ -115,6 +115,7 @@ class Dummy::SeedGenerator
          .gsub(".dAtom", ".<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= global_namespace_path %>/ui")
          .gsub(%r{dummy/atom/\w+}, "<%= atom_cell_name %>")
+         .gsub(%r{dummy/molecule/\w+}, "<%= molecule_cell_name %>")
     end
 
     def copy_file(from, to)

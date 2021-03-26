@@ -75,14 +75,20 @@ module Folio::GeneratorBase
         end
 
         # sort keys alphabetically
-        sorted = hash[locale.to_s]["activerecord"]["models"].sort_by { |key, _v| key }
-        hash[locale.to_s]["activerecord"]["models"] = Hash[ sorted ]
+        if hash[locale.to_s]["activerecord"]["models"]
+          sorted = hash[locale.to_s]["activerecord"]["models"].sort_by { |key, _v| key }
+          hash[locale.to_s]["activerecord"]["models"] = Hash[ sorted ]
+        end
 
-        sorted = hash[locale.to_s]["activerecord"]["attributes"].sort_by { |key, _v| key }
-        hash[locale.to_s]["activerecord"]["attributes"] = Hash[ sorted ]
+        if hash[locale.to_s]["activerecord"]["attributes"]
+          sorted = hash[locale.to_s]["activerecord"]["attributes"].sort_by { |key, _v| key }
+          hash[locale.to_s]["activerecord"]["attributes"] = Hash[ sorted ]
+        end
 
-        sorted = hash[locale.to_s]["activerecord"].sort_by { |key, _v| key }
-        hash[locale.to_s]["activerecord"] = Hash[ sorted ]
+        if hash[locale.to_s]["activerecord"]
+          sorted = hash[locale.to_s]["activerecord"].sort_by { |key, _v| key }
+          hash[locale.to_s]["activerecord"] = Hash[ sorted ]
+        end
 
         File.open(path, "w") do |f|
           f.write hash.to_yaml(line_width: -1)

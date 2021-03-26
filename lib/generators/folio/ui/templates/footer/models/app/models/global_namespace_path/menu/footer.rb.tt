@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+class <%= global_namespace %>::Menu::Footer < Folio::Menu
+  include Folio::Singleton
+end
