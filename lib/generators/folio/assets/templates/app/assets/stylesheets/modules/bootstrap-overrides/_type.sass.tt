@@ -40,7 +40,8 @@ small,
 .small
   +font-size-sm
 
-.font-size-lg
+.font-size-lg,
+.lead
   +font-size-lg
 
 ul

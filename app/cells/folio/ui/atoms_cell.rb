@@ -20,11 +20,6 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
     images = Folio::Image.tagged_with("unsplash").to_a
     documents = Folio::Document.limit(5).to_a
-    # articles = Mmspektrum::Article.ordered.limit(3).to_a
-    # issue = Mmspektrum::Issue.ordered.offset(5).first
-    # serial = Mmspektrum::Serial.joins(:cover_placement).first
-    # serial ||= Mmspektrum::Serial.published.last
-    # menu = Mmspektrum::Menu::Navigation.last
 
     sorted_yaml = YAML.load_file(self.class.data_path).sort_by do |data|
       klass = data["type"].constantize

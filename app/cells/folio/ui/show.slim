@@ -16,7 +16,7 @@
           - main_colors.each do |color|
             div[
               class="bg-#{color}"
-              style="width: 210px; height: 70px; margin: 0 10px 10px 0"
+              style="width: 210px; height: 70px; margin: 0 10px 10px 0; #{color == 'white' ? 'box-shadow: 0 0 0 2px black' : '' }"
               title=color
             ]
 
@@ -27,7 +27,7 @@
           - additional_colors.each do |color|
             div[
               class="bg-#{color}"
-              style="width: 70px; height: 70px; margin: 0 10px 10px 0"
+              style="width: 70px; height: 70px; margin: 0 10px 10px 0; #{color == 'white' ? 'box-shadow: 0 0 0 2px black' : '' }"
               title=color
             ]
 

@@ -178,7 +178,7 @@ $input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-s
 $input-height-sm: $input-height-inner-sm + $input-height-border
 
 $input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2
-$input-height-lg: $input-height-inner + $input-height-border
+$input-height-lg: $input-height-inner-lg + $input-height-border
 
 $btn-disabled-opacity: 0.15
 
@@ -197,6 +197,6 @@ $hr-border-color: $border-color
 
 $modal-inner-padding: px-to-rem(30px)
 
-$alert-bg-level: 0;
-$alert-border-level: 0;
-$alert-color-level: 0;
+$alert-bg-level: 0
+$alert-border-level: 0
+$alert-color-level: 0
