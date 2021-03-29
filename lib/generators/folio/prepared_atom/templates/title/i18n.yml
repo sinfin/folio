@@ -2,7 +2,7 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/title:
+      global_namespace_path/atom/title:
         tag: Tag
         tag/H1: H1
         tag/H2: H2
@@ -10,11 +10,11 @@ en:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/title: Title
+      global_namespace_path/atom/title: Title
 cs:
   activerecord:
     attributes:
-      dummy/atom/title:
+      global_namespace_path/atom/title:
         tag: Tag
         tag/H1: H1
         tag/H2: H2
@@ -22,4 +22,4 @@ cs:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/title: Nadpis
+      global_namespace_path/atom/title: Nadpis

@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/navigation: 
+      global_namespace_path/atom/navigation: 
     models:
-      dummy/atom/navigation: Navigation
+      global_namespace_path/atom/navigation: Navigation
 cs:
   activerecord:
     attributes:
-      dummy/atom/navigation: 
+      global_namespace_path/atom/navigation: 
     models:
-      dummy/atom/navigation: Menu
+      global_namespace_path/atom/navigation: Menu

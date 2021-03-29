@@ -50,7 +50,8 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
       i18n_path = "#{base}#{key}/i18n.yml"
       if File.exist?(i18n_path)
-        add_atom_to_i18n_ymls(YAML.load_file(i18n_path))
+        raw_yaml = File.read(i18n_path).gsub("global_namespace_path", global_namespace_path)
+        add_atom_to_i18n_ymls(YAML.load(raw_yaml))
       end
     end
   end

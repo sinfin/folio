@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/quotation: 
+      global_namespace_path/atom/quotation: 
     models:
-      dummy/atom/quotation: Quotation
+      global_namespace_path/atom/quotation: Quotation
 cs:
   activerecord:
     attributes:
-      dummy/atom/quotation: 
+      global_namespace_path/atom/quotation: 
     models:
-      dummy/atom/quotation: Zvýrazněná citace
+      global_namespace_path/atom/quotation: Zvýrazněná citace

@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/perex: 
+      global_namespace_path/atom/perex: 
     models:
-      dummy/atom/perex: Perex
+      global_namespace_path/atom/perex: Perex
 cs:
   activerecord:
     attributes:
-      dummy/atom/perex: 
+      global_namespace_path/atom/perex: 
     models:
-      dummy/atom/perex: Perex
+      global_namespace_path/atom/perex: Perex

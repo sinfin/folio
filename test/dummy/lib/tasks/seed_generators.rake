@@ -63,10 +63,10 @@ class Dummy::SeedGenerator
       i18n_values[locale] = {
         "activerecord" => {
           "attributes" => {
-            "dummy/atom/#{name}" => hash[locale]["activerecord"]["attributes"]["dummy/atom/#{name}"],
+            "global_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["attributes"]["dummy/atom/#{name}"],
           },
           "models" => {
-            "dummy/atom/#{name}" => hash[locale]["activerecord"]["models"]["dummy/atom/#{name}"],
+            "global_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["models"]["dummy/atom/#{name}"],
           },
         }
       }

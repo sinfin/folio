@@ -62,8 +62,10 @@ module Folio::GeneratorBase
           }
         end
 
-        if new_hash[locale.to_s]["activerecord"]["attributes"][i18n_key].blank?
-          new_hash[locale.to_s]["activerecord"].delete("attributes")
+        if new_hash[locale.to_s]["activerecord"]["attributes"]
+          if new_hash[locale.to_s]["activerecord"]["attributes"][i18n_key].blank?
+            new_hash[locale.to_s]["activerecord"].delete("attributes")
+          end
         end
 
         if File.exist?(path)
