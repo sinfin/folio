@@ -18,6 +18,47 @@ class Folio::PageSingletonGenerator < Rails::Generators::NamedBase
     end
   end
 
+  def add_to_i18n
+    I18n.available_locales.each do |locale|
+      path = Rails.root.join("config/locales/page.#{locale}.yml")
+      i18n_key = "#{global_namespace_path}/page/#{name}"
+      page_label = locale == :cs ? "Stránka" : "Page"
+
+      new_hash = {
+        locale.to_s => {
+          "activerecord" => {
+            "models" => {
+              i18n_key => "#{page_label} / #{class_name}"
+            }
+          }
+        }
+      }
+
+      if File.exist?(path)
+        hash = new_hash.deep_merge(YAML.load_file(path))
+        puts "Updating #{path}"
+      else
+        hash = new_hash
+        puts "Creating #{path}"
+      end
+
+      # sort keys alphabetically
+      if hash[locale.to_s]["activerecord"]["models"]
+        sorted = hash[locale.to_s]["activerecord"]["models"].sort_by { |key, _v| key }
+        hash[locale.to_s]["activerecord"]["models"] = Hash[ sorted ]
+      end
+
+      if hash[locale.to_s]["activerecord"]
+        sorted = hash[locale.to_s]["activerecord"].sort_by { |key, _v| key }
+        hash[locale.to_s]["activerecord"] = Hash[ sorted ]
+      end
+
+      File.open(path, "w") do |f|
+        f.write hash.to_yaml(line_width: -1)
+      end
+    end
+  end
+
   private
     def file_name
       name.underscore
