@@ -3,6 +3,8 @@
   color: $white
   margin-bottom: $grid-gutter-width
   flex: 0 0 auto
+  z-index: 3
+  position: relative
 
   &__text-logo
     margin: 0 auto 0 0
