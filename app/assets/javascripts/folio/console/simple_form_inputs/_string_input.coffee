@@ -140,7 +140,7 @@ $(document).on 'click', '.f-c-content-templates-dropdown__item', (e) ->
     .find(CONTENT_TEMPLATES_SELECTOR)
     .each (i, el) ->
       if data[i]
-        $(el).val(data[i])
+        $(el).val(data[i]).trigger('change')
         el.dispatchEvent(new Event('autosize:update')) if el.dispatchEvent
 
 $(document)
