@@ -139,7 +139,9 @@ $(document).on 'click', '.f-c-content-templates-dropdown__item', (e) ->
     .closest('.form-group, .f-c-translated-inputs')
     .find(CONTENT_TEMPLATES_SELECTOR)
     .each (i, el) ->
-      $(el).val(data[i]) if data[i]
+      if data[i]
+        $(el).val(data[i])
+        el.dispatchEvent(new Event('autosize:update')) if el.dispatchEvent
 
 $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->
