@@ -172,6 +172,8 @@ class Folio::ImageCell < Folio::ApplicationCell
       end
     end
 
+    styles << options[:style] if options[:style].present?
+
     styles.join(";")
   end
 
