@@ -26,7 +26,7 @@ else
         width: r.width
         position: 'absolute'
 
-  handleWraps = ($wraps) ->
+  handleWraps = ->
     $('.d-atom-images__dynamic').each ->
       $wrap = $(this)
       alignWrap($wrap)
@@ -34,15 +34,21 @@ else
 
   debouncedHandleWraps = window.folioDebounce(handleWraps, 250)
 
-  $(document)
-    .on 'turbolinks:load', ->
-      $wraps = $('.d-atom-images__dynamic')
-      return unless $wraps.length
-      bound = true
-      handleWraps($wraps)
+  onLoad = ->
+    return unless $('.d-atom-images__dynamic').length
+    handleWraps()
+    unless bound
       $(window).on 'resize.dAtomImages orientationchange.dAtomImages', debouncedHandleWraps
+      bound = true
 
-    .on 'turbolinks:before-render', ->
-      return unless bound
-      bound = false
-      $(window).off 'resize.dAtomImages orientationchange.dAtomImages', debouncedHandleWraps
+  if Turbolinks?
+    $(document)
+      .on 'turbolinks:load', onLoad
+
+      .on 'turbolinks:before-render', ->
+        return unless bound
+        bound = false
+        $(window).off 'resize.aAtomImages orientationchange.aAtomImages', debouncedHandleWraps
+  else
+    # atom previews in /console
+    $(document).on 'folioConsoleReplacedHtml', onLoad
