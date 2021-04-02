@@ -66,6 +66,12 @@ Rails.application.config.folio_console_sidebar_link_class_names = [
   ....
 ```
 
+## Tips and Tricks
+- Check [Wiki](https://github.com/sinfin/folio/wiki)
+
+- If  class responds to `:console_sidebar_count` , such number is displayed in Folio console sidebar
+- If aasm event have option `confirm`, confirmation alert is displayed in change (in Foio console). You can pass `true` (defaults to `t("folio.console.confirmation")`) or string ` event :pay, confirm: "Do You really want to pay this" do ... end`
+
 ## Contributing
 
 Clone & setup
