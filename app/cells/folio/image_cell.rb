@@ -153,7 +153,11 @@ class Folio::ImageCell < Folio::ApplicationCell
           if file.respond_to?(:file_width)
             max_width_i = max_width.to_i
             if max_width_i > 0
-              max_width = [max_width_i, file.file_width].min
+              if file.file_width
+                max_width = [max_width_i, file.file_width].min
+              else
+                max_width = max_width_i
+              end
             end
           end
 
