@@ -35,6 +35,10 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  if ENV["DEV_QUEUE_ADAPTER"].present?
+    config.active_job.queue_adapter = ENV["DEV_QUEUE_ADAPTER"]
+  end
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
