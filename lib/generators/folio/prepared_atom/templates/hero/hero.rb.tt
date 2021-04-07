@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Hero < Folio::Atom::Base
+class <%= global_namespace %>::Atom::Hero < Folio::Atom::Base
   ATTACHMENTS = %i[cover]
 
   STRUCTURE = {
@@ -19,7 +19,7 @@ class Dummy::Atom::Hero < Folio::Atom::Base
   validate :validate_urls_if_labels_are_present
 
   def self.molecule_cell_name
-    "dummy/molecule/hero"
+    "<%= molecule_cell_name %>"
   end
 
   def self.console_icon

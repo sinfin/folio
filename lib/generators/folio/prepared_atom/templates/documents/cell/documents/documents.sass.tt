@@ -1,4 +1,4 @@
-.d-molecule-documents
+.<%= classname_prefix %>-atom-documents
   &__inner
     column-gap: 0
 
