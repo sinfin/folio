@@ -84,7 +84,7 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
   end
 
   def container_class_name_for_atom(atom)
-    if atom.model_name.human.include?("Homepage")
+    if atom.class.console_insert_row > 1
       "px-h"
     else
       "container-fluid"

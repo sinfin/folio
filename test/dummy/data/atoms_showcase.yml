@@ -60,3 +60,42 @@
 - type: Dummy::Atom::Documents
   documents: true
   title: "More documents"
+
+- type: Dummy::Atom::Image
+  cover: true
+
+- type: Dummy::Atom::Image
+  cover: true
+  title: true
+
+- type: Dummy::Atom::Hero
+  cover: true
+  title: "Title"
+  perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  primary_button_url: "/"
+  primary_button_label: "Button label"
+
+- type: Dummy::Atom::Hero
+  cover: true
+  perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  secondary_button_url: "/"
+  secondary_button_label: "Button label"
+
+- type: Dummy::Atom::Person
+  cover: true
+  name: "Lorem ipsum"
+  description: |
+    lorem
+    ipsum
+  phone: "+420 123 123 132"
+  email: "email@email.email"
+
+- type: Dummy::Atom::Person
+  name: "Lorem ipsum"
+  phone: "+420 123 123 132"
+  email: "email@email.email"
+
+- type: Dummy::Atom::Person
+  cover: true
+  name: "Lorem ipsum"
+  email: "email@email.email"
