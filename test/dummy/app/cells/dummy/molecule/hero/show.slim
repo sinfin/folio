@@ -1,4 +1,4 @@
-.d-molecule.d-molecule-hero.d-molecule-hero--loading
+.d-molecule.d-molecule-hero
   .d-molecule-hero__slider.d-molecule-hero__slider--loading[
     class=(model.size > 1 ? 'd-molecule-hero__slider--has-more' : nil)
   ]
@@ -41,3 +41,12 @@
                       href=atom.secondary_button_url
                     ]
                       = atom.secondary_button_label
+
+  .d-molecule-hero__arrow.d-molecule-hero__arrow--left
+    = icon(:chevron_right, height: 36)
+
+  .d-molecule-hero__arrow.d-molecule-hero__arrow--right
+    = icon(:chevron_right, height: 36)
+
+  .d-molecule-hero__dots
+    .container-fluid.d-molecule-hero__dots-container

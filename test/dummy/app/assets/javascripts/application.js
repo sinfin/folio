@@ -2,6 +2,7 @@
 //= require rails-ujs
 //= require turbolinks
 //= require justified-layout
+//= require slick-carousel/slick/slick.min
 
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
@@ -18,3 +19,5 @@
 //= require dummy/ui/flash/flash
 //= require dummy/ui/menu/menu
 //= require dummy/ui/navigation/navigation
+
+//= require dummy/molecule/hero/hero

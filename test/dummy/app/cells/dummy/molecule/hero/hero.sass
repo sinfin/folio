@@ -1,4 +1,6 @@
 .d-molecule-hero
+  position: relative
+
   &__atom--color-light,
   &__atom--color-light &__title
     color: $white
@@ -32,6 +34,10 @@
   &__slider--has-more &__content
     padding-bottom: 80px
 
+  &__slider
+    position: relative
+    z-index: 1
+
   &__buttons
     display: flex
     flex-wrap: wrap
@@ -62,6 +68,64 @@
     z-index: 4
     position: relative
 
+  &__arrow
+    position: absolute
+    top: 0
+    bottom: 0
+    width: 45px
+    display: flex !important
+    align-items: center
+    justify-content: center
+    z-index: 2
+    color: $white
+    cursor: pointer
+
+  &__arrow--left
+    transform: rotate(180deg)
+    left: 0
+
+  &__arrow--right
+    right: 0
+
+  &__dots
+    position: absolute
+    bottom: 1.5 * $spacer
+    left: 0
+    right: 0
+    z-index: 2
+
+  &__dots-inner
+    display: flex
+    margin-left: -8px
+    margin-right: -8px
+
+    li
+      width: 16px
+      height: 16px
+      flex: 0 0 auto
+      border-radius: 100%
+      background: rgba($white, 0.3)
+      cursor: pointer
+      margin: 8px
+
+    .slick-active
+      background: rgba($white, 1)
+
+    button
+      display: none
+
+  .slick-track
+    display: flex
+    align-items: stretch
+
+    &::before,
+    &::after
+      display: none
+
+  .slick-slide
+    height: auto
+    float: none
+
   +media-breakpoint-up(lg)
     &__content
       min-height: 500px
@@ -69,12 +133,20 @@
       align-items: center
       padding-top: 80px
 
+  +media-breakpoint-only(lg)
+    &__arrow
+      width: 30px
+
   +media-breakpoint-down(md)
     &__content
       padding-top: $grid-gutter-width
 
+    &__arrow
+      display: none !important
+
   +media-breakpoint-down(xs)
-    &__container
+    &__container,
+    &__dots-container
       padding-left: $grid-gutter-width
       padding-right: $grid-gutter-width
 
