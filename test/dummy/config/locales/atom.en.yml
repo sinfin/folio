@@ -2,6 +2,14 @@
 en:
   activerecord:
     attributes:
+      dummy/atom/hero:
+        color: Text color
+        color/light: Light
+        color/dark: Dark
+        primary_button_label: Primary button text
+        primary_button_url: Primary button link
+        secondary_button_label: Secondary button text
+        secondary_button_url: Secondary button link
       dummy/atom/images:
         same_width: Align to grid
         title: Caption under the gallery
@@ -17,20 +25,13 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
-      dummy/atom/hero:
-        color: Text color
-        color/light: Light
-        color/dark: Dark
-        primary_button_label: Primary button text
-        primary_button_url: Primary button link
-        secondary_button_label: Secondary button text
-        secondary_button_url: Secondary button link
     models:
       dummy/atom/documents: Documents (list)
       dummy/atom/hero: Card (big cover, carousel)
       dummy/atom/images: Images (gallery)
       dummy/atom/navigation: Navigation
       dummy/atom/perex: Perex
+      dummy/atom/person: Person
       dummy/atom/quotation: Quotation
       dummy/atom/text: Text (paragraphs, tables, etc.)
       dummy/atom/text_with_image: Text with image

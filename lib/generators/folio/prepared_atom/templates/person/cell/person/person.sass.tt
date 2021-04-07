@@ -1,0 +1,27 @@
+.<%= classname_prefix %>-atom-person
+  &__atom:nth-child(n + 4)
+    margin-top: $grid-gutter-width
+
+  +media-breakpoint-up(sm)
+    &__atom-inner
+      display: flex
+
+    &__content
+      flex: 1 1 auto
+      min-width: 0
+
+    &__cover
+      max-width: 195px
+      flex: 0 0 40%
+      margin: 0 $grid-gutter-half 0 0
+
+  +media-breakpoint-down(sm)
+    &__atom:nth-child(n + 3)
+      margin-top: $grid-gutter-width
+
+  +media-breakpoint-down(xs)
+    &__cover
+      margin: 0 0 $grid-gutter-half
+
+    &__atom:nth-child(n + 2)
+      margin-top: $grid-gutter-width
