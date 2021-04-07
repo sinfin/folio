@@ -28,6 +28,7 @@ en:
     models:
       dummy/atom/documents: Documents (list)
       dummy/atom/hero: Card (big cover, carousel)
+      dummy/atom/image: Image
       dummy/atom/images: Images (gallery)
       dummy/atom/navigation: Navigation
       dummy/atom/perex: Perex

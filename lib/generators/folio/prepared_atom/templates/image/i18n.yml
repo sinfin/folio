@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/image: 
+    models:
+      global_namespace_path/atom/image: Image
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/image: 
+    models:
+      global_namespace_path/atom/image: Obrázek

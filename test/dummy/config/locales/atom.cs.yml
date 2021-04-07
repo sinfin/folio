@@ -28,6 +28,7 @@ cs:
     models:
       dummy/atom/documents: Soubory (výpis)
       dummy/atom/hero: Karta s odkazem (velký cover, karusel)
+      dummy/atom/image: Obrázek
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/navigation: Menu
       dummy/atom/perex: Perex
