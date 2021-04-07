@@ -33,11 +33,18 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
       attrs = data.dup
 
       attrs.delete("_showcase")
-      attrs["cover"] = images.sample if attrs["cover"]
+
+      if attrs["cover"]
+        if attrs["cover"].is_a?(Numeric)
+          attrs["cover"] = images[attrs["cover"]]
+        end
+        attrs["cover"] ||= images.sample
+      end
+
       attrs["documents"] = documents if attrs["documents"]
+
       if attrs["images"]
-        images.shuffle
-        attrs["images"] = images
+        attrs["images"] = images.shuffle
       end
 
       if attrs["article"]

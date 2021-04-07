@@ -69,20 +69,20 @@
   title: true
 
 - type: <%= global_namespace %>::Atom::Hero
-  cover: true
+  cover: 0
   title: "Title"
   perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
   primary_button_url: "/"
   primary_button_label: "Button label"
 
 - type: <%= global_namespace %>::Atom::Hero
-  cover: true
+  cover: 1
   perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
   secondary_button_url: "/"
   secondary_button_label: "Button label"
 
 - type: <%= global_namespace %>::Atom::Person
-  cover: true
+  cover: 0
   name: "Lorem ipsum"
   description: |
     lorem
@@ -96,6 +96,6 @@
   email: "email@email.email"
 
 - type: <%= global_namespace %>::Atom::Person
-  cover: true
+  cover: 1
   name: "Lorem ipsum"
   email: "email@email.email"
