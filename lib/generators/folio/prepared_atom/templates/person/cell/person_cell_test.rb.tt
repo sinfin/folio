@@ -9,6 +9,6 @@ class <%= global_namespace %>::Molecule::PersonCellTest < Cell::TestCase
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)
-    assert_equal 2, html.find_all(".<%= classname_prefix %>-atom-person__atom").size
+    assert_equal 2, html.find_all(".<%= classname_prefix %>-molecule-person__atom").size
   end
 end

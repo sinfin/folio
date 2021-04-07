@@ -27,7 +27,7 @@ module Folio::GeneratorBase
     end
 
     def molecule_class_name
-      "#{classname_prefix}-molecule-#{atom_name}"
+      "#{classname_prefix}-molecule-#{dashed_resource_name}"
     end
 
     def molecule_cell_name

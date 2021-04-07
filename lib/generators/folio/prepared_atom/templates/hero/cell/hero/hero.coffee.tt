@@ -1,5 +1,5 @@
 bindSlick = ->
-  $('.<%= classname_prefix %>-atom-hero__slider')
+  $('.<%= classname_prefix %>-molecule-hero__slider')
     .each ->
       $this = $(this)
 
@@ -10,24 +10,24 @@ bindSlick = ->
             instance.load(this)
 
       $this
-        .removeClass('<%= classname_prefix %>-atom-hero__slider--loading')
-        .addClass('<%= classname_prefix %>-atom-hero__slider--slick')
+        .removeClass('<%= classname_prefix %>-molecule-hero__slider--loading')
+        .addClass('<%= classname_prefix %>-molecule-hero__slider--slick')
         .slick
           arrows: true
           dots: true
           infinite: true
           slidesToShow: 1
           slidesToScroll: 1
-          prevArrow: $this.siblings('.<%= classname_prefix %>-atom-hero__arrow--left')
-          nextArrow: $this.siblings('.<%= classname_prefix %>-atom-hero__arrow--right')
-          appendDots: $this.siblings('.<%= classname_prefix %>-atom-hero__dots').find('.<%= classname_prefix %>-atom-hero__dots-container')
-          dotsClass: '<%= classname_prefix %>-atom-hero__dots-inner'
+          prevArrow: $this.siblings('.<%= classname_prefix %>-molecule-hero__arrow--left')
+          nextArrow: $this.siblings('.<%= classname_prefix %>-molecule-hero__arrow--right')
+          appendDots: $this.siblings('.<%= classname_prefix %>-molecule-hero__dots').find('.<%= classname_prefix %>-molecule-hero__dots-container')
+          dotsClass: '<%= classname_prefix %>-molecule-hero__dots-inner'
 
 destroySlick = ($el) ->
-  $('<%= classname_prefix %>-atom-hero__slider--slick')
+  $('<%= classname_prefix %>-molecule-hero__slider--slick')
     .slick('unslick')
-    .removeClass('<%= classname_prefix %>-atom-hero__slider--slick')
-    .addClass('<%= classname_prefix %>-atom-hero__slider--loading')
+    .removeClass('<%= classname_prefix %>-molecule-hero__slider--slick')
+    .addClass('<%= classname_prefix %>-molecule-hero__slider--loading')
 
 $(document)
   .on 'turbolinks:load', bindSlick

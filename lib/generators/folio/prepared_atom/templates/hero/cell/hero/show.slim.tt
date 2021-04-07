@@ -1,52 +1,52 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-hero.mb-gg
-  .<%= classname_prefix %>-atom-hero__slider.<%= classname_prefix %>-atom-hero__slider--loading[
-    class=(model.size > 1 ? '<%= classname_prefix %>-atom-hero__slider--has-more' : nil)
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-hero.mb-gg
+  .<%= classname_prefix %>-molecule-hero__slider.<%= classname_prefix %>-molecule-hero__slider--loading[
+    class=(model.size > 1 ? '<%= classname_prefix %>-molecule-hero__slider--has-more' : nil)
   ]
     - model.each do |atom|
-      .<%= classname_prefix %>-atom-hero__atom[
-        class="<%= classname_prefix %>-atom-hero__atom--color-#{atom.color_with_fallback}"
+      .<%= classname_prefix %>-molecule-hero__atom[
+        class="<%= classname_prefix %>-molecule-hero__atom--color-#{atom.color_with_fallback}"
       ]
         - if atom.cover_placement.present?
           = image(atom.cover_placement,
                   THUMB_SIZE,
-                  class: '<%= classname_prefix %>-atom-hero__image',
+                  class: '<%= classname_prefix %>-molecule-hero__image',
                   cover: true)
 
-        .<%= classname_prefix %>-atom-hero__content
-          .<%= classname_prefix %>-atom-hero__content-inner
-            .container-fluid.<%= classname_prefix %>-atom-hero__container
+        .<%= classname_prefix %>-molecule-hero__content
+          .<%= classname_prefix %>-molecule-hero__content-inner
+            .container-fluid.<%= classname_prefix %>-molecule-hero__container
               - if atom.title.present?
-                h2.<%= classname_prefix %>-atom-hero__title.h1
+                h2.<%= classname_prefix %>-molecule-hero__title.h1
                   = cstypo atom.title
 
               - if atom.perex.present?
-                .<%= classname_prefix %>-atom-hero__perex.perex
+                .<%= classname_prefix %>-molecule-hero__perex.perex
                   = cstypo simple_format atom.perex
 
               - if atom.primary_button_label.present? || \
                    atom.secondary_button_label.present?
-                .<%= classname_prefix %>-atom-hero__buttons
+                .<%= classname_prefix %>-molecule-hero__buttons
                   - if atom.primary_button_label.present?
                     a.btn.btn-primary.btn-xs-block[
-                      class="<%= classname_prefix %>-atom-hero__button"
-                      class="<%= classname_prefix %>-atom-hero__button--primary"
+                      class="<%= classname_prefix %>-molecule-hero__button"
+                      class="<%= classname_prefix %>-molecule-hero__button--primary"
                       href=atom.primary_button_url
                     ]
                       = atom.primary_button_label
 
                   - if atom.secondary_button_label.present?
                     a.btn.btn-secondary.btn-xs-block[
-                      class="<%= classname_prefix %>-atom-hero__button"
-                      class="<%= classname_prefix %>-atom-hero__button--secondary"
+                      class="<%= classname_prefix %>-molecule-hero__button"
+                      class="<%= classname_prefix %>-molecule-hero__button--secondary"
                       href=atom.secondary_button_url
                     ]
                       = atom.secondary_button_label
 
-  .<%= classname_prefix %>-atom-hero__arrow.<%= classname_prefix %>-atom-hero__arrow--left
+  .<%= classname_prefix %>-molecule-hero__arrow.<%= classname_prefix %>-molecule-hero__arrow--left
     = icon(:chevron_right, height: 36)
 
-  .<%= classname_prefix %>-atom-hero__arrow.<%= classname_prefix %>-atom-hero__arrow--right
+  .<%= classname_prefix %>-molecule-hero__arrow.<%= classname_prefix %>-molecule-hero__arrow--right
     = icon(:chevron_right, height: 36)
 
-  .<%= classname_prefix %>-atom-hero__dots
-    .container-fluid.<%= classname_prefix %>-atom-hero__dots-container
+  .<%= classname_prefix %>-molecule-hero__dots
+    .container-fluid.<%= classname_prefix %>-molecule-hero__dots-container

@@ -111,7 +111,7 @@ class Dummy::SeedGenerator
       str.gsub("Dummy::", "<%= global_namespace %>::")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
-         .gsub("d-molecule", "<%= classname_prefix %>-atom")
+         .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub(".dAtom", ".<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= global_namespace_path %>/ui")

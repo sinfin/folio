@@ -1,15 +1,15 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-person.my-gg
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-person.my-gg
   .container-fluid
     .row
       - model.each do |atom|
-        .col-sm-6.col-lg-4.<%= classname_prefix %>-atom-person__atom
-          .<%= classname_prefix %>-atom-person__atom-inner.small
+        .col-sm-6.col-lg-4.<%= classname_prefix %>-molecule-person__atom
+          .<%= classname_prefix %>-molecule-person__atom-inner.small
             = image(atom.cover_placement,
                     THUMB_SIZE,
-                    class: '<%= classname_prefix %>-atom-person__cover',
+                    class: '<%= classname_prefix %>-molecule-person__cover',
                     lightbox: true)
 
-            .<%= classname_prefix %>-atom-person__content[
+            .<%= classname_prefix %>-molecule-person__content[
               class="<%= classname_prefix %>-rich-text"
               class="<%= classname_prefix %>-rich-text--compact"
               class="<%= classname_prefix %>-rich-text--chomp"
@@ -20,7 +20,7 @@
                 div = cstypo simple_format atom.description
 
               - if atom.email.present? || atom.phone.present?
-                .<%= classname_prefix %>-atom-person__spacer
+                .<%= classname_prefix %>-molecule-person__spacer
                   - if atom.phone.present?
                     p
                       a.m-unlink href="tel:#{atom.phone}" = atom.phone
