@@ -24,10 +24,14 @@ h3, .h3
   display: block
   margin: $h3-margin-top 0 $h3-margin-bottom
 
-h4, .h4,
+h4, .h4
+  +font-h4
+  display: block
+  margin: $headings-margin-top 0 $headings-margin-bottom
+
 h5, .h5,
 h6, .h6
-  +font-h4
+  +font-h5
   display: block
   margin: $headings-margin-top 0 $headings-margin-bottom
 
@@ -36,7 +40,8 @@ small,
 .small
   +font-size-sm
 
-.font-size-lg
+.font-size-lg,
+.lead
   +font-size-lg
 
 ul
@@ -45,3 +50,8 @@ ul
 @for $lines from 1 to 5
   .text-line-clamp-#{$lines}
     +line-clamp($lines)
+
+.d-unlink
+  +plain-hover-focus
+    text-decoration: none
+    color: inherit

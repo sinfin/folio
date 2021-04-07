@@ -60,6 +60,16 @@
     font-size: $mobile-h4-font-size
     line-height: $mobile-h4-line-height
 
+= font-h5
+  font-size: $h5-font-size
+  line-height: $h5-line-height
+  font-weight: $font-weight-bold
+  letter-spacing: 1px
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    font-size: $mobile-h5-font-size
+    line-height: $mobile-h5-line-height
+
 = line-clamp($lines)
   display: -webkit-box
   -webkit-box-orient: vertical

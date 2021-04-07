@@ -15,6 +15,12 @@
   font-size: $input-btn-font-size-lg
   min-height: $input-height-lg
 
+.btn-xs-block
+  +media-breakpoint-down(xs)
+    display: flex
+    width: 100%
+    flex: 0 0 100%
+
 %btn-primary
   background-color: $black
   border-color: $black

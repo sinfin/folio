@@ -1,0 +1,83 @@
+.d-molecule-hero
+  &__atom--color-light,
+  &__atom--color-light &__title
+    color: $white
+
+  &__slider--loading &__atom:nth-child(n + 2)
+    display: none
+
+  &__title,
+  &__perex
+    margin-bottom: 1.5 * $spacer
+
+  &__atom,
+  &__content
+    position: relative
+
+  &__image
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    max-width: 100% !important
+    max-height: 100% !important
+    z-index: 1
+
+  &__content
+    position: relative
+    z-index: 2
+    padding-bottom: $grid-gutter-width
+
+  &__slider--has-more &__content
+    padding-bottom: 80px
+
+  &__buttons
+    display: flex
+    flex-wrap: wrap
+    margin-left: - $spacer
+
+  &__button
+    margin-left: $spacer
+
+  &__container
+    > :first-child
+      margin-top: 0
+
+    > :last-child
+      margin-bottom: 0
+
+  &__button--primary,
+  &__button--secondary:first-child
+    &::after
+      content: ''
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      z-index: 3
+
+  &__button--secondary
+    z-index: 4
+    position: relative
+
+  +media-breakpoint-up(lg)
+    &__content
+      min-height: 500px
+      display: flex
+      align-items: center
+      padding-top: 80px
+
+  +media-breakpoint-down(md)
+    &__content
+      padding-top: $grid-gutter-width
+
+  +media-breakpoint-down(xs)
+    &__container
+      padding-left: $grid-gutter-width
+      padding-right: $grid-gutter-width
+
+    &__button
+      &:nth-child(n + 2)
+        margin-top: $spacer

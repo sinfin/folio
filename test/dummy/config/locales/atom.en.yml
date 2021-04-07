@@ -17,8 +17,13 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+      dummy/atom/hero:
+        color: Text color
+        color/light: Light
+        color/dark: Dark
     models:
       dummy/atom/documents: Documents (list)
+      dummy/atom/hero: Card (big cover, carousel)
       dummy/atom/images: Images (gallery)
       dummy/atom/navigation: Navigation
       dummy/atom/perex: Perex

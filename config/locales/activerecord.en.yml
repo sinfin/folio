@@ -180,6 +180,9 @@ en:
     to_label: Label
     url: URL
   errors:
+    messages:
+      at_least_one: Fill at least one of the fields.
+
     attributes:
       verified_captcha:
         invalid: Please verify you're not a robot 🤖

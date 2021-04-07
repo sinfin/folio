@@ -1,0 +1,43 @@
+.d-molecule.d-molecule-hero.d-molecule-hero--loading
+  .d-molecule-hero__slider.d-molecule-hero__slider--loading[
+    class=(model.size > 1 ? 'd-molecule-hero__slider--has-more' : nil)
+  ]
+    - model.each do |atom|
+      .d-molecule-hero__atom[
+        class="d-molecule-hero__atom--color-#{atom.color_with_fallback}"
+      ]
+        - if atom.cover_placement.present?
+          = image(atom.cover_placement,
+                  THUMB_SIZE,
+                  class: 'd-molecule-hero__image',
+                  cover: true)
+
+        .d-molecule-hero__content
+          .d-molecule-hero__content-inner
+            .container-fluid.d-molecule-hero__container
+              - if atom.title.present?
+                h2.d-molecule-hero__title.h1
+                  = cstypo atom.title
+
+              - if atom.perex.present?
+                .d-molecule-hero__perex.perex
+                  = cstypo simple_format atom.perex
+
+              - if atom.primary_button_label.present? || \
+                   atom.secondary_button_label.present?
+                .d-molecule-hero__buttons
+                  - if atom.primary_button_label.present?
+                    a.btn.btn-primary.btn-xs-block[
+                      class="d-molecule-hero__button"
+                      class="d-molecule-hero__button--primary"
+                      href=atom.primary_button_url
+                    ]
+                      = atom.primary_button_label
+
+                  - if atom.secondary_button_label.present?
+                    a.btn.btn-secondary.btn-xs-block[
+                      class="d-molecule-hero__button"
+                      class="d-molecule-hero__button--secondary"
+                      href=atom.secondary_button_url
+                    ]
+                      = atom.secondary_button_label

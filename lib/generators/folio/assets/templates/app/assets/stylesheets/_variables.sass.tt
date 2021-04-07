@@ -83,7 +83,7 @@ $mobile-line-height-sm: 17 / 13
 
 $h1-font-size: px-to-rem(44px)
 $h1-line-height: 50 / 44
-$h1-margin-top: 0
+$h1-margin-top: $grid-gutter-width
 $h1-margin-bottom: $spacer
 $mobile-h1-font-size: mobile-px-to-rem(30px)
 $mobile-h1-line-height: 41 / 30

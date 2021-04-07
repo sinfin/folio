@@ -83,7 +83,7 @@ $mobile-line-height-sm: 17 / 13
 
 $h1-font-size: px-to-rem(44px)
 $h1-line-height: 50 / 44
-$h1-margin-top: 0
+$h1-margin-top: $grid-gutter-width
 $h1-margin-bottom: $spacer
 $mobile-h1-font-size: mobile-px-to-rem(30px)
 $mobile-h1-line-height: 41 / 30
@@ -116,6 +116,15 @@ $mobile-h4-font-size: mobile-px-to-rem(17px)
 $mobile-h4-line-height: 24 / 17
 $mobile-h4-margin-top: 2 * $spacer
 $mobile-h4-margin-bottom: $spacer
+
+$h5-font-size: px-to-rem(18px)
+$h5-line-height: 22 / 18
+$h5-margin-top: 2 * $spacer
+$h5-margin-bottom: $spacer
+$mobile-h5-font-size: mobile-px-to-rem(16px)
+$mobile-h5-line-height: 19 / 16
+$mobile-h5-margin-top: 2 * $spacer
+$mobile-h5-margin-bottom: $spacer
 
 $lead-font-size: $font-size-lg
 $lead-font-weight: $font-weight-normal
@@ -169,7 +178,7 @@ $input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-s
 $input-height-sm: $input-height-inner-sm + $input-height-border
 
 $input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2
-$input-height-lg: $input-height-inner + $input-height-border
+$input-height-lg: $input-height-inner-lg + $input-height-border
 
 $btn-disabled-opacity: 0.15
 
@@ -188,6 +197,6 @@ $hr-border-color: $border-color
 
 $modal-inner-padding: px-to-rem(30px)
 
-$alert-bg-level: 0;
-$alert-border-level: 0;
-$alert-color-level: 0;
+$alert-bg-level: 0
+$alert-border-level: 0
+$alert-color-level: 0

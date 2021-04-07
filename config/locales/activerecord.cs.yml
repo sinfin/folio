@@ -259,6 +259,9 @@ cs:
     use_secondary_address: Použít doplňkovou adresu
 
   errors:
+    messages:
+      at_least_one: Vyplňte alespoň jedno políčko.
+
     attributes:
       verified_captcha:
         invalid: Potvrďte prosím, že nejste robot 🤖

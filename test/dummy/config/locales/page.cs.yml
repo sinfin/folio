@@ -1,0 +1,5 @@
+---
+cs:
+  activerecord:
+    models:
+      dummy/page/homepage: Stránka / Homepage

@@ -17,8 +17,13 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+      dummy/atom/hero:
+        color: Barva textu
+        color/light: Světlá
+        color/dark: Tmavá
     models:
       dummy/atom/documents: Soubory (výpis)
+      dummy/atom/hero: Karta s odkazem (velký cover, karusel)
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/navigation: Menu
       dummy/atom/perex: Perex
