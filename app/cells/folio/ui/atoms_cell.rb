@@ -36,9 +36,10 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
       if attrs["cover"]
         if attrs["cover"].is_a?(Numeric)
-          attrs["cover"] = images[attrs["cover"]]
+          attrs["cover"] = images[attrs["cover"]] || images.sample
+        else
+          attrs["cover"] = images.sample
         end
-        attrs["cover"] ||= images.sample
       end
 
       attrs["documents"] = documents if attrs["documents"]
