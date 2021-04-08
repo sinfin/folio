@@ -10,6 +10,8 @@ cs:
       dummy/atom/images:
         same_width: Zarovnat do mřížky
         title: Popisek pod galerií
+      dummy/atom/text: {}
+      dummy/atom/title: {}
     models:
       dummy/atom/images: Obrázky (galerie)
       dummy/atom/text: Text (odstavce, tabulky, apod.)
