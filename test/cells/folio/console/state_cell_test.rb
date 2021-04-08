@@ -7,11 +7,11 @@ class Folio::Console::StateCellTest < Folio::Console::CellTest
     lead = create(:folio_lead)
 
     html = cell("folio/console/state", lead).(:show)
-    assert_match("aasm_event=handle", html.find(".dropdown-item").native["data-url"])
+    assert_match("aasm_event=to_handled", html.find_all(".dropdown-item").last.native["data-url"])
 
-    lead.handle!
+    lead.to_handled!
 
     html = cell("folio/console/state", lead).(:show)
-    assert_match("aasm_event=unhandle", html.find(".dropdown-item").native["data-url"])
+    assert_match("aasm_event=to_submitted", html.find_all(".dropdown-item")[0].native["data-url"])
   end
 end

@@ -5,10 +5,12 @@ en:
       aasm_state: State
 
       folio/lead:
-        aasm_state/submitted: To be handled
         aasm_state/handled: Handled
+        aasm_state/pending: Pending
+        aasm_state/submitted: To be handled
 
     events:
       folio/lead:
-        handle: Handle
-        unhandle: Unhandle
+        to_handled: Handle
+        to_pending: To pending
+        to_submitted: To submitted

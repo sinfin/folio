@@ -5,10 +5,12 @@ cs:
       aasm_state: Stav
 
       folio/lead:
-        aasm_state/submitted: K vyřízení
         aasm_state/handled: Vyřízeno
+        aasm_state/pending: Vyřizováno
+        aasm_state/submitted: K vyřízení
 
     events:
       folio/lead:
-        handle: Vyřídit
-        unhandle: Označit jako nevyřízený
+        to_handled: Vyřídit
+        to_pending: Označit jako vyřizovaný
+        to_submitted: Označit jako nevyřízený
