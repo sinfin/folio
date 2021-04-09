@@ -25,7 +25,18 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+      dummy/atom/card/large:
+        button_label: Text tlačítka
+        href: Odkaz
+      dummy/atom/card/medium:
+        button_label: Text tlačítka
+        href: Odkaz
+      dummy/atom/card/small:
+        href: Odkaz
     models:
+      dummy/atom/card/large: Karta s odkazem (velká)
+      dummy/atom/card/medium: Karta s odkazem (střední)
+      dummy/atom/card/small: Karta s odkazem (malá)
       dummy/atom/documents: Soubory (výpis)
       dummy/atom/hero: Karta s odkazem (velký cover, karusel)
       dummy/atom/image: Obrázek

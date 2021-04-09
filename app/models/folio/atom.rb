@@ -2,12 +2,12 @@
 
 module Folio::Atom
   def self.types
-    Folio::Atom::Base.recursive_subclasses(include_self: false)
+    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true)
   end
 
   def self.structures
     str = {}
-    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
       structure = {}
 
       klass::STRUCTURE.each do |key, value|
@@ -98,7 +98,7 @@ module Folio::Atom
 
   def self.strong_params
     keys = []
-    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
       keys += klass::STRUCTURE.keys
       keys += klass::ASSOCIATIONS.keys.map { |k| { k => [:id, :type] } }
     end
