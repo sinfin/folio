@@ -5,7 +5,7 @@ class <%= global_namespace %>::Atom::Card::Large < <%= global_namespace %>::Atom
             presence: true
 
   def self.molecule_cell_name
-    "<%= molecule_cell_name %>/large"
+    "<%= molecule_cell_name %>"
   end
 end
 

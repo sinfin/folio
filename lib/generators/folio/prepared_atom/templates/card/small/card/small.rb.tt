@@ -7,7 +7,7 @@ class <%= global_namespace %>::Atom::Card::Small < <%= global_namespace %>::Atom
   STRUCTURE = <%= global_namespace %>::Atom::Card::STRUCTURE.without(:button_label)
 
   def self.molecule_cell_name
-    "<%= molecule_cell_name %>/small"
+    "<%= molecule_cell_name %>"
   end
 end
 

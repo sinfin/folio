@@ -5,7 +5,7 @@ class <%= global_namespace %>::Atom::Card::Medium < <%= global_namespace %>::Ato
             presence: true
 
   def self.molecule_cell_name
-    "<%= molecule_cell_name %>/medium"
+    "<%= molecule_cell_name %>"
   end
 end
 

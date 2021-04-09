@@ -40,7 +40,7 @@ class Dummy::SeedGenerator
 
     FileUtils.mkdir_p template_atom_cell_dir
 
-    unless File.read(atom_path).include?('self.abstract_class = true')
+    unless File.read(atom_path).include?("self.abstract_class = true")
       %w[atom molecule].each do |key|
         Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
           copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
@@ -118,7 +118,7 @@ class Dummy::SeedGenerator
          .gsub("dummy/ui", "<%= global_namespace_path %>/ui")
          .gsub("dummy_menu", "<%= global_namespace_path %>_menu")
          .gsub(%r{dummy/atom/\w+}, "<%= atom_cell_name %>")
-         .gsub(%r{dummy/molecule/\w+}, "<%= molecule_cell_name %>")
+         .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
     end
 
     def copy_file(from, to)

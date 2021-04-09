@@ -11,6 +11,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
   def create
     allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.starts_with?(".") }
+    allowed_keys += %w[card/small card/medium card/large]
 
     if name == "all"
       keys = allowed_keys

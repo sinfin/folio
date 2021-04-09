@@ -94,6 +94,8 @@ FactoryBot.define do
     end
   end
 
+  factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
+
   factory :folio_menu_item, class: "Folio::MenuItem" do
     association :menu, factory: :folio_menu
     association :target, factory: :folio_page
