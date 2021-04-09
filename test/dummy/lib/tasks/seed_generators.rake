@@ -29,29 +29,30 @@ class Dummy::SeedGenerator
   end
 
   def from_atom_path(atom_path)
-    atom_basename = File.basename(atom_path)
-    name = atom_basename.gsub(".rb", "")
+    name = atom_path.gsub(%r{.*app/models/dummy/atom/(.*).rb}, '\1')
 
     template_atom_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_atom_dir
 
-    copy_file(atom_path, template_atom_dir.join("#{atom_basename}.tt"))
+    copy_file(atom_path, template_atom_dir.join("#{name}.rb.tt"))
 
     template_atom_cell_dir = template_atom_dir.join("cell")
 
     FileUtils.mkdir_p template_atom_cell_dir
 
-    %w[atom molecule].each do |key|
-      Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
-        copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
-      end
+    unless File.read(atom_path).include?('self.abstract_class = true')
+      %w[atom molecule].each do |key|
+        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
+          copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+        end
 
-      Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}/*")].each do |path|
-        copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
-      end
+        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}/*")].each do |path|
+          copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
+        end
 
-      Dir[Rails.root.join("test/cells/dummy/#{key}/#{name}_cell_test.rb")].each do |path|
-        copy_file(path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+        Dir[Rails.root.join("test/cells/dummy/#{key}/#{name}_cell_test.rb")].each do |path|
+          copy_file(path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+        end
       end
     end
 
