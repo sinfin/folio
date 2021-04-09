@@ -29,7 +29,8 @@ class Dummy::Ui::CardCell < ApplicationCell
     if model[:medium]
       tag[:tag] = :h3
     elsif model[:small]
-      tag[:tag] = :p
+      tag[:tag] = :a
+      tag[:href] = model[:href]
     end
 
     tag
