@@ -6,7 +6,7 @@
     - model.each do |placement|
       - doc = placement.file
       li.<%= classname_prefix %>-ui-documents__li
-        a.<%= classname_prefix %>-ui-documents__a.d-with-icon.d-with-icon--underlined.text-black[
+        a.<%= classname_prefix %>-ui-documents__a.<%= classname_prefix %>-with-icon.<%= classname_prefix %>-with-icon--underlined.text-black[
           href=download_path(doc, doc.file_name, locale: :cs)
           target="_blank"
         ]
