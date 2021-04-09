@@ -2,6 +2,14 @@
 en:
   activerecord:
     attributes:
+      dummy/atom/card/large:
+        button_label: Button label
+        href: Link
+      dummy/atom/card/medium:
+        button_label: Button label
+        href: Link
+      dummy/atom/card/small:
+        href: Link
       dummy/atom/hero:
         color: Text color
         color/light: Light
@@ -25,15 +33,8 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
-      dummy/atom/card/large:
-        button_label: Button label
-        href: Link
-      dummy/atom/card/medium:
-        button_label: Button label
-        href: Link
-      dummy/atom/card/small:
-        href: Link
     models:
+      dummy/atom/card: 
       dummy/atom/card/large: Card (big)
       dummy/atom/card/medium: Card (medium)
       dummy/atom/card/small: Card (small)

@@ -6,7 +6,7 @@
 
   .<%= classname_prefix %>-ui-card
     flex: 0 0 100%
-    margin: $grid-gutter-half 0
+    margin: $grid-gutter-half
 
   .<%= classname_prefix %>-ui-card--size-large
     margin: map-get($spacers, gg) $grid-gutter-half
