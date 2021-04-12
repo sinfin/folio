@@ -1,0 +1,4 @@
+.<%= classname_prefix %>-ui-embed
+  iframe
+    max-width: 100%
+    display: block
