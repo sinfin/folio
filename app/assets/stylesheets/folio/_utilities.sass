@@ -23,3 +23,8 @@
 
   > li
     list-style: none
+
+=social-sites-hover-color
+  @each $key, $color in $social-sites-colors
+    &--#{$key}:hover
+      color: $color

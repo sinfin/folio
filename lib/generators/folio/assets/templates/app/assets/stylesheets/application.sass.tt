@@ -10,6 +10,7 @@
 
 <%- if Rails.application.config.folio_users -%>@import 'folio/devise'
 <%- end -%>
+@import 'folio/loader'
 @import 'folio/lazyload'
 @import 'folio/lightbox'
 @import 'folio/image/image'

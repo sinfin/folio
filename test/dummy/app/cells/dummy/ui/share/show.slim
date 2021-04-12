@@ -1,0 +1,14 @@
+.d-ui-share
+  span.d-ui-share__title.small.font-weight-bold = t('.title')
+
+  - share_links.each do |link|
+    a.d-ui-share__item[
+      title=link[:title]
+      href=link[:url]
+      target=link[:target]
+      class="d-ui-share__item--#{link[:icon]}"
+    ]
+      = icon link[:icon], class: 'd-ui-share__icon', height: 22
+
+  .d-ui-share__item
+    == cell('dummy/ui/clipboard', request.url, height: 22)

@@ -47,6 +47,7 @@ cs:
       dummy/atom/perex: Perex
       dummy/atom/person: Osoba (karta střední)
       dummy/atom/quotation: Zvýrazněná citace
+      dummy/atom/share: Sdílení
       dummy/atom/text: Text (odstavce, tabulky, apod.)
       dummy/atom/text_with_image: Text s obrázkem
       dummy/atom/title: Nadpis

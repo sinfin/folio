@@ -3,6 +3,9 @@
 arrow_drop_down:
   width: 24
   height: 24
+check:
+  width: 24
+  height: 24
 check_circle:
   width: 24
   height: 24
@@ -10,6 +13,9 @@ chevron_right:
   width: 24
   height: 24
 close:
+  width: 24
+  height: 24
+content_copy:
   width: 24
   height: 24
 facebook:
@@ -33,6 +39,12 @@ instagram:
 linkedin:
   width: 28
   height: 32
+mail:
+  width: 24
+  height: 24
+messenger:
+  width: 512
+  height: 512
 pinterest:
   width: 31
   height: 32
@@ -51,3 +63,4 @@ warning:
 youtube:
   width: 36
   height: 32
+

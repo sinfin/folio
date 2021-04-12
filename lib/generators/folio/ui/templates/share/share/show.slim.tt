@@ -1,0 +1,14 @@
+.<%= classname_prefix %>-ui-share
+  span.<%= classname_prefix %>-ui-share__title.small.font-weight-bold = t('.title')
+
+  - share_links.each do |link|
+    a.<%= classname_prefix %>-ui-share__item[
+      title=link[:title]
+      href=link[:url]
+      target=link[:target]
+      class="<%= classname_prefix %>-ui-share__item--#{link[:icon]}"
+    ]
+      = icon link[:icon], class: '<%= classname_prefix %>-ui-share__icon', height: 22
+
+  .<%= classname_prefix %>-ui-share__item
+    == cell('<%= global_namespace_path %>/ui/clipboard', request.url, height: 22)

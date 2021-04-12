@@ -1,0 +1,15 @@
+.<%= classname_prefix %>-ui-share
+  color: $black
+  display: flex
+  align-items: center
+
+  &__title
+    margin-right: 0.75 * $spacer
+
+  &__item
+    +social-sites-hover-color
+    margin: 0 0.75 * $spacer
+    display: block
+
+  &__item--clipboard
+    +unbutton

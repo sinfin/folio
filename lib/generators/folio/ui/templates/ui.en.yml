@@ -6,3 +6,10 @@ footer:
   copyright: "© Copyright info %{year}"
   follow_us: Follow us
   newsletter: Newsletter signup
+share:
+  title: 'Share:'
+  facebook: Share on Facebook
+  messenger: Share on Messenger
+  twitter: Share on Twitter
+  email: Share via e-mail
+  clipboard: Copy link

@@ -9,3 +9,10 @@ cs:
         copyright: "© Copyright info %{year}"
         follow_us: Sledujte nás
         newsletter: Newsletter
+      share:
+        title: 'Sdílejte:'
+        facebook: Sdílejte na Facebooku
+        messenger: Sdílejte na Messengeru
+        twitter: Sdílejte na Twitteru
+        email: Sdílejte mailem
+        clipboard: Kopírovat odkaz
