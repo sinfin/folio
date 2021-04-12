@@ -41,8 +41,10 @@ cs:
       dummy/atom/contact_form: Formulář (kontakt)
       dummy/atom/documents: Soubory (výpis)
       dummy/atom/hero: Karta s odkazem (velký cover, karusel)
+      dummy/atom/hr: Linka (vodorovná)
       dummy/atom/image: Obrázek
       dummy/atom/images: Obrázky (galerie)
+      dummy/atom/margin: Odsazení
       dummy/atom/navigation: Menu
       dummy/atom/perex: Perex
       dummy/atom/person: Osoba (karta střední)

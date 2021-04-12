@@ -6,5 +6,5 @@
                 THUMB_SIZE,
                 class: '<%= classname_prefix %>-atom-text-with-image__cover')
 
-      .<%= classname_prefix %>-atom-text-with-image__content.m-rich-text
+      .<%= classname_prefix %>-atom-text-with-image__content.<%= classname_prefix %>-rich-text
         == cstypo model.content

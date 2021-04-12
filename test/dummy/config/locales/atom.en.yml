@@ -41,8 +41,10 @@ en:
       dummy/atom/contact_form: Contact form
       dummy/atom/documents: Documents (list)
       dummy/atom/hero: Card (big cover, carousel)
+      dummy/atom/hr: Line (horizontal)
       dummy/atom/image: Image
       dummy/atom/images: Images (gallery)
+      dummy/atom/margin: Margin
       dummy/atom/navigation: Navigation
       dummy/atom/perex: Perex
       dummy/atom/person: Person

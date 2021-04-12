@@ -12,8 +12,8 @@
     margin-bottom: $spacer
 
   hr
-    margin-top: $spacer
-    margin-bottom: $spacer
+    margin-top: map-get($spacers, gg)
+    margin-bottom: map-get($spacers, gg)
 
   &.small,
   &--compact
@@ -21,7 +21,7 @@
       margin: 0 0 $spacer / 2
 
     hr
-      margin: (( $spacer / 2 )) 0 (( $spacer / 2 ))
+      margin: map-get($spacers, g) 0 map-get($spacers, g)
 
   figcaption
     +font-size-sm
