@@ -1,13 +1,13 @@
 import React from 'react'
 
-function SerializedItem ({ item, index, paramBase, foreignKey }) {
+function SerializedItem ({ item, index, paramBase, foreignKey, serializePosition }) {
   const prefix = `${paramBase}[${index + 1}]`
   const name = (field) => `${prefix}[${field}]`
 
   return (
     <div>
       <input type='hidden' name={name('id')} value={item['id'] || ''} />
-      <input type='hidden' name={name('position')} value={index + 1} />
+      {serializePosition && <input type='hidden' name={name('position')} value={index + 1} />}
       <input type='hidden' name={name(foreignKey)} value={item.value || ''} />
     </div>
   )
@@ -26,7 +26,7 @@ function SerializedRemovedItem ({ id, index, paramBase }) {
 }
 
 function Serialized ({ orderedMultiselect }) {
-  const { paramBase, foreignKey, items, removedIds } = orderedMultiselect
+  const { paramBase, foreignKey, items, removedIds, sortable } = orderedMultiselect
 
   let i = -1
   const index = () => { i++; return i }
@@ -40,6 +40,7 @@ function Serialized ({ orderedMultiselect }) {
           index={index()}
           paramBase={paramBase}
           foreignKey={foreignKey}
+          serializePosition={sortable}
         />
       ))}
 
