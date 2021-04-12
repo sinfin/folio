@@ -34,10 +34,11 @@ cs:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/card: 
+      dummy/atom/card:
       dummy/atom/card/large: Karta s odkazem (velká)
       dummy/atom/card/medium: Karta s odkazem (střední)
       dummy/atom/card/small: Karta s odkazem (malá)
+      dummy/atom/contact_form: Formulář (kontakt)
       dummy/atom/documents: Soubory (výpis)
       dummy/atom/hero: Karta s odkazem (velký cover, karusel)
       dummy/atom/image: Obrázek

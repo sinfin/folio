@@ -34,10 +34,11 @@ en:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/card: 
+      dummy/atom/card:
       dummy/atom/card/large: Card (big)
       dummy/atom/card/medium: Card (medium)
       dummy/atom/card/small: Card (small)
+      dummy/atom/contact_form: Contact form
       dummy/atom/documents: Documents (list)
       dummy/atom/hero: Card (big cover, carousel)
       dummy/atom/image: Image
