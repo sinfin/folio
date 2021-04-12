@@ -41,6 +41,8 @@ en:
       dummy/atom/contact_form: Contact form
       dummy/atom/documents: Documents (list)
       dummy/atom/embed/html: HTML (embed)
+      dummy/atom/embed/podcast: Podcast (embed)
+      dummy/atom/embed/video: Video (embed)
       dummy/atom/hero: Card (big cover, carousel)
       dummy/atom/hr: Line (horizontal)
       dummy/atom/image: Image

@@ -41,6 +41,8 @@ cs:
       dummy/atom/contact_form: Formulář (kontakt)
       dummy/atom/documents: Soubory (výpis)
       dummy/atom/embed/html: HTML (vložený kód)
+      dummy/atom/embed/podcast: Podcast (vložený kód)
+      dummy/atom/embed/video: Video (vložený kód)
       dummy/atom/hero: Karta s odkazem (velký cover, karusel)
       dummy/atom/hr: Linka (vodorovná)
       dummy/atom/image: Obrázek
