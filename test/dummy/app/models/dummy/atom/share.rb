@@ -12,6 +12,7 @@ class Dummy::Atom::Share < Folio::Atom::Base
   end
 
   def self.console_icon
+    :share
   end
 end
 

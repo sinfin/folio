@@ -12,6 +12,7 @@ class Dummy::Atom::Margin < Folio::Atom::Base
   end
 
   def self.console_icon
+    :space_bar
   end
 end
 
