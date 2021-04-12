@@ -1,14 +1,21 @@
-.<%= classname_prefix %>-ui-share
-  span.<%= classname_prefix %>-ui-share__title.small.font-weight-bold = t('.title')
+div class=class_name
+  .<%= classname_prefix %>-ui-share__inner
+    - if options[:mobile_collapsible]
+      = icon(:share,
+             height: 22,
+             class: 'dropdown-toggle <%= classname_prefix %>-ui-share__toggle')
 
-  - share_links.each do |link|
-    a.<%= classname_prefix %>-ui-share__item[
-      title=link[:title]
-      href=link[:url]
-      target=link[:target]
-      class="<%= classname_prefix %>-ui-share__item--#{link[:icon]}"
-    ]
-      = icon link[:icon], class: '<%= classname_prefix %>-ui-share__icon', height: 22
+    .<%= classname_prefix %>-ui-share__items
+      span.<%= classname_prefix %>-ui-share__title.small.font-weight-bold = t('.title')
 
-  .<%= classname_prefix %>-ui-share__item
-    == cell('<%= global_namespace_path %>/ui/clipboard', request.url, height: 22)
+      - share_links.each do |link|
+        a.<%= classname_prefix %>-ui-share__item[
+          title=link[:title]
+          href=link[:url]
+          target=link[:target]
+          class="<%= classname_prefix %>-ui-share__item--#{link[:icon]}"
+        ]
+          = icon link[:icon], class: '<%= classname_prefix %>-ui-share__icon', height: 22
+
+      .<%= classname_prefix %>-ui-share__item
+        == cell('<%= global_namespace_path %>/ui/clipboard', url, height: 22)

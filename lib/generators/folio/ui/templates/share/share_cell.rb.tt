@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class <%= global_namespace %>::Ui::ShareCell < ApplicationCell
+  class_name "<%= classname_prefix %>-ui-share", :mobile_collapsible
+
   def share_links
     [
       {
@@ -29,23 +31,27 @@ class <%= global_namespace %>::Ui::ShareCell < ApplicationCell
     ]
   end
 
+  def url
+    @url ||= model.presence || request.url
+  end
+
   def facebook_url
-    h = { u: request.url, src: "sdkpreparse" }
+    h = { u: url, src: "sdkpreparse" }
     "https://www.facebook.com/sharer/sharer.php?#{h.to_query}"
   end
 
   def messenger_url
-    h = { u: request.url }
+    h = { u: url }
     "messenger://share/?#{h.to_query}"
   end
 
   def twitter_url
-    h = { url: request.url }
+    h = { url: url }
     "https://twitter.com/share?#{h.to_query}"
   end
 
   def mail_url
-    h = { subject: model.try(:title) || "", body: request.url }
+    h = { body: url }
     "mailto:?#{h.to_query}"
   end
 end

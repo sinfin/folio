@@ -182,11 +182,11 @@
 
     h3 Icons
 
-    .f-ui__icons
+    .f-ui__icons.d-flex.flex-wrap
       - if icons.present?
         - icons.each do |key|
-          span.mr-3 title=key
-            == cell("#{global_namespace_path}/ui/icon", key)
+          .mr-3.mb-3 title=key
+            == cell("#{global_namespace_path}/ui/icon", key, height: 24)
       - else
         ' No icons found in app/assets/stylesheets/_icons.scss
 
@@ -233,6 +233,20 @@
         p.text-danger No documents - upload some to preview
     - else
       = missing_cell("documents")
+
+    h3 Share
+
+    p Regular
+
+    .my-4
+      == cell("#{global_namespace_path}/ui/share")
+
+    p Collapsible on mobile
+
+    .my-4
+      == cell("#{global_namespace_path}/ui/share",
+              nil,
+              mobile_collapsible: true)
 
     h3 Cards
 
