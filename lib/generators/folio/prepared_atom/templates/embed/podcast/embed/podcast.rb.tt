@@ -14,7 +14,7 @@ class <%= global_namespace %>::Atom::Embed::Podcast < Folio::Atom::Base
             presence: true
 
   def self.cell_name
-    "<%= atom_cell_name %>/podcast"
+    "<%= atom_cell_name %>"
   end
 
   def self.console_icon

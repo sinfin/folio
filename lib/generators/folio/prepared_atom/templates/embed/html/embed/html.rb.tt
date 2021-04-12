@@ -14,7 +14,7 @@ class <%= global_namespace %>::Atom::Embed::Html < Folio::Atom::Base
             presence: true
 
   def self.cell_name
-    "<%= atom_cell_name %>/html"
+    "<%= atom_cell_name %>"
   end
 
   def self.console_icon
