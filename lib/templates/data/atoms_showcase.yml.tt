@@ -119,3 +119,6 @@
 - type: <%= global_namespace %>::Atom::Hr
 
 - type: <%= global_namespace %>::Atom::Margin
+
+- type: <%= global_namespace %>::Atom::Map
+  latlng: 50.091254894762635, 14.401627227698018

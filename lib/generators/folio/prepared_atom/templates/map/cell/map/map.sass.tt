@@ -1,0 +1,2 @@
+.<%= classname_prefix %>-atom-map
+  min-height: 100px

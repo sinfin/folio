@@ -168,3 +168,6 @@
 - type: Dummy::Atom::Hr
 
 - type: Dummy::Atom::Margin
+
+- type: Dummy::Atom::Map
+  latlng: 50.091254894762635, 14.401627227698018

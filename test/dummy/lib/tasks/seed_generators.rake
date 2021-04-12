@@ -115,7 +115,7 @@ class Dummy::SeedGenerator
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
-         .gsub(".dAtom", ".<%= classname_prefix %>Atom")
+         .gsub("dAtom", "<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= global_namespace_path %>/ui")
          .gsub("dummy_menu", "<%= global_namespace_path %>_menu")
          .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")

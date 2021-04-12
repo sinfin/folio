@@ -22,5 +22,5 @@
 //= require dummy/ui/menu/menu
 //= require dummy/ui/navigation/navigation
 
+//= require dummy/atom/map/map
 //= require dummy/molecule/hero/hero
-
