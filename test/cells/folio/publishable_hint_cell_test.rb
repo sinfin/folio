@@ -9,22 +9,25 @@ class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
     create(:folio_site)
 
     @page = create(:folio_page)
-    visit url_for([@page, locale: @page.locale])
-    assert_not page.has_css?(".folio-publishable-hint")
+    get url_for([@page, locale: @page.locale])
+    assert_select ".folio-publishable-hint", false
 
     @page.update!(published: false)
     assert_raises(ActiveRecord::RecordNotFound) do
-      visit url_for([@page, locale: @page.locale])
+      get url_for([@page, locale: @page.locale])
     end
 
     account = create(:folio_admin_account)
     login_as(account, scope: :account)
 
-    visit url_for([@page, locale: @page.locale])
-    assert page.has_css?(".folio-publishable-hint")
+    get url_for([@page, locale: @page.locale])
+
+    assert_redirected_to url_for([:preview, @page]) # , locale: @page.locale])
+    follow_redirect!
+    assert_select ".folio-publishable-hint"
 
     @page.update!(published: true)
-    visit url_for([@page, locale: @page.locale])
-    assert_not page.has_css?(".folio-publishable-hint")
+    get url_for([@page, locale: @page.locale])
+    assert_select ".folio-publishable-hint", false
   end
 end
