@@ -22,23 +22,16 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
   test "failed edit" do
     folio_page = create(:folio_page)
 
-    visit url_for([:edit, :console, folio_page])
-    page.fill_in "page_title", with: ""
-    page.find('input[type="submit"]').click
+    put url_for([:console, folio_page]), params: { page: { title: "" } }
 
-    title_group = page.find(".form-group.page_title")
-    assert title_group[:class].include?("form-group-invalid")
-    assert_not page.has_css?(".alert-success")
+    assert_select ".form-group.page_title.form-group-invalid"
+    assert_select ".alert-success", false
 
-    page.find('input[type="submit"]').click
+    put url_for([:console, folio_page]), params: { page: { title: "foo" } }
 
-    title_group = page.find(".form-group.page_title")
-    assert title_group[:class].include?("form-group-invalid")
-    assert_not page.has_css?(".alert-success")
-
-    page.fill_in "page_title", with: "foo"
-    page.find('input[type="submit"]').click
-    assert page.has_css?(".alert-success")
+    assert_redirected_to url_for([:edit, :console, folio_page])
+    follow_redirect!
+    assert_select ".alert-success"
   end
 
   test "revision" do

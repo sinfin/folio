@@ -38,18 +38,18 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "pending" do
-    auth = create_omniauth_authentication("foo@foo.foo", "foo")
+    user = create(:folio_user)
+    auth = create_omniauth_authentication(user.email, "foo")
 
-    visit main_app.new_user_session_path(pending: 1)
-    assert_not page.has_css?(".f-devise-omniauth-conflict")
+    assert_not auth.find_or_create_user!
 
-    page.set_rack_session("pending_folio_authentication_id" => {
-      timestamp: Time.zone.now,
-      id: auth.id,
-    })
+    get main_app.new_user_session_path(pending: 1)
+    assert_select ".f-devise-omniauth-conflict", false
 
-    visit main_app.new_user_session_path(pending: 1)
-    assert page.has_css?(".f-devise-omniauth-conflict")
+    do_omniauth_callback(auth)
+
+    get main_app.new_user_session_path(pending: 1)
+    assert_select ".f-devise-omniauth-conflict"
   end
 
   test "conflict_token" do
@@ -68,5 +68,9 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
 
     assert_equal(user.id, auth.reload.folio_user_id)
+  end
+
+  def do_omniauth_callback(auth)
+    get user_facebook_omniauth_callback_url, headers: { "omniauth.auth" => omniauth_authentication_openstruct(auth.email, auth.nickname) }
   end
 end

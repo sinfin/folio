@@ -9,45 +9,26 @@ class Folio::MetaVariablesTest < ActionDispatch::IntegrationTest
     node = create(:folio_page, title: "PAGE")
 
     # node without perex
-    visit url_for(node)
+    get url_for(node)
 
-    title = page.find("title", visible: false)
-    assert_equal("PAGE | SITE", title.native.text)
+    assert_select "head title", "PAGE | SITE"
+    assert_select 'meta[name="description"][content="SITE DESCRIPTION"]'
 
-    description = page.find('meta[name="description"]',
-                            visible: false)
-    assert_equal("SITE DESCRIPTION", description[:content])
-
-    og_title = page.find('meta[property="og:title"]',
-                         visible: false)
-    assert_equal("PAGE | SITE", og_title[:content])
-
-    og_description = page.find('meta[property="og:description"]',
-                               visible: false)
-    assert_equal("SITE DESCRIPTION", og_description[:content])
+    assert_select 'meta[property="og:title"][content="PAGE | SITE"]'
+    assert_select 'meta[property="og:description"][content="SITE DESCRIPTION"]'
 
     # node with perex
     node.update!(perex: "PAGE DESCRIPTION")
-    visit url_for(node)
+    get url_for(node)
 
-    description = page.find('meta[name="description"]',
-                            visible: false)
-    assert_equal("PAGE DESCRIPTION", description[:content])
-
-    og_description = page.find('meta[property="og:description"]',
-                               visible: false)
-    assert_equal("PAGE DESCRIPTION", og_description[:content])
+    assert_select 'meta[name="description"][content="PAGE DESCRIPTION"]'
+    assert_select 'meta[property="og:description"][content="PAGE DESCRIPTION"]'
 
     # page with perex & meta_description
     node.update!(meta_description: "PAGE META DESCRIPTION")
-    visit url_for(node)
+    get url_for(node)
 
-    description = page.find('meta[name="description"]',
-                            visible: false)
-    assert_equal("PAGE META DESCRIPTION", description[:content])
-
-    og_description = page.find('meta[property="og:description"]',
-                               visible: false)
-    assert_equal("PAGE META DESCRIPTION", og_description[:content])
+    assert_select 'meta[name="description"][content="PAGE META DESCRIPTION"]'
+    assert_select 'meta[property="og:description"][content="PAGE META DESCRIPTION"]'
   end
 end
