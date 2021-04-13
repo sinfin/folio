@@ -2,7 +2,7 @@
 Short description and motivation.
 
 ## Usage
-Copy `redactor.js` and `redactor.css` to `test/dummy/vendor/assets/redactor`.
+Run `bundle exec rails app:folio:prepare_dummy_app`.
 
 ## Installation
 Add this line to your application's Gemfile:
