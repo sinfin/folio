@@ -1,5 +1,5 @@
 bindSlick = ->
-  $('.<%= classname_prefix %>-molecule-hero__slider')
+  $('.<%= classname_prefix %>-molecule-hero__slider--has-more')
     .each ->
       $this = $(this)
 

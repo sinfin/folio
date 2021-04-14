@@ -1,5 +1,6 @@
 .<%= classname_prefix %>-molecule-hero
   position: relative
+  overflow: hidden
 
   &__atom--color-light,
   &__atom--color-light &__title
@@ -42,9 +43,11 @@
     display: flex
     flex-wrap: wrap
     margin-left: - $spacer
+    margin-top: - $spacer / 2
 
   &__button
     margin-left: $spacer
+    margin-top: $spacer / 2
 
   &__container
     > :first-child
@@ -79,6 +82,10 @@
     z-index: 2
     color: $white
     cursor: pointer
+    display: none !important
+
+  &__slider--has-more ~ &__arrow
+    display: flex !important
 
   &__arrow--left
     transform: rotate(180deg)
@@ -93,6 +100,10 @@
     left: 0
     right: 0
     z-index: 2
+    display: none
+
+  &__slider--has-more ~ &__dots
+    display: block !important
 
   &__dots-inner
     display: flex

@@ -1,5 +1,5 @@
 bindSlick = ->
-  $('.d-molecule-hero__slider')
+  $('.d-molecule-hero__slider--has-more')
     .each ->
       $this = $(this)
 
