@@ -40,8 +40,12 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
 
   def submit_button(f, label)
     content_tag(:div, class: "f-devise__submit-wrap") do
-      f.button :submit, label, class: "f-devise__submit-btn"
+      f.button :submit, label, class: "f-devise__submit-btn #{submit_button_class_names}"
     end
+  end
+
+  def submit_button_class_names
+    ""
   end
 
   def email_input(f, opts = {})
@@ -76,5 +80,17 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
 
   def registration_gdpr_content
     content_tag(:p, t(".gdpr_content"))
+  end
+
+  def omniauth_above?
+    true
+  end
+
+  def omniauth_button_label(key)
+    t("folio.devise.omniauth.providers.#{key}")
+  end
+
+  def omniauth_button_icon(key)
+    cell("folio/devise/omniauth/icon", key, size: 24)
   end
 end

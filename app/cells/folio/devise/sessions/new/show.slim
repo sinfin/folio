@@ -4,13 +4,17 @@
 
     == cell('folio/devise/flash', model[:flash])
 
-    == cell('folio/devise/omniauth', 'sessions')
+    - if omniauth_above?
+      == cell('folio/devise/omniauth', 'sessions')
 
     == email_input(f)
 
     == password_input(f, :password, autocomplete: 'current-password')
 
     = submit_button(f, t('.sign_in'))
+
+    - unless omniauth_above?
+      == cell('folio/devise/omniauth', 'sessions')
 
     .f-devise__under-submit-links
       = forgotten_password_link
