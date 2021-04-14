@@ -118,8 +118,9 @@ namespace :folio do
     gem_root = File.expand_path(File.join(File.dirname(__FILE__), "..", ".."))
 
     from_folder = File.join(gem_root, "lib", "templates", "vendor", "assets", "redactor")
-    to_folder = File.join(gem_root, "test", "dummy", "vendor", "assets")
+    to_folder = File.join(Dir.getwd, "test", "dummy", "vendor", "assets")
 
+    FileUtils.mkdir_p to_folder
     FileUtils.cp_r(from_folder, to_folder)
   end
 

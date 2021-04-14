@@ -16,10 +16,22 @@ And then execute:
 $ bundle
 ```
 
-Or install it yourself as:
+Run:
 ```bash
 $ rails generate folio:install
 ```
+which will copy bunch of things into your, hopefilly clean, app
+
+Then run migrations
+```bash
+$ rails db:migrate
+```
+
+Take a look to, not only Folio, handy generators by
+```bash
+$ rails g
+```
+
 
 ## Attachments
 

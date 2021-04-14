@@ -3,7 +3,7 @@
 require "rails/test_help"
 require "capybara/rails"
 require "capybara/minitest"
-require "rack_session_access/capybara"
+
 require "cells"
 require "cells-rails"
 require "cells-slim"
