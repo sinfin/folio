@@ -24,7 +24,6 @@ group :test do
   gem "minitest", "5.10.3"
   gem "factory_bot"
   gem "capybara", "~> 2.13"
-  gem "selenium-webdriver"
   gem "faker"
 end
 
