@@ -73,7 +73,7 @@ FactoryBot.define do
 
   factory :folio_admin_account, class: "Folio::Account" do
     email { "test@test.com" }
-    password { "test@test.com" }
+    password { "Complex@Password.123" }
     role { :superuser }
     first_name { "Test" }
     last_name { "Dummy" }
@@ -130,7 +130,7 @@ FactoryBot.define do
 
   factory :folio_user, class: "Folio::User" do
     sequence(:email) { |i| "email-#{i}@email.email" }
-    password { "password" }
+    password { "Complex@Password.123" }
     confirmed_at { Time.now }
     first_name { "first_name" }
     last_name { "last_name" }
