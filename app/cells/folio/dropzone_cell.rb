@@ -15,6 +15,7 @@ class Folio::DropzoneCell < Folio::ApplicationCell
       "file-formats" => file_formats,
       "records" => records,
       "destroy-failure" => destroy_failure,
+      "max-files" => model[:max_files],
       "max-file-size" => model[:max_file_size],
       "dict" => dict.to_json,
     }
