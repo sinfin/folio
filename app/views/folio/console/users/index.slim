@@ -1,9 +1,16 @@
 = index_header
 
+= render partial: "folio/console/users/index_top"
+
 = catalogue(@users)
   ruby:
     show_link(:to_label)
     email
     date(:last_sign_in_at, small: true)
     attribute(:sign_in_count)
+
+    if record.respond_to?(:aasm_state)
+      state
+    end
+
     actions :show, :edit, :destroy
