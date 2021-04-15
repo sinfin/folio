@@ -40,8 +40,8 @@ class Folio::Users::PasswordsControllerTest < ActionDispatch::IntegrationTest
     put main_app.user_password_path, params: {
       user: {
         reset_password_token: raw,
-        password: "new-password",
-        password_confirmation: "new-password",
+        password: "New@Password.123",
+        password_confirmation: "New@Password.123",
       }
     }
 

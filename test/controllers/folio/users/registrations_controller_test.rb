@@ -10,7 +10,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
 
     @params = {
       email: "email@email.email",
-      password: "password",
+      password: "Complex@Password.123",
       first_name: "Name",
       last_name: "Surname",
     }
@@ -33,7 +33,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     post main_app.user_registration_path, params: {
       user: {
         email: "third@email.email",
-        password: "password",
+        password: "Complex@Password.123",
       }
     }
     assert_not Folio::User.exists?(email: "third@email.email")
@@ -60,7 +60,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     patch main_app.user_registration_path, params: {
       user: {
         email: "new@email.email",
-        current_password: "password",
+        current_password: "Complex@Password.123",
       }
     }
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)

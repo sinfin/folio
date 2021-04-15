@@ -46,8 +46,8 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
     put main_app.user_invitation_path, params: {
       user: {
         invitation_token: user.raw_invitation_token,
-        password: "new-password",
-        password_confirmation: "new-password",
+        password: "New@Password.123",
+        password_confirmation: "New@Password.123",
       }
     }
 
