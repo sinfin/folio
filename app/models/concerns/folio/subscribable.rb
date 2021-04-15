@@ -16,6 +16,12 @@ module Folio::Subscribable
     end
   end
 
+  def add_subscription_tags(tags)
+    if Rails.env.production? || ENV["DEV_MAILCHIMP"]
+      Folio::Mailchimp::AddSubscriptionTagsJob.perform_later(self, tags)
+    end
+  end
+
   module ClassMethods
     def requires_subscription_confirmation?
       true
