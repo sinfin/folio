@@ -276,12 +276,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       return nil if attr.nil?
       return @labels[attr] unless @labels[attr].nil?
 
-      @labels[attr] ||= begin
-        if %i[actions cover].include?(attr)
-          ""
-        else
-          klass.human_attribute_name(attr)
-        end
+      @labels[attr] ||= if %i[actions cover].include?(attr)
+        ""
+      else
+        klass.human_attribute_name(attr)
       end
     end
 
