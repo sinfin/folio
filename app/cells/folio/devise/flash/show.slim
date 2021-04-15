@@ -1,5 +1,7 @@
 .f-devise-flash
-  - if "#{application_module}::FlashCell".safe_constantize
+  - if "#{application_module}::Ui::FlashCell".safe_constantize
+    == cell("#{application_module.underscore}/ui/flash", model)
+  - elsif "#{application_module}::FlashCell".safe_constantize
     == cell("#{application_module.underscore}/flash", model)
   - else
     == cell('folio/console/flash', model)
