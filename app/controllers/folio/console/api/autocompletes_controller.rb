@@ -190,7 +190,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   end
 
   private
-
     def filter_by_atom_setting_params(scope)
       params.keys.each do |key|
         next unless key.starts_with?("by_atom_setting_")

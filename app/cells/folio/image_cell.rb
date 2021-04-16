@@ -22,63 +22,61 @@ class Folio::ImageCell < Folio::ApplicationCell
   def data
     return nil unless model.present?
 
-    @data ||= begin
-      if static?
-        use_webp = model[:webp_normal].present?
+    @data ||= if static?
+      use_webp = model[:webp_normal].present?
 
-        if model[:webp_normal].present?
-          if model[:webp_retina].present?
-            webp_srcset = "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x"
-          else
-            webp_srcset = model[:webp_normal]
-          end
+      if model[:webp_normal].present?
+        if model[:webp_retina].present?
+          webp_srcset = "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x"
         else
-          webp_srcset = nil
+          webp_srcset = model[:webp_normal]
         end
-
-        {
-          alt: "",
-          src: model[:normal],
-          srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
-          webp_src: model[:webp_normal],
-          webp_srcset: webp_srcset,
-          use_webp: use_webp,
-        }
       else
-        if model.is_a?(Folio::FilePlacement::Base)
-          file = model.file
-        else
-          file = model
-        end
-
-        normal = file.thumb(size)
-
-        h = {
-          normal: normal,
-          src: normal.url,
-          alt: model.try(:alt) || "",
-          title: model.try(:title),
-        }
-
-        unless /svg/.match?(file.mime_type)
-          retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
-
-          retina = file.thumb(retina_size)
-
-          use_webp = normal[:webp_url] && retina[:webp_url]
-
-          h[:retina] = retina
-          h[:use_webp] = use_webp
-          h[:srcset] = "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x"
-
-          if use_webp
-            h[:webp_src] = normal.webp_src
-            h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
-          end
-        end
-
-        h
+        webp_srcset = nil
       end
+
+      {
+        alt: "",
+        src: model[:normal],
+        srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
+        webp_src: model[:webp_normal],
+        webp_srcset: webp_srcset,
+        use_webp: use_webp,
+      }
+    else
+      if model.is_a?(Folio::FilePlacement::Base)
+        file = model.file
+      else
+        file = model
+      end
+
+      normal = file.thumb(size)
+
+      h = {
+        normal: normal,
+        src: normal.url,
+        alt: model.try(:alt) || "",
+        title: model.try(:title),
+      }
+
+      unless /svg/.match?(file.mime_type)
+        retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+        retina = file.thumb(retina_size)
+
+        use_webp = normal[:webp_url] && retina[:webp_url]
+
+        h[:retina] = retina
+        h[:use_webp] = use_webp
+        h[:srcset] = "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x"
+
+        if use_webp
+          h[:webp_src] = normal.webp_src
+          h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+        end
+      end
+
+      h
     end
   end
 

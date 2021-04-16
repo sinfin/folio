@@ -15,16 +15,14 @@ class Folio::Console::Merges::Form::AssociationCell < Folio::ConsoleCell
   end
 
   def records
-    @records ||= begin
-      if multi
-        model[:record].send(model[:reflection].name)
+    @records ||= if multi
+      model[:record].send(model[:reflection].name)
+    else
+      relation = model[:record].send(model[:reflection].name)
+      if relation
+        [relation]
       else
-        relation = model[:record].send(model[:reflection].name)
-        if relation
-          [relation]
-        else
-          []
-        end
+        []
       end
     end
   end

@@ -68,16 +68,14 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
   end
 
   def layout
-    @layout ||= begin
-      if options[:layout]
-        if options[:layout].is_a?(String)
-          JSON.parse(options[:layout]).symbolize_keys
-        else
-          options[:layout]
-        end
+    @layout ||= if options[:layout]
+      if options[:layout].is_a?(String)
+        JSON.parse(options[:layout]).symbolize_keys
       else
-        default_layout
+        options[:layout]
       end
+    else
+      default_layout
     end
   end
 
