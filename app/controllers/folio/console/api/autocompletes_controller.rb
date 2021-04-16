@@ -113,6 +113,8 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.where.not(id: p_without.split(","))
       end
 
+      scope = filter_by_atom_setting_params(scope)
+
       scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
@@ -164,12 +166,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             scope = scope.unscope(:order).send(p_order)
           end
 
-          params.keys.each do |key|
-            next unless key.starts_with?("by_atom_setting_")
-            if scope.respond_to?(key)
-              scope = scope.send(key, params[key])
-            end
-          end
+          scope = filter_by_atom_setting_params(scope)
 
           response += scope.first(30).map do |record|
             text = record.to_console_label
@@ -191,4 +188,17 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       render json: { data: [] }
     end
   end
+
+  private
+
+    def filter_by_atom_setting_params(scope)
+      params.keys.each do |key|
+        next unless key.starts_with?("by_atom_setting_")
+        if scope.respond_to?(key)
+          scope = scope.send(key, params[key])
+        end
+      end
+
+      scope
+    end
 end
