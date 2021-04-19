@@ -16,7 +16,7 @@ class Folio::Lead < Folio::ApplicationRecord
   validate :validate_verified_captcha
 
   # Scopes
-  scope :not_to_handledd, -> { submitted }
+  scope :not_handled, -> { submitted }
   scope :ordered, -> { order(id: :desc) }
   scope :by_state, -> (state) { where(aasm_state: state) }
 
