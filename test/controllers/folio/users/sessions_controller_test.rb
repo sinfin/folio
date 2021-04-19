@@ -71,6 +71,9 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def do_omniauth_callback(auth)
-    get user_facebook_omniauth_callback_url, headers: { "omniauth.auth" => omniauth_authentication_openstruct(auth.email, auth.nickname) }
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.mock_auth[:facebook] = omniauth_authentication_openstruct(auth.email, auth.nickname)
+
+    get user_facebook_omniauth_callback_url, headers: { "omniauth.auth" => OmniAuth.config.mock_auth[:facebook] }
   end
 end
