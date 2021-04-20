@@ -34,7 +34,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   test "destroy" do
     sign_in @user
     get main_app.destroy_user_session_path
-    assert_redirected_to main_app.new_user_session_path
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_out_path)
   end
 
   if Rails.application.config.folio_users_omniauth_providers.present?
