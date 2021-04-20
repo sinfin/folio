@@ -9,13 +9,14 @@ class Folio::User < Folio::ApplicationRecord
 
   selected_device_modules = %i[
     database_authenticatable
-    registerable
     recoverable
     rememberable
     trackable
     validatable
     invitable
   ]
+
+  selected_device_modules << :registerable if Rails.application.config.folio_users_registerable
   selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 

@@ -17,5 +17,6 @@
 
     span.folio-loader.f-devise__loader
 
-  .f-devise__bottom-action-wrap
-    == register_button
+  - if ::Rails.application.config.folio_users_registerable
+    .f-devise__bottom-action-wrap
+      == register_button

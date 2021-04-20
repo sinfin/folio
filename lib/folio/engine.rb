@@ -40,6 +40,7 @@ module Folio
 
     config.folio_users = false
     config.folio_users_confirmable = false
+    config.folio_users_registerable = true
     config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter]
     config.folio_users_after_sign_in_path = :root_path
     config.folio_users_after_sign_up_path = :root_path
