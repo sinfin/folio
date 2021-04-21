@@ -11,6 +11,25 @@ class Folio::UserTest < ActiveSupport::TestCase
     assert user.errors[:first_name]
     assert user.errors[:last_name]
   end
+
+  test "newsletter subscription" do
+    user = Folio::User.invite!(email: "email@email.email",
+                               first_name: "John",
+                               last_name: "Doe",
+                               subscribed_to_newsletter: true) do |u|
+      u.skip_invitation = true
+    end
+    assert_not user.newsletter_subscription
+
+    token = user.instance_variable_get(:@raw_invitation_token)
+    user = Folio::User.accept_invitation!(invitation_token: token, password: "12345678", password_confirmation: "12345678")
+    assert user.newsletter_subscription
+    assert user.newsletter_subscription.active?
+
+    assert 1, Folio::NewsletterSubscription.count
+    user.destroy!
+    assert 0, Folio::NewsletterSubscription.count
+  end
 end
 
 # == Schema Information

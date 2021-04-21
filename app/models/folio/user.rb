@@ -3,6 +3,7 @@
 class Folio::User < Folio::ApplicationRecord
   include Folio::Filterable
   include Folio::HasAddresses
+  include Folio::HasNewsletterSubscription
 
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
@@ -38,6 +39,8 @@ class Folio::User < Folio::ApplicationRecord
   validates :first_name, :last_name,
             presence: true,
             if: :validate_first_name_and_last_name?
+
+  after_invitation_accepted :update_newsletter_subscription
 
   def full_name
     if first_name.present? || last_name.present?
@@ -80,6 +83,27 @@ class Folio::User < Folio::ApplicationRecord
   private
     def validate_first_name_and_last_name?
       authentications.blank? || nickname.blank?
+    end
+
+    def should_subscribe_to_newsletter?
+      # skip users that
+      # - haven't accepted invitaton
+      # - haven't confirmed their email address
+      return if created_by_invite? && !invitation_accepted_at?
+      return if !confirmed_at? && confirmation_required_for_invited?
+
+      subscribed_to_newsletter?
+    end
+
+    def subscription_email
+      email || authentications.order(id: :asc).first.email
+    end
+
+    def subscription_merge_vars
+      {
+        "FNAME" => first_name,
+        "LNAME" => last_name,
+      }.compact
     end
 end
 
