@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_25_135419) do
+ActiveRecord::Schema.define(version: 2021_04_19_134935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -226,6 +226,12 @@ ActiveRecord::Schema.define(version: 2021_02_25_135419) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "subscribable_type"
+    t.bigint "subscribable_id"
+    t.boolean "active", default: true
+    t.string "tags"
+    t.text "merge_vars"
+    t.index ["subscribable_type", "subscribable_id"], name: "index_folio_newsletter_subscriptions_on_subscribable"
   end
 
   create_table "folio_omniauth_authentications", force: :cascade do |t|
@@ -364,6 +370,7 @@ ActiveRecord::Schema.define(version: 2021_02_25_135419) do
     t.boolean "use_secondary_address", default: false
     t.bigint "primary_address_id"
     t.bigint "secondary_address_id"
+    t.boolean "subscribed_to_newsletter", default: false
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
