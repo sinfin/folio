@@ -47,10 +47,14 @@ class Folio::Mailchimp::Api
     member = retrieve_member(subscription_id, hashed_email: true)
 
     if member && member["status"] != "archived"
-      with_mailchimp_error_rescue do
+      # to archive pending member is not allowed, make him subscribed first
+      if member["status"] == "pending"
         request.lists(list_id).members(subscription_id)
-                              .delete
+                              .upsert(body: { status: "subscribed" })
       end
+
+      request.lists(list_id).members(subscription_id)
+                            .delete
 
       true
     end
