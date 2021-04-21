@@ -80,6 +80,10 @@ class Folio::User < Folio::ApplicationRecord
     end
   end
 
+  def requires_subscription_confirmation?
+    false
+  end
+
   private
     def validate_first_name_and_last_name?
       authentications.blank? || nickname.blank?
