@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-04-21
+### Added
+- added `Folio::Mailchimp::Api` helper class
+- added subscribable associtation to newsletter subscriptions & `Folio::HasNewsletterSubscription` concern
+### Changed
+- mark `Folio::Subscribable` as deprecated
+
 ## 2020-03-09
 ### Added
 - added `folio:console:catalogue` generator
