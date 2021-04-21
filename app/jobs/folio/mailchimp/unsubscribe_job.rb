@@ -3,7 +3,9 @@
 class Folio::Mailchimp::UnsubscribeJob < ApplicationJob
   queue_as :default
 
-  def perform(model)
-    Folio::Mailchimp::Api.new.delete_member(model.email)
+  # deprecated, use Folio::HasNewsletterSubscription & Folio::Mailchimp::CreateOrUpdateSubscriptionJob
+
+  def perform(email)
+    Folio::Mailchimp::Api.new.delete_member(email)
   end
 end
