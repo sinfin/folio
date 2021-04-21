@@ -16,7 +16,16 @@ window.folioConsoleBindCollectionSelectInput = ($elements) ->
           dataType: "JSON"
           minimumInputLength: 0
           cache: false
-          data: (params) -> { q: params.term }
+          data: (params) ->
+            data = { q: params.term }
+
+            $('.f-c-js-atoms-placement-setting').each ->
+              $this = $(this)
+              value = $this.val()
+              data["by_atom_setting_#{$this.data('atom-setting')}"] = value
+
+            return data
+
         templateSelection: (data, container) ->
           $el = $(data.element)
           Object.keys(data).forEach (key) ->

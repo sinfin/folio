@@ -33,7 +33,6 @@ module Folio
 
         gem_group :test do
           gem "factory_bot"
-          gem "rack_session_access"
         end
 
         gem_group :development do

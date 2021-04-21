@@ -29,14 +29,19 @@ class Folio::Lead < Folio::ApplicationRecord
 
   aasm do
     state :submitted, initial: true, color: "red"
+    state :pending, color: "orange"
     state :handled, color: "green"
 
-    event :handle do
-      transitions from: :submitted, to: :handled
+    event :to_submitted do
+      transitions from: %i[pending handled], to: :submitted
     end
 
-    event :unhandle do
-      transitions from: :handled, to: :submitted
+    event :to_pending do
+      transitions from: %i[submitted handled], to: :pending
+    end
+
+    event :to_handled do
+      transitions from: %i[submitted pending], to: :handled
     end
   end
 

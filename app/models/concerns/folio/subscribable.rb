@@ -4,15 +4,21 @@ module Folio::Subscribable
   extend ActiveSupport::Concern
 
   def subscribe
-    if !Rails.env.test? && (!Rails.env.development? || ENV["DEV_MAILCHIMP"])
+    if Rails.env.production? || ENV["DEV_MAILCHIMP"]
       Folio::Mailchimp::SubscribeJob.perform_later(self, merge_vars: subscription_merge_vars,
                                                          tags: subscription_tags)
     end
   end
 
   def unsubscribe
-    if !Rails.env.test? && (!Rails.env.development? || ENV["DEV_MAILCHIMP"])
+    if Rails.env.production? || ENV["DEV_MAILCHIMP"]
       Folio::Mailchimp::UnsubscribeJob.perform_later(self)
+    end
+  end
+
+  def add_subscription_tags(tags)
+    if Rails.env.production? || ENV["DEV_MAILCHIMP"]
+      Folio::Mailchimp::AddSubscriptionTagsJob.perform_later(self, tags)
     end
   end
 

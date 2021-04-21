@@ -39,7 +39,7 @@ class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
   test "event" do
     model = create(:folio_lead)
     assert_not(model.handled?)
-    post url_for([:event, :console, model]), params: { aasm_event: "handle" }
+    post url_for([:event, :console, model]), params: { aasm_event: "to_handled" }
     assert(model.reload.handled?)
   end
 end

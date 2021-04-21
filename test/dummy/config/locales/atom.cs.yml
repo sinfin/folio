@@ -21,6 +21,8 @@ cs:
       dummy/atom/images:
         same_width: Zarovnat do mřížky
         title: Popisek pod galerií
+      dummy/atom/map:
+        latlng: GPS souřadnice ve formátu 50.091254894762635, 14.401627227698018
       dummy/atom/text:
         highlight: Zvýraznění
         highlight/nil: Žádné
@@ -33,10 +35,8 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
-      dummy/atom/map:
-        latlng: GPS souřadnice ve formátu 50.091254894762635, 14.401627227698018
     models:
-      dummy/atom/card:
+      dummy/atom/card: 
       dummy/atom/card/large: Karta s odkazem (velká)
       dummy/atom/card/medium: Karta s odkazem (střední)
       dummy/atom/card/small: Karta s odkazem (malá)
