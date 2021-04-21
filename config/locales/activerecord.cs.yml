@@ -250,6 +250,7 @@ cs:
     published: Zveřejněno
     published_at: Zveřejněno k datu
     secondary_address: Adresa - doplňková
+    sensitive_content: Obsahuje citlivý obsah
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova

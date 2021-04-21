@@ -112,7 +112,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
   if (type === 'text' || type === 'code') {
     const classNames = ['form-control']
 
-    if (type === "code") {
+    if (type === 'code') {
       classNames.push('text-monospace')
     }
 

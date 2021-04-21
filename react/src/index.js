@@ -49,7 +49,7 @@ window.folioConsoleInitReact = (domRoot) => {
       paramBase: domRoot.dataset.paramBase,
       foreignKey: domRoot.dataset.foreignKey,
       url: domRoot.dataset.url,
-      sortable: domRoot.dataset.sortable !== "0"
+      sortable: domRoot.dataset.sortable !== '0'
     }))
 
     ReactDOM.render((
