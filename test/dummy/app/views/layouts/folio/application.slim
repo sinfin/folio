@@ -1,5 +1,9 @@
 doctype html
-html lang=I18n.locale
+html[
+  lang=I18n.locale
+  class=(cookies[:image_sensitive_content] && "f-html--show-sensitive-content")
+]
+
   head
     = render partial: 'layouts/folio/head'
     = render partial: 'layouts/folio/favicon'
@@ -18,4 +22,5 @@ html lang=I18n.locale
 
     == cell('dummy/ui/footer')
 
+    == cell('folio/sensitive_content_modal')
     == cell('folio/photoswipe')

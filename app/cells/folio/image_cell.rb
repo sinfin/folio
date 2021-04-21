@@ -13,7 +13,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :fixed_height_fluid,
                         :cloned,
                         :round,
-                        :static?
+                        :static?,
+                        :sensitive_content?
 
   def show
     render if size
@@ -319,5 +320,17 @@ class Folio::ImageCell < Folio::ApplicationCell
     else
       @thumbnail_height.presence
     end
+  end
+
+  def sensitive_content?
+    return @sensitive_content unless @sensitive_content.nil?
+
+    if model.is_a?(Folio::FilePlacement::Base)
+      file = model.file
+    else
+      file = model
+    end
+
+    @sensitive_content = file.try(:sensitive_content?) || false
   end
 end

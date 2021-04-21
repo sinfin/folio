@@ -38,6 +38,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "app/assets/stylesheets/modules/bootstrap-overrides/_buttons.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_forms.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_grid.sass",
+      "app/assets/stylesheets/modules/bootstrap-overrides/_modal.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
       "app/cells/folio/console/atoms/previews/main_app.coffee",

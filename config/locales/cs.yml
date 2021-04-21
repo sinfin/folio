@@ -54,6 +54,13 @@ cs:
         title_long: Nastavení stránky %{site}
     publishable_hint:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
+    image:
+      sensitive_content_title: Tento obrázek obsahuje citlivý obsah, který je možné zobrazit až po ověření věku.
+    sensitive_content_modal:
+      title: Upozornění
+      content: Tato stránka obsahuje citlivý obsah, který je možné zobrazit až po ověření věku. Je Vám více než 18 let?
+      accept: Ano
+      cancel: Ne
   head:
     description: ''
     title:

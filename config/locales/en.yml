@@ -54,6 +54,13 @@ en:
         title_long: Settings for site %{site}
     publishable_hint:
       hint: Until publishing, this page is visible to logged in administrators only.
+    image:
+      sensitive_content_title: This image contains sensitive content. To see it, verify your age.
+    sensitive_content_modal:
+      title: Warning
+      content: This image contains sensitive content. To see it, verify your age. Are you over 18?
+      accept: Yes
+      cancel: No
   head:
     description: ''
     title:

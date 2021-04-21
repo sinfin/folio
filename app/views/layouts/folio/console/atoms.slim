@@ -1,5 +1,8 @@
 doctype html
-html.f-c-layout-atoms__html lang=Rails.application.config.folio_console_locale
+html.f-c-layout-atoms__html[
+  lang=Rails.application.config.folio_console_locale
+  class="f-html--show-sensitive-content"
+]
   head
     = csrf_meta_tags
     = stylesheet_link_tag('application', media: 'all')
