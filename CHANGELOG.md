@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-04-22
+### Added
+- added UI generator, refactor dummy assets usage
+- added assets generator
+### Changed
+- added plenty of prepared_atom templates
+
 ## 2021-04-21
 ### Added
 - added `Folio::Mailchimp::Api` helper class
@@ -20,7 +27,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - removed `Folio::Atom::Text` and `Folio::Atom::Title`
 ### Added
-- added folio:prepared_atom generator 
+- added folio:prepared_atom generator
 - started creating/updating `config/locales/atom.LOCALE.yml` for atom model names in generators
 
 ## 2020-02-23
@@ -112,7 +119,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2020-07-22
 ### Removed
-- removed `turbo_mode` from `Site` 
+- removed `turbo_mode` from `Site`
 - removed `non_turbo.js`
 
 ## 2020-05-06
