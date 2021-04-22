@@ -10,18 +10,22 @@ class Folio::User < Folio::ApplicationRecord
 
   selected_device_modules = %i[
     database_authenticatable
-    registerable
     recoverable
     rememberable
     trackable
     validatable
     invitable
   ]
+
+  selected_device_modules << :registerable if Rails.application.config.folio_users_registerable
   selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 
-  devise(*selected_device_modules,
-         omniauth_providers: Rails.application.config.folio_users_omniauth_providers)
+  devise_options = {
+    omniauth_providers: Rails.application.config.folio_users_omniauth_providers.presence
+  }.compact
+
+  devise(*selected_device_modules, devise_options)
 
   pg_search_scope :by_query,
                   against: [:email],
