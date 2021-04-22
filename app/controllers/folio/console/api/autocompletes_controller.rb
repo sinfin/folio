@@ -89,7 +89,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.unscope(:order).send(p_order)
       end
 
-      render_selectize_options(scope.limit(25))
+      render_selectize_options(scope.limit(25), label_method: params[:label_method])
     else
       render_selectize_options([])
     end
@@ -121,7 +121,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.unscope(:order).send(p_order)
       end
 
-      render_select2_options(scope.limit(25))
+      render_select2_options(scope.limit(25), label_method: params[:label_method])
     else
       render_select2_options([])
     end

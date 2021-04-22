@@ -103,7 +103,8 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
         url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
                                                                      scope: data[:scope],
                                                                      order_scope: data[:order_scope],
-                                                                     slug: data[:slug])
+                                                                     slug: data[:slug],
+                                                                     label_method: data[:label_method])
         select2_select(f, key, data, url: url)
       end
     else

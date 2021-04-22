@@ -64,25 +64,27 @@ module Folio::ApiControllerBase
       render json: { errors: errors }, status: 400
     end
 
-    def render_selectize_options(models)
+    def render_selectize_options(models, label_method: nil)
+      label_method ||= :to_console_label
       id_method = params[:slug] ? :slug : :id
 
       ary = models.map do |model|
         {
           id: model.send(id_method),
-          text: model.to_console_label,
-          label: model.to_console_label,
+          text: model.send(label_method),
+          label: model.send(label_method),
           value: model.send(id_method)
         }
       end
       render json: { data: ary }
     end
 
-    def render_select2_options(models)
+    def render_select2_options(models, label_method: nil)
+      label_method ||= :to_console_label
       id_method = params[:slug] ? :slug : :id
 
       ary = models.map do |model|
-        h = { id: model.send(id_method), text: model.to_console_label }
+        h = { id: model.send(id_method), text: model.send(label_method) }
 
         if form_select_data = model.try(:form_select_data)
           h.merge(form_select_data)
