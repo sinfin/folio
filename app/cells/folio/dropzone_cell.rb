@@ -31,7 +31,13 @@ class Folio::DropzoneCell < Folio::ApplicationCell
 
   def file_formats
     if model[:file_formats]
-      model[:file_formats].map { |ff| "image/#{ff}" }.join(", ")
+      model[:file_formats].map do |ff|
+        if ff.include?("/")
+          ff
+        else
+          "image/#{ff}"
+        end
+      end.join(", ")
     else
       nil
     end
