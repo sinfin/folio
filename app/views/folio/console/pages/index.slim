@@ -9,11 +9,16 @@
     published_toggle
     date(:published_at)
 
-    preview_path = nil
-    if record.is_a?(Folio::Page)
-      preview_path = controller.main_app.page_path(record.to_preview_param)
+    if record.is_a?(Folio::Page) && record.class.try(:public?)
+      locale = I18n.available_locales.size > 1 ? I18n.locale : nil
+      actions({ preview: controller.main_app.page_path(record.to_preview_param, locale: locale) }, :edit, :destroy)
+    elsif record.is_a?(Folio::Page) && record.class.try(:public_rails_path)
+      locale = I18n.available_locales.size > 1 ? I18n.locale : nil
+      actions({ preview: controller.main_app.send(record.class.public_rails_path, locale: locale) },
+              :edit,
+              :destroy)
+    else
+      actions(:edit, :destroy)
     end
-
-    actions({ preview: preview_path }, :edit, :destroy)
 
     transportable_dropdown
