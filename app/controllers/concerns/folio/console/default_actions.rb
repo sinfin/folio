@@ -174,7 +174,12 @@ module Folio::Console::DefaultActions
 
     def respond_with_location(prevalidate: nil)
       if folio_console_record.destroyed?
-        request.referrer || url_for([:console, @klass])
+        index_url = url_for([:console, @klass])
+        if !request.referrer || request.referrer.include?(index_url)
+          index_url
+        else
+          request.referrer
+        end
       else
         if folio_console_record.persisted?
           begin
