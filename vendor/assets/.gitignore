@@ -47,3 +47,7 @@ bower_components/cleave.js/dist/*
 
 bower_components/select2/*
 !bower_components/select2/dist
+
+bower_components/slick-carousel/*
+bower_components/slick-carousel/slick/fonts
+!bower_components/slick-carousel/slick

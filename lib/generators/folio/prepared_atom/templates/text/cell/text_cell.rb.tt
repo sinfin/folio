@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+class <%= global_namespace %>::Atom::TextCell < ApplicationCell
+  def show
+    render if model.content.present?
+  end
+
+  def content
+    if model.content.present? && model.content.include?("<table>")
+      content_with_table
+    else
+      model.content
+    end
+  end
+
+  def content_with_table
+    parsed = Nokogiri::HTML::DocumentFragment.parse(model.content)
+    parsed.search("table")
+          .wrap('<div class="<%= classname_prefix %>-atom-text__table-wrap" />')
+    parsed.to_html
+  end
+
+  def highlight?
+    model.highlight.present?
+  end
+
+  def highlight_class_name
+    if highlight?
+      "p-gg <%= classname_prefix %>-atom-text__highlight <%= classname_prefix %>-atom-text__highlight--#{model.highlight} <%= classname_prefix %>-rich-text--chomp"
+    end
+  end
+end

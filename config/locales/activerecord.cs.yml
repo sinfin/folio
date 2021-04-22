@@ -171,10 +171,7 @@ cs:
         few: Menu
         one: Menu
         other: Menu
-      folio/menu/page:
-        few: Menu
-        one: Menu
-        other: Menu
+      folio/menu/page: Menu
       folio/menu_item:
         few: Odkazy
         one: Odkaz
@@ -253,6 +250,7 @@ cs:
     published: Zveřejněno
     published_at: Zveřejněno k datu
     secondary_address: Adresa - doplňková
+    sensitive_content: Obsahuje citlivý obsah
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
@@ -262,6 +260,9 @@ cs:
     use_secondary_address: Použít doplňkovou adresu
 
   errors:
+    messages:
+      at_least_one: Vyplňte alespoň jedno políčko.
+
     attributes:
       verified_captcha:
         invalid: Potvrďte prosím, že nejste robot 🤖

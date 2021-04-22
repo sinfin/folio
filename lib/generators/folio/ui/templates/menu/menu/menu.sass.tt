@@ -1,0 +1,173 @@
+.<%= classname_prefix %>-ui-menu
+  $a-padding: $grid-gutter-half
+
+  flex: 1 1 auto
+  min-width: 0
+  background: $black
+  font-family: $headings-font-family
+
+  &--theme-light
+    background: $light-gray
+
+  &__a
+    display: flex
+    align-items: center
+    padding: $a-padding
+    text-transform: uppercase
+    text-decoration: none
+
+    &--active
+      font-weight: $font-weight-bold
+
+  &__arrow
+    transition: $transition-base
+
+  &__li--expanded &__arrow
+    transform: rotate(180deg)
+
+  &__mq
+    position: absolute
+    pointer-events: none
+    z-index: 0
+    display: none
+
+  +mq-desktop-menu
+    display: flex
+    align-items: stretch
+    overflow: hidden
+    position: relative
+
+    &:after
+      content: ""
+      display: block
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      width: 50px
+      background: linear-gradient(90deg, rgba($black, 0) 0%, rgba($black, 1) 85%)
+      z-index: 2
+
+    &--theme-light:after
+      background: linear-gradient(90deg, rgba($light-gray, 0) 0%, rgba($light-gray, 1) 85%)
+
+    &--bound
+      overflow: visible
+
+      &:after
+        display: none
+
+    &__ul
+      display: flex
+      align-items: stretch
+
+    &__ul > &__li
+      position: relative
+      margin-right: map-get($spacers, s) - 2 * $a-padding
+      display: flex
+      align-items: stretch
+
+      &--collapsed
+        display: none
+
+    &__ul > &__li > &__a
+      position: relative
+      white-space: nowrap
+      overflow: hidden
+
+      &:before
+        content: ""
+        background: $white
+        height: 5px
+        position: absolute
+        right: 0
+        bottom: 0
+        left: 0
+        display: block
+        transform: translate(0, 5px)
+        transition: .1s all
+
+    &__ul > &__li > &__a:hover:before,
+    &__ul > &__li > &__a--active:before
+      transform: translate(0, 0)
+
+    &--theme-light &__ul > &__li > &__a:before
+      background: $black
+
+    &__ul > &__li > &__a--active
+      font-weight: $font-weight-bold
+
+    &__children-ul
+      position: absolute
+      top: 100%
+      margin-top: -10px
+      left: 0
+      z-index: 2
+      background: $dark-gray
+      color: $white
+      min-width: 290px
+      box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.3)
+      display: none
+
+    &__li:nth-child(n + 5) &__children-ul
+      left: auto
+      right: 0
+
+    &__children-ul &__a
+      padding: $grid-gutter-half $grid-gutter-width
+
+      &:hover
+        font-weight: $font-weight-bold
+
+    &__ul > &__li > &__children-ul > &__li:first-child > &__a
+      padding-top: $grid-gutter-width
+
+    &__ul > &__li > &__children-ul > &__li:last-child:not(&__li--expanded) > &__a
+      padding-bottom: $grid-gutter-width
+
+    &__children-ul &__arrow
+      margin-left: auto
+      margin-right: - $grid-gutter-half
+
+    &__ul > &__li:hover > &__children-ul,
+    &__children-ul &__li--expanded &__children-ul
+      display: block
+
+    &__children-ul &__children-ul
+      padding-left: 10px
+      box-shadow: none
+      position: relative
+      top: auto
+      margin-top: 0
+
+  +mq-mobile-menu
+    &__mq--mobile
+      display: block
+
+    &__arrow
+      margin-left: auto
+
+    &__span
+      margin-right: $grid-gutter-half
+
+    &__li--more
+      display: none
+
+    &__li:not(&__li--expanded) &__children-ul
+      display: none
+
+    &__ul > &__li > &__a
+      min-width: 0
+      border-top: 1px solid rgba($white, 0.2)
+
+    &__children-ul &__a
+      display: block
+      padding: $grid-gutter-half 0
+      border-top: 1px solid rgba($white, 0.2)
+
+    &__ul > &__li:first-child > &__a
+      border-top: 0
+
+    &__children-ul
+      padding-left: $grid-gutter-width
+      padding-right: $grid-gutter-half

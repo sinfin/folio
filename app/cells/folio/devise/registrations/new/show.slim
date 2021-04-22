@@ -10,7 +10,8 @@
 
     == cell('folio/devise/flash', model[:flash])
 
-    == cell('folio/devise/omniauth', 'registrations')
+    - if omniauth_above?
+      == cell('folio/devise/omniauth', 'registrations')
 
     - @f = f
 
@@ -29,6 +30,9 @@
     = submit_button(f, t('.sign_up'))
 
     - @f = nil
+
+    - unless omniauth_above?
+      == cell('folio/devise/omniauth', 'sessions')
 
     span.folio-loader.f-devise__loader
 

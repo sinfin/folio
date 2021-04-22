@@ -1,0 +1,49 @@
+.f-ui__typo
+  - typo_titles.each do |tag|
+    .f-ui__typo-item.mb-3
+      *{tag: tag, class: 'm-0'}
+        ' #{tag} — This is a main title
+
+  .f-ui__typo-item.mb-3
+    p.m-0.lead Lead — Lorem ipsum dolor sit amet, hyperlink hover adipiscing elit. Cras dapibus vulputate diam eu pretium. Mauris elit orci, ultricies id fermentum vel, porta et eros. Vestibulum condimentum lectus in convallis feugiat. Sed vulputate fringilla felis. Aliquam ut arcu et dui feugiat scelerisque eu quis diam. Mauris placerat congue dui sit amet blandit. Phasellus condimentum libero vel velit auctor, sit amet tincidunt velit varius.
+
+  .f-ui__typo-item.mb-3
+    p.m-0 Paragraph — Lorem ipsum dolor sit amet, hyperlink hover adipiscing elit. Cras dapibus vulputate diam eu pretium. Mauris elit orci, ultricies id fermentum vel, porta et eros. Vestibulum condimentum lectus in convallis feugiat. Sed vulputate fringilla felis. Aliquam ut arcu et dui feugiat scelerisque eu quis diam. Mauris placerat congue dui sit amet blandit. Phasellus condimentum libero vel velit auctor, sit amet tincidunt velit varius.
+
+  .f-ui__typo-item.mb-3
+    p.m-0.small Small — Lorem ipsum dolor sit amet, consectetur adipiscing elit hyperlink. Cras dapibus vulputate diam eu pretium. Mauris elit orci, ultricies id fermentum vel, porta et eros. Vestibulum condimentum lectus in convallis feugiat.
+
+javascript:
+  function rgb2hex(rgb) {
+    rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    function hex(x) {
+      return ("0" + parseInt(x).toString(16)).slice(-2);
+    }
+    return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+  }
+
+  [].forEach.call(document.querySelectorAll('.f-ui__typo-item.mb-3'), function (el) {
+    var style = window.getComputedStyle(el.children[0])
+    var line = [
+      style['font-family'].split(',')[0].replace(/"/g, ''),
+      style['font-weight'],
+      style['font-size'].replace('px', '') + '/' + style['line-height'].replace('px', '') + 'px',
+      rgb2hex(style['color'])
+    ].join(', ')
+    var div = document.createElement('div')
+    div.classList.add('text-muted')
+    div.classList.add('small')
+    div.classList.add('mt-1')
+    div.innerText = line
+    el.appendChild(div)
+  });
+
+- if @mobile_only
+  javascript:
+    document.body.innerHTML = document.querySelector('.f-ui__typo').outerHTML
+    document.documentElement.style.overflow = 'auto'
+
+    document.addEventListener('DOMContentLoaded', function () {
+      document.body.innerHTML = document.querySelector('.f-ui__typo').outerHTML
+      document.documentElement.style.overflow = 'auto'
+    })

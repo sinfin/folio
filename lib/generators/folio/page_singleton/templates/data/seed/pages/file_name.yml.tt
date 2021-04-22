@@ -1,0 +1,2 @@
+type: <%= global_namespace %>::Page::<%= class_name %>
+title: <%= class_name %>

@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+class <%= global_namespace %>::Atom::NavigationCell < ApplicationCell
+  def show
+    render if model && model.menu
+  end
+end

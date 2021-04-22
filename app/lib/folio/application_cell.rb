@@ -3,6 +3,7 @@
 class Folio::ApplicationCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
+  include Folio::CstypoHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 
@@ -29,6 +30,8 @@ class Folio::ApplicationCell < Cell::ViewModel
 
   def url_for(options)
     controller.url_for(options)
+  rescue NoMethodError
+    controller.main_app.url_for(options)
   end
 
   def current_site
@@ -37,5 +40,15 @@ class Folio::ApplicationCell < Cell::ViewModel
 
   def image(placement, size, opts = {})
     cell("folio/image", placement, opts.merge(size: size))
+  end
+
+  def menu_url_for(menu_item)
+    if menu_item.url.present?
+      menu_item.url
+    elsif menu_item.eager_load_aware_target.present?
+      url_for(menu_item.eager_load_aware_target)
+    elsif menu_item.rails_path.present?
+      controller.send(menu_item.rails_path)
+    end
   end
 end

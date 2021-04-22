@@ -1,0 +1,263 @@
+.f-ui
+  .container-fluid
+    h1.mb-a
+      a.text-decoration-none href="/folio/ui" UI Kit
+
+  hr
+
+  .container-fluid
+    h2 Color scheme
+
+    .row
+      .col-lg-6
+        h3 Main colors
+
+        .d-flex
+          - main_colors.each do |color|
+            div[
+              class="bg-#{color}"
+              style="width: 210px; height: 70px; margin: 0 10px 10px 0; #{color == 'white' ? 'box-shadow: 0 0 0 2px black' : '' }"
+              title=color
+            ]
+
+      .col-lg-6
+        h3 Additional colors
+
+        .d-flex.flex-wrap
+          - additional_colors.each do |color|
+            div[
+              class="bg-#{color}"
+              style="width: 70px; height: 70px; margin: 0 10px 10px 0; #{color == 'white' ? 'box-shadow: 0 0 0 2px black' : '' }"
+              title=color
+            ]
+
+  hr
+
+  .container-fluid
+    h2 Typography
+
+    .row.f-ui__typo-row
+      .col-lg-6.f-ui__typo-col
+        h3 Desktop
+
+        = render(:_typo)
+
+      .col-lg-6.f-ui__typo-col
+        h3 Mobile
+
+        iframe.f-ui__typo-iframe[
+          src=controller.folio_ui_mobile_typo_path(pp: "disable")
+          width="100%"
+        ]
+
+  hr
+
+  .container-fluid
+    h2 UI elements
+
+    h3 Input fields
+
+    = simple_form_for "" do |f|
+      .row
+        .col-md-6
+          .row
+            .col-md-6
+              = f.input :normal,
+                        input_html: { \
+                          id: nil, \
+                          placeholder: "Placeholder text" \
+                        }
+
+            .col-md-6
+              = f.input :active,
+                        input_html: { \
+                          id: nil, \
+                          value: "Input text", \
+                          class: 'f-ui__focused-input' \
+                        }
+
+            .col-md-6
+              = f.input :filled,
+                        input_html: { \
+                          id: nil, \
+                          value: "Input text" \
+                        }
+
+            .col-md-6
+              = f.input :disabled,
+                        disabled: true,
+                        input_html: { id: nil, placeholder: "Disabled text" }
+
+            .col-md-6
+              = f.input :error_empty,
+                        error: "Error message lorem ipsum link",
+                        input_html: { id: nil, placeholder: "Empty value" }
+
+            .col-md-6
+              = f.input :error_wrong,
+                        error: "Error message lorem ipsum link",
+                        input_html: { id: nil, value: "Wrong value" }
+
+            .col-md-6
+              = f.input :select,
+                        collection: 4.times.map { |i| "Select #{i + 1}" }
+
+            .col-md-6
+              = f.input :remote_select,
+                        collection: ["TODO"],
+                        include_blank: false
+
+            .col-md-6
+              = f.input :radio_buttons,
+                        collection: 4.times.map { |i| "Radio #{i + 1}" },
+                        as: :radio_buttons
+
+            .col-md-6
+              = f.input :check_boxes,
+                        collection: 4.times.map { |i| "Checkbox #{i + 1}" },
+                        as: :check_boxes
+
+        .col-md-6
+          = f.input :text,
+                    as: :text,
+                    label: "Textarea",
+                    input_html: { \
+                      id: nil, \
+                      rows: 4, \
+                      placeholder: "Placeholder text" \
+                    }
+
+          = f.input :check_boxes,
+                    as: :boolean,
+                    label: "Agreement with <a href=\"#\">a link</a> in the middle.".html_safe
+
+    h3 Buttons
+
+    .row
+      - button_variants.each do |variant|
+        .col-md-6
+          - button_sizes.each do |size|
+            p.small.mt-3.mb-0 btn btn-#{variant} #{size}
+
+            .d-flex.flex-wrap
+              .mr-g.mt-3
+                p.small Normal
+
+                button.btn class="btn-#{variant} #{size}" type="button"
+                  ' Button label
+
+              .mr-g.mt-3
+                p.small Hover / Pressed
+
+                button.btn.active class="btn-#{variant} #{size}" type="button"
+                  ' Button active
+
+              .mr-g.mt-3
+                p.small Disabled
+
+                button.btn class="btn-#{variant} #{size}" type="button" disabled=true
+                  ' Button disabled
+
+      .col-md-6
+        p.small.mt-3.mb-0 btn btn-tag
+
+        .d-flex.flex-wrap
+          .mr-g.mt-3
+            p.small Normal
+
+            button.btn.btn-tag type="button"
+              ' Button label
+
+          .mr-g.mt-3
+            p.small Hover / Pressed
+
+            button.btn.btn-tag.active type="button"
+              ' Button active
+
+          .mr-g.mt-3
+            p.small Disabled
+
+            button.btn.btn-tag type="button" disabled=true
+              ' Button disabled
+
+    h3 Icons
+
+    .f-ui__icons.d-flex.flex-wrap
+      - if icons.present?
+        - icons.each do |key|
+          .mr-3.mb-3 title=key
+            == cell("#{global_namespace_path}/ui/icon", key, height: 24)
+      - else
+        ' No icons found in app/assets/stylesheets/_icons.scss
+
+    h3 Pagination
+
+    - if "#{global_namespace}::Ui::Pagy".safe_constantize
+      == cell("#{global_namespace_path}/ui/pagy", pagy_model)
+    - else
+      = missing_cell("pagy")
+
+    h3 Tabs
+
+    - if "#{global_namespace}::Ui::Tabs".safe_constantize
+      == cell("#{global_namespace_path}/ui/tabs", tabs_model)
+    - else
+      = missing_cell("tabs")
+
+    h3 Flash
+
+    - if "#{global_namespace}::Ui::Flash".safe_constantize
+      .row
+        - flash_models.each do |flash_model|
+          .col-md-6.mb-g
+            == cell("#{global_namespace_path}/ui/flash", flash_model)
+    - else
+      = missing_cell("flash")
+
+    h3 Navigation
+
+    - if "#{global_namespace}::Ui::Navigation".safe_constantize
+      - if navigation_model
+        == cell("#{global_namespace_path}/ui/navigation", navigation_model)
+      - else
+        p.text-danger Missing menu - create a Folio::Menu to preview
+    - else
+      = missing_cell("navigation")
+
+    h3 Documents
+
+    - if "#{global_namespace}::Ui::Documents".safe_constantize
+      - if documents_model.present?
+        == cell("#{global_namespace_path}/ui/documents", documents_model)
+      - else
+        p.text-danger No documents - upload some to preview
+    - else
+      = missing_cell("documents")
+
+    h3 Share
+
+    p Regular
+
+    .my-4
+      == cell("#{global_namespace_path}/ui/share")
+
+    p Collapsible on mobile
+
+    .my-4
+      == cell("#{global_namespace_path}/ui/share",
+              nil,
+              mobile_collapsible: true)
+
+    h3 Cards
+
+    h4 Large
+
+    == cell("#{global_namespace_path}/ui/card_list", card_variants)
+
+    h4 Medium
+
+    == cell("#{global_namespace_path}/ui/card_list", card_variants(medium: true))
+
+    h4 Small
+
+    == cell("#{global_namespace_path}/ui/card_list", card_variants(small: true))

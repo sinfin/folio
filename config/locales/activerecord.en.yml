@@ -121,9 +121,7 @@ en:
       folio/menu:
         one: Menu
         other: Menus
-      folio/menu/page:
-        one: Menu
-        other: Menus
+      folio/menu/page: Menu
       folio/menu_item:
         one: Link
         other: Links
@@ -152,6 +150,7 @@ en:
           states:
             handled: Handled
             submitted: Submitted
+
   attributes:
     aasm_state: State
     content: Content
@@ -160,8 +159,8 @@ en:
     description: Description
     email: E-mail
     featured: Featured
-    file: File
     figcaption: Caption
+    file: File
     first_name: First name
     is_active: Active
     last_name: Last name
@@ -175,13 +174,18 @@ en:
     private_attachments: Files
     published: Published
     published_at: Published at
+    sensitive_content: Contains sensitive content
     slug: Slug
     state: State
     tag_list: Keywords
     title: Title
     to_label: Label
     url: URL
+
   errors:
+    messages:
+      at_least_one: Fill at least one of the fields.
+
     attributes:
       verified_captcha:
         invalid: Please verify you're not a robot 🤖

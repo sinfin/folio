@@ -17,6 +17,10 @@ Rails.application.routes.draw do
   get "/lead_form", to: "home#lead_form"
   get "/gallery", to: "home#gallery"
 
+  get "/download/:hash_id/*name", to: "downloads#show",
+                                  as: :download,
+                                  constraints: { name: /.*/ }
+
   if Rails.application.config.folio_pages_translations
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
       if Rails.application.config.folio_pages_ancestry

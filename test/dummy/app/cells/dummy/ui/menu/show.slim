@@ -1,0 +1,30 @@
+.d-ui-menu[
+  class="d-ui-menu--theme-#{options[:theme] || 'dark'}"
+]
+  ul.d-ui-menu__ul
+    - model.menu_items.includes(:page).arrange.each do |menu_item, children|
+      li.d-ui-menu__li
+        *link_tag(menu_item, children)
+          span.d-ui-menu__span
+            = cstypo menu_item.to_label
+
+          - if children.present?
+            = icon(:arrow_drop_down, class: "d-ui-menu__arrow", height: 22)
+
+        - if children.present?
+          ul.d-ui-menu__children-ul
+            - children.each do |child, _children|
+              li.d-ui-menu__li
+                *link_tag(child)
+                  span.d-ui-menu__span = cstypo child.to_label
+
+    li.d-ui-menu__li.d-ui-menu__li--more[
+      hidden=true
+    ]
+      span.d-ui-menu__a
+        = t('.more', default: t('more'))
+        = icon(:arrow_drop_down, class: "d-ui-menu__arrow", height: 22)
+
+      ul.d-ui-menu__children-ul
+
+  span.d-ui-menu__mq.d-ui-menu__mq--mobile

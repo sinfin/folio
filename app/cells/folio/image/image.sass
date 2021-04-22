@@ -49,6 +49,28 @@ $folio-image-fallback-background: #f9f9f9 !default
     display: block
     opacity: $folio-image-fallback-svg-opacity
 
+  &__sensitive-content
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 3
+    background: #666666
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__sensitive-content-svg
+    flex: 0 0 auto
+    height: 10%
+    min-height: 40px
+    max-height: 100px
+    width: auto
+
+  .f-html--show-sensitive-content &__sensitive-content
+    display: none
+
   &--centered
     margin-left: auto
     margin-right: auto

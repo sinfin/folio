@@ -9,7 +9,7 @@ class Folio::Accounts::SessionsControllerTest < ActionDispatch::IntegrationTest
     create(:folio_site)
     @params = {
       email: "email@email.email",
-      password: "password",
+      password: "Complex@Password.123",
     }
 
     @admin = create(:folio_admin_account, @params)

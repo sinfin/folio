@@ -48,7 +48,8 @@ window.folioConsoleInitReact = (domRoot) => {
       items: JSON.parse(domRoot.dataset.items),
       paramBase: domRoot.dataset.paramBase,
       foreignKey: domRoot.dataset.foreignKey,
-      url: domRoot.dataset.url
+      url: domRoot.dataset.url,
+      sortable: domRoot.dataset.sortable !== '0'
     }))
 
     ReactDOM.render((

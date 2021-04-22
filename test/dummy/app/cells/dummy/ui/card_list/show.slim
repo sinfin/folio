@@ -1,0 +1,5 @@
+.d-ui-card-list
+  .container-fluid
+    .d-ui-card-list__inner
+      - model.each do |card_model|
+        == cell('dummy/ui/card', card_model)

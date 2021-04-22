@@ -1,10 +1,16 @@
 = show_header @user, destroy_url: url_for([:console, @user]),
                      right: cell('folio/console/users/header_actions',
                                  @user)
+
+= render partial: "folio/console/users/show_top"
+
 .row
   .col-lg-8
     = show_for @user do |s|
       = s.email
+      = s.attribute :first_name
+      = s.attribute :last_name
+      = s.attribute :nickname
       = s.attribute :sign_in_count
       = s.attribute :last_sign_in_at
       = s.attribute :created_at
@@ -18,4 +24,8 @@
           .mb-n3
             = simple_format @user.admin_note
 
+= render partial: "folio/console/users/show_middle"
+
 == cell('folio/console/addresses/show_for_model', @user)
+
+= render partial: "folio/console/users/show_bottom"

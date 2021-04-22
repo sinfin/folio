@@ -5,6 +5,7 @@ class Dummy::Atom::Text < Folio::Atom::Base
 
   STRUCTURE = {
     content: :richtext,
+    highlight: [nil, "red", "gray"],
   }
 
   ASSOCIATIONS = {}

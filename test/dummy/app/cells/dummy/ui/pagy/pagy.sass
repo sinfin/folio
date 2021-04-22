@@ -1,0 +1,38 @@
+.d-ui-pagy
+  font-weight: $font-weight-bold
+
+  &__page, a
+    border-radius: 100%
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    text-align: center
+    min-width: 32px
+    min-height: 32px
+    line-height: 32px
+    flex: 0 0 32px
+
+  a
+    color: $black
+    text-decoration: none
+
+    &:hover, &:focus
+      color: $black
+      background: $medium-gray
+      text-decoration: none
+
+  &__nav,
+  &__pages
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__page
+    margin: 0 5px
+
+  &__page--current
+    background: $black
+    color: $white
+
+  &__page--disabled
+    opacity: 0.4

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::TextCell < ApplicationCell
-  include Folio::CstypoHelper
-
   def show
     render if model.content.present?
   end
@@ -20,5 +18,15 @@ class Dummy::Atom::TextCell < ApplicationCell
     parsed.search("table")
           .wrap('<div class="d-atom-text__table-wrap" />')
     parsed.to_html
+  end
+
+  def highlight?
+    model.highlight.present?
+  end
+
+  def highlight_class_name
+    if highlight?
+      "p-gg d-atom-text__highlight d-atom-text__highlight--#{model.highlight} d-rich-text--chomp"
+    end
   end
 end

@@ -7,75 +7,56 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
   source_root File.expand_path("templates", __dir__)
 
-  PREPARED_ATOMS = {
-    text: {
-      cs: {
-        name: "Text (odstavce, tabulky, apod.)",
-        attributes: {},
-      },
-      en: {
-        name: "Text (paragraphs, tables, etc.)",
-        attributes: {},
-      },
-    },
-    title: {
-      cs: {
-        name: "Nadpis",
-        attributes: {},
-      },
-      en: {
-        name: "Title",
-        attributes: {},
-      },
-    },
-    images: {
-      cs: {
-        name: "Obrázky (galerie)",
-        attributes: {
-          same_width: "Zarovnat do mřížky",
-          title: "Popisek pod galerií",
-        },
-      },
-      en: {
-        name: "Images (gallery)",
-        attributes: {
-          same_width: "Align to grid",
-          title: "Caption under the gallery",
-        },
-      },
-    }
-  }
-
   class UnknownAtomKey < StandardError; end
 
   def create
-    if name.blank? || PREPARED_ATOMS.keys.exclude?(name.to_sym)
-      raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{PREPARED_ATOMS.keys.join(', ')}"
-    end
+    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.starts_with?(".") }
+    allowed_keys += %w[card/small card/medium card/large]
+    allowed_keys += %w[embed/html embed/video embed/podcast]
+    allowed_keys -= %w[embed]
 
-    if global_namespace == "Dummy"
-      prefix = "test/dummy/"
+    if name == "all"
+      keys = allowed_keys
+    elsif allowed_keys.include?(name)
+      keys = [name.to_sym]
     else
-      prefix = ""
+      raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{allowed_keys.join(', ')}"
     end
 
+    base = ::Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates/").to_s
 
-    template "#{name}/atom_model.rb.tt", "#{prefix}app/models/#{global_namespace_path}/atom/#{name}.rb"
-    template "#{name}/cell.rb.tt", "#{prefix}app/cells/#{global_namespace_path}/atom/#{name}_cell.rb"
-    template "#{name}/cell.slim.tt", "#{prefix}app/cells/#{global_namespace_path}/atom/#{name}/show.slim"
-    template "#{name}/cell_test.rb.tt", "#{prefix}test/cells/#{global_namespace_path}/atom/#{name}_cell_test.rb"
+    keys.each do |key|
+      @atom_name = key
 
-    root = File.expand_path("templates", __dir__)
+      Dir["#{base}#{key}/#{key}.rb.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, "app/models/#{global_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+      end
 
-    if File.exist?("#{root}/#{name}/#{name}.coffee.tt")
-      template "#{name}/#{name}.coffee.tt", "#{prefix}app/cells/#{global_namespace_path}/atom/#{name}/#{name}.coffee"
+      is_molecule = File.read("#{base}#{key}/#{key}.rb.tt").match?("self.molecule")
+      cell_directory = is_molecule ? "molecule" : "atom"
+
+      Dir["#{base}#{key}/cell/#{key}_cell.rb.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, "app/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+      end
+
+      Dir["#{base}#{key}/cell/#{key}_cell_test.rb.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, "test/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+      end
+
+      Dir["#{base}#{key}/cell/#{key}/**/*.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, "app/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+      end
+
+      i18n_path = "#{base}#{key}/i18n.yml"
+      if File.exist?(i18n_path)
+        raw_yaml = File.read(i18n_path).gsub("global_namespace_path", global_namespace_path)
+        add_atom_to_i18n_ymls(YAML.load(raw_yaml))
+      end
     end
-
-    if File.exist?("#{root}/#{name}/#{name}.sass.tt")
-      template "#{name}/#{name}.sass.tt", "#{prefix}app/cells/#{global_namespace_path}/atom/#{name}/#{name}.sass"
-    end
-
-    add_atom_to_i18n_ymls(PREPARED_ATOMS[name.to_sym])
   end
 
   private

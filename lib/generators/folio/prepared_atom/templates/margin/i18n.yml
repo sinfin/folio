@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/margin: 
+    models:
+      global_namespace_path/atom/margin: Margin
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/margin: 
+    models:
+      global_namespace_path/atom/margin: Odsazení

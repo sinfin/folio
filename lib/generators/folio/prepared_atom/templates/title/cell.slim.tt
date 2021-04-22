@@ -1,4 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-<%= dashed_resource_name %>
-  .container
-    *{ tag: model.tag_with_fallback }
-      = cstypo model.title

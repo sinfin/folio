@@ -8,6 +8,8 @@ div class=class_name data-failure=t('.failure')
           value=remember_option(opt)
         ]
 
+    == options[:above_form]
+
     = additional_data_input(f)
 
     - if layout[:cols]
@@ -30,13 +32,15 @@ div class=class_name data-failure=t('.failure')
            ENV['RECAPTCHA_SECRET_KEY'].present?
         .f-leads-form__recaptcha.form-group
           = recaptcha_tags(script: false)
-          = f.error :verified_captcha, class: 'text-danger'
+          = f.error :verified_captcha, class: 'invalid-feedback d-block'
 
       .f-leads-form__submit-wrap
         button.btn.btn-primary.f-leads-form__submit type="submit"
           = t('.submit')
 
         == options[:next_to_submit]
+
+    == options[:under_form]
 
   - if submitted?
     .f-leads-form__message

@@ -1,0 +1,17 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/card/medium:
+        button_label: Button label
+        href: Link
+    models:
+      global_namespace_path/atom/card/medium: Card (medium)
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/card/medium:
+        button_label: Text tlačítka
+        href: Odkaz
+    models:
+      global_namespace_path/atom/card/medium: Karta s odkazem (střední)

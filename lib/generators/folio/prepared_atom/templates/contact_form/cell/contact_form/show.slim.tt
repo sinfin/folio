@@ -1,0 +1,7 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-contact-form.my-gg
+  .container-fluid
+    .<%= classname_prefix %>-atom-contact-form__inner
+      - if model.title.present?
+        h2.mt-0.mb-g = cstypo model.title
+
+      == form_cell

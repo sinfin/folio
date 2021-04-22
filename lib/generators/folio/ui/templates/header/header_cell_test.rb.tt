@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Ui::HeaderCellTest < Cell::TestCase
+  test "show" do
+    html = cell("<%= global_namespace_path %>/ui/header", nil).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-header")
+
+    <%= global_namespace %>::Menu::Header.create!(locale: :en)
+    html = cell("<%= global_namespace_path %>/ui/header", nil).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-header")
+  end
+end

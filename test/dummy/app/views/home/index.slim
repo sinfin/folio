@@ -1,50 +1,5 @@
-.container
-  h1 home#index
-
-  - if Rails.application.config.folio_users
-    - if user_signed_in?
-      .mt-5
-        = show_for current_user do |s|
-          = s.email
-          = s.attribute(:nickname)
-          = s.attribute(:authentications)
-            == cell('folio/devise/omniauth/authentications/list', current_user)
-
-        .mt-4.row
-          .col-auto
-            a.btn.btn-secondary href=edit_user_registration_path
-              ' Edit registration
-
-          .col-auto
-            a.btn.btn-secondary href=edit_user_registration_path(pw: 1)
-              ' Change password
-
-          .col-auto
-            a.btn.btn-danger href=destroy_user_session_path
-              ' Sign out
-
-    - else
-      .mt-5.row
-        .col-auto
-          a.btn.btn-primary href=new_user_session_path Sign in
-
-        .col-auto
-          a.btn.btn-secondary href=new_user_registration_path Sign up
-
-        .col-auto
-          button.btn.btn-primary[
-            type="button"
-            data-toggle="modal"
-            data-target=Folio::Devise::ModalCell::CLASS_NAME
-            data-action="sign_in"
-          ]
-            ' Sign in (modal)
-
-        .col-auto
-          button.btn.btn-secondary[
-              type="button"
-              data-toggle="modal"
-              data-target=Folio::Devise::ModalCell::CLASS_NAME
-              data-action="sign_up"
-            ]
-            ' Sign up (modal)
+- if @page.present?
+  = render_atoms_in_molecules @page.atoms_in_molecules
+- else
+  .container-fluid
+    h1 home#index

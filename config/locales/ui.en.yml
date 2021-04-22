@@ -1,0 +1,6 @@
+---
+en:
+  folio:
+    ui:
+      atoms:
+        invalid: Invalid atom

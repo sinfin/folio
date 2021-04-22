@@ -16,9 +16,8 @@ class Folio::NewsletterSubscriptionsControllerTest < ActionDispatch::Integration
       }
     }
     assert_response(:success)
-    html = Nokogiri::HTML(response.body)
-    assert_equal 0, html.css(".folio-newsletter-subscription-form-message").size
-    assert_equal 1, html.css(".form-group-invalid #newsletter_subscription_email").size
+    assert_select(".f-newsletter-subscriptions-form__message", false)
+    assert_select(".form-group-invalid #newsletter_subscription_email")
   end
 
   test "valid" do
@@ -28,7 +27,6 @@ class Folio::NewsletterSubscriptionsControllerTest < ActionDispatch::Integration
       }
     }
     assert_response(:success)
-    html = Nokogiri::HTML(response.body)
-    assert_equal 1, html.css(".folio-newsletter-subscription-form-message").size
+    assert_select(".f-newsletter-subscriptions-form__message")
   end
 end

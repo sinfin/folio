@@ -42,12 +42,13 @@ PATH
       jquery-rails
       mini_exiftool
       mini_magick
+      mini_racer (~> 0.4.0)
       nokogiri
       omniauth (~> 1.9.1)
       omniauth-facebook (~> 8.0.0)
       omniauth-google-oauth2 (~> 0.8.1)
       omniauth-twitter (~> 1.4.0)
-      pagy
+      pagy (~> 3)
       pg (~> 1.2.3)
       pg_search (= 2.3.2)
       premailer-rails

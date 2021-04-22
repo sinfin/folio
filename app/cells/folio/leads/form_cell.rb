@@ -100,6 +100,8 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
   def remember_option(opt)
     if opt == :layout
       val = layout.to_json
+    elsif %i[above_form under_form].include?(opt)
+      val = options[opt].gsub(/="([^"]+)"/, "='\\1'")
     else
       val = options[opt]
     end

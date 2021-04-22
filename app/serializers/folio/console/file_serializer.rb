@@ -15,7 +15,8 @@ class Folio::Console::FileSerializer
              :thumbnail_sizes,
              :author,
              :description,
-             :file_placements_size
+             :file_placements_size,
+             :sensitive_content
 
   attribute :react_type do |object|
     object.class.react_type

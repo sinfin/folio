@@ -1,7 +1,9 @@
 #= require jquery
 #= require jquery-ui/jquery-ui
+#= require justified-layout
 #= require folio/cable
 #= require folio/lazyload
+#= require folio/debounce
 #= require folio/console/atoms/previews/main_app
 
 lazyloadAll = ->

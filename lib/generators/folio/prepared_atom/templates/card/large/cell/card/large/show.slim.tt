@@ -1,0 +1,2 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-card-large.my-h
+  == cell('<%= global_namespace_path %>/ui/card_list', model.map(&:to_cell_hash))

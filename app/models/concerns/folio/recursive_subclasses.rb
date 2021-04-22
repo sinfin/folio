@@ -4,7 +4,7 @@ module Folio::RecursiveSubclasses
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def recursive_subclasses(include_self: true, exclude_singletons: false, preload_sti: true)
+    def recursive_subclasses(include_self: true, exclude_singletons: false, exclude_abstract: false, preload_sti: true)
       self.preload_sti if preload_sti && self.respond_to?(:preload_sti)
 
       subs = subclasses.map { |k| k.recursive_subclasses(preload_sti: false) }
@@ -12,6 +12,10 @@ module Folio::RecursiveSubclasses
 
       if exclude_singletons
         subs = subs.reject { |k| k.try(:singleton?) }
+      end
+
+      if exclude_abstract
+        subs = subs.reject(&:abstract_class?)
       end
 
       include_self ? [self] + subs.compact : subs.compact

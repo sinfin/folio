@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-<%= dashed_resource_name %>
-  .container
-    = cstypo content

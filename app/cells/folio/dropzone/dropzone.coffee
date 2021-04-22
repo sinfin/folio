@@ -14,6 +14,7 @@ initDropzones = ->
       thumbnailWidth: 250
       thumbnailHeight: 250
       maxFilesize: 100
+      maxFiles: $wrap.data('max-files') || null
       timeout: 0
       acceptedFiles: $wrap.data('file-formats') || null
       removedfile: (file) ->

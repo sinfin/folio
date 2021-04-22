@@ -1,0 +1,8 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-documents.mb-a
+  .container-fluid
+    ul.<%= classname_prefix %>-molecule-documents__inner.mb-n4
+      - model.each do |atom|
+        li.<%= classname_prefix %>-molecule-documents__atom.mb-4.pb-2
+          == cell('<%= global_namespace_path %>/ui/documents',
+                  atom.document_placements,
+                  title: atom.title)

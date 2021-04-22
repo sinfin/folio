@@ -1,5 +1,8 @@
 {
   "name": "dummy",
   "private": true,
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "svg-sprite": "^1.5.0"
+  }
 }

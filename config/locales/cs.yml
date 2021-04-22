@@ -1,6 +1,7 @@
 ---
 cs:
   all: Všechny
+  more: Více
   date:
     formats:
       short: "%d. %m. %Y"
@@ -41,9 +42,10 @@ cs:
         de: němčina
         en: angličtina
         es: španělština
-    newsletter_subscription_form:
-      message: Odesláno!
-      submit: Odeslat
+    newsletter_subscriptions:
+      form:
+        message: Odesláno!
+        submit: Odeslat
     photoswipe:
       error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:
@@ -52,6 +54,13 @@ cs:
         title_long: Nastavení stránky %{site}
     publishable_hint:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
+    image:
+      sensitive_content_title: Tento obrázek obsahuje citlivý obsah, který je možné zobrazit až po ověření věku.
+    sensitive_content_modal:
+      title: Upozornění
+      content: Tato stránka obsahuje citlivý obsah, který je možné zobrazit až po ověření věku. Je Vám více než 18 let?
+      accept: Ano
+      cancel: Ne
   head:
     description: ''
     title:

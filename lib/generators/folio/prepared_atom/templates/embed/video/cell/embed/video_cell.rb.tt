@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+class <%= global_namespace %>::Atom::Embed::VideoCell < ApplicationCell
+end

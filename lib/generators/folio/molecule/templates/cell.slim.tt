@@ -1,5 +1,5 @@
 .<%= classname_prefix %>-molecule.<%= molecule_class_name %>
-  .container
+  .container-fluid
     ul.<%= molecule_class_name %>__inner
       - model.each do |atom|
         li.<%= molecule_class_name %>__atom

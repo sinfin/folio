@@ -10,7 +10,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
 
     @params = {
       email: "email@email.email",
-      password: "password",
+      password: "Complex@Password.123",
     }
 
     @user = create(:folio_user, @params)

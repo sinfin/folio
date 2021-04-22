@@ -9,6 +9,8 @@ class Folio::LeadsController < Folio::ApplicationController
     :note_rows,
     :layout,
     :next_to_submit,
+    :above_form,
+    :under_form,
   ]
 
   def create

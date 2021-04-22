@@ -154,11 +154,15 @@ module Folio::Console::ReactHelper
     )
   end
 
-  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered)
+  def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
     if atom_setting
       class_name = "#{class_name} f-c-js-atoms-placement-setting"
+    end
+
+    unless sortable
+      class_name = "#{class_name} folio-react-wrap--ordered-multiselect-not-sortable"
     end
 
     klass = f.object.class
@@ -203,6 +207,7 @@ module Folio::Console::ReactHelper
           "data-foreign-key" => reflection.foreign_key,
           "data-items" => items.to_json,
           "data-url" => url,
+          "data-sortable" => sortable ? "1" : "0",
         )
       )
     end

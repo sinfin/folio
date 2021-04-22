@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/person: 
+    models:
+      global_namespace_path/atom/person: Person
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/person: 
+    models:
+      global_namespace_path/atom/person: Osoba (karta střední)

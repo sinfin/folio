@@ -26,3 +26,8 @@ AllCops:
     - 'test/dummy/public/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
+
+Lint/UselessAssignment:
+  Exclude:
+    - 'db/seeds.rb'
+    - 'lib/tasks/developer_tools.rake'

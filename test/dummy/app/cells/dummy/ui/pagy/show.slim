@@ -1,0 +1,47 @@
+.d-ui-pagy
+  nav.d-ui-pagy__nav role="navigation" aria-label="pager"
+    - if model.prev
+      span.d-ui-pagy__page[
+        class="d-ui-pagy__page--with-ico"
+        class="d-ui-pagy__page--prev"
+      ]
+        = link.call(model.prev, icon(:fast_rewind), 'aria-label="previous"')
+    - else
+      span.d-ui-pagy__page[
+        class="d-ui-pagy__page--with-ico"
+        class="d-ui-pagy__page--prev"
+        class="d-ui-pagy__page--disabled"
+      ]
+        = icon(:fast_rewind)
+
+    .d-ui-pagy__pages
+      / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
+      - model.series.each_with_index do |item, index|
+        - if item.is_a?(Integer)          # page link
+          span.d-ui-pagy__page = link.call(item)
+
+        - elsif item.is_a?(String)        # current page
+          span.d-ui-pagy__page[
+            class="d-ui-pagy__page--current"
+          ]
+            = item
+
+        - elsif item == :gap              # page gap
+          span.d-ui-pagy__page[
+            class="d-ui-pagy__page--gap"
+          ]
+            ' &hellip;
+
+    - if model.next
+      span.d-ui-pagy__page[
+        class="d-ui-pagy__page--with-ico"
+        class="d-ui-pagy__page--next"
+      ]
+        == link.call(model.next, icon(:fast_forward), 'aria-label="next"')
+    - else
+      span.d-ui-pagy__page[
+        class="d-ui-pagy__page--with-ico"
+        class="d-ui-pagy__page--next"
+        class="d-ui-pagy__page--disabled"
+      ]
+        = icon(:fast_forward)

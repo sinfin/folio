@@ -1,0 +1,28 @@
+input[
+  hidden=true
+  class=MENU_INPUT_ID
+  id=MENU_INPUT_ID
+  type="checkbox"
+]
+
+.<%= classname_prefix %>-ui-header
+  .container-fluid
+    .<%= classname_prefix %>-ui-header__inner
+      a.<%= classname_prefix %>-ui-header__text-logo.h3 href="/"
+          = ::Rails.application.class.to_s.deconstantize
+
+      - if menu
+        .<%= classname_prefix %>-ui-header__menu
+          == cell('<%= global_namespace_path %>/ui/menu', menu, theme: :dark)
+
+      a.<%= classname_prefix %>-ui-header__search-a href="/"
+        = icon(:search, height: 32)
+
+      - if menu
+        label.<%= classname_prefix %>-ui-header__menu-toggle for=MENU_INPUT_ID
+          .<%= classname_prefix %>-ui-header__menu-toggle-inner
+            - 4.times do |i|
+              span[
+                class="<%= classname_prefix %>-ui-header__menu-toggle-span"
+                class="<%= classname_prefix %>-ui-header__menu-toggle-span--#{i + 1}"
+              ]

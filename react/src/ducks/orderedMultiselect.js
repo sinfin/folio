@@ -38,7 +38,8 @@ const initialState = {
   removedIds: [],
   paramBase: null,
   foreignKey: null,
-  url: null
+  url: null,
+  sortable: true
 }
 
 // Reducer

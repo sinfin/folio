@@ -1,0 +1,17 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/images:
+        same_width: Align to grid
+        title: Caption under the gallery
+    models:
+      global_namespace_path/atom/images: Images (gallery)
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/images:
+        same_width: Zarovnat do mřížky
+        title: Popisek pod galerií
+    models:
+      global_namespace_path/atom/images: Obrázky (galerie)

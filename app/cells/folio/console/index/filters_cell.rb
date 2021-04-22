@@ -66,6 +66,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    .delete_prefix("by_")
                    .delete_suffix("_query")
                    .delete_suffix("_id")
+                   .delete_suffix("_slug")
 
     klass.human_attribute_name(clear_key)
   end
@@ -95,12 +96,14 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       if data[:autocomplete]
         url = controller.folio.console_api_autocomplete_path(klass: data[:klass],
                                                              scope: data[:scope],
-                                                             order_scope: data[:order_scope])
+                                                             order_scope: data[:order_scope],
+                                                             slug: data[:slug])
         autocomplete_select(f, key, url: url)
       else
         url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
                                                                      scope: data[:scope],
-                                                                     order_scope: data[:order_scope])
+                                                                     order_scope: data[:order_scope],
+                                                                     slug: data[:slug])
         select2_select(f, key, data, url: url)
       end
     else
@@ -129,8 +132,13 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     collection = []
 
     if controller.params[key].present?
-      record = data[:klass].constantize.find_by_id(controller.params[key])
-      collection << [record.to_console_label, record.id, selected: true] if record
+      if data[:slug]
+        record = data[:klass].constantize.find_by_slug(controller.params[key])
+        collection << [record.to_console_label, record.slug, selected: true] if record
+      else
+        record = data[:klass].constantize.find_by_id(controller.params[key])
+        collection << [record.to_console_label, record.id, selected: true] if record
+      end
     end
 
     f.input key, collection: collection,

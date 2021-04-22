@@ -1,0 +1,20 @@
+//= require jquery3
+//= require rails-ujs
+//= require turbolinks
+//= require justified-layout
+//= require slick-carousel/slick/slick.min
+//= require js-cookie/src/js.cookie
+
+//= require folio-bootstrap/js/dist/util
+//= require folio-bootstrap/js/dist/modal
+
+<%- if Rails.application.config.folio_users -%>//= require folio/devise
+<%- end -%>
+//= require folio/debounce
+//= require folio/lazyload
+//= require folio/lightbox
+
+//= require folio/image/image
+//= require folio/leads/form/form
+//= require folio/modal/sensitive_content/sensitive_content
+//= require folio/newsletter_subscriptions/form/form

@@ -1,0 +1,10 @@
+.<%= classname_prefix %>-ui-tabs
+  .<%= classname_prefix %>-ui-tabs__inner
+    ul.<%= classname_prefix %>-ui-tabs__ul
+      - model.each do |link|
+        li.<%= classname_prefix %>-ui-tabs__li
+          a.<%= classname_prefix %>-ui-tabs__a[
+            href=link[:href]
+            class=(link[:active] ? "<%= classname_prefix %>-ui-tabs__a--active": nil)
+          ]
+            = link[:label]

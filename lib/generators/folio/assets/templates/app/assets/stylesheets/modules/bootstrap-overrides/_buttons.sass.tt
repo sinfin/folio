@@ -1,0 +1,80 @@
+.btn
+  font-size: $input-btn-font-size
+  text-transform: uppercase
+  min-height: $input-height
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  text-align: center
+
+.btn-sm
+  font-size: $input-btn-font-size-sm
+  min-height: $input-height-sm
+
+.btn-lg
+  font-size: $input-btn-font-size-lg
+  min-height: $input-height-lg
+
+.btn-xs-block
+  +media-breakpoint-down(xs)
+    display: flex
+    width: 100%
+    flex: 0 0 100%
+
+%btn-primary
+  background-color: $black
+  border-color: $black
+  color: $white
+
+  &:focus, &.focus,
+  &:hover, &.active
+    &:not(:disabled):not(.disabled)
+      color: $white
+      border-color: rgba($black, 0.7)
+      background-color: rgba($black, 0.7)
+
+.btn-primary
+  @extend %btn-primary
+
+%btn-secondary
+  background-color: $white
+  border-color: $black
+  color: $black
+
+  &:focus, &.focus,
+  &:hover, &.active
+    &:not(:disabled):not(.disabled)
+      color: $black
+      border-color: $black
+      background-color: rgba($black, 0.04)
+
+  &.disabled, &:disabled
+    background-color: $white
+    border-color: $black
+    color: $black
+
+.btn-secondary
+  @extend %btn-secondary
+
+%btn-tag
+  background-color: rgba($black, 0.1)
+  border: 0
+  color: #515151
+  min-height: 24px
+  padding: 2px 10px
+  text-transform: none
+  font-weight: $font-weight-normal
+
+  &:focus, &.focus,
+  &:hover, &.active
+    &:not(:disabled):not(.disabled)
+      color: #515151
+      background-color: rgba($black, 0.15)
+
+  &.disabled, &:disabled
+    background-color: rgba($black, 0.1)
+    color: #515151
+    opacity: 0.33
+
+.btn-tag
+  @extend %btn-tag
