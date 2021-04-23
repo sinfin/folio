@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::EmailTemplate < Folio::ApplicationRecord
-  extend FriendlyId
-
-  friendly_id :slug_candidate, use: %i[slugged]
+  include Folio::FriendlyId
 
   validates :mailer, :action,
             presence: true
