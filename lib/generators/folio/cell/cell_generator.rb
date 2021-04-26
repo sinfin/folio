@@ -27,7 +27,7 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
     end
 
     def dashed_resource_name
-      model_resource_name.gsub("_", "-")
+      model_resource_name.tr("_", "-")
     end
 
     def cell_name
