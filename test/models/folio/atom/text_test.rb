@@ -2,15 +2,12 @@
 
 require "test_helper"
 
-class Folio::Atom::TextTest < ActionDispatch::IntegrationTest
+class Dummy::Atom::TextTest < Cell::TestCase
   test "renders" do
     create(:folio_site)
 
-    atom = create_atom(Folio::Atom::Text,
-                       content: "<p>bar</p>",
-                       placement: create(:folio_page, title: "cat"))
-    visit page_path(atom.placement, locale: :cs)
-    assert_equal("cat", page.find("h1").text)
-    assert_equal("bar", page.find("p").text)
+    atom = create_atom(Dummy::Atom::Text, content: "<p>bar</p>")
+    html = cell(atom.class.cell_name, atom).(:show)
+    assert_equal("bar", html.find("p").text)
   end
 end

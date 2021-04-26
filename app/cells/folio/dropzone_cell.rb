@@ -15,6 +15,7 @@ class Folio::DropzoneCell < Folio::ApplicationCell
       "file-formats" => file_formats,
       "records" => records,
       "destroy-failure" => destroy_failure,
+      "max-files" => model[:max_files],
       "max-file-size" => model[:max_file_size],
       "dict" => dict.to_json,
     }
@@ -30,7 +31,13 @@ class Folio::DropzoneCell < Folio::ApplicationCell
 
   def file_formats
     if model[:file_formats]
-      model[:file_formats].map { |ff| "image/#{ff}" }.join(", ")
+      model[:file_formats].map do |ff|
+        if ff.include?("/")
+          ff
+        else
+          "image/#{ff}"
+        end
+      end.join(", ")
     else
       nil
     end

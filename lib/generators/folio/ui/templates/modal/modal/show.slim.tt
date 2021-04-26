@@ -1,0 +1,22 @@
+.modal.<%= classname_prefix %>-ui-modal role="dialog" tabindex="-1" class=model[:class]
+  .modal-dialog[
+    role="document"
+    class="<%= classname_prefix %>-ui-modal__dialog"
+  ]
+    .modal-content.<%= classname_prefix %>-ui-modal__content
+      - if model[:header]
+        .modal-header.<%= classname_prefix %>-ui-modal__header
+          = model[:header]
+          = render(:_close)
+
+      .modal-body.<%= classname_prefix %>-ui-modal__body
+        = model[:body]
+        = render(:_close) unless model[:header]
+
+      - if model[:footer]
+        .modal-footer.<%= classname_prefix %>-ui-modal__footer
+          = model[:footer]
+      - elsif model[:primary] || model[:secondary]
+        .modal-footer.<%= classname_prefix %>-ui-modal__footer
+          = footer_button(:primary)
+          = footer_button(:secondary)

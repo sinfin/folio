@@ -80,6 +80,9 @@ en:
         keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
+      folio/user:
+        last_sign_in_at: Last sign in
+        sign_in_count: Sign in count
     errors:
       messages:
         indestructible: The record cannot be removed.
@@ -100,8 +103,6 @@ en:
       folio/atom:
         one: Atom
         other: Atoms
-      folio/atom/text: Text
-      folio/atom/title: Title
       folio/content_template:
         one: Content template
         other: Content templates
@@ -120,9 +121,7 @@ en:
       folio/menu:
         one: Menu
         other: Menus
-      folio/menu/page:
-        one: Menu
-        other: Menus
+      folio/menu/page: Menu
       folio/menu_item:
         one: Link
         other: Links
@@ -139,6 +138,9 @@ en:
       folio/email_template:
         one: Email template
         other: Email templates
+      folio/user:
+        one: User
+        other: Users
       tag:
         one: Tag
         other: Tags
@@ -148,6 +150,7 @@ en:
           states:
             handled: Handled
             submitted: Submitted
+
   attributes:
     aasm_state: State
     content: Content
@@ -156,8 +159,8 @@ en:
     description: Description
     email: E-mail
     featured: Featured
-    file: File
     figcaption: Caption
+    file: File
     first_name: First name
     is_active: Active
     last_name: Last name
@@ -171,13 +174,18 @@ en:
     private_attachments: Files
     published: Published
     published_at: Published at
+    sensitive_content: Contains sensitive content
     slug: Slug
     state: State
     tag_list: Keywords
     title: Title
     to_label: Label
     url: URL
+
   errors:
+    messages:
+      at_least_one: Fill at least one of the fields.
+
     attributes:
       verified_captcha:
         invalid: Please verify you're not a robot 🤖

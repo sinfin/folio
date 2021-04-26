@@ -13,7 +13,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :fixed_height_fluid,
                         :cloned,
                         :round,
-                        :static?
+                        :static?,
+                        :sensitive_content?
 
   def show
     render if size
@@ -22,52 +23,61 @@ class Folio::ImageCell < Folio::ApplicationCell
   def data
     return nil unless model.present?
 
-    @data ||= begin
-      if static?
-        use_webp = model[:webp_normal] && model[:webp_retina]
-        {
-          alt: "",
-          src: model[:normal],
-          srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
-          webp_src: model[:webp_normal],
-          webp_srcset: use_webp ? "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x" : nil,
-          use_webp: use_webp,
-        }
-      else
-        if model.is_a?(Folio::FilePlacement::Base)
-          file = model.file
+    @data ||= if static?
+      use_webp = model[:webp_normal].present?
+
+      if model[:webp_normal].present?
+        if model[:webp_retina].present?
+          webp_srcset = "#{model[:webp_normal]} 1x, #{model[:webp_retina]} #{retina_multiplier}x"
         else
-          file = model
+          webp_srcset = model[:webp_normal]
         end
-
-        normal = file.thumb(size)
-
-        h = {
-          normal: normal,
-          src: normal.url,
-          alt: model.try(:alt) || "",
-          title: model.try(:title),
-        }
-
-        unless /svg/.match?(file.mime_type)
-          retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
-
-          retina = file.thumb(retina_size)
-
-          use_webp = normal[:webp_url] && retina[:webp_url]
-
-          h[:retina] = retina
-          h[:use_webp] = use_webp
-          h[:srcset] = "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x"
-
-          if use_webp
-            h[:webp_src] = normal.webp_src
-            h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
-          end
-        end
-
-        h
+      else
+        webp_srcset = nil
       end
+
+      {
+        alt: "",
+        src: model[:normal],
+        srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
+        webp_src: model[:webp_normal],
+        webp_srcset: webp_srcset,
+        use_webp: use_webp,
+      }
+    else
+      if model.is_a?(Folio::FilePlacement::Base)
+        file = model.file
+      else
+        file = model
+      end
+
+      normal = file.thumb(size)
+
+      h = {
+        normal: normal,
+        src: normal.url,
+        alt: model.try(:alt) || "",
+        title: model.try(:title),
+      }
+
+      unless /svg/.match?(file.mime_type)
+        retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
+
+        retina = file.thumb(retina_size)
+
+        use_webp = normal[:webp_url] && retina[:webp_url]
+
+        h[:retina] = retina
+        h[:use_webp] = use_webp
+        h[:srcset] = "#{normal.url} 1x, #{retina.url} #{retina_multiplier}x"
+
+        if use_webp
+          h[:webp_src] = normal.webp_src
+          h[:webp_srcset] = "#{normal.webp_url} 1x, #{retina.webp_url} #{retina_multiplier}x"
+        end
+      end
+
+      h
     end
   end
 
@@ -114,10 +124,21 @@ class Folio::ImageCell < Folio::ApplicationCell
       styles << "width: #{mobile}px"
       styles << "height: #{mobile_height}px"
     else
+      max_height = nil
+
       if options[:max_height]
         max_width = (options[:max_height] / spacer_ratio).round(4)
       else
-        max_width = options[:max_width] || size.split("x").first
+        if options[:max_width]
+          max_width = options[:max_width]
+        else
+          if thumbnail_width
+            max_width = thumbnail_width
+            max_height = "#{thumbnail_height}px" if thumbnail_height
+          else
+            max_width = size.split("x").first
+          end
+        end
       end
 
       if max_width.present?
@@ -131,7 +152,11 @@ class Folio::ImageCell < Folio::ApplicationCell
           if file.respond_to?(:file_width)
             max_width_i = max_width.to_i
             if max_width_i > 0
-              max_width = [max_width_i, file.file_width].min
+              if file.file_width
+                max_width = [max_width_i, file.file_width].min
+              else
+                max_width = max_width_i
+              end
             end
           end
 
@@ -141,10 +166,16 @@ class Folio::ImageCell < Folio::ApplicationCell
         styles << "max-width: #{max_width}"
       end
 
+      if max_height.present?
+        styles << "max-height: #{max_height}"
+      end
+
       if options[:fixed_width]
         styles << "width: #{options[:fixed_width]}"
       end
     end
+
+    styles << options[:style] if options[:style].present?
 
     styles.join(";")
   end
@@ -210,6 +241,8 @@ class Folio::ImageCell < Folio::ApplicationCell
       tag: :div,
       class: class_names,
       style: wrap_style,
+      "data-width" => thumbnail_width,
+      "data-height" => thumbnail_height,
     }
 
     if options[:href]
@@ -251,5 +284,53 @@ class Folio::ImageCell < Folio::ApplicationCell
     else
       options[:spacer_background]
     end
+  end
+
+  def thumbnail_size
+    if @thumbnail_size.nil?
+      file = nil
+      file = model if model.is_a?(Folio::File)
+      file = model.file if model.is_a?(Folio::FilePlacement::Base)
+
+      if file
+        t = file.thumb(size)
+        @thumbnail_size = {
+          width: t.width,
+          height: t.height,
+        }
+      else
+        @thumbnail_size = false
+      end
+    else
+      @thumbnail_size.presence
+    end
+  end
+
+  def thumbnail_width
+    if @thumbnail_width.nil?
+      @thumbnail_width = thumbnail_size.try(:[], :width)
+    else
+      @thumbnail_width.presence
+    end
+  end
+
+  def thumbnail_height
+    if @thumbnail_height.nil?
+      @thumbnail_height = thumbnail_size.try(:[], :height)
+    else
+      @thumbnail_height.presence
+    end
+  end
+
+  def sensitive_content?
+    return @sensitive_content unless @sensitive_content.nil?
+
+    if model.is_a?(Folio::FilePlacement::Base)
+      file = model.file
+    else
+      file = model
+    end
+
+    @sensitive_content = file.try(:sensitive_content?) || false
   end
 end

@@ -1,0 +1,38 @@
+.d-atom.d-atom-images
+  .container-fluid
+    - if model.same_width
+      .row.d-atom-images__row
+        - model.image_placements.each do |placement|
+          figure.col-3.d-atom-images__col
+            = image(placement,
+                    "#{GRID_SIZE}x#{GRID_SIZE}#",
+                    hover_zoom: true,
+                    title: placement.title.presence,
+                    alt: placement.alt.presence,
+                    lightbox: true,
+                    class: 'd-atom-images__col-image')
+
+    - else
+      .d-atom-images__dynamic[
+        data-target-height=DYNAMIC_TARGET_HEIGHT
+        data-margin=DYNAMIC_MARGIN
+      ]
+        - model.image_placements.each do |placement|
+          - data = dynamic_item_data(placement)
+          .d-atom-images__dynamic-item[
+            style="width: #{data[:width]}px"
+            data-ratio=data[:ratio]
+          ]
+            = image(placement,
+                    dynamic_geometry,
+                    hover_zoom: true,
+                    title: placement.title.presence,
+                    alt: placement.alt.presence,
+                    lightbox: true,
+                    class: 'd-atom-images__dynamic-image')
+
+        .d-atom-images__loader-wrap
+          span.folio-loader.d-atom-images__loader
+
+    - if model.title.present?
+      figcaption.d-atom-images__bottom-figcaption = cstypo model.title

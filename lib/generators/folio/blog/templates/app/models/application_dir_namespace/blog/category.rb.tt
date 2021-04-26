@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class <%= application_module %>::Blog::Category < ApplicationRecord
-  extend FriendlyId
+  include Folio::FriendlyId
   include Folio::HasAttachments
   include Folio::Publishable::Basic
-
-  friendly_id :title, use: %i[slugged history]
 
   has_many :primary_articles, class_name: "<%= application_module %>::Blog::Article",
                               inverse_of: :primary_category,

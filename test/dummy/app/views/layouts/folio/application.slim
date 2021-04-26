@@ -1,0 +1,25 @@
+doctype html
+html[
+  lang=I18n.locale
+  class=(cookies[:image_sensitive_content] && "f-html--show-sensitive-content")
+]
+  head
+    = render partial: 'layouts/folio/head'
+    = render partial: 'layouts/folio/favicon'
+
+    - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+      = preload_link_tag font_path('IBMPlexSans-Bold.woff2')
+      = preload_link_tag font_path('OpenSans-Regular.woff2')
+
+  body
+    == cell('dummy/ui/header')
+
+    == cell('dummy/ui/flash', flash)
+
+    .d-layout-main
+      = yield
+
+    == cell('dummy/ui/footer')
+
+    == cell('folio/sensitive_content_modal')
+    == cell('folio/photoswipe')

@@ -1,0 +1,16 @@
+.f-devise-omniauth-authentications-list
+  &__provider
+    display: flex
+    align-items: center
+
+    &:nth-child(n + 2)
+      margin-top: map-get($spacers, 2)
+
+  &__action
+    margin-left: $grid-gutter-width
+
+  &__nickname--missing
+    color: $text-muted
+
+  .f-devise-omniauth-icon
+    margin: -5px 10px -5px 0

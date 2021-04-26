@@ -8,5 +8,5 @@ guard :rubocop, cli: ["--auto-correct-all"] do
 end
 
 guard :slimlint, notify_on: :failure do
-  watch(/^app\/.+(\.slim)$/)
+  watch(/^(app|test)\/.+(\.slim)$/)
 end

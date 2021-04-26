@@ -1,0 +1,173 @@
+- type: Dummy::Atom::Text
+  content: true
+
+- type: Dummy::Atom::Text
+  content: true
+  highlight: 'gray'
+  _showcase: "highlight: gray"
+
+- type: Dummy::Atom::Text
+  content: true
+  highlight: 'red'
+  _showcase: "highlight: red"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H1
+  _showcase: "tag: H1"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H2
+  _showcase: "tag: H2"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H3
+  _showcase: "tag: H3"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H4
+  _showcase: "tag: H4"
+
+- type: Dummy::Atom::Title
+  title: true
+  tag: H5
+  _showcase: "tag: H5"
+
+- type: Dummy::Atom::Navigation
+  menu: true
+
+- type: Dummy::Atom::Perex
+  text: true
+
+- type: Dummy::Atom::Quotation
+  text: true
+
+- type: Dummy::Atom::TextWithImage
+  content: long
+  cover: true
+
+- type: Dummy::Atom::Documents
+  documents: true
+  title: "Documents"
+
+- type: Dummy::Atom::Documents
+  documents: true
+  title: "Other documents"
+
+- type: Dummy::Atom::Documents
+  documents: true
+  title: "More documents"
+
+- type: Dummy::Atom::Image
+  cover: true
+
+- type: Dummy::Atom::Image
+  cover: true
+  title: true
+
+- type: Dummy::Atom::Hero
+  cover: 0
+  title: "Title"
+  perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  primary_button_url: "/"
+  primary_button_label: "Button label"
+
+- type: Dummy::Atom::Hero
+  cover: 1
+  perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  secondary_button_url: "/"
+  secondary_button_label: "Button label"
+
+- type: Dummy::Atom::Person
+  cover: 0
+  name: "Lorem ipsum"
+  description: |
+    lorem
+    ipsum
+  phone: "+420 123 123 132"
+  email: "email@email.email"
+
+- type: Dummy::Atom::Person
+  name: "Lorem ipsum"
+  phone: "+420 123 123 132"
+  email: "email@email.email"
+
+- type: Dummy::Atom::Person
+  cover: 1
+  name: "Lorem ipsum"
+  email: "email@email.email"
+
+- type: Dummy::Atom::Card::Large
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Large
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Medium
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Medium
+  cover: 2
+  title: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Medium
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Small
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+
+- type: Dummy::Atom::Card::Small
+  cover: 2
+  title: true
+  href: "/"
+
+- type: Dummy::Atom::Card::Small
+  title: true
+  content: true
+  href: "/"
+
+- type: Dummy::Atom::Embed::Video
+  embed_code: '<iframe width="560" height="315" src="https://www.youtube.com/embed/HmZKgaHa3Fg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+  caption: Popisek video embedu
+
+- type: Dummy::Atom::Embed::Html
+  embed_code: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'
+  caption: Popisek HTML obsahu
+
+- type: Dummy::Atom::Embed::Podcast
+  embed_code: '<iframe src="https://open.spotify.com/embed-podcast/episode/5PM3tj3Zg8r0zMwtLTMQZf" width="100%" height="232" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
+  caption: Popisek podcast embedu
+
+- type: Dummy::Atom::ContactForm
+  title: Contact us
+  text: Leave us your message and we will contact you.
+
+- type: Dummy::Atom::Hr
+
+- type: Dummy::Atom::Margin
+
+- type: Dummy::Atom::Map
+  latlng: 50.091254894762635, 14.401627227698018

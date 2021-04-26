@@ -10,7 +10,7 @@ class Folio::Console::Api::AasmControllerTest < Folio::Console::BaseControllerTe
     post event_console_api_aasm_path, params: {
       klass: "Folio::Lead",
       id: lead.id,
-      aasm_event: "handle",
+      aasm_event: "to_handled",
       cell_options: { small: true }
     }
 
@@ -22,21 +22,21 @@ class Folio::Console::Api::AasmControllerTest < Folio::Console::BaseControllerTe
     post event_console_api_aasm_path, params: {
       klass: "Folio::Lead",
       id: lead.id,
-      aasm_event: "handle",
+      aasm_event: "to_handled",
     }
     assert_response(422)
 
     post event_console_api_aasm_path, params: {
       klass: "Foo::Bar",
       id: lead.id,
-      aasm_event: "handle",
+      aasm_event: "to_handled",
     }
     assert_response(422)
 
     post event_console_api_aasm_path, params: {
       klass: "Folio::Lead",
       id: 0,
-      aasm_event: "handle",
+      aasm_event: "to_handled",
     }
     assert_response(422)
   end

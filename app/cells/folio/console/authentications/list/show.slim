@@ -1,0 +1,11 @@
+.f-c-authentications-list
+  - if authentications.present?
+    - authentications.each do |provider, _auths|
+      .f-c-authentications-list__item.d-flex.align-items-center
+        .mr-2
+          == cell('folio/devise/omniauth/icon', provider.to_sym, color: true)
+
+        = _auths.last.nickname
+
+  - else
+    .text-muted = t('folio.console.blank')

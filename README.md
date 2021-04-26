@@ -2,7 +2,7 @@
 Short description and motivation.
 
 ## Usage
-Copy `redactor.js` and `redactor.css` to `test/dummy/vendor/assets/redactor`.
+Run `bundle exec rails app:folio:prepare_dummy_app`.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -16,10 +16,22 @@ And then execute:
 $ bundle
 ```
 
-Or install it yourself as:
+Run:
 ```bash
 $ rails generate folio:install
 ```
+which will copy bunch of things into your, hopefilly clean, app
+
+Then run migrations
+```bash
+$ rails db:migrate
+```
+
+Take a look to, not only Folio, handy generators by
+```bash
+$ rails g
+```
+
 
 ## Attachments
 
@@ -45,6 +57,32 @@ Easily scaffold console controller and views for existing models.
 ```bash
 $ rails generate folio:console:scaffold ModelName
 ```
+Then add correct routes to `config/routes`
+```
+scope module: :folio do
+  namespace :console do
+    ...
+    resources :model_names
+    ...
+  end
+end
+```
+and update Folio console config (`config/initializers/folio.rb`) to see this `ModelName` in console menu
+```
+Rails.application.config.folio_console_sidebar_link_class_names = [
+  %w[
+    ...
+    ModelName
+  ],
+  %w[...]
+  ....
+```
+
+## Tips and Tricks
+- Check [Wiki](https://github.com/sinfin/folio/wiki)
+
+- If  class responds to `:console_sidebar_count` , such number is displayed in Folio console sidebar
+- If aasm event have option `confirm`, confirmation alert is displayed in change (in Foio console). You can pass `true` (defaults to `t("folio.console.confirmation")`) or string ` event :pay, confirm: "Do You really want to pay this" do ... end`
 
 ## Contributing
 

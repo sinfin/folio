@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/embed/html: 
+    models:
+      global_namespace_path/atom/embed/html: HTML (embed)
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/embed/html: 
+    models:
+      global_namespace_path/atom/embed/html: HTML (vložený kód)

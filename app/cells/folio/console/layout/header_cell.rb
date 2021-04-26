@@ -5,7 +5,7 @@ class Folio::Console::Layout::HeaderCell < Folio::ConsoleCell
     if options[:log_out_path]
       controller.send(options[:log_out_path])
     else
-      controller.destroy_account_session_path
+      controller.try(:destroy_account_session_path) || controller.main_app.try(:destroy_account_session_path)
     end
   end
 end

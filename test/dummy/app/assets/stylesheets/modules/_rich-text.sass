@@ -1,0 +1,103 @@
+.d-rich-text
+  margin-bottom: 0
+
+  video
+    width: 100%
+
+  img
+    max-width: 100%
+
+  p, figure, ul, ol
+    margin: 0
+    margin-bottom: $spacer
+
+  hr
+    margin-top: map-get($spacers, gg)
+    margin-bottom: map-get($spacers, gg)
+
+  &.small,
+  &--compact
+    p, figure, ul, ol
+      margin: 0 0 $spacer / 2
+
+    hr
+      margin: map-get($spacers, g) 0 map-get($spacers, g)
+
+  figcaption
+    +font-size-sm
+    color: $dark
+    margin-top: 10px
+
+  ul,
+  ol
+    margin-left: 0
+    padding-left: 0.9rem
+
+    > li
+      padding-left: 0.5rem
+
+      & + li
+        margin-top: 1rem
+
+  ul
+    margin-left: 0
+    padding-left: 0
+
+    > li
+      list-style: none
+      padding-left: 1.25em
+      position: relative
+
+      &:before
+        content: '–'
+        position: absolute
+        top: 0
+        left: 2px
+
+  table
+    +font-size-sm
+    width: 100%
+    margin: 2 * $spacer 0
+
+    th, td
+      padding: 1rem
+      border-bottom: 1px solid $hr-border-color
+
+      &:first-child
+        padding-left: 0
+
+      &:last-child
+        padding-right: 0
+
+    p
+      &:last-child
+        margin-bottom: 0
+
+  &__table-wrap
+    max-width: 100%
+    overflow-x: auto
+    -webkit-overflow-scrolling: touch
+    margin: 2 * $spacer 0
+
+    table
+      margin: 0
+
+  &--max-width
+    max-width: 850px
+
+  &--chomp > :first-child
+    margin-top: 0 !important
+
+  &--chomp > :last-child
+    margin-bottom: 0 !important
+
+  .folio-redactor-button
+    margin: $grid-gutter-width 0
+
+    + br
+      display: none
+
+    a
+      @extend .btn
+      @extend .btn-primary
+      color: $gray-100 !important

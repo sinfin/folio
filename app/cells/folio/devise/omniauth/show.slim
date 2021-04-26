@@ -1,0 +1,19 @@
+.f-devise-omniauth
+  - if model.present?
+    - unless omniauth_above?
+      p.f-devise-omniauth__p.f-devise-omniauth__p--or = t(".or")
+
+    p.f-devise-omniauth__p.f-devise-omniauth__p--title = t(".#{model}")
+
+  .f-devise-omniauth__buttons
+    - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
+      a.f-devise-omniauth__button[
+        href=url_for_key(key)
+        class=omniauth_button_class_name
+      ]
+        = omniauth_button_icon(key)
+        = omniauth_button_label(key)
+
+  - if model.present?
+    - if omniauth_above?
+      p.f-devise-omniauth__p = t(".or")

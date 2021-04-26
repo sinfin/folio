@@ -1,0 +1,44 @@
+.f-devise-registrations-new
+  = form do |f|
+    = title
+
+    - if registrations_perex
+      p.f-devise__perex = registrations_perex
+
+    .f-devise-registrations-new__gdpr-content
+      == registration_gdpr_content
+
+    == cell('folio/devise/flash', model[:flash])
+
+    - if omniauth_above?
+      == cell('folio/devise/omniauth', 'registrations')
+
+    - @f = f
+
+    = render(:_top)
+
+    .f-devise__row
+      .f-devise__col
+        == email_input(f, autofocus: false, label: t('.email_label'))
+
+    .f-devise__row
+      .f-devise__col
+        == password_input(f, :password, autocomplete: 'current-password')
+
+    = render(:_bottom)
+
+    = submit_button(f, t('.sign_up'))
+
+    - @f = nil
+
+    - unless omniauth_above?
+      == cell('folio/devise/omniauth', 'sessions')
+
+    span.folio-loader.f-devise__loader
+
+  .f-devise__bottom-action-wrap
+    = t("folio.devise.sign_in_link")
+    a.f-devise-modal-aware-link<>[
+      href=controller.new_session_path(resource_name)
+    ]
+      = t("folio.devise.sign_in_link_inner")

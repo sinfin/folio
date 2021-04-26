@@ -1,8 +1,12 @@
-= index_header by_query: false
+ruby:
+  types = @klass.creatable_types if @klass.creatable_types.size > 1
+
+= index_header by_query: false, types: types
 
 = catalogue(@menus)
   ruby:
     edit_link :to_label
+    type
     locale_flag
     attribute(:menu_items) { record.menu_items.size }
     actions

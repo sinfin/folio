@@ -1,6 +1,48 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-04-22
+### Added
+- added UI generator, refactor dummy assets usage
+- added assets generator
+### Changed
+- added plenty of prepared_atom templates
+
+## 2021-04-21
+### Added
+- added `Folio::Mailchimp::Api` helper class
+- added subscribable associtation to newsletter subscriptions & `Folio::HasNewsletterSubscription` concern
+### Changed
+- mark `Folio::Subscribable` as deprecated
+
+## 2020-03-09
+### Added
+- added `folio:console:catalogue` generator
+
+## 2020-03-03
+### Added
+- added `react_ordered_multiselect` for has_many through relations with positionable
+
+## 2020-02-24
+### Removed
+- removed `Folio::Atom::Text` and `Folio::Atom::Title`
+### Added
+- added folio:prepared_atom generator
+- started creating/updating `config/locales/atom.LOCALE.yml` for atom model names in generators
+
+## 2020-02-23
+### Added
+- added users and addresses
+- added custom devise views for user
+
+## 2020-02-17
+### Added
+- added `url` type to atom structure
+
+## 2020-02-11
+### Added
+- added `redactor: :perex` and `folio_pages_perex_richtext` configuration
+
 ## 2020-02-09
 ### Added
 - added transportable functionality - download to yaml/override from yaml
@@ -77,7 +119,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2020-07-22
 ### Removed
-- removed `turbo_mode` from `Site` 
+- removed `turbo_mode` from `Site`
 - removed `non_turbo.js`
 
 ## 2020-05-06

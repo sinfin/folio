@@ -2,25 +2,30 @@
 
 module Folio::Atom
   def self.types
-    Folio::Atom::Base.recursive_subclasses(include_self: false)
+    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true)
   end
 
   def self.structures
     str = {}
-    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
       structure = {}
 
       klass::STRUCTURE.each do |key, value|
         structure[key] = {
           label: klass.human_attribute_name(key),
-          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil).try(:html_safe),
           type: value,
           character_counter: value == :text,
         }
 
         if value.is_a?(Array)
           structure[key][:type] = "collection"
-          structure[key][:collection] = value
+          structure[key][:collection] = value.map do |option|
+            [
+              klass.human_attribute_name("#{key}/#{option.presence || 'nil'}"),
+              option
+            ]
+          end
         end
       end
 
@@ -70,7 +75,7 @@ module Folio::Atom
                                      only_path: true])
 
         associations[key] = {
-          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil),
+          hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil).try(:html_safe),
           label: klass.human_attribute_name(key),
           url: url,
         }
@@ -79,7 +84,7 @@ module Folio::Atom
       str[klass.to_s] = {
         associations: associations,
         attachments: attachments,
-        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil),
+        hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil).try(:html_safe),
         structure: structure,
         form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,
@@ -93,7 +98,7 @@ module Folio::Atom
 
   def self.strong_params
     keys = []
-    Folio::Atom::Base.recursive_subclasses(include_self: false).each do |klass|
+    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
       keys += klass::STRUCTURE.keys
       keys += klass::ASSOCIATIONS.keys.map { |k| { k => [:id, :type] } }
     end

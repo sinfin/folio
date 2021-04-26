@@ -8,6 +8,8 @@ class Folio::Console::Form::FooterCell < Folio::ConsoleCell
 
   def preview_path
     return nil unless model.object.persisted?
+    return nil if options[:preview_button] == false
+
     options[:preview_path] || url_for([model.object])
   rescue NoMethodError
   end

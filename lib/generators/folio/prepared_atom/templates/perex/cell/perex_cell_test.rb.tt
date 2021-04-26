@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Atom::PerexCellTest < Cell::TestCase
+  test "show" do
+    atom = create_atom(<%= global_namespace %>::Atom::Perex, :text)
+    html = cell(atom.class.cell_name, atom).(:show)
+    assert html
+  end
+end

@@ -3,16 +3,27 @@
 module Folio::Subscribable
   extend ActiveSupport::Concern
 
+  included do
+    ActiveSupport::Deprecation.warn("Folio::Subscribable is deprecated, use Folio::HasNewsletterSubscription instead!")
+  end
+
   def subscribe
-    if !Rails.env.test? && (!Rails.env.development? || ENV["DEV_MAILCHIMP"])
-      Folio::Mailchimp::SubscribeJob.perform_later(self, merge_vars: subscription_merge_vars,
-                                                         tags: subscription_tags)
+    return if email.nil?
+
+    if Rails.env.production? || ENV["DEV_MAILCHIMP"]
+      status = model.class.requires_subscription_confirmation? ? "pending" : "subscribed"
+
+      Folio::Mailchimp::SubscribeJob.perform_later(email, merge_vars: subscription_merge_vars,
+                                                          tags: subscription_tags,
+                                                          status: status)
     end
   end
 
   def unsubscribe
-    if !Rails.env.test? && (!Rails.env.development? || ENV["DEV_MAILCHIMP"])
-      Folio::Mailchimp::UnsubscribeJob.perform_later(self)
+    return if email.nil?
+
+    if Rails.env.production? || ENV["DEV_MAILCHIMP"]
+      Folio::Mailchimp::UnsubscribeJob.perform_later(email)
     end
   end
 

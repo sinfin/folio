@@ -1,0 +1,29 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-person.my-gg
+  .container-fluid
+    .row
+      - model.each do |atom|
+        .col-sm-6.col-lg-4.<%= classname_prefix %>-molecule-person__atom
+          .<%= classname_prefix %>-molecule-person__atom-inner.small
+            = image(atom.cover_placement,
+                    THUMB_SIZE,
+                    class: '<%= classname_prefix %>-molecule-person__cover',
+                    lightbox: true)
+
+            .<%= classname_prefix %>-molecule-person__content[
+              class="<%= classname_prefix %>-rich-text"
+              class="<%= classname_prefix %>-rich-text--compact"
+              class="<%= classname_prefix %>-rich-text--chomp"
+            ]
+              p: strong = cstypo atom.name
+
+              - if atom.description.present?
+                div = cstypo simple_format atom.description
+
+              - if atom.email.present? || atom.phone.present?
+                .<%= classname_prefix %>-molecule-person__spacer
+                  - if atom.phone.present?
+                    p
+                      a.m-unlink href="tel:#{atom.phone}" = atom.phone
+                  - if atom.email.present?
+                    p
+                      a href="mailto:#{atom.email}" = atom.email

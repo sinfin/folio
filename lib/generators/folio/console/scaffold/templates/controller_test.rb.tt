@@ -5,47 +5,60 @@ require "test_helper"
 class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Console::BaseControllerTest
   test "index" do
     get url_for([:console, <%= class_name %>])
+
     assert_response :success
+
     create(:<%= singular_table_name %>)
+
     get url_for([:console, <%= class_name %>])
+
     assert_response :success
   end
 
   test "new" do
     get url_for([:console, <%= class_name %>, action: :new])
+
     assert_response :success
   end
 
   test "edit" do
     model = create(:<%= singular_table_name %>)
+
     get url_for([:edit, :console, model])
+
     assert_response :success
   end
 
   test "create" do
     params = build(:<%= singular_table_name %>).serializable_hash
     assert_equal(0, <%= class_name %>.count)
+
     post url_for([:console, <%= class_name %>]), params: {
       <%= singular_table_name %>: params,
     }
+
     assert_equal(1, <%= class_name %>.count, "Creates record")
   end
 
   test "update" do
     model = create(:<%= singular_table_name %>)
     assert_not_equal("Title", model.title)
+
     put url_for([:console, model]), params: {
       <%= singular_table_name %>: {
         title: "Title",
       },
     }
+
     assert_redirected_to url_for([:edit, :console, model])
     assert_equal("Title", model.reload.title)
   end
 
   test "destroy" do
     model = create(:<%= singular_table_name %>)
+
     delete url_for([:console, model])
+
     assert_redirected_to url_for([:console, <%= class_name %>])
     assert_not(<%= class_name %>.exists?(id: model.id))
   end

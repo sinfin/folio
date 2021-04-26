@@ -1,0 +1,42 @@
+.<%= classname_prefix %>-ui-footer
+  flex: 0 0 auto
+  background: $light-gray
+  margin-top: map-get($spacers, gg)
+  padding-top: map-get($spacers, gg)
+  z-index: 1
+  position: relative
+
+  .f-newsletter-subscriptions-form__message
+    align-items: flex-start
+
+  &__copyright
+    border-top: 1px solid #EAEAEA
+
+  &__row
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+
+  &__left
+    width: 100%
+    max-width: 560px
+    flex: 0 0 auto
+
+  &__right
+    max-width: 100%
+    flex: 0 0 auto
+
+  &__social-link
+    +social-sites-hover-color
+
+  &__social-ico
+    font-size: 36px
+    margin: $grid-gutter-half
+
+  +media-breakpoint-up(lg)
+    &__left
+      margin-right: $grid-gutter-width
+
+  +media-breakpoint-down(md)
+    &__social-ico
+      font-size: 28px

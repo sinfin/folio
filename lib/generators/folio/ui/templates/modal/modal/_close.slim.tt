@@ -1,0 +1,2 @@
+button.<%= classname_prefix %>-ui-modal__close data-dismiss="modal" type="button"
+  = icon(:close)

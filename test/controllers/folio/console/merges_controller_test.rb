@@ -7,9 +7,10 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original = create(:folio_page)
     duplicate = create(:folio_page)
 
-    visit new_console_merge_path("Folio::Page", original, duplicate)
-    assert page.has_css?(".f-c-merges-form__form")
-    assert_not page.has_css?(".f-c-merges-form__invalid")
+    get new_console_merge_path("Folio::Page", original, duplicate)
+
+    assert_select ".f-c-merges-form__form"
+    assert_select ".f-c-merges-form__invalid", false
   end
 
   test "new - invalid" do
@@ -18,9 +19,10 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original.update_column(:title, nil)
     assert_not(original.valid?)
 
-    visit new_console_merge_path("Folio::Page", original, duplicate)
-    assert_not page.has_css?(".f-c-merges-form__form")
-    assert page.has_css?(".f-c-merges-form__invalid")
+    get new_console_merge_path("Folio::Page", original, duplicate)
+
+    assert_select ".f-c-merges-form__form", false
+    assert_select ".f-c-merges-form__invalid"
   end
 
   test "create" do

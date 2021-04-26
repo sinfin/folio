@@ -5,8 +5,9 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
     iho = input_html_options || {}
 
     if options[:remote]
-      options[:collection] = autocomplete_collection
+      options[:collection] = autocomplete_collection(options[:force_collection] ? options[:collection] : nil)
       iho[:class] = [iho[:class], "f-c-collection-remote-select-input"].flatten
+      iho[:id] = nil unless iho[:id].present?
 
       if options[:remote] == true
         iho["data-url"] = autocomplete_url
@@ -44,7 +45,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
                            only_path: true])
   end
 
-  def autocomplete_collection
+  def autocomplete_collection(default_collection)
     value = object.try(attribute_name)
 
     if value.present?
@@ -64,7 +65,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
         [ary]
       end
     else
-      []
+      default_collection || []
     end
   end
 end

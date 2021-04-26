@@ -25,7 +25,7 @@ class Folio::HasAtomsTest < ActiveSupport::TestCase
     assert_equal([], page.atoms)
     assert_equal([], page.atoms_in_molecules)
 
-    atom_1 = create_atom(position: 1, placement: page, content: "foo")
+    atom_1 = create_atom(Dummy::Atom::Text, position: 1, placement: page, content: "foo")
     page.reload
 
     assert_equal([atom_1], page.atoms.to_a)
@@ -38,7 +38,7 @@ class Folio::HasAtomsTest < ActiveSupport::TestCase
                                         position: 3,
                                         placement: page)
 
-    atom_2 = create_atom(placement: page, position: 4, content: "a")
+    atom_2 = create_atom(Dummy::Atom::Text, placement: page, position: 4, content: "a")
 
     page.reload
 

@@ -209,6 +209,14 @@ cs:
           clear_cache: Smazat cache
         clear_cache:
           success: Cache byla úspěšně smazána.
+      users:
+        send_reset_password_email:
+          success: Instrukce pro reset hesla odeslány e-mailem
+        impersonate:
+          success: Přihlášen jako uživatel "%{label}"
+        header_actions:
+          impersonate: Přihlásit se jako uživatel
+          send_reset_password_email: Poslat odkaz na reset hesla
       email_templates:
         form:
           keywords:

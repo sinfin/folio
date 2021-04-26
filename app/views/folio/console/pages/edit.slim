@@ -1,2 +1,7 @@
-= simple_form_for_with_atoms([:console, @page]) do |f|
+- preview_path = controller.main_app.page_path(@page.to_preview_param)
+
+= simple_form_for_with_atoms([:console, @page],
+                             form_footer_options: { \
+                               preview_path: preview_path \
+                             }) do |f|
   = render 'form', f: f

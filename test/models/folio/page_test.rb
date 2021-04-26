@@ -6,7 +6,7 @@ class Folio::PageTest < ActiveSupport::TestCase
   # # TODO: test with folio_pages_translations
   # test 'translate a page with atoms' do
   #   page = create(:folio_page, locale: :cs)
-  #   create_atom(Folio::Atom::Text, content: 'foo', placement: page)
+  #   create_atom(Dummy::Atom::Text, content: 'foo', placement: page)
   #   create_atom(::Atom::Gallery, :images, placement: page)
   #   assert_equal(1, page.atoms.last.images.count)
 

@@ -6,7 +6,7 @@ Description:
     more info https://github.com/Casecommons/pg_search/wiki/Building-indexes
 
 Example:
-    rails generate folio:index_migration SomeClass scope_name
+    rails generate folio:pg_search_index_migration SomeClass scope_name
 
     This will create:
         db/migrate/XXXXXXXXXXXXXX_add_scope_name_index_to_some_class_table_name.rb

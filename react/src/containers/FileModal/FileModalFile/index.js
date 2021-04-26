@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormGroup, Label } from 'reactstrap'
+import { FormGroup, Label, Input } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import { makeConfirmed } from 'utils/confirmed'
@@ -151,6 +151,25 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 />
               )}
             </FormGroup>
+
+            {readOnly ? (
+              formState.sensitiveContent ? <p>{window.FolioConsole.translations.fileSensitiveContent}</p> : null
+            ) : (
+              <FormGroup>
+                <FormGroup check>
+                  <Label check>
+                    <Input
+                      type='checkbox'
+                      name='sensitive_content'
+                      onChange={(e) => onValueChange('sensitive_content', e.currentTarget.checked)}
+                      checked={formState.sensitive_content}
+                    />
+                    {' '}
+                    {window.FolioConsole.translations.fileSensitiveContent}
+                  </Label>
+                </FormGroup>
+              </FormGroup>
+            )}
 
             {!readOnly && (
               <button type='button' className='btn btn-primary px-4' onClick={saveModal}>

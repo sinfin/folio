@@ -1,0 +1,8 @@
+.d-atom.d-atom-image
+  .container-fluid.d-rich-text
+    figure
+      = image(model.cover_placement, THUMB_SIZE, lightbox: true)
+
+      - if model.title.present?
+        figcaption
+          = cstypo model.title

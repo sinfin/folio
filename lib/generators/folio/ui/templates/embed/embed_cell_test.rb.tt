@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Ui::EmbedCellTest < Cell::TestCase
+  test "show" do
+    html = cell("<%= global_namespace_path %>/ui/embed", nil).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-embed")
+  end
+end

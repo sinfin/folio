@@ -3,16 +3,22 @@
 require "test_helper"
 
 class Folio::MergerTest < ActiveSupport::TestCase
+  class ReferenceAtom < Folio::Atom::Base
+    ASSOCIATIONS = {
+      page: %w[Folio::Page]
+    }
+  end
+
   test "Folio::PageMerger" do
     original = create(:folio_page, title: "foo", slug: "foo")
-    original_atom = create_atom(Folio::Atom::Text, :content, placement: original)
+    original_atom = create_atom(Dummy::Atom::Text, :content, placement: original)
     original_cover = create(:folio_cover_placement, placement: original)
     duplicate = create(:folio_page, title: "bar", slug: "bar")
-    duplicate_atom = create_atom(Folio::Atom::Text, :content, placement: duplicate)
+    duplicate_atom = create_atom(Dummy::Atom::Text, :content, placement: duplicate)
     duplicate_cover = create(:folio_cover_placement, placement: duplicate)
     merger = Folio::Page::Merger.new(original, duplicate)
 
-    reference = create_atom(Dummy::Atom::DaVinci, page: duplicate)
+    reference = create_atom(ReferenceAtom, page: duplicate)
     assert_equal(duplicate, reference.page)
 
     merger.merge!(

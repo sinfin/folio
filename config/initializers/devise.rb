@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+module Folio
+  module DeviseMapping
+    private
+      def default_controllers(options)
+        mod = options[:registrations_module] || options[:module] || "devise"
+
+        options[:controllers] ||= {}
+        options[:controllers][:registrations] = "#{mod}/registrations"
+
+        super
+      end
+  end
+end
+
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -296,7 +311,7 @@ Devise.setup do |config|
   # config.navigational_formats = ['*/*', :html]
 
   # The default HTTP method used to sign out a resource. Default is :delete.
-  config.sign_out_via = :delete
+  config.sign_out_via = :get
 
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
@@ -320,7 +335,12 @@ Devise.setup do |config|
   #     mount MyEngine, at: '/my_engine'
   #
   # The router that invoked `devise_for`, in the example above, would be:
-  config.router_name = :folio
+  unless Rails.application.config.folio_users
+    config.router_name = :folio
+  end
+
+  Devise::Mapping.send :prepend, Folio::DeviseMapping
+
   #
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:

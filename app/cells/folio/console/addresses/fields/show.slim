@@ -1,0 +1,21 @@
+.f-c-addresses-fields
+  .row
+    - cols.each do |klass, key, toggle|
+      .col-lg-6
+        .d-flex.flex-wrap[
+          class=(toggle ? "align-items-end" : nil)
+        ]
+          h2.mr-auto.pr-g = klass.model_name.human
+
+          - if toggle
+            = model.input toggle, wrapper_html: { class: 'pb-1' }
+
+        = html_safe_fields_for model, key, build: true do |g|
+          - g.object.class.fields_layout.each do |row|
+            - if row.is_a?(Hash)
+              .row
+                - row.each do |key, col|
+                  div class="col-md-#{col}"
+                    = input(g, key)
+            - elsif row.is_a?(Symbol)
+              = input(g, row)

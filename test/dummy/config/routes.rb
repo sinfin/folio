@@ -5,9 +5,21 @@ Rails.application.routes.draw do
 
   mount Folio::Engine => "/"
 
+  if Rails.application.config.folio_users
+    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+    devise_for :users, class_name: "Folio::User",
+                       module: "dummy/folio/users",
+                       omniauth_providers: Rails.application.config.folio_users_omniauth_providers
+  end
+
   resource :test, only: [:show]
   get "/dropzone", to: "home#dropzone"
   get "/lead_form", to: "home#lead_form"
+  get "/gallery", to: "home#gallery"
+
+  get "/download/:hash_id/*name", to: "downloads#show",
+                                  as: :download,
+                                  constraints: { name: /.*/ }
 
   if Rails.application.config.folio_pages_translations
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do

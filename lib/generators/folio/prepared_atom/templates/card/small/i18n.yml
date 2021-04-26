@@ -1,0 +1,15 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/card/small:
+        href: Link
+    models:
+      global_namespace_path/atom/card/small: Card (small)
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/card/small:
+        href: Odkaz
+    models:
+      global_namespace_path/atom/card/small: Karta s odkazem (malá)

@@ -6,7 +6,7 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
     @newsletter_subscription = Folio::NewsletterSubscription.new(attrs)
     @newsletter_subscription.save
 
-    render html: cell("folio/newsletter_subscription_form", @newsletter_subscription, cell_options_params)
+    render html: cell("folio/newsletter_subscriptions/form", @newsletter_subscription, cell_options_params)
   end
 
   private

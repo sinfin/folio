@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Ui::DocumentsCellTest < Cell::TestCase
+  test "show" do
+    document_placements = create_list(:folio_document_placement, 1)
+    html = cell("<%= global_namespace_path %>/ui/documents", document_placements).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-documents")
+
+    html = cell("<%= global_namespace_path %>/ui/documents", document_placements, title: "foo").(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-documents")
+  end
+end

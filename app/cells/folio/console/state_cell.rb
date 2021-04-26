@@ -71,7 +71,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
 
   def confirm(event)
     if event.options[:confirm]
-      t("folio.console.confirmation")
+      event.options[:confirm].is_a?(String) ? event.options[:confirm] : t("folio.console.confirmation")
     end
   end
 

@@ -67,13 +67,25 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def association(name, separator: ", ", small: false)
+  def association(name, separator: ", ", small: false, link: false)
     assoc = record.send(name)
 
+    handle_record = Proc.new do |record, link|
+      label = record.to_label
+
+      if link
+        link_to(label, url_for([*link, record]))
+      else
+        label
+      end
+    end
+
     if assoc.is_a?(Enumerable)
-      val = assoc.map(&:to_label).join(separator)
+      val = assoc.map do |record|
+        handle_record.call(record, link)
+      end.join(separator)
     elsif assoc.respond_to?(:to_label)
-      val = assoc.to_label
+      val = handle_record.call(assoc, link)
     else
       val = nil
     end
@@ -264,12 +276,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       return nil if attr.nil?
       return @labels[attr] unless @labels[attr].nil?
 
-      @labels[attr] ||= begin
-        if %i[actions cover].include?(attr)
-          ""
-        else
-          klass.human_attribute_name(attr)
-        end
+      @labels[attr] ||= if %i[actions cover].include?(attr)
+        ""
+      else
+        klass.human_attribute_name(attr)
       end
     end
 

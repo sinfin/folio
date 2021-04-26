@@ -33,7 +33,18 @@
                       label_method: :select_option_depth, \
                       value_method: :id
 
-    == translated_inputs f, :perex, autosize: true, folio_perex: true
+    - if Rails.application.config.folio_pages_perex_richtext
+      == translated_inputs f,
+                           :perex,
+                           as: :redactor,
+                           redactor: :perex,
+                           folio_perex: true
+    - else
+      == translated_inputs f,
+                           :perex,
+                           autosize: true,
+                           character_counter: true,
+                           folio_perex: true
 
     == cell('folio/console/tagsinput', f)
     = translated_inputs f, :meta_title

@@ -3,6 +3,10 @@
 require "test_helper"
 
 class Folio::FileTest < ActiveSupport::TestCase
+  class CoverAtom < Folio::Atom::Base
+    ATTACHMENTS = %i[cover]
+  end
+
   test "touches placements and their models" do
     page = create(:folio_page)
     updated_at = page.updated_at
@@ -19,7 +23,7 @@ class Folio::FileTest < ActiveSupport::TestCase
   test "touches page through atoms" do
     page = create(:folio_page)
     image = create(:folio_image)
-    atom = create_atom(Dummy::Atom::DaVinci, placement: page, cover: image)
+    atom = create_atom(CoverAtom, placement: page, cover: image)
 
     atom_updated_at = atom.reload.updated_at
     page_updated_at = page.reload.updated_at
@@ -34,7 +38,16 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert image.destroy
 
     image = create(:folio_image)
-    create_atom(Dummy::Atom::DaVinci, cover: image)
+    create_atom(CoverAtom, cover: image)
     assert_not image.destroy
+  end
+
+  test "by_file_name pg scope" do
+    create(:folio_image, file_name: "foo.jpg")
+    file1 = create(:folio_image, file_name: "foo_bar.jpg")
+    file2 = create(:folio_image, file_name: "foo-bar.jpg")
+
+    assert_equal [file1], Folio::File.by_file_name("foo_bar")
+    assert_equal [file2], Folio::File.by_file_name("foo-bar")
   end
 end

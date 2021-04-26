@@ -11,7 +11,7 @@ module Folio::DeviseExtension
     if resource_name == :account
       "folio/console/devise"
     else
-      "devise"
+      "folio/application"
     end
   end
 end

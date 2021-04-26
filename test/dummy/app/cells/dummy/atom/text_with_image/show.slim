@@ -1,0 +1,10 @@
+.d-atom.d-atom-text-with-image
+  .container-fluid
+    .d-atom-text-with-image__inner
+      - if model.cover_placement
+        = image(model.cover_placement,
+                THUMB_SIZE,
+                class: 'd-atom-text-with-image__cover')
+
+      .d-atom-text-with-image__content.d-rich-text
+        == cstypo model.content

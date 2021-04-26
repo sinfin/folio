@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/documents: 
+    models:
+      global_namespace_path/atom/documents: Documents (list)
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/documents: 
+    models:
+      global_namespace_path/atom/documents: Soubory (výpis)

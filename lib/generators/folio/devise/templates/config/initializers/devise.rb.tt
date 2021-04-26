@@ -1,0 +1,6 @@
+# frozen_string_literal: true
+
+Devise.setup do |config|
+  config.mailer_sender = "noreply@<%= application_dir_namespace %>.com"
+  config.mailer = "<%= application_module %>::DeviseMailer"
+end

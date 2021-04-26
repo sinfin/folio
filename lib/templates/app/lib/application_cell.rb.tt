@@ -1,4 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationCell < Folio::ApplicationCell
+  def icon(key, opts = {})
+    cell("<%= ::Rails.application.class.name.deconstantize.underscore %>/ui/icon", key, opts)
+  end
 end

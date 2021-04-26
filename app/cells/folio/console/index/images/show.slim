@@ -1,18 +1,18 @@
 div class=class_name class=id_class_name
   - if options[:cover]
-    .f-c-index-images__item(*lightbox(model.cover_placement))
+    .f-c-index-images__item(*size(lightbox(model.cover_placement)))
       = admin_image(model.cover_placement, small: true, \
                                            class: 'f-c-index-images__img')
 
   - elsif options[:custom]
-    .f-c-index-images__item(*lightbox_from_image(model))
+    .f-c-index-images__item(*size(lightbox_from_image(model)))
       = admin_image(model, small: true)
 
   - elsif options[:private_attachment]
-    .f-c-index-images__item(*lightbox_from_private_attachment(model))
+    .f-c-index-images__item(*size(lightbox_from_private_attachment(model)))
       = admin_image({ normal: model.file.url }, small: true)
 
   - else
     - model.image_placements.first(3).each do |placement|
-      .f-c-index-images__item(*lightbox(placement))
+      .f-c-index-images__item(*size(lightbox(placement)))
         = admin_image(placement, small: true)

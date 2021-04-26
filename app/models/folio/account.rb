@@ -41,8 +41,8 @@ class Folio::Account < Folio::ApplicationRecord
   end
 
   def full_name
-    if first_name || last_name
-      "#{first_name} #{last_name}"
+    if first_name.present? || last_name.present?
+      "#{first_name} #{last_name}".strip
     else
       email
     end

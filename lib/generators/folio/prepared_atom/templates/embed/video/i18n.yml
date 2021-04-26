@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/embed/video: 
+    models:
+      global_namespace_path/atom/embed/video: Video (embed)
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/embed/video: 
+    models:
+      global_namespace_path/atom/embed/video: Video (vložený kód)

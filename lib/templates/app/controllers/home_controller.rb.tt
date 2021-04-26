@@ -2,11 +2,7 @@
 
 class HomeController < ApplicationController
   def index
-  end
-
-  def ui
-    unless Rails.env.development?
-      redirect_to "/"
-    end
+    @page = <%= global_namespace %>::Page::Homepage.instance
+    set_meta_variables(@page)
   end
 end

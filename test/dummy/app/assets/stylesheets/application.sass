@@ -1,17 +1,42 @@
-@import 'folio-bootstrap/scss/bootstrap'
+@import 'custom_bootstrap'
+@import 'slick-carousel/slick/slick'
+@import 'fonts'
+@import 'folio/utilities'
+@import 'modules/turbolinks'
+@import 'modules/bootstrap-overrides'
+@import 'modules/atoms'
+@import 'modules/rich-text'
+@import 'modules/with-icon'
 
+@import 'folio/devise'
+@import 'folio/loader'
 @import 'folio/lazyload'
 @import 'folio/lightbox'
-@import 'folio/loader'
-
-@import 'folio/dropzone/dropzone'
 @import 'folio/image/image'
 @import 'folio/leads/form/form'
+@import 'folio/newsletter_subscriptions/form/form'
+@import 'folio/publishable_hint/publishable_hint'
+@import 'folio/ui/ui'
+@import 'folio/ui/atoms/atoms'
 
-.folio-atom,
-.d-atom
-  margin: 2rem 0
+html
+  height: 100%
+  min-width: 320px
+  overflow-y: scroll
 
-.folio-redactor-button a
-  @extend .btn
-  @extend .btn-primary
+body
+  min-width: 320px
+  min-height: 100%
+  display: flex
+  flex-direction: column
+
+.d-layout-main
+  position: relative
+  z-index: 2
+  flex: 1 0 auto
+
+@import '../../cells/folio/**/*'
+@import '../../cells/dummy/**/*'
+
+@media print
+  @import 'print'

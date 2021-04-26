@@ -20,6 +20,11 @@ module Folio::Positionable
     end
   end
 
+  def positionable_sql_update(new_position)
+    update_columns(position: new_position,
+                   updated_at: current_time_from_proper_timezone)
+  end
+
   private
     def set_position
       if self.position.nil?

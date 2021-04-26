@@ -1,0 +1,3 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-embed-html.my-gg
+  .container-fluid
+    == cell('<%= global_namespace_path %>/ui/embed', model.embed_code, caption: model.caption)

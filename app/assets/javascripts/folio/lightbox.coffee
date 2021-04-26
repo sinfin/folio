@@ -12,6 +12,7 @@ class window.FolioLightbox
     else
       @full_selector = selector
     @eventIdentifier = "folioLightbox"
+    @$html = $(document.documentElement)
     @bind(data)
 
   pswp: ->
@@ -26,14 +27,20 @@ class window.FolioLightbox
       e.preventDefault()
       $img = $(this)
 
+      items = data || that.items()
+      index = 0
+      items.forEach (item, i) =>
+        if item.el is this
+          index = i
+
       options =
-        index: $img.index(that.full_selector)
+        index: index
         bgOpacity: 0.7
         showHideOpacity: true
         history: false
         errorMsg: that.pswp().data('error-msg')
 
-      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, data || that.items(), options)
+      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, items, options)
       that.photoSwipe.init()
 
   items: ->
@@ -46,6 +53,9 @@ class window.FolioLightbox
   item: (index, el) ->
     $el = $(el)
 
+    if $el.hasClass('f-image--sensitive-content')
+      return unless @$html.hasClass('f-html--show-sensitive-content')
+
     unless $el.data('lightbox-src')
       $el = $(el).find('[data-lightbox-src]')
 
@@ -54,9 +64,10 @@ class window.FolioLightbox
     item =
       w: parseInt($el.data('lightbox-width'))
       h: parseInt($el.data('lightbox-height'))
-    item.title = $el.data('lightbox-title') or $el.next('figcaption').text()
+      title: $el.data('lightbox-title') or $el.next('figcaption').text()
+      src: $el.data('lightbox-webp-src') if window.FolioWebpSupported
+      el: el
 
-    item.src = $el.data('lightbox-webp-src') if window.FolioWebpSupported
     item.src ||= $el.data('lightbox-src')
 
     item

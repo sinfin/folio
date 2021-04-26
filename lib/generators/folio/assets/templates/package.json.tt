@@ -1,0 +1,8 @@
+{
+  "name": "<%= global_namespace_path %>",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "svg-sprite": "^1.5.0"
+  }
+}

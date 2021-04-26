@@ -1,0 +1,5 @@
+.<%= cell_css_class_name %>
+  = catalogue(model)
+    ruby:
+      edit_link :to_label
+      actions

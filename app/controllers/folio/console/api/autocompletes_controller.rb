@@ -70,6 +70,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
+    p_without = params[:without]
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
@@ -78,13 +79,17 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.send(p_scope)
       end
 
+      if p_without.present?
+        scope = scope.where.not(id: p_without.split(","))
+      end
+
       scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
         scope = scope.unscope(:order).send(p_order)
       end
 
-      render_selectize_options(scope.limit(25))
+      render_selectize_options(scope.limit(25), label_method: params[:label_method])
     else
       render_selectize_options([])
     end
@@ -95,6 +100,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
+    p_without = params[:without]
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
@@ -103,13 +109,19 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.send(p_scope)
       end
 
+      if p_without.present?
+        scope = scope.where.not(id: p_without.split(","))
+      end
+
+      scope = filter_by_atom_setting_params(scope)
+
       scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
         scope = scope.unscope(:order).send(p_order)
       end
 
-      render_select2_options(scope.limit(25))
+      render_select2_options(scope.limit(25), label_method: params[:label_method])
     else
       render_select2_options([])
     end
@@ -120,6 +132,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     q = params[:q]
     p_scope = params[:scope]
     p_order = params[:order_scope]
+    p_without = params[:without]
 
     if class_names
       response = []
@@ -133,6 +146,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
           if p_scope.present? && scope.respond_to?(p_scope)
             scope = scope.send(p_scope)
+          end
+
+          if p_without.present?
+            scope = scope.where.not(id: p_without.split(","))
           end
 
           if q.present?
@@ -149,12 +166,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             scope = scope.unscope(:order).send(p_order)
           end
 
-          params.keys.each do |key|
-            next unless key.starts_with?("by_atom_setting_")
-            if scope.respond_to?(key)
-              scope = scope.send(key, params[key])
-            end
-          end
+          scope = filter_by_atom_setting_params(scope)
 
           response += scope.first(30).map do |record|
             text = record.to_console_label
@@ -176,4 +188,16 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       render json: { data: [] }
     end
   end
+
+  private
+    def filter_by_atom_setting_params(scope)
+      params.keys.each do |key|
+        next unless key.starts_with?("by_atom_setting_")
+        if scope.respond_to?(key)
+          scope = scope.send(key, params[key])
+        end
+      end
+
+      scope
+    end
 end

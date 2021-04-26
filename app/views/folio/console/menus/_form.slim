@@ -1,18 +1,30 @@
 = form_header f
-  button.btn.btn-success.f-c-js-menus-form-add type="button"
-    i.fa.fa-plus
-    = t('folio.console.javascript.addMenuItem')
+  - if f.object.persisted?
+    button.btn.btn-success.f-c-js-menus-form-add type="button"
+      i.fa.fa-plus
+      = t('folio.console.javascript.addMenuItem')
 
 - if f.object.new_record?
-  - klass = f.object.class
-  - collection = klass.recursive_subclasses_for_select(include_self: false)
-  = f.input :type, collection: collection, \
-                   include_blank: false
+  = f.input :title, hint: false
 
-  = f.input :locale, collection: current_site.locales,
+  - types = @klass.creatable_types_for_select
+  - if types.size > 1
+    = f.input :type, collection: @klass.creatable_types_for_select, \
                      include_blank: false
+  - else
+      = f.hidden_field :type, value: types.first.second
+
+  - locales = current_site.locales.map(&:presence).compact
+  - if locales.size > 1
+    = f.input :locale, collection: locales,
+                       include_blank: false
+  - else
+    = f.hidden_field :locale, value: locales.first
 
 - else
+  - unless f.object.class.try(:singleton?)
+    = f.input :title, hint: false
+
   .folio-react-wrap.folio-react-wrap--menu-form[
     data-menupaths=@serialized_menu_paths
     data-menuitems=@serialized_menu_items

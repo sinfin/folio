@@ -1,0 +1,13 @@
+.f-c-addresses-show-for-model
+  .row
+    - cols.each do |klass, address|
+      .col-lg-4
+        h2.mt-0 = klass.model_name.human
+
+        - if address.present?
+          = show_for address do |s|
+            - klass.show_for_attributes.each do |attr|
+              = s.attribute attr
+
+        - else
+          .text-muted = t('folio.console.blank')

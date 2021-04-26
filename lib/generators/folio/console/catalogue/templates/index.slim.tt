@@ -1,0 +1,3 @@
+= index_header
+
+== cell('<%= cell_name %>', @<%= index_variable_name %>)

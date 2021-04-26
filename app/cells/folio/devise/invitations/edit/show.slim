@@ -1,0 +1,11 @@
+.f-devise-invitations-edit
+  = title
+
+  = form do |f|
+    = f.hidden_field :invitation_token, value: invitation_token
+
+    - if f.object.class.require_password_on_accepting
+      = f.input :password
+      = f.input :password_confirmation
+
+    = f.button :submit, t('folio.devise.submit')

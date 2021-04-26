@@ -5,6 +5,7 @@ cs:
       javascript:
         add: Přidat
         addMenuItem: Přidat odkaz
+        addPlaceholder: Přidat...
         availableDocuments: Dostupné dokumenty
         availableImages: Dostupné obrázky
         cancel: Zrušit

@@ -34,12 +34,6 @@ FactoryBot.define do
 
   factory :folio_page_cookies, parent: :folio_page, class: "Folio::Page::Cookies"
 
-  factory :folio_atom, class: "Folio::Atom::Text" do
-    type { "Folio::Atom::Text" }
-    association :placement, factory: :folio_page
-    content { "<p>Officiis perferendis commodi. Asperiores quas et. Veniam qui est.</p>" }
-  end
-
   factory :folio_document_placement, class: "Folio::FilePlacement::Document" do
     association :file, factory: :folio_document
     association :placement, factory: :folio_page
@@ -79,7 +73,7 @@ FactoryBot.define do
 
   factory :folio_admin_account, class: "Folio::Account" do
     email { "test@test.com" }
-    password { "test@test.com" }
+    password { "Complex@Password.123" }
     role { :superuser }
     first_name { "Test" }
     last_name { "Dummy" }
@@ -87,6 +81,7 @@ FactoryBot.define do
 
   factory :folio_menu, class: "Folio::Menu::Page" do
     locale { :cs }
+    sequence(:title) { |i| "Menu #{i}" }
 
     factory :folio_menu_with_menu_items do
       transient do
@@ -98,6 +93,8 @@ FactoryBot.define do
       end
     end
   end
+
+  factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
 
   factory :folio_menu_item, class: "Folio::MenuItem" do
     association :menu, factory: :folio_menu
@@ -129,5 +126,13 @@ FactoryBot.define do
     body_text_en { "body_text_en" }
     optional_keywords { [] }
     required_keywords { [] }
+  end
+
+  factory :folio_user, class: "Folio::User" do
+    sequence(:email) { |i| "email-#{i}@email.email" }
+    password { "Complex@Password.123" }
+    confirmed_at { Time.now }
+    first_name { "first_name" }
+    last_name { "last_name" }
   end
 end

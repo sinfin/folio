@@ -13,12 +13,17 @@ class Folio::Menu < Folio::ApplicationRecord
   validates :type, :locale,
             presence: true
 
+  validates :title,
+            presence: true,
+            uniqueness: true
+
   alias_attribute :items, :menu_items
+  before_validation :set_default_title
 
   scope :ordered, -> { order(type: :asc, locale: :asc) }
 
-  def title
-    model_name.human
+  scope :by_type, -> (type) do
+    where(type: type)
   end
 
   def available_targets
@@ -68,6 +73,23 @@ class Folio::Menu < Folio::ApplicationRecord
       Rails.root.join("app/models/**/menu"),
     ]
   end
+
+  def self.creatable_types
+    descendants.select do |klass|
+      !klass.try(:singleton?)
+    end
+  end
+
+  def self.creatable_types_for_select
+    creatable_types.map do |klass|
+      [klass.model_name.human, klass]
+    end
+  end
+
+  private
+    def set_default_title
+      self.title ||= self.class.model_name.human
+    end
 end
 
 # == Schema Information
@@ -79,6 +101,7 @@ end
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  locale     :string
+#  title      :string
 #
 # Indexes
 #

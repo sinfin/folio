@@ -1,0 +1,46 @@
+.f-newsletter-subscriptions-form
+  position: relative
+
+  &__form:not(&__form--submitting) &__loader
+    display: none
+
+  &__message
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    display: none
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    z-index: 2
+
+  &__form
+    position: relative
+    z-index: 1
+
+  &__input
+    padding-right: $input-padding-x + $input-height
+
+  &__btn
+    padding: 0
+    position: absolute
+    top: 0
+    right: 0
+    width: $input-height
+    height: $input-height
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__svg
+    width: 30px
+    height: 30px
+    flex: 0 0 30px
+
+  &--submitted &__form
+    visibility: hidden
+
+  &--submitted &__message
+    display: flex

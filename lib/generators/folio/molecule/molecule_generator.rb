@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
+
 class Folio::MoleculeGenerator < Rails::Generators::NamedBase
+  include Folio::GeneratorBase
+
   source_root File.expand_path("templates", __dir__)
 
   def atom_model
@@ -13,36 +17,7 @@ class Folio::MoleculeGenerator < Rails::Generators::NamedBase
     template "cell_test.rb.tt", "test/cells/#{global_namespace_path}/molecule/#{name}_cell_test.rb"
   end
 
-  private
-    def classname_prefix
-      Rails.application.class.name[0].downcase
-    end
-
-    def plural_dashed_resource_name
-      name.gsub(/[_\/]/, "-")
-    end
-
-    def dashed_resource_name
-      model_resource_name.gsub(/[_\/]/, "-")
-    end
-
-    def molecule_name
-      class_name
-    end
-
-    def molecule_class_name
-      "#{classname_prefix}-molecule-#{plural_dashed_resource_name}"
-    end
-
-    def molecule_cell_name
-      "#{global_namespace_path}/molecule/#{name}"
-    end
-
-    def global_namespace_path
-      global_namespace.underscore
-    end
-
-    def global_namespace
-      Rails.application.class.name.deconstantize
-    end
+  def i18n_yml
+    add_atom_to_i18n_ymls
+  end
 end

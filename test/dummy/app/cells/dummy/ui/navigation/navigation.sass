@@ -1,0 +1,39 @@
+.d-ui-navigation
+  &__menu
+    background: $light-gray
+    padding: 0 $grid-gutter-width
+
+  &__select
+    position: relative
+
+  &__select-input
+    position: relative
+    z-index: 1
+    cursor: pointer
+
+  &__select-overlay
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 2
+    background: $light-gray
+    display: flex
+    align-items: center
+    padding: 5px $grid-gutter-half
+    font-weight: $font-weight-bold
+    text-transform: uppercase
+    color: $dark
+    pointer-events: none
+
+  &__select-arrow
+    margin-left: auto
+
+  +mq-desktop-menu
+    &__select
+      display: none
+
+  +mq-mobile-menu
+    &__menu
+      display: none

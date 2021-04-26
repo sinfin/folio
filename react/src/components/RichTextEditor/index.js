@@ -13,7 +13,7 @@ class RichTextEditor extends React.PureComponent {
         callbacks: {
           changed: this.props.onChange
         },
-        toolbarFixedTarget: '.f-c-atom-form-toolbar-fix-parent'
+        scrollTarget: this.props.scrollTarget
       })
     }
   }

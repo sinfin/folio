@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/navigation: 
+    models:
+      global_namespace_path/atom/navigation: Navigation
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/navigation: 
+    models:
+      global_namespace_path/atom/navigation: Menu

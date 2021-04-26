@@ -1,0 +1,77 @@
+.folio-react-wrap--ordered-multiselect
+  +font-size($input-font-size)
+  +border-radius($input-border-radius, 0)
+  +box-shadow($input-box-shadow)
+  background: $input-bg
+  color: $input-color
+  border: $input-border-width solid $input-border-color
+  padding: $input-padding-y $input-padding-x
+  font-family: $input-font-family
+  font-weight: $input-font-weight
+  line-height: $input-line-height
+  min-height: 49px
+  position: relative
+
+.f-c-r-ordered-multiselect-app
+  &__item
+    display: flex
+    padding-left: $spacer
+
+  &__item-destroy
+    margin-left: $spacer
+    cursor: pointer
+
+  .react-select__control
+    border: 0
+    box-shadow: none !important
+
+  .react-select__value-container
+    padding-left: 0
+
+  .react-select__indicators
+    display: none
+
+  .rst__collapseButton,
+  .rst__lineBlock,
+  .rst__placeholder
+    display: none
+
+  .rst__rowLabel
+    padding-right: 0
+
+  .rst__rowTitle
+    font-weight: inherit
+
+  .rst__rowContents
+    padding: 0
+    border: 0
+    box-shadow: none
+
+  .rst__nodeContent
+    left: 0 !important
+    right: 0
+
+  .rst__rowWrapper
+    padding: 0
+
+  .rst__moveHandle
+    +material-icon-style
+    background: none
+    box-shadow: none
+    border: 0
+    color: $gray-400
+    font-size: 20px
+    width: 20px
+    height: 100%
+    justify-content: flex-end
+
+    &:before
+      content: 'drag_indicator'
+
+.folio-react-wrap--ordered-multiselect-not-sortable
+  .f-c-r-ordered-multiselect-app
+    &__item
+      padding-left: 0
+
+  .rst__moveHandle
+    display: none

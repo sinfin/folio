@@ -18,20 +18,35 @@ class Folio::DeviseMailer < Devise::Mailer
     @data = {
       USER_CHANGE_PASSWORD_URL: scoped_url_method(record,
                                                   :edit_password_url,
-                                                  record,
                                                   reset_password_token: token)
     }
     super(record, token, opts)
   end
 
   def invitation_instructions(record, token, opts = {})
-    @data = {
-      USER_ACCEPT_INVITATION_URL: scoped_url_method(record,
-                                                    :accept_invitation_url,
-                                                    record,
-                                                    invitation_token: token)
-    }
+    @data ||= {}
+    @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
+                                                           :accept_invitation_url,
+                                                           invitation_token: token)
+
     super(record, token, opts)
+  end
+
+  def omniauth_conflict(authentication, opts = {})
+    @authentication = authentication
+    @record = Folio::User.find(authentication.conflict_user_id)
+
+    initialize_from_record(@record)
+
+
+    @data = {
+      USER_CONFLICT_PROVIDER: authentication.human_provider,
+      USER_CONFLICT_RESOLVE_URL: scoped_url_method(@record,
+                                                   :new_session_url,
+                                                   conflict_token: authentication.conflict_token)
+    }
+
+    mail headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"))
   end
 
   private

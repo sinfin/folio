@@ -1,0 +1,8 @@
+.row.f-devise__row
+  .f-devise__col
+    = attribute_input(@f, :first_name, required: true)
+
+  .f-devise__col
+    = attribute_input(@f, :last_name, required: true)
+
+= attribute_input(@f, :nickname)

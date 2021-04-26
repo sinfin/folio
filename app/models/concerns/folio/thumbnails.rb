@@ -16,7 +16,7 @@ module Folio::Thumbnails
     serialize :thumbnail_sizes, Hash
     before_validation :reset_thumbnails
 
-    before_save :set_additional_data, if: :mime_type_image?
+    after_save :run_set_additional_data_job
     before_destroy :delete_thumbnails
   end
 
@@ -159,42 +159,14 @@ module Folio::Thumbnails
       IMAGE_MIME_TYPES.include? mime_type
     end
 
-    def set_additional_data
+    def run_set_additional_data_job
       return unless file.present?
-      return unless new_record?
+      return unless persisted?
+      return unless mime_type_image?
       return unless self.respond_to?(:additional_data)
+      return if additional_data?
       return if svg?
 
-      if gif?
-        identify = MiniMagick::Tool::Identify.new do |i|
-          i << file.path
-        end
-        animated = identify.split("\n").size > 1
-        self.additional_data ||= {}
-        self.additional_data[:animated] = animated
-      end
-
-      dominant_color = MiniMagick::Tool::Convert.new do |convert|
-        convert.merge! [
-          file.path,
-          "+dither",
-          "-colors", "1",
-          "-unique-colors",
-          "txt:"
-        ]
-      end
-
-      return unless dominant_color.present?
-
-      hex = dominant_color[/#\S+/]
-      rgb = hex.scan(/../).map { |color| color.to_i(16) }
-      dark = rgb.sum < 3 * 255 / 2.0
-
-      self.additional_data ||= {}
-
-      self.additional_data.merge!(
-        dominant_color: hex,
-        dark: dark,
-      )
+      Folio::SetFileAdditionalDataJob.perform_later(self)
     end
 end

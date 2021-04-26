@@ -1,0 +1,46 @@
+.f-devise-registrations-edit
+  = form do |f|
+    - if params[:pw].present?
+      = title(t('.title_password'))
+    - else
+      = title
+
+    - @f = f
+
+    - if params[:pw].present?
+      .f-devise__row
+        .f-devise__col
+          == password_input(f,
+                            :password,
+                            autocomplete: 'new-password',
+                            label: t('.new_password'))
+
+      .f-devise__row
+        .f-devise__col
+          == password_input(f,
+                            :password_confirmation,
+                            autocomplete: 'new-password',
+                            label: t('.new_password_confirmation'))
+
+    - else
+      = render(:_top)
+
+      .f-devise__row
+        .f-devise__col
+          == email_input(f, hint: email_hint)
+
+      = render(:_bottom)
+
+    - if f.object.password_required?
+      .f-devise__group
+        .f-devise__row
+          .f-devise__col
+            == password_input(f,
+                              :current_password,
+                              autocomplete: 'current-password')
+
+    = submit_button(f, t('.update'))
+
+    - @f = nil
+
+    span.folio-loader.f-devise__loader

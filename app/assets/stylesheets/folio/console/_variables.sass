@@ -41,6 +41,10 @@ $body-bg: $white !default
 $text-muted: $gray-500 !default
 $text-semi-muted: #495057 !default
 
+$font-weight-normal: 400 !default
+$font-weight-medium: 500 !default
+$font-weight-bold: 700 !default
+
 $enable-validation-icons: false !default
 
 $link-color: $blue !default
@@ -58,12 +62,14 @@ $border-radius-sm: .15rem !default
 // Fonts
 //
 $font-size-base: 0.875rem !default
+$font-size-sm: 0.8 * 0.875rem !default
 $font-size-tiny: 0.6rem !default
 
 // Headings
 //
 $headings-margin-top: 2 * $spacer !default
 $headings-margin-bottom: $spacer !default
+$headings-font-weight: $font-weight-bold !default
 
 $h1-margin-top: 0 !default
 $h1-margin-bottom: $spacer !default
@@ -108,23 +114,46 @@ $breadcrumb-divider: "/" !default
 // Forms
 $form-text-margin-top: 0.5rem !default
 
+$input-btn-padding-y: 10px !default
+$input-btn-padding-x: 40px !default
+$input-btn-font-size: 14px !default
+$input-btn-line-height: 1.29 !default
 
-$input-btn-padding-y: .375rem !default
-$input-btn-padding-x: .75rem !default
-$input-btn-border-width: $border-width !default
-$input-border-width: $input-btn-border-width !default
-$input-height-border: $input-border-width * 2 !default
+$input-btn-padding-y-sm: 3px !default
+$input-btn-padding-x-sm: 6px !default
+$input-btn-font-size-sm: 12px !default
+$input-btn-line-height-sm: 17 / 12 !default
 
-$input-btn-line-height: $line-height-base !default
-$input-line-height: $input-btn-line-height !default
-$input-padding-y: $input-btn-padding-y !default
-$input-padding-x: $input-btn-padding-x !default
-$input-height-inner: $input-line-height * 1rem + $input-padding-y * 2 !default
-$input-height-inner-half: $input-line-height * .5rem + $input-padding-y !default
-$input-height-inner-quarter: $input-line-height * .25rem + $input-padding-y / 2 !default
+$input-btn-padding-y-lg: 17px !default
+$input-btn-padding-x-lg: 55px !default
+$input-btn-font-size-lg: 18px !default
+$input-btn-line-height-lg: 23 / 18 !default
 
-$input-height: calc(#{$input-line-height * 1rem + $input-padding-y} + #{2 * $input-height-border}) !default
-$btn-fa-line-height: 32px !default
+$input-color: $body-color !default
+$input-placeholder-color: rgba($body-color, 0.5) !default
+$input-font-size: 14px !default
+$input-line-height: 20px !default
+
+$input-padding-x: 10px !default
+$input-padding-y: 5px !default
+
+$input-border-width: 1px !default
+$input-height-border: 2px !default
+
+$input-height-inner: 33px !default
+$input-height-inner-half: 1
+$input-height-inner-quarter: 1
+$input-height: $input-height-inner + $input-height-border !default
+
+$input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-sm) + $input-btn-padding-y-sm * 2 !default
+$input-height-sm: $input-height-inner-sm + $input-height-border !default
+
+$input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2 !default
+$input-height-lg: $input-height-inner-lg + $input-height-border !default
+
+$custom-select-indicator-padding: 18px
+
+$btn-fa-line-height: 33px !default
 
 // Spacers
 $grid-gutter-width: 30px !default

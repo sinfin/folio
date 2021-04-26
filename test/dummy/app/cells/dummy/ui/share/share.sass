@@ -1,0 +1,46 @@
+.d-ui-share
+  color: $black
+  position: relative
+  z-index: 2
+
+  &__inner
+    display: inline-block
+    position: relative
+
+  &__title
+    margin-right: 0.75 * $spacer
+
+  &__items
+    display: flex
+    align-items: center
+
+  &__item
+    +social-sites-hover-color
+    display: block
+    margin: 0 0.75 * $spacer
+
+  &__item--clipboard
+    +unbutton
+
+  +media-breakpoint-up(md)
+    &__toggle
+      display: none
+
+  +media-breakpoint-down(sm)
+    &--mobile-collapsible &__title
+      display: none
+
+    &--mobile-collapsible &__items
+      display: none
+      position: absolute
+      top: 100%
+      left: 50%
+      transform: translate(-50%, 0)
+      padding: 10px
+      background: $white
+
+    &--mobile-collapsible:hover &__items
+      display: block
+
+    &--mobile-collapsible &__item:nth-child(n + 3)
+      margin-top: 10px

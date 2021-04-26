@@ -5,7 +5,19 @@ Folio::Engine.routes.draw do
 
   get "errors/internal_server_error"
 
-  devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+  unless Rails.application.config.folio_users
+    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
+  end
+
+  namespace :devise do
+    namespace :omniauth do
+      resource :authentication, only: %i[destroy]
+    end
+  end
+
+  namespace :users do
+    get "/comeback", to: "comebacks#show"
+  end
 
   root to: "home#index"
 
@@ -33,7 +45,7 @@ Folio::Engine.routes.draw do
       patch :update, path: ":type/update", as: :update
     end
 
-    resources :menus, only: [:edit, :update, :index]
+    resources :menus, except: %i[show]
 
     resources :images, only: %i[index]
     resources :documents, only: %i[index]
@@ -48,6 +60,13 @@ Folio::Engine.routes.draw do
     resource :search, only: %i[show]
     resource :site, only: %i[edit update] do
       post :clear_cache
+    end
+
+    resources :users do
+      member do
+        get :send_reset_password_email
+        get :impersonate
+      end
     end
 
     resource :transport, only: [] do
@@ -78,6 +97,8 @@ Folio::Engine.routes.draw do
 
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
+
+      resources :links, only: %i[index]
 
       resources :images, only: %i[index create update destroy] do
         collection do
@@ -120,9 +141,11 @@ Folio::Engine.routes.draw do
   resources :session_attachments, only: %i[create index destroy],
                                   as: :folio_session_attachments
 
-  scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
-    get "/download/:hash_id/*name", to: "downloads#show",
-                                    as: :download,
-                                    constraints: { name: /.*/ }
-  end
+  get "/folio/ui", to: "ui#ui"
+  get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
+  get "/folio/ui/atoms", to: "ui#atoms"
+
+  get "/download/:hash_id/*name", to: "downloads#show",
+                                  as: :download,
+                                  constraints: { name: /.*/ }
 end

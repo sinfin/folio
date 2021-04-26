@@ -17,6 +17,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     datetime
     color
     boolean
+    url
   ]
 
   ATTACHMENTS = []

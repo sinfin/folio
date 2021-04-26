@@ -1,0 +1,124 @@
+- type: <%= global_namespace %>::Atom::Text
+  content: true
+
+- type: <%= global_namespace %>::Atom::Text
+  content: true
+  highlight: 'gray'
+  _showcase: "highlight: gray"
+
+- type: <%= global_namespace %>::Atom::Text
+  content: true
+  highlight: 'red'
+  _showcase: "highlight: red"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H1
+  _showcase: "tag: H1"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H2
+  _showcase: "tag: H2"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H3
+  _showcase: "tag: H3"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H4
+  _showcase: "tag: H4"
+
+- type: <%= global_namespace %>::Atom::Title
+  title: true
+  tag: H5
+  _showcase: "tag: H5"
+
+- type: <%= global_namespace %>::Atom::Navigation
+  menu: true
+
+- type: <%= global_namespace %>::Atom::Perex
+  text: true
+
+- type: <%= global_namespace %>::Atom::Quotation
+  text: true
+
+- type: <%= global_namespace %>::Atom::TextWithImage
+  content: long
+  cover: true
+
+- type: <%= global_namespace %>::Atom::Documents
+  documents: true
+  title: "Documents"
+
+- type: <%= global_namespace %>::Atom::Documents
+  documents: true
+  title: "Other documents"
+
+- type: <%= global_namespace %>::Atom::Documents
+  documents: true
+  title: "More documents"
+
+- type: <%= global_namespace %>::Atom::Image
+  cover: true
+
+- type: <%= global_namespace %>::Atom::Image
+  cover: true
+  title: true
+
+- type: <%= global_namespace %>::Atom::Hero
+  cover: 0
+  title: "Title"
+  perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  primary_button_url: "/"
+  primary_button_label: "Button label"
+
+- type: <%= global_namespace %>::Atom::Hero
+  cover: 1
+  perex: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  secondary_button_url: "/"
+  secondary_button_label: "Button label"
+
+- type: <%= global_namespace %>::Atom::Person
+  cover: 0
+  name: "Lorem ipsum"
+  description: |
+    lorem
+    ipsum
+  phone: "+420 123 123 132"
+  email: "email@email.email"
+
+- type: <%= global_namespace %>::Atom::Person
+  name: "Lorem ipsum"
+  phone: "+420 123 123 132"
+  email: "email@email.email"
+
+- type: <%= global_namespace %>::Atom::Person
+  cover: 1
+  name: "Lorem ipsum"
+  email: "email@email.email"
+
+- type: <%= global_namespace %>::Atom::Embed::Video
+  embed_code: '<iframe width="560" height="315" src="https://www.youtube.com/embed/HmZKgaHa3Fg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+  caption: Popisek video embedu
+
+- type: <%= global_namespace %>::Atom::Embed::Html
+  embed_code: '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Sunsets don&#39;t get much better than this one over <a href="https://twitter.com/GrandTetonNPS?ref_src=twsrc%5Etfw">@GrandTetonNPS</a>. <a href="https://twitter.com/hashtag/nature?src=hash&amp;ref_src=twsrc%5Etfw">#nature</a> <a href="https://twitter.com/hashtag/sunset?src=hash&amp;ref_src=twsrc%5Etfw">#sunset</a> <a href="http://t.co/YuKy2rcjyU">pic.twitter.com/YuKy2rcjyU</a></p>&mdash; US Department of the Interior (@Interior) <a href="https://twitter.com/Interior/status/463440424141459456?ref_src=twsrc%5Etfw">May 5, 2014</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>'
+  caption: Popisek HTML obsahu
+
+- type: <%= global_namespace %>::Atom::Embed::Podcast
+  embed_code: '<iframe src="https://open.spotify.com/embed-podcast/episode/5PM3tj3Zg8r0zMwtLTMQZf" width="100%" height="232" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>'
+  caption: Popisek podcast embedu
+
+- type: <%= global_namespace %>::Atom::ContactForm
+  title: Contact us
+  text: Leave us your message and we will contact you.
+
+- type: <%= global_namespace %>::Atom::Hr
+
+- type: <%= global_namespace %>::Atom::Margin
+
+- type: <%= global_namespace %>::Atom::Map
+  latlng: 50.091254894762635, 14.401627227698018

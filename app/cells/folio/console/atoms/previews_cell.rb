@@ -13,8 +13,23 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
     @controls ||= render(:_controls)
   end
 
-  def insert
-    @insert ||= render(:_insert)
+  def insert(before: nil, after: nil)
+    if options[:non_interactive]
+      nil
+    else
+      @insert_inner ||= render(:_inner_insert)
+
+      class_name_base = "f-c-atoms-previews__insert"
+      class_name = class_name_base
+      class_name += " #{class_name_base}--first" if after.nil?
+      class_name += " #{class_name_base}--last" if before.nil?
+
+      content_tag(:div,
+                  @insert_inner,
+                  class: class_name,
+                  "data-before" => before,
+                  "data-after" => after)
+    end
   end
 
   def label_perex_controls

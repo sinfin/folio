@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= global_namespace %>::Ui::FooterCellTest < Cell::TestCase
+  test "show" do
+    create(:folio_site)
+    html = cell("<%= global_namespace_path %>/ui/footer", nil).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-footer")
+  end
+end

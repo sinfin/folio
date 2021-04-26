@@ -73,10 +73,6 @@ class Folio::BlogGenerator < Rails::Generators::Base
       @app_module_spacing ||= application_module.to_s.gsub(/\w/, " ")
     end
 
-    def application_dir_namespace
-      @application_dir_namespace ||= application_module.to_s.underscore
-    end
-
     def blog_namespace
       @blog_namespace ||= "#{application_module}::Blog"
     end

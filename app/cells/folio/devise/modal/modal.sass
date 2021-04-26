@@ -1,0 +1,37 @@
+.f-devise-modal
+  &__dialog
+    max-width: $folio-devise-modal-max-width
+
+  &__dialog--registrations
+    max-width: $folio-devise-modal-registrations-max-width
+
+  .f-devise__title
+    padding-right: 40px + $grid-gutter-width / 2
+    margin-top: 0
+    font-size: $h3-font-size
+
+  &__dialog:not(&__dialog--active)
+    display: none
+
+  &__close
+    position: absolute
+    top: 0
+    right: 0
+    border: 0
+    background: transparent
+    padding: 10px
+    appearance: none
+    cursor: pointer
+
+    &, &:hover, &:focus
+      outline: 0
+      box-shadow: none
+
+  &__close-svg
+    width: 30px
+    height: 30px
+    display: block
+
+  .f-devise-password-input__wrap,
+  .f-devise__col
+    max-width: 100%

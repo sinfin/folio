@@ -1,0 +1,12 @@
+.f-c-leads-catalogue
+  = catalogue(model)
+    ruby:
+      show_link(:name)
+
+      email
+
+      date(:created_at)
+
+      state
+
+      actions :show, :edit, :destroy

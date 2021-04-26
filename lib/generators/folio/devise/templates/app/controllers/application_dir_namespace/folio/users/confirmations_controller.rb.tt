@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+class <%= application_module %>::Folio::Users::ConfirmationsController < Folio::Users::ConfirmationsController
+end

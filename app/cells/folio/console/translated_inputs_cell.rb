@@ -14,14 +14,12 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
   end
 
   def translations
-    @translations ||= begin
-      if options[:locales]
-        options[:locales]
-      elsif ::Rails.application.config.folio_using_traco
-        I18n.available_locales
-      else
-        []
-      end
+    @translations ||= if options[:locales]
+      options[:locales]
+    elsif ::Rails.application.config.folio_using_traco
+      I18n.available_locales
+    else
+      []
     end
   end
 

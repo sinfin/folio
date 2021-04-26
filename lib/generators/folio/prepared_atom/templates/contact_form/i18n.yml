@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/contact_form: 
+    models:
+      global_namespace_path/atom/contact_form: Contact form
+cs:
+  activerecord:
+    attributes:
+      global_namespace_path/atom/contact_form: 
+    models:
+      global_namespace_path/atom/contact_form: Formulář (kontakt)
