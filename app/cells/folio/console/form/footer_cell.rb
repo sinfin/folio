@@ -7,6 +7,7 @@ class Folio::Console::Form::FooterCell < Folio::ConsoleCell
   end
 
   def preview_path
+    return nil unless model
     return nil unless model.object.persisted?
     return nil if options[:preview_button] == false
 

@@ -16,10 +16,12 @@
 
     = options[:pre_submit_content]
 
-    = model.button :submit, \
-                   submit_label, \
-                   class: 'f-c-form-footer__btn f-c-form-footer__btn--submit '\
-                          'mr-2'
+    - if model
+      = model.button :submit, \
+                     submit_label, \
+                     class: 'f-c-form-footer__btn '\
+                            'f-c-form-footer__btn--submit '\
+                            'mr-2'
 
     .f-c-form-footer__ribbon.text-danger.f-c-with-icon
       span.mi.f-c-form-footer__ribbon-icon warning
