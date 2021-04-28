@@ -35,6 +35,8 @@
 //= require folio/cable
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/debounce
+//= require folio/throttle
 //= require folio/image/image
 
 //= require folio/console/_bootstrap-tabs-lazyload
