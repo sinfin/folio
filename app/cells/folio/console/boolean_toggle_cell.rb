@@ -18,7 +18,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def id
-    "f-c-boolean-toggle--#{model.id}-#{attribute}"
+    "f-c-boolean-toggle--#{model.try(:id)}-#{attribute}"
   end
 
   def input_label
@@ -30,7 +30,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def input_checked?
-    !!model.send(attribute)
+    !!model.try(attribute)
   end
 
   def name
