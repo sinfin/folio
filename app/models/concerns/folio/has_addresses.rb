@@ -56,7 +56,7 @@ module Folio::HasAddresses
     end
 
     def should_validate_secondary_address?
-      use_secondary_address? || should_validate_address?
+      use_secondary_address ? should_validate_address? : false
     end
 
     def should_validate_primary_address?
