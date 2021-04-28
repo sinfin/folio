@@ -41,6 +41,56 @@
       min-height: 0
       position: relative
 
+    &__toggle
+      text-transform: lowercase
+      height: 35px
+      flex: 0 0 35px
+      background: $info
+      display: flex
+      align-items: center
+      justify-content: flex-end
+      padding: 5px 0
+      cursor: pointer
+      position: static
+
+      &::before
+        content: "hide"
+        display: block
+        padding-left: 10px
+
+        html[lang="cs"] &
+          content: "skrýt"
+
+      &::after
+        +pseudo-font-awesome-icon($fa-var-chevron-right)
+        width: 28px
+        display: flex
+        align-items: center
+        justify-content: center
+
+    &--aside-collapsed &__aside
+      width: 28px
+      flex-basis: 28px
+      position: relative
+
+    &--aside-collapsed &__aside > *:not(&__toggle)
+      display: none
+
+    &--aside-collapsed &__toggle
+      text-align: center
+
+      &::before
+        content: '' !important
+        position: absolute
+        top: 0
+        right: 0
+        bottom: 0
+        left: 0
+
+      &::after
+        transform: rotate(180deg)
+        margin-left: 0
+
   +mq-mobile-menu
     overflow-y: scroll
     -webkit-overflow-scrolling: touch
@@ -53,3 +103,6 @@
 
       .f-c-with-aside__scroll
         padding: $grid-gutter-half $grid-gutter-width
+
+    &__toggle
+      display: none

@@ -64,6 +64,7 @@
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
 //= require folio/console/modules/_dirty-forms
+//= require folio/console/modules/_with-aside
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_multiselect
 //= require folio/console/modules/simple-form-with-atoms
