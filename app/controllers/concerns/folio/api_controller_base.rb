@@ -79,9 +79,9 @@ module Folio::ApiControllerBase
       render json: { data: ary }
     end
 
-    def render_select2_options(models, label_method: nil)
+    def render_select2_options(models, label_method: nil, id_method: nil, meta: nil)
       label_method ||= :to_console_label
-      id_method = params[:slug] ? :slug : :id
+      id_method ||= params[:slug] ? :slug : :id
 
       ary = models.map do |model|
         h = { id: model.send(id_method), text: model.send(label_method) }
@@ -93,7 +93,7 @@ module Folio::ApiControllerBase
         end
       end
 
-      render json: { results: ary }
+      render json: { results: ary, meta: meta }
     end
 
     def serializer_for(model)
