@@ -1,8 +1,7 @@
 .f-c-boolean-toggle
   position: relative
-  font-size: $font-size-sm
 
-  &:not(&--show-label)
+  &:not(&--show-label):not(&--verbose)
     width: 2.25rem
 
   &--show-label
@@ -22,3 +21,12 @@
 
   &--show-label &__input:checked ~ &__label::after
     transform: translateX(0.75rem)
+
+  &__label-on,
+  &__label-off
+    position: relative
+    top: 1px
+
+  &__input:not(:checked) ~ &__label &__label-on,
+  &__input:checked ~ &__label &__label-off
+    display: none

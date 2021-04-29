@@ -248,6 +248,8 @@ cs:
     primary_address: Adresa - hlavní
     private_attachments: Soubory
     published: Zveřejněno
+    published/true: Zveřejněno
+    published/false: Nezveřejněno
     published_at: Zveřejněno k datu
     secondary_address: Adresa - doplňková
     sensitive_content: Obsahuje citlivý obsah
