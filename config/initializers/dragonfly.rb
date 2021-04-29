@@ -86,9 +86,10 @@ Dragonfly.app.configure do
       {}
     else
       begin
-        photo = MiniExiftool.new(content.file, ignore_minor_errors: true, replace_invalid_chars: true)
-        photo.to_hash
-      rescue MiniExiftool::Error
+        reader = MultiExiftool::Reader.new
+        reader.filenames = [content.file.path]
+        reader.read.try(:first).try(:to_hash)
+      rescue MultiExiftool::Error
         {}
       end
     end
