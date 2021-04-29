@@ -198,10 +198,8 @@ module Folio::Console::DefaultActions
     end
 
     def invalid_flash_error
-      base = I18n.t("flash.actions.update.alert",
-                    resource_name: @klass.model_name.human)
       folio_console_record.valid?
       messages = folio_console_record.errors.full_messages
-      "#{base} #{messages.join(" ")}"
+      messages.join(" ")
     end
 end
