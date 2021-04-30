@@ -1,4 +1,14 @@
-- preview_path = controller.main_app.page_path(@page.to_preview_param)
+ruby:
+  if @page.class.public_rails_path
+    locale = I18n.available_locales.size > 1 ? I18n.locale : nil
+    preview_path = main_app.send(@page.class.public_rails_path, locale: locale)
+  elsif @page.class.public?
+    locale = I18n.available_locales.size > 1 ? I18n.locale : nil
+    preview_path = controller.main_app.page_path(@page.to_preview_param,
+                                                 locale: locale)
+  else
+    preview_path = false
+  end
 
 = simple_form_for_with_atoms([:console, @page],
                              form_footer_options: { \
