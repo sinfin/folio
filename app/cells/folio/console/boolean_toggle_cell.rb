@@ -18,7 +18,8 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def id
-    "f-c-boolean-toggle--#{model.try(:id)}-#{attribute}"
+    uniq = "#{model.class.try(:table_name)}-#{model.try(:id)}"
+    "f-c-boolean-toggle--#{uniq}-#{attribute}"
   end
 
   def input_label
