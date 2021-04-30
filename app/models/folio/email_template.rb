@@ -21,7 +21,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
     title.presence || "#{mailer}##{action}"
   end
 
-  def slug_candidate
+  def slug_candidates
     "#{mailer.gsub('::', '_')}-#{action}"
   end
 

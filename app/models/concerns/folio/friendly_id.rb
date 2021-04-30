@@ -6,7 +6,7 @@ module Folio::FriendlyId
   included do
     extend FriendlyId
 
-    friendly_id :slug_candidate, use: %i[slugged history]
+    friendly_id :slug_candidates, use: %i[slugged history]
 
     validates :slug,
               presence: true,
@@ -17,7 +17,7 @@ module Folio::FriendlyId
   end
 
   private
-    def slug_candidate
+    def slug_candidates
       title
     end
 
