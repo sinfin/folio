@@ -12,7 +12,7 @@ class Folio::Address::Base < Folio::ApplicationRecord
             :type,
             presence: true
 
-  audited only: %i[city country_code name street zip]
+  audited only: %i[address_line_1 address_line_2 city country_code name zip]
 
   def country
     ISO3166::Country.new(country_code)
