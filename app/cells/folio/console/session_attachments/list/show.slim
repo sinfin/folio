@@ -17,7 +17,11 @@
                 class="f-c-file-table__td"
                 class="f-c-file-table__td--main"
               ]
-                = attachment.file_name
+                a[
+                  href=attachment.file.remote_url(expires: 1.hour.from_now)
+                  target="_blank"
+                ]
+                  = attachment.file_name
 
               div[
                 class="f-c-file-table__td"
