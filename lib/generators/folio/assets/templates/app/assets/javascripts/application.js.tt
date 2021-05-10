@@ -16,5 +16,5 @@
 
 //= require folio/image/image
 //= require folio/leads/form/form
-//= require folio/modal/sensitive_content/sensitive_content
+//= require folio/sensitive_content_modal/sensitive_content_modal
 //= require folio/newsletter_subscriptions/form/form

@@ -198,12 +198,6 @@ module Folio
         end
       end
 
-      def test_settings
-        inject_into_file "config/environments/test.rb", before: "# Raises error for missing translations" do
-          "config.middleware.use RackSessionAccess::Middleware\n\n  "
-        end
-      end
-
       def production_settings
         gsub_file "config/environments/production.rb", "config.assets.js_compressor = :uglifier", "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6"
       end
