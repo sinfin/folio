@@ -53,16 +53,6 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
         email: "new@email.email",
       }
     }
-    assert_response(:ok)
-    assert_not_equal("new@email.email", @user.reload.email)
-
-    sign_in @user
-    patch main_app.user_registration_path, params: {
-      user: {
-        email: "new@email.email",
-        current_password: "Complex@Password.123",
-      }
-    }
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
     assert_equal("new@email.email", @user.reload.email)
   end
