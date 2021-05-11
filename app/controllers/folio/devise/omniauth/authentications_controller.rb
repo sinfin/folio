@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Devise::Omniauth::AuthenticationsController < Folio::ApplicationController
-  include Folio::Users::DeviseUserPaths
+  include Folio::Users::DeviseControllerBase
 
   before_action :authenticate_user!
 

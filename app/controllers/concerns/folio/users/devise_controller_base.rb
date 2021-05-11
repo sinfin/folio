@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-module Folio::Users::DeviseUserPaths
+module Folio::Users::DeviseControllerBase
+  extend ActiveSupport::Concern
+
   def after_sign_in_path_for(_resource)
     stored_location_for(:user) ||
     main_app.send(Rails.application.config.folio_users_after_sign_in_path)
@@ -22,5 +24,13 @@ module Folio::Users::DeviseUserPaths
 
   def signed_in_root_path(_resource)
     main_app.send(Rails.application.config.folio_users_signed_in_root_path)
+  end
+
+  def set_flash_message(key, kind, options = {})
+    if key == :notice
+      super(:success, kind, options)
+    else
+      super(key, kind, options)
+    end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Users::InvitationsController < Devise::InvitationsController
-  include Folio::Users::DeviseUserPaths
+  include Folio::Users::DeviseControllerBase
 
   def new
     fail ActionController::MethodNotAllowed, ""

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Users::SessionsController < Devise::SessionsController
-  include Folio::Users::DeviseUserPaths
+  include Folio::Users::DeviseControllerBase
 
   def new
     if params[:conflict_token].present?
@@ -81,14 +81,6 @@ class Folio::Users::SessionsController < Devise::SessionsController
       true
     else
       super
-    end
-  end
-
-  def set_flash_message(key, kind, options = {})
-    if key == :notice
-      super(:success, kind, options)
-    else
-      super(key, kind, options)
     end
   end
 end

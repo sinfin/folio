@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
-  include Folio::Users::DeviseUserPaths
+  include Folio::Users::DeviseControllerBase
 
   def create
     devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
