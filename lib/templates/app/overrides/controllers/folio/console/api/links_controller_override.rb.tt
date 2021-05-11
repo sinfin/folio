@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+Folio::Console::Api::LinksController.class_eval do
+  private
+    def additional_links
+      # {
+      #   Klass => Proc.new { |instance| main_app.klass_path(instance) },
+      # }
+      {}
+    end
+
+    def rails_paths
+      <%= global_namespace %>.rails_paths
+    end
+end
