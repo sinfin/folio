@@ -11,6 +11,8 @@ cs:
       signed_up_but_unconfirmed: Byl vám zaslán potvrzovací e-mail. Pro dokončení klikněte na aktivační odkaz zaslaný na Váš e-mail.
       update_needs_confirmation: Úspěšně jste aktualizovali svůj účet, ale ještě musíte ověřit svou novou e-mailovou adresu. Zkontrolujte svou schránku a klikněte na odkaz pro dokončení ověření Vaší nové e-mailové adresy.
       updated: Váš účet byl úspěšně aktualizován.
+    omniauth_callbacks:
+      signed_up: Registrace proběhla úspěšně.
     mailer:
       omniauth_conflict:
         subject: Dokončení přihlášení

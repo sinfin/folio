@@ -9,6 +9,9 @@ en:
         button: Sign in
         footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
 
+    omniauth_callbacks:
+      signed_up: "Welcome! You have signed up successfully."
+
   folio:
     devise:
       submit: Submit

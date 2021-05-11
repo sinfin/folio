@@ -4,23 +4,23 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
   include Folio::Users::DeviseUserPaths
 
   def facebook
-    bind_user_and_redirect(root_url)
+    bind_user_and_redirect
   end
 
   def twitter
-    bind_user_and_redirect(root_url)
+    bind_user_and_redirect
   end
 
   def google_oauth2
-    bind_user_and_redirect(root_url)
+    bind_user_and_redirect
   end
 
   private
-    def bind_user_and_redirect(fallback_url)
+    def bind_user_and_redirect
       auth = Folio::Omniauth::Authentication.from_request(request)
 
       if user_signed_in?
-        target_url = stored_location_for(:user).presence || fallback_url
+        target_url = stored_location_for(:user).presence || Rails.application.config.folio_users_after_sign_in_path
 
         if auth.user.nil?
           # it's a new Authentication
@@ -32,16 +32,18 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
                     provider: auth.human_provider)
             redirect_to target_url, flash: { success: msg }
           else
-            set_flash_message!(:notice, :signed_in)
+            set_flash_message!(:success, :signed_in)
             redirect_to target_url
           end
         else
-          set_flash_message!(:notice, :signed_in)
+          set_flash_message!(:success, :signed_in)
           redirect_to target_url
         end
       else
         if user = auth.find_or_create_user!
-          sign_in_and_redirect user
+          sign_in(:user, user)
+          set_flash_message!(:success, :signed_up)
+          redirect_to after_sign_in_path_for(resource)
         else
           session[:pending_folio_authentication_id] = {
             timestamp: Time.zone.now,
