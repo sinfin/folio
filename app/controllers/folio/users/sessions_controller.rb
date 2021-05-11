@@ -51,12 +51,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
           sign_in(resource_name, resource)
           @force_flash = true
           set_flash_message!(:notice, :signed_in)
-
-          render json: {
-            data: {
-              url: stored_location_for(:user).presence || after_sign_in_path_for(resource),
-            }
-          }, status: 200
+          render json: {}, status: 200
         else
           message = I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
 

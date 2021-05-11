@@ -45,11 +45,17 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
             expire_data_after_sign_in!
           end
 
-          render json: {
-            data: {
-              url: stored_location_for(:user).presence || root_path,
+          if Rails.application.config.folio_users_after_ajax_sign_up_redirect
+            json = {
+              data: {
+                url: stored_location_for(:user).presence || after_sign_up_path_for(resource),
+              }
             }
-          }, status: 200
+          else
+            json = {}
+          end
+
+          render json: json, status: 200
         else
           clean_up_passwords resource
           set_minimum_password_length

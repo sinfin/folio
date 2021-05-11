@@ -48,7 +48,7 @@ $(document)
         path = $form.closest('.n-devise-modal').data('after-sign-in-path')
         if path
           window.location.href = path
-        else if res.data.url
+        else if res.data and res.data.url
           window.location.href = res.data.url
         else
           window.location.reload()
