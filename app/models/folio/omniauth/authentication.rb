@@ -44,8 +44,17 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
 
       false
     else
+      first_name = nil
+      last_name = nil
+
+      if nickname.include?(" ")
+        first_name, last_name = nickname.split(" ", 2)
+      end
+
       Folio::User.create!(password: Devise.friendly_token[0, 20],
                           nickname: nickname,
+                          first_name: first_name,
+                          last_name: last_name,
                           authentications: [self],
                           email: email)
     end
