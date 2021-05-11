@@ -83,4 +83,12 @@ class Folio::Users::SessionsController < Devise::SessionsController
       super
     end
   end
+
+  def set_flash_message(key, kind, options = {})
+    if key == :notice
+      super(:success, kind, options)
+    else
+      super(key, kind, options)
+    end
+  end
 end
