@@ -24,6 +24,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
                     :domain,
                     :locale,
                     :google_analytics_tracking_code,
+                    :google_analytics_tracking_code_v4,
                     :facebook_pixel_code,
                     :phone,
                     :email,

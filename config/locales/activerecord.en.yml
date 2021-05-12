@@ -46,6 +46,7 @@ en:
         domain: Domain
         facebook_pixel_code: Facebook pixel - code
         google_analytics_tracking_code: Google analytics - tracking code
+        google_analytics_tracking_code_v4: Google analytics - tracking code - V4
         locales: Languages
         social_links/appstore: Appstore
         social_links/facebook: Facebook

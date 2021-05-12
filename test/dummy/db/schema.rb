@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_20_094559) do
+ActiveRecord::Schema.define(version: 2021_05_12_084817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -336,6 +336,7 @@ ActiveRecord::Schema.define(version: 2021_04_20_094559) do
     t.string "system_email"
     t.string "system_email_copy"
     t.string "email_from"
+    t.string "google_analytics_tracking_code_v4"
     t.index ["domain"], name: "index_folio_sites_on_domain"
   end
 

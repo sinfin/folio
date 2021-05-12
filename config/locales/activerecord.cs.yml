@@ -57,6 +57,7 @@ cs:
         system_email_copy: Systémová e-mailová adresa (kopie)
         facebook_pixel_code: Facebook pixel - kód
         google_analytics_tracking_code: Google analytics - trackovací kód
+        google_analytics_tracking_code_v4: Google analytics - trackovací kód V4
         locales: Jazyky
         social_links/appstore: Appstore
         social_links/facebook: Facebook

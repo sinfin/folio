@@ -59,23 +59,24 @@ end
 #
 # Table name: folio_sites
 #
-#  id                             :bigint(8)        not null, primary key
-#  title                          :string
-#  domain                         :string
-#  email                          :string
-#  phone                          :string
-#  locale                         :string
-#  locales                        :string           default([]), is an Array
-#  created_at                     :datetime         not null
-#  updated_at                     :datetime         not null
-#  google_analytics_tracking_code :string
-#  facebook_pixel_code            :string
-#  social_links                   :json
-#  address                        :text
-#  description                    :text
-#  system_email                   :string
-#  system_email_copy              :string
-#  email_from                     :string
+#  id                                :bigint(8)        not null, primary key
+#  title                             :string
+#  domain                            :string
+#  email                             :string
+#  phone                             :string
+#  locale                            :string
+#  locales                           :string           default([]), is an Array
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  google_analytics_tracking_code    :string
+#  facebook_pixel_code               :string
+#  social_links                      :json
+#  address                           :text
+#  description                       :text
+#  system_email                      :string
+#  system_email_copy                 :string
+#  email_from                        :string
+#  google_analytics_tracking_code_v4 :string
 #
 # Indexes
 #

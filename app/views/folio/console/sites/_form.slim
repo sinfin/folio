@@ -30,7 +30,13 @@ ruby:
     = f.input :domain
     = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
                                           checked: f.object.locales
-    = f.input :google_analytics_tracking_code
+
+    .row
+      .col-md
+        = f.input :google_analytics_tracking_code_v4
+      .col-md
+        = f.input :google_analytics_tracking_code
+
     = f.input :facebook_pixel_code
 
   = tab :site_social_links
