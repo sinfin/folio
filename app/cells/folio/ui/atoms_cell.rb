@@ -19,6 +19,7 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
     @page = Folio::Page.new
 
     images = Folio::Image.tagged_with("unsplash").to_a
+    images = Folio::Image.last(5).to_a if images.blank?
     documents = Folio::Document.limit(5).to_a
 
     sorted_yaml = YAML.load_file(self.class.data_path).sort_by do |data|
@@ -56,19 +57,16 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         end
       end
 
-      attrs["main_article"] = articles[0] if attrs["main_article"]
-      attrs["article_1"] = articles[1] if attrs["article_1"]
-      attrs["article_2"] = articles[2] if attrs["article_2"]
-
-      attrs["issue"] = issue if attrs["issue"]
-      attrs["serial"] = serial if attrs["serial"]
-
-      if attrs["menu"]
-        menu = attrs["type"].constantize::ASSOCIATIONS[:menu].first.constantize.last
-        if menu
-          attrs["menu"] = menu
-        else
-          attrs.delete("menu")
+      attrs.each do |key, value|
+        if value == true
+          if association_definition = attrs["type"].constantize::ASSOCIATIONS[key.to_sym]
+            record = association_definition.first.constantize.last
+            if record
+              attrs[key] = record
+            else
+              attrs.delete(key)
+            end
+          end
         end
       end
 
@@ -86,8 +84,11 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         end
       end
 
+      attrs = handle_attributes(attrs)
+
       atom = @page.atoms.build(attrs)
       atom.data["_showcase"] = data["_showcase"]
+
       atom
     end
 
@@ -104,5 +105,9 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
   def classname_prefix
     @classname_prefix ||= ::Rails.application.class.name[0].downcase
+  end
+
+  def handle_attributes(attrs)
+    attrs
   end
 end
