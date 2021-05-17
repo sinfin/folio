@@ -337,7 +337,7 @@ class Folio::ImageCell < Folio::ApplicationCell
 
   def vertical_image?
     if options[:always_keep_ratio] && self.thumbnail_width && self.thumbnail_height
-      self.thumbnail_width > self.thumbnail_height
+      self.thumbnail_width < self.thumbnail_height
     end
   end
 end
