@@ -14,7 +14,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :cloned,
                         :round,
                         :static?,
-                        :sensitive_content?
+                        :sensitive_content?,
+                        :vertical_image?
 
   def show
     render if size
@@ -332,5 +333,9 @@ class Folio::ImageCell < Folio::ApplicationCell
     end
 
     @sensitive_content = file.try(:sensitive_content?) || false
+  end
+
+  def vertical_image?
+    options[:always_keep_ratio] && self.thumbnail_width > self.thumbnail_height
   end
 end
