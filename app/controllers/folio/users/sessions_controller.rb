@@ -60,7 +60,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
           cell_flash[:alert] = message
 
           html = cell("folio/devise/sessions/new",
-                      resource: resource || Folio::User.new,
+                      resource: resource || Folio::User.new(email: params[:user][:email]),
                       resource_name: :user,
                       modal: true,
                       flash: cell_flash).show
