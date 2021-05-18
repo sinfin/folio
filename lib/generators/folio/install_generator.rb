@@ -31,6 +31,15 @@ module Folio
         gem "uglifier", ">= 1.3.0"
         gem "faker", require: false
 
+        gem "sidekiq", "~> 5"
+        gem "sidekiq-cron", "1.2.0"
+        gem "sidekiq-monitoring", "1.3.4"
+        gem "redis-namespace", "1.8.1"
+
+        gem "status-page", "0.1.5"
+        
+        gem "rack-mini-profiler"
+
         gem_group :test do
           gem "factory_bot"
         end
@@ -53,12 +62,6 @@ module Folio
           gem "letter_opener"
           gem "pry-rails"
           gem "slack-notifier"
-
-          gem "capistrano-rails", require: false
-          gem "capistrano-sinfin", git: "git@bitbucket.org:Sinfin/capistrano-sinfin.git", branch: "master"
-          gem "capistrano-serviceman", github: "Sinfin/capistrano-serviceman", branch: "master"
-          gem "capistrano3-puma", "~> 4.0.0"
-
           gem "better_errors"
           gem "binding_of_caller"
           gem "rails-flog", require: "flog"

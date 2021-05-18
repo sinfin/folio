@@ -26,7 +26,6 @@ I. fáze
 II. fáze
 [ ] node type galerie
 [ ] pgsearch s diakritikou
-[ ] capistrano deployment
 [ ] generovani modelu a CRUD (gem od Jakuba)
 [ ] document thumbnails async
 
