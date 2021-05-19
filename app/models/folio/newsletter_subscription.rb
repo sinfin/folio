@@ -22,17 +22,16 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   serialize :tags, Array
   serialize :merge_vars, Hash
 
-  after_save do
-    if saved_changes?
+  after_commit do
+    if saved_changes? || destroyed?
       if email_before_last_save
+        # email changed > delete old subscription
         update_mailchimp_subscription(email_before_last_save)
       end
 
       update_mailchimp_subscription
     end
   end
-
-  after_destroy :update_mailchimp_subscription
 
   def requires_subscription_confirmation?
     return true unless subscribable.respond_to?(:requires_subscription_confirmation?)

@@ -135,4 +135,8 @@ FactoryBot.define do
     first_name { "first_name" }
     last_name { "last_name" }
   end
+
+  factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
+    sequence(:email) { |i| "email-#{i}@email.email" }
+  end
 end
