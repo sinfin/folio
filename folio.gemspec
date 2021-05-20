@@ -66,7 +66,7 @@ Gem::Specification.new do |s|
   s.add_dependency "discard"
   s.add_dependency "traco"
 
-  s.add_dependency "dragonfly"
+  s.add_dependency "dragonfly", "~> 1.3"
   s.add_dependency "dragonfly-s3_data_store"
   s.add_dependency "multi_exiftool"
 
