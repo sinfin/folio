@@ -33,7 +33,7 @@ class Folio::SitemapTest < ActiveSupport::TestCase
           width: 100,
           height: 100,
           quality: 90,
-       },
+        },
         "200x200" => {
           uid: "foo",
           signature: "bar",
@@ -41,7 +41,15 @@ class Folio::SitemapTest < ActiveSupport::TestCase
           width: 200,
           height: 200,
           quality: 90,
-       },
+        },
+        "50x50" => {
+          uid: "foo",
+          signature: "bar",
+          url: "/media/foo/bar",
+          width: 50,
+          height: 50,
+          quality: 90,
+        },
       })
     end
 
@@ -52,5 +60,6 @@ class Folio::SitemapTest < ActiveSupport::TestCase
 
     # Sitemap gets only the biggest thumbnail available
     assert_equal(image_count, sitemap.size)
+    assert_includes(sitemap.last[:loc], "200x200")
   end
 end
