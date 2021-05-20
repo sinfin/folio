@@ -31,7 +31,7 @@ PATH
       devise_invitable
       discard
       dotenv-rails
-      dragonfly (~> 1.3)
+      dragonfly (= 1.3)
       dragonfly-s3_data_store
       dropzonejs-rails
       fast_jsonapi
