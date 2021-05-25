@@ -143,7 +143,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     if klass.respond_to?(:console_sidebar_count)
       count = klass.console_sidebar_count
-      if count != 0
+      if count && count != 0
         return "#{label} <strong class=\"font-weight-bold\">(#{count})</strong>"
       end
     end
