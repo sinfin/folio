@@ -9,4 +9,8 @@ class Folio::Console::Addresses::ShowForModelCell < Folio::ConsoleCell
       [Folio::Address::Secondary, model.secondary_address],
     ]
   end
+
+  def col_class
+    options[:col_class] || "col-lg-4"
+  end
 end

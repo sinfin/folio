@@ -1,7 +1,7 @@
 .f-c-addresses-show-for-model
   .row
     - cols.each do |klass, address|
-      .col-lg-4
+      div class=col_class
         h2.mt-0 = klass.model_name.human
 
         - if address.present?
