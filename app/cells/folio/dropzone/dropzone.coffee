@@ -11,6 +11,7 @@ initDropzones = ->
       paramName: $wrap.data('param-name')
       addRemoveLinks: true
       createImageThumbnails: $wrap.data('create-thumbnails')
+      maxThumbnailFilesize: 15
       thumbnailWidth: 250
       thumbnailHeight: 250
       maxFilesize: 100
