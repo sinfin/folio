@@ -95,6 +95,7 @@ cs:
       folio/user:
         admin_note: Poznámka (viditelná jen adminstrátory)
         authentications: Propojení
+        created_at: Vytvořen
         last_sign_in_at: Poslední přihlášení
         nickname: Přezdívka
         password: Heslo
