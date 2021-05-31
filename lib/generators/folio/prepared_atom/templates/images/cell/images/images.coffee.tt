@@ -43,9 +43,9 @@ else
 
   if Turbolinks?
     $(document)
-      .on 'turbolinks:load', onLoad
+      .on 'folioAtomsLoad', onLoad
 
-      .on 'turbolinks:before-render', ->
+      .on 'folioAtomsUnload', ->
         return unless bound
         bound = false
         $(window).off 'resize.aAtomImages orientationchange.aAtomImages', debouncedHandleWraps

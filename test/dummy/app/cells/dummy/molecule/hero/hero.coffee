@@ -30,5 +30,5 @@ destroySlick = ($el) ->
     .addClass('d-molecule-hero__slider--loading')
 
 $(document)
-  .on 'turbolinks:load', bindSlick
-  .on 'turbolinks:before-render', destroySlick
+  .on 'folioAtomsLoad', bindSlick
+  .on 'folioAtomsUnload', destroySlick

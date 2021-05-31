@@ -17,7 +17,7 @@ window.dAtomMapInit = ->
       map: map
 
 $(document)
-  .on 'turbolinks:load', ->
+  .on 'folioAtomsLoad', ->
     $map = $('.d-atom-map__map')
     return unless $map.length
 

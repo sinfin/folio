@@ -17,7 +17,7 @@ window.<%= classname_prefix %>AtomMapInit = ->
       map: map
 
 $(document)
-  .on 'turbolinks:load', ->
+  .on 'folioAtomsLoad', ->
     $map = $('.<%= classname_prefix %>-atom-map__map')
     return unless $map.length
 
