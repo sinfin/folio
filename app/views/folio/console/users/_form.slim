@@ -23,4 +23,8 @@
       .col-lg-8
         == cell('folio/console/addresses/fields', f)
 
+    - if File.exists?(Rails.root.join("app/views/folio/console/users/_additional_form_fields.slim"))
+      = render partial: "folio/console/users/additional_form_fields", \
+              locals: { f: f }
+
 = form_footer f
