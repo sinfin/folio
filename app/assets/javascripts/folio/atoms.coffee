@@ -6,5 +6,5 @@ else
   unloadEvent = "folioConsoleWillReplaceHtml"
 
 $(document)
-  .on(loadEvent, -> $(this).trigger("folioAtomLoad"))
-  .on(unloadEvent, -> $(this).trigger("folioAtomUnload"))
+  .on(loadEvent, -> $(document).trigger("folioAtomsLoad"))
+  .on(unloadEvent, -> $(document).trigger("folioAtomsUnload"))
