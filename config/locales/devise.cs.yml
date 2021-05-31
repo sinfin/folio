@@ -12,6 +12,7 @@ cs:
       update_needs_confirmation: Úspěšně jste aktualizovali svůj účet, ale ještě musíte ověřit svou novou e-mailovou adresu. Zkontrolujte svou schránku a klikněte na odkaz pro dokončení ověření Vaší nové e-mailové adresy.
       updated: Váš účet byl úspěšně aktualizován.
     omniauth_callbacks:
+      signed_in: Přihlášení proběhlo úspěšně.
       signed_up: Registrace proběhla úspěšně.
     mailer:
       omniauth_conflict:

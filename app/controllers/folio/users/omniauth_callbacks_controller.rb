@@ -40,7 +40,11 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           redirect_to target_url
         end
       else
-        if user = auth.find_or_create_user!
+        if user = auth.user
+          sign_in(:user, user)
+          set_flash_message!(:success, :signed_in)
+          redirect_to after_sign_in_path_for(resource)
+        elsif user = auth.find_or_create_user!
           sign_in(:user, user)
           set_flash_message!(:success, :signed_up)
           redirect_to after_sign_in_path_for(resource)
