@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-06-02
+### Added
+- added header message to Zone
+
 ## 2021-04-22
 ### Added
 - added UI generator, refactor dummy assets usage

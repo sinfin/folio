@@ -77,6 +77,10 @@ end
 #  system_email_copy                 :string
 #  email_from                        :string
 #  google_analytics_tracking_code_v4 :string
+#  header_message                    :text
+#  header_message_published          :boolean          default(FALSE)
+#  header_message_published_from     :datetime
+#  header_message_published_until    :datetime
 #
 # Indexes
 #
