@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2021-06-02
 ### Added
-- added header message to Zone
+- added header message to Site
 
 ## 2021-04-22
 ### Added
