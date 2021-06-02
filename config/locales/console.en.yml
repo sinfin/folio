@@ -187,6 +187,8 @@ en:
         auth_links:
           logout: Log out
         tabs:
+          analytics: Analytics
+          contacts: Emails and contacts
           content: Content
           documents: Documents
           gallery: Gallery
@@ -202,6 +204,10 @@ en:
       sites:
         form:
           clear_cache: Clear cache
+          header_message: Message text
+          header_message_published: Enabled
+          header_message_published_from: 'From:'
+          header_message_published_until: 'To:'
         clear_cache:
           success: Cache was cleared successfully.
       users:

@@ -1,0 +1,12 @@
+/ - require "pry"; binding.pry
+.d-ui-header-message[
+  role="alert"
+  data-cookie=cookie
+]
+  .container-fluid
+    .d-ui-header-message__inner
+      .d-rich-text.d-rich-text--chomp
+        == message
+
+      button.d-ui-header-message__close type="button"
+        = icon(:close, height: 22)

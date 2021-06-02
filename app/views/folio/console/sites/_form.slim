@@ -6,31 +6,54 @@ ruby:
 
 = form_header f, right: cache_clear_button
 
-= tabs [:content, :settings, :site_social_links]
+= tabs [:header_message, :contacts, :analytics, :site_social_links, :settings]
 
 .tab-content
-  = tab :content
+  = tab :header_message
+    .d-lg-flex.align-items-center
+      .flex-shrink-0.mr-g
+        = f.input :header_message_published,
+                  label: t('.header_message_published')
+
+      .row
+        .col-xxl-6.d-xl-flex.align-items-center.mb-3
+          .mb-2.mb-xl-0.mr-2 = t('.header_message_published_from')
+          = f.input :header_message_published_from,
+                    label: false,
+                    wrapper_html: { class: 'm-0' }
+
+        .col-xxl-6.d-xl-flex.align-items-center.mb-3
+          .mb-2.mb-xl-0.mr-2 = t('.header_message_published_until')
+          = f.input :header_message_published_until,
+                    label: false,
+                    wrapper_html: { class: 'm-0' }
+
+    = f.input :header_message,
+              as: :redactor,
+              label: false,
+              input_html: { placeholder: t('.header_message') }
+
+  = tab :settings
     = f.input :title
     = f.input :description, as: :text, autosize: true
-
-    = f.input :phone
-    .row
-      .col
-        = f.input :email
-        = f.input :email_from
-      .col
-        = f.input :system_email
-        = f.input :system_email_copy
-    = f.input :address, as: :text, autosize: true
 
     = render partial: 'folio/console/sites/additional_form_fields', \
              locals: { f: f }
 
-  = tab :settings
     = f.input :domain
     = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
                                           checked: f.object.locales
 
+  = tab :contacts
+    = f.input :email
+    = f.input :phone
+    = f.input :address, as: :text, autosize: true
+
+    = f.input :email_from
+    = f.input :system_email
+    = f.input :system_email_copy
+
+  = tab :analytics
     .row
       .col-md
         = f.input :google_analytics_tracking_code_v4

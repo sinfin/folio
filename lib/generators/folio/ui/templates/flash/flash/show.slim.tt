@@ -5,7 +5,7 @@
         class=bootstrap_class_for(msg_type)
         role="alert"
       ]
-        .container
+        .container-fluid
           .<%= classname_prefix %>-ui-flash__inner
             - if i = icon_for(msg_type)
               .<%= classname_prefix %>-ui-flash__ico

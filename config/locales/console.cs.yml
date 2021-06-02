@@ -191,12 +191,14 @@ cs:
         auth_links:
           logout: Odhlásit
         tabs:
+          analytics: Analytika
+          contacts: Emaily a kontakty
           content: Obsah
           documents: Dokumenty
           gallery: Galerie
+          merge: Sloučení duplikátů
           settings: Nastavení
           site_social_links: Odkazy
-          merge: Sloučení duplikátů
         simple_form_with_atoms:
           editor: Editor
           settings: Nastavení
@@ -207,6 +209,10 @@ cs:
       sites:
         form:
           clear_cache: Smazat cache
+          header_message: Text oznámení
+          header_message_published: Zapnuto
+          header_message_published_from: 'Od:'
+          header_message_published_until: 'Do:'
         clear_cache:
           success: Cache byla úspěšně smazána.
       users:

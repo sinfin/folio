@@ -2,13 +2,6 @@
 
 module Folio::HasHeaderMessage
   extend ActiveSupport::Concern
-  include Folio::Indestructible
-
-  class MissingError < ActiveRecord::RecordNotFound; end
-
-  included do
-    validate :validate_singularity
-  end
 
   def header_message_published?
     if header_message_published.present?

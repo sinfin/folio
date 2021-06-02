@@ -53,11 +53,10 @@ cs:
         address: Adresa
         domain: Doména
         email_from: E-mail odesílatele
-        system_email: Systémová e-mailová adresa
-        system_email_copy: Systémová e-mailová adresa (kopie)
         facebook_pixel_code: Facebook pixel - kód
         google_analytics_tracking_code: Google analytics - trackovací kód
         google_analytics_tracking_code_v4: Google analytics - trackovací kód V4
+        header_message: Oznámení v hlavičce webu
         locales: Jazyky
         social_links/appstore: Appstore
         social_links/facebook: Facebook
@@ -68,6 +67,8 @@ cs:
         social_links/pinterest: Pinterest
         social_links/twitter: Twitter
         social_links/youtube: Youtube
+        system_email: Systémová e-mailová adresa
+        system_email_copy: Systémová e-mailová adresa (kopie)
       folio/email_template:
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
         subject: Předmět

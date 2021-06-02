@@ -1,0 +1,12 @@
+/ - require "pry"; binding.pry
+.<%= classname_prefix %>-ui-header-message[
+  role="alert"
+  data-cookie=cookie
+]
+  .container-fluid
+    .<%= classname_prefix %>-ui-header-message__inner
+      .<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+        == message
+
+      button.<%= classname_prefix %>-ui-header-message__close type="button"
+        = icon(:close, height: 22)

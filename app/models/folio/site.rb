@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Site < Folio::ApplicationRecord
+  include Folio::HasHeaderMessage
   include Folio::Singleton
 
   # Validations
