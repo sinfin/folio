@@ -1,0 +1,11 @@
+= index_header
+
+= catalogue(@articles)
+  ruby:
+    cover
+    edit_link :to_label
+    association(:categories)
+    featured_toggle
+    published_toggle
+    date(:published_at)
+    actions

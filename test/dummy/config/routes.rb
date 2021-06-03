@@ -22,11 +22,23 @@ Rails.application.routes.draw do
                                   constraints: { name: /.*/ }
 
   scope module: :dummy, as: :dummy do
+    namespace :blog do
+      resources :articles, only: %i[index show] do
+        member { get :preview }
+      end
+      resources :categories, only: %i[show] do
+        member { get :preview }
+      end
+    end
   end
 
   scope module: :folio do
     namespace :console do
       namespace :dummy do
+        namespace :blog do
+          resources :articles, except: %i[show]
+          resources :categories, except: %i[show]
+        end
       end
     end
   end
