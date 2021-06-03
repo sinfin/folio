@@ -24,6 +24,8 @@ class Dummy::Blog::Article < ApplicationRecord
   validates :locale,
             inclusion: { in: Dummy::Blog.available_locales }
 
+  validate :validate_matching_locales
+
   pg_search_scope :by_query,
                   against: {
                     title: "A",
@@ -61,6 +63,13 @@ class Dummy::Blog::Article < ApplicationRecord
   def published_at_with_fallback
     published_at || created_at
   end
+
+  private
+    def validate_matching_locales
+      unless category_article_links.all?(&:valid?)
+        errors.add(:locale, :doesnt_match_categories)
+      end
+    end
 end
 
 # == Schema Information

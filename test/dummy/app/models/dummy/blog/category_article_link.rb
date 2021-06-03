@@ -25,7 +25,6 @@ class Dummy::Blog::CategoryArticleLink < ApplicationRecord
 
   private
     def validate_matching_locales
-      # TODO
       if article && category && article.locale != category.locale
         errors.add(:base, :invalid_locales)
       end

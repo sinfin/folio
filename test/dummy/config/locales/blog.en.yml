@@ -14,3 +14,9 @@ en:
       dummy/blog/category:
         one: Article category
         other: Article categories
+    errors:
+      models:
+        dummy/blog/article:
+          attributes:
+            locale:
+              doesnt_match_categories: doesn't match category locales.

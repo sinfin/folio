@@ -16,3 +16,9 @@ cs:
         one: Kategorie článků
         few: Kategorie článků
         other: Kategorií článků
+    errors:
+      models:
+        dummy/blog/article:
+          attributes:
+            locale:
+              doesnt_match_categories: se neshoduje se zvolenýma kategoriemi.
