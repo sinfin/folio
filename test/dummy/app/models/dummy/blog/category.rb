@@ -38,6 +38,7 @@ class Dummy::Blog::Category < ApplicationRecord
   scope :by_locale, -> (locale) { where(locale: locale) }
   scope :featured, -> { where(featured: true) }
   scope :ordered, -> { order(title: :asc) }
+  scope :by_atom_setting_locale, -> (locale) { by_locale(locale) }
 end
 
 # == Schema Information

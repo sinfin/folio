@@ -68,6 +68,7 @@ class OrderedMultiselectApp extends React.Component {
           placeholder={window.FolioConsole.translations.addPlaceholder}
           key={without}
           defaultOptions
+          addAtomSettings
           selectize
         />
 

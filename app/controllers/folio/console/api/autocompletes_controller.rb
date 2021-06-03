@@ -83,6 +83,8 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.where.not(id: p_without.split(","))
       end
 
+      scope = filter_by_atom_setting_params(scope)
+
       scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)

@@ -7,6 +7,7 @@ import AsyncSelect from 'react-select/async'
 import AsyncCreatableSelect from 'react-select/async-creatable'
 
 import { apiGet } from 'utils/api'
+import settingsToHash from 'utils/settingsToHash'
 
 import selectStyles from './selectStyles'
 import formatOption from './formatOption'
@@ -15,6 +16,19 @@ import formatCreateLabel from './formatCreateLabel'
 import makeNoOptionsMessage from './makeNoOptionsMessage'
 
 class Select extends React.Component {
+  state = { key: 0 }
+
+  // changing key force the select to reload options based on atom settings
+  componentWillMount () {
+    window.jQuery(document).on('folioAtomSettingChanged.folioReactSelect', () => {
+      this.setState({ key: this.state.key + 1 })
+    })
+  }
+
+  componentWillUnmount () {
+    window.jQuery(document).off('folioAtomSettingChanged.folioReactSelect')
+  }
+
   onChange = (value) => {
     if (this.props.selectize) {
       return this.props.onChange(value)
@@ -58,7 +72,7 @@ class Select extends React.Component {
   }
 
   render () {
-    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, settingsUrlData, defaultOptions, placeholder, ...rest } = this.props
+    const { isClearable, createable, value, options, rawOptions, onChange, innerRef, selectize, async, asyncData, addAtomSettings, defaultOptions, placeholder, ...rest } = this.props
     let SelectComponent = CreatableSelect
     let loadOptions, loadOptionsRaw
 
@@ -81,7 +95,26 @@ class Select extends React.Component {
           })
         }
 
-        if (settingsUrlData) {
+        if (addAtomSettings) {
+          const settingsUrlData = {}
+          const settingsHash = settingsToHash()
+
+          Object.keys(settingsHash).forEach((key) => {
+            if (key !== 'loading') {
+              Object.keys(settingsHash[key]).forEach((locale) => {
+                let fullKey
+
+                if (locale && locale !== 'null') {
+                  fullKey = `by_atom_setting_${key}_${locale}`
+                } else {
+                  fullKey = `by_atom_setting_${key}`
+                }
+
+                settingsUrlData[fullKey] = settingsHash[key][locale]
+              })
+            }
+          })
+
           Object.keys(settingsUrlData).forEach((key) => {
             params.set(key, settingsUrlData[key])
           })
@@ -141,6 +174,7 @@ class Select extends React.Component {
         styles={selectStyles}
         loadOptions={loadOptions}
         onKeyDown={this.onKeyDown}
+        key={this.state.key}
         isClearable={typeof isClearable === 'undefined' ? true : isClearable}
         placeholder={placeholder || window.FolioConsole.translations.selectPlaceholder}
         loadingMessage={() => window.FolioConsole.translations.loading}

@@ -13,7 +13,8 @@
         = f.input :slug
         = f.input :perex, character_counter: true, autosize: true
         = f.input :locale, collection: Dummy::Blog.available_locales,
-                           include_blank: false
+                           include_blank: false,
+                           atom_setting: :locale
 
         = react_ordered_multiselect(f, :categories)
 
