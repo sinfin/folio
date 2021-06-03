@@ -7,7 +7,7 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.string :slug
       t.text :perex
 
-      t.string :locale, default: "en"
+      t.string :locale, default: I18n.default_locale
 
       t.string :meta_title
       t.text :meta_description
@@ -32,7 +32,7 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.string :slug
       t.text :perex
 
-      t.string :locale, default: "en"
+      t.string :locale, default: I18n.default_locale
 
       t.boolean :published
       t.boolean :featured
@@ -50,9 +50,13 @@ class CreateBlog < ActiveRecord::Migration[6.0]
     add_index :dummy_blog_categories, :featured
     add_index :dummy_blog_categories, :published
 
-    create_join_table :dummy_blog_categories, :dummy_blog_articles do |t|
-      t.index :dummy_blog_category_id, name: :index_blog_articles_categories_on_blog_category_id
-      t.index :dummy_blog_article_id, name: :index_blog_articles_categories_on_blog_article_id
+    create_table :dummy_blog_category_article_links do |t|
+      t.belongs_to :dummy_blog_category, index: { name: :dummy_blog_category_article_links_c_id }
+      t.belongs_to :dummy_blog_article, index: { name: :dummy_blog_category_article_links_a_id }
+
+      t.integer :position
+
+      t.timestamps
     end
   end
 end

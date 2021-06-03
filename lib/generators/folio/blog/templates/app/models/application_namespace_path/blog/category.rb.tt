@@ -5,36 +5,26 @@ class <%= application_namespace %>::Blog::Category < ApplicationRecord
   include Folio::HasAttachments
   include Folio::Publishable::Basic
 
-  has_many :primary_articles, class_name: "<%= application_namespace %>::Blog::Article",
-                              inverse_of: :primary_category,
-                              foreign_key: :primary_category_id,
-                              dependent: :nullify
+  has_many :category_article_links, -> { ordered },
+                                    class_name: "<%= application_namespace %>::Blog::CategoryArticleLink",
+                                    inverse_of: :category,
+                                    foreign_key: :<%= application_namespace_path %>_blog_category_id,
+                                    dependent: :destroy
 
-  has_and_belongs_to_many :articles,
-                          -> { ordered },
-                          class_name: "<%= application_namespace %>::Blog::Article",
-                          foreign_key: :<%= application_namespace_path %>_blog_category_id,
-                          association_foreign_key: :<%= application_namespace_path %>_blog_article_id
+  accepts_nested_attributes_for :category_article_links, allow_destroy: true,
+                                                         reject_if: :all_blank
 
-  has_and_belongs_to_many :published_articles,
-                          -> { published.ordered },
-                          class_name: "<%= application_namespace %>::Blog::Article",
-                          foreign_key: :<%= application_namespace_path %>_blog_category_id,
-                          association_foreign_key: :<%= application_namespace_path %>_blog_article_id
+  has_many :articles, through: :category_article_links, source: :article
 
-  # Validations
   validates :title,
-            :slug,
             presence: true
-  validates :slug, uniqueness: true
 
   validates :locale,
-            presence: <%= application_namespace %>::Blog.available_locales
+            inclusion: { in: <%= application_namespace %>::Blog.available_locales }
 
   after_save :update_articles_count, prepend: true
   after_touch :update_articles_count, prepend: true
 
-  # Scopes
   pg_search_scope :by_query,
                   against: {
                     title: "A",

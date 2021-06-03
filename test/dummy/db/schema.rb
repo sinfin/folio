@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_02_082901) do
+ActiveRecord::Schema.define(version: 2021_06_03_000000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,55 @@ ActiveRecord::Schema.define(version: 2021_06_02_082901) do
     t.index ["placement_version"], name: "index_audits_on_placement_version"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
+  end
+
+  create_table "dummy_blog_articles", force: :cascade do |t|
+    t.string "title"
+    t.string "slug"
+    t.text "perex"
+    t.string "locale", default: "cs"
+    t.string "meta_title"
+    t.text "meta_description"
+    t.boolean "featured"
+    t.boolean "published"
+    t.datetime "published_at"
+    t.bigint "primary_category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["featured"], name: "index_dummy_blog_articles_on_featured"
+    t.index ["locale"], name: "index_dummy_blog_articles_on_locale"
+    t.index ["primary_category_id"], name: "index_dummy_blog_articles_on_primary_category_id"
+    t.index ["published"], name: "index_dummy_blog_articles_on_published"
+    t.index ["published_at"], name: "index_dummy_blog_articles_on_published_at"
+    t.index ["slug"], name: "index_dummy_blog_articles_on_slug"
+  end
+
+  create_table "dummy_blog_categories", force: :cascade do |t|
+    t.string "title"
+    t.string "slug"
+    t.text "perex"
+    t.string "locale", default: "cs"
+    t.boolean "published"
+    t.boolean "featured"
+    t.integer "articles_count"
+    t.string "meta_title"
+    t.text "meta_description"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["featured"], name: "index_dummy_blog_categories_on_featured"
+    t.index ["locale"], name: "index_dummy_blog_categories_on_locale"
+    t.index ["published"], name: "index_dummy_blog_categories_on_published"
+    t.index ["slug"], name: "index_dummy_blog_categories_on_slug"
+  end
+
+  create_table "dummy_blog_category_article_links", force: :cascade do |t|
+    t.bigint "dummy_blog_category_id"
+    t.bigint "dummy_blog_article_id"
+    t.integer "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dummy_blog_article_id"], name: "dummy_blog_category_article_links_a_id"
+    t.index ["dummy_blog_category_id"], name: "dummy_blog_category_article_links_c_id"
   end
 
   create_table "folio_accounts", force: :cascade do |t|

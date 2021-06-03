@@ -45,6 +45,23 @@ class Folio::BlogGenerator < Rails::Generators::Base
     end
   end
 
+  def add_console_sidebar_links
+    path = Rails.root.join("config/initializers/folio.rb")
+    return unless File.exist?(path)
+    return if File.read(path).include?("Blog::Article")
+
+    content = <<~'RUBY'
+      Rails.application.config.folio_console_sidebar_runner_up_link_class_names = [%w[
+        application_namespace::Blog::Article
+        application_namespace::Blog::Category
+      ]]
+    RUBY
+
+    append_to_file "config/initializers/folio.rb" do
+      content.gsub("application_namespace", application_namespace)
+    end
+  end
+
   def add_factories
     return if application_namespace == "Dummy"
     return if File.read(Rails.root.join("test/factories.rb")).include?("#{application_namespace_path}_blog_article")

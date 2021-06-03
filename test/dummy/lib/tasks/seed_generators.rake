@@ -84,6 +84,13 @@ class Dummy::SeedGenerator
     end
   end
 
+  def blog
+    Dir[Rails.root.join('db/migrate/*_create_blog.rb'), Rails.root.join('app/models/dummy/blog/**/*.rb')].each do |path|
+      target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
+      copy_file(path, @templates_path.join(target_path))
+    end
+  end
+
   def ui_i18n_yamls(path)
     Dir[path].each do |yaml_path|
       hash = YAML.load_file(yaml_path)
@@ -108,8 +115,17 @@ class Dummy::SeedGenerator
       path.to_s.gsub(/\A#{root}\//, "")
     end
 
+    def application_root
+      Rails.root.to_s
+    end
+
+    def relative_application_path(path)
+      path.to_s.gsub(/\A#{application_root}\//, "")
+    end
+
     def replace_names(str)
       str.gsub("Dummy::", "<%= application_namespace %>::")
+         .gsub("dummy_", "<%= application_namespace_path %>_")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
@@ -141,6 +157,7 @@ namespace :dummy do
     task all: :environment do
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
+      Rake::Task["dummy:seed_generators:blog"].invoke
     end
 
     task ui: :environment do
@@ -159,6 +176,11 @@ namespace :dummy do
       Dir[Rails.root.join("app/models/dummy/atom/**/*.rb")].each do |atom_path|
         gen.from_atom_path(atom_path)
       end
+    end
+
+    task blog: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/blog/templates"))
+      gen.blog
     end
   end
 end
