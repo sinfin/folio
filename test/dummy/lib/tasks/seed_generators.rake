@@ -85,7 +85,13 @@ class Dummy::SeedGenerator
   end
 
   def blog
-    Dir[Rails.root.join('db/migrate/*_create_blog.rb'), Rails.root.join('app/models/dummy/blog/**/*.rb')].each do |path|
+    Dir[Rails.root.join('app/controllers/dummy/blog/**/*.rb'),
+        Rails.root.join('app/models/dummy/blog/**/*.rb'),
+        Rails.root.join('app/views/dummy/blog/**/*.slim'),
+        Rails.root.join('app/views/folio/console/dummy/blog/**/*.slim'),
+        Rails.root.join('config/locales/blog.*.yml'),
+        Rails.root.join('db/migrate/*_create_blog.rb'),
+        Rails.root.join('test/**/dummy/blog/**/*.rb'),].each do |path|
       target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
       copy_file(path, @templates_path.join(target_path))
     end
@@ -133,6 +139,7 @@ class Dummy::SeedGenerator
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
          .gsub("dAtom", "<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
+         .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
          .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")
          .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')

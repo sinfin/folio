@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Blog::ArticlesController < ApplicationController
+  before_action { @klass = Dummy::Blog::Article }
   before_action :find_article, only: [:show, :preview]
 
   def index
@@ -35,10 +36,10 @@ class Dummy::Blog::ArticlesController < ApplicationController
 
   private
     def find_article
-      @article = Dummy::Blog::Article.published_or_admin(account_signed_in?)
-                                     .by_locale(I18n.locale)
-                                     .includes(cover_placement: :file)
-                                     .friendly.find(params[:id])
+      @article = @klass.published_or_admin(account_signed_in?)
+                       .by_locale(I18n.locale)
+                       .includes(cover_placement: :file)
+                       .friendly.find(params[:id])
 
       set_meta_variables(@article)
     end

@@ -1,0 +1,15 @@
+---
+en:
+  activerecord:
+    attributes:
+      dummy/blog/article:
+        category: Category
+        categories: Categories
+      dummy/blog/category:
+    models:
+      dummy/blog/article:
+        one: Article
+        other: Articles
+      dummy/blog/category:
+        one: Article category
+        other: Article categories

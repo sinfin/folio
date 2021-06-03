@@ -1,0 +1,17 @@
+---
+cs:
+  activerecord:
+    attributes:
+      dummy/blog/article:
+        category: Kategorie
+        categories: Kategorie
+      dummy/blog/category:
+    models:
+      dummy/blog/article:
+        one: Článek
+        few: Články
+        other: Článků
+      dummy/blog/category:
+        one: Kategorie článků
+        few: Kategorie článků
+        other: Kategorií článků

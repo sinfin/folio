@@ -94,8 +94,6 @@ FactoryBot.define do
     end
   end
 
-  factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
-
   factory :folio_menu_item, class: "Folio::MenuItem" do
     association :menu, factory: :folio_menu
     association :target, factory: :folio_page
@@ -138,5 +136,16 @@ FactoryBot.define do
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
     sequence(:email) { |i| "email-#{i}@email.email" }
+  end
+
+  factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
+
+  factory :dummy_blog_article, class: "Dummy::Blog::Article" do
+    sequence(:title) { |i| "Article title #{i + 1}" }
+    perex { "perex" }
+  end
+
+  factory :dummy_blog_category, class: "Dummy::Blog::Category" do
+    sequence(:title) { |i| "Category title #{i + 1}" }
   end
 end

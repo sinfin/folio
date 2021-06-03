@@ -1,0 +1,17 @@
+---
+cs:
+  activerecord:
+    attributes:
+      <%= application_namespace_path %>/blog/article:
+        category: Kategorie
+        categories: Kategorie
+      <%= application_namespace_path %>/blog/category:
+    models:
+      <%= application_namespace_path %>/blog/article:
+        one: Článek
+        few: Články
+        other: Článků
+      <%= application_namespace_path %>/blog/category:
+        one: Kategorie článků
+        few: Kategorie článků
+        other: Kategorií článků

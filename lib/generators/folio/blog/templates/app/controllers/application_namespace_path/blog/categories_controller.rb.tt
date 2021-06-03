@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Blog::CategoriesController < ApplicationController
+  before_action { @klass = <%= application_namespace %>::Blog::Category }
   before_action :find_category, only: [:show, :preview]
 
   def show
@@ -21,9 +22,9 @@ class <%= application_namespace %>::Blog::CategoriesController < ApplicationCont
 
   private
     def find_category
-      @category = <%= application_namespace %>::Blog::Category.published_or_admin(account_signed_in?)
-                  <%= application_namespace_spacing %>                .includes(cover_placement: :file)
-                  <%= application_namespace_spacing %>                .by_locale(I18n.locale)
-                  <%= application_namespace_spacing %>                .friendly.find(params[:id])
+      @category = @klass.published_or_admin(account_signed_in?)
+                        .includes(cover_placement: :file)
+                        .by_locale(I18n.locale)
+                        .friendly.find(params[:id])
     end
 end

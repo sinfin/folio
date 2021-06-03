@@ -15,8 +15,7 @@
         = f.input :locale, collection: Dummy::Blog.available_locales,
                            include_blank: false
 
-        = f.association :primary_category
-        = f.association :categories
+        = react_ordered_multiselect(f, :categories)
 
         = f.input :meta_title
         = f.input :meta_description

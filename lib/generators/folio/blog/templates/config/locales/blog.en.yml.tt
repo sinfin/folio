@@ -1,0 +1,15 @@
+---
+en:
+  activerecord:
+    attributes:
+      <%= application_namespace_path %>/blog/article:
+        category: Category
+        categories: Categories
+      <%= application_namespace_path %>/blog/category:
+    models:
+      <%= application_namespace_path %>/blog/article:
+        one: Article
+        other: Articles
+      <%= application_namespace_path %>/blog/category:
+        one: Article category
+        other: Article categories
