@@ -22,9 +22,6 @@ class Dummy::Blog::Category < ApplicationRecord
   validates :locale,
             inclusion: { in: Dummy::Blog.available_locales }
 
-  after_save :update_articles_count, prepend: true
-  after_touch :update_articles_count, prepend: true
-
   pg_search_scope :by_query,
                   against: {
                     title: "A",
@@ -41,9 +38,31 @@ class Dummy::Blog::Category < ApplicationRecord
   scope :by_locale, -> (locale) { where(locale: locale) }
   scope :featured, -> { where(featured: true) }
   scope :ordered, -> { order(title: :asc) }
-
-  private
-    def update_articles_count
-      update_column(:articles_count, articles.count)
-    end
 end
+
+# == Schema Information
+#
+# Table name: dummy_blog_categories
+#
+#  id               :bigint(8)        not null, primary key
+#  title            :string
+#  slug             :string
+#  perex            :text
+#  locale           :string           default("cs")
+#  published        :boolean
+#  featured         :boolean
+#  articles_count   :integer
+#  position         :integer
+#  meta_title       :string
+#  meta_description :text
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# Indexes
+#
+#  index_dummy_blog_categories_on_featured   (featured)
+#  index_dummy_blog_categories_on_locale     (locale)
+#  index_dummy_blog_categories_on_position   (position)
+#  index_dummy_blog_categories_on_published  (published)
+#  index_dummy_blog_categories_on_slug       (slug)
+#

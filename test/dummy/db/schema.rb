@@ -71,12 +71,14 @@ ActiveRecord::Schema.define(version: 2021_06_03_000000) do
     t.boolean "published"
     t.boolean "featured"
     t.integer "articles_count"
+    t.integer "position"
     t.string "meta_title"
     t.text "meta_description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["featured"], name: "index_dummy_blog_categories_on_featured"
     t.index ["locale"], name: "index_dummy_blog_categories_on_locale"
+    t.index ["position"], name: "index_dummy_blog_categories_on_position"
     t.index ["published"], name: "index_dummy_blog_categories_on_published"
     t.index ["slug"], name: "index_dummy_blog_categories_on_slug"
   end

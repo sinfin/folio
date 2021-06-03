@@ -4,7 +4,7 @@
   ruby:
     cover
     edit_link :to_label
-    association(:categories)
+    association(:categories, link: [:edit, :console])
     featured_toggle
     published_toggle
     date(:published_at)

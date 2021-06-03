@@ -37,7 +37,9 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.boolean :published
       t.boolean :featured
 
-      t.integer :articles_count
+      t.integer :articles_count, default: 0
+
+      t.integer :position
 
       t.string :meta_title
       t.text :meta_description
@@ -49,6 +51,7 @@ class CreateBlog < ActiveRecord::Migration[6.0]
     add_index :dummy_blog_categories, :locale
     add_index :dummy_blog_categories, :featured
     add_index :dummy_blog_categories, :published
+    add_index :dummy_blog_categories, :position
 
     create_table :dummy_blog_category_article_links do |t|
       t.belongs_to :dummy_blog_category, index: { name: :dummy_blog_category_article_links_c_id }

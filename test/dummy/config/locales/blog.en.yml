@@ -6,6 +6,7 @@ en:
         category: Category
         categories: Categories
       dummy/blog/category:
+        articles_count: Articles
     models:
       dummy/blog/article:
         one: Article

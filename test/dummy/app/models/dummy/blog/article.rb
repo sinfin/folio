@@ -42,8 +42,8 @@ class Dummy::Blog::Article < ApplicationRecord
   scope :by_locale, -> (locale) { where(locale: locale) }
 
   scope :by_category, -> (category) do
-    ids = Dummy::Blog::ItemArtistLink.select(:dummy_blog_article_id)
-                                     .where(category: category)
+    ids = Dummy::Blog::CategoryArticleLink.select(:dummy_blog_article_id)
+                                          .where(category: category)
 
     where(id: ids)
   end
@@ -62,3 +62,31 @@ class Dummy::Blog::Article < ApplicationRecord
     published_at || created_at
   end
 end
+
+# == Schema Information
+#
+# Table name: dummy_blog_articles
+#
+#  id                  :bigint(8)        not null, primary key
+#  title               :string
+#  slug                :string
+#  perex               :text
+#  locale              :string           default("cs")
+#  meta_title          :string
+#  meta_description    :text
+#  featured            :boolean
+#  published           :boolean
+#  published_at        :datetime
+#  primary_category_id :bigint(8)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#
+# Indexes
+#
+#  index_dummy_blog_articles_on_featured             (featured)
+#  index_dummy_blog_articles_on_locale               (locale)
+#  index_dummy_blog_articles_on_primary_category_id  (primary_category_id)
+#  index_dummy_blog_articles_on_published            (published)
+#  index_dummy_blog_articles_on_published_at         (published_at)
+#  index_dummy_blog_articles_on_slug                 (slug)
+#

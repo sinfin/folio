@@ -5,23 +5,17 @@ end
 
 # == Schema Information
 #
-# Table name: folio_atoms
+# Table name: folio_content_templates
 #
-#  id             :bigint(8)        not null, primary key
-#  type           :string
-#  content        :text
-#  position       :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  placement_type :string
-#  placement_id   :bigint(8)
-#  model_type     :string
-#  model_id       :bigint(8)
-#  title          :string
-#  perex          :text
+#  id         :bigint(8)        not null, primary key
+#  content    :text
+#  position   :integer
+#  type       :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #
-#  index_folio_atoms_on_model_type_and_model_id          (model_type,model_id)
-#  index_folio_atoms_on_placement_type_and_placement_id  (placement_type,placement_id)
+#  index_folio_content_templates_on_position  (position)
+#  index_folio_content_templates_on_type      (type)
 #

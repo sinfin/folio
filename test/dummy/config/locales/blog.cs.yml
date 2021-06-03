@@ -6,6 +6,7 @@ cs:
         category: Kategorie
         categories: Kategorie
       dummy/blog/category:
+        articles_count: Články
     models:
       dummy/blog/article:
         one: Článek

@@ -12,7 +12,8 @@ class Folio::Console::Dummy::Blog::CategoriesController < Folio::Console::BaseCo
 
     def index_filters
       {
-by_locale: Dummy::Blog.available_locales,        by_published: [true, false],
+        by_locale: Dummy::Blog.available_locales,
+        by_published: [true, false],
         by_featured: [true, false],
       }
     end

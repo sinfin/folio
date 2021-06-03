@@ -9,20 +9,23 @@ class Folio::Console::Dummy::Blog::ArticlesController < Folio::Console::BaseCont
             .permit(*(@klass.column_names - ["id"]),
                     *atoms_strong_params,
                     *file_placements_strong_params,
-                    category_ids: [])
+                    category_article_links_attributes: %w[id _destroy position dummy_blog_category_id])
     end
 
     def index_filters
       {
-by_locale: Dummy::Blog.available_locales,        by_published: [true, false],
-        by_category_id: Dummy::Blog::Category.ordered.map do |cat|
-          [cat.to_label, cat.id]
-        end,
+        by_locale: Dummy::Blog.available_locales,
+        by_published: [true, false],
+        by_category_slug: {
+          klass: "Dummy::Blog::Category",
+          order_scope: :ordered,
+          slug: true,
+        },
       }
     end
 
     def folio_console_collection_includes
-      []
+      [:categories, cover_placement: :file]
     end
 
     def folio_console_record_includes
