@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::CardCell < ApplicationCell
+class <%= application_namespace %>::Ui::CardCell < ApplicationCell
   THUMB_SIZE_LARGE = "645x430#"
   THUMB_SIZE_MEDIUM = "420x280#"
   THUMB_SIZE_SMALL = "83x79#"

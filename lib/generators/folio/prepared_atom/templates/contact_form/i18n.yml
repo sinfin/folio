@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/contact_form: 
+      application_namespace_path/atom/contact_form: 
     models:
-      global_namespace_path/atom/contact_form: Contact form
+      application_namespace_path/atom/contact_form: Contact form
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/contact_form: 
+      application_namespace_path/atom/contact_form: 
     models:
-      global_namespace_path/atom/contact_form: Formulář (kontakt)
+      application_namespace_path/atom/contact_form: Formulář (kontakt)

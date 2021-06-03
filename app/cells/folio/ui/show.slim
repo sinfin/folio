@@ -186,39 +186,39 @@
       - if icons.present?
         - icons.each do |key|
           .mr-3.mb-3 title=key
-            == cell("#{global_namespace_path}/ui/icon", key, height: 24)
+            == cell("#{application_namespace_path}/ui/icon", key, height: 24)
       - else
         ' No icons found in app/assets/stylesheets/_icons.scss
 
     h3 Pagination
 
-    - if "#{global_namespace}::Ui::Pagy".safe_constantize
-      == cell("#{global_namespace_path}/ui/pagy", pagy_model)
+    - if "#{application_namespace}::Ui::Pagy".safe_constantize
+      == cell("#{application_namespace_path}/ui/pagy", pagy_model)
     - else
       = missing_cell("pagy")
 
     h3 Tabs
 
-    - if "#{global_namespace}::Ui::Tabs".safe_constantize
-      == cell("#{global_namespace_path}/ui/tabs", tabs_model)
+    - if "#{application_namespace}::Ui::Tabs".safe_constantize
+      == cell("#{application_namespace_path}/ui/tabs", tabs_model)
     - else
       = missing_cell("tabs")
 
     h3 Flash
 
-    - if "#{global_namespace}::Ui::Flash".safe_constantize
+    - if "#{application_namespace}::Ui::Flash".safe_constantize
       .row
         - flash_models.each do |flash_model|
           .col-md-6.mb-g
-            == cell("#{global_namespace_path}/ui/flash", flash_model)
+            == cell("#{application_namespace_path}/ui/flash", flash_model)
     - else
       = missing_cell("flash")
 
     h3 Navigation
 
-    - if "#{global_namespace}::Ui::Navigation".safe_constantize
+    - if "#{application_namespace}::Ui::Navigation".safe_constantize
       - if navigation_model
-        == cell("#{global_namespace_path}/ui/navigation", navigation_model)
+        == cell("#{application_namespace_path}/ui/navigation", navigation_model)
       - else
         p.text-danger Missing menu - create a Folio::Menu to preview
     - else
@@ -226,9 +226,9 @@
 
     h3 Documents
 
-    - if "#{global_namespace}::Ui::Documents".safe_constantize
+    - if "#{application_namespace}::Ui::Documents".safe_constantize
       - if documents_model.present?
-        == cell("#{global_namespace_path}/ui/documents", documents_model)
+        == cell("#{application_namespace_path}/ui/documents", documents_model)
       - else
         p.text-danger No documents - upload some to preview
     - else
@@ -239,12 +239,12 @@
     p Regular
 
     .my-4
-      == cell("#{global_namespace_path}/ui/share")
+      == cell("#{application_namespace_path}/ui/share")
 
     p Collapsible on mobile
 
     .my-4
-      == cell("#{global_namespace_path}/ui/share",
+      == cell("#{application_namespace_path}/ui/share",
               nil,
               mobile_collapsible: true)
 
@@ -252,12 +252,12 @@
 
     h4 Large
 
-    == cell("#{global_namespace_path}/ui/card_list", card_variants)
+    == cell("#{application_namespace_path}/ui/card_list", card_variants)
 
     h4 Medium
 
-    == cell("#{global_namespace_path}/ui/card_list", card_variants(medium: true))
+    == cell("#{application_namespace_path}/ui/card_list", card_variants(medium: true))
 
     h4 Small
 
-    == cell("#{global_namespace_path}/ui/card_list", card_variants(small: true))
+    == cell("#{application_namespace_path}/ui/card_list", card_variants(small: true))

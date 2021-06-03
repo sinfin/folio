@@ -37,7 +37,7 @@ body
   flex: 1 0 auto
 
 @import '../../cells/folio/**/*'
-@import '../../cells/<%= global_namespace_path %>/**/*'
+@import '../../cells/<%= application_namespace_path %>/**/*'
 
 @media print
   @import 'print'

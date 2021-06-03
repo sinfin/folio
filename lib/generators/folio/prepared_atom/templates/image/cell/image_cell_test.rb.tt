@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Atom::ImageCellTest < Cell::TestCase
+class <%= application_namespace %>::Atom::ImageCellTest < Cell::TestCase
   test "show" do
-    atom = create_atom(<%= global_namespace %>::Atom::Image, :cover)
+    atom = create_atom(<%= application_namespace %>::Atom::Image, :cover)
     html = cell(atom.class.cell_name, atom).(:show)
     assert html
   end

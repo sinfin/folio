@@ -64,10 +64,10 @@ class Dummy::SeedGenerator
       i18n_values[locale] = {
         "activerecord" => {
           "attributes" => {
-            "global_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["attributes"]["dummy/atom/#{name}"],
+            "application_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["attributes"]["dummy/atom/#{name}"],
           },
           "models" => {
-            "global_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["models"]["dummy/atom/#{name}"],
+            "application_namespace_path/atom/#{name}" => hash[locale]["activerecord"]["models"]["dummy/atom/#{name}"],
           },
         }
       }
@@ -109,15 +109,15 @@ class Dummy::SeedGenerator
     end
 
     def replace_names(str)
-      str.gsub("Dummy::", "<%= global_namespace %>::")
+      str.gsub("Dummy::", "<%= application_namespace %>::")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
          .gsub("dAtom", "<%= classname_prefix %>Atom")
-         .gsub("dummy/ui", "<%= global_namespace_path %>/ui")
-         .gsub("dummy_menu", "<%= global_namespace_path %>_menu")
+         .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
+         .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
          .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")
          .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
     end

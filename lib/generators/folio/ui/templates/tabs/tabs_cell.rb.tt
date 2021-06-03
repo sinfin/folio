@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::TabsCell < ApplicationCell
+class <%= application_namespace %>::Ui::TabsCell < ApplicationCell
   def show
     render if model.present?
   end

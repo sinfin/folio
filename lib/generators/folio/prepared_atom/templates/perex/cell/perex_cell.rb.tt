@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::PerexCell < ApplicationCell
+class <%= application_namespace %>::Atom::PerexCell < ApplicationCell
 end

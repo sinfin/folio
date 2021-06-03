@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/hr: 
+      application_namespace_path/atom/hr: 
     models:
-      global_namespace_path/atom/hr: Line (horizontal)
+      application_namespace_path/atom/hr: Line (horizontal)
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/hr: 
+      application_namespace_path/atom/hr: 
     models:
-      global_namespace_path/atom/hr: Linka (vodorovná)
+      application_namespace_path/atom/hr: Linka (vodorovná)

@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::<%= class_name %>Cell < Folio::ConsoleCell
+class <%= application_namespace %>::<%= class_name %>Cell < Folio::ConsoleCell
 end

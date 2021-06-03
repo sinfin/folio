@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module <%= global_namespace %>
+module <%= application_namespace %>
   def self.table_name_prefix
-    "<%= global_namespace_path %>_"
+    "<%= application_namespace_path %>_"
   end
 
   def self.rails_paths

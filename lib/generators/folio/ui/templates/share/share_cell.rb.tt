@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::ShareCell < ApplicationCell
+class <%= application_namespace %>::Ui::ShareCell < ApplicationCell
   class_name "<%= classname_prefix %>-ui-share", :mobile_collapsible
 
   def share_links

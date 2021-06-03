@@ -31,14 +31,14 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
     end
 
     def cell_name
-      "#{global_namespace_path}#{name.delete_prefix('/')}"
+      "#{application_namespace_path}#{name.delete_prefix('/')}"
     end
 
-    def global_namespace_path
-      global_namespace.underscore
+    def application_namespace_path
+      application_namespace.underscore
     end
 
-    def global_namespace
+    def application_namespace
       if name.start_with?("/")
         ""
       else

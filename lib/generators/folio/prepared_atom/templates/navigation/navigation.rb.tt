@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Navigation < Folio::Atom::Base
+class <%= application_namespace %>::Atom::Navigation < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {}
 
   ASSOCIATIONS = {
-    menu: %w[<%= global_namespace %>::Menu::Navigation]
+    menu: %w[<%= application_namespace %>::Menu::Navigation]
   }
 
   validates :menu,

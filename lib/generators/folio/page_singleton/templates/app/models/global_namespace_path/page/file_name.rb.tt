@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Page::<%= class_name %> < Folio::Page
+class <%= application_namespace %>::Page::<%= class_name %> < Folio::Page
   include Folio::Singleton
 end
 

@@ -34,12 +34,12 @@ class Folio::UiCell < Folio::ApplicationCell
     [nil, "btn-sm", "btn-lg"]
   end
 
-  def global_namespace
-    @global_namespace ||= ::Rails.application.class.name.deconstantize
+  def application_namespace
+    @application_namespace ||= ::Rails.application.class.name.deconstantize
   end
 
-  def global_namespace_path
-    @global_namespace_path ||= global_namespace.underscore
+  def application_namespace_path
+    @application_namespace_path ||= application_namespace.underscore
   end
 
   def pagy_model
@@ -62,7 +62,7 @@ class Folio::UiCell < Folio::ApplicationCell
   end
 
   def icons
-    "#{global_namespace}::Ui::IconCell".constantize::ICONS.keys
+    "#{application_namespace}::Ui::IconCell".constantize::ICONS.keys
   rescue StandardError
   end
 

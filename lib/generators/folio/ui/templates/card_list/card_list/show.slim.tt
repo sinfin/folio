@@ -2,4 +2,4 @@
   .container-fluid
     .<%= classname_prefix %>-ui-card-list__inner
       - model.each do |card_model|
-        == cell('<%= global_namespace_path %>/ui/card', card_model)
+        == cell('<%= application_namespace_path %>/ui/card', card_model)

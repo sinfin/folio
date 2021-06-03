@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Ui::CardListCellTest < Cell::TestCase
+class <%= application_namespace %>::Ui::CardListCellTest < Cell::TestCase
   test "show" do
     card_model = {
       title: "This is a section title",
@@ -26,7 +26,7 @@ class <%= global_namespace %>::Ui::CardListCellTest < Cell::TestCase
         card_model.slice(*keys, :href, :button_label).merge(size => true)
       end
 
-      html = cell("<%= global_namespace_path %>/ui/card_list", model).(:show)
+      html = cell("<%= application_namespace_path %>/ui/card_list", model).(:show)
       assert html.has_css?(".<%= classname_prefix %>-ui-card-list")
     end
   end

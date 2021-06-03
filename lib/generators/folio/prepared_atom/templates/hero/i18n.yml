@@ -2,7 +2,7 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/hero:
+      application_namespace_path/atom/hero:
         color: Text color
         color/light: Light
         color/dark: Dark
@@ -11,11 +11,11 @@ en:
         secondary_button_label: Secondary button text
         secondary_button_url: Secondary button link
     models:
-      global_namespace_path/atom/hero: Card (big cover, carousel)
+      application_namespace_path/atom/hero: Card (big cover, carousel)
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/hero:
+      application_namespace_path/atom/hero:
         color/dark: Tmavá
         color/light: Světlá
         color: Barva textu
@@ -24,4 +24,4 @@ cs:
         secondary_button_label: Text vedlejšího tlačítka
         secondary_button_url: Odkaz vedlejšího tlačítka
     models:
-      global_namespace_path/atom/hero: Karta s odkazem (velký cover, karusel)
+      application_namespace_path/atom/hero: Karta s odkazem (velký cover, karusel)

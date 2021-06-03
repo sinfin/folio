@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Molecule::PersonCell < ApplicationCell
+class <%= application_namespace %>::Molecule::PersonCell < ApplicationCell
   THUMB_SIZE = "195x195#"
 end

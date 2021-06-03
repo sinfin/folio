@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Folio::Users::InvitationsController < Folio::Users::InvitationsController
+end

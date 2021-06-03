@@ -89,8 +89,8 @@ module Folio
           "app/controllers/pages_controller.rb",
           "app/lib/application_cell.rb",
           "app/models/application_record.rb",
-          "app/models/global_namespace_path.rb",
-          "app/models/global_namespace_path/page/homepage.rb",
+          "app/models/application_namespace_path.rb",
+          "app/models/application_namespace_path/page/homepage.rb",
           "app/overrides/cells/folio/ui_cell_override.rb",
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/layouts/folio/application.slim",
@@ -113,7 +113,7 @@ module Folio
           "test/factories.rb",
           "test/test_helper.rb",
           "vendor/assets/bower.json",
-        ].each { |f| template "#{f}.tt", f.gsub("global_namespace_path", global_namespace_path) }
+        ].each { |f| template "#{f}.tt", f.gsub("application_namespace_path", application_namespace_path) }
 
         template ".env.sample.tt", ".env"
       end

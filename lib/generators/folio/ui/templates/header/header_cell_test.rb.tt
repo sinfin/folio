@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Ui::HeaderCellTest < Cell::TestCase
+class <%= application_namespace %>::Ui::HeaderCellTest < Cell::TestCase
   test "show" do
-    html = cell("<%= global_namespace_path %>/ui/header", nil).(:show)
+    html = cell("<%= application_namespace_path %>/ui/header", nil).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-header")
 
-    <%= global_namespace %>::Menu::Header.create!(locale: :en)
-    html = cell("<%= global_namespace_path %>/ui/header", nil).(:show)
+    <%= application_namespace %>::Menu::Header.create!(locale: :en)
+    html = cell("<%= application_namespace_path %>/ui/header", nil).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-header")
   end
 end

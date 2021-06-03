@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Menu::Header < Folio::Menu
+class <%= application_namespace %>::Menu::Header < Folio::Menu
   include Folio::Singleton
 
   def self.max_nesting_depth

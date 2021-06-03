@@ -2,11 +2,11 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Ui::MenuCellTest < Cell::TestCase
+class <%= application_namespace %>::Ui::MenuCellTest < Cell::TestCase
   test "show" do
-    menu = <%= global_namespace %>::Menu::Header.create!(locale: :en)
+    menu = <%= application_namespace %>::Menu::Header.create!(locale: :en)
 
-    html = cell("<%= global_namespace_path %>/ui/menu", menu).(:show)
+    html = cell("<%= application_namespace_path %>/ui/menu", menu).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-menu")
   end
 end

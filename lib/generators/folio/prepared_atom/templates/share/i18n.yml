@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/share: 
+      application_namespace_path/atom/share: 
     models:
-      global_namespace_path/atom/share: Sharing
+      application_namespace_path/atom/share: Sharing
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/share: 
+      application_namespace_path/atom/share: 
     models:
-      global_namespace_path/atom/share: Sdílení
+      application_namespace_path/atom/share: Sdílení

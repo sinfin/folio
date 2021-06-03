@@ -12,8 +12,8 @@ class Folio::DeviseGenerator < Rails::Generators::Base
     Dir.glob("#{path}/**/*.tt").each do |file_path|
       template_path = file_path.gsub("#{path}/", "")
       target_path = template_path.gsub(/\.tt\Z/, "")
-                                 .gsub("application_dir_namespace",
-                                       application_dir_namespace)
+                                 .gsub("application_namespace_path",
+                                       application_namespace_path)
 
       template template_path, target_path
     end
@@ -32,12 +32,12 @@ class Folio::DeviseGenerator < Rails::Generators::Base
                             module: "folio/accounts"
 
       devise_for :users, class_name: "Folio::User",
-                         module: "application_dir_namespace/folio/users",
+                         module: "application_namespace_path/folio/users",
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
     RUBY
 
-    str = str.gsub("application_dir_namespace", application_dir_namespace)
+    str = str.gsub("application_namespace_path", application_namespace_path)
 
     inject_into_file "config/routes.rb", after: "Rails.application.routes.draw do\n" do
       str
@@ -77,11 +77,11 @@ class Folio::DeviseGenerator < Rails::Generators::Base
   end
 
   private
-    def application_module
-      @application_module ||= Rails.application.class.parent
+    def application_namespace
+      @application_namespace ||= Rails.application.class.parent
     end
 
-    def application_dir_namespace
-      @application_dir_namespace ||= application_module.to_s.underscore
+    def application_namespace_path
+      @application_namespace_path ||= application_namespace.to_s.underscore
     end
 end

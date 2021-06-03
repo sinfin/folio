@@ -1,6 +1,6 @@
 .<%= classname_prefix %>-ui-navigation
   .<%= classname_prefix %>-ui-navigation__menu
-    == cell('<%= global_namespace_path %>/ui/menu', model, theme: :light)
+    == cell('<%= application_namespace_path %>/ui/menu', model, theme: :light)
 
   .<%= classname_prefix %>-ui-navigation__select
     select.form-control.<%= classname_prefix %>-ui-navigation__select-input

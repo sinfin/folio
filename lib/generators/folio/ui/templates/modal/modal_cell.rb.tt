@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::ModalCell < ApplicationCell
+class <%= application_namespace %>::Ui::ModalCell < ApplicationCell
   def footer_button(key)
     if model[key]
       opts = { class: "btn btn-#{key} btn-xs-block #{model[:class]}__footer-btn #{model[:class]}__footer-btn--#{key}" }

@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/card: 
+      application_namespace_path/atom/card: 
     models:
-      global_namespace_path/atom/card: 
+      application_namespace_path/atom/card: 
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/card: 
+      application_namespace_path/atom/card: 
     models:
-      global_namespace_path/atom/card: 
+      application_namespace_path/atom/card: 

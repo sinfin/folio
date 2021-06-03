@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/documents: 
+      application_namespace_path/atom/documents: 
     models:
-      global_namespace_path/atom/documents: Documents (list)
+      application_namespace_path/atom/documents: Documents (list)
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/documents: 
+      application_namespace_path/atom/documents: 
     models:
-      global_namespace_path/atom/documents: Soubory (výpis)
+      application_namespace_path/atom/documents: Soubory (výpis)

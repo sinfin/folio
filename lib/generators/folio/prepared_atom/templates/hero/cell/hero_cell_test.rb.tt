@@ -2,10 +2,10 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Molecule::HeroCellTest < Cell::TestCase
+class <%= application_namespace %>::Molecule::HeroCellTest < Cell::TestCase
   test "show" do
     atoms = Array.new(2) do
-      create_atom(<%= global_namespace %>::Atom::Hero, :title)
+      create_atom(<%= application_namespace %>::Atom::Hero, :title)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)

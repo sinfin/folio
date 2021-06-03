@@ -35,7 +35,7 @@ class Folio::Console::CatalogueGenerator < Rails::Generators::NamedBase
     end
 
     def plural_dashed_resource_name_without_namespace
-      plural_dashed_resource_name.gsub("#{global_namespace_path}-", "")
+      plural_dashed_resource_name.gsub("#{application_namespace_path}-", "")
     end
 
     def factory_name

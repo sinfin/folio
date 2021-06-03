@@ -11,9 +11,13 @@ Rails.application.routes.draw do
   get "/422", to: "errors#page422", via: :all
   get "/500", to: "errors#page500", via: :all
 
+
+  scope module: :<%= application_namespace_path %>, as: :<%= application_namespace_path %> do
+  end
+
   scope module: :folio do
     namespace :console do
-      namespace :<%= global_namespace_path %> do
+      namespace :<%= application_namespace_path %> do
       end
     end
   end

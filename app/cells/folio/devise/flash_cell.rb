@@ -5,7 +5,7 @@ class Folio::Devise::FlashCell < Folio::Devise::ApplicationCell
     render if model.present?
   end
 
-  def application_module
+  def application_namespace
     ::Rails.application.class.name.deconstantize
   end
 end

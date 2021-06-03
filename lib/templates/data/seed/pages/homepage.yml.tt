@@ -1,3 +1,3 @@
-type: <%= global_namespace %>::Page::Homepage
-title: <%= global_namespace %> homepage
+type: <%= application_namespace %>::Page::Homepage
+title: <%= application_namespace %> homepage
 slug: homepage

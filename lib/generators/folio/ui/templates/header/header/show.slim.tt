@@ -13,7 +13,7 @@ input[
 
       - if menu
         .<%= classname_prefix %>-ui-header__menu
-          == cell('<%= global_namespace_path %>/ui/menu', menu, theme: :dark)
+          == cell('<%= application_namespace_path %>/ui/menu', menu, theme: :dark)
 
       a.<%= classname_prefix %>-ui-header__search-a href="/"
         = icon(:search, height: 32)

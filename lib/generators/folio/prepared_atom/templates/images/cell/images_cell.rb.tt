@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::ImagesCell < ApplicationCell
+class <%= application_namespace %>::Atom::ImagesCell < ApplicationCell
   DYNAMIC_TARGET_HEIGHT = 260
   DYNAMIC_THUMB_MAX_WIDTH = 600
   DYNAMIC_THUMB_MAX_HEIGHT = 400

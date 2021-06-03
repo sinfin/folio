@@ -21,6 +21,16 @@ Rails.application.routes.draw do
                                   as: :download,
                                   constraints: { name: /.*/ }
 
+  scope module: :dummy, as: :dummy do
+  end
+
+  scope module: :folio do
+    namespace :console do
+      namespace :dummy do
+      end
+    end
+  end
+
   if Rails.application.config.folio_pages_translations
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
       if Rails.application.config.folio_pages_ancestry

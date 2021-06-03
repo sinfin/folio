@@ -11,17 +11,17 @@ class Folio::PageSingletonGenerator < Rails::Generators::NamedBase
 
   def copy_templates
     [
-      "app/models/global_namespace_path/page/file_name.rb",
+      "app/models/application_namespace_path/page/file_name.rb",
       "data/seed/pages/file_name.yml",
     ].each do |f|
-      template "#{f}.tt", f.gsub("file_name", file_name).gsub("global_namespace_path", global_namespace_path)
+      template "#{f}.tt", f.gsub("file_name", file_name).gsub("application_namespace_path", application_namespace_path)
     end
   end
 
   def add_to_i18n
     I18n.available_locales.each do |locale|
       path = Rails.root.join("config/locales/page.#{locale}.yml")
-      i18n_key = "#{global_namespace_path}/page/#{name}"
+      i18n_key = "#{application_namespace_path}/page/#{name}"
       page_label = locale == :cs ? "Stránka" : "Page"
 
       new_hash = {

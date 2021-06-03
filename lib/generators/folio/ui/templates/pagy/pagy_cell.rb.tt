@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::PagyCell < ApplicationCell
+class <%= application_namespace %>::Ui::PagyCell < ApplicationCell
   include Pagy::Frontend
 
   def show

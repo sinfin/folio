@@ -1,0 +1,24 @@
+= form_header f
+
+= tabs [:content]
+
+.tab-content
+  = tab :content
+    .row
+      .col-md-auto
+        = react_picker(f, :cover_placement)
+      .col-md
+        == cell('folio/console/publishable_inputs', f)
+        = f.input :title
+        = f.input :slug
+        = f.input :perex, character_counter: true, autosize: true
+        = f.input :locale, collection: <%= application_namespace %>::Blog.available_locales,
+                           include_blank: false
+
+        = f.association :primary_category
+        = f.association :categories
+
+        = f.input :meta_title
+        = f.input :meta_description
+
+= form_footer f

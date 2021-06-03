@@ -1,5 +1,5 @@
 {
-  "name": "<%= global_namespace_path %>",
+  "name": "<%= application_namespace_path %>",
   "private": true,
   "dependencies": {},
   "devDependencies": {

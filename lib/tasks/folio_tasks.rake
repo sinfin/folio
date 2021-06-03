@@ -34,10 +34,10 @@ namespace :folio do
       end
     end
 
-    application_module = Rails.application.class.parent
-    article_klass = "#{application_module}::Blog::Article".constantize
-    category_klass = "#{application_module}::Blog::Category".constantize
-    page_klass = "#{application_module}::Page::Blog".constantize
+    application_namespace = Rails.application.class.parent
+    article_klass = "#{application_namespace}::Blog::Article".constantize
+    category_klass = "#{application_namespace}::Blog::Category".constantize
+    page_klass = "#{application_namespace}::Page::Blog".constantize
 
     if Rails.env.development?
       category_klass.destroy_all
@@ -53,7 +53,7 @@ namespace :folio do
     page.update!(perex: nil, published: true, published_at: 1.minute.ago)
     page.atoms.destroy_all
 
-    locales = "#{application_module}::Blog".constantize.available_locales
+    locales = "#{application_namespace}::Blog".constantize.available_locales
 
     locales.each do |locale|
       categories = 5.times.map do |i|
@@ -86,27 +86,27 @@ namespace :folio do
       atoms.destroy_all
       position = 0
 
-      "#{application_module}::Atom::Blog::Articles::Latest".constantize
+      "#{application_namespace}::Atom::Blog::Articles::Latest".constantize
                                                            .create!(position: position += 1,
                                                                     placement: page,
                                                                     locale: atom_locale)
 
       featured_categories = category_klass.all.sample(2)
 
-      "#{application_module}::Atom::Blog::Categories::LatestArticles".constantize
+      "#{application_namespace}::Atom::Blog::Categories::LatestArticles".constantize
                                                                      .create!(position: position += 1,
                                                                               placement: page,
                                                                               locale: atom_locale,
                                                                               category: featured_categories.first,
                                                                               background: true)
 
-      "#{application_module}::Atom::Blog::Categories::Featured".constantize
+      "#{application_namespace}::Atom::Blog::Categories::Featured".constantize
                                                                .create!(position: position += 1,
                                                                         placement: page,
                                                                         locale: atom_locale,
                                                                         title: "Featured topics")
 
-      "#{application_module}::Atom::Blog::Categories::LatestArticles".constantize
+      "#{application_namespace}::Atom::Blog::Categories::LatestArticles".constantize
                                                                      .create!(position: position + 1,
                                                                               placement: page,
                                                                               locale: atom_locale,

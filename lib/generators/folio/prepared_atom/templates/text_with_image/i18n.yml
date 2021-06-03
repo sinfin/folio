@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/text_with_image: 
+      application_namespace_path/atom/text_with_image: 
     models:
-      global_namespace_path/atom/text_with_image: Text with image
+      application_namespace_path/atom/text_with_image: Text with image
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/text_with_image: 
+      application_namespace_path/atom/text_with_image: 
     models:
-      global_namespace_path/atom/text_with_image: Text s obrázkem
+      application_namespace_path/atom/text_with_image: Text s obrázkem

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::MenuCell < ApplicationCell
+class <%= application_namespace %>::Ui::MenuCell < ApplicationCell
   include Folio::ActiveClass
 
   def show

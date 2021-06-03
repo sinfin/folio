@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Atom::ContactFormCellTest < Cell::TestCase
+class <%= application_namespace %>::Atom::ContactFormCellTest < Cell::TestCase
   test "show" do
-    atom = create_atom(<%= global_namespace %>::Atom::ContactForm)
+    atom = create_atom(<%= application_namespace %>::Atom::ContactForm)
     html = cell(atom.class.cell_name, atom).(:show)
     assert html
   end

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::TextWithImageCell < ApplicationCell
+class <%= application_namespace %>::Atom::TextWithImageCell < ApplicationCell
   THUMB_SIZE = "305x450"
 end

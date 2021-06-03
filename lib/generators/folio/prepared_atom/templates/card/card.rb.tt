@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Card < Folio::Atom::Base
+class <%= application_namespace %>::Atom::Card < Folio::Atom::Base
   self.abstract_class = true
 
   ATTACHMENTS = %i[cover]
@@ -28,9 +28,9 @@ class <%= global_namespace %>::Atom::Card < Folio::Atom::Base
       content: content,
       button_label: try(:button_label),
       href: href,
-      large: is_a?(<%= global_namespace %>::Atom::Card::Large),
-      medium: is_a?(<%= global_namespace %>::Atom::Card::Medium),
-      small: is_a?(<%= global_namespace %>::Atom::Card::Small),
+      large: is_a?(<%= application_namespace %>::Atom::Card::Large),
+      medium: is_a?(<%= application_namespace %>::Atom::Card::Medium),
+      small: is_a?(<%= application_namespace %>::Atom::Card::Small),
     }
   end
 end

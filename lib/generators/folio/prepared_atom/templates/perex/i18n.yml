@@ -2,12 +2,12 @@
 en:
   activerecord:
     attributes:
-      global_namespace_path/atom/perex: 
+      application_namespace_path/atom/perex: 
     models:
-      global_namespace_path/atom/perex: Perex
+      application_namespace_path/atom/perex: Perex
 cs:
   activerecord:
     attributes:
-      global_namespace_path/atom/perex: 
+      application_namespace_path/atom/perex: 
     models:
-      global_namespace_path/atom/perex: Perex
+      application_namespace_path/atom/perex: Perex

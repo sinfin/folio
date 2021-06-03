@@ -30,7 +30,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
       Dir["#{base}#{key}/#{key}.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/models/#{global_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "app/models/#{application_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       is_molecule = File.read("#{base}#{key}/#{key}.rb.tt").match?("self.molecule")
@@ -38,22 +38,22 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
       Dir["#{base}#{key}/cell/#{key}_cell.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "app/cells/#{application_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
       end
 
       Dir["#{base}#{key}/cell/#{key}_cell_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "test/cells/#{application_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
       end
 
       Dir["#{base}#{key}/cell/#{key}/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{global_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "app/cells/#{application_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
       end
 
       i18n_path = "#{base}#{key}/i18n.yml"
       if File.exist?(i18n_path)
-        raw_yaml = File.read(i18n_path).gsub("global_namespace_path", global_namespace_path)
+        raw_yaml = File.read(i18n_path).gsub("application_namespace_path", application_namespace_path)
         add_atom_to_i18n_ymls(YAML.load(raw_yaml))
       end
     end

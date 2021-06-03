@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Card::Small < <%= global_namespace %>::Atom::Card
+class <%= application_namespace %>::Atom::Card::Small < <%= application_namespace %>::Atom::Card
   validates :title,
             presence: true
 
-  STRUCTURE = <%= global_namespace %>::Atom::Card::STRUCTURE.without(:button_label)
+  STRUCTURE = <%= application_namespace %>::Atom::Card::STRUCTURE.without(:button_label)
 
   def self.molecule_cell_name
     "<%= molecule_cell_name %>"

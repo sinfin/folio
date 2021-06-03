@@ -6,7 +6,7 @@
 
         == cell('folio/newsletter_subscriptions/form')
 
-        == cell('<%= global_namespace_path %>/ui/disclaimer')
+        == cell('<%= application_namespace_path %>/ui/disclaimer')
 
       .<%= classname_prefix %>-ui-footer__right.mb-s
         .h4.mt-0 = t('.follow_us')

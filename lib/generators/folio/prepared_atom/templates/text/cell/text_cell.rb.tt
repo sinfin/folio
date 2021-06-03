@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::TextCell < ApplicationCell
+class <%= application_namespace %>::Atom::TextCell < ApplicationCell
   def show
     render if model.content.present?
   end

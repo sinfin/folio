@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Molecule::Card::SmallCell < ApplicationCell
+class <%= application_namespace %>::Molecule::Card::SmallCell < ApplicationCell
 end

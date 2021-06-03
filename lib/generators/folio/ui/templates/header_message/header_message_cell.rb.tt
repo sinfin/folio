@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::HeaderMessageCell < ApplicationCell
+class <%= application_namespace %>::Ui::HeaderMessageCell < ApplicationCell
   def show
     return nil if message.blank?
     render if controller.send(:cookies)[:hiddenHeaderMessage] != cookie

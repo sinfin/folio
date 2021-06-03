@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::NavigationCell < ApplicationCell
+class <%= application_namespace %>::Ui::NavigationCell < ApplicationCell
   include Folio::ActiveClass
 
   def menu_items

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Person < Folio::Atom::Base
+class <%= application_namespace %>::Atom::Person < Folio::Atom::Base
   ATTACHMENTS = %i[cover]
 
   STRUCTURE = {

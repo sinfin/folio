@@ -18,4 +18,4 @@ div class=class_name
           = icon link[:icon], class: '<%= classname_prefix %>-ui-share__icon', height: 22
 
       .<%= classname_prefix %>-ui-share__item
-        == cell('<%= global_namespace_path %>/ui/clipboard', url, height: 22)
+        == cell('<%= application_namespace_path %>/ui/clipboard', url, height: 22)

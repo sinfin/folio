@@ -10,6 +10,6 @@ Folio::Console::Api::LinksController.class_eval do
     end
 
     def rails_paths
-      <%= global_namespace %>.rails_paths
+      <%= application_namespace %>.rails_paths
     end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::ContactFormCell < ApplicationCell
+class <%= application_namespace %>::Atom::ContactFormCell < ApplicationCell
   def form_cell
     cell("folio/leads/form",
          Folio::Lead.new(email: "@"),
@@ -16,6 +16,6 @@ class <%= global_namespace %>::Atom::ContactFormCell < ApplicationCell
   end
 
   def under_form
-    content_tag(:div, cell("<%= global_namespace_path %>/ui/disclaimer").show, class: "mt-g small")
+    content_tag(:div, cell("<%= application_namespace_path %>/ui/disclaimer").show, class: "mt-g small")
   end
 end

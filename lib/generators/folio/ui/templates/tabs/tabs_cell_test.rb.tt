@@ -2,9 +2,9 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Ui::TabsCellTest < Cell::TestCase
+class <%= application_namespace %>::Ui::TabsCellTest < Cell::TestCase
   test "show" do
-    html = cell("<%= global_namespace_path %>/ui/tabs", nil).(:show)
+    html = cell("<%= application_namespace_path %>/ui/tabs", nil).(:show)
     assert_not html.has_css?(".<%= classname_prefix %>-ui-tabs")
 
     model = [
@@ -13,7 +13,7 @@ class <%= global_namespace %>::Ui::TabsCellTest < Cell::TestCase
       { href: "#", label: "Another tab" },
     ]
 
-    html = cell("<%= global_namespace_path %>/ui/tabs", model).(:show)
+    html = cell("<%= application_namespace_path %>/ui/tabs", model).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-tabs")
   end
 end

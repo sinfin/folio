@@ -19,7 +19,7 @@ module Folio::GeneratorBase
     end
 
     def atom_cell_name
-      "#{global_namespace_path}/atom/#{atom_name}"
+      "#{application_namespace_path}/atom/#{atom_name}"
     end
 
     def molecule_name
@@ -31,21 +31,25 @@ module Folio::GeneratorBase
     end
 
     def molecule_cell_name
-      "#{global_namespace_path}/molecule/#{atom_name}"
+      "#{application_namespace_path}/molecule/#{atom_name}"
     end
 
-    def global_namespace_path
-      global_namespace.underscore
+    def application_namespace_path
+      application_namespace.underscore
     end
 
-    def global_namespace
+    def application_namespace
       Rails.application.class.name.deconstantize
+    end
+
+    def application_namespace_spacing
+      @application_namespace_spacing ||= application_namespace.to_s.gsub(/\w/, " ")
     end
 
     def add_atom_to_i18n_ymls(values = {})
       I18n.available_locales.each do |locale|
         path = Rails.root.join("config/locales/atom.#{locale}.yml")
-        i18n_key = "#{global_namespace_path}/atom/#{atom_name}"
+        i18n_key = "#{application_namespace_path}/atom/#{atom_name}"
         i18n_value = values[locale] || values[locale.to_s] || values[:en]
 
         if i18n_value.is_a?(Hash)

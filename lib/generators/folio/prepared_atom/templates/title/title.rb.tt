@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Title < Folio::Atom::Base
+class <%= application_namespace %>::Atom::Title < Folio::Atom::Base
   ALLOWED_TAGS = %w[H1 H2 H3 H4]
 
   ATTACHMENTS = %i[]

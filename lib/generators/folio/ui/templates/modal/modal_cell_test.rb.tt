@@ -2,14 +2,14 @@
 
 require "test_helper"
 
-class <%= global_namespace %>::Ui::ModalCellTest < Cell::TestCase
+class <%= application_namespace %>::Ui::ModalCellTest < Cell::TestCase
   test "show" do
     model = {
       class: "foo",
       body: "bar"
     }
 
-    html = cell("<%= global_namespace_path %>/ui/modal", model).(:show)
+    html = cell("<%= application_namespace_path %>/ui/modal", model).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-modal")
     assert html.has_css?(".foo")
     assert_equal "bar", html.text

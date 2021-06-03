@@ -25,22 +25,22 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
     keys.each do |key|
       Dir["#{base}#{key}/#{key}_cell.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{global_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       Dir["#{base}#{key}/#{key}_cell_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/cells/#{global_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "test/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       Dir["#{base}#{key}/#{key}/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{global_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
       end
 
       Dir["#{base}#{key}/models/**/*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, relative_path.delete_prefix("#{key}/models/").gsub("global_namespace_path", global_namespace_path).delete_suffix(".tt")
+        template relative_path, relative_path.delete_prefix("#{key}/models/").gsub("application_namespace_path", application_namespace_path).delete_suffix(".tt")
       end
     end
   end
@@ -55,7 +55,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
       else
         new_hash = {
           locale.to_s => {
-            global_namespace_path => {
+            application_namespace_path => {
               "ui" => YAML.load_file(template_path),
             }
           }

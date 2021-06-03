@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Embed::PodcastCell < ApplicationCell
+class <%= application_namespace %>::Atom::Embed::PodcastCell < ApplicationCell
 end

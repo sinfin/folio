@@ -2,7 +2,7 @@
 
 class CreateBlog < ActiveRecord::Migration[6.0]
   def change
-    create_table :<%= application_dir_namespace %>_blog_articles do |t|
+    create_table :<%= application_namespace_path %>_blog_articles do |t|
       t.string :title
       t.string :slug
       t.text :perex
@@ -21,13 +21,13 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :<%= application_dir_namespace %>_blog_articles, :slug
-    add_index :<%= application_dir_namespace %>_blog_articles, :locale
-    add_index :<%= application_dir_namespace %>_blog_articles, :featured
-    add_index :<%= application_dir_namespace %>_blog_articles, :published
-    add_index :<%= application_dir_namespace %>_blog_articles, :published_at
+    add_index :<%= application_namespace_path %>_blog_articles, :slug
+    add_index :<%= application_namespace_path %>_blog_articles, :locale
+    add_index :<%= application_namespace_path %>_blog_articles, :featured
+    add_index :<%= application_namespace_path %>_blog_articles, :published
+    add_index :<%= application_namespace_path %>_blog_articles, :published_at
 
-    create_table :<%= application_dir_namespace %>_blog_categories do |t|
+    create_table :<%= application_namespace_path %>_blog_categories do |t|
       t.string :title
       t.string :slug
       t.text :perex
@@ -45,14 +45,14 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :<%= application_dir_namespace %>_blog_categories, :slug
-    add_index :<%= application_dir_namespace %>_blog_categories, :locale
-    add_index :<%= application_dir_namespace %>_blog_categories, :featured
-    add_index :<%= application_dir_namespace %>_blog_categories, :published
+    add_index :<%= application_namespace_path %>_blog_categories, :slug
+    add_index :<%= application_namespace_path %>_blog_categories, :locale
+    add_index :<%= application_namespace_path %>_blog_categories, :featured
+    add_index :<%= application_namespace_path %>_blog_categories, :published
 
-    create_join_table :<%= application_dir_namespace %>_blog_categories, :<%= application_dir_namespace %>_blog_articles do |t|
-      t.index :<%= application_dir_namespace %>_blog_category_id, name: :index_blog_articles_categories_on_blog_category_id
-      t.index :<%= application_dir_namespace %>_blog_article_id, name: :index_blog_articles_categories_on_blog_article_id
+    create_join_table :<%= application_namespace_path %>_blog_categories, :<%= application_namespace_path %>_blog_articles do |t|
+      t.index :<%= application_namespace_path %>_blog_category_id, name: :index_blog_articles_categories_on_blog_category_id
+      t.index :<%= application_namespace_path %>_blog_article_id, name: :index_blog_articles_categories_on_blog_article_id
     end
   end
 end

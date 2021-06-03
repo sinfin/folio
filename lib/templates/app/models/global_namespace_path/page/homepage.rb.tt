@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Page::Homepage < Folio::Page
+class <%= application_namespace %>::Page::Homepage < Folio::Page
   include Folio::Singleton
 
   def self.public_rails_path

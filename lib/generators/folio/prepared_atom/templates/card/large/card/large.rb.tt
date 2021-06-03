@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Atom::Card::Large < <%= global_namespace %>::Atom::Card
+class <%= application_namespace %>::Atom::Card::Large < <%= application_namespace %>::Atom::Card
   validates :button_label,
             presence: true
 

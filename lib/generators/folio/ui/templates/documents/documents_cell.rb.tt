@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class <%= global_namespace %>::Ui::DocumentsCell < ApplicationCell
+class <%= application_namespace %>::Ui::DocumentsCell < ApplicationCell
   include ActionView::Helpers::NumberHelper
 
   def label(placement)

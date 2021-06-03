@@ -2,7 +2,7 @@
 
 class HomeController < ApplicationController
   def index
-    @page = <%= global_namespace %>::Page::Homepage.instance
+    @page = <%= application_namespace %>::Page::Homepage.instance
     set_meta_variables(@page)
   end
 end
