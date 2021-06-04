@@ -67,6 +67,16 @@ class Dummy::Blog::Article < ApplicationRecord
     published_at || created_at
   end
 
+  def to_ui_article_card_model
+    {
+      cover_placement: cover_placement,
+      title: title,
+      content: ActionController::Base.helpers.content_tag(:p, perex),
+      tag_records: published_topics,
+      published_at: published_at_with_fallback,
+    }
+  end
+
   private
     def validate_matching_locales
       unless topic_article_links.all?(&:valid?)

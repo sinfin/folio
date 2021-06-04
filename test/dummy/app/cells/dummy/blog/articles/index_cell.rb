@@ -3,9 +3,9 @@
 class Dummy::Blog::Articles::IndexCell < ApplicationCell
   def show
     if model.present?
-      @main_article = model.slice(0)
-      @secondary_articles = model.slice(1, 2)
-      @small_articles = model.slice(3, -1)
+      @main_article = model[0]
+      @secondary_articles = model[1..2]
+      @small_articles = model[3..-1]
 
       render
     end
