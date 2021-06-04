@@ -3,15 +3,28 @@ cs:
   activerecord:
     attributes:
       <%= application_namespace_path %>/blog/article:
-        category: Kategorie
-        categories: Kategorie
-      <%= application_namespace_path %>/blog/category:
+        topic: Téma
+        topics: Témata
+      <%= application_namespace_path %>/blog/topic:
+        articles_count: Články
     models:
       <%= application_namespace_path %>/blog/article:
         one: Článek
         few: Články
         other: Článků
-      <%= application_namespace_path %>/blog/category:
-        one: Kategorie článků
-        few: Kategorie článků
-        other: Kategorií článků
+      <%= application_namespace_path %>/blog/topic:
+        one: Téma
+        few: Témata
+        other: Témat
+    errors:
+      models:
+        <%= application_namespace_path %>/blog/article:
+          attributes:
+            locale:
+              doesnt_match_topics: se neshoduje se zvolenýma tématy.
+
+  dummy:
+    blog:
+      articles:
+        index:
+          title: Blog

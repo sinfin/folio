@@ -1,0 +1,1 @@
+== cell('<%= application_namespace_path %>/blog/articles/index', @articles, pagy: @pagy)

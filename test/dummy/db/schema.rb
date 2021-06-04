@@ -52,45 +52,43 @@ ActiveRecord::Schema.define(version: 2021_06_03_000000) do
     t.boolean "featured"
     t.boolean "published"
     t.datetime "published_at"
-    t.bigint "primary_category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["featured"], name: "index_dummy_blog_articles_on_featured"
     t.index ["locale"], name: "index_dummy_blog_articles_on_locale"
-    t.index ["primary_category_id"], name: "index_dummy_blog_articles_on_primary_category_id"
     t.index ["published"], name: "index_dummy_blog_articles_on_published"
     t.index ["published_at"], name: "index_dummy_blog_articles_on_published_at"
     t.index ["slug"], name: "index_dummy_blog_articles_on_slug"
   end
 
-  create_table "dummy_blog_categories", force: :cascade do |t|
+  create_table "dummy_blog_topic_article_links", force: :cascade do |t|
+    t.bigint "dummy_blog_topic_id"
+    t.bigint "dummy_blog_article_id"
+    t.integer "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["dummy_blog_article_id"], name: "dummy_blog_topic_article_links_a_id"
+    t.index ["dummy_blog_topic_id"], name: "dummy_blog_topic_article_links_t_id"
+  end
+
+  create_table "dummy_blog_topics", force: :cascade do |t|
     t.string "title"
     t.string "slug"
     t.text "perex"
     t.string "locale", default: "cs"
     t.boolean "published"
     t.boolean "featured"
-    t.integer "articles_count"
+    t.integer "articles_count", default: 0
     t.integer "position"
     t.string "meta_title"
     t.text "meta_description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["featured"], name: "index_dummy_blog_categories_on_featured"
-    t.index ["locale"], name: "index_dummy_blog_categories_on_locale"
-    t.index ["position"], name: "index_dummy_blog_categories_on_position"
-    t.index ["published"], name: "index_dummy_blog_categories_on_published"
-    t.index ["slug"], name: "index_dummy_blog_categories_on_slug"
-  end
-
-  create_table "dummy_blog_category_article_links", force: :cascade do |t|
-    t.bigint "dummy_blog_category_id"
-    t.bigint "dummy_blog_article_id"
-    t.integer "position"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["dummy_blog_article_id"], name: "dummy_blog_category_article_links_a_id"
-    t.index ["dummy_blog_category_id"], name: "dummy_blog_category_article_links_c_id"
+    t.index ["featured"], name: "index_dummy_blog_topics_on_featured"
+    t.index ["locale"], name: "index_dummy_blog_topics_on_locale"
+    t.index ["position"], name: "index_dummy_blog_topics_on_position"
+    t.index ["published"], name: "index_dummy_blog_topics_on_published"
+    t.index ["slug"], name: "index_dummy_blog_topics_on_slug"
   end
 
   create_table "folio_accounts", force: :cascade do |t|

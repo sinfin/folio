@@ -4,8 +4,9 @@
   ruby:
     cover
     edit_link :to_label
-    association(:categories)
+    association(:topics, link: [:edit, :console])
     featured_toggle
     published_toggle
     date(:published_at)
-    actions
+    locale_flag
+    actions :preview, :edit, :destroy

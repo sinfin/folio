@@ -3,13 +3,26 @@ en:
   activerecord:
     attributes:
       <%= application_namespace_path %>/blog/article:
-        category: Category
-        categories: Categories
-      <%= application_namespace_path %>/blog/category:
+        topic: Topic
+        topics: Topics
+      <%= application_namespace_path %>/blog/topic:
+        articles_count: Articles
     models:
       <%= application_namespace_path %>/blog/article:
         one: Article
         other: Articles
-      <%= application_namespace_path %>/blog/category:
-        one: Article category
-        other: Article categories
+      <%= application_namespace_path %>/blog/topic:
+        one: Topic
+        other: Topics
+    errors:
+      models:
+        <%= application_namespace_path %>/blog/article:
+          attributes:
+            locale:
+              doesnt_match_topics: doesn't match topic locales.
+
+  dummy:
+    blog:
+      articles:
+        index:
+          title: Blog

@@ -8,7 +8,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
     articles = @klass.published
                      .ordered
                      .by_locale(I18n.locale)
-                     .includes(:published_categories,
+                     .includes(:published_topics,
                                cover_placement: :file)
 
     if params[:q].present?

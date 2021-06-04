@@ -29,7 +29,7 @@ Rails.application.routes.draw do
 
       get "/", to: "articles#index", as: :articles
 
-      resources :categories, only: %i[show] do
+      resources :topics, only: %i[show] do
         member { get :preview }
       end
     end
@@ -40,7 +40,7 @@ Rails.application.routes.draw do
       namespace :dummy do
         namespace :blog do
           resources :articles, except: %i[show]
-          resources :categories, except: %i[show]
+          resources :topics, except: %i[show]
         end
       end
     end

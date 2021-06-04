@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Blog::Articles::IndexCellTest < Cell::TestCase
+  test "show" do
+    html = cell("<%= application_namespace_path %>/blog/articles/index", nil).(:show)
+    assert html.has_css?(".d-blog-articles-index")
+  end
+end

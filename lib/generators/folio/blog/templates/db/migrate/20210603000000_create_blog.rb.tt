@@ -16,8 +16,6 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.boolean :published
       t.datetime :published_at
 
-      t.belongs_to :primary_category
-
       t.timestamps
     end
 
@@ -27,7 +25,7 @@ class CreateBlog < ActiveRecord::Migration[6.0]
     add_index :<%= application_namespace_path %>_blog_articles, :published
     add_index :<%= application_namespace_path %>_blog_articles, :published_at
 
-    create_table :<%= application_namespace_path %>_blog_categories do |t|
+    create_table :<%= application_namespace_path %>_blog_topics do |t|
       t.string :title
       t.string :slug
       t.text :perex
@@ -37,7 +35,9 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.boolean :published
       t.boolean :featured
 
-      t.integer :articles_count
+      t.integer :articles_count, default: 0
+
+      t.integer :position
 
       t.string :meta_title
       t.text :meta_description
@@ -45,14 +45,15 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :<%= application_namespace_path %>_blog_categories, :slug
-    add_index :<%= application_namespace_path %>_blog_categories, :locale
-    add_index :<%= application_namespace_path %>_blog_categories, :featured
-    add_index :<%= application_namespace_path %>_blog_categories, :published
+    add_index :<%= application_namespace_path %>_blog_topics, :slug
+    add_index :<%= application_namespace_path %>_blog_topics, :locale
+    add_index :<%= application_namespace_path %>_blog_topics, :featured
+    add_index :<%= application_namespace_path %>_blog_topics, :published
+    add_index :<%= application_namespace_path %>_blog_topics, :position
 
-    create_table :<%= application_namespace_path %>_blog_category_article_links do |t|
-      t.belongs_to :<%= application_namespace_path %>_blog_category, index: { name: :<%= application_namespace_path %>_blog_category_article_links_c_id }
-      t.belongs_to :<%= application_namespace_path %>_blog_article, index: { name: :<%= application_namespace_path %>_blog_category_article_links_a_id }
+    create_table :<%= application_namespace_path %>_blog_topic_article_links do |t|
+      t.belongs_to :<%= application_namespace_path %>_blog_topic, index: { name: :<%= application_namespace_path %>_blog_topic_article_links_t_id }
+      t.belongs_to :<%= application_namespace_path %>_blog_article, index: { name: :<%= application_namespace_path %>_blog_topic_article_links_a_id }
 
       t.integer :position
 

@@ -3,23 +3,23 @@ en:
   activerecord:
     attributes:
       dummy/blog/article:
-        category: Category
-        categories: Categories
-      dummy/blog/category:
+        topic: Topic
+        topics: Topics
+      dummy/blog/topic:
         articles_count: Articles
     models:
       dummy/blog/article:
         one: Article
         other: Articles
-      dummy/blog/category:
-        one: Article category
-        other: Article categories
+      dummy/blog/topic:
+        one: Topic
+        other: Topics
     errors:
       models:
         dummy/blog/article:
           attributes:
             locale:
-              doesnt_match_categories: doesn't match category locales.
+              doesnt_match_topics: doesn't match topic locales.
 
   dummy:
     blog:

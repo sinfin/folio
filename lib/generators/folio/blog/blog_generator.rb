@@ -30,7 +30,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
 
         get "/", to: "articles#index", as: :articles
 
-        resources :categories, only: %i[show] do
+        resources :topics, only: %i[show] do
           member { get :preview }
         end
       end
@@ -41,7 +41,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
     inject_into_file "config/routes.rb", after: "scope module: :folio do\n    namespace :console do\n      namespace :#{application_namespace_path} do\n" do <<~'RUBY'
         namespace :blog do
           resources :articles, except: %i[show]
-          resources :categories, except: %i[show]
+          resources :topics, except: %i[show]
         end
 
     RUBY
@@ -56,7 +56,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
     content = <<~'RUBY'
       Rails.application.config.folio_console_sidebar_runner_up_link_class_names = [%w[
         application_namespace::Blog::Article
-        application_namespace::Blog::Category
+        application_namespace::Blog::Topic
       ]]
     RUBY
 
@@ -75,7 +75,7 @@ class Folio::BlogGenerator < Rails::Generators::Base
         perex { "perex" }
       end
 
-      factory :application_namespace_path_blog_category, class: "application_namespace::Blog::Category" do
+      factory :application_namespace_path_blog_category, class: "application_namespace::Blog::Topic" do
         sequence(:title) { |i| "Category title #{i + 1}" }
       end
 

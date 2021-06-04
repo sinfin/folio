@@ -2,24 +2,15 @@
 
 require "test_helper"
 
-class <%= application_namespace %>::Blog::ArticlesControllerTest < ActionDispatch::IntegrationTest
+class <%= application_namespace %>::Blog::TopicsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
     create(:folio_site)
   end
 
-  test "index" do
-    get url_for(<%= application_namespace %>::Blog::Article)
-    assert_response :ok
-
-    create(:<%= application_namespace_path %>_blog_article)
-    get url_for(<%= application_namespace %>::Blog::Article)
-    assert_response :ok
-  end
-
   test "show" do
-    article = create(:<%= application_namespace_path %>_blog_article)
+    article = create(:<%= application_namespace_path %>_blog_category)
     get url_for(article)
     assert_response :ok
 
@@ -33,7 +24,7 @@ class <%= application_namespace %>::Blog::ArticlesControllerTest < ActionDispatc
   end
 
   test "preview" do
-    article = create(:<%= application_namespace_path %>_blog_article, published: false)
+    article = create(:<%= application_namespace_path %>_blog_category, published: false)
     assert_raises(ActiveRecord::RecordNotFound) { get url_for([:preview, article]) }
 
     admin = create(:folio_admin_account)

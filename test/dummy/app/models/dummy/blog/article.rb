@@ -6,19 +6,19 @@ class Dummy::Blog::Article < ApplicationRecord
   include Folio::Publishable::WithDate
   include Folio::HasAtoms::Basic
 
-  has_many :category_article_links, -> { ordered },
-                                    class_name: "Dummy::Blog::CategoryArticleLink",
+  has_many :topic_article_links, -> { ordered },
+                                    class_name: "Dummy::Blog::TopicArticleLink",
                                     inverse_of: :article,
                                     foreign_key: :dummy_blog_article_id,
                                     dependent: :destroy
 
-  accepts_nested_attributes_for :category_article_links, allow_destroy: true,
+  accepts_nested_attributes_for :topic_article_links, allow_destroy: true,
                                                          reject_if: :all_blank
 
-  has_many :categories, through: :category_article_links, source: :category
-  has_many :published_categories, -> { published },
-                                  through: :category_article_links,
-                                  source: :category
+  has_many :topics, through: :topic_article_links, source: :topic
+  has_many :published_topics, -> { published },
+                              through: :topic_article_links,
+                              source: :topic
 
   validates :title,
             :perex,
@@ -46,18 +46,18 @@ class Dummy::Blog::Article < ApplicationRecord
   scope :featured, -> { where(featured: true) }
   scope :by_locale, -> (locale) { where(locale: locale) }
 
-  scope :by_category, -> (category) do
-    ids = Dummy::Blog::CategoryArticleLink.select(:dummy_blog_article_id)
-                                          .where(category: category)
+  scope :by_topic, -> (topic) do
+    ids = Dummy::Blog::TopicArticleLink.select(:dummy_blog_article_id)
+                                          .where(topic: topic)
 
     where(id: ids)
   end
 
-  scope :by_category_slug, -> (slug) do
-    category = Dummy::Blog::Category.find_by(slug: slug)
+  scope :by_topic_slug, -> (slug) do
+    topic = Dummy::Blog::Topic.find_by(slug: slug)
 
-    if category
-      by_category(category)
+    if topic
+      by_topic(topic)
     else
       none
     end
@@ -69,8 +69,8 @@ class Dummy::Blog::Article < ApplicationRecord
 
   private
     def validate_matching_locales
-      unless category_article_links.all?(&:valid?)
-        errors.add(:locale, :doesnt_match_categories)
+      unless topic_article_links.all?(&:valid?)
+        errors.add(:locale, :doesnt_match_topics)
       end
     end
 end
@@ -79,26 +79,24 @@ end
 #
 # Table name: dummy_blog_articles
 #
-#  id                  :bigint(8)        not null, primary key
-#  title               :string
-#  slug                :string
-#  perex               :text
-#  locale              :string           default("cs")
-#  meta_title          :string
-#  meta_description    :text
-#  featured            :boolean
-#  published           :boolean
-#  published_at        :datetime
-#  primary_category_id :bigint(8)
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
+#  id               :bigint(8)        not null, primary key
+#  title            :string
+#  slug             :string
+#  perex            :text
+#  locale           :string           default("cs")
+#  meta_title       :string
+#  meta_description :text
+#  featured         :boolean
+#  published        :boolean
+#  published_at     :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 # Indexes
 #
-#  index_dummy_blog_articles_on_featured             (featured)
-#  index_dummy_blog_articles_on_locale               (locale)
-#  index_dummy_blog_articles_on_primary_category_id  (primary_category_id)
-#  index_dummy_blog_articles_on_published            (published)
-#  index_dummy_blog_articles_on_published_at         (published_at)
-#  index_dummy_blog_articles_on_slug                 (slug)
+#  index_dummy_blog_articles_on_featured      (featured)
+#  index_dummy_blog_articles_on_locale        (locale)
+#  index_dummy_blog_articles_on_published     (published)
+#  index_dummy_blog_articles_on_published_at  (published_at)
+#  index_dummy_blog_articles_on_slug          (slug)
 #

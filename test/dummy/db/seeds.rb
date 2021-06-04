@@ -27,7 +27,7 @@ force_destroy Folio::Page
 force_destroy Folio::Site
 
 destroy_all Dummy::Blog::Article
-destroy_all Dummy::Blog::Category
+destroy_all Dummy::Blog::Topic
 
 def unsplash_pic(square = false)
   puts "Creating unsplash pic"
@@ -211,30 +211,35 @@ puts "Created Dummy::Menu::Footer"
 
 images = Folio::Image.tagged_with("unsplash").to_a
 
-puts "Creating Dummy::Blog::Category"
+puts "Creating Dummy::Blog::Topic"
 
-categories = 5.times.map do
-  Dummy::Blog::Category.create!(locale: "cs",
-                                published: true,
-                                title: Faker::Hipster.sentence(word_count: rand(1..3)),
-                                cover: images.sample)
+topics = 5.times.map do
+  topic = Dummy::Blog::Topic.create!(locale: "cs",
+                                     published: true,
+                                     title: Faker::Hipster.sentence(word_count: rand(1..3))[0..-1],
+                                     cover: images.sample)
+
+  print(".")
+
+  topic
 end
 
-puts "Created Dummy::Blog::Category"
+puts "\nCreated Dummy::Blog::Topic"
 
 puts "Creating Dummy::Blog::Article"
 
-5.times do |i|
+20.times do |i|
   Dummy::Blog::Article.create!(locale: "cs",
                                published: true,
-                               title: Faker::Hipster.sentence(word_count: rand(1..3)),
+                               title: Faker::Hipster.sentence(word_count: rand(1..3))[0..-1],
                                perex: Faker::Hipster.sentence,
                                cover: images.sample,
-                               categories: categories.sample(rand(1..categories.size)),
+                               topics: topics.sample(rand(1..topics.size)),
                                published_at: Time.zone.now - i.days - i.hours - i.minutes)
+  print(".")
 end
 
-puts "Created Dummy::Blog::Article"
+puts "\nCreated Dummy::Blog::Article"
 
 if Rails.env.development?
   puts "Creating test@test.test account"

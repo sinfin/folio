@@ -3,25 +3,25 @@ cs:
   activerecord:
     attributes:
       dummy/blog/article:
-        category: Kategorie
-        categories: Kategorie
-      dummy/blog/category:
+        topic: Téma
+        topics: Témata
+      dummy/blog/topic:
         articles_count: Články
     models:
       dummy/blog/article:
         one: Článek
         few: Články
         other: Článků
-      dummy/blog/category:
-        one: Kategorie článků
-        few: Kategorie článků
-        other: Kategorií článků
+      dummy/blog/topic:
+        one: Téma
+        few: Témata
+        other: Témat
     errors:
       models:
         dummy/blog/article:
           attributes:
             locale:
-              doesnt_match_categories: se neshoduje se zvolenýma kategoriemi.
+              doesnt_match_topics: se neshoduje se zvolenýma tématy.
 
   dummy:
     blog:

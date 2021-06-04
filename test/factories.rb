@@ -146,7 +146,7 @@ FactoryBot.define do
     published { true }
   end
 
-  factory :dummy_blog_category, class: "Dummy::Blog::Category" do
+  factory :dummy_blog_category, class: "Dummy::Blog::Topic" do
     sequence(:title) { |i| "Category title #{i + 1}" }
     published { true }
   end
