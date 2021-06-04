@@ -5,11 +5,11 @@ class Dummy::Blog::ArticlesController < ApplicationController
   before_action :find_article, only: [:show, :preview]
 
   def index
-    articles = Dummy::Blog::Article.published
-                                   .ordered
-                                   .by_locale(I18n.locale)
-                                   .includes(:published_categories,
-                                                                 cover_placement: :file)
+    articles = @klass.published
+                     .ordered
+                     .by_locale(I18n.locale)
+                     .includes(:published_categories,
+                               cover_placement: :file)
 
     if params[:q].present?
       articles = articles.by_query(params[:q])

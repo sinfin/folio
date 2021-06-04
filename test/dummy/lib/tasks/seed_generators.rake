@@ -85,13 +85,13 @@ class Dummy::SeedGenerator
   end
 
   def blog
-    Dir[Rails.root.join('app/controllers/dummy/blog/**/*.rb'),
-        Rails.root.join('app/models/dummy/blog/**/*.rb'),
-        Rails.root.join('app/views/dummy/blog/**/*.slim'),
-        Rails.root.join('app/views/folio/console/dummy/blog/**/*.slim'),
-        Rails.root.join('config/locales/blog.*.yml'),
-        Rails.root.join('db/migrate/*_create_blog.rb'),
-        Rails.root.join('test/**/dummy/blog/**/*.rb'),].each do |path|
+    Dir[Rails.root.join("app/controllers/dummy/blog/**/*.rb"),
+        Rails.root.join("app/models/dummy/blog/**/*.rb"),
+        Rails.root.join("app/views/dummy/blog/**/*.slim"),
+        Rails.root.join("app/views/folio/console/dummy/blog/**/*.slim"),
+        Rails.root.join("config/locales/blog.*.yml"),
+        Rails.root.join("db/migrate/*_create_blog.rb"),
+        Rails.root.join("test/**/dummy/blog/**/*.rb"),].each do |path|
       target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
       copy_file(path, @templates_path.join(target_path))
     end

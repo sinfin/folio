@@ -143,9 +143,11 @@ FactoryBot.define do
   factory :dummy_blog_article, class: "Dummy::Blog::Article" do
     sequence(:title) { |i| "Article title #{i + 1}" }
     perex { "perex" }
+    published { true }
   end
 
   factory :dummy_blog_category, class: "Dummy::Blog::Category" do
     sequence(:title) { |i| "Category title #{i + 1}" }
+    published { true }
   end
 end
