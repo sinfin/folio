@@ -8,7 +8,7 @@ class Folio::Console::Dummy::Blog::TopicsControllerTest < Folio::Console::BaseCo
 
     assert_response :success
 
-    create(:dummy_blog_category)
+    create(:dummy_blog_topic)
 
     get url_for([:console, Dummy::Blog::Topic])
 
@@ -22,7 +22,7 @@ class Folio::Console::Dummy::Blog::TopicsControllerTest < Folio::Console::BaseCo
   end
 
   test "edit" do
-    model = create(:dummy_blog_category)
+    model = create(:dummy_blog_topic)
 
     get url_for([:edit, :console, model])
 
@@ -30,22 +30,22 @@ class Folio::Console::Dummy::Blog::TopicsControllerTest < Folio::Console::BaseCo
   end
 
   test "create" do
-    params = build(:dummy_blog_category).serializable_hash
+    params = build(:dummy_blog_topic).serializable_hash
     assert_equal(0, Dummy::Blog::Topic.count)
 
     post url_for([:console, Dummy::Blog::Topic]), params: {
-      dummy_blog_category: params,
+      dummy_blog_topic: params,
     }
 
     assert_equal(1, Dummy::Blog::Topic.count, "Creates record")
   end
 
   test "update" do
-    model = create(:dummy_blog_category)
+    model = create(:dummy_blog_topic)
     assert_not_equal("Title", model.title)
 
     put url_for([:console, model]), params: {
-      dummy_blog_category: {
+      dummy_blog_topic: {
         title: "Title",
       },
     }
@@ -55,7 +55,7 @@ class Folio::Console::Dummy::Blog::TopicsControllerTest < Folio::Console::BaseCo
   end
 
   test "destroy" do
-    model = create(:dummy_blog_category)
+    model = create(:dummy_blog_topic)
 
     delete url_for([:console, model])
 

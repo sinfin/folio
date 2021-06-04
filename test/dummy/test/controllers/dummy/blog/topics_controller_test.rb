@@ -10,7 +10,7 @@ class Dummy::Blog::TopicsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show" do
-    article = create(:dummy_blog_category)
+    article = create(:dummy_blog_topic)
     get url_for(article)
     assert_response :ok
 
@@ -24,7 +24,7 @@ class Dummy::Blog::TopicsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "preview" do
-    article = create(:dummy_blog_category, published: false)
+    article = create(:dummy_blog_topic, published: false)
     assert_raises(ActiveRecord::RecordNotFound) { get url_for([:preview, article]) }
 
     admin = create(:folio_admin_account)

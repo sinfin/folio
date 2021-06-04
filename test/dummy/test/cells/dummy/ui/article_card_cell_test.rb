@@ -4,7 +4,8 @@ require "test_helper"
 
 class Dummy::Ui::ArticleCardCellTest < Cell::TestCase
   test "show" do
-    html = cell("dummy/ui/article_card", nil).(:show)
+    model = create(:dummy_blog_article)
+    html = cell("dummy/ui/article_card", model).(:show)
     assert html.has_css?(".d-ui-article-card")
   end
 end
