@@ -1,0 +1,22 @@
+.d-ui-article-card class=size_class_name class=image_class_name
+  .container-fluid.d-ui-article-card__container
+    .d-ui-article-card__inner
+      - if model[:cover_placement]
+        = image(model[:cover_placement],
+                thumb_size,
+                class: 'd-ui-article-card__image')
+
+      .d-ui-article-card__content
+        - if model[:title].present?
+          *title_tag
+            = cstypo model[:title]
+
+        - if model[:content].present?
+          .d-ui-article-card__content-content.d-rich-text.d-rich-text--chomp[
+            class=content_content_class_name
+          ]
+            == cstypo model[:content]
+
+        - unless model[:small]
+          a.btn.btn-primary.d-ui-article-card__button href=model[:href]
+            = model[:button_label]

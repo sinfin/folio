@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "faker"
+
 if Rails.env.development?
   ActiveJob::Base.queue_adapter = :inline
 end
@@ -23,6 +25,9 @@ destroy_all Folio::File
 force_destroy Folio::Menu
 force_destroy Folio::Page
 force_destroy Folio::Site
+
+destroy_all Dummy::Blog::Article
+destroy_all Dummy::Blog::Category
 
 def unsplash_pic(square = false)
   puts "Creating unsplash pic"
@@ -100,20 +105,6 @@ Folio::Page.create!(title: "Hidden", published: false)
 Folio::Page.create!(title: "DAM", published: true)
 puts "Created more pages"
 
-puts "Creating Folio::Menu::Page"
-menu = Folio::Menu::Page.create!(locale: :cs)
-
-Folio::MenuItem.create!(menu: menu,
-                        title: "Reference",
-                        target: reference,
-                        position: 0)
-
-Folio::MenuItem.create!(menu: menu,
-                        title: "About",
-                        target: about,
-                        position: 1)
-puts "Created Folio::Menu::Page"
-
 puts "Creating Dummy::Menu::Nestable"
 menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable")
 
@@ -173,6 +164,11 @@ Folio::MenuItem.create!(menu: menu,
                         url: "/folio/ui/atoms",
                         position: 2)
 
+Folio::MenuItem.create!(menu: menu,
+                        title: "Blog",
+                        url: "/blog",
+                        position: 3)
+
 mi = Folio::MenuItem.create!(menu: menu,
                              title: "Nestable non-link",
                              position: 3)
@@ -212,6 +208,33 @@ menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer")
 end
 
 puts "Created Dummy::Menu::Footer"
+
+images = Folio::Image.tagged_with("unsplash").to_a
+
+puts "Creating Dummy::Blog::Category"
+
+categories = 5.times.map do
+  Dummy::Blog::Category.create!(locale: "cs",
+                                published: true,
+                                title: Faker::Hipster.sentence(word_count: rand(1..3)),
+                                cover: images.sample)
+end
+
+puts "Created Dummy::Blog::Category"
+
+puts "Creating Dummy::Blog::Article"
+
+5.times do |i|
+  Dummy::Blog::Article.create!(locale: "cs",
+                               published: true,
+                               title: Faker::Hipster.sentence(word_count: rand(1..3)),
+                               perex: Faker::Hipster.sentence,
+                               cover: images.sample,
+                               categories: categories.sample(rand(1..categories.size)),
+                               published_at: Time.zone.now - i.days - i.hours - i.minutes)
+end
+
+puts "Created Dummy::Blog::Article"
 
 if Rails.env.development?
   puts "Creating test@test.test account"

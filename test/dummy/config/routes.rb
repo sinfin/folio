@@ -23,9 +23,12 @@ Rails.application.routes.draw do
 
   scope module: :dummy, as: :dummy do
     namespace :blog do
-      resources :articles, only: %i[index show] do
+      resources :articles, only: %i[show] do
         member { get :preview }
       end
+
+      get "/", to: "articles#index", as: :articles
+
       resources :categories, only: %i[show] do
         member { get :preview }
       end

@@ -22,3 +22,9 @@ cs:
           attributes:
             locale:
               doesnt_match_categories: se neshoduje se zvolenýma kategoriemi.
+
+  dummy:
+    blog:
+      articles:
+        index:
+          title: Blog

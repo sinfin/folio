@@ -1,0 +1,9 @@
+.d-ui-article-card-list
+  .container-fluid
+    .d-ui-article-card-list__inner
+      - model.each do |card_model|
+        == cell('dummy/ui/article_card',
+                card_model,
+                large: options[:large],
+                medium: options[:medium],
+                small: options[:small])

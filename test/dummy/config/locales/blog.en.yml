@@ -20,3 +20,9 @@ en:
           attributes:
             locale:
               doesnt_match_categories: doesn't match category locales.
+
+  dummy:
+    blog:
+      articles:
+        index:
+          title: Blog

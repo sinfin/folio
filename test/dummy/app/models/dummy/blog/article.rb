@@ -16,6 +16,9 @@ class Dummy::Blog::Article < ApplicationRecord
                                                          reject_if: :all_blank
 
   has_many :categories, through: :category_article_links, source: :category
+  has_many :published_categories, -> { published },
+                                  through: :category_article_links,
+                                  source: :category
 
   validates :title,
             :perex,

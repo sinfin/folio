@@ -24,7 +24,6 @@ group :test do
   gem "minitest", "5.10.3"
   gem "factory_bot"
   gem "capybara", "~> 2.13"
-  gem "faker"
 end
 
 group :development do
@@ -35,4 +34,5 @@ end
 
 group :development, :test do
   gem "byebug"
+  gem "faker"
 end
