@@ -137,6 +137,7 @@ class Dummy::SeedGenerator
          .gsub("dummy:", "<%= application_namespace_path %>:")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
+         .gsub("d-blog", "<%= classname_prefix %>-blog")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")

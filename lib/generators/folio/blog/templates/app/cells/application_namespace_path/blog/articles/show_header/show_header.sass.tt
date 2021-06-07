@@ -1,4 +1,4 @@
-.d-blog-articles-show-header
+.<%= classname_prefix %>-blog-articles-show-header
   +mq-desktop-menu
     &__inner
       display: flex

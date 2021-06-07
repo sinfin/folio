@@ -1,6 +1,6 @@
-.d-blog-topics-tag-list.mt-a.mb-3
+.<%= classname_prefix %>-blog-topics-tag-list.mt-a.mb-3
   .container-fluid
-    .d-blog-topics-tag-list__inner.d-flex
+    .<%= classname_prefix %>-blog-topics-tag-list__inner.d-flex
       span.flex-shrink-0.mr-h
         = t('.topics')
 

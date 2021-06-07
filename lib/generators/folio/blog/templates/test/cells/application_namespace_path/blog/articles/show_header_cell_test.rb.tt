@@ -6,6 +6,6 @@ class <%= application_namespace %>::Blog::Articles::ShowHeaderCellTest < Cell::T
   test "show" do
     model = create(:<%= application_namespace_path %>_blog_article)
     html = cell("<%= application_namespace_path %>/blog/articles/show_header", model).(:show)
-    assert html.has_css?(".d-blog-articles-show-header")
+    assert html.has_css?(".<%= classname_prefix %>-blog-articles-show-header")
   end
 end

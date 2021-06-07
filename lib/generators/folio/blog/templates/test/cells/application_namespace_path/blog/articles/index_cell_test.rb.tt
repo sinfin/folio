@@ -6,12 +6,12 @@ class <%= application_namespace %>::Blog::Articles::IndexCellTest < Cell::TestCa
   test "show" do
     model = create_list(:<%= application_namespace_path %>_blog_article, 4)
     html = cell("<%= application_namespace_path %>/blog/articles/index", [model[0]]).(:show)
-    assert html.has_css?(".d-blog-articles-index")
+    assert html.has_css?(".<%= classname_prefix %>-blog-articles-index")
 
     html = cell("<%= application_namespace_path %>/blog/articles/index", model[0..1]).(:show)
-    assert html.has_css?(".d-blog-articles-index")
+    assert html.has_css?(".<%= classname_prefix %>-blog-articles-index")
 
     html = cell("<%= application_namespace_path %>/blog/articles/index", model).(:show)
-    assert html.has_css?(".d-blog-articles-index")
+    assert html.has_css?(".<%= classname_prefix %>-blog-articles-index")
   end
 end

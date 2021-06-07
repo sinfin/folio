@@ -6,6 +6,6 @@ class <%= application_namespace %>::Blog::Topics::TagListCellTest < Cell::TestCa
   test "show" do
     model = create_list(:<%= application_namespace_path %>_blog_topic, 1)
     html = cell("<%= application_namespace_path %>/blog/topics/tag_list", model).(:show)
-    assert html.has_css?(".d-blog-topics-tag-list")
+    assert html.has_css?(".<%= classname_prefix %>-blog-topics-tag-list")
   end
 end
