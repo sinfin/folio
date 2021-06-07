@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Ui::ArticleCardListCell < ApplicationCell
+  def show
+    render if model.present?
+  end
+end

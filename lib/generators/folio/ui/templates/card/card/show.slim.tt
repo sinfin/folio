@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-ui-card class=size_class_name
+.<%= classname_prefix %>-ui-card class=size_class_name class=image_class_name
   .container-fluid.<%= classname_prefix %>-ui-card__container
     .<%= classname_prefix %>-ui-card__inner
       - if model[:cover_placement]

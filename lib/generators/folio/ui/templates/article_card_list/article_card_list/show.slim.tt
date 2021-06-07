@@ -1,0 +1,9 @@
+.<%= classname_prefix %>-ui-article-card-list
+  .container-fluid
+    .<%= classname_prefix %>-ui-article-card-list__inner
+      - model.each do |article|
+        == cell('<%= application_namespace_path %>/ui/article_card',
+                article.to_ui_article_card_model,
+                large: options[:large],
+                medium: options[:medium],
+                small: options[:small])

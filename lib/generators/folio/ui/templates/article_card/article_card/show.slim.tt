@@ -1,0 +1,40 @@
+.<%= classname_prefix %>-ui-article-card class=size_class_name class=image_class_name
+  .container-fluid.<%= classname_prefix %>-ui-article-card__container
+    .<%= classname_prefix %>-ui-article-card__inner
+      - if model[:cover_placement]
+        = image(model[:cover_placement],
+                THUMB_SIZE,
+                class: '<%= classname_prefix %>-ui-article-card__image')
+
+      .<%= classname_prefix %>-ui-article-card__content
+        - if model[:title].present?
+          *title_tag
+            - if has_button?
+              = cstypo model[:title]
+            - else
+              a.<%= classname_prefix %>-ui-article-card__title-a href=model[:href]
+                = cstypo model[:title]
+
+        - if model[:content].present? && large?
+          .<%= classname_prefix %>-ui-article-card__content-content.<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+            == cstypo model[:content]
+
+        - if model[:published_at].present? || model[:tag_records].present?
+          .<%= classname_prefix %>-ui-article-card__meta
+            - if model[:tag_records].present?
+              .<%= classname_prefix %>-ui-article-card__meta-tags
+                - model[:tag_records].each do |record|
+                  a.btn.btn-tag[
+                    href=url_for(record)
+                    title=record.to_label
+                    class="<%= classname_prefix %>-ui-article-card__meta-tag"
+                  ]
+                    = truncate(record.to_label)
+
+            - if model[:published_at].present?
+              .<%= classname_prefix %>-ui-article-card__meta-published.small
+                = l(model[:published_at].to_date)
+
+        - if has_button?
+          a.btn.btn-primary.<%= classname_prefix %>-ui-article-card__button href=model[:href]
+            = model[:button_label]

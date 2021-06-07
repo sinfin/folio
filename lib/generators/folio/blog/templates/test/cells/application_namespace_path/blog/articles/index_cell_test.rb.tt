@@ -4,7 +4,14 @@ require "test_helper"
 
 class <%= application_namespace %>::Blog::Articles::IndexCellTest < Cell::TestCase
   test "show" do
-    html = cell("<%= application_namespace_path %>/blog/articles/index", nil).(:show)
+    model = create_list(:<%= application_namespace_path %>_blog_article, 4)
+    html = cell("<%= application_namespace_path %>/blog/articles/index", [model[0]]).(:show)
+    assert html.has_css?(".d-blog-articles-index")
+
+    html = cell("<%= application_namespace_path %>/blog/articles/index", model[0..1]).(:show)
+    assert html.has_css?(".d-blog-articles-index")
+
+    html = cell("<%= application_namespace_path %>/blog/articles/index", model).(:show)
     assert html.has_css?(".d-blog-articles-index")
   end
 end

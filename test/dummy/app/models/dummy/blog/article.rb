@@ -77,9 +77,27 @@ class Dummy::Blog::Article < ApplicationRecord
     }
   end
 
+  def self.pregenerated_thumbnails
+    h = {
+      "Folio::FilePlacement::Cover" => [],
+    }
+
+    [
+      Dummy::Ui::ArticleCardCell::THUMB_SIZE,
+    ].uniq.each do |size|
+      h["Folio::FilePlacement::Cover"] << size
+      h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
+    end
+
+    h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
+
+    h
+  end
+
   private
     def validate_matching_locales
       unless topic_article_links.all?(&:valid?)
+        errors.delete("topic_article_links.base")
         errors.add(:locale, :doesnt_match_topics)
       end
     end

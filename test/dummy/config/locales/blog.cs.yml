@@ -21,7 +21,7 @@ cs:
         dummy/blog/article:
           attributes:
             locale:
-              doesnt_match_topics: se neshoduje se zvolenýma tématy.
+              doesnt_match_topics: se neshoduje se zvolenými tématy.
 
   dummy:
     blog:

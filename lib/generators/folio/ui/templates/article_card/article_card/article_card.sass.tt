@@ -1,6 +1,6 @@
 $ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
 
-.d-ui-article-card
+.<%= classname_prefix %>-ui-article-card
   margin: $grid-gutter-width 0
 
   &__inner
