@@ -85,7 +85,7 @@ class Dummy::SeedGenerator
   end
 
   def blog
-    Dir[Rails.root.join("app/controllers/dummy/blog/**/*.rb"),
+    Dir[Rails.root.join("app/controllers/**/dummy/blog/**/*.rb"),
         Rails.root.join("app/models/dummy/blog/**/*.rb"),
         Rails.root.join("app/models/dummy/blog.rb"),
         Rails.root.join("app/views/dummy/blog/**/*.slim"),

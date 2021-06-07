@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+class Folio::Console::<%= application_namespace %>::Blog::ArticlesController < Folio::Console::BaseController
+  folio_console_controller_for "<%= application_namespace %>::Blog::Article"
+
+  private
+    def article_params
+      params.require(:<%= application_namespace_path %>_blog_article)
+            .permit(*(@klass.column_names - ["id"]),
+                    *atoms_strong_params,
+                    *file_placements_strong_params,
+                    topic_article_links_attributes: %w[id _destroy position <%= application_namespace_path %>_blog_topic_id])
+    end
+
+    def index_filters
+      {
+        by_locale: <%= application_namespace %>::Blog.available_locales,
+        by_published: [true, false],
+        by_topic_slug: {
+          klass: "<%= application_namespace %>::Blog::Topic",
+          order_scope: :ordered,
+          slug: true,
+        },
+      }
+    end
+
+    def folio_console_collection_includes
+      [:topics, cover_placement: :file]
+    end
+
+    def folio_console_record_includes
+      []
+    end
+end
