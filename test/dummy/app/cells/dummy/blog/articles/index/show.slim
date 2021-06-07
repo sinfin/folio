@@ -2,7 +2,7 @@
   .container-fluid
     h1 = t('.title')
 
-  - if topics.present?
+  - if topics.present? && !active_pagy?
     == cell('dummy/blog/topics/tag_list', topics)
 
   - if @main_article.present?
@@ -19,3 +19,7 @@
     == cell('dummy/ui/article_card_list',
             @small_articles,
             small: true)
+
+- if active_pagy?
+  .mt-4
+    == cell('dummy/ui/pagy', options[:pagy])

@@ -29,7 +29,7 @@
                     title=record.to_label
                     class="<%= classname_prefix %>-ui-article-card__meta-tag"
                   ]
-                    = truncate(record.to_label)
+                    = cstypo truncate(record.to_label)
 
             - if model[:published_at].present?
               .<%= classname_prefix %>-ui-article-card__meta-published.small
@@ -37,4 +37,4 @@
 
         - if has_button?
           a.btn.btn-primary.<%= classname_prefix %>-ui-article-card__button href=href
-            = model[:button_label]
+            = cstypo model[:button_label]
