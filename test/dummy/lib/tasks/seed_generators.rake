@@ -134,6 +134,7 @@ class Dummy::SeedGenerator
     def replace_names(str)
       str.gsub("Dummy::", "<%= application_namespace %>::")
          .gsub("dummy_", "<%= application_namespace_path %>_")
+         .gsub("dummy:", "<%= application_namespace_path %>:")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")

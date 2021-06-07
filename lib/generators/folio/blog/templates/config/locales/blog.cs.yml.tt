@@ -23,7 +23,7 @@ cs:
             locale:
               doesnt_match_topics: se neshoduje se zvolenými tématy.
 
-  dummy:
+  <%= application_namespace_path %>:
     blog:
       articles:
         index:

@@ -21,7 +21,7 @@ en:
             locale:
               doesnt_match_topics: doesn't match topic locales.
 
-  dummy:
+  <%= application_namespace_path %>:
     blog:
       articles:
         index:
