@@ -16,6 +16,11 @@ class <%= application_namespace %>::Blog::ArticlesController < ApplicationContro
     end
 
     @pagy, @articles = pagy(articles, items: 10)
+
+    @topics = <%= application_namespace %>::Blog::Topic.published
+                                .with_published_articles
+                                .ordered
+                                .limit(20)
   end
 
   def show

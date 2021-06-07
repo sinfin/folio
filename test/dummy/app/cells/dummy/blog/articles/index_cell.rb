@@ -10,4 +10,8 @@ class Dummy::Blog::Articles::IndexCell < ApplicationCell
       render
     end
   end
+
+  def topics
+    options[:topics]
+  end
 end

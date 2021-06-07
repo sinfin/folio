@@ -2,6 +2,9 @@
   .container-fluid
     h1 = t('.title')
 
+  - if topics.present?
+    == cell('dummy/blog/topics/tag_list', topics)
+
   - if @main_article.present?
     == cell('dummy/ui/article_card',
             @main_article.to_ui_article_card_model,

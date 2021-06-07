@@ -15,6 +15,9 @@ class Dummy::Blog::Topic < ApplicationRecord
                                                          reject_if: :all_blank
 
   has_many :articles, through: :topic_article_links, source: :article
+  has_many :published_articles, -> { published },
+                                through: :topic_article_links,
+                                source: :article
 
   validates :title,
             presence: true
@@ -39,6 +42,8 @@ class Dummy::Blog::Topic < ApplicationRecord
   scope :featured, -> { where(featured: true) }
   scope :ordered, -> { order(title: :asc) }
   scope :by_atom_setting_locale, -> (locale) { by_locale(locale) }
+
+  scope :with_published_articles, -> { joins(:published_articles).distinct }
 end
 
 # == Schema Information

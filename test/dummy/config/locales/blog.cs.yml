@@ -28,3 +28,7 @@ cs:
       articles:
         index:
           title: Blog
+
+      topics:
+        tag_list:
+          topics: "Témata:"

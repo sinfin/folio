@@ -53,4 +53,12 @@ class <%= application_namespace %>::Ui::ArticleCardCell < ApplicationCell
   def small?
     model[:small] || options[:small]
   end
+
+  def href
+    if model[:href]
+      model[:href]
+    elsif model[:url_for_args]
+      url_for(model[:url_for_args])
+    end
+  end
 end

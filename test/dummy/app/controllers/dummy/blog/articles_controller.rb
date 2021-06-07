@@ -16,6 +16,11 @@ class Dummy::Blog::ArticlesController < ApplicationController
     end
 
     @pagy, @articles = pagy(articles, items: 10)
+
+    @topics = Dummy::Blog::Topic.published
+                                .with_published_articles
+                                .ordered
+                                .limit(20)
   end
 
   def show

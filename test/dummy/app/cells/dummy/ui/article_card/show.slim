@@ -12,7 +12,7 @@
             - if has_button?
               = cstypo model[:title]
             - else
-              a.d-ui-article-card__title-a href=model[:href]
+              a.d-ui-article-card__title-a href=href
                 = cstypo model[:title]
 
         - if model[:content].present? && large?
@@ -36,5 +36,5 @@
                 = l(model[:published_at].to_date)
 
         - if has_button?
-          a.btn.btn-primary.d-ui-article-card__button href=model[:href]
+          a.btn.btn-primary.d-ui-article-card__button href=href
             = model[:button_label]

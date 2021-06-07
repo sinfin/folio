@@ -71,6 +71,7 @@ class Dummy::Blog::Article < ApplicationRecord
     {
       cover_placement: cover_placement,
       title: title,
+      url_for_args: self,
       content: ActionController::Base.helpers.content_tag(:p, perex),
       tag_records: published_topics,
       published_at: published_at_with_fallback,
