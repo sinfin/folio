@@ -4,7 +4,7 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::ArticleCardCellTest < Cell::TestCase
   test "show" do
-    model = create(:<%= application_namespace_path %>_blog_article)
+    model = create(:<%= application_namespace_path %>_blog_article).to_ui_article_card_model
     html = cell("<%= application_namespace_path %>/ui/article_card", model).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-article-card")
   end

@@ -1,2 +1,5 @@
-.container-fluid
-  h1 = @article.title
+== cell('folio/publishable_hint', @article)
+
+== cell('<%= application_namespace_path %>/blog/articles/show_header', @article)
+
+= render_atoms_in_molecules(@article.atoms_in_molecules)
