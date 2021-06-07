@@ -128,8 +128,8 @@ class Dummy::Blog::Article < ApplicationRecord
 
         hash = {
           title: title,
-          perex: params[:perex][locale],
-          cover_placement: Folio::FilePlacement::Cover.new(params[:cover_placement][locale].permit(:file_id, :alt)),
+          perex: params[:perex] && params[:perex][locale],
+          cover_placement: params[:cover_placement] && Folio::FilePlacement::Cover.new(params[:cover_placement][locale].permit(:file_id, :alt)),
           to_ui_article_meta: {
             tag_records: tag_records,
             published_at: safe_published_at,
