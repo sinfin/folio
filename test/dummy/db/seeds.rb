@@ -216,7 +216,7 @@ puts "Creating Dummy::Blog::Topic"
 topics = 5.times.map do
   topic = Dummy::Blog::Topic.create!(locale: "cs",
                                      published: true,
-                                     title: Faker::Hipster.sentence(word_count: rand(1..3))[0..-1],
+                                     title: Faker::Hipster.words(number: rand(1..3)).join(' ').capitalize,
                                      cover: images.sample)
 
   print(".")
@@ -231,7 +231,7 @@ puts "Creating Dummy::Blog::Article"
 20.times do |i|
   Dummy::Blog::Article.create!(locale: "cs",
                                published: true,
-                               title: Faker::Hipster.sentence(word_count: rand(1..3))[0..-1],
+                               title: Faker::Hipster.words(number: rand(1..3)).join(' ').capitalize,
                                perex: Faker::Hipster.sentence,
                                cover: images.sample,
                                topics: topics.sample(rand(1..topics.size)),
