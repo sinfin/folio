@@ -21,19 +21,7 @@
 
         - if model[:published_at].present? || model[:tag_records].present?
           .d-ui-article-card__meta
-            - if model[:tag_records].present?
-              .d-ui-article-card__meta-tags
-                - model[:tag_records].each do |record|
-                  a.btn.btn-tag[
-                    href=url_for(record)
-                    title=record.to_label
-                    class="d-ui-article-card__meta-tag"
-                  ]
-                    = cstypo truncate(record.to_label)
-
-            - if model[:published_at].present?
-              .d-ui-article-card__meta-published.small
-                = l(model[:published_at].to_date)
+            == cell('dummy/ui/article_meta', model)
 
         - if has_button?
           a.btn.btn-primary.d-ui-article-card__button href=href

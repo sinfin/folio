@@ -84,7 +84,9 @@ class Dummy::Blog::Article < ApplicationRecord
     }
 
     [
+      Dummy::Blog::Articles::ShowCell::THUMB_SIZE,
       Dummy::Ui::ArticleCardCell::THUMB_SIZE,
+      Folio::CellLightbox::LIGHTBOX_SIZE,
     ].uniq.each do |size|
       h["Folio::FilePlacement::Cover"] << size
       h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }

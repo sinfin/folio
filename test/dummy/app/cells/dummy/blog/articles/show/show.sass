@@ -1,0 +1,27 @@
+.d-blog-articles-show
+  +mq-desktop-menu
+    &__header
+      display: flex
+
+    &__header-content
+      align-self: stretch
+      display: flex
+      flex-direction: column
+
+    &__header-content-top,
+    &__header-content-bottom
+      flex: 1 1 50%
+
+    &__header-content-top
+      display: flex
+      flex-direction: column
+      justify-content: flex-end
+      padding-bottom: map-get($spacers, 3)
+
+    &__cover
+      max-width: 307px !important
+      flex: 0 0 307px
+      margin-right: $grid-gutter-width
+
+    &__title
+      margin-top: 0
