@@ -1,4 +1,5 @@
 import { uniqueId } from 'lodash'
+import { select, takeLatest } from 'redux-saga/effects'
 
 // Constants
 
@@ -31,6 +32,26 @@ export function removeItem (item) {
 
 export const orderedMultiselectSelector = (state) => state.orderedMultiselect
 
+// Sagas
+
+function * triggerAtomSettingUpdate (action) {
+  const orderedMultiselect = yield select(orderedMultiselectSelector)
+  if (orderedMultiselect.atomSetting) {
+    const $wrap = window.jQuery('.folio-react-wrap--ordered-multiselect')
+    $wrap.trigger('folioCustomChange')
+    $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form').trigger('change')
+    yield $wrap
+  }
+}
+
+function * triggerAtomSettingUpdateSaga () {
+  yield takeLatest(UPDATE_ITEMS, triggerAtomSettingUpdate)
+}
+
+export const orderedMultiselectSagas = [
+  triggerAtomSettingUpdateSaga
+]
+
 // State
 
 const initialState = {
@@ -39,7 +60,8 @@ const initialState = {
   paramBase: null,
   foreignKey: null,
   url: null,
-  sortable: true
+  sortable: true,
+  atomSetting: false
 }
 
 // Reducer

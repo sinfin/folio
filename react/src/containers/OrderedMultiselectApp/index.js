@@ -32,6 +32,14 @@ class OrderedMultiselectApp extends React.Component {
     this.props.dispatch(removeItem(item))
   }
 
+  settingValue () {
+    if (this.props.orderedMultiselect.atomSetting) {
+      return JSON.stringify(this.props.orderedMultiselect.items.map((item) => item.value))
+    } else {
+      return undefined
+    }
+  }
+
   render () {
     const { orderedMultiselect } = this.props
     const without = orderedMultiselect.items.map((item) => item.value).join(',')
@@ -40,7 +48,10 @@ class OrderedMultiselectApp extends React.Component {
     // using key={without} forces Select to reload default options
 
     return (
-      <div className='f-c-r-ordered-multiselect-app'>
+      <div
+        className={`f-c-r-ordered-multiselect-app ${orderedMultiselect.atomSetting ? 'f-c-js-atoms-placement-setting__value' : ''}`}
+        data-atom-setting-value={this.settingValue()}
+      >
         {orderedMultiselect.items.length ? (
           <SortableTree
             maxDepth={1}

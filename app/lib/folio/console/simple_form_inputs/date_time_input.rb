@@ -8,6 +8,11 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
       input_html_options[:value] = I18n.l(value, format: :console_short)
     end
 
+    if options[:atom_setting]
+      input_html_classes << "f-c-js-atoms-placement-setting"
+      input_html_options["data-atom-setting"] = options[:atom_setting]
+    end
+
     input_html_options[:class] ||= []
     input_html_options[:class] << "folio-console-date-picker"
 

@@ -24,4 +24,10 @@ class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
   def featurable_within?
     f.object.respond_to?(:featured_from) && f.object.respond_to?(:featured_until)
   end
+
+  def atom_setting(field)
+    if options[:atom_setting]
+      field
+    end
+  end
 end

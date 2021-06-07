@@ -6,17 +6,21 @@
   = tab :content
     .row
       .col-md-auto
-        = react_picker(f, :cover_placement)
+        = react_picker(f, :cover_placement, atom_setting: :cover_placement)
       .col-md
-        == cell('folio/console/publishable_inputs', f)
-        = f.input :title
+        == cell('folio/console/publishable_inputs', f, atom_setting: true)
+
+        = f.input :title, atom_setting: :title
         = f.input :slug
-        = f.input :perex, character_counter: true, autosize: true
+        = f.input :perex, character_counter: true,
+                          autosize: true,
+                          atom_setting: :perex
+
         = f.input :locale, collection: Dummy::Blog.available_locales,
                            include_blank: false,
                            atom_setting: :locale
 
-        = react_ordered_multiselect(f, :topics)
+        = react_ordered_multiselect(f, :topics, atom_setting: :topics)
 
         = f.input :meta_title
         = f.input :meta_description

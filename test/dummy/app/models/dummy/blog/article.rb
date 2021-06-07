@@ -67,15 +67,20 @@ class Dummy::Blog::Article < ApplicationRecord
     published_at || created_at
   end
 
-  def to_ui_article_card_model
+  def to_ui_article_meta
     {
+      tag_records: published_topics,
+      published_at: published_at_with_fallback,
+    }
+  end
+
+  def to_ui_article_card_model
+    to_ui_article_meta.merge(
       cover_placement: cover_placement,
       title: title,
       url_for_args: self,
       content: ActionController::Base.helpers.content_tag(:p, perex),
-      tag_records: published_topics,
-      published_at: published_at_with_fallback,
-    }
+    )
   end
 
   def self.pregenerated_thumbnails
@@ -95,6 +100,51 @@ class Dummy::Blog::Article < ApplicationRecord
     h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
 
     h
+  end
+
+  def self.atom_settings_from_params(params)
+    settings = {}
+
+    if params[:title].present?
+      params[:title].each do |locale, title|
+        settings[locale] ||= []
+
+        begin
+          safe_published_at = Date.parse(params[:published_at][locale])
+        rescue StandardError
+          safe_published_at = nil
+        end
+
+        if params[:topics][locale].present?
+          topics = Dummy::Blog::Topic.where(id: params[:topics][locale]).to_a
+
+          # reorder
+          tag_records = params[:topics][locale].map do |id|
+            topics.find { |topic| topic.id == id }
+          end.compact
+        else
+          tag_records = []
+        end
+
+        hash = {
+          title: title,
+          perex: params[:perex][locale],
+          cover_placement: Folio::FilePlacement::Cover.new(params[:cover_placement][locale].permit(:file_id, :alt)),
+          to_ui_article_meta: {
+            tag_records: tag_records,
+            published_at: safe_published_at,
+          }
+        }
+
+        settings[locale] << {
+          cell_name: "dummy/blog/articles/show_header",
+          model: OpenStruct.new(hash),
+          key: :title,
+        }
+      end
+    end
+
+    settings
   end
 
   private

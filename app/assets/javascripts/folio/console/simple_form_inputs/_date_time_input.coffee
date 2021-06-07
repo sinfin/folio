@@ -22,6 +22,11 @@ DATE_CONFIG = $.extend {}, CONFIG, format: 'DD. MM. YYYY'
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 
 makeDpChange = (config) -> (e) ->
+  $(e.target)
+    .trigger('folioCustomChange')
+    .closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')
+    .trigger('change')
+
   if e.date
     @dataset.date = moment(e.date).format()
   else

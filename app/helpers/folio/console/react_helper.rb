@@ -208,6 +208,7 @@ module Folio::Console::ReactHelper
           "data-items" => items.to_json,
           "data-url" => url,
           "data-sortable" => sortable ? "1" : "0",
+          "data-atom-setting" => atom_setting,
         )
       )
     end

@@ -17,6 +17,7 @@ export default function settingsToHash () {
 
       if (key) {
         let val
+
         if ($setting.hasClass('selectized')) {
           val = $setting[0].selectize.getValue()
         } else if ($setting.hasClass('folio-console-react-picker')) {
@@ -27,6 +28,13 @@ export default function settingsToHash () {
             if (val.length === 0) val = null
           } else if ($setting.find('.f-c-file-placement-list__empty').length) {
             val = null
+          } else if ($setting.find('.f-c-js-atoms-placement-setting__value').length) {
+            const raw = $setting.find('.f-c-js-atoms-placement-setting__value').attr('data-atom-setting-value')
+            try {
+              val = JSON.parse(raw)
+            } catch {
+              val = null
+            }
           } else {
             hash.loading = true
             return

@@ -1,1 +1,5 @@
-== cell('dummy/blog/articles/show', @article)
+== cell('folio/publishable_hint', @article)
+
+== cell('dummy/blog/articles/show_header', @article)
+
+= render_atoms_in_molecules(@article.atoms_in_molecules)

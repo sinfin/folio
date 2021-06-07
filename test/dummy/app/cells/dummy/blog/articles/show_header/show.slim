@@ -1,0 +1,19 @@
+header.d-blog-articles-show-header
+  .container-fluid
+    .d-blog-articles-show-header__inner.mt-g.mb-a
+      - if model.cover_placement.present?
+        = image(model.cover_placement,
+                THUMB_SIZE,
+                class: 'd-blog-articles-show-header__cover',
+                lightbox: true)
+
+      .d-blog-articles-show-header__content
+        .d-blog-articles-show-header__top.pb-3
+          h1.d-blog-articles-show-header__title
+            == cstypo model.title
+
+          == cell('dummy/ui/article_meta', model.to_ui_article_meta)
+
+        - if model.perex.present?
+          .d-blog-articles-show-header__bottom
+            p.lead == cstypo model.perex
