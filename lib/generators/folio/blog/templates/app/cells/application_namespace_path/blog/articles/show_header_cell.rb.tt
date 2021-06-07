@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Blog::Articles::ShowHeaderCell < ApplicationCell
+  THUMB_SIZE = <%= application_namespace %>::Ui::ArticleCardCell::THUMB_SIZE
+end
