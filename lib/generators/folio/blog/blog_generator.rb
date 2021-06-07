@@ -73,10 +73,12 @@ class Folio::BlogGenerator < Rails::Generators::Base
       factory :application_namespace_path_blog_article, class: "application_namespace::Blog::Article" do
         sequence(:title) { |i| "Article title #{i + 1}" }
         perex { "perex" }
+        published { true }
       end
 
       factory :application_namespace_path_blog_topic, class: "application_namespace::Blog::Topic" do
         sequence(:title) { |i| "Topic title #{i + 1}" }
+        published { true }
       end
 
     RUBY
