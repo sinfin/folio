@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+module <%= application_namespace %>::Blog
+  def self.table_name_prefix
+    "<%= application_namespace_path %>_blog_"
+  end
+
+  def self.available_locales
+    I18n.available_locales.map(&:to_s)
+  end
+end
