@@ -245,6 +245,8 @@ en:
           version: 'Version:'
           restore: Restore this version
           show_current: Show current version
+        sidebar:
+          homepage: Homepage
       private_attachments:
         single_dropzone:
           download: Download

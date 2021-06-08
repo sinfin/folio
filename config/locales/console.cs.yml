@@ -250,6 +250,8 @@ cs:
           version: 'Verze:'
           restore: Obnovit tuto verzi
           show_current: Zobrazit současnou verzi
+        sidebar:
+          homepage: Úvodní stránka
       private_attachments:
         single_dropzone:
           download: Stáhnout

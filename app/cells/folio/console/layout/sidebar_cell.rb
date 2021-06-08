@@ -12,12 +12,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                            .folio_console_sidebar_link_class_names
     else
       class_names = prepended_link_class_names +
-                    [%w[
-                      Folio::Page
-                      Folio::Menu
-                      Folio::Image
-                      Folio::Document
-                      Folio::ContentTemplate
+                    [[
+                      "Folio::Page",
+                      :homepage,
+                      "Folio::Menu",
+                      "Folio::Image",
+                      "Folio::Document",
+                      "Folio::ContentTemplate",
                     ]] +
                     runner_up_link_class_names +
                     folio_link_class_names +
@@ -33,7 +34,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     else
       return if skip_link_class_names.include?(class_name)
 
-      if class_name.is_a?(Hash) &&
+      if class_name == :homepage
+        if homepage_instance
+          path = controller.url_for([:edit, :console, homepage_instance])
+          link(t(".homepage"), path)
+        end
+      elsif class_name.is_a?(Hash) &&
          (class_name[:klass] || class_name[:label]) &&
          class_name[:path]
 
@@ -89,6 +95,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         request.path.start_with?(start) || request.url.start_with?(start)
       else
         request.path == p || request.url == p
+      end
+    end
+
+    if active && path == url_for([:console, Folio::Page]) && homepage_instance
+      url = url_for([:edit, :console, homepage_instance])
+      if (request.path == url) || (request.url == url)
+        active = false
       end
     end
 
@@ -149,5 +162,9 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
 
     label
+  end
+
+  def homepage_instance
+    @homepage_instance ||= "#{::Rails.application.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false)
   end
 end
