@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-blog-articles-featured.<%= classname_prefix %>-atom-margin
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-blog-articles-featured
   - if model.title.present?
     .container-fluid
       h2 = cstypo model.title

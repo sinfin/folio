@@ -1,0 +1,4 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Molecule::Blog::Articles::Card::MediumCell < ApplicationCell
+end

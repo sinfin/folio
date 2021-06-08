@@ -155,6 +155,7 @@ en:
 
   attributes:
     aasm_state: State
+    article: Article
     button_label: Button label
     content: Content
     count: Count

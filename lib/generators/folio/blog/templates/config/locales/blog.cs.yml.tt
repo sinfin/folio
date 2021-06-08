@@ -18,6 +18,9 @@ cs:
         other: Témat
 
       <%= application_namespace_path %>/atom/blog/articles/featured: Blog - zvýrazněné články
+      <%= application_namespace_path %>/atom/blog/articles/card/large: Článek (karta velká)
+      <%= application_namespace_path %>/atom/blog/articles/card/medium: Článek (karta střední)
+      <%= application_namespace_path %>/atom/blog/articles/card/small: Článek (karta malá)
 
     errors:
       models:

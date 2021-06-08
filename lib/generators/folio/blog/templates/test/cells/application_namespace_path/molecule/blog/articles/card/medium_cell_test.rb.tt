@@ -1,0 +1,16 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Molecule::Blog::Articles::Card::MediumCellTest < Cell::TestCase
+  test "show" do
+    article = create(:<%= application_namespace_path %>_blog_article)
+
+    atoms = Array.new(2) do
+      create_atom(<%= application_namespace %>::Atom::Blog::Articles::Card::Large, article: article)
+    end
+
+    html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)
+    assert_equal 2, html.find_all(".<%= classname_prefix %>-ui-article-card").size
+  end
+end

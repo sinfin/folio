@@ -18,6 +18,9 @@ cs:
         other: Témat
 
       dummy/atom/blog/articles/featured: Blog - zvýrazněné články
+      dummy/atom/blog/articles/card/large: Článek (karta velká)
+      dummy/atom/blog/articles/card/medium: Článek (karta střední)
+      dummy/atom/blog/articles/card/small: Článek (karta malá)
 
     errors:
       models:

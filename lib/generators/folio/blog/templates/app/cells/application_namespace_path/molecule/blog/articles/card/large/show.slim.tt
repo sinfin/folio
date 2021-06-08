@@ -1,0 +1,5 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-blog-articles-card-large
+  - if model.present?
+    == cell('<%= application_namespace_path %>/ui/article_card_list',
+            model.map(&:article),
+            large: true)

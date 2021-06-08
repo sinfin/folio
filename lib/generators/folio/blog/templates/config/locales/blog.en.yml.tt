@@ -16,6 +16,9 @@ en:
         other: Topics
 
       <%= application_namespace_path %>/atom/blog/articles/featured: Blog - featured articles
+      <%= application_namespace_path %>/atom/blog/articles/card/large: Blog - article (large)
+      <%= application_namespace_path %>/atom/blog/articles/card/medium: Blog - article (medium)
+      <%= application_namespace_path %>/atom/blog/articles/card/small: Blog - article (small)
 
     errors:
       models:

@@ -16,6 +16,9 @@ en:
         other: Topics
 
       dummy/atom/blog/articles/featured: Blog - featured articles
+      dummy/atom/blog/articles/card/large: Blog - article (large)
+      dummy/atom/blog/articles/card/medium: Blog - article (medium)
+      dummy/atom/blog/articles/card/small: Blog - article (small)
 
     errors:
       models:
