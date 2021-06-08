@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::Blog::Articles::FeaturedCellTest < Cell::TestCase
+  test "show" do
+    atom = create_atom(<%= application_namespace %>::Atom::Blog::Articles::Featured)
+    html = cell(atom.class.cell_name, atom).(:show)
+    assert html
+
+    create(:<%= application_namespace_path %>_blog_article, featured: true)
+    html = cell(atom.class.cell_name, atom).(:show)
+    assert html
+  end
+end

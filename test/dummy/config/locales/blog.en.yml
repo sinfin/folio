@@ -14,6 +14,9 @@ en:
       dummy/blog/topic:
         one: Topic
         other: Topics
+
+      dummy/atom/blog/articles/featured: Blog - featured articles
+
     errors:
       models:
         dummy/blog/article:

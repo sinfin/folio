@@ -14,6 +14,9 @@ en:
       <%= application_namespace_path %>/blog/topic:
         one: Topic
         other: Topics
+
+      <%= application_namespace_path %>/atom/blog/articles/featured: Blog - featured articles
+
     errors:
       models:
         <%= application_namespace_path %>/blog/article:

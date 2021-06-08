@@ -1,0 +1,12 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-blog-articles-featured.<%= classname_prefix %>-atom-margin
+  - if model.title.present?
+    .container-fluid
+      h2 = cstypo model.title
+
+  == cell('<%= application_namespace_path %>/ui/article_card_list', articles)
+
+  - if model.button_label.present?
+    .container-fluid
+      a.btn.btn-primary.btn-lg href=url_for(klass)
+        = model.button_label
+        = icon(:arrow_forward, class: 'ml-3')

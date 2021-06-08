@@ -155,6 +155,7 @@ en:
 
   attributes:
     aasm_state: State
+    button_label: Button label
     content: Content
     count: Count
     cover_placement: Image

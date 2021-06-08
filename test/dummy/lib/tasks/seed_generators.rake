@@ -86,14 +86,17 @@ class Dummy::SeedGenerator
 
   def blog
     Dir[Rails.root.join("app/cells/**/dummy/blog/**/*.*"),
+        Rails.root.join("app/cells/**/dummy/*/blog/**/*.*"),
         Rails.root.join("app/controllers/**/dummy/blog/**/*.rb"),
         Rails.root.join("app/models/dummy/blog/**/*.rb"),
+        Rails.root.join("app/models/dummy/atom/blog/**/*.rb"),
         Rails.root.join("app/models/dummy/blog.rb"),
         Rails.root.join("app/views/dummy/blog/**/*.slim"),
         Rails.root.join("app/views/folio/console/dummy/blog/**/*.slim"),
         Rails.root.join("config/locales/blog.*.yml"),
         Rails.root.join("db/migrate/*_create_blog.rb"),
-        Rails.root.join("test/**/dummy/blog/**/*.rb"),].each do |path|
+        Rails.root.join("test/**/dummy/blog/**/*.rb"),
+        Rails.root.join("test/**/dummy/*/blog/**/*.rb")].each do |path|
       target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
       copy_file(path, @templates_path.join(target_path))
     end
@@ -144,6 +147,7 @@ class Dummy::SeedGenerator
          .gsub("dAtom", "<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
+         .gsub("dummy/atom/blog", "<%= application_namespace_path %>/atom/blog")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
          .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")
          .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
@@ -185,6 +189,7 @@ namespace :dummy do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates"))
 
       Dir[Rails.root.join("app/models/dummy/atom/**/*.rb")].each do |atom_path|
+        next if atom_path.include?('/blog/')
         gen.from_atom_path(atom_path)
       end
     end

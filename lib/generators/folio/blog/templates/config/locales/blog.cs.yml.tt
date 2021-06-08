@@ -16,6 +16,9 @@ cs:
         one: Téma
         few: Témata
         other: Témat
+
+      <%= application_namespace_path %>/atom/blog/articles/featured: Blog - zvýrazněné články
+
     errors:
       models:
         <%= application_namespace_path %>/blog/article:

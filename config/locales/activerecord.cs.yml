@@ -225,6 +225,7 @@ cs:
 
   attributes:
     aasm_state: Stav
+    button_label: Text tlačítka
     content: Obsah
     count: Počet
     cover: Obrázek

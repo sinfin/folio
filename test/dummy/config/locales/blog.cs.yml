@@ -16,6 +16,9 @@ cs:
         one: Téma
         few: Témata
         other: Témat
+
+      dummy/atom/blog/articles/featured: Blog - zvýrazněné články
+
     errors:
       models:
         dummy/blog/article:
