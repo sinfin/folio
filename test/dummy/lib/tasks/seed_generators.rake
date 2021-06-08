@@ -190,7 +190,7 @@ namespace :dummy do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates"))
 
       Dir[Rails.root.join("app/models/dummy/atom/**/*.rb")].each do |atom_path|
-        next if atom_path.include?('/blog/')
+        next if atom_path.include?("/blog/")
         gen.from_atom_path(atom_path)
       end
     end
