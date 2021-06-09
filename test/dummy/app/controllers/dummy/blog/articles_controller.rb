@@ -11,10 +11,6 @@ class Dummy::Blog::ArticlesController < ApplicationController
                      .includes(:published_topics,
                                cover_placement: :file)
 
-    if params[:q].present?
-      articles = articles.by_query(params[:q])
-    end
-
     @pagy, @articles = pagy(articles, items: 10)
 
     @topics = Dummy::Blog::Topic.published
