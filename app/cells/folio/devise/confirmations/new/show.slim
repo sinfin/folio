@@ -1,0 +1,9 @@
+.f-devise-confirmations-new
+  h2 = t(".header")
+
+  = form do |f|
+    = f.full_error :confirmation_token
+
+    = email_input(f)
+
+    = f.button :submit, t(".submit_button")

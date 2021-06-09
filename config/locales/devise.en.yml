@@ -54,6 +54,11 @@ en:
           new_password_confirmation: New password (confirmation)
           pending_reconfirmation: We're waiting for you to confirm the change to %{email}
 
+      confirmations:
+        new:
+          header: Resend confirmation instructions
+          submit_button: Resend confirmation instructions
+
       omniauth:
         providers:
           facebook: Facebook

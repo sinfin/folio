@@ -64,6 +64,11 @@ cs:
           new_password_confirmation: Nové heslo (kontrola)
           pending_reconfirmation: Čekáme na potvrzení změny na %{email}
 
+      confirmations:
+        new:
+          header: Znovu odeslat instrukce k potvrzení
+          submit_button: Odeslat
+
       omniauth:
         providers:
           facebook: Facebook
