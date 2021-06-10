@@ -56,7 +56,8 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
                           first_name: first_name,
                           last_name: last_name,
                           authentications: [self],
-                          email: email)
+                          email: email,
+                          confirmed_at: Rails.application.config.folio_users_confirmable ? Time.zone.now : nil)
     end
   end
 
