@@ -4,6 +4,8 @@ require "test_helper"
 
 class Folio::Omniauth::AuthenticationTest < ActiveSupport::TestCase
   test "find_or_create_user new" do
+    create(:folio_site)
+
     assert_equal(0, Folio::User.count)
     auth = create_omniauth_authentication("foo@foo.foo", "foo")
     assert_equal(0, Folio::User.count)

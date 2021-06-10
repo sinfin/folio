@@ -54,7 +54,12 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
       }
     }
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
-    assert_equal("new@email.email", @user.reload.email)
+
+    if Rails.application.config.folio_users_confirmable
+      assert_equal("new@email.email", @user.reload.unconfirmed_email)
+    else
+      assert_equal("new@email.email", @user.reload.email)
+    end
   end
 
   test "destroy" do
