@@ -25,8 +25,13 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
 
   test "create" do
     post main_app.user_registration_path, params: { user: @params.merge(email: "other@email.email") }
-    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_up_path)
     assert Folio::User.exists?(email: "other@email.email")
+
+    if Rails.application.config.folio_users_confirmable
+      assert_redirected_to root_path
+    else
+      assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_up_path)
+    end
   end
 
   test "create_invalid" do
