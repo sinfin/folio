@@ -54,6 +54,13 @@ $(document)
           window.location.reload()
 
       error: (jxHr) ->
-        $form
-          .closest('.f-devise-sessions-new, .f-devise-registrations-new')
-          .replaceWith(jxHr.responseJSON.data)
+        json = jxHr.responseJSON
+
+        if json
+          if json.error
+            alert(json.error)
+            $form.removeClass('f-devise-modal__form--loading')
+          else if json.data
+            $form
+              .closest('.f-devise-sessions-new, .f-devise-registrations-new')
+              .replaceWith(jxHr.responseJSON.data)

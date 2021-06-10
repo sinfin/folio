@@ -25,3 +25,6 @@ html[
 
     == cell('folio/sensitive_content_modal')
     == cell('folio/photoswipe')
+
+    - if Rails.application.config.folio_users
+      == cell('folio/devise/modal')

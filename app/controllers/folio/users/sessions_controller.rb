@@ -45,7 +45,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
       format.html { super }
 
       format.json do
-        self.resource = warden.authenticate(auth_options)
+        warden_exception_or_user = catch :warden do
+          self.resource = warden.authenticate(auth_options)
+        end
 
         if resource
           sign_in(resource_name, resource)
@@ -53,7 +55,11 @@ class Folio::Users::SessionsController < Devise::SessionsController
           set_flash_message!(:notice, :signed_in)
           render json: {}, status: 200
         else
-          message = I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
+          if warden_exception_or_user.is_a?(Hash)
+            message = I18n.t("devise.failure.#{warden_exception_or_user[:message]}", default: I18n.t("devise.failure.unconfirmed"))
+          else
+            message = I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
+          end
 
           errors = [{ status: 401, title: "Unauthorized", detail: message }]
           cell_flash = ActionDispatch::Flash::FlashHash.new
