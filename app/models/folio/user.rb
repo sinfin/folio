@@ -28,7 +28,7 @@ class Folio::User < Folio::ApplicationRecord
   devise(*selected_device_modules, devise_options)
 
   pg_search_scope :by_query,
-                  against: [:email],
+                  against: [:email, :last_name, :first_name, :nickname],
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }

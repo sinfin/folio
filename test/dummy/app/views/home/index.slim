@@ -11,7 +11,8 @@
             = s.email
             = s.attribute(:nickname)
             = s.attribute(:authentications)
-              == cell('folio/devise/omniauth/authentications/list', current_user)
+              == cell('folio/devise/omniauth/authentications/list',
+                      current_user)
 
           .mt-4.row
             .col-auto
