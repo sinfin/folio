@@ -108,7 +108,8 @@ class Folio::Page < Folio::ApplicationRecord
                   rescue ActiveRecord::NoDatabaseError
                     [:title]
                   end,
-                  ignoring: :accents
+                  ignoring: :accents,
+                  additional_attributes: -> (page) { { searchable_type: "Folio::Page" } }
 
   pg_search_scope :by_query,
                   against: begin
