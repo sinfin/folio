@@ -36,7 +36,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, &block)
     content = nil
 
     full_class_name = cell_class_name(name,
@@ -57,6 +57,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         content = block.call(self.record)
       else
         content = value || record.send(name)
+      end
+
+      if sanitize
+        content = sanitize_string(content)
       end
 
       value_div = content_tag(:div, content, class: "f-c-catalogue__cell-value")
@@ -97,12 +101,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(:type) { record.class.model_name.human }
   end
 
-  def edit_link(attr = nil, &block)
-    resource_link([:edit, :console, record], attr, &block)
+  def edit_link(attr = nil, sanitize: false, &block)
+    resource_link([:edit, :console, record], attr, sanitize: sanitize, &block)
   end
 
-  def show_link(attr = nil, &block)
-    resource_link([:console, record], attr, &block)
+  def show_link(attr = nil, sanitize: false, &block)
+    resource_link([:console, record], attr, sanitize: sanitize, &block)
   end
 
   def date(attr = nil, small: false)
@@ -148,9 +152,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(:user, record.try(:audit).try(:user).try(:full_name))
   end
 
-  def email(attr = :email)
+  def email(attr = :email, sanitize: false)
     attribute(attr, spacey: true) do
       e = record.public_send(attr)
+
+      if sanitize
+        e = sanitize_string(e)
+      end
+
       icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
       "#{e} #{icon}"
     end
@@ -203,7 +212,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   private
-    def resource_link(url_for_args, attr = nill)
+    def resource_link(url_for_args, attr = nil, sanitize: false)
       attribute(attr, spacey: true) do
         if block_given?
           content = yield(record)
@@ -211,6 +220,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
           content = record.class.model_name.human
         else
           content = record.public_send(attr)
+        end
+
+        if sanitize
+          content = sanitize_string(content)
         end
 
         url = controller.url_for(url_for_args)
@@ -360,5 +373,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       html
+    end
+
+    def sanitize_string(str)
+      if str.present? && str.is_a?(String)
+        ActionController::Base.helpers.sanitize(str, tags: [], attributes: [])
+      else
+        str
+      end
     end
 end

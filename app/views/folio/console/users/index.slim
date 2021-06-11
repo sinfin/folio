@@ -4,8 +4,8 @@
 
 = catalogue(@users)
   ruby:
-    show_link(:to_label)
-    email
+    show_link(:to_label, sanitize: true)
+    email(sanitize: true)
     date(:last_sign_in_at, small: true)
     attribute(:sign_in_count)
 

@@ -1,9 +1,9 @@
 .f-c-leads-catalogue
   = catalogue(model)
     ruby:
-      show_link(:name)
+      show_link(:name, sanitize: true)
 
-      email
+      email(sanitize: true)
 
       date(:created_at)
 

@@ -2,6 +2,6 @@
 
 = catalogue(@newsletter_subscriptions)
   ruby:
-    email(:email)
+    email(:email, sanitize: true)
     attribute(:created_at)
     actions :destroy
