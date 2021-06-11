@@ -11,10 +11,10 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   validates :type,
             presence: true
 
-  after_save :extract_placement_title_and_type
-  after_touch :extract_placement_title_and_type
-  after_create :update_file_file_placements_size
-  after_destroy :update_file_file_placements_size
+  after_save :run_after_save_job!
+  after_touch :run_after_save_job!
+  after_create :run_file_after_save_job!
+  after_destroy :run_file_after_save_job!
 
   def to_label
     title.presence || file.try(:file_name) || "error: empty file"
@@ -41,33 +41,13 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
     folio_file_placement("Folio::Document", name)
   end
 
-  private
-    def extract_placement_title_and_type
-      if placement.present?
-        if placement.class < Folio::Atom::Base
-          source = placement.placement
-        else
-          source = placement
-        end
+  def run_after_save_job!
+    Folio::FilePlacements::AfterSaveJob.perform_later(self)
+  end
 
-        I18n.with_locale(Rails.application.config.folio_console_locale) do
-          title = source.try(:to_label) ||
-                  source.try(:title) ||
-                  source.try(:name)
-
-          pl_title = [source.class.model_name.human, title].join(" - ")
-
-          if title.present?
-            update_columns(placement_title: pl_title,
-                           placement_title_type: source.class.to_s)
-          end
-        end
-      end
-    end
-
-    def update_file_file_placements_size
-      file.try(:update_file_placements_size!)
-    end
+  def run_file_after_save_job!
+    file.run_after_save_job! if file
+  end
 end
 
 # == Schema Information

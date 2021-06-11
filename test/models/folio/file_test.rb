@@ -3,34 +3,43 @@
 require "test_helper"
 
 class Folio::FileTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   class CoverAtom < Folio::Atom::Base
     ATTACHMENTS = %i[cover]
   end
 
-  test "touches placements and their models" do
+  test "touches placement placements" do
     page = create(:folio_page)
     updated_at = page.updated_at
 
-    image = create(:folio_image)
-    page.images << image
-    assert page.reload.updated_at > updated_at
+    perform_enqueued_jobs do
+      image = create(:folio_image)
+      page.images << image
 
-    updated_at = page.updated_at
-    assert image.reload.update!(tag_list: "foo")
-    assert page.reload.updated_at > updated_at
+      assert page.reload.updated_at > updated_at
+
+      updated_at = page.updated_at
+
+      assert image.reload.update!(tag_list: "foo")
+
+      assert page.reload.updated_at > updated_at
+    end
   end
 
   test "touches page through atoms" do
-    page = create(:folio_page)
-    image = create(:folio_image)
-    atom = create_atom(CoverAtom, placement: page, cover: image)
+    perform_enqueued_jobs do
+      page = create(:folio_page)
+      image = create(:folio_image)
+      atom = create_atom(CoverAtom, placement: page, cover: image)
 
-    atom_updated_at = atom.reload.updated_at
-    page_updated_at = page.reload.updated_at
+      atom_updated_at = atom.reload.updated_at
+      page_updated_at = page.reload.updated_at
 
-    assert image.reload.update!(tag_list: "foo")
-    assert atom.reload.updated_at > atom_updated_at
-    assert page.reload.updated_at > page_updated_at
+      assert image.reload.update!(tag_list: "foo")
+      assert atom.reload.updated_at > atom_updated_at
+      assert page.reload.updated_at > page_updated_at
+    end
   end
 
   test "cannot be destroyed when used" do

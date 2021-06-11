@@ -13,7 +13,7 @@ module Folio::HasAttachments
              class_name: "Folio::File",
              through: :file_placements
 
-    after_save :touch_placements
+    after_save :run_file_placements_after_save!
 
     has_many_placements(:images,
                         placements_key: :image_placements,
@@ -70,11 +70,7 @@ module Folio::HasAttachments
   end
 
   private
-    def touch_placements
-      # this might touch some other placement types as well
-      # but it does not matter as touching is safe
-      # compared to handling STI and base classes
-      Folio::FilePlacement::Base.where(placement_id: id)
-                                .find_each(&:touch)
+    def run_file_placements_after_save!
+      file_placements.find_each(&:run_after_save_job!)
     end
 end

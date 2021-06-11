@@ -70,7 +70,7 @@ class Folio::File < Folio::ApplicationRecord
   before_save :set_mime_type
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
-  after_save :touch_placements
+  after_save :run_after_save_job!
 
   def title
     file_name
@@ -112,11 +112,11 @@ class Folio::File < Folio::ApplicationRecord
                .gsub("_", "{u}")
   end
 
-  private
-    def touch_placements
-      file_placements.each(&:touch)
-    end
+  def run_after_save_job!
+    Folio::Files::AfterSaveJob.perform_later(self)
+  end
 
+  private
     def set_mime_type
       return unless will_save_change_to_file_uid?
       return unless file.present?

@@ -41,14 +41,5 @@ namespace :folio do
       Folio::FilePlacement::Document.where(id: ids)
                                     .update_all(type: "Folio::FilePlacement::SingleDocument")
     end
-
-    task reset_file_file_placements_size: :environment do |t|
-      Rails.logger.silence do
-        Folio::File.where(file_placements_size: nil).find_each do |file|
-          file.update_file_placements_size!
-          print(".")
-        end
-      end
-    end
   end
 end
