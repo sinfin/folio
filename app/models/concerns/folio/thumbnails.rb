@@ -172,6 +172,6 @@ module Folio::Thumbnails
       return if additional_data?
       return if svg?
 
-      Folio::SetFileAdditionalDataJob.perform_later(self)
+      Folio::Files::SetAdditionalDataJob.perform_later(self)
     end
 end

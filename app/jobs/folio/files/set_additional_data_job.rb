@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::SetFileAdditionalDataJob < Folio::ApplicationJob
+class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
   queue_as :slow
 
   def perform(file)
