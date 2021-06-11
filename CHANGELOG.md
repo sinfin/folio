@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-06-11
+### Added
+- added Folio::HasSanitizedFields concern
+
 ## 2021-06-02
 ### Added
 - added header message to Site

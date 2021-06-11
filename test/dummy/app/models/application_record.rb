@@ -2,6 +2,7 @@
 
 class ApplicationRecord < ActiveRecord::Base
   include Folio::Filterable
+  include Folio::HasSanitizedFields
   include Folio::NillifyBlanks
   include Folio::ToLabel
 

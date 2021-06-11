@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::NewsletterSubscription < Folio::ApplicationRecord
+  has_sanitized_fields :email
+
   belongs_to :subscribable, polymorphic: true,
                             optional: true
 

@@ -4,6 +4,8 @@ class Folio::Lead < Folio::ApplicationRecord
   include AASM
   include PgSearch::Model
 
+  has_sanitized_fields :email, :phone, :note, :name
+
   attr_accessor :verified_captcha
 
   # Validations

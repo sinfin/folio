@@ -5,6 +5,19 @@ class Folio::Address::Base < Folio::ApplicationRecord
 
   self.table_name = "folio_addresses"
 
+  has_sanitized_fields :name,
+                       :company_name,
+                       :address_line_1,
+                       :address_line_2,
+                       :zip,
+                       :city,
+                       :country_code,
+                       :state,
+                       :identification_number,
+                       :vat_identification_number,
+                       :phone,
+                       :email
+
   validates :address_line_1,
             :city,
             :zip,
