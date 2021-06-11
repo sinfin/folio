@@ -28,9 +28,9 @@ module Folio::Thumbnails
 
   # Use w_x_h = 400x250# or similar
   #
-  def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil)
+  def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil, override_test_behaviour: false)
     fail_for_non_images
-    return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test?
+    return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test? && !override_test_behaviour
 
     if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
       OpenStruct.new(thumbnail_sizes[w_x_h])
@@ -40,15 +40,35 @@ module Folio::Thumbnails
         width = file_width
         height = file_height
       else
+        width, height = w_x_h.split("x").map(&:to_i)
+
         if immediate || self.class.immediate_thumbnails
           image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force: force, x: x, y: y)
           return OpenStruct.new(image.thumbnail_sizes[w_x_h])
         else
-          Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
-          url = temporary_url(w_x_h)
+          if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
+            return OpenStruct.new(thumbnail_sizes[w_x_h])
+          else
+            url = temporary_url(w_x_h)
+
+            update(thumbnail_sizes: thumbnail_sizes.merge(w_x_h => {
+              uid: nil,
+              signature: nil,
+              x: nil,
+              y: nil,
+              url: url,
+              width: width,
+              height: height,
+              quality: quality,
+              started_generating_at: Time.zone.now,
+              temporary_url: url,
+            }))
+
+            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
+          end
         end
-        width, height = w_x_h.split("x").map(&:to_i)
       end
+
       OpenStruct.new(
         uid: nil,
         signature: nil,
