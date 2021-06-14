@@ -1,6 +1,7 @@
 == email_input(@f, hint: email_hint)
 
-== password_input(@f,
-                  :current_password,
-                  autocomplete: 'current-password',
-                  label: t('.email_confirm_password'))
+- unless @f.object.has_generated_password?
+  == password_input(@f,
+                    :current_password,
+                    autocomplete: 'current-password',
+                    label: t('.email_confirm_password'))

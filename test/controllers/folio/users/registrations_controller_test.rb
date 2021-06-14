@@ -75,8 +75,33 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     assert_select ".f-devise-registrations-edit__form input[name=\"user[first_name]\"]", false
   end
 
-  test "update" do
+  test "update name" do
     sign_in @user
+    patch main_app.user_registration_path, params: {
+      user: {
+        first_name: "New first name",
+      }
+    }
+    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
+    assert_equal "New first name", @user.reload.first_name
+  end
+
+  test "update email" do
+    sign_in @user
+
+    patch main_app.user_registration_path, params: {
+      user: {
+        email: "new@email.email",
+      }
+    }
+    assert_response(:ok)
+
+    if Rails.application.config.folio_users_confirmable
+      assert_not_equal("new@email.email", @user.reload.unconfirmed_email)
+    else
+      assert_not_equal("new@email.email", @user.reload.email)
+    end
+
     patch main_app.user_registration_path, params: {
       user: {
         email: "new@email.email",

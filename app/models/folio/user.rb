@@ -48,6 +48,8 @@ class Folio::User < Folio::ApplicationRecord
 
   after_invitation_accepted :update_newsletter_subscription
 
+  before_update :update_has_generated_password
+
   def full_name
     if first_name.present? || last_name.present?
       "#{first_name} #{last_name}".strip
@@ -115,6 +117,12 @@ class Folio::User < Folio::ApplicationRecord
         "LNAME" => last_name,
       }.compact
     end
+
+    def update_has_generated_password
+      if will_save_change_to_encrypted_password?
+        self.has_generated_password = false
+      end
+    end
 end
 
 # == Schema Information
@@ -154,6 +162,7 @@ end
 #  primary_address_id       :bigint(8)
 #  secondary_address_id     :bigint(8)
 #  subscribed_to_newsletter :boolean          default(FALSE)
+#  has_generated_password   :boolean          default(FALSE)
 #
 # Indexes
 #

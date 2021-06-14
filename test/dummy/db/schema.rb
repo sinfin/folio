@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_000000) do
+ActiveRecord::Schema.define(version: 2021_06_14_070814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -426,6 +426,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_000000) do
     t.bigint "primary_address_id"
     t.bigint "secondary_address_id"
     t.boolean "subscribed_to_newsletter", default: false
+    t.boolean "has_generated_password", default: false
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true

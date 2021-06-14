@@ -89,10 +89,14 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, params)
-    if params[:email].present? || params[:current_password].present?
+    if resource.has_generated_password?
+      # don't require current_password as the omniauth-user did not set one yet
+      resource.update(params)
+    elsif params[:email].present? || params[:current_password].present?
+      # require current_password to update email
       super(resource, params)
     else
-      # don't require current_password
+      # don't require current_password to update name etc.
       resource.update(params)
     end
   end
@@ -107,6 +111,14 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
 
   private
     def sign_up_params
-      params.require(:user).permit(:first_name, :last_name).to_h.merge(super)
+      params.require(:user).permit(*additional_user_params).to_h.merge(super)
+    end
+
+    def account_update_params
+      params.require(:user).permit(*additional_user_params).to_h.merge(super)
+    end
+
+    def additional_user_params
+      %i[first_name last_name nickname]
     end
 end
