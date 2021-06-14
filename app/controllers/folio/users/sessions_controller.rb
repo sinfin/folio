@@ -42,7 +42,21 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
   def create
     respond_to do |format|
-      format.html { super }
+      format.html do
+        warden_exception_or_user = catch :warden do
+          self.resource = warden.authenticate!(auth_options)
+        end
+
+        if resource
+          set_flash_message!(:notice, :signed_in)
+          sign_in(resource_name, resource)
+          yield resource if block_given?
+          respond_with resource, location: after_sign_in_path_for(resource)
+        else
+          message = get_failure_flash_message(warden_exception_or_user)
+          redirect_to main_app.new_user_session_path, flash: { alert: message }
+        end
+      end
 
       format.json do
         warden_exception_or_user = catch :warden do
@@ -55,11 +69,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
           set_flash_message!(:notice, :signed_in)
           render json: {}, status: 200
         else
-          if warden_exception_or_user.is_a?(Hash)
-            message = I18n.t("devise.failure.#{warden_exception_or_user[:message]}", default: I18n.t("devise.failure.unconfirmed"))
-          else
-            message = I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
-          end
+          message = get_failure_flash_message(warden_exception_or_user)
 
           errors = [{ status: 401, title: "Unauthorized", detail: message }]
           cell_flash = ActionDispatch::Flash::FlashHash.new
@@ -83,5 +93,26 @@ class Folio::Users::SessionsController < Devise::SessionsController
     else
       super
     end
+  end
+
+  def get_failure_flash_message(warden_exception_or_user)
+    if warden_exception_or_user.is_a?(Hash)
+      if warden_exception_or_user[:message] == :unconfirmed
+        unconfirmed_flash_message
+      else
+        I18n.t("devise.failure.#{warden_exception_or_user[:message]}", default: unconfirmed_flash_message)
+      end
+    else
+      I18n.t("devise.failure.invalid", authentication_keys: resource_class.authentication_keys.join(", "))
+    end
+  end
+
+  def unconfirmed_flash_message
+    link = ActionController::Base.helpers.link_to(I18n.t("folio.devise.confirmations.new.header"),
+                                                  main_app.new_user_confirmation_path(email: params[:user] && params[:user][:email]))
+
+    msg = I18n.t("devise.failure.unconfirmed")
+
+    "#{msg} #{link}"
   end
 end
