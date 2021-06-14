@@ -3,6 +3,16 @@
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
   include Folio::Users::DeviseControllerBase
 
+  def edit
+    if params[:pw]
+      resource.send_reset_password_instructions
+      redirect_back fallback_location: root_path,
+                    flash: { success: t("folio.devise.registrations.edit.sent_reset_password_instructions") }
+    else
+      super
+    end
+  end
+
   def create
     devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
 
@@ -79,8 +89,12 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def update_resource(resource, params)
-    # don't require current_password
-    resource.update(params)
+    if params[:email].present? || params[:current_password].present?
+      super(resource, params)
+    else
+      # don't require current_password
+      resource.update(params)
+    end
   end
 
   def is_flashing_format?

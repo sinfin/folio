@@ -59,10 +59,11 @@ cs:
         edit:
           update: Uložit
           title: Osobní údaje
-          title_password: Změna hesla
-          new_password: Nové heslo
-          new_password_confirmation: Nové heslo (kontrola)
+          title_email: Změna e-mailu
+          email_confirm_password: Pro změnu e-mailu zadejte vaše heslo
           pending_reconfirmation: Čekáme na potvrzení změny na %{email}
+          sent_reset_password_instructions: Za několik minut obdržíte e-mail s instrukcemi pro nastavení nového hesla.
+          email_blank: Pro přihlášení pomocí hesla je potřeba nejprve vyplnit e-mailovou adresu.
 
       confirmations:
         new:

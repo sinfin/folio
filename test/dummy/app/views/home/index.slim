@@ -17,11 +17,15 @@
           .mt-4.row
             .col-auto
               a.btn.btn-secondary href=edit_user_registration_path
-                ' Edit registration
+                ' Edit name
 
             .col-auto
               a.btn.btn-secondary href=edit_user_registration_path(pw: 1)
                 ' Change password
+
+            .col-auto
+              a.btn.btn-secondary href=edit_user_registration_path(em: 1)
+                ' Change e-mail
 
             .col-auto
               a.btn.btn-danger href=destroy_user_session_path

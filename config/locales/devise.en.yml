@@ -49,10 +49,11 @@ en:
         edit:
           update: Update
           title: Account information
-          title_password: Password update
-          new_password: New password
-          new_password_confirmation: New password (confirmation)
+          title_email: E-mailu update
+          email_confirm_password: Enter your password to update e-mail
           pending_reconfirmation: We're waiting for you to confirm the change to %{email}
+          sent_reset_password_instructions: You'll receive an e-mail with instruction in a moment.
+          email_blank: To sign in via password you have to enter an e-mail address first.
 
       confirmations:
         new:

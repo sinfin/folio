@@ -1,35 +1,16 @@
 .f-devise-registrations-edit
   = form do |f|
-    - if params[:pw].present?
-      = title(t('.title_password'))
+    - if params[:em].present?
+      = title(t('.title_email'))
     - else
       = title
 
     - @f = f
 
-    - if params[:pw].present?
-      .f-devise__row
-        .f-devise__col
-          == password_input(f,
-                            :password,
-                            autocomplete: 'new-password',
-                            label: t('.new_password'))
-
-      .f-devise__row
-        .f-devise__col
-          == password_input(f,
-                            :password_confirmation,
-                            autocomplete: 'new-password',
-                            label: t('.new_password_confirmation'))
-
+    - if params[:em].present?
+      = render(:_email)
     - else
-      = render(:_top)
-
-      .f-devise__row
-        .f-devise__col
-          == email_input(f, hint: email_hint)
-
-      = render(:_bottom)
+      = render(:_regular)
 
     = submit_button(f, t('.update'))
 

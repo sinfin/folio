@@ -3,7 +3,7 @@
 class Folio::Devise::Registrations::EditCell < Folio::Devise::ApplicationCell
   def form(&block)
     opts = {
-      url: controller.registration_path(resource_name, pw: params[:pw]),
+      url: controller.registration_path(resource_name, em: params[:em]),
       as: resource_name,
       html: { class: "f-devise-registrations-edit__form" },
     }

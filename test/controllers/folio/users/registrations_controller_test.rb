@@ -8,9 +8,11 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
   def setup
     create(:folio_site)
 
+    @password = "Complex@Password.123"
+
     @params = {
       email: "email@email.email",
-      password: "Complex@Password.123",
+      password: @password,
       first_name: "Name",
       last_name: "Surname",
     }
@@ -45,10 +47,32 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     assert_response(:ok)
   end
 
-  test "edit" do
+  test "edit name" do
     sign_in @user
     get main_app.edit_user_registration_path
     assert_response(:ok)
+    assert_select ".f-devise-registrations-edit__form input[name=\"user[email]\"]", false
+    assert_select ".f-devise-registrations-edit__form input[name=\"user[first_name]\"]"
+  end
+
+  test "edit password" do
+    sign_in @user
+    assert_nil @user.reset_password_token
+
+    get root_path
+
+    get main_app.edit_user_registration_path(pw: 1)
+    assert_redirected_to(root_path)
+
+    assert_not_nil @user.reload.reset_password_token
+  end
+
+  test "edit email" do
+    sign_in @user
+    get main_app.edit_user_registration_path(em: 1)
+    assert_response(:ok)
+    assert_select ".f-devise-registrations-edit__form input[name=\"user[email]\"]"
+    assert_select ".f-devise-registrations-edit__form input[name=\"user[first_name]\"]", false
   end
 
   test "update" do
@@ -56,6 +80,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     patch main_app.user_registration_path, params: {
       user: {
         email: "new@email.email",
+        current_password: "Complex@Password.123",
       }
     }
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
