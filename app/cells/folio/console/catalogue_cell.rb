@@ -374,12 +374,4 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       html
     end
-
-    def sanitize_string(str)
-      if str.present? && str.is_a?(String)
-        ActionController::Base.helpers.sanitize(str, tags: [], attributes: [])
-      else
-        str
-      end
-    end
 end

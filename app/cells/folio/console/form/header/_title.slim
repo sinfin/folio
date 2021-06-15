@@ -4,4 +4,4 @@ h1.m-0
   - elsif record.new_record?
     = record.class.model_name.human
   - else
-    = record.to_label
+    = sanitize_string(record.to_label)
