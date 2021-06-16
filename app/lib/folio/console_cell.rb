@@ -11,8 +11,8 @@ class Folio::ConsoleCell < Folio::ApplicationCell
   def admin_image(placement, opts = {})
     cell("folio/image",
          placement,
-         opts.merge(size: Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
-                    contain: true))
+         opts.reverse_merge(size: Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
+                            contain: true))
   end
 
   def sanitize_string(str)
