@@ -8,6 +8,8 @@
           = show_for address do |s|
             - klass.show_for_attributes.each do |attr|
               = s.attribute attr
+                - value = s.object.send(attr)
+                = sanitize(value, tags: []) if value.present?
 
         - else
           .text-muted = t('folio.console.blank')
