@@ -5,7 +5,7 @@ module Folio::SetMetaVariables
 
   def set_meta_variables(instance, mappings = {})
     m = {
-      title: :title,
+      title: :to_label,
       image: :cover,
       description: :perex,
       meta_title: :meta_title,

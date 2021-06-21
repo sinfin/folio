@@ -85,13 +85,15 @@ class Dummy::Blog::Article < ApplicationRecord
 
   def self.pregenerated_thumbnails
     h = {
-      "Folio::FilePlacement::Cover" => [],
+      "Folio::FilePlacement::Cover" => [
+        Folio::OG_IMAGE_DIMENSIONS,
+        Folio::CellLightbox::LIGHTBOX_SIZE,
+      ],
     }
 
     [
       Dummy::Blog::Articles::ShowHeaderCell::THUMB_SIZE,
       Dummy::Ui::ArticleCardCell::THUMB_SIZE,
-      Folio::CellLightbox::LIGHTBOX_SIZE,
     ].uniq.each do |size|
       h["Folio::FilePlacement::Cover"] << size
       h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
