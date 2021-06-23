@@ -42,44 +42,30 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
       if /png/.match?(image.try(:mime_type))
         if Rails.application.config.folio_dragonfly_keep_png
-          thumbnail = image.file
-                           .thumb(size, format: :png,
-                                        x: x,
-                                        y: y)
+          thumbnail = image_file(image).thumb(size, format: :png, x: x, y: y)
         else
-          thumbnail = image.file
-                           .add_white_background
-                           .thumb(size, format: :jpg,
-                                        x: x,
-                                        y: y)
-                           .encode("jpg", "-quality #{quality}")
-                           .jpegoptim
+          thumbnail = image_file(image).add_white_background
+                                       .thumb(size, format: :jpg, x: x, y: y)
+                                       .encode("jpg", "-quality #{quality}")
+                                       .jpegoptim
         end
 
         make_webp = true
       elsif image.animated_gif?
-        thumbnail = image.file
-                         .animated_gif_resize(size)
+        thumbnail = image_file(image).animated_gif_resize(size)
       elsif /pdf/.match?(image.try(:mime_type))
         # "frame" option has to be set as string key
         # https://github.com/markevans/dragonfly/issues/483
-        thumbnail = image.file
-                         .add_white_background
-                         .thumb(size, format: :jpg,
-                                      "frame" => 0,
-                                      x: x,
-                                      y: y)
-                         .encode("jpg", "-quality #{quality}")
-                         .jpegoptim
+        thumbnail = image_file(image).add_white_background
+                                     .thumb(size, format: :jpg, "frame" => 0, x: x, y: y)
+                                     .encode("jpg", "-quality #{quality}")
+                                     .jpegoptim
       else
-        thumbnail = image.file
-                         .thumb(size, format: :jpg,
-                                      x: x,
-                                      y: y)
-                         .auto_orient
-                         .encode("jpg", "-quality #{quality}")
-                         .cmyk_to_srgb
-                         .jpegoptim
+        thumbnail = image_file(image).thumb(size, format: :jpg, x: x, y: y)
+                                     .auto_orient
+                                     .encode("jpg", "-quality #{quality}")
+                                     .cmyk_to_srgb
+                                     .jpegoptim
 
         make_webp = true
       end
@@ -110,6 +96,14 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         )
       else
         base
+      end
+    end
+
+    def image_file(image)
+      if Rails.env.development? && ENV["DEV_S3_DRAGONFLY"] && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
+        image.development_safe_file(logger)
+      else
+        image.file
       end
     end
 end

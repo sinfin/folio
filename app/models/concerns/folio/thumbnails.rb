@@ -140,6 +140,62 @@ module Folio::Thumbnails
     end
   end
 
+  def development_safe_file(logger = nil)
+    if persisted? && Rails.env.development? && ENV["DEV_S3_DRAGONFLY"] && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]
+      logger ||= Rails.logger
+      datastore = file.app.datastore
+      content, _meta = datastore.read(file_uid)
+
+      if content.nil?
+        development_safe_file_debug(logger, "Missing S3 file.")
+
+        joiner = ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"].ends_with?("/") ? "" : "/"
+        production_s3_url = "#{ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]}#{joiner}#{file_uid}"
+
+        headers = { "Content-Type" => mime_type }
+        default_meta = {
+          "name" => file_name,
+          "model_class" => self.class.to_s,
+          "model_attachment" => "file",
+        }
+
+        begin
+          development_safe_file_debug(logger, "Trying production S3 file - #{production_s3_url}")
+
+          open(production_s3_url) do |s3_file|
+            datastore.storage.put_object(datastore.bucket_name,
+                                         datastore.send(:full_path, file_uid),
+                                         s3_file,
+                                         datastore.send(:full_storage_headers, headers, default_meta))
+          end
+
+          development_safe_file_debug(logger, "Stored production S3 file - #{production_s3_url} - to development S3 - #{file.remote_url}")
+
+          file
+        rescue StandardError
+          development_safe_file_debug(logger, "Failed to fetch production S3 file. Using placeholder.")
+
+          placeholder_url = "https://via.placeholder.com/1000x750.png?text=Missing+production+image"
+
+          open(placeholder_url) do |s3_file|
+            datastore.storage.put_object(datastore.bucket_name,
+                                         datastore.send(:full_path, file_uid),
+                                         s3_file,
+                                         datastore.send(:full_storage_headers, headers, default_meta))
+          end
+
+          development_safe_file_debug(logger, "Stored placeholder S3 file - #{placeholder_url} - to development S3 - #{file.remote_url}")
+
+          file
+        rescue StandardError
+          fail "Missing file_uid - #{file_uid} - did not find any at production either (#{production_s3_url}), couldn't fetch via placeholder.com."
+        end
+      else
+        file
+      end
+    end
+  end
+
   private
     def reset_thumbnails
       fail_for_non_images
@@ -173,5 +229,11 @@ module Folio::Thumbnails
       return if svg?
 
       Folio::Files::SetAdditionalDataJob.perform_later(self)
+    end
+
+    def development_safe_file_debug(logger, msg)
+      logger.tagged(self.class.to_s, "development_safe_file", self.id) do
+        logger.info(msg)
+      end
     end
 end
