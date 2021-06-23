@@ -51,18 +51,24 @@ module Folio::Thumbnails
           else
             url = temporary_url(w_x_h)
 
-            update(thumbnail_sizes: thumbnail_sizes.merge(w_x_h => {
-              uid: nil,
-              signature: nil,
-              x: nil,
-              y: nil,
-              url: url,
-              width: width,
-              height: height,
-              quality: quality,
-              started_generating_at: Time.zone.now,
-              temporary_url: url,
-            }))
+            self.reload.with_lock do
+              if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
+                # already added via a parallel process
+              else
+                update(thumbnail_sizes: thumbnail_sizes.merge(w_x_h => {
+                  uid: nil,
+                  signature: nil,
+                  x: nil,
+                  y: nil,
+                  url: url,
+                  width: width,
+                  height: height,
+                  quality: quality,
+                  started_generating_at: Time.zone.now,
+                  temporary_url: url,
+                }))
+              end
+            end
 
             Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
           end
