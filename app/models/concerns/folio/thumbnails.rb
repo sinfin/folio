@@ -51,9 +51,10 @@ module Folio::Thumbnails
           else
             url = temporary_url(w_x_h)
 
-            self.reload.with_lock do
+            response = self.reload.with_lock do
               if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
                 # already added via a parallel process
+                OpenStruct.new(thumbnail_sizes[w_x_h])
               else
                 update(thumbnail_sizes: thumbnail_sizes.merge(w_x_h => {
                   uid: nil,
@@ -64,11 +65,15 @@ module Folio::Thumbnails
                   width: width,
                   height: height,
                   quality: quality,
-                  started_generating_at: Time.zone.now,
+                  started_generating_at: Time.current,
                   temporary_url: url,
                 }))
+
+                nil
               end
             end
+
+            return response if response
 
             Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
           end
