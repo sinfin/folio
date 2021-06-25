@@ -82,7 +82,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    class: "f-c-index-filters__date-range-input",
                    value: controller.params[key],
                    autocomplete: "off",
-                   placeholder: t(".placeholders.#{key}", default: ""),
+                   placeholder: "#{label_for_key(key)}...",
                  },
                  wrapper: false
   end
