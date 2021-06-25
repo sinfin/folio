@@ -6,6 +6,7 @@ default: &default
 development:
   <<: *default
   database: <%= project_name %>_development
+  pool: 50
 
 test:
   <<: *default
