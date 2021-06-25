@@ -88,6 +88,7 @@ module Folio
           "app/controllers/home_controller.rb",
           "app/controllers/pages_controller.rb",
           "app/lib/application_cell.rb",
+          "app/lib/application_namespace_path/current_methods.rb",
           "app/models/application_namespace_path.rb",
           "app/models/application_namespace_path/page/homepage.rb",
           "app/models/application_record.rb",
