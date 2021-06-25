@@ -6,8 +6,14 @@ module <%= application_namespace %>
   end
 
   def self.rails_paths
-    {
-      root_path: I18n.t("homepage"),
-    }
+    h = {}
+
+    %i[
+      root_path
+    ].each do |key|
+      h[key] = I18n.t("<%= application_namespace_path %>.menu.base.#{key}")
+    end
+
+    h
   end
 end

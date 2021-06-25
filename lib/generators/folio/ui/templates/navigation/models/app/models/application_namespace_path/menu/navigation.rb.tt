@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Menu::Navigation < Folio::Menu
+  include <%= application_namespace %>::Menu::Base
+
   def self.max_nesting_depth
     2
   end
