@@ -4,6 +4,6 @@ class <%= application_namespace %>::Ui::HeaderCell < ApplicationCell
   MENU_INPUT_ID = "<%= classname_prefix %>-ui-header__menu-input"
 
   def menu
-    @menu ||= <%= application_namespace %>::Menu::Header.instance(fail_on_missing: false)
+    @menu ||= current_header_menu
   end
 end

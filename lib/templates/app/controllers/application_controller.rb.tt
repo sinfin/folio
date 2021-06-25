@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   include Folio::ApplicationControllerBase
   helper Folio::Engine.helpers
 
+  include <%= application_namespace %>::CurrentMethods
+
   before_action do
     if (params[:rmp] && account_signed_in?) || ENV['FORCE_MINI_PROFILER']
       Rack::MiniProfiler.authorize_request

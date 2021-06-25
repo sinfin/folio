@@ -2,7 +2,7 @@
 
 class Dummy::Ui::FooterCell < ApplicationCell
   def menu
-    @menu ||= Dummy::Menu::Footer.instance(fail_on_missing: false)
+    @menu ||= current_footer_menu
   end
 
   def social_links
