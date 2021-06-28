@@ -105,4 +105,18 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
         "= f.input :#{name}"
       end
     end
+
+    def controller_params_permit
+      rows = ['*(@klass.column_names - ["id"])']
+
+      if has_attachmentable?
+        rows << "*file_placements_strong_params"
+      end
+
+      if has_atoms?
+        rows << "*atoms_strong_params"
+      end
+
+      rows.join(",\n                    ")
+    end
 end
