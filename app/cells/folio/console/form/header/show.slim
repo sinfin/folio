@@ -14,5 +14,9 @@
       .f-c-form-header__right
         = options[:right]
 
+  - if options[:tabs]
+    .mt-3
+      == cell('folio/console/index/tabs', options[:tabs])
+
   - if model.try(:object).try(:errors).present?
     == cell('folio/console/form/errors', model)
