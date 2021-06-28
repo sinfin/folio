@@ -4,7 +4,7 @@ module Folio::HasSecretHash
   extend ActiveSupport::Concern
 
   included do
-    before_create :set_secret_hash
+    before_validation :set_secret_hash
 
     validates :secret_hash,
               presence: true,
@@ -12,6 +12,8 @@ module Folio::HasSecretHash
   end
 
   def set_secret_hash
+    return if secret_hash?
+
     secret_hash = nil
 
     loop do
