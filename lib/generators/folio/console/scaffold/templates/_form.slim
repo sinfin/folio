@@ -9,8 +9,14 @@
       .col-md-auto
         = react_picker(f, :cover_placement)
       .col-md
+        <%- if publishable? -%>
+        == cell('folio/console/publishable_inputs', f)
+        <%- end -%>
         <%= attribute_inputs %>
     <%- else -%>
+    <%- if publishable? -%>
+    == cell('folio/console/publishable_inputs', f)
+    <%- end -%>
     <%= attribute_inputs %>
     <%- end -%>
 

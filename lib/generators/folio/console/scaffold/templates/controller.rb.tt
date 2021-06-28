@@ -19,8 +19,4 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
     def folio_console_collection_includes
       []
     end
-
-    def folio_console_record_includes
-      []
-    end
 end

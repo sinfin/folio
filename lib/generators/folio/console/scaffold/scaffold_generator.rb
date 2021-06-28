@@ -27,6 +27,10 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     attributes_names.include?("position")
   end
 
+  def publishable?
+    publishable_attribute_names.present?
+  end
+
   def has_attachmentable?
     class_name.constantize.method_defined?(:cover_placement)
   end
@@ -80,7 +84,13 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def form_attribute_names
-      attributes_names - ["position"]
+      attributes_names - ["position"] - publishable_attribute_names
+    end
+
+    def publishable_attribute_names
+      @publishable_attribute_names ||= %w[published published_at published_from published_until].select do |att|
+        attributes_names.include?(att)
+      end
     end
 
     def attribute_inputs
