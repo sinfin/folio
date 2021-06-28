@@ -1,4 +1,4 @@
-$(document).on 'click', '.folio-console-nested-model-position-button', ->
+$(document).on 'click', '.f-c-nested-model-controls__position-button', ->
   $button = $(this)
   $this = $button.closest('.nested-fields')
   moveUp = $button.data('direction') is 'up'
@@ -15,12 +15,13 @@ $(document).on 'click', '.folio-console-nested-model-position-button', ->
   else
     $target.after($this)
 
-  $this.parent().find('.folio-console-nested-model-position-input').each (i) ->
-    $(this).val(i + 1)
+  $this.parent().find('.f-c-nested-model-controls__position-input').each (i) ->
+    $(this)
+      .val(i + 1)
+      .trigger('change')
 
-$(document).on 'click', '.folio-console-nested-model-destroy-button', ->
+$(document).on 'click', '.f-c-nested-model-controls__destroy-button', ->
   $button = $(this)
-  unless window.confirm(window.FolioConsole.translations.removePrompt)
-    return $button.blur()
-  $button.siblings('input[type="hidden"]').val(1)
-  $button.closest('.nested-fields').hide(0)
+  return $button.blur() unless window.confirm(window.FolioConsole.translations.removePrompt)
+  $button.closest('.nested-fields').prop('hidden', true)
+  $button.siblings('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')

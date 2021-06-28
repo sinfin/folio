@@ -3,7 +3,7 @@
 class Folio::Console::NestedModelControlsCell < Folio::ConsoleCell
   include Cocoon::ViewHelpers
 
-  class_name "f-c-nested-model-controls-form-group", :vertical, :no_margin
+  class_name "f-c-nested-model-controls", :vertical, :no_margin
 
   def f
     model
@@ -39,7 +39,7 @@ class Folio::Console::NestedModelControlsCell < Folio::ConsoleCell
   end
 
   def destroy_button_class_name
-    class_name = ["btn btn-danger folio-console-nested-model-destroy-button"]
+    class_name = ["btn btn-danger f-c-nested-model-controls__destroy-button"]
     class_name << "fa fa-trash-alt" if options[:vertical]
     class_name
   end

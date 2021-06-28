@@ -7,14 +7,14 @@
     div class=btn_group_class_name
       - %w(up down).each do |direction|
         button.btn.btn-outline-secondary[
-          class="folio-console-nested-model-position-button"
+          class="f-c-nested-model-controls__position-button"
           class="fa fa-arrow-#{direction}"
           data-direction=direction
           type="button"
         ]
 
       = f.hidden_field :position, \
-                       class: 'folio-console-nested-model-position-input'
+                       class: 'f-c-nested-model-controls__position-input'
 
       - if handle_destroy? && options[:vertical]
         = render(:button_destroy)
