@@ -4,4 +4,3 @@ linters:
 
   LineLength:
     exclude:
-      - "app/views/home/ui.slim"
