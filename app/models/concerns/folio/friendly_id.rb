@@ -18,7 +18,7 @@ module Folio::FriendlyId
 
   private
     def slug_candidates
-      title
+      to_label
     end
 
     def strip_and_downcase_slug
