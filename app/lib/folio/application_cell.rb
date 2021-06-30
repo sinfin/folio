@@ -48,7 +48,11 @@ class Folio::ApplicationCell < Cell::ViewModel
     elsif menu_item.eager_load_aware_target.present?
       url_for(menu_item.eager_load_aware_target)
     elsif menu_item.rails_path.present?
-      controller.send(menu_item.rails_path)
+      begin
+        controller.send(menu_item.rails_path)
+      rescue NoMethodError
+        controller.main_app.send(menu_item.rails_path)
+      end
     end
   end
 end
