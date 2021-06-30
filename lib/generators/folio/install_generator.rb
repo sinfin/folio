@@ -30,6 +30,7 @@ module Folio
         gem "rubyzip"
         gem "uglifier", ">= 1.3.0"
         gem "faker", require: false
+        gem "aws-sdk-s3", require: false
 
         gem "sidekiq", "~> 5"
         gem "sidekiq-cron", "1.2.0"
@@ -37,7 +38,7 @@ module Folio
         gem "redis-namespace", "1.8.1"
 
         gem "status-page", "0.1.5"
-        
+
         gem "rack-mini-profiler"
 
         gem_group :test do
