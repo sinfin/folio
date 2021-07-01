@@ -30,6 +30,10 @@ class Folio::UiCell < Folio::ApplicationCell
     %w[primary secondary]
   end
 
+  def typo_paragraphs
+    ["lead", nil, "small"]
+  end
+
   def button_sizes
     [nil, "btn-sm", "btn-lg"]
   end

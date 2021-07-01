@@ -2,7 +2,7 @@
 
 html, body
   line-height: $line-height-base
-  font-family: $font-family-sans-serif
+  font-family: $font-family-base
   -webkit-font-smoothing: antialiased
   font-size: $font-size-base-px
 
