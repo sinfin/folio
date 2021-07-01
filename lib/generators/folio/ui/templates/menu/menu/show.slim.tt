@@ -28,3 +28,33 @@
       ul.<%= classname_prefix %>-ui-menu__children-ul
 
   span.<%= classname_prefix %>-ui-menu__mq.<%= classname_prefix %>-ui-menu__mq--mobile
+
+  / use javascript so that we can cache no matter the URL
+  javascript:
+    function markActiveLink#{model.id} () {
+      var selector = ".<%= classname_prefix %>-ui-menu--#{model.id}"
+      var links = document.querySelectorAll(".<%= classname_prefix %>-ui-menu--#{model.id} .<%= classname_prefix %>-ui-menu__a")
+      var target = null
+
+      for (var i = 0; i < links.length; i++) {
+        var link = links[i]
+
+        if (link.href === window.location.href) {
+          target = link
+          break
+        }
+      }
+
+      if (target) {
+        target.classList.add('<%= classname_prefix %>-ui-menu__a--active')
+
+        if (target.closest) {
+          var ul = target.closest('.<%= classname_prefix %>-ui-menu__children-ul')
+          if (ul && ul.previousElementSibling && ul.previousElementSibling.classList.contains('<%= classname_prefix %>-ui-menu__a')) {
+            ul.previousElementSibling.classList.add('<%= classname_prefix %>-ui-menu__a--active')
+          }
+        }
+      }
+    }
+
+    markActiveLink#{model.id}()

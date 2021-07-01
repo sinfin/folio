@@ -28,3 +28,33 @@
       ul.d-ui-menu__children-ul
 
   span.d-ui-menu__mq.d-ui-menu__mq--mobile
+
+  / use javascript so that we can cache no matter the URL
+  javascript:
+    function markActiveLink#{model.id} () {
+      var selector = ".d-ui-menu--#{model.id}"
+      var links = document.querySelectorAll(".d-ui-menu--#{model.id} .d-ui-menu__a")
+      var target = null
+
+      for (var i = 0; i < links.length; i++) {
+        var link = links[i]
+
+        if (link.href === window.location.href) {
+          target = link
+          break
+        }
+      }
+
+      if (target) {
+        target.classList.add('d-ui-menu__a--active')
+
+        if (target.closest) {
+          var ul = target.closest('.d-ui-menu__children-ul')
+          if (ul && ul.previousElementSibling && ul.previousElementSibling.classList.contains('d-ui-menu__a')) {
+            ul.previousElementSibling.classList.add('d-ui-menu__a--active')
+          }
+        }
+      }
+    }
+
+    markActiveLink#{model.id}()

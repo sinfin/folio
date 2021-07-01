@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::MenuCell < ApplicationCell
-  include Folio::ActiveClass
+  cache :show do
+    model ? [model.id, model.updated_at] : "blank-ui-menu"
+  end
 
   def show
     render if model.present?
@@ -15,26 +17,10 @@ class Dummy::Ui::MenuCell < ApplicationCell
       tag: :span,
     }
 
-    path = menu_url_for(menu_item)
-    paths = path ? [path] : []
-
-    if children.present?
-      children.each do |child, _x|
-        child_path = menu_url_for(child)
-        paths << child_path if child_path
-      end
-    end
-
-    if paths.present?
-      ac = active_class(*paths, start_with: true, base: class_name)
-      tag[:class] = "#{tag[:class]} #{ac}"
-    end
-
     if children.present?
       tag[:class] = "#{tag[:class]} #{class_name}--expandable"
-    elsif path
+    elsif path = menu_url_for(menu_item)
       tag[:tag] = :a
-      tag[:class] = "#{tag[:class]} #{ac}"
       tag[:href] = path
       tag[:target] = menu_item.open_in_new ? "_blank" : nil
     end
