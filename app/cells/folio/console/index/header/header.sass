@@ -28,14 +28,19 @@
     align-items: center
 
     &__h1
-      margin: 0
-      flex: 1 1 auto
+      margin: 0 $grid-gutter-half 0 0
+      flex: 2 1 auto
       min-width: 0
+      width: 50%
+
+    &__btn
+      flex: 0 0 auto
 
     &__form
       flex: 3 1 auto
       min-width: 0
       max-width: 600px
+      width: 50%
 
   +mq-mobile-menu
     &__h1
