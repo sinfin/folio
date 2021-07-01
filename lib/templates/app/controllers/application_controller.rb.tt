@@ -6,9 +6,17 @@ class ApplicationController < ActionController::Base
 
   include <%= application_namespace %>::CurrentMethods
 
-  before_action do
-    if (params[:rmp] && account_signed_in?) || ENV['FORCE_MINI_PROFILER']
-      Rack::MiniProfiler.authorize_request
+  before_action :handle_rmp
+  before_action :add_homepage_breadcrumb
+
+  private
+    def handle_rmp
+      if (params[:rmp] && account_signed_in?) || ENV['FORCE_MINI_PROFILER']
+        Rack::MiniProfiler.authorize_request
+      end
     end
-  end
+
+    def add_homepage_breadcrumb
+      add_breadcrumb_on_rails(t("homepage"), "/")
+    end
 end

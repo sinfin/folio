@@ -1,6 +1,7 @@
 ---
 cs:
   all: Všechny
+  homepage: Úvodní strana
   more: Více
   date:
     formats:

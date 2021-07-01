@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::BreadcrumbsCellTest < Cell::TestCase
+  test "show" do
+    html = cell("<%= application_namespace_path %>/ui/breadcrumbs", nil).(:show)
+    assert_not html.has_css?(".<%= classname_prefix %>-ui-breadcrumbs")
+
+    crumbs = [
+      OpenStruct.new(path: "/foo", name: "foo", options: {}),
+      OpenStruct.new(path: "/bar", name: "bar", options: {}),
+    ]
+    html = cell("<%= application_namespace_path %>/ui/breadcrumbs", crumbs).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-ui-breadcrumbs")
+  end
+end

@@ -1,0 +1,26 @@
+.<%= classname_prefix %>-ui-breadcrumbs
+  margin: $grid-gutter-half 0
+  position: relative
+  z-index: 3
+  flex: 0 0 auto
+
+  &__icon
+    transform: rotate(180deg)
+    margin-top: -1px
+    margin-left: -6px
+
+  &--share &__flex
+    display: flex
+
+  &--share &__link
+    margin-right: $grid-gutter-width
+
+  &__share
+    margin-left: auto
+
+  .<%= classname_prefix %>-ui-share__items
+    padding-left: 0 !important
+    padding-right: 0 !important
+
+  +mq-desktop-menu
+    margin: $grid-gutter-width 0
