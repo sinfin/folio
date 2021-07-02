@@ -58,6 +58,8 @@ $headings-margin-top: $spacer / 2
 $headings-margin-bottom: $spacer
 $headings-font-family: "IBM Plex Sans", $font-family-sans-serif
 
+$paragraph-margin-bottom: $spacer
+
 $link-color: inherit
 $link-decoration: underline
 $link-hover-color: inherit
