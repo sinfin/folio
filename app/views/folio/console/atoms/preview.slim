@@ -1,6 +1,7 @@
-== cell('folio/console/atoms/previews', \
-        @atoms, \
-        default_locale: @default_locale, \
-        settings: @settings, \
-        non_interactive: @non_interactive, \
+== cell('folio/console/atoms/previews',
+        @atoms,
+        default_locale: @default_locale,
+        settings: @settings,
+        settings_param: params[:settings],
+        non_interactive: @non_interactive,
         klass: @klass)

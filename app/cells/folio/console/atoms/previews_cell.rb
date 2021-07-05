@@ -65,7 +65,11 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def atom_cell(atom)
-    opts = (atom.cell_options.presence || {}).merge(console_preview: true)
+    opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
     cell(atom.class.cell_name, atom, opts)
+  end
+
+  def atom_additional_options
+    { console_preview: true, console_preview_settings_param: options[:settings_param] }
   end
 end
