@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Show::HeaderCell < Folio::ConsoleCell
-  class_name "f-c-show-header", :no_border
+  class_name "f-c-show-header", :no_border, :tabs
 
   def edit_url
     options[:edit_url] || url_for([:edit, :console, model])

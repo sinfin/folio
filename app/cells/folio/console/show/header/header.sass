@@ -2,10 +2,13 @@
   margin: 0 0 2 * $spacer
   padding: 0 0 2 * $spacer
   border-bottom: 1px solid $hr-border-color
-  display: flex
-  align-items: center
 
-  &--no-border
+  &__flex
+    display: flex
+    align-items: center
+
+  &--no-border,
+  &--tabs
     border-bottom: 0
     padding-bottom: 0
 
@@ -23,7 +26,8 @@
       flex: 1
 
   +media-breakpoint-down(md)
-    display: block
+    &__flex
+      display: block
 
     &__h1
       flex: 0 0 100%
