@@ -3,6 +3,9 @@
 class Folio::Files::AfterSaveJob < Folio::ApplicationJob
   queue_as :slow
 
+  # Discard if file no longer exists
+  discard_on ActiveJob::DeserializationError
+
   # use SQL commands only!
   # save/update would cause an infinite loop as this is hooked in after_save
   def perform(file)
