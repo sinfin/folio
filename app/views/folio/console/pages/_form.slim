@@ -8,7 +8,7 @@
     == cell('folio/console/publishable_inputs', f)
 
     .d-md-flex
-      = react_picker(f, :cover_placement)
+      = react_picker(f, :cover_placement, atom_setting: :cover_placement)
 
       .ml-md-g
         == translated_inputs f, :title, folio_label: true
