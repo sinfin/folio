@@ -14,8 +14,8 @@
             .f-ui-atoms__molecule[
               class=container_class_name_for_atom(atoms.first)
             ]
-              .pt-a class="#{classname_prefix}-atoms"
-                == cell(molecule, atoms)
+              div class="#{classname_prefix}-atoms"
+                == cell(molecule, atoms, cell_options)
       - else
         - atoms.each do |atom|
           .row.border-top.f-ui-atoms__row id=atom.type
@@ -28,10 +28,10 @@
                 class=container_class_name_for_atom(atom)
               ]
                 - if atom.valid?
-                  .pt-a class="#{classname_prefix}-atoms"
+                  div class="#{classname_prefix}-atoms"
                     == cell(atom.class.cell_name,
                             atom,
-                            atom.cell_options.presence || {})
+                            cell_options(atom.cell_options))
                 - else
                   .container-fluid.py-a
                     .text-danger

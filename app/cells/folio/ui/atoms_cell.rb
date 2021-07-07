@@ -110,4 +110,8 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
   def handle_attributes(attrs)
     attrs
   end
+
+  def cell_options(obj = {})
+    (obj || {}).merge(folio_ui_atoms_showcase: true)
+  end
 end
