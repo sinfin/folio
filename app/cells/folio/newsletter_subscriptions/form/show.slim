@@ -11,7 +11,10 @@ div class=wrap_class
     .position-relative
       = input(f)
 
-      button.btn.btn-primary.f-newsletter-subscriptions-form__btn type="submit"
+      button.f-newsletter-subscriptions-form__btn[
+        type="submit"
+        class=button_class
+      ]
         .f-newsletter-subscriptions-form__btn-inner
           svg.f-newsletter-subscriptions-form__svg[
             xmlns="http://www.w3.org/2000/svg"
