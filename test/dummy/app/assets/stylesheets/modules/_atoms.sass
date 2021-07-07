@@ -1,3 +1,6 @@
+$my-atom-lg: 2 * $grid-gutter-width
+$my-atom-lg-mobile: 50px
+
 .d-atoms
   .d-atom:first-child,
   .d-molecule:first-child
@@ -10,3 +13,11 @@
   .f-ui-atoms &
     padding-top: $grid-gutter-width
     padding-bottom: $grid-gutter-width
+
+.my-atom-lg
+  margin-top: $my-atom-lg
+  margin-bottom: $my-atom-lg
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin-top: $my-atom-lg-mobile
+    margin-bottom: $my-atom-lg-mobile

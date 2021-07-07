@@ -1,0 +1,19 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-logo.my-atom-lg
+  .container-fluid
+    ul.<%= classname_prefix %>-molecule-logo__inner
+      - model.each do |atom|
+        li.<%= classname_prefix %>-molecule-logo__atom
+          - if atom.url.present?
+            a.<%= classname_prefix %>-molecule-logo__a href=atom.url target="_blank"
+              = image(atom.cover_placement,
+                      THUMB_SIZE,
+                      class: '<%= classname_prefix %>-molecule-logo__img',
+                      alt: atom.title,
+                      contain: true)
+          - else
+            span.<%= classname_prefix %>-molecule-logo__a
+              = image(atom.cover_placement,
+                      THUMB_SIZE,
+                      class: '<%= classname_prefix %>-molecule-logo__img',
+                      alt: atom.title,
+                      contain: true)

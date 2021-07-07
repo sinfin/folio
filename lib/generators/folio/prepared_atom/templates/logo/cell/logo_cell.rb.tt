@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Molecule::LogoCell < ApplicationCell
+  THUMB_SIZE = "195x145"
+end

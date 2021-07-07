@@ -1,0 +1,43 @@
+.<%= classname_prefix %>-molecule-logo
+  &__inner
+    display: flex
+    flex-wrap: wrap
+    margin: - $grid-gutter-half / 2
+
+  &__atom
+    margin: $grid-gutter-half / 2
+
+  &__atom,
+  &__a
+    display: block
+    width: 87px
+    height: 65px
+    flex: 0 0 87px
+
+  &__a
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__img
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    max-width: 100% !important
+    max-height: 100% !important
+
+  +mq-desktop-menu
+    &__atom,
+    &__a
+      flex: 0 0 196px
+      width: 196px
+      height: 145px
+
+    &__inner
+      margin: - $grid-gutter-half
+
+    &__atom
+      margin: $grid-gutter-half

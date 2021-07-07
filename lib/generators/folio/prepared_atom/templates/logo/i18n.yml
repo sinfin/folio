@@ -1,0 +1,13 @@
+---
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/logo: 
+    models:
+      application_namespace_path/atom/logo: Company logo
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/logo: 
+    models:
+      application_namespace_path/atom/logo: Logo společnosti

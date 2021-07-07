@@ -49,6 +49,7 @@ en:
       dummy/atom/hr: Line (horizontal)
       dummy/atom/image: Image
       dummy/atom/images: Images (gallery)
+      dummy/atom/logo: Company logo
       dummy/atom/map: Map
       dummy/atom/margin: Margin
       dummy/atom/navigation: Navigation

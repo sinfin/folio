@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-person.my-gg
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-person.my-atom-lg
   .container-fluid
     .row
       - model.each do |atom|

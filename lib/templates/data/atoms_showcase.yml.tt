@@ -171,3 +171,18 @@
   title: true
   content: true
   href: "/"
+
+- type: <%= application_namespace %>::Atom::Logo
+  cover: 1
+  title: "Company title"
+  url: https://www.google.com/
+
+- type: <%= application_namespace %>::Atom::Logo
+  cover: 2
+  title: "Company title"
+  url: https://www.google.com/
+
+- type: <%= application_namespace %>::Atom::Logo
+  cover: 3
+  title: "Company title"
+  url: https://www.google.com/

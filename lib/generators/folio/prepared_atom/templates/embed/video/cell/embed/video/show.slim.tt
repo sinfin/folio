@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-embed-video.my-gg
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-embed-video.my-atom-lg
   .container-fluid
     == cell('<%= application_namespace_path %>/ui/embed',
             model.embed_code,
