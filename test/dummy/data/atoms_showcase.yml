@@ -235,3 +235,5 @@
   cover: 3
   title: "Company title"
   url: https://www.google.com/
+
+- type: Dummy::Atom::Share

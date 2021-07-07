@@ -186,3 +186,5 @@
   cover: 3
   title: "Company title"
   url: https://www.google.com/
+
+- type: <%= application_namespace %>::Atom::Share
