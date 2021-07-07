@@ -1,5 +1,6 @@
 .<%= classname_prefix %>-ui-menu[
   class="<%= classname_prefix %>-ui-menu--theme-#{options[:theme] || 'dark'}"
+  class="<%= classname_prefix %>-ui-menu--#{model.id}"
 ]
   ul.<%= classname_prefix %>-ui-menu__ul
     - model.menu_items.includes(:page).arrange.each do |menu_item, children|
