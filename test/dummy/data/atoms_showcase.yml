@@ -171,3 +171,52 @@
 
 - type: Dummy::Atom::Map
   latlng: 50.091254894762635, 14.401627227698018
+
+- type: Dummy::Atom::Card::Large
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Large
+  cover: 2
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Medium
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Medium
+  cover: 2
+  title: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Medium
+  title: true
+  content: true
+  href: "/"
+  button_label: "Button label"
+
+- type: Dummy::Atom::Card::Small
+  cover: 1
+  title: true
+  content: true
+  href: "/"
+
+- type: Dummy::Atom::Card::Small
+  cover: 2
+  title: true
+  href: "/"
+
+- type: Dummy::Atom::Card::Small
+  title: true
+  content: true
+  href: "/"
