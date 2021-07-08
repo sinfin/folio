@@ -43,7 +43,9 @@ export default {
     return ({
       ...base,
       color,
-      backgroundColor
+      backgroundColor,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
     })
   }
 }
