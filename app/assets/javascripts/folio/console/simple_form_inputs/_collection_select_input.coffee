@@ -17,7 +17,7 @@ window.folioConsoleBindCollectionSelectInput = ($elements) ->
           minimumInputLength: 0
           cache: false
           data: (params) ->
-            data = { q: params.term }
+            data = { q: params.term, page: params.page || 1 }
 
             $('.f-c-js-atoms-placement-setting').each ->
               $this = $(this)
@@ -25,6 +25,13 @@ window.folioConsoleBindCollectionSelectInput = ($elements) ->
               data["by_atom_setting_#{$this.data('atom-setting')}"] = value
 
             return data
+
+          processResults: (data, params) ->
+            return {
+              results: data.results
+              pagination:
+                more: data.meta and data.meta.pages > data.meta.page
+            }
 
         templateSelection: (data, container) ->
           $el = $(data.element)

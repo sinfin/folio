@@ -123,7 +123,11 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.unscope(:order).send(p_order)
       end
 
-      render_select2_options(scope.limit(25), label_method: params[:label_method])
+      pagination, records = pagy(scope, items: 25)
+
+      render_select2_options(records,
+                             label_method: params[:label_method],
+                             meta: meta_from_pagy(pagination))
     else
       render_select2_options([])
     end
