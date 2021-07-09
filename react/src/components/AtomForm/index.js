@@ -76,10 +76,15 @@ class AtomForm extends React.PureComponent {
     this.props.validateAndSubmitGlobalForm()
   }
 
+  saveFormAtoms = () => {
+    window.folioConsoleRedactorHardsyncAll()
+    this.props.saveFormAtoms()
+  }
+
   onKeydown = (e) => {
     if (e.keyCode === 13 && e.ctrlKey) {
       e.preventDefault()
-      this.props.saveFormAtoms()
+      this.saveFormAtoms()
       return false
     }
   }
@@ -149,7 +154,7 @@ class AtomForm extends React.PureComponent {
             <button
               type='button'
               className='btn btn-outline f-c-atoms-settings-header__button'
-              onClick={this.props.saveFormAtoms}
+              onClick={this.saveFormAtoms}
             >
               {window.FolioConsole.translations.done}
             </button>

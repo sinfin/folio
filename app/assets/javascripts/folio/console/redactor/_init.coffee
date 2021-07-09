@@ -56,7 +56,9 @@ window.folioConsoleRedactorGetContent = (node) ->
   R = $R(node)
   R.source.getCode()
 
-$(document).on 'submit', 'form', ->
+window.folioConsoleRedactorHardsyncAll = ->
   $('.redactor-source').each ->
     R = $R(this)
     R.broadcast('hardsync')
+
+$(document).on 'submit', 'form', window.folioConsoleRedactorHardsyncAll

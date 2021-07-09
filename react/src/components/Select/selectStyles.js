@@ -45,7 +45,7 @@ export default {
       color,
       backgroundColor,
       textOverflow: 'ellipsis',
-      overflow: 'hidden',
+      overflow: 'hidden'
     })
   }
 }
