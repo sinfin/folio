@@ -67,6 +67,24 @@ module Folio::HasAttachments
 
       accepts_nested_attributes_for placement_key, allow_destroy: true
     end
+
+    def folio_attachments_first_image_as_cover
+      after_save :update_cover_placement
+
+      define_method :update_cover_placement do
+        if ip = image_placements.reload.first
+          if cover_placement
+            if cover_placement.file_id != ip.file_id
+              cover_placement.update(file_id: ip.file_id)
+            end
+          else
+            create_cover_placement(file_id: ip.file_id)
+          end
+        end
+      end
+
+      private :update_cover_placement
+    end
   end
 
   private
