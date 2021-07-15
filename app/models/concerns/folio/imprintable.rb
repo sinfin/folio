@@ -66,27 +66,9 @@ module Folio::Imprintable
         result.instance_variable_set(:@new_record, false)
 
         imprinted_model_associations.each do |k, h|
-          associated_models = result.public_send(k).build(h)
-          result.define_singleton_method(:artists) { associated_models }
-        end
-
-        # assign eager loaded associations if imprint itself is loaded
-        if association(association).loaded?
-          original = association(association).reader
-
-          association(association).reader._reflections.each do |k, h|
-            k = k.to_sym
-
-            next if incl.include?(k)
-
-            # FIXME: `files` association is broken
-            next if k == :files
-
-            if original.association(k).loaded?
-              preloaded_association = original.association(k).reader
-              result.define_singleton_method(k) { preloaded_association }
-            end
-          end
+          result.public_send(k)
+                .build(h)
+                .each { |a| a.instance_variable_set(:@new_record, false) }
         end
 
         result
