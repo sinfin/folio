@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_14_070814) do
+ActiveRecord::Schema.define(version: 2021_07_16_083655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -315,6 +315,7 @@ ActiveRecord::Schema.define(version: 2021_06_14_070814) do
     t.string "locale", limit: 6
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ancestry_slug"
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"

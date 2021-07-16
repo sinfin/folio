@@ -103,10 +103,6 @@ module Folio::PagesControllerBase
     end
 
     def force_correct_path_for_page
-      if Rails.application.config.folio_pages_ancestry
-        force_correct_path(nested_page_path(@page))
-      else
-        force_correct_path(url_for(@page))
-      end
+      force_correct_path(url_for(@page))
     end
 end

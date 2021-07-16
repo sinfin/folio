@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-07-16
+### Added
+- added Folio::HasAncestrySlug concern
+
 ## 2021-06-23
 ### Added
 - added development s3 fetching via DRAGONFLY_PRODUCTION_S3_URL_BASE in ENV

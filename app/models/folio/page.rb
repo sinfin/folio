@@ -37,6 +37,7 @@ class Folio::Page < Folio::ApplicationRecord
 
   if Rails.application.config.folio_pages_ancestry
     include Folio::HasAncestry
+    include Folio::HasAncestrySlug
   end
 
   if Rails.application.config.folio_using_traco
@@ -149,24 +150,9 @@ class Folio::Page < Folio::ApplicationRecord
     title
   end
 
-  def nested_page_path
-    if Rails.application.config.folio_pages_ancestry
-      page = self
-      parts = [page]
-
-      while page = page.parent
-        parts << page
-      end
-
-      parts.reverse.map(&:slug).join("/")
-    else
-      nil
-    end
-  end
-
   def to_preview_param
     if Rails.application.config.folio_pages_ancestry
-      nested_page_path
+      ancestry_url
     else
       to_param
     end
@@ -209,6 +195,7 @@ end
 #  locale           :string(6)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  ancestry_slug    :string
 #
 # Indexes
 #

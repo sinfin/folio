@@ -42,7 +42,7 @@ module Folio::ApplicationControllerBase
   private
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)
-      main_app.page_path(path: page.nested_page_path)
+      main_app.page_path(path: page.ancestry_url)
     end
 
     def force_correct_path(correct_path_or_url)

@@ -9,7 +9,7 @@ module Folio::NillifyBlanks
 
   class_methods do
     def non_nillifiable_fields
-      []
+      %w[ancestry_url]
     end
   end
 

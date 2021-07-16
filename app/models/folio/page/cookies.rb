@@ -24,6 +24,7 @@ end
 #  locale           :string(6)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  ancestry_slug    :string
 #
 # Indexes
 #
