@@ -4,7 +4,7 @@ module Folio::HasAncestry
   extend ActiveSupport::Concern
 
   included do
-    has_ancestry touch: true
+    has_ancestry touch: true, orphan_strategy: :adopt
 
     validate :validate_allowed_type,
              if: :has_parent?
