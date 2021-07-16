@@ -30,6 +30,9 @@ en:
           sign_in: Sign in
           invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.
 
+        create:
+          invalid: Invalid e-mail or password
+
       passwords:
         new:
           title: Forgotten password

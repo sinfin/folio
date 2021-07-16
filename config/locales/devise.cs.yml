@@ -40,6 +40,9 @@ cs:
           sign_in: Přihlásit se
           invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.
 
+        create:
+          invalid: Neplatný e-mail nebo heslo
+
       passwords:
         new:
           title: Zapomenuté heslo

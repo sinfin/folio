@@ -14,6 +14,10 @@
       = s.attribute :sign_in_count
       = s.attribute :last_sign_in_at
       = s.attribute :created_at
+
+      - if Rails.application.config.folio_users_confirmable
+        = s.attribute :confirmed_at
+
       = s.attribute :authentications
         == cell('folio/console/authentications/list', s.object)
 

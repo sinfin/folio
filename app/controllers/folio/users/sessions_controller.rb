@@ -97,7 +97,9 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
   def get_failure_flash_message(warden_exception_or_user)
     if warden_exception_or_user.is_a?(Hash)
-      if warden_exception_or_user[:message] == :unconfirmed
+      if warden_exception_or_user[:message].nil?
+        I18n.t("folio.devise.sessions.create.invalid")
+      elsif warden_exception_or_user[:message] == :unconfirmed
         unconfirmed_flash_message
       else
         I18n.t("devise.failure.#{warden_exception_or_user[:message]}", default: unconfirmed_flash_message)
