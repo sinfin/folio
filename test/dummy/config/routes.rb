@@ -46,6 +46,11 @@ Rails.application.routes.draw do
     end
   end
 
+  require "sidekiq/web"
+  authenticate :account do
+    mount Sidekiq::Web => "/sidekiq"
+  end
+
   if Rails.application.config.folio_pages_translations
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
       if Rails.application.config.folio_pages_ancestry
