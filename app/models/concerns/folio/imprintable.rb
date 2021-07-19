@@ -60,15 +60,34 @@ module Folio::Imprintable
       define_method(:revive_imprint) do |klass, hash, incl|
         imprinted_model_associations = {}
         incl.each do |i|
-          imprinted_model_associations[i] = hash.delete(i)
+          imprinted_model_associations[i] = hash.delete(i) if hash[i].present?
         end
         result = klass.new(hash)
         result.instance_variable_set(:@new_record, false)
 
         imprinted_model_associations.each do |k, h|
-          result.public_send(k)
-                .build(h)
-                .each { |a| a.instance_variable_set(:@new_record, false) }
+          associated_models = result.public_send(k).build(h)
+          associated_models.each { |m| m.instance_variable_set(:@new_record, false) }
+          result.define_singleton_method(k) { associated_models }
+        end
+
+        # assign eager loaded associations if original is loaded
+        if association(association).loaded?
+          original = association(association).reader
+
+          association(association).reader._reflections.each do |k, h|
+            k = k.to_sym
+
+            next if incl.include?(k)
+
+            # FIXME: `files` association is broken
+            next if k == :files
+
+            if original.association(k).loaded?
+              preloaded_association = original.association(k).reader
+              result.define_singleton_method(k) { preloaded_association }
+            end
+          end
         end
 
         result
