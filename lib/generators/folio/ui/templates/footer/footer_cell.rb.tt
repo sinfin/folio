@@ -7,6 +7,6 @@ class <%= application_namespace %>::Ui::FooterCell < ApplicationCell
 
   def social_links
     allowed = %w[facebook instagram linkedin pinterest twitter youtube]
-    current_site.social_links.slice(*allowed)
+    current_site.social_links.slice(*allowed).select { |key, val| val.present? }
   end
 end
