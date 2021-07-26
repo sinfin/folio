@@ -80,9 +80,11 @@ class Folio::Page < Folio::ApplicationRecord
   def self.by_query_associated_against
     if Rails.application.config.folio_using_traco
       h = {}
+
       I18n.available_locales.each do |locale|
         h["#{locale}_atoms".to_sym] = %i[data_for_search]
       end
+
       h
 
       h.merge(
@@ -96,50 +98,41 @@ class Folio::Page < Folio::ApplicationRecord
     end
   end
 
+  def self.traco_aware_against(perex: false)
+    if Rails.application.config.folio_using_traco
+      if perex
+        h = {}
+
+        I18n.available_locales.each do |locale|
+          h["title_#{locale}".to_sym] = "A"
+          h["perex_#{locale}".to_sym] = "B"
+        end
+
+        h
+      else
+        I18n.available_locales.map do |locale|
+          "title_#{locale}"
+        end
+      end
+    else
+      if perex
+        {
+          title: "A",
+          perex: "B",
+        }
+      else
+        [:title]
+      end
+    end
+  end
+
   # Multi-search
-  multisearchable against: begin
-                    if Rails.application.config.folio_using_traco &&
-                       ActiveRecord::Base.connection.table_exists?("folio_pages")
-                      I18n.available_locales.map do |locale|
-                        "title_#{locale}"
-                      end
-                    else
-                      [:title]
-                    end
-                  rescue ActiveRecord::NoDatabaseError
-                    [:title]
-                  end,
+  multisearchable against: self.traco_aware_against(perex: false),
                   ignoring: :accents,
                   additional_attributes: -> (page) { { searchable_type: "Folio::Page" } }
 
   pg_search_scope :by_query,
-                  against: begin
-                    if Rails.application.config.folio_using_traco && ActiveRecord::Base.connection.table_exists?("folio_pages")
-                      weighted = {}
-                      self.column_names.each do |column|
-                        if /\A(title|perex)_/.match?(column)
-                          if /title/.match?(column)
-                            weighted[column] = "A"
-                          elsif /perex/.match?(column)
-                            weighted[column] = "B"
-                          else
-                            weighted[column] = "C"
-                          end
-                        end
-                      end
-                      weighted
-                    else
-                      {
-                        title: "A",
-                        perex: "B",
-                      }
-                    end
-                  rescue ActiveRecord::NoDatabaseError
-                    {
-                      title: "A",
-                      perex: "B",
-                    }
-                  end,
+                  against: self.traco_aware_against(perex: true),
                   associated_against: self.by_query_associated_against,
                   ignoring: :accents,
                   using: {
