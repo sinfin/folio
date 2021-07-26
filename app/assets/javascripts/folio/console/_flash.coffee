@@ -1,6 +1,6 @@
 window.FolioConsole ||= {}
 
-window.FolioConsole.flash = (msg, type = 'success') ->
+window.FolioConsole.flash = (msg, type = 'success', autohide = false) ->
   if type is 'success'
     className = 'alert-success'
     icon = 'fa fa-mr fa-check-circle'
@@ -8,13 +8,19 @@ window.FolioConsole.flash = (msg, type = 'success') ->
     className = 'alert-danger'
     icon = 'fa fa-mr fa-times-circle'
 
-  $('.f-c-flash-wrap').append("""
+  $flash = $("""
     <div class="alert alert-dismissible fade show #{className}" role="alert">
       <button class="close" data-dismiss="alert"><span>&times;</span></button>
       <i class="#{icon}"></i>
       #{msg}
     </div>
   """)
+  $('.f-c-flash-wrap').append $flash
+
+  if autohide
+    setTimeout((->
+      $flash.find('[data-dismiss]').click()
+    ), if typeof autohide is "number" then autohide else 5000)
 
 window.FolioConsole.clearFlashes = ->
   $('.f-c-flash-wrap').html('')
