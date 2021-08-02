@@ -72,12 +72,14 @@ module Folio::Console::Api::FileControllerBase
   end
 
   def change_file
-    old_thumbnail_versions = folio_console_record.thumbnail_sizes
+    old_thumbnail_versions = folio_console_record.thumbnail_sizes.dup
 
-    if folio_console_record.update(file_params)
+    if folio_console_record.update(file_params.to_h.merge(thumbnail_sizes: {}))
       if folio_console_record.is_a?(Folio::Image)
+        Folio::DeleteThumbnailsJob.perform_later(old_thumbnail_versions)
+
         old_thumbnail_versions.keys.each do |version|
-          folio_console_record.thumb(version, immediate: true)
+          folio_console_record.thumb(version)
         end
       end
 
