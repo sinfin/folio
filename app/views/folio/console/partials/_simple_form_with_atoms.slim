@@ -15,9 +15,6 @@
           class="f-c-simple-form-with-atoms__dirty-wrap"
         ]
           .container-fluid.f-c-simple-form-with-atoms__form-container
-            - if f.object.try(:errors).present?
-              == cell('folio/console/form/errors', f)
-
             = yield(f)
 
         == cell('folio/console/atoms/layout_switch', layout_code)

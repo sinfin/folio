@@ -48,9 +48,7 @@ $ ->
       else
         offset = $formGroup.offset().top
 
-      $scroll = $formGroup.closest('.f-c-with-aside__scroll, .f-c-simple-form-with-atoms__scroll, .f-c-layout-main-container')
-
-      $scroll.animate scrollTop: offset - $scroll.offset().top - 10, ->
+      callback = ->
         $formGroup.addClass('has-danger-blink')
 
         if $formGroup.hasClass('string') or $formGroup.hasClass('text')
@@ -59,3 +57,9 @@ $ ->
         setTimeout (->
           $formGroup.removeClass('has-danger-blink')
         ), 500
+
+      if offset > $(window).height() / 2
+        $scroll = $formGroup.closest('.f-c-with-aside__scroll, .f-c-simple-form-with-atoms__scroll, .f-c-layout-main-container')
+        $scroll.animate scrollTop: offset - $scroll.offset().top - 10, callback
+      else
+        callback()

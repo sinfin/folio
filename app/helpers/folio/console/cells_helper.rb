@@ -39,6 +39,8 @@ module Folio
         opts[:right] = capture(&block)
       end
 
+      opts[:form_errors_shown] = @form_errors_shown
+
       cell("folio/console/form/header", f, opts).show.html_safe
     end
 
