@@ -16,12 +16,14 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       atoms = atom_params[key]
       next if atoms.nil?
       @atoms[locale] = []
-      atoms.each do |attrs|
+      atoms.each_with_index do |attrs, i|
         next if attrs["destroyed"]
         next if attrs["_destroy"]
         props = attrs.to_h
                      .without("id", "placement_id")
-                     .merge(placement: attrs[:placement_type].constantize.new)
+                     .merge(placement: attrs[:placement_type].constantize.new,
+                            position: i + 1)
+
         @atoms[locale] << attrs["type"].constantize
                                        .new(props)
       end
