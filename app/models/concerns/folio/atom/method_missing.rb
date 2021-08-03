@@ -5,7 +5,7 @@ module Folio::Atom::MethodMissing
 
   def method_missing(method_name, *arguments, &block)
     name_without_operator = method_name.to_s
-                                       .gsub("=", "")
+                                       .delete("=")
                                        .to_sym
     name_for_association = name_without_operator.to_s
                                                 .gsub(/_(id|type)$/, "")
@@ -24,7 +24,7 @@ module Folio::Atom::MethodMissing
 
   def respond_to_missing?(method_name, include_private = false)
     name_without_operator = method_name.to_s
-                                       .gsub("=", "")
+                                       .delete("=")
                                        .to_sym
     name_for_association = name_without_operator.to_s
                                                 .gsub(/_(id|type)$/, "")
@@ -38,7 +38,7 @@ module Folio::Atom::MethodMissing
   private
     def method_missing_association(method_name, arguments)
       name_without_operator = method_name.to_s
-                                         .gsub("=", "")
+                                         .delete("=")
                                          .to_sym
       name_for_association = name_without_operator.to_s
                                                   .gsub(/_(id|type)$/, "")
@@ -86,7 +86,7 @@ module Folio::Atom::MethodMissing
 
     def method_missing_data(method_name, argument)
       name_without_operator = method_name.to_s
-                                         .gsub("=", "")
+                                         .delete("=")
                                          .to_sym
       is_bool = klass::STRUCTURE[name_without_operator] == :boolean
       is_date = klass::STRUCTURE[name_without_operator] == :date

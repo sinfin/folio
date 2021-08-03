@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", ">= 6.0.2.2"
+  s.add_dependency "rails", "~> 6.1"
   s.add_dependency "pg", "~> 1.2.3"
   s.add_dependency "pg_search", "= 2.3.2"
   s.add_dependency "friendly_id", "~> 5.3.0"
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon"
   s.add_dependency "invisible_captcha"
   s.add_dependency "countries"
-  s.add_dependency "acts-as-taggable-on", "~> 6.0"
+  s.add_dependency "acts-as-taggable-on", "~> 7.0"
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "cells"
   s.add_dependency "cells-slim", "0.0.6"

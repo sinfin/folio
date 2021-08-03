@@ -19,7 +19,7 @@ class Folio::ApplicationCell < Cell::ViewModel
 
       keys.each do |key|
         if try(key) || options[key]
-          safe_key = key.to_s.gsub("_", "-").gsub("?", "")
+          safe_key = key.to_s.tr("_", "-").delete("?")
           class_names << "#{base}--#{safe_key}"
         end
       end

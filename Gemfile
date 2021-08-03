@@ -22,7 +22,7 @@ gem "show_for"
 gem "sidekiq"
 
 group :test do
-  gem "minitest", "5.10.3"
+  gem "minitest", "~> 5.14.4"
   gem "factory_bot"
   gem "capybara", "~> 2.13"
 end

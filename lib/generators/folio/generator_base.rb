@@ -15,7 +15,7 @@ module Folio::GeneratorBase
     end
 
     def dashed_resource_name
-      model_resource_name.gsub("_", "-").gsub("::", "-")
+      model_resource_name.tr("_", "-").gsub("::", "-")
     end
 
     def atom_cell_name

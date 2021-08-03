@@ -39,6 +39,6 @@ class Folio::Console::CatalogueGenerator < Rails::Generators::NamedBase
     end
 
     def factory_name
-      class_name.underscore.gsub("/", "_")
+      class_name.underscore.tr("/", "_")
     end
 end
