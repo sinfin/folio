@@ -54,3 +54,7 @@ module Folio
     "folio_"
   end
 end
+
+# only `folio/lib` directory is loaded when processing Rails `config/environments/*`
+require "uglifier"
+require_relative "../app/lib/folio/selective_uglifier.rb"
