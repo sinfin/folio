@@ -28,6 +28,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
   test "create" do
     post main_app.user_registration_path, params: { user: @params.merge(email: "other@email.email") }
     assert Folio::User.exists?(email: "other@email.email")
+    assert_not Folio::NewsletterSubscription.exists?(email: "other@email.email")
 
     if Rails.application.config.folio_users_confirmable
       assert_redirected_to root_path
@@ -36,15 +37,18 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     end
   end
 
-  test "create_invalid" do
+  test "not create invalid user" do
     post main_app.user_registration_path, params: {
       user: {
         email: "third@email.email",
         password: "Complex@Password.123",
       }
     }
+
     assert_not Folio::User.exists?(email: "third@email.email")
     assert_response(:ok)
+    assert response.body.include?("Jméno je povinná položka")
+    assert response.body.include?("Příjmení je povinná položka")
   end
 
   test "edit name" do

@@ -45,7 +45,7 @@ $(document)
       data: $form.serialize()
       dataType: 'JSON'
       success: (res) ->
-        path = $form.closest('.n-devise-modal').data('after-sign-in-path')
+        path = $form.closest('.f-devise-modal').data('after-sign-in-path')
         if path
           window.location.href = path
         else if res.data and res.data.url
