@@ -3,7 +3,7 @@
 module Folio::CellLightbox
   include Folio::ImageHelper
 
-  LIGHTBOX_SIZE = "1920x1080>"
+  LIGHTBOX_SIZE = "2560x2048>"
 
   def lightbox(placement)
     if placement && placement.file
