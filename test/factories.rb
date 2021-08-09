@@ -132,6 +132,7 @@ FactoryBot.define do
     confirmed_at { Time.now }
     first_name { "first_name" }
     last_name { "last_name" }
+    phone { "+420604123123" }
   end
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
