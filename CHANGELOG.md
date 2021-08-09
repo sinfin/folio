@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-08-09
+### Added
+- added `phone` to `Folio::User`
+
 ## 2021-08-03
 ### Changed
 - updated rails to 6.1.4

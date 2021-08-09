@@ -8,6 +8,8 @@
   .col-lg-8
     = show_for @user do |s|
       = s.email
+      - if ::Rails.application.config.folio_users_require_phone
+        = s.attribute :phone
       = s.attribute :first_name
       = s.attribute :last_name
       = s.attribute :nickname

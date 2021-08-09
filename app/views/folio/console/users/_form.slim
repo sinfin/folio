@@ -8,6 +8,9 @@
       .col-lg-8
         = f.input :email
 
+        - if ::Rails.application.config.folio_users_require_phone
+          = f.input :phone
+
         .row
           .col-md-6
             = f.input :first_name
