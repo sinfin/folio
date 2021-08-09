@@ -138,6 +138,10 @@ cs:
           attributes:
             email:
               invalid: není platná
+        folio/user:
+          attributes:
+            phone:
+              invalid: nemá správný formát. Zadejte prosím celé číslo včetně předvolby. Např. +420604123456
     models:
       folio/account:
         few: Administrátoři

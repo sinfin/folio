@@ -21,6 +21,11 @@
       .f-devise__col
         == email_input(f, autofocus: false, label: t('.email_label'))
 
+    - if ::Rails.application.config.folio_users_require_phone
+      .f-devise__row
+        .f-devise__col
+          == phone_input(f, autofocus: false, label: t('.phone_label'))
+
     .f-devise__row
       .f-devise__col
         == password_input(f, :password, autocomplete: 'current-password')

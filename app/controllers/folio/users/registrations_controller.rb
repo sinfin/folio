@@ -119,6 +119,6 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
     end
 
     def additional_user_params
-      %i[first_name last_name nickname]
+      %i[first_name last_name nickname phone]
     end
 end

@@ -99,6 +99,10 @@ en:
           attributes:
             email:
               invalid: Invalid e-mail address
+        folio/user:
+          attributes:
+            phone:
+              invalid: is invalid. Please enter a full number including country code, i.e. +420604123456
     models:
       folio/account:
         one: Account

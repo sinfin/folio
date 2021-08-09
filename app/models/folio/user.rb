@@ -46,6 +46,10 @@ class Folio::User < Folio::ApplicationRecord
             presence: true,
             if: :validate_first_name_and_last_name?
 
+  validates :phone,
+            phone: true,
+            if: :validate_phone?
+
   after_invitation_accepted :update_newsletter_subscription
 
   before_update :update_has_generated_password
@@ -95,6 +99,10 @@ class Folio::User < Folio::ApplicationRecord
   private
     def validate_first_name_and_last_name?
       authentications.blank? || nickname.blank?
+    end
+
+    def validate_phone?
+      Rails.application.config.folio_users_require_phone
     end
 
     def should_subscribe_to_newsletter?
@@ -163,6 +171,7 @@ end
 #  secondary_address_id     :bigint(8)
 #  subscribed_to_newsletter :boolean          default(FALSE)
 #  has_generated_password   :boolean          default(FALSE)
+#  phone                    :string
 #
 # Indexes
 #

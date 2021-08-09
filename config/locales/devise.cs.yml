@@ -55,6 +55,7 @@ cs:
       registrations:
         new:
           email_label: E-mail (slouží pro přihlášení)
+          phone_label: Telefon
           sign_up: Vytvořit účet
           title: Registrace
           gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.

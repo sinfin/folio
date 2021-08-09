@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency "cocoon"
   s.add_dependency "devise"
   s.add_dependency "devise_invitable"
+  s.add_dependency "phonelib"
   s.add_dependency "omniauth", "~> 1.9.1"
   s.add_dependency "omniauth-facebook", "~> 8.0.0"
   s.add_dependency "omniauth-twitter", "~> 1.4.0"

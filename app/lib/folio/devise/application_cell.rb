@@ -58,6 +58,14 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
                               })
   end
 
+  def phone_input(f, opts = {})
+    f.input :phone, opts.merge(required: true,
+                               input_html: {
+                                autocomplete: "phone",
+                                id: nil,
+                              })
+  end
+
   def password_input(f, field, opts = {})
     cell("folio/devise/password_input",
          f,
