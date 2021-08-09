@@ -30,7 +30,6 @@ end
 group :development do
   gem "puma", "< 6"
   gem "i18n-tasks"
-  gem "rails-flog", require: "flog"
 end
 
 group :development, :test do

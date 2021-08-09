@@ -65,7 +65,6 @@ module Folio
           gem "slack-notifier"
           gem "better_errors"
           gem "binding_of_caller"
-          gem "rails-flog", require: "flog"
         end
       end
 
