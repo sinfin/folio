@@ -6,7 +6,10 @@
     - errors.each_with_index do |error, i|
       li.d-flex.align-items-center class=(i.zero? ? nil : 'mt-2')
         span.mr-3
-          = error.full_message
+          - if ie = error.try(:inner_error)
+            = ie.full_message
+          - else
+            = error.full_message
 
         - if options[:buttons] != false
           button.btn.btn-sm.btn-danger[
