@@ -20,8 +20,10 @@ $ ->
         key = $formGroup
           .find('.form-control:visible, .form-control.redactor-source')
           .prop('name')
-          .match(/\[(.+)\]$/)
+
+        key = key.match(/\[(.+)\]$/) if key
         key = key[1] if key
+
         if key
           key = key.replace('_attributes', '').replace(/\]\[\d*\]\[/, '.')
           $errorButtons
