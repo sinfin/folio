@@ -66,7 +66,11 @@ post = (tr, url) ->
   })
 
   ajax
-    .done -> switchRows(tr)
+    .done (res) ->
+      switchRows(tr)
+      tr.btn.trigger('folioConsolePersistedRowsOrder', response: res)
+    .fail (jxHr) ->
+      tr.btn.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJson)
     .always ->
       tr.btn.removeClass('folio-console-loading')
       tr.target.removeClass('folio-console-loading')

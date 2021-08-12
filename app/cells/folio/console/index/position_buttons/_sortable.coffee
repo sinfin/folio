@@ -37,10 +37,13 @@ makeSortableUpdate = ($sortable) -> ->
       $positions
         .removeClass('folio-console-loading')
         .addClass('f-c-index-position-buttons--failed')
-    .done ->
+    .fail (jxHr) ->
+      $positions.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJson)
+    .done (res) ->
       $positions.removeClass('folio-console-loading')
+      $positions.trigger('folioConsolePersistedRowsOrder', response: res)
 
-indexPositionSortable = ->
+window.folioConsoleBindIndexPositionSortable = ->
   $sortable = $('.f-c-catalogue__table')
   return if $sortable.closest('.f-c-catalogue--ancestry').length
   return if $sortable.find('.f-c-index-position-buttons__button--handle').length < 2
@@ -59,4 +62,8 @@ indexPositionSortable = ->
     stop: (e, ui) ->
       ui.item.find('.f-c-catalogue__cell').css('width', '')
 
-$ indexPositionSortable
+window.folioConsoleUnbindIndexPositionSortable = ->
+  $sortable = $('.f-c-catalogue__table')
+  $sortable.sortable("destroy") if $sortable.length and $sortable.sortable("instance")
+
+$ window.folioConsoleBindIndexPositionSortable
