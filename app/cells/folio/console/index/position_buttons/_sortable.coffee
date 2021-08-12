@@ -38,7 +38,7 @@ makeSortableUpdate = ($sortable) -> ->
         .removeClass('folio-console-loading')
         .addClass('f-c-index-position-buttons--failed')
     .fail (jxHr) ->
-      $positions.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJson)
+      $positions.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJSON)
     .done (res) ->
       $positions.removeClass('folio-console-loading')
       $positions.trigger('folioConsolePersistedRowsOrder', response: res)

@@ -70,7 +70,7 @@ post = (tr, url) ->
       switchRows(tr)
       tr.btn.trigger('folioConsolePersistedRowsOrder', response: res)
     .fail (jxHr) ->
-      tr.btn.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJson)
+      tr.btn.trigger('folioConsoleFailedToPersistRowsOrder', response: jxHr.responseJSON)
     .always ->
       tr.btn.removeClass('folio-console-loading')
       tr.target.removeClass('folio-console-loading')
