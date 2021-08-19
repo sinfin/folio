@@ -278,7 +278,9 @@ cs:
         edit:
           invitation_not_accepted_1: Uživatel byl pozván <strong>%{created_at}</strong>, ale pozvánku zatím nepřijal.
           invitation_not_accepted_2: Můžete mu nastavit heslo pomocí políčka níže, nebo udělat novou pozvánku a zkopírovat adresu.
-          invite_and_copy: Pozvat znovu a zkopírovat adresu
+        invite_and_copy:
+          button: Pozvat znovu a zkopírovat adresu
+          failure: Pozvánka se nezdařila. Chyba byla reportována.
 
   date:
     formats:

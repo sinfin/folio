@@ -51,6 +51,7 @@
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
 
+//= require folio/console/accounts/invite_and_copy/invite_and_copy
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
 //= require folio/console/atoms/settings_header/settings_header
@@ -66,9 +67,9 @@
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
 //= require folio/console/modules/_dirty-forms
-//= require folio/console/modules/_with-aside
 //= require folio/console/modules/_layout
 //= require folio/console/modules/_multiselect
+//= require folio/console/modules/_with-aside
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal

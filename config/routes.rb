@@ -55,7 +55,11 @@ Folio::Engine.routes.draw do
       member { post :event }
     end
     resources :newsletter_subscriptions, only: %i[index destroy]
-    resources :accounts
+
+    resources :accounts do
+      member { post :invite_and_copy }
+    end
+
     resources :email_templates, only: %i[index edit update]
     resource :search, only: %i[show]
     resource :site, only: %i[edit update] do

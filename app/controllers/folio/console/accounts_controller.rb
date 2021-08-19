@@ -20,6 +20,11 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
     end
   end
 
+  def invite_and_copy
+    @account.send(:generate_invitation_token!)
+    render json: { data: cell("folio/console/accounts/invite_and_copy", @account).show }
+  end
+
   private
     def account_params
       p = params.require(:account)

@@ -273,7 +273,9 @@ en:
         edit:
           invitation_not_accepted_1: Account was invited <strong>%{created_at}</strong>, but did not accept yet.
           invitation_not_accepted_2: You can set a password using the form bellow or create a new invitation and copy the invitation link.
-          invite_and_copy: Re-invite and copy invitation link
+        invite_and_copy:
+          button: Re-invite and copy invitation link
+          failure: Failed to re-invite. The error was reported.
 
   date:
     formats:

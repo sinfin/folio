@@ -9,7 +9,7 @@
       p == t('.invitation_not_accepted_2',
              created_at: l(@account.invitation_created_at, format: :short))
 
-      a.btn.btn-primary href="#"
-        = t('.invite_and_copy')
+      == cell('folio/console/accounts/invite_and_copy',
+              @account)
 
   = render 'form', f: f
