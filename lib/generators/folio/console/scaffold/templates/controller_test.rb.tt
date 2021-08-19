@@ -31,13 +31,12 @@ class Folio::Console::<%= controller_class_name %>ControllerTest < Folio::Consol
 
   test "create" do
     params = build(:<%= singular_table_name %>).serializable_hash
-    assert_equal(0, <%= class_name %>.count)
 
-    post url_for([:console, <%= class_name %>]), params: {
-      <%= singular_table_name %>: params,
-    }
-
-    assert_equal(1, <%= class_name %>.count, "Creates record")
+    assert_difference("<%= class_name %>.count", 1) do
+      post url_for([:console, <%= class_name %>]), params: {
+        <%= singular_table_name %>: params,
+      }
+    end
   end
 
   test "update" do

@@ -21,8 +21,12 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
   end
 
   def invite_and_copy
-    @account.send(:generate_invitation_token!)
-    render json: { data: cell("folio/console/accounts/invite_and_copy", @account).show }
+    if @account.invitation_created_at && !@account.invitation_accepted_at
+      @account.send(:generate_invitation_token!)
+      render json: { data: cell("folio/console/accounts/invite_and_copy", @account).show }
+    else
+      head 422
+    end
   end
 
   private

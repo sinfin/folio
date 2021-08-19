@@ -9,17 +9,17 @@ class Folio::Console::Api::DocumentsControllerTest < Folio::Console::BaseControl
   end
 
   test "create" do
-    assert_equal(0, Folio::Document.count)
-    post url_for([:console, :api, Folio::Document]), params: {
-      file: {
-        attributes: {
-          file: fixture_file_upload("test/fixtures/folio/test.gif"),
-          type: "Folio::Document",
+    assert_difference("Folio::Document.count", 1) do
+      post url_for([:console, :api, Folio::Document]), params: {
+        file: {
+          attributes: {
+            file: fixture_file_upload("test/fixtures/folio/test.gif"),
+            type: "Folio::Document",
+          }
         }
       }
-    }
-    assert_response :success
-    assert_equal(1, Folio::Document.count)
+      assert_response :success
+    end
   end
 
   test "update" do

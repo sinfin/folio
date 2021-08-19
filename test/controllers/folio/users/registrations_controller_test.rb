@@ -122,10 +122,10 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
   end
 
   test "destroy" do
-    assert_equal(1, Folio::User.count)
-    sign_in @user
-    delete main_app.user_registration_path
-    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_out_path)
-    assert_equal(0, Folio::User.count)
+    assert_difference("Folio::User.count", -1) do
+      sign_in @user
+      delete main_app.user_registration_path
+      assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_out_path)
+    end
   end
 end

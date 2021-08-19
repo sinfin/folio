@@ -16,9 +16,9 @@ class Folio::Devise::Omniauth::AuthenticationsControllerTest < ActionDispatch::I
     assert_redirected_to new_user_session_path
 
     sign_in user
-    assert_equal(1, Folio::Omniauth::Authentication.count)
-    delete folio.devise_omniauth_authentication_path(provider: "facebook")
-    assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
-    assert_equal(0, Folio::Omniauth::Authentication.count)
+    assert_difference("Folio::Omniauth::Authentication.count", -1) do
+      delete folio.devise_omniauth_authentication_path(provider: "facebook")
+      assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
+    end
   end
 end

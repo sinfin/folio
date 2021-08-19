@@ -39,11 +39,13 @@ class Folio::SessionAttachmentTest < ActiveSupport::TestCase
                                                  web_session_id: id)
     assert_equal(1, Folio::SessionAttachment::Base.count)
 
-    Folio::SessionAttachment::Base.clear_unpaired!
-    assert_equal(1, Folio::SessionAttachment::Base.count)
+    assert_difference("Folio::SessionAttachment::Base.count", 0) do
+      Folio::SessionAttachment::Base.clear_unpaired!
+    end
 
-    sa.update_column(:created_at, 3.days.ago)
-    Folio::SessionAttachment::Base.clear_unpaired!
-    assert_equal(0, Folio::SessionAttachment::Base.count)
+    assert_difference("Folio::SessionAttachment::Base.count", -1) do
+      sa.update_column(:created_at, 3.days.ago)
+      Folio::SessionAttachment::Base.clear_unpaired!
+    end
   end
 end
