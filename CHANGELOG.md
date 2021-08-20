@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-08-20
+### Added
+- added `VALID_PLACEMENT_TYPES` to atoms, validate placement method
+
 ## 2021-08-09
 ### Added
 - added `phone` to `Folio::User`

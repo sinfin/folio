@@ -26,6 +26,8 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   ASSOCIATIONS = {}
 
+  VALID_PLACEMENT_TYPES = nil
+
   FORM_LAYOUT = [
     "ATTACHMENTS",
     "ASSOCIATIONS",
@@ -50,6 +52,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   before_save :set_data_for_search
 
   validates :type, presence: true
+  validate :validate_placement
 
   def self.cell_name
     nil
@@ -125,6 +128,26 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
 
     { associations: h }
+  end
+
+  def valid_for_placement?(placement)
+    if self.class::VALID_PLACEMENT_TYPES.present?
+      if self.class::VALID_PLACEMENT_TYPES.none? { |type| placement.is_a?(type.constantize) }
+        return false
+      end
+    end
+
+    true
+  end
+
+  def self.valid_for_placement_class?(placement_class)
+    if self::VALID_PLACEMENT_TYPES.present?
+      if self::VALID_PLACEMENT_TYPES.none? { |type| placement_class <= type.constantize }
+        return false
+      end
+    end
+
+    true
   end
 
   def self.scoped_model_resource(resource)
@@ -212,6 +235,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
     def placement_has_audited_atoms?
       placement.class.try(:has_audited_atoms?)
+    end
+
+    def validate_placement
+      unless valid_for_placement?(placement)
+        errors.add(:placement, :invalid)
+      end
     end
 end
 

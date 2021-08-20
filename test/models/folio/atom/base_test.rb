@@ -21,4 +21,25 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
     assert_equal(atom2.page, page)
     assert_equal(page.id, atom2.page_id)
   end
+
+  class SpecialAtomPage < Folio::Page
+  end
+
+  class PlacementTestAtom < Folio::Atom::Base
+    VALID_PLACEMENT_TYPES = %w[Folio::Atom::BaseTest::SpecialAtomPage]
+  end
+
+  test "valid placement types" do
+    page = create(:folio_page)
+
+    atom = PlacementTestAtom.new(placement: page)
+    assert_not atom.valid?
+    assert atom.errors[:placement]
+
+    special_atom_page = create(:folio_page).becomes!(Folio::Atom::BaseTest::SpecialAtomPage)
+    special_atom_page.save
+
+    atom = PlacementTestAtom.new(placement: special_atom_page)
+    assert atom.valid?
+  end
 end
