@@ -30,6 +30,37 @@ class Folio::UserTest < ActiveSupport::TestCase
     user.destroy!
     assert 0, Folio::NewsletterSubscription.count
   end
+
+  test "do not stores second address if it is not in use" do
+    user = create(:folio_user)
+
+    assert_nil user.primary_address
+    assert_nil user.secondary_address
+    assert_not user.use_secondary_address
+
+    params = {
+      use_secondary_address: "0",
+      secondary_address_attributes: {
+        name: "Foo Von Bar",
+        company_name: "",
+        address_line_1: "Example steet 75",
+        address_line_2: "",
+        city: "Somewhere",
+        zip: "12345",
+        country_code: "CZ"
+      }
+    }
+
+    assert user.update(params)
+
+    assert_not user.reload.use_secondary_address
+    assert_nil user.secondary_address
+
+    assert user.update(params.merge(use_secondary_address: "1"))
+
+    assert user.reload.use_secondary_address
+    assert_equal "Somewhere", user.secondary_address.city
+  end
 end
 
 # == Schema Information
