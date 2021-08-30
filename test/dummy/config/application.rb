@@ -27,6 +27,13 @@ module Dummy
     config.folio_console_locale = I18n.default_locale
     config.time_zone = "Prague"
 
+    config.generators do |g|
+      g.stylesheets false
+      g.javascripts false
+      g.helper false
+      g.test_framework :test_unit, fixture: false
+    end
+
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
     Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
 

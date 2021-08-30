@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::SearchesController < ApplicationController
+  def show
+  end
+
+  def autocomplete
+  end
+
+  def pages
+  end
+end

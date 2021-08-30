@@ -15,7 +15,9 @@ input[
         .d-ui-header__menu
           == cell('dummy/ui/menu', menu, theme: :dark)
 
-      a.d-ui-header__search-a href="/"
+      a.d-ui-header__search-a[
+        href=(controller.main_app.try(:dummy_search_path) || "/")
+      ]
         = icon(:search, height: 32)
 
       - if menu
