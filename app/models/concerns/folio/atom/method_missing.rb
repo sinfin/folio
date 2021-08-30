@@ -7,6 +7,7 @@ module Folio::Atom::MethodMissing
     name_without_operator = method_name.to_s
                                        .delete("=")
                                        .to_sym
+
     name_for_association = name_without_operator.to_s
                                                 .gsub(/_(id|type)$/, "")
                                                 .to_sym
@@ -88,6 +89,7 @@ module Folio::Atom::MethodMissing
       name_without_operator = method_name.to_s
                                          .delete("=")
                                          .to_sym
+
       is_bool = klass::STRUCTURE[name_without_operator] == :boolean
       is_date = klass::STRUCTURE[name_without_operator] == :date
       is_datetime = klass::STRUCTURE[name_without_operator] == :datetime
@@ -116,21 +118,35 @@ module Folio::Atom::MethodMissing
 
         self.data[name_without_operator.to_s] = value
       else
+        result = nil
         val = (self.data || {})[name_without_operator.to_s]
+
         if is_bool
-          val.present?
+          result = val.present?
         elsif is_date || is_datetime
           if val.present?
-            begin
-              Time.zone.parse(val)
-            rescue StandardError
-              nil
+            if is_date && val.is_a?(Date)
+              result = val
+            elsif is_datetime && val.is_a?(DateTime)
+              result = val
+            else
+              begin
+                result = Time.zone.parse(val)
+              rescue StandardError
+                result = nil
+              end
             end
           else
-            val
+            result = val
           end
         else
-          val
+          result = val
+        end
+
+        if method_name.to_s.ends_with?("?")
+          !!result
+        else
+          result
         end
       end
     end
