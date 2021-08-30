@@ -22,6 +22,8 @@ export default function settingsToHash () {
           val = $setting[0].selectize.getValue()
         } else if ($setting.hasClass('folio-console-react-picker')) {
           val = getJsonFromReactPicker($setting)
+        } else if ($setting.hasClass('form-check-input')) {
+          val = $setting[0].checked
         } else if ($setting.hasClass('folio-react-wrap')) {
           if ($setting.find('.f-c-file-placement-list').length) {
             val = getJsonFromMultiSelectDom($setting)
