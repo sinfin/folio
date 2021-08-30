@@ -70,8 +70,4 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     assert_redirected_to url_for([:console, Folio::User])
     assert_not(Folio::User.exists?(id: model.id))
   end
-
-
-
-
 end
