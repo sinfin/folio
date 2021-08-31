@@ -41,7 +41,7 @@ module Folio::AtomsHelper
           end
         end
       else
-        render_atoms(atoms)
+        render_atoms(atoms, cell_options: cell_options)
       end
     end.compact.join("").html_safe
   end
