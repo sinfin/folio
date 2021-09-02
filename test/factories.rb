@@ -8,8 +8,8 @@ FactoryBot.define do
     social_links { { "facebook" => "http://www.facebook.com/folio" } }
     address { "90682 Folio Square\nFolio" }
     phone { "+420 123456789" }
-    locale { :cs }
-    locales { [:cs] }
+    locale { I18n.default_locale }
+    locales { [I18n.default_locale] }
   end
 
   factory :folio_page, class: "Folio::Page" do
