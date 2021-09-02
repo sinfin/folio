@@ -12,6 +12,8 @@ module Folio
       source_root Folio::Engine.root.join("lib/templates")
 
       def add_gems
+        gsub_file "Gemfile", "  # Display performance information such as SQL time and flame graphs for each request in your browser.\n  # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md\n  gem 'rack-mini-profiler', '~> 2.0'\n", ""
+
         gem "dotenv-rails"
         gem "autoprefixer-rails", "9.8.5"
         gem "slim-rails"
@@ -33,7 +35,6 @@ module Folio
 
         gem "sidekiq", "~> 6"
         gem "sidekiq-cron", "1.2.0"
-        gem "sidekiq-monitoring", "1.3.4"
         gem "redis-namespace", "1.8.1"
 
         gem "status-page", "0.1.5"
@@ -213,10 +214,6 @@ module Folio
         ].each do |file|
           ::File.chmod(0775, Rails.root.join(file))
         end
-      end
-
-      def run_assets_generator
-        generate "folio:assets"
       end
 
       private
