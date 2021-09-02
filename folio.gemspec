@@ -66,6 +66,7 @@ Gem::Specification.new do |s|
   s.add_dependency "fast_jsonapi"
   s.add_dependency "discard"
   s.add_dependency "traco"
+  s.add_dependency "uglifier"
 
   s.add_dependency "dragonfly", "1.3"
   s.add_dependency "dragonfly-s3_data_store"

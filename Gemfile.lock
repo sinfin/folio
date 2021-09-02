@@ -63,6 +63,7 @@ PATH
       sitemap_generator
       slim
       traco
+      uglifier
       whenever
 
 GEM
