@@ -12,7 +12,6 @@ module Folio
       source_root Folio::Engine.root.join("lib/templates")
 
       def add_gems
-        gem "turbolinks"
         gem "dotenv-rails"
         gem "autoprefixer-rails", "9.8.5"
         gem "slim-rails"
@@ -32,7 +31,7 @@ module Folio
         gem "faker", require: false
         gem "aws-sdk-s3", require: false
 
-        gem "sidekiq", "~> 5"
+        gem "sidekiq", "~> 6"
         gem "sidekiq-cron", "1.2.0"
         gem "sidekiq-monitoring", "1.3.4"
         gem "redis-namespace", "1.8.1"
