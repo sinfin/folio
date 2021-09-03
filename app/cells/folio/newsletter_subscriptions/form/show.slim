@@ -8,6 +8,10 @@ div class=wrap_class
           value=ERB::Util.html_escape(options[opt])
         ]
 
+    - if options[:input_label]
+      .form-group.m-0
+        label = options[:input_label]
+
     .position-relative
       = input(f)
 

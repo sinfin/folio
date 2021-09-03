@@ -21,7 +21,8 @@ class Folio::NewsletterSubscriptionsController < Folio::ApplicationController
                             :submit_text,
                             :message,
                             :button_class,
-                            :label)
+                            :label,
+                            :input_label)
       else
         {}
       end

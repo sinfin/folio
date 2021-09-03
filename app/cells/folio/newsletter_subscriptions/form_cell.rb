@@ -42,7 +42,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
   end
 
   def remember_option_keys
-    [:placeholder, :submit_text, :message, :button_class]
+    [:placeholder, :submit_text, :message, :button_class, :input_label]
   end
 
   def input(f)
