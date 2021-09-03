@@ -10,7 +10,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
   def form(&block)
     opts = {
       url: controller.folio.newsletter_subscriptions_path,
-      html: { class: "f-newsletter-subscriptions-form__form" },
+      html: { class: "f-newsletter-subscriptions-form__form", id: nil },
     }
 
     simple_form_for(newsletter_subscription, opts, &block)
@@ -49,6 +49,6 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
     f.input :email,
             as: :email,
             label: false,
-            input_html: { class: "f-newsletter-subscriptions-form__input" }
+            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil }
   end
 end
