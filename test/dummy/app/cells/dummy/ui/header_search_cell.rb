@@ -3,7 +3,7 @@
 class Dummy::Ui::HeaderSearchCell < ApplicationCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
-  class_name "d-ui-header-search", :expanded?
+  class_name "d-ui-header-search"
 
   def form(&block)
     opts = {
@@ -19,7 +19,6 @@ class Dummy::Ui::HeaderSearchCell < ApplicationCell
     f.input :q,
             input_html: {
               class: "d-ui-header-search__input",
-              value: params[:q],
               placeholder: t(".placeholder"),
               id: nil,
               autocomplete: "off",
@@ -27,9 +26,5 @@ class Dummy::Ui::HeaderSearchCell < ApplicationCell
             },
             label: false,
             wrapper: false
-  end
-
-  def expanded?
-    params[:q].present?
   end
 end

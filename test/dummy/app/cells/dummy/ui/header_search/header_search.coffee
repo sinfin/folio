@@ -1,16 +1,45 @@
+resultsCache = []
+closed = null
+
+close = ($wrap) ->
+  closed = Number(new Date())
+  $wrap
+    .removeClass('d-ui-header-search--expanded')
+    .removeClass('d-ui-header-search--autocomplete')
+    .find('.d-ui-header-search__autocomplete-results')
+    .html('')
+  $(window).trigger('resize.uiHeaderMenu')
+
+getCachedResult = (q) ->
+  result = null
+  resultsCache.forEach (ary) -> result = ary[1] if q is ary[0]
+  return result
+
 loadAutocomplete = (input) ->
   $input = $(input)
   $wrap = $input.closest('.d-ui-header-search')
+  cachedResult = getCachedResult(input.value)
+  value = input.value
+
+  if cachedResult
+    $wrap
+      .find('.d-ui-header-search__autocomplete-results')
+      .html(cachedResult)
+
+    return
 
   $.ajax
     url: input.getAttribute('data-autocomplete-url')
     data:
-      q: $input.val()
+      q: value
     method: 'GET'
     success: (response) ->
       $wrap
         .find('.d-ui-header-search__autocomplete-results')
         .html(response.data)
+
+      resultsCache = resultsCache.slice(0, 4)
+      resultsCache.unshift([value, response.data])
     error: ->
       $wrap.removeClass('d-ui-header-search--autocomplete')
 
@@ -25,8 +54,14 @@ $(document)
     return unless isDesktop
 
     e.preventDefault()
-    if $wrap.hasClass('d-ui-header-search--expanded')
-      $wrap.find('form').submit()
+
+    if $wrap.hasClass('d-ui-header-search--expanded') or (closed and (Number(new Date()) - closed < 500))
+      $form = $wrap.find('form')
+
+      if $form.find('.d-ui-header-search__input').val()
+        $form.submit()
+      else
+        close($wrap)
     else
       $wrap
         .addClass('d-ui-header-search--expanded')
@@ -37,11 +72,7 @@ $(document)
 
   .on 'blur', '.d-ui-header-search__input', ->
     if @value is ""
-      $(this)
-        .closest('.d-ui-header-search')
-        .removeClass('d-ui-header-search--expanded')
-
-      $(window).trigger('resize.uiHeaderMenu')
+      close($(this).closest('.d-ui-header-search'))
 
   .on 'keyup', '.d-ui-header-search__input', ->
     if @value is ""
@@ -51,10 +82,21 @@ $(document)
         .find('.d-ui-header-search__autocomplete-results')
         .html('')
     else
+      cachedResult = getCachedResult(@value)
+
       $(this)
         .closest('.d-ui-header-search')
         .addClass('d-ui-header-search--autocomplete')
         .find('.d-ui-header-search__autocomplete-results')
-        .html('')
+        .html(cachedResult or '')
 
-      debouncedLoadAutocomplete(this)
+      debouncedLoadAutocomplete(this) unless cachedResult
+
+  .on 'change', '.d-ui-header-search__input', ->
+    $(this)
+      .closest('.d-ui-header-search')
+      .toggleClass('d-ui-header-search--expanded', if @value then true else false)
+
+  .on 'click', '.d-ui-header-search__overlay', ->
+    $wrap = $(this).closest('.d-ui-header-search')
+    close($wrap)
