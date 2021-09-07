@@ -1,0 +1,37 @@
+.d-searches-show
+  .container-fluid
+    h1.d-searches-show__title
+      span.d-searches-show__title-label = t('.title')
+      '
+      span.d-searches-show__title-query = params[:q]
+
+    - if model[:tabs].present?
+      .d-searches-show__tabs.mb-g
+        == cell('dummy/ui/tabs', model[:tabs])
+
+    - if model[:count] == 0
+      .d-searches-show__no-results
+        p = cstypo t('.no_results')
+    - else
+      .d-searches-show__results
+        - if model[:active_results]
+          - if model[:active_results][:pagy]
+            - if model[:active_results][:pagy].pages > 1
+              .small.mb-3
+                = pagy_info model[:active_results][:pagy]
+
+          == cell(model[:active_results][:results_cell],
+                  model[:active_results][:records])
+
+          == cell('dummy/ui/pagy', model[:active_results][:pagy])
+        - else
+          - model[:klasses].each do |klass, data|
+            h2.d-searches-show__results-title
+              a.d-unlink href=data[:href]
+                = data[:label]
+
+            == cell(data[:results_cell], data[:records])
+
+            - if data[:pagy] && data[:pagy].pages > 1
+              a.btn.btn-primary href=data[:href]
+                = t('.more_results')
