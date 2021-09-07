@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Searches::AutocompleteCellTest < Cell::TestCase
+  test "show" do
+    html = cell("<%= application_namespace_path %>/searches/autocomplete", nil).(:show)
+    assert html.has_css?(".<%= classname_prefix %>-searches-autocomplete")
+  end
+end
