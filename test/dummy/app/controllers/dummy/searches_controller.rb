@@ -12,6 +12,7 @@ class Dummy::SearchesController < ApplicationController
   end
 
   def autocomplete
+    render json: { data: cell("dummy/searches/autocomplete", @search).show }
   end
 
   private
@@ -45,7 +46,11 @@ class Dummy::SearchesController < ApplicationController
 
         scope = scope.includes(*meta[:includes]) if meta[:includes].present?
 
-        scope = scope.by_query(params[:q].presence)
+        if params[:q].present?
+          scope = scope.by_query(params[:q].presence)
+        else
+          scope = scope.none
+        end
 
         klass_pagy, klass_records = pagy(scope, items: meta[:overview_limit] || DEFAULT_OVERVIEW_LIMIT)
         count = klass_pagy.count

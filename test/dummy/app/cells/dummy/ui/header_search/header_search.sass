@@ -32,6 +32,29 @@
   &__input
     padding-right: 45px
 
+  &__autocomplete
+    position: absolute
+    top: 100%
+    left: 1px
+    right: 1px
+    background: $light-gray
+    box-shadow: $ui-card-box-shadow
+    min-height: 60px
+    display: none
+
+  &--autocomplete &__autocomplete
+    display: block
+
+  &__loader
+    background: $light-gray
+    display: none
+
+  &__autocomplete-results
+    color: $black
+
+  &__autocomplete-results:empty + &__loader
+    display: block
+
   +mq-desktop-menu
     &--expanded &__a
       color: $black

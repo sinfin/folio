@@ -23,6 +23,7 @@ class Dummy::Ui::HeaderSearchCell < ApplicationCell
               placeholder: t(".placeholder"),
               id: nil,
               autocomplete: "off",
+              "data-autocomplete-url" => controller.main_app.autocomplete_dummy_search_path,
             },
             label: false,
             wrapper: false

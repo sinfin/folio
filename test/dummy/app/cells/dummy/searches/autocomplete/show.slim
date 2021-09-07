@@ -1,0 +1,15 @@
+.d-searches-autocomplete.small
+  - if model[:count] == 0
+    .d-searches-autocomplete__no-results
+      = cstypo t('dummy.searches.show.no_results')
+
+  - else
+    - model[:klasses].each do |klass, data|
+      .d-searches-autocomplete__klass
+        a.d-searches-autocomplete__title href=data[:href]
+          = data[:label]
+
+        - data[:records].each do |record|
+          .d-searches-autocomplete__record
+            a.d-searches-autocomplete__record-a href=url_for(record)
+              = record.to_label

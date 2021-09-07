@@ -40,4 +40,34 @@ class Dummy::SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_select(".d-searches-show__results-title", 0)
     assert_select(".d-searches-show__no-results", 0)
   end
+
+  test "autocomplete" do
+    create(:folio_site)
+
+    get autocomplete_dummy_search_path
+    assert_response(:ok)
+    page = Capybara.string(response.parsed_body["data"])
+    assert_equal(0, page.find_css(".d-searches-autocomplete__klass").size)
+    assert_equal(1, page.find_css(".d-searches-autocomplete__no-results").size)
+
+    get autocomplete_dummy_search_path(q: "foo")
+    assert_response(:ok)
+    page = Capybara.string(response.parsed_body["data"])
+    assert_equal(0, page.find_css(".d-searches-autocomplete__klass").size)
+    assert_equal(1, page.find_css(".d-searches-autocomplete__no-results").size)
+
+    create(:folio_page, title: "bar")
+    get autocomplete_dummy_search_path(q: "foo")
+    assert_response(:ok)
+    page = Capybara.string(response.parsed_body["data"])
+    assert_equal(0, page.find_css(".d-searches-autocomplete__klass").size)
+    assert_equal(1, page.find_css(".d-searches-autocomplete__no-results").size)
+
+    create(:folio_page, title: "foo")
+    get autocomplete_dummy_search_path(q: "foo")
+    assert_response(:ok)
+    page = Capybara.string(response.parsed_body["data"])
+    assert_equal(1, page.find_css(".d-searches-autocomplete__klass").size)
+    assert_equal(0, page.find_css(".d-searches-autocomplete__no-results").size)
+  end
 end
