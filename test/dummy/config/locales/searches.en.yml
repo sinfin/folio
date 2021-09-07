@@ -6,6 +6,7 @@ en:
         title: "Search results:"
         no_results: No results found. Make sure the term is spelled correctly, or try searching for other keywords.
         more_results: More results
+        placeholder: Search term
         tabs:
           overview: Overview
           "Folio::Page": Stránky

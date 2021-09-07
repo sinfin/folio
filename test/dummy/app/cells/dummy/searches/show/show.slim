@@ -1,9 +1,14 @@
 .d-searches-show
   .container-fluid
-    h1.d-searches-show__title
-      span.d-searches-show__title-label = t('.title')
+    = form do |f|
+      h1.d-searches-show__title = t('.title')
       '
-      span.d-searches-show__title-query = params[:q]
+
+      .d-searches-show__input-and-submit
+        = query_input(f)
+
+        button.d-searches-show__submit type="submit"
+          = icon(:search, class: 'd-searches-show__submit-ico', height: 32)
 
     - if model[:tabs].present?
       .d-searches-show__tabs.mb-g
