@@ -16,3 +16,5 @@ en:
         twitter: Share on Twitter
         email: Share via e-mail
         clipboard: Copy link
+      header_search:
+        placeholder: Search term

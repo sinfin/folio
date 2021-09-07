@@ -1,0 +1,10 @@
+div class=class_name
+  a.d-ui-header-search__a[
+    href=(controller.main_app.try(:dummy_search_path) || "/")
+  ]
+    = icon(:search, height: 32)
+
+  = form do |f|
+    = query_input(f)
+
+  span.d-ui-header-search__mq
