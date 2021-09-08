@@ -1,7 +1,9 @@
 .d-searches-show
   .container-fluid
     = form do |f|
-      h1.d-searches-show__title = t('.title')
+      h1.d-searches-show__title
+        a.d-unlink href=controller.main_app.volebnipruvodce_search_path
+          = t('.title')
       '
 
       .d-searches-show__input-and-submit
@@ -16,7 +18,11 @@
 
     - if model[:count] == 0
       .d-searches-show__no-results.mt-g
-        p = cstypo t('.no_results')
+        p
+          - if params[:q].present?
+            = cstypo t('.no_results')
+          - else
+            = cstypo t('.no_query')
     - else
       .d-searches-show__results
         - if model[:active_results]
@@ -31,6 +37,8 @@
           == cell('dummy/ui/pagy', model[:active_results][:pagy])
         - else
           - model[:klasses].each do |klass, data|
+            - next if data[:count] == 0
+
             h2.d-searches-show__results-title
               a.d-unlink href=data[:href]
                 = data[:label]

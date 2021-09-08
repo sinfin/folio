@@ -5,6 +5,7 @@ en:
       show:
         title: "Search results:"
         no_results: No results found. Make sure the term is spelled correctly, or try searching for other keywords.
+        no_query: Enter a search term into the field above to search.
         more_results: More results
         placeholder: Search term
         tabs:

@@ -74,7 +74,12 @@ $(document)
     if @value is ""
       close($(this).closest('.d-ui-header-search'))
 
-  .on 'keyup', '.d-ui-header-search__input', ->
+  .on 'keyup', '.d-ui-header-search__input', (e) ->
+    if e.key is 'Escape'
+      e.preventDefault()
+      @value = ""
+      return $(this).blur()
+
     if @value is ""
       $(this)
         .closest('.d-ui-header-search')

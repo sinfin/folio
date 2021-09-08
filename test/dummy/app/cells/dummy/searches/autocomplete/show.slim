@@ -5,6 +5,8 @@
 
   - else
     - model[:klasses].each do |klass, data|
+      - next if data[:count] == 0
+
       .d-searches-autocomplete__klass
         a.d-searches-autocomplete__title href=data[:href]
           = data[:label]

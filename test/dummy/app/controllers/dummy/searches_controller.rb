@@ -6,7 +6,16 @@ class Dummy::SearchesController < ApplicationController
   DEFAULT_OVERVIEW_LIMIT = 4
   DEFAULT_LIMIT = 40
   DEFAULT_RESULTS_CELL = "dummy/searches/results_list"
-  DEFAULT_AUTOCOMPLETE_RESULTS_CELL = "dummy/searches/results_list"
+
+  SEARCH_MODELS = [
+    {
+      klass: Folio::Page,
+      limit: DEFAULT_LIMIT,
+      overview_limit: DEFAULT_OVERVIEW_LIMIT,
+      includes: [cover_placement: :file],
+      results_cell: DEFAULT_RESULTS_CELL,
+    },
+  ]
 
   def show
   end
@@ -31,17 +40,7 @@ class Dummy::SearchesController < ApplicationController
 
       has_active = false
 
-      # cell defaults to "dummy/searches/results_list"
-      [
-        {
-          klass: Folio::Page,
-          limit: DEFAULT_LIMIT,
-          overview_limit: DEFAULT_OVERVIEW_LIMIT,
-          includes: [cover_placement: :file],
-          results_cell: "dummy/searches/results_list",
-          autocomplete_results_cell: "dummy/searches/results_list",
-        },
-      ].each do |meta|
+      SEARCH_MODELS.each do |meta|
         scope = meta[:klass].published
 
         scope = scope.includes(*meta[:includes]) if meta[:includes].present?
@@ -65,7 +64,6 @@ class Dummy::SearchesController < ApplicationController
           label: "#{label} (#{count})",
           href: tab_href,
           results_cell: meta[:results_cell] || DEFAULT_RESULTS_CELL,
-          autocomplete_results_cell: meta[:autocomplete_results_cell] || DEFAULT_AUTOCOMPLETE_RESULTS_CELL,
         }
 
         @search[:count] += count
