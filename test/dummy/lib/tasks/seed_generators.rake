@@ -85,21 +85,11 @@ class Dummy::SeedGenerator
   end
 
   def blog
-    Dir[Rails.root.join("app/cells/**/dummy/blog/**/*.*"),
-        Rails.root.join("app/cells/**/dummy/*/blog/**/*.*"),
-        Rails.root.join("app/controllers/**/dummy/blog/**/*.rb"),
-        Rails.root.join("app/models/dummy/blog/**/*.rb"),
-        Rails.root.join("app/models/dummy/atom/blog/**/*.rb"),
-        Rails.root.join("app/models/dummy/blog.rb"),
-        Rails.root.join("app/views/dummy/blog/**/*.slim"),
-        Rails.root.join("app/views/folio/console/dummy/blog/**/*.slim"),
-        Rails.root.join("config/locales/blog.*.yml"),
-        Rails.root.join("db/migrate/*_create_blog.rb"),
-        Rails.root.join("test/**/dummy/blog/**/*.rb"),
-        Rails.root.join("test/**/dummy/*/blog/**/*.rb")].each do |path|
-      target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
-      copy_file(path, @templates_path.join(target_path))
-    end
+    scaffold("blog")
+  end
+
+  def search
+    scaffold("searches")
   end
 
   def ui_i18n_yamls(path)
@@ -137,17 +127,21 @@ class Dummy::SeedGenerator
     def replace_names(str)
       str.gsub("Dummy::", "<%= application_namespace %>::")
          .gsub("dummy_", "<%= application_namespace_path %>_")
+         .gsub("dummy.search", "<%= application_namespace_path %>.search")
          .gsub("dummy:", "<%= application_namespace_path %>:")
          .gsub("window.dummy", "window.<%= application_namespace_path %>")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
+         .gsub("d-unlink", "<%= classname_prefix %>-unlink")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
+         .gsub("d-search", "<%= classname_prefix %>-search")
          .gsub("d-molecule", "<%= classname_prefix %>-molecule")
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
          .gsub("dAtom", "<%= classname_prefix %>Atom")
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
+         .gsub("dummy/search", "<%= application_namespace_path %>/search")
          .gsub("dummy/atom/blog", "<%= application_namespace_path %>/atom/blog")
          .gsub("dummy/molecule/blog", "<%= application_namespace_path %>/molecule/blog")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
@@ -167,6 +161,26 @@ class Dummy::SeedGenerator
         puts "W #{relative_path(to)}"
       end
     end
+
+    def scaffold(key)
+      Dir[Rails.root.join("app/cells/**/dummy/#{key}/**/*.*"),
+          Rails.root.join("app/cells/**/dummy/*/#{key}/**/*.*"),
+          Rails.root.join("app/controllers/**/dummy/#{key}/**/*.rb"),
+          Rails.root.join("app/controllers/**/dummy/#{key}_controller.rb"),
+          Rails.root.join("app/models/dummy/#{key}/**/*.rb"),
+          Rails.root.join("app/models/dummy/atom/#{key}/**/*.rb"),
+          Rails.root.join("app/models/dummy/#{key}.rb"),
+          Rails.root.join("app/views/dummy/#{key}/**/*.slim"),
+          Rails.root.join("app/views/folio/console/dummy/#{key}/**/*.slim"),
+          Rails.root.join("config/locales/#{key}.*.yml"),
+          Rails.root.join("db/migrate/*_create_#{key}.rb"),
+          Rails.root.join("test/**/dummy/#{key}/**/*.rb"),
+          Rails.root.join("test/**/dummy/#{key}_controller_test.rb"),
+          Rails.root.join("test/**/dummy/*/#{key}/**/*.rb")].each do |path|
+        target_path = "#{relative_application_path(path).gsub('dummy', "application_namespace_path")}.tt"
+        copy_file(path, @templates_path.join(target_path))
+      end
+    end
 end
 
 namespace :dummy do
@@ -175,6 +189,7 @@ namespace :dummy do
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
       Rake::Task["dummy:seed_generators:blog"].invoke
+      Rake::Task["dummy:seed_generators:search"].invoke
     end
 
     task ui: :environment do
@@ -199,6 +214,11 @@ namespace :dummy do
     task blog: :environment do
       gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/blog/templates"))
       gen.blog
+    end
+
+    task search: :environment do
+      gen = Dummy::SeedGenerator.new(templates_path: Folio::Engine.root.join("lib/generators/folio/search/templates"))
+      gen.search
     end
   end
 end

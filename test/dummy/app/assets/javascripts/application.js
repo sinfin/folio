@@ -23,6 +23,7 @@
 //= require dummy/ui/clipboard/clipboard
 //= require dummy/ui/flash/flash
 //= require dummy/ui/header_message/header_message
+//= require dummy/ui/header_search/header_search
 //= require dummy/ui/menu/menu
 //= require dummy/ui/modal/modal
 //= require dummy/ui/navigation/navigation

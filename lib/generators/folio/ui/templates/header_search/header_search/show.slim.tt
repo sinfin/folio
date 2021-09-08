@@ -1,0 +1,16 @@
+div class=class_name
+  a.<%= classname_prefix %>-ui-header-search__a[
+    href=(controller.main_app.try(:<%= application_namespace_path %>_search_path) || "/")
+  ]
+    = icon(:search, height: 32)
+
+  = form do |f|
+    = query_input(f)
+
+    .<%= classname_prefix %>-ui-header-search__autocomplete
+      .<%= classname_prefix %>-ui-header-search__autocomplete-results
+      span.folio-loader.<%= classname_prefix %>-ui-header-search__loader
+
+  .<%= classname_prefix %>-ui-header-search__overlay
+
+  span.<%= classname_prefix %>-ui-header-search__mq

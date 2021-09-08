@@ -15,8 +15,7 @@ input[
         .<%= classname_prefix %>-ui-header__menu
           == cell('<%= application_namespace_path %>/ui/menu', menu, theme: :dark)
 
-      a.<%= classname_prefix %>-ui-header__search-a href="/"
-        = icon(:search, height: 32)
+      == cell('<%= application_namespace_path %>/ui/header_search')
 
       - if menu
         label.<%= classname_prefix %>-ui-header__menu-toggle for=MENU_INPUT_ID

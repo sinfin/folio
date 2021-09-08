@@ -16,3 +16,5 @@ cs:
         twitter: Sdílejte na Twitteru
         email: Sdílejte mailem
         clipboard: Kopírovat odkaz
+      header_search:
+        placeholder: Hledaný výraz

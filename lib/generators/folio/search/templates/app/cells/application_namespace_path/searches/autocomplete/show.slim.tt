@@ -1,0 +1,17 @@
+.<%= classname_prefix %>-searches-autocomplete.small
+  - if model[:count] == 0
+    .<%= classname_prefix %>-searches-autocomplete__no-results
+      = cstypo t('<%= application_namespace_path %>.searches.show.no_results')
+
+  - else
+    - model[:klasses].each do |klass, data|
+      - next if data[:count] == 0
+
+      .<%= classname_prefix %>-searches-autocomplete__klass
+        a.<%= classname_prefix %>-searches-autocomplete__title href=data[:href]
+          = data[:label]
+
+        - data[:records].each do |record|
+          .<%= classname_prefix %>-searches-autocomplete__record
+            a.<%= classname_prefix %>-searches-autocomplete__record-a href=url_for(record)
+              = record.to_label

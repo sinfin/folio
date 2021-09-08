@@ -1,0 +1,50 @@
+.d-searches-show
+  .container-fluid
+    = form do |f|
+      h1.d-searches-show__title
+        a.d-unlink href=controller.main_app.volebnipruvodce_search_path
+          = t('.title')
+      '
+
+      .d-searches-show__input-and-submit
+        = query_input(f)
+
+        button.d-searches-show__submit type="submit"
+          = icon(:search, class: 'd-searches-show__submit-ico', height: 32)
+
+    - if model[:tabs].present? && model[:count] > 0
+      .d-searches-show__tabs.mb-g
+        == cell('dummy/ui/tabs', model[:tabs])
+
+    - if model[:count] == 0
+      .d-searches-show__no-results.mt-g
+        p
+          - if params[:q].present?
+            = cstypo t('.no_results')
+          - else
+            = cstypo t('.no_query')
+    - else
+      .d-searches-show__results
+        - if model[:active_results]
+          - if model[:active_results][:pagy]
+            - if model[:active_results][:pagy].pages > 1
+              .small.mb-3
+                = pagy_info model[:active_results][:pagy]
+
+          == cell(model[:active_results][:results_cell],
+                  model[:active_results][:records])
+
+          == cell('dummy/ui/pagy', model[:active_results][:pagy])
+        - else
+          - model[:klasses].each do |klass, data|
+            - next if data[:count] == 0
+
+            h2.d-searches-show__results-title
+              a.d-unlink href=data[:href]
+                = data[:label]
+
+            == cell(data[:results_cell], data[:records])
+
+            - if data[:pagy] && data[:pagy].pages > 1
+              a.btn.btn-primary href=data[:href]
+                = t('.more_results')

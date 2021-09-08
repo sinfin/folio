@@ -22,6 +22,11 @@ Rails.application.routes.draw do
                                   constraints: { name: /.*/ }
 
   scope module: :dummy, as: :dummy do
+    resource :search, only: %i[show] do
+      get :autocomplete
+      get :pages
+    end
+
     namespace :blog do
       resources :articles, only: %i[show] do
         member { get :preview }

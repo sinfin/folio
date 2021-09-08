@@ -1,0 +1,1 @@
+== cell('<%= application_namespace_path %>/searches/show', @search)
