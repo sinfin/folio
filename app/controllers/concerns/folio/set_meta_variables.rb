@@ -12,8 +12,10 @@ module Folio::SetMetaVariables
       meta_description: :meta_description,
     }.merge(mappings)
 
-    if image = instance.try(m[:image]).presence
-      @og_image = image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
+    if ::Rails.application.config.folio_use_og_image
+      if image = instance.try(m[:image]).presence
+        @og_image = image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
+      end
     end
 
     title = instance.try(m[:title]).presence

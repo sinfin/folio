@@ -38,6 +38,7 @@ module Folio
     config.folio_image_spacer_background_fallback = nil
     config.folio_show_transportable_frontend = false
     config.folio_modal_cell_name = nil
+    config.folio_use_og_image = true
 
     config.folio_users = false
     config.folio_users_require_phone = false
