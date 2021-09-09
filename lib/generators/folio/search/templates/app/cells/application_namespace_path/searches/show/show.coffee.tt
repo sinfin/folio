@@ -1,6 +1,7 @@
 resultsCache = []
 ajax = null
 aborted = false
+timeout = null
 
 getCachedResult = (q) ->
   result = null
@@ -34,6 +35,10 @@ load = ($input, $form, $wrap) ->
   return if setCachedResults(value, $wrap)
 
   url = "#{$form.prop('action')}?q=#{value}"
+
+  tabMatch = window.location.search.match(/tab=[^&]+/)
+  if tabMatch and tabMatch[0]
+    url += "&#{tabMatch[0]}"
 
   $.ajax
     url: url
@@ -75,20 +80,31 @@ debouncedLoad = window.folioDebounce(load, 300)
 $(document)
   .on 'turbolinks:load', ->
     $('.<%= classname_prefix %>-searches-show__input').on 'keyup.<%= classname_prefix %>SearchesShow change.<%= classname_prefix %>SearchesShow', (e) ->
-      $input = $(this)
-      $form = $input.closest('.<%= classname_prefix %>-searches-show__form')
-      $wrap = $form.closest('.<%= classname_prefix %>-searches-show')
+      perform = =>
+        $input = $(this)
+        $form = $input.closest('.<%= classname_prefix %>-searches-show__form')
+        $wrap = $form.closest('.<%= classname_prefix %>-searches-show')
 
-      return if setCachedResults(@value, $wrap)
+        return if setCachedResults(@value, $wrap)
 
-      $wrap.addClass('<%= classname_prefix %>-searches-show--loading')
+        $wrap.addClass('<%= classname_prefix %>-searches-show--loading')
 
-      debouncedLoad($input, $form, $wrap)
+        debouncedLoad($input, $form, $wrap)
 
-  .on 'turbolinks:before-render', ->
+      if e.type is "change"
+        timeout = setTimeout(perform, 100)
+      else
+        perform()
+
+  .on 'turbolinks:request-start', ->
     if ajax
       aborted = true
       ajax.abort()
       ajax = null
 
+    if timeout
+      clearTimeout(timeout)
+      timeeout = null
+
+  .on 'turbolinks:before-render', ->
     $('.<%= classname_prefix %>-searches-show__input').off 'keyup.<%= classname_prefix %>SearchesShow change.<%= classname_prefix %>SearchesShow'
