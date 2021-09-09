@@ -32,7 +32,8 @@
                   = pagy_info model[:active_results][:pagy]
 
             == cell(model[:active_results][:results_cell],
-                    model[:active_results][:records])
+                    model[:active_results][:records],
+                    search_results: true)
 
             == cell('dummy/ui/pagy', model[:active_results][:pagy])
           - else
@@ -43,7 +44,9 @@
                 a.d-unlink href=data[:href]
                   = data[:label]
 
-              == cell(data[:results_cell], data[:records])
+              == cell(data[:results_cell],
+                      data[:records],
+                      search_results: false)
 
               - if data[:pagy] && data[:pagy].pages > 1
                 a.btn.btn-primary href=data[:href]

@@ -5,4 +5,5 @@
             href: url_for(record),
             title: record.to_label,
             content: record.try(:perex) || record.try(:description),
-            small: true)
+            small: true,
+            lazyload_image: false)
