@@ -17,7 +17,7 @@ class Folio::NewsletterSubscriptionsControllerTest < ActionDispatch::Integration
     }
     assert_response(:success)
     assert_select(".f-newsletter-subscriptions-form__message", false)
-    assert_select(".form-group-invalid #newsletter_subscription_email")
+    assert_select(".form-group-invalid .f-newsletter-subscriptions-form__input")
   end
 
   test "valid" do
