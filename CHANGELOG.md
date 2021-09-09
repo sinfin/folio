@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-09-09
+### Added
+- added search generator and UI
+
 ## 2021-08-20
 ### Added
 - added `VALID_PLACEMENT_TYPES` to atoms, validate placement method
