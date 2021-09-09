@@ -2,7 +2,10 @@
   .container-fluid.<%= classname_prefix %>-ui-card__container
     .<%= classname_prefix %>-ui-card__inner
       - if model[:cover_placement]
-        = image(model[:cover_placement], thumb_size, class: '<%= classname_prefix %>-ui-card__image')
+        = image(model[:cover_placement],
+                thumb_size,
+                class: '<%= classname_prefix %>-ui-card__image',
+                lazy: lazyload_image?)
 
       .<%= classname_prefix %>-ui-card__content
         - if model[:title].present?

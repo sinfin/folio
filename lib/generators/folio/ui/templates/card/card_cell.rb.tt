@@ -53,4 +53,8 @@ class <%= application_namespace %>::Ui::CardCell < ApplicationCell
       "small"
     end
   end
+
+  def lazyload_image?
+    model[:lazyload_image] != false
+  end
 end
