@@ -21,6 +21,7 @@ class <%= application_namespace %>::Searches::ShowCell < ApplicationCell
               value: params[:q],
               placeholder: t(".placeholder"),
               autofocus: true,
+              autocomplete: "off",
               id: nil,
               onfocus: "var <%= classname_prefix %>SearchesShowValue = this.value; this.value = ''; this.value = <%= classname_prefix %>SearchesShowValue",
             },

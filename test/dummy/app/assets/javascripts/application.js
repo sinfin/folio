@@ -19,6 +19,7 @@
 //= require folio/leads/form/form
 //= require folio/sensitive_content_modal/sensitive_content_modal
 //= require folio/newsletter_subscriptions/form/form
+//= require dummy/searches/show/show
 
 //= require dummy/ui/clipboard/clipboard
 //= require dummy/ui/flash/flash

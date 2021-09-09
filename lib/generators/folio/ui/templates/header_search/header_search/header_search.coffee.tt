@@ -1,6 +1,6 @@
 resultsCache = []
 closed = null
-keyupListening = false
+keydownListening = false
 
 onDocumentKeydown = (e) ->
   if e.key is "ArrowDown" or e.key is "ArrowUp"
@@ -37,8 +37,8 @@ startAutocomplete = ($wrap) ->
   $wrap
     .addClass('<%= classname_prefix %>-ui-header-search--autocomplete')
 
-  unless keyupListening
-    keyupListening = true
+  unless keydownListening
+    keydownListening = true
     $(document).on 'keydown.vUiHeaderSearch', onDocumentKeydown
 
 stopAutocomplete = ($wrap) ->
@@ -47,8 +47,8 @@ stopAutocomplete = ($wrap) ->
     .find('.<%= classname_prefix %>-ui-header-search__autocomplete-results')
     .html('')
 
-  if keyupListening
-    keyupListening = false
+  if keydownListening
+    keydownListening = false
     $(document).off 'keydown.vUiHeaderSearch'
 
 close = ($wrap) ->
@@ -68,8 +68,8 @@ getCachedResult = (q) ->
 loadAutocomplete = (input) ->
   $input = $(input)
   $wrap = $input.closest('.<%= classname_prefix %>-ui-header-search')
-  cachedResult = getCachedResult(input.value)
   value = input.value
+  cachedResult = getCachedResult(value)
 
   if cachedResult
     $wrap

@@ -35,6 +35,16 @@
     height: 41px
     padding-right: 10px
 
+  &__tabs:empty
+    display: none
+
+  &__results-wrap
+    position: relative
+    min-height: 150px
+
+  &:not(&--loading) &__loader
+    display: none
+
   +media-breakpoint-down(xs)
     &__form
       flex-wrap: wrap

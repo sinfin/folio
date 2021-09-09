@@ -21,6 +21,7 @@ class Dummy::Searches::ShowCell < ApplicationCell
               value: params[:q],
               placeholder: t(".placeholder"),
               autofocus: true,
+              autocomplete: "off",
               id: nil,
               onfocus: "var dSearchesShowValue = this.value; this.value = ''; this.value = dSearchesShowValue",
             },
