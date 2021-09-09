@@ -18,6 +18,7 @@ class Dummy::SearchesController < ApplicationController
   ]
 
   def show
+    @public_page_title = t(".title")
   end
 
   def autocomplete
