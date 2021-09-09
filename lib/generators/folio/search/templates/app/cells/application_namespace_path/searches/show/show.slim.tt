@@ -2,7 +2,7 @@
   .container-fluid
     = form do |f|
       h1.<%= classname_prefix %>-searches-show__title
-        a.<%= classname_prefix %>-unlink href=controller.main_app.volebnipruvodce_search_path
+        a.<%= classname_prefix %>-unlink href=controller.main_app.<%= application_namespace_path %>_search_path
           = t('.title')
       '
 

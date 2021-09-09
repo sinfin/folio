@@ -12,6 +12,5 @@
           = data[:label]
 
         - data[:records].each do |record|
-          .<%= classname_prefix %>-searches-autocomplete__record
-            a.<%= classname_prefix %>-searches-autocomplete__record-a href=url_for(record)
-              = record.to_label
+          a.<%= classname_prefix %>-searches-autocomplete__record href=url_for(record)
+            = record.to_label

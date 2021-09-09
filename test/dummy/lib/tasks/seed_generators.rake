@@ -139,6 +139,7 @@ class Dummy::SeedGenerator
          .gsub("d-rich-text", "<%= classname_prefix %>-rich-text")
          .gsub("d-with-icon", "<%= classname_prefix %>-with-icon")
          .gsub("dAtom", "<%= classname_prefix %>Atom")
+         .gsub("dSearch", "<%= classname_prefix %>Search")
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")

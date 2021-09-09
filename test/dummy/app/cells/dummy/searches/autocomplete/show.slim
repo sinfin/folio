@@ -12,6 +12,5 @@
           = data[:label]
 
         - data[:records].each do |record|
-          .d-searches-autocomplete__record
-            a.d-searches-autocomplete__record-a href=url_for(record)
-              = record.to_label
+          a.d-searches-autocomplete__record href=url_for(record)
+            = record.to_label

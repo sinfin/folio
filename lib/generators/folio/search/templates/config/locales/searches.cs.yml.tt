@@ -3,7 +3,7 @@ cs:
   <%= application_namespace_path %>:
     searches:
       show:
-        title: "Výsledky vyhledávání:"
+        title: "Vyhledávání:"
         no_results: Nebyly nalezeny žádné výsledky. Ujistěte se, zda je výraz napsán správně, nebo zkuste hledat jiná klíčová slova.
         no_query: Pro vyhledávání zadejte hledaný výraz do políčka výše.
         more_results: Zobrazit další položky

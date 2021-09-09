@@ -1,14 +1,19 @@
 .d-searches-autocomplete
+  padding: $spacer / 2 0
+
   &__title
     font-weight: $font-weight-bold
     text-decoration: none
-    padding: $spacer $grid-gutter-half 0
+    padding: $spacer / 2 $grid-gutter-half
     display: block
 
   &__record
-    margin: $spacer 0
+    padding: $spacer / 2 $grid-gutter-half
     display: block
-    padding: 0 $grid-gutter-half
+
+    &:hover,
+    &--focused
+      background: $gray
 
   &__no-results
     padding: $spacer $grid-gutter-half

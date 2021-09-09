@@ -1,13 +1,63 @@
 resultsCache = []
 closed = null
+keyupListening = false
 
-close = ($wrap) ->
-  closed = Number(new Date())
+onDocumentKeydown = (e) ->
+  if e.key is "ArrowDown" or e.key is "ArrowUp"
+    $records = $('.d-searches-autocomplete__record')
+    focused = null
+    $records.each (i, el) ->
+      if el.classList.contains('d-searches-autocomplete__record--focused')
+        focused = i
+        return false
+
+    if focused isnt null
+      shift = if e.key is "ArrowDown" then 1 else -1
+      target = focused + shift
+      if target < -1
+        target = -1
+      else if target > $records.length - 1
+        target = 0
+    else
+      target = if e.key is "ArrowDown" then 0 else -1
+
+    $records
+      .removeClass('d-searches-autocomplete__record--focused')
+      .eq(target)
+      .addClass('d-searches-autocomplete__record--focused')
+
+  else if e.key is "Enter"
+    focused = document.querySelector('.d-searches-autocomplete__record--focused')
+    if focused
+      e.preventDefault()
+      e.stopPropagation()
+      focused.click()
+
+startAutocomplete = ($wrap) ->
   $wrap
-    .removeClass('d-ui-header-search--expanded')
+    .addClass('d-ui-header-search--autocomplete')
+
+  unless keyupListening
+    keyupListening = true
+    $(document).on 'keydown.vUiHeaderSearch', onDocumentKeydown
+
+stopAutocomplete = ($wrap) ->
+  $wrap
     .removeClass('d-ui-header-search--autocomplete')
     .find('.d-ui-header-search__autocomplete-results')
     .html('')
+
+  if keyupListening
+    keyupListening = false
+    $(document).off 'keydown.vUiHeaderSearch'
+
+close = ($wrap) ->
+  closed = Number(new Date())
+
+  stopAutocomplete($wrap)
+
+  $wrap.removeClass('d-ui-header-search--expanded')
+
   $(window).trigger('resize.uiHeaderMenu')
 
 getCachedResult = (q) ->
@@ -41,7 +91,7 @@ loadAutocomplete = (input) ->
       resultsCache = resultsCache.slice(0, 4)
       resultsCache.unshift([value, response.data])
     error: ->
-      $wrap.removeClass('d-ui-header-search--autocomplete')
+      stopAutocomplete($wrap)
 
 debouncedLoadAutocomplete = window.folioDebounce(loadAutocomplete, 300)
 
@@ -75,23 +125,28 @@ $(document)
       close($(this).closest('.d-ui-header-search'))
 
   .on 'keyup', '.d-ui-header-search__input', (e) ->
+    if e.key is 'ArrowUp' or e.key is 'ArrowDown'
+      e.preventDefault()
+      return
+
+    if e.key is 'Enter' and $('.d-searches-autocomplete__record--focused').length
+      e.preventDefault()
+      return
+
     if e.key is 'Escape'
       e.preventDefault()
       @value = ""
       return $(this).blur()
 
     if @value is ""
-      $(this)
-        .closest('.d-ui-header-search')
-        .removeClass('d-ui-header-search--autocomplete')
-        .find('.d-ui-header-search__autocomplete-results')
-        .html('')
+      stopAutocomplete($(this).closest('.d-ui-header-search'))
     else
       cachedResult = getCachedResult(@value)
 
-      $(this)
-        .closest('.d-ui-header-search')
-        .addClass('d-ui-header-search--autocomplete')
+      $wrap = $(this).closest('.d-ui-header-search')
+      startAutocomplete($wrap)
+
+      $wrap
         .find('.d-ui-header-search__autocomplete-results')
         .html(cachedResult or '')
 
