@@ -22,7 +22,7 @@ module Folio
         gem "cells-rails", "0.1.0"
         gem "route_translator"
         gem "breadcrumbs_on_rails"
-        gem "sentry-ruby"
+        gem "sentry-raven"
         gem "devise-i18n"
         gem "rails-i18n"
         gem "mini_racer"
