@@ -7,7 +7,8 @@ class Folio::Console::Api::PrivateAttachmentsController < Folio::Console::Api::B
     @private_attachment = @klass.create!(private_attachment_params)
 
     # destroy older
-    @klass.where(attachmentable: @private_attachment.attachmentable)
+    @klass.where(type: @private_attachment.type)
+          .where(attachmentable: @private_attachment.attachmentable)
           .where.not(id: @private_attachment.id)
           .destroy_all
 
