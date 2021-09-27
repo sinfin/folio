@@ -88,8 +88,18 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
     }
   end
 
+  def attachment_input
+    [
+      content_tag(:label, t(".attachment"), class: "f-leads-form__attachment-label"),
+      cell("folio/session_attachments/dropzone", options[:attachment_klass]).show,
+    ].join("")
+  end
+
   def input_for(f, col)
-    if col == :note || col == "note"
+    case col
+    when :attachment
+      content_tag(:div, attachment_input, class: "form-group f-leads-form__attachment")
+    when :note || "note"
       f.input(col, label: note_label,
                    input_html: { rows: note_rows, value: note_value })
     else
