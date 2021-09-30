@@ -96,10 +96,9 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
   end
 
   def input_for(f, col)
-    case col
-    when :attachment
+    if col == :attachment || col == "attachment"
       content_tag(:div, attachment_input, class: "form-group f-leads-form__attachment")
-    when :note || "note"
+    elsif col == :note || col == "note"
       f.input(col, label: note_label,
                    input_html: { rows: note_rows, value: note_value })
     else
