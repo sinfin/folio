@@ -21,12 +21,4 @@ class Folio::Leads::FormCellTest < Cell::TestCase
     html = cell("folio/leads/form", nil, note: "foo").(:show)
     assert_equal "foo", html.find("textarea").value
   end
-
-  test "shows attachment from option" do
-    html = cell("folio/leads/form", nil,
-                                    layout: { cols: [%i[attachment]] },
-                                    attachment_klass: Folio::SessionAttachment::Image).(:show)
-
-    assert html.has_css?(".f-dropzone")
-  end
 end
