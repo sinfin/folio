@@ -2,7 +2,7 @@
 
 class Folio::LeadMailer < Folio::ApplicationMailer
   def notification_email(lead)
-    email_template_mail(
+    template_data = {
       FOLIO_LEAD_ID: lead.id,
       FOLIO_LEAD_EMAIL: lead.email,
       FOLIO_LEAD_PHONE: lead.phone,
@@ -11,6 +11,8 @@ class Folio::LeadMailer < Folio::ApplicationMailer
       FOLIO_LEAD_NAME: lead.name,
       FOLIO_LEAD_URL: lead.url,
       FOLIO_LEAD_CONSOLE_URL: url_for([:console, lead]),
-    )
+    }
+
+    email_template_mail(template_data, reply_to: lead.email)
   end
 end
