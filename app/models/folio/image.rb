@@ -8,8 +8,8 @@ class Folio::Image < Folio::File
   validate_file_format
 
   dragonfly_accessor :file do
-    after_assign :sanitize_filename
-    after_assign { |image| image.metadata }
+    after_assign { |file| file.convert! "-auto-orient" }
+    after_assign { |file| file.metadata }
   end
 
   # Get from metadata

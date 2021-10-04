@@ -3,10 +3,22 @@
 class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
   include Folio::DragonflyFormatValidation
 
+  # respect app/models/folio/session_attachment/base.rb when changing!
+  dragonfly_accessor :file do
+    after_assign :sanitize_filename
+    after_assign { |file| file.convert! "-auto-orient" }
+
+    storage_options do |attachment|
+      {
+        headers: { "x-amz-acl" => "private" },
+        path: "session_attachments/#{hash_id}/#{sanitize_filename}",
+      }
+    end
+  end
+
   ALLOWED_FORMATS = %w[jpeg png bmp gif svg tiff]
 
   validate_file_format ALLOWED_FORMATS
-
   def to_h_thumb
     file.remote_url(expires: 1.hour.from_now)
   end

@@ -10,6 +10,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   self.table_name = "folio_session_attachments"
 
+  # respect app/models/folio/session_attachment/image.rb when changing!
   dragonfly_accessor :file do
     after_assign :sanitize_filename
 
