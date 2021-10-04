@@ -61,6 +61,10 @@ $(document)
             alert(json.error)
             $form.removeClass('f-devise-modal__form--loading')
           else if json.data
-            $form
-              .closest('.f-devise-sessions-new, .f-devise-registrations-new')
-              .replaceWith(jxHr.responseJSON.data)
+            $form.trigger('folioDeviseBeforeHtmlReplace')
+
+            $wrap = $form.closest('.f-devise-sessions-new, .f-devise-registrations-new')
+            $parent = $wrap.parent()
+            $wrap.replaceWith(jxHr.responseJSON.data)
+
+            $parent.find('.f-devise-modal__form').trigger('folioDeviseAfterHtmlReplace')
