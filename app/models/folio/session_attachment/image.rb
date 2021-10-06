@@ -6,7 +6,7 @@ class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
   # respect app/models/folio/session_attachment/base.rb when changing!
   dragonfly_accessor :file do
     after_assign :sanitize_filename
-    after_assign { |file| file.convert! "-auto-orient" }
+    # after_assign { |file| file.convert! "-auto-orient" }
 
     storage_options do |attachment|
       {
