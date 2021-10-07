@@ -8,16 +8,7 @@ class Folio::Console::SessionAttachments::ListCell < Folio::ConsoleCell
   end
 
   def image_for(attachment)
-    src = { normal: attachment.to_h_thumb }
-
-    image(src,
-          "150x150#",
-          contain: true,
-          lightbox: {
-            "data-lightbox-src" => attachment.to_h_thumb,
-            "data-lightbox-width" => attachment.file_width,
-            "data-lightbox-height" => attachment.file_height,
-          })
+    admin_image(attachment, lightbox: true)
   end
 
   def as_images?

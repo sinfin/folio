@@ -70,7 +70,17 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         make_webp = true
       end
 
-      uid = thumbnail.store
+      if opts = image.try(:thumbnail_store_options)
+        if opts[:path]
+          opts[:path] += "/#{size}/#{thumbnail.name}"
+        end
+
+        uid = thumbnail.store(opts)
+        is_private = !!opts[:private]
+      else
+        uid = thumbnail.store
+        is_private = false
+      end
 
       base = {
         uid: uid,
@@ -81,13 +91,22 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         quality: quality,
         x: x,
         y: y,
+        private: is_private,
       }
 
       if make_webp
         webp = thumbnail.convert_to_webp
         webp.name = Pathname(webp.name).sub_ext(".webp").to_s
 
-        webp_uid = webp.store
+        if opts = image.try(:thumbnail_store_options)
+          if opts[:path]
+            opts[:path] += "/#{size}/#{webp.name}"
+          end
+
+          webp_uid = webp.store(opts)
+        else
+          webp_uid = webp.store
+        end
 
         base.merge(
           webp_uid: webp_uid,

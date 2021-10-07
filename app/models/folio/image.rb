@@ -9,7 +9,6 @@ class Folio::Image < Folio::File
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
-    # after_assign { |file| file.convert! "-auto-orient" }
     after_assign { |file| file.metadata }
   end
 

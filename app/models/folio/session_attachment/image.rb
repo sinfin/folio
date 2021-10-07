@@ -2,25 +2,16 @@
 
 class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
   include Folio::DragonflyFormatValidation
-
-  # respect app/models/folio/session_attachment/base.rb when changing!
-  dragonfly_accessor :file do
-    after_assign :sanitize_filename
-    # after_assign { |file| file.convert! "-auto-orient" }
-
-    storage_options do |attachment|
-      {
-        headers: { "x-amz-acl" => "private" },
-        path: "session_attachments/#{hash_id}/#{sanitize_filename}",
-      }
-    end
-  end
+  include Folio::Thumbnails
 
   ALLOWED_FORMATS = %w[jpeg png bmp gif svg tiff]
 
   validate_file_format ALLOWED_FORMATS
+
   def to_h_thumb
-    file.remote_url(expires: 1.hour.from_now)
+    if admin_thumb.uid
+      Dragonfly.app.datastore.url_for(admin_thumb.uid, expires: 1.hour.from_now)
+    end
   end
 end
 
@@ -28,20 +19,21 @@ end
 #
 # Table name: folio_session_attachments
 #
-#  id             :bigint(8)        not null, primary key
-#  hash_id        :string
-#  file_uid       :string
-#  file_name      :string
-#  file_size      :bigint(8)
-#  file_mime_type :string
-#  type           :string
-#  web_session_id :string
-#  placement_type :string
-#  placement_id   :bigint(8)
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  file_width     :integer
-#  file_height    :integer
+#  id              :bigint(8)        not null, primary key
+#  hash_id         :string
+#  file_uid        :string
+#  file_name       :string
+#  file_size       :bigint(8)
+#  file_mime_type  :string
+#  type            :string
+#  web_session_id  :string
+#  placement_type  :string
+#  placement_id    :bigint(8)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  file_width      :integer
+#  file_height     :integer
+#  thumbnail_sizes :json
 #
 # Indexes
 #

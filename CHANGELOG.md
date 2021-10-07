@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-10-07
+### Added
+- added `private` thumbnails, add `thumbnail_sizes` to session attachments
+
 ## 2021-09-09
 ### Added
 - added search generator and UI

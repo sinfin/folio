@@ -10,7 +10,6 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   self.table_name = "folio_session_attachments"
 
-  # respect app/models/folio/session_attachment/image.rb when changing!
   dragonfly_accessor :file do
     after_assign :sanitize_filename
 
@@ -36,6 +35,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
                          touch: true
 
   before_save :set_file_mime_type
+  after_save :pregenerate_thumbnails
 
   alias_attribute :mime_type, :file_mime_type
 
@@ -58,6 +58,14 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   end
 
   def to_h_thumb
+  end
+
+  def thumbnail_store_options
+    {
+      path: "session_attachments/#{hash_id}",
+      headers: { "x-amz-acl" => "private" },
+      private: true,
+    }
   end
 
   def self.hash_id_length
@@ -101,26 +109,36 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
       return errors.add(:type, :blank) if type.blank?
       return errors.add(:type, :invalid) if type.start_with?("Folio::")
     end
+
+    def pregenerate_thumbnails
+      return if Rails.env.test?
+      return unless respond_to?(:admin_thumb)
+      return unless respond_to?(:lightbox_thumb)
+
+      admin_thumb
+      lightbox_thumb
+    end
 end
 
 # == Schema Information
 #
 # Table name: folio_session_attachments
 #
-#  id             :bigint(8)        not null, primary key
-#  hash_id        :string
-#  file_uid       :string
-#  file_name      :string
-#  file_size      :bigint(8)
-#  file_mime_type :string
-#  type           :string
-#  web_session_id :string
-#  placement_type :string
-#  placement_id   :bigint(8)
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  file_width     :integer
-#  file_height    :integer
+#  id              :bigint(8)        not null, primary key
+#  hash_id         :string
+#  file_uid        :string
+#  file_name       :string
+#  file_size       :bigint(8)
+#  file_mime_type  :string
+#  type            :string
+#  web_session_id  :string
+#  placement_type  :string
+#  placement_id    :bigint(8)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  file_width      :integer
+#  file_height     :integer
+#  thumbnail_sizes :json
 #
 # Indexes
 #

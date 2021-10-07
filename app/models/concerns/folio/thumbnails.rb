@@ -33,9 +33,20 @@ module Folio::Thumbnails
     return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test? && !override_test_behaviour
 
     if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
-      OpenStruct.new(thumbnail_sizes[w_x_h])
+      hash = thumbnail_sizes[w_x_h]
+
+      if hash[:private]
+        hash[:url] = Dragonfly.app.datastore.url_for(hash[:uid], expires: 1.hour.from_now)
+
+        if hash[:webp_url]
+          hash[:webp_url] = Dragonfly.app.datastore.url_for(hash[:webp_uid], expires: 1.hour.from_now)
+        end
+      end
+
+      OpenStruct.new(hash)
     else
       if svg?
+        # private svgs won't work, but that should rarely be the case
         url = file.remote_url
         width = file_width
         height = file_height
@@ -95,6 +106,12 @@ module Folio::Thumbnails
 
   def admin_thumb(immediate: false, force: false)
     thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
+          immediate: immediate,
+          force: force)
+  end
+
+  def lightbox_thumb(immediate: false, force: false)
+    thumb(Folio::CellLightbox::LIGHTBOX_SIZE,
           immediate: immediate,
           force: force)
   end
