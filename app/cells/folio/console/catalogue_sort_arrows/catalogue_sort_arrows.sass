@@ -1,0 +1,40 @@
+.f-c-catalogue-sort-arrows
+  flex: 0 0 18px
+  cursor: pointer
+  display: inline-block
+  margin-left: 1ch
+  color: #BFC4C4
+
+  +mq-mobile-catalogue
+    display: none
+
+  &, &__inner
+    width: 18px
+    height: 10px
+
+  &::before
+    content: ""
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 2
+
+  &--active
+    color: $link-color
+
+  &:hover
+    color: $link-hover-color
+
+  &__inner
+    position: relative
+
+  &__ico
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+
+  &--desc &__inner
+    transform: rotate(180deg)

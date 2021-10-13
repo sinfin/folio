@@ -276,6 +276,9 @@ en:
         invite_and_copy:
           button: Re-invite and copy invitation link
           failure: Failed to re-invite. The error was reported.
+      catalogue_sort_arrows:
+        sort_asc: Ascending sort
+        sort_desc: Descending sort
 
   date:
     formats:

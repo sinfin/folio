@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-10-13
+### Added
+- added automatic sortable arrows to catalogue based on klass `sort_by_*` scopes
+
 ## 2021-10-07
 ### Added
 - added `private` thumbnails, add `thumbnail_sizes` to session attachments

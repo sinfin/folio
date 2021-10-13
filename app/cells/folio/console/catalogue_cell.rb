@@ -50,7 +50,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     if rendering_header?
       @header_html += content_tag(:div,
-                                  label_for(name, skip_desktop_header: skip_desktop_header),
+                                  label_for(name, skip_desktop_header: skip_desktop_header, allow_sorting: true),
                                   class: full_class_name)
     else
       if block_given?
@@ -284,7 +284,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       full
     end
 
-    def label_for(attr = nil, skip_desktop_header: false)
+    def label_for(attr = nil, skip_desktop_header: false, allow_sorting: false)
       return "" if skip_desktop_header
       return nil if attr.nil?
       return @labels[attr] unless @labels[attr].nil?
@@ -292,7 +292,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       @labels[attr] ||= if %i[actions cover].include?(attr)
         ""
       else
-        klass.human_attribute_name(attr)
+        base = klass.human_attribute_name(attr)
+
+        if allow_sorting && arrows = cell("folio/console/catalogue_sort_arrows",
+                                          klass: klass,
+                                          attr: attr).show
+          content_tag(:span, "#{base} #{arrows}", class: "f-c-catalogue__label-with-arrows")
+        else
+          base
+        end
       end
     end
 

@@ -281,6 +281,9 @@ cs:
         invite_and_copy:
           button: Pozvat znovu a zkopírovat adresu
           failure: Pozvánka se nezdařila. Chyba byla reportována.
+      catalogue_sort_arrows:
+        sort_asc: Řadit vzestupně
+        sort_desc: Řadit sestupně
 
   date:
     formats:

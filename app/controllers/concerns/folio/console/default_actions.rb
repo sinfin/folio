@@ -4,8 +4,12 @@ module Folio::Console::DefaultActions
   extend ActiveSupport::Concern
 
   def index
-    if folio_console_records.respond_to?(:ordered)
-      records = folio_console_records.ordered
+    unless @sorted_by_param
+      if folio_console_records.respond_to?(:ordered)
+        records = folio_console_records.ordered
+      else
+        records = folio_console_records.order(id: :desc)
+      end
     else
       records = folio_console_records
     end

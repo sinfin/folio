@@ -73,6 +73,26 @@ class Folio::Console::BaseController < Folio::ApplicationController
         filtered = instance_variable_get(name).filter_by_params(filter_params)
         instance_variable_set(name, filtered)
       end
+
+      if params[:sort].present?
+        # sort_*_asc or sort_*_desc
+        sort = params[:sort].to_s
+        scope_name = "sort_by_#{sort}"
+
+        if instance_variable_get(name).respond_to?(scope_name)
+          @sorted_by_param = scope_name
+          sorted = instance_variable_get(name).send(scope_name)
+          instance_variable_set(name, sorted)
+        else
+          @sorted_by_param = nil
+        end
+      end
+
+      if params[:sort].
+         instance_variable_get(name).respond_to?(:sort_by_params)
+        filtered = instance_variable_get(name).filter_by_params(filter_params)
+        instance_variable_set(name, filtered)
+      end
     end
 
     prepend_before_action except: (except + [:index]) do
