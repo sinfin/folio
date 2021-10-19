@@ -51,7 +51,7 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
         first_name, last_name = nickname.split(" ", 2)
       end
 
-      Folio::User.create!(password: Devise.friendly_token[0, 20],
+      Folio::User.create!(password: Devise.friendly_token[0, 20]+"a6C", # appendix to always fullfill standard requirements
                           has_generated_password: true,
                           nickname: nickname,
                           first_name: first_name,
