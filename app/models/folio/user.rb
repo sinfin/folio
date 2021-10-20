@@ -96,6 +96,16 @@ class Folio::User < Folio::ApplicationRecord
     false
   end
 
+  def self.csv_attribute_names
+    %i[id first_name last_name nickname email phone created_at sign_in_count last_sign_in_at admin_note]
+  end
+
+  def csv_attributes(controller = nil)
+    self.class.csv_attribute_names.map do |attr|
+      send(attr)
+    end
+  end
+
   private
     def validate_first_name_and_last_name?
       authentications.blank? || nickname.blank?

@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::LeadsController < Folio::Console::BaseController
-  folio_console_controller_for "Folio::Lead"
-
-  def index
-    @leads = @leads.ordered
-
-    respond_with(@leads) do |format|
-      format.html { @pagy, @leads = pagy(@leads) }
-      format.csv { render_csv(@leads) }
-    end
-  end
+  folio_console_controller_for "Folio::Lead", csv: true
 
   def mass_handle
     @leads = Folio::Lead.not_handled.where(id: params.require(:leads))

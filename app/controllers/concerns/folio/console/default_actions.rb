@@ -14,10 +14,24 @@ module Folio::Console::DefaultActions
       records = folio_console_records
     end
 
-    pagy, records = pagy(records)
-    instance_variable_set("@pagy", pagy)
-    instance_variable_set(folio_console_record_variable_name(plural: true),
-                          records)
+    if self.folio_console_controller_handle_csv
+      respond_with(records) do |format|
+        format.html do
+          pagy, records = pagy(records)
+          instance_variable_set("@pagy", pagy)
+          instance_variable_set(folio_console_record_variable_name(plural: true),
+                                records)
+        end
+        format.csv do
+          render_csv(records)
+        end
+      end
+    else
+      pagy, records = pagy(records)
+      instance_variable_set("@pagy", pagy)
+      instance_variable_set(folio_console_record_variable_name(plural: true),
+                            records)
+    end
   end
 
   def edit

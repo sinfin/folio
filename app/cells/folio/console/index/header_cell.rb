@@ -75,7 +75,18 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def csv_path
     if options[:csv] == true
-      url_for([:console, model, format: :csv])
+      h = {
+        format: :csv,
+        by_query: controller.params[:by_query],
+      }
+
+      controller.send(:index_filters).keys.each do |key|
+        if controller.params[key].present?
+          h[key] = controller.params[key]
+        end
+      end
+
+      url_for([:console, model, h])
     else
       options[:csv]
     end

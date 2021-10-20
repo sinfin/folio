@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-10-20
+### Added
+- added easy CSV exports via `csv: true` on `folio_console_controller_for`. See CSV wiki for more information.
+
 ## 2021-10-13
 ### Added
 - added automatic sortable arrows to catalogue based on klass `sort_by_*` scopes

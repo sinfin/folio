@@ -65,7 +65,7 @@ class Folio::Lead < Folio::ApplicationRecord
     by_state("submitted").count
   end
 
-  def csv_attributes
+  def csv_attributes(controller = nil)
     self.class.csv_attribute_names.map do |attr|
       case attr
       when :aasm_state

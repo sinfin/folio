@@ -11,6 +11,14 @@ class Folio::Console::LeadsControllerTest < Folio::Console::BaseControllerTest
     assert_response :success
   end
 
+  test "index.csv" do
+    get url_for([:console, Folio::Lead, format: :csv])
+    assert_response :success
+    create(:folio_lead)
+    get url_for([:console, Folio::Lead, format: :csv])
+    assert_response :success
+  end
+
   test "edit" do
     model = create(:folio_lead)
     get url_for([:edit, :console, model])

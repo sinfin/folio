@@ -31,11 +31,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def self.folio_console_controller_for(class_name, as: nil, except: [])
+  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false)
     as_s = as.present? ? as.to_s : nil
 
     define_method :folio_console_controller_for_as do
       as_s
+    end
+
+    define_method :folio_console_controller_handle_csv do
+      csv
     end
 
     klass = class_name.constantize
