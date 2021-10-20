@@ -14,7 +14,7 @@ module Folio::Console::DefaultActions
       records = folio_console_records
     end
 
-    if self.folio_console_controller_handle_csv
+    if self.folio_console_controller_for_handle_csv
       respond_with(records) do |format|
         format.html do
           pagy, records = pagy(records)

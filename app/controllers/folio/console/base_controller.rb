@@ -38,7 +38,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       as_s
     end
 
-    define_method :folio_console_controller_handle_csv do
+    define_method :folio_console_controller_for_handle_csv do
       csv
     end
 

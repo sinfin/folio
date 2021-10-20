@@ -5,7 +5,7 @@ module Folio::Console::IndexHelper
     opts[:pagy] ||= @pagy
     opts[:tabs] ||= index_tabs
     opts[:folio_console_merge] ||= @folio_console_merge
-    opts[:csv] = controller.try(:folio_console_controller_handle_csv) if opts[:csv].nil?
+    opts[:csv] = controller.try(:folio_console_controller_for_handle_csv) if opts[:csv].nil?
     cell("folio/console/index/header", @klass, opts).show.html_safe
   end
 
