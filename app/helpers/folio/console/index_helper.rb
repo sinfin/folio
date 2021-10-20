@@ -13,7 +13,8 @@ module Folio::Console::IndexHelper
     model = options.merge(records: records,
                           block: block,
                           klass: @klass,
-                          merge: @folio_console_merge)
+                          merge: @folio_console_merge,
+                          collection_actions: controller.try(:folio_console_controller_for_catalogue_collection_actions))
     cell("folio/console/catalogue", model).show.html_safe
   end
 end

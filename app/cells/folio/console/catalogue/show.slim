@@ -3,10 +3,29 @@ div class=wrap_class_name
     == cell('folio/console/merges/index/header')
 
   - if model && model[:records].present?
+    - if collection_actions
+      .f-c-catalogue__collection-actions-bar hidden=true
+        .f-c-catalogue__collection-actions-bar-count-wrap
+          .f-c-catalogue__collection-actions-bar-count 0
+          span.f-c-catalogue__collection-actions-bar-count-ico.mi content_copy
+
+        - collection_actions.each do |action|
+          = collection_action_for(action)
+
+        span.f-c-catalogue__collection-actions-bar-close
+          span.mi close
+
     .f-c-catalogue__table
       .f-c-catalogue__header
         - if model[:merge]
-          .f-c-catalogue__header-cell.f-c-catalogue__header-cell--merge
+          .f-c-catalogue__header-cell[
+            class="f-c-catalogue__header-cell--merge"
+          ]
+
+        - if collection_actions
+          .f-c-catalogue__header-cell[
+            class="f-c-catalogue__header-cell--collection-actions"
+          ]
 
         = header_html
 
@@ -25,6 +44,19 @@ div class=wrap_class_name
             - if model[:merge]
               .f-c-catalogue__cell.f-c-catalogue__cell--merge
                 == cell('folio/console/merges/index/radios', rec)
+
+            - if collection_actions
+              .f-c-catalogue__cell.f-c-catalogue__cell--collection-actions
+                label[
+                  class="f-c-catalogue__collection-actions-label"
+                ]
+                  input[
+                    class="form-check-input"
+                    class="f-c-catalogue__collection-actions-checkbox"
+                    type="checkbox"
+                    name="ids[]"
+                    value=rec.id
+                  ]
 
             = record_html(rec)
 

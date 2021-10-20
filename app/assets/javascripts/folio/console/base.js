@@ -56,6 +56,7 @@
 //= require folio/console/atoms/locale_switch/locale_switch
 //= require folio/console/atoms/settings_header/settings_header
 //= require folio/console/boolean_toggle/boolean_toggle
+//= require folio/console/catalogue/catalogue
 //= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters

@@ -62,12 +62,30 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     assert_equal "Somewhere", model.secondary_address.city
   end
 
-
-
   test "destroy" do
     model = create(:folio_user)
     delete url_for([:console, model])
     assert_redirected_to url_for([:console, Folio::User])
     assert_not(Folio::User.exists?(id: model.id))
+  end
+
+  test "collection_destroy" do
+    models = create_list(:folio_user, 5)
+
+    assert_difference("Folio::User.count", -2) do
+      delete url_for([:collection_destroy, :console, Folio::User]), params: {
+        ids: "#{models[0].id},#{models[1].id}"
+      }
+      assert_redirected_to url_for([:console, Folio::User])
+    end
+  end
+
+  test "collection_csv" do
+    models = create_list(:folio_user, 5)
+
+    get url_for([:collection_csv, :console, Folio::User]), params: {
+      ids: "#{models[0].id},#{models[1].id}"
+    }
+    assert_response(:success)
   end
 end

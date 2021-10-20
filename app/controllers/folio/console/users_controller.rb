@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::UsersController < Folio::Console::BaseController
-  folio_console_controller_for "Folio::User", csv: true
+  folio_console_controller_for "Folio::User",
+                               csv: true,
+                               catalogue_collection_actions: %i[destroy csv]
 
   def send_reset_password_email
     @user.send_reset_password_instructions

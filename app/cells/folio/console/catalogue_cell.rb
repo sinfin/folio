@@ -2,6 +2,7 @@
 
 class Folio::Console::CatalogueCell < Folio::ConsoleCell
   include Folio::Console::FlagHelper
+  include SimpleForm::ActionViewExtensions::FormHelper
 
   attr_reader :record
 
@@ -33,6 +34,16 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def rendering_header?
     !@header_html.nil?
+  end
+
+  def collection_actions
+    return @collection_actions unless @collection_actions.nil?
+
+    @collection_actions = if !model[:merge] && model[:collection_actions].present?
+      model[:collection_actions]
+    else
+      false
+    end
   end
 
   # every method call should use the attribute method
@@ -189,6 +200,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(name, I18n.t("folio.console.boolean.#{record.send(name)}"))
   end
 
+  def id
+    attribute(:id)
+  end
+
   def color(name)
     attribute(nil,
               "",
@@ -317,6 +332,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         cn += " f-c-catalogue--merge"
       end
 
+      if collection_actions
+        cn += " f-c-catalogue--collection-actions"
+      end
+
       if model[:ancestry]
         cn += " f-c-catalogue--ancestry"
       end
@@ -381,5 +400,38 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       html
+    end
+
+    def collection_action_for(action)
+      opts = {
+        type: "submit",
+        class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}",
+      }
+
+      if action == :destroy
+        opts[:url]
+        opts[:class] += " btn btn-danger"
+        opts["data-confirm"] = t("folio.console.confirmation")
+        icon = '<span class="fa fa-trash-alt"></span>'
+
+        simple_form_for("",
+                        url: url_for([:collection_destroy, :console, model[:klass]]),
+                        method: :delete,
+                        html: { class: "f-c-catalogue__collection-actions-bar-destroy-form" }) do |f|
+          button_tag("#{icon} #{t(".actions.#{action}")}", opts)
+        end
+      elsif action == :csv
+        opts[:class] += " btn btn-secondary"
+        icon = '<span class="fa fa-download"></span>'
+        url = url_for([:collection_csv, :console, model[:klass]])
+
+        link_to("#{icon} #{t(".actions.#{action}")}",
+                url,
+                class: opts[:class],
+                target: "_blank",
+                "data-url-base" => url)
+      else
+        nil
+      end
     end
 end

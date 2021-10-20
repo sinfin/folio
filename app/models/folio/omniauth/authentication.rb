@@ -3,7 +3,8 @@
 class Folio::Omniauth::Authentication < Folio::ApplicationRecord
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
-                    optional: true
+                    optional: true,
+                    inverse_of: :authentications
 
   validates :nickname, :access_token,
             presence: true

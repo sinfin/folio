@@ -53,6 +53,58 @@ $catalogue-green: $green !default
     #{$this}__row:hover &-green
       background: $catalogue-green !important
 
+  &__collection-actions-label
+    display: flex
+    align-items: center
+    justify-content: flex-start
+    margin: 0
+    width: 25px
+    min-height: 100%
+    cursor: pointer
+
+  &__collection-actions-checkbox
+    margin: 0
+    position: static
+    cursor: pointer
+
+  &__collection-actions-bar
+    background: $info
+    margin: 0 0 $spacer
+    position: sticky
+    top: 0
+    z-index: 10
+    display: flex
+    align-items: center
+
+  &__collection-actions-bar-button
+    flex: 0 0 auto
+    margin: 7px 0 7px 7px
+
+  &__collection-actions-bar-count-wrap
+    display: flex
+    align-items: center
+    font-weight: $font-weight-bold
+    margin-right: $spacer / 2
+    padding: 7px $spacer
+
+  &__collection-actions-bar-count
+    display: block
+    margin-right: 7px
+    padding-top: 2px
+
+  &__collection-actions-bar-count-ico
+    font-size: 20px
+
+  &__collection-actions-bar-close
+    margin-left: auto
+    font-size: 20px
+    padding: 0 $spacer
+    align-self: stretch
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+
   +mq-desktop-catalogue
     &__table
       display: table
@@ -115,6 +167,13 @@ $catalogue-green: $green !default
     &__cell--merge
       background: $table-accent-bg
 
+    &__header-cell--collection-actions,
+    &__cell--collection-actions
+      border-bottom: 0
+      width: 20px
+      background: transparent
+      padding: 0
+
     &__header-cell--color-border,
     &__cell--color-border
       padding: 0
@@ -122,6 +181,10 @@ $catalogue-green: $green !default
 
     &__cell--small &__cell-value
       font-size: $font-size-sm
+
+    &__cell--id &__cell-value
+      font-size: $font-size-sm
+      font-weight: $font-weight-bold
 
     &__row--ancestry-root &__cell
       background: $table-accent-bg
@@ -219,6 +282,9 @@ $catalogue-green: $green !default
       margin: 0
 
     &__header
+      display: none
+
+    &__cell--collection-actions
       display: none
 
     &__row

@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-10-21
+### Added
+- added "collection_actions" to catalogue, See wiki for more information
+
 ## 2021-10-20
 ### Added
 - added easy CSV exports via `csv: true` on `folio_console_controller_for`. See CSV wiki for more information.

@@ -54,6 +54,9 @@ cs:
           error: Stromovou strukturu se nepodařilo upravit.
         restore:
           success: Verze obnovena.
+        collection_destroy:
+          success: Vybrané záznamy byly odstraněny.
+          error: Některé z vybraných záznamů se nepodařilo odstranit.
       blank: Neuvedeno
       boolean:
         'yes': "Ano"
@@ -284,6 +287,10 @@ cs:
       catalogue_sort_arrows:
         sort_asc: Řadit vzestupně
         sort_desc: Řadit sestupně
+      catalogue:
+        actions:
+          destroy: Smazat
+          csv: CSV
 
   date:
     formats:

@@ -38,6 +38,7 @@ class Folio::User < Folio::ApplicationRecord
 
   has_many :authentications, class_name: "Folio::Omniauth::Authentication",
                              foreign_key: :folio_user_id,
+                             inverse_of: :user,
                              dependent: :destroy
 
   scope :ordered, -> { order(id: :desc) }

@@ -71,6 +71,11 @@ Folio::Engine.routes.draw do
         get :send_reset_password_email
         get :impersonate
       end
+
+      collection do
+        delete :collection_destroy
+        get :collection_csv
+      end
     end
 
     resource :transport, only: [] do

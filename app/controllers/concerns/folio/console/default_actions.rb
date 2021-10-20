@@ -157,6 +157,28 @@ module Folio::Console::DefaultActions
     end
   end
 
+  def collection_destroy
+    ids = params.require(:ids).split(",")
+
+    destroyed = @klass.where(id: ids).collect do |record|
+      record.destroy
+      record.destroyed?
+    end
+
+    if destroyed.all?
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { success: I18n.t("folio.console.base_controller.collection_destroy.success") }
+    else
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { error: I18n.t("folio.console.base_controller.collection_destroy.error") }
+    end
+  end
+
+  def collection_csv
+    ids = params.require(:ids).split(",")
+    render_csv(@klass.where(id: ids))
+  end
+
   private
     def folio_console_name_base(plural: false)
       if try(:folio_console_controller_for_as).present?
