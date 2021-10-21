@@ -52,6 +52,17 @@ en:
         ancestry:
           success: Tree structure updated.
           error: Failed to update the tree structure.
+        restore:
+          success: Version restored
+        collection_destroy:
+          success: Selected records were destroyed.
+          error: Failed to destroy some of the records.
+        collection_discard:
+          success: Selected records were archived.
+          error: Failed to archive some of the records.
+        collection_undiscard:
+          success: Selected records were restored.
+          error: Failed to restore some of the records.
       blank: "Not specified"
       boolean:
         "yes": "Yes"
@@ -281,8 +292,10 @@ en:
         sort_desc: Descending sort
       catalogue:
         actions:
-          destroy: Destroy
           csv: CSV
+          destroy: Destroy
+          discard: Archive
+          undiscard: Restore
 
   date:
     formats:

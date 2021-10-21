@@ -57,6 +57,12 @@ cs:
         collection_destroy:
           success: Vybrané záznamy byly odstraněny.
           error: Některé z vybraných záznamů se nepodařilo odstranit.
+        collection_discard:
+          success: Vybrané záznamy byly archivovány.
+          error: Některé z vybraných záznamů se nepodařilo archivovat.
+        collection_undiscard:
+          success: Vybrané záznamy byly obnoveny.
+          error: Některé z vybraných záznamů se nepodařilo obnovit.
       blank: Neuvedeno
       boolean:
         'yes': "Ano"
@@ -289,8 +295,10 @@ cs:
         sort_desc: Řadit sestupně
       catalogue:
         actions:
-          destroy: Smazat
           csv: CSV
+          destroy: Smazat
+          discard: Archivovat
+          undiscard: Obnovit
 
   date:
     formats:

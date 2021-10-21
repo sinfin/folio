@@ -174,6 +174,40 @@ module Folio::Console::DefaultActions
     end
   end
 
+  def collection_discard
+    ids = params.require(:ids).split(",")
+
+    discarded = @klass.where(id: ids).collect do |record|
+      record.discard
+      record.discarded?
+    end
+
+    if discarded.all?
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { success: I18n.t("folio.console.base_controller.collection_discard.success") }
+    else
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { error: I18n.t("folio.console.base_controller.collection_discard.error") }
+    end
+  end
+
+  def collection_undiscard
+    ids = params.require(:ids).split(",")
+
+    undiscarded = @klass.where(id: ids).collect do |record|
+      record.undiscard
+      !record.discarded?
+    end
+
+    if undiscarded.all?
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { success: I18n.t("folio.console.base_controller.collection_undiscard.success") }
+    else
+      redirect_back fallback_location: url_for([:console, @klass]),
+                    flash: { error: I18n.t("folio.console.base_controller.collection_undiscard.error") }
+    end
+  end
+
   def collection_csv
     ids = params.require(:ids).split(",")
     render_csv(@klass.where(id: ids))

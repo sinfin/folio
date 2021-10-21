@@ -408,16 +408,27 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}",
       }
 
-      if action == :destroy
-        opts[:url]
-        opts[:class] += " btn btn-danger"
+      if %i[destroy discard undiscard].include?(action)
+        if action == :destroy
+          opts[:class] += " btn btn-danger"
+          icon = '<span class="fa fa-trash-alt"></span>'
+          method = :delete
+        elsif action == :discard
+          opts[:class] += " btn btn-secondary"
+          icon = '<span class="fa fa-trash-alt"></span>'
+          method = :delete
+        else
+          opts[:class] += " btn btn-secondary"
+          icon = '<span class="fa fa-redo-alt"></span>'
+          method = :post
+        end
+
         opts["data-confirm"] = t("folio.console.confirmation")
-        icon = '<span class="fa fa-trash-alt"></span>'
 
         simple_form_for("",
-                        url: url_for([:collection_destroy, :console, model[:klass]]),
-                        method: :delete,
-                        html: { class: "f-c-catalogue__collection-actions-bar-destroy-form" }) do |f|
+                        url: url_for(["collection_#{action}".to_sym, :console, model[:klass]]),
+                        method: method,
+                        html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |f|
           button_tag("#{icon} #{t(".actions.#{action}")}", opts)
         end
       elsif action == :csv
