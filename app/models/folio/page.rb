@@ -3,8 +3,18 @@
 class Folio::Page < Folio::ApplicationRecord
   if Rails.application.config.folio_using_traco
     include Folio::FriendlyIdForTraco
+
+    if Rails.application.config.folio_pages_ancestry
+      include Folio::HasAncestry
+      include Folio::HasAncestrySlugForTraco
+    end
   else
     include Folio::FriendlyId
+
+    if Rails.application.config.folio_pages_ancestry
+      include Folio::HasAncestry
+      include Folio::HasAncestrySlug
+    end
   end
 
   extend Folio::InheritenceBaseNaming
@@ -37,11 +47,6 @@ class Folio::Page < Folio::ApplicationRecord
 
   if Rails.application.config.folio_pages_translations
     include Folio::Translatable
-  end
-
-  if Rails.application.config.folio_pages_ancestry
-    include Folio::HasAncestry
-    include Folio::HasAncestrySlug
   end
 
   if Rails.application.config.folio_using_traco
