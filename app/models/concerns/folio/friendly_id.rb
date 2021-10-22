@@ -23,7 +23,7 @@ module Folio::FriendlyId
 
     def strip_and_downcase_slug
       if slug.present?
-        self.slug = slug.strip.downcase
+        self.slug = slug.strip.downcase.parameterize
       end
     end
 end

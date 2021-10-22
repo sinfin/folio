@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-10-22
+### Added
+- added `Folio::FriendlyIdForTraco` concern
+
 ## 2021-10-21
 ### Added
 - added "collection_actions" to catalogue, See wiki for more information

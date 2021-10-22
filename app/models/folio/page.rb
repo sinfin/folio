@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Page < Folio::ApplicationRecord
-  extend FriendlyId
+  if Rails.application.config.folio_using_traco
+    include Folio::FriendlyIdForTraco
+  else
+    include Folio::FriendlyId
+  end
+
   extend Folio::InheritenceBaseNaming
   include PgSearch::Model
   include Folio::Taggable
@@ -40,10 +45,7 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   if Rails.application.config.folio_using_traco
-    include Folio::TracoSluggable
     include Folio::HasAtoms::Localized
-
-    friendly_id :title, use: %i[slugged history simple_i18n]
 
     translates :title, :perex, :slug, :meta_title, :meta_description
 
@@ -53,12 +55,6 @@ class Folio::Page < Folio::ApplicationRecord
     end
   else
     include Folio::HasAtoms::Basic
-
-    friendly_id :title, use: %i[slugged history]
-
-    validates :slug,
-              presence: true,
-              uniqueness: true
 
     validates :title,
               presence: true
