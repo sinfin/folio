@@ -39,11 +39,11 @@ Dragonfly.app.configure do
   end
 
   processor :flatten do |content, *args|
-    content.process! :convert, "-flatten"
+    Dragonfly::ImageMagick::Commands.convert(content, "-flatten")
   end
 
   processor :auto_orient do |content, *args|
-    content.process! :convert, "-auto-orient"
+    Dragonfly::ImageMagick::Commands.convert(content, "-auto-orient")
   end
 
   processor :jpegoptim do |content, *args|
@@ -68,7 +68,7 @@ Dragonfly.app.configure do
   end
 
   processor :add_white_background do |content, *args|
-    content.process! :convert, "-background white -alpha remove"
+    Dragonfly::ImageMagick::Commands.convert(content, "-background white -alpha remove")
   end
 
   processor :convert_to_webp do |content, *args|

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-
 Dragonfly::ImageMagick::Processors::Thumb.class_eval do
   def call(content, geometry, opts = {})
-    content.process!(:convert, args_for_geometry_extended(geometry, opts), opts)
+    Dragonfly::ImageMagick::Commands.convert(content, args_for_geometry_extended(geometry, opts), opts)
   end
 
   def args_for_geometry_extended(geometry, opts = {})
