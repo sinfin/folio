@@ -30,15 +30,17 @@ module Folio::HasAncestrySlug
   def ancestry_url(locale = nil)
     if self.class.ancestry_slug_columns.size > 1
       locale ||= I18n.locale
-      column_name = "ancestry_slug_#{locale}"
+      ancestry_slug_column_name = "ancestry_slug_#{locale}"
+      slug_column_name = "slug_#{locale}"
     else
-      column_name = "ancestry_slug"
+      ancestry_slug_column_name = "ancestry_slug"
+      slug_column_name = "slug"
     end
 
-    if send(column_name).present?
-      "#{send(column_name)}/#{slug}"
+    if send(ancestry_slug_column_name).present?
+      "#{send(ancestry_slug_column_name)}/#{send(slug_column_name)}"
     else
-      slug
+      send(slug_column_name)
     end
   end
 
@@ -63,7 +65,8 @@ module Folio::HasAncestrySlug
 
     if destroyed?
       self.class.ancestry_slug_columns.each do |ancestry_slug_column|
-        self.class.base_class.where("#{ancestry_slug_column} LIKE ?", "#{slug}%").each do |record|
+        slug_column = ancestry_slug_column.delete_prefix("ancestry_")
+        self.class.base_class.where("#{ancestry_slug_column} LIKE ?", "#{send(slug_column)}%").each do |record|
           record.update_ancestry_slug!
         end
       end
