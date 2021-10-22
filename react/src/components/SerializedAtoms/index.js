@@ -47,7 +47,7 @@ function SerializedAttachments ({ atom, prefix }) {
               attachmentKey={key}
               attachment={values}
               key={key}
-              showId={values.id && values._destroy}
+              showId={Boolean(values.id)}
             />
           )
         )
