@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Users::ComebacksController < ApplicationController
+  include Folio::Users::DeviseControllerBase
+
   def show
     store_location_for(:user, landing_param)
     redirect_to to_param
