@@ -1,2 +1,2 @@
 h1.f-c-show-header__h1
-  = sanitize_string(model.to_label)
+  = sanitize_string(options[:title].presence || model.to_label)
