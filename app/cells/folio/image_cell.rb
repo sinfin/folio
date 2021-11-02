@@ -340,4 +340,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       self.thumbnail_width < self.thumbnail_height
     end
   end
+
+  def additional_html
+  end
 end
