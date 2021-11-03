@@ -14,7 +14,11 @@ module Folio::SetMetaVariables
 
     if ::Rails.application.config.folio_use_og_image
       if image = instance.try(m[:image]).presence
-        @og_image = image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
+        if image.is_a?(String)
+          @og_image = image
+        elsif image.respond_to?(:thumb)
+          @og_image = image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
+        end
       end
     end
 
