@@ -80,6 +80,8 @@ module Folio::HasAttachments
           else
             create_cover_placement(file_id: ip.file_id)
           end
+        elsif cover_placement
+          cover_placement.destroy
         end
       end
 
