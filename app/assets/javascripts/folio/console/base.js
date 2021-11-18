@@ -51,6 +51,7 @@
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
 
+//= require folio/console/aasm/email_modal/email_modal
 //= require folio/console/accounts/invite_and_copy/invite_and_copy
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch

@@ -7,6 +7,7 @@ en:
         arrange: Arrange
         back: Back
         cancel: Cancel
+        confirm: Confirm
         continue: Continue
         close: Close
         destroy: Destroy
@@ -296,6 +297,10 @@ en:
           destroy: Destroy
           discard: Archive
           undiscard: Restore
+      aasm:
+        email_modal:
+          title: Change the state to "{STATE_NAME}"?
+          send_email_label: Send e-mail to {EMAIL}
 
   date:
     formats:

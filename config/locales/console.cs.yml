@@ -7,6 +7,7 @@ cs:
         arrange: Upravit strukturu
         back: Zpět
         cancel: Zrušit
+        confirm: Potvrdit
         continue: Pokračovat
         close: Zavřít
         destroy: Smazat
@@ -299,6 +300,10 @@ cs:
           destroy: Smazat
           discard: Archivovat
           undiscard: Obnovit
+      aasm:
+        email_modal:
+          title: Opravdu si přejete změnit stav na „{STATE_NAME}“?
+          send_email_label: Odeslat e-mail na {EMAIL}
 
   date:
     formats:

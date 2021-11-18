@@ -1,0 +1,37 @@
+= form do |f|
+  p
+    strong.f-c-aasm-email-modal__title data-title=t('.title')
+
+  = f.input :event_email_enabled,
+            label: "",
+            as: :boolean,
+            input_html: { \
+              class: 'f-c-aasm-email-modal__checkbox', \
+              'data-label' => t('.send_email_label'), \
+              checked: true,
+            }
+
+  = f.input :event_email_text,
+            autosize: true,
+            as: :text,
+            label: false,
+            input_html: { class: 'f-c-aasm-email-modal__text', rows: 8 }
+
+  - %i[klass aasm_event id email].each do |key|
+    = key_hidden_field(f, key)
+
+  .d-flex
+    .mr-2
+      button.btn.btn-outline.f-c-aasm-email-modal__cancel[
+        type="button"
+        data-dismiss="modal"
+      ]
+        = t('folio.console.actions.cancel')
+
+    button.btn.btn-primary.f-c-aasm-email-modal__submit[
+      type="submit"
+      disabled=true
+    ]
+      = t('folio.console.actions.confirm')
+
+span.folio-loader.f-c-aasm-email-modal__loader

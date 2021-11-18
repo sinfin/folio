@@ -89,4 +89,10 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   def klass
     @klass ||= model.class.to_s
   end
+
+  def event_target_human_name(event)
+    to = event.transitions[0].to
+    state = event.state_machine.states.find { |s| s.name == to }
+    state ? state.human_name : to
+  end
 end
