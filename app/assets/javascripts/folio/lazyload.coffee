@@ -17,7 +17,10 @@ window.makeFolioLazyLoad = (selector, containerSelector = null, options = {}) ->
         el.style.visibility = ''
         el.alt = el.dataset.alt if el.dataset.alt
         el.classList.remove(selector.replace('.', ''))
-        $(el).closest('.f-image').addClass('f-image--loaded')
+        $(el)
+          .trigger('folioLazyLoadLoaded')
+          .closest('.f-image')
+          .addClass('f-image--loaded')
 
     window.folioLazyloadInstances.push(
       new LazyLoad $.extend({}, defaults, options)
