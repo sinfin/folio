@@ -15,7 +15,7 @@ $(document)
     ["klass", "aasm_event", "id", "email"].forEach (key) ->
       $form.find(".f-c-aasm-email-modal__hidden--#{key}").val(data[key])
 
-    $form.find(".f-c-aasm-email-modal__subject").val(data.emailPlaceholder)
+    $form.find(".f-c-aasm-email-modal__subject").val(data.emailSubject)
     $form.find(".f-c-aasm-email-modal__text").val(data.emailText)
 
     $modal.modal('show')
