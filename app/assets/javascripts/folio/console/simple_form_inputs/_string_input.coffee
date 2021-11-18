@@ -108,6 +108,11 @@ window.folioConsoleBindContentTemplatesInput = ($elements) ->
     return if $wrap.hasClass('f-c-js-content-templates-bound')
     $wrap.addClass('f-c-js-content-templates-bound')
     $label = $wrap.find('label')
+
+    if $label.length is 0
+      $label = $("<label for=\"#{$input.prop('id')}\">&nbsp;</label>")
+      $input.before($label)
+
     $menu = $('<div class="dropdown-menu f-c-content-templates-dropdown__menu" />')
     items = $input.data('content-templates').map (ary) ->
       $a = $("""<a href="#" class="dropdown-item f-c-content-templates-dropdown__item"></a>""")

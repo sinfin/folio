@@ -14,12 +14,21 @@
   cursor: pointer
 
 .f-c-content-templates-dropdown
+  display: flex
+  align-items: flex-end
+
+  label
+    flex: 1 1 auto
+
   &__menu
     max-height: 50vh
     overflow-y: auto
+    flex: 0
 
   &__toggle
     cursor: pointer
+    flex: 0 0 auto
+    margin-bottom: 0.5 * $spacer
 
   &__item
     white-space: normal

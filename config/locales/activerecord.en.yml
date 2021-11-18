@@ -113,6 +113,8 @@ en:
       folio/content_template:
         one: Content template
         other: Content templates
+      folio/content_template/aasm_email_subject: State upddate - email subject
+      folio/content_template/aasm_email_text: State upddate - email content
       folio/document:
         one: Document
         other: Documents

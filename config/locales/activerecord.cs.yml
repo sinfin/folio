@@ -155,6 +155,8 @@ cs:
         one: Šablona obsahu
         few: Šablony obsahu
         other: Šablon obsahu
+      folio/content_template/aasm_email_subject: Email při změně stavu - předmět
+      folio/content_template/aasm_email_text: Email při změně stavu - obsah
       folio/category:
         few: Kategorie
         one: Kategorie
