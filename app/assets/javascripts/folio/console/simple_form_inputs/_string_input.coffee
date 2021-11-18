@@ -114,6 +114,18 @@ window.folioConsoleBindContentTemplatesInput = ($elements) ->
       $input.before($label)
 
     $menu = $('<div class="dropdown-menu f-c-content-templates-dropdown__menu" />')
+
+    url = $input.data('content-templates-url')
+    title = $input.data('content-templates-title')
+    console.log url, title
+
+    if url and title
+      $menu.append $("""
+        <a class="dropdown-header f-c-content-templates-dropdown__header" href="#{url}">
+          <span class="f-c-content-templates-dropdown__header-text">#{title}</span>
+          <span class="f-c-content-templates-dropdown__header-ico mi ml-2">edit</span>
+        </a>""")
+
     items = $input.data('content-templates').map (ary) ->
       $a = $("""<a href="#" class="dropdown-item f-c-content-templates-dropdown__item"></a>""")
       $a.text(ary.join(' / '))

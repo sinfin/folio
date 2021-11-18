@@ -32,3 +32,21 @@
 
   &__item
     white-space: normal
+
+  &__header
+    text-decoration: none
+    color: $text-muted
+    text-transform: uppercase
+
+    &:hover
+      text-decoration: none
+      color: $text-muted
+
+  &__header-ico
+    visibility: hidden
+
+  &__header:hover &__header-ico
+    visibility: visible
+
+  &__header:hover &__header-text
+    text-decoration: underline

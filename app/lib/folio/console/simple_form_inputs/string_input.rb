@@ -45,7 +45,10 @@ SimpleForm::Inputs::StringInput.class_eval do
     end
 
     if options[:content_templates]
-      input_html_options["data-content-templates"] = options[:content_templates].constantize.to_data_attribute
+      ct_klass = options[:content_templates].constantize
+      input_html_options["data-content-templates"] = ct_klass.to_data_attribute
+      input_html_options["data-content-templates-url"] = Folio::Engine.app.url_helpers.edit_console_content_templates_path(type: options[:content_templates])
+      input_html_options["data-content-templates-title"] = ct_klass.model_name.human(count: 2)
       input_html_classes << "f-c-string-input--content-templates"
     end
 
