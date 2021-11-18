@@ -13,6 +13,7 @@
 
   = f.input :event_email_subject,
             as: :string,
+            label: false,
             content_templates: "Folio::ContentTemplate::AasmEmailSubject",
             input_html: { \
               class: 'f-c-aasm-email-modal__subject', \
