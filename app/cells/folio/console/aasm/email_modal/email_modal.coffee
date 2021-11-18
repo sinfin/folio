@@ -15,10 +15,16 @@ $(document)
     ["klass", "aasm_event", "id", "email"].forEach (key) ->
       $form.find(".f-c-aasm-email-modal__hidden--#{key}").val(data[key])
 
+    $form.find(".f-c-aasm-email-modal__subject").val(data.emailPlaceholder)
+    $form.find(".f-c-aasm-email-modal__text").val(data.emailText)
 
     $modal.modal('show')
 
-    $modal.find('.f-c-aasm-email-modal__text').focus()
+    $subject = $modal.find('.f-c-aasm-email-modal__subject')
+    if $subject.val()
+      $modal.find('.f-c-aasm-email-modal__text').focus()
+    else
+      $subject.focus()
 
   .on 'change keyup', '.f-c-aasm-email-modal__form', (e) ->
     $form = $(this)

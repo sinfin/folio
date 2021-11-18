@@ -23,6 +23,8 @@ $(document).on 'click', '.f-c-state__state--trigger', (e) ->
       targetStateName: $this.data('event-target-human-name')
       aasm_event: $this.data('event-name')
       trigger: $this
+      emailPlaceholder: $this.data('email-placeholder')
+      emailText: $this.data('email-text')
 
     $('.f-c-aasm-email-modal').trigger('folioConsoleAasmEventModalTrigger', data)
   else

@@ -16,6 +16,13 @@ class Folio::Console::Api::AasmController < Folio::Console::Api::BaseController
           record = handle_record_before_event(record)
           record.send("#{event_name}!")
 
+          if params[:event_email_enabled] == "1"
+            if %i[event_email_subject event_email_text email].all? { |key| params[key].present? }
+              Folio::AasmMailer.event(params[:email], params[:event_email_subject], params[:event_email_text])
+                               .deliver_later
+            end
+          end
+
           if params[:cell_options]
             opts = {
               small: params[:cell_options][:small].presence,

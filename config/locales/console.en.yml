@@ -301,6 +301,9 @@ en:
         email_modal:
           title: Change the state to "{STATE_NAME}"?
           send_email_label: Send e-mail to {EMAIL}
+          placeholders:
+            subject: E-mail subject
+            text: E-mail content
 
   date:
     formats:

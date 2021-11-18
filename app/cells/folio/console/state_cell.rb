@@ -95,4 +95,20 @@ class Folio::Console::StateCell < Folio::ConsoleCell
     state = event.state_machine.states.find { |s| s.name == to }
     state ? state.human_name : to
   end
+
+  def data_for_event(event)
+    {
+      "confirmation" => confirm(event),
+      "url" => remote_url_for(event),
+      "aasm-email-modal" => event.options[:email_modal],
+      "modal" => event.options[:modal],
+      "event-name" => event.name,
+      "event-target-human-name" => event_target_human_name(event),
+      "klass" => klass,
+      "id" => model.id,
+      "email" => model.try(:email),
+      "email-placeholder" => model.class.try(:aasm_email_default_placeholder, event),
+      "email-text" => model.class.try(:aasm_email_default_text, event),
+    }
+  end
 end
