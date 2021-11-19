@@ -126,10 +126,10 @@ window.folioConsoleBindContentTemplatesInput = ($elements) ->
           <span class="f-c-content-templates-dropdown__header-ico mi ml-2">edit</span>
         </a>""")
 
-    items = $input.data('content-templates').map (ary) ->
+    items = $input.data('content-templates').map (hash) ->
       $a = $("""<a href="#" class="dropdown-item f-c-content-templates-dropdown__item"></a>""")
-      $a.text(ary.join(' / '))
-      $a.data('value', ary)
+      $a.text(hash.label)
+      $a.data('value', hash.contents)
       $menu.append($a)
 
     $flex = $("""

@@ -26,15 +26,27 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
     Folio::ContentTemplate
   end
 
+  def to_label
+    title.presence || content
+  end
+
   def self.to_data_attribute
     if Rails.application.config.folio_using_traco
       ordered.map do |ct|
-        I18n.available_locales.map do |locale|
-          ct.send("content_#{locale}")
-        end
+        {
+          label: ct.to_label,
+          contents: I18n.available_locales.map do |locale|
+            ct.send("content_#{locale}")
+          end
+        }
       end.to_json
     else
-      ordered.map { |ct| [ct.content] }.to_json
+      ordered.map do |ct|
+        {
+          label: ct.to_label,
+          contents: [ct.content],
+        }
+      end.to_json
     end
   end
 
@@ -56,6 +68,7 @@ end
 #  type       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  title      :string
 #
 # Indexes
 #

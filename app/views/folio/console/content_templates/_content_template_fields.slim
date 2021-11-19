@@ -3,8 +3,9 @@
     .card-body
       .row.align-items-center.mb-n3
         .col
-          == translated_inputs f, :content, label: false, \
-                                            hint: false, \
+          = f.input :title, hint: false
+
+          == translated_inputs f, :content, hint: false, \
                                             autosize: true, \
                                             input_html: { rows: 1 }
 

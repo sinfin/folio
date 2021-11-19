@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-11-19
+### Added
+- added `title` to content templates
+
 ## 2021-11-18
 ### Added
 - added `email_modal` option handler in state cell - see wiki for more information
