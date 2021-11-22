@@ -7,6 +7,11 @@ class Folio::AasmMailer < Folio::ApplicationMailer
     @simple_text = simple_text
 
     mail to: email,
-         subject: subject
+         subject: subject,
+         bcc: self.class.bcc_email
+  end
+
+  def self.bcc_email
+    Rails.application.config.folio_aasm_mailer_bcc
   end
 end
