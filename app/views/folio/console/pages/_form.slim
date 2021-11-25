@@ -23,8 +23,13 @@
          Rails.application.config.folio_pages_ancestry
       .row
         - if Rails.application.config.folio_pages_translations
+          - locales = Rails.application.config.folio_pages_translations
+          - locales = I18n.available_locales unless locales.is_a?(Array)
+
           .col
-            = f.input :locale, disabled: true
+            = f.input :locale,
+                      collection: locales,
+                      include_blank: false
 
         - if Rails.application.config.folio_pages_ancestry
           .col
