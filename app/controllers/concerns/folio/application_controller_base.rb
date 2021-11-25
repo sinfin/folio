@@ -14,6 +14,8 @@ module Folio::ApplicationControllerBase
 
     before_action :set_i18n_locale
 
+    before_action :set_cookies_for_log
+
     helper_method :current_site
   end
 
@@ -67,5 +69,13 @@ module Folio::ApplicationControllerBase
           document_placements: :file,
         }
       ]
+    end
+
+    def set_cookies_for_log
+      cookies.signed[:s_for_log] = session.id.public_id unless cookies.signed[:s_for_log] == session.id.public_id
+
+      if user_id = try(:current_user).try(:id)
+        cookies.signed[:u_for_log] = user_id unless cookies.signed[:u_for_log] == user_id
+      end
     end
 end

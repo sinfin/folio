@@ -54,7 +54,11 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [:request_id]
+  config.log_tags = [
+    :request_id,
+    -> request { "u=#{request.cookie_jar.signed[:u_for_log] || "nil"}" },
+    -> request { "s=#{request.cookie_jar.signed[:s_for_log] || "nil"}" },
+  ]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store

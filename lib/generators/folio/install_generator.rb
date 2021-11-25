@@ -208,6 +208,20 @@ module Folio
         gsub_file "config/environments/production.rb", "config.assets.js_compressor = :uglifier", "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6"
       end
 
+      def log_tag_settings
+        %w[config/environments/production.rb config/environments/staging.rb].each do |path|
+          gsub_file path,
+                    "config.log_tags = [ :request_id ]",
+                    <<~RUBY.chomp
+                      config.log_tags = [
+                          :request_id,
+                          -> request { "u=\#{request.cookie_jar.signed[:u_for_log] || "nil"}" },
+                          -> request { "s=\#{request.cookie_jar.signed[:s_for_log] || "nil"}" },
+                        ]
+                    RUBY
+        end
+      end
+
       def chmod_files
         [
           "bin/bower",
