@@ -117,7 +117,6 @@ window.folioConsoleBindContentTemplatesInput = ($elements) ->
 
     url = $input.data('content-templates-url')
     title = $input.data('content-templates-title')
-    console.log url, title
 
     if url and title
       $menu.append $("""

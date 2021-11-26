@@ -29,7 +29,8 @@
           .col
             = f.input :locale,
                       collection: locales,
-                      include_blank: false
+                      include_blank: false,
+                      atom_setting: :locale
 
         - if Rails.application.config.folio_pages_ancestry
           .col
