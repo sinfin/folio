@@ -44,8 +44,13 @@ module Folio::HasAtoms
         settings
       end
 
-      def atom_default_locale_from_params(_params)
-        I18n.default_locale
+      def atom_default_locale_from_params(params)
+        # use the submitted locale for classes with a locale column
+        if column_names.include?("locale") && locale = params[:locale].try(:[], :null)
+          locale
+        else
+          I18n.default_locale
+        end
       end
     end
   end
