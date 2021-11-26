@@ -214,9 +214,9 @@ module Folio
                     "config.log_tags = [ :request_id ]",
                     <<~RUBY.chomp
                       config.log_tags = [
-                          :request_id,
                           -> request { "u=\#{request.cookie_jar.signed[:u_for_log] || "nil"}" },
                           -> request { "s=\#{request.cookie_jar.signed[:s_for_log] || "nil"}" },
+                          :request_id,
                         ]
                     RUBY
         end
