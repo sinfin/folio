@@ -37,18 +37,23 @@ $folio-loader-inverse-foreground: white !default
     border-bottom: 0.45em solid rgba($folio-loader-foreground, .2)
     border-left: 0.45em solid $folio-loader-foreground
     transform: translateZ(0)
+    transform-origin: center center
     animation: load8 1.1s infinite linear
     position: absolute
     top: 50%
     left: 50%
 
   &--small
+    width: 22px
+    height: 22px
+
     &:before, &:after
-      width: 2.2em
-      height: 2.2em
+      width: 22px
+      height: 22px
 
     &:before
-      margin: -1.1em
+      margin: -11px
+      border-width: 3px
 
   &--transparent
     background-color: transparent
