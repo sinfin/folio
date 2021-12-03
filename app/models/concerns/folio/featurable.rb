@@ -11,6 +11,27 @@ module Folio::Featurable
     end
   end
 
+  module WithPosition
+    extend ActiveSupport::Concern
+
+    included do
+      scope :featured, -> { where.not(featured: nil) }
+
+      scope :ordered_featured, -> { featured.order(featured: :asc) }
+
+      scope :by_featured, -> (arg) do
+        case arg
+        when true, "true"
+          featured
+        when false, "false"
+          where(featured: nil)
+        else
+          all
+        end
+      end
+    end
+  end
+
   module Within
     extend ActiveSupport::Concern
 
