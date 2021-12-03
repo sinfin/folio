@@ -30,6 +30,11 @@ module Folio::Featurable
         end
       end
     end
+
+    def featurable_sql_update(new_featured)
+      update_columns(featured: new_featured,
+                     updated_at: current_time_from_proper_timezone)
+    end
   end
 
   module Within
