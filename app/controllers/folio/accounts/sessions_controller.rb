@@ -4,7 +4,7 @@ class Folio::Accounts::SessionsController < Devise::SessionsController
   layout "folio/console/devise"
 
   def after_sign_in_path_for(_resource)
-    console_root_path
+    stored_location_for(:account).presence || console_root_path
   end
 
   def after_sign_out_path_for(_resource)
