@@ -49,14 +49,6 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         attrs["images"] = images.shuffle
       end
 
-      if attrs["article"]
-        if attrs["article"] == 2
-          attrs["article"] = articles[1]
-        else
-          attrs["article"] = articles[0]
-        end
-      end
-
       attrs.each do |key, value|
         if value == true
           if association_definition = attrs["type"].constantize::ASSOCIATIONS[key.to_sym]
