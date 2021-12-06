@@ -5,8 +5,10 @@ $ ->
   onCheckboxChange = ($catalogue) ->
     ids = []
 
-    $catalogue.find('.f-c-catalogue__collection-actions-checkbox:checked').each ->
-      ids.push(@value)
+    $all = $catalogue.find('.f-c-catalogue__collection-actions-checkbox')
+    $checked = $all.filter(':checked')
+
+    $checked.each -> ids.push(@value)
 
     $bar = $catalogue.find('.f-c-catalogue__collection-actions-bar')
 
@@ -23,9 +25,25 @@ $ ->
         $this = $(this)
         $this.prop('href', "#{$this.data('url-base')}?ids=#{ids}")
 
+    $catalogue
+      .find('.f-c-catalogue__collection-actions-checkbox-all')
+      .prop('checked', $all.length is $checked.length)
+
   $(document)
     .on 'change', '.f-c-catalogue__collection-actions-checkbox', ->
       onCheckboxChange($(this).closest('.f-c-catalogue'))
+
+    .on 'change', '.f-c-catalogue__collection-actions-checkbox-all', ->
+      console.log 'all'
+      $this = $(this)
+
+      $catalogue = $this.closest('.f-c-catalogue')
+
+      $catalogue
+        .find('.f-c-catalogue__collection-actions-checkbox')
+        .prop('checked', $this.prop('checked'))
+
+      onCheckboxChange($catalogue)
 
     .on 'click', '.f-c-catalogue__collection-actions-bar-close', ->
       $catalogue = $(this).closest('.f-c-catalogue')
