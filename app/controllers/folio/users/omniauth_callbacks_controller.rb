@@ -20,7 +20,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       auth = Folio::Omniauth::Authentication.from_request(request)
 
       if user_signed_in?
-        target_url = stored_location_for(:user).presence || Rails.application.config.folio_users_after_sign_in_path
+        target_url = stored_location_for(:user).presence || main_app.send(Rails.application.config.folio_users_after_sign_in_path)
 
         if auth.user.nil?
           # it's a new Authentication
