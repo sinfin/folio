@@ -19,7 +19,7 @@ module Folio::HasSecretHash
     loop do
       secret_hash = SecureRandom.urlsafe_base64(self.class.secret_hash_length)
                                 .gsub(/-|_/, ("a".."z").to_a[rand(26)])
-      break unless self.class.exists?(secret_hash: secret_hash)
+      break unless self.class.base_class.exists?(secret_hash: secret_hash)
     end
 
     self.secret_hash = secret_hash
