@@ -11,7 +11,7 @@ module Folio::FriendlyId
     validates :slug,
               presence: true,
               uniqueness: true,
-              format: { with: /[a-z][0-9a-z-]+/ }
+              format: { with: /[0-9a-z-]+/ }
 
     before_validation :strip_and_downcase_slug
   end
