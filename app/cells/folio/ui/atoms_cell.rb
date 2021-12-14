@@ -13,14 +13,38 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
     ::Rails.root.join("data/atoms_showcase.yml")
   end
 
+  def images
+    @images ||= begin
+      ary = Folio::Image.tagged_with("folio-ui-atoms").to_a
+
+      if ary.size < 5
+        ary = Folio::Image.tagged_with("unsplash").to_a
+
+        if ary.size < 5
+          ary += Folio::Image.first(5 - ary.size).to_a
+        end
+      end
+
+      ary
+    end
+  end
+
+  def documents
+    @documents ||= begin
+      ary = Folio::Document.tagged_with("folio-ui-atoms").to_a
+
+      if ary.size < 5
+        ary += Folio::Document.first(5 - ary.size).to_a
+      end
+
+      ary
+    end
+  end
+
   def page
     require "faker"
 
     @page = Folio::Page.new
-
-    images = Folio::Image.tagged_with("unsplash").to_a
-    images = Folio::Image.last(5).to_a if images.blank?
-    documents = Folio::Document.limit(5).to_a
 
     sorted_yaml = YAML.load_file(self.class.data_path).sort_by do |data|
       klass = data["type"].constantize
@@ -32,6 +56,8 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
     sorted_yaml.each do |data|
       attrs = data.dup
+
+      attrs = handle_attributes(attrs)
 
       attrs.delete("_showcase")
 
@@ -49,19 +75,6 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         attrs["images"] = images.shuffle
       end
 
-      attrs.each do |key, value|
-        if value == true
-          if association_definition = attrs["type"].constantize::ASSOCIATIONS[key.to_sym]
-            record = association_definition.first.constantize.last
-            if record
-              attrs[key] = record
-            else
-              attrs.delete(key)
-            end
-          end
-        end
-      end
-
       attrs["title"] = Faker::Hipster.sentence if attrs["title"] == true
 
       %w[description text].each do |key|
@@ -76,7 +89,23 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         end
       end
 
-      attrs = handle_attributes(attrs)
+      attrs.each do |key, value|
+        if value == true
+          if association_klasses = attrs["type"].constantize::ASSOCIATIONS[key.to_sym]
+            if association_klasses.is_a?(Hash)
+              association_klasses = association_klasses[:klasses]
+            end
+
+            record = association_klasses.first.constantize.last
+
+            if record
+              attrs[key] = record
+            else
+              attrs.delete(key)
+            end
+          end
+        end
+      end
 
       atom = @page.atoms.build(attrs)
       atom.data["_showcase"] = data["_showcase"]
@@ -100,6 +129,7 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
   end
 
   def handle_attributes(attrs)
+    # to be overriden in project
     attrs
   end
 
