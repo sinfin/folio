@@ -60,6 +60,7 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
       attrs = handle_attributes(attrs)
 
       attrs.delete("_showcase")
+      molecule = attrs.delete("_molecule").presence || 1
 
       if attrs["cover"]
         if attrs["cover"].is_a?(Numeric)
@@ -107,10 +108,10 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         end
       end
 
-      atom = @page.atoms.build(attrs)
-      atom.data["_showcase"] = data["_showcase"]
-
-      atom
+      molecule.times do
+        atom = @page.atoms.build(attrs)
+        atom.data["_showcase"] = data["_showcase"]
+      end
     end
 
     @page
