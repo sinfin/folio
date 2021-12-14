@@ -4,9 +4,7 @@ class Folio::SessionAttachment::Image < Folio::SessionAttachment::Base
   include Folio::DragonflyFormatValidation
   include Folio::Thumbnails
 
-  ALLOWED_FORMATS = %w[jpeg png bmp gif svg tiff]
-
-  validate_file_format ALLOWED_FORMATS
+  validate_file_format
 
   def to_h_thumb
     if admin_thumb.uid

@@ -13,6 +13,8 @@ en:
         title: Title
       folio/content_template:
         content: Content
+      folio/file:
+        mime_type: File type
       folio/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
@@ -89,7 +91,7 @@ en:
     errors:
       messages:
         indestructible: The record cannot be removed.
-        file_format: 'has invalid type. Allowed types: %{types}'
+        file_format: 'is invalid. Allowed types: %{types}'
       models:
         folio/lead:
           attributes:

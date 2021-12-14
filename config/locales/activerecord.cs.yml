@@ -20,6 +20,7 @@ cs:
       folio/file:
         author: Autor
         description: Popis
+        mime_type: Typ souboru
       folio/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
@@ -120,7 +121,7 @@ cs:
     errors:
       messages:
         indestructible: Záznam není možné odstranit.
-        file_format: 'není povoleného typu. Povolené typy: %{types}'
+        file_format: 'není povolen. Povolené typy: %{types}'
       models:
         folio/atom/base:
           attributes:

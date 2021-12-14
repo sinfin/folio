@@ -67,7 +67,7 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
-  before_save :set_mime_type
+  before_validation :set_mime_type
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job!

@@ -9,13 +9,16 @@ class Folio::SessionAttachmentTest < ActiveSupport::TestCase
 
     assert_not Folio::SessionAttachment::Base.new(web_session_id: id,
                                                   file: image).valid?
+
     assert_not Folio::SessionAttachment::Document.new(web_session_id: id,
                                                       file: image).valid?
+
     assert_not Folio::SessionAttachment::Image.new(web_session_id: id,
                                                    file: image).valid?
 
     assert Dummy::SessionAttachment::Document.new(web_session_id: id,
                                                   file: image).valid?
+
     assert Dummy::SessionAttachment::Image.new(web_session_id: id,
                                                file: image).valid?
   end

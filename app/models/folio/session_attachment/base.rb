@@ -34,7 +34,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
                          optional: true,
                          touch: true
 
-  before_save :set_file_mime_type
+  before_validation :set_file_mime_type
   after_save :pregenerate_thumbnails
 
   alias_attribute :mime_type, :file_mime_type
