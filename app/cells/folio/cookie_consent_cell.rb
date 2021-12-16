@@ -1,8 +1,18 @@
 # frozen_string_literal: true
 
 class Folio::CookieConsentCell < Folio::ApplicationCell
+  DISABLED_SCRIPT_TYPE = "text/plain"
+  ANALYTICS_CATEGORY = "analytics"
+
   def self.known_cookies
     {
+      cc_cookie: {
+        expiration: [1, :years],
+        description: {
+          cs: "Udržuje nastavení cookies z toho okna.",
+          en: "Maintains cookie configuration made from this window.",
+        }
+      },
       session_id: {
         name: "_#{::Rails.application.class.name.deconstantize.underscore}_session",
         expiration: :end_of_session,
