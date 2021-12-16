@@ -1,6 +1,10 @@
 #= require cookieconsent
 
 if window.folioCookieConsentConfiguration
+  # TODO
+  # if window.dataLayer
+  #   window.dataLayer.push()
+
   window.folioCookieConsent = initCookieConsent()
   window.folioCookieConsent.run(window.folioCookieConsentConfiguration)
 

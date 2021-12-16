@@ -58,6 +58,7 @@ module Folio
       enabled: true,
       cookies: {
         necessary: [
+          :cc_cookie,
           :session_id,
           :s_for_log,
           :u_for_log,
