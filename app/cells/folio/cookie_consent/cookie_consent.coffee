@@ -1,22 +1,39 @@
 #= require cookieconsent
 
 if window.folioCookieConsentConfiguration
-  # TODO
-  # if window.dataLayer
-  #   window.dataLayer.push()
+  bindTurbolinks = Turbolinks?
 
-  window.folioCookieConsent = initCookieConsent()
-  window.folioCookieConsent.run(window.folioCookieConsentConfiguration)
+  if bindTurbolinks
+    detached = null
 
-  detached = null
-
-  $(document)
-    .on 'turbolinks:load', ->
+    onLoad = ->
       if detached
         $('body').append(detached)
         detached = null
 
-    .on 'turbolinks:before-render', ->
+    onBeforeRender = ->
       $main = $('#cc--main')
       return unless $main.length
       detached = $main.detach()
+
+  onAccept = (cookie) ->
+    if bindTurbolinks
+      bindTurbolinks = false
+
+      $(document)
+        .off 'turbolinks:load', onLoad
+        .off 'turbolinks:before-render', onBeforeRender
+
+    if window.dataLayer
+      window.dataLayer.push
+        event: 'cookieConsent'
+        level: cookie.level
+
+  window.folioCookieConsent = initCookieConsent()
+
+  window.folioCookieConsent.run(Object.assign({}, window.folioCookieConsentConfiguration, { onAccept: onAccept }))
+
+  if bindTurbolinks
+    $(document)
+      .on 'turbolinks:load', onLoad
+      .on 'turbolinks:before-render', onBeforeRender
