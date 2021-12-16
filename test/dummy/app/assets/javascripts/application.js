@@ -10,8 +10,9 @@
 //= require folio-bootstrap/js/dist/modal
 
 //= require folio/atoms
-//= require folio/devise
+//= require folio/cookie_consent/cookie_consent
 //= require folio/debounce
+//= require folio/devise
 //= require folio/lazyload
 //= require folio/lightbox
 

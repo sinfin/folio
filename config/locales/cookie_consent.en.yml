@@ -1,0 +1,50 @@
+---
+en:
+  folio:
+    cookie_consent:
+      cookies_link: More about cookies.
+
+      expiration:
+        end_of_session: When the browsing session ends
+        minutes:
+          one: "%{count} minute"
+          other: "%{count} minutes"
+        hours:
+          one: "%{count} hour"
+          other: "%{count} hours"
+        days:
+          one: "%{count} day"
+          other: "%{count} days"
+        years:
+          one: "%{count} year"
+          other: "%{count} years"
+      consent_modal:
+        title: We use cookies!
+        description: Hi, this website uses essential cookies to ensure its proper operation and tracking cookies to understand how you interact with it. The latter will be set only after consent. %{cookies_link}
+        primary_btn:
+          text: Accept all
+        secondary_btn:
+          text: Preferences
+        settings_modal:
+          title: Cookie preferences
+          save_settings_btn: Save settings
+          accept_all_btn: Accept all
+          reject_all_btn: Reject all
+          close_btn_label: Close
+          cookie_table_headers:
+            col1: Name
+            col2: Domain
+            col3: Expiration
+            col4: Description
+          blocks:
+            title: Cookie usage
+            description: We use cookies to ensure the basic functionalities of the website and to enhance your online experience. %{cookies_link}
+            necessary:
+              title: Strictly necessary cookies
+              description: These cookies are essential for the proper functioning of our website. Without these cookies, the website would not work properly
+            analytics:
+              title: Performance and Analytics cookies
+              description: These cookies allow the website to remember the choices you have made in the past
+            marketing:
+              title: Advertisement and Targeting cookies
+              description: These cookies collect information about how you use the website, which pages you visited and which links you clicked on. All of the data is anonymized and cannot be used to identify you

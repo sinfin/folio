@@ -47,6 +47,7 @@ meta name="twitter:card" content="summary"
                         'data-turbolinks-track': 'reload')
 
   == render partial: 'layouts/folio/analytics'
+  == cell('folio/cookie_consent', request.hostname)
 
   - unless skip_javascript
     = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \

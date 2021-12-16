@@ -11,6 +11,7 @@
 <%- if Rails.application.config.folio_users -%>//= require folio/devise
 <%- end -%>
 //= require folio/atoms
+//= require folio/cookie_consent/cookie_consent
 //= require folio/debounce
 //= require folio/lazyload
 //= require folio/lightbox
