@@ -42,6 +42,15 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
           en: "Used to distinguish users.",
         }
       },
+      _gat: {
+        name: "_gat_.*",
+        is_regex: true,
+        expiration: [1, :minutes],
+        description: {
+          cs: "Tento soubor cookie neukládá žádné informace o uživateli; používá se pouze k omezení počtu požadavků, které je třeba provést na doubleclick.net.",
+          en: "This cookie does not store any user information; it's just used to limit the number of requests that have to be made to doubleclick.net.",
+        }
+      },
       _gid: {
         expiration: [24, :hours],
         description: {
@@ -66,7 +75,14 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
           cs: "Obsahuje informace související s kampaní.",
           en: "Contains campaign related information.",
         }
-      }
+      },
+      _gcl_au: {
+        expiration: [1, :years],
+        description: {
+          cs: "Ukládá informace o prokliku reklam.",
+          en: "Stores information about ad clicks.",
+        }
+      },
     }
   end
 
@@ -173,6 +189,8 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
         else
           log_error("Missing definition for cookie symbol - #{symbol_or_hash}")
         end
+      elsif symbol_or_hash.is_a?(Hash)
+        ary << cookie_setting_for_hash(symbol_or_hash)
       else
         log_error("Unknown definition of a cookie", extra: symbol_or_hash)
       end
@@ -186,6 +204,16 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
 
     {
       col1: h[:name] || key.to_s,
+      col2: model,
+      col3: h[:expiration] == :end_of_session ? t(".expiration.end_of_session") : t(".expiration.#{h[:expiration][1]}", count: h[:expiration][0]),
+      col4: h[:description][I18n.locale] || h[:description][:en],
+      is_regex: h[:is_regex] == true,
+    }
+  end
+
+  def cookie_setting_for_hash(h)
+    {
+      col1: h[:name],
       col2: model,
       col3: h[:expiration] == :end_of_session ? t(".expiration.end_of_session") : t(".expiration.#{h[:expiration][1]}", count: h[:expiration][0]),
       col4: h[:description][I18n.locale] || h[:description][:en],
