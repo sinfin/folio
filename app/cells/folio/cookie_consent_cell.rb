@@ -103,7 +103,14 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
       current_lang: I18n.locale,
       autoclear_cookies: true,
       page_scripts: true,
-      languages: { I18n.locale => languages_hash }
+      languages: { I18n.locale => languages_hash },
+      gui_options: {
+        consent_modal: {
+          layout: "cloud",
+          position: "bottom center",
+          transition: "slide",
+        }
+      }
     }
   end
 

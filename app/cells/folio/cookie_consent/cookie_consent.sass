@@ -1,1 +1,51 @@
 @import "cookieconsent"
+
+$folio-cookie-consent-bg: $body-bg !default
+$folio-cookie-consent-text: $body-color !default
+$folio-cookie-consent-btn-primary-bg: $primary !default
+$folio-cookie-consent-btn-primary-text: color-yiq($primary) !default
+$folio-cookie-consent-btn-primary-hover-bg: darken($primary, 7.5%) !default
+$folio-cookie-consent-btn-secondary-bg: #eaeff2 !default
+$folio-cookie-consent-btn-secondary-text: $folio-cookie-consent-text !default
+$folio-cookie-consent-btn-secondary-hover-bg: #d8e0e6 !default
+$folio-cookie-consent-toggle-bg-off: #919ea6 !default
+$folio-cookie-consent-toggle-bg-on: $success !default
+$folio-cookie-consent-toggle-bg-readonly: #d5dee2 !default
+$folio-cookie-consent-toggle-knob-bg: #fff !default
+$folio-cookie-consent-toggle-knob-icon-color: #ecf2fa !default
+$folio-cookie-consent-block-text: $folio-cookie-consent-text !default
+$folio-cookie-consent-cookie-category-block-bg: #f0f4f7 !default
+$folio-cookie-consent-cookie-category-block-bg-hover: #e9eff4 !default
+$folio-cookie-consent-section-border: #f1f3f5 !default
+$folio-cookie-consent-cookie-table-border: #e9edf2 !default
+$folio-cookie-consent-overlay-bg: rgba(4, 6, 8, .85) !default
+$folio-cookie-consent-webkit-scrollbar-bg: #cfd5db !default
+$folio-cookie-consent-webkit-scrollbar-bg-hover: #9199a0 !default
+$folio-cookie-consent-button-border-radius: $btn-border-radius !default
+
+.cc_div
+  --cc-bg: #{$folio-cookie-consent-bg}
+  --cc-text: #{$folio-cookie-consent-text}
+  --cc-btn-primary-bg: #{$folio-cookie-consent-btn-primary-bg}
+  --cc-btn-primary-text: #{$folio-cookie-consent-btn-primary-text: $folio-cookie-conse}
+  --cc-btn-primary-hover-bg: #{$folio-cookie-consent-btn-primary-hover-bg}
+  --cc-btn-secondary-bg: #{$folio-cookie-consent-btn-secondary-bg}
+  --cc-btn-secondary-text: #{$folio-cookie-consent-btn-secondary-text: $folio-cookie-conse}
+  --cc-btn-secondary-hover-bg: #{$folio-cookie-consent-btn-secondary-hover-bg}
+  --cc-toggle-bg-off: #{$folio-cookie-consent-toggle-bg-off}
+  --cc-toggle-bg-on: #{$folio-cookie-consent-toggle-bg-on}
+  --cc-toggle-bg-readonly: #{$folio-cookie-consent-toggle-bg-readonly}
+  --cc-toggle-knob-bg: #{$folio-cookie-consent-toggle-knob-bg}
+  --cc-toggle-knob-icon-color: #{$folio-cookie-consent-toggle-knob-icon-color}
+  --cc-block-text: #{$folio-cookie-consent-block-text: $folio-cookie-conse}
+  --cc-cookie-category-block-bg: #{$folio-cookie-consent-cookie-category-block-bg}
+  --cc-cookie-category-block-bg-hover: #{$folio-cookie-consent-cookie-category-block-bg-hover}
+  --cc-section-border: #{$folio-cookie-consent-section-border}
+  --cc-cookie-table-border: #{$folio-cookie-consent-cookie-table-border}
+  --cc-overlay-bg: #{$folio-cookie-consent-overlay-bg}
+  --cc-webkit-scrollbar-bg: #{$folio-cookie-consent-webkit-scrollbar-bg}
+  --cc-webkit-scrollbar-bg-hover: #{$folio-cookie-consent-webkit-scrollbar-bg-hover}
+
+  .c-bn
+    border-radius: $folio-cookie-consent-button-border-radius
+    outline: 0 !important
