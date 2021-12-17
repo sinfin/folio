@@ -37,3 +37,7 @@ if window.folioCookieConsentConfiguration
     $(document)
       .on 'turbolinks:load', onLoad
       .on 'turbolinks:before-render', onBeforeRender
+
+  $(document).on 'click', '.f-cookie-consent-link', (e) ->
+    e.preventDefault()
+    window.folioCookieConsent.showSettings()
