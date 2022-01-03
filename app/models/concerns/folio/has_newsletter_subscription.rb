@@ -19,10 +19,13 @@ module Folio::HasNewsletterSubscription
     if newsletter_subscription.present? || should_subscribe_to_newsletter?
       build_newsletter_subscription if newsletter_subscription.nil?
 
-      newsletter_subscription.update!(email: subscription_email,
-                                      merge_vars: subscription_merge_vars,
-                                      tags: subscription_tags,
-                                      active: should_subscribe_to_newsletter?)
+      did_update = newsletter_subscription.update(email: subscription_email,
+                                                  merge_vars: subscription_merge_vars,
+                                                  tags: subscription_tags,
+                                                  active: should_subscribe_to_newsletter?)
+      unless did_update
+        Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\" - failed to update.") if defined?(Raven)
+      end
     end
   end
 
