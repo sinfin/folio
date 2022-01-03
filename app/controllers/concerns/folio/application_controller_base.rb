@@ -74,10 +74,14 @@ module Folio::ApplicationControllerBase
     def set_cookies_for_log
       if session_id = session.id.try(:public_id)
         cookies.signed[:s_for_log] = session_id unless cookies.signed[:s_for_log] == session_id
+      else
+        cookies.signed[:s_for_log] = nil if cookies.signed[:s_for_log]
       end
 
       if user_id = try(:current_user).try(:id)
         cookies.signed[:u_for_log] = user_id unless cookies.signed[:u_for_log] == user_id
+      else
+        cookies.signed[:u_for_log] = nil if cookies.signed[:u_for_log]
       end
     end
 end
