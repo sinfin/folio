@@ -1,0 +1,53 @@
+.f-c-r-atoms-settings-header
+  margin-bottom: 1.5 * $spacer
+  display: flex
+  align-items: center
+
+  &__title
+    flex: 1 1 auto
+    max-width: 100%
+
+    .form-control
+      max-width: 357px
+
+  &__controls
+    display: flex
+    align-items: center
+    flex: 0 0 auto
+
+  &__button
+    min-width: 145px
+
+  &__close
+    +unbutton
+    font-size: 32px
+
+  +media-breakpoint-up(lg)
+    &__close
+      margin-left: $grid-gutter-width
+
+    &__controls
+      margin-left: auto
+
+    &__title
+      margin-right: $grid-gutter-width
+
+  +media-breakpoint-down(md)
+    flex-direction: column-reverse
+    align-items: stretch
+
+    &__controls
+      flex-direction: row-reverse
+      margin-bottom: $spacer
+
+    &__button
+      margin-left: auto
+
+    &__close
+      margin-right: $grid-gutter-width
+
+  +media-breakpoint-down(sm)
+    &__title
+      .form-control
+        max-width: 100%
+        width: 100%

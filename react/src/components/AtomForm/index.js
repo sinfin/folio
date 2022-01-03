@@ -135,8 +135,8 @@ class AtomForm extends React.PureComponent {
 
     return (
       <AtomFormWrap>
-        <div className='f-c-atoms-settings-header'>
-          <div className='f-c-atoms-settings-header__title'>
+        <div className='f-c-r-atoms-settings-header'>
+          <div className='f-c-r-atoms-settings-header__title'>
             <Input
               type='select'
               value={this.props.form.atoms[0].record.type}
@@ -150,10 +150,10 @@ class AtomForm extends React.PureComponent {
             </Input>
           </div>
 
-          <div className='f-c-atoms-settings-header__controls'>
+          <div className='f-c-r-atoms-settings-header__controls'>
             <button
               type='button'
-              className='btn btn-primary f-c-atoms-settings-header__button'
+              className='btn btn-primary f-c-r-atoms-settings-header__button'
               onClick={this.saveFormAtoms}
             >
               {window.FolioConsole.translations.done}
@@ -161,7 +161,7 @@ class AtomForm extends React.PureComponent {
 
             <button
               type='button'
-              className='f-c-atoms-settings-header__close mi'
+              className='f-c-r-atoms-settings-header__close mi'
               onClick={this.props.closeFormAtom}
             >
               close
