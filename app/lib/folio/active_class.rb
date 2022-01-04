@@ -10,7 +10,9 @@ module Folio::ActiveClass
       path = raw_path.split("?").first
 
       if start_with && ["/", "/cs", "/en"].exclude?(path)
-        request_path.start_with?(path) || request_url.start_with?(path)
+        [request_path, request_url].any? do |p|
+          p == path || p.start_with?("#{path}/")
+        end
       else
         request_path == path || request_url == path
       end
