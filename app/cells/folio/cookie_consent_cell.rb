@@ -83,6 +83,13 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
           en: "Stores information about ad clicks.",
         }
       },
+      _fbp: {
+        expiration: [3, :months],
+        description: {
+          cs: "Používá se k rozlišení uživatelů.",
+          en: "Used to distinguish users.",
+        }
+      },
     }
   end
 
