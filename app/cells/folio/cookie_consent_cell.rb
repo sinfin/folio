@@ -129,6 +129,16 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
     klass = "#{::Rails.application.class.name.deconstantize}::Page::Cookies".safe_constantize
 
     if klass && instance = klass.instance(fail_on_missing: false)
+      return url_for(instance)
+    end
+
+    if p = try(:current_page_singleton, "::Folio::Page::Cookies")
+      return url_for(p)
+    end
+
+    klass = "::Folio::Page::Cookies".safe_constantize
+
+    if klass && instance = klass.instance(fail_on_missing: false)
       url_for(instance)
     end
   rescue StandardError
