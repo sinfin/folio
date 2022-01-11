@@ -2,7 +2,6 @@ import { isEqual, omit } from 'lodash'
 import { delay } from 'redux-saga'
 import { takeLatest, put, select } from 'redux-saga/effects'
 
-import { flashError } from 'utils/flash'
 import { getFiles } from 'ducks/files'
 
 // Constants
@@ -36,7 +35,7 @@ function * updateFiltersPerform (action) {
     }
     yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 

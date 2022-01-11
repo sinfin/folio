@@ -109,8 +109,10 @@ Folio::Engine.routes.draw do
 
       resources :links, only: %i[index]
 
-      resources :images, only: %i[index create update destroy] do
+      resources :images, only: %i[index update destroy] do
         collection do
+          post :s3_before
+          post :s3_after
           post :tag
           delete :mass_destroy
           get :mass_download
@@ -120,8 +122,10 @@ Folio::Engine.routes.draw do
           post :change_file
         end
       end
-      resources :documents, only: %i[index create update destroy] do
+      resources :documents, only: %i[index update destroy] do
         collection do
+          post :s3_before
+          post :s3_after
           post :tag
           delete :mass_destroy
           get :mass_download

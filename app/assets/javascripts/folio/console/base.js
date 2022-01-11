@@ -39,6 +39,11 @@
 //= require folio/throttle
 //= require folio/image/image
 
+// keep the order!
+//= require folio/console/_flash
+//= require folio/console/_api
+//= require folio/console/_s3-upload
+
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-prompt-file-input
 //= require folio/console/_cocoon-set-position
@@ -46,7 +51,6 @@
 //= require folio/console/_data-change-value
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
-//= require folio/console/_flash
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs

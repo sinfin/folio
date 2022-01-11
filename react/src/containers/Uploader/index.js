@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { uniqueId } from 'lodash'
 
 import { CSRF } from 'utils/api'
-import { flashMessageFromApiErrors } from 'utils/flash'
 
 import Loader from 'components/Loader'
 import {
@@ -51,7 +50,8 @@ class Uploader extends Component {
       thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
       success: (file, response) => dispatch(success(fileType, file, response)),
       error: (file, message) => {
-        dispatch(error(fileType, file, flashMessageFromApiErrors(message)))
+        window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+        dispatch(error(fileType, file))
       },
       uploadprogress: (file, percentage) => dispatch(progress(fileType, file, Math.round(percentage))),
       init: (dropzone) => { this.dropzone = dropzone }

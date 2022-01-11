@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-11-01
+### Changed
+- changed console flash javascript - upgrade all your JS code using flash (grep `window.FolioConsole.flash` and replace via the new methods defined in `app/assets/javascripts/folio/console/_flash.es6`)
+
 ## 2021-12-14
 ### Changed
 - changed `Folio::DragonflyFormatValidation` to not use dragonfly `validates_property` as it tends to ping the image when not needed - make sure you assign mime_type attributes in `before_validation` instead of `before_save` from now on!

@@ -34,8 +34,8 @@ $(document).on 'click', '.f-c-state__state--trigger', (e) ->
       url: $this.data('url')
       method: 'POST'
       error: (jxHr) ->
-        window.FolioConsole.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
+        window.FolioConsole.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
         $this.closest('.f-c-state').removeClass('f-c-state--loading')
       success: (res) ->
         $this.closest('.f-c-state').replaceWith(res.data)
-        window.FolioConsole.flashMessageFromMeta(res)
+        window.FolioConsole.Flash.flashMessageFromMeta(res)

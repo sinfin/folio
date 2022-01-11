@@ -1,5 +1,4 @@
 import { apiGet, apiPut, apiDelete } from 'utils/api'
-import { flashError, flashSuccess } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find, without, omit } from 'lodash'
 
@@ -96,7 +95,7 @@ function * getFilesPerform (action) {
     const response = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.fileType, response.data, response.meta))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -118,7 +117,7 @@ function * updateFilePerform (action) {
     const response = yield call(apiPut, fullUrl, data)
     yield put(updateFileSuccess(action.fileType, action.file, response.data))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
     yield put(updateFileFailure(action.fileType, action.file))
   }
 }
@@ -136,7 +135,7 @@ function * changeFilesPagePerform (action) {
     }
     yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -151,14 +150,14 @@ function * massDeletePerform (action) {
     const fullUrl = `${filesUrl}/mass_destroy?ids=${massSelectedIds.join(',')}`
     const res = yield call(apiDelete, fullUrl)
     if (res.error) {
-      flashError(res.error)
+      window.FolioConsole.Flash.alert(res.error)
     } else {
-      flashSuccess(res.data.message)
+      window.FolioConsole.Flash.success(res.data.message)
       yield put(removedFiles(action.fileType, massSelectedIds))
       yield put(massCancel(action.fileType))
     }
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -170,12 +169,12 @@ function * deleteFilePerform (action) {
   try {
     const res = yield call(apiDelete, `${action.filesUrl}/${action.file.id}`)
     if (res.error) {
-      flashError(res.error)
+      window.FolioConsole.Flash.alert(res.error)
     } else {
       yield put(removedFiles(action.fileType, [action.file.id]))
     }
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 

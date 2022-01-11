@@ -36,6 +36,7 @@ require "recaptcha"
 require "audited"
 require "fast_jsonapi"
 require "traco"
+require "aws-sdk-s3"
 
 module Folio
   LANGUAGES = {

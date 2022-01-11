@@ -53,13 +53,13 @@ $(document)
       method: 'POST'
 
       error: (jxHr) ->
-        window.FolioConsole.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
+        window.FolioConsole.Flash.flashMessageFromApiErrors(JSON.parse(jxHr.responseText))
         $modal.removeClass('f-c-aasm-email-modal--loading')
 
       success: (res) ->
         $trigger.closest('.f-c-state').replaceWith(res.data)
 
-        window.FolioConsole.flashMessageFromMeta(res)
+        window.FolioConsole.Flash.flashMessageFromMeta(res)
 
         $modal
           .removeClass('f-c-aasm-email-modal--loading')

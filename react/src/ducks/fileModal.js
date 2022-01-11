@@ -1,7 +1,6 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
 
 import { apiGet, apiPost, apiFilePost } from 'utils/api'
-import { flashError } from 'utils/flash'
 import { updatedFiles, UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
 
 // Constants
@@ -72,7 +71,7 @@ function * updateFileThumbnailPerform (action) {
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -90,7 +89,7 @@ function * uploadNewFileInsteadPerform (action) {
     yield put(updatedFiles(action.fileType, [response.data]))
     yield put(uploadNewFileInsteadSuccess(response.data))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -119,7 +118,7 @@ function * openFileModalPerform (action) {
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -133,7 +132,7 @@ function * changeFilePlacementsPagePerform (action) {
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 

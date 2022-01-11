@@ -1,4 +1,3 @@
-import { flashError } from 'utils/flash'
 import { takeLatest, takeEvery, call, select, put } from 'redux-saga/effects'
 import { omit, without } from 'lodash'
 
@@ -40,8 +39,8 @@ export function finishedUpload (fileType, file, uploadedFileId) {
   return { type: FINISHED_UPLOAD, fileType, file, uploadedFileId }
 }
 
-export function error (fileType, file, error) {
-  return { type: ERROR, fileType, file, error }
+export function error (fileType, file) {
+  return { type: ERROR, fileType, file }
 }
 
 export function progress (fileType, file, percentage) {
@@ -62,12 +61,14 @@ export function closeTagger (fileType) {
 
 // Sagas
 
-function * uploadsErrorPerform (action) {
-  yield call(flashError, action.error)
+function * addedFileSagaPerform (action) {
+  const filesUrl = yield select(filesUrlSelector)
+  const result = yield call(window.FolioConsole.S3Upload.newUpload, { filesUrl, file: action.file })
+  console.log(result)
 }
 
-function * uploadsErrorSaga () {
-  yield takeLatest(ERROR, uploadsErrorPerform)
+function * addedFileSaga () {
+  yield takeLatest(ADDED_FILE, addedFileSagaPerform)
 }
 
 function * uploadedFilePerform (action) {
@@ -105,9 +106,9 @@ function * setUploadAttributesSaga () {
 }
 
 export const uploadsSagas = [
-  uploadsErrorSaga,
   uploadedFileSaga,
-  setUploadAttributesSaga
+  setUploadAttributesSaga,
+  addedFileSaga
 ]
 
 // Selectors
