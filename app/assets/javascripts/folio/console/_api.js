@@ -68,7 +68,6 @@ window.FolioConsole.Api.api = (method, url, body) => {
     headers: window.FolioConsole.Api.JSON_HEADERS,
     credentials: 'same-origin'
   }
-  console.log(data)
 
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)

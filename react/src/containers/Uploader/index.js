@@ -46,7 +46,7 @@ class Uploader extends Component {
     const { dispatch, fileType } = this.props
 
     return {
-      addedfile: (file) => dispatch(addedFile(fileType, file)),
+      addedfile: (file) => dispatch(addedFile(fileType, file, this.dropzone)),
       thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
       success: (file, response) => dispatch(success(fileType, file, response)),
       error: (file, message) => {
@@ -74,6 +74,7 @@ class Uploader extends Component {
 
     return {
       headers: CSRF,
+      method: 'PUT',
       paramName: 'file[attributes][file]',
       previewTemplate: '<span></span>',
       clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
@@ -81,8 +82,9 @@ class Uploader extends Component {
       thumbnailWidth: 150,
       thumbnailHeight: 150,
       timeout: 0,
-      parallelUploads: 5,
+      parallelUploads: 25,
       maxFilesize: 4096,
+      autoProcessQueue: false,
       params
     }
   }

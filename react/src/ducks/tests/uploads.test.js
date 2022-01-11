@@ -9,7 +9,8 @@ import uploadsReducer, {
   progress,
   setUploadAttributes,
   clearUploadedIds,
-  defaultTag
+  defaultTag,
+  setFileS3Data
 } from '../uploads'
 
 describe('uploadsReducer', () => {
@@ -22,6 +23,12 @@ describe('uploadsReducer', () => {
 
   it('addedFile', () => {
     expect(state['Folio::Image'].records['foo.jpg|1|1']).not.toEqual(undefined)
+  })
+
+  it('setFileS3Data', () => {
+    expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.s3_path).toEqual(undefined)
+    state = uploadsReducer(state, setFileS3Data('Folio::Image', fileMock, '/foo', 'http://foo/foo'))
+    expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.s3_path).toEqual('/foo')
   })
 
   it('thumbnail', () => {

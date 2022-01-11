@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2021_11_19_120347) do
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
     t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
@@ -201,7 +201,7 @@ ActiveRecord::Schema.define(version: 2021_11_19_120347) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -460,7 +460,7 @@ ActiveRecord::Schema.define(version: 2021_11_19_120347) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

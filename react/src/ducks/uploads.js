@@ -8,6 +8,7 @@ import { filesUrlSelector } from 'ducks/app'
 // Constants
 
 const ADDED_FILE = 'uploads/ADDED_FILE'
+const SET_FILE_S3_DATA = 'uploads/SET_FILE_S3_DATA'
 const THUMBNAIL = 'uploads/THUMBNAIL'
 const SUCCESS = 'uploads/SUCCESS'
 const ERROR = 'uploads/ERROR'
@@ -23,8 +24,12 @@ const idFromFile = (file) => {
 
 // Actions
 
-export function addedFile (fileType, file) {
-  return { type: ADDED_FILE, fileType, file }
+export function addedFile (fileType, file, dropzone) {
+  return { type: ADDED_FILE, fileType, file, dropzone }
+}
+
+export function setFileS3Data (fileType, file, s3_path, s3_url) {
+  return { type: SET_FILE_S3_DATA, fileType, file, s3_path, s3_url }
 }
 
 export function thumbnail (fileType, file, dataUrl) {
@@ -62,9 +67,16 @@ export function closeTagger (fileType) {
 // Sagas
 
 function * addedFileSagaPerform (action) {
-  const filesUrl = yield select(filesUrlSelector)
-  const result = yield call(window.FolioConsole.S3Upload.newUpload, { filesUrl, file: action.file })
-  console.log(result)
+  try {
+    const filesUrl = yield select(filesUrlSelector)
+    const result = yield call(window.FolioConsole.S3Upload.newUpload, { filesUrl, file: action.file })
+    yield put(setFileS3Data(action.fileType, action.file, result.s3_path, result.s3_url))
+    console.log(result)
+    action.dropzone.options.url = result.s3_url
+    yield call(action.dropzone.processFile.bind(action.dropzone), action.file)
+  } catch (e) {
+    window.FolioConsole.Flash.alert(e.message)
+  }
 }
 
 function * addedFileSaga () {
@@ -172,6 +184,25 @@ function uploadsReducer (rawState = initialState, action) {
                 description: state[action.fileType].uploadAttributes.description,
                 thumb: null,
                 progress: 0
+              }
+            }
+          }
+        }
+      }
+
+    case SET_FILE_S3_DATA:
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          records: {
+            ...state[action.fileType].records,
+            [id]: {
+              id,
+              attributes: {
+                ...state[action.fileType].records[id].attributes,
+                s3_path: action.s3_path,
+                s3_url: action.s3_url
               }
             }
           }

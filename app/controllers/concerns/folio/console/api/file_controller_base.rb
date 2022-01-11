@@ -27,6 +27,8 @@ module Folio::Console::Api::FileControllerBase
 
     session[:init] = true unless session.id
 
+    letters = ("a".."z").to_a.sample(2)
+
     s3_path = [
       "tmp_folio_file_uploads",
       "session",
@@ -39,7 +41,7 @@ module Folio::Console::Api::FileControllerBase
 
     presigned_url = test_aware_presign_url(s3_path)
 
-    render json: { url: presigned_url, file_name: file_name, s3_path: s3_path }
+    render json: { s3_url: presigned_url, file_name: file_name, s3_path: s3_path }
   end
 
   # somewhere between, JS on FE directly loads file to S3 and returns it's s3_path
