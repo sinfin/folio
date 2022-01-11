@@ -7,12 +7,5 @@ window.FolioConsole.S3Upload.HEADERS = {
 }
 
 window.FolioConsole.S3Upload.newUpload = ({ filesUrl, file }) => {
-  const data = {
-    method: "POST",
-    headers: window.FolioConsole.S3Upload.HEADERS,
-    credentials: 'same-origin',
-    body: JSON.stringify({ file_name: file.name })
-  }
-
-  return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
+  return window.FolioConsole.Api.apiPost(`${filesUrl}/s3_before`, { file_name: file.name })
 }

@@ -1,5 +1,8 @@
 import React from 'react'
 import renderer from 'react-test-renderer'
+
+import 'folioTestSetup'
+
 import { Atoms } from '../'
 import { SerializedAtom } from 'components/SerializedAtoms'
 

@@ -1,3 +1,5 @@
+import 'folioTestSetup'
+
 import filtersReducer, {
   initialState,
   setFilter,
