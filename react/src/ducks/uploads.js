@@ -9,6 +9,7 @@ import { filesUrlSelector } from 'ducks/app'
 
 const ADDED_FILE = 'uploads/ADDED_FILE'
 const SET_FILE_S3_DATA = 'uploads/SET_FILE_S3_DATA'
+const S3_UPLOAD_SUCCESS = 'uploads/S3_UPLOAD_SUCCESS'
 const THUMBNAIL = 'uploads/THUMBNAIL'
 const SUCCESS = 'uploads/SUCCESS'
 const ERROR = 'uploads/ERROR'
@@ -30,6 +31,10 @@ export function addedFile (fileType, file, dropzone) {
 
 export function setFileS3Data (fileType, file, s3_path, s3_url) {
   return { type: SET_FILE_S3_DATA, fileType, file, s3_path, s3_url }
+}
+
+export function s3UploadSuccess (fileType, file) {
+  return { type: S3_UPLOAD_SUCCESS, fileType, file }
 }
 
 export function thumbnail (fileType, file, dataUrl) {
@@ -71,7 +76,6 @@ function * addedFileSagaPerform (action) {
     const filesUrl = yield select(filesUrlSelector)
     const result = yield call(window.FolioConsole.S3Upload.newUpload, { filesUrl, file: action.file })
     yield put(setFileS3Data(action.fileType, action.file, result.s3_path, result.s3_url))
-    console.log(result)
     action.dropzone.options.url = result.s3_url
     yield call(action.dropzone.processFile.bind(action.dropzone), action.file)
   } catch (e) {
@@ -117,10 +121,27 @@ function * setUploadAttributesSaga () {
   yield takeEvery(SET_UPLOAD_ATTRIBUTES, setUploadAttributesPerform)
 }
 
+function * s3UploadSuccessPerform (action) {
+  try {
+    const id = idFromFile(action.file)
+    const upload = yield select(makeUploadSelector(action.fileType)(id))
+    const filesUrl = yield select(filesUrlSelector)
+    const url = `${filesUrl}/s3_after`
+    yield call(apiPost, url, { s3_path: upload.attributes.s3_path, type: action.fileType })
+  } catch (e) {
+    window.FolioConsole.Flash.alert(e.message)
+  }
+}
+
+function * s3UploadSuccessSaga () {
+  yield takeLatest(S3_UPLOAD_SUCCESS, s3UploadSuccessPerform)
+}
+
 export const uploadsSagas = [
   uploadedFileSaga,
   setUploadAttributesSaga,
-  addedFileSaga
+  addedFileSaga,
+  s3UploadSuccessSaga
 ]
 
 // Selectors

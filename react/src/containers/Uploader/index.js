@@ -10,10 +10,10 @@ import Loader from 'components/Loader'
 import {
   addedFile,
   thumbnail,
-  success,
   error,
   progress,
-  makeUploadsSelector
+  makeUploadsSelector,
+  s3UploadSuccess
 } from 'ducks/uploads'
 
 import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
@@ -48,7 +48,7 @@ class Uploader extends Component {
     return {
       addedfile: (file) => dispatch(addedFile(fileType, file, this.dropzone)),
       thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
-      success: (file, response) => dispatch(success(fileType, file, response)),
+      success: (file) => dispatch(s3UploadSuccess(fileType, file)),
       error: (file, message) => {
         window.FolioConsole.Flash.flashMessageFromApiErrors(message)
         dispatch(error(fileType, file))
