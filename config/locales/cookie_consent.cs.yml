@@ -1,0 +1,54 @@
+---
+cs:
+  folio:
+    cookie_consent:
+      cookies_link: Více o cookies.
+
+      expiration:
+        end_of_session: Do uzavření prohlížeče
+        minutes:
+          one: "%{count} minuta"
+          few: "%{count} minuty"
+          other: "%{count} minut"
+        hours:
+          one: "%{count} hodina"
+          few: "%{count} hodiny"
+          other: "%{count} hodin"
+        days:
+          one: "%{count} den"
+          few: "%{count} dny"
+          other: "%{count} dní"
+        years:
+          one: "%{count} rok"
+          few: "%{count} roky"
+          other: "%{count} let"
+      consent_modal:
+        title: Využití cookies pro personalizaci webu
+        description: Soubory cookies Vám umožňují komfortnější zážitek z použití webu i omezení nevhodně zacílené reklamy. Proto potřebujeme Váš souhlas se zpracováním souborů cookies - malých souborů dočasně uložených ve Vašem prohlížeči. Vaše data zpracováváme zodpovědně a v souladu s platnou legislativou. %{cookies_link}
+        primary_btn:
+          text: Přijmout vše
+        secondary_btn:
+          text: Nastavení
+        settings_modal:
+          title: Nastavení cookies
+          save_settings_btn: Uložit nastavení
+          accept_all_btn: Přijmout vše
+          reject_all_btn: Odmítnout vše
+          close_btn_label: Zavřít
+          cookie_table_headers:
+            col1: Název
+            col2: Doména
+            col3: Expirace
+            col4: Popis
+          blocks:
+            title: Použití cookies
+            description: Soubory cookies Vám umožňují komfortnější zážitek z použití webu i omezení nevhodně zacílené reklamy. Proto potřebujeme Váš souhlas se zpracováním souborů cookies - malých souborů dočasně uložených ve Vašem prohlížeči. Vaše data zpracováváme zodpovědně a v souladu s platnou legislativou. %{cookies_link}
+            necessary:
+              title: Technicky nutné cookies
+              description: Jsou potřeba pro správnou funkci stránky.
+            analytics:
+              title: Statistické cookies
+              description: Pomáhají nám sbírat informace o tom, jak procházíte naše stránky. Veškerá data jsou anonymizována a využíváme je pro zlepšování našich služeb.
+            marketing:
+              title: Marketingové cookies
+              description: Tyto cookies umožňují zobrazení relevantní reklamy. Veškerá data jsou anonymizována.

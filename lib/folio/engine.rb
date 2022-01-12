@@ -54,6 +54,24 @@ module Folio
     config.folio_users_after_accept_path = :root_path
     config.folio_users_signed_in_root_path = :root_path
 
+    config.folio_cookie_consent_configuration = {
+      enabled: true,
+      cookies: {
+        necessary: [
+          :cc_cookie,
+          :session_id,
+          :s_for_log,
+          :u_for_log,
+        ],
+        analytics: [
+          :_ga,
+          :_gid,
+          :_ga_container_id,
+          :_gac_gb_container_id,
+        ]
+      }
+    }
+
     initializer :append_migrations do |app|
       unless app.root.to_s.include? root.to_s
         config.paths["db/migrate"].expanded.each do |expanded_path|
