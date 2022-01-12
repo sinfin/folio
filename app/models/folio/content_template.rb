@@ -27,7 +27,7 @@ class Folio::ContentTemplate < Folio::ApplicationRecord
   end
 
   def to_label
-    title.presence || content
+    title.presence || try(:content) || try(:content_cs) || try(:content_en)
   end
 
   def self.to_data_attribute
