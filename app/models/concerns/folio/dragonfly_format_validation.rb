@@ -5,7 +5,15 @@ module Folio::DragonflyFormatValidation
 
   class_methods do
     def validate_file_format(formats = %w[jpeg png bmp gif svg tiff])
-      mime_types = formats.map { |f| "image/#{f}" }
+      mime_types = []
+
+      formats.each do |f|
+        mime_types << "image/#{f}"
+
+        if f == "svg"
+          mime_types << "image/svg+xml"
+        end
+      end
 
       define_singleton_method :valid_mime_types do
         mime_types
