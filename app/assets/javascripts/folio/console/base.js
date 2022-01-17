@@ -32,7 +32,6 @@
 //= require ./redactor/_definedlinks
 //= require ./redactor/_init
 
-//= require folio/cable
 //= require folio/lazyload
 //= require folio/lightbox
 //= require folio/debounce
@@ -43,6 +42,8 @@
 //= require folio/console/_flash
 //= require folio/console/_api
 //= require folio/console/_s3-upload
+
+//= require folio/_message-bus
 
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-prompt-file-input

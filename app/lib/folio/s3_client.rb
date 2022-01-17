@@ -49,7 +49,7 @@ module Folio::S3Client
       begin
         s3_client.head_object(
           bucket: s3_bucket,
-          key: key
+          key: s3_path
         )
         true
       rescue Aws::S3::Errors::NotFound

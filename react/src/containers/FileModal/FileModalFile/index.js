@@ -94,6 +94,8 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </div>
 
+            <p>ID: {file.attributes.id}</p>
+
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>
               {readOnly ? (

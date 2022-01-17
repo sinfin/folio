@@ -13,11 +13,13 @@ const S3_UPLOAD_SUCCESS = 'uploads/S3_UPLOAD_SUCCESS'
 const THUMBNAIL = 'uploads/THUMBNAIL'
 const SUCCESS = 'uploads/SUCCESS'
 const ERROR = 'uploads/ERROR'
-const FINISHED_UPLOAD = 'uploads/FINISHED_UPLOAD'
 const PROGRESS = 'uploads/PROGRESS'
 const SET_UPLOAD_ATTRIBUTES = 'uploads/SET_UPLOAD_ATTRIBUTES'
 const CLEAR_UPLOADED_IDS = 'uploads/CLEAR_UPLOADED_IDS'
 const CLOSE_TAGGER = 'uploads/CLOSE_TAGGER'
+const CREATE_FILE_FROM_S3_JOB_START = 'uploads/CREATE_FILE_FROM_S3_JOB_START'
+const CREATE_FILE_FROM_S3_JOB_SUCCESS = 'uploads/CREATE_FILE_FROM_S3_JOB_SUCCESS'
+const CREATE_FILE_FROM_S3_JOB_FAILURE = 'uploads/CREATE_FILE_FROM_S3_JOB_FAILURE'
 
 const idFromFile = (file) => {
   return [file.name, file.lastModified, file.size].join('|')
@@ -45,10 +47,6 @@ export function success (fileType, file, response) {
   return { type: SUCCESS, fileType, file, response }
 }
 
-export function finishedUpload (fileType, file, uploadedFileId) {
-  return { type: FINISHED_UPLOAD, fileType, file, uploadedFileId }
-}
-
 export function error (fileType, file) {
   return { type: ERROR, fileType, file }
 }
@@ -67,6 +65,18 @@ export function clearUploadedIds (fileType, ids) {
 
 export function closeTagger (fileType) {
   return { type: CLOSE_TAGGER, fileType }
+}
+
+export function createFileFromS3JobStart (fileType, s3_path, startedAt) {
+  return { type: CREATE_FILE_FROM_S3_JOB_START, fileType, s3_path, startedAt }
+}
+
+export function createFileFromS3JobSuccess (fileType, s3_path, fileFromApi) {
+  return { type: CREATE_FILE_FROM_S3_JOB_SUCCESS, fileType, s3_path, fileFromApi }
+}
+
+export function createFileFromS3JobFailure (fileType, s3_path, errors) {
+  return { type: CREATE_FILE_FROM_S3_JOB_FAILURE, fileType, s3_path, errors }
 }
 
 // Sagas
@@ -88,21 +98,21 @@ function * addedFileSaga () {
 }
 
 function * uploadedFilePerform (action) {
-  const id = idFromFile(action.file)
-  const upload = yield select(makeUploadSelector(action.fileType)(id))
-  const data = action.response.data
-  yield put(finishedUpload(action.fileType, action.file, data.id))
+  const upload = yield select(makeUploadS3PathSelector(action.fileType)(action.s3_path))
+
+  if (!upload) return
+
   yield put(uploadedFile(action.fileType, {
-    ...data,
+    ...action.fileFromApi,
     attributes: {
-      ...data.attributes,
-      thumb: upload.thumb || data.attributes.thumb
+      ...action.fileFromApi.attributes,
+      thumb: upload.thumb || action.fileFromApi.attributes.thumb
     }
   }))
 }
 
 function * uploadedFileSaga () {
-  yield takeLatest(SUCCESS, uploadedFilePerform)
+  yield takeLatest(CREATE_FILE_FROM_S3_JOB_SUCCESS, uploadedFilePerform)
 }
 
 function * setUploadAttributesPerform (action) {
@@ -154,6 +164,11 @@ export const makeUploadsSelector = (fileType) => (state) => {
 export const makeUploadSelector = (fileType) => (id) => (state) => {
   const base = state.uploads[fileType] || defaultUploadsKeyState
   return base.records[id]
+}
+
+export const makeUploadS3PathSelector = (fileType) => (s3_path) => (state) => {
+  const base = state.uploads[fileType] || defaultUploadsKeyState
+  return Object.keys(base.records).find((key) => base.records[key].attributes.s3_path === s3_path)
 }
 
 // State
@@ -269,17 +284,6 @@ function uploadsReducer (rawState = initialState, action) {
         }
       }
 
-    case FINISHED_UPLOAD:
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          showTagger: true,
-          records: omit(state[action.fileType].records, [id]),
-          uploadedIds: [...state[action.fileType].uploadedIds, action.uploadedFileId]
-        }
-      }
-
     case ERROR:
       return {
         ...state,
@@ -316,6 +320,59 @@ function uploadsReducer (rawState = initialState, action) {
           records: state[action.fileType].records
         }
       }
+
+    case CREATE_FILE_FROM_S3_JOB_START: {
+      const records = state[action.fileType].records
+
+      Object.keys(records).forEach((key) => {
+        if (records[key].attributes.s3_path === action.s3_path) {
+          records[key].attributes.s3_job = { startedAt: action.startedAt }
+        }
+      })
+
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          records
+        }
+      }
+    }
+
+    case CREATE_FILE_FROM_S3_JOB_SUCCESS:
+      const records = {}
+
+      Object.keys(state[action.fileType].records).forEach((key) => {
+        if (state[action.fileType].records[key].attributes.s3_path === action.s3_path) return
+        records[key] = state[action.fileType].records[key]
+      })
+
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          records,
+          showTagger: true,
+          uploadedIds: [...state[action.fileType].uploadedIds, action.fileFromApi.id]
+        }
+      }
+
+    case CREATE_FILE_FROM_S3_JOB_FAILURE: {
+      const records = {}
+
+      Object.keys(state[action.fileType].records).forEach((key) => {
+        if (state[action.fileType].records[key].attributes.s3_path === action.s3_path) return
+        records[key] = state[action.fileType].records[key]
+      })
+
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          records
+        }
+      }
+    }
 
     default:
       return state

@@ -26,7 +26,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       test_aware_download_from_s3(s3_path, tmp_file_path)
       test_aware_s3_delete(s3_path)
 
-      file.file = tmp_file_path
+      file.file = File.open(tmp_file_path)
 
       if file.save
         broadcast_success(file: file, s3_path: s3_path)
@@ -35,7 +35,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       end
     end
   rescue StandardError => e
-    broadcast_error(file: file, s3_path: s3_path)
+    broadcast_error(file: file, s3_path: s3_path, error: e)
     raise e
   ensure
     test_aware_s3_delete(s3_path)
@@ -48,30 +48,30 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     end
 
     def broadcast_start(s3_path:)
-      json = { data: { s3_path: s3_path, started_at: Time.current.to_i * 1000 } }.to_json
-
-      # TODO
+      broadcast({ s3_path: s3_path, type: "start", started_at: Time.current.to_i * 1000 })
     end
 
     def broadcast_success(s3_path:, file:)
-      json = { data: { s3_path: s3_path, file: serialized_file(file) } }.to_json
-
-      # TODO
+      broadcast({ s3_path: s3_path, type: "success", file: serialized_file(file) })
     end
 
-    def broadcast_error(s3_path:, file:)
-      errors = model.errors.full_messages.map do |msg|
-        {
-          status: 400,
-          title: "ActiveRecord::RecordInvalid",
-          detail: msg,
-        }
+    def broadcast_error(s3_path:, file: nil, error: nil)
+      if error
+        errors = [error.message]
+      elsif file && file.errors
+        errors = file.errors.full_messages
+      else
+        errors = nil
       end
 
-      render json: { errors: errors }, status: 400
+      broadcast({ s3_path: s3_path, type: "failure", errors: errors })
+    end
 
-      json = { data: { s3_path: s3_path, errors: errors } }.to_json
-
-      # TODO
+    def broadcast(hash)
+      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                         {
+                           type: "Folio::CreateFileFromS3Job",
+                           data: hash,
+                         }.to_json
     end
 end

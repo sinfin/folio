@@ -27,8 +27,6 @@ module Folio::Console::Api::FileControllerBase
 
     session[:init] = true unless session.id
 
-    letters = ("a".."z").to_a.sample(2)
-
     s3_path = [
       "tmp_folio_file_uploads",
       "session",
@@ -48,9 +46,10 @@ module Folio::Console::Api::FileControllerBase
 
   def s3_after # load back file from S3 and process it
     s3_path = params.require(:s3_path)
-    type = params.require(:type).safe_constantize
+    type = params.require(:type)
+    file_klass = type.safe_constantize
 
-    if type && type < Folio::File && test_aware_s3_exists?(s3_path)
+    if file_klass && file_klass < Folio::File && test_aware_s3_exists?(s3_path)
       Folio::CreateFileFromS3Job.perform_later(s3_path: s3_path, type: type)
       render json: {}
     else

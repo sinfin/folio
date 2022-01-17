@@ -4,8 +4,6 @@ import DropzoneComponent from 'react-dropzone-component'
 import styled from 'styled-components'
 import { uniqueId } from 'lodash'
 
-import { CSRF } from 'utils/api'
-
 import Loader from 'components/Loader'
 import {
   addedFile,
@@ -13,7 +11,10 @@ import {
   error,
   progress,
   makeUploadsSelector,
-  s3UploadSuccess
+  s3UploadSuccess,
+  createFileFromS3JobStart,
+  createFileFromS3JobSuccess,
+  createFileFromS3JobFailure
 } from 'ducks/uploads'
 
 import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
@@ -67,15 +68,9 @@ class Uploader extends Component {
   }
 
   djsConfig () {
-    const params = {}
-    params['file[type]'] = this.props.fileType
-    params['file[attributes][type]'] = this.props.fileType
-    params['file[attributes][tag_list]'] = this.props.uploads.uploadAttributes.tags.join(',')
-
     return {
-      headers: CSRF,
       method: 'PUT',
-      paramName: 'file[attributes][file]',
+      paramName: 'file',
       previewTemplate: '<span></span>',
       clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
       thumbnailMethod: 'contain',
@@ -84,8 +79,7 @@ class Uploader extends Component {
       timeout: 0,
       parallelUploads: 25,
       maxFilesize: 4096,
-      autoProcessQueue: false,
-      params
+      autoProcessQueue: false
     }
   }
 
@@ -93,8 +87,35 @@ class Uploader extends Component {
     this.dropzone.hiddenFileInput.click()
   }
 
+  componentWillMount () {
+    window.Folio.MessageBus.callbacks['Folio::CreateFileFromS3Job'] = (msg) => {
+      if (!msg || msg.type !== 'Folio::CreateFileFromS3Job') return
+      switch (msg.data.type) {
+        case 'start':
+          return this.props.dispatch(
+            createFileFromS3JobStart(this.props.fileType, msg.data.s3_path, msg.data.started_at)
+          )
+        case 'success':
+          return this.props.dispatch(
+            createFileFromS3JobSuccess(this.props.fileType, msg.data.s3_path, msg.data.file)
+          )
+        case 'failure': {
+          if (msg.data.errors && msg.data.errors.length) {
+            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+          }
+
+          return this.props.dispatch(
+            createFileFromS3JobFailure(this.props.fileType, msg.data.s3_path, msg.data.errors)
+          )
+        }
+        default:
+      }
+    }
+  }
+
   componentWillUnmount () {
     this.dropzone = null
+    delete window.Folio.MessageBus.callbacks['Folio::CreateFileFromS3Job']
   }
 
   render () {

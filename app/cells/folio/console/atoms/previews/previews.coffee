@@ -2,7 +2,7 @@
 #= require jquery-ui/jquery-ui
 #= require justified-layout
 #= require folio/atoms
-#= require folio/cable
+#= require folio/_message-bus
 #= require folio/lazyload
 #= require folio/debounce
 #= require folio/console/atoms/previews/main_app
