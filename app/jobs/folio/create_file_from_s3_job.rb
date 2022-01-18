@@ -52,7 +52,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     end
 
     def broadcast_success(s3_path:, file:)
-      broadcast({ s3_path: s3_path, type: "success", file: serialized_file(file) })
+      broadcast({ s3_path: s3_path, type: "success", file: serialized_file(file)[:data] })
     end
 
     def broadcast_error(s3_path:, file: nil, error: nil)

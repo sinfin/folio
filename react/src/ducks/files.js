@@ -36,6 +36,7 @@ export function getFilesSuccess (fileType, records, meta) {
 }
 
 export function uploadedFile (fileType, file) {
+  console.log({ type: UPLOADED_FILE, fileType, file })
   return { type: UPLOADED_FILE, fileType, file }
 }
 

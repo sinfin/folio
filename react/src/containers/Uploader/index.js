@@ -6,12 +6,12 @@ import { uniqueId } from 'lodash'
 
 import Loader from 'components/Loader'
 import {
-  addedFile,
   thumbnail,
   error,
   progress,
   makeUploadsSelector,
   s3UploadSuccess,
+  createFileFromS3JobAdded,
   createFileFromS3JobStart,
   createFileFromS3JobSuccess,
   createFileFromS3JobFailure
@@ -47,7 +47,7 @@ class Uploader extends Component {
     const { dispatch, fileType } = this.props
 
     return {
-      addedfile: (file) => dispatch(addedFile(fileType, file, this.dropzone)),
+      processing: (file) => { this.dropzone.options.url = file.uploadURL },
       thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
       success: (file) => dispatch(s3UploadSuccess(fileType, file)),
       error: (file, message) => {
@@ -55,7 +55,9 @@ class Uploader extends Component {
         dispatch(error(fileType, file))
       },
       uploadprogress: (file, percentage) => dispatch(progress(fileType, file, Math.round(percentage))),
-      init: (dropzone) => { this.dropzone = dropzone }
+      init: (dropzone) => {
+        this.dropzone = dropzone
+      }
     }
   }
 
@@ -77,9 +79,32 @@ class Uploader extends Component {
       thumbnailWidth: 150,
       thumbnailHeight: 150,
       timeout: 0,
-      parallelUploads: 25,
+      parallelUploads: 1,
       maxFilesize: 4096,
-      autoProcessQueue: false
+      autoProcessQueue: false,
+      sending: (file, xhr) => {
+        const _send = xhr.send
+        xhr.send = () => { _send.call(xhr, file) }
+      },
+      accept: (file, done) => {
+        window.FolioConsole.S3Upload.newUpload({ filesUrl: this.props.filesUrl, file: file })
+          .then((result) => {
+            file.uploadURL = result.s3_url
+
+            this.props.dispatch(createFileFromS3JobAdded(this.props.fileType,
+              file,
+              result.file_name,
+              result.s3_path,
+              result.s3_url))
+
+            done()
+
+            setTimeout(() => this.dropzone.processFile(file), 0)
+          })
+          .catch((err) => {
+            done('Failed to get an S3 signed upload URL', err)
+          })
+      }
     }
   }
 

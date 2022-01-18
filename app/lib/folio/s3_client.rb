@@ -37,8 +37,10 @@ module Folio::S3Client
     if Rails.env.test?
       FileUtils.cp("#{TEST_PATH}/#{s3_path}", local_path)
     else
-      s3_client.get_object({ bucket: s3_bucket, key: s3_path },
-                           { target: local_path })
+      s3_client.get_object(bucket: s3_bucket,
+                           key: s3_path,
+                           response_target: local_path,
+                           response_content_type: "image/jpeg")
     end
   end
 
