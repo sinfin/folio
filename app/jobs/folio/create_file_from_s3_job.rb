@@ -29,7 +29,8 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       file.file = File.open(tmp_file_path)
 
       if file.save
-        broadcast_success(file: file, s3_path: s3_path)
+        file.try(:admin_thumb, immediate: true)
+        broadcast_success(file: file.reload, s3_path: s3_path)
       else
         broadcast_error(file: file, s3_path: s3_path)
       end
