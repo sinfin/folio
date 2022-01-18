@@ -6,7 +6,7 @@ window.Folio.MessageBus = {}
 // respect lib/folio.rb
 window.Folio.MessageBus.channel = "folio_messagebus_channel"
 window.Folio.MessageBus.callbacks = window.Folio.MessageBus.callbacks || {}
-window.Folio.MessageBus.debug = true
+window.Folio.MessageBus.debug = false
 
 window.MessageBus.start()
 

@@ -36,7 +36,6 @@ export function getFilesSuccess (fileType, records, meta) {
 }
 
 export function uploadedFile (fileType, file) {
-  console.log({ type: UPLOADED_FILE, fileType, file })
   return { type: UPLOADED_FILE, fileType, file }
 }
 
@@ -242,7 +241,8 @@ export const makeFilesForListSelector = (fileType) => (state) => {
   }
 
   return [
-    ...Object.values(uploads.records).map((upload) => ({ ...upload, attributes: { ...upload.attributes, uploading: true } })),
+    // TODO
+    // ...Object.values(uploads.records).map((upload) => ({ ...upload, attributes: { ...upload.attributes, uploading: true } })),
     ...files
   ]
 }

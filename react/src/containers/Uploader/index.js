@@ -1,146 +1,41 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import DropzoneComponent from 'react-dropzone-component'
-import styled from 'styled-components'
-import { uniqueId } from 'lodash'
 
 import Loader from 'components/Loader'
-import {
-  thumbnail,
-  error,
-  progress,
-  makeUploadsSelector,
-  s3UploadSuccess,
-  createFileFromS3JobAdded,
-  createFileFromS3JobStart,
-  createFileFromS3JobSuccess,
-  createFileFromS3JobFailure
-} from 'ducks/uploads'
-
-import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
+import { showTagger } from 'ducks/uploads'
+import { uploadedFile } from 'ducks/files'
 
 const date = new Date()
 let month = date.getMonth() + 1
 if (month < 10) month = `0${month}`
 
-const StyledDropzone = styled(DropzoneComponent)`
-  .dz-default.dz-message {
-    display: none;
-  }
-
-  .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME} {
-    position: absolute;
-    visibility: hidden;
-    width: 0;
-    height: 0;
-  }
-`
-
 export const UploaderContext = React.createContext(() => {})
 
 class Uploader extends Component {
-  state = { uploaderClassName: uniqueId('folio-console-uploader-') }
-
-  dropzone = null
-
-  eventHandlers () {
-    const { dispatch, fileType } = this.props
-
-    return {
-      processing: (file) => { this.dropzone.options.url = file.uploadURL },
-      thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
-      success: (file) => dispatch(s3UploadSuccess(fileType, file)),
-      error: (file, message) => {
-        window.FolioConsole.Flash.flashMessageFromApiErrors(message)
-        dispatch(error(fileType, file))
-      },
-      uploadprogress: (file, percentage) => dispatch(progress(fileType, file, Math.round(percentage))),
-      init: (dropzone) => {
-        this.dropzone = dropzone
-      }
-    }
-  }
-
-  config () {
-    return {
-      iconFiletypes: ['.jpg', '.png', '.gif'],
-      showFiletypeIcon: false,
-      postUrl: this.props.filesUrl
-    }
-  }
-
-  djsConfig () {
-    return {
-      method: 'PUT',
-      paramName: 'file',
-      previewTemplate: '<span></span>',
-      clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
-      thumbnailMethod: 'contain',
-      thumbnailWidth: 150,
-      thumbnailHeight: 150,
-      timeout: 0,
-      parallelUploads: 1,
-      maxFilesize: 4096,
-      autoProcessQueue: false,
-      sending: (file, xhr) => {
-        const _send = xhr.send
-        xhr.send = () => { _send.call(xhr, file) }
-      },
-      accept: (file, done) => {
-        window.FolioConsole.S3Upload.newUpload({ filesUrl: this.props.filesUrl, file: file })
-          .then((result) => {
-            file.uploadURL = result.s3_url
-
-            this.props.dispatch(createFileFromS3JobAdded(this.props.fileType,
-              file,
-              result.file_name,
-              result.s3_path,
-              result.s3_url))
-
-            done()
-
-            setTimeout(() => this.dropzone.processFile(file), 0)
-          })
-          .catch((err) => {
-            done('Failed to get an S3 signed upload URL', err)
-          })
-      }
-    }
+  constructor (props) {
+    super(props)
+    this.dropzoneDivRef = React.createRef()
   }
 
   triggerFileInput = () => {
-    this.dropzone.hiddenFileInput.click()
+    window.FolioConsole.S3Upload.triggerDropzone(this.dropzone)
   }
 
-  componentWillMount () {
-    window.Folio.MessageBus.callbacks['Folio::CreateFileFromS3Job'] = (msg) => {
-      if (!msg || msg.type !== 'Folio::CreateFileFromS3Job') return
-      switch (msg.data.type) {
-        case 'start':
-          return this.props.dispatch(
-            createFileFromS3JobStart(this.props.fileType, msg.data.s3_path, msg.data.started_at)
-          )
-        case 'success':
-          return this.props.dispatch(
-            createFileFromS3JobSuccess(this.props.fileType, msg.data.s3_path, msg.data.file)
-          )
-        case 'failure': {
-          if (msg.data.errors && msg.data.errors.length) {
-            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
-          }
-
-          return this.props.dispatch(
-            createFileFromS3JobFailure(this.props.fileType, msg.data.s3_path, msg.data.errors)
-          )
-        }
-        default:
+  componentDidMount () {
+    this.dropzone = window.FolioConsole.S3Upload.createConsoleDropzone({
+      element: this.dropzoneDivRef.current,
+      filesUrl: this.props.filesUrl,
+      fileType: this.props.fileType,
+      onSuccess: (fileFromApi) => {
+        this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
+        this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
       }
-    }
+    })
   }
 
   componentWillUnmount () {
+    window.FolioConsole.S3Upload.destroyDropzone(this.dropzone)
     this.dropzone = null
-    delete window.Folio.MessageBus.callbacks['Folio::CreateFileFromS3Job']
   }
 
   render () {
@@ -149,23 +44,18 @@ class Uploader extends Component {
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
-        <StyledDropzone
-          config={this.config()}
-          djsConfig={this.djsConfig()}
-          eventHandlers={this.eventHandlers()}
-          className={this.state.uploaderClassName}
-        >
+        <div className='f-c-r-dropzone' ref={this.dropzoneDivRef}>
+          <div className='f-c-r-dropzone__previews dropzone-previews' />
+          <div className='f-c-r-dropzone__trigger' />
+
           {this.props.children}
-          <span className={HIDDEN_DROPZONE_TRIGGER_CLASSNAME} />
-        </StyledDropzone>
+        </div>
       </UploaderContext.Provider>
     )
   }
 }
 
-const mapStateToProps = (state, props) => ({
-  uploads: makeUploadsSelector(props.fileType)(state)
-})
+const mapStateToProps = (state, props) => ({})
 
 function mapDispatchToProps (dispatch) {
   return { dispatch }
