@@ -25,7 +25,16 @@ window.FolioConsole.S3Upload.consolePreviewTemplate = () => `
   </div>
 `
 
-window.FolioConsole.S3Upload.createConsoleDropzone = ({ dropzoneOptions, element, filesUrl, fileType, onSuccess }) => {
+window.FolioConsole.S3Upload.createConsoleDropzone = ({
+  dropzoneOptions,
+  element,
+  filesUrl,
+  fileType,
+  onStart,
+  onProgress,
+  onSuccess,
+  onFailure,
+}) => {
   if (!filesUrl) throw "Missing filesUrl"
   if (!fileType) throw "Missing fileType"
   if (!element) throw "Missing element"
@@ -62,6 +71,8 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({ dropzoneOptions, element
           file.s3_path = result.s3_path
           file.s3_url = result.s3_url
 
+          if (onStart) onStart(file.s3_path, { file_name: result.file_name })
+
           done()
 
           setTimeout(() => dropzone.processFile(file), 0)
@@ -81,10 +92,27 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({ dropzoneOptions, element
 
     error: function (file, message) {
       window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+      if (onFailure) onFailure(file.s3_path)
     },
 
     processing: function (file) {
       this.options.url = file.s3_url
+    },
+
+    uploadprogress: function (file, progress, _bytesSent) {
+      if (onProgress) onProgress(file.s3_path, progress)
+
+      if (file.previewElement) {
+        file
+          .previewElement
+          .querySelector('.f-c-r-file-upload-progress__slider')
+          .style['width'] = `${progress}%`
+
+        file
+          .previewElement
+          .querySelector('.f-c-r-file-upload-progress__inner')
+          .innerText = progress === 100 ? window.FolioConsole.translations.finalizing : `${progress}%`
+      }
     },
 
     ...(dropzoneOptions || {}),
@@ -111,7 +139,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({ dropzoneOptions, element
           }
         })
 
-        if (onSuccess) onSuccess(msg.data.file)
+        if (onSuccess) onSuccess(msg.data.s3_path, msg.data.file)
 
         return
       }
@@ -125,6 +153,8 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({ dropzoneOptions, element
             setTimeout(() => { dropzone.removeFile(file) }, 0)
           }
         })
+
+        if (onFailure) onFailure(msg.data.s3_path)
 
         return
       }

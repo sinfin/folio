@@ -26,9 +26,24 @@ class Uploader extends Component {
       element: this.dropzoneDivRef.current,
       filesUrl: this.props.filesUrl,
       fileType: this.props.fileType,
-      onSuccess: (fileFromApi) => {
+      onStart: (s3Path, fileAttributes) => {
+        console.log('start', s3Path, fileAttributes)
+      },
+      onSuccess: (s3Path, fileFromApi) => {
+        console.log('success', s3Path)
         this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
         this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
+      },
+      onFailure: (s3Path) => {
+        console.log('failure', s3Path)
+      },
+      onProgress: (s3Path, progress) => {
+        console.log('progress', progress, s3Path)
+      },
+      dropzoneOptions: {
+        clickable: true,
+        previewsContainer: false,
+        previewTemplate: ''
       }
     })
   }
@@ -44,12 +59,9 @@ class Uploader extends Component {
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
-        <div className='f-c-r-dropzone' ref={this.dropzoneDivRef}>
-          <div className='f-c-r-dropzone__previews dropzone-previews' />
-          <div className='f-c-r-dropzone__trigger' />
+        <div className='f-c-r-dropzone' ref={this.dropzoneDivRef} />
 
-          {this.props.children}
-        </div>
+        {this.props.children}
       </UploaderContext.Provider>
     )
   }
