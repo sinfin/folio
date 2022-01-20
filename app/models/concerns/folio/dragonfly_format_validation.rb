@@ -22,11 +22,11 @@ module Folio::DragonflyFormatValidation
 
   private
     def validate_file_format_via_mime_type
-      if mime_type.blank?
-        errors.add(:mime_type, :blank)
+      if file_mime_type.blank?
+        errors.add(:file_mime_type, :blank)
       else
-        if self.class.valid_mime_types.exclude?(mime_type)
-          errors.add(:mime_type, self.class.valid_mime_types_message)
+        if self.class.valid_mime_types.exclude?(file_mime_type)
+          errors.add(:file_mime_type, self.class.valid_mime_types_message)
         end
       end
     end

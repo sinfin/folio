@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 2021-20-01
 ### Changed
 - changed api files controllers to use direct s3 upload
+- added `file_mime_type` for `Folio::File`, whilst keeping `mime_type` column so that there's not a 500 during deployment - create a per-project migration removing it
 
 ## 2021-11-01
 ### Changed

@@ -30,7 +30,7 @@ module Folio::CellLightbox
   end
 
   def lightbox_from_private_attachment(pa)
-    if pa && pa.mime_type && pa.mime_type.starts_with?("image/")
+    if pa && pa.file_mime_type && pa.file_mime_type.starts_with?("image/")
       {
         "data-lightbox-src" => pa.file.url,
         "data-lightbox-width" => pa.file_width,

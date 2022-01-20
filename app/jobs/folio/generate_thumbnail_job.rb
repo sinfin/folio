@@ -4,7 +4,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :default
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
-    return if /svg/.match?(image.mime_type)
+    return if /svg/.match?(image.file_mime_type)
 
     # need to reload here because of parallel jobs
     image.reload
@@ -44,7 +44,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     def make_thumb(image, size, quality, x: nil, y: nil)
       make_webp = false
 
-      if /png/.match?(image.try(:mime_type))
+      if /png/.match?(image.try(:file_mime_type))
         if Rails.application.config.folio_dragonfly_keep_png
           thumbnail = image_file(image).thumb(size, format: :png, x: x, y: y)
         else
@@ -57,7 +57,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         make_webp = true
       elsif image.animated_gif?
         thumbnail = image_file(image).animated_gif_resize(size)
-      elsif /pdf/.match?(image.try(:mime_type))
+      elsif /pdf/.match?(image.try(:file_mime_type))
         # "frame" option has to be set as string key
         # https://github.com/markevans/dragonfly/issues/483
         thumbnail = image_file(image).add_white_background
@@ -66,9 +66,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                                      .jpegoptim
       else
         thumbnail = image_file(image).thumb(size, format: :jpg, x: x, y: y)
-                                     .auto_orient
                                      .encode("jpg", "-quality #{quality}")
-                                     .cmyk_to_srgb
+                                     .normalize_profiles_via_liblcms2
                                      .jpegoptim
 
         make_webp = true

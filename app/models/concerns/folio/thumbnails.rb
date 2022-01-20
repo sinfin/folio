@@ -147,11 +147,11 @@ module Folio::Thumbnails
   end
 
   def svg?
-    mime_type =~ /svg/
+    file_mime_type =~ /svg/
   end
 
   def gif?
-    mime_type =~ /gif/
+    file_mime_type =~ /gif/
   end
 
   def animated_gif?
@@ -200,7 +200,7 @@ module Folio::Thumbnails
         joiner = ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"].ends_with?("/") ? "" : "/"
         production_s3_url = "#{ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]}#{joiner}#{file_uid}"
 
-        headers = { "Content-Type" => mime_type }
+        headers = { "Content-Type" => file_mime_type }
         default_meta = {
           "name" => file_name,
           "model_class" => self.class.to_s,
@@ -264,14 +264,14 @@ module Folio::Thumbnails
       fail "You can only thumbnail images." unless has_attribute?("thumbnail_sizes")
     end
 
-    def mime_type_image?
-      IMAGE_MIME_TYPES.include? mime_type
+    def file_mime_type_image?
+      IMAGE_MIME_TYPES.include? file_mime_type
     end
 
     def run_set_additional_data_job
       return unless file.present?
       return unless persisted?
-      return unless mime_type_image?
+      return unless file_mime_type_image?
       return unless self.respond_to?(:additional_data)
       return if additional_data?
       return if svg?

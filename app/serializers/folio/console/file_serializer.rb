@@ -51,7 +51,7 @@ class Folio::Console::FileSerializer
   end
 
   attribute :extension do |object|
-    Mime::Type.lookup(object.mime_type).symbol.to_s.upcase
+    Mime::Type.lookup(object.file_mime_type).symbol.to_s.upcase
   end
 
   attribute :file_name do |object|

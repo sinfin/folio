@@ -56,7 +56,6 @@ end
 #  file_width           :integer
 #  file_height          :integer
 #  file_size            :bigint(8)
-#  mime_type            :string(255)
 #  additional_data      :json
 #  file_metadata        :json
 #  hash_id              :string
@@ -65,6 +64,7 @@ end
 #  file_placements_size :integer
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
+#  file_mime_type       :string
 #
 # Indexes
 #

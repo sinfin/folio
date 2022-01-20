@@ -94,5 +94,19 @@ module Folio
         cells_i18n_reloader.execute_if_updated
       end
     end
+
+    initializer :deprecations do |app|
+      if Folio::File.column_names.include?("mime_type")
+        msg = "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+
+        Raven.capture_message(msg) if defined?(Raven)
+
+        if defined?(logger)
+          logger.error(msg)
+        else
+          puts "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+        end
+      end
+    end
   end
 end

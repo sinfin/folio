@@ -21,6 +21,11 @@ gem "uglifier", ">= 1.3.0"
 gem "show_for"
 gem "sidekiq"
 
+gem "dragonfly", "1.4.0"
+gem "dragonfly-s3_data_store"
+# gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips"
+gem "dragonfly_libvips", path: "../dragonfly_libvips"
+
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "factory_bot"

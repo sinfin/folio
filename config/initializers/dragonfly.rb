@@ -26,24 +26,31 @@ def shell(*command)
 end
 
 Dragonfly.app.configure do
-  plugin :imagemagick
+  plugin :libvips
 
-  processor :cmyk_to_srgb do |content, *args|
-    if /CMYK/.match?(shell("identify", content.file.path))
+  analyser :mime_type do |content|
+    content.shell_eval do |path|
+      "file --brief --mime-type #{path}"
+    end.chomp
+  end
+
+  processor :normalize_profiles_via_liblcms2 do |content, *args|
+    if shell("which", "jpgicc").blank?
+      msg = "Missing jpgicc binary. Profiles not normalized."
+      Raven.capture_message msg if defined?(Raven)
+      logger.error msg if defined?(logger)
+      content
+    else
       content.shell_update escape: false do |old_path, new_path|
-        cmyk_icc = "#{Folio::Engine.root}/data/icc_profiles/PSOuncoated_v3_FOGRA52.icc"
-        srgb_icc = "#{Folio::Engine.root}/data/icc_profiles/sRGB_v4_ICC_preference.icc"
-        "convert -profile #{cmyk_icc} '#{old_path}' -profile #{srgb_icc} -colorspace sRGB '#{new_path}'"
+        "jpgicc #{old_path} #{new_path}"
       end
     end
   end
 
   processor :flatten do |content, *args|
-    content.process! :convert, "-flatten"
-  end
-
-  processor :auto_orient do |content, *args|
-    content.process! :convert, "-auto-orient"
+    # TODO
+    # content.process! :convert, "-flatten"
+    content
   end
 
   processor :jpegoptim do |content, *args|
@@ -68,7 +75,8 @@ Dragonfly.app.configure do
   end
 
   processor :add_white_background do |content, *args|
-    content.process! :convert, "-background white -alpha remove"
+    # TODO
+    # content.process! :convert, "-background white -alpha remove"
   end
 
   processor :convert_to_webp do |content, *args|
