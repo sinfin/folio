@@ -1,5 +1,4 @@
 import React from 'react'
-import LazyLoad from 'react-lazyload'
 
 import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'containers/Tags'
@@ -60,9 +59,7 @@ const FileTableRow = ({
                 rel='noopener noreferrer'
                 onClick={(e) => e.stopPropagation()}
               >
-                <LazyLoad height={50} once overflow>
-                  <Picture file={file} imageClassName='f-c-file-table__img' />
-                </LazyLoad>
+                <Picture file={file} imageClassName='f-c-file-table__img' lazyload={{ height: 50, once: true, overflow: true }} />
               </a>
             )}
           </div>

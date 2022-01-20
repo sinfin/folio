@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import Loader from 'components/Loader'
-import { showTagger } from 'ducks/uploads'
+
+import {
+  showTagger,
+  addDropzoneFile,
+  updateDropzoneFile,
+  removeDropzoneFile,
+  thumbnailDropzoneFile
+} from 'ducks/uploads'
+
 import { uploadedFile } from 'ducks/files'
 
 const date = new Date()
@@ -27,18 +35,21 @@ class Uploader extends Component {
       filesUrl: this.props.filesUrl,
       fileType: this.props.fileType,
       onStart: (s3Path, fileAttributes) => {
-        console.log('start', s3Path, fileAttributes)
+        this.props.dispatch(addDropzoneFile(this.props.fileType, s3Path, fileAttributes))
       },
       onSuccess: (s3Path, fileFromApi) => {
-        console.log('success', s3Path)
-        this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
+        this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
         this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
+        this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
       },
       onFailure: (s3Path) => {
-        console.log('failure', s3Path)
+        this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
       },
       onProgress: (s3Path, progress) => {
-        console.log('progress', progress, s3Path)
+        this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, { progress }))
+      },
+      onThumbnail: (s3Path, dataThumbnail) => {
+        this.props.dispatch(thumbnailDropzoneFile(this.props.fileType, s3Path, dataThumbnail))
       },
       dropzoneOptions: {
         clickable: true,

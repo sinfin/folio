@@ -1,5 +1,4 @@
 import React from 'react'
-import LazyLoad from 'react-lazyload'
 
 import FileUploadProgress from 'components/FileUploadProgress'
 import FileThumbnailHover from './FileThumbnailHover'
@@ -27,15 +26,14 @@ const FileThumbnail = ({ file, fileType, onClick, openFileModalOnClick, selectin
       className={className}
     >
       <div className='f-c-file-list__img-wrap' style={{ background: file.attributes.dominant_color }} onClick={persistedWrapOnClick}>
-        {file.attributes.thumb && (
-          <LazyLoad height={150} once overflow>
-            <Picture
-              file={file}
-              className='f-c-file-list__picture'
-              imageClassName='f-c-file-list__img'
-              alt={file.attributes.file_name}
-            />
-          </LazyLoad>
+        {(file.attributes.thumb || file.attributes.dataThumbnail) && (
+          <Picture
+            file={file}
+            className='f-c-file-list__picture'
+            imageClassName='f-c-file-list__img'
+            alt={file.attributes.file_name}
+            lazyload={{ height: 150, once: true, overflow: true }}
+          />
         )}
       </div>
 

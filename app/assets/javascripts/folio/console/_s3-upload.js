@@ -34,6 +34,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   onProgress,
   onSuccess,
   onFailure,
+  onThumbnail,
 }) => {
   if (!filesUrl) throw "Missing filesUrl"
   if (!fileType) throw "Missing fileType"
@@ -71,7 +72,12 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
           file.s3_path = result.s3_path
           file.s3_url = result.s3_url
 
-          if (onStart) onStart(file.s3_path, { file_name: result.file_name })
+          if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
+            file.thumbnail_notified = true
+            onThumbnail(file.s3_path, file.dataURL)
+          }
+
+          if (onStart) onStart(file.s3_path, { file_name: result.file_name, file_size: file.size })
 
           done()
 
@@ -100,18 +106,29 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
     },
 
     uploadprogress: function (file, progress, _bytesSent) {
-      if (onProgress) onProgress(file.s3_path, progress)
+      const rounded = Math.round(progress)
+
+      if (onProgress) onProgress(file.s3_path, rounded)
 
       if (file.previewElement) {
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__slider')
-          .style['width'] = `${progress}%`
+          .style['width'] = `${rounded}%`
 
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__inner')
-          .innerText = progress === 100 ? window.FolioConsole.translations.finalizing : `${progress}%`
+          .innerText = rounded === 100 ? window.FolioConsole.translations.finalizing : `${rounded}%`
+      }
+    },
+
+    thumbnail: function (file, dataUrl) {
+      if (onThumbnail) {
+        if (file.s3_path) {
+          file.thumbnail_notified = true
+          onThumbnail(file.s3_path, dataUrl)
+        }
       }
     },
 

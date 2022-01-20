@@ -1,5 +1,5 @@
 import { takeEvery, call, select, put } from 'redux-saga/effects'
-import { without } from 'lodash'
+import { without, omit } from 'lodash'
 
 import { apiPost } from 'utils/api'
 import { updatedFiles } from 'ducks/files'
@@ -11,6 +11,10 @@ const SET_UPLOAD_ATTRIBUTES = 'uploads/SET_UPLOAD_ATTRIBUTES'
 const CLEAR_UPLOADED_IDS = 'uploads/CLEAR_UPLOADED_IDS'
 const SHOW_TAGGER = 'uploads/SHOW_TAGGER'
 const CLOSE_TAGGER = 'uploads/CLOSE_TAGGER'
+const ADD_DROPZONE_FILE = 'uploads/ADD_DROPZONE_FILE'
+const UPDATE_DROPZONE_FILE = 'uploads/UPDATE_DROPZONE_FILE'
+const REMOVE_DROPZONE_FILE = 'uploads/REMOVE_DROPZONE_FILE'
+const THUMBNAIL_DROPZONE_FILE = 'uploads/THUMBNAIL_DROPZONE_FILE'
 
 // Actions
 
@@ -28,6 +32,23 @@ export function showTagger (fileType, fileFromApiId) {
 
 export function closeTagger (fileType) {
   return { type: CLOSE_TAGGER, fileType }
+}
+
+export function addDropzoneFile (fileType, s3Path, attributes) {
+  return { type: ADD_DROPZONE_FILE, fileType, s3Path, attributes }
+}
+
+export function updateDropzoneFile (fileType, s3Path, attributes) {
+  return { type: UPDATE_DROPZONE_FILE, fileType, s3Path, attributes }
+}
+
+export function removeDropzoneFile (fileType, s3Path) {
+  return { type: REMOVE_DROPZONE_FILE, fileType, s3Path }
+}
+
+export function thumbnailDropzoneFile (fileType, s3Path, dataThumbnail) {
+  console.log({ type: THUMBNAIL_DROPZONE_FILE, fileType, s3Path, dataThumbnail })
+  return { type: THUMBNAIL_DROPZONE_FILE, fileType, s3Path, dataThumbnail }
 }
 
 // Sagas
@@ -71,7 +92,9 @@ export const defaultUploadsKeyState = {
     author: null,
     description: null
   },
-  uploadedIds: []
+  uploadedIds: [],
+  dropzoneFiles: {},
+  pendingDataThumbnails: {}
 }
 
 const initialState = {}
@@ -124,6 +147,89 @@ function uploadsReducer (rawState = initialState, action) {
             ...state[action.fileType].uploadedIds,
             action.fileFromApiId
           ]
+        }
+      }
+    }
+
+    case ADD_DROPZONE_FILE: {
+      const pendingDataThumbnail = state[action.fileType].pendingDataThumbnails[action.s3Path]
+
+      const newAttributes = { ...action.attributes, progress: 0 }
+
+      if (pendingDataThumbnail) {
+        newAttributes.dataThumbnail = pendingDataThumbnail
+      }
+
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          dropzoneFiles: {
+            ...state[action.fileType].dropzoneFiles,
+            [action.s3Path]: {
+              attributes: newAttributes
+            }
+          },
+          pendingDataThumbnails: omit(state[action.fileType].pendingDataThumbnails, action.s3Path)
+        }
+      }
+    }
+
+    case UPDATE_DROPZONE_FILE:
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          dropzoneFiles: {
+            ...state[action.fileType].dropzoneFiles,
+            [action.s3Path]: {
+              ...state[action.fileType][action.s3Path],
+              attributes: {
+                ...state[action.fileType].dropzoneFiles[action.s3Path].attributes,
+                ...action.attributes
+              }
+            }
+          }
+        }
+      }
+
+    case REMOVE_DROPZONE_FILE:
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          dropzoneFiles: omit(state[action.fileType].dropzoneFiles, action.s3Path)
+        }
+      }
+
+    case THUMBNAIL_DROPZONE_FILE: {
+      if (state[action.fileType].dropzoneFiles[action.s3Path]) {
+        return {
+          ...state,
+          [action.fileType]: {
+            ...state[action.fileType],
+            dropzoneFiles: {
+              ...state[action.fileType].dropzoneFiles,
+              [action.s3Path]: {
+                ...state[action.fileType][action.s3Path],
+                attributes: {
+                  ...state[action.fileType].dropzoneFiles[action.s3Path].attributes,
+                  dataThumbnail: action.dataThumbnail
+                }
+              }
+            }
+          }
+        }
+      } else {
+        return {
+          ...state,
+          [action.fileType]: {
+            ...state[action.fileType],
+            pendingDataThumbnails: {
+              ...state[action.fileType].pendingDataThumbnails,
+              [action.s3Path]: action.dataThumbnail
+            }
+          }
         }
       }
     }
