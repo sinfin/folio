@@ -51,16 +51,12 @@ const FileTableRow = ({
           <FileUploadProgress progress={file.attributes.progress} />
 
           <div className='f-c-file-table__img-wrap'>
-            {file.attributes.thumb && (
-              <a
-                href={file.attributes.source_url}
-                target='_blank'
-                className='f-c-file-table__img-a'
-                rel='noopener noreferrer'
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Picture file={file} imageClassName='f-c-file-table__img' lazyload={{ height: 50, once: true, overflow: true }} />
-              </a>
+            {(file.attributes.thumb || file.attributes.dataThumbnail) && (
+              <Picture
+                file={file}
+                imageClassName='f-c-file-table__img'
+                lazyload={{ height: 50, once: true, overflow: true }}
+              />
             )}
           </div>
         </div>
