@@ -30,5 +30,6 @@
 //= require dummy/ui/modal/modal
 //= require dummy/ui/navigation/navigation
 
+//= require dummy/atom/images/images
 //= require dummy/atom/map/map
 //= require dummy/molecule/hero/hero

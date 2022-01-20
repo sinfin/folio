@@ -1,1 +1,1 @@
-# Override in main app
+#= require dummy/atom/images/images
