@@ -9,6 +9,32 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       assert_response :success
     end
 
+    test "#{klass} - s3_before" do
+      post url_for([:s3_before, :console, :api, klass]), params: { file_name: "Intricate fílě name.jpg" }
+      assert_response :success
+
+      json = response.parsed_body
+      assert json["s3_url"]
+      assert json["s3_path"]
+      assert_equal "intricate-file-name.jpg", json["file_name"]
+    end
+
+    test "#{klass} - s3_after" do
+      assert_enqueued_jobs(0) do
+        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "foo", type: klass.to_s }
+        assert_response 422
+      end
+
+      test_path = "#{Folio::S3Client::TEST_PATH}/test.gif"
+      FileUtils.mkdir_p(File.dirname(test_path))
+      FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
+
+      assert_enqueued_with(job: Folio::CreateFileFromS3Job, args: [{ s3_path: "test.gif", type: klass.to_s }]) do
+        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "test.gif", type: klass.to_s }
+        assert_response(:ok)
+      end
+    end
+
     test "#{klass} - update" do
       file = create(klass.model_name.singular)
       put url_for([:console, :api, file]), params: {
@@ -19,8 +45,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         }
       }
       assert_response(:success)
-      json = JSON.parse(response.body)
-      assert_equal(["foo"], json["data"]["attributes"]["tags"])
+      assert_equal(["foo"], response.parsed_body["data"]["attributes"]["tags"])
     end
 
     test "#{klass} - destroy" do
@@ -64,8 +89,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         }
       }
       assert_response(:success)
-      json = JSON.parse(response.body)
-      assert_equal("test-black.gif", json["data"]["attributes"]["file_name"])
+      assert_equal("test-black.gif", response.parsed_body["data"]["attributes"]["file_name"])
     end
 
     test "#{klass} - mass_download" do

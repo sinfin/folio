@@ -35,7 +35,9 @@ module Folio::S3Client
 
   def test_aware_download_from_s3(s3_path, local_path)
     if Rails.env.test?
-      FileUtils.cp("#{TEST_PATH}/#{s3_path}", local_path)
+      test_path = "#{TEST_PATH}/#{s3_path}"
+      FileUtils.mkdir_p(File.dirname(test_path))
+      FileUtils.cp(test_path, local_path)
     else
       s3_client.get_object(bucket: s3_bucket,
                            key: s3_path,
