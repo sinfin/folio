@@ -39,8 +39,6 @@ export default function Picture ({ file, className, alt, imageStyle, imageClassN
     imageStyle
   })
 
-  if (file.attributes.uploading) console.log(lazyload, file)
-
   if (lazyload && file.attributes.thumb) {
     return (
       <LazyLoad {...lazyload}>{rawPicture}</LazyLoad>

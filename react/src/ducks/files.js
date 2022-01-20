@@ -240,10 +240,6 @@ export const makeFilesForListSelector = (fileType) => (state) => {
     files = makeFilesSelector(fileType)(state)
   }
 
-  console.group('makeFilesForListSelector')
-  console.log(uploads.dropzoneFiles)
-  console.groupEnd()
-
   return [
     ...Object.keys(uploads.dropzoneFiles).map((s3Path) => ({
       id: s3Path,

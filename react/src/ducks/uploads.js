@@ -47,7 +47,6 @@ export function removeDropzoneFile (fileType, s3Path) {
 }
 
 export function thumbnailDropzoneFile (fileType, s3Path, dataThumbnail) {
-  console.log({ type: THUMBNAIL_DROPZONE_FILE, fileType, s3Path, dataThumbnail })
   return { type: THUMBNAIL_DROPZONE_FILE, fileType, s3Path, dataThumbnail }
 }
 
