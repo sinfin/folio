@@ -107,6 +107,7 @@ module Folio
           puts "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
         end
       end
+    rescue StandardError
     end
   end
 end

@@ -110,6 +110,7 @@ module Folio
           "data/atoms_showcase.yml",
           "data/seed/pages/homepage.yml",
           "db/seeds.rb",
+          "db/migrate/20220120132205_rm_files_mime_type_column.rb",
           "lib/tasks/developer_tools.rake",
           "public/maintenance.html",
           "test/factories.rb",
