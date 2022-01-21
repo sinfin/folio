@@ -11,7 +11,7 @@ PATH
   remote: ../dragonfly_libvips
   specs:
     dragonfly_libvips (2.4.2)
-      dragonfly (~> 1.0)
+      dragonfly (~> 1.4)
       ruby-vips (~> 2.0, >= 2.0.16)
 
 PATH

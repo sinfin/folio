@@ -25,8 +25,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       scope = scope.limit(25)
-                   .map(&:to_autocomplete_label)
-                   .compact
+                   .filter_map(&:to_autocomplete_label)
                    .uniq
                    .first(10)
 

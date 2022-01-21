@@ -32,7 +32,7 @@ class Folio::Address::Base < Folio::ApplicationRecord
   end
 
   def to_label
-    [address_line_1, address_line_2].map(&:presence).compact.join(", ")
+    [address_line_1, address_line_2].filter_map(&:presence).join(", ")
   end
 
   def self.sti_paths

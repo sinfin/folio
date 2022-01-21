@@ -30,7 +30,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def link_groups_from(class_name)
     if class_name.is_a?(Array)
-      class_name.map { |cn| link_groups_from(cn) }.compact
+      class_name.filter_map { |cn| link_groups_from(cn) }
     else
       return if skip_link_class_names.include?(class_name)
 

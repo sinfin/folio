@@ -36,7 +36,7 @@ class Folio::Image < Folio::File
 
   private
     def metadata_compose(tags)
-      string_arr = tags.collect { |tag| file_metadata.try("[]", tag) }.compact.uniq
+      string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
       return nil if string_arr.size == 0
       string_arr.join(", ")
     end
