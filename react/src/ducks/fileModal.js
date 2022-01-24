@@ -1,4 +1,5 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
+import { omit } from 'lodash'
 
 import { apiGet, apiPost, apiFilePost } from 'utils/api'
 import { updatedFiles, UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
@@ -9,6 +10,8 @@ const OPEN_FILE_MODAL = 'fileModal/OPEN_FILE_MODAL'
 const CLOSE_FILE_MODAL = 'fileModal/CLOSE_FILE_MODAL'
 const UPDATE_FILE_THUMBNAIL = 'fileModal/UPDATE_FILE_THUMBNAIL'
 const UPDATED_FILE_MODAL_FILE = 'fileModal/UPDATED_FILE_MODAL_FILE'
+const DESTROY_FILE_THUMBNAIL = 'fileModal/DESTROY_FILE_THUMBNAIL'
+const DESTROY_FILE_THUMBNAIL_FAILED = 'fileModal/DESTROY_FILE_THUMBNAIL_FAILED'
 const UPLOAD_NEW_FILE_INSTEAD = 'fileModal/UPLOAD_NEW_FILE_INSTEAD'
 const UPLOAD_NEW_FILE_INSTEAD_SUCCESS = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_SUCCESS'
 const MARK_MODAL_FILE_AS_UPDATING = 'fileModal/MARK_MODAL_FILE_AS_UPDATING'
@@ -28,6 +31,14 @@ export function closeFileModal () {
 
 export function updateFileThumbnail (fileType, filesUrl, file, thumbKey, params) {
   return { type: UPDATE_FILE_THUMBNAIL, fileType, filesUrl, file, thumbKey, params }
+}
+
+export function destroyFileThumbnail (fileType, filesUrl, file, thumbKey, thumb) {
+  return { type: DESTROY_FILE_THUMBNAIL, fileType, filesUrl, file, thumbKey, thumb }
+}
+
+export function destroyFileThumbnailFailed (fileType, filesUrl, file, thumbKey, thumb) {
+  return { type: DESTROY_FILE_THUMBNAIL_FAILED, fileType, filesUrl, file, thumbKey, thumb }
 }
 
 export function updatedFileModalFile (file) {
@@ -63,6 +74,22 @@ export function changeFilePlacementsPage (file, page) {
 export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
+function * destroyFileThumbnailPerform (action) {
+  if (action.file.attributes.react_type !== 'image') return
+
+  try {
+    const url = `${action.filesUrl}/${action.file.id}/destroy_file_thumbnail`
+    yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
+  } catch (e) {
+    window.FolioConsole.Flash.alert(e.message)
+    yield put(destroyFileThumbnailFailed(action.fileType, action.filesUrl, action.file, action.thumbKey, action.thumb))
+  }
+}
+
+function * destroyFileThumbnailSaga () {
+  yield takeEvery(DESTROY_FILE_THUMBNAIL, destroyFileThumbnailPerform)
+}
+
 function * updateFileThumbnailPerform (action) {
   if (action.file.attributes.react_type !== 'image') return
 
@@ -145,7 +172,8 @@ export const fileModalSagas = [
   uploadNewFileInsteadSaga,
   handleFileUpdateSaga,
   openFileModalSaga,
-  changeFilePlacementsPageSaga
+  changeFilePlacementsPageSaga,
+  destroyFileThumbnailSaga
 ]
 
 // State
@@ -213,6 +241,33 @@ function modalReducer (state = initialState, action) {
         return state
       }
     }
+
+    case DESTROY_FILE_THUMBNAIL:
+      return {
+        ...state,
+        file: {
+          ...state.file,
+          attributes: {
+            ...state.file.attributes,
+            thumbnail_sizes: omit(state.file.attributes.thumbnail_sizes, action.thumbKey)
+          }
+        }
+      }
+
+    case DESTROY_FILE_THUMBNAIL_FAILED:
+      return {
+        ...state,
+        file: {
+          ...state.file,
+          attributes: {
+            ...state.file.attributes,
+            thumbnail_sizes: {
+              ...state.file.attributes.thumbnail_sizes,
+              [action.thumbKey]: action.thumb
+            }
+          }
+        }
+      }
 
     case UPLOAD_NEW_FILE_INSTEAD:
       return {

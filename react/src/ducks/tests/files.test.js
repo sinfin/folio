@@ -5,7 +5,7 @@ import filesReducer, {
   getFiles,
   getFilesSuccess,
   uploadedFile,
-  thumbnailGenerated,
+  messageBusThumbnailGenerated,
   updatedFiles,
   updateFile,
   updateFileSuccess,
@@ -53,9 +53,9 @@ describe('filesReducer', () => {
     expect(state['Folio::Image'].records.length).toEqual(4)
   })
 
-  it('thumbnailGenerated', () => {
+  it('messageBusThumbnailGenerated', () => {
     expect(state['Folio::Image'].records[0].attributes.thumb).toEqual(firstThumb)
-    state = filesReducer(state, thumbnailGenerated('Folio::Image', firstThumb, '/foo.jpg'))
+    state = filesReducer(state, messageBusThumbnailGenerated('Folio::Image', firstThumb, { id: Number(IMAGES[0].id), url: '/foo.jpg', thumb_key: '250x250', thumb: { url: '/foo.jpg' } }))
     expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
   })
 

@@ -28,12 +28,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                        {
                          type: "Folio::GenerateThumbnailJob",
                          data: {
+                           id: image.id,
                            temporary_url: image.temporary_url(size),
-                           temporary_s3_url: image.temporary_s3_url(size),
                            url: new_thumb[:url],
                            webp_url: new_thumb[:webp_url],
-                           width: new_thumb[:width],
-                           height: new_thumb[:height],
+                           thumb_key: size,
+                           thumb: new_thumb,
                          }
                        }.to_json
 

@@ -19,6 +19,12 @@ class ThumbnailSize extends React.Component {
     this.setState({ ...this.state, editing: false })
   }
 
+  destroy = () => {
+    if (window.confirm(window.FolioConsole.translations.removePrompt)) {
+      this.props.destroyThumbnail(this.props.thumbKey, this.props.thumb)
+    }
+  }
+
   render () {
     const { thumb, thumbKey } = this.props
     const editable = thumbKey.indexOf('#') !== -1
@@ -44,7 +50,11 @@ class ThumbnailSize extends React.Component {
               {thumb._saving ? null : <RawPicture src={this.props.thumb.url} webpSrc={this.props.thumb.webp_url} imageStyle={{ height: height, width: width }} alt={thumbKey} />}
             </div>
 
-            <div className='mt-2 pt-1 small'>{thumbKey}</div>
+            <div className='mt-2 pt-1 small d-flex align-items-center'>
+              {thumbKey}
+
+              <div className='pl-3 ml-auto fa fa-trash-alt cursor-pointer' onClick={this.destroy} />
+            </div>
 
             {editable && (
               <div className='f-c-with-icon cursor-pointer text-semi-muted mt-1 text-nowrap' onClick={() => { this.setState({ ...this.state, editing: true }) }}>

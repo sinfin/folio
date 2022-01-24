@@ -12,7 +12,7 @@ import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 const GET_FILES = 'files/GET_FILES'
 const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
-const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
+const MESSAGE_BUS_THUMBNAIL_GENERATED = 'files/MESSAGE_BUS_THUMBNAIL_GENERATED'
 const DELETE_FILE = 'files/DELETE_FILE'
 const DELETE_FILE_FAILURE = 'files/DELETE_FILE_FAILURE'
 const UPDATE_FILE = 'files/UPDATE_FILE'
@@ -39,8 +39,8 @@ export function uploadedFile (fileType, file) {
   return { type: UPLOADED_FILE, fileType, file }
 }
 
-export function thumbnailGenerated (fileType, temporaryUrl, url) {
-  return { type: THUMBNAIL_GENERATED, fileType, temporaryUrl, url }
+export function messageBusThumbnailGenerated (fileType, filesUrl, data) {
+  return { type: MESSAGE_BUS_THUMBNAIL_GENERATED, fileType, filesUrl, data }
 }
 
 export function updatedFiles (fileType, files) {
@@ -336,18 +336,24 @@ function filesReducer (rawState = initialState, action) {
         }
       }
 
-    case THUMBNAIL_GENERATED: {
+    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
       return {
         ...state,
         [action.fileType]: {
           ...state[action.fileType],
           records: state[action.fileType].records.map((record) => {
-            if (record.attributes.thumb !== action.temporaryUrl) return record
+            if (Number(record.id) !== Number(action.data.id)) return record
+
             return {
               ...record,
               attributes: {
                 ...record.attributes,
-                thumb: action.url
+                thumb: action.data.thumb_key === '250x250' ? action.data.url : record.attributes.thumb,
+                webp_thumb: action.data.thumb_key === '250x250' ? action.data.webp_url : record.attributes.webp_thumb,
+                thumbnail_sizes: {
+                  ...record.attributes.thumbnail_sizes,
+                  [action.data.thumb_key]: action.data.thumb
+                }
               }
             }
           })

@@ -119,6 +119,7 @@ Folio::Engine.routes.draw do
         end
         member do
           post :update_file_thumbnail
+          post :destroy_file_thumbnail
           post :change_file
         end
       end

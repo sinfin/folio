@@ -17,7 +17,7 @@ import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, readOnly, changeFilePlacementsPage }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage }) => {
   const file = fileModal.file
   const isImage = file.attributes.react_type === 'image'
   let download = file.attributes.file_name
@@ -184,7 +184,11 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
         <div className={isImage ? 'row mt-3' : 'mt-3'}>
           {isImage && (
             <div className='col-lg-7 mb-3'>
-              <ThumbnailSizes file={file} updateThumbnail={updateThumbnail} />
+              <ThumbnailSizes
+                file={file}
+                updateThumbnail={updateThumbnail}
+                destroyThumbnail={destroyThumbnail}
+              />
             </div>
           )}
 

@@ -6,6 +6,7 @@ import ReactModal from 'react-modal'
 import { updateFile, deleteFile } from 'ducks/files'
 import {
   updateFileThumbnail,
+  destroyFileThumbnail,
   closeFileModal,
   fileModalSelector,
   uploadNewFileInstead,
@@ -67,6 +68,16 @@ class FileModal extends Component {
       params))
   }
 
+  destroyThumbnail = (thumbKey, thumb) => {
+    this.props.dispatch(destroyFileThumbnail(
+      this.props.fileModal.fileType,
+      this.props.fileModal.filesUrl,
+      this.props.fileModal.file,
+      thumbKey,
+      thumb
+    ))
+  }
+
   deleteFile = (file) => {
     this.closeFileModal()
     this.props.dispatch(deleteFile(this.props.fileModal.fileType, this.props.fileModal.filesUrl, file))
@@ -105,6 +116,7 @@ class FileModal extends Component {
             saveModal={this.saveModal}
             closeFileModal={this.closeFileModal}
             updateThumbnail={this.updateThumbnail}
+            destroyThumbnail={this.destroyThumbnail}
             deleteFile={this.deleteFile}
             uploadNewFileInstead={this.uploadNewFileInstead}
             onValueChange={this.onValueChange}
