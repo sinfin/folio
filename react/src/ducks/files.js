@@ -337,11 +337,13 @@ function filesReducer (rawState = initialState, action) {
       }
 
     case MESSAGE_BUS_THUMBNAIL_GENERATED: {
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          records: state[action.fileType].records.map((record) => {
+      const fileTypesHash = {}
+      const fileTypes = action.fileType ? [action.fileType] : Object.keys(state)
+
+      fileTypes.forEach((fileType) => {
+        fileTypesHash[fileType] = {
+          ...state[fileType],
+          records: state[fileType].records.map((record) => {
             if (Number(record.id) !== Number(action.data.id)) return record
 
             return {
@@ -358,6 +360,11 @@ function filesReducer (rawState = initialState, action) {
             }
           })
         }
+      })
+
+      return {
+        ...state,
+        ...fileTypesHash
       }
     }
 
