@@ -47,7 +47,7 @@ class ThumbnailSize extends React.Component {
             <div className='mt-2 pt-1 small'>{thumbKey}</div>
 
             {editable && (
-              <div className='f-c-with-icon cursor-pointer text-semi-muted mt-1 d-flex' onClick={() => { this.setState({ ...this.state, editing: true }) }}>
+              <div className='f-c-with-icon cursor-pointer text-semi-muted mt-1 text-nowrap' onClick={() => { this.setState({ ...this.state, editing: true }) }}>
                 <span className='mi mi--18'>crop</span>
                 {window.FolioConsole.translations.editOffset}
               </div>

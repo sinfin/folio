@@ -23,8 +23,8 @@ gem "sidekiq"
 
 gem "dragonfly", "1.4.0"
 gem "dragonfly-s3_data_store"
-# gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
-gem "dragonfly_libvips", path: "../dragonfly_libvips"
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+# gem "dragonfly_libvips", path: "../dragonfly_libvips"
 
 group :test do
   gem "minitest", "~> 5.14.4"
