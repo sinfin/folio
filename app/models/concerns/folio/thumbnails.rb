@@ -146,6 +146,10 @@ module Folio::Thumbnails
     file.present? && file.width >= file.height
   end
 
+  def jpg?
+    file_mime_type.ends_with?("jpeg")
+  end
+
   def svg?
     file_mime_type =~ /svg/
   end

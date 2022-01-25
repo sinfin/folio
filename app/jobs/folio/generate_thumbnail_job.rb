@@ -41,36 +41,64 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   end
 
   private
-    def make_thumb(image, size, quality, x: nil, y: nil)
-      make_webp = false
+    def make_thumb(image, raw_size, quality, x: nil, y: nil)
+      size = raw_size.ends_with?("#") ? "#{raw_size}c" : raw_size
 
-      if /png/.match?(image.try(:file_mime_type))
-        if Rails.application.config.folio_dragonfly_keep_png
-          thumbnail = image_file(image).thumb(size, format: :png, x: x, y: y)
-        else
-          thumbnail = image_file(image).add_white_background
-                                       .thumb(size, format: :jpg, x: x, y: y)
-                                       .encode("jpg", "-quality #{quality}")
-                                       .jpegoptim
+      if image.animated_gif?
+        thumbnail = image_file(image).animated_gif_resize(size)
+      else
+        add_white_background = false
+        format = :jpg
+        make_webp = true
+
+        if /png/.match?(image.try(:file_mime_type))
+          if Rails.application.config.folio_dragonfly_keep_png
+            format = :png
+          else
+            add_white_background = true
+          end
+        elsif /pdf/.match?(image.try(:file_mime_type))
+          # TODO frame
+          add_white_background = true
         end
 
-        make_webp = true
-      elsif image.animated_gif?
-        thumbnail = image_file(image).animated_gif_resize(size)
-      elsif /pdf/.match?(image.try(:file_mime_type))
-        # "frame" option has to be set as string key
-        # https://github.com/markevans/dragonfly/issues/483
-        thumbnail = image_file(image).add_white_background
-                                     .thumb(size, format: :jpg, "frame" => 0, x: x, y: y)
-                                     .encode("jpg", "-quality #{quality}")
-                                     .jpegoptim
-      else
-        thumbnail = image_file(image).thumb(size, format: :jpg, x: x, y: y)
-                                     .encode("jpg", "-quality #{quality}")
-                                     .normalize_profiles_via_liblcms2
-                                     .jpegoptim
+        thumbnail = image_file(image)
+        geometry = size
 
-        make_webp = true
+        if size.include?("#")
+          _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
+
+          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
+            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^")
+          end
+
+          if !x.nil? || !y.nil?
+            image_width_f = image.file_width.to_f
+            image_height_f = image.file_height.to_f
+
+            fill_width_f = if image_width_f / image_height_f > crop_width_f / crop_height_f
+              # original is wider than the required thumb rectangle -> reduce height
+              image_width_f * crop_height_f / image_height_f
+            else
+              # original is narrower than the required crop rectangle -> reduce width
+              crop_width_f
+            end
+
+            fill_height_f = fill_width_f * image_height_f / image_width_f
+
+            x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
+            y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
+
+            geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{x_px.floor}+#{y_px.floor}"
+          end
+        end
+
+        thumbnail = thumbnail.thumb(geometry, format: format)
+        thumbnail = thumbnail.add_white_background if add_white_background
+        thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
+        thumbnail = thumbnail.jpegoptim if format == :jpg
+
+        thumbnail
       end
 
       if opts = image.try(:thumbnail_store_options)

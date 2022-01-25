@@ -59,8 +59,8 @@ class Scroller extends React.Component {
 
     this.setState({
       ...this.state,
-      y: ref.scrollTop / ref.clientHeight,
-      x: ref.scrollLeft / ref.clientWidth
+      y: ref.scrollTop / this.state.imageStyle.height,
+      x: ref.scrollLeft / this.state.imageStyle.width
     })
   }
 
