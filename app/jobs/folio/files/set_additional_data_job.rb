@@ -10,20 +10,24 @@ class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
 
     if file_model.gif?
       begin
-        gif_image = Vips::Image.new_from_file(file_model.file.path, page: 1)
-        gif_image = nil
+        Vips::Image.new_from_file(file_model.file.path, page: 1)
         additional_data[:animated] = true
       rescue Vips::Error
         additional_data[:animated] = false
       end
     end
 
+    unless file_model.jpg?
+      image = Vips::Image.jpegload_buffer(image.jpegsave_buffer)
+    end
 
-    rgb = [
-      image.stats.getpoint(4, 1)[0],
-      image.stats.getpoint(4, 2)[0],
-      image.stats.getpoint(4, 3)[0],
-    ]
+    # handle monocolored pngs and gifs
+    last = 0
+    rgb = Array.new(3) do |i|
+      last = image.stats.getpoint(4, i + 1)[0]
+      rescue Vips::Error
+        last
+    end
 
     additional_data[:dominant_color] = "#%02X%02X%02X" % rgb
     additional_data[:dark] = rgb.sum < 3 * 255 / 2.0
