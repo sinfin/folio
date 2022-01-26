@@ -2,7 +2,7 @@ import { call, takeEvery, put, select } from 'redux-saga/effects'
 import { omit } from 'lodash'
 
 import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
-import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
+import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_THUMBNAIL_GENERATED } from 'ducks/files'
 
 // Constants
 
@@ -353,6 +353,26 @@ function modalReducer (state = initialState, action) {
           filePlacements: {
             ...state.filePlacements,
             loading: true
+          }
+        }
+      } else {
+        return state
+      }
+    }
+
+    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
+      if (state.file && Number(state.file.id) === Number(action.data.id)) {
+        return {
+          ...state,
+          file: {
+            ...state.file,
+            attributes: {
+              ...state.file.attributes,
+              thumbnail_sizes: {
+                ...state.file.attributes.thumbnail_sizes,
+                [action.data.thumb_key]: action.data.thumb
+              }
+            }
           }
         }
       } else {

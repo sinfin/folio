@@ -81,8 +81,6 @@ class FileModal extends Component {
             this.props.dispatch(uploadNewFileInsteadFailure(this.props.fileModal.file))
           }
         }
-      } else if (msg.type === 'Folio::GenerateThumbnailJob') {
-
       }
     }
   }
