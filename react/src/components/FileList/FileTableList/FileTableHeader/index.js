@@ -31,7 +31,7 @@ const FileTableHeader = ({ fileTypeIsImage, massSelect }) => {
         {window.FolioConsole.translations.fileTableHeaderTags}
       </div>
 
-      <div className='f-c-file-table__td f-c-file-table__td--actions pr-0' />
+      <div className='f-c-file-table__td f-c-file-table__td--actions' />
     </div>
   )
 }

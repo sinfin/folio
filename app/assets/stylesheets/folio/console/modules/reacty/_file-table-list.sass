@@ -2,11 +2,14 @@
   margin-bottom: 0
 
   .card-body &
-    td
+    margin-left: - $card-spacer-x
+    margin-right: - $card-spacer-x
+
+    &__td
       &:first-child
-        border-left: 1px solid $border-color
+        padding-left: $card-spacer-x
       &:last-child
-        border-right: 1px solid $border-color
+        padding-right: $card-spacer-x
 
   &-wrap
     position: relative
@@ -32,9 +35,6 @@
 
   &--hover &__tr:not(&__tr--uploading):not(&__tr--header):hover &__td
     background: $table-hover-bg
-
-  &__td:first-child
-    padding-left: 0
 
   &__img-wrap
     display: flex
