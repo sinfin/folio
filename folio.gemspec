@@ -70,6 +70,10 @@ Gem::Specification.new do |s|
   s.add_dependency "babel-transpiler"
   s.add_dependency "message_bus"
 
+  s.add_dependency "dragonfly"
+  s.add_dependency "dragonfly-s3_data_store"
+  s.add_dependency "dragonfly_libvips"
+
   s.add_dependency "multi_exiftool"
 
   s.add_dependency "devise-i18n"

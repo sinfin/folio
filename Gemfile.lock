@@ -42,6 +42,9 @@ PATH
       devise_invitable
       discard
       dotenv-rails
+      dragonfly
+      dragonfly-s3_data_store
+      dragonfly_libvips
       dropzonejs-rails
       fast_jsonapi
       friendly_id (~> 5.3.0)
