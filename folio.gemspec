@@ -18,11 +18,12 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 6.1"
+  s.add_dependency "rails", "~> 6"
+  s.add_dependency "rails-i18n", "~> 6"
   s.add_dependency "pg", "~> 1.2.3"
   s.add_dependency "pg_search", "= 2.3.2"
-  s.add_dependency "friendly_id", "~> 5.3.0"
-  s.add_dependency "ancestry", "~> 4.1.0"
+  s.add_dependency "friendly_id"
+  s.add_dependency "ancestry"
   s.add_dependency "mini_racer", "~> 0.4.0"
   s.add_dependency "sidekiq"
   s.add_dependency "slim"
@@ -54,7 +55,6 @@ Gem::Specification.new do |s|
   s.add_dependency "cells"
   s.add_dependency "cells-slim", "0.0.6"
   s.add_dependency "cells-rails", "0.1.0"
-  s.add_dependency "rails-i18n"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "aasm"
   s.add_dependency "recaptcha", "4.13.1"

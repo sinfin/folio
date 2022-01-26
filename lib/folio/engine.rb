@@ -80,31 +80,18 @@ module Folio
       end
     end
 
-    initializer :add_watchable_cell_i18n_files do |app|
-      dirs = {
-        Folio::Engine.root.join("app/cells").to_s => [".yml"],
-        Rails.root.join("app/cells").to_s => [".yml"]
-      }
-      cells_i18n_reloader = app.config.file_watcher.new([], dirs) do
-        I18n.reload!
-      end
-      app.reloaders << cells_i18n_reloader
+    begin
+      initializer :deprecations do |app|
+        if ActiveRecord::Base.connection.exec_query("SELECT column_name FROM information_schema.columns WHERE table_name = 'folio_files' AND column_name = 'mime_type';").rows.size > 0
+          msg = "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
 
-      ActiveSupport::Reloader.to_prepare do
-        cells_i18n_reloader.execute_if_updated
-      end
-    end
+          Raven.capture_message(msg) if defined?(Raven)
 
-    initializer :deprecations do |app|
-      if Folio::File.column_names.include?("mime_type")
-        msg = "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
-
-        Raven.capture_message(msg) if defined?(Raven)
-
-        if defined?(logger)
-          logger.error(msg)
-        else
-          puts "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+          if defined?(logger)
+            logger.error(msg)
+          else
+            puts "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+          end
         end
       end
     rescue StandardError

@@ -39,6 +39,10 @@ require "traco"
 require "aws-sdk-s3"
 require "message_bus"
 
+require "dragonfly"
+require "dragonfly/s3_data_store"
+require "dragonfly_libvips"
+
 module Folio
   LANGUAGES = {
     cs: "CZ",

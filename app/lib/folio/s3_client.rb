@@ -25,14 +25,6 @@ module Folio::S3Client
     end
   end
 
-  def test_aware_s3_exists?(s3_path)
-    if Rails.env.test?
-      File.exist?("#{TEST_PATH}/#{s3_path}")
-    else
-      s3_exists?(s3_path)
-    end
-  end
-
   def test_aware_download_from_s3(s3_path, local_path)
     if Rails.env.test?
       test_path = "#{TEST_PATH}/#{s3_path}"
