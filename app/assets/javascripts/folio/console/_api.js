@@ -107,13 +107,32 @@ window.FolioConsole.Api.apiHtmlPost = (url, body) => {
   return window.FolioConsole.Api.htmlApi('POST', url, body)
 }
 
-window.FolioConsole.Api.apiFilePost = (url, file) => {
-  const data = {
-    method: 'POST',
-    headers: { ...window.FolioConsole.Api.CSRF_TOKEN },
-    credentials: 'same-origin',
-    body: file
-  }
+window.FolioConsole.Api.apiXhrFilePut = (url, file) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
 
-  return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
+    xhr.open('PUT', url)
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(xhr.response)
+      } else {
+        reject({
+          status: xhr.status,
+          statusText: xhr.statusText
+        })
+      }
+    }
+
+    xhr.onerror = () => {
+      reject({
+        status: xhr.status,
+        statusText: xhr.statusText
+      })
+    }
+
+    xhr.send(file)
+
+    return xhr
+  })
 }

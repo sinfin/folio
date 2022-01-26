@@ -21,7 +21,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
 
     test "#{klass} - s3_after" do
       assert_enqueued_jobs(0) do
-        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "foo", type: klass.to_s }
+        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "foo", type: klass.to_s, file_id: nil }
         assert_response 422
       end
 
@@ -29,8 +29,26 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
-      assert_enqueued_with(job: Folio::CreateFileFromS3Job, args: [{ s3_path: "test.gif", type: klass.to_s }]) do
-        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "test.gif", type: klass.to_s }
+      assert_enqueued_with(job: Folio::CreateFileFromS3Job, args: [{ s3_path: "test.gif", type: klass.to_s, file_id: nil }]) do
+        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "test.gif", type: klass.to_s, file_id: nil }
+        assert_response(:ok)
+      end
+    end
+
+    test "#{klass} - s3_after with file id" do
+      file = create(klass.model_name.singular)
+
+      assert_enqueued_jobs(0) do
+        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "foo", type: klass.to_s, file_id: file.id }
+        assert_response 422
+      end
+
+      test_path = "#{Folio::S3Client::TEST_PATH}/test.gif"
+      FileUtils.mkdir_p(File.dirname(test_path))
+      FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
+
+      assert_enqueued_with(job: Folio::CreateFileFromS3Job, args: [{ s3_path: "test.gif", type: klass.to_s, file_id: file.id }]) do
+        post url_for([:s3_after, :console, :api, klass]), params: { s3_path: "test.gif", type: klass.to_s, file_id: file.id }
         assert_response(:ok)
       end
     end

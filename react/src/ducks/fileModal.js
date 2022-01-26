@@ -1,8 +1,8 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
 import { omit } from 'lodash'
 
-import { apiGet, apiPost, apiFilePost } from 'utils/api'
-import { updatedFiles, UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
+import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
+import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
 
 // Constants
 
@@ -14,6 +14,7 @@ const DESTROY_FILE_THUMBNAIL = 'fileModal/DESTROY_FILE_THUMBNAIL'
 const DESTROY_FILE_THUMBNAIL_FAILED = 'fileModal/DESTROY_FILE_THUMBNAIL_FAILED'
 const UPLOAD_NEW_FILE_INSTEAD = 'fileModal/UPLOAD_NEW_FILE_INSTEAD'
 const UPLOAD_NEW_FILE_INSTEAD_SUCCESS = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_SUCCESS'
+const UPLOAD_NEW_FILE_INSTEAD_FAILURE = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_FAILURE'
 const MARK_MODAL_FILE_AS_UPDATING = 'fileModal/MARK_MODAL_FILE_AS_UPDATING'
 const MARK_MODAL_FILE_AS_UPDATED = 'fileModal/MARK_MODAL_FILE_AS_UPDATED'
 const LOADED_FILE_MODAL_PLACEMENTS = 'fileModal/LOADED_FILE_MODAL_PLACEMENTS'
@@ -51,6 +52,10 @@ export function uploadNewFileInstead (fileType, filesUrl, file, fileIo) {
 
 export function uploadNewFileInsteadSuccess (file) {
   return { type: UPLOAD_NEW_FILE_INSTEAD_SUCCESS, file }
+}
+
+export function uploadNewFileInsteadFailure (file) {
+  return { type: UPLOAD_NEW_FILE_INSTEAD_FAILURE, file }
 }
 
 export function markModalFileAsUpdating (file) {
@@ -108,15 +113,21 @@ function * updateFileThumbnailSaga () {
 
 function * uploadNewFileInsteadPerform (action) {
   try {
-    const url = `${action.filesUrl}/${action.file.id}/change_file`
-    const data = new FormData()
-    data.append('file[attributes][file]', action.fileIo)
-    const response = yield call(apiFilePost, url, data)
-    yield put(updatedFileModalFile(response.data))
-    yield put(updatedFiles(action.fileType, [response.data]))
-    yield put(uploadNewFileInsteadSuccess(response.data))
+    const result = yield call(window.FolioConsole.S3Upload.newUpload, {
+      filesUrl: action.filesUrl,
+      file: action.fileIo
+    })
+
+    yield call(apiXhrFilePut, result.s3_url, action.fileIo)
+
+    yield call(window.FolioConsole.S3Upload.finishedUpload, {
+      filesUrl: action.filesUrl,
+      s3_path: result.s3_path,
+      type: action.fileType,
+      fileId: action.file.id
+    })
   } catch (e) {
-    window.FolioConsole.Flash.alert(e.message)
+    window.FolioConsole.Flash.alert(`${e.status}: ${e.statusText}`)
   }
 }
 
@@ -276,6 +287,17 @@ function modalReducer (state = initialState, action) {
       }
 
     case UPLOAD_NEW_FILE_INSTEAD_SUCCESS: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          uploadingNew: false
+        }
+      } else {
+        return state
+      }
+    }
+
+    case UPLOAD_NEW_FILE_INSTEAD_FAILURE: {
       if (state.file && state.file.id === action.file.id) {
         return {
           ...state,

@@ -5,8 +5,8 @@ window.FolioConsole.S3Upload.newUpload = ({ filesUrl, file }) => {
   return window.FolioConsole.Api.apiPost(`${filesUrl}/s3_before`, { file_name: file.name })
 }
 
-window.FolioConsole.S3Upload.finishedUpload = ({ filesUrl, s3_path, type }) => {
-  return window.FolioConsole.Api.apiPost(`${filesUrl}/s3_after`, { s3_path, type })
+window.FolioConsole.S3Upload.finishedUpload = ({ filesUrl, s3_path, type, fileId }) => {
+  return window.FolioConsole.Api.apiPost(`${filesUrl}/s3_after`, { s3_path, type, file_id: fileId })
 }
 
 window.FolioConsole.S3Upload.previousDropzoneId = 0

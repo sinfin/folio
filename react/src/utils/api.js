@@ -10,4 +10,4 @@ export const apiDelete = window.FolioConsole.Api.apiDelete
 
 export const apiHtmlPost = window.FolioConsole.Api.apiHtmlPost
 
-export const apiFilePost = window.FolioConsole.Api.apiFilePost
+export const apiXhrFilePut = window.FolioConsole.Api.apiXhrFilePut

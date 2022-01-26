@@ -50,7 +50,7 @@ module Folio::Console::Api::FileControllerBase
     file_klass = type.safe_constantize
 
     if file_klass && file_klass < Folio::File && test_aware_s3_exists?(s3_path)
-      Folio::CreateFileFromS3Job.perform_later(s3_path: s3_path, type: type)
+      Folio::CreateFileFromS3Job.perform_later(s3_path: s3_path, type: type, file_id: params[:file_id].try(:to_i))
       render json: {}
     else
       render json: {}, status: 422
