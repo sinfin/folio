@@ -17,8 +17,7 @@ const Wrap = styled.div`
     padding-right: 5px;
   }
 
-  .folio-console-modal__scroll-fixed & {
-    margin-bottom: -1rem;
+  .f-c-r-modal__scroll-fixed & {
     padding: 0.5rem 1rem;
   }
 

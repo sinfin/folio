@@ -20,7 +20,7 @@ class ModalSingleSelect extends ModalSelect {
 
   jQueryModal () {
     const $ = window.jQuery
-    return $('.folio-console-react-modal').filter(`[data-klass="${this.props.fileType}"]`)
+    return $('.f-c-r-modal').filter(`[data-klass="${this.props.fileType}"]`)
   }
 
   fileTemplate (file, prefix) {

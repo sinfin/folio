@@ -2,7 +2,7 @@ import React from 'react'
 
 class ModalTitleAndUpload extends React.PureComponent {
   triggerUpload = () => {
-    window.jQuery('.folio-console-react-modal.show .f-c-r-dropzone-trigger').click()
+    window.jQuery('.f-c-r-modal.show .f-c-r-dropzone-trigger').click()
   }
 
   render () {

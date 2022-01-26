@@ -3,19 +3,19 @@ import { forceCheck } from 'react-lazyload'
 
 function ModalScroll ({ children, header, footer }) {
   return (
-    <div className='folio-console-modal__scroll-wrap'>
+    <div className='f-c-r-modal__scroll-wrap'>
       {header && (
-        <div className='folio-console-modal__scroll-fixed'>
+        <div className='f-c-r-modal__scroll-fixed'>
           {header}
         </div>
       )}
 
-      <div className='folio-console-modal__scroll-inner' onScroll={forceCheck}>
+      <div className='f-c-r-modal__scroll-inner' onScroll={forceCheck}>
         {children}
       </div>
 
       {footer && (
-        <div className='folio-console-modal__scroll-fixed modal-footer'>
+        <div className='f-c-r-modal__scroll-fixed modal-footer'>
           {footer}
         </div>
       )}

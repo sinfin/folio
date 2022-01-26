@@ -54,7 +54,8 @@ class Uploader extends Component {
       dropzoneOptions: {
         clickable: true,
         previewsContainer: false,
-        previewTemplate: ''
+        previewTemplate: '',
+        disablePreviews: true
       }
     })
   }
@@ -70,9 +71,9 @@ class Uploader extends Component {
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
-        <div className='f-c-r-dropzone' ref={this.dropzoneDivRef} />
-
-        {this.props.children}
+        <div className='f-c-r-dropzone' ref={this.dropzoneDivRef}>
+          {this.props.children}
+        </div>
       </UploaderContext.Provider>
     )
   }
