@@ -49,7 +49,6 @@ PATH
       invisible_captcha
       jquery-rails
       message_bus
-      mini_magick
       mini_racer (~> 0.4.0)
       multi_exiftool
       nokogiri
@@ -376,7 +375,6 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2021.0704)
-    mini_magick (4.11.0)
     mini_mime (1.1.1)
     mini_racer (0.4.0)
       libv8-node (~> 15.14.0.0)

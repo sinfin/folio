@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "mini_magick"
-
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 

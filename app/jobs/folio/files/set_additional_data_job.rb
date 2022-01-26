@@ -3,36 +3,31 @@
 class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
   queue_as :slow
 
-  def perform(file)
-    additional_data = file.additional_data || {}
+  def perform(file_model)
+    additional_data = file_model.additional_data || {}
 
-    if file.gif?
-      identify = MiniMagick::Tool::Identify.new do |i|
-        i << file.file.path
+    image = Vips::Image.new_from_file(file_model.file.path)
+
+    if file_model.gif?
+      begin
+        gif_image = Vips::Image.new_from_file(file_model.file.path, page: 1)
+        gif_image = nil
+        additional_data[:animated] = true
+      rescue Vips::Error
+        additional_data[:animated] = false
       end
-      animated = identify.split("\n").size > 1
-      additional_data[:animated] = animated
     end
 
-    dominant_color = MiniMagick::Tool::Convert.new do |convert|
-      convert.merge! [
-        file.file.path,
-        "+dither",
-        "-colors", "1",
-        "-unique-colors",
-        "txt:"
-      ]
-    end
 
-    if dominant_color.present?
-      hex = dominant_color[/#\S+/]
-      rgb = hex.scan(/../).map { |color| color.to_i(16) }
-      dark = rgb.sum < 3 * 255 / 2.0
+    rgb = [
+      image.stats.getpoint(4, 1)[0],
+      image.stats.getpoint(4, 2)[0],
+      image.stats.getpoint(4, 3)[0],
+    ]
 
-      additional_data[:dominant_color] = hex
-      additional_data[:dark] = dark
-    end
+    additional_data[:dominant_color] = "#%02X%02X%02X" % rgb
+    additional_data[:dark] = rgb.sum < 3 * 255 / 2.0
 
-    file.update!(additional_data: additional_data)
+    file_model.update!(additional_data: additional_data)
   end
 end

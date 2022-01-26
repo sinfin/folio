@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
   s.add_dependency "friendly_id", "~> 5.3.0"
   s.add_dependency "ancestry", "~> 4.1.0"
   s.add_dependency "mini_racer", "~> 0.4.0"
-  s.add_dependency "mini_magick"
   s.add_dependency "sidekiq"
   s.add_dependency "slim"
   s.add_dependency "simple_form"
