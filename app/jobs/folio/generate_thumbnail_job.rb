@@ -101,6 +101,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail
       end
 
+      thumbnail.name = image.file_name
+
       if opts = image.try(:thumbnail_store_options)
         if opts[:path]
           opts[:path] += "/#{size}/#{thumbnail.name}"

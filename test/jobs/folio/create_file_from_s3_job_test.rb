@@ -2,10 +2,6 @@
 
 require "test_helper"
 
-module Folio
-  class CreateFileFromS3JobTest < ActiveJob::TestCase
-    # test "the truth" do
-    #   assert true
-    # end
-  end
+class Folio::CreateFileFromS3JobTest < ActiveJob::TestCase
+  # tested via test/controllers/folio/console/api/file_controller_base_test.rb
 end

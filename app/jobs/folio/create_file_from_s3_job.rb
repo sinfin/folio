@@ -21,7 +21,11 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     if file_id
       file = type.constantize.find(file_id)
       replacing_file = true
-      thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
+      if file.try(:thumbnail_sizes).is_a?(Hash)
+        thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
+      else
+        thumbnail_keys_to_recreate = []
+      end
     else
       file = type.constantize.new
       replacing_file = false
