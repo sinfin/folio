@@ -45,10 +45,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
           {isImage && (
             <div className='col-lg-7 mb-3'>
               <MainImageOuter>
-                <div style={{
-                  backgroundColor: file.attributes.dominant_color,
-                  paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%`
-                }} />
+                <div style={{ paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%` }} />
 
                 <MainImageInner>
                   <MainImage src={file.attributes.source_url} />
