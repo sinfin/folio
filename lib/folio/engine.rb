@@ -82,16 +82,25 @@ module Folio
 
     begin
       initializer :deprecations do |app|
+        deprecations = []
+
         if ActiveRecord::Base.connection.exec_query("SELECT column_name FROM information_schema.columns WHERE table_name = 'folio_files' AND column_name = 'mime_type';").rows.size > 0
-          msg = "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+          deprecations << "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+        end
 
-          Raven.capture_message(msg) if defined?(Raven)
+        if deprecations.present?
+          puts "\nFolio deprecations:"
+          deprecations.each do |msg|
+            Raven.capture_message(msg) if defined?(Raven)
 
-          if defined?(logger)
-            logger.error(msg)
-          else
-            puts "Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+            if defined?(logger)
+              logger.error(msg)
+            else
+              puts "- Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+            end
           end
+
+          puts ""
         end
       end
     rescue StandardError
