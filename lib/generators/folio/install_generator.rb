@@ -210,7 +210,7 @@ module Folio
       end
 
       def log_tag_settings
-        %w[config/environments/production.rb config/environments/staging.rb].each do |path|
+        %w[config/environments/production.rb].each do |path|
           gsub_file path,
                     "config.log_tags = [ :request_id ]",
                     <<~RUBY.chomp
