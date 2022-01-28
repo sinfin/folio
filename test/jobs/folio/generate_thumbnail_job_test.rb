@@ -14,7 +14,7 @@ class Folio::GenerateThumbnailJobTest < ActiveJob::TestCase
 
     image.reload
 
-    assert_match /test\.gif\Z/, image.thumbnail_sizes["100x100#"][:url]
-    assert_match /test\.webp\Z/, image.thumbnail_sizes["100x100#"][:webp_url]
+    assert_match(/test\.gif\Z/, image.thumbnail_sizes["100x100#"][:url])
+    assert_match(/test\.webp\Z/, image.thumbnail_sizes["100x100#"][:webp_url])
   end
 end
