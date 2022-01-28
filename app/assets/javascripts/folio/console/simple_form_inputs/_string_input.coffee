@@ -68,15 +68,13 @@ cleaveOpts =
 window.folioConsoleBindNumeralInput = ($elements) ->
   $elements.each ->
     $this = $(this)
-
-    $this.after """<input type="#{@type}" name="#{name}" value="#{@value}" autocomplete="off" hidden>"""
-
+    name = @name
     $this
       .data('type', @type)
-      .data('name', @name)
+      .data('name', name)
       .removeAttr('name')
       .prop('type', 'string')
-
+    $this.after """<input type="hidden" name="#{name}" value="#{@value}">"""
     $this.data('cleave', new Cleave(this, cleaveOpts))
 
 window.folioConsoleUnbindNumeralInput = ($elements) ->
@@ -91,7 +89,7 @@ window.folioConsoleUnbindNumeralInput = ($elements) ->
       cleave.destroy()
       $this.data('cleave', null)
 
-    $hidden = $this.next('input[hidden]')
+    $hidden = $this.next('input[type="hidden"]')
     if $hidden.length
       $this.val($hidden.val())
       $hidden.remove()
