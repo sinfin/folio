@@ -76,6 +76,14 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
         attrs["images"] = images.shuffle
       end
 
+      if attrs["article"] == true
+        blog_article_klass = "#{::Rails.application.class.name.deconstantize}::Blog::Article".constantize
+
+        attrs["article"] = blog_article_klass.ordered
+                                             .published
+                                             .first
+      end
+
       attrs["title"] = Faker::Hipster.sentence if attrs["title"] == true
 
       %w[description text].each do |key|

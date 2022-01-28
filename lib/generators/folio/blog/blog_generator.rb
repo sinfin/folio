@@ -48,6 +48,21 @@ class Folio::BlogGenerator < Rails::Generators::Base
     end
   end
 
+  def add_atoms_to_showcase
+    return if File.read(Rails.root.join("data/atoms_showcase.yml")).include?("::Atom::Blog::Articles::Card::Large")
+    append_file "data/atoms_showcase.yml" do <<~'YAML'
+      - type: Redside::Atom::Blog::Articles::Card::Large
+        article: true
+
+      - type: Redside::Atom::Blog::Articles::Card::Medium
+        article: true
+
+      - type: Redside::Atom::Blog::Articles::Card::Small
+        article: true
+    YAML
+    end
+  end
+
   def add_console_sidebar_links
     path = Rails.root.join("config/initializers/folio.rb")
     return unless File.exist?(path)

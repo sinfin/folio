@@ -94,6 +94,7 @@ module Folio
           "app/models/application_record.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
           "app/overrides/cells/folio/ui_cell_override.rb",
+          "app/overrides/cells/folio/ui/atoms_cell_override.rb",
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
