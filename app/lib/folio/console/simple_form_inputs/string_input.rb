@@ -34,6 +34,7 @@ SimpleForm::Inputs::StringInput.class_eval do
       end
     elsif options[:numeral]
       input_html_classes << "f-c-string-input--numeral"
+      input_html_options[:autocomplete] = "off"
     else
       input_html_classes.unshift("string")
       input_html_options[:type] ||= input_type if html5?
