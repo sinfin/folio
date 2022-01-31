@@ -93,7 +93,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def publishable_attribute_names
-      @publishable_attribute_names ||= %w[published published_at published_from published_until].select do |att|
+      @publishable_attribute_names ||= %w[published published_at published_from published_until featured featured_from featured_until].select do |att|
         attributes_names.include?(att)
       end
     end
