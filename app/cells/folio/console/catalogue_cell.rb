@@ -171,8 +171,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         e = sanitize_string(e)
       end
 
-      icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
-      "#{e} #{icon}"
+      if e.present?
+        icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
+        "#{e} #{icon}"
+      end
     end
   end
 
