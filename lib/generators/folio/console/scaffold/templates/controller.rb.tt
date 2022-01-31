@@ -1,5 +1,9 @@
 class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::BaseController
+  <%- if options[:nested] -%>
+  folio_console_controller_for "<%= class_name %>", nested: "<%= options[:nested] %>"
+  <%- else -%>
   folio_console_controller_for "<%= class_name %>"
+  <%- end -%>
 
   private
 

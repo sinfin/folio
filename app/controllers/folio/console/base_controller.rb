@@ -31,11 +31,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false, catalogue_collection_actions: nil)
+  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false, catalogue_collection_actions: nil, nested: nil)
     as_s = as.present? ? as.to_s : nil
 
     define_method :folio_console_controller_for_as do
       as_s
+    end
+
+    define_method :folio_console_controller_for_nested do
+      nested
     end
 
     define_method :folio_console_controller_for_handle_csv do
@@ -60,9 +64,20 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     respond_to :json, only: %i[update]
 
-    load_and_authorize_resource(as, class: class_name,
-                                    except: except,
-                                    parent: (false if as.present?))
+    if nested
+      through_as = nested.demodulize.underscore
+
+      load_and_authorize_resource(through_as, class: nested)
+
+      load_and_authorize_resource(as, class: class_name,
+                                      except: except,
+                                      parent: (false if as.present?),
+                                      through: through_as)
+    else
+      load_and_authorize_resource(as, class: class_name,
+                                      except: except,
+                                      parent: (false if as.present?))
+    end
 
     before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs

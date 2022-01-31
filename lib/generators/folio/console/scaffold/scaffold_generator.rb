@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 require "rails/generators/erb/scaffold/scaffold_generator"
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
 
 class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
+  include Folio::GeneratorBase
+
   source_root File.expand_path("../templates", __FILE__)
 
   hook_for :orm, as: :scaffold
   hook_for :form_builder, as: :scaffold
+
+  class_option :nested, type: :string
 
   def copy_view_files
     available_views.each do |view|
@@ -118,5 +123,45 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       end
 
       rows.join(",\n                    ")
+    end
+
+    def controller_file_path
+      if options[:nested]
+        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:nested].demodulize.tableize}")
+      else
+        super
+      end
+    end
+
+    def controller_file_path
+      if options[:nested]
+        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:nested].demodulize.tableize}")
+      else
+        super
+      end
+    end
+
+    def controller_class_name
+      if options[:nested]
+        super.gsub(/\A#{application_namespace}/, "#{application_namespace}::#{options[:nested].demodulize.pluralize}")
+      else
+        super
+      end
+    end
+
+    def form_url_for_array_string
+      if options[:nested]
+        "[:console, @#{options[:nested].demodulize.underscore}, @#{instance_variable_name}]"
+      else
+        "[:console, @#{instance_variable_name}]"
+      end
+    end
+
+    def catalogue_edit_link
+      if options[:nested]
+        "resource_link [:edit, :console, @#{options[:nested].demodulize.underscore}, @#{instance_variable_name}], :to_label"
+      else
+        "edit_link :to_label"
+      end
     end
 end
