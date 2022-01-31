@@ -133,14 +133,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       end
     end
 
-    def controller_file_path
-      if options[:through]
-        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:through].demodulize.tableize}")
-      else
-        super
-      end
-    end
-
     def controller_class_name
       if options[:through]
         super.gsub(/\A#{application_namespace}/, "#{application_namespace}::#{options[:through].demodulize.pluralize}")

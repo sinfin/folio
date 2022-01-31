@@ -79,6 +79,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                       parent: (false if as.present?))
     end
 
+    before_action :add_through_breadcrumbs
     before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs
 
@@ -307,9 +308,35 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
+    def add_through_breadcrumbs
+      return unless folio_console_controller_for_through
+      through_klass = folio_console_controller_for_through.constantize
+
+      add_breadcrumb(through_klass.model_name.human(count: 2),
+                     url_for([:console, through_klass]))
+
+      through_record = instance_variable_get("@#{through_klass.model_name.element}")
+
+      if through_record
+        add_breadcrumb(through_record.to_label, console_show_or_edit_path(through_record))
+      end
+    end
+
     def add_collection_breadcrumbs
-      add_breadcrumb(@klass.model_name.human(count: 2),
-                     url_for([:console, @klass]))
+      if folio_console_controller_for_through
+        begin
+          through_klass = folio_console_controller_for_through.constantize
+          through_record = instance_variable_get("@#{through_klass.model_name.element}")
+
+          add_breadcrumb(@klass.model_name.human(count: 2),
+                         console_show_or_edit_path(through_record))
+        rescue NoMethodError
+          add_breadcrumb(@klass.model_name.human(count: 2))
+        end
+      else
+        add_breadcrumb(@klass.model_name.human(count: 2),
+                       url_for([:console, @klass]))
+      end
     rescue NoMethodError
     end
 
@@ -318,19 +345,59 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if folio_console_record.new_record?
           add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
         else
-          begin
-            add_breadcrumb(folio_console_record.to_label,
-                           url_for([:console, folio_console_record, action: :show]))
-          rescue StandardError
-            add_breadcrumb(folio_console_record.to_label,
-                           url_for([:console, folio_console_record, action: :edit]))
+          if folio_console_controller_for_through
+            through_klass = folio_console_controller_for_through.constantize
+            through_record = instance_variable_get("@#{through_klass.model_name.element}")
+
+            record_url = console_show_or_edit_path(folio_console_record, through: through_record)
+          else
+            record_url = console_show_or_edit_path(folio_console_record)
           end
+
+          add_breadcrumb(folio_console_record.to_label, record_url)
         end
       end
-    rescue NoMethodError
+    rescue StandardError
+      add_breadcrumb(folio_console_record.to_label)
     end
 
     def custom_authenticate_account!
       authenticate_account!
+    end
+
+    def console_show_or_edit_path(record, through: nil)
+      return nil if record.nil?
+
+      begin
+        if through
+          url = url_for([:console, through, record])
+        else
+          url = url_for([:console, record])
+        end
+      rescue NoMethodError, ActionController::RoutingError
+        return nil
+      end
+
+      valid_routes_parent = nil
+
+      [ Folio::Engine, main_app ].each do |routes_parent|
+        if routes_parent.routes.recognize_path(url, method: :get)
+          valid_routes_parent = routes_parent
+          break
+        end
+      rescue ActionController::RoutingError
+      end
+
+      return url if valid_routes_parent
+
+      begin
+        if through
+          url_for([:edit, :console, through, record])
+        else
+          url_for([:edit, :console, record])
+        end
+      rescue NoMethodError, ActionController::RoutingError
+        nil
+      end
     end
 end
