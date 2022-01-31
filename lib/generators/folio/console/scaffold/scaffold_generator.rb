@@ -11,7 +11,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   hook_for :orm, as: :scaffold
   hook_for :form_builder, as: :scaffold
 
-  class_option :nested, type: :string
+  class_option :through, type: :string
 
   def copy_view_files
     available_views.each do |view|
@@ -126,40 +126,40 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def controller_file_path
-      if options[:nested]
-        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:nested].demodulize.tableize}")
+      if options[:through]
+        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:through].demodulize.tableize}")
       else
         super
       end
     end
 
     def controller_file_path
-      if options[:nested]
-        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:nested].demodulize.tableize}")
+      if options[:through]
+        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:through].demodulize.tableize}")
       else
         super
       end
     end
 
     def controller_class_name
-      if options[:nested]
-        super.gsub(/\A#{application_namespace}/, "#{application_namespace}::#{options[:nested].demodulize.pluralize}")
+      if options[:through]
+        super.gsub(/\A#{application_namespace}/, "#{application_namespace}::#{options[:through].demodulize.pluralize}")
       else
         super
       end
     end
 
     def form_url_for_array_string
-      if options[:nested]
-        "[:console, @#{options[:nested].demodulize.underscore}, @#{instance_variable_name}]"
+      if options[:through]
+        "[:console, @#{options[:through].demodulize.underscore}, @#{instance_variable_name}]"
       else
         "[:console, @#{instance_variable_name}]"
       end
     end
 
     def catalogue_edit_link
-      if options[:nested]
-        "resource_link [:edit, :console, @#{options[:nested].demodulize.underscore}, @#{instance_variable_name}], :to_label"
+      if options[:through]
+        "resource_link [:edit, :console, @#{options[:through].demodulize.underscore}, @#{instance_variable_name}], :to_label"
       else
         "edit_link :to_label"
       end

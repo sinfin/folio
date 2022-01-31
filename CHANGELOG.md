@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2021-31-01
 ### Added
-- added `nested` support for `folio_console_controller_for`
+- added `through` support for `folio_console_controller_for`
 
 ## 2021-20-01
 ### Changed

@@ -31,15 +31,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false, catalogue_collection_actions: nil, nested: nil)
+  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false, catalogue_collection_actions: nil, through: nil)
     as_s = as.present? ? as.to_s : nil
 
     define_method :folio_console_controller_for_as do
       as_s
     end
 
-    define_method :folio_console_controller_for_nested do
-      nested
+    define_method :folio_console_controller_for_through do
+      through
     end
 
     define_method :folio_console_controller_for_handle_csv do
@@ -64,10 +64,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     respond_to :json, only: %i[update]
 
-    if nested
-      through_as = nested.demodulize.underscore
+    if through
+      through_as = through.demodulize.underscore
 
-      load_and_authorize_resource(through_as, class: nested)
+      load_and_authorize_resource(through_as, class: through)
 
       load_and_authorize_resource(as, class: class_name,
                                       except: except,
