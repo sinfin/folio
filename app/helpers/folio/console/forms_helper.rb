@@ -64,7 +64,12 @@ module Folio::Console::FormsHelper
                   "horizontal"
     layout_class = "f-c-simple-form-with-atoms--layout-#{layout_code}"
 
-    if model.class.try(:console_atoms_expanded_settings)
+    expandable = true
+
+    if model.class.try(:console_atoms_expandable) == false
+      expanded_class = "f-c-simple-form-with-atoms--expanded-form f-c-simple-form-with-atoms--non-expandable"
+      expandable = false
+    elsif model.class.try(:console_atoms_expanded_settings)
       expanded_class = "f-c-simple-form-with-atoms--expanded-form"
     else
       expanded_class = nil
@@ -85,6 +90,7 @@ module Folio::Console::FormsHelper
              opts: opts,
              layout_code: layout_code,
              form_footer_options: form_footer_options,
+             expandable: expandable,
            },
            &block
   end

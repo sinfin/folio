@@ -19,13 +19,14 @@
 
         == cell('folio/console/atoms/layout_switch', layout_code)
 
-      .f-c-simple-form-with-atoms__form-toggle
-        .container-fluid
-          .position-relative.f-c-simple-form-with-atoms__form-toggle-inner
-            button.f-c-simple-form-with-atoms__form-toggle-button.mi[
-              type="button"
-            ]
-              .mi.f-c-simple-form-with-atoms__form-toggle-icon arrow_drop_down
+      - if expandable
+        .f-c-simple-form-with-atoms__form-toggle
+          .container-fluid
+            .position-relative.f-c-simple-form-with-atoms__form-toggle-inner
+              button.f-c-simple-form-with-atoms__form-toggle-button.mi[
+                type="button"
+              ]
+                .mi.f-c-simple-form-with-atoms__form-toggle-icon arrow_drop_down
 
       .f-c-simple-form-with-atoms__atoms
         .f-c-simple-form-with-atoms__previews

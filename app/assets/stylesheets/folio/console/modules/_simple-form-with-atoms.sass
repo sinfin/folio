@@ -239,9 +239,16 @@
     &--editing-atom &__scroll
       overflow: visible
 
+    &--layout-horizontal
+      .f-c-form-footer-spacer
+        display: none
+
   +mq-mobile-menu
     overflow-y: scroll
     -webkit-overflow-scrolling: touch
+
+    .f-c-form-footer-spacer
+      display: none
 
   @media screen and (max-width: 1699px)
     .f-c-atoms-layout-switch
