@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 - added `through` support for `folio_console_controller_for`
 
+## 2021-31-01
+### Changed
+- changed the syntax of `FORM_LAYOUT` for atoms - use nested rows/columns hashes
+
 ## 2021-20-01
 ### Changed
 - changed api files controllers to use direct s3 upload

@@ -28,11 +28,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   VALID_PLACEMENT_TYPES = nil
 
-  FORM_LAYOUT = [
-    "ATTACHMENTS",
-    "ASSOCIATIONS",
-    "STRUCTURE",
-  ]
+  FORM_LAYOUT = {
+    rows: [
+      "ATTACHMENTS",
+      "ASSOCIATIONS",
+      "STRUCTURE",
+    ]
+  }
 
   self.table_name = "folio_atoms"
 

@@ -6,14 +6,17 @@ import NestedModelControls from 'components/NestedModelControls'
 
 import Associations from './Associations'
 import Fields from './Fields'
+import Field from './Field'
 import MultiAttachments from './MultiAttachments'
 import SingleAttachments from './SingleAttachments'
 
 import AtomFormWrap from './styled/AtomFormWrap'
 import AtomFormHint from './styled/AtomFormHint'
 import AtomFormCardOuter from './styled/AtomFormCardOuter'
-import AtomFormCardCol from './styled/AtomFormCardCol'
+import AtomFormCardRows from './styled/AtomFormCardRows'
 import AtomFormCardRow from './styled/AtomFormCardRow'
+import AtomFormCardColumns from './styled/AtomFormCardColumns'
+import AtomFormCardColumn from './styled/AtomFormCardColumn'
 
 class AtomForm extends React.PureComponent {
   state = { focusedIndex: null }
@@ -174,54 +177,80 @@ class AtomForm extends React.PureComponent {
             const asMolecule = molecule && !atom.record.meta.molecule_singleton
             if (asMolecule) { nonSingletonIndex++ }
 
-            const singleAttachments = (
-              <SingleAttachments
-                attachments={atom.record.meta.attachments}
-                atom={atom.record}
-                index={index}
-                remove={this.props.removeFormAtomAttachment}
-                openFileModal={this.props.openFileModal}
-              />
-            )
-
-            const inputs = (
-              <Fields
-                atom={atom}
-                onChange={this.onChange}
-                onValueChange={this.onValueChange}
-                index={index}
-              />
-            )
-
-            const associations = (
-              <Associations
-                atom={atom}
-                asyncData={asMolecule ? asyncData : undefined}
-                onChange={this.onAssociationChange}
-                onBlur={() => { this.setState({ focusedIndex: null }) }}
-                onFocus={() => { this.setState({ focusedIndex: index }) }}
-                index={index}
-                addAtomSettings
-              />
-            )
-
-            const fillOutput = (ary) => (
-              ary.map((row) => {
-                if (typeof row === 'string') {
-                  if (row === 'ASSOCIATIONS') {
-                    return <AtomFormCardCol key={row} above>{associations}</AtomFormCardCol>
-                  } else if (row === 'STRUCTURE') {
-                    return <AtomFormCardCol key={row}>{inputs}</AtomFormCardCol>
-                  } else if (row === 'ATTACHMENTS') {
-                    return <AtomFormCardCol key={row} narrow>{singleAttachments}</AtomFormCardCol>
-                  }
-                } else if (typeof row === 'object') {
-                  return <AtomFormCardRow key={row.join('-')}>{fillOutput(row)}</AtomFormCardRow>
+            const fillOutput = (input) => {
+              if (typeof input === 'object') {
+                if (input.rows) {
+                  return (
+                    <AtomFormCardRows data-debug='rows'>
+                      {input.rows.map((row) => (
+                        <AtomFormCardRow data-debug='row' key={JSON.stringify(row)}>
+                          {fillOutput(row)}
+                        </AtomFormCardRow>
+                      ))}
+                    </AtomFormCardRows>
+                  )
+                } else if (input.columns) {
+                  return (
+                    <AtomFormCardColumns data-debug='columns'>
+                      {input.columns.map((column) => (
+                        <AtomFormCardColumn data-debug='column' key={JSON.stringify(column)}>
+                          {fillOutput(column)}
+                        </AtomFormCardColumn>
+                      ))}
+                    </AtomFormCardColumns>
+                  )
+                } else {
+                  input.map((item) => fillOutput(item))
                 }
-
-                return null
-              })
-            )
+              } else {
+                if (input === 'ASSOCIATIONS') {
+                  return (
+                    <Associations
+                      atom={atom}
+                      key={input}
+                      asyncData={asMolecule ? asyncData : undefined}
+                      onChange={this.onAssociationChange}
+                      onBlur={() => { this.setState({ focusedIndex: null }) }}
+                      onFocus={() => { this.setState({ focusedIndex: index }) }}
+                      index={index}
+                      addAtomSettings
+                    />
+                  )
+                } else if (input === 'STRUCTURE') {
+                  return (
+                    <Fields
+                      key={input}
+                      atom={atom}
+                      onChange={this.onChange}
+                      onValueChange={this.onValueChange}
+                      index={index}
+                    />
+                  )
+                } else if (input === 'ATTACHMENTS') {
+                  return (
+                    <SingleAttachments
+                      key={input}
+                      attachments={atom.record.meta.attachments}
+                      atom={atom.record}
+                      index={index}
+                      remove={this.props.removeFormAtomAttachment}
+                      openFileModal={this.props.openFileModal}
+                    />
+                  )
+                } else if (input.indexOf('STRUCTURE/') !== -1) {
+                  return (
+                    <Field
+                      key={input}
+                      atom={atom}
+                      field={input.replace('STRUCTURE/', '')}
+                      onChange={this.onChange}
+                      onValueChange={this.onValueChange}
+                      index={index}
+                    />
+                  )
+                }
+              }
+            }
 
             const output = fillOutput(atom.record.meta.form_layout)
 

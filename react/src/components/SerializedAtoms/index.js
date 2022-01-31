@@ -37,7 +37,7 @@ function SerializedAttachments ({ atom, prefix }) {
                 attachmentKey={key}
                 attachment={value}
                 index={i}
-                key={value.file_id}
+                key={`${value.id || 'nil'}-${value.file_id}`}
                 showId={Boolean(atom.id)}
               />
             ))

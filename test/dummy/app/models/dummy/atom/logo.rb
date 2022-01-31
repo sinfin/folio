@@ -10,6 +10,13 @@ class Dummy::Atom::Logo < Folio::Atom::Base
 
   ASSOCIATIONS = {}
 
+  FORM_LAYOUT = {
+    columns: [
+      "ATTACHMENTS",
+      { rows: ["STRUCTURE", "ASSOCIATIONS"] }
+    ]
+  }
+
   validates :cover_placement,
             presence: true
 
