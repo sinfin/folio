@@ -365,14 +365,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
       authenticate_account!
     end
 
-    def console_show_or_edit_path(record, through: nil)
+    def console_show_or_edit_path(record, through: nil, other_params: {})
       return nil if record.nil?
 
       begin
         if through
-          url = url_for([:console, through, record])
+          url = url_for([:console, through, record, other_params])
         else
-          url = url_for([:console, record])
+          url = url_for([:console, record, other_params])
         end
       rescue NoMethodError, ActionController::RoutingError
         return nil

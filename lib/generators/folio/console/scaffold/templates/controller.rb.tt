@@ -13,6 +13,9 @@ class Folio::Console::<%= controller_class_name %>Controller < Folio::Console::B
       <%- else -%>
       params.require(:<%= singular_table_name %>)
             .permit(<%= controller_params_permit %>)
+      <%- if options[:through] -%>
+            .tap { |p| p[:<%= options[:through].demodulize.underscore %>_id] = @<%= options[:through].demodulize.underscore %>.id }
+      <%- end -%>
       <%- end -%>
     end
 

@@ -248,7 +248,14 @@ module Folio::Console::DefaultActions
 
     def respond_with_location(prevalidate: nil)
       if folio_console_record.destroyed?
-        index_url = url_for([:console, @klass])
+        if folio_console_controller_for_through
+          through_klass = folio_console_controller_for_through.constantize
+          through_record = instance_variable_get("@#{through_klass.model_name.element}")
+          index_url = console_show_or_edit_path(through_record)
+        else
+          index_url = url_for([:console, @klass])
+        end
+
         if !request.referrer || request.referrer.include?(index_url)
           index_url
         else
@@ -256,16 +263,31 @@ module Folio::Console::DefaultActions
         end
       else
         if folio_console_record.persisted?
+          if folio_console_controller_for_through
+            through_klass = folio_console_controller_for_through.constantize
+            through_record = instance_variable_get("@#{through_klass.model_name.element}")
+          else
+            through_record = nil
+          end
+
           begin
             if action_name == "create"
-              url_for([:console, folio_console_record, action: :show])
+              console_show_or_edit_path(folio_console_record,
+                                        through: through_record,
+                                        other_params: { prevalidate: prevalidate ? 1 : nil })
             else
-              url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
+              if through_record
+                url_for([:edit, :console, through_record, folio_console_record, prevalidate: prevalidate ? 1 : nil])
+              else
+                url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
+              end
             end
           rescue ActionController::UrlGenerationError, NoMethodError
-            url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
-          rescue ActionController::UrlGenerationError, NoMethodError
-            url_for([:console, @klass, prevalidate: prevalidate ? 1 : nil])
+            if try(:through_record)
+              console_show_or_edit_path(through_record)
+            else
+              url_for([:console, @klass])
+            end
           end
         end
       end

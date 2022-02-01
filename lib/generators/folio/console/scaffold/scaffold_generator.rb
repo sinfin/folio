@@ -112,7 +112,11 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def controller_params_permit
-      rows = ['*(@klass.column_names - ["id"])']
+      if options[:through]
+        rows = ["*(@klass.column_names - [\"id\", \"#{options[:through].demodulize.underscore}_id\"])"]
+      else
+        rows = ['*(@klass.column_names - ["id"])']
+      end
 
       if has_attachmentable?
         rows << "*file_placements_strong_params"
