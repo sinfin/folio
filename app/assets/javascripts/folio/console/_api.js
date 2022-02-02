@@ -54,9 +54,9 @@ function responseToHtml (response) {
 function flashMessageFromMeta (response) {
   if (typeof response === 'object' && response.meta && response.meta.flash) {
     if (response.meta.flash.success) {
-      flashSuccess(response.meta.flash.success)
+      window.FolioConsole.Flash.success(response.meta.flash.success)
     } else if (response.meta.flash.alert) {
-      flashError(response.meta.flash.alert)
+      window.FolioConsole.Flash.alert(response.meta.flash.alert)
     }
   }
   return response
