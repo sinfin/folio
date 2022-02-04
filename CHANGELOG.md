@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## 2021-02-04
+### Added
+- added `Rails.application.config.folio_console_ability_lambda` for easier console ability tweaks
+
+## 2021-02-04
 ### Changed
 - added sidekiq web to folio routes, hidden behind an `authenticate` lambda - remove it from application routes!
 

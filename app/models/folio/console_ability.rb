@@ -18,5 +18,7 @@ class Folio::ConsoleAbility
     when "superuser"
       can :manage, :all
     end
+
+    Rails.application.config.folio_console_ability_lambda.call(self, account)
   end
 end
