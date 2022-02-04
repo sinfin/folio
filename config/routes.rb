@@ -64,4 +64,6 @@ Folio::Engine.routes.draw do
                                     as: :download,
                                     constraints: { name: /.*/ }
   end
+
+  get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 end
