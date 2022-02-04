@@ -157,4 +157,6 @@ Folio::Engine.routes.draw do
   get "/download/:hash_id/*name", to: "downloads#show",
                                   as: :download,
                                   constraints: { name: /.*/ }
+
+  get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 end
