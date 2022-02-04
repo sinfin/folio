@@ -43,8 +43,14 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
     end
 
     def index_filters
-      {
-        by_role: @klass.roles_for_select
-      }
+      roles = @klass.roles_for_select(current_account.account_roles_for_select)
+
+      if roles.size > 1
+        {
+          by_role: roles
+        }
+      else
+        {}
+      end
     end
 end

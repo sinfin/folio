@@ -32,12 +32,8 @@ class Folio::Account < Folio::ApplicationRecord
     where(role: role)
   }
 
-  def superuser?
-    role == "superuser"
-  end
-
-  def manager?
-    role == "manager"
+  def can_manage_sidekiq?
+    Folio::ConsoleAbility.new(self).can?(:manage, :sidekiq)
   end
 
   def full_name
@@ -68,16 +64,25 @@ class Folio::Account < Folio::ApplicationRecord
     end
   end
 
+  def account_roles_for_select
+    if role_index = self.class.roles.find_index(role)
+      self.class.roles[role_index..-1]
+    else
+      []
+    end
+  end
+
   def self.clears_page_cache_on_save?
     false
   end
 
   def self.roles
-    %w[superuser manager]
+    # keep the order by strength (strongest first)!
+    %w[superuser administrator manager]
   end
 
-  def self.roles_for_select
-    roles.map do |role|
+  def self.roles_for_select(selectable_roles = nil)
+    (selectable_roles || roles).map do |role|
       [human_attribute_name("role/#{role}"), role]
     end
   end

@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-02-04
+### Changed
+- added sidekiq web to folio routes, hidden behind an `authenticate` lambda - remove it from application routes!
+
 ## 2021-12-14
 ### Changed
 - changed `Folio::DragonflyFormatValidation` to not use dragonfly `validates_property` as it tends to ping the image when not needed - make sure you assign mime_type attributes in `before_validation` instead of `before_save` from now on!

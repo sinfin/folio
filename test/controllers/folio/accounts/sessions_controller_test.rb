@@ -15,6 +15,14 @@ class Folio::Accounts::SessionsControllerTest < ActionDispatch::IntegrationTest
     @admin = create(:folio_admin_account, @params)
   end
 
+  test "sign_in redirect to request page" do
+    get folio.edit_console_site_path
+    assert_redirected_to new_account_session_path
+    follow_redirect!
+    post account_session_path, params: { account: @params }
+    assert_redirected_to folio.edit_console_site_path
+  end
+
   test "sign_in redirect to console root" do
     post account_session_path, params: { account: @params }
     assert_redirected_to folio.console_root_path
