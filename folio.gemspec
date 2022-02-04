@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cancancan', '~> 2.0'
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
-  s.add_dependency 'pagy'
+  s.add_dependency 'pagy', '~> 3.8'
   s.add_dependency 'responders'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'dropzonejs-rails'
