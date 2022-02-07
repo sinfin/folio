@@ -111,7 +111,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def run_after_save_job!
-    Folio::Files::AfterSaveJob.perform_later(self)
+    Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
   end
 
   private
