@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/sinfin/dragonfly_libvips.git
-  revision: d45633d2ca1795d5639ba23dcfe191c0a96c02c3
+  revision: e12a27c627cfb72c3bd65a5b8cc60ff4b600b1b3
   branch: more_geometry
   specs:
     dragonfly_libvips (2.4.2)
