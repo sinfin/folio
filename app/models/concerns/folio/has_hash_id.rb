@@ -17,6 +17,8 @@ module Folio::HasHashId
   end
 
   def set_hash_id
+    return read_attribute(:hash_id) if read_attribute(:hash_id)
+
     hash_id = nil
 
     loop do
