@@ -153,9 +153,13 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
     def image_file(image)
       if Rails.env.development? && ENV["DEV_S3_DRAGONFLY"] && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
-        image.development_safe_file(logger)
+        thumbnail = image.development_safe_file(logger)
       else
-        image.file
+        thumbnail = image.file
       end
+
+      thumbnail.name = image.file_name
+
+      thumbnail
     end
 end
