@@ -21,10 +21,6 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/download/:hash_id/*name', to: 'downloads#show',
-                                  as: :download,
-                                  constraints: { name: /.*/ }
-
   scope "/:locale", locale: /#{I18n.available_locales.join("|")}/ do
     resources :pages, only: [:show], path: "" do
       member { get :preview }

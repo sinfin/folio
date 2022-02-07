@@ -159,7 +159,7 @@ Folio::Engine.routes.draw do
   get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
   get "/folio/ui/atoms", to: "ui#atoms"
 
-  get "/download/:hash_id/*name", to: "downloads#show",
-                                  as: :download,
-                                  constraints: { name: /.*/ }
+  get "/download/:hash_id(/*name)", to: "downloads#show",
+                                    as: :download,
+                                    constraints: { name: /.*/ }
 end

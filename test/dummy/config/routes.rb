@@ -17,10 +17,6 @@ Rails.application.routes.draw do
   get "/lead_form", to: "home#lead_form"
   get "/gallery", to: "home#gallery"
 
-  get "/download/:hash_id/*name", to: "downloads#show",
-                                  as: :download,
-                                  constraints: { name: /.*/ }
-
   scope module: :dummy, as: :dummy do
     resource :search, only: %i[show] do
       get :autocomplete
