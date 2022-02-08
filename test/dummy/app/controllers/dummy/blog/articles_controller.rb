@@ -14,6 +14,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
     @pagy, @articles = pagy(articles, items: 10)
 
     @topics = Dummy::Blog::Topic.published
+                                .by_locale(I18n.locale)
                                 .with_published_articles
                                 .ordered
                                 .limit(20)

@@ -23,7 +23,6 @@ class Dummy::Blog::TopicsController < ApplicationController
   private
     def find_topic
       @topic = @klass.published_or_admin(account_signed_in?)
-                     .includes(cover_placement: :file)
                      .by_locale(I18n.locale)
                      .friendly.find(params[:id])
 

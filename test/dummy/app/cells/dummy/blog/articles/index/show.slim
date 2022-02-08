@@ -20,6 +20,6 @@
             @small_articles,
             small: true)
 
-- if active_pagy?
+- if options[:pagy] && options[:pagy].pages > 1
   .mt-4
     == cell('dummy/ui/pagy', options[:pagy])

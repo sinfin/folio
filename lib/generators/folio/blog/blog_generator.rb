@@ -41,7 +41,9 @@ class Folio::BlogGenerator < Rails::Generators::Base
     inject_into_file "config/routes.rb", after: "scope module: :folio do\n    namespace :console do\n      namespace :#{application_namespace_path} do\n" do <<~'RUBY'
         namespace :blog do
           resources :articles, except: %i[show]
-          resources :topics, except: %i[show]
+          resources :topics, except: %i[show] do
+            post :set_positions, on: :collection
+          end
         end
 
     RUBY

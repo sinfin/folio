@@ -3,6 +3,7 @@
 class Dummy::Blog::Topic < ApplicationRecord
   include Folio::FriendlyId
   include Folio::HasAttachments
+  include Folio::Positionable
   include Folio::Publishable::Basic
 
   has_many :topic_article_links, -> { ordered },
@@ -40,7 +41,6 @@ class Dummy::Blog::Topic < ApplicationRecord
 
   scope :by_locale, -> (locale) { where(locale: locale) }
   scope :featured, -> { where(featured: true) }
-  scope :ordered, -> { order(title: :asc) }
   scope :by_atom_setting_locale, -> (locale) { by_locale(locale) }
 
   scope :with_published_articles, -> { joins(:published_articles).distinct }
