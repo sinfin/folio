@@ -51,13 +51,13 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         format = :jpg
         make_webp = true
 
-        if /png/.match?(image.try(:file_mime_type))
+        if image.try(:file_mime_type) == "image/png"
           if Rails.application.config.folio_dragonfly_keep_png
             format = :png
           else
             add_white_background = true
           end
-        elsif /pdf/.match?(image.try(:file_mime_type))
+        elsif image.try(:file_mime_type) == "application/pdf"
           # TODO frame
           add_white_background = true
         end
@@ -69,7 +69,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
           _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
 
           if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
-            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^")
+            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format: format)
           end
 
           if !x.nil? || !y.nil?
@@ -101,7 +101,14 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail
       end
 
-      thumbnail.name = image.file_name
+      case format.to_sym
+      when :jpg
+        thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".jpg")
+      when :png
+        thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".png")
+      else
+        thumbnail.name = image.file_name
+      end
 
       if opts = image.try(:thumbnail_store_options)
         if opts[:path]
@@ -114,6 +121,11 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         uid = thumbnail.store
         is_private = false
       end
+
+      # fix dragonfly content mime type after converting
+      # otherwise image_properties (width/height) break
+      # keep the string key!
+      thumbnail.content.add_meta("mime_type" => thumbnail.mime_type)
 
       base = {
         uid: uid,

@@ -246,6 +246,10 @@ module Folio::Thumbnails
     end
   end
 
+  def thumbnailable?
+    true
+  end
+
   private
     def reset_thumbnails
       fail_for_non_images
@@ -263,7 +267,7 @@ module Folio::Thumbnails
     end
 
     def fail_for_non_images
-      fail "You can only thumbnail images." unless has_attribute?("thumbnail_sizes")
+      fail "You can only thumbnail images." unless has_attribute?("thumbnail_sizes") && thumbnailable?
     end
 
     def file_mime_type_image?

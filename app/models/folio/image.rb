@@ -2,7 +2,6 @@
 
 class Folio::Image < Folio::File
   include Folio::DragonflyFormatValidation
-  include Folio::Thumbnails
   include Folio::Sitemap::Image
 
   validate_file_format
@@ -28,6 +27,10 @@ class Folio::Image < Folio::File
   def geo_location
     # Geographic location, e.g.: Limerick, Ireland
     metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
+  end
+
+  def thumbnailable?
+    true
   end
 
   def self.react_type

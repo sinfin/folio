@@ -5,6 +5,7 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::HasHashId
   include Folio::SanitizeFilename
   include Folio::Taggable
+  include Folio::Thumbnails
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -84,7 +85,7 @@ class Folio::File < Folio::ApplicationRecord
 
   def to_h
     {
-      thumb: is_a?(Folio::Image) ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
+      thumb: thumbnailable? ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
       file_size: file_size,
       file_name: file_name,
       type: type,
