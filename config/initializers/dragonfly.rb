@@ -89,7 +89,9 @@ Dragonfly.app.configure do
         reader = MultiExiftool::Reader.new
         reader.filenames = [content.file.path]
         reader.read.try(:first).try(:to_hash)
-      rescue MultiExiftool::Error
+      # FIXME: rm ArgumentError after MultiExiftool issue is fixed
+      # https://github.com/janfri/multi_exiftool/issues/14
+      rescue MultiExiftool::Error, ArgumentError
         {}
       end
     end
