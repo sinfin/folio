@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
+
 class Folio::DeviseGenerator < Rails::Generators::Base
+  include Folio::GeneratorBase
+
   desc "Sets devise up for application"
   source_root File.expand_path("templates", __dir__)
 
@@ -75,13 +79,4 @@ class Folio::DeviseGenerator < Rails::Generators::Base
       puts "Skipping css - no application.sass"
     end
   end
-
-  private
-    def application_namespace
-      @application_namespace ||= Rails.application.class.parent
-    end
-
-    def application_namespace_path
-      @application_namespace_path ||= application_namespace.to_s.underscore
-    end
 end
