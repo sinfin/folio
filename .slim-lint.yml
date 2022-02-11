@@ -12,6 +12,7 @@ exclude:
   - app/cells/folio/modal/_close.slim
   - app/cells/folio/ui/_typo.slim
   - app/cells/folio/ui/show.slim
+  - app/views/folio/console/accounts/_form.slim
   - app/views/folio/console/pages/index.slim
   - app/views/folio/console/partials/_translations.slim
   - app/views/folio/console/users/_form.slim

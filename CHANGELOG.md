@@ -1,20 +1,28 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2021-31-01
+## 2021-02-04
+### Added
+- added `Rails.application.config.folio_console_ability_lambda` for easier console ability tweaks
+
+## 2021-02-04
+### Changed
+- added sidekiq web to folio routes, hidden behind an `authenticate` lambda - remove it from application routes!
+
+## 2021-01-31
 ### Added
 - added `through` support for `folio_console_controller_for`
 
-## 2021-31-01
+## 2021-01-31
 ### Changed
 - changed the syntax of `FORM_LAYOUT` for atoms - use nested rows/columns hashes
 
-## 2021-20-01
+## 2021-01-20
 ### Changed
 - changed api files controllers to use direct s3 upload
 - added `file_mime_type` for `Folio::File`, whilst keeping `mime_type` column so that there's not a 500 during deployment - create a per-project migration removing it
 
-## 2021-11-01
+## 2021-01-11
 ### Changed
 - changed console flash javascript - upgrade all your JS code using flash (grep `window.FolioConsole.flash` and replace via the new methods defined in `app/assets/javascripts/folio/console/_flash.es6`)
 

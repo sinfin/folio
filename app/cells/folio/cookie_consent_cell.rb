@@ -21,6 +21,13 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
           en: "Maintains the results of user activity on the site, such as login or cart content.",
         }
       },
+      remember_user_token: {
+        expiration: [1, :years],
+        description: {
+          cs: "Udržuje příhlášení uživatele.",
+          en: "Keeps the user signed in.",
+        }
+      },
       s_for_log: {
         expiration: :end_of_session,
         description: {
@@ -88,6 +95,14 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
         description: {
           cs: "Používá se k rozlišení uživatelů.",
           en: "Used to distinguish users.",
+        }
+      },
+      NID: {
+        expiration: [6, :months],
+        domain: ".google.com",
+        description: {
+          cs: "Udržuje uživatelská nastavení.",
+          en: "Stores user preferences.",
         }
       },
     }
@@ -228,7 +243,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
 
     {
       col1: h[:name] || key.to_s,
-      col2: model,
+      col2: h[:domain].presence || model,
       col3: h[:expiration] == :end_of_session ? t(".expiration.end_of_session") : t(".expiration.#{h[:expiration][1]}", count: h[:expiration][0]),
       col4: h[:description][I18n.locale] || h[:description][:en],
       is_regex: h[:is_regex] == true,
@@ -238,7 +253,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
   def cookie_setting_for_hash(h)
     {
       col1: h[:name],
-      col2: model,
+      col2: h[:domain].presence || model,
       col3: h[:expiration] == :end_of_session ? t(".expiration.end_of_session") : t(".expiration.#{h[:expiration][1]}", count: h[:expiration][0]),
       col4: h[:description][I18n.locale] || h[:description][:en],
       is_regex: h[:is_regex] == true,

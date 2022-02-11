@@ -11,6 +11,7 @@ SimpleForm::Inputs::NumericInput.class_eval do
 
     if options[:numeral]
       input_html_classes << "f-c-string-input--numeral"
+      input_html_options[:autocomplete] = "off"
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

@@ -71,6 +71,7 @@ PATH
       sass-rails
       show_for
       sidekiq
+      sidekiq-cron
       simple_form
       sitemap_generator
       slim
@@ -261,6 +262,8 @@ GEM
     dropzonejs-rails (0.8.5)
       rails (> 3.1)
     erubi (1.10.0)
+    et-orbi (1.2.6)
+      tzinfo
     excon (0.90.0)
     execjs (2.8.1)
     factory_bot (6.2.0)
@@ -312,6 +315,9 @@ GEM
     formatador (0.3.0)
     friendly_id (5.4.2)
       activerecord (>= 4.0.0)
+    fugit (1.5.2)
+      et-orbi (~> 1.1, >= 1.1.8)
+      raabro (~> 1.4)
     gibbon (3.4.3)
       faraday (>= 1.0)
       multi_json (>= 1.11.0)
@@ -387,7 +393,7 @@ GEM
     mini_racer (0.4.0)
       libv8-node (~> 15.14.0.0)
     minitest (5.14.4)
-    multi_exiftool (0.16.0)
+    multi_exiftool (0.17.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
@@ -448,6 +454,7 @@ GEM
     public_suffix (4.0.6)
     puma (5.6.0)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.3)
     rack-mini-profiler (2.3.3)
@@ -551,6 +558,9 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
+    sidekiq-cron (1.2.0)
+      fugit (~> 1.1)
+      sidekiq (>= 4.2.1)
     simple_form (5.1.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)

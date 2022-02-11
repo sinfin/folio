@@ -8,8 +8,8 @@ class Folio::Accounts::SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(_resource)
-    new_account_session_path
-  rescue ActionController::UrlGenerationError
+    folio.new_account_session_path
+  rescue NoMethodError
     main_app.new_account_session_path
   end
 end

@@ -15,6 +15,9 @@ en:
         days:
           one: "%{count} day"
           other: "%{count} days"
+        months:
+          one: "%{count} month"
+          other: "%{count} months"
         years:
           one: "%{count} year"
           other: "%{count} years"

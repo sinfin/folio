@@ -3,7 +3,7 @@
     = f.input :email
 
   .col-sm
-    = f.input :role, collection: Folio::Account.roles_for_select, \
+    = f.input :role, collection: @klass.roles_for_select(current_account.account_roles_for_select),
                      include_blank: false
 
 .row

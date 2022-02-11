@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency "ancestry"
   s.add_dependency "mini_racer", "~> 0.4.0"
   s.add_dependency "sidekiq"
+  s.add_dependency "sidekiq-cron"
   s.add_dependency "slim"
   s.add_dependency "simple_form"
   s.add_dependency "country_select"

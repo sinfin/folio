@@ -162,4 +162,13 @@ Folio::Engine.routes.draw do
   get "/download/:hash_id(/*name)", to: "downloads#show",
                                     as: :download,
                                     constraints: { name: /.*/ }
+
+  get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
+
+  require "sidekiq/web"
+  require "sidekiq/cron/web"
+
+  authenticate :account, lambda { |account| account.can_manage_sidekiq? } do
+    mount Sidekiq::Web => "/sidekiq"
+  end
 end

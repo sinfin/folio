@@ -26,9 +26,4 @@ Rails.application.routes.draw do
       member { get :preview }
     end
   end
-
-  require "sidekiq/web"
-  authenticate :account do
-    mount Sidekiq::Web => "/sidekiq"
-  end
 end

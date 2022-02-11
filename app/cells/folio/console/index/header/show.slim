@@ -45,7 +45,7 @@
     ]
       = render(:_new_button_label)
 
-  - else
+  - elsif options[:new_button] != false
     - if options[:types] || options[:new_dropdown_links]
       .f-c-index-header__new-dropdown
         == cell('folio/console/dropdown', title: render(:_new_button_label),  \
