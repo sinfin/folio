@@ -14,10 +14,6 @@ require Folio::Engine.root.join("test/omniauth_helper")
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
-class ActiveSupport::TestCase
-  parallelize
-end
-
 class Cell::TestCase
   controller ApplicationController
   include FactoryBot::Syntax::Methods
