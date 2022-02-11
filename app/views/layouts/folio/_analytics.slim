@@ -1,0 +1,36 @@
+- if Rails.env.production? || ENV["FORCE_ENABLE_ANALYTICS"].present?
+  - if current_site.google_analytics_tracking_code.present?
+    script[
+      type=Folio::CookieConsentCell::DISABLED_SCRIPT_TYPE
+      data-cookiecategory=Folio::CookieConsentCell::ANALYTICS_CATEGORY
+    ]
+      |
+        // Google Analytics
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('set', 'anonymizeIp', true);
+        ga('require', 'displayfeatures');
+        ga('require', 'linkid', 'linkid.js');
+
+        ga('create', '#{current_site.google_analytics_tracking_code}', 'auto');
+
+        ga('send', 'pageview');
+
+  - if current_site.facebook_pixel_code.present?
+    script[
+      type=Folio::CookieConsentCell::DISABLED_SCRIPT_TYPE
+      data-cookiecategory=Folio::CookieConsentCell::ANALYTICS_CATEGORY
+    ]
+      |
+        // Facebook tracker
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','//connect.facebook.net/en_US/fbevents.js');
+        // Insert Your Facebook Pixel ID below.
+        fbq('init', '#{current_site.facebook_pixel_code}');
+        fbq('track', 'PageView');

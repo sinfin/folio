@@ -3,4 +3,22 @@ linters:
     enabled: false
 
 exclude:
-  - 'lib/generators/folio/console/scaffold/templates/*'
+  - app/cells/folio/console/publishable_inputs/show.slim
+  - app/cells/folio/devise/modal/_close.slim
+  - app/cells/folio/devise/omniauth/icon/show.slim
+  - app/cells/folio/devise/password_input/show.slim
+  - app/cells/folio/image/_fallback_svg.slim
+  - app/cells/folio/image/_sensitive_content.slim
+  - app/cells/folio/modal/_close.slim
+  - app/cells/folio/ui/_typo.slim
+  - app/cells/folio/ui/show.slim
+  - app/views/folio/console/documents/edit.slim
+  - app/views/folio/console/images/edit.slim
+  - app/views/folio/console/pages/index.slim
+  - app/views/folio/console/partials/_translations.slim
+  - app/views/folio/console/users/_form.slim
+  - app/views/layouts/folio/_analytics.slim
+  - app/views/layouts/folio/_cookieconsent.slim
+  - app/views/layouts/folio/console/_head.slim
+  - lib/generators/folio/console/scaffold/templates/*
+  - test/dummy/app/cells/dummy/ui/menu/show.slim
