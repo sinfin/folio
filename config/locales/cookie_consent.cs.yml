@@ -18,6 +18,10 @@ cs:
           one: "%{count} den"
           few: "%{count} dny"
           other: "%{count} dní"
+        months:
+          one: "%{count} měsíc"
+          few: "%{count} měsíce"
+          other: "%{count} měsíců"
         years:
           one: "%{count} rok"
           few: "%{count} roky"
