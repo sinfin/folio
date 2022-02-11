@@ -21,6 +21,13 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
           en: "Maintains the results of user activity on the site, such as login or cart content.",
         }
       },
+      remember_user_token: {
+        expiration: [1, :years],
+        description: {
+          cs: "Udržuje příhlášení uživatele.",
+          en: "Keeps the user signed in.",
+        }
+      },
       s_for_log: {
         expiration: :end_of_session,
         description: {
