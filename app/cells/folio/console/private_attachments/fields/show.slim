@@ -1,0 +1,16 @@
+.f-c-private-attachments-fields.nested-fields.folio-console--compact
+  .card class=(model.object.new_record? ? 'card--fresh' : nil)
+    .card-body
+      .row.align-items-center
+        .col.f-c-private-attachments-fields__dropzone-col
+          .f-c-private-attachments-fields__dropzone
+            span.folio-loader.f-c-private-attachments-fields__dropzone-loader
+
+        .col
+          = model.input :title,
+                        as: :string,
+                        hint: false,
+                        label: false,
+                        wrapper_html: { class: 'mb-0' }
+        .col-auto
+          == cell('folio/console/nested_model_controls', model, no_margin: true)

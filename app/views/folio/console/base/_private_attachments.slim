@@ -1,11 +1,14 @@
-fieldset.mt-4.mb-3 id="private_attachments"
-  h2.mt-0.mb-3 = f.object.class.human_attribute_name(:private_attachments)
+- key ||= :private_attachments
 
-  = f.simple_fields_for :private_attachments do |g|
-    = render partial: 'private_attachment_fields', locals: { f: g }
+fieldset.mt-4.mb-3 id="key"
+  h2.mt-0.mb-3 = f.object.class.human_attribute_name(key)
+
+  = f.simple_fields_for key do |g|
+    = render partial: 'private_attachment_fields',
+             locals: { f: g }
 
   .links
-    = link_to_add_association t('folio.console.actions.add'), \
-                              f, \
-                              :private_attachments, \
+    = link_to_add_association t('folio.console.actions.add'),
+                              f,
+                              key,
                               class: 'btn btn-success'

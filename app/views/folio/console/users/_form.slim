@@ -4,6 +4,8 @@
 
 .tab-content
   = tab :content
+    = render "private_attachments", f: f
+
     .row
       .col-lg-8
         = f.input :email
