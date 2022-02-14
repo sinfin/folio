@@ -6,10 +6,11 @@ class Folio::CreateFileFromS3Job < ApplicationJob
   queue_as :default
   sidekiq_options retry: false
 
-  def perform(s3_path:, type:, file_id: nil)
+  def perform(s3_path:, type:, existing_id: nil)
     return unless s3_path
     return unless type
-    return unless type.safe_constantize && type.safe_constantize < Folio::File
+    klass = type.safe_constantize
+    return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
 
     unless test_aware_s3_exists?(s3_path)
       # probably handled it already in another job
@@ -18,8 +19,8 @@ class Folio::CreateFileFromS3Job < ApplicationJob
 
     broadcast_start(s3_path: s3_path)
 
-    if file_id
-      file = type.constantize.find(file_id)
+    if existing_id
+      file = klass.find(existing_id)
       replacing_file = true
       if file.try(:thumbnail_sizes).is_a?(Hash)
         thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
@@ -27,7 +28,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
         thumbnail_keys_to_recreate = []
       end
     else
-      file = type.constantize.new
+      file = klass.new
       replacing_file = false
       thumbnail_keys_to_recreate = []
     end
@@ -66,9 +67,16 @@ class Folio::CreateFileFromS3Job < ApplicationJob
   end
 
   private
-    def serialized_file(folio_file)
-      Folio::Console::FileSerializer.new(folio_file)
-                                    .serializable_hash
+    def serializer_for(model)
+      name = model.class.base_class.name.gsub("Folio::", "")
+      serializer = "Folio::Console::#{name}Serializer".safe_constantize
+      serializer ||= "#{name}Serializer".safe_constantize
+      fail ArgumentError.new("Unknown serializer") if serializer.nil?
+      serializer
+    end
+
+    def serialized_file(model)
+      serializer_for(model).new(model).serializable_hash
     end
 
     def broadcast_start(s3_path:)

@@ -124,7 +124,7 @@ function * uploadNewFileInsteadPerform (action) {
       filesUrl: action.filesUrl,
       s3_path: result.s3_path,
       type: action.fileType,
-      fileId: action.file.id
+      existingId: action.file.id
     })
   } catch (e) {
     window.FolioConsole.Flash.alert(`${e.status}: ${e.statusText}`)

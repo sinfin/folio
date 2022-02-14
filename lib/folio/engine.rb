@@ -41,6 +41,11 @@ module Folio
     config.folio_use_og_image = true
     config.folio_aasm_mailer_config = {}
 
+    config.folio_direct_s3_upload_class_names = %w[
+      Folio::File
+      Folio::PrivateAttachment
+    ]
+
     config.folio_users = false
     config.folio_users_require_phone = false
     config.folio_users_confirmable = false

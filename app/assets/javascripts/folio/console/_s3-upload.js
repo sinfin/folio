@@ -1,12 +1,12 @@
 window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.S3Upload = {}
 
-window.FolioConsole.S3Upload.newUpload = ({ filesUrl, file }) => {
-  return window.FolioConsole.Api.apiPost(`${filesUrl}/s3_before`, { file_name: file.name })
+window.FolioConsole.S3Upload.newUpload = ({ file }) => {
+  return window.FolioConsole.Api.apiPost('/console/api/s3_signer/s3_before', { file_name: file.name })
 }
 
-window.FolioConsole.S3Upload.finishedUpload = ({ filesUrl, s3_path, type, fileId }) => {
-  return window.FolioConsole.Api.apiPost(`${filesUrl}/s3_after`, { s3_path, type, file_id: fileId })
+window.FolioConsole.S3Upload.finishedUpload = ({ s3_path, type, existingId }) => {
+  return window.FolioConsole.Api.apiPost('/console/api/s3_signer/s3_after', { s3_path, type, existing_id: existingId })
 }
 
 window.FolioConsole.S3Upload.previousDropzoneId = 0
@@ -28,7 +28,6 @@ window.FolioConsole.S3Upload.consolePreviewTemplate = () => `
 window.FolioConsole.S3Upload.createConsoleDropzone = ({
   dropzoneOptions,
   element,
-  filesUrl,
   fileType,
   onStart,
   onProgress,
@@ -36,7 +35,6 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   onFailure,
   onThumbnail,
 }) => {
-  if (!filesUrl) throw "Missing filesUrl"
   if (!fileType) throw "Missing fileType"
   if (!element) throw "Missing element"
 
@@ -66,7 +64,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
     accept: function (file, done) {
       const dropzone = this
 
-      window.FolioConsole.S3Upload.newUpload({ filesUrl, file })
+      window.FolioConsole.S3Upload.newUpload({ file })
         .then((result) => {
           file.file_name = result.file_name
           file.s3_path = result.s3_path
@@ -90,7 +88,6 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
 
     success: function (file) {
       window.FolioConsole.S3Upload.finishedUpload({
-        filesUrl,
         s3_path: file.s3_path,
         type: fileType
       })
