@@ -20,8 +20,21 @@ $(document).on 'click', '.f-c-nested-model-controls__position-button', ->
       .val(i + 1)
       .trigger('change')
 
-$(document).on 'click', '.f-c-nested-model-controls__destroy-button', ->
+$(document).on 'click', '.f-c-nested-model-controls__destroy-button', (e) ->
   $button = $(this)
-  return $button.blur() unless window.confirm(window.FolioConsole.translations.removePrompt)
-  $button.closest('.nested-fields').prop('hidden', true)
-  $button.siblings('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')
+
+  if window.confirm(window.FolioConsole.translations.removePrompt)
+    $nestedFields = $button.closest('.nested-fields')
+    $nestedFieldsParent = $nestedFields.parent()
+
+    if $button.data('remove')
+      $nestedFieldsParent.trigger('cocoon:before-remove', [$nestedFields, e])
+      $nestedFields.remove()
+      $nestedFieldsParent.trigger('cocoon:after-remove', [$nestedFields, e])
+    else
+      $nestedFields.prop('hidden', true)
+      $button.siblings('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')
+  else
+    e.preventDefault()
+    e.stopPropagation()
+    $button.blur()
