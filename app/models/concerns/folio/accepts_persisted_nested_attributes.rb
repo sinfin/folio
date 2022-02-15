@@ -5,13 +5,15 @@ module Folio::AcceptsPersistedNestedAttributes
 
   class_methods do
     def accepts_persisted_nested_attributes_for
-      %i[]
+      %w[]
     end
   end
 
   def assign_nested_attributes_for_collection_association(association_name, attributes_collection)
-    if self.class.accepts_persisted_nested_attributes_for.include?(association_name)
-      reflection = self.class.reflections[association_name.to_s]
+    association_name_s = association_name.to_s
+
+    if self.class.accepts_persisted_nested_attributes_for.map(&:to_s).include?(association_name_s)
+      reflection = self.class.reflections[association_name_s]
       reflection_klass = reflection.options[:class_name].constantize
 
       attributes_collection.each do |key, attrs|

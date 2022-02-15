@@ -6,7 +6,17 @@ module Folio::HasPrivateAttachments
 
   class_methods do
     def accepts_persisted_nested_attributes_for
-      %i[private_attachments]
+      ary = []
+
+      reflections.each do |name, reflection|
+        if reflection.options[:as] == :attachmentable
+          if reflection.options[:class_name] && reflection.options[:class_name].constantize <= Folio::PrivateAttachment
+            ary << name
+          end
+        end
+      end
+
+      ary
     end
   end
 
