@@ -15,6 +15,7 @@ div[
       = link_to_add_association t('folio.console.actions.add'),
                                 f,
                                 key,
+                                partial: "private_attachment_fields",
                                 class: "btn btn-success #{Folio::Console::PrivateAttachments::FieldsCell::DROPZONE_CLASS_NAME}__add"
 
     div[

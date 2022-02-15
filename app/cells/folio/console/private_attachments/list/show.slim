@@ -4,7 +4,7 @@
       - model.each do |pa|
         li.f-c-private-attachments-list__li.my-2
           a.f-c-private-attachments-list__a[
-            href=download_url(pa)
+            href=pa.file.remote_url(expires: 1.hour.from_now)
             target="_blank"
             class="f-c-with-icon"
           ]
