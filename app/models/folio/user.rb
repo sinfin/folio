@@ -5,7 +5,6 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscription
   include Folio::Devise::DeliverLater
-  include Folio::HasPrivateAttachments
 
   has_sanitized_fields :email, :first_name, :last_name, :nickname
 

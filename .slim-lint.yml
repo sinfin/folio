@@ -3,6 +3,7 @@ linters:
     enabled: false
 
 exclude:
+  - app/cells/folio/console/private_attachments/fields/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/devise/modal/_close.slim
   - app/cells/folio/devise/omniauth/icon/show.slim
@@ -13,6 +14,7 @@ exclude:
   - app/cells/folio/ui/_typo.slim
   - app/cells/folio/ui/show.slim
   - app/views/folio/console/accounts/_form.slim
+  - app/views/folio/console/base/_private_attachments.slim
   - app/views/folio/console/pages/index.slim
   - app/views/folio/console/partials/_translations.slim
   - app/views/folio/console/users/_form.slim

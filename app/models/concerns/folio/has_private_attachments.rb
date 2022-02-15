@@ -2,6 +2,13 @@
 
 module Folio::HasPrivateAttachments
   extend ActiveSupport::Concern
+  include Folio::AcceptsPersistedNestedAttributes
+
+  class_methods do
+    def accepts_persisted_nested_attributes_for
+      %i[private_attachments]
+    end
+  end
 
   included do
     has_many :private_attachments, -> { ordered },

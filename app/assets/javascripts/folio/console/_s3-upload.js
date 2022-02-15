@@ -12,16 +12,12 @@ window.FolioConsole.S3Upload.finishedUpload = ({ s3_path, type, existingId }) =>
 window.FolioConsole.S3Upload.previousDropzoneId = 0
 
 window.FolioConsole.S3Upload.consolePreviewTemplate = () => `
-  <div class="dz-preview dz-file-preview">
-    <div class="dz-details">
-      <div class="dz-filename"><span data-dz-name></span></div>
-      <div class="dz-size" data-dz-size></div>
-      <img data-dz-thumbnail />
+  <div class="f-c-r-dropzone__preview">
+    <img data-dz-thumbnail class="f-c-r-dropzone__preview-thumbnail" />
+    <div class="f-c-r-dropzone__preview-progress">
+      <span class="f-c-r-dropzone__preview-progress-inner" data-dz-uploadprogress></span>
+      <span class="f-c-r-dropzone__preview-progress-text"></span>
     </div>
-    <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-    <div class="dz-success-mark"><span>✔</span></div>
-    <div class="dz-error-mark"><span>✘</span></div>
-    <div class="dz-error-message"><span data-dz-errormessage></span></div>
   </div>
 `
 
@@ -39,15 +35,14 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   if (!element) throw "Missing element"
 
   const dropzoneId = window.FolioConsole.S3Upload.previousDropzoneId += 1
-  const uniqueDropzoneClassName = `f-c-r-dropzone--${dropzoneId}`
 
   const options = {
     url: "#",
     method: 'PUT',
     paramName: 'file',
-    previewsContainer: `.${uniqueDropzoneClassName} .f-c-r-dropzone__previews`,
     previewTemplate: window.FolioConsole.S3Upload.consolePreviewTemplate(),
-    clickable: `.${uniqueDropzoneClassName} .f-c-r-dropzone__trigger`,
+    previewsContainer: null,
+    clickable: true,
     thumbnailMethod: 'contain',
     thumbnailWidth: 150,
     thumbnailHeight: 150,
@@ -95,6 +90,11 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
 
     error: function (file, message) {
       window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+
+      const dropzone = this
+
+      setTimeout(() => { dropzone.removeFile(file) }, 0)
+
       if (onFailure) onFailure(file.s3_path)
     },
 
@@ -110,12 +110,12 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
       if (file.previewElement) {
         file
           .previewElement
-          .querySelector('.f-c-r-file-upload-progress__slider')
+          .querySelector('.f-c-r-file-upload-progress__slider, .f-c-r-dropzone__preview-progress-inner')
           .style['width'] = `${rounded}%`
 
         file
           .previewElement
-          .querySelector('.f-c-r-file-upload-progress__inner')
+          .querySelector('.f-c-r-file-upload-progress__inner, .f-c-r-dropzone__preview-progress-text')
           .innerText = rounded === 100 ? window.FolioConsole.translations.finalizing : `${rounded}%`
       }
     },
@@ -132,7 +132,6 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
     ...(dropzoneOptions || {}),
   }
 
-  element.classList.add(uniqueDropzoneClassName)
   const dropzone = new Dropzone(element, options)
   dropzone.dropzoneId = dropzoneId
 

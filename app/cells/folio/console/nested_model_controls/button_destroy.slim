@@ -9,6 +9,9 @@
                    class: 'f-c-nested-model-controls__destroy-input'
 
 - else
-  = link_to_remove_association(destroy_label, \
-                               f, \
-                               class: destroy_button_class_name)
+  button[
+    type="button"
+    class=destroy_button_class_name
+    data-remove="1"
+  ]
+    = destroy_label

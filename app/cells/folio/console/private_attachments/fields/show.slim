@@ -1,16 +1,34 @@
 .f-c-private-attachments-fields.nested-fields.folio-console--compact
-  .card class=(model.object.new_record? ? 'card--fresh' : nil)
-    .card-body
-      .row.align-items-center
-        .col.f-c-private-attachments-fields__dropzone-col
-          .f-c-private-attachments-fields__dropzone
-            span.folio-loader.f-c-private-attachments-fields__dropzone-loader
+  = model.hidden_field :id,
+                       class: 'f-c-private-attachments-fields__id-input'
+
+  .card.f-c-private-attachments-fields__card
+    .card-body.f-c-private-attachments-fields__card-body
+      .row.align-items-center.f-c-private-attachments-fields__row
+        .col.f-c-private-attachments-fields__file-col
+          - if model.object.new_record?
+            span.f-c-private-attachments-fields__file-loader[
+              class="folio-loader"
+              class="folio-loader--small"
+              class="folio-loader--transparent"
+            ]
+          - else
+            a[
+              href=model.object.file.remote_url(expires: 1.hour.from_now)
+              target="_blank"
+              class="fa fa-file"
+              class="f-c-private-attachments-fields__file-ico"
+            ]
 
         .col
           = model.input :title,
                         as: :string,
                         hint: false,
                         label: false,
-                        wrapper_html: { class: 'mb-0' }
+                        input_html: { class: "f-c-private-attachments-fields__title-input" },
+                        wrapper_html: { class: "mb-0" }
         .col-auto
           == cell('folio/console/nested_model_controls', model, no_margin: true)
+
+      - if model.object.new_record?
+        .f-c-private-attachments-fields__dropzone-progress-bar
