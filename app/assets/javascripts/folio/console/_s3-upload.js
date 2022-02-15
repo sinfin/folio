@@ -136,7 +136,9 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   dropzone.dropzoneId = dropzoneId
 
   window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzoneId}`] = (msg) => {
-    if (!msg || msg.type !== 'Folio::CreateFileFromS3Job') return
+    if (!msg) return
+    if (msg.type !== 'Folio::CreateFileFromS3Job') return
+    if (msg.data.file_type !== fileType) return
 
     switch (msg.data.type) {
       case 'start':
