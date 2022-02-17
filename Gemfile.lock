@@ -28,7 +28,7 @@ PATH
       mailchimp-api
       mini_magick
       nokogiri
-      pagy
+      pagy (~> 3)
       pg (~> 1.2.3)
       pg_search
       rails (~> 5.2.1)
