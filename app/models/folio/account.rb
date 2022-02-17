@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Account < Folio::ApplicationRecord
+  include Folio::Devise::DeliverLater
+
   devise :database_authenticatable,
          :recoverable,
          :rememberable,
