@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cancancan', '~> 2.0'
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
-  s.add_dependency 'pagy'
+  s.add_dependency 'pagy', '3.5.1'
   s.add_dependency 'responders'
   s.add_dependency 'active_model_serializers', '~> 0.9.6'
   s.add_dependency 'font-awesome-rails'
