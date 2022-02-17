@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'rails', '~> 5.2.1'
-  s.add_dependency 'pg', '~> 0.21.0'
+  s.add_dependency 'pg', '~> 1.2.3'
   s.add_dependency 'pg_search'
   s.add_dependency 'friendly_id', '~> 5.2.4'
   s.add_dependency 'ancestry'
@@ -46,14 +46,14 @@ Gem::Specification.new do |s|
   s.add_dependency 'invisible_captcha'
   s.add_dependency 'countries'
   s.add_dependency 'acts-as-taggable-on', '~> 6.0'
-  s.add_dependency 'breadcrumbs_on_rails'
+  s.add_dependency 'breadcrumbs_on_rails', '~> 3'
   s.add_dependency 'cells'
-  s.add_dependency 'cells-rails'
-  s.add_dependency 'cells-slim'
+  s.add_dependency 'cells-rails', '0.0.9'
+  s.add_dependency 'cells-slim', '0.0.6'
   s.add_dependency 'ahoy_matey', '~> 2'
   s.add_dependency 'rails-i18n'
   s.add_dependency 'state_machines-activerecord'
-  s.add_dependency 'actionpack-page_caching'
+  s.add_dependency 'actionpack-page_caching', '1.1.1'
   s.add_dependency 'recaptcha', '4.13.1'
   s.add_dependency 'nokogiri'
 
