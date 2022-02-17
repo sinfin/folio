@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pg', '~> 1.2.3'
   s.add_dependency 'pg_search'
   s.add_dependency 'friendly_id', '~> 5.2.4'
-  s.add_dependency 'ancestry'
+  s.add_dependency 'ancestry', '3.0.7'
   s.add_dependency 'carrierwave'
   s.add_dependency 'mini_magick'
   s.add_dependency 'sidekiq'
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cancancan', '~> 2.0'
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
-  s.add_dependency 'pagy'
+  s.add_dependency 'pagy', '3.7.3'
   s.add_dependency 'responders'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'dropzonejs-rails'
@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'material_icons'
   s.add_dependency 'discard'
 
-  s.add_dependency 'dragonfly'
+  s.add_dependency 'dragonfly', '1.2.0'
   s.add_dependency 'dragonfly-s3_data_store'
   s.add_dependency 'mini_exiftool'
 

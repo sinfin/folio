@@ -21,7 +21,7 @@ PATH
       aasm
       acts-as-taggable-on (~> 6.0)
       ahoy_matey (~> 2)
-      ancestry
+      ancestry (= 3.0.7)
       audited (~> 4.7)
       breadcrumbs_on_rails
       cancancan (~> 2.0)
@@ -38,7 +38,7 @@ PATH
       devise_invitable
       discard
       dotenv-rails
-      dragonfly
+      dragonfly (= 1.2.0)
       dragonfly-s3_data_store
       dropzonejs-rails
       fast_jsonapi
@@ -50,7 +50,7 @@ PATH
       mini_exiftool
       mini_magick
       nokogiri
-      pagy
+      pagy (= 3.7.3)
       pg (~> 1.2.3)
       pg_search
       premailer-rails
@@ -353,7 +353,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
-    pagy (3.7.2)
+    pagy (3.7.3)
     parallel (1.19.1)
     parser (2.7.0.2)
       ast (~> 2.4.0)
