@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   s.add_dependency 'rails', '~> 5.2.1'
-  s.add_dependency 'pg', '~> 0.21.0'
+  s.add_dependency 'pg', '~> 1.2.3'
   s.add_dependency 'pg_search'
   s.add_dependency 'friendly_id', '~> 5.2.4'
   s.add_dependency 'ancestry'
