@@ -1,22 +1,20 @@
-default: &default
+development:
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 50
-
-
-development:
-  <<: *default
   database: folio_development
 
 test:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: 50
   database: folio_test
   pool: 2
 
 staging:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: 50
   database: folio_staging
   pool: 4
 
