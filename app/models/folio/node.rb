@@ -2,7 +2,7 @@
 
 class Folio::Node < Folio::ApplicationRecord
   extend FriendlyId
-  include PgSearch
+  include PgSearch::Model
   include Folio::Taggable
   include Folio::HasAtoms
   include Folio::HasAttachments

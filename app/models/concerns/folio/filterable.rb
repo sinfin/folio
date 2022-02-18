@@ -8,7 +8,7 @@
 #
 module Folio::Filterable
   extend ActiveSupport::Concern
-  include PgSearch
+  include PgSearch::Model
 
   module ClassMethods
     # Call the class methods with the same name as the keys in <tt>filtering_params</tt>
