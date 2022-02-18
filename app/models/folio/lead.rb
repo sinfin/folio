@@ -2,7 +2,7 @@
 
 class Folio::Lead < Folio::ApplicationRecord
   include AASM
-  include PgSearch
+  include PgSearch::Model
 
   attr_accessor :verified_captcha
 

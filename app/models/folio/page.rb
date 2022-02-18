@@ -3,7 +3,7 @@
 class Folio::Page < Folio::ApplicationRecord
   extend FriendlyId
   extend Folio::InheritenceBaseNaming
-  include PgSearch
+  include PgSearch::Model
   include Folio::Taggable
   include Folio::HasAttachments
   include Folio::ReferencedFromMenuItems
