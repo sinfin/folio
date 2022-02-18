@@ -15,6 +15,8 @@ gem 'mini_racer', platforms: :ruby
 gem 'premailer', github: 'sinfin/premailer'
 gem 'premailer-rails'
 
+gem 'pg', '~> 1'
+
 gem 'actionpack-page_caching', github: 'sinfin/actionpack-page_caching'
 
 group :test do
