@@ -7,6 +7,7 @@ import arrayMove from 'utils/arrayMove'
 
 import { combineAtoms } from 'ducks/utils/atoms'
 import settingsToHash from 'utils/settingsToHash'
+import atomsDefaultDataFromStructure from 'utils/atomsDefaultDataFromStructure'
 
 // Constants
 
@@ -427,7 +428,7 @@ function atomsReducer (state = initialState, action) {
               record: {
                 id: null,
                 type: action.atomType,
-                data: {},
+                data: atomsDefaultDataFromStructure(state.structures[action.atomType].structure),
                 lodashId: uniqueId('atom_'),
                 meta: state.structures[action.atomType],
                 associations: {}
@@ -741,7 +742,7 @@ function atomsReducer (state = initialState, action) {
               record: {
                 id: null,
                 type: action.atomType,
-                data: {},
+                data: atomsDefaultDataFromStructure(state.structures[action.atomType].structure),
                 lodashId: uniqueId('atom_'),
                 meta: state.structures[action.atomType],
                 associations: {}

@@ -207,6 +207,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     super - [inheritance_column]
   end
 
+  def self.default_atom_values
+    # { STRUCTURE_KEY => value }
+    # i.e. { content: "<p>hello</p>" }
+    {}
+  end
+
   private
     def klass
       # as type can be changed

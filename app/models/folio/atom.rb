@@ -16,6 +16,7 @@ module Folio::Atom
           hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil).try(:html_safe),
           type: value,
           character_counter: value == :text,
+          default_values: klass.default_atom_values[key],
         }
 
         if value.is_a?(Array)
