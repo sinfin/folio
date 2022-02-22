@@ -100,7 +100,7 @@ module Folio
           if ActiveRecord::Base.connection.exec_query("SELECT column_name FROM information_schema.columns WHERE table_name = 'folio_private_attachments' AND column_name = 'mime_type';").rows.size > 0
             deprecations << "Column mime_type for folio_private_attachments table is deprecated. Remove it in a custom migration."
           end
-        rescue ActiveRecord::NoDatabaseError
+        rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
         end
 
         if deprecations.present?
