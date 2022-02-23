@@ -13,6 +13,8 @@ class Folio::Account < Folio::ApplicationRecord
   validate :validate_role
   validates :first_name, :last_name, presence: true
 
+  attribute :skip_password_validation, :boolean, default: false
+
   pg_search_scope :by_query,
                   against: %i[first_name last_name email],
                   ignoring: :accents,
@@ -91,6 +93,14 @@ class Folio::Account < Folio::ApplicationRecord
 
   def self.human_role_name(role)
     human_attribute_name("role/#{role}")
+  end
+
+  def password_required?
+    if skip_password_validation?
+      false
+    else
+      !persisted? || !password.nil? || !password_confirmation.nil?
+    end
   end
 
   private
