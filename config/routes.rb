@@ -56,7 +56,7 @@ Folio::Engine.routes.draw do
     end
     resources :newsletter_subscriptions, only: %i[index destroy]
 
-    resources :accounts do
+    resources :accounts, except: %i[show] do
       member { post :invite_and_copy }
     end
 

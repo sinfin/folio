@@ -381,7 +381,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
       valid_routes_parent = nil
 
       [ Folio::Engine, main_app ].each do |routes_parent|
-        if routes_parent.routes.recognize_path(url, method: :get)
+        recognized = routes_parent.routes.recognize_path(url, method: :get)
+
+        if recognized && recognized[:controller].include?("/console/")
           valid_routes_parent = routes_parent
           break
         end
