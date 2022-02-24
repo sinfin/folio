@@ -56,6 +56,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         if image.try(:file_mime_type) == "image/png"
           if Rails.application.config.folio_dragonfly_keep_png
             format = :png
+            add_white_background = false
           else
             add_white_background = true
           end
@@ -95,8 +96,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
           end
         end
 
+        if add_white_background
+          format = :jpg
+          thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
+        end
+
         thumbnail = thumbnail.thumb(geometry, format: format)
-        thumbnail = thumbnail.add_white_background if add_white_background
         thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
         thumbnail = thumbnail.jpegoptim if format == :jpg
 

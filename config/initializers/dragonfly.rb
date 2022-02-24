@@ -70,11 +70,6 @@ Dragonfly.app.configure do
     end
   end
 
-  processor :add_white_background do |content, *args|
-    # TODO
-    # content.process! :convert, "-background white -alpha remove"
-  end
-
   processor :convert_to_webp do |content, *args|
     content.shell_update ext: "webp" do |old_path, new_path|
       "cwebp -q 85 #{old_path} -o #{new_path}"
