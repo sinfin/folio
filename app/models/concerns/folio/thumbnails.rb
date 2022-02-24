@@ -159,7 +159,14 @@ module Folio::Thumbnails
   def animated_gif?
     return false unless gif?
     return false unless self.respond_to?(:additional_data)
-    additional_data["animated"].presence || false
+
+    if additional_data.present?
+      additional_data["animated"].present?
+    else
+      Folio::Files::SetAdditionalDataJob.perform_now(self)
+      reload
+      additional_data.present? && additional_data["animated"].present?
+    end
   end
 
   def largest_thumb_key

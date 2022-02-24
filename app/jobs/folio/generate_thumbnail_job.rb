@@ -43,13 +43,15 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   private
     def make_thumb(image, raw_size, quality, x: nil, y: nil)
       size = raw_size.ends_with?("#") ? "#{raw_size}c" : raw_size
+      make_webp = true
 
       if image.animated_gif?
         thumbnail = image_file(image).animated_gif_resize(size)
+        make_webp = false
+        format = :gif
       else
         add_white_background = false
         format = :jpg
-        make_webp = true
 
         if image.try(:file_mime_type) == "image/png"
           if Rails.application.config.folio_dragonfly_keep_png
@@ -106,6 +108,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".jpg")
       when :png
         thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".png")
+      when :gif
+        thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".gif")
       else
         thumbnail.name = image.file_name
       end

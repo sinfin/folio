@@ -36,4 +36,15 @@ class Folio::ThumbnailsTest < ActiveSupport::TestCase
     assert image.thumbnail_sizes[THUMB_SIZE][:uid]
     assert_nil image.thumbnail_sizes[THUMB_SIZE][:started_generating_at]
   end
+
+  test "works for animated gif" do
+    image = create(:folio_image, file: Folio::Engine.root.join("test/fixtures/folio/animated.gif"))
+    assert image
+
+    perform_enqueued_jobs do
+      assert image.thumb(THUMB_SIZE, override_test_behaviour: true)
+    end
+
+    assert image.reload.thumbnail_sizes[THUMB_SIZE][:uid].ends_with?(".gif")
+  end
 end
