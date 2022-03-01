@@ -8,7 +8,6 @@ module Folio::DragonflyFormatValidation
       mime_types = []
 
       formats.each do |f|
-
         if f == "svg"
           mime_types << "image/svg+xml"
         elsif f == "pdf"
