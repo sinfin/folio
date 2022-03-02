@@ -229,24 +229,28 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    def addresses_strong_params
-      base = %i[id
-                _destroy
-                name
-                company_name
-                address_line_1
-                address_line_2
-                zip
-                city
-                country_code
-                state
-                identification_number
-                vat_identification_number
-                phone
-                email
-                type]
+    def base_address_attributes
+      %i[
+        id
+        _destroy
+        name
+        company_name
+        address_line_1
+        address_line_2
+        zip
+        city
+        country_code
+        state
+        identification_number
+        vat_identification_number
+        phone
+        email
+        type
+      ]
+    end
 
-      [{ primary_address_attributes: base, secondary_address_attributes: base }]
+    def addresses_strong_params
+      [{ primary_address_attributes: base_address_attributes, secondary_address_attributes: base_address_attributes }]
     end
 
     def sti_hack(params, nested_name, relation_name)

@@ -34,7 +34,7 @@
   - if options[:csv]
     a.btn.btn-secondary.f-c-index-header__btn href=csv_path
       i.fa.fa-download<>
-      ' CSV
+      = options[:csv].try(:[], :label) || "CSV"
 
   - if options[:react_new]
     button.btn.btn-success[

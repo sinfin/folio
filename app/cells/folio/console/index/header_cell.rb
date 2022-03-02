@@ -88,7 +88,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
       url_for([:console, model, h])
     else
-      options[:csv]
+      options[:csv].try(:[], :url) || options[:csv]
     end
   end
 

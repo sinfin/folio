@@ -12,8 +12,8 @@ end
 
 Rake::Task["db:schema:dump"].enhance do
   if Rake::Task.task_defined?("app:folio:pg:insert_folio_unaccent_into_schema")
-    Rake::Task["app:folio:pg:insert_folio_unaccent_into_schema"].invoke
+    Rake::Task["app:folio:pg:insert_folio_unaccent_into_schema"].execute
   else
-    Rake::Task["folio:pg:insert_folio_unaccent_into_schema"].invoke
+    Rake::Task["folio:pg:insert_folio_unaccent_into_schema"].execute
   end
 end
