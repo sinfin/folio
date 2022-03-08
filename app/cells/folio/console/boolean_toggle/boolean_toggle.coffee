@@ -1,6 +1,12 @@
 $(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
   e.preventDefault()
   $input = $(this)
+
+  if $input.data('confirmation')
+    unless window.confirm $input.data('confirmation')
+      $input.prop('checked', !$input.prop('checked'))
+      return
+
   $wrap = $input.closest('.f-c-boolean-toggle')
   return if $wrap.hasClass('f-c-boolean-toggle--loading')
   $wrap.addClass('f-c-boolean-toggle--loading')

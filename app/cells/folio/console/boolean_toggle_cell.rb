@@ -45,4 +45,19 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   def verbose_label(boolean)
     model.class.human_attribute_name("#{attribute}/#{boolean}")
   end
+
+  def input_data_confirmation
+    if options[:confirm].is_a?(String)
+      options[:confirm]
+    elsif options[:confirm]
+      t("folio.console.confirmation")
+    end
+  end
+
+  def input_data
+    {
+      url: url,
+      confirmation: input_data_confirmation,
+    }.compact
+  end
 end
