@@ -24,6 +24,7 @@ class Folio::Page < Folio::ApplicationRecord
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
   include Folio::Transportable::Model
+  include Folio::HasConsoleNotes
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited

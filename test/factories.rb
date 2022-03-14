@@ -139,6 +139,10 @@ FactoryBot.define do
     sequence(:email) { |i| "email-#{i}@email.email" }
   end
 
+  factory :folio_console_note, class: "Folio::Console::Note" do
+    content { "content" }
+  end
+
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
 
   factory :dummy_blog_article, class: "Dummy::Blog::Article" do
