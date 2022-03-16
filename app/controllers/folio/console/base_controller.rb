@@ -213,6 +213,17 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
+    def notes_strong_params
+      [
+        {
+          console_notes_attributes: %i[id
+                                       position
+                                       content
+                                       _destroy]
+        }
+      ]
+    end
+
     def base_address_attributes
       %i[
         id

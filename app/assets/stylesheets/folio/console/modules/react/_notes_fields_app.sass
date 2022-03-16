@@ -1,0 +1,31 @@
+.folio-react-wrap--notes-fields
+  min-height: 50px
+  position: relative
+
+  .f-c-simple-form-with-atoms & .folio-loader
+    background: #f2f2f2
+
+.f-c-r-notes-fields-app
+  &__header
+    display: flex
+
+  &__header-label
+    margin: 0 $grid-gutter-half 0 0
+
+  &__header-buttons
+    margin-left: auto
+
+  &-form
+    position: relative
+
+    &__textarea
+      padding-right: 100px
+      min-height: 35px
+      padding-top: $input-padding-y + 1
+      padding-bottom: $input-padding-y + 1
+
+    &__button
+      position: absolute
+      top: 50%
+      right: 5px
+      transform: translate(0, -50%)

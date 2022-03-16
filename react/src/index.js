@@ -10,19 +10,24 @@ import FilesApp from 'containers/FilesApp'
 import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import OrderedMultiselectApp from 'containers/OrderedMultiselectApp'
+import NotesFieldsApp from 'containers/NotesFieldsApp'
 import { setMode, setFileType, setFilesUrl, setReadOnly, setNoFileUsage, setFileReactType } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
 import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
 import { setOrderedMultiselectData } from 'ducks/orderedMultiselect'
+import { setNotesFieldsData } from 'ducks/notesFields'
 
 import reducers from './reducers'
 import sagas from './sagas'
 
 // import registerServiceWorker from './registerServiceWorker'
 
-window.folioConsoleInitReact = (domRoot) => {
+window.FolioConsole = window.FolioConsole || {}
+window.FolioConsole.React = {}
+
+window.FolioConsole.React.init = (domRoot) => {
   const sagaMiddleware = createSagaMiddleware()
   const store = createStore(reducers, {}, applyMiddleware(sagaMiddleware))
 
@@ -41,6 +46,18 @@ window.folioConsoleInitReact = (domRoot) => {
     ReactDOM.render((
       <Provider store={store}>
         <MenuFormApp />
+      </Provider>
+    ), domRoot)
+  } else if (domRoot.classList.contains('folio-react-wrap--notes-fields')) {
+    store.dispatch(setNotesFieldsData({
+      notes: domRoot.dataset.notes ? JSON.parse(domRoot.dataset.notes) : [],
+      label: domRoot.dataset.label,
+      paramBase: domRoot.dataset.paramBase
+    }))
+
+    ReactDOM.render((
+      <Provider store={store}>
+        <NotesFieldsApp />
       </Provider>
     ), domRoot)
   } else if (domRoot.classList.contains('folio-react-wrap--ordered-multiselect')) {
@@ -152,8 +169,12 @@ window.folioConsoleInitReact = (domRoot) => {
   }
 }
 
+window.FolioConsole.React.destroy = (domRoot) => {
+  ReactDOM.unmountComponentAtNode(domRoot)
+}
+
 const DOM_ROOTS = document.querySelectorAll('.folio-react-wrap')
 
 for (let i = 0; i < DOM_ROOTS.length; ++i) {
-  window.folioConsoleInitReact(DOM_ROOTS[i])
+  window.FolioConsole.React.init(DOM_ROOTS[i])
 }

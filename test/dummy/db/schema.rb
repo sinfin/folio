@@ -164,6 +164,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.bigint "created_by_id"
     t.bigint "closed_by_id"
     t.datetime "closed_at"
+    t.integer "position"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["closed_by_id"], name: "index_folio_console_notes_on_closed_by_id"

@@ -12,6 +12,8 @@ class CreateFolioConsoleNotes < ActiveRecord::Migration[6.1]
 
       t.datetime :closed_at
 
+      t.integer :position
+
       t.timestamps
     end
   end

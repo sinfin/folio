@@ -8,5 +8,14 @@ import { uploadsSagas } from 'ducks/uploads'
 import { filePlacementsSagas } from 'ducks/filePlacements'
 import { fileModalSagas } from 'ducks/fileModal'
 import { orderedMultiselectSagas } from 'ducks/orderedMultiselect'
+import { notesFieldsSagas } from 'ducks/notesFields'
 
-export default concat(filesSagas, uploadsSagas, displaySagas, atomsSagas, filtersSagas, filePlacementsSagas, fileModalSagas, orderedMultiselectSagas)
+export default concat(filesSagas,
+  uploadsSagas,
+  displaySagas,
+  atomsSagas,
+  filtersSagas,
+  filePlacementsSagas,
+  fileModalSagas,
+  orderedMultiselectSagas,
+  notesFieldsSagas)

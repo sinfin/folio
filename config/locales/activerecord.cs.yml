@@ -225,6 +225,10 @@ cs:
         few: Adresy - doplňková
         one: Adresa - doplňková
         other: Adres - doplňková
+      folio/console/note:
+        few: Poznámky (interní údaj)
+        one: Poznámka (interní údaj)
+        other: Poznámek (interní údaj)
     state_machines:
       folio/lead:
         state:

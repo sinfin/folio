@@ -213,4 +213,19 @@ module Folio::Console::ReactHelper
       )
     end
   end
+
+  def react_notes_fields(f)
+    class_name = "folio-react-wrap folio-react-wrap--notes-fields"
+
+    data = f.object.console_notes.map { |note| Folio::Console::NoteSerializer.new(note).serializable_hash[:data] }
+
+    param_base = "#{f.object.class.base_class.model_name.param_key}[console_notes_attributes]"
+
+    content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
+      "class" => class_name,
+      "data-notes" => data.to_json,
+      "data-param-base" => param_base,
+      "data-label" => Folio::Console::Note.model_name.human(count: 2),
+    )
+  end
 end

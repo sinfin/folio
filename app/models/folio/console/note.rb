@@ -3,6 +3,8 @@
 class Folio::Console::Note < Folio::ApplicationRecord
   include Folio::Positionable
 
+  has_sanitized_fields :content
+
   belongs_to :target, polymorphic: true
 
   validates :content,
@@ -20,6 +22,7 @@ end
 #  created_by_id :bigint(8)
 #  closed_by_id  :bigint(8)
 #  closed_at     :datetime
+#  position      :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
