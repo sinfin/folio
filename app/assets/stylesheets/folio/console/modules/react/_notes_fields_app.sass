@@ -29,3 +29,28 @@
       top: 50%
       right: 5px
       transform: translate(0, -50%)
+
+  &-table
+    margin-top: $spacer
+
+    &__row
+      display: flex
+      align-items: center
+      border-bottom: 1px solid $border-color
+      padding: 5px 0
+
+      .f-c-simple-form-with-atoms &
+        border-bottom-color: #CACBCB
+
+    &__content
+      flex: 1 1 auto
+      min-width: 0
+
+    &__checkbox,
+    &__action
+      flex: 0 0 auto
+
+    &__action
+      cursor: pointer
+      display: inline-block
+      padding: 3px 5px

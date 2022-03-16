@@ -2,14 +2,35 @@ import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
 class Form extends React.Component {
-  state = { content: '' }
+  state = { content: '', originalContent: '' }
+
+  constructor (props) {
+    super(props)
+    this.state = { content: props.content, originalContent: props.content }
+  }
 
   save = (e) => {
     this.props.save(this.state.content)
   }
 
   onChange = (e) => {
-    this.setState({ content: e.currentTarget.value })
+    this.setState({ ...this.state, content: e.currentTarget.value })
+  }
+
+  onKeyUp = (e) => {
+    if (e.key === 'Escape') {
+      this.close()
+    }
+  }
+
+  close = () => {
+    if (this.state.content !== this.state.originalContent) {
+      if (window.confirm(window.FolioConsole.translations.cancelChanges)) {
+        this.props.close()
+      }
+    } else {
+      this.props.close()
+    }
   }
 
   render () {
@@ -18,9 +39,11 @@ class Form extends React.Component {
         <TextareaAutosize
           defaultValue={this.state.content}
           onChange={this.onChange}
+          onKeyUp={this.onKeyUp}
           type='text'
           className='form-control f-c-r-notes-fields-app-form__textarea'
           rows={1}
+          placeholder={window.FolioConsole.translations.notesFieldsAdd}
           async
           autoFocus
         />

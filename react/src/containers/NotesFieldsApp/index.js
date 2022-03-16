@@ -6,7 +6,11 @@ import {
   initNewNote,
   updateShowChecked,
   removeAll,
-  saveForm
+  saveForm,
+  closeForm,
+  editNote,
+  removeNote,
+  updateNote
 } from 'ducks/notesFields'
 
 import Form from './Form'
@@ -29,7 +33,29 @@ class NotesFields extends React.Component {
   }
 
   saveForm = (content) => {
-    this.props.dispatch(saveForm(content))
+    if (content === '') {
+      this.props.dispatch(closeForm())
+    } else {
+      this.props.dispatch(saveForm(content))
+    }
+  }
+
+  closeForm = () => {
+    this.props.dispatch(closeForm())
+  }
+
+  editNote = (note) => {
+    this.props.dispatch(editNote(note))
+  }
+
+  removeNote = (note) => {
+    if (window.confirm(window.FolioConsole.translations.confirmation)) {
+      this.props.dispatch(removeNote(note))
+    }
+  }
+
+  toggleClosedAt = (note) => {
+    this.props.dispatch(updateNote(note, { closed_at: note.attributes.closed_at ? null : (new Date()) }))
   }
 
   render () {
@@ -53,11 +79,18 @@ class NotesFields extends React.Component {
           ) : null}
         </div>
 
-        <Table notes={notesFields.notes} />
+        <Table
+          notes={notesFields.notes}
+          currentlyEditting={!!notesFields.form}
+          currentlyEdittingUniqueId={notesFields.form ? notesFields.form.existingUniqueId : null}
+          editNote={this.editNote}
+          removeNote={this.removeNote}
+          toggleClosedAt={this.toggleClosedAt}
+        />
 
         <div className='mt-2'>
           {notesFields.form ? (
-            <Form content={notesFields.form.content} save={this.saveForm} />
+            <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
           ) : (
             <button type='button' className='btn btn-sm btn-secondary' onClick={this.initNewNote}>
               {window.FolioConsole.translations.notesFieldsAdd}

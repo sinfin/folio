@@ -219,6 +219,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
           console_notes_attributes: %i[id
                                        position
                                        content
+                                       closed_at
                                        _destroy]
         }
       ]

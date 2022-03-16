@@ -8,6 +8,10 @@ const UPDATE_SHOW_CHECKED = 'notesFields/UPDATE_SHOW_CHECKED'
 const REMOVE_ALL = 'notesFields/REMOVE_ALL'
 const INIT_NEW_NOTE = 'notesFields/INIT_NEW_NOTE'
 const SAVE_FORM = 'notesFields/SAVE_FORM'
+const CLOSE_FORM = 'notesFields/CLOSE_FORM'
+const EDIT_NOTE = 'notesFields/EDIT_NOTE'
+const REMOVE_NOTE = 'notesFields/REMOVE_NOTE'
+const UPDATE_NOTE = 'notesFields/UPDATE_NOTE'
 
 // Actions
 
@@ -31,6 +35,22 @@ export function saveForm (content) {
   return { type: SAVE_FORM, content }
 }
 
+export function closeForm (content) {
+  return { type: CLOSE_FORM }
+}
+
+export function editNote (note) {
+  return { type: EDIT_NOTE, note }
+}
+
+export function removeNote (note) {
+  return { type: REMOVE_NOTE, note }
+}
+
+export function updateNote (note, attributes) {
+  return { type: UPDATE_NOTE, note, attributes }
+}
+
 // Selectors
 
 export const notesFieldsSelector = (state) => state.notesFields
@@ -45,7 +65,12 @@ function * triggerDirtyForm (action) {
 }
 
 function * triggerDirtyFormSaga () {
-  yield takeLatest([REMOVE_ALL, SAVE_FORM], triggerDirtyForm)
+  yield takeLatest([
+    REMOVE_ALL,
+    SAVE_FORM,
+    REMOVE_NOTE,
+    UPDATE_NOTE
+  ], triggerDirtyForm)
 }
 
 export const notesFieldsSagas = [
@@ -77,7 +102,11 @@ function notesFieldsReducer (state = initialState, action) {
         } else {
           notes.push({
             ...note,
-            uniqueId: uniqueId()
+            uniqueId: uniqueId(),
+            attributes: {
+              ...note.attributes,
+              closed_at: note.attributes.closed_at ? (new Date(Date.parse(note.attributes.closed_at))) : null
+            }
           })
         }
       })
@@ -156,6 +185,62 @@ function notesFieldsReducer (state = initialState, action) {
             }
           ]
         }
+      }
+    }
+
+    case UPDATE_NOTE: {
+      return {
+        ...state,
+        form: null,
+        notes: state.notes.map((note) => {
+          if (note.uniqueId === action.note.uniqueId) {
+            return {
+              ...note,
+              attributes: {
+                ...note.attributes,
+                ...action.attributes
+              }
+            }
+          } else {
+            return note
+          }
+        })
+      }
+    }
+
+    case CLOSE_FORM: {
+      return {
+        ...state,
+        form: null
+      }
+    }
+
+    case EDIT_NOTE: {
+      return {
+        ...state,
+        form: {
+          existingUniqueId: action.note.uniqueId,
+          content: action.note.attributes.content
+        }
+      }
+    }
+
+    case REMOVE_NOTE: {
+      const removedIds = state.removedIds
+      const notes = []
+
+      state.notes.forEach((note) => {
+        if (note.uniqueId === action.note.uniqueId) {
+          if (note.id) removedIds.push(note.id)
+        } else {
+          notes.push(note)
+        }
+      })
+
+      return {
+        ...state,
+        notes,
+        removedIds
       }
     }
 
