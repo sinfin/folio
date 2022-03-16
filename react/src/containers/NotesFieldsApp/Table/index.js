@@ -1,12 +1,15 @@
 import React from 'react'
 
+import DueDate from './DueDate'
+
 export default function Table ({
   notes,
   editNote,
   removeNote,
   toggleClosedAt,
   currentlyEditting,
-  currentlyEdittingUniqueId
+  currentlyEdittingUniqueId,
+  changeDueDate
 }) {
   return (
     <div className='f-c-r-notes-fields-app-table'>
@@ -27,6 +30,12 @@ export default function Table ({
 
             {currentlyEditting ? null : (
               <React.Fragment>
+                <DueDate
+                  className='f-c-r-notes-fields-app-table__action mr-2'
+                  dueAt={note.attributes.due_at}
+                  onChange={(dueAt) => changeDueDate(note, dueAt)}
+                />
+
                 <span className='f-c-r-notes-fields-app-table__action fa fa--12 fa-edit mr-2' onClick={() => editNote(note)} />
 
                 <span className='f-c-r-notes-fields-app-table__action fa fa-times text-danger' onClick={() => removeNote(note)} />

@@ -107,7 +107,8 @@ function notesFieldsReducer (state = initialState, action) {
             uniqueId: uniqueId(),
             attributes: {
               ...note.attributes,
-              closed_at: note.attributes.closed_at ? (new Date(Date.parse(note.attributes.closed_at))) : null
+              closed_at: note.attributes.closed_at ? (new Date(Date.parse(note.attributes.closed_at))) : null,
+              due_at: note.attributes.due_at ? (new Date(Date.parse(note.attributes.due_at))) : null
             }
           })
         }
@@ -182,7 +183,6 @@ function notesFieldsReducer (state = initialState, action) {
               uniqueId: uniqueId(),
               attributes: {
                 content: action.content,
-                closed_at: null,
                 created_by_id: state.accountId
               }
             }

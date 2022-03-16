@@ -68,6 +68,10 @@ class NotesFields extends React.Component {
     this.props.dispatch(updateNote(note, attributes))
   }
 
+  changeDueDate = (note, dueAt) => {
+    this.props.dispatch(updateNote(note, { due_at: dueAt }))
+  }
+
   render () {
     const { notesFields } = this.props
 
@@ -96,6 +100,7 @@ class NotesFields extends React.Component {
           editNote={this.editNote}
           removeNote={this.removeNote}
           toggleClosedAt={this.toggleClosedAt}
+          changeDueDate={this.changeDueDate}
         />
 
         <div className='mt-2'>
