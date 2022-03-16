@@ -82,10 +82,12 @@ export const notesFieldsSagas = [
 const initialState = {
   notes: [],
   removedIds: [],
+  accountId: null,
   paramBase: null,
   label: null,
   showChecked: true,
-  form: null
+  form: null,
+  errorsHtml: null
 }
 
 // Reducer
@@ -180,7 +182,8 @@ function notesFieldsReducer (state = initialState, action) {
               uniqueId: uniqueId(),
               attributes: {
                 content: action.content,
-                closed_at: null
+                closed_at: null,
+                created_by_id: state.accountId
               }
             }
           ]

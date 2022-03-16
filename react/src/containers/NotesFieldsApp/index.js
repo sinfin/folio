@@ -55,7 +55,17 @@ class NotesFields extends React.Component {
   }
 
   toggleClosedAt = (note) => {
-    this.props.dispatch(updateNote(note, { closed_at: note.attributes.closed_at ? null : (new Date()) }))
+    const attributes = {}
+
+    if (note.attributes.closed_at) {
+      attributes.closed_at = null
+      attributes.closed_by_id = null
+    } else {
+      attributes.closed_at = new Date()
+      attributes.closed_by_id = this.props.notesFields.accountId
+    }
+
+    this.props.dispatch(updateNote(note, attributes))
   }
 
   render () {
@@ -97,6 +107,10 @@ class NotesFields extends React.Component {
             </button>
           )}
         </div>
+
+        {notesFields.errorsHtml ? (
+          <div dangerouslySetInnerHTML={{ __html: notesFields.errorsHtml }} />
+        ) : null}
 
         <Serialized notesFields={notesFields} />
       </div>

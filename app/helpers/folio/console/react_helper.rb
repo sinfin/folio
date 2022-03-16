@@ -224,8 +224,10 @@ module Folio::Console::ReactHelper
     content_tag(:div, content_tag(:span, nil, class: "folio-loader"),
       "class" => class_name,
       "data-notes" => data.to_json,
+      "data-account-id" => current_account.try(:id),
       "data-param-base" => param_base,
       "data-label" => Folio::Console::Note.model_name.human(count: 2),
+      "data-errors-html" => f.error(:console_notes).to_s.presence,
     )
   end
 end

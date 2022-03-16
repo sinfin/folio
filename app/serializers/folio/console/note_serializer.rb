@@ -6,6 +6,9 @@ class Folio::Console::NoteSerializer
   attributes :id,
              :content,
              :position,
+             :due_at,
              :closed_at,
+             :created_by_id,
+             :closed_by_id,
              :_destroy
 end

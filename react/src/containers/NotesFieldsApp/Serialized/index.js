@@ -9,7 +9,10 @@ function SerializedNote ({ note, index, paramBase }) {
       <input type='hidden' name={name('id')} value={note.id || ''} />
       <input type='hidden' name={name('position')} value={index + 1} />
       <input type='hidden' name={name('content')} value={note.attributes.content || ''} />
+      <input type='hidden' name={name('created_by_id')} value={note.attributes.created_by_id || ''} />
+      <input type='hidden' name={name('closed_by_id')} value={note.attributes.closed_by_id || ''} />
       <input type='hidden' name={name('closed_at')} value={note.attributes.closed_at ? note.attributes.closed_at.toISOString() : ''} />
+      <input type='hidden' name={name('due_at')} value={note.attributes.due_at ? note.attributes.due_at.toISOString() : ''} />
     </div>
   )
 }

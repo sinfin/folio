@@ -220,6 +220,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                        position
                                        content
                                        closed_at
+                                       due_at
+                                       closed_by_id
+                                       created_by_id
                                        _destroy]
         }
       ]

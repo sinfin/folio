@@ -13,6 +13,16 @@ class Folio::Account < Folio::ApplicationRecord
   validate :validate_role
   validates :first_name, :last_name, presence: true
 
+  has_many :created_console_notes, class_name: "Folio::Console::Note",
+                                   inverse_of: :created_by,
+                                   foreign_key: :created_by_id,
+                                   dependent: :nullify
+
+  has_many :closed_console_notes, class_name: "Folio::Console::Note",
+                                  inverse_of: :closed_by,
+                                  foreign_key: :closed_by_id,
+                                  dependent: :nullify
+
   pg_search_scope :by_query,
                   against: %i[first_name last_name email],
                   ignoring: :accents,

@@ -7,6 +7,14 @@ class Folio::Console::Note < Folio::ApplicationRecord
 
   belongs_to :target, polymorphic: true
 
+  belongs_to :created_by, class_name: "Folio::Account",
+                          inverse_of: :created_console_notes,
+                          required: false
+
+  belongs_to :closed_by, class_name: "Folio::Account",
+                         inverse_of: :closed_console_notes,
+                         required: false
+
   validates :content,
             presence: true
 end
@@ -22,6 +30,7 @@ end
 #  created_by_id :bigint(8)
 #  closed_by_id  :bigint(8)
 #  closed_at     :datetime
+#  due_at        :datetime
 #  position      :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null

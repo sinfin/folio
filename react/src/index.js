@@ -52,7 +52,9 @@ window.FolioConsole.React.init = (domRoot) => {
     store.dispatch(setNotesFieldsData({
       notes: domRoot.dataset.notes ? JSON.parse(domRoot.dataset.notes) : [],
       label: domRoot.dataset.label,
-      paramBase: domRoot.dataset.paramBase
+      paramBase: domRoot.dataset.paramBase,
+      accountId: domRoot.dataset.accountId,
+      errorsHtml: domRoot.dataset.errorsHtml
     }))
 
     ReactDOM.render((
