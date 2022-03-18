@@ -1,0 +1,44 @@
+.f-c-notes-catalogue-tooltip
+  &__note
+    display: flex
+    align-items: center
+    padding: 5px 10px
+    margin: 0
+    cursor: pointer
+
+    &:hover
+      background: $gray-100
+
+  &__note-input
+    margin-right: $spacer / 2
+
+  +mq-desktop-catalogue
+    position: relative
+    padding: $spacer
+    margin: - $spacer
+
+    &__tooltip
+      position: fixed
+      z-index: 999
+      transform: translate(-175px, 0)
+      width: 190px
+      padding-top: 5px
+      display: none
+
+    &:hover &__tooltip
+      display: block
+
+    &__tooltip-inner
+      background: $white
+      border: 1px solid #CED4DA
+      padding: 5px 0
+
+  +mq-mobile-catalogue
+    &__icon
+      display: none
+
+    &__note
+      margin: 0 (( -10px ))
+
+      & + &
+        margin-top: 5px

@@ -170,6 +170,7 @@ en:
     aasm_state: State
     article: Article
     button_label: Button label
+    console_notes: Notes (internal)
     content: Content
     count: Count
     cover_placement: Image

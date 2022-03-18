@@ -240,6 +240,7 @@ cs:
     aasm_state: Stav
     article: Článek
     button_label: Text tlačítka
+    console_notes: Poznámky (interní údaj)
     content: Obsah
     count: Počet
     cover: Obrázek
@@ -265,9 +266,9 @@ cs:
     position: Pořadí
     primary_address: Adresa - hlavní
     private_attachments: Soubory
-    published: Zveřejněno
-    published/true: Zveřejněno
     published/false: Nezveřejněno
+    published/true: Zveřejněno
+    published: Zveřejněno
     published_at: Zveřejněno k datu
     secondary_address: Adresa - doplňková
     sensitive_content: Obsahuje citlivý obsah

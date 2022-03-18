@@ -141,6 +141,7 @@ FactoryBot.define do
 
   factory :folio_console_note, class: "Folio::Console::Note" do
     content { "content" }
+    association(:target, factory: :folio_page)
   end
 
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu

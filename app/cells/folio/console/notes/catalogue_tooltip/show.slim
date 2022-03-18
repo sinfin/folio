@@ -1,0 +1,14 @@
+.f-c-notes-catalogue-tooltip
+  span.fas.fa-comment.text-danger.f-c-notes-catalogue-tooltip__icon
+
+  .f-c-notes-catalogue-tooltip__tooltip
+    .f-c-notes-catalogue-tooltip__tooltip-inner
+      - model.console_notes.each do |note|
+        label.f-c-notes-catalogue-tooltip__note
+          input.f-c-notes-catalogue-tooltip__note-input[
+            type="checkbox"
+            checked=note.closed_at?
+          ]
+
+          .f-c-notes-catalogue-tooltip__content.small
+            = cstypo note.content

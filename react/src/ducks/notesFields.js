@@ -183,7 +183,9 @@ function notesFieldsReducer (state = initialState, action) {
               uniqueId: uniqueId(),
               attributes: {
                 content: action.content,
-                created_by_id: state.accountId
+                created_by_id: state.accountId,
+                due_at: null,
+                closed_at: null
               }
             }
           ]
