@@ -2,6 +2,10 @@ window.FolioConsole = window.FolioConsole || {}
 
 window.FolioConsole.NotesCatalogueTooltip = {}
 
+window.FolioConsole.NotesCatalogueTooltip.onSuccess = ($tooltip, res) => {
+  // to be overriden in app
+}
+
 window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
   const $input = $(e.target)
   const $tooltip = $input.closest('.f-c-console-notes-catalogue-tooltip')
@@ -18,6 +22,8 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
     },
     success: (res) => {
       if (res && res.data) {
+        window.FolioConsole.NotesCatalogueTooltip.onSuccess($tooltip, res)
+
         if (res.data.catalogue_tooltip) {
           $tooltip
             .find('.f-c-console-notes-catalogue-tooltip__tooltip-inner')
