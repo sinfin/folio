@@ -33,7 +33,7 @@ class Folio::Console::PagesController < Folio::Console::BaseController
                     :parent_id,
                     *atoms_strong_params,
                     *file_placements_strong_params,
-                    *notes_strong_params)
+                    *console_notes_strong_params)
     end
 
     def folio_console_record_includes
