@@ -21,8 +21,9 @@ $(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
     data: data
     dataType: 'json'
     method: 'PATCH'
-    success: ->
+    success: (res) ->
       $wrap.removeClass('f-c-boolean-toggle--loading')
+      $input.trigger('folioConsoleBooleanToggleSuccess', res)
     error: (jXHR) ->
       $wrap.removeClass('f-c-boolean-toggle--loading')
       $input.prop('checked', !$input.prop('checked'))
