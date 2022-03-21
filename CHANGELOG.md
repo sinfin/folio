@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-03-21
+### Added
+- added `Folio::ConsoleNote` model and `Folio::HasConsoleNotes` concern
+
 ## 2021-02-04
 ### Added
 - added `Rails.application.config.folio_console_ability_lambda` for easier console ability tweaks
