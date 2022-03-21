@@ -55,6 +55,12 @@ class Form extends React.Component {
         >
           {window.FolioConsole.translations.save}
         </button>
+
+        <button
+          type='button'
+          className='fa fa-times text-danger f-c-r-notes-fields-app-form__close'
+          onClick={this.close}
+        />
       </div>
     )
   }

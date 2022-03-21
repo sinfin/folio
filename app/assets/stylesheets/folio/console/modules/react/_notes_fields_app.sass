@@ -27,8 +27,19 @@
     &__button
       position: absolute
       top: 50%
-      right: 5px
+      right: 36px
       transform: translate(0, -50%)
+
+    &__close
+      +unbutton
+      position: absolute
+      top: 0
+      right: 0
+      height: 100%
+      padding: 0 13px
+      display: flex
+      align-items: center
+      justify-content: center
 
   &-table
     margin-top: $spacer
