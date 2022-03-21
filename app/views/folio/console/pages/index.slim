@@ -9,8 +9,6 @@
     published_toggle
     date(:published_at)
 
-    console_notes
-
     if record.is_a?(Folio::Page) && record.class.try(:public?)
       locale = I18n.available_locales.size > 1 ? I18n.locale : nil
       actions({ preview: controller.main_app.page_path(record.to_preview_param, locale: locale) }, :edit, :destroy)
