@@ -35,6 +35,9 @@ en:
           invalid_event_detail: Such a change cannot be done
           invalid_record_title: Invalid record
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
+        console_notes:
+          toggle_closed_at:
+            all_closed: All notes were closed.
       atoms:
         form_header:
           settings: Settings

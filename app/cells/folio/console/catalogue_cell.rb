@@ -228,7 +228,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def console_notes
     attribute(:console_notes, compact: true, skip_desktop_header: true) do
-      cell("folio/console/notes/catalogue_tooltip", record)
+      cell("folio/console/console_notes/catalogue_tooltip", record)
     end
   end
 

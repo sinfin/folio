@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::NoteSerializer
+class Folio::Console::ConsoleNoteSerializer
   include FastJsonapi::ObjectSerializer
 
   attributes :id,

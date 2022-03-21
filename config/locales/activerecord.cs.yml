@@ -225,7 +225,7 @@ cs:
         few: Adresy - doplňková
         one: Adresa - doplňková
         other: Adres - doplňková
-      folio/console/note:
+      folio/console_note:
         few: Poznámky (interní údaj)
         one: Poznámka (interní údaj)
         other: Poznámek (interní údaj)

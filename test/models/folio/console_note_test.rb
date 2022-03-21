@@ -3,7 +3,7 @@
 require "test_helper"
 
 module Folio
-  class Console::NoteTest < ActiveSupport::TestCase
+  class ConsoleNoteTest < ActiveSupport::TestCase
     # test "the truth" do
     #   assert true
     # end

@@ -1,0 +1,18 @@
+.f-c-console-notes-catalogue-tooltip
+  span.fas.fa-comment.text-danger.f-c-console-notes-catalogue-tooltip__icon
+
+  .f-c-console-notes-catalogue-tooltip__tooltip
+    .f-c-console-notes-catalogue-tooltip__tooltip-inner
+      - model.console_notes.each do |note|
+        label.f-c-console-notes-catalogue-tooltip__note
+          input.f-c-console-notes-catalogue-tooltip__note-input[
+            type="checkbox"
+            data-id=note.id
+            data-url=url_for([:toggle_closed_at, :console, :api, note])
+            checked=note.closed_at?
+          ]
+
+          .f-c-console-notes-catalogue-tooltip__content.small
+            = cstypo note.content
+
+      span.folio-loader.folio-loader--small.f-c-console-notes-catalogue-tooltip__loader

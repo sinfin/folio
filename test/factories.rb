@@ -139,7 +139,7 @@ FactoryBot.define do
     sequence(:email) { |i| "email-#{i}@email.email" }
   end
 
-  factory :folio_console_note, class: "Folio::Console::Note" do
+  factory :folio_console_note, class: "Folio::ConsoleNote" do
     content { "content" }
     association(:target, factory: :folio_page)
   end

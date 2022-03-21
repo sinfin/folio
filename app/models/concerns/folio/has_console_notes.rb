@@ -5,7 +5,7 @@ module Folio::HasConsoleNotes
 
   included do
     has_many :console_notes, -> { ordered },
-                             class_name: "Folio::Console::Note",
+                             class_name: "Folio::ConsoleNote",
                              as: :target,
                              inverse_of: :target,
                              dependent: :destroy

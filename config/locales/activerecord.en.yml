@@ -156,7 +156,7 @@ en:
       tag:
         one: Tag
         other: Tags
-      folio/console/note:
+      folio/console_note:
         one: Note (internal)
         other: Notes (internal)
     state_machines:

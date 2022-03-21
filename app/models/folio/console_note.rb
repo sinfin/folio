@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Note < Folio::ApplicationRecord
+class Folio::ConsoleNote < Folio::ApplicationRecord
   include Folio::Positionable
 
   has_sanitized_fields :content

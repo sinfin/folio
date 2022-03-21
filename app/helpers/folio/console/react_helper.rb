@@ -217,7 +217,7 @@ module Folio::Console::ReactHelper
   def react_notes_fields(f)
     class_name = "folio-react-wrap folio-react-wrap--notes-fields"
 
-    data = f.object.console_notes.map { |note| Folio::Console::NoteSerializer.new(note).serializable_hash[:data] }
+    data = f.object.console_notes.map { |note| Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data] }
 
     param_base = "#{f.object.class.base_class.model_name.param_key}[console_notes_attributes]"
 
@@ -226,7 +226,7 @@ module Folio::Console::ReactHelper
       "data-notes" => data.to_json,
       "data-account-id" => current_account.try(:id),
       "data-param-base" => param_base,
-      "data-label" => Folio::Console::Note.model_name.human(count: 2),
+      "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
       "data-errors-html" => f.error(:console_notes).to_s.presence,
     )
   end

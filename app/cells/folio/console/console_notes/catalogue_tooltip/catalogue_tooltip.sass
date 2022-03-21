@@ -1,4 +1,4 @@
-.f-c-notes-catalogue-tooltip
+.f-c-console-notes-catalogue-tooltip
   &__note
     display: flex
     align-items: center
@@ -11,6 +11,12 @@
 
   &__note-input
     margin-right: $spacer / 2
+
+  &__tooltip-inner
+    position: relative
+
+  &:not(&--submitting) &__loader
+    display: none
 
   +mq-desktop-catalogue
     position: relative
