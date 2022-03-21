@@ -7,6 +7,8 @@
         label.f-c-notes-catalogue-tooltip__note
           input.f-c-notes-catalogue-tooltip__note-input[
             type="checkbox"
+            data-id=note.id
+            data-url=controller.toggle_closed_at_console_api_note_path(note)
             checked=note.closed_at?
           ]
 

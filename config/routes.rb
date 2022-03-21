@@ -109,6 +109,12 @@ Folio::Engine.routes.draw do
 
       resources :links, only: %i[index]
 
+      resources :console_notes, only: [] do
+        member do
+          post :toggle_closed_at
+        end
+      end
+
       resources :images, only: %i[index create update destroy] do
         collection do
           post :tag
@@ -120,6 +126,7 @@ Folio::Engine.routes.draw do
           post :change_file
         end
       end
+
       resources :documents, only: %i[index create update destroy] do
         collection do
           post :tag

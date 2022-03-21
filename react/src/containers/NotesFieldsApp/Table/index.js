@@ -3,7 +3,7 @@ import React from 'react'
 import DueDate from './DueDate'
 
 export default function Table ({
-  notes,
+  notesForTable,
   editNote,
   removeNote,
   toggleClosedAt,
@@ -13,7 +13,7 @@ export default function Table ({
 }) {
   return (
     <div className='f-c-r-notes-fields-app-table'>
-      {notes.map((note) => (
+      {notesForTable.map((note) => (
         currentlyEdittingUniqueId && currentlyEdittingUniqueId === note.uniqueId ? null : (
           <div className='f-c-r-notes-fields-app-table__row' key={note.uniqueId}>
             <input

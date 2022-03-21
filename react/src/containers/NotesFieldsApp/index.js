@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import {
   notesFieldsSelector,
+  notesForTableSelector,
   initNewNote,
   updateShowChecked,
   removeAll,
@@ -73,7 +74,7 @@ class NotesFields extends React.Component {
   }
 
   render () {
-    const { notesFields } = this.props
+    const { notesFields, notesForTable } = this.props
 
     return (
       <div className='f-c-r-notes-fields-app form-group'>
@@ -94,7 +95,7 @@ class NotesFields extends React.Component {
         </div>
 
         <Table
-          notes={notesFields.notes}
+          notesForTable={notesForTable}
           currentlyEditting={!!notesFields.form}
           currentlyEdittingUniqueId={notesFields.form ? notesFields.form.existingUniqueId : null}
           editNote={this.editNote}
@@ -124,7 +125,8 @@ class NotesFields extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  notesFields: notesFieldsSelector(state)
+  notesFields: notesFieldsSelector(state),
+  notesForTable: notesForTableSelector(state)
 })
 
 function mapDispatchToProps (dispatch) {

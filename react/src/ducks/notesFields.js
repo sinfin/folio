@@ -54,6 +54,15 @@ export function updateNote (note, attributes) {
 // Selectors
 
 export const notesFieldsSelector = (state) => state.notesFields
+export const notesForTableSelector = (state) => {
+  const subState = notesFieldsSelector(state)
+
+  if (subState.showChecked) {
+    return subState.notes
+  } else {
+    return subState.notes.filter((note) => !note.attributes.closed_at)
+  }
+}
 
 // Sagas
 
