@@ -3,6 +3,10 @@
 require "test_helper"
 
 class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseControllerTest
+  class PageWithConsoleNotes < Folio::Page
+    include Folio::HasConsoleNotes
+  end
+
   test "toggle_closed_at - invalid" do
     note = create(:folio_console_note)
 
@@ -17,7 +21,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
   end
 
   test "toggle_closed_at - valid" do
-    page = create(:folio_page)
+    page = PageWithConsoleNotes.create!(title: "PageWithConsoleNotes")
     note = create(:folio_console_note, target: page)
     another_note = create(:folio_console_note, target: page)
 
