@@ -33,7 +33,6 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
 
     assert_response(:success)
     assert response.parsed_body["data"]["catalogue_tooltip"]
-    assert_nil response.parsed_body["meta"]
     assert note.reload.closed_at
 
     post url_for([:toggle_closed_at, :console, :api, another_note]), params: {
@@ -41,8 +40,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
     }
 
     assert_response(:success)
-    assert_nil response.parsed_body["data"]["catalogue_tooltip"]
-    assert response.parsed_body["meta"]["flash"]["success"]
+    assert response.parsed_body["data"]["catalogue_tooltip"]
     assert another_note.reload.closed_at
 
     post url_for([:toggle_closed_at, :console, :api, note]), params: {
