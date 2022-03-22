@@ -26,6 +26,7 @@ export default function Table ({
             <div
               className='f-c-r-notes-fields-app-table__content mr-3'
               dangerouslySetInnerHTML={{ __html: note.attributes.content.replace(/\n/g, '<br>') }}
+              onClick={() => editNote(note)}
             />
 
             {currentlyEditting ? null : (
