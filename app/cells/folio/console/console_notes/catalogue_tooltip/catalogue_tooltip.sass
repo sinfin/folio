@@ -15,6 +15,9 @@
   &__tooltip-inner
     position: relative
 
+  &__content
+    word-break: break-all
+
   &:not(&--submitting) &__loader
     display: none
 
@@ -24,10 +27,12 @@
     margin: - $spacer
 
     &__tooltip
-      position: fixed
+      position: absolute
+      top: 100%
+      right: 0
       z-index: 999
-      transform: translate(-175px, 0)
       width: 190px
+      margin-top: -1px
       padding-top: 5px
       display: none
 
