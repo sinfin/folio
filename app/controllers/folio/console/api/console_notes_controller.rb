@@ -4,15 +4,9 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
   folio_console_controller_for "Folio::ConsoleNote"
 
   def toggle_closed_at
-    @meta = nil
-
     if [true, "true"].include?(params[:closed]) && !@console_note.closed_at?
       @console_note.update(closed_at: Time.current,
                            closed_by: current_account)
-
-      if @console_note.target && @console_note.target.console_notes.all?(&:closed_at?)
-        @meta = { flash: { success: t(".all_closed") } }
-      end
     elsif [false, "false"].include?(params[:closed]) && @console_note.closed_at
       @console_note.update(closed_at: nil,
                            closed_by: nil)
@@ -23,7 +17,6 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
         data: {
           catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", @console_note.target).show,
         },
-        meta: @meta,
       }).compact
     else
       render_invalid @console_note

@@ -35,9 +35,6 @@ cs:
           invalid_event_detail: Změnu záznamu nelze provést.
           invalid_record_title: Neplatný záznam
           invalid_record_detail: Záznam nelze uložit. Před změnou stavu jej opravte.
-        console_notes:
-          toggle_closed_at:
-            all_closed: Všechny poznámky byly uzavřeny.
       atoms:
         form_header:
           settings: Nastavení

@@ -22,15 +22,13 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
     },
     success: (res) => {
       if (res && res.data) {
-        window.FolioConsole.NotesCatalogueTooltip.onSuccess($tooltip, res)
-
         if (res.data.catalogue_tooltip) {
           $tooltip
             .find('.f-c-console-notes-catalogue-tooltip__tooltip-inner')
             .replaceWith($(res.data.catalogue_tooltip).find('.f-c-console-notes-catalogue-tooltip__tooltip-inner'))
-        } else {
-          $tooltip.remove()
         }
+
+        window.FolioConsole.NotesCatalogueTooltip.onSuccess($tooltip, res)
       }
 
       $tooltip.removeClass('f-c-console-notes-catalogue-tooltip--submitting')

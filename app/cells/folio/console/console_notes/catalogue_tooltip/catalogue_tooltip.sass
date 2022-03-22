@@ -26,6 +26,10 @@
     padding: $spacer
     margin: - $spacer
 
+    &--some-open &__icon--only-closed,
+    &--only-closed &__icon--some-open
+      display: none
+
     &__tooltip
       position: absolute
       top: 100%

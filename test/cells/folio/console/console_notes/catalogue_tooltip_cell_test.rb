@@ -8,11 +8,13 @@ class Folio::Console::ConsoleNotes::CatalogueTooltipCellTest < Folio::Console::C
     model = OpenStruct.new(console_notes: [note])
 
     html = cell("folio/console/console_notes/catalogue_tooltip", model).(:show)
-    assert html.has_css?(".f-c-console-notes-catalogue-tooltip")
+    assert html.has_css?(".f-c-console-notes-catalogue-tooltip--some-open")
+    assert_not html.has_css?(".f-c-console-notes-catalogue-tooltip--only-closed")
 
     note.update!(closed_at: Time.current)
 
     html = cell("folio/console/console_notes/catalogue_tooltip", model).(:show)
-    assert_not html.has_css?(".f-c-console-notes-catalogue-tooltip")
+    assert_not html.has_css?(".f-c-console-notes-catalogue-tooltip--some-open")
+    assert html.has_css?(".f-c-console-notes-catalogue-tooltip--only-closed")
   end
 end
