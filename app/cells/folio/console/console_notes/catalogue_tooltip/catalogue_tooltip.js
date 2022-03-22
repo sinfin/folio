@@ -26,9 +26,7 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
         $parent.trigger('folioConsole:success', res)
 
         if (res.data.catalogue_tooltip) {
-          $tooltip
-            .find('.f-c-console-notes-catalogue-tooltip__tooltip-inner')
-            .replaceWith($(res.data.catalogue_tooltip).find('.f-c-console-notes-catalogue-tooltip__tooltip-inner'))
+          $tooltip.replaceWith($(res.data.catalogue_tooltip))
         } else {
           $tooltip.remove()
         }
