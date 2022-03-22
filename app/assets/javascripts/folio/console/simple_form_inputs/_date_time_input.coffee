@@ -3,6 +3,7 @@ CONFIG =
   sideBySide: true
   format: 'DD. MM. YYYY HH:mm'
   keepInvalid: false
+  useCurrent: false
   widgetPositioning:
     horizontal: 'auto'
     vertical: 'bottom'
