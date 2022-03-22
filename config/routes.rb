@@ -113,6 +113,10 @@ Folio::Engine.routes.draw do
         member do
           post :toggle_closed_at
         end
+
+        collection do
+          post :react_update_target
+        end
       end
 
       resources :images, only: %i[index create update destroy] do

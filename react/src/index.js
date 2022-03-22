@@ -54,7 +54,10 @@ window.FolioConsole.React.init = (domRoot) => {
       label: domRoot.dataset.label,
       paramBase: domRoot.dataset.paramBase,
       accountId: domRoot.dataset.accountId,
-      errorsHtml: domRoot.dataset.errorsHtml
+      errorsHtml: domRoot.dataset.errorsHtml,
+      targetType: domRoot.dataset.targetType,
+      targetId: domRoot.dataset.targetId,
+      url: domRoot.dataset.url
     }))
 
     ReactDOM.render((

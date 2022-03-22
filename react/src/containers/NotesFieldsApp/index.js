@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import {
   notesFieldsSelector,
   notesForTableSelector,
+  notesFieldsSerializedSelector,
   initNewNote,
   updateShowChecked,
   removeAll,
@@ -46,7 +47,7 @@ class NotesFields extends React.Component {
   }
 
   editNote = (note) => {
-    this.props.dispatch(editNote(note))
+    if (this.props.notesFields.form === null) this.props.dispatch(editNote(note))
   }
 
   removeNote = (note) => {
@@ -94,31 +95,37 @@ class NotesFields extends React.Component {
           ) : null}
         </div>
 
-        <Table
-          notesForTable={notesForTable}
-          currentlyEditting={!!notesFields.form}
-          currentlyEdittingUniqueId={notesFields.form ? notesFields.form.existingUniqueId : null}
-          editNote={this.editNote}
-          removeNote={this.removeNote}
-          toggleClosedAt={this.toggleClosedAt}
-          changeDueDate={this.changeDueDate}
-        />
+        <div className='f-c-r-notes-fields-app__bottom'>
+          <Table
+            notesForTable={notesForTable}
+            currentlyEditting={!!notesFields.form}
+            currentlyEdittingUniqueId={notesFields.form ? notesFields.form.existingUniqueId : null}
+            editNote={this.editNote}
+            removeNote={this.removeNote}
+            toggleClosedAt={this.toggleClosedAt}
+            changeDueDate={this.changeDueDate}
+          />
 
-        <div className='mt-2'>
-          {notesFields.form ? (
-            <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
-          ) : (
-            <button type='button' className='btn btn-sm btn-secondary' onClick={this.initNewNote}>
-              {window.FolioConsole.translations.notesFieldsAdd}
-            </button>
-          )}
+          <div className='mt-2'>
+            {notesFields.form ? (
+              <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
+            ) : (
+              <button type='button' className='btn btn-sm btn-secondary' onClick={this.initNewNote}>
+                {window.FolioConsole.translations.notesFieldsAdd}
+              </button>
+            )}
+          </div>
+
+          {notesFields.errorsHtml ? (
+            <div dangerouslySetInnerHTML={{ __html: notesFields.errorsHtml }} />
+          ) : null}
+
+          <span
+            className={`folio-loader f-c-r-notes-fields-app__loader ${notesFields.submitting ? 'f-c-r-notes-fields-app__loader--active' : 'f-c-r-notes-fields-app__loader--inactive'}`}
+          />
         </div>
 
-        {notesFields.errorsHtml ? (
-          <div dangerouslySetInnerHTML={{ __html: notesFields.errorsHtml }} />
-        ) : null}
-
-        <Serialized notesFields={notesFields} />
+        <Serialized paramBase={notesFields.paramBase} serializedNotes={this.props.serializedNotes} />
       </div>
     )
   }
@@ -126,7 +133,8 @@ class NotesFields extends React.Component {
 
 const mapStateToProps = (state, props) => ({
   notesFields: notesFieldsSelector(state),
-  notesForTable: notesForTableSelector(state)
+  notesForTable: notesForTableSelector(state),
+  serializedNotes: notesFieldsSerializedSelector(state, true)
 })
 
 function mapDispatchToProps (dispatch) {

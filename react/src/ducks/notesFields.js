@@ -1,5 +1,8 @@
 import { uniqueId } from 'lodash'
-import { takeLatest } from 'redux-saga/effects'
+import { takeLatest, put, call, select } from 'redux-saga/effects'
+
+import { apiPost } from 'utils/api'
+import { flashError } from 'utils/flash'
 
 // Constants
 
@@ -12,11 +15,16 @@ const CLOSE_FORM = 'notesFields/CLOSE_FORM'
 const EDIT_NOTE = 'notesFields/EDIT_NOTE'
 const REMOVE_NOTE = 'notesFields/REMOVE_NOTE'
 const UPDATE_NOTE = 'notesFields/UPDATE_NOTE'
+const SET_SUBMITTING = 'notesFields/SET_SUBMITTING'
 
 // Actions
 
 export function setNotesFieldsData (data) {
   return { type: SET_NOTES_FIELDS_DATA, data }
+}
+
+export function setSubmitting (submitting) {
+  return { type: SET_SUBMITTING, submitting }
 }
 
 export function updateShowChecked (showChecked) {
@@ -54,6 +62,7 @@ export function updateNote (note, attributes) {
 // Selectors
 
 export const notesFieldsSelector = (state) => state.notesFields
+
 export const notesForTableSelector = (state) => {
   const subState = notesFieldsSelector(state)
 
@@ -64,26 +73,83 @@ export const notesForTableSelector = (state) => {
   }
 }
 
-// Sagas
+export const notesFieldsSerializedSelector = (state, useUniqueId = false) => {
+  const subState = notesFieldsSelector(state)
+  const ary = []
+  let index = 0
 
-function * triggerDirtyForm (action) {
-  const $wrap = window.jQuery('.folio-react-wrap--notes-fields')
-  $wrap.trigger('folioCustomChange')
-  $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form').trigger('change')
-  yield $wrap
+  subState.notes.forEach((note) => {
+    index += 1
+
+    const h = {
+      id: note.id,
+      position: index,
+      content: note.attributes.content,
+      created_by_id: note.attributes.created_by_id,
+      closed_by_id: note.attributes.closed_by_id,
+      closed_at: note.attributes.closed_at ? note.attributes.closed_at.toISOString() : null,
+      due_at: note.attributes.due_at ? note.attributes.due_at.toISOString() : null
+    }
+
+    if (useUniqueId) h.uniqueId = note.uniqueId
+
+    ary.push(h)
+  })
+
+  subState.removedIds.forEach((removedId) => {
+    index += 1
+
+    const h = {
+      id: removedId,
+      _destroy: '1'
+    }
+
+    ary.push(h)
+  })
+
+  return ary
 }
 
-function * triggerDirtyFormSaga () {
+// Sagas
+
+function * triggerDirtyFormOrSubmit (action) {
+  const notesFields = yield (select(notesFieldsSelector))
+  const serialized = yield (select(notesFieldsSerializedSelector))
+
+  if (notesFields.url) {
+    try {
+      yield put(setSubmitting(true))
+
+      const response = yield call(apiPost, notesFields.url, {
+        console_notes_attributes: serialized,
+        target_id: notesFields.targetId,
+        target_type: notesFields.targetType
+      })
+
+      yield put(setNotesFieldsData({ ...response.data.react, submitting: false }))
+    } catch (e) {
+      yield put(setSubmitting(false))
+      flashError(e.message)
+    }
+  } else {
+    const $wrap = window.jQuery('.folio-react-wrap--notes-fields')
+    $wrap.trigger('folioCustomChange')
+    $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form').trigger('change')
+    yield $wrap
+  }
+}
+
+function * triggerDirtyFormOrSubmitSaga () {
   yield takeLatest([
     REMOVE_ALL,
     SAVE_FORM,
     REMOVE_NOTE,
     UPDATE_NOTE
-  ], triggerDirtyForm)
+  ], triggerDirtyFormOrSubmit)
 }
 
 export const notesFieldsSagas = [
-  triggerDirtyFormSaga
+  triggerDirtyFormOrSubmitSaga
 ]
 
 // State
@@ -96,7 +162,11 @@ const initialState = {
   label: null,
   showChecked: true,
   form: null,
-  errorsHtml: null
+  errorsHtml: null,
+  targetId: null,
+  targetType: null,
+  url: null,
+  submitting: false
 }
 
 // Reducer
@@ -135,6 +205,13 @@ function notesFieldsReducer (state = initialState, action) {
       return {
         ...state,
         showChecked: action.showChecked
+      }
+    }
+
+    case SET_SUBMITTING: {
+      return {
+        ...state,
+        submitting: action.submitting
       }
     }
 

@@ -6,14 +6,27 @@
     background: #f2f2f2
 
 .f-c-r-notes-fields-app
+  position: relative
+
   &__header
     display: flex
+
+  &__bottom
+    position: relative
 
   &__header-label
     margin: 0 $grid-gutter-half 0 0
 
   &__header-buttons
     margin-left: auto
+
+  &__loader
+    transition: $transition-base
+    opacity: 1
+
+    &--inactive
+      pointer-events: none
+      opacity: 0
 
   &-form
     position: relative

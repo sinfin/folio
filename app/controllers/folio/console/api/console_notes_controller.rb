@@ -23,6 +23,30 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
     end
   end
 
+  def react_update_target
+    klass = params.require(:target_type).safe_constantize
+
+    if klass && klass < ActiveRecord::Base && klass.new.respond_to?(:console_notes)
+      target = klass.find(params.require(:target_id))
+
+      if target.update(params.permit(*console_notes_strong_params))
+        render json: {
+          data: {
+            react: {
+              removed_ids: [],
+              notes: target.console_notes.map { |note| Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data] },
+            },
+            catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", target).show,
+          }
+        }
+      else
+        render_invalid target
+      end
+    else
+      head 422
+    end
+  end
+
   private
     def modify_valid_hash_to_render(hash)
       # to be overriden in app if need be

@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseControllerTest
-  class PageWithConsoleNotes < Folio::Page
+  class ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes < Folio::Page
     include Folio::HasConsoleNotes
   end
 
@@ -21,7 +21,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
   end
 
   test "toggle_closed_at - valid" do
-    page = PageWithConsoleNotes.create!(title: "PageWithConsoleNotes")
+    page = ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes.create!(title: "::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes")
     note = create(:folio_console_note, target: page)
     another_note = create(:folio_console_note, target: page)
 
@@ -50,5 +50,23 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
     assert_response(:success)
     assert response.parsed_body["data"]["catalogue_tooltip"]
     assert_nil note.reload.closed_at
+  end
+
+  test "react_update_target" do
+    page = ::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes.create!(title: "react_update_target")
+
+    assert_equal(0, page.console_notes.count)
+
+    post react_update_target_console_api_console_notes_path, params: {
+      target_id: page.id,
+      target_type: "::Folio::Console::Api::ConsoleNotesControllerTest::PageWithConsoleNotes",
+      console_notes_attributes: {
+        "0" => {
+          content: "<p>foo</p>"
+        }
+      }
+    }
+    assert_response(:ok)
+    assert_equal 1, response.parsed_body["data"]["react"]["notes"].size
   end
 end
