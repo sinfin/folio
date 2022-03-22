@@ -22,10 +22,29 @@ window.FolioConsole.NotesCatalogueTooltip.onChange = (e) => {
     },
     success: (res) => {
       if (res && res.data) {
+        const $parent = $tooltip.closest(`.${$tooltip.data('class-name-parent')}`)
+        $parent.trigger('folioConsole:success', res)
+
         if (res.data.catalogue_tooltip) {
           $tooltip
             .find('.f-c-console-notes-catalogue-tooltip__tooltip-inner')
             .replaceWith($(res.data.catalogue_tooltip).find('.f-c-console-notes-catalogue-tooltip__tooltip-inner'))
+        } else {
+          $tooltip.remove()
+        }
+
+        if (res.data.form) {
+          const $formParent = $parent.find(`.${$tooltip.data('class-name-form-parent')}`)
+
+          $formParent.find('.folio-react-wrap--notes-fields').each((i, el) => {
+            window.FolioConsole.React.destroy(el)
+          })
+
+          $formParent.html(res.data.form)
+
+          $formParent.find('.folio-react-wrap--notes-fields').each((i, el) => {
+            window.FolioConsole.React.init(el)
+          })
         }
 
         window.FolioConsole.NotesCatalogueTooltip.onSuccess($tooltip, res)

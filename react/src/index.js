@@ -50,6 +50,7 @@ window.FolioConsole.React.init = (domRoot) => {
     ), domRoot)
   } else if (domRoot.classList.contains('folio-react-wrap--notes-fields')) {
     store.dispatch(setNotesFieldsData({
+      domRoot,
       notes: domRoot.dataset.notes ? JSON.parse(domRoot.dataset.notes) : [],
       label: domRoot.dataset.label,
       paramBase: domRoot.dataset.paramBase,
@@ -57,7 +58,9 @@ window.FolioConsole.React.init = (domRoot) => {
       errorsHtml: domRoot.dataset.errorsHtml,
       targetType: domRoot.dataset.targetType,
       targetId: domRoot.dataset.targetId,
-      url: domRoot.dataset.url
+      url: domRoot.dataset.url,
+      classNameParent: domRoot.dataset.classNameParent,
+      classNameTooltipParent: domRoot.dataset.classNameTooltipParent
     }))
 
     ReactDOM.render((

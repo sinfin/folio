@@ -127,6 +127,15 @@ function * triggerDirtyFormOrSubmit (action) {
       })
 
       yield put(setNotesFieldsData({ ...response.data.react, submitting: false }))
+
+      if (notesFields.classNameParent && notesFields.classNameTooltipParent) {
+        window
+          .jQuery(notesFields.domRoot)
+          .closest(`.${notesFields.classNameParent}`)
+          .trigger('folioConsole:success', response)
+          .find(`.${notesFields.classNameTooltipParent}`)
+          .html(response.data.catalogue_tooltip)
+      }
     } catch (e) {
       yield put(setSubmitting(false))
       flashError(e.message)
@@ -155,6 +164,7 @@ export const notesFieldsSagas = [
 // State
 
 const initialState = {
+  domRoot: null,
   notes: [],
   removedIds: [],
   accountId: null,
@@ -166,7 +176,9 @@ const initialState = {
   targetId: null,
   targetType: null,
   url: null,
-  submitting: false
+  submitting: false,
+  classNameParent: null,
+  classNameTooltipParent: null
 }
 
 // Reducer

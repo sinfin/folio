@@ -214,6 +214,10 @@ module Folio::Console::ReactHelper
     end
   end
 
+  REACT_NOTE_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-parent"
+  REACT_NOTE_TOOLTIP_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-tooltip-parent"
+  REACT_NOTE_FORM_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-form-parent"
+
   def react_notes_fields(f)
     react_notes_common(f: f)
   end
@@ -243,6 +247,8 @@ module Folio::Console::ReactHelper
         hash["data-target-type"] = target.class.base_class.to_s
         hash["data-target-id"] = target.id
         hash["data-url"] = url_for([:react_update_target, :console, :api, Folio::ConsoleNote])
+        hash["data-class-name-parent"] = REACT_NOTE_PARENT_CLASS_NAME
+        hash["data-class-name-tooltip-parent"] = REACT_NOTE_TOOLTIP_PARENT_CLASS_NAME
       elsif f
         hash["data-errors-html"] = f.error(:console_notes).to_s.presence
       end

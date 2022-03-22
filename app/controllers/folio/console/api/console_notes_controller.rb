@@ -16,6 +16,7 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
       render json: modify_valid_hash_to_render({
         data: {
           catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", @console_note.target).show,
+          form: helpers.react_notes_form(@console_note.target),
         },
       }).compact
     else
@@ -27,20 +28,20 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
     klass = params.require(:target_type).safe_constantize
 
     if klass && klass < ActiveRecord::Base && klass.new.respond_to?(:console_notes)
-      target = klass.find(params.require(:target_id))
+      @target = klass.find(params.require(:target_id))
 
-      if target.update(params.permit(*console_notes_strong_params))
-        render json: {
+      if @target.update(params.permit(*console_notes_strong_params))
+        render json: modify_valid_hash_to_render({
           data: {
             react: {
               removed_ids: [],
-              notes: target.console_notes.map { |note| Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data] },
+              notes: @target.console_notes.map { |note| Folio::Console::ConsoleNoteSerializer.new(note).serializable_hash[:data] },
             },
-            catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", target).show,
+            catalogue_tooltip: cell("folio/console/console_notes/catalogue_tooltip", @target).show,
           }
-        }
+        })
       else
-        render_invalid target
+        render_invalid @target
       end
     else
       head 422

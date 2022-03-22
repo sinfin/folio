@@ -3,6 +3,7 @@ linters:
     enabled: false
 
 exclude:
+  - app/cells/folio/console/console_notes/catalogue_tooltip/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/devise/modal/_close.slim
   - app/cells/folio/devise/omniauth/icon/show.slim
