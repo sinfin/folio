@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/sinfin/cells-rails.git
+  revision: 78a09e6f71e1912abf42f1e0f2026b9571a3d024
+  specs:
+    cells-rails (0.1.4)
+      actionpack (>= 5.0)
+      cells (>= 4.1.6, < 5.0.0)
+
+GIT
   remote: https://github.com/sinfin/dragonfly_libvips.git
   revision: e12a27c627cfb72c3bd65a5b8cc60ff4b600b1b3
   branch: more_geometry
@@ -29,9 +37,6 @@ PATH
       babel-transpiler
       breadcrumbs_on_rails
       cancancan (~> 3.0)
-      cells
-      cells-rails (= 0.1.0)
-      cells-slim (= 0.0.6)
       cocoon
       coffee-rails (~> 5.0)
       countries
@@ -216,9 +221,6 @@ GEM
       declarative-option (< 0.2.0)
       tilt (>= 1.4, < 3)
       uber (< 0.2.0)
-    cells-rails (0.1.0)
-      actionpack (>= 5.0)
-      cells (>= 4.1.6, < 5.0.0)
     cells-slim (0.0.6)
       cells (>= 4.0.1, < 6.0.0)
       slim (~> 3.0)
@@ -634,6 +636,9 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   capybara (~> 2.13)
+  cells
+  cells-rails!
+  cells-slim (= 0.0.6)
   dragonfly (= 1.4.0)
   dragonfly-s3_data_store
   dragonfly_libvips!

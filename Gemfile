@@ -27,6 +27,10 @@ gem "dragonfly-s3_data_store"
 gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
 # gem "dragonfly_libvips", path: "../dragonfly_libvips"
 
+gem "cells"
+gem "cells-slim", "0.0.6"
+gem "cells-rails", github: "sinfin/cells-rails"
+
 group :test do
   gem "minitest", "~> 5.14.4"
   gem "factory_bot"
