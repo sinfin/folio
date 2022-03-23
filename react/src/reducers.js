@@ -11,6 +11,7 @@ import filtersReducer from 'ducks/filters'
 import menusReducer from 'ducks/menus'
 import orderedMultiselectReducer from 'ducks/orderedMultiselect'
 import uploadsReducer from 'ducks/uploads'
+import notesFieldsReducer from 'ducks/notesFields'
 
 export default combineReducers({
   ancestry: ancestryReducer,
@@ -23,5 +24,6 @@ export default combineReducers({
   filters: filtersReducer,
   menus: menusReducer,
   orderedMultiselect: orderedMultiselectReducer,
-  uploads: uploadsReducer
+  uploads: uploadsReducer,
+  notesFields: notesFieldsReducer
 })

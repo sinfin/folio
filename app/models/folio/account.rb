@@ -15,6 +15,16 @@ class Folio::Account < Folio::ApplicationRecord
 
   attribute :skip_password_validation, :boolean, default: false
 
+  has_many :created_console_notes, class_name: "Folio::ConsoleNote",
+                                   inverse_of: :created_by,
+                                   foreign_key: :created_by_id,
+                                   dependent: :nullify
+
+  has_many :closed_console_notes, class_name: "Folio::ConsoleNote",
+                                  inverse_of: :closed_by,
+                                  foreign_key: :closed_by_id,
+                                  dependent: :nullify
+
   pg_search_scope :by_query,
                   against: %i[first_name last_name email],
                   ignoring: :accents,
@@ -143,10 +153,10 @@ end
 #
 # Indexes
 #
-#  index_folio_accounts_on_email                              (email) UNIQUE
-#  index_folio_accounts_on_invitation_token                   (invitation_token) UNIQUE
-#  index_folio_accounts_on_invitations_count                  (invitations_count)
-#  index_folio_accounts_on_invited_by_id                      (invited_by_id)
-#  index_folio_accounts_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)
-#  index_folio_accounts_on_reset_password_token               (reset_password_token) UNIQUE
+#  index_folio_accounts_on_email                 (email) UNIQUE
+#  index_folio_accounts_on_invitation_token      (invitation_token) UNIQUE
+#  index_folio_accounts_on_invitations_count     (invitations_count)
+#  index_folio_accounts_on_invited_by            (invited_by_type,invited_by_id)
+#  index_folio_accounts_on_invited_by_id         (invited_by_id)
+#  index_folio_accounts_on_reset_password_token  (reset_password_token) UNIQUE
 #

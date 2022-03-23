@@ -15,6 +15,7 @@
 //= require jquery.kinetic/index
 //= require dropzone/dist/dropzone
 //= require clipboard/dist/clipboard
+//= require strftime
 
 //= require jquery-ui/jquery-ui
 //= require selectize/dist/js/standalone/selectize
@@ -62,6 +63,7 @@
 //= require folio/console/boolean_toggle/boolean_toggle
 //= require folio/console/catalogue/catalogue
 //= require folio/console/clipboard_copy/clipboard_copy
+//= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header

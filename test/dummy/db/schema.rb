@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_14_083648) do
+ActiveRecord::Schema.define(version: 2022_03_14_084147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_083648) do
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
     t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
@@ -155,6 +155,22 @@ ActiveRecord::Schema.define(version: 2022_02_14_083648) do
     t.jsonb "associations", default: {}
     t.text "data_for_search"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
+  end
+
+  create_table "folio_console_notes", force: :cascade do |t|
+    t.text "content"
+    t.string "target_type"
+    t.bigint "target_id"
+    t.bigint "created_by_id"
+    t.bigint "closed_by_id"
+    t.datetime "closed_at"
+    t.datetime "due_at"
+    t.integer "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["closed_by_id"], name: "index_folio_console_notes_on_closed_by_id"
+    t.index ["created_by_id"], name: "index_folio_console_notes_on_created_by_id"
+    t.index ["target_type", "target_id"], name: "index_folio_console_notes_on_target"
   end
 
   create_table "folio_content_templates", force: :cascade do |t|
@@ -201,7 +217,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_083648) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -225,6 +241,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_083648) do
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
+    t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
     t.index ["created_at"], name: "index_folio_files_on_created_at"
     t.index ["file_name"], name: "index_folio_files_on_file_name"
@@ -460,7 +477,7 @@ ActiveRecord::Schema.define(version: 2022_02_14_083648) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

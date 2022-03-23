@@ -38,7 +38,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       end
 
       {
-        alt: "",
+        alt: options[:alt] || "",
         src: model[:normal],
         srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
         webp_src: model[:webp_normal],
@@ -57,8 +57,8 @@ class Folio::ImageCell < Folio::ApplicationCell
       h = {
         normal: normal,
         src: normal.url,
-        alt: model.try(:alt) || "",
-        title: model.try(:title),
+        alt: options[:alt] || "",
+        title: options[:title],
       }
 
       unless /svg/.match?(file.file_mime_type)
@@ -254,7 +254,7 @@ class Folio::ImageCell < Folio::ApplicationCell
         h = h.merge(options[:lightbox])
       elsif model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
-        h["data-lightbox-title"] ||= options[:title] || model.try(:title)
+        h["data-lightbox-title"] ||= options[:title] || options[:title]
       else
         h = h.merge(lightbox_from_image(model))
       end

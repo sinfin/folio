@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-03-21
+### Added
+- added `Folio::ConsoleNote` model and `Folio::HasConsoleNotes` concern
+
 ## 2021-02-21
 ### Added
 - added `self.default_atom_values` to atoms

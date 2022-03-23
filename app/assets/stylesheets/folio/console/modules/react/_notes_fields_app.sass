@@ -1,0 +1,100 @@
+.folio-react-wrap--notes-fields
+  min-height: 50px
+  position: relative
+
+  .f-c-simple-form-with-atoms & .folio-loader
+    background: #f2f2f2
+
+.f-c-r-notes-fields-app
+  position: relative
+
+  &__header
+    display: flex
+
+  &__bottom
+    position: relative
+
+  &__header-label
+    margin: 0 $grid-gutter-half 0 0
+
+  &__header-buttons
+    margin-left: auto
+
+  &__loader
+    transition: $transition-base
+    opacity: 1
+
+    &--inactive
+      pointer-events: none
+      opacity: 0
+
+  &-form
+    position: relative
+
+    &__textarea
+      padding-right: 100px
+      min-height: 35px
+      padding-top: $input-padding-y + 1
+      padding-bottom: $input-padding-y + 1
+
+    &__button
+      position: absolute
+      top: 50%
+      right: 36px
+      transform: translate(0, -50%)
+
+    &__close
+      +unbutton
+      position: absolute
+      top: 0
+      right: 0
+      height: 100%
+      padding: 0 13px
+      display: flex
+      align-items: center
+      justify-content: center
+
+  &-table
+    margin-top: $spacer
+
+    &__row
+      display: flex
+      align-items: center
+      border-bottom: 1px solid $border-color
+      padding: 5px 0
+
+      &--being-editted
+        opacity: 0.5
+        pointer-events: none
+
+      .f-c-simple-form-with-atoms &
+        border-bottom-color: #CACBCB
+
+    &__content
+      flex: 1 1 auto
+      min-width: 0
+      word-break: break-all
+
+    &__checkbox,
+    &__action
+      flex: 0 0 auto
+
+    &__action
+      cursor: pointer
+      display: inline-block
+      padding: 3px 5px
+
+    &-due-date
+      display: flex
+      align-items: center
+      position: relative
+
+      &__input
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        opacity: 0
+        z-index: 2
+        cursor: pointer

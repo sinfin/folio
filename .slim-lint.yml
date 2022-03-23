@@ -3,6 +3,7 @@ linters:
     enabled: false
 
 exclude:
+  - app/cells/folio/console/console_notes/catalogue_tooltip/show.slim
   - app/cells/folio/console/private_attachments/fields/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/devise/modal/_close.slim
@@ -21,5 +22,6 @@ exclude:
   - app/views/layouts/folio/_analytics.slim
   - app/views/layouts/folio/_cookieconsent.slim
   - app/views/layouts/folio/console/_head.slim
+  - app/views/layouts/folio/console/application.slim
   - lib/generators/folio/console/scaffold/templates/*
   - test/dummy/app/cells/dummy/ui/menu/show.slim

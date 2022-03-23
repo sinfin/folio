@@ -46,7 +46,8 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
 
       - if ENV['REACT_DEV']
         = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
-        = javascript_include_tag 'http://localhost:3001/static/js/0.chunk.js'
+        - 5.times do |i|
+          = javascript_include_tag "http://localhost:3001/static/js/#{i}.chunk.js"
         = javascript_include_tag 'http://localhost:3001/static/js/main.chunk.js'
       - else
         = javascript_include_tag 'folio/console/react'

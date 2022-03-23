@@ -3,6 +3,7 @@ CONFIG =
   sideBySide: true
   format: 'DD. MM. YYYY HH:mm'
   keepInvalid: false
+  useCurrent: false
   widgetPositioning:
     horizontal: 'auto'
     vertical: 'bottom'
@@ -22,15 +23,15 @@ DATE_CONFIG = $.extend {}, CONFIG, format: 'DD. MM. YYYY'
 DATE_INPUT_SELECTOR = '.folio-console-date-picker'
 
 makeDpChange = (config) -> (e) ->
-  $(e.target)
-    .trigger('folioCustomChange')
-    .closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')
-    .trigger('change')
-
   if e.date
     @dataset.date = moment(e.date).format()
   else
     @dataset.date = null
+
+  $(e.target)
+    .trigger('folioCustomChange')
+    .closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form')
+    .trigger('change')
 
 dpShow = (e) ->
   $input = $(this)
@@ -43,19 +44,21 @@ dpShow = (e) ->
       </div>
     """
 
-window.folioConsoleInitDatePicker = (el) ->
+window.folioConsoleInitDatePicker = (el, opts = {}) ->
   $el = $(el)
-  $el.val(moment($el.data('date')).format(DATE_CONFIG.format)) if $el.data('date')
-  $el.datetimepicker(DATE_CONFIG)
+  fullOpts = $.extend {}, DATE_CONFIG, opts
+  $el.val(moment($el.data('date')).format(fullOpts.format)) if $el.data('date')
+  $el.datetimepicker(fullOpts)
   $el.on 'dp.show', dpShow
-  $el.on 'dp.change', makeDpChange(DATE_CONFIG)
+  $el.on 'dp.change', makeDpChange(fullOpts)
 
-window.folioConsoleInitDateTimePicker = (el) ->
+window.folioConsoleInitDateTimePicker = (el, opts = {}) ->
   $el = $(el)
-  $el.val(moment($el.data('date')).format(CONFIG.format)) if $el.data('date')
-  $el.datetimepicker(CONFIG)
+  fullOpts = $.extend {}, CONFIG, opts
+  $el.val(moment($el.data('date')).format(fullOpts.format)) if $el.data('date')
+  $el.datetimepicker(fullOpts)
   $el.on 'dp.show', dpShow
-  $el.on 'dp.change', makeDpChange(CONFIG)
+  $el.on 'dp.change', makeDpChange(fullOpts)
 
 window.folioConsoleUnbindDatePicker = (el) ->
   $(el)
@@ -70,7 +73,6 @@ bindDatePicker = ($elements) ->
 
     if $this.hasClass('folio-console-date-picker--date')
       window.folioConsoleInitDatePicker(this)
-      $this.datetimepicker(DATE_CONFIG)
     else
       window.folioConsoleInitDateTimePicker(this)
 
@@ -90,7 +92,7 @@ $(document)
     e.preventDefault()
     e.stopPropagation()
     picker = $(this)
-      .closest('.form-group')
+      .closest('.form-group, .f-c-r-notes-fields-app-table-due-date')
       .find('.form-control')
       .data('DateTimePicker')
     picker.clear()

@@ -156,6 +156,9 @@ en:
       tag:
         one: Tag
         other: Tags
+      folio/console_note:
+        one: Note (internal)
+        other: Notes (internal)
     state_machines:
       folio/lead:
         state:
@@ -167,6 +170,7 @@ en:
     aasm_state: State
     article: Article
     button_label: Button label
+    console_notes: Notes (internal)
     content: Content
     count: Count
     cover_placement: Image

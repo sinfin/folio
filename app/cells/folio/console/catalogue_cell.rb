@@ -228,6 +228,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def console_notes
+    attribute(:console_notes, compact: true, skip_desktop_header: true) do
+      cell("folio/console/console_notes/catalogue_tooltip", record)
+    end
+  end
+
   private
     def resource_link(url_for_args, attr = nil, sanitize: false)
       attribute(attr, spacey: true) do

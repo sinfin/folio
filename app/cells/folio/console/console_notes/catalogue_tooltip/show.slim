@@ -1,0 +1,32 @@
+div[
+  class=class_name
+  data-class-name-parent=Folio::Console::ReactHelper::REACT_NOTE_PARENT_CLASS_NAME
+  data-class-name-form-parent=Folio::Console::ReactHelper::REACT_NOTE_FORM_PARENT_CLASS_NAME
+]
+  span.fas.fa-comment.text-danger[
+    class="f-c-console-notes-catalogue-tooltip__icon"
+    class="f-c-console-notes-catalogue-tooltip__icon--some-open"
+  ]
+
+  span.fa.fa-comment[
+    class="f-c-console-notes-catalogue-tooltip__icon"
+    class="f-c-console-notes-catalogue-tooltip__icon--only-closed"
+  ]
+
+  .f-c-console-notes-catalogue-tooltip__tooltip
+    .f-c-console-notes-catalogue-tooltip__tooltip-inner
+      - model.console_notes.each do |note|
+        label.f-c-console-notes-catalogue-tooltip__note
+          input.f-c-console-notes-catalogue-tooltip__note-input[
+            type="checkbox"
+            data-id=note.id
+            data-url=url_for([:toggle_closed_at, :console, :api, note])
+            checked=note.closed_at?
+          ]
+
+          .f-c-console-notes-catalogue-tooltip__content.small
+            = cstypo note.content
+
+      span.folio-loader.folio-loader--small[
+        class="f-c-console-notes-catalogue-tooltip__loader"
+      ]
