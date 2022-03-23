@@ -20,6 +20,7 @@ gem "turbolinks"
 gem "uglifier", ">= 1.3.0"
 gem "show_for"
 gem "sidekiq"
+gem "sprockets-rails"
 
 gem "dragonfly", "1.4.0"
 gem "dragonfly-s3_data_store"
