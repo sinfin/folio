@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable OpenStruct
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 
@@ -294,3 +295,4 @@ module Folio::Thumbnails
       end
     end
 end
+# rubocop:enable OpenStruct
