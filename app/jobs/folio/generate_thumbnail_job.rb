@@ -24,11 +24,24 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
     end
 
+    cable_urls = {}
+
+    if new_thumb[:private]
+      cable_urls[:url] = Dragonfly.app.datastore.url_for(new_thumb[:uid], expires: 1.hour.from_now)
+
+      if new_thumb[:webp_url]
+        cable_urls[:webp_url] = Dragonfly.app.datastore.url_for(new_thumb[:webp_uid], expires: 1.hour.from_now)
+      end
+    else
+      cable_urls[:url] = new_thumb[:url]
+      cable_urls[:webp_url] = new_thumb[:webp_url]
+    end
+
     ActionCable.server.broadcast(FolioThumbnailsChannel::STREAM,
       temporary_url: image.temporary_url(size),
       temporary_s3_url: image.temporary_s3_url(size),
-      url: new_thumb[:url],
-      webp_url: new_thumb[:webp_url],
+      url: cable_urls[:url],
+      webp_url: cable_urls[:webp_url],
       width: new_thumb[:width],
       height: new_thumb[:height],
     )
