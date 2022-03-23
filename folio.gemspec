@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 6"
-  s.add_dependency "rails-i18n", "~> 6"
+  s.add_dependency "rails", "~> 7"
+  s.add_dependency "rails-i18n", "~> 7"
   s.add_dependency "pg", "~> 1.2.3"
   s.add_dependency "pg_search", "= 2.3.2"
   s.add_dependency "friendly_id"
@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon"
   s.add_dependency "invisible_captcha"
   s.add_dependency "countries"
-  s.add_dependency "acts-as-taggable-on", "~> 7.0"
+  s.add_dependency "acts-as-taggable-on"
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "cells"
   s.add_dependency "cells-slim", "0.0.6"
@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
   s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "nokogiri"
   s.add_dependency "show_for"
-  s.add_dependency "audited", "~> 4.7"
+  s.add_dependency "audited"
   s.add_dependency "premailer-rails"
   s.add_dependency "fast_jsonapi"
   s.add_dependency "discard"
