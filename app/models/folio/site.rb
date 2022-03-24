@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Site < Folio::ApplicationRecord
+  include Folio::FriendlyId
   include Folio::HasHeaderMessage
 
   if Rails.application.config.folio_site_is_a_singleton
@@ -90,9 +91,11 @@ end
 #  header_message_published_from     :datetime
 #  header_message_published_until    :datetime
 #  type                              :string
+#  slug                              :string
 #
 # Indexes
 #
 #  index_folio_sites_on_domain  (domain)
+#  index_folio_sites_on_slug    (slug)
 #  index_folio_sites_on_type    (type)
 #

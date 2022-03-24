@@ -410,7 +410,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.datetime "header_message_published_from", precision: nil
     t.datetime "header_message_published_until", precision: nil
     t.string "type"
+    t.string "slug"
     t.index ["domain"], name: "index_folio_sites_on_domain"
+    t.index ["slug"], name: "index_folio_sites_on_slug"
     t.index ["type"], name: "index_folio_sites_on_type"
   end
 
