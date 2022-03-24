@@ -57,7 +57,6 @@ PATH
       invisible_captcha
       jquery-rails
       message_bus
-      mini_racer (~> 0.4.0)
       multi_exiftool
       nokogiri
       omniauth (~> 1.9.1)
@@ -371,7 +370,6 @@ GEM
       addressable (~> 2.7)
     letter_opener (1.8.1)
       launchy (>= 2.2, < 3)
-    libv8-node (15.14.0.1-x86_64-linux)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -389,8 +387,6 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
-    mini_racer (0.4.0)
-      libv8-node (~> 15.14.0.0)
     minitest (5.14.4)
     multi_exiftool (0.17.0)
     multi_json (1.15.0)
@@ -650,7 +646,6 @@ DEPENDENCIES
   guard-slimlint
   i18n-tasks
   letter_opener
-  mini_racer
   minitest (~> 5.14.4)
   premailer!
   premailer-rails
