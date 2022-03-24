@@ -10,6 +10,9 @@ module Folio
       g.helper false
     end
 
+    # fix deprecation warning - Using legacy connection handling is deprecated
+    config.active_record.legacy_connection_handling = false
+
     config.folio_dragonfly_keep_png = true
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
