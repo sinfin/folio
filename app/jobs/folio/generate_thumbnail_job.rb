@@ -108,15 +108,17 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail
       end
 
-      case format.to_sym
-      when :jpg
-        thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".jpg")
-      when :png
-        thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".png")
-      when :gif
-        thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".gif")
-      else
-        thumbnail.name = image.file_name
+      if image.file_name
+        case format.to_sym
+        when :jpg
+          thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".jpg")
+        when :png
+          thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".png")
+        when :gif
+          thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".gif")
+        else
+          thumbnail.name = image.file_name
+        end
       end
 
       if opts = image.try(:thumbnail_store_options)
