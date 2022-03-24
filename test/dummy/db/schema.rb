@@ -198,6 +198,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.string "subject_cs"
     t.text "body_html_cs"
     t.text "body_text_cs"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_email_templates_on_site_id"
     t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end
 
@@ -259,6 +261,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.string "url"
     t.json "additional_data"
     t.string "aasm_state", default: "submitted"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_leads_on_site_id"
   end
 
   create_table "folio_menu_items", force: :cascade do |t|
@@ -286,6 +290,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "locale"
     t.string "title"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_menus_on_site_id"
     t.index ["type"], name: "index_folio_menus_on_type"
   end
 
@@ -298,6 +304,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.boolean "active", default: true
     t.string "tags"
     t.text "merge_vars"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_newsletter_subscriptions_on_site_id"
     t.index ["subscribable_type", "subscribable_id"], name: "index_folio_newsletter_subscriptions_on_subscribable"
   end
 
@@ -333,6 +341,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "ancestry_slug"
+    t.bigint "site_id"
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"
@@ -340,6 +349,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.index ["position"], name: "index_folio_pages_on_position"
     t.index ["published"], name: "index_folio_pages_on_published"
     t.index ["published_at"], name: "index_folio_pages_on_published_at"
+    t.index ["site_id"], name: "index_folio_pages_on_site_id"
     t.index ["slug"], name: "index_folio_pages_on_slug"
     t.index ["type"], name: "index_folio_pages_on_type"
   end

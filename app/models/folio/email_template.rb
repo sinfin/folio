@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::EmailTemplate < Folio::ApplicationRecord
+  include Folio::BelongsToSite
   include Folio::FriendlyId
 
   validates :mailer, :action,
@@ -133,8 +134,10 @@ end
 #  subject_cs        :string
 #  body_html_cs      :text
 #  body_text_cs      :text
+#  site_id           :bigint(8)
 #
 # Indexes
 #
-#  index_folio_email_templates_on_slug  (slug)
+#  index_folio_email_templates_on_site_id  (site_id)
+#  index_folio_email_templates_on_slug     (slug)
 #

@@ -18,12 +18,13 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   extend Folio::InheritenceBaseNaming
-  include PgSearch::Model
-  include Folio::Taggable
+  include Folio::BelongsToSite
   include Folio::HasAttachments
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base
+  include Folio::Taggable
   include Folio::Transportable::Model
+  include PgSearch::Model
 
   if Rails.application.config.folio_pages_audited
     include Folio::Audited
@@ -189,6 +190,7 @@ end
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  ancestry_slug    :string
+#  site_id          :bigint(8)
 #
 # Indexes
 #
@@ -199,6 +201,7 @@ end
 #  index_folio_pages_on_position      (position)
 #  index_folio_pages_on_published     (published)
 #  index_folio_pages_on_published_at  (published_at)
+#  index_folio_pages_on_site_id       (site_id)
 #  index_folio_pages_on_slug          (slug)
 #  index_folio_pages_on_type          (type)
 #

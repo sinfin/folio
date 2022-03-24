@@ -123,6 +123,7 @@ cs:
       messages:
         indestructible: Záznam není možné odstranit.
         file_format: 'není povolen. Povolené typy: %{types}'
+        wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
       models:
         folio/atom/base:
           attributes:

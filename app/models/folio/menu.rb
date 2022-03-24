@@ -2,6 +2,7 @@
 
 class Folio::Menu < Folio::ApplicationRecord
   extend Folio::InheritenceBaseNaming
+  include Folio::BelongsToSite
   include Folio::StiPreload
 
   # Relations
@@ -102,8 +103,10 @@ end
 #  updated_at :datetime         not null
 #  locale     :string
 #  title      :string
+#  site_id    :bigint(8)
 #
 # Indexes
 #
-#  index_folio_menus_on_type  (type)
+#  index_folio_menus_on_site_id  (site_id)
+#  index_folio_menus_on_type     (type)
 #
