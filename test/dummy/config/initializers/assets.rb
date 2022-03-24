@@ -18,6 +18,6 @@ Rails.application.config.assets.precompile += %w(
   folio/console/react.css
   folio/console/react.js
   folio/mailer/base.css
-  folio/console/atoms/previews/previews.css
-  folio/console/atoms/previews/previews.js
+  folio/console/atoms/previews/base.css
+  folio/console/atoms/previews/base.js
 )

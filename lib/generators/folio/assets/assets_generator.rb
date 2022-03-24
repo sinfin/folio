@@ -21,6 +21,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
   def copy_templates
     [
       "app/assets/javascripts/application.js",
+      "app/assets/javascripts/folio/console/atoms/previews/main_app.coffee",
       "app/assets/javascripts/folio/console/main_app.coffee",
       "app/assets/stylesheets/_custom_bootstrap.sass",
       "app/assets/stylesheets/_fonts.scss",
@@ -41,7 +42,6 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "app/assets/stylesheets/modules/bootstrap-overrides/_modal.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",
       "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
-      "app/cells/folio/console/atoms/previews/main_app.coffee",
       "bin/icons",
       "package.json",
     ].each { |f| template "#{f}.tt", f }
