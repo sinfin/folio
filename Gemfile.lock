@@ -64,7 +64,7 @@ PATH
       omniauth-facebook (~> 8.0.0)
       omniauth-google-oauth2 (~> 0.8.1)
       omniauth-twitter (~> 1.4.0)
-      pagy (~> 3)
+      pagy
       pg (~> 1.2.3)
       pg_search (= 2.3.2)
       phonelib
@@ -444,7 +444,8 @@ GEM
       omniauth-oauth (~> 1.1)
       rack
     orm_adapter (0.5.0)
-    pagy (3.14.0)
+    pagy (5.10.1)
+      activesupport
     parallel (1.22.0)
     parser (3.1.1.0)
       ast (~> 2.4.1)
