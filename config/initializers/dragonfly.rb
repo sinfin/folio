@@ -102,6 +102,8 @@ Dragonfly.app.configure do
     datastore :file,
               root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
               server_root: Rails.root.join("public")
+  elsif Rails.env.development? && !File.exist?(Rails.root.join(".env"))
+    puts "\nMissing .env file, not setting up dragonfly correctly.\n\n"
   else
     datastore :s3,
               bucket_name: ENV.fetch("S3_BUCKET_NAME"),
