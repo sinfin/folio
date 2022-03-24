@@ -19,35 +19,40 @@ class Folio::AssetsGenerator < Rails::Generators::Base
   end
 
   def copy_templates
-    [
-      "app/assets/javascripts/application.js",
-      "app/assets/javascripts/folio/console/atoms/previews/main_app.coffee",
-      "app/assets/javascripts/folio/console/main_app.coffee",
-      "app/assets/stylesheets/_custom_bootstrap.sass",
-      "app/assets/stylesheets/_fonts.scss",
-      "app/assets/stylesheets/_icons.scss",
-      "app/assets/stylesheets/_print.sass",
-      "app/assets/stylesheets/_variables.sass",
-      "app/assets/stylesheets/application.sass",
-      "app/assets/stylesheets/folio/console/_main_app.sass",
-      "app/assets/stylesheets/modules/_atoms.sass",
-      "app/assets/stylesheets/modules/_bootstrap-overrides.sass",
-      "app/assets/stylesheets/modules/_rich-text.sass",
-      "app/assets/stylesheets/modules/_turbolinks.sass",
-      "app/assets/stylesheets/modules/_with-icon.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/_alert.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/_buttons.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/_forms.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/_grid.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/_modal.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/_type.sass",
-      "app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass",
-      "bin/icons",
-      "package.json",
+    %w[
+      app/assets/javascripts/application.js
+      app/assets/javascripts/folio/console/atoms/previews/main_app.coffee
+      app/assets/javascripts/folio/console/main_app.coffee
+      app/assets/stylesheets/_custom_bootstrap.sass
+      app/assets/stylesheets/_fonts.scss
+      app/assets/stylesheets/_icons.scss
+      app/assets/stylesheets/_print.sass
+      app/assets/stylesheets/_variables.sass
+      app/assets/stylesheets/application.sass
+      app/assets/stylesheets/folio/console/_main_app.sass
+      app/assets/stylesheets/modules/_atoms.sass
+      app/assets/stylesheets/modules/_bootstrap-overrides.sass
+      app/assets/stylesheets/modules/_rich-text.sass
+      app/assets/stylesheets/modules/_turbolinks.sass
+      app/assets/stylesheets/modules/_with-icon.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/_alert.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/_buttons.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/_forms.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/_grid.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/_modal.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/_type.sass
+      app/assets/stylesheets/modules/bootstrap-overrides/mixins/_type.sass
+      bin/icons
+      package.json
     ].each { |f| template "#{f}.tt", f }
   end
 
   def copy_files
+    %w[
+      app/cells/folio/.keep
+      app/cells/folio/console/.keep
+    ].each { |f| copy_file f, f }
+
     base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
 
     %w[
