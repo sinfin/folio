@@ -116,6 +116,7 @@ module Folio
           "data/seed/pages/homepage.yml",
           "db/seeds.rb",
           "db/migrate/20220120132205_rm_files_mime_type_column.rb",
+          "db/migrate/20220214083648_rm_private_attachments_mime_type_column.rb.tt",
           "lib/tasks/developer_tools.rake",
           "public/maintenance.html",
           "test/factories.rb",
