@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 7"
   s.add_dependency "rails-i18n", "~> 7"
+  s.add_dependency "turbolinks"
   s.add_dependency "pg"
   s.add_dependency "pg_search", "= 2.3.2"
   s.add_dependency "friendly_id"
