@@ -44,6 +44,7 @@ module Folio
         gem "status-page", "0.1.5"
 
         gem "rack-mini-profiler"
+        gem "turbolinks"
 
         gem_group :test do
           gem "factory_bot"

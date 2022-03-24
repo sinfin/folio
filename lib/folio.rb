@@ -15,6 +15,7 @@ require "responders"
 require "sitemap_generator"
 require "acts-as-taggable-on"
 require "pg_search"
+require "turbolinks"
 
 require "slim"
 require "sass-rails"
