@@ -21,7 +21,7 @@ class Dummy::Atom::ImagesCell < ApplicationCell
     ratio = t.width.to_f / t.height
 
     {
-      ratio: ratio,
+      ratio:,
       width: (DYNAMIC_TARGET_HEIGHT.to_f * ratio).round,
     }
   end

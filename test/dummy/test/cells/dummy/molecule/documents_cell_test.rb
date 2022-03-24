@@ -7,7 +7,7 @@ class Dummy::Molecule::DocumentsCellTest < Cell::TestCase
     documents = create_list(:folio_document, 1)
 
     atoms = Array.new(2) do
-      create_atom(Dummy::Atom::Documents, documents: documents)
+      create_atom(Dummy::Atom::Documents, documents:)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)

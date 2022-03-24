@@ -15,7 +15,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
     Dragonfly.app.datastore.destroy(present_uid) if present_uid
 
-    new_thumb = make_thumb(image, size, quality, x: x, y: y)
+    new_thumb = make_thumb(image, size, quality, x:, y:)
 
     # need to reload here because of parallel jobs
     image.with_lock do
@@ -72,7 +72,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
           _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
 
           if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
-            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format: format)
+            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
           end
 
           if !x.nil? || !y.nil?
@@ -101,7 +101,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
           thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
         end
 
-        thumbnail = thumbnail.thumb(geometry, format: format)
+        thumbnail = thumbnail.thumb(geometry, format:)
         thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
         thumbnail = thumbnail.jpegoptim if format == :jpg
 
@@ -139,14 +139,14 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       thumbnail.content.add_meta("mime_type" => thumbnail.mime_type)
 
       base = {
-        uid: uid,
+        uid:,
         signature: thumbnail.signature,
         url: Dragonfly.app.datastore.url_for(uid),
         width: thumbnail.width,
         height: thumbnail.height,
-        quality: quality,
-        x: x,
-        y: y,
+        quality:,
+        x:,
+        y:,
         private: is_private,
       }
 
@@ -165,7 +165,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         end
 
         base.merge(
-          webp_uid: webp_uid,
+          webp_uid:,
           webp_url: Dragonfly.app.datastore.url_for(webp_uid),
           webp_signature: webp.signature,
         )

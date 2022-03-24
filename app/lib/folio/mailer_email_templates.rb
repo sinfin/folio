@@ -4,13 +4,13 @@ module Folio::MailerEmailTemplates
   def email_template_for(action = nil, mailer: nil)
     action ||= action_name
     mailer ||= self.class.to_s
-    Folio::EmailTemplate.find_by(mailer: mailer, action: action)
+    Folio::EmailTemplate.find_by(mailer:, action:)
   end
 
   def email_template_for!(action = nil, mailer: nil)
     action ||= action_name
     mailer ||= self.class.to_s
-    Folio::EmailTemplate.find_by!(mailer: mailer, action: action)
+    Folio::EmailTemplate.find_by!(mailer:, action:)
   end
 
   def email_template_mail(sym_data = {}, opts = {})

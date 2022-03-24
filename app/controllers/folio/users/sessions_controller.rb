@@ -81,7 +81,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
                       modal: true,
                       flash: cell_flash).show
 
-          render json: { errors: errors, data: html }, status: 401
+          render json: { errors:, data: html }, status: 401
         end
       end
     end

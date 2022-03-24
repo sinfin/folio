@@ -23,11 +23,11 @@ class Dummy::Atom::Card < Folio::Atom::Base
 
   def to_cell_hash
     {
-      cover_placement: cover_placement,
-      title: title,
-      content: content,
+      cover_placement:,
+      title:,
+      content:,
       button_label: try(:button_label),
-      href: href,
+      href:,
       large: is_a?(Dummy::Atom::Card::Large),
       medium: is_a?(Dummy::Atom::Card::Medium),
       small: is_a?(Dummy::Atom::Card::Small),

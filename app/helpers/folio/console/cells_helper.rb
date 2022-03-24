@@ -4,7 +4,7 @@
 module Folio
   module Console::CellsHelper
     def boolean_toggle(model, attribute, options = {})
-      opts = options.merge(attribute: attribute)
+      opts = options.merge(attribute:)
       cell("folio/console/boolean_toggle", model, opts).show
                                                        .try(:html_safe)
     end
@@ -26,8 +26,8 @@ module Folio
     end
 
     def single_file_select(f, attr_name = :file, as: :file)
-      cell("folio/console/single_file_select", f, attr_name: attr_name,
-                                                  as: as).show.html_safe
+      cell("folio/console/single_file_select", f, attr_name:,
+                                                  as:).show.html_safe
     end
 
     def show_header(model, opts = {})

@@ -3,12 +3,12 @@
 class Folio::SessionAttachments::DropzoneCell < Folio::ApplicationCell
   def dropzone_model
     {
-      create_url: create_url,
-      destroy_url: destroy_url,
+      create_url:,
+      destroy_url:,
       records: model.unpaired.where(web_session_id: session.id.try(:public_id)),
       param_name: "folio_session_attachment[file]",
       create_thumbnails: model < Folio::SessionAttachment::Image,
-      file_formats: file_formats,
+      file_formats:,
       max_file_size: 20,
     }
   end

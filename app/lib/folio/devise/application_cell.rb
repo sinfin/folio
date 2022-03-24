@@ -69,7 +69,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def password_input(f, field, opts = {})
     cell("folio/devise/password_input",
          f,
-         opts.merge(field: field))
+         opts.merge(field:))
   end
 
   def attribute_input(f, field, opts = {})

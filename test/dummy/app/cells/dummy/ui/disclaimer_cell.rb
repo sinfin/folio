@@ -11,6 +11,6 @@ class Dummy::Ui::DisclaimerCell < ApplicationCell
       link = t(".link")
     end
 
-    t(".text", link: link)
+    t(".text", link:)
   end
 end

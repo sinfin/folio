@@ -84,7 +84,7 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
     }
 
     sign_in @admin
-    post transport_console_transport_path(class_name: "Folio::Page", id: id), params: {
+    post transport_console_transport_path(class_name: "Folio::Page", id:), params: {
       yaml_string: hash.to_yaml(line_width: -1),
     }
 

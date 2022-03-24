@@ -11,7 +11,7 @@ class Folio::Console::Index::FiltersCellTest < Folio::Console::CellTest
         ["Unpublished", "unpublished"],
       ]
     }
-    html = cell("folio/console/index/filters", index_filters: index_filters,
+    html = cell("folio/console/index/filters", index_filters:,
                                                klass: Folio::Page).(:show)
 
     assert_equal 1,

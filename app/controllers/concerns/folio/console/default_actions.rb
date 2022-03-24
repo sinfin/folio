@@ -54,7 +54,7 @@ module Folio::Console::DefaultActions
               folio_console_record.try(:title) ||
               folio_console_record.id
 
-      render json: { label: label, id: folio_console_record.id }, layout: false
+      render json: { label:, id: folio_console_record.id }, layout: false
     else
       respond_with folio_console_record, location: respond_with_location
     end
@@ -80,7 +80,7 @@ module Folio::Console::DefaultActions
             }
           ]
 
-          render json: { errors: errors }, status: 422
+          render json: { errors: }, status: 422
         end
       end
     end
@@ -142,7 +142,7 @@ module Folio::Console::DefaultActions
       if event && !event.options[:private]
         folio_console_record.send("#{event_name}!")
         location = request.referer || respond_with_location
-        respond_with folio_console_record, location: location
+        respond_with folio_console_record, location:
       else
         human_event = AASM::Localizer.new.human_event_name(@klass, event_name)
 
@@ -153,7 +153,7 @@ module Folio::Console::DefaultActions
       alert = I18n.t("flash.actions.update.alert",
                      resource_name: @klass.model_name.human)
       redirect_to respond_with_location(prevalidate: true),
-                  flash: { alert: alert }
+                  flash: { alert: }
     end
   end
 
@@ -231,7 +231,7 @@ module Folio::Console::DefaultActions
     end
 
     def folio_console_record_variable_name(plural: false)
-      "@#{folio_console_name_base(plural: plural)}".to_sym
+      "@#{folio_console_name_base(plural:)}".to_sym
     end
 
     def folio_console_record

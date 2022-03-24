@@ -23,7 +23,7 @@ class Folio::Menu < Folio::ApplicationRecord
   scope :ordered, -> { order(type: :asc, locale: :asc) }
 
   scope :by_type, -> (type) do
-    where(type: type)
+    where(type:)
   end
 
   def available_targets

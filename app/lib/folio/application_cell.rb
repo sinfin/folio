@@ -39,7 +39,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def image(placement, size, opts = {})
-    cell("folio/image", placement, opts.merge(size: size))
+    cell("folio/image", placement, opts.merge(size:))
   end
 
   def menu_url_for(menu_item)

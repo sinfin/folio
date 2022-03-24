@@ -29,7 +29,7 @@ module Folio::Thumbnails
   #
   def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil, override_test_behaviour: false)
     fail_for_non_images
-    return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test? && !override_test_behaviour
+    return thumb_in_test_env(w_x_h, quality:) if Rails.env.test? && !override_test_behaviour
 
     if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
       hash = thumbnail_sizes[w_x_h]
@@ -53,7 +53,7 @@ module Folio::Thumbnails
         width, height = w_x_h.split("x").map(&:to_i)
 
         if immediate || self.class.immediate_thumbnails
-          image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force: force, x: x, y: y)
+          image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force:, x:, y:)
           return OpenStruct.new(image.thumbnail_sizes[w_x_h])
         else
           if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
@@ -71,10 +71,10 @@ module Folio::Thumbnails
                   signature: nil,
                   x: nil,
                   y: nil,
-                  url: url,
-                  width: width,
-                  height: height,
-                  quality: quality,
+                  url:,
+                  width:,
+                  height:,
+                  quality:,
                   started_generating_at: Time.current,
                   temporary_url: url,
                 }))
@@ -85,7 +85,7 @@ module Folio::Thumbnails
 
             return response if response
 
-            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
+            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
           end
         end
       end
@@ -93,26 +93,26 @@ module Folio::Thumbnails
       OpenStruct.new(
         uid: nil,
         signature: nil,
-        url: url,
-        width: width,
-        height: height,
+        url:,
+        width:,
+        height:,
         x: nil,
         y: nil,
-        quality: quality
+        quality:
       )
     end
   end
 
   def admin_thumb(immediate: false, force: false)
     thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
-          immediate: immediate,
-          force: force)
+          immediate:,
+          force:)
   end
 
   def lightbox_thumb(immediate: false, force: false)
     thumb(Folio::CellLightbox::LIGHTBOX_SIZE,
-          immediate: immediate,
-          force: force)
+          immediate:,
+          force:)
   end
 
   def thumb_in_test_env(w_x_h, quality: 90)
@@ -122,11 +122,11 @@ module Folio::Thumbnails
       uid: nil,
       signature: nil,
       url: temporary_url(w_x_h),
-      width: width,
-      height: height,
+      width:,
+      height:,
       x: nil,
       y: nil,
-      quality: quality
+      quality:
     )
   end
 

@@ -32,6 +32,6 @@ class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
     additional_data[:dominant_color] = "#%02X%02X%02X" % rgb
     additional_data[:dark] = rgb.sum < 3 * 255 / 2.0
 
-    file_model.update!(additional_data: additional_data)
+    file_model.update!(additional_data:)
   end
 end

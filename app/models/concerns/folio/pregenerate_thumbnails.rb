@@ -36,7 +36,7 @@ module Folio::PregenerateThumbnails
       if collection.present?
         collection.each do |version, quality|
           if quality.present?
-            file.thumb(version, quality: quality)
+            file.thumb(version, quality:)
           else
             file.thumb(version)
           end

@@ -60,7 +60,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
       p += %i[type locale] if action_name == "create"
 
       params.require(:menu)
-            .permit(*p, menu_items_attributes: menu_items_attributes)
+            .permit(*p, menu_items_attributes:)
     end
 
     def menu_items_attributes
@@ -84,7 +84,7 @@ class Folio::Console::MenusController < Folio::Console::BaseController
       serialized_menu_paths = []
       @menu.class.rails_paths.each do |path, title|
         serialized_menu_paths << {
-          title: title,
+          title:,
           label: "#{t('folio.console.menus.link')} - #{title}",
           rails_path: path,
         }

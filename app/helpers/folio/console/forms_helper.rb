@@ -2,19 +2,19 @@
 
 module Folio::Console::FormsHelper
   def translated_inputs(f, key, *args)
-    model = { f: f, key: key, args: args }
+    model = { f:, key:, args: }
     cell("folio/console/translated_inputs", model).show.html_safe
   end
 
   def translated_inputs_for_locales(f, key, locales, *args)
-    model = { f: f, key: key, args: args }
+    model = { f:, key:, args: }
     cell("folio/console/translated_inputs",
          model,
-         locales: locales).show.html_safe
+         locales:).show.html_safe
   end
 
   def private_attachments_fields(f, options = {})
-    render partial: "private_attachments", locals: options.merge(f: f)
+    render partial: "private_attachments", locals: options.merge(f:)
   end
 
   def link_to_remove_association(*args)
@@ -25,7 +25,7 @@ module Folio::Console::FormsHelper
       data.merge!(args[key][:data])
     end
 
-    args[key] = (args[key] || {}).merge(data: data)
+    args[key] = (args[key] || {}).merge(data:)
     super(*args)
   end
 
@@ -86,11 +86,11 @@ module Folio::Console::FormsHelper
 
     render layout: "folio/console/partials/simple_form_with_atoms",
            locals: {
-             model: model,
-             opts: opts,
-             layout_code: layout_code,
-             form_footer_options: form_footer_options,
-             expandable: expandable,
+             model:,
+             opts:,
+             layout_code:,
+             form_footer_options:,
+             expandable:,
            },
            &block
   end

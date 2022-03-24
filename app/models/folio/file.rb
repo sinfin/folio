@@ -86,10 +86,10 @@ class Folio::File < Folio::ApplicationRecord
   def to_h
     {
       thumb: thumbnailable? ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
-      file_size: file_size,
-      file_name: file_name,
-      type: type,
-      id: id,
+      file_size:,
+      file_name:,
+      type:,
+      id:,
     }
   end
 

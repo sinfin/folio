@@ -39,9 +39,9 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   def to_h
     {
       id: hash_id,
-      file_name: file_name,
-      file_size: file_size,
-      file_mime_type: file_mime_type,
+      file_name:,
+      file_size:,
+      file_mime_type:,
       thumb: to_h_thumb,
     }
   end

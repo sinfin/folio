@@ -7,7 +7,7 @@ class Dummy::Molecule::LogoCellTest < Cell::TestCase
     cover = create(:folio_image)
 
     atoms = Array.new(2) do
-      create_atom(Dummy::Atom::Logo, cover: cover)
+      create_atom(Dummy::Atom::Logo, cover:)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)

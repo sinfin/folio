@@ -12,7 +12,7 @@ class Dummy::Atom::ContactFormCell < ApplicationCell
          },
          note_rows: 5,
          above_form: model.text.present? ? content_tag(:p, cstypo(model.text), class: "mb-g") : nil,
-         under_form: under_form)
+         under_form:)
   end
 
   def under_form

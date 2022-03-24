@@ -7,7 +7,7 @@ class Dummy::Molecule::Blog::Articles::Card::MediumCellTest < Cell::TestCase
     article = create(:dummy_blog_article)
 
     atoms = Array.new(2) do
-      create_atom(Dummy::Atom::Blog::Articles::Card::Large, article: article)
+      create_atom(Dummy::Atom::Blog::Articles::Card::Large, article:)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)

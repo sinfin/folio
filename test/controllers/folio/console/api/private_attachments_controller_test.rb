@@ -52,7 +52,7 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
   test "destroy" do
     attachmentable = PageWithAttachments.create!(title: "PageWithAttachments")
     private_attachment = Folio::PrivateAttachment.create!(
-      attachmentable: attachmentable,
+      attachmentable:,
       file: Folio::Engine.root.join("test/fixtures/folio/test.gif")
     )
     account = Folio::Account.last

@@ -20,8 +20,8 @@ class ConvertAtomFieldsToJson < ActiveRecord::Migration[5.2]
         }
       end
 
-      atom.update_columns(data: data,
-                          associations: associations)
+      atom.update_columns(data:,
+                          associations:)
     end
 
     remove_column :folio_atoms, :title, :string

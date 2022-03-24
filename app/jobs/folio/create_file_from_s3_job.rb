@@ -17,7 +17,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       return
     end
 
-    broadcast_start(s3_path: s3_path, file_type: type)
+    broadcast_start(s3_path:, file_type: type)
 
     if existing_id
       file = klass.find(existing_id)
@@ -49,18 +49,18 @@ class Folio::CreateFileFromS3Job < ApplicationJob
         if replacing_file
           broadcast_replace_success(file: file.reload, file_type: type)
         else
-          broadcast_success(file: file.reload, s3_path: s3_path, file_type: type)
+          broadcast_success(file: file.reload, s3_path:, file_type: type)
         end
       else
         if replacing_file
-          broadcast_replace_error(file: file, file_type: type)
+          broadcast_replace_error(file:, file_type: type)
         else
-          broadcast_error(file: file, s3_path: s3_path, file_type: type)
+          broadcast_error(file:, s3_path:, file_type: type)
         end
       end
     end
   rescue StandardError => e
-    broadcast_error(file: file, s3_path: s3_path, error: e, file_type: type)
+    broadcast_error(file:, s3_path:, error: e, file_type: type)
     raise e
   ensure
     test_aware_s3_delete(s3_path)
@@ -80,11 +80,11 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     end
 
     def broadcast_start(s3_path:, file_type:)
-      broadcast({ s3_path: s3_path, type: "start", started_at: Time.current.to_i * 1000, file_type: file_type })
+      broadcast({ s3_path:, type: "start", started_at: Time.current.to_i * 1000, file_type: })
     end
 
     def broadcast_success(s3_path:, file:, file_type:)
-      broadcast({ s3_path: s3_path, type: "success", file: serialized_file(file)[:data], file_type: file_type })
+      broadcast({ s3_path:, type: "success", file: serialized_file(file)[:data], file_type: })
     end
 
     def broadcast_error(s3_path:, file: nil, error: nil, file_type:)
@@ -96,11 +96,11 @@ class Folio::CreateFileFromS3Job < ApplicationJob
         errors = nil
       end
 
-      broadcast({ s3_path: s3_path, type: "failure", errors: errors, file_type: file_type })
+      broadcast({ s3_path:, type: "failure", errors:, file_type: })
     end
 
     def broadcast_replace_success(file:, file_type:)
-      broadcast({ type: "replace-success", file: serialized_file(file)[:data], file_type: file_type })
+      broadcast({ type: "replace-success", file: serialized_file(file)[:data], file_type: })
     end
 
     def broadcast_replace_error(file:, error: nil, file_type:)
@@ -112,7 +112,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
         errors = nil
       end
 
-      broadcast({ type: "replace-failure", file: serialized_file(file)[:data], errors: errors, file_type: file_type })
+      broadcast({ type: "replace-failure", file: serialized_file(file)[:data], errors:, file_type: })
     end
 
     def broadcast(hash)

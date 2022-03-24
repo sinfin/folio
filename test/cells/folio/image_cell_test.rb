@@ -11,7 +11,7 @@ class Folio::ImageCellTest < Cell::TestCase
     html = cell("folio/image", nil).(:show)
     assert_not html.has_css?(".f-image")
 
-    html = cell("folio/image", nil, size: size).(:show)
+    html = cell("folio/image", nil, size:).(:show)
     assert html.has_css?(".f-image")
     assert html.has_css?(".f-image__fallback")
 
@@ -19,12 +19,12 @@ class Folio::ImageCellTest < Cell::TestCase
     html = cell("folio/image", placement).(:show)
     assert_not html.has_css?(".f-image")
 
-    html = cell("folio/image", placement, size: size).(:show)
+    html = cell("folio/image", placement, size:).(:show)
     assert html.has_css?(".f-image")
     assert_not html.has_css?(".f-image__fallback")
     assert html.has_css?(".f-image__img")
 
-    html = cell("folio/image", placement, size: size, lightbox: true).(:show)
+    html = cell("folio/image", placement, size:, lightbox: true).(:show)
     assert html.has_css?(".f-image--lightboxable")
     assert html.has_css?(".f-image[data-lightbox-src]")
   end

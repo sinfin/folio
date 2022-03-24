@@ -23,6 +23,6 @@ class Folio::Devise::Omniauth::Authentications::ListCell < Folio::Devise::Applic
   end
 
   def unlink_url_for(provider)
-    controller.folio.devise_omniauth_authentication_path(provider: provider)
+    controller.folio.devise_omniauth_authentication_path(provider:)
   end
 end

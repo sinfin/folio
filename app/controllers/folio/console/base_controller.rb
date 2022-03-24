@@ -70,12 +70,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
       load_and_authorize_resource(through_as, class: through)
 
       load_and_authorize_resource(as, class: class_name,
-                                      except: except,
+                                      except:,
                                       parent: (false if as.present?),
                                       through: through_as)
     else
       load_and_authorize_resource(as, class: class_name,
-                                      except: except,
+                                      except:,
                                       parent: (false if as.present?))
     end
 
@@ -303,7 +303,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       filename = "#{name}-#{Date.today}.csv".split(".")
                                             .map(&:parameterize)
                                             .join(".")
-      send_data data, filename: filename
+      send_data data, filename:
     end
 
     def index_tabs

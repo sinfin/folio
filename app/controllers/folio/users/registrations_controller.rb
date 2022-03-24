@@ -65,7 +65,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
             json = {}
           end
 
-          render json: json, status: 200
+          render json:, status: 200
         else
           clean_up_passwords resource
           set_minimum_password_length
@@ -77,12 +77,12 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
           cell_flash[:alert] = message
 
           html = cell("folio/devise/registrations/new",
-                      resource: resource,
+                      resource:,
                       resource_name: :user,
                       modal: true,
                       flash: cell_flash).show
 
-          render json: { errors: errors, data: html }, status: 401
+          render json: { errors:, data: html }, status: 401
         end
       end
     end

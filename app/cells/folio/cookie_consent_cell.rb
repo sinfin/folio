@@ -169,7 +169,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
     blocks = [
       {
         title: t(".consent_modal.settings_modal.blocks.title"),
-        description: t(".consent_modal.settings_modal.blocks.description", cookies_link: cookies_link)
+        description: t(".consent_modal.settings_modal.blocks.description", cookies_link:)
       }
     ]
 
@@ -191,7 +191,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
     {
       consent_modal: {
         title: t(".consent_modal.title"),
-        description: t(".consent_modal.description", cookies_link: cookies_link),
+        description: t(".consent_modal.description", cookies_link:),
         primary_btn: {
           text: t(".consent_modal.primary_btn.text"),
           role: "accept_all"
@@ -213,7 +213,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
           { col3: t(".consent_modal.settings_modal.cookie_table_headers.col3") },
           { col4: t(".consent_modal.settings_modal.cookie_table_headers.col4") }
         ],
-        blocks: blocks,
+        blocks:,
       }
     }
   end
@@ -261,7 +261,7 @@ class Folio::CookieConsentCell < Folio::ApplicationCell
   end
 
   def log_error(msg, extra: nil)
-    Raven.capture_message(msg, extra: extra)
+    Raven.capture_message(msg, extra:)
   rescue StandardError
   end
 end

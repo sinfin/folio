@@ -43,7 +43,7 @@ class Folio::Account < Folio::ApplicationRecord
   }
 
   scope :by_role, -> (role) {
-    where(role: role)
+    where(role:)
   }
 
   def can_manage_sidekiq?

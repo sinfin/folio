@@ -7,7 +7,7 @@ class Folio::Console::SearchesController < Folio::Console::BaseController
     @query = ActionController::Base.helpers.sanitize(params[:q].to_s)
 
     respond_to do |format|
-      format.html { render html: html, layout: "folio/console/application" }
+      format.html { render html:, layout: "folio/console/application" }
       format.json { render html: html(js: true), layout: false }
     end
   end

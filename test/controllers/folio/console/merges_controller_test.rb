@@ -45,7 +45,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     duplicate = create(:folio_page, title: "bar")
 
     url = "/foo/bar/baz"
-    post console_merge_path("Folio::Page", original, duplicate, url: url), params: {
+    post console_merge_path("Folio::Page", original, duplicate, url:), params: {
       merge: {
         title: Folio::Merger::DUPLICATE,
       }
@@ -57,7 +57,7 @@ class Folio::Console::MergesControllerTest < Folio::Console::BaseControllerTest
     original = create(:folio_page, title: "foo")
 
     url = "/foo/bar/baz"
-    get new_console_merge_path("Folio::Page", original, original, url: url)
+    get new_console_merge_path("Folio::Page", original, original, url:)
     assert_redirected_to console_pages_path
   end
 end

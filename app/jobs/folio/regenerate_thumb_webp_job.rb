@@ -23,7 +23,7 @@ class Folio::RegenerateThumbWebpJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes: thumbnail_sizes)
+        image.update!(thumbnail_sizes:)
       end
     end
   end
@@ -37,7 +37,7 @@ class Folio::RegenerateThumbWebpJob < Folio::ApplicationJob
       webp_uid = webp.store
 
       data.merge(
-        webp_uid: webp_uid,
+        webp_uid:,
         webp_url: Dragonfly.app.datastore.url_for(webp_uid),
         webp_signature: webp.signature,
       )

@@ -95,7 +95,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
             required_keywords.each do |key|
               unless value.include?("{#{key}}")
                 message = I18n.t("activerecord.attributes.folio/email_template.missing_keyword", keyword: key)
-                self.errors.add column_name, :missing_keyword, message: message
+                self.errors.add column_name, :missing_keyword, message:
               end
             end
           end

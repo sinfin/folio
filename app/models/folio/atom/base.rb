@@ -70,11 +70,11 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def to_h
     {
-      id: id,
-      type: type,
-      position: position,
-      placement_type: placement_type,
-      placement_id: placement_id,
+      id:,
+      type:,
+      position:,
+      placement_type:,
+      placement_id:,
       data: data || {},
     }.merge(attachments_to_h).merge(associations_to_h)
   end

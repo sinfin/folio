@@ -89,7 +89,7 @@ FactoryBot.define do
       end
 
       after(:create) do |menu, evaluator|
-        create_list(:folio_menu_item, evaluator.items_count, menu: menu)
+        create_list(:folio_menu_item, evaluator.items_count, menu:)
       end
     end
   end

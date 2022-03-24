@@ -12,7 +12,7 @@ class Folio::Mailchimp::Api
   end
 
   def request
-    Gibbon::Request.new(api_key: api_key)
+    Gibbon::Request.new(api_key:)
   end
 
   def retrieve_member(email, hashed_email: false)
@@ -34,7 +34,7 @@ class Folio::Mailchimp::Api
     subscription = {
       email_address: email,
       merge_fields: merge_vars,
-      status: status
+      status:
     }.compact
 
     request.lists(list_id).members(subscription_id)
@@ -77,7 +77,7 @@ class Folio::Mailchimp::Api
 
     with_mailchimp_error_rescue do
       request.lists(list_id).members(subscription_id).tags
-                                                     .create(body: { tags: tags })
+                                                     .create(body: { tags: })
     end
 
     true

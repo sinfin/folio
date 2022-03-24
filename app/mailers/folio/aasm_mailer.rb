@@ -7,7 +7,7 @@ class Folio::AasmMailer < Folio::ApplicationMailer
     @simple_text = simple_text
 
     mail to: email,
-         subject: subject,
+         subject:,
          bcc: self.class.bcc_email,
          reply_to: self.class.reply_to_email,
          from: self.class.from_email

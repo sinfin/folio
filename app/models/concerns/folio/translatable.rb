@@ -32,7 +32,7 @@ module Folio::Translatable
     end
 
     scope :original, -> { where(original_id: nil) }
-    scope :by_locale, -> (locale) { where(locale: locale)   }
+    scope :by_locale, -> (locale) { where(locale:)   }
   end
 
   # TODO
@@ -76,6 +76,6 @@ module Folio::Translatable
   end
 
   def translation(locale = I18n.locale)
-    translations.find_by(locale: locale)
+    translations.find_by(locale:)
   end
 end

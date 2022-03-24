@@ -9,13 +9,13 @@ class Folio::Devise::Omniauth::AuthenticationsController < Folio::ApplicationCon
     provider = params.require(:provider)
 
     current_user.authentications
-                .where(provider: provider)
+                .where(provider:)
                 .destroy_all
 
     msg = t(".success",
             provider: Folio::Omniauth::Authentication.human_provider(provider))
 
-    redirect_back fallback_location: fallback_location,
+    redirect_back fallback_location:,
                   flash: { success: msg }
   end
 

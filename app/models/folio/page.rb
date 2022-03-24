@@ -73,7 +73,7 @@ class Folio::Page < Folio::ApplicationRecord
     if type == "Folio::Page"
       where(type: [type, nil])
     else
-      where(type: type)
+      where(type:)
     end
   }
 

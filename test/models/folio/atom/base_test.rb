@@ -11,7 +11,7 @@ class Folio::Atom::BaseTest < ActiveSupport::TestCase
 
   test "associations" do
     page = create(:folio_page)
-    atom1 = PageReferenceAtom.create!(page: page, placement: page)
+    atom1 = PageReferenceAtom.create!(page:, placement: page)
     assert_equal(atom1.page, page)
     assert_equal(page.id, atom1.page_id)
 

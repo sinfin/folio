@@ -7,9 +7,9 @@ module Folio::Console::ReactHelper
                    atom_setting: nil)
     react_files("Folio::Image",
                 selected_placements,
-                attachmentable: attachmentable,
-                type: type,
-                atom_setting: atom_setting)
+                attachmentable:,
+                type:,
+                atom_setting:)
   end
 
   def react_documents(selected_placements = nil,
@@ -18,22 +18,22 @@ module Folio::Console::ReactHelper
                       atom_setting: nil)
     react_files("Folio::Document",
                 selected_placements,
-                attachmentable: attachmentable,
-                type: type,
-                atom_setting: atom_setting)
+                attachmentable:,
+                type:,
+                atom_setting:)
   end
 
   def react_picker(f, placement_key, file_type: "Folio::Image", title: nil, atom_setting: nil)
-    raw cell("folio/console/react_picker", f, placement_key: placement_key,
-                                              title: title,
-                                              file_type: file_type,
-                                              atom_setting: atom_setting)
+    raw cell("folio/console/react_picker", f, placement_key:,
+                                              title:,
+                                              file_type:,
+                                              atom_setting:)
   end
 
   def react_ancestry(klass, max_nesting_depth: 2)
     raw cell("folio/console/react_ancestry",
              klass,
-             max_nesting_depth: max_nesting_depth)
+             max_nesting_depth:)
   end
 
   def react_modal_for(file_type)
@@ -98,9 +98,9 @@ module Folio::Console::ReactHelper
     end
 
     data = {
-      atoms: atoms,
+      atoms:,
       destroyedIds: destroyed_ids,
-      namespace: namespace,
+      namespace:,
       structures: Folio::Atom.structures,
       placementType: f.object.class.to_s,
       className: f.object.class.to_s,
@@ -194,8 +194,8 @@ module Folio::Console::ReactHelper
                                  :api,
                                  :autocomplete,
                                  klass: through_klass.to_s,
-                                 scope: scope,
-                                 order_scope: order_scope,
+                                 scope:,
+                                 order_scope:,
                                  only_path: true])
 
     content_tag(:div, class: "form-group") do
@@ -219,11 +219,11 @@ module Folio::Console::ReactHelper
   REACT_NOTE_FORM_PARENT_CLASS_NAME = "f-c-r-notes-fields-app-form-parent"
 
   def react_notes_fields(f)
-    react_notes_common(f: f)
+    react_notes_common(f:)
   end
 
   def react_notes_form(target)
-    react_notes_common(target: target)
+    react_notes_common(target:)
   end
 
   private

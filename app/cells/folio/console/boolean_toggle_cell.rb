@@ -56,7 +56,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
 
   def input_data
     {
-      url: url,
+      url:,
       confirmation: input_data_confirmation,
     }.compact
   end

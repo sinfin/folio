@@ -33,14 +33,14 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
       name: nil,
       id: nil,
       class: "f-c-merges-form-row__input",
-      value: value
+      value:
     }
 
     if row.is_a?(Hash)
       case row[:as]
       when :tags
         cell("folio/console/tagsinput", f, value: value.pluck(:name).join(", "),
-                                           input_html: input_html).show
+                                           input_html:).show
       when :publishable_and_featured
         cell("folio/console/publishable_inputs", f, no_input_ids: true,
                                                     no_input_names: true).show
@@ -56,7 +56,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
              reflection: merger.klass.reflect_on_association(row_key)).show
       end
     else
-      f.input row_key, input_html: input_html,
+      f.input row_key, input_html:,
                        wrapper_html: { class: "m-0" }
     end
   end
@@ -84,7 +84,7 @@ class Folio::Console::Merges::Form::RowCell < Folio::ConsoleCell
     src = controller.placement_preview_console_atoms_path(record.class.to_s,
                                                           record.id)
     content_tag(:iframe, "", class: "f-c-merges-form-row__atoms-iframe",
-                             src: src)
+                             src:)
   end
 
   def title?

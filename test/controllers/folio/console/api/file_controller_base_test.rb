@@ -48,7 +48,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
       files = create_list(klass.model_name.singular, 3)
       assert_equal(3, klass.count)
       ids = files.first(2).map(&:id).join(",")
-      delete url_for([:mass_destroy, :console, :api, klass, ids: ids])
+      delete url_for([:mass_destroy, :console, :api, klass, ids:])
       assert_equal(1, klass.count)
     end
 
@@ -69,7 +69,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     test "#{klass} - mass_download" do
       files = create_list(klass.model_name.singular, 2)
       ids = files.map(&:id).join(",")
-      get url_for([:mass_download, :console, :api, klass, ids: ids])
+      get url_for([:mass_download, :console, :api, klass, ids:])
       assert_response(:ok)
     end
   end

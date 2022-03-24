@@ -7,7 +7,7 @@ module Folio::Console::TabsHelper
         @folio_active_tab = params[:tab].try(:to_sym)
       end
 
-      render "folio/console/partials/tabs", keys: keys
+      render "folio/console/partials/tabs", keys:
     end
   end
 

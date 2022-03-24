@@ -15,7 +15,7 @@ module Folio::Subscribable
 
       Folio::Mailchimp::SubscribeJob.perform_later(email, merge_vars: subscription_merge_vars,
                                                           tags: subscription_tags,
-                                                          status: status)
+                                                          status:)
     end
   end
 

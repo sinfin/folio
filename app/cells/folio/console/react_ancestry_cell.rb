@@ -12,7 +12,7 @@ class Folio::Console::ReactAncestryCell < Folio::ConsoleCell
         url: url_for([:edit, :console, parent]),
         destroy_url: parent.class.try(:indestructible?) ? nil : url_for([:console, parent]),
         valid: parent.valid?,
-        children: children,
+        children:,
       }
     end
   end

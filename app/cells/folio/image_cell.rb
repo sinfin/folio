@@ -42,8 +42,8 @@ class Folio::ImageCell < Folio::ApplicationCell
         src: model[:normal],
         srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
         webp_src: model[:webp_normal],
-        webp_srcset: webp_srcset,
-        use_webp: use_webp,
+        webp_srcset:,
+        use_webp:,
       }
     else
       if model.is_a?(Folio::FilePlacement::Base)
@@ -55,7 +55,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       normal = file.thumb(size)
 
       h = {
-        normal: normal,
+        normal:,
         src: normal.url,
         alt: options[:alt] || "",
         title: options[:title],

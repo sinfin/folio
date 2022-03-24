@@ -44,11 +44,11 @@ module Folio::Atom
         end
 
         {
-          file_type: file_type,
-          files_url: files_url,
+          file_type:,
+          files_url:,
           key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
           label: klass.human_attribute_name(key),
-          plural: plural,
+          plural:,
         }
       end
 
@@ -70,23 +70,23 @@ module Folio::Atom
                                      :console,
                                      :api,
                                      :autocomplete,
-                                     class_names: class_names,
-                                     scope: scope,
-                                     order_scope: order_scope,
+                                     class_names:,
+                                     scope:,
+                                     order_scope:,
                                      only_path: true])
 
         associations[key] = {
           hint: I18n.t("simple_form.hints.#{klass.name.underscore}.#{key}", default: nil).try(:html_safe),
           label: klass.human_attribute_name(key),
-          url: url,
+          url:,
         }
       end
 
       str[klass.to_s] = {
-        associations: associations,
-        attachments: attachments,
+        associations:,
+        attachments:,
         hint: I18n.t("simple_form.hints.#{klass.name.underscore}.base", default: nil).try(:html_safe),
-        structure: structure,
+        structure:,
         form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,
         molecule: klass.molecule_cell_name,
@@ -146,7 +146,7 @@ module Folio::Atom
       id: record.id,
       type: record.class.name,
       text: label,
-      label: label,
+      label:,
       value: Folio::Console::StiHelper.sti_record_to_select_value(record)
     }
   end

@@ -10,8 +10,8 @@ module Folio::Console::IndexHelper
   end
 
   def catalogue(records, options = {}, &block)
-    model = options.merge(records: records,
-                          block: block,
+    model = options.merge(records:,
+                          block:,
                           klass: @klass,
                           merge: @folio_console_merge)
 

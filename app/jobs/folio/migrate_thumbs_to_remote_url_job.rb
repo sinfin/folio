@@ -24,7 +24,7 @@ class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes: thumbnail_sizes)
+        image.update!(thumbnail_sizes:)
       end
     end
   end

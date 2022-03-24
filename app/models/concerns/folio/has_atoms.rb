@@ -96,7 +96,7 @@ module Folio::HasAtoms
 
     included do
       atom_locales.each do |locale|
-        has_many "#{locale}_atoms".to_sym, -> { ordered.where(locale: locale) },
+        has_many "#{locale}_atoms".to_sym, -> { ordered.where(locale:) },
                                            class_name: "Folio::Atom::Base",
                                            as: :placement,
                                            inverse_of: :placement,

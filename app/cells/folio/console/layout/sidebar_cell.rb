@@ -73,7 +73,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             concat(label)
           end
         else
-          link(label, path, paths: paths,
+          link(label, path, paths:,
                             active_start_with: class_name[:active_start_with])
         end
       else

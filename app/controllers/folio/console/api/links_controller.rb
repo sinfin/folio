@@ -34,7 +34,7 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       end
 
       links << {
-        label: label,
+        label:,
         url: main_app.public_send(path),
         title: label,
       }

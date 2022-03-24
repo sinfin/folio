@@ -108,24 +108,24 @@ puts "Created more pages"
 puts "Creating Dummy::Menu::Nestable"
 menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable")
 
-root = Folio::MenuItem.create!(menu: menu,
+root = Folio::MenuItem.create!(menu:,
                                title: "Reference",
                                target: reference,
                                position: 0)
 
-child = Folio::MenuItem.create!(menu: menu,
+child = Folio::MenuItem.create!(menu:,
                                 title: "Podreference",
                                 target: reference,
                                 position: 1,
                                 parent: root)
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "Podreference",
                         target: reference,
                         position: 2,
                         parent: child)
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "About",
                         target: about,
                         position: 3)
@@ -134,18 +134,18 @@ puts "Created Dummy::Menu::Nestable"
 puts "Creating Dummy::Menu::Stylable"
 menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable")
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "Reference",
                         target: reference,
                         position: 0)
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "About red",
                         target: about,
                         position: 1,
                         style: "red")
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "About",
                         target: about,
                         position: 1)
@@ -154,40 +154,40 @@ puts "Created Dummy::Menu::Stylable"
 puts "Creating Dummy::Menu::Header"
 menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header")
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "UI Kit",
                         url: "/folio/ui",
                         position: 1)
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "Atoms",
                         url: "/folio/ui/atoms",
                         position: 2)
 
-Folio::MenuItem.create!(menu: menu,
+Folio::MenuItem.create!(menu:,
                         title: "Blog",
                         url: "/blog",
                         position: 3)
 
-mi = Folio::MenuItem.create!(menu: menu,
+mi = Folio::MenuItem.create!(menu:,
                              title: "Nestable non-link",
                              position: 3)
 
 3.times do |i|
-  Folio::MenuItem.create!(menu: menu,
+  Folio::MenuItem.create!(menu:,
                           title: "Child #{i + 1}",
                           url: "/",
                           position: i + 1,
                           parent: mi)
 end
 
-mi = Folio::MenuItem.create!(menu: menu,
+mi = Folio::MenuItem.create!(menu:,
                              title: "Nestable link",
                              url: "/",
                              position: 3)
 
 3.times do |i|
-  Folio::MenuItem.create!(menu: menu,
+  Folio::MenuItem.create!(menu:,
                           title: "Child #{i + 1}",
                           url: "/",
                           position: i + 1,
@@ -201,7 +201,7 @@ puts "Creating Dummy::Menu::Footer"
 menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer")
 
 3.times do |i|
-  Folio::MenuItem.create!(menu: menu,
+  Folio::MenuItem.create!(menu:,
                           title: "Footer link #{i + 1}",
                           url: "/",
                           position: i + 1)

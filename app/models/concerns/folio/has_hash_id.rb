@@ -25,7 +25,7 @@ module Folio::HasHashId
       hash_id = SecureRandom.urlsafe_base64(self.class.hash_id_length)
                             .gsub(/-|_/, ("a".."z").to_a[rand(26)])
       exists = self.class.hash_id_classes.any? do |klass|
-        klass.exists?(hash_id: hash_id)
+        klass.exists?(hash_id:)
       end
       break unless exists
     end

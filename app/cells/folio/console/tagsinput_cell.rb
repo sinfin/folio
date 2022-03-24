@@ -4,8 +4,8 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
 
   def show
-    model.input name, input_html: input_html,
-                      wrapper_html: wrapper_html
+    model.input name, input_html:,
+                      wrapper_html:
   end
 
   def selected
@@ -38,7 +38,7 @@ class Folio::Console::TagsinputCell < Folio::ConsoleCell
 
     (options[:input_html] || {}).merge(
       class: "f-c-tagsinput",
-      value: value,
+      value:,
       "data-context" => options[:tag_context],
     )
   end

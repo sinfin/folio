@@ -25,7 +25,7 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
     return user if user.present?
 
     if email.present?
-      existing_user = Folio::User.find_by(email: email)
+      existing_user = Folio::User.find_by(email:)
     else
       existing_user = nil
     end
@@ -37,11 +37,11 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
         conflict_token = SecureRandom.urlsafe_base64(16)
                                      .gsub(/-|_/, ("a".."z").to_a[rand(26)])
 
-        break unless self.class.exists?(conflict_token: conflict_token)
+        break unless self.class.exists?(conflict_token:)
       end
 
       update_columns(conflict_user_id: existing_user.id,
-                     conflict_token: conflict_token)
+                     conflict_token:)
 
       false
     else
@@ -54,11 +54,11 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
 
       Folio::User.create!(password: Devise.friendly_token[0, 20] + "a6C", # appendix to always fullfill standard requirements
                           has_generated_password: true,
-                          nickname: nickname,
-                          first_name: first_name,
-                          last_name: last_name,
+                          nickname:,
+                          first_name:,
+                          last_name:,
                           authentications: [self],
-                          email: email,
+                          email:,
                           confirmed_at: Rails.application.config.folio_users_confirmable ? Time.zone.now : nil)
     end
   end
