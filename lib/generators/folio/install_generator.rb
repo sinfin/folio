@@ -19,7 +19,7 @@ module Folio
         gem "slim-rails"
         gem "cells"
         gem "cells-slim", "0.0.6"
-        gem "cells-rails", "0.1.0"
+        gem "cells-rails", github: "sinfin/cells-rails"
         gem "route_translator"
         gem "breadcrumbs_on_rails"
         gem "sentry-raven"
@@ -32,6 +32,10 @@ module Folio
         gem "uglifier", ">= 1.3.0"
         gem "faker", require: false
         gem "aws-sdk-s3", require: false
+
+        gem "dragonfly", "1.4.0"
+        gem "dragonfly-s3_data_store"
+        gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
 
         gem "sidekiq", "~> 6"
         gem "sidekiq-cron", "1.2.0"
