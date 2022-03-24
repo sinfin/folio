@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_14_084147) do
+ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -409,7 +409,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_14_084147) do
     t.boolean "header_message_published", default: false
     t.datetime "header_message_published_from", precision: nil
     t.datetime "header_message_published_until", precision: nil
+    t.string "type"
     t.index ["domain"], name: "index_folio_sites_on_domain"
+    t.index ["type"], name: "index_folio_sites_on_type"
   end
 
   create_table "folio_users", force: :cascade do |t|

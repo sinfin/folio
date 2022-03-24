@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-03-24
+### Added
+- added `Rails.application.config.folio_site_is_a_singleton` and `Folio::Site` STI support
+
 ## 2021-03-21
 ### Added
 - added `Folio::ConsoleNote` model and `Folio::HasConsoleNotes` concern

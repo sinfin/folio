@@ -61,6 +61,14 @@ module Folio
   def self.table_name_prefix
     "folio_"
   end
+
+  def self.current_site(*arguments)
+    if Rails.application.config.folio_site_is_a_singleton
+      Folio::Site.instance
+    else
+      fail "You must implement this yourself"
+    end
+  end
 end
 
 # only `folio/lib` directory is loaded when processing Rails `config/environments/*`

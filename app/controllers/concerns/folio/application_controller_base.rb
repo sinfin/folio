@@ -37,10 +37,6 @@ module Folio::ApplicationControllerBase
     end
   end
 
-  def current_site
-    @current_site ||= Folio::Site.instance
-  end
-
   private
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)

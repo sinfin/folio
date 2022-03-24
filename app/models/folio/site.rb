@@ -2,7 +2,14 @@
 
 class Folio::Site < Folio::ApplicationRecord
   include Folio::HasHeaderMessage
-  include Folio::Singleton
+
+  if Rails.application.config.folio_site_is_a_singleton
+    include Folio::Singleton
+  else
+    # use specific STI types if site is not a singleton
+    validates :type,
+              presence: true
+  end
 
   # Validations
   validates :title, :email, :locale, :locales,
@@ -82,8 +89,10 @@ end
 #  header_message_published          :boolean          default(FALSE)
 #  header_message_published_from     :datetime
 #  header_message_published_until    :datetime
+#  type                              :string
 #
 # Indexes
 #
 #  index_folio_sites_on_domain  (domain)
+#  index_folio_sites_on_type    (type)
 #

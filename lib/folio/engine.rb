@@ -33,6 +33,7 @@ module Folio
     config.folio_modal_cell_name = nil
     config.folio_use_og_image = true
     config.folio_aasm_mailer_config = {}
+    config.folio_site_is_a_singleton = true
 
     config.folio_direct_s3_upload_class_names = %w[
       Folio::File
