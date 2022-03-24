@@ -52,7 +52,6 @@ end
 #  file_width          :integer
 #  file_height         :integer
 #  file_size           :bigint(8)
-#  mime_type           :string(255)
 #  additional_data     :json
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null

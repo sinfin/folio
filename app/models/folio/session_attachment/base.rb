@@ -124,7 +124,7 @@ end
 #  type            :string
 #  web_session_id  :string
 #  placement_type  :string
-#  placement_id    :bigint(8)
+#  placement_id    :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  file_width      :integer
