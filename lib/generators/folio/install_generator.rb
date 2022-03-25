@@ -108,8 +108,6 @@ module Folio
           "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
-          "config/locales/activerecord.cs.yml",
-          "config/locales/activerecord.en.yml",
           "config/routes.rb",
           "config/schedule.rb",
           "config/sitemap.rb",
