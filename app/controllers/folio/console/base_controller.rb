@@ -3,9 +3,10 @@
 require "csv"
 
 class Folio::Console::BaseController < Folio::ApplicationController
-  include Pagy::Backend
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
+  include Folio::HasCurrentSite
+  include Pagy::Backend
 
   before_action :custom_authenticate_account!
 
@@ -146,12 +147,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
   def filter_params
     params.permit(:by_query, *index_filters.keys)
   end
-
-  def current_site
-    @current_site ||= Folio::Site.instance
-  end
-
-  helper_method :current_site
 
   private
     # TODO: authorize account

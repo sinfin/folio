@@ -7,7 +7,7 @@ module Folio::HasCurrentSite
     helper_method :current_site
   end
 
-  def current_site(*arguments)
-    @current_site ||= Folio.current_site(*arguments)
+  def current_site
+    @current_site ||= Folio.current_site(request:)
   end
 end
