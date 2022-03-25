@@ -230,18 +230,6 @@ module Folio::Console::DefaultActions
       end
     end
 
-    def folio_console_record_variable_name(plural: false)
-      "@#{folio_console_name_base(plural:)}".to_sym
-    end
-
-    def folio_console_record
-      instance_variable_get(folio_console_record_variable_name)
-    end
-
-    def folio_console_records
-      instance_variable_get(folio_console_record_variable_name(plural: true))
-    end
-
     def folio_console_params
       send("#{folio_console_name_base}_params")
     end

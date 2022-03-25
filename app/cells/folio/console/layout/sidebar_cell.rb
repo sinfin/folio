@@ -27,10 +27,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         path = controller.url_for([:edit, :console, homepage_instance])
         link(t(".homepage"), path)
       end
-    elsif link_source.is_a?(Hash) &&
-       (link_source[:klass] || link_source[:label]) &&
-       link_source[:path]
-
+    elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && link_source[:path]
       if link_source[:klass]
         return if controller.cannot?(:read, link_source[:klass].constantize)
       end
@@ -43,10 +40,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         ""
       end
 
-      begin
-        path = controller.send(link_source[:path])
-      rescue NoMethodError
-        path = controller.main_app.send(link_source[:path])
+      if link_source[:path].is_a?(String)
+        path = link_source[:path]
+      else
+        begin
+          path = controller.send(link_source[:path])
+        rescue NoMethodError
+          path = controller.main_app.send(link_source[:path])
+        end
       end
 
       paths = (link_source[:paths] || []).map do |p|
@@ -124,22 +125,29 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           ]
         }
       ] + Folio::Site.ordered.map do |site|
+        link_for_class = -> (klass) do
+          {
+            klass: klass.to_s,
+            path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+          }
+        end
+
         {
           title: site.title,
           links: [
-            "Folio::Page",
-            :homepage,
-            "Folio::Menu",
-            "Folio::Lead",
-            "Folio::NewsletterSubscription",
-            "Folio::EmailTemplate",
+            link_for_class.call(Folio::Page),
+            homepage_for_site(site),
+            link_for_class.call(Folio::Menu),
+            link_for_class.call(Folio::Lead),
+            link_for_class.call(Folio::NewsletterSubscription),
+            link_for_class.call(Folio::EmailTemplate),
             {
               klass: "Folio::Site",
               icon: "fa fa-cogs",
-              path: :edit_console_site_path,
+              path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
               label: "settings"
             },
-          ]
+          ].compact
         }
       end
     end
@@ -211,5 +219,16 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def homepage_instance
     @homepage_instance ||= "#{::Rails.application.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false)
+  end
+
+  def homepage_for_site(site)
+    instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false)
+
+    if instance
+      {
+        label: t(".homepage"),
+        path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
+      }
+    end
   end
 end

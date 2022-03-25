@@ -52,6 +52,14 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  def env_aware_domain
+    if Rails.env.development?
+      "dev-#{domain}:3000"
+    else
+      domain
+    end
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|

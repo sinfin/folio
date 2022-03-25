@@ -80,6 +80,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                       parent: (false if as.present?))
     end
 
+    # keep this under load_and_authorize_resource
+    if klass.try(:has_belongs_to_site?)
+      before_action :filter_records_by_belongs_to_site
+    end
+
     before_action :add_through_breadcrumbs
     before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs
@@ -414,6 +419,29 @@ class Folio::Console::BaseController < Folio::ApplicationController
         end
       rescue NoMethodError, ActionController::RoutingError
         nil
+      end
+    end
+
+    def folio_console_record_variable_name(plural: false)
+      "@#{folio_console_name_base(plural:)}".to_sym
+    end
+
+    def folio_console_record
+      instance_variable_get(folio_console_record_variable_name)
+    end
+
+    def folio_console_records
+      instance_variable_get(folio_console_record_variable_name(plural: true))
+    end
+
+    def filter_records_by_belongs_to_site
+      if records = folio_console_records
+        instance_variable_set(folio_console_record_variable_name(plural: true),
+                              records.where(site: current_site))
+      elsif record = folio_console_record
+        if record.site != current_site
+          fail ActiveRecord::RecordNotFound
+        end
       end
     end
 end

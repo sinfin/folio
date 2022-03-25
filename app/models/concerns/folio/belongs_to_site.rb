@@ -10,6 +10,12 @@ module Folio::BelongsToSite
     validate :validate_belongs_to_site
   end
 
+  class_methods do
+    def has_belongs_to_site?
+      !Rails.application.config.folio_site_is_a_singleton
+    end
+  end
+
   private
     def validate_belongs_to_site
       return if Rails.application.config.folio_site_is_a_singleton
@@ -17,7 +23,7 @@ module Folio::BelongsToSite
       return errors.add(:site, :blank) if site.nil?
 
       if Rails.application.config.folio_site_validate_belongs_to_namespace
-        if site.class.name.deconstantize != self.class.name.deconstantize
+        unless self.class.name.deconstantize.starts_with?(site.class.name.deconstantize)
           errors.add(:base, :wrong_namespace)
         end
       end
