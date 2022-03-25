@@ -88,7 +88,11 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   end
 
   def default_url_options
-    { locale: I18n.locale }
+    if I18n.available_locales.size > 1
+      { locale: I18n.locale }
+    else
+      {}
+    end
   end
 
   private
