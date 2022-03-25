@@ -7,6 +7,7 @@ class Folio::Site < Folio::ApplicationRecord
   if Rails.application.config.folio_site_is_a_singleton
     include Folio::Singleton
   else
+    include Folio::Positionable
     # use specific STI types if site is not a singleton
     validates :type,
               presence: true
@@ -92,10 +93,12 @@ end
 #  header_message_published_until    :datetime
 #  type                              :string
 #  slug                              :string
+#  position                          :integer
 #
 # Indexes
 #
-#  index_folio_sites_on_domain  (domain)
-#  index_folio_sites_on_slug    (slug)
-#  index_folio_sites_on_type    (type)
+#  index_folio_sites_on_domain    (domain)
+#  index_folio_sites_on_position  (position)
+#  index_folio_sites_on_slug      (slug)
+#  index_folio_sites_on_type      (type)
 #
