@@ -16,8 +16,11 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 def create_and_host_site(key: :folio_site, attributes: {})
   @site = create(key, attributes)
+
   Rails.application.routes.default_url_options[:host] = @site.domain
   Rails.application.routes.default_url_options[:only_path] = false
+
+  host!(@site.domain) if self.respond_to?(:host!)
 end
 
 class Cell::TestCase
