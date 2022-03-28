@@ -35,6 +35,7 @@ module Folio
     config.folio_aasm_mailer_config = {}
     config.folio_site_is_a_singleton = true
     config.folio_site_validate_belongs_to_namespace = false
+    config.folio_site_default_test_factory = nil
 
     config.folio_direct_s3_upload_class_names = %w[
       Folio::File

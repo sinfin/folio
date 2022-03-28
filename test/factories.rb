@@ -157,3 +157,22 @@ FactoryBot.define do
     published { true }
   end
 end
+
+unless Rails.application.config.folio_site_is_a_singleton
+  if Rails.application.config.folio_site_default_test_factory
+    FactoryBot.modify do
+      %i[
+        folio_email_template
+        folio_lead
+        folio_menu
+        folio_newsletter_subscription
+        folio_page
+      ].each do |key|
+        factory key do
+          association :site, factory: Rails.application.config.folio_site_default_test_factory
+          initialize_with { new(site: Folio::Site.first) }
+        end
+      end
+    end
+  end
+end
