@@ -28,7 +28,7 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
   include Folio::Engine.routes.url_helpers
 
   def setup
-    create(:folio_site)
+    create_site
     @admin = create(:folio_admin_account)
     sign_in @admin
   end
@@ -37,6 +37,10 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
     super(options)
   rescue NoMethodError
     main_app.url_for(options)
+  end
+
+  def create_site
+    create(:folio_site)
   end
 end
 

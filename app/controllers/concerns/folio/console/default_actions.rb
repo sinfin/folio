@@ -46,7 +46,7 @@ module Folio::Console::DefaultActions
 
   def new
     unless Rails.application.config.folio_site_is_a_singleton
-      folio_console_record.site = current_site if folio_console_record
+      folio_console_record.site = current_site if folio_console_record && folio_console_record.respond_to?("site=")
     end
   end
 

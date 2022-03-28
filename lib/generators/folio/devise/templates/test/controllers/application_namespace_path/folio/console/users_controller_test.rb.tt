@@ -3,5 +3,11 @@
 require "test_helper"
 require Folio::Engine.root.join("test/controllers/folio/console/users_controller_test").to_s
 
-class Folio::Console::<%= application_namespace %>::UsersControllerTest < Folio::Console::UsersControllerTest
+module Folio
+  module Console
+    module <%= application_namespace %>
+      class UsersControllerTest < ::Folio::Console::UsersControllerTest
+      end
+    end
+  end
 end
