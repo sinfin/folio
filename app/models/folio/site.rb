@@ -11,6 +11,18 @@ class Folio::Site < Folio::ApplicationRecord
     # use specific STI types if site is not a singleton
     validates :type,
               presence: true
+
+    [
+      [:email_templates, "Folio::EmailTemplate"],
+      [:leads, "Folio::Lead"],
+      [:menus, "Folio::Menu"],
+      [:newsletter_subscriptions, "Folio::NewsletterSubscription"],
+      [:pages, "Folio::Page"],
+    ].each do |key, class_name|
+      has_many key, class_name:,
+                    foreign_key: :site_id,
+                    dependent: :nullify
+    end
   end
 
   # Validations

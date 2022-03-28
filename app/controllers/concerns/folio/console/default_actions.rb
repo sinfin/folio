@@ -44,9 +44,15 @@ module Folio::Console::DefaultActions
     render :index
   end
 
+  def new
+    unless Rails.application.config.folio_site_is_a_singleton
+      folio_console_record.site = current_site if folio_console_record
+    end
+  end
+
   def create
     instance_variable_set(folio_console_record_variable_name,
-                          @klass.create(folio_console_params))
+                          @klass.create(folio_console_params_with_site))
 
     if folio_console_record.persisted? && params[:created_from_modal]
       label = folio_console_record.try(:to_console_label) ||
@@ -232,6 +238,14 @@ module Folio::Console::DefaultActions
 
     def folio_console_params
       send("#{folio_console_name_base}_params")
+    end
+
+    def folio_console_params_with_site
+      if Rails.application.config.folio_site_is_a_singleton
+        folio_console_params
+      else
+        folio_console_params.merge(site: current_site)
+      end
     end
 
     def respond_with_location(prevalidate: nil)

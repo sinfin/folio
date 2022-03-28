@@ -439,7 +439,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         instance_variable_set(folio_console_record_variable_name(plural: true),
                               records.where(site: current_site))
       elsif record = folio_console_record
-        if record.site != current_site
+        if record.persisted? && record.site != current_site
           fail ActiveRecord::RecordNotFound
         end
       end
