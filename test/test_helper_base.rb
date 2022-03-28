@@ -24,6 +24,8 @@ def create_and_host_site(key: nil, attributes: {})
   if self.respond_to?(:host!)
     host!(@site.domain)
   end
+
+  @site
 end
 
 class Cell::TestCase
