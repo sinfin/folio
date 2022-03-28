@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::Ui::HeaderMessageCellTest < Cell::TestCase
   test "show" do
-    site = create(:folio_site)
+    site = create_and_host_site
     assert_not site.header_message_published?
     html = cell("dummy/ui/header_message", site).(:show)
     assert_not html.has_css?(".d-ui-header-message")

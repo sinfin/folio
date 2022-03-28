@@ -5,7 +5,7 @@ require "generators/folio/email_templates/email_templates_generator"
 
 class Folio::DeviseMailerTest < ActionMailer::TestCase
   setup do
-    create(:folio_site)
+    create_and_host_site
     Folio::EmailTemplatesGenerator.new.seed_records
   end
 

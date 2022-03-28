@@ -6,7 +6,7 @@ class Folio::Devise::Omniauth::AuthenticationsControllerTest < ActionDispatch::I
   include Devise::Test::IntegrationHelpers
 
   test "destroy" do
-    create(:folio_site)
+    create_and_host_site
 
     auth = create_omniauth_authentication("foo@bar.baz", "foo")
     user = auth.find_or_create_user!

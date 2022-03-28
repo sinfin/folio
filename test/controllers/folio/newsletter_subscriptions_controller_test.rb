@@ -6,7 +6,7 @@ class Folio::NewsletterSubscriptionsControllerTest < ActionDispatch::Integration
   include Folio::Engine.routes.url_helpers
 
   def setup
-    create(:folio_site)
+    create_and_host_site
   end
 
   test "invalid" do

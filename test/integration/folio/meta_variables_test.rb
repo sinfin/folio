@@ -4,8 +4,10 @@ require "test_helper"
 
 class Folio::MetaVariablesTest < ActionDispatch::IntegrationTest
   test "meta variables" do
-    create(:folio_site, title: "SITE",
-                               description: "SITE DESCRIPTION")
+    create_and_host_site(attributes: {
+      title: "SITE",
+      description: "SITE DESCRIPTION",
+    })
     node = create(:folio_page, title: "PAGE")
 
     # node without perex

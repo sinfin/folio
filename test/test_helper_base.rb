@@ -14,6 +14,12 @@ require Folio::Engine.root.join("test/omniauth_helper")
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
+def create_and_host_site(key: :folio_site, attributes: {})
+  @site = create(key, attributes)
+  Rails.application.routes.default_url_options[:host] = @site.domain
+  Rails.application.routes.default_url_options[:only_path] = false
+end
+
 class Cell::TestCase
   controller ApplicationController
   include FactoryBot::Syntax::Methods
@@ -40,7 +46,7 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
   end
 
   def create_site
-    create(:folio_site)
+    create_and_host_site
   end
 end
 

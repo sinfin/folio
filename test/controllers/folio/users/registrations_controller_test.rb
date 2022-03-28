@@ -6,7 +6,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
   include Devise::Test::IntegrationHelpers
 
   def setup
-    create(:folio_site)
+    create_and_host_site
 
     @password = "Complex@Password.123"
 

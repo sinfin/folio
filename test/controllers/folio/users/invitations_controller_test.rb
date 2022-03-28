@@ -6,7 +6,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   test "new" do
-    create(:folio_site)
+    create_and_host_site
     sign_in create(:folio_user)
 
     assert_raises(ActionController::MethodNotAllowed) do
@@ -15,7 +15,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create" do
-    create(:folio_site)
+    create_and_host_site
     sign_in create(:folio_user)
 
 
@@ -29,14 +29,14 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit" do
-    create(:folio_site)
+    create_and_host_site
     user = Folio::User.invite!(email: "email@email.email")
     get main_app.accept_user_invitation_path(invitation_token: user.raw_invitation_token)
     assert_response(:ok)
   end
 
   test "update" do
-    create(:folio_site)
+    create_and_host_site
 
     user = Folio::User.invite!(email: "email@email.email",
                                first_name: "a",
