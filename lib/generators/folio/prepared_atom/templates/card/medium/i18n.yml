@@ -1,12 +1,4 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/card/medium:
-        button_label: Button label
-        href: Link
-    models:
-      application_namespace_path/atom/card/medium: Card (medium)
 cs:
   activerecord:
     attributes:
@@ -15,3 +7,11 @@ cs:
         href: Odkaz
     models:
       application_namespace_path/atom/card/medium: Karta s odkazem (střední)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/card/medium:
+        button_label: Button label
+        href: Link
+    models:
+      application_namespace_path/atom/card/medium: Card (medium)

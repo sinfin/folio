@@ -1,14 +1,4 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/text:
-        highlight: Highlight
-        highlight/nil: None
-        highlight/red: Red
-        highlight/gray: Gray
-    models:
-      application_namespace_path/atom/text: Text (paragraphs, tables, etc.)
 cs:
   activerecord:
     attributes:
@@ -19,3 +9,13 @@ cs:
         highlight/gray: Šedé
     models:
       application_namespace_path/atom/text: Text (odstavce, tabulky, apod.)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/red: Red
+        highlight/gray: Gray
+    models:
+      application_namespace_path/atom/text: Text (paragraphs, tables, etc.)

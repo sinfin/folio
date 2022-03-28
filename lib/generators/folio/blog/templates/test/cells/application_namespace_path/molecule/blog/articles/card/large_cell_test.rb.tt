@@ -7,7 +7,7 @@ class <%= application_namespace %>::Molecule::Blog::Articles::Card::LargeCellTes
     article = create(:<%= application_namespace_path %>_blog_article)
 
     atoms = Array.new(2) do
-      create_atom(<%= application_namespace %>::Atom::Blog::Articles::Card::Large, article: article)
+      create_atom(<%= application_namespace %>::Atom::Blog::Articles::Card::Large, article:)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)

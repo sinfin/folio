@@ -1,13 +1,13 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/share: 
-    models:
-      application_namespace_path/atom/share: Sharing
 cs:
   activerecord:
     attributes:
       application_namespace_path/atom/share: 
     models:
       application_namespace_path/atom/share: Sdílení
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/share: 
+    models:
+      application_namespace_path/atom/share: Sharing

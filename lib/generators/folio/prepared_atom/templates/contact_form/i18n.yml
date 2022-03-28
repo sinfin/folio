@@ -1,13 +1,13 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/contact_form: 
-    models:
-      application_namespace_path/atom/contact_form: Contact form
 cs:
   activerecord:
     attributes:
       application_namespace_path/atom/contact_form: 
     models:
       application_namespace_path/atom/contact_form: Formulář (kontakt)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/contact_form: 
+    models:
+      application_namespace_path/atom/contact_form: Contact form

@@ -1,13 +1,13 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/embed/podcast: 
-    models:
-      application_namespace_path/atom/embed/podcast: Podcast (embed)
 cs:
   activerecord:
     attributes:
       application_namespace_path/atom/embed/podcast: 
     models:
       application_namespace_path/atom/embed/podcast: Podcast (vložený kód)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/embed/podcast: 
+    models:
+      application_namespace_path/atom/embed/podcast: Podcast (embed)

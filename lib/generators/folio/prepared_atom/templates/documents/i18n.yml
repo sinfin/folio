@@ -1,13 +1,13 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/documents: 
-    models:
-      application_namespace_path/atom/documents: Documents (list)
 cs:
   activerecord:
     attributes:
       application_namespace_path/atom/documents: 
     models:
       application_namespace_path/atom/documents: Soubory (výpis)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/documents: 
+    models:
+      application_namespace_path/atom/documents: Documents (list)
