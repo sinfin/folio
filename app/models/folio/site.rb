@@ -3,11 +3,11 @@
 class Folio::Site < Folio::ApplicationRecord
   include Folio::FriendlyId
   include Folio::HasHeaderMessage
+  include Folio::Positionable
 
   if Rails.application.config.folio_site_is_a_singleton
     include Folio::Singleton
   else
-    include Folio::Positionable
     # use specific STI types if site is not a singleton
     validates :type,
               presence: true
@@ -70,6 +70,10 @@ class Folio::Site < Folio::ApplicationRecord
     else
       domain
     end
+  end
+
+  def layout_name
+    "folio/application"
   end
 
   private

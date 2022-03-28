@@ -10,7 +10,7 @@ module Folio::ApplicationControllerBase
 
     protect_from_forgery with: :exception
 
-    layout "folio/application"
+    layout :current_site_based_layout
 
     before_action :set_i18n_locale
 
@@ -85,5 +85,9 @@ module Folio::ApplicationControllerBase
           cookies.signed[:u_for_log] = nil if cookies.signed[:u_for_log]
         end
       end
+    end
+
+    def current_site_based_layout
+      current_site ? current_site.layout_name : "folio/application"
     end
 end

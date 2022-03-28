@@ -1,7 +1,14 @@
 .f-ui
+  - if sites.size > 1 && "#{application_namespace}::Ui::Tabs".safe_constantize
+    .container-fluid
+      == cell("#{application_namespace_path}/ui/tabs", sites_tabs_model)
+
   .container-fluid
     h1.mb-a
-      a.text-decoration-none href="/folio/ui" UI Kit
+      a.text-decoration-none href="/folio/ui"
+        ' UI Kit
+        - if sites.size > 1
+          ' - #{current_site.to_label}
 
   hr
 
@@ -207,7 +214,7 @@
     h3 Flash
 
     - if "#{application_namespace}::Ui::Flash".safe_constantize
-      .row
+      .row.f-ui__flash
         - flash_models.each do |flash_model|
           .col-md-6.mb-g
             == cell("#{application_namespace_path}/ui/flash", flash_model)

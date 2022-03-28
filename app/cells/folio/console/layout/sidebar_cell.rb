@@ -135,6 +135,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         {
           title: site.title,
           links: [
+            *(site.class.try(:console_sidebar_prepended_links) ? site.class.console_sidebar_prepended_links : []),
             link_for_class.call(Folio::Page),
             homepage_for_site(site),
             link_for_class.call(Folio::Menu),

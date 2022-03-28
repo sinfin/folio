@@ -241,10 +241,10 @@ module Folio::Console::DefaultActions
     end
 
     def folio_console_params_with_site
-      if Rails.application.config.folio_site_is_a_singleton
-        folio_console_params
-      else
+      if !Rails.application.config.folio_site_is_a_singleton && @klass.column_names.include?("site_id")
         folio_console_params.merge(site: current_site)
+      else
+        folio_console_params
       end
     end
 
