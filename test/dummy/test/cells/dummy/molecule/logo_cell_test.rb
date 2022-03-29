@@ -5,9 +5,10 @@ require "test_helper"
 class Dummy::Molecule::LogoCellTest < Cell::TestCase
   test "show" do
     cover = create(:folio_image)
+    placement = create(:folio_page)
 
     atoms = Array.new(2) do
-      create_atom(Dummy::Atom::Logo, cover:)
+      create_atom(Dummy::Atom::Logo, cover:, placement:)
     end
 
     html = cell(atoms.first.class.molecule_cell_name, atoms).(:show)
