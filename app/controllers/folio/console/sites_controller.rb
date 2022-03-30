@@ -18,24 +18,29 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
   private
     def site_params
+      ary = %i[
+        title
+        description
+        locale
+        google_analytics_tracking_code
+        google_analytics_tracking_code_v4
+        facebook_pixel_code
+        phone
+        email
+        email_from
+        system_email
+        system_email_copy
+        header_message_published
+        header_message_published_from
+        header_message_published_until
+        header_message
+        address
+      ]
+
+      ary << :domain if Rails.application.config.folio_site_is_a_singleton
+
       params.require(:site)
-            .permit(:title,
-                    :description,
-                    :domain,
-                    :locale,
-                    :google_analytics_tracking_code,
-                    :google_analytics_tracking_code_v4,
-                    :facebook_pixel_code,
-                    :phone,
-                    :email,
-                    :email_from,
-                    :system_email,
-                    :system_email_copy,
-                    :header_message_published,
-                    :header_message_published_from,
-                    :header_message_published_until,
-                    :header_message,
-                    :address,
+            .permit(*ary,
                     *@site.class.additional_params,
                     *file_placements_strong_params,
                     locales: [],
