@@ -13,7 +13,7 @@ class Folio::LeadMailerTest < ActionMailer::TestCase
     lead = create(:folio_lead, note: "Foo Bar")
 
     mail = Folio::LeadMailer.notification_email(lead)
-    assert_equal [Folio::Site.instance.email], mail.to
+    assert_equal [Folio::Site.instance_for_mailers.email], mail.to
     assert_match "Foo Bar", mail.body.encoded
   end
 end

@@ -3,7 +3,7 @@
 require "rubygems"
 require "sitemap_generator"
 
-SitemapGenerator::Sitemap.default_host = "http://#{Folio::Site.instance.domain}"
+SitemapGenerator::Sitemap.default_host = "http://#{Folio::Site.instance_for_sitemap.domain}"
 SitemapGenerator::Sitemap.sitemaps_path = "sitemaps"
 
 SitemapGenerator::Sitemap.create do

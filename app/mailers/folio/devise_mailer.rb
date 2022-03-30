@@ -7,7 +7,7 @@ class Folio::DeviseMailer < Devise::Mailer
 
   layout "folio/mailer"
 
-  default from: ->(*) { Folio::Site.instance.email }
+  default from: ->(*) { Folio::Site.instance_for_mailers.email }
 
   def devise_mail(record, action, opts = {}, &block)
     full_opts = devise_opts_from_template(opts, action, record)

@@ -56,6 +56,18 @@ class Folio::Site < Folio::ApplicationRecord
        messenger]
   end
 
+  def self.instance_for_mailers
+    if Rails.application.config.folio_site_is_a_singleton
+      instance
+    else
+      ordered.first
+    end
+  end
+
+  def self.instance_for_sitemap
+    instance_for_mailers
+  end
+
   %i[system_email system_email_copy].each do |attr|
     define_method("#{attr}_array") do
       return [] if send(attr).nil?
