@@ -4,7 +4,7 @@ require "rubygems"
 require "sitemap_generator"
 require "aws-sdk-s3"
 
-SitemapGenerator::Sitemap.default_host = "https://#{Folio::Site.instance.domain}"
+SitemapGenerator::Sitemap.default_host = "https://#{Folio.site_instance_for_sitemap.domain}"
 SitemapGenerator::Sitemap.sitemaps_path = "sitemaps/"
 
 unless Rails.env.development?
