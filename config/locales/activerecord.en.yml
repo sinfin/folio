@@ -86,8 +86,6 @@ en:
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
       folio/user:
-        last_sign_in_at: Last sign in
-        sign_in_count: Sign in count
         confirmed_at: Confirmed at
     errors:
       messages:
@@ -183,6 +181,7 @@ en:
     first_name: First name
     is_active: Active
     last_name: Last name
+    last_sign_in_at: Last sign in
     locale: Translation
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
@@ -194,6 +193,7 @@ en:
     published: Published
     published_at: Published at
     sensitive_content: Contains sensitive content
+    sign_in_count: Sign in count
     slug: Slug
     state: State
     tag_list: Keywords

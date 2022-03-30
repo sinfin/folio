@@ -100,11 +100,9 @@ cs:
         authentications: Propojení
         created_at: Vytvořen
         confirmed_at: Potvrzen
-        last_sign_in_at: Poslední přihlášení
         nickname: Přezdívka
         password: Heslo
         password_confirmation: Heslo (kontrola)
-        sign_in_count: Počet přihlášení
       folio/address/base:
         address_line_1: Ulice a číslo
         address_line_2: Druhý řádek adresy
@@ -258,6 +256,7 @@ cs:
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
+    last_sign_in_at: Poslední přihlášení
     locale: Překlad
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
@@ -273,6 +272,7 @@ cs:
     published_at: Zveřejněno k datu
     secondary_address: Adresa - doplňková
     sensitive_content: Obsahuje citlivý obsah
+    sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
     state: Stav
     tag_list: Klíčová slova
