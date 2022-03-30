@@ -132,10 +132,17 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           }
         end
 
+        prepended_links = []
+
+        if site.class.try(:console_sidebar_prepended_links).present?
+          site.class.console_sidebar_prepended_links.each do |prepended_link|
+            prepended_links << link_for_class.call(prepended_link.constantize)
+          end
+        end
+
         {
           title: site.title,
-          links: [
-            *(site.class.try(:console_sidebar_prepended_links) ? site.class.console_sidebar_prepended_links : []),
+          links: prepended_links + [
             link_for_class.call(Folio::Page),
             homepage_for_site(site),
             link_for_class.call(Folio::Menu),
