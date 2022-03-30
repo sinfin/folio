@@ -19,8 +19,6 @@ Folio::Engine.routes.draw do
     get "/comeback", to: "comebacks#show"
   end
 
-  root to: "home#index"
-
   namespace :console do
     root to: "dashboard#index"
     resources :dashboard, only: :index
