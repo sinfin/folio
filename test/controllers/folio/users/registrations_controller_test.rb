@@ -63,7 +63,7 @@ class Folio::Users::RegistrationsControllerTest < ActionDispatch::IntegrationTes
     sign_in @user
     assert_nil @user.reset_password_token
 
-    get root_path
+    get folio.console_root_path
 
     get main_app.edit_user_registration_path(pw: 1)
     assert_redirected_to(root_path)
