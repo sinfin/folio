@@ -272,10 +272,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    def render_csv(records, class_name: nil, name: nil, separator: nil)
+    def render_csv(records, class_name: nil, name: nil, separator: ",")
       klass = class_name ? class_name.constantize : @klass
 
-      data = ::CSV.generate(headers: true) do |csv|
+      data = ::CSV.generate(headers: true, col_sep: separator) do |csv|
         csv << klass.csv_attribute_names.map do |a|
           klass.human_attribute_name(a)
         end
