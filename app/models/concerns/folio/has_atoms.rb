@@ -135,7 +135,7 @@ module Folio::HasAtoms
     end
 
     def atom_image_placements
-      atom_locales.map do |locale|
+      self.class.atom_locales.map do |locale|
         Folio::Atom.atom_image_placements(send("#{locale}_atoms"))
       end.flatten
     end
