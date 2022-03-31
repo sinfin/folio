@@ -15,6 +15,7 @@ class Dummy::Searches::ShowCellTest < Cell::TestCase
     assert html.has_css?(".d-searches-show")
     assert_not html.has_css?(".d-searches-show__results")
     assert_not html.has_css?(".d-searches-show__tabs")
+    assert_equal "", html.find(".d-searches-show__tabs").text
 
     model = {
       klasses: {
@@ -41,6 +42,6 @@ class Dummy::Searches::ShowCellTest < Cell::TestCase
     html = cell("dummy/searches/show", model).(:show)
     assert html.has_css?(".d-searches-show")
     assert html.has_css?(".d-searches-show__results")
-    assert html.has_css?(".d-searches-show__tabs")
+    assert_not_equal "", html.find(".d-searches-show__tabs").text
   end
 end
