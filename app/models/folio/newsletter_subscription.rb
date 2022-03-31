@@ -45,7 +45,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     %i[id email created_at]
   end
 
-  def csv_attributes
+  def csv_attributes(controller = nil)
     self.class.csv_attribute_names.map do |attr|
       send(attr)
     end
