@@ -76,6 +76,10 @@ class Folio::Site < Folio::ApplicationRecord
     "folio/application"
   end
 
+  def i18n_key_base
+    @i18n_key_base ||= self.class.to_s.deconstantize.underscore
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
