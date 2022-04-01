@@ -229,8 +229,8 @@ module Folio::Console::ReactHelper
                   hidden: true,
                   class: "f-c-js-atoms-placement-setting",
                   data: {
-                    "atom-setting" => "placement_id",
-                    "atom-setting-value" => f.object.id,
+                    "atom-setting" => "placement",
+                    "atom-setting-value-json" => { id: f.object.id, class_name: f.object.class.to_s }.to_json,
                   })
     end
   end
