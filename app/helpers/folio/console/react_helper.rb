@@ -227,6 +227,7 @@ module Folio::Console::ReactHelper
       content_tag(:div,
                   "",
                   hidden: true,
+                  class: "f-c-js-atoms-placement-setting",
                   data: {
                     "atom-setting" => "placement_id",
                     "atom-setting-value" => f.object.id,
