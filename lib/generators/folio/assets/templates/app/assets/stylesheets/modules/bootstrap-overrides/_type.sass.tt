@@ -14,26 +14,41 @@ h1, .h1
   display: block
   margin: $h1-margin-top 0 $h1-margin-bottom
 
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $mobile-h1-margin-top 0 $mobile-h1-margin-bottom
+
 h2, .h2
   +font-h2
   display: block
   margin: $h2-margin-top 0 $h2-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $mobile-h2-margin-top 0 $mobile-h2-margin-bottom
 
 h3, .h3
   +font-h3
   display: block
   margin: $h3-margin-top 0 $h3-margin-bottom
 
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $mobile-h3-margin-top 0 $mobile-h3-margin-bottom
+
 h4, .h4
   +font-h4
   display: block
   margin: $headings-margin-top 0 $headings-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $mobile-headings-margin-top 0 $mobile-headings-margin-bottom
 
 h5, .h5,
 h6, .h6
   +font-h5
   display: block
   margin: $headings-margin-top 0 $headings-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $mobile-headings-margin-top 0 $mobile-headings-margin-bottom
 
 small,
 .font-size-sm,
