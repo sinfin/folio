@@ -157,10 +157,6 @@ module Folio::Console::ReactHelper
   def react_ordered_multiselect(f, relation_name, atom_setting: nil, scope: nil, order_scope: :ordered, sortable: true)
     class_name = "folio-react-wrap folio-react-wrap--ordered-multiselect"
 
-    if atom_setting
-      class_name = "#{class_name} f-c-js-atoms-placement-setting"
-    end
-
     unless sortable
       class_name = "#{class_name} folio-react-wrap--ordered-multiselect-not-sortable"
     end
@@ -224,6 +220,18 @@ module Folio::Console::ReactHelper
 
   def react_notes_form(target)
     react_notes_common(target:)
+  end
+
+  def react_atom_setting_id(f)
+    if f.object.id.present?
+      content_tag(:div,
+                  "",
+                  hidden: true,
+                  data: {
+                    "atom-setting" => "placement_id",
+                    "atom-setting-value" => f.object.id,
+                  })
+    end
   end
 
   private

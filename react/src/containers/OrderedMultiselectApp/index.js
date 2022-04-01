@@ -49,9 +49,18 @@ class OrderedMultiselectApp extends React.Component {
 
     return (
       <div
-        className={`f-c-r-ordered-multiselect-app ${orderedMultiselect.atomSetting ? 'f-c-js-atoms-placement-setting__value' : ''}`}
+        className={`f-c-r-ordered-multiselect-app`}
         data-atom-setting-value={this.settingValue()}
       >
+        {orderedMultiselect.atomSetting ? (
+          <div
+            hidden
+            data-atom-setting={orderedMultiselect.atomSetting}
+            data-atom-setting-value-json={this.settingValue()}
+            className='f-c-js-atoms-placement-setting'
+          />
+        ) : null}
+
         {orderedMultiselect.items.length ? (
           <SortableTree
             maxDepth={1}

@@ -75,7 +75,7 @@ window.FolioConsole.React.init = (domRoot) => {
       foreignKey: domRoot.dataset.foreignKey,
       url: domRoot.dataset.url,
       sortable: domRoot.dataset.sortable !== '0',
-      atomSetting: !!domRoot.dataset.atomSetting
+      atomSetting: domRoot.dataset.atomSetting
     }))
 
     ReactDOM.render((
