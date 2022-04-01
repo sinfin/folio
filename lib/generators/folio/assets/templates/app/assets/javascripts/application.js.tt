@@ -4,6 +4,7 @@
 //= require justified-layout
 //= require slick-carousel/slick/slick.min
 //= require js-cookie/src/js.cookie
+//= require clipboard/dist/clipboard
 
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
