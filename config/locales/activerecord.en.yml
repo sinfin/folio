@@ -52,15 +52,6 @@ en:
         google_analytics_tracking_code_v4: Google analytics - tracking code - V4
         header_message: Header message
         locales: Languages
-        social_links/appstore: Appstore
-        social_links/facebook: Facebook
-        social_links/google_play: Google play
-        social_links/instagram: Instagram
-        social_links/linkedin: LinkedIn
-        social_links/messenger: Messenger
-        social_links/pinterest: Pinterest
-        social_links/twitter: Twitter
-        social_links/youtube: Youtube
       folio/email_template:
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject
@@ -195,6 +186,15 @@ en:
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug
+    social_links/appstore: Appstore
+    social_links/facebook: Facebook
+    social_links/google_play: Google play
+    social_links/instagram: Instagram
+    social_links/linkedin: LinkedIn
+    social_links/messenger: Messenger
+    social_links/pinterest: Pinterest
+    social_links/twitter: Twitter
+    social_links/youtube: Youtube
     state: State
     tag_list: Keywords
     title: Title

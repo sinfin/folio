@@ -60,15 +60,6 @@ cs:
         google_analytics_tracking_code_v4: Google analytics - trackovací kód V4
         header_message: Oznámení v hlavičce webu
         locales: Jazyky
-        social_links/appstore: Appstore
-        social_links/facebook: Facebook
-        social_links/google_play: Google play
-        social_links/instagram: Instagram
-        social_links/linkedin: LinkedIn
-        social_links/messenger: Messenger
-        social_links/pinterest: Pinterest
-        social_links/twitter: Twitter
-        social_links/youtube: Youtube
         system_email: Systémová e-mailová adresa
         system_email_copy: Systémová e-mailová adresa (kopie)
       folio/email_template:
@@ -274,6 +265,15 @@ cs:
     sensitive_content: Obsahuje citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
+    social_links/appstore: Appstore
+    social_links/facebook: Facebook
+    social_links/google_play: Google play
+    social_links/instagram: Instagram
+    social_links/linkedin: LinkedIn
+    social_links/messenger: Messenger
+    social_links/pinterest: Pinterest
+    social_links/twitter: Twitter
+    social_links/youtube: Youtube
     state: Stav
     tag_list: Klíčová slova
     title: Název
