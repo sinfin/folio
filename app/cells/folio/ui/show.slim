@@ -255,6 +255,10 @@
               nil,
               mobile_collapsible: true)
 
+    h3 Clipboard
+
+    == cell("#{application_namespace_path}/ui/clipboard", "text in clipboard")
+
     h3 Cards
 
     h4 Large
@@ -269,6 +273,4 @@
 
     == cell("#{application_namespace_path}/ui/card_list", card_variants(small: true))
 
-    h3 Clipboard
-
-    == cell("#{application_namespace_path}/ui/clipboard", "text in clipboard")
+    == render(:_show_more)
