@@ -56,8 +56,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       elsif /pdf/.match?(image.try(:mime_type))
         # "frame" option has to be set as string key
         # https://github.com/markevans/dragonfly/issues/483
-        thumbnail = image_file(image).add_white_background
-                                     .thumb(size, format: :jpg, "frame" => 0, x: x, y: y)
+        thumbnail = image_file(image).thumb(size, "format" => :png, "frame" => 0, x: x, y: y)
+                                     .add_white_background
                                      .encode("jpg", "-quality #{quality}")
                                      .jpegoptim
       else
