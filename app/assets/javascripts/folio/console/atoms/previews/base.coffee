@@ -287,4 +287,3 @@ $ ->
   handleNewHtml()
   sendMediaQueryRequest()
   $(window).one 'load', -> sendResizeMessage()
-

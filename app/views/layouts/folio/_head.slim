@@ -1,6 +1,6 @@
 ruby:
-  stylesheet ||= 'application'
-  javascript ||= 'application'
+  stylesheet ||= current_site.layout_assets_path
+  javascript ||= current_site.layout_assets_path
   skip_javascript ||= false
   meta_viewport ||= "width=device-width, initial-scale=1, shrink-to-fit=no"
   turbolinks_cache_control ||= "no-cache"

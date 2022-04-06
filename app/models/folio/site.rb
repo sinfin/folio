@@ -76,6 +76,10 @@ class Folio::Site < Folio::ApplicationRecord
     "folio/application"
   end
 
+  def layout_assets_path
+    "application"
+  end
+
   def i18n_key_base
     @i18n_key_base ||= self.class.to_s.deconstantize.underscore
   end
