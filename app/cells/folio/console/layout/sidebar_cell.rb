@@ -33,7 +33,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
 
       label = if link_source[:label]
-        t(".#{link_source[:label]}")
+        link_source[:label]
       elsif link_source[:klass]
         label_from(link_source[:klass].constantize)
       else
@@ -132,19 +132,33 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           }
         end
 
-        prepended_links = []
+        site_links = {
+          console_sidebar_prepended_links: [],
+          console_sidebar_before_menu_links: [],
+        }
 
-        if site.class.try(:console_sidebar_prepended_links).present?
-          site.class.console_sidebar_prepended_links.each do |prepended_link|
-            prepended_links << link_for_class.call(prepended_link.constantize)
+        %i[
+          console_sidebar_before_menu_links
+          console_sidebar_prepended_links
+        ].each do |key|
+          values = site.class.try(key)
+          if values.present?
+            values.each do |link_or_hash|
+              if link_or_hash.is_a?(Hash)
+                site_links[key] << link_or_hash
+              else
+                site_links[key] << link_for_class.call(link_or_hash.constantize)
+              end
+            end
           end
         end
 
         {
           title: site.title,
-          links: prepended_links + [
+          links: site_links[:console_sidebar_prepended_links] + [
             link_for_class.call(Folio::Page),
-            homepage_for_site(site),
+            homepage_for_site(site)
+          ] + site_links[:console_sidebar_before_menu_links] + [
             link_for_class.call(Folio::Menu),
             link_for_class.call(Folio::Lead),
             link_for_class.call(Folio::NewsletterSubscription),
@@ -153,7 +167,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
               klass: "Folio::Site",
               icon: "fa fa-cogs",
               path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-              label: "settings"
+              label: t("settings")
             },
           ].compact
         }
@@ -179,7 +193,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
               klass: "Folio::Site",
               icon: "fa fa-cogs",
               path: :edit_console_site_path,
-              label: "settings"
+              label: t("settings")
             },
           ]
         }
