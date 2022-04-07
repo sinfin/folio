@@ -155,10 +155,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
         {
           title: site.title,
-          links: site_links[:console_sidebar_prepended_links] + [
+          links: site_links[:console_sidebar_prepended_links].compact + [
             link_for_class.call(Folio::Page),
             homepage_for_site(site)
-          ] + site_links[:console_sidebar_before_menu_links] + [
+          ].compact + site_links[:console_sidebar_before_menu_links].compact + [
             link_for_class.call(Folio::Menu),
             link_for_class.call(Folio::Lead),
             link_for_class.call(Folio::NewsletterSubscription),
@@ -167,7 +167,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
               klass: "Folio::Site",
               icon: "fa fa-cogs",
               path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-              label: t("settings")
+              label: t(".settings")
             },
           ].compact
         }
@@ -193,7 +193,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
               klass: "Folio::Site",
               icon: "fa fa-cogs",
               path: :edit_console_site_path,
-              label: t("settings")
+              label: t(".settings")
             },
           ]
         }
