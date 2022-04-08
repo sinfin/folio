@@ -178,7 +178,7 @@ class AtomForm extends React.PureComponent {
             if (asMolecule) { nonSingletonIndex++ }
 
             const fillOutput = (input) => {
-              let zIndex = 900
+              let zIndex = 100
               const makeStyle = () => ({ position: 'relative', zIndex: (zIndex -= 1) })
 
               if (typeof input === 'object') {
