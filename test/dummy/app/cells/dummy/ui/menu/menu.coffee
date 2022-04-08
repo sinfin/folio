@@ -48,7 +48,7 @@ $(document)
 
   .on 'turbolinks:load', ->
     if $('.d-ui-menu').length
-      $(window).on('resize.uiHeaderMenu orientationchange.uiHeaderMenu', window.folioDebounce(handleMenuOverflow, 100))
+      $(window).on('resize.uiHeaderMenu orientationchange.uiHeaderMenu', window.Folio.debounce(handleMenuOverflow, 100))
       handleMenuOverflow()
 
   .on 'turbolinks:before-render', ->
