@@ -178,20 +178,30 @@ class AtomForm extends React.PureComponent {
             if (asMolecule) { nonSingletonIndex++ }
 
             const fillOutput = (input) => {
+              let zIndex = 900
+              const makeStyle = () => ({ position: 'relative', zIndex: (zIndex -= 1) })
+
               if (typeof input === 'object') {
                 if (input.rows) {
+                  zIndex -= 1
                   return (
-                    <AtomFormCardRows data-debug='rows'>
-                      {input.rows.map((row) => (
-                        <AtomFormCardRow data-debug='row' key={JSON.stringify(row)}>
-                          {fillOutput(row)}
-                        </AtomFormCardRow>
-                      ))}
+                    <AtomFormCardRows data-debug='rows' style={makeStyle()}>
+                      {input.rows.map((row) => {
+                        zIndex -= 1
+
+                        return (
+                          <AtomFormCardRow data-debug='row' key={JSON.stringify(row)} style={makeStyle()}>
+                            {fillOutput(row)}
+                          </AtomFormCardRow>
+                        )
+                      })}
                     </AtomFormCardRows>
                   )
                 } else if (input.columns) {
+                  zIndex -= 1
+
                   return (
-                    <AtomFormCardColumns data-debug='columns'>
+                    <AtomFormCardColumns data-debug='columns' style={makeStyle()}>
                       {input.columns.map((column) => (
                         <AtomFormCardColumn data-debug='column' key={JSON.stringify(column)}>
                           {fillOutput(column)}
@@ -203,6 +213,8 @@ class AtomForm extends React.PureComponent {
                   input.map((item) => fillOutput(item))
                 }
               } else {
+                zIndex -= 1
+
                 if (input === 'ASSOCIATIONS') {
                   return (
                     <Associations
@@ -213,6 +225,7 @@ class AtomForm extends React.PureComponent {
                       onBlur={() => { this.setState({ focusedIndex: null }) }}
                       onFocus={() => { this.setState({ focusedIndex: index }) }}
                       index={index}
+                      style={makeStyle()}
                       addAtomSettings
                     />
                   )
@@ -224,6 +237,7 @@ class AtomForm extends React.PureComponent {
                       onChange={this.onChange}
                       onValueChange={this.onValueChange}
                       index={index}
+                      style={makeStyle()}
                     />
                   )
                 } else if (input === 'ATTACHMENTS') {
@@ -235,6 +249,7 @@ class AtomForm extends React.PureComponent {
                       index={index}
                       remove={this.props.removeFormAtomAttachment}
                       openFileModal={this.props.openFileModal}
+                      style={makeStyle()}
                     />
                   )
                 } else if (input.indexOf('STRUCTURE/') !== -1) {
@@ -245,6 +260,7 @@ class AtomForm extends React.PureComponent {
                       field={input.replace('STRUCTURE/', '')}
                       onChange={this.onChange}
                       onValueChange={this.onValueChange}
+                      style={makeStyle()}
                       index={index}
                     />
                   )
