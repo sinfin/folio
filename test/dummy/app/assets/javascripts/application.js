@@ -9,6 +9,7 @@
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
 
+//= require folio/_message-bus
 //= require folio/atoms
 //= require folio/cookie_consent/cookie_consent
 //= require folio/debounce
