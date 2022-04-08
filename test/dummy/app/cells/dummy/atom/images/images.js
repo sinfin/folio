@@ -23,9 +23,9 @@
       $wrap.css('height', result.containerHeight)
 
       $items.each((i, el) => {
-        var r
-        r = result.boxes[i]
-        return $(el).css({
+        const r = result.boxes[i]
+
+        $(el).css({
           left: r.left,
           top: r.top,
           width: r.width,
