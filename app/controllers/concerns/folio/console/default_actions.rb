@@ -45,8 +45,8 @@ module Folio::Console::DefaultActions
   end
 
   def new
-    unless Rails.application.config.folio_site_is_a_singleton
-      folio_console_record.site = current_site if folio_console_record && folio_console_record.respond_to?("site=")
+    if !Rails.application.config.folio_site_is_a_singleton && @klass.try(:has_belongs_to_site?)
+      folio_console_record.site = current_site
     end
   end
 
@@ -241,7 +241,7 @@ module Folio::Console::DefaultActions
     end
 
     def folio_console_params_with_site
-      if !Rails.application.config.folio_site_is_a_singleton && @klass.column_names.include?("site_id")
+      if !Rails.application.config.folio_site_is_a_singleton && @klass.try(:has_belongs_to_site?)
         folio_console_params.merge(site: current_site)
       else
         folio_console_params
