@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_14_090811) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -152,7 +152,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_24_105755) do
     t.string "locale"
     t.jsonb "data", default: {}
     t.jsonb "associations", default: {}
-    t.text "data_for_search"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 

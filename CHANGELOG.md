@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-04-14
+### Removed
+- removed `data_for_search` column from atoms
+
 ## 2021-03-25
 ### Changed
 - update `folio_console_sidebar_*` config syntax to use hashes with `{ links: [] }`

@@ -39,7 +39,6 @@ end
 #  locale          :string
 #  data            :jsonb
 #  associations    :jsonb
-#  data_for_search :text
 #
 # Indexes
 #
