@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_04_14_090811) do
+ActiveRecord::Schema[7.0].define(version: 2022_04_14_092139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -341,6 +341,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_14_090811) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "ancestry_slug"
     t.bigint "site_id"
+    t.text "atoms_data_for_search"
+    t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"

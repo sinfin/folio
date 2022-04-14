@@ -78,63 +78,41 @@ class Folio::Page < Folio::ApplicationRecord
     end
   }
 
-  def self.by_query_associated_against
-    if Rails.application.config.folio_using_traco
+  before_save :set_atoms_data_for_search
+
+  def self.traco_aware_against(multisearch: false)
+    if multisearch
+      if Rails.application.config.folio_using_traco
+        I18n.available_locales.map { |locale| "title_#{locale}".to_sym }
+      else
+        %i[title]
+      end
+    else
       h = {}
 
-      I18n.available_locales.each do |locale|
-        h["#{locale}_atoms".to_sym] = %i[data_for_search]
-      end
-
-      h
-
-      h.merge(
-        file_placements: %i[title alt],
-      )
-    else
-      {
-        atoms: %i[data_for_search],
-        file_placements: %i[title alt],
-      }
-    end
-  end
-
-  def self.traco_aware_against(perex: false)
-    if Rails.application.config.folio_using_traco
-      if perex
-        h = {}
-
+      if Rails.application.config.folio_using_traco
         I18n.available_locales.each do |locale|
           h["title_#{locale}".to_sym] = "A"
           h["perex_#{locale}".to_sym] = "B"
         end
+      else
+        h["title"] = "A"
+        h["perex"] = "B"
+      end
 
-        h
-      else
-        I18n.available_locales.map do |locale|
-          "title_#{locale}"
-        end
-      end
-    else
-      if perex
-        {
-          title: "A",
-          perex: "B",
-        }
-      else
-        [:title]
-      end
+      h["atoms_data_for_search"] = "C"
+
+      h
     end
   end
 
   # Multi-search
-  multisearchable against: self.traco_aware_against(perex: false),
+  multisearchable against: self.traco_aware_against(multisearch: true),
                   ignoring: :accents,
                   additional_attributes: -> (page) { { searchable_type: "Folio::Page" } }
 
   pg_search_scope :by_query,
-                  against: self.traco_aware_against(perex: true),
-                  associated_against: self.by_query_associated_against,
+                  against: self.traco_aware_against,
                   ignoring: :accents,
                   using: {
                     tsearch: { prefix: true }
@@ -167,34 +145,41 @@ class Folio::Page < Folio::ApplicationRecord
       true
     end
   end
+
+  private
+    def set_atoms_data_for_search
+      self.atoms_data_for_search = all_atoms_in_array.filter_map { |a| a.data_for_search }.join(" ").presence
+    end
 end
 
 # == Schema Information
 #
 # Table name: folio_pages
 #
-#  id               :bigint(8)        not null, primary key
-#  title            :string
-#  slug             :string
-#  perex            :text
-#  meta_title       :string(512)
-#  meta_description :text
-#  ancestry         :string
-#  type             :string
-#  featured         :boolean
-#  position         :integer
-#  published        :boolean
-#  published_at     :datetime
-#  original_id      :integer
-#  locale           :string(6)
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  ancestry_slug    :string
-#  site_id          :bigint(8)
+#  id                    :bigint(8)        not null, primary key
+#  title                 :string
+#  slug                  :string
+#  perex                 :text
+#  meta_title            :string(512)
+#  meta_description      :text
+#  ancestry              :string
+#  type                  :string
+#  featured              :boolean
+#  position              :integer
+#  published             :boolean
+#  published_at          :datetime
+#  original_id           :integer
+#  locale                :string(6)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  ancestry_slug         :string
+#  site_id               :bigint(8)
+#  atoms_data_for_search :text
 #
 # Indexes
 #
 #  index_folio_pages_on_ancestry      (ancestry)
+#  index_folio_pages_on_by_query      ((((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::"char") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::"char")))) USING gin
 #  index_folio_pages_on_featured      (featured)
 #  index_folio_pages_on_locale        (locale)
 #  index_folio_pages_on_original_id   (original_id)
