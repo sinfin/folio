@@ -24,7 +24,11 @@ module Folio::ApplicationControllerBase
   end
 
   def default_url_options
-    { only_path: true }
+    if Rails.application.config.folio_site_is_a_singleton
+      { only_path: true }
+    else
+      { host: current_site.env_aware_domain }
+    end
   end
 
   def url_for(options = nil)
