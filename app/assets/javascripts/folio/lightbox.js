@@ -27,7 +27,7 @@ window.Folio.Lightbox.bind = (selector, options) => {
           subSelector = `${subSelector} ${options.itemSelector}`
         }
 
-        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ subSelector, options }))
+        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ selector, subSelector, options }))
       })
     } else if (options.fromData) {
       $items.each((i, el) => {
