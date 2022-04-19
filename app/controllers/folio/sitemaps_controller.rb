@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Folio::SitemapsController < ActionController::Base
+  unless Rails.application.config.folio_site_is_a_singleton
+    include Folio::HasCurrentSite
+  end
+
   def show
     filename = File.basename(request.path)
     data = open(s3_sitemap_url(filename))
@@ -12,6 +16,10 @@ class Folio::SitemapsController < ActionController::Base
 
   private
     def s3_sitemap_url(filename)
-      "https://#{ENV["S3_BUCKET_NAME"]}.s3.amazonaws.com/sitemaps/#{filename}"
+      if Rails.application.config.folio_site_is_a_singleton
+        "https://#{ENV["S3_BUCKET_NAME"]}.s3.amazonaws.com/sitemaps/#{filename}"
+      else
+        "https://#{ENV["S3_BUCKET_NAME"]}.s3.amazonaws.com/sitemaps/#{current_site.domain}/#{filename}"
+      end
     end
 end

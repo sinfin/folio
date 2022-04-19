@@ -77,10 +77,6 @@ module Folio
       Folio::Site.ordered.first
     end
   end
-
-  def self.site_instance_for_sitemap
-    site_instance_for_mailers
-  end
 end
 
 # only `folio/lib` directory is loaded when processing Rails `config/environments/*`
