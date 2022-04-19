@@ -173,6 +173,10 @@ Folio::Engine.routes.draw do
                                     as: :download,
                                     constraints: { name: /.*/ }
 
+  unless Rails.application.config.folio_site_is_a_singleton
+    get "/robots.txt" => "robots#index"
+  end
+
   get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 
   require "sidekiq/web"

@@ -64,6 +64,10 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  def env_aware_root_url
+    "http://#{env_aware_domain}/"
+  end
+
   def env_aware_domain
     if Rails.env.development?
       "dev-#{domain}:3000"
