@@ -1,0 +1,14 @@
+{
+  "name": "folio",
+  "version": "0.0.0",
+  "standard": {
+    "globals": [
+      "$",
+      "jQuery",
+      "Turbolinks",
+      "PhotoSwipe",
+      "PhotoSwipeUI_Default",
+      "Image"
+    ]
+  }
+}

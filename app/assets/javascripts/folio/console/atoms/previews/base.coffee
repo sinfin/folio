@@ -7,6 +7,7 @@
 #= require folio/atoms
 #= require folio/_message-bus
 #= require folio/lazyload
+#= require folio/lightbox
 #= require folio/debounce
 #= require folio/console/atoms/previews/main_app
 

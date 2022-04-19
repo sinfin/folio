@@ -9,39 +9,39 @@ window.Folio.Lightbox.calls = []
 
 window.Folio.Lightbox.instances = []
 
-window.Folio.Lightbox.bind = (selector, opts) => {
-  opts = opts || {}
+window.Folio.Lightbox.bind = (selector, options) => {
+  options = options || {}
 
-  window.Folio.Lightbox.calls.push([selector, opts])
+  window.Folio.Lightbox.calls.push([selector, options])
 
   const init = () => {
     const $items = $(selector)
 
     if ($items.length === 0) return
 
-    if (opts.individual) {
-      $items.each(function() {
+    if (options.individual) {
+      $items.each(function () {
         let subSelector = `.${this.className.replace(/\s+/g, '.')}`
 
-        if (opts.itemSelector) {
-          subSelector = `${subSelector} ${opts.itemSelector}`
+        if (options.itemSelector) {
+          subSelector = `${subSelector} ${options.itemSelector}`
         }
 
-        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox(subSelector))
+        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ subSelector, options }))
       })
-    } else if (opts.fromData) {
+    } else if (options.fromData) {
       $items.each((i, el) => {
-        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox(selector, false, $(el).data('lightbox-image-data')))
+        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ selector, options, data: $(el).data('lightbox-image-data') }))
       })
     } else {
-      window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox(selector))
+      window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ selector, options }))
     }
   }
 
-  if (typeof Turbolinks !== "undefined" && Turbolinks !== null) {
+  if (typeof Turbolinks !== 'undefined' && Turbolinks !== null) {
     $(document)
       .on('turbolinks:load', init)
-      .on('turbolinks:before-render', function() {
+      .on('turbolinks:before-render', function () {
         if (window.Folio.Lightbox.instances.length === 0) return
 
         window.Folio.Lightbox.instances.forEach((instance) => {
@@ -64,19 +64,20 @@ window.Folio.Lightbox.updateAll = () => {
 }
 
 window.Folio.Lightbox.Lightbox = class FolioLightbox {
-  constructor (selector, additionalSelector = false, data = null) {
-    this.selector = selector
+  constructor (attrs) {
+    this.selector = attrs.selector
+    this.options = attrs.options
 
-    if (additionalSelector) {
-      this.fullSelector = `${selector}, ${additionalSelector}`
+    if (attrs.additionalSelector) {
+      this.fullSelector = `${this.selector}, ${attrs.additionalSelector}`
     } else {
-      this.fullSelector = selector
+      this.fullSelector = this.selector
     }
 
-    this.eventIdentifier = "folioLightbox"
+    this.eventIdentifier = 'folioLightbox'
     this.$html = $(document.documentElement)
 
-    this.bind(data)
+    this.bind(attrs.data)
   }
 
   pswp () {
@@ -89,34 +90,35 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
     const that = this
 
     $(document).on(`click.${this.eventIdentifier}`, this.fullSelector, function (e) {
-      var $img, index, items, options
       e.preventDefault()
-      $img = $(this)
-      items = data || that.items()
-      index = 0
 
-      items.forEach((item, i) => {
-        if (item.el === this) {
-          return index = i
-        }
-      })
+      const items = data || that.items()
+      let index = 0
 
-      options = {
+      if (typeof that.options.forceIndex !== 'undefined') {
+        index = that.options.forceIndex
+      } else {
+        items.forEach((item, i) => {
+          if (item.el === this) {
+            index = i
+          }
+        })
+      }
+
+      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, items, {
         index: index,
         bgOpacity: 0.7,
         showHideOpacity: true,
         history: false,
         errorMsg: that.pswp().data('error-msg')
-      }
-
-      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, items, options)
+      })
 
       that.photoSwipe.init()
     })
   }
 
   items () {
-    let items = []
+    const items = []
 
     $(this.selector).each((i, el) => {
       const item = this.item(i, el)
@@ -128,7 +130,7 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
   }
 
   item (index, el) {
-    const $el = $(el)
+    let $el = $(el)
 
     if ($el.hasClass('f-image--sensitive-content')) {
       if (!this.$html.hasClass('f-html--show-sensitive-content')) return

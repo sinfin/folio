@@ -15,7 +15,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :round,
                         :static?,
                         :sensitive_content?,
-                        :vertical_image?
+                        :vertical_image?,
+                        :custom_lightbox
 
   def show
     render if size

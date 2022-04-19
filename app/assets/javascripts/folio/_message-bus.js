@@ -4,7 +4,7 @@ window.Folio = window.Folio || {}
 window.Folio.MessageBus = {}
 
 // respect lib/folio.rb
-window.Folio.MessageBus.channel = "folio_messagebus_channel"
+window.Folio.MessageBus.channel = 'folio_messagebus_channel'
 window.Folio.MessageBus.callbacks = window.Folio.MessageBus.callbacks || {}
 window.Folio.MessageBus.debug = false
 
@@ -42,7 +42,7 @@ window.Folio.MessageBus.handleMessage = (msg, globalMsgId, msgId) => {
   if (!data) return
 
   if (window.Folio.MessageBus.debug) {
-    console.group("[Folio] [MessageBus] handleMessage")
+    console.group('[Folio] [MessageBus] handleMessage')
     console.log(msgId)
     console.log(data)
     console.groupEnd()
@@ -51,34 +51,35 @@ window.Folio.MessageBus.handleMessage = (msg, globalMsgId, msgId) => {
   Object.values(window.Folio.MessageBus.callbacks).forEach((callback) => { callback(data) })
 }
 
-window.MessageBus.subscribe(window.Folio.MessageBus.channel,
-                            window.Folio.MessageBus.handleMessage,
-                            window.Folio.MessageBus.lastId)
+window.MessageBus.subscribe(
+  window.Folio.MessageBus.channel,
+  window.Folio.MessageBus.handleMessage,
+  window.Folio.MessageBus.lastId
+)
 
 window.Folio.MessageBus.callbacks['Folio::GenerateThumbnailJob'] = (data) => {
   if (!data || data.type !== 'Folio::GenerateThumbnailJob') return
-  const { temporary_url, url } = data.data
-  if (!temporary_url || !url) return
+  if (!data.data.temporary_url || !data.data.url) return
 
-  $(`img[src='${temporary_url}']`).attr('src', url)
+  $(`img[src='${data.data.temporary_url}']`).attr('src', data.data.url)
 
-  $(`img[srcset*='${temporary_url}']`).each((i, el) => {
+  $(`img[srcset*='${data.data.temporary_url}']`).each((i, el) => {
     const $img = $(el)
-    $img.attr('srcset', $img.attr('srcset').replace(temporary_url, url))
+    $img.attr('srcset', $img.attr('srcset').replace(data.data.temporary_url, data.data.url))
   })
 
   $('.folio-thumbnail-background').each((i, el) => {
     const $el = $(el)
     const bg = $el.css('background-image')
 
-    if (bg.indexOf(temporary_url) !== -1) {
-      $el.css('background-image', `url('${url}')`)
+    if (bg.indexOf(data.data.temporary_url) !== -1) {
+      $el.css('background-image', `url('${data.data.url}')`)
       $el.removeClass('folio-thumbnail-background')
     }
   })
 
-  $(`[data-lightbox-src='${temporary_url}']`)
-    .attr('data-lightbox-src', url)
+  $(`[data-lightbox-src='${data.data.temporary_url}']`)
+    .attr('data-lightbox-src', data.data.url)
     .attr('data-lightbox-width', data.width)
     .attr('data-lightbox-height', data.height)
 }
