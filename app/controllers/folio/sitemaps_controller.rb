@@ -7,7 +7,8 @@ class Folio::SitemapsController < ActionController::Base
 
   def show
     filename = File.basename(request.path)
-    data = open(s3_sitemap_url(filename))
+    uri = URI.parse(s3_sitemap_url(filename))
+    data = uri.open
 
     send_data data.read, filename:, type: data.content_type
   rescue OpenURI::HTTPError
