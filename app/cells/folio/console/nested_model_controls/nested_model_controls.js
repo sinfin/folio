@@ -3,7 +3,6 @@ window.FolioConsole.NestedModelControls = {}
 
 window.FolioConsole.NestedModelControls.setPositionsIn = ($wrap) => {
   $wrap.find('.f-c-nested-model-controls__position-input').each((i, el) => {
-    console.log(el, i + 1)
     $(el).val(i + 1)
   })
 }
@@ -61,7 +60,6 @@ window.FolioConsole.NestedModelControls.afterInsert = (e, insertedItem) => {
 
 window.FolioConsole.NestedModelControls.beforeRemove = (e, item) => {
   const $item = $(item)
-  console.log(item)
   $item.find('.f-c-nested-model-controls__position-input').remove()
   window.FolioConsole.NestedModelControls.setPositionsIn($item.closest('.nested-fields').parent())
 }
