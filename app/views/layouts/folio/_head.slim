@@ -35,7 +35,13 @@ meta property="og:image:height" content=og_image_height
 
 meta name="turbolinks-cache-control" content=turbolinks_cache_control
 
-meta name="twitter:card" content="summary"
+- current_site.layout_twitter_meta.each do |name, content|
+  meta name=name content=content
+
+meta name="twitter:title" content=og_title
+meta name="twitter:image" content=og_image
+- if og_description.present?
+  meta name="twitter:description" content=og_description
 
 = csrf_meta_tags
 

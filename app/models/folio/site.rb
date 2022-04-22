@@ -88,6 +88,12 @@ class Folio::Site < Folio::ApplicationRecord
     @i18n_key_base ||= self.class.to_s.deconstantize.underscore
   end
 
+  def layout_twitter_meta
+    {
+      "twitter:card" => "summary",
+    }
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
