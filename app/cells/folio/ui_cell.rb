@@ -21,11 +21,15 @@ class Folio::UiCell < Folio::ApplicationCell
   def sites_tabs_model
     @sites.map do |site|
       {
-        href: controller.folio.folio_ui_url(host: site.env_aware_domain, only_path: false),
+        href: sites_tabs_href(site),
         active: site == current_site,
         label: site.to_label
       }
     end
+  end
+
+  def sites_tabs_href(site)
+    controller.folio.folio_ui_url(host: site.env_aware_domain, only_path: false)
   end
 
   def typo_titles

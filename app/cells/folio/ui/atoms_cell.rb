@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Ui::AtomsCell < Folio::ApplicationCell
+class Folio::Ui::AtomsCell < Folio::UiCell
   def show
     if File.exist?(self.class.data_path)
       render
@@ -11,6 +11,10 @@ class Folio::Ui::AtomsCell < Folio::ApplicationCell
 
   def self.data_path
     ::Rails.root.join("data/atoms_showcase.yml")
+  end
+
+  def sites_tabs_href(site)
+    controller.folio.folio_ui_atoms_url(host: site.env_aware_domain, only_path: false)
   end
 
   def images

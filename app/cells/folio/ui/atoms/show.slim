@@ -1,8 +1,16 @@
 .f-ui-atoms
-  .px-h
-    h1.mt-0.mb-a
-      a.text-decoration-none href="/folio/ui/atoms" UI Kit / Atoms
+  - if sites.size > 1 && "#{application_namespace}::Ui::Tabs".safe_constantize
+    .container-fluid
+      == cell("#{application_namespace_path}/ui/tabs", sites_tabs_model)
 
+  .container-fluid
+    h1.mb-a
+      a.text-decoration-none href="/folio/ui"
+        ' UI Kit / Atoms
+        - if sites.size > 1
+          ' - #{current_site.to_label}
+
+  .px-h
     - placements.each do |type, placement|
       - placement.atoms_in_molecules.each do |molecule, atoms|
         - if molecule.present?
