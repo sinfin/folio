@@ -7,6 +7,10 @@
   ]
     = model.model_name.human
 
+  - if model.data["_placement_type"]
+    .small.mt-2.text-truncate title=model.data["_placement_type"]
+      = model.data["_placement_type"]
+
   .small.mt-2.text-truncate title=model.type
     = model.type
 
