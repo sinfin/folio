@@ -23,13 +23,13 @@ window.Folio.Lightbox.bind = (selector, options) => {
 
     if (options.individual) {
       $items.each(function () {
-        let subSelector = `.${this.className.replace(/\s+/g, '.')}`
+        let individualSelector = `.${this.className.replace(/\s+/g, '.')}`
 
         if (options.itemSelector) {
-          subSelector = `${subSelector} ${options.itemSelector}`
+          individualSelector = `${individualSelector} ${options.itemSelector}`
         }
 
-        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ selector, subSelector, options }))
+        window.Folio.Lightbox.instances.push(new window.Folio.Lightbox.Lightbox({ selector: individualSelector, options }))
       })
     } else if (options.fromData) {
       $items.each((i, el) => {
