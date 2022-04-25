@@ -1,6 +1,6 @@
 //= require folio/webp
-//= require photoswipe/dist/photoswipe
-//= require photoswipe/dist/photoswipe-ui-default
+//= require photoswipe.esm.folio
+//= require photoswipe-dynamic-caption-plugin.esm
 
 window.Folio = window.Folio || {}
 window.Folio.Lightbox = {}
@@ -8,6 +8,8 @@ window.Folio.Lightbox = {}
 window.Folio.Lightbox.calls = []
 
 window.Folio.Lightbox.instances = []
+
+window.Folio.Lightbox.authorLabel = document.lang === "cs" ? "Foto" : "Photo"
 
 window.Folio.Lightbox.bind = (selector, options) => {
   options = options || {}
@@ -110,13 +112,35 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
         })
       }
 
-      that.photoSwipe = new PhotoSwipe(that.pswp()[0], PhotoSwipeUI_Default, items, {
-        index: index,
-        bgOpacity: 0.7,
-        showHideOpacity: true,
-        history: false,
-        errorMsg: that.pswp().data('error-msg')
+      that.photoSwipe = new window.Folio.PhotoSwipe({
+        dataSource: items,
+        index: index
       })
+
+      that.photoSwipeCaptionPlugin = new window.Folio.PhotoSwipeDynamicCaption({
+        on: () => {},
+        pswp: that.photoSwipe
+      }, {
+        captionContent: (slide) => {
+          if (slide.data.caption || slide.data.author) {
+            let content = '<div class="f-pswp__caption">'
+
+            if (slide.data.caption) {
+              content += `<div class="f-pswp__caption-caption">${slide.data.caption}</div>`
+            }
+
+            if (slide.data.author) {
+              content += `<div class="f-pswp__caption-author">${window.Folio.Lightbox.authorLabel}: ${slide.data.author}</div>`
+            }
+
+            content += '</div>'
+
+            return content
+          }
+        }
+      })
+
+      that.photoSwipeCaptionPlugin.initPlugin()
 
       that.photoSwipe.init()
     })
@@ -150,7 +174,8 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
     return {
       w: parseInt($el.data('lightbox-width')),
       h: parseInt($el.data('lightbox-height')),
-      title: $el.data('lightbox-title') || $el.next('figcaption').text(),
+      caption: $el.data('lightbox-caption') || $el.next('figcaption').text(),
+      author: $el.data('lightbox-author'),
       src: window.Folio.Webp.supported ? $el.data('lightbox-webp-src') : $el.data('lightbox-src'),
       el: el
     }

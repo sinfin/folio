@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-04-25
+### Changed
+- updated photoswipe and `folio/lightbox` - remove `folio/photoswipe` cell calls
+
 ## 2021-04-14
 ### Removed
 - removed `data_for_search` column from atoms

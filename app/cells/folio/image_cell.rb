@@ -255,7 +255,7 @@ class Folio::ImageCell < Folio::ApplicationCell
         h = h.merge(options[:lightbox])
       elsif model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
-        h["data-lightbox-title"] ||= options[:title] || options[:title]
+        h["data-lightbox-caption"] ||= options[:title]
       else
         h = h.merge(lightbox_from_image(model))
       end

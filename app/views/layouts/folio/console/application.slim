@@ -37,8 +37,6 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
 
     = render 'folio/console/partials/translations'
 
-    == cell('folio/photoswipe')
-
     = render 'folio/console/partials/application_above_javascripts'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
