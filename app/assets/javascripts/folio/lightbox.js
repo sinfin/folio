@@ -92,7 +92,12 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
     $(document).on(`click.${this.eventIdentifier}`, this.fullSelector, function (e) {
       e.preventDefault()
 
-      const items = data || that.items()
+      let items = data || that.items()
+
+      if (that.options.itemsCallback) {
+        items = that.options.itemsCallback(items)
+      }
+
       let index = 0
 
       if (typeof that.options.forceIndex !== 'undefined') {
