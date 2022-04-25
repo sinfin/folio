@@ -9,7 +9,7 @@ window.Folio.Lightbox.calls = []
 
 window.Folio.Lightbox.instances = []
 
-window.Folio.Lightbox.authorLabel = document.lang === "cs" ? "Foto" : "Photo"
+window.Folio.Lightbox.authorLabel = document.lang === 'cs' ? 'Foto' : 'Photo'
 
 window.Folio.Lightbox.bind = (selector, options) => {
   options = options || {}
@@ -116,6 +116,10 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
         dataSource: items,
         index: index
       })
+
+      if (that.options.changeCallback) {
+        that.photoSwipe.on('change', () => that.options.changeCallback(that))
+      }
 
       that.photoSwipeCaptionPlugin = new window.Folio.PhotoSwipeDynamicCaption({
         on: () => {},
