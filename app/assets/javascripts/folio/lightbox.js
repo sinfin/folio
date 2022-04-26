@@ -82,11 +82,6 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
     this.bind(attrs.data)
   }
 
-  pswp () {
-    this.$pswp || (this.$pswp = $('.pswp'))
-    return this.$pswp
-  }
-
   bind (data) {
     this.unbind()
     const that = this
@@ -198,6 +193,5 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
 
     this.photoSwipe = null
     this.unbind()
-    this.$pswp = null
   }
 }
