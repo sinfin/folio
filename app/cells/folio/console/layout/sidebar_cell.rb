@@ -33,7 +33,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
 
       label = if link_source[:label]
-        link_source[:label]
+        link_source[:label].is_a?(Symbol) ? t(".#{link_source[:label]}") : link_source[:label]
       elsif link_source[:klass]
         label_from(link_source[:klass].constantize)
       else
