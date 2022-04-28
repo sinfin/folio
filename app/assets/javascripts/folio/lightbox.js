@@ -9,7 +9,7 @@ window.Folio.Lightbox.calls = []
 
 window.Folio.Lightbox.instances = []
 
-window.Folio.Lightbox.authorLabel = document.lang === 'cs' ? 'Foto' : 'Photo'
+window.Folio.Lightbox.authorLabel = document.documentElement.lang === 'cs' ? 'Foto' : 'Photo'
 
 window.Folio.Lightbox.bind = (selector, options) => {
   options = options || {}
