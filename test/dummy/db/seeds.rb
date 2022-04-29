@@ -38,6 +38,9 @@ def unsplash_pic(square = false)
   h = (square ? scale * 2560 : scale * 1440).to_i
   image.file_url = "https://picsum.photos/#{w}/#{h}/?random"
   image.tag_list = "unsplash, seed"
+  image.file_name = "unsplash.jpg"
+  image.file_width = w
+  image.file_height = h
   image.save!
 
   puts "Created unsplash pic"

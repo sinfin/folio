@@ -29,6 +29,9 @@ def unsplash_pic(square = false)
   image = Folio::Image.new
   image.file_url = "https://unsplash.it/2560/#{square ? 2560 : 1440}/?random"
   image.tag_list = "unsplash, seed"
+  image.file_name = "unsplash.jpg"
+  image.file_width = w
+  image.file_height = h
   image.save!
 
   puts "Created unsplash pic"
