@@ -15,17 +15,17 @@
                       current_user)
 
           .mt-4.row
-            .col-auto
-              a.btn.btn-secondary href=edit_user_registration_path
-                ' Edit name
+            / .col-auto
+            /   a.btn.btn-secondary href=edit_user_registration_path
+            /     ' Edit name
 
-            .col-auto
-              a.btn.btn-secondary href=edit_user_registration_path(pw: 1)
-                ' Change password
+            / .col-auto
+            /   a.btn.btn-secondary href=edit_user_registration_path(pw: 1)
+            /     ' Change password
 
-            .col-auto
-              a.btn.btn-secondary href=edit_user_registration_path(em: 1)
-                ' Change e-mail
+            / .col-auto
+            /   a.btn.btn-secondary href=edit_user_registration_path(em: 1)
+            /     ' Change e-mail
 
             .col-auto
               a.btn.btn-danger href=destroy_user_session_path
@@ -37,7 +37,7 @@
             a.btn.btn-primary href=new_user_session_path Sign in
 
           .col-auto
-            a.btn.btn-secondary href=new_user_registration_path Sign up
+            a.btn.btn-secondary href=new_user_invitation_path Sign up
 
           .col-auto
             button.btn.btn-primary[

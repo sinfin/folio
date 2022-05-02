@@ -26,13 +26,25 @@ cs:
     devise:
       submit: Odeslat
       forgotten_password_link: Zapomenuté heslo?
-      register_button: Vytvořit nový účet
+      invite_button: Vytvořit nový účet
       sign_in_link: Již u nás máte účet?
       sign_in_link_inner: Přihlašte se
 
       invitations:
         edit:
           title: Nastavte si heslo
+
+        new:
+          email_label: E-mail (slouží pro přihlášení)
+          phone_label: Telefon
+          sign_up: Vytvořit účet
+          title: Registrace
+          gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.
+
+        show:
+          title: Potvrzení e-mailu
+          text: Pro úspěšnou správu předplatného je potřeba dokončit registraci. Prosíme potvrďte Vaší e-mailovou adresu kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          resend_email: Znovu zaslat ověřovací e-mail
 
       sessions:
         new:
@@ -53,13 +65,6 @@ cs:
           change_password: Nastavit nové heslo
 
       registrations:
-        new:
-          email_label: E-mail (slouží pro přihlášení)
-          phone_label: Telefon
-          sign_up: Vytvořit účet
-          title: Registrace
-          gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.
-
         edit:
           update: Uložit
           title: Osobní údaje

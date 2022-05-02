@@ -9,17 +9,15 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
     create_and_host_site
     sign_in create(:folio_user)
 
-    assert_raises(ActionController::MethodNotAllowed) do
-      get main_app.new_user_invitation_path
-    end
+    get main_app.new_user_invitation_path
+    assert_response(:ok)
   end
 
   test "create" do
     create_and_host_site
     sign_in create(:folio_user)
 
-
-    assert_raises(ActionController::MethodNotAllowed) do
+    assert_difference("Folio::User.count", 1) do
       post main_app.user_invitation_path, params: {
         user: {
           email: "email@email.email"
@@ -53,5 +51,26 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_accept_path)
     assert user.reload.invitation_accepted?
+  end
+
+  test "show" do
+    create_and_host_site
+
+    get main_app.user_invitation_path
+    # redirect without :folio_user_invited_email in session
+    assert_redirected_to main_app.new_user_invitation_path
+
+    assert_difference("Folio::User.count", 1) do
+      post main_app.user_invitation_path, params: {
+        user: {
+          email: "email@email.email"
+        }
+      }
+    end
+
+    assert_redirected_to main_app.user_invitation_path
+    follow_redirect!
+    # render with :folio_user_invited_email in session
+    assert_select ".f-devise-invitations-show"
   end
 end

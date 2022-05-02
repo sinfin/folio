@@ -20,7 +20,6 @@ class Folio::User < Folio::ApplicationRecord
     invitable
   ]
 
-  selected_device_modules << :registerable if Rails.application.config.folio_users_registerable
   selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 

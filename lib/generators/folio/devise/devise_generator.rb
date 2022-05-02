@@ -39,6 +39,10 @@ class Folio::DeviseGenerator < Rails::Generators::Base
                          module: "application_namespace_path/folio/users",
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
+      devise_scope :user do
+        get "/users/invitation", to: "application_namespace_path/users/invitations#show", as: nil
+        post "/users/invitation/resend", to: "dummy/folio/users/invitations#resend", as: :resend_user_invitation
+      end
     RUBY
 
     str = str.gsub("application_namespace_path", application_namespace_path)

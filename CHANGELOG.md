@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-05-02
+### Changed
+- use `:invitable` instead of `:registerable` for folio users
+- changed `Rails.application.config.folio_users_registerable` -> `Rails.application.config.folio_users_publicly_invitable`
+
 ## 2021-04-25
 ### Changed
 - updated photoswipe and `folio/lightbox` - remove `folio/photoswipe` cell calls

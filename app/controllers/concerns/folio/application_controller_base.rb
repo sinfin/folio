@@ -90,4 +90,8 @@ module Folio::ApplicationControllerBase
     def current_site_based_layout
       current_site ? current_site.layout_name : "folio/application"
     end
+
+    def authenticate_inviter!
+      # allow anonymous invites
+    end
 end

@@ -21,6 +21,6 @@
 
     span.folio-loader.f-devise__loader
 
-  - if ::Rails.application.config.folio_users_registerable
+  - if ::Rails.application.config.folio_users_publicly_invitable
     .f-devise__bottom-action-wrap
-      == register_button
+      == invite_button

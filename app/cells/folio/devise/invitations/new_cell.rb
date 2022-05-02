@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Folio::Devise::Registrations::NewCell < Folio::Devise::ApplicationCell
+class Folio::Devise::Invitations::NewCell < Folio::Devise::ApplicationCell
   def form(&block)
     opts = {
-      url: controller.registration_path(resource_name),
+      url: controller.invitation_path(resource_name),
       as: resource_name,
       html: {
         class: model[:modal] ? "f-devise-modal__form" : nil,

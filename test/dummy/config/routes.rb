@@ -10,6 +10,11 @@ Rails.application.routes.draw do
     devise_for :users, class_name: "Folio::User",
                        module: "dummy/folio/users",
                        omniauth_providers: Rails.application.config.folio_users_omniauth_providers
+
+    devise_scope :user do
+      get "/users/invitation", to: "dummy/folio/users/invitations#show", as: nil
+      post "/users/invitation/resend", to: "dummy/folio/users/invitations#resend", as: :resend_user_invitation
+    end
   end
 
   resource :test, only: [:show]

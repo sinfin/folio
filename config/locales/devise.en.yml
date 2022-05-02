@@ -16,13 +16,20 @@ en:
     devise:
       submit: Submit
       forgotten_password_link: Forgotten password?
-      register_button: Create new account
+      invite_button: Create new account
       sign_in_link: Have an account?
       sign_in_link_inner: Sign in
 
       invitations:
         edit:
           title: Set your password
+
+        new:
+          email_label: E-mail (used for signing in)
+          phone_label: Phone
+          sign_up: Create account
+          title: Sign up
+          gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
 
       sessions:
         new:
@@ -43,13 +50,6 @@ en:
           change_password: Set my password
 
       registrations:
-        new:
-          email_label: E-mail (used for signing in)
-          phone_label: Phone
-          sign_up: Create account
-          title: Sign up
-          gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
-
         edit:
           update: Update
           title: Account information

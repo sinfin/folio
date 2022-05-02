@@ -63,7 +63,7 @@ $(document)
           else if json.data
             $form.trigger('folioDeviseBeforeHtmlReplace')
 
-            $wrap = $form.closest('.f-devise-sessions-new, .f-devise-registrations-new')
+            $wrap = $form.closest('.f-devise-sessions-new, .f-devise-invitations-new')
             $parent = $wrap.parent()
             $wrap.replaceWith(jxHr.responseJSON.data)
 

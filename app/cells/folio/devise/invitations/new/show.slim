@@ -1,12 +1,12 @@
-.f-devise-registrations-new
+.f-devise-invitations-new
   = form do |f|
     = title
 
-    - if registrations_perex
-      p.f-devise__perex = registrations_perex
+    - if invitations_perex
+      p.f-devise__perex = invitations_perex
 
-    .f-devise-registrations-new__gdpr-content
-      == registration_gdpr_content
+    .f-devise-invitations-new__gdpr-content
+      == invitations_gdpr_content
 
     == cell('folio/devise/flash', model[:flash])
 
@@ -20,15 +20,6 @@
     .f-devise__row
       .f-devise__col
         == email_input(f, autofocus: false, label: t('.email_label'))
-
-    - if ::Rails.application.config.folio_users_require_phone
-      .f-devise__row
-        .f-devise__col
-          == phone_input(f, autofocus: false, label: t('.phone_label'))
-
-    .f-devise__row
-      .f-devise__col
-        == password_input(f, :password, autocomplete: 'current-password')
 
     = render(:_bottom)
 

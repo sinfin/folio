@@ -3,6 +3,10 @@
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
   include Folio::Users::DeviseControllerBase
 
+  def new
+    fail ActionController::MethodNotAllowed, ""
+  end
+
   def edit
     if params[:pw]
       resource.send_reset_password_instructions
@@ -14,7 +18,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
+    fail ActionController::MethodNotAllowed, ""
 
     build_resource(sign_up_params)
 
@@ -76,7 +80,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
           cell_flash = ActionDispatch::Flash::FlashHash.new
           cell_flash[:alert] = message
 
-          html = cell("folio/devise/registrations/new",
+          html = cell("folio/devise/invitations/new",
                       resource:,
                       resource_name: :user,
                       modal: true,
