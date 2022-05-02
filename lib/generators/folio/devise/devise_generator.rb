@@ -41,7 +41,6 @@ class Folio::DeviseGenerator < Rails::Generators::Base
 
       devise_scope :user do
         get "/users/invitation", to: "application_namespace_path/users/invitations#show", as: nil
-        post "/users/invitation/resend", to: "dummy/folio/users/invitations#resend", as: :resend_user_invitation
       end
     RUBY
 

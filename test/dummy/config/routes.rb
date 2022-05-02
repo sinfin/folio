@@ -13,7 +13,6 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get "/users/invitation", to: "dummy/folio/users/invitations#show", as: nil
-      post "/users/invitation/resend", to: "dummy/folio/users/invitations#resend", as: :resend_user_invitation
     end
   end
 
