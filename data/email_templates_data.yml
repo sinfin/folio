@@ -51,46 +51,63 @@
     - USER_EMAIL
     - ROOT_URL
     - DOMAIN
+    - SITE_TITLE
   required_keywords:
     - USER_ACCEPT_INVITATION_URL
-  title_cs: Uživatelské účty - pozvánka
-  title_en: Users - invitation
+  title_cs: Uživatelské účty - registrace
+  title_en: Users - registration
   subject_cs: Pozvánka
   subject_en: Invitation instructions
   body_html_cs: |
     <p>Dobrý den,</p>
 
-    <p>byli jste pozváni na web <a href="{ROOT_URL}">{DOMAIN}</a>. Pozvánku můžete přijmout kliknutím na odkaz níže.</p>
+    <p>děkujeme za registraci na webu {SITE_TITLE}. Registraci prosíme dokončete kliknutím na tlačítko:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Přijmout pozvánku</a></p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
 
-    <p>Pokud si nepřejete pozvánku využít, ignorujte tento e-mail. Uživatelský účet vám nebude zřízen, dokud nekliknete na odkaz výše a nenastavíte si heslo.</p>
+    <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
 
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
+
+    <p>S přátelským pozdravem</p>
+
+    <p>{SITE_TITLE}</p>
   body_html_en: |
-    <p>Hello!</p>
+    <p>Hello,</p>
 
-    <p>Someone has invited you to <a href="{ROOT_URL}">{DOMAIN}</a>, you can accept it through the link below.</p>
+    <p>thank you for registering at {SITE_TITLE}. Please complete the registration by clicking the button:</p>
 
-    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Accept invitation</a></p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Confirm registration</a></p>
 
-    <p>If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link above and set your password.</p>
+    <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
+
+    <p>If you did not request this, please ignore this email.</p>
+
+    <p>With kind regards,</p>
+
+    <p>{SITE_TITLE}</p>
   body_text_cs: |
     Dobrý den,
 
-    byli jste pozváni na web {ROOT_URL}. Pozvánku můžete přijmout kliknutím na odkaz níže.
+    děkujeme za registraci na webu {SITE_TITLE}. Registraci prosíme dokončete kliknutím na odkaz:
 
     {USER_ACCEPT_INVITATION_URL}
 
-    Pokud si nepřejete pozvánku využít, ignorujte tento e-mail. Uživatelský účet vám nebude zřízen, dokud nekliknete na odkaz výše a nenastavíte si heslo.
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail.
 
+    S přátelským pozdravem
+    {SITE_TITLE}
   body_text_en: |
-    Hello!
+    Hello,
 
-    Someone has invited you to {ROOT_URL}, you can accept it through the link below.
+    thank you for registering at {SITE_TITLE}. Please complete the registration by clicking the link:
 
     {USER_ACCEPT_INVITATION_URL}
 
-    If you don't want to accept the invitation, please ignore this email. Your account won't be created until you access the link above and set your password.
+    If you did not request this, please ignore this email.
+
+    With kind regards,
+    {SITE_TITLE}
 
 - mailer: Devise::Mailer
   action: omniauth_conflict

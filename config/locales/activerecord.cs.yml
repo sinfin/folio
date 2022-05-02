@@ -83,7 +83,8 @@ cs:
         keyword/FOLIO_LEAD_PHONE: Telefon vyplněný ve formuláři
         keyword/FOLIO_LEAD_URL: Adresa, ze které byl odeslán formulář
         keyword/ROOT_URL: URL adresa domovské stránky
-        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
+        keyword/SITE_TITLE: Název webu
+        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro dokončení registrace
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:

@@ -73,7 +73,8 @@ en:
         keyword/FOLIO_LEAD_PHONE: Phone entered in the lead form
         keyword/FOLIO_LEAD_URL: Submission URL
         keyword/ROOT_URL: Root URL of the website
-        keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
+        keyword/SITE_TITLE: Name of the website
+        keyword/USER_ACCEPT_INVITATION_URL: URL used to finish the registration
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
       folio/user:

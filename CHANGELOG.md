@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## 2021-05-02
 ### Changed
+- converted email templates generator to `folio:email_tempaltes:seed` rake task
+
+## 2021-05-02
+### Changed
 - use `:invitable` instead of `:registerable` for folio users
 - changed `Rails.application.config.folio_users_registerable` -> `Rails.application.config.folio_users_publicly_invitable`
 

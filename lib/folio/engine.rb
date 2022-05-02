@@ -98,7 +98,7 @@ module Folio
     end
 
     begin
-      initializer :deprecations do |app|
+      initializer :deprecations_and_important_messages do |app|
         deprecations = []
 
         begin
@@ -108,6 +108,10 @@ module Folio
 
           if ActiveRecord::Base.connection.exec_query("SELECT column_name FROM information_schema.columns WHERE table_name = 'folio_private_attachments' AND column_name = 'mime_type';").rows.size > 0
             deprecations << "Column mime_type for folio_private_attachments table is deprecated. Remove it in a custom migration."
+          end
+
+          if ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
+            deprecations << "There are no email templates present. Seed them via rake folio:email_templates:seed"
           end
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
         end

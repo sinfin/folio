@@ -18,6 +18,7 @@ module Folio::MailerEmailTemplates
     @email_template = email_template_for!
 
     @data[:ROOT_URL] = "#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
+    @data[:SITE_TITLE] = Folio.site_instance_for_mailers.title
     @data[:DOMAIN] = Folio.site_instance_for_mailers.domain
 
     opts[:subject] = @email_template.render_subject(@data)
@@ -37,6 +38,7 @@ module Folio::MailerEmailTemplates
     if @email_template.present?
       @data ||= {}
       @data[:ROOT_URL] = "#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
+      @data[:SITE_TITLE] = Folio.site_instance_for_mailers.title
       @data[:DOMAIN] = Folio.site_instance_for_mailers.domain
       @data[:USER_EMAIL] = record.email
 
