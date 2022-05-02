@@ -32,7 +32,11 @@ cs:
 
       invitations:
         edit:
+          email_label: E-mail (slouží pro přihlášení)
+          password_label: Zvolte heslo pro další přihlášení
           title: Nastavte si heslo
+          perex: Pro dokončení registrace prosíme doplňte následující údaje.
+          submit: Dokončit registraci
 
         new:
           email_label: E-mail (slouží pro přihlášení)

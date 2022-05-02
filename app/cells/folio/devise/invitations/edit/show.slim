@@ -1,11 +1,29 @@
 .f-devise-invitations-edit
-  = title
-
   = form do |f|
-    = f.hidden_field :invitation_token, value: invitation_token
+    = title
 
-    - if f.object.class.require_password_on_accepting
-      = f.input :password
-      = f.input :password_confirmation
+    p.f-devise__perex = t('.perex')
 
-    = f.button :submit, t('folio.devise.submit')
+    == cell('folio/devise/flash', model[:flash])
+
+    - @f = f
+
+    = render(:_top)
+
+    = f.hidden_field :invitation_token, readonly: true
+
+    .f-devise__row
+      .f-devise__col
+        == email_input(f, autofocus: false, label: t('.email_label'))
+
+        .f-devise-invitations-edit__password-wrap
+          == password_input(f,
+                            :password,
+                            autocomplete: 'new-password',
+                            label: t('.password_label'))
+
+    = render(:_bottom)
+
+    = submit_button(f, t('.submit'))
+
+    - @f = nil

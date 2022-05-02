@@ -6,15 +6,11 @@ class Folio::Devise::Invitations::EditCell < Folio::Devise::ApplicationCell
       url: controller.invitation_path(resource_name),
       as: resource_name,
       html: {
-        method: :put,
-        class: "f-devise-invitations-edit__form"
+        class: model[:modal] ? "f-devise-modal__form" : nil,
+        id: nil
       },
     }
 
     simple_form_for(resource, opts, &block)
-  end
-
-  def invitation_token
-    resource.invitation_token || params[:invitation_token]
   end
 end
