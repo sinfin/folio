@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2021-05-02
 ### Changed
-- converted email templates generator to `folio:email_tempaltes:seed` rake task
+- converted email templates generator to `folio:email_templates:idp_seed` rake task
 
 ## 2021-05-02
 ### Changed

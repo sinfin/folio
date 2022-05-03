@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "generators/folio/email_templates/email_templates_generator"
 
 class Folio::LeadMailerTest < ActionMailer::TestCase
   setup do
     create_and_host_site
-    Folio::EmailTemplatesGenerator.new.seed_records
+    Rails.application.load_tasks
+    Rake::Task["folio:email_templates:idp_seed"].invoke
   end
 
   test "notification_email" do

@@ -3,15 +3,6 @@
 require "test_helper"
 
 class Folio::UserTest < ActiveSupport::TestCase
-  test "first_name and last_name validation" do
-    user = Folio::User.new(email: "email@email.email",
-                           password: "123123123",
-                           password_confirmation: "123123123")
-    assert_not(user.valid?)
-    assert user.errors[:first_name]
-    assert user.errors[:last_name]
-  end
-
   test "newsletter subscription" do
     user = Folio::User.invite!(email: "email@email.email",
                                first_name: "John",

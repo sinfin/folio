@@ -2,7 +2,7 @@
 
 namespace :folio do
   namespace :email_templates do
-    task seed: :environment do
+    task idp_seed: :environment do
       Rails.logger.silence do
         records = []
 

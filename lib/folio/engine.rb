@@ -111,7 +111,7 @@ module Folio
           end
 
           if ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
-            deprecations << "There are no email templates present. Seed them via rake folio:email_templates:seed"
+            deprecations << "There are no email templates present. Seed them via rake folio:email_templates:idp_seed"
           end
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
         end
