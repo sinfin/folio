@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class Folio::Devise::Invitations::EditCell < Folio::Devise::ApplicationCell
+class Folio::Devise::ResourceFormCell < Folio::Devise::ApplicationCell
   include ActionView::Helpers::FormOptionsHelper
 
   def form(&block)
     opts = {
-      url: controller.invitation_path(resource_name),
+      url: model[:form_url],
       as: resource_name,
       html: {
         class: model[:modal] ? "f-devise-modal__form" : nil,

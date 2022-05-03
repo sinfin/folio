@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def create_omniauth_authentication(email: "omniauth@authentication.com", nickname: "Lorem ipsum")
-  Folio::Omniauth::Authentication.from_omniauth_auth(omniauth_authentication_openstruct(email, nickname))
+  Folio::Omniauth::Authentication.from_omniauth_auth(omniauth_authentication_openstruct(email:, nickname:))
 end
 
 def omniauth_authentication_hash(email: "omniauth@authentication.com", nickname: "Lorem ipsum")

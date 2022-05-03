@@ -118,7 +118,35 @@ class Folio::User < Folio::ApplicationRecord
       user.last_name = ary[1]
     end
 
+    user.authentications << auth
+
     user
+  end
+
+  def self.controller_strong_params_for_create
+    address_strong_params = %i[
+      id
+      _destroy
+      name
+      company_name
+      address_line_1
+      address_line_2
+      zip
+      city
+      country_code
+      phone
+    ]
+
+    [
+      :first_name,
+      :last_name,
+      :nickname,
+      :phone,
+      :subscribed_to_newsletter,
+      :use_secondary_address,
+      primary_address_attributes: address_strong_params,
+      secondary_address_attributes: address_strong_params,
+    ]
   end
 
   private
@@ -152,7 +180,7 @@ class Folio::User < Folio::ApplicationRecord
     end
 
     def update_has_generated_password
-      if will_save_change_to_encrypted_password?
+      if will_save_change_to_encrypted_password? && !will_save_change_to_has_generated_password?
         self.has_generated_password = false
       end
     end

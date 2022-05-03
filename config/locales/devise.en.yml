@@ -21,15 +21,15 @@ en:
       sign_in_link: Have an account?
       sign_in_link_inner: Sign in
 
-      invitations:
-        edit:
-          email_label: E-mail (used for signing in)
-          password_label: Password
-          subscribed_to_newsletter_label: Subscribe to our newsletter
-          title: Set your password
-          perex: To complete the registration, please fill in the following form.
-          submit: Finish registration
+      resource_form:
+        email_label: E-mail (used for signing in)
+        password_label: Password
+        subscribed_to_newsletter_label: Subscribe to our newsletter
+        title: Set your password
+        perex: To complete the registration, please fill in the following form.
+        submit: Finish registration
 
+      invitations:
         new:
           email_label: E-mail (used for signing in)
           phone_label: Phone
@@ -103,3 +103,6 @@ en:
 
         new_user:
           invalid_session_data: Invalid sign in.
+
+        create_user:
+          failure: Failed to finish the registration.

@@ -18,34 +18,6 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
   private
     def update_resource_params
-      params.require(:user).permit(*additional_user_params).to_h.merge(super)
-    end
-
-    def additional_user_params
-      [
-        :first_name,
-        :last_name,
-        :nickname,
-        :phone,
-        :subscribed_to_newsletter,
-        :use_secondary_address,
-        primary_address_attributes: address_strong_params,
-        secondary_address_attributes: address_strong_params,
-      ]
-    end
-
-    def address_strong_params
-      %i[
-        id
-        _destroy
-        name
-        company_name
-        address_line_1
-        address_line_2
-        zip
-        city
-        country_code
-        phone
-      ]
+      params.require(:user).permit(*Folio::User.controller_strong_params_for_create).to_h.merge(super)
     end
 end

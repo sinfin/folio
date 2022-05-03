@@ -31,6 +31,35 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
   end
 
   def create_user
+    auth_data = session[:pending_folio_authentication]
+
+    if auth_data &&
+      auth_data["timestamp"] &&
+      auth_data["timestamp"].to_datetime > 1.hour.ago &&
+      @auth = Folio::Omniauth::Authentication.find_by_id(auth_data["id"])
+      @user = Folio::User.new_from_auth(@auth)
+
+      @user.assign_attributes(create_user_params)
+      @user.password = "#{Devise.friendly_token[0, 20]}a6C" # appendix to always fullfill standard requirements
+      @user.has_generated_password = true
+
+      if @user.save
+        session.delete(:pending_folio_authentication)
+
+        sign_in(resource_name, @user)
+        set_flash_message!(:notice, :signed_in) if is_flashing_format?
+        resource.after_database_authentication
+        sign_in(resource_name, resource)
+        redirect_to after_sign_in_path_for(resource)
+      else
+        flash.now[:alert] = t("folio.users.omniauth_callbacks.create_user.failure")
+        render :new_user
+      end
+    else
+      session.delete(:pending_folio_authentication)
+      redirect_to main_app.new_user_session_path,
+                  flash: { alert: t("folio.users.omniauth_callbacks.new_user.invalid_session_data") }
+    end
   end
 
   private
@@ -74,7 +103,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           session[:pending_folio_authentication] = {
             timestamp: Time.zone.now,
             id: auth.id,
-            conflict: true,
+            conflict: !!existing_user,
           }
 
           if existing_user
@@ -86,5 +115,11 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           end
         end
       end
+    end
+
+    def create_user_params
+      params.require(:user)
+            .permit(:email,
+                    *Folio::User.controller_strong_params_for_create)
     end
 end

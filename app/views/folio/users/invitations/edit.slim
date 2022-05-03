@@ -1,3 +1,7 @@
 .f-devise.f-devise--invitations-edit
-  == cell('folio/devise/invitations/edit', resource: resource,
-                                           resource_name: resource_name)
+  == cell('folio/devise/resource_form',
+          resource:,
+          resource_name:,
+          use_password: true,
+          lock_email: true,
+          form_url: invitation_path(resource_name))

@@ -30,15 +30,15 @@ cs:
       sign_in_link: Již u nás máte účet?
       sign_in_link_inner: Přihlašte se
 
-      invitations:
-        edit:
-          email_label: E-mail (slouží pro přihlášení)
-          password_label: Zvolte heslo pro další přihlášení
-          subscribed_to_newsletter_label: Mám zájem o odběr novinek na e-mail
-          title: Nastavte si heslo
-          perex: Pro dokončení registrace prosíme doplňte následující údaje.
-          submit: Dokončit registraci
+      resource_form:
+        email_label: E-mail (slouží pro přihlášení)
+        password_label: Zvolte heslo pro další přihlášení
+        subscribed_to_newsletter_label: Mám zájem o odběr novinek na e-mail
+        title: Nastavte si heslo
+        perex: Pro dokončení registrace prosíme doplňte následující údaje.
+        submit: Dokončit registraci
 
+      invitations:
         new:
           email_label: E-mail (slouží pro přihlášení)
           phone_label: Telefon
@@ -118,3 +118,6 @@ cs:
 
         new_user:
           invalid_session_data: Neplatné přihlášení.
+
+        create_user:
+          failure: Registraci se nepodařilo dokončit.

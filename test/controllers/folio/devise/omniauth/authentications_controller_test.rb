@@ -8,9 +8,9 @@ class Folio::Devise::Omniauth::AuthenticationsControllerTest < ActionDispatch::I
   test "destroy" do
     create_and_host_site
 
-    auth = create_omniauth_authentication("foo@bar.baz", "foo")
-    user = auth.find_or_create_user!
-    assert user
+    user = create(:folio_user)
+    auth = create_omniauth_authentication
+    auth.update!(user:)
 
     delete folio.devise_omniauth_authentication_path(provider: "facebook")
     assert_redirected_to new_user_session_path

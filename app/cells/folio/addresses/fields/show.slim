@@ -9,22 +9,25 @@
       = model.input :last_name, required: true
 
   - model.simple_fields_for :primary_address do |g|
-    = g.input :address_line_1
+    - all_blank = g.object.attributes.all? { |attr, val| attr == "type" || val.blank? }
+
+    = g.input :address_line_1, required: !all_blank
 
     .row
       .col-lg-5
-        = g.input :zip
+        = g.input :zip, required: !all_blank
 
       .col-lg-7
-        = g.input :city
-
-    .row
-      .col-lg-7
-        = g.input :country_code, priority: g.object.class.priority_countries(locale: I18n.locale)
+        = g.input :city, required: !all_blank
 
     .row
       .col-lg-7
-        = g.input :phone
+        = g.input :country_code, priority: g.object.class.priority_countries(locale: I18n.locale),
+                                 required: !all_blank
+
+    .row
+      .col-lg-7
+        = g.input :phone, required: !all_blank
 
   .f-addresses-fields__nested
     = togglable_fields model, :use_secondary_address

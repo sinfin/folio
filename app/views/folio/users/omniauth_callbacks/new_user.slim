@@ -1,2 +1,7 @@
 .f-devise.f-devise--omniauth-callbacks-new-user
-  p new user
+  == cell('folio/devise/resource_form',
+          resource:,
+          resource_name:,
+          use_password: false,
+          lock_email: false,
+          form_url: main_app.users_auth_create_user_path)

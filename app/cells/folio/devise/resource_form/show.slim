@@ -1,4 +1,4 @@
-.f-devise-invitations-edit
+.f-devise-resource-form
   = form do |f|
     = title
 
@@ -13,13 +13,17 @@
     = f.hidden_field :invitation_token, readonly: true
 
     .f-devise__narrow
+      - if model[:lock_email]
+        p lock email TODO
+
       == email_input(f, autofocus: false, label: t('.email_label'))
 
-      .f-devise-invitations-edit__password-wrap
-        == password_input(f,
-                          :password,
-                          autocomplete: 'new-password',
-                          label: t('.password_label'))
+      - if model[:use_password]
+        .f-devise-invitations-edit__password-wrap
+          == password_input(f,
+                            :password,
+                            autocomplete: 'new-password',
+                            label: t('.password_label'))
 
     == cell('folio/addresses/fields', f)
 
