@@ -17,9 +17,8 @@
 
     = render(:_top)
 
-    .f-devise__row
-      .f-devise__col
-        == email_input(f, autofocus: false, label: t('.email_label'))
+    .f-devise__narrow
+      == email_input(f, autofocus: false, label: t('.email_label'))
 
     = render(:_bottom)
 

@@ -1,0 +1,56 @@
+.f-addresses-fields
+  h2.mt-0 = t('.title')
+
+  .row
+    .col-lg-6
+      = model.input :first_name, required: true
+
+    .col-lg-6
+      = model.input :last_name, required: true
+
+  - model.simple_fields_for :primary_address do |g|
+    = g.input :address_line_1
+
+    .row
+      .col-lg-5
+        = g.input :zip
+
+      .col-lg-7
+        = g.input :city
+
+    .row
+      .col-lg-7
+        = g.input :country_code, priority: g.object.class.priority_countries(locale: I18n.locale)
+
+    .row
+      .col-lg-7
+        = g.input :phone
+
+  .f-addresses-fields__nested
+    = togglable_fields model, :use_secondary_address
+      .f-addresses-fields__nested-content
+        - model.simple_fields_for :secondary_address do |g|
+          = g.input :name
+
+          = g.input :company_name
+
+          = g.input :address_line_1
+
+          .row
+            .col-lg-5
+              = g.input :zip
+
+            .col-lg-7
+              = g.input :city
+
+          .row
+            .col-lg-7
+              = g.input :country_code, priority: g.object.class.priority_countries(locale: I18n.locale)
+
+          .row
+            .col-lg-7
+              = g.input :email
+
+          .row
+            .col-lg-7
+              = g.input :phone

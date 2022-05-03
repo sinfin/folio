@@ -72,8 +72,12 @@ class Folio::Address::Base < Folio::ApplicationRecord
     ]
   end
 
-  def self.priority_countries
-    []
+  def self.priority_countries(locale: nil)
+    if locale == :cs
+      %w[CZ SK]
+    else
+      []
+    end
   end
 
   private

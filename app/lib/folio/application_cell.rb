@@ -56,6 +56,20 @@ class Folio::ApplicationCell < Cell::ViewModel
     end
   end
 
+  def togglable_fields(f, key, label: nil, &block)
+    content_tag(:div, class: "f-togglable-fields") do
+      concat(f.check_box(key, class: "f-togglable-fields__input"))
+
+      if label.nil?
+        concat(f.label(key, class: "f-togglable-fields__label"))
+      else
+        concat(f.label(key, label, class: "f-togglable-fields__label"))
+      end
+
+      concat(content_tag(:div, class: "f-togglable-fields__content", &block))
+    end
+  end
+
   unless ::Rails.application.config.folio_site_is_a_singleton
     def t(str, **options)
       if str.starts_with?(".")

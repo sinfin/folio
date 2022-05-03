@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Devise::Invitations::EditCell < Folio::Devise::ApplicationCell
+  include ActionView::Helpers::FormOptionsHelper
+
   def form(&block)
     opts = {
       url: controller.invitation_path(resource_name),

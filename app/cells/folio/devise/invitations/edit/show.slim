@@ -12,15 +12,16 @@
 
     = f.hidden_field :invitation_token, readonly: true
 
-    .f-devise__row
-      .f-devise__col
-        == email_input(f, autofocus: false, label: t('.email_label'))
+    .f-devise__narrow
+      == email_input(f, autofocus: false, label: t('.email_label'))
 
-        .f-devise-invitations-edit__password-wrap
-          == password_input(f,
-                            :password,
-                            autocomplete: 'new-password',
-                            label: t('.password_label'))
+      .f-devise-invitations-edit__password-wrap
+        == password_input(f,
+                          :password,
+                          autocomplete: 'new-password',
+                          label: t('.password_label'))
+
+    == cell('folio/addresses/fields', f)
 
     = render(:_bottom)
 
