@@ -24,6 +24,7 @@ en:
         edit:
           email_label: E-mail (used for signing in)
           password_label: Password
+          subscribed_to_newsletter_label: Subscribe to our newsletter
           title: Set your password
           perex: To complete the registration, please fill in the following form.
           submit: Finish registration

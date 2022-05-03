@@ -27,6 +27,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
         :last_name,
         :nickname,
         :phone,
+        :subscribed_to_newsletter,
         :use_secondary_address,
         primary_address_attributes: address_strong_params,
         secondary_address_attributes: address_strong_params,

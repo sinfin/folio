@@ -34,6 +34,7 @@ cs:
         edit:
           email_label: E-mail (slouží pro přihlášení)
           password_label: Zvolte heslo pro další přihlášení
+          subscribed_to_newsletter_label: Mám zájem o odběr novinek na e-mail
           title: Nastavte si heslo
           perex: Pro dokončení registrace prosíme doplňte následující údaje.
           submit: Dokončit registraci
