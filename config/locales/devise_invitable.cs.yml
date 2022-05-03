@@ -5,7 +5,7 @@ cs:
     invitations:
       send_instructions: "Potvrzovací e-mail odeslán na %{email}."
       invitation_token_invalid: "Neplatný klíč pozvánky!"
-      updated: "Heslo nastaveno - byli jste přihlášeni."
+      updated: "Registrace dokončena - byli jste přihlášeni."
       updated_not_active: "Heslo nastaveno."
       no_invitations_remaining: "Žádné další pozvánky"
       invitation_removed: "Vaše pozvánka byla odebrána."

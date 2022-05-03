@@ -109,9 +109,7 @@ class Folio::User < Folio::ApplicationRecord
 
   private
     def validate_first_name_and_last_name?
-      false
-      # TODO
-      # authentications.blank? || nickname.blank?
+      invitation_accepted_at?
     end
 
     def validate_phone?
