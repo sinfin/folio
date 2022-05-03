@@ -8,7 +8,7 @@ class Folio::Users::SessionsController < Devise::SessionsController
       authentication = Folio::Omniauth::Authentication.find_by(conflict_token: params[:conflict_token])
 
       if authentication.present?
-        session.delete(:pending_folio_authentication_id)
+        session.delete(:pending_folio_authentication)
         @user = Folio::User.find_by_id(authentication.conflict_user_id)
         authentication.update_columns(folio_user_id: @user.id,
                                       conflict_token: nil,
@@ -21,11 +21,11 @@ class Folio::Users::SessionsController < Devise::SessionsController
       end
 
       redirect_to main_app.new_user_session_path, flash: { alert: t("folio.devise.sessions.new.invalid_conflict_token_flash") }
-    elsif params[:pending] && session[:pending_folio_authentication_id]
-      timestamp = Time.zone.parse(session[:pending_folio_authentication_id]["timestamp"])
+    elsif params[:pending] && session[:pending_folio_authentication]
+      timestamp = Time.zone.parse(session[:pending_folio_authentication]["timestamp"])
 
       if timestamp > 1.hour.ago
-        @pending_authentication = Folio::Omniauth::Authentication.find_by(id: session[:pending_folio_authentication_id]["id"])
+        @pending_authentication = Folio::Omniauth::Authentication.find_by(id: session[:pending_folio_authentication]["id"])
 
         if @pending_authentication
           Rails.application.config.devise.mailer.omniauth_conflict(@pending_authentication).deliver_later

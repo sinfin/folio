@@ -15,6 +15,24 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     bind_user_and_redirect
   end
 
+  def new_user
+    auth_data = session[:pending_folio_authentication]
+
+    if auth_data &&
+      auth_data["timestamp"] &&
+      auth_data["timestamp"].to_datetime > 1.hour.ago &&
+      @auth = Folio::Omniauth::Authentication.find_by_id(auth_data["id"])
+      @user = Folio::User.new_from_auth(@auth)
+    else
+      session.delete(:pending_folio_authentication)
+      redirect_to main_app.new_user_session_path,
+                  flash: { alert: t("folio.users.omniauth_callbacks.new_user.invalid_session_data") }
+    end
+  end
+
+  def create_user
+  end
+
   private
     def bind_user_and_redirect
       auth = Folio::Omniauth::Authentication.from_request(request)
@@ -44,16 +62,28 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
           sign_in(:user, user)
           set_flash_message!(:success, :signed_in)
           redirect_to after_sign_in_path_for(resource)
-        elsif user = auth.find_or_create_user!
-          sign_in(:user, user)
-          set_flash_message!(:success, :signed_up)
-          redirect_to after_sign_in_path_for(resource)
         else
-          session[:pending_folio_authentication_id] = {
+          email = auth.email
+
+          if email.present?
+            existing_user = Folio::User.find_by(email:)
+          else
+            existing_user = nil
+          end
+
+          session[:pending_folio_authentication] = {
             timestamp: Time.zone.now,
             id: auth.id,
+            conflict: true,
           }
-          redirect_to main_app.new_user_session_path(pending: 1)
+
+          if existing_user
+            # prompt the user to add auth to an existing user and sign in after
+            redirect_to main_app.users_auth_conflict_path
+          else
+            # prompt the user to create a new user
+            redirect_to main_app.users_auth_new_user_path
+          end
         end
       end
     end

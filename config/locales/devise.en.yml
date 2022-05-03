@@ -10,7 +10,8 @@ en:
         footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
 
     omniauth_callbacks:
-      signed_up: "Welcome! You have signed up successfully."
+      signed_in: Signed in successfully.
+      signed_up: Signed up successfully.
 
   folio:
     devise:
@@ -99,3 +100,6 @@ en:
 
       omniauth_callbacks:
         added_provider: "%{provider} account linked."
+
+        new_user:
+          invalid_session_data: Invalid sign in.

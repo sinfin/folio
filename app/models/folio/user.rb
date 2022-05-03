@@ -107,6 +107,20 @@ class Folio::User < Folio::ApplicationRecord
     end
   end
 
+  def self.new_from_auth(auth)
+    user = self.new
+
+    user.email = auth.email
+
+    if auth.nickname.present?
+      ary = auth.nickname.split(/\s+/, 2)
+      user.first_name = ary[0]
+      user.last_name = ary[1]
+    end
+
+    user
+  end
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?

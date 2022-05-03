@@ -11,7 +11,7 @@ class Folio::UserFlowTest < ActionDispatch::IntegrationTest
     Capybara.use_default_driver
   end
 
-  test "registration" do
+  test "standard via e-mail" do
     create_and_host_site
 
     visit main_app.new_user_invitation_path
@@ -54,5 +54,8 @@ class Folio::UserFlowTest < ActionDispatch::IntegrationTest
 
     assert user.primary_address
     assert_equal "Foo 1", user.primary_address.address_line_1
+  end
+
+  test "omniauth - new user" do
   end
 end

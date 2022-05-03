@@ -13,6 +13,9 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get "/users/invitation", to: "dummy/folio/users/invitations#show", as: nil
+      get "/users/auth/conflict", to: "dummy/folio/users/omniauth_callbacks#conflict"
+      get "/users/auth/new_user", to: "dummy/folio/users/omniauth_callbacks#new_user"
+      post "/users/auth/create_user", to: "dummy/folio/users/omniauth_callbacks#create_user"
     end
   end
 

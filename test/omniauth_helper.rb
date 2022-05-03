@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-def create_omniauth_authentication(email, nickname)
+def create_omniauth_authentication(email: "omniauth@authentication.com", nickname: "Lorem ipsum")
   Folio::Omniauth::Authentication.from_omniauth_auth(omniauth_authentication_openstruct(email, nickname))
 end
 
-def omniauth_authentication_openstruct(email, nickname)
-  OpenStruct.new(
+def omniauth_authentication_hash(email: "omniauth@authentication.com", nickname: "Lorem ipsum")
+  {
     provider: "facebook",
     uid: "1234567890123456",
     info: OpenStruct.new(
@@ -25,5 +25,12 @@ def omniauth_authentication_openstruct(email, nickname)
         "id" => "1234567890123456",
       }
     )
-  )
+  }
 end
+
+def omniauth_authentication_openstruct(email: "omniauth@authentication.com", nickname: "Lorem ipsum")
+  OpenStruct.new(omniauth_authentication_hash(email:, nickname:))
+end
+
+OmniAuth.config.test_mode = true
+OmniAuth.config.mock_auth[:default] = OmniAuth::AuthHash.new(omniauth_authentication_hash)

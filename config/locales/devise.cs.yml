@@ -115,3 +115,6 @@ cs:
 
       omniauth_callbacks:
         added_provider: "%{provider} účet úspěšně připojen."
+
+        new_user:
+          invalid_session_data: Neplatné přihlášení.
