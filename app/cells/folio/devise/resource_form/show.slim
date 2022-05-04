@@ -14,9 +14,14 @@
 
     .f-devise__narrow
       - if model[:lock_email]
-        p lock email TODO
+        == email_input(f,
+                       autofocus: false,
+                       label: t('.email_label'),
+                       disabled: true)
 
-      == email_input(f, autofocus: false, label: t('.email_label'))
+        = f.hidden_field :email
+      - else
+        == email_input(f, autofocus: false, label: t('.email_label'))
 
       - if model[:use_password]
         .f-devise-invitations-edit__password-wrap
