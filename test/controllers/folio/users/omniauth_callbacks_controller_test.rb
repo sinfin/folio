@@ -7,7 +7,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
 
   def setup
     super
-    create(:folio_site)
+    create_and_host_site
   end
 
   test "bind_user_and_redirect - signed in" do
