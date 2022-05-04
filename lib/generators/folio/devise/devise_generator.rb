@@ -42,6 +42,7 @@ class Folio::DeviseGenerator < Rails::Generators::Base
       devise_scope :user do
         get "/users/invitation", to: "application_namespace_path/users/invitations#show", as: nil
         get "/users/auth/conflict", to: "dummy/folio/users/omniauth_callbacks#conflict"
+        get "/users/auth/resolve_conflict", to: "dummy/folio/users/omniauth_callbacks#resolve_conflict"
         get "/users/auth/new_user", to: "dummy/folio/users/omniauth_callbacks#new_user"
         post "/users/auth/create_user", to: "dummy/folio/users/omniauth_callbacks#create_user"
       end

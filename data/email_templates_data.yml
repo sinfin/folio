@@ -109,7 +109,7 @@
     With kind regards,
     {SITE_TITLE}
 
-- mailer: Devise::Mailer
+- mailer: Folio::DeviseMailer
   action: omniauth_conflict
   optional_keywords:
     - USER_EMAIL
@@ -129,6 +129,8 @@
 
     <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFLICT_RESOLVE_URL}">Dokončit přihlášení</a></p>
 
+    <p class="small"><a class="text-muted" href="{USER_CONFLICT_RESOLVE_URL}">{USER_CONFLICT_RESOLVE_URL}</a></p>
+
     <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.</p>
   body_html_en: |
     <p>Hello!</p>
@@ -136,6 +138,8 @@
     <p>to finish signing in via {USER_CONFLICT_PROVIDER} click the link bellow:</p>
 
     <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFLICT_RESOLVE_URL}">Sign in</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFLICT_RESOLVE_URL}">{USER_CONFLICT_RESOLVE_URL}</a></p>
 
     <p>If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.</p>
   body_text_cs: |

@@ -62,6 +62,42 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     end
   end
 
+  def conflict
+    auth_data = session[:pending_folio_authentication]
+
+    if auth_data &&
+       auth_data["timestamp"] &&
+       auth_data["timestamp"].to_datetime > 1.hour.ago &&
+       auth_data["conflict"]
+      @auth = Folio::Omniauth::Authentication.find_by_id(auth_data["id"])
+      Rails.application.config.devise.mailer.omniauth_conflict(@auth).deliver_later
+    else
+      session.delete(:pending_folio_authentication)
+      redirect_to main_app.new_user_session_path
+    end
+  end
+
+  def resolve_conflict
+    if params[:conflict_token].present?
+      authentication = Folio::Omniauth::Authentication.find_by(conflict_token: params[:conflict_token])
+
+      if authentication.present?
+        session.delete(:pending_folio_authentication)
+        @user = Folio::User.find_by_id(authentication.conflict_user_id)
+        authentication.update_columns(folio_user_id: @user.id,
+                                      conflict_token: nil,
+                                      conflict_user_id: nil)
+        sign_in(resource_name, @user)
+        @force_flash = true
+        set_flash_message!(:notice, :signed_in)
+        redirect_to stored_location_for(:user).presence || after_sign_in_path_for(@user)
+        return
+      end
+    end
+
+    redirect_to main_app.new_user_session_path
+  end
+
   private
     def bind_user_and_redirect
       auth = Folio::Omniauth::Authentication.from_request(request)
@@ -96,6 +132,18 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
 
           if email.present?
             existing_user = Folio::User.find_by(email:)
+
+            if existing_user
+              conflict_token = nil
+
+              loop do
+                conflict_token = SecureRandom.urlsafe_base64(16).gsub(/-|_/, ("a".."z").to_a[rand(26)])
+                break unless Folio::Omniauth::Authentication.exists?(conflict_token:)
+              end
+
+              auth.update_columns(conflict_user_id: existing_user.id,
+                                  conflict_token:)
+            end
           else
             existing_user = nil
           end

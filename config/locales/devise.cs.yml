@@ -55,7 +55,6 @@ cs:
         new:
           title: Přihlášení
           sign_in: Přihlásit se
-          invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.
 
         create:
           invalid: Neplatný e-mail nebo heslo
@@ -121,3 +120,6 @@ cs:
 
         create_user:
           failure: Registraci se nepodařilo dokončit.
+
+        resolve_conflict:
+          invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.

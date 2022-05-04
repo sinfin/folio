@@ -32,7 +32,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
 
   test "bind_user_and_redirect - signed out - conflict" do
     # should set conflict info to session and go to /users/auth/conflict
-    user = create(:folio_user, email: "omniauth@authentication.com")
+    create(:folio_user, email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL)
 
     assert_difference("Folio::User.count", 0) do
       assert_difference("Folio::Omniauth::Authentication.count", 1) do
@@ -121,5 +121,48 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
       }
       assert_response(:ok)
     end
+  end
+
+  test "conflict without session data" do
+    # redirect to sign_in with a flash message
+    get main_app.users_auth_conflict_path
+    assert_redirected_to main_app.new_user_session_path
+  end
+
+  test "conflict with session data" do
+    create(:folio_user, email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL)
+
+    get main_app.user_facebook_omniauth_callback_path
+    assert_redirected_to main_app.users_auth_conflict_path
+
+    get main_app.users_auth_conflict_path
+    assert_response :ok
+  end
+
+  test "resolve_conflict without conflict_token param" do
+    # redirect to sign_in with a flash message
+    get main_app.users_auth_resolve_conflict_path(conflict_token: "foo")
+    assert_redirected_to main_app.new_user_session_path
+  end
+
+  test "resolve_conflict with conflict_token param" do
+    user = create(:folio_user, email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL)
+
+    assert_difference("Folio::Omniauth::Authentication.count", 1) do
+      get main_app.user_facebook_omniauth_callback_path
+      assert_redirected_to main_app.users_auth_conflict_path
+    end
+
+    auth = Folio::Omniauth::Authentication.order(id: :desc).last
+    assert auth.conflict_token
+    assert_equal user.id, auth.conflict_user_id
+
+    get main_app.users_auth_resolve_conflict_path(conflict_token: auth.conflict_token)
+    # assert_redirected_to "/"
+
+    auth.reload
+    assert_nil auth.conflict_token
+    assert_nil auth.conflict_user_id
+    assert_equal user.id, auth.folio_user_id
   end
 end

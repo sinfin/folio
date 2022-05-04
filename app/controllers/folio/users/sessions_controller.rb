@@ -3,43 +3,6 @@
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
 
-  def new
-    if params[:conflict_token].present?
-      authentication = Folio::Omniauth::Authentication.find_by(conflict_token: params[:conflict_token])
-
-      if authentication.present?
-        session.delete(:pending_folio_authentication)
-        @user = Folio::User.find_by_id(authentication.conflict_user_id)
-        authentication.update_columns(folio_user_id: @user.id,
-                                      conflict_token: nil,
-                                      conflict_user_id: nil)
-        sign_in(resource_name, @user)
-        @force_flash = true
-        set_flash_message!(:notice, :signed_in)
-        redirect_to stored_location_for(:user).presence || after_sign_in_path_for(@user)
-        return
-      end
-
-      redirect_to main_app.new_user_session_path, flash: { alert: t("folio.devise.sessions.new.invalid_conflict_token_flash") }
-    elsif params[:pending] && session[:pending_folio_authentication]
-      timestamp = Time.zone.parse(session[:pending_folio_authentication]["timestamp"])
-
-      if timestamp > 1.hour.ago
-        @pending_authentication = Folio::Omniauth::Authentication.find_by(id: session[:pending_folio_authentication]["id"])
-
-        if @pending_authentication
-          Rails.application.config.devise.mailer.omniauth_conflict(@pending_authentication).deliver_later
-        end
-
-        super unless @pending_authentication
-      else
-        super
-      end
-    else
-      super
-    end
-  end
-
   def create
     respond_to do |format|
       format.html do
