@@ -1,16 +1,25 @@
 # frozen_string_literal: true
 
 module Folio::MailerEmailTemplates
-  def email_template_for(action = nil, mailer: nil)
+  def email_template_for(action = nil, mailer: nil, bang: false)
     action ||= action_name
     mailer ||= self.class.to_s
-    Folio::EmailTemplate.find_by(mailer:, action:)
+
+    find_by = { mailer:, action: }
+
+    unless Rails.application.config.folio_site_is_a_singleton
+      find_by[:site] = Folio.site_instance_for_mailers
+    end
+
+    if bang
+      Folio::EmailTemplate.find_by!(find_by)
+    else
+      Folio::EmailTemplate.find_by(find_by)
+    end
   end
 
   def email_template_for!(action = nil, mailer: nil)
-    action ||= action_name
-    mailer ||= self.class.to_s
-    Folio::EmailTemplate.find_by!(mailer:, action:)
+    email_template_for(action, mailer:, bang: true)
   end
 
   def email_template_mail(sym_data = {}, opts = {})

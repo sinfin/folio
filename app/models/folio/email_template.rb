@@ -11,7 +11,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
   validate :validate_bodies
 
   validates :action,
-            uniqueness: { scope: %i[mailer] },
+            uniqueness: { scope: %i[mailer site_id] },
             presence: true
 
   scope :ordered, -> { order(:title) }
@@ -23,7 +23,11 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
   end
 
   def slug_candidates
-    "#{mailer.gsub('::', '_')}-#{action}"
+    if site && site.slug
+      "#{mailer.gsub('::', '_')}-#{action}-#{site.slug}"
+    else
+      "#{mailer.gsub('::', '_')}-#{action}"
+    end
   end
 
   def human_keywords
