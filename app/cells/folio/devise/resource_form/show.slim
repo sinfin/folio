@@ -32,7 +32,7 @@
     = f.input :subscribed_to_newsletter,
               label: t(".subscribed_to_newsletter_label")
 
-    == cell('dummy/ui/disclaimer')
+    == cell("#{application_namespace_path}/ui/disclaimer")
 
     = submit_button(f, t('.submit'))
 

@@ -101,4 +101,12 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def omniauth_button_icon(key)
     cell("folio/devise/omniauth/icon", key, size: 24)
   end
+
+  def application_namespace
+    ::Rails.application.class.name.deconstantize
+  end
+
+  def application_namespace_path
+    application_namespace.underscore
+  end
 end
