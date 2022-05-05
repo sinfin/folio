@@ -3,12 +3,21 @@
 
 $folio-lightbox-caption-font-size: 13px !default
 $folio-lightbox-caption-line-height: 18px !default
+$folio-lightbox-caption-mobile-font-size: $folio-lightbox-caption-font-size !default
+$folio-lightbox-caption-mobile-line-height: $folio-lightbox-caption-line-height !default
 $folio-lightbox-caption-author-color: $text-muted !default
 $folio-lightbox-caption-author-margin-top: 8px !default
+$folio-lightbox-caption-font-family: $font-family-sans-serif !default
 
 .f-pswp__caption
   font-size: $folio-lightbox-caption-font-size
   line-height: $folio-lightbox-caption-line-height
+  font-family: $folio-lightbox-caption-font-family
+
+  @if variable-exists(font-size-media-breakpoint)
+    +media-breakpoint-down($font-size-media-breakpoint)
+      font-size: $folio-lightbox-caption-mobile-font-size
+      line-height: $folio-lightbox-caption-mobile-line-height
 
 .f-pswp__caption-author
   color: $folio-lightbox-caption-author-color
