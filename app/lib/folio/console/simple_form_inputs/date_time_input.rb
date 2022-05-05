@@ -23,6 +23,7 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
       input_html_options[:class] << "folio-console-date-picker--date-time"
     end
 
+    input_html_options["autocomplete"] = "off"
     input_html_options["data-toggle"] = "datetimepicker"
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
