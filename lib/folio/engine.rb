@@ -113,7 +113,7 @@ module Folio
           if ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
             deprecations << "There are no email templates present. Seed them via rake folio:email_templates:idp_seed"
           end
-        rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
+        rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
         end
 
         if %w[js coffee].any? { |ext| File.exist?(Rails.root.join("app/cells/folio/console/atoms/previews/main_app.#{ext}")) }
