@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::User < Folio::ApplicationRecord
+  include Folio::Devise::Crossdomain::Model
+  include Folio::Devise::DeliverLater
   include Folio::Filterable
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscription
-  include Folio::Devise::DeliverLater
 
   has_sanitized_fields :email, :first_name, :last_name, :nickname
 
@@ -190,45 +191,48 @@ end
 #
 # Table name: folio_users
 #
-#  id                       :bigint(8)        not null, primary key
-#  email                    :string
-#  encrypted_password       :string           default(""), not null
-#  reset_password_token     :string
-#  reset_password_sent_at   :datetime
-#  remember_created_at      :datetime
-#  sign_in_count            :integer          default(0), not null
-#  current_sign_in_at       :datetime
-#  last_sign_in_at          :datetime
-#  current_sign_in_ip       :inet
-#  last_sign_in_ip          :inet
-#  confirmation_token       :string
-#  confirmed_at             :datetime
-#  confirmation_sent_at     :datetime
-#  unconfirmed_email        :string
-#  first_name               :string
-#  last_name                :string
-#  admin_note               :text
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  invitation_token         :string
-#  invitation_created_at    :datetime
-#  invitation_sent_at       :datetime
-#  invitation_accepted_at   :datetime
-#  invitation_limit         :integer
-#  invited_by_type          :string
-#  invited_by_id            :integer
-#  invitations_count        :integer          default(0)
-#  nickname                 :string
-#  use_secondary_address    :boolean          default(FALSE)
-#  primary_address_id       :bigint(8)
-#  secondary_address_id     :bigint(8)
-#  subscribed_to_newsletter :boolean          default(FALSE)
-#  has_generated_password   :boolean          default(FALSE)
-#  phone                    :string
+#  id                        :bigint(8)        not null, primary key
+#  email                     :string
+#  encrypted_password        :string           default(""), not null
+#  reset_password_token      :string
+#  reset_password_sent_at    :datetime
+#  remember_created_at       :datetime
+#  sign_in_count             :integer          default(0), not null
+#  current_sign_in_at        :datetime
+#  last_sign_in_at           :datetime
+#  current_sign_in_ip        :inet
+#  last_sign_in_ip           :inet
+#  confirmation_token        :string
+#  confirmed_at              :datetime
+#  confirmation_sent_at      :datetime
+#  unconfirmed_email         :string
+#  first_name                :string
+#  last_name                 :string
+#  admin_note                :text
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  invitation_token          :string
+#  invitation_created_at     :datetime
+#  invitation_sent_at        :datetime
+#  invitation_accepted_at    :datetime
+#  invitation_limit          :integer
+#  invited_by_type           :string
+#  invited_by_id             :integer
+#  invitations_count         :integer          default(0)
+#  nickname                  :string
+#  use_secondary_address     :boolean          default(FALSE)
+#  primary_address_id        :bigint(8)
+#  secondary_address_id      :bigint(8)
+#  subscribed_to_newsletter  :boolean          default(FALSE)
+#  has_generated_password    :boolean          default(FALSE)
+#  phone                     :string
+#  crossdomain_devise_token  :string
+#  crossdomain_devise_set_at :datetime
 #
 # Indexes
 #
 #  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
+#  index_folio_users_on_crossdomain_devise_token           (crossdomain_devise_token)
 #  index_folio_users_on_email                              (email)
 #  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
 #  index_folio_users_on_invited_by_id                      (invited_by_id)

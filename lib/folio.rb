@@ -77,6 +77,11 @@ module Folio
       Folio::Site.ordered.first
     end
   end
+
+  # set to force authentication via a site
+  def self.site_for_crossdomain_devise
+    nil
+  end
 end
 
 # only `folio/lib` directory is loaded when processing Rails `config/environments/*`
