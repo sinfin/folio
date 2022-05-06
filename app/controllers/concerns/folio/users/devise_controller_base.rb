@@ -2,7 +2,7 @@
 
 module Folio::Users::DeviseControllerBase
   extend ActiveSupport::Concern
-  include Folio::Devise::Crossdomain::DeviseControllerConcern
+  include Folio::Devise::CrossdomainController
 
   def after_sign_in_path_for(_resource)
     stored_location_for(:user) ||

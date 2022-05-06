@@ -4,7 +4,7 @@ module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
   include Folio::SetMetaVariables
   include Folio::HasCurrentSite
-  include Folio::Devise::Crossdomain::ApplicationControllerConcern
+  include Folio::Devise::CrossdomainController
 
   included do
     include Pagy::Backend

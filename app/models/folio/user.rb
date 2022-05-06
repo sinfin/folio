@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::User < Folio::ApplicationRecord
-  include Folio::Devise::Crossdomain::Model
   include Folio::Devise::DeliverLater
   include Folio::Filterable
   include Folio::HasAddresses
