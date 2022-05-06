@@ -6,7 +6,8 @@ class Folio::Devise::Crossdomain
                 :current_user,
                 :current_site,
                 :master_site,
-                :params
+                :params,
+                :resource_class
 
   Result = Struct.new(:action, :target, :params, keyword_init: true)
 
@@ -14,13 +15,14 @@ class Folio::Devise::Crossdomain
   TOKEN_LENGTH = 20
   SESSION_KEY = "folio_devise_crossdomain"
 
-  def initialize(request:, session:, current_user:, current_site:, params: {}, master_site: nil)
+  def initialize(request:, session:, current_user:, current_site:, params: {}, master_site: nil, resource_class: nil)
     @request = request
     @session = session
     @current_user = current_user
     @current_site = current_site
     @params = params
     @master_site = master_site || Folio.site_for_crossdomain_devise
+    @resource_class = resource_class || Folio::User
   end
 
   def handle!
@@ -50,8 +52,7 @@ class Folio::Devise::Crossdomain
           current_user.update_columns(crossdomain_devise_token: Devise.friendly_token[0, TOKEN_LENGTH],
                                       crossdomain_devise_set_at: Time.current)
 
-          session.delete(SESSION_KEY)
-
+          clear_session!
           return Result.new(action: :sign_in_on_target_site,
                             params: {
                               crossdomain: token,
@@ -68,10 +69,27 @@ class Folio::Devise::Crossdomain
     end
 
     def handle_on_slave_site!
+      return Result.new(action: :noop) if current_user
+
+      if params[:crossdomain] == session.try(:[], SESSION_KEY).try(:[], :token) && params[:crossdomain_user].present? && params[:crossdomain_user].length == TOKEN_LENGTH
+        user = Folio::User.where("crossdomain_devise_set_at > ?", TIMESTAMP_THRESHOLD.ago)
+                          .find_by(crossdomain_devise_token: params[:crossdomain_user])
+
+
+        if user
+          clear_session!
+          return Result.new(action: :sign_in, target: user)
+        end
+      end
+
       Result.new(action: :noop)
     end
 
     def has_crossdomain_data_in_session?
       !!session[SESSION_KEY]
+    end
+
+    def clear_session!
+      session.delete(SESSION_KEY)
     end
 end

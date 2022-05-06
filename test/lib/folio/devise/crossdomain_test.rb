@@ -100,6 +100,57 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert_equal :noop, result.action
   end
 
+  test "slave_site - valid params & session and no user" do
+    token = make_devise_token
+    user_token = make_devise_token
+
+    user = create(:folio_user,
+                  crossdomain_devise_token: user_token,
+                  crossdomain_devise_set_at: 1.second.ago)
+
+    make_session({ token:, timestamp: 10.seconds.ago })
+
+    result = new_result(master_site: master_site_mock,
+                        current_user: nil,
+                        params: {
+                          crossdomain: token,
+                          crossdomain_user: user.crossdomain_devise_token,
+                        })
+
+    assert_equal :sign_in, result.action
+    assert_equal user, result.target
+
+    # clears session
+    assert_nil session[Folio::Devise::Crossdomain::SESSION_KEY]
+  end
+
+  test "slave_site - valid params & session and no user, but crossdomain_devise_set_at set too long ago" do
+    token = make_devise_token
+    user_token = make_devise_token
+
+    user = create(:folio_user,
+                  crossdomain_devise_token: user_token,
+                  crossdomain_devise_set_at: 1.day.ago)
+
+    make_session({ token:, timestamp: 10.seconds.ago })
+
+    result = new_result(master_site: master_site_mock,
+                        current_user: nil,
+                        params: {
+                          crossdomain: token,
+                          crossdomain_user: user.crossdomain_devise_token,
+                        })
+
+    assert_equal :noop, result.action
+  end
+
+  test "slave_site - valid params+session and signed_in user" do
+    user = create(:folio_user)
+    result = new_result(master_site: master_site_mock, current_user: user)
+
+    assert_equal :noop, result.action
+  end
+
   private
     MockRequest = Struct.new(:host, :path, :path_parameters, keyword_init: true)
 
