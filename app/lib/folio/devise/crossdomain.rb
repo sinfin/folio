@@ -68,10 +68,17 @@ class Folio::Devise::Crossdomain
                                       crossdomain_devise_set_at: Time.current)
 
           clear_session!
+
+          target_site = Folio::Site.find_by_slug(target_site_slug)
+
+          # be able to test in folio dummy app with singleton sites
+          target_site ||= Folio::Site.instance if Rails.env.test?
+
           return Result.new(action: :sign_in_on_target_site,
                             params: {
                               crossdomain: token,
                               crossdomain_user: current_user.crossdomain_devise_token,
+                              host: target_site.env_aware_domain,
                             })
         else
           session[SESSION_KEY] = { target_site_slug:, token: }
@@ -90,9 +97,11 @@ class Folio::Devise::Crossdomain
         set_slave_session_before_redirect
 
         if %w[registrations invitations].include?(controller_name)
-          return Result.new(action: :redirect_to_master_invitations_new)
+          return Result.new(action: :redirect_to_master_invitations_new,
+                            params: { host: master_site.env_aware_domain })
         else
-          return Result.new(action: :redirect_to_master_sessions_new)
+          return Result.new(action: :redirect_to_master_sessions_new,
+                            params: { host: master_site.env_aware_domain })
         end
       end
 

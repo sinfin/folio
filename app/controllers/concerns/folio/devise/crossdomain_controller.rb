@@ -11,20 +11,31 @@ module Folio::Devise::CrossdomainController
     def handle_crossdomain_devise
       return @devise_crossdomain_result if @devise_crossdomain_result
 
-      @devise_crossdomain_result = Folio::Devise::Crossdomain.new(request:,
-                                                                  session:,
-                                                                  current_site:,
-                                                                  current_user:,
-                                                                  controller_name:,
-                                                                  action_name:,
-                                                                  devise_controller: try(:devise_controller?)).handle_before_action!
+      result = Folio::Devise::Crossdomain.new(request:,
+                                              session:,
+                                              current_site:,
+                                              current_user:,
+                                              controller_name:,
+                                              action_name:,
+                                              devise_controller: try(:devise_controller?)).handle_before_action!
 
-      case @devise_crossdomain_result.action
+      case result.action
       when :noop
-        return
+        return result
+      when :sign_in_on_target_site
+        redirect_to main_app.new_user_session_path(result.params), allow_other_host: true
+      when :redirect_to_sessions_new
+        redirect_to main_app.new_user_session_path
+      when :redirect_to_master_invitations_new
+        redirect_to main_app.new_user_invititation_path(result.params), allow_other_host: true
+      when :redirect_to_master_sessions_new
+        redirect_to main_app.new_user_session_path(result.params), allow_other_host: true
+      when :sign_in
+        sign_in(:user, target.user)
+        redirect_to after_sign_in_path_for(target.user)
       end
 
-      @devise_crossdomain_result
+      @devise_crossdomain_result = result
     end
 
   protected
