@@ -5,9 +5,12 @@ class Folio::Devise::Crossdomain
                 :session,
                 :current_user,
                 :current_site,
+                :controller_name,
+                :action_name,
                 :master_site,
                 :params,
-                :resource_class
+                :resource_class,
+                :devise_controller
 
   Result = Struct.new(:action, :target, :params, keyword_init: true)
 
@@ -15,17 +18,29 @@ class Folio::Devise::Crossdomain
   TOKEN_LENGTH = 20
   SESSION_KEY = "folio_devise_crossdomain"
 
-  def initialize(request:, session:, current_user:, current_site:, params: {}, master_site: nil, resource_class: nil)
+  def initialize(request:,
+                 session:,
+                 current_user:,
+                 current_site:,
+                 controller_name:,
+                 action_name:,
+                 params: {},
+                 master_site: nil,
+                 resource_class: nil,
+                 devise_controller: false)
     @request = request
     @session = session
     @current_user = current_user
     @current_site = current_site
+    @controller_name = controller_name
+    @action_name = action_name
     @params = params
     @master_site = master_site || Folio.site_for_crossdomain_devise
     @resource_class = resource_class || Folio::User
+    @devise_controller = devise_controller
   end
 
-  def handle!
+  def handle_before_action!
     return Result.new(action: :noop) unless supports_crossdomain_devise?
 
     if current_site == master_site
@@ -71,14 +86,32 @@ class Folio::Devise::Crossdomain
     def handle_on_slave_site!
       return Result.new(action: :noop) if current_user
 
-      if params[:crossdomain] == session.try(:[], SESSION_KEY).try(:[], :token) && params[:crossdomain_user].present? && params[:crossdomain_user].length == TOKEN_LENGTH
-        user = Folio::User.where("crossdomain_devise_set_at > ?", TIMESTAMP_THRESHOLD.ago)
-                          .find_by(crossdomain_devise_token: params[:crossdomain_user])
+      if devise_controller
+        set_slave_session_before_redirect
+
+        if %w[registrations invitations].include?(controller_name)
+          return Result.new(action: :redirect_to_master_invitations_new)
+        else
+          return Result.new(action: :redirect_to_master_sessions_new)
+        end
+      end
+
+      if params[:crossdomain].present? && params[:crossdomain_user].present?
+        session_token = session.try(:[], SESSION_KEY).try(:[], :token)
+        session_timestamp = session.try(:[], SESSION_KEY).try(:[], :timestamp)
+
+        if params[:crossdomain] == session_token &&
+           session_timestamp &&
+           session_timestamp > TIMESTAMP_THRESHOLD.ago &&
+           params[:crossdomain_user].length == TOKEN_LENGTH
+          user = Folio::User.where("crossdomain_devise_set_at > ?", TIMESTAMP_THRESHOLD.ago)
+                            .find_by(crossdomain_devise_token: params[:crossdomain_user])
 
 
-        if user
-          clear_session!
-          return Result.new(action: :sign_in, target: user)
+          if user
+            clear_session!
+            return Result.new(action: :sign_in, target: user)
+          end
         end
       end
 
@@ -91,5 +124,12 @@ class Folio::Devise::Crossdomain
 
     def clear_session!
       session.delete(SESSION_KEY)
+    end
+
+    def set_slave_session_before_redirect
+      session[SESSION_KEY] = {
+        token: Devise.friendly_token[0, TOKEN_LENGTH],
+        timestamp: Time.current,
+      }
     end
 end

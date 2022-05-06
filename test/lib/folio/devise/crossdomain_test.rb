@@ -151,6 +151,24 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert_equal :noop, result.action
   end
 
+  test "slave_site - devise controller - sessions" do
+    result = new_result(master_site: master_site_mock,
+                        devise_controller: true,
+                        controller_name: "sessions")
+
+    assert_equal :redirect_to_master_sessions_new, result.action
+  end
+
+  test "slave_site - devise controller - registrations/invitations" do
+    %w[registrations invitations].each do |controller_name|
+      result = new_result(master_site: master_site_mock,
+                          devise_controller: true,
+                          controller_name:)
+
+      assert_equal :redirect_to_master_invitations_new, result.action
+    end
+  end
+
   private
     MockRequest = Struct.new(:host, :path, :path_parameters, keyword_init: true)
 
@@ -195,13 +213,24 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
       create(:folio_site)
     end
 
-    def new_result(request: nil, session: nil, current_site: nil, current_user: nil, master_site: nil, params: nil)
+    def new_result(request: nil,
+                   session: nil,
+                   current_site: nil,
+                   current_user: nil,
+                   master_site: nil,
+                   controller_name: nil,
+                   action_name: nil,
+                   params: nil,
+                   devise_controller: false)
       Folio::Devise::Crossdomain.new(request: request || self.request,
                                      session: session || self.session,
                                      current_site: current_site || self.current_site,
                                      params: params || self.params,
                                      current_user: current_user || self.current_user,
-                                     master_site: master_site || self.master_site).handle!
+                                     master_site: master_site || self.master_site,
+                                     controller_name: controller_name || "home",
+                                     action_name: action_name || "index",
+                                     devise_controller: devise_controller).handle_before_action!
     end
 
     def make_session(h)
