@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-05-09
+### Added
+- added `Rails.application.config.folio_console_react_modal_types`
+
 ## 2021-05-02
 ### Changed
 - converted email templates generator to `folio:email_templates:idp_seed` rake task

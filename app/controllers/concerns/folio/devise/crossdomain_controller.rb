@@ -47,7 +47,7 @@ module Folio::Devise::CrossdomainController
         flash.discard
         sign_in(result.resource_name, result.resource)
         redirect_to after_sign_in_path_for(result.resource),
-                    flash: { notice: t('devise.sessions.signed_in') }
+                    flash: { notice: t("devise.sessions.signed_in") }
 
       else
         # noop
