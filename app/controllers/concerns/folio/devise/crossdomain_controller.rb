@@ -13,35 +13,31 @@ module Folio::Devise::CrossdomainController
 
       result = Folio::Devise::CrossdomainHandler.new(request:,
                                                      session:,
+                                                     params:,
                                                      current_site:,
                                                      current_user:,
                                                      controller_name:,
                                                      action_name:,
+                                                     master_site: Folio.site_for_crossdomain_devise,
+                                                     resource_class: Folio::User,
                                                      devise_controller: try(:devise_controller?)).handle_before_action!
 
       case result.action
       when :noop
         return result
       when :sign_in_on_target_site
-        redirect_to main_app.new_user_session_path(result.params), allow_other_host: true
+        redirect_to main_app.new_user_session_url(result.params), allow_other_host: true
       when :redirect_to_sessions_new
         redirect_to main_app.new_user_session_path
       when :redirect_to_master_invitations_new
-        redirect_to main_app.new_user_invititation_path(result.params), allow_other_host: true
+        redirect_to main_app.new_user_invititation_url(result.params), allow_other_host: true
       when :redirect_to_master_sessions_new
-        redirect_to main_app.new_user_session_path(result.params), allow_other_host: true
+        redirect_to main_app.new_user_session_url(result.params), allow_other_host: true
       when :sign_in
-        sign_in(:user, target.user)
-        redirect_to after_sign_in_path_for(target.user)
+        sign_in(:user, result.target)
+        redirect_to after_sign_in_path_for(result.target)
       end
 
       @devise_crossdomain_result = result
-    end
-
-  protected
-    # override devise signed in check - redirect to source site if needed
-    def require_no_authentication
-      result = handle_crossdomain_devise
-      super if result.action == :noop
     end
 end

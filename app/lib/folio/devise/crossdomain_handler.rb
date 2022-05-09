@@ -34,7 +34,7 @@ class Folio::Devise::CrossdomainHandler
     @current_site = current_site
     @controller_name = controller_name
     @action_name = action_name
-    @params = params
+    @params = params || {}
     @master_site = master_site || Folio.site_for_crossdomain_devise
     @resource_class = resource_class || Folio::User
     @devise_controller = devise_controller
@@ -56,10 +56,10 @@ class Folio::Devise::CrossdomainHandler
     end
 
     def handle_on_master_site!
-      token = params[:crossdomain].presence || (session.try(:[], SESSION_KEY).try(:[], :crossdomain).presence)
+      token = params[:crossdomain].presence || (session.try(:[], SESSION_KEY).try(:[], "token").presence)
       token = nil if token && token.length != TOKEN_LENGTH
 
-      target_site_slug = params[:site].presence || (session.try(:[], SESSION_KEY).try(:[], :target_site_slug).presence)
+      target_site_slug = params[:site].presence || (session.try(:[], SESSION_KEY).try(:[], "target_site_slug").presence)
 
       if token && target_site_slug
         # valid params or session
@@ -74,15 +74,16 @@ class Folio::Devise::CrossdomainHandler
           # be able to test in folio dummy app with singleton sites
           target_site ||= Folio::Site.instance if Rails.env.test?
 
-          return Result.new(action: :sign_in_on_target_site,
+          Result.new(action: :sign_in_on_target_site,
                             params: {
                               crossdomain: token,
                               crossdomain_user: current_user.crossdomain_devise_token,
                               host: target_site.env_aware_domain,
+                              only_path: false,
                             })
         else
           session[SESSION_KEY] = { target_site_slug:, token: }
-          return Result.new(action: :redirect_to_sessions_new)
+          Result.new(action: :redirect_to_sessions_new)
         end
       else
         # invalid or blank params and session
@@ -93,21 +94,9 @@ class Folio::Devise::CrossdomainHandler
     def handle_on_slave_site!
       return Result.new(action: :noop) if current_user
 
-      if devise_controller
-        set_slave_session_before_redirect
-
-        if %w[registrations invitations].include?(controller_name)
-          return Result.new(action: :redirect_to_master_invitations_new,
-                            params: { host: master_site.env_aware_domain })
-        else
-          return Result.new(action: :redirect_to_master_sessions_new,
-                            params: { host: master_site.env_aware_domain })
-        end
-      end
-
       if params[:crossdomain].present? && params[:crossdomain_user].present?
-        session_token = session.try(:[], SESSION_KEY).try(:[], :token)
-        session_timestamp = session.try(:[], SESSION_KEY).try(:[], :timestamp)
+        session_token = session.try(:[], SESSION_KEY).try(:[], "token")
+        session_timestamp = session.try(:[], SESSION_KEY).try(:[], "timestamp")
 
         if params[:crossdomain] == session_token &&
            session_timestamp &&
@@ -121,6 +110,25 @@ class Folio::Devise::CrossdomainHandler
             clear_session!
             return Result.new(action: :sign_in, target: user)
           end
+        end
+      end
+
+      if devise_controller
+        set_slave_session_before_redirect
+
+        result_params = {
+          only_path: false,
+          host: master_site.env_aware_domain,
+          crossdomain: session[SESSION_KEY][:token],
+          site: current_site.slug,
+        }
+
+        if %w[registrations invitations].include?(controller_name)
+          return Result.new(action: :redirect_to_master_invitations_new,
+                            params: result_params)
+        else
+          return Result.new(action: :redirect_to_master_sessions_new,
+                            params: result_params)
         end
       end
 

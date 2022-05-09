@@ -1,6 +1,9 @@
 .f-devise-resource-form
   = form do |f|
-    = title
+    - if model[:use_password]
+      = title t('.title_with_password')
+    - else
+      = title t('.title_without_password')
 
     p.f-devise__perex = t('.perex')
 
