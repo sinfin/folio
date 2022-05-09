@@ -12,6 +12,6 @@ module Folio::Accounts::DeviseControllerBase
     # override devise signed in check - redirect to source site if needed
     def require_no_authentication
       result = handle_crossdomain_devise
-      super if result.action == :noop
+      super if result && result.action == :noop
     end
 end

@@ -9,7 +9,7 @@ module Folio::Devise::CrossdomainController
 
   private
     def handle_crossdomain_devise
-      return unless Rails.application.config.folio_crossdomain_devise
+      return unless Rails.application.config.folio_crossdomain_devise && !Rails.env.test?
       return @devise_crossdomain_result if @devise_crossdomain_result
 
       safe_resource_name = (defined?(resource_name) ? resource_name : nil) || :user
