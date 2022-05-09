@@ -28,6 +28,7 @@ module Folio::Devise::CrossdomainController
 
       case result.action
       when :sign_in_on_target_site
+        flash.discard
         redirect_to main_app.send("new_#{result.resource_name}_session_url", result.params),
                     allow_other_host: true
 
@@ -43,8 +44,10 @@ module Folio::Devise::CrossdomainController
                     allow_other_host: true
 
       when :sign_in
+        flash.discard
         sign_in(result.resource_name, result.resource)
-        redirect_to after_sign_in_path_for(result.resource)
+        redirect_to after_sign_in_path_for(result.resource),
+                    flash: { notice: t('devise.sessions.signed_in') }
 
       else
         # noop
