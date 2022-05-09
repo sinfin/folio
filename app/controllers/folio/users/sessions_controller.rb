@@ -3,6 +3,11 @@
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
 
+  def destroy
+    current_user.sign_out_everywhere! if Rails.application.config.folio_crossdomain_devise && current_user
+    super
+  end
+
   def create
     respond_to do |format|
       format.html do

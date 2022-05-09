@@ -90,7 +90,12 @@ class Folio::Devise::CrossdomainHandler
                     })
         else
           session[SESSION_KEY] = { target_site_slug:, token:, resource_name: }
-          Result.new(action: :redirect_to_sessions_new, resource_name:)
+
+          if controller_name == "sessions" && action_name == "new"
+            Result.new(action: :noop)
+          else
+            Result.new(action: :redirect_to_sessions_new, resource_name:)
+          end
         end
       else
         # invalid or blank params and session

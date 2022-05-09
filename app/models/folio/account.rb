@@ -113,6 +113,14 @@ class Folio::Account < Folio::ApplicationRecord
     end
   end
 
+  def authenticatable_salt
+    "#{super}#{sign_out_salt_part}"
+  end
+
+  def sign_out_everywhere!
+    self.update_column(:sign_out_salt_part, SecureRandom.hex)
+  end
+
   private
     def validate_role
       if self.class.roles.exclude?(role)
@@ -152,6 +160,7 @@ end
 #  invitations_count         :integer          default(0)
 #  crossdomain_devise_token  :string
 #  crossdomain_devise_set_at :datetime
+#  sign_out_salt_part        :string
 #
 # Indexes
 #

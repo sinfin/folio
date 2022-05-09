@@ -117,6 +117,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
     t.integer "invitations_count", default: 0
     t.string "crossdomain_devise_token"
     t.datetime "crossdomain_devise_set_at"
+    t.string "sign_out_salt_part"
     t.index ["crossdomain_devise_token"], name: "index_folio_accounts_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
@@ -469,6 +470,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
     t.string "phone"
     t.string "crossdomain_devise_token"
     t.datetime "crossdomain_devise_set_at"
+    t.string "sign_out_salt_part"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"

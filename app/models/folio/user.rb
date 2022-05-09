@@ -149,6 +149,14 @@ class Folio::User < Folio::ApplicationRecord
     ]
   end
 
+  def authenticatable_salt
+    "#{super}#{sign_out_salt_part}"
+  end
+
+  def sign_out_everywhere!
+    self.update_column(:sign_out_salt_part, SecureRandom.hex)
+  end
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?
@@ -227,6 +235,7 @@ end
 #  phone                     :string
 #  crossdomain_devise_token  :string
 #  crossdomain_devise_set_at :datetime
+#  sign_out_salt_part        :string
 #
 # Indexes
 #

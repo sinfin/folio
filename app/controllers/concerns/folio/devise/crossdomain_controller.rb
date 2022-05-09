@@ -9,20 +9,22 @@ module Folio::Devise::CrossdomainController
 
   private
     def handle_crossdomain_devise
+      return unless Rails.application.config.folio_crossdomain_devise
       return @devise_crossdomain_result if @devise_crossdomain_result
 
-      resource_name ||= :user
+      safe_resource_name = (defined?(resource_name) ? resource_name : nil) || :user
 
       result = Folio::Devise::CrossdomainHandler.new(request:,
                                                      session:,
                                                      params:,
                                                      current_site:,
-                                                     current_resource: resource_name == :account ? current_account : current_user,
+                                                     current_resource: safe_resource_name == :account ? current_account : current_user,
                                                      controller_name:,
-                                                     resource_name:,
+                                                     resource_name: safe_resource_name,
                                                      action_name:,
+                                                     devise_controller: try(:devise_controller?),
                                                      master_site: Folio.site_for_crossdomain_devise,
-                                                     resource_class: resource_name == :account ? Folio::Account : Folio::User).handle_before_action!
+                                                     resource_class: safe_resource_name == :account ? Folio::Account : Folio::User).handle_before_action!
 
       case result.action
       when :sign_in_on_target_site
