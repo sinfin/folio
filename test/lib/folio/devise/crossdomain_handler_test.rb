@@ -176,9 +176,18 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
     assert_equal :noop, result.action
   end
 
-  test "slave_site - devise controller - sessions" do
+  test "slave_site - devise controller - sessions for users" do
     result = new_result(master_site: master_site_mock,
                         devise_controller: true,
+                        controller_name: "sessions")
+
+    assert_equal :redirect_to_master_sessions_new, result.action
+  end
+
+  test "slave_site - devise controller - sessions for accounts" do
+    result = new_result(master_site: master_site_mock,
+                        devise_controller: true,
+                        resource_name: :account,
                         controller_name: "sessions")
 
     assert_equal :redirect_to_master_sessions_new, result.action
@@ -246,7 +255,8 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
                    controller_name: nil,
                    action_name: nil,
                    params: nil,
-                   devise_controller: false)
+                   devise_controller: false,
+                   resource_name: :user)
       Folio::Devise::CrossdomainHandler.new(request: request || self.request,
                                             session: session || self.session,
                                             current_site: current_site || self.current_site,
@@ -255,7 +265,8 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
                                             master_site: master_site || self.master_site,
                                             controller_name: controller_name || "home",
                                             action_name: action_name || "index",
-                                            devise_controller:).handle_before_action!
+                                            devise_controller:,
+                                            resource_name:).handle_before_action!
     end
 
     def make_session(h)

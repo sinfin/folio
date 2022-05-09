@@ -10,7 +10,8 @@ class Folio::Devise::CrossdomainHandler
                 :master_site,
                 :params,
                 :resource_class,
-                :devise_controller
+                :devise_controller,
+                :resource_name
 
   Result = Struct.new(:action, :target, :params, keyword_init: true)
 
@@ -26,6 +27,7 @@ class Folio::Devise::CrossdomainHandler
                  action_name:,
                  params: {},
                  master_site: nil,
+                 resource_name: nil,
                  resource_class: nil,
                  devise_controller: false)
     @request = request
@@ -37,6 +39,7 @@ class Folio::Devise::CrossdomainHandler
     @params = params || {}
     @master_site = master_site || Folio.site_for_crossdomain_devise
     @resource_class = resource_class || Folio::User
+    @resource_name = resource_name || :user
     @devise_controller = devise_controller
   end
 

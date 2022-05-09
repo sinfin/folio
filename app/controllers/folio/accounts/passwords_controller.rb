@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class Folio::Accounts::PasswordsController < Devise::PasswordsController
-  layout "folio/console/devise"
+  include Folio::Accounts::DeviseControllerBase
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Accounts::SessionsController < Devise::SessionsController
-  layout "folio/console/devise"
+  include Folio::Accounts::DeviseControllerBase
 
   def after_sign_in_path_for(_resource)
     stored_location_for(:account).presence || console_root_path
