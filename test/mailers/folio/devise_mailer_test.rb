@@ -6,6 +6,7 @@ class Folio::DeviseMailerTest < ActionMailer::TestCase
   setup do
     create_and_host_site
     Rails.application.load_tasks
+    Rake::Task["folio:email_templates:idp_seed"].reenable
     Rake::Task["folio:email_templates:idp_seed"].invoke
   end
 
