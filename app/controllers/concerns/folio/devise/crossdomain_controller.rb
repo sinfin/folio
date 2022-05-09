@@ -11,13 +11,13 @@ module Folio::Devise::CrossdomainController
     def handle_crossdomain_devise
       return @devise_crossdomain_result if @devise_crossdomain_result
 
-      result = Folio::Devise::Crossdomain.new(request:,
-                                              session:,
-                                              current_site:,
-                                              current_user:,
-                                              controller_name:,
-                                              action_name:,
-                                              devise_controller: try(:devise_controller?)).handle_before_action!
+      result = Folio::Devise::CrossdomainHandler.new(request:,
+                                                     session:,
+                                                     current_site:,
+                                                     current_user:,
+                                                     controller_name:,
+                                                     action_name:,
+                                                     devise_controller: try(:devise_controller?)).handle_before_action!
 
       case result.action
       when :noop

@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
+class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
   test "always noop with nil master_site" do
     result = new_result(master_site: nil)
     assert_equal :noop, result.action
@@ -26,10 +26,10 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert session.present?
 
     assert_equal "target-site-slug",
-                 session[Folio::Devise::Crossdomain::SESSION_KEY][:target_site_slug]
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
 
     assert_equal token,
-                 session[Folio::Devise::Crossdomain::SESSION_KEY][:token]
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
   end
 
   test "master_site - valid params and signed in user" do
@@ -52,7 +52,7 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert_equal user.crossdomain_devise_token, result.params[:crossdomain_user]
 
     # clears session
-    assert_nil session[Folio::Devise::Crossdomain::SESSION_KEY]
+    assert_nil session[Folio::Devise::CrossdomainHandler::SESSION_KEY]
   end
 
   test "master_site - valid session and no user" do
@@ -66,10 +66,10 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert session.present?
 
     assert_equal "target-site-slug",
-                 session[Folio::Devise::Crossdomain::SESSION_KEY][:target_site_slug]
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
 
     assert_equal token,
-                 session[Folio::Devise::Crossdomain::SESSION_KEY][:token]
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
   end
 
   test "master_site - valid session and signed in user" do
@@ -90,7 +90,7 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert_equal user.crossdomain_devise_token, result.params[:crossdomain_user]
 
     # clears session
-    assert_nil session[Folio::Devise::Crossdomain::SESSION_KEY]
+    assert_nil session[Folio::Devise::CrossdomainHandler::SESSION_KEY]
   end
 
   test "master_site - no params/session and signed in user" do
@@ -121,7 +121,7 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
     assert_equal user, result.target
 
     # clears session
-    assert_nil session[Folio::Devise::Crossdomain::SESSION_KEY]
+    assert_nil session[Folio::Devise::CrossdomainHandler::SESSION_KEY]
   end
 
   test "slave_site - valid params & session and no user, but crossdomain_devise_set_at set too long ago" do
@@ -222,22 +222,22 @@ class Folio::Devise::CrossdomainTest < ActiveSupport::TestCase
                    action_name: nil,
                    params: nil,
                    devise_controller: false)
-      Folio::Devise::Crossdomain.new(request: request || self.request,
-                                     session: session || self.session,
-                                     current_site: current_site || self.current_site,
-                                     params: params || self.params,
-                                     current_user: current_user || self.current_user,
-                                     master_site: master_site || self.master_site,
-                                     controller_name: controller_name || "home",
-                                     action_name: action_name || "index",
-                                     devise_controller: devise_controller).handle_before_action!
+      Folio::Devise::CrossdomainHandler.new(request: request || self.request,
+                                            session: session || self.session,
+                                            current_site: current_site || self.current_site,
+                                            params: params || self.params,
+                                            current_user: current_user || self.current_user,
+                                            master_site: master_site || self.master_site,
+                                            controller_name: controller_name || "home",
+                                            action_name: action_name || "index",
+                                            devise_controller: devise_controller).handle_before_action!
     end
 
     def make_session(h)
-      @session = { Folio::Devise::Crossdomain::SESSION_KEY => h }
+      @session = { Folio::Devise::CrossdomainHandler::SESSION_KEY => h }
     end
 
     def make_devise_token
-      Devise.friendly_token[0, Folio::Devise::Crossdomain::TOKEN_LENGTH]
+      Devise.friendly_token[0, Folio::Devise::CrossdomainHandler::TOKEN_LENGTH]
     end
 end

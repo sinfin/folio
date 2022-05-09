@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Devise::Crossdomain
+class Folio::Devise::CrossdomainHandler
   attr_accessor :request,
                 :session,
                 :current_user,
