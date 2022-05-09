@@ -11,16 +11,18 @@ module Folio::Devise::CrossdomainController
     def handle_crossdomain_devise
       return @devise_crossdomain_result if @devise_crossdomain_result
 
+      resource_name ||= :user
+
       result = Folio::Devise::CrossdomainHandler.new(request:,
                                                      session:,
                                                      params:,
                                                      current_site:,
-                                                     current_user:,
+                                                     current_resource: resource_name == :account ? current_account : current_user,
                                                      controller_name:,
-                                                     resource_name: try(:resource_name),
+                                                     resource_name:,
                                                      action_name:,
                                                      master_site: Folio.site_for_crossdomain_devise,
-                                                     resource_class: try(:resource_name) == :account ? Folio::Account : Folio::User).handle_before_action!
+                                                     resource_class: resource_name == :account ? Folio::Account : Folio::User).handle_before_action!
 
       case result.action
       when :sign_in_on_target_site
@@ -39,8 +41,8 @@ module Folio::Devise::CrossdomainController
                     allow_other_host: true
 
       when :sign_in
-        sign_in(:user, result.target)
-        redirect_to after_sign_in_path_for(result.target)
+        sign_in(result.resource_name, result.resource)
+        redirect_to after_sign_in_path_for(result.resource)
 
       else
         # noop
