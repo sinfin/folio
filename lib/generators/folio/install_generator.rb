@@ -211,7 +211,12 @@ module Folio
       end
 
       def production_settings
-        gsub_file "config/environments/production.rb", "config.assets.js_compressor = :uglifier", "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6"
+        gsub_file "config/environments/production.rb", "# config.assets.css_compressor = :sass", do
+          [
+            "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: true)",
+            "# config.assets.css_compressor = :sass",
+          ]
+        ].join("\n  ")
       end
 
       def log_tag_settings
