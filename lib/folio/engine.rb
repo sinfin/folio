@@ -131,7 +131,7 @@ module Folio
             if defined?(logger)
               logger.error(msg)
             else
-              puts "- Column mime_type for folio_files table is deprecated. Remove it in a custom migration."
+              puts msg
             end
           end
 
