@@ -113,7 +113,7 @@ module Folio
             deprecations << "Column mime_type for folio_private_attachments table is deprecated. Remove it in a custom migration."
           end
 
-          if ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
+          if !Rails.env.test? && ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
             deprecations << "There are no email templates present. Seed them via rake folio:email_templates:idp_seed"
           end
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
