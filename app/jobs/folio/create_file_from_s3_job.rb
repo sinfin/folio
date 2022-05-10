@@ -22,7 +22,8 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     if existing_id
       file = klass.find(existing_id)
       replacing_file = true
-      if file.try(:thumbnail_sizes).is_a?(Hash)
+
+      if file.try(:thumbnailable?) && file.try(:thumbnail_sizes).is_a?(Hash)
         thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
       else
         thumbnail_keys_to_recreate = []
@@ -42,9 +43,11 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       file.file = File.open(tmp_file_path)
 
       if file.save
-        file.try(:admin_thumb, immediate: true)
+        if file.try(:thumbnailable?)
+          file.try(:admin_thumb, immediate: true)
 
-        thumbnail_keys_to_recreate.each { |thumbnail_key| file.thumb(thumbnail_key) }
+          thumbnail_keys_to_recreate.each { |thumbnail_key| file.thumb(thumbnail_key) }
+        end
 
         if replacing_file
           broadcast_replace_success(file: file.reload, file_type: type)
