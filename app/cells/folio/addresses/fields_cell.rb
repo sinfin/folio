@@ -10,4 +10,8 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
 
     render
   end
+
+  def title_tag
+    { tag: options[:title_tag] || "h2", class: "mt-0" }
+  end
 end
