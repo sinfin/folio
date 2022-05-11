@@ -83,6 +83,7 @@ PATH
       turbolinks
       uglifier
       whenever
+      zip
 
 GEM
   remote: https://rubygems.org/
@@ -625,6 +626,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.5.4)
+    zip (2.0.2)
 
 PLATFORMS
   x86_64-linux

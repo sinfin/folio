@@ -67,6 +67,7 @@ Gem::Specification.new do |s|
   s.add_dependency "aws-sdk-s3"
   s.add_dependency "babel-transpiler"
   s.add_dependency "message_bus"
+  s.add_dependency "zip"
 
   s.add_dependency "dragonfly"
   s.add_dependency "dragonfly-s3_data_store"
