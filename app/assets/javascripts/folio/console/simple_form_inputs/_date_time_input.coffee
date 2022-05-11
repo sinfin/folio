@@ -47,6 +47,7 @@ dpShow = (e) ->
 window.folioConsoleInitDatePicker = (el, opts = {}) ->
   $el = $(el)
   fullOpts = $.extend {}, DATE_CONFIG, opts
+  fullOpts['widgetPositioning']['vertical'] = 'top' if $el.hasClass('folio-console-date-picker--on-top')
   $el.val(moment($el.data('date')).format(fullOpts.format)) if $el.data('date')
   $el.datetimepicker(fullOpts)
   $el.on 'dp.show', dpShow
@@ -55,6 +56,7 @@ window.folioConsoleInitDatePicker = (el, opts = {}) ->
 window.folioConsoleInitDateTimePicker = (el, opts = {}) ->
   $el = $(el)
   fullOpts = $.extend {}, CONFIG, opts
+  fullOpts['widgetPositioning']['vertical'] = 'top' if $el.hasClass('folio-console-date-picker--on-top')
   $el.val(moment($el.data('date')).format(fullOpts.format)) if $el.data('date')
   $el.datetimepicker(fullOpts)
   $el.on 'dp.show', dpShow

@@ -17,10 +17,15 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
     input_html_options[:class] << "folio-console-date-picker"
 
     type = @builder.object.class.type_for_attribute(attribute_name).type
+
     if type == :date
       input_html_options[:class] << "folio-console-date-picker--date"
     else
       input_html_options[:class] << "folio-console-date-picker--date-time"
+    end
+
+    if options[:calendar_on_top]
+      input_html_options[:class] << "folio-console-date-picker--on-top"
     end
 
     input_html_options["autocomplete"] = "off"
