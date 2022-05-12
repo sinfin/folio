@@ -109,7 +109,7 @@ cs:
         resend_link: Zaslat znovu
 
     users:
-      registrations:
+      invitations:
         create:
           failure: Účet se nepodařilo vytvořit. Prosíme zkontrolujte označená pole.
 

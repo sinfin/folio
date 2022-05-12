@@ -94,7 +94,7 @@ en:
         resend_link: Resend
 
     users:
-      registrations:
+      invitations:
         create:
           failure: Failed to create an account. Please check the marked fields bellow.
 
