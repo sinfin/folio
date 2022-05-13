@@ -458,7 +458,7 @@ GEM
       ffi (~> 1.0)
     recaptcha (4.13.1)
       json
-    redis (4.4.0)
+    redis (4.6.0)
     regexp_parser (2.1.1)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -513,7 +513,7 @@ GEM
     show_for (0.8.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
-    sidekiq (6.2.2)
+    sidekiq (6.4.2)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
