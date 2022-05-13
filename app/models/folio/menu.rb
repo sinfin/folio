@@ -16,7 +16,7 @@ class Folio::Menu < Folio::ApplicationRecord
 
   validates :title,
             presence: true,
-            uniqueness: true
+            uniqueness: Rails.application.config.folio_site_is_a_singleton ? true : { scope: :site_id }
 
   alias_attribute :items, :menu_items
   before_validation :set_default_title
