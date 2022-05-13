@@ -1,2 +1,5 @@
 javascript:
-  window.folioCookieConsentConfiguration = #{configuration_hash.to_json};
+  window.Folio = window.Folio || {}
+  window.Folio.CookieConsent = window.Folio.CookieConsent || {}
+  window.Folio.CookieConsent.runAfterAccept = window.Folio.CookieConsent.runAfterAccept || []
+  window.Folio.CookieConsent.configuration = #{configuration_hash.to_json};
