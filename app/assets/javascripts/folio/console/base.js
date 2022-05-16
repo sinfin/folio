@@ -8,7 +8,6 @@
 //= require slideout.js/dist/slideout
 //= require multiselect/js/jquery.multi-select
 //= require autosize/dist/autosize
-//= require spectrum/spectrum
 //= require js-cookie/src/js.cookie
 //= require cleave.js/dist/cleave
 //= require jquery.kinetic/index
@@ -89,7 +88,6 @@
 
 //= require folio/console/simple_form_inputs/_character_counter_input
 //= require folio/console/simple_form_inputs/_collection_select_input
-//= require folio/console/simple_form_inputs/_color_input
 //= require folio/console/simple_form_inputs/_date_time_input
 //= require folio/console/simple_form_inputs/_redactor_input
 //= require folio/console/simple_form_inputs/_string_input

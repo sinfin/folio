@@ -3,7 +3,6 @@ import { Input } from 'reactstrap'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import RichTextEditor from 'components/RichTextEditor'
-import ColorInput from 'components/ColorInput'
 import DateInput from 'components/DateInput'
 import UrlInput from 'components/UrlInput'
 
@@ -22,6 +21,9 @@ function inputProps (type, defaultValue) {
 
     case 'collection':
       return { type: 'select' }
+
+    case 'color':
+      return { type: 'color' }
 
     default:
       return { type: 'text' }
@@ -51,18 +53,6 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         onChange={(html) => onValueChange(index, html, key)}
         invalid={Boolean(atom.errors[key])}
         scrollTarget='.f-c-atom-form-toolbar-fix-parent'
-      />
-    )
-  }
-
-  if (type === 'color') {
-    return (
-      <ColorInput
-        name={key}
-        defaultValue={defaultValue}
-        onChange={(colorString) => onValueChange(index, colorString, key)}
-        invalid={Boolean(atom.errors[key])}
-        type={type}
       />
     )
   }
