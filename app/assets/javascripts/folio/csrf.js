@@ -1,3 +1,7 @@
 $(document).on('turbolinks:load', () => {
-  $('input[name="authenticity_token"]').val($('meta[name="csrf-param"]').prop('content'))
+  const $param = $('meta[name="csrf-param"]')
+
+  if ($param && $param.prop('content')) {
+    $(`input[name="${$param.prop('content')}"]`).val($('meta[name="csrf-token"]').prop('content'))
+  }
 })
