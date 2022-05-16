@@ -1,39 +1,53 @@
-COLOR_INPUT_SELECTOR = '.folio-console-color-input'
+hasColorInputSupport = ->
+  input = document.createElement('input')
+  input.type = 'color'
+  input.value = '!'
+  result = input.type is 'color' and input.value isnt '!'
+  input = null
+  return result
 
-CONFIG =
-  allowEmpty: true
-  showAlpha: true
-  showButtons: false
+unless hasColorInputSupport()
+  COLOR_INPUT_SELECTOR = '.f-c-color-input'
 
-window.folioConsoleInitColorPicker = (el, opts) ->
-  $(el).spectrum($.extend({}, CONFIG, opts))
+  CONFIG =
+    allowEmpty: true
+    showAlpha: true
+    showButtons: false
+    preferredFormat: 'hex'
 
-window.folioConsoleUnbindColorPicker = (el) ->
-  $(el).spectrum('destroy')
+  supports = undefined
 
-bindColorPicker = ($elements) ->
-  $elements.each ->
-    $this = $(this)
-    return if $this.hasClass('f-c-js-manual')
-    window.folioConsoleInitColorPicker(this)
+  testSupport = ->
 
-unbindColorPicker = ($elements) ->
-  $elements.each -> window.folioConsoleUnbindColorPicker(this)
+  window.folioConsoleInitColorPicker = (el, opts) ->
+    $(el).spectrum($.extend({}, CONFIG, opts))
 
-$(document)
-  .on 'cocoon:after-insert', (e, insertedItem) ->
-    bindColorPicker(insertedItem.find(COLOR_INPUT_SELECTOR))
+  window.folioConsoleUnbindColorPicker = (el) ->
+    $(el).spectrum('destroy')
 
-  .on 'cocoon:before-remove', (e, item) ->
-    unbindColorPicker(item.find(COLOR_INPUT_SELECTOR))
+  bindColorPicker = ($elements) ->
+    $elements.each ->
+      $this = $(this)
+      return if $this.hasClass('f-c-js-manual')
+      window.folioConsoleInitColorPicker(this)
 
-if Turbolinks?
+  unbindColorPicker = ($elements) ->
+    $elements.each -> window.folioConsoleUnbindColorPicker(this)
+
   $(document)
-    .on 'turbolinks:load', ->
-      bindColorPicker($(COLOR_INPUT_SELECTOR))
+    .on 'cocoon:after-insert', (e, insertedItem) ->
+      bindColorPicker(insertedItem.find(COLOR_INPUT_SELECTOR))
 
-    .on 'turbolinks:before-cache', ->
-      unbindColorPicker($(COLOR_INPUT_SELECTOR))
+    .on 'cocoon:before-remove', (e, item) ->
+      unbindColorPicker(item.find(COLOR_INPUT_SELECTOR))
 
-else
-  $ -> bindColorPicker($(COLOR_INPUT_SELECTOR))
+  if Turbolinks?
+    $(document)
+      .on 'turbolinks:load', ->
+        bindColorPicker($(COLOR_INPUT_SELECTOR))
+
+      .on 'turbolinks:before-cache', ->
+        unbindColorPicker($(COLOR_INPUT_SELECTOR))
+
+  else
+    $ -> bindColorPicker($(COLOR_INPUT_SELECTOR))

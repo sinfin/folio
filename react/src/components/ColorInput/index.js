@@ -35,7 +35,7 @@ class ColorInput extends React.PureComponent {
         placeholder={this.props.placeholder}
         innerRef={this.inputRef}
         invalid={this.props.invalid}
-        className='folio-console-color-input'
+        className='f-c-color-input'
       />
     )
   }
