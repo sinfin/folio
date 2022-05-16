@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= controller_name %>Test < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
+  def setup
+    create(:folio_site)
+  end
+
+  test "show" do
+    <%= element_name %> = create(:<%= model_resource_name %>)
+    get url_for(<%= element_name %>)
+    assert_response :ok
+
+    <%= element_name %>.update!(published: false)
+
+    assert_raises(ActiveRecord::RecordNotFound) { get url_for(<%= element_name %>) }
+
+    sign_in create(:folio_admin_account)
+    get url_for(<%= element_name %>)
+    assert_redirected_to url_for([:preview, <%= element_name %>])
+  end
+
+  test "preview" do
+    <%= element_name %> = create(:<%= model_resource_name %>, published: false)
+    assert_raises(ActiveRecord::RecordNotFound) { get url_for([:preview, <%= element_name %>]) }
+
+    admin = create(:folio_admin_account)
+    sign_in admin
+    get url_for([:preview, <%= element_name %>])
+
+    <%= element_name %>.update!(published: true)
+    sign_in admin
+    get url_for([:preview, <%= element_name %>])
+    assert_redirected_to url_for(<%= element_name %>)
+  end
+end

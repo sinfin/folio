@@ -1,0 +1,8 @@
+- content_for :publishable_hint
+  == cell('folio/publishable_hint', @<%= element_name %>)
+
+- cache cache_key_base + ["<%= element_name.pluralize %>/show", @<%= element_name %>.id]
+  == cell('<%= namespace_path_base %>/<%= element_name.pluralize %>/show/header', @<%= element_name %>)
+
+  .<%= classname_prefix %>-atoms
+    == render_atoms_in_molecules @<%= element_name %>.atoms_in_molecules

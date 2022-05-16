@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-05-16
+### Added
+- added `folio:scaffold` generator
+
 ## 2021-05-09
 ### Added
 - added `Rails.application.config.folio_console_react_modal_types`
