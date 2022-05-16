@@ -12,6 +12,7 @@
 //= require folio/_message-bus
 //= require folio/atoms
 //= require folio/cookie_consent/cookie_consent
+//= require folio/csrf
 //= require folio/debounce
 //= require folio/devise
 //= require folio/lazyload
