@@ -30,7 +30,7 @@ class Folio::ApplicationCell < Cell::ViewModel
 
   def url_for(options)
     controller.url_for(options)
-  rescue NoMethodError
+  rescue NoMethodError, ActionController::UrlGenerationError
     controller.main_app.url_for(options)
   end
 
@@ -50,7 +50,7 @@ class Folio::ApplicationCell < Cell::ViewModel
     elsif menu_item.rails_path.present?
       begin
         controller.send(menu_item.rails_path)
-      rescue NoMethodError
+      rescue NoMethodError, ActionController::UrlGenerationError
         controller.main_app.send(menu_item.rails_path)
       end
     end
