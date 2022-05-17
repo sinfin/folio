@@ -7,6 +7,10 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
     page_links.merge(additional_links).each do |klass, url_proc|
       scope = klass
 
+      if !Rails.application.config.folio_site_is_a_singleton && klass.try(:has_belongs_to_site?)
+        scope = scope.where(site: current_site)
+      end
+
       if params[:q].present? && scope.respond_to?(:by_query)
         scope = scope.by_query(params[:q])
       end
