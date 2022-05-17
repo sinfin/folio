@@ -47,8 +47,7 @@ module Folio::Thumbnails
       if svg?
         # private svgs won't work, but that should rarely be the case
         url = file.remote_url
-        width = file_width
-        height = file_height
+        width, height = get_svg_dimensions(w_x_h)
       else
         width, height = w_x_h.split("x").map(&:to_i)
 
@@ -293,6 +292,39 @@ module Folio::Thumbnails
       logger.tagged(self.class.to_s, "development_safe_file", self.id) do
         logger.info(msg)
       end
+    end
+
+    def get_svg_dimensions(w_x_h)
+      original_width = file.width.to_f
+      original_height = file.height.to_f
+      return [0, 0] if !original_width || !original_height
+
+      if w_x_h.include?("#")
+        return w_x_h.split("x", 2).map { |p| p.to_i }
+      elsif w_x_h.match?(/\d+x\d+/)
+        max_width, max_height = w_x_h.split("x", 2).map { |p| p.to_f }
+      elsif w_x_h.match?(/\d+x/)
+        max_width = w_x_h.to_f
+        max_height = 9999.0
+      elsif w_x_h.match?(/x\d+/)
+        max_width = 9999.0
+        max_height = w_x_h.to_f
+      else
+        return [0, 0]
+      end
+
+      max_ratio = max_width / max_height
+      original_ratio = original_width / original_height
+
+      if original_ratio > max_ratio
+        target_width = max_width.to_i
+        target_height = (max_width / original_width * original_height).ceil.to_i
+      else
+        target_height = max_height.to_i
+        target_width = (max_height / original_height * original_width).ceil.to_i
+      end
+
+      [target_width, target_height]
     end
 end
 # rubocop:enable OpenStruct
