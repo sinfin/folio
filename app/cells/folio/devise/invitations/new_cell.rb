@@ -7,7 +7,8 @@ class Folio::Devise::Invitations::NewCell < Folio::Devise::ApplicationCell
       as: resource_name,
       html: {
         class: model[:modal] ? "f-devise-modal__form" : nil,
-        id: nil
+        id: nil,
+        "data-failure" => t('.failure'),
       },
     }
 

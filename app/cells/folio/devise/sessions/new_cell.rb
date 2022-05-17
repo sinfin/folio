@@ -8,6 +8,7 @@ class Folio::Devise::Sessions::NewCell < Folio::Devise::ApplicationCell
       html: {
         class: model[:modal] ? "f-devise-modal__form" : nil,
         id: nil,
+        "data-failure" => t('.failure'),
       },
     }
 

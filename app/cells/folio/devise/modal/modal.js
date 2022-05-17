@@ -55,15 +55,18 @@ $(document)
         if (json) {
           if (json.error) {
             window.alert(json.error)
-            $form.removeClass('f-devise-modal__form--loading')
+            return $form.removeClass('f-devise-modal__form--loading')
           } else if (json.data) {
             $form.trigger('folioDeviseBeforeHtmlReplace')
             const $wrap = $form.closest('.f-devise-sessions-new, .f-devise-invitations-new')
             const $parent = $wrap.parent()
             $wrap.replaceWith(jxHr.responseJSON.data)
-            $parent.find('.f-devise-modal__form').trigger('folioDeviseAfterHtmlReplace')
+            return $parent.find('.f-devise-modal__form').trigger('folioDeviseAfterHtmlReplace')
           }
         }
+
+        window.alert($form.data('failure'))
+        return $form.removeClass('f-devise-modal__form--loading')
       }
     })
   })

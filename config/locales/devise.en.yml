@@ -37,11 +37,13 @@ en:
           sign_up: Create account
           title: Sign up
           gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
+          failure: Failed to submit the registration. Please try again later.
 
       sessions:
         new:
           title: Sign in
           sign_in: Sign in
+          failure: Failed to sign in. Please try again later.
 
         create:
           invalid: Invalid e-mail or password

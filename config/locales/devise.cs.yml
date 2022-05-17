@@ -46,6 +46,7 @@ cs:
           sign_up: Vytvořit účet
           title: Registrace
           gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.
+          failure: Registrace se nezdařila. Zkuste to prosím znovu.
 
         show:
           title: Potvrzení e-mailu
@@ -56,6 +57,7 @@ cs:
         new:
           title: Přihlášení
           sign_in: Přihlásit se
+          failure: Přihlášení se nezdařilo. Zkuste to prosím znovu.
 
         create:
           invalid: Neplatný e-mail nebo heslo
