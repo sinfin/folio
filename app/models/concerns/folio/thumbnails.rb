@@ -303,12 +303,12 @@ module Folio::Thumbnails
         return w_x_h.split("x", 2).map { |p| p.to_i }
       elsif w_x_h.match?(/\d+x\d+/)
         max_width, max_height = w_x_h.split("x", 2).map { |p| p.to_f }
-      elsif w_x_h.match?(/\d+x/)
-        max_width = w_x_h.to_f
+      elsif matches = w_x_h.match(/(\d+)x/)
+        max_width = matches[1].to_f
         max_height = 9999.0
-      elsif w_x_h.match?(/x\d+/)
+      elsif matches = w_x_h.match(/x(\d+)/)
         max_width = 9999.0
-        max_height = w_x_h.to_f
+        max_height = matches[1].to_f
       else
         return [0, 0]
       end
