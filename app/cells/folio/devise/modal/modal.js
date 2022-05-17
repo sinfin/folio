@@ -55,7 +55,7 @@ $(document)
         if (json) {
           if (json.error) {
             window.alert(json.error)
-            return $form.removeClass('f-devise-modal__form--loading')
+            return $form.removeClass('f-devise-modal__form--loading').find('[type="submit"]').prop('disabled', false)
           } else if (json.data) {
             $form.trigger('folioDeviseBeforeHtmlReplace')
             const $wrap = $form.closest('.f-devise-sessions-new, .f-devise-invitations-new')
@@ -66,7 +66,7 @@ $(document)
         }
 
         window.alert($form.data('failure'))
-        return $form.removeClass('f-devise-modal__form--loading')
+        return $form.removeClass('f-devise-modal__form--loading').find('[type="submit"]').prop('disabled', false)
       }
     })
   })
