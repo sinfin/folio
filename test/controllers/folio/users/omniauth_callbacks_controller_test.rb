@@ -81,7 +81,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
           last_name: "Bar",
         }
       }
-      assert_redirected_to "/"
+      assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
 
       user = Folio::User.order(id: :desc).first
       assert_equal "email@email.email", user.email
@@ -158,7 +158,6 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
     assert_equal user.id, auth.conflict_user_id
 
     get main_app.users_auth_resolve_conflict_path(conflict_token: auth.conflict_token)
-    # assert_redirected_to "/"
 
     auth.reload
     assert_nil auth.conflict_token
