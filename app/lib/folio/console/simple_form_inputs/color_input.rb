@@ -4,8 +4,10 @@ SimpleForm::Inputs::ColorInput.class_eval do
   def input(wrapper_options = nil)
     input_html_options[:type] ||= "color" if html5?
 
+    input_html_options["class"] ||= ""
+    input_html_options["class"] += " form-control color"
+
     if options[:atom_setting]
-      input_html_options["class"] ||= ""
       input_html_options["class"] += " f-c-js-atoms-placement-setting"
       input_html_options["data-atom-setting"] = options[:atom_setting]
     end
