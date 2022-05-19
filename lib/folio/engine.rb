@@ -57,6 +57,7 @@ module Folio
     config.folio_users_after_sign_out_path = :new_user_session_path
     config.folio_users_after_accept_path = :root_path
     config.folio_users_signed_in_root_path = :root_path
+    config.folio_users_after_password_change_path = :root_path
 
     config.folio_console_ability_lambda = -> (ability, account) { }
 

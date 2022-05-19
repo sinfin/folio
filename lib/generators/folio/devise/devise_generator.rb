@@ -40,11 +40,13 @@ class Folio::DeviseGenerator < Rails::Generators::Base
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
       devise_scope :user do
-        get "/users/invitation", to: "application_namespace_path/users/invitations#show", as: nil
-        get "/users/auth/conflict", to: "dummy/folio/users/omniauth_callbacks#conflict"
-        get "/users/auth/resolve_conflict", to: "dummy/folio/users/omniauth_callbacks#resolve_conflict"
-        get "/users/auth/new_user", to: "dummy/folio/users/omniauth_callbacks#new_user"
-        post "/users/auth/create_user", to: "dummy/folio/users/omniauth_callbacks#create_user"
+        get "/users/invitation", to: "application_namespace_path/folio/users/invitations#show", as: nil
+        get "/users/registrations/edit_password", to: "application_namespace_path/folio/users/registrations#edit_password"
+        patch "/users/registrations/update_password", to: "application_namespace_path/folio/users/registrations#update_password"
+        get "/users/auth/conflict", to: "application_namespace_path/folio/users/omniauth_callbacks#conflict"
+        get "/users/auth/resolve_conflict", to: "application_namespace_path/folio/users/omniauth_callbacks#resolve_conflict"
+        get "/users/auth/new_user", to: "application_namespace_path/folio/users/omniauth_callbacks#new_user"
+        post "/users/auth/create_user", to: "application_namespace_path/folio/users/omniauth_callbacks#create_user"
       end
     RUBY
 

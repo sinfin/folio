@@ -67,6 +67,16 @@ en:
           sent_reset_password_instructions: You'll receive an e-mail with instruction in a moment.
           email_blank: To sign in via password you have to enter an e-mail address first.
 
+        edit_password:
+          change_password: Change password
+          new_password: New password
+          new_password_confirmation: New password (check)
+          title: Change password
+
+        update_password:
+          success: Password was changed.
+          failure: Failed to change password.
+
       confirmations:
         new:
           header: Resend confirmation instructions

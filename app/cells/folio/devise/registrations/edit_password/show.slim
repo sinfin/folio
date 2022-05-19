@@ -1,0 +1,21 @@
+.f-devise-registrations-edit-password
+  .f-devise__narrow
+    = form do |f|
+      h1 = t('.title')
+
+      - unless resource.has_generated_password?
+        == password_input(f,
+                          :current_password,
+                          autocomplete: 'current-password')
+
+      == password_input(f,
+                        :password,
+                        label: t('.new_password'),
+                        autocomplete: 'new-password')
+
+      == password_input(f,
+                        :password_confirmation,
+                        label: t('.new_password_confirmation'),
+                        autocomplete: 'new-password')
+
+      = submit_button(f, t('.change_password'))

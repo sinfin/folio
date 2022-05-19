@@ -81,6 +81,16 @@ cs:
           sent_reset_password_instructions: Za několik minut obdržíte e-mail s instrukcemi pro nastavení nového hesla.
           email_blank: Pro přihlášení pomocí hesla je potřeba nejprve vyplnit e-mailovou adresu.
 
+        edit_password:
+          change_password: Změnit heslo
+          new_password: Nové heslo
+          new_password_confirmation: Nové heslo (kontrola)
+          title: Změna hesla
+
+        update_password:
+          success: Heslo bylo změněno.
+          failure: Heslo se nepodařilo změnit.
+
       confirmations:
         new:
           header: Znovu odeslat instrukce k potvrzení
