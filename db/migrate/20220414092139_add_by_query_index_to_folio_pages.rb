@@ -13,6 +13,8 @@ class AddByQueryIndexToFolioPages < ActiveRecord::Migration[7.0]
       end
     end
 
-    add_index :folio_pages, %[(setweight(to_tsvector('simple', folio_unaccent(coalesce("folio_pages"."title"::text, ''))), 'A') || setweight(to_tsvector('simple', folio_unaccent(coalesce("folio_pages"."perex"::text, ''))), 'B') || setweight(to_tsvector('simple', folio_unaccent(coalesce("folio_pages"."atoms_data_for_search"::text, ''))), 'C'))], using: :gin, name: "index_folio_pages_on_by_query"
+    if column_exists?("folio_pages", "title")
+      add_index :folio_pages, %[(setweight(to_tsvector('simple', folio_unaccent(coalesce("folio_pages"."title"::text, ''))), 'A') || setweight(to_tsvector('simple', folio_unaccent(coalesce("folio_pages"."perex"::text, ''))), 'B') || setweight(to_tsvector('simple', folio_unaccent(coalesce("folio_pages"."atoms_data_for_search"::text, ''))), 'C'))], using: :gin, name: "index_folio_pages_on_by_query"
+    end
   end
 end
