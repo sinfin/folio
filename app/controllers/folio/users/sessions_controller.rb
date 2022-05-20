@@ -3,6 +3,8 @@
 class Folio::Users::SessionsController < Devise::SessionsController
   include Folio::Users::DeviseControllerBase
 
+  protect_from_forgery prepend: true
+
   def destroy
     current_user.sign_out_everywhere! if Rails.application.config.folio_crossdomain_devise && current_user
     super
