@@ -109,7 +109,6 @@ module Folio
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
           "config/routes.rb",
-          "config/schedule.rb",
           "config/sitemap.rb",
           "data/atoms_showcase.yml",
           "data/seed/pages/homepage.yml",
