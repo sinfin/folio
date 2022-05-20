@@ -4,7 +4,10 @@ class Folio::CreateFileFromS3Job < ApplicationJob
   include Folio::S3Client
 
   queue_as :default
-  sidekiq_options retry: false
+
+  if defined?(sidekiq_options)
+    sidekiq_options retry: false
+  end
 
   def perform(s3_path:, type:, existing_id: nil)
     return unless s3_path
