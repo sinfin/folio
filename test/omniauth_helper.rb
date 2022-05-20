@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'omniauth'
+
 OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL = "omniauth@default.email"
 
 def create_omniauth_authentication(email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL, nickname: "Lorem ipsum")
