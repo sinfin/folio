@@ -87,4 +87,13 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
     "#{msg} #{link}"
   end
+
+  def require_no_authentication
+    if current_user && !request.format.json?
+      set_flash_message!(:notice, :signed_in)
+      redirect_to after_sign_in_path_for(current_user)
+    else
+      super
+    end
+  end
 end
