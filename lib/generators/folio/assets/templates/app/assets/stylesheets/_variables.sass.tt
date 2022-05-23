@@ -201,7 +201,7 @@ $hr-border-color: #EAEAEA
 
 $modal-inner-padding: px-to-rem(30px)
 
-$modal-footer-margin-between:       .5rem !default;
+$modal-footer-margin-between: .5rem
 $modal-content-border-width: 0
 $modal-content-border-radius: 0
 $modal-content-inner-border-radius: 0

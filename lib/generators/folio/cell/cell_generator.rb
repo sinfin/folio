@@ -22,6 +22,7 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
 
         if key
           @classname_prefix = "#{Rails.application.config.folio_cell_generator_class_name_prefixes[key]}-"
+          @force_classname_prefix = @classname_prefix
           to_be_replaced = "#{key.gsub(/\A#{application_namespace}/, "").underscore.tr('/', '_')}"
           @dashed_resource_name = model_resource_name.gsub(/\A#{to_be_replaced}_/, "")
         else
@@ -34,7 +35,9 @@ class Folio::CellGenerator < Rails::Generators::NamedBase
     end
 
     def classname_prefix
-      if name.start_with?("/")
+      if @force_classname_prefix
+        @force_classname_prefix
+      elsif name.start_with?("/")
         ""
       else
         @classname_prefix
