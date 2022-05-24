@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'omniauth'
+require "omniauth"
 
 OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL = "omniauth@default.email"
 
