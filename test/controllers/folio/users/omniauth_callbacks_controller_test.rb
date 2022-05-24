@@ -8,6 +8,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
   def setup
     super
     create_and_host_site
+    skip if Rails.application.config.folio_users_omniauth_providers.blank?
   end
 
   test "bind_user_and_redirect - signed in" do
