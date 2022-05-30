@@ -178,7 +178,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def secondary_class_names
     if ::Rails.application.config.folio_site_is_a_singleton
       [
-        ::Rails.application.config.folio_users ? { links: %w[Folio::User] } : nil,
+        show_users? ? { links: %w[Folio::User] } : nil,
         {
           links: %w[
             Folio::Lead
@@ -252,5 +252,9 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
       }
     end
+  end
+
+  def show_users?
+    ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
   end
 end
