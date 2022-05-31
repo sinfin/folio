@@ -2,7 +2,7 @@
 
 SimpleForm::Inputs::StringInput.class_eval do
   def input(wrapper_options = nil)
-    if string?
+    if string? || input_type == :email
       if options[:autocomplete]
         collection = nil
         remote_autocomplete = nil
