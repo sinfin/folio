@@ -31,7 +31,8 @@
           == password_input(f,
                             :password,
                             autocomplete: 'new-password',
-                            label: t('.password_label'))
+                            label: t('.password_label'),
+                            keep_password: true)
 
     - if show_address?(f)
       == cell('folio/addresses/fields', f, mark_as_required: true)
