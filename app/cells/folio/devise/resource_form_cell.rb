@@ -15,4 +15,10 @@ class Folio::Devise::ResourceFormCell < Folio::Devise::ApplicationCell
 
     simple_form_for(resource, opts, &block)
   end
+
+  def show_address?(f)
+    return true if f.object.primary_address.blank?
+    return false if f.object.primary_address.persisted? && f.object.primary_address.valid? && !f.object.primary_address.changed?
+    true
+  end
 end

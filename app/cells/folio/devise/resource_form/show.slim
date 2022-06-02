@@ -33,7 +33,7 @@
                             autocomplete: 'new-password',
                             label: t('.password_label'))
 
-    - if f.object.primary_address.blank? || !f.object.primary_address.valid?
+    - if show_address?(f)
       == cell('folio/addresses/fields', f)
 
     = render(:_bottom)
