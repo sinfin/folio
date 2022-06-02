@@ -42,7 +42,9 @@
     = f.input :subscribed_to_newsletter,
               label: t(".subscribed_to_newsletter_label")
 
-    == cell("#{application_namespace_path}/ui/disclaimer")
+    - @f = f
+    = render(:_disclaimer)
+    - @f = nil
 
     = submit_button(f, t('.submit'))
 

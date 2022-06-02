@@ -146,7 +146,11 @@ class Folio::User < Folio::ApplicationRecord
       :use_secondary_address,
       primary_address_attributes: address_strong_params,
       secondary_address_attributes: address_strong_params,
-    ]
+    ] + additional_controller_strong_params_for_create
+  end
+
+  def self.additional_controller_strong_params_for_create
+    []
   end
 
   def authenticatable_salt
