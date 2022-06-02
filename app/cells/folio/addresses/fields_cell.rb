@@ -14,4 +14,8 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
   def title_tag
     { tag: options[:title_tag] || "h2", class: "mt-0" }
   end
+
+  def required?(all_blank)
+    options[:mark_as_required] || !all_blank
+  end
 end

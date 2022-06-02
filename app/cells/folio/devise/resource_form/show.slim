@@ -34,7 +34,7 @@
                             label: t('.password_label'))
 
     - if show_address?(f)
-      == cell('folio/addresses/fields', f)
+      == cell('folio/addresses/fields', f, mark_as_required: true)
 
     = render(:_bottom)
 
