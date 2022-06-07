@@ -27,6 +27,16 @@ class Folio::Menu < Folio::ApplicationRecord
     where(type:)
   end
 
+  pg_search_scope :by_query,
+                  against: {
+                    title: "A",
+                    type: "B",
+                  },
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
   def available_targets
     if Rails.application.config.folio_using_traco ||
        !Rails.application.config.folio_pages_translations
