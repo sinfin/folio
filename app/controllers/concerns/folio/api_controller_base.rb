@@ -14,6 +14,8 @@ module Folio::ApiControllerBase
     end
 
     def render_error(e)
+      Raven.capture_exception(e) if defined?(Raven)
+
       responses = Rails.configuration.action_dispatch.rescue_responses
       status = responses[e.class.name] || 500
 
