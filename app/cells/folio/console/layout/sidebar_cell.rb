@@ -43,10 +43,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       if link_source[:path].is_a?(String)
         path = link_source[:path]
       else
+        path_params = link_source[:params].presence || {}
+
         begin
-          path = controller.send(link_source[:path])
+          path = controller.send(link_source[:path], path_params)
         rescue NoMethodError
-          path = controller.main_app.send(link_source[:path])
+          path = controller.main_app.send(link_source[:path], path_params)
         end
       end
 
@@ -54,6 +56,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         controller.send(p)
       rescue NoMethodError
         controller.main_app.send(p)
+      end
+
+      if path.include?("?")
+        paths << path.split("?", 2)[0]
       end
 
       if link_source[:icon]
