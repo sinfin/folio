@@ -1,22 +1,35 @@
-// Extracted from https://stackoverflow.com/a/27078401
+// Extracted from https://gist.github.com/msssk/b720a8bddf2ba595347820ac387751ce
 
 window.Folio = window.Folio || {}
 
-window.Folio.throttle = function (callback, limit) {
-  if (!limit) {
-    limit = 150
-  }
+window.Folio.throttle = (callback, delay) => {
+  let ready = true
+  let args = null
 
-  let waiting = false // Initially, we're not waiting
+  delay = delay || 100
 
-  return function () { // We return a throttled function
-    if (!waiting) { // If we're not waiting
-      callback.apply(this, arguments) // Execute users function
-      waiting = true // Prevent future invocations
+  return function throttled () {
+    const context = this
 
-      setTimeout(function () { // After a period of time
-        waiting = false // And allow future invocations
-      }, limit)
+    if (ready) {
+      ready = false
+
+      setTimeout(function () {
+        ready = true
+
+        if (args) {
+          throttled.apply(context)
+        }
+      }, delay)
+
+      if (args) {
+        callback.apply(this, args)
+        args = null
+      } else {
+        callback.apply(this, arguments)
+      }
+    } else {
+      args = arguments
     }
   }
 }
