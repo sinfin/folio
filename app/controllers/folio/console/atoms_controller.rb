@@ -5,6 +5,8 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
 
   layout "folio/console/atoms"
 
+  before_action :set_layout_stylesheet_path
+
   def index
   end
 
@@ -110,5 +112,10 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
         *file_placements_strong_params,
         *Folio::Atom.strong_params,
       ]
+    end
+
+    def set_layout_stylesheet_path
+      @layout_stylesheet_path = Folio.atoms_previews_stylesheet_path(site: current_site,
+                                                                     class_name: params[:class_name])
     end
 end

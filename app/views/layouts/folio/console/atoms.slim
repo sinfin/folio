@@ -10,7 +10,7 @@ html.f-c-layout-atoms__html[
       = stylesheet_link_tag('folio/console/atoms/previews/base',
                             media: 'all')
 
-      = stylesheet_link_tag(current_site.layout_assets_path,
+      = stylesheet_link_tag(@layout_stylesheet_path,
                             media: 'all')
 
       = javascript_include_tag 'folio/console/atoms/previews/base'

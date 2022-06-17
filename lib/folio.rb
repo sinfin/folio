@@ -82,6 +82,10 @@ module Folio
   def self.site_for_crossdomain_devise
     nil
   end
+
+  def self.atoms_previews_stylesheet_path(site:, class_name:)
+    site.layout_assets_path
+  end
 end
 
 # only `folio/lib` directory is loaded when processing Rails `config/environments/*`
