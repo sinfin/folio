@@ -29,7 +29,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   private
     def after_impersonate_path
-      main_app.root_path
+      main_app.send(Rails.application.config.folio_users_after_impersonate_path)
     end
 
     def user_params

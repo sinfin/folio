@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-06-27
+### Added
+- added `Rails.application.config.folio_users_after_impersonate_path`
+
 ## 2021-05-16
 ### Added
 - added `folio:scaffold` generator
