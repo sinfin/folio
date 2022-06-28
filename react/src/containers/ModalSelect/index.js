@@ -56,9 +56,12 @@ class ModalSelect extends Component {
   }
 
   inputName ($el) {
-    const $nestedInput = $el.closest('.nested-fields').find('input[type="hidden"]').filter((i, input) => (
-      $el.closest('.folio-console-react-picker').length === 1 || window.jQuery(input).closest('.folio-console-react-picker').length === 0
+    const $ = window.jQuery
+
+    const $nestedInput = $el.parents('.nested-fields').find('input').filter((i, input) => (
+      $(input).closest('.folio-console-react-picker').length === 0
     ))
+
     let name
 
     if ($nestedInput.length) {
