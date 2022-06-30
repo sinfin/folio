@@ -2,6 +2,9 @@
   .mr-md-auto.my-2.text-center.text-md-left.pr-md-g
     == pagy_info(model)
 
+    - if options[:inside]
+      == options[:inside]
+
   - if model.pages > 1
     .my-2
       .f-c-pagination__nav
