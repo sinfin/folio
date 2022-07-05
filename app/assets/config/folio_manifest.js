@@ -8,3 +8,4 @@
 
 //= link folio/console/base.js
 //= link folio/console/base.css
+//= link svg_sprite.svg
