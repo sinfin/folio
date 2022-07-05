@@ -70,9 +70,9 @@ Gem::Specification.new do |s|
   s.add_dependency "sitemap_generator"
   # s.add_dependency "cells-slim", "~> 0.1.1" # need to be in Gemfile
   # s.add_dependency "cells-rails", "~> 0.1.5" # need to be in Gemfile
-  # s.add_dependency "slim-rails", "~> 3.5.1" # need to be in Gemfile
+  s.add_dependency "slim-rails" # need to be in Gemfile
   s.add_dependency "slim"
-  #s.add_dependency "traco"
+  s.add_dependency "traco"
   s.add_dependency "turbolinks"
   #s.add_dependency "uglifier"
   s.add_dependency "whenever"
@@ -81,9 +81,13 @@ Gem::Specification.new do |s|
   s.add_development_dependency "annotate"
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller"
+  s.add_development_dependency "capybara"
+  s.add_development_dependency "factory_bot"
   s.add_development_dependency "guard-rubocop"
   s.add_development_dependency "guard-slimlint"
   s.add_development_dependency "letter_opener"
+  s.add_development_dependency "minitest"
+  s.add_development_dependency "pry-byebug"
   s.add_development_dependency "pry-rails"
   s.add_development_dependency "rubocop-minitest"
   s.add_development_dependency "rubocop-performance"
