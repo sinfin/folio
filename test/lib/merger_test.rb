@@ -13,15 +13,17 @@ class Folio::MergerTest < ActiveSupport::TestCase
     original = create(:folio_page, title: "foo", slug: "foo")
     original_atom = create_atom(Dummy::Atom::Text, :content, placement: original)
     original_cover = create(:folio_cover_placement, placement: original)
+
     duplicate = create(:folio_page, title: "bar", slug: "bar")
     duplicate_atom = create_atom(Dummy::Atom::Text, :content, placement: duplicate)
     duplicate_cover = create(:folio_cover_placement, placement: duplicate)
+
     merger = Folio::Page::Merger.new(original, duplicate)
 
     reference = create_atom(ReferenceAtom, page: duplicate)
-    assert_equal(duplicate, reference.page)
+    assert_equal(duplicate.id, reference.page.id)
 
-    merger.merge!(
+    merger.merge!( # how to merge these two
       title: Folio::Merger::DUPLICATE,
       slug: Folio::Merger::ORIGINAL,
       atoms: Folio::Merger::DUPLICATE,
