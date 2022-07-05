@@ -1,12 +1,4 @@
 GIT
-  remote: https://github.com/sinfin/cells-rails.git
-  revision: 78a09e6f71e1912abf42f1e0f2026b9571a3d024
-  specs:
-    cells-rails (0.1.4)
-      actionpack (>= 5.0)
-      cells (>= 4.1.6, < 5.0.0)
-
-GIT
   remote: https://github.com/sinfin/dragonfly_libvips.git
   revision: 8143023d4fb84b55da0a2f6768058c507805865c
   branch: more_geometry
@@ -79,6 +71,7 @@ PATH
       sidekiq-cron
       simple_form
       sitemap_generator
+      slim-rails
       traco
       turbolinks
       uglifier
@@ -212,16 +205,21 @@ GEM
     cancancan (3.4.0)
     capybara (2.18.0)
       addressable
+      matrix
       mini_mime (>= 0.1.3)
-      nokogiri (>= 1.3.3)
-      rack (>= 1.0.0)
-      rack-test (>= 0.5.4)
-      xpath (>= 2.0, < 4.0)
+      nokogiri (~> 1.8)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     cells (4.1.7)
       declarative-builder (< 0.2.0)
       declarative-option (< 0.2.0)
       tilt (>= 1.4, < 3)
       uber (< 0.2.0)
+    cells-rails (0.1.5)
+      actionpack (>= 5.0)
+      cells (>= 4.1.6, < 5.0.0)
     cells-slim (0.0.6)
       cells (>= 4.0.1, < 6.0.0)
       slim (~> 3.0)
@@ -377,6 +375,7 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    matrix (0.4.2)
     message_bus (4.2.0)
       rack (>= 1.1.3)
     method_source (1.0.0)
@@ -384,7 +383,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
-    minitest (5.14.4)
+    minitest (5.16.2)
     multi_exiftool (0.17.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -581,6 +580,10 @@ GEM
     slim (3.0.9)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)
+    slim-rails (3.5.1)
+      actionpack (>= 3.1)
+      railties (>= 3.1)
+      slim (>= 3.0, < 5.0)
     slim_lint (0.22.1)
       rubocop (>= 0.78.0)
       slim (>= 3.0, < 5.0)
@@ -630,12 +633,9 @@ DEPENDENCIES
   annotate
   better_errors
   binding_of_caller
-  capybara (~> 2.13)
-  cells
-  cells-rails!
-  cells-slim (= 0.0.6)
-  dragonfly (= 1.4.0)
-  dragonfly-s3_data_store
+  capybara
+  cells-rails (~> 0.1.5)
+  cells-slim (~> 0.0.6)
   dragonfly_libvips!
   factory_bot
   faker
@@ -644,7 +644,7 @@ DEPENDENCIES
   guard-slimlint
   i18n-tasks
   letter_opener
-  minitest (~> 5.14.4)
+  minitest
   premailer!
   premailer-rails
   pry-byebug
@@ -659,10 +659,8 @@ DEPENDENCIES
   rubocop-rake
   rubyzip
   show_for
-  sidekiq
   sprockets (~> 4.0)
   sprockets-rails
-  uglifier (>= 1.3.0)
 
 BUNDLED WITH
    2.3.5
