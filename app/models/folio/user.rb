@@ -228,7 +228,7 @@ end
 #  invitation_accepted_at    :datetime
 #  invitation_limit          :integer
 #  invited_by_type           :string
-#  invited_by_id             :integer
+#  invited_by_id             :bigint(8)
 #  invitations_count         :integer          default(0)
 #  nickname                  :string
 #  use_secondary_address     :boolean          default(FALSE)

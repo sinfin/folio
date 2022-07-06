@@ -61,8 +61,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
   end
 
   create_table "dummy_blog_topic_article_links", force: :cascade do |t|
-    t.integer "dummy_blog_topic_id"
-    t.integer "dummy_blog_article_id"
+    t.bigint "dummy_blog_topic_id"
+    t.bigint "dummy_blog_article_id"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -313,7 +313,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
   end
 
   create_table "folio_omniauth_authentications", force: :cascade do |t|
-    t.integer "folio_user_id"
+    t.bigint "folio_user_id"
     t.string "uid"
     t.string "provider"
     t.string "email"
@@ -390,7 +390,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
     t.string "type"
     t.string "web_session_id"
     t.string "placement_type"
-    t.integer "placement_id"
+    t.bigint "placement_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "file_width"
@@ -459,7 +459,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
     t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
-    t.integer "invited_by_id"
+    t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "nickname"
     t.boolean "use_secondary_address", default: false

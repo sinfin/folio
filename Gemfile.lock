@@ -7,19 +7,10 @@ GIT
       dragonfly (~> 1.4)
       ruby-vips (~> 2.0, >= 2.0.16)
 
-GIT
-  remote: https://github.com/sinfin/premailer.git
-  revision: 4f14229876c7f226ebb175b9cfaaf8c361169819
-  specs:
-    premailer (1.11.1)
-      addressable
-      css_parser (>= 1.6.0)
-      htmlentities (>= 4.0.0)
-
 PATH
   remote: .
   specs:
-    folio (0.1.0)
+    folio (0.7.0)
       aasm
       acts-as-taggable-on
       after_commit_everywhere
@@ -449,6 +440,10 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.7.0)
+    premailer (1.16.0)
+      addressable
+      css_parser (>= 1.6.0)
+      htmlentities (>= 4.0.0)
     premailer-rails (1.11.1)
       actionmailer (>= 3)
       premailer (~> 1.7, >= 1.7.9)
@@ -645,7 +640,6 @@ DEPENDENCIES
   i18n-tasks
   letter_opener
   minitest
-  premailer!
   premailer-rails
   pry-byebug
   pry-rails
