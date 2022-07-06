@@ -114,7 +114,7 @@ module Folio
           "data/seed/pages/homepage.yml",
           "db/seeds.rb",
           "db/migrate/20220120132205_rm_files_mime_type_column.rb",
-          "db/migrate/20220214083648_rm_private_attachments_mime_type_column.rb.tt",
+          "db/migrate/20220214083648_rm_private_attachments_mime_type_column.rb",
           "lib/tasks/developer_tools.rake",
           "public/maintenance.html",
           "test/factories.rb",
@@ -200,7 +200,7 @@ module Folio
       end
 
       def development_settings
-        gsub_file "config/environments/development.rb", /  config\.action_mailer\.raise_delivery_errors = false/ do
+        gsub_file "config/environments/development.rb", "config.action_mailer.raise_delivery_errors = false" do
           [
             "config.action_mailer.raise_delivery_errors = true",
             "config.action_mailer.delivery_method = :letter_opener",
@@ -210,12 +210,12 @@ module Folio
       end
 
       def production_settings
-        gsub_file "config/environments/production.rb", "# config.assets.css_compressor = :sass", do
+        gsub_file "config/environments/production.rb", "# config.assets.css_compressor = :sass" do
           [
             "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: true)",
             "# config.assets.css_compressor = :sass",
-          ]
-        ].join("\n  ")
+          ].join("\n  ")
+        end
       end
 
       def log_tag_settings
