@@ -49,8 +49,7 @@
 
               iframe[
                 class="f-c-simple-form-with-atoms__iframe"
-                src=console_atoms_path(keys: keys, \
-                                       default_locale: key)
+                src=console_atoms_path_proc.call(keys, key)
               ]
               span.folio-loader.f-c-simple-form-with-atoms__preview-loader
 

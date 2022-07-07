@@ -78,6 +78,7 @@ module Folio::Console::FormsHelper
                            expanded_class].compact.join(" ")
 
     form_footer_options = opts.delete(:form_footer_options) || {}
+    console_atoms_path_proc = opts.delete(:console_atoms_path_proc) || -> (keys, key) { console_atoms_path(keys: keys, default_locale: key) }
 
     render layout: "folio/console/partials/simple_form_with_atoms",
            locals: {
@@ -85,6 +86,7 @@ module Folio::Console::FormsHelper
              opts: opts,
              layout_code: layout_code,
              form_footer_options: form_footer_options,
+             console_atoms_path_proc: console_atoms_path_proc,
            },
            &block
   end
