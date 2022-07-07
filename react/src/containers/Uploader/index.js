@@ -8,7 +8,8 @@ import {
   addDropzoneFile,
   updateDropzoneFile,
   removeDropzoneFile,
-  thumbnailDropzoneFile
+  thumbnailDropzoneFile,
+  makeUploadsSelector
 } from 'ducks/uploads'
 
 import { uploadedFile } from 'ducks/files'
@@ -38,17 +39,25 @@ class Uploader extends Component {
         this.props.dispatch(addDropzoneFile(this.props.fileType, s3Path, fileAttributes))
       },
       onSuccess: (s3Path, fileFromApi) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
         this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
         this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
         this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
       },
       onFailure: (s3Path) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
         this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
       },
       onProgress: (s3Path, progress) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
         this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, { progress }))
       },
       onThumbnail: (s3Path, dataThumbnail) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
         this.props.dispatch(thumbnailDropzoneFile(this.props.fileType, s3Path, dataThumbnail))
       },
       dropzoneOptions: {
@@ -79,7 +88,9 @@ class Uploader extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({})
+const mapStateToProps = (state, props) => ({
+  uploads: props.fileType ? makeUploadsSelector(props.fileType)(state) : null
+})
 
 function mapDispatchToProps (dispatch) {
   return { dispatch }
