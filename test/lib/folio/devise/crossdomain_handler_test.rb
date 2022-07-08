@@ -79,7 +79,7 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
                  session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
   end
 
-  test "master_site - valid session and sessions#new and sessions#create" do
+  test "master_site - noop for devise controllers" do
     %w[create new].each do |action_name|
       token = make_devise_token
 
@@ -87,7 +87,8 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
       result = new_result(master_site: current_site,
                           session:,
                           controller_name: "sessions",
-                          action_name:)
+                          action_name:,
+                          devise_controller: true)
 
       assert_equal :noop, result.action
 
