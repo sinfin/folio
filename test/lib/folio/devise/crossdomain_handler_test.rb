@@ -79,6 +79,31 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
                  session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
   end
 
+  test "master_site - valid session and sessions#new and sessions#create" do
+    %w[create new].each do |action_name|
+      token = make_devise_token
+
+      make_session({ token:, target_site_slug: "target-site-slug", resource_name: "user" })
+      result = new_result(master_site: current_site,
+                          session:,
+                          controller_name: "sessions",
+                          action_name:)
+
+      assert_equal :noop, result.action
+
+      assert session.present?
+
+      assert_equal "user",
+                   session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:resource_name]
+
+      assert_equal "target-site-slug",
+                   session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
+
+      assert_equal token,
+                   session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
+    end
+  end
+
   test "master_site - valid session and signed in user" do
     token = make_devise_token
     user = create(:folio_user)

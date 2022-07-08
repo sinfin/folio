@@ -6,6 +6,7 @@ module Folio::ApiControllerBase
   included do
     respond_to :json
     rescue_from StandardError, with: :render_error
+    skip_before_action :handle_crossdomain_devise
   end
 
   private
