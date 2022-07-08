@@ -29,6 +29,7 @@
           left: r.left,
           top: r.top,
           width: r.width,
+          height: r.height,
           position: 'absolute'
         })
       })

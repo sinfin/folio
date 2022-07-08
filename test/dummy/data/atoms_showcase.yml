@@ -237,3 +237,13 @@
   url: https://www.google.com/
 
 - type: Dummy::Atom::Share
+
+- type: Dummy::Atom::Images
+  images: true
+  same_width: true
+  _showcase: "same_width: true"
+
+- type: Dummy::Atom::Images
+  images: true
+  same_width: false
+  _showcase: "same_width: false"
