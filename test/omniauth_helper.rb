@@ -8,7 +8,7 @@ def create_omniauth_authentication(email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_E
   Folio::Omniauth::Authentication.from_omniauth_auth(omniauth_authentication_openstruct(email:, nickname:))
 end
 
-def omniauth_authentication_hash(email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL, nickname: "Lorem ipsum")
+def omniauth_authentication_facebook_hash(email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL, nickname: "Lorem ipsum")
   {
     provider: "facebook",
     uid: "1234567890123456",
@@ -33,8 +33,9 @@ def omniauth_authentication_hash(email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMA
 end
 
 def omniauth_authentication_openstruct(email: OMNIAUTH_AUTHENTICATION_DEFAULT_TEST_EMAIL, nickname: "Lorem ipsum")
-  OpenStruct.new(omniauth_authentication_hash(email:, nickname:))
+  OpenStruct.new(omniauth_authentication_facebook_hash(email:, nickname:))
 end
 
 OmniAuth.config.test_mode = true
-OmniAuth.config.mock_auth[:default] = OmniAuth::AuthHash.new(omniauth_authentication_hash)
+OmniAuth.config.mock_auth[:default] = OmniAuth::AuthHash.new(omniauth_authentication_facebook_hash)
+OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(omniauth_authentication_facebook_hash)

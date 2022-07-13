@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::Omniauth::Authentication < Folio::ApplicationRecord
+  self.table_name = "folio_omniauth_authentications"
+
   belongs_to :user, class_name: "Folio::User",
                     foreign_key: :folio_user_id,
                     optional: true,
