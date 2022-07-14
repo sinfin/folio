@@ -158,6 +158,7 @@ module Folio
       def application_settings
         return if ::File.readlines(Rails.root.join("config/application.rb")).grep('Rails.root.join("lib")').any?
 
+# cannot use <<~'RUBY' here,beacouse all lines need to be 4 spaces intended
         inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'
     config.exceptions_app = self.routes
 

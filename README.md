@@ -1,5 +1,10 @@
 # Folio
-Short description and motivation.
+CMS based on Ruby on Rails.
+You can create web pages (`Folio::Page`) by stiching fragments (called `Folio::Atom`) into desired form.
+This is done in `/console`, admin part of Folio. There you can also manage your users (`Folio::User`) and admins (`Folio::Account`).
+And even more! With little effort, you can manage your models too.
+
+Folio uses `Cells` with `Slim` templates, `MessageBus` for WebSockets messaging, Sidekiq and PostgreSql.
 
 ## Usage
 Run `bundle exec rails app:folio:prepare_dummy_app`.
@@ -20,7 +25,7 @@ Run:
 ```bash
 $ rails generate folio:install
 ```
-which will copy bunch of things into your, hopefilly clean, app
+which will copy bunch of things into your, hopefully clean, app
 
 Then run migrations
 ```bash
