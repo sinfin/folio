@@ -137,7 +137,7 @@ class Folio::Users::OmniauthCallbacksControllerTest < ActionDispatch::Integratio
     get main_app.user_facebook_omniauth_callback_path, env: { "omniauth.auth" => OmniAuth.config.mock_auth[:facebook] }
     assert_redirected_to main_app.users_auth_conflict_path
 
-    get main_app.users_auth_conflict_path
+    follow_redirect!
     assert_response :ok
   end
 
