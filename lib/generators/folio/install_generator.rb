@@ -130,7 +130,6 @@ module Folio
           ".gitignore",
           ".rubocop.yml",
           ".slim-lint.yml",
-          "app/assets/config/manifest.js",
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
@@ -155,10 +154,17 @@ module Folio
         end
       end
 
+      def add_folio_assets
+        inject_into_file "app/assets/config/manifest.js", before: /\A/ do  <<~'RUBY'
+          //= link folio_manifest.js
+        RUBY
+        end
+      end
+
       def application_settings
         return if ::File.readlines(Rails.root.join("config/application.rb")).grep('Rails.root.join("lib")').any?
 
-# cannot use <<~'RUBY' here,beacouse all lines need to be 4 spaces intended
+# cannot use <<~'RUBY' here, because ALL lines need to be 4 spaces intended
         inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'
     config.exceptions_app = self.routes
 
@@ -200,10 +206,10 @@ module Folio
       def development_settings
         gsub_file "config/environments/development.rb", "config.action_mailer.raise_delivery_errors = false" do
           [
-            "config.action_mailer.raise_delivery_errors = true",
-            "config.action_mailer.delivery_method = :letter_opener",
-            "config.action_mailer.perform_deliveries = true",
-          ].join("\n  ")
+            "  config.action_mailer.raise_delivery_errors = true",
+            "  config.action_mailer.delivery_method = :letter_opener",
+            "  config.action_mailer.perform_deliveries = true",
+          ].join("")
         end
       end
 
