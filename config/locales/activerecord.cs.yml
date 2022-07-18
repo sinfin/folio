@@ -96,8 +96,8 @@ cs:
         password: Heslo
         password_confirmation: Heslo (kontrola)
       folio/address/base:
-        address_line_1: Ulice a číslo
-        address_line_2: Druhý řádek adresy
+        address_line_1: Ulice
+        address_line_2: Číslo
         city: Město
         company_name: Název firmy
         country_code: Země

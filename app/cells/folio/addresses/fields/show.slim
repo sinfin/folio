@@ -9,52 +9,68 @@
     .col-lg-6
       = model.input :last_name, required: true
 
-  - model.simple_fields_for :primary_address do |g|
-    - all_blank = g.object.attributes.all? { |attr, val| attr == "type" || val.blank? }
-    - required = required?(all_blank)
+  .f-addresses-fields__fields-wrap[
+    data-country-code=data_country_code(:primary_address)
+  ]
+    - model.simple_fields_for :primary_address do |g|
+      - all_blank = g.object.attributes.all? { |attr, val| attr == "type" || val.blank? }
+      - required = required?(all_blank)
 
-    = g.input :address_line_1, required: required
+      .row
+        .col-lg-7.f-addresses-fields__address-line-1
+          = address_line_input g, :address_line_1, required: required
 
-    .row
-      .col-lg-5
-        = g.input :zip, required: required
+        .col-lg-5.f-addresses-fields__address-line-2
+          = address_line_input g, :address_line_2, required: required
 
-      .col-lg-7
-        = g.input :city, required: required
+      .row
+        .col-lg-5
+          = g.input :zip, required: required
 
-    .row
-      .col-lg-7
-        = g.input :country_code, priority: g.object.class.priority_countries(locale: I18n.locale)
+        .col-lg-7
+          = g.input :city, required: required
 
-    .row
-      .col-lg-7
-        = g.input :phone
+      .row
+        .col-lg-7
+          = country_code_input(g)
+
+      .row
+        .col-lg-7
+          = g.input :phone
 
   .f-addresses-fields__nested
     = togglable_fields model, :use_secondary_address
       .f-addresses-fields__nested-content
-        - model.simple_fields_for :secondary_address do |g|
-          = g.input :name
+        .f-addresses-fields__fields-wrap[
+          data-country-code=data_country_code(:secondary_address)
+        ]
+          - model.simple_fields_for :secondary_address do |g|
+            = g.input :name
 
-          = g.input :company_name
+            = g.input :company_name
 
-          = g.input :address_line_1
+            .row
+              .col-lg-7.f-addresses-fields__address-line-1
+                = address_line_input g, :address_line_1
 
-          .row
-            .col-lg-5
-              = g.input :zip
+              .col-lg-5.f-addresses-fields__address-line-2
+                = address_line_input g, :address_line_2
 
-            .col-lg-7
-              = g.input :city
+            .row
+              .col-lg-5
+                = g.input :zip
 
-          .row
-            .col-lg-7
-              = g.input :country_code, priority: g.object.class.priority_countries(locale: I18n.locale)
+              .col-lg-7
+                = g.input :city
 
-          .row
-            .col-lg-7
-              = g.input :email
+            .row
+              .col-lg-7
+                = country_code_input(g)
 
-          .row
-            .col-lg-7
-              = g.input :phone
+            .row
+              .col-lg-7
+                = g.input :email
+
+            .row
+              .col-lg-7
+                = g.input :phone
