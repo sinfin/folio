@@ -36,7 +36,7 @@
 
       .row
         .col-lg-7
-          = g.input :phone
+          = g.input :phone, as: :phone
 
   .f-addresses-fields__nested
     = togglable_fields model, :use_secondary_address
@@ -76,4 +76,4 @@
 
             .row
               .col-lg-7
-                = g.input :phone
+                = g.input :phone, as: :phone

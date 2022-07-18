@@ -17,6 +17,7 @@
 //= require folio/cookie_consent/cookie_consent
 //= require folio/csrf
 //= require folio/debounce
+//= require folio/input/phone
 //= require folio/lazyload
 //= require folio/lightbox
 

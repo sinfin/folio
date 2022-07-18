@@ -16,6 +16,7 @@
 //= require folio/csrf
 //= require folio/debounce
 //= require folio/devise
+//= require folio/input/phone
 //= require folio/lazyload
 //= require folio/lightbox
 
