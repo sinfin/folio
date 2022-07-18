@@ -1,10 +1,11 @@
 # Folio
-CMS based on Ruby on Rails.
-You can create web pages (`Folio::Page`) by stiching fragments (called `Folio::Atom`) into desired form.
-This is done in `/console`, admin part of Folio. There you can also manage your users (`Folio::User`) and admins (`Folio::Account`).
-And even more! With little effort, you can manage your models too.
 
-Folio uses `Cells` with `Slim` templates, `MessageBus` for WebSockets messaging, Sidekiq and PostgreSql.
+A collection of Ruby on Rails mixins and generators, an administration framework. Contains some basic models so that you don't have to make them for every website you create. Consists mostly of:
+
++ `Folio::Page` model for individual web pages, consisting of content parts called `Folio::Atom`
++ Administration in `/console` for `Folio::Account` administrators with a simple generator to add custom models.
+
+Folio uses [Trailblazer cells](https://github.com/trailblazer/cells) with [Slim](http://slim-lang.com/) templates, [MessageBus](https://github.com/discourse/message_bus) for WebSockets-like messaging, Sidekiq and PostgreSQL.
 
 ## Usage
 Run `bundle exec rails app:folio:prepare_dummy_app`.
