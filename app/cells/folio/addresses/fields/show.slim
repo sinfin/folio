@@ -45,23 +45,26 @@
           data-country-code=data_country_code(:secondary_address)
         ]
           - model.simple_fields_for :secondary_address do |g|
+            - all_blank = g.object.attributes.all? { |attr, val| attr == "type" || val.blank? }
+            - required = required?(all_blank)
+
             = g.input :name
 
             = g.input :company_name
 
             .row
               .col-lg-7.f-addresses-fields__address-line-1
-                = address_line_input g, :address_line_1
+                = address_line_input g, :address_line_1, required: required
 
               .col-lg-5.f-addresses-fields__address-line-2
-                = address_line_input g, :address_line_2
+                = address_line_input g, :address_line_2, required: required
 
             .row
               .col-lg-5
-                = g.input :zip
+                = g.input :zip, required: required
 
               .col-lg-7
-                = g.input :city
+                = g.input :city, required: required
 
             .row
               .col-lg-7
