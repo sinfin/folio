@@ -43,8 +43,10 @@ window.Folio.Input.Phone.onBlur = (e) => {
   }
 }
 
-window.Folio.Input.Phone.bindAll = () => {
-  $(window.Folio.Input.Phone.SELECTOR).each((i, input) => {
+window.Folio.Input.Phone.bindAll = ($wrap) => {
+  $wrap = $wrap || $(document.body)
+
+  $wrap.find(window.Folio.Input.Phone.SELECTOR).each((i, input) => {
     const hiddenInput = document.createElement('input')
     hiddenInput.type = 'hidden'
     hiddenInput.name = input.name
@@ -64,8 +66,10 @@ window.Folio.Input.Phone.bindAll = () => {
   })
 }
 
-window.Folio.Input.Phone.unbindAll = () => {
-  $(window.Folio.Input.Phone.SELECTOR).each((i, input) => {
+window.Folio.Input.Phone.unbindAll = ($wrap) => {
+  $wrap = $wrap || $(document.body)
+
+  $wrap.find(window.Folio.Input.Phone.SELECTOR).each((i, input) => {
     input.removeEventListener('change', window.Folio.Input.Phone.onChange)
     input.removeEventListener('countrychange', window.Folio.Input.Phone.onChange)
     input.removeEventListener('blur', window.Folio.Input.Phone.onBlur)
@@ -85,9 +89,17 @@ window.Folio.Input.Phone.unbindAll = () => {
 }
 
 if (typeof Turbolinks === 'undefined') {
-  $(window.Folio.Input.Phone.bindAll)
+  $(() => { window.Folio.Input.Phone.bindAll() })
 } else {
   $(document)
-    .on('turbolinks:load', window.Folio.Input.Phone.bindAll)
-    .on('turbolinks:before-render', window.Folio.Input.Phone.unbindAll)
+    .on('turbolinks:load', () => { window.Folio.Input.Phone.bindAll() })
+    .on('turbolinks:before-render', () => { window.Folio.Input.Phone.unbindAll() })
 }
+
+$(document)
+  .on('cocoon:after-insert', (e, insertedItem) => {
+    window.Folio.Input.Phone.bindAll(insertedItem)
+  })
+  .on('cocoon:before-remove', (e, item) => {
+    window.Folio.Input.Phone.unbindAll(item)
+  })

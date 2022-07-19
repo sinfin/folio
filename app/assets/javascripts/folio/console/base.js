@@ -35,6 +35,7 @@
 //= require folio/lightbox
 //= require folio/debounce
 //= require folio/throttle
+//= require folio/input
 //= require folio/image/image
 
 // keep the order!
@@ -85,13 +86,6 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 //= require folio/console/tagsinput/tagsinput
-
-//= require folio/console/simple_form_inputs/_character_counter_input
-//= require folio/console/simple_form_inputs/_collection_select_input
-//= require folio/console/simple_form_inputs/_date_time_input
-//= require folio/console/simple_form_inputs/_redactor_input
-//= require folio/console/simple_form_inputs/_string_input
-//= require folio/console/simple_form_inputs/_text_input
 
 //= require ./pages_table
 

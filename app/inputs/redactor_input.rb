@@ -3,10 +3,10 @@
 class RedactorInput < SimpleForm::Inputs::TextInput
   def input(wrapper_options = nil)
     input_html_options[:class] ||= []
-    input_html_options[:class] << " f-c-redactor-input"
+    input_html_options[:class] << " f-input--redactor"
 
     if options[:redactor]
-      input_html_options[:class] << " f-c-redactor-input--#{options[:redactor]}"
+      input_html_options[:class] << " f-input--redactor-#{options[:redactor]}"
     end
 
     if options[:folio_label]
