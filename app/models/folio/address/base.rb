@@ -25,6 +25,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
             :type,
             presence: true
 
+  validates :phone,
+            phone: true,
+            if: :should_validate_phone?
+
   audited only: %i[address_line_1 address_line_2 city country_code name zip]
 
   def country
@@ -83,6 +87,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
   private
     def should_validate_country_code?
       true
+    end
+
+    def should_validate_phone?
+      phone.present?
     end
 end
 
