@@ -18,18 +18,14 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
 
     type = @builder.object.class.type_for_attribute(attribute_name).type
 
-    if type == :date
-      input_html_options[:class] << "f-input--date"
+    input_html_options[:class] << "f-input--date"
 
-      if options[:calendar_on_top]
-        input_html_options[:class] << "f-input--date-on-top"
-      end
-    else
+    if options[:calendar_on_top]
+      input_html_options[:class] << "f-input--date-on-top"
+    end
+
+    if type != :date
       input_html_options[:class] << "f-input--date-time"
-
-      if options[:calendar_on_top]
-        input_html_options[:class] << "f-input--date-time-on-top"
-      end
     end
 
     input_html_options["autocomplete"] = "off"
