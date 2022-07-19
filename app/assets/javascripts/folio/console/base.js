@@ -8,7 +8,6 @@
 //= require slideout.js/dist/slideout
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
-//= require cleave.js/dist/cleave
 //= require jquery.kinetic/index
 //= require dropzone/dist/dropzone
 //= require clipboard/dist/clipboard

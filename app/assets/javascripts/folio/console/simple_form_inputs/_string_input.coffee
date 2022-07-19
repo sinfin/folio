@@ -1,6 +1,5 @@
 REMOTE_AUTOCOMPLETE_SELECTOR = '.f-c-string-input--remote-autocomplete'
 AUTOCOMPLETE_SELECTOR = '.f-c-string-input--autocomplete'
-NUMERAL_SELECTOR = '.f-input--numeral'
 CONTENT_TEMPLATES_SELECTOR = '.f-c-string-input--content-templates'
 
 $.widget 'ui.autocomplete', $.ui.autocomplete,
@@ -57,48 +56,6 @@ window.folioConsoleUnbindRemoteAutocomplete = ($elements) ->
     .off('change')
     .off('focus.folioConsoleRemoteAutocomplete')
     .autocomplete('destroy')
-
-cleaveOpts =
-  numeral: true
-  numeralDecimalScale: 6
-  delimiter: ' '
-  onValueChanged: (e) ->
-    @element.nextElementSibling.value = e.target.rawValue
-
-window.folioConsoleBindNumeralInput = ($elements) ->
-  $elements.each ->
-    $this = $(this)
-    name = @name
-    $this
-      .data('type', @type)
-      .data('name', name)
-      .removeAttr('name')
-      .prop('type', 'string')
-    $this.after """<input type="hidden" name="#{name}" value="#{@value}">"""
-    $this.data('cleave', new Cleave(this, cleaveOpts))
-
-window.folioConsoleUnbindNumeralInput = ($elements) ->
-  $elements.each ->
-    $this = $(this)
-
-    $this.prop('type', $this.data('type')) if $this.data('type')
-    $this.prop('name', $this.data('name')) if $this.data('name')
-
-    cleave = $this.data('cleave')
-    if cleave
-      cleave.destroy()
-      $this.data('cleave', null)
-
-    $hidden = $this.next('input[type="hidden"]')
-    if $hidden.length
-      $this.val($hidden.val())
-      $hidden.remove()
-
-window.folioConsoleBindNumeralInputIn = ($wrap) ->
-  window.folioConsoleBindNumeralInput $wrap.find(NUMERAL_SELECTOR)
-
-window.folioConsoleUnbindNumeralInputIn = ($wrap) ->
-  window.folioConsoleUnbindNumeralInput $wrap.find(NUMERAL_SELECTOR)
 
 window.folioConsoleBindContentTemplatesInput = ($elements) ->
   $elements.each ->
@@ -163,20 +120,17 @@ $(document)
   .on 'cocoon:after-insert', (e, insertedItem) ->
     bindAutocomplete(insertedItem.find(AUTOCOMPLETE_SELECTOR))
     window.folioConsoleBindContentTemplatesInput(insertedItem.find(CONTENT_TEMPLATES_SELECTOR))
-    window.folioConsoleBindNumeralInput(insertedItem.find(NUMERAL_SELECTOR))
     window.folioConsoleBindRemoteAutocomplete(insertedItem.find(REMOTE_AUTOCOMPLETE_SELECTOR))
 
   .on 'cocoon:before-remove', (e, item) ->
     unbindAutocomplete(item.find(AUTOCOMPLETE_SELECTOR))
     window.folioConsoleUnbindContentTemplatesInput(item.find(CONTENT_TEMPLATES_SELECTOR))
-    window.folioConsoleUnbindNumeralInput(item.find(NUMERAL_SELECTOR))
     window.folioConsoleUnbindRemoteAutocomplete(item.find(REMOTE_AUTOCOMPLETE_SELECTOR))
 
 if Turbolinks?
   $(document)
     .on 'turbolinks:load', ->
       bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-      window.folioConsoleBindNumeralInput($(NUMERAL_SELECTOR))
       window.folioConsoleBindContentTemplatesInput($(CONTENT_TEMPLATES_SELECTOR))
       window.folioConsoleBindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
 
@@ -189,6 +143,5 @@ if Turbolinks?
 else
   $ ->
     bindAutocomplete($(AUTOCOMPLETE_SELECTOR))
-    window.folioConsoleBindNumeralInput($(NUMERAL_SELECTOR))
     window.folioConsoleBindContentTemplatesInput($(CONTENT_TEMPLATES_SELECTOR))
     window.folioConsoleBindRemoteAutocomplete($(REMOTE_AUTOCOMPLETE_SELECTOR))
