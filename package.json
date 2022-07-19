@@ -8,7 +8,8 @@
       "Turbolinks",
       "PhotoSwipe",
       "PhotoSwipeUI_Default",
-      "Image"
+      "Image",
+      "Event"
     ]
   }
 }
