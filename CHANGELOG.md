@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-07-19
+### Changed
+- refactored simple form inputs - check your js/coffee code (especially console) for manual input functionality and update accordingly
+
 ## 2021-06-27
 ### Added
 - added `Rails.application.config.folio_users_after_impersonate_path`
