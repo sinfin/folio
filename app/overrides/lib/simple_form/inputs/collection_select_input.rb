@@ -6,7 +6,9 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
 
     if options[:remote]
       options[:collection] = autocomplete_collection(options[:force_collection] ? options[:collection] : nil)
-      iho[:class] = [iho[:class], "f-c-collection-remote-select-input"].flatten
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+
+      iho[:class] = [iho[:class], "f-input f-input--collection-remote-select"].flatten
       iho[:id] = nil unless iho[:id].present?
 
       if options[:remote] == true

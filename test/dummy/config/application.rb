@@ -34,9 +34,6 @@ module Dummy
       g.test_framework :test_unit, fixture: false
     end
 
-    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
-    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
-
     overrides = [
       Folio::Engine.root.join("app/overrides").to_s,
       Rails.root.join("app/overrides").to_s,

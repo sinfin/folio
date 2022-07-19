@@ -1,6 +1,6 @@
 REMOTE_AUTOCOMPLETE_SELECTOR = '.f-c-string-input--remote-autocomplete'
 AUTOCOMPLETE_SELECTOR = '.f-c-string-input--autocomplete'
-NUMERAL_SELECTOR = '.f-c-string-input--numeral'
+NUMERAL_SELECTOR = '.f-input--numeral'
 CONTENT_TEMPLATES_SELECTOR = '.f-c-string-input--content-templates'
 
 $.widget 'ui.autocomplete', $.ui.autocomplete,

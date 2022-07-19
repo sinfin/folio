@@ -177,9 +177,6 @@ module Folio
     config.autoload_paths << Rails.root.join("app/lib")
     config.eager_load_paths << Rails.root.join("app/lib")
 
-    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
-    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
-
     overrides = [
       Folio::Engine.root.join("app/overrides").to_s,
       Rails.root.join("app/overrides").to_s,

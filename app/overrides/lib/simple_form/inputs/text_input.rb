@@ -2,10 +2,9 @@
 
 SimpleForm::Inputs::TextInput.class_eval do
   def input(wrapper_options = nil)
-    input_html_classes << "f-c-text-input"
-
     if options[:autosize]
-      input_html_classes << "f-c-text-input--autosize"
+      input_html_classes << "f-input"
+      input_html_classes << "f-input--autosize"
     end
 
     if options[:locale]
@@ -13,7 +12,8 @@ SimpleForm::Inputs::TextInput.class_eval do
     end
 
     if options[:character_counter]
-      input_html_classes << "f-c-string-input--character-counter"
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+      input_html_classes << "f-input--character-counter"
       input_html_options["data-character-counter"] = options[:character_counter]
     end
 
@@ -31,7 +31,8 @@ SimpleForm::Inputs::TextInput.class_eval do
       input_html_options["data-content-templates"] = ct_klass.to_data_attribute
       input_html_options["data-content-templates-url"] = Folio::Engine.app.url_helpers.edit_console_content_templates_path(type: options[:content_templates])
       input_html_options["data-content-templates-title"] = ct_klass.model_name.human(count: 2)
-      input_html_classes << "f-c-string-input--content-templates"
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+      input_html_classes << "f-input--content-templates"
     end
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)

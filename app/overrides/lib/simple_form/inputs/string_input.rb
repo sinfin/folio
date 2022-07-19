@@ -22,18 +22,19 @@ SimpleForm::Inputs::StringInput.class_eval do
           remote_autocomplete = Folio::Engine.app.url_helpers.url_for(opts)
         end
 
-        input_html_classes << "f-c-string-input"
-
         if collection
           input_html_options["data-autocomplete"] = collection
-          input_html_classes << "f-c-string-input--autocomplete"
+          input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+          input_html_classes << "f-input--autocomplete"
         elsif remote_autocomplete
           input_html_options["data-remote-autocomplete"] = remote_autocomplete
-          input_html_classes << "f-c-string-input--remote-autocomplete"
+          input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+          input_html_classes << "f-input--remote-autocomplete"
         end
       end
     elsif options[:numeral]
-      input_html_classes << "f-c-string-input--numeral"
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+      input_html_classes << "f-input--numeral"
       input_html_options[:autocomplete] = "off"
     else
       input_html_classes.unshift("string")
@@ -41,7 +42,8 @@ SimpleForm::Inputs::StringInput.class_eval do
     end
 
     if options[:character_counter]
-      input_html_classes << "f-c-string-input--character-counter"
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+      input_html_classes << "f-input--character-counter"
       input_html_options["data-character-counter"] = options[:character_counter]
     end
 
@@ -50,7 +52,8 @@ SimpleForm::Inputs::StringInput.class_eval do
       input_html_options["data-content-templates"] = ct_klass.to_data_attribute
       input_html_options["data-content-templates-url"] = Folio::Engine.app.url_helpers.edit_console_content_templates_path(type: options[:content_templates])
       input_html_options["data-content-templates-title"] = ct_klass.model_name.human(count: 2)
-      input_html_classes << "f-c-string-input--content-templates"
+      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+      input_html_classes << "f-input--content-templates"
     end
 
     if options[:locale]

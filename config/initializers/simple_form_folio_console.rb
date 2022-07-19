@@ -1,13 +1,5 @@
 # frozen_string_literal: true
 
-Dir["#{Folio::Engine.root}/app/lib/folio/console/simple_form_components/*.rb"].each do |file|
-  load file
-end
-
-Dir["#{Folio::Engine.root}/app/lib/folio/console/simple_form_inputs/*.rb"].each do |file|
-  load file
-end
-
 SimpleForm.setup do |config|
   config.wrappers :with_flag, tag: "div", class: "form-group form-group--with-flag", error_class: "text-danger has-danger" do |b|
     b.use :html5

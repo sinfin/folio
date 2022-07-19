@@ -10,7 +10,8 @@ SimpleForm::Inputs::NumericInput.class_eval do
     end
 
     if options[:numeral]
-      input_html_classes << "f-c-string-input--numeral"
+      input_html_classes << "f-input"
+      input_html_classes << "f-input--numeral"
       input_html_options[:autocomplete] = "off"
     end
 
