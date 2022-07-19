@@ -1,3 +1,4 @@
+//= require folio/input/_framework
 //= require intlTelInput
 
 window.Folio = window.Folio || {}
@@ -88,18 +89,5 @@ window.Folio.Input.Phone.unbindAll = ($wrap) => {
   })
 }
 
-if (typeof Turbolinks === 'undefined') {
-  $(() => { window.Folio.Input.Phone.bindAll() })
-} else {
-  $(document)
-    .on('turbolinks:load', () => { window.Folio.Input.Phone.bindAll() })
-    .on('turbolinks:before-render', () => { window.Folio.Input.Phone.unbindAll() })
-}
-
-$(document)
-  .on('cocoon:after-insert', (e, insertedItem) => {
-    window.Folio.Input.Phone.bindAll(insertedItem)
-  })
-  .on('cocoon:before-remove', (e, item) => {
-    window.Folio.Input.Phone.unbindAll(item)
-  })
+window.Folio.Input.Framework.bindInputEvents(window.Folio.Input.Phone.bindAll,
+                                             window.Folio.Input.Phone.unbindAll)

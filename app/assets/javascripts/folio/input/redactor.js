@@ -1,3 +1,5 @@
+//= require folio/input/_framework
+
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
@@ -51,18 +53,5 @@ window.Folio.Input.Redactor.unbindAll = ($wrap) => {
   })
 }
 
-if (typeof Turbolinks === 'undefined') {
-  $(() => { window.Folio.Input.Redactor.bindAll() })
-} else {
-  $(document)
-    .on('turbolinks:load', () => { window.Folio.Input.Redactor.bindAll() })
-    .on('turbolinks:before-render', () => { window.Folio.Input.Redactor.unbindAll() })
-}
-
-$(document)
-  .on('cocoon:after-insert', (e, insertedItem) => {
-    window.Folio.Input.Redactor.bindAll(insertedItem)
-  })
-  .on('cocoon:before-remove', (e, item) => {
-    window.Folio.Input.Redactor.unbindAll(item)
-  })
+window.Folio.Input.Framework.bindInputEvents(window.Folio.Input.Redactor.bindAll,
+                                             window.Folio.Input.Redactor.unbindAll)
