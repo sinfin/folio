@@ -36,11 +36,11 @@ module Folio::HasAddresses
     end
 
     def reject_primary_address_attributes?(attributes)
-      reject_address_attributes?(attributes)
+      !self.new.send(:should_validate_primary_address?) && reject_address_attributes?(attributes)
     end
 
     def reject_secondary_address_attributes?(attributes)
-      reject_address_attributes?(attributes)
+      !self.new.send(:should_validate_secondary_address?) && reject_address_attributes?(attributes)
     end
   end
 
