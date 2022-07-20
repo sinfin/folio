@@ -4,6 +4,7 @@ A collection of Ruby on Rails mixins and generators, an administration framework
 
 + `Folio::Page` model for individual web pages, consisting of content parts called `Folio::Atom`
 + Administration in `/console` for `Folio::Account` administrators with a simple generator to add custom models.
++ User management for `Folio::User` model.
 
 Folio uses [Trailblazer cells](https://github.com/trailblazer/cells) with [Slim](http://slim-lang.com/) templates, [MessageBus](https://github.com/discourse/message_bus) for WebSockets-like messaging, Sidekiq and PostgreSQL.
 
