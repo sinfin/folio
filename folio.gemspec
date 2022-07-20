@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"
+  s.add_dependency "annotate" # required from task copied from Folio to main_app
   s.add_dependency "audited"
   s.add_dependency "aws-sdk-s3"
   s.add_dependency "babel-transpiler"
@@ -79,7 +80,6 @@ Gem::Specification.new do |s|
   s.add_dependency "whenever"
   s.add_dependency "zip"
 
-  s.add_development_dependency "annotate"
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
   s.add_development_dependency "capybara"

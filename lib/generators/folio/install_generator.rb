@@ -14,62 +14,32 @@ module Folio
       def add_gems
         gsub_file "Gemfile", "  # Display performance information such as SQL time and flame graphs for each request in your browser.\n  # Can be configured to work on production as well see: https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md\n  gem 'rack-mini-profiler', '~> 2.0'\n", ""
 
-        gem "dotenv-rails"
-        gem "autoprefixer-rails", "9.8.5"
-        gem "slim-rails"
-        gem "cells"
-        gem "cells-slim", "0.0.6"
-        gem "cells-rails", github: "sinfin/cells-rails"
-        gem "route_translator"
-        gem "breadcrumbs_on_rails"
-        gem "sentry-raven"
-        gem "devise-i18n"
-        gem "rails-i18n"
-        gem "mini_racer"
-        gem "premailer", github: "sinfin/premailer"
         gem "premailer-rails"
         gem "rubyzip"
-        gem "uglifier", ">= 1.3.0"
-        gem "faker", require: false
-        gem "aws-sdk-s3", require: false
-
-        gem "dragonfly", "1.4.0"
-        gem "dragonfly-s3_data_store"
-        gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
-
-        gem "sidekiq", "~> 6"
-        gem "sidekiq-cron", "1.2.0"
-        gem "redis-namespace", "1.8.1"
-
-        gem "status-page", "0.1.5"
 
         gem "rack-mini-profiler"
-        gem "turbolinks"
+        gem "show_for"
+        gem "sprockets", "~> 4.0"
+        gem "sprockets-rails" # remove if twice in Gemfile
+
+        gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
+
+        gem "cells-rails", "~> 0.1.5"
+        gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
+
+        gem_group :development do
+          gem "puma", "< 6" # remove if twice in Gemfile
+          gem "i18n-tasks"
+          gem "annotate"
+        end
+
+        gem_group :development, :test do
+          gem "faker"
+          gem "pry-byebug"
+        end
 
         gem_group :test do
           gem "factory_bot"
-        end
-
-        gem_group :development do
-          gem "rbnacl", version: "< 5.0"
-          gem "rbnacl-libsodium"
-          gem "bcrypt_pbkdf", version: "< 2.0"
-          gem "ed25519"
-
-          gem "rubocop"
-          gem "rubocop-minitest"
-          gem "rubocop-performance"
-          gem "rubocop-rails"
-          gem "rubocop-rails_config"
-          gem "rubocop-rake"
-          gem "annotate"
-          gem "guard-rubocop"
-          gem "guard-slimlint"
-          gem "letter_opener"
-          gem "pry-rails"
-          gem "slack-notifier"
-          gem "better_errors"
-          gem "binding_of_caller"
         end
       end
 
@@ -103,7 +73,7 @@ module Folio
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
-          "config/initializers/assets.rb",
+          "config/initializers/asse ts.rb",
           "config/initializers/folio.rb",
           "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
@@ -133,6 +103,7 @@ module Folio
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
+          "app/"
           "bin/bower",
           "config/secrets.yml",
           "data/email_templates_data.yml",
@@ -209,7 +180,7 @@ module Folio
             "  config.action_mailer.raise_delivery_errors = true",
             "  config.action_mailer.delivery_method = :letter_opener",
             "  config.action_mailer.perform_deliveries = true",
-          ].join("")
+          ].join("\n")
         end
       end
 
