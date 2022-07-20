@@ -13,6 +13,9 @@ module Folio
     # fix deprecation warning - Using legacy connection handling is deprecated
     config.active_record.legacy_connection_handling = false
 
+    # can remove this once we get rid of "serialize" in app/models/concerns/folio/thumbnails.rb and app/models/folio/newsletter_subscription.rb
+    config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
+
     config.folio_crossdomain_devise = false
     config.folio_dragonfly_keep_png = true
     config.folio_public_page_title_reversed = false
