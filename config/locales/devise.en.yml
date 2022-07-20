@@ -39,6 +39,11 @@ en:
           gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
           failure: Failed to submit the registration. Please try again later.
 
+        show:
+          title: E-mail confirmation
+          text: Please confirm your email address by clicking on the link we sent to the email %{email} you entered. A confirmation email should arrive within a few minutes.
+          resend_email: Resend the confirmation email
+
       sessions:
         new:
           title: Sign in

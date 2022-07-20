@@ -50,7 +50,7 @@ cs:
 
         show:
           title: Potvrzení e-mailu
-          text: Pro úspěšnou správu předplatného je potřeba dokončit registraci. Prosíme potvrďte Vaší e-mailovou adresu kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          text: Prosíme potvrďte Vaší e-mailovou adresu kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
           resend_email: Znovu zaslat ověřovací e-mail
 
       sessions:
