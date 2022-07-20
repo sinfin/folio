@@ -33,9 +33,8 @@ $ rails db:migrate
 ```
 
 Then You can seed some pages and sites
-
 ```bash
-rails db:seed
+$ rails db:seed
 ```
 
 Folio is build on philosophy "You can have it, if You want, but it is not required."
