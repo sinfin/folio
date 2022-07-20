@@ -23,7 +23,7 @@ class Folio::UserTest < ActiveSupport::TestCase
   end
 
   test "do not stores second address if it is not in use" do
-    user = create(:folio_user)
+    user = create(:folio_user, primary_address: nil)
 
     assert_nil user.primary_address
     assert_nil user.secondary_address
@@ -53,43 +53,3 @@ class Folio::UserTest < ActiveSupport::TestCase
     assert_equal "Somewhere", user.secondary_address.city
   end
 end
-
-# == Schema Information
-#
-# Table name: folio_users
-#
-#  id                     :bigint(8)        not null, primary key
-#  email                  :string           default(""), not null
-#  encrypted_password     :string           default(""), not null
-#  reset_password_token   :string
-#  reset_password_sent_at :datetime
-#  remember_created_at    :datetime
-#  sign_in_count          :integer          default(0), not null
-#  current_sign_in_at     :datetime
-#  last_sign_in_at        :datetime
-#  current_sign_in_ip     :inet
-#  last_sign_in_ip        :inet
-#  confirmation_token     :string
-#  confirmed_at           :datetime
-#  confirmation_sent_at   :datetime
-#  unconfirmed_email      :string
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  invitation_token       :string
-#  invitation_created_at  :datetime
-#  invitation_sent_at     :datetime
-#  invitation_accepted_at :datetime
-#  invitation_limit       :integer
-#  invited_by_type        :string
-#  invited_by_id          :bigint(8)
-#  invitations_count      :integer          default(0)
-#
-# Indexes
-#
-#  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
-#  index_folio_users_on_email                              (email) UNIQUE
-#  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
-#  index_folio_users_on_invited_by_id                      (invited_by_id)
-#  index_folio_users_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)
-#  index_folio_users_on_reset_password_token               (reset_password_token) UNIQUE
-#

@@ -133,6 +133,7 @@ FactoryBot.define do
     first_name { "first_name" }
     last_name { "last_name" }
     phone { "+420604123123" }
+    association(:primary_address, factory: :folio_address_primary)
   end
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
@@ -142,6 +143,13 @@ FactoryBot.define do
   factory :folio_console_note, class: "Folio::ConsoleNote" do
     content { "content" }
     association(:target, factory: :folio_page)
+  end
+
+  factory :folio_address_primary, class: "Folio::Address::Primary" do
+    address_line_1 { "address_line_1" }
+    city { "city" }
+    zip { "zip" }
+    country_code { "country_code" }
   end
 
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
