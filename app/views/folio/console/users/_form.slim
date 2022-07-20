@@ -6,7 +6,7 @@
   = tab :content
     .row
       .col-lg-8
-        = f.input :email
+        = f.input :email, required: f.object.new_record?
 
         - if ::Rails.application.config.folio_users_require_phone
           = f.input :phone

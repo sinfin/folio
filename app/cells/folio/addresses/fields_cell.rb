@@ -15,8 +15,10 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     { tag: options[:title_tag] || "h2", class: "mt-0" }
   end
 
-  def required?(all_blank)
-    options[:mark_as_required] || !all_blank
+  def required?(key, attributes)
+    return true if model.object.send("should_validate_#{key}?")
+    all_blank = attributes.all? { |attr, val| attr == "type" || val.blank? }
+    !all_blank
   end
 
   def data_country_code(key)

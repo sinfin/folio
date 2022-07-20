@@ -13,8 +13,7 @@
     data-country-code=data_country_code(:primary_address)
   ]
     - model.simple_fields_for :primary_address do |g|
-      - all_blank = g.object.attributes.all? { |attr, val| attr == "type" || val.blank? }
-      - required = required?(all_blank)
+      - required = required?(:primary_address, g.object.attributes)
 
       .row
         .col-lg-7.f-addresses-fields__address-line-1
@@ -45,8 +44,7 @@
           data-country-code=data_country_code(:secondary_address)
         ]
           - model.simple_fields_for :secondary_address do |g|
-            - all_blank = g.object.attributes.all? { |attr, val| attr == "type" || val.blank? }
-            - required = required?(all_blank)
+            - required = required?(:secondary_address, g.object.attributes)
 
             = g.input :name
 
