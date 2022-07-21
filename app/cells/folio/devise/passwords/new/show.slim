@@ -2,6 +2,7 @@
   = form do |f|
     = title
 
-    == email_input(f)
+    .f-devise__narrow
+      == email_input(f)
 
     = submit_button(f, t('.reset_password'))
