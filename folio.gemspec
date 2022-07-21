@@ -51,7 +51,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon"
   s.add_dependency "invisible_captcha"
   s.add_dependency "countries"
-  s.add_dependency "acts-as-taggable-on", "~> 7.0"
+  s.add_dependency "acts-as-taggable-on", "~> 9.0"
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "cells"
   s.add_dependency "cells-slim", "0.0.6"

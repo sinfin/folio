@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2022-07-01
+### Changed
+- gem dependency changed to `s.add_dependency "acts-as-taggable-on", "~> 9.0"` (allowing usage of ActiveRecord 6.1.4 and above)
+- version bump to `0.2.0`
+
 ## 2021-03-21
 ### Added
 - added `Folio::ConsoleNote` model and `Folio::HasConsoleNotes` concern
