@@ -11,6 +11,9 @@ class Folio::User < Folio::ApplicationRecord
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
 
+  # used to handle address validation when changing password
+  attr_accessor :devise_resetting_password
+
   selected_device_modules = %i[
     database_authenticatable
     recoverable
@@ -105,6 +108,11 @@ class Folio::User < Folio::ApplicationRecord
     self.class.csv_attribute_names.map do |attr|
       send(attr)
     end
+  end
+
+  def reset_password(new_password, new_password_confirmation)
+    self.devise_resetting_password = true
+    super
   end
 
   def self.new_from_auth(auth)
