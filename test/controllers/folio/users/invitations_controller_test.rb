@@ -48,6 +48,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
         password_confirmation: "New@Password.123",
         primary_address_attributes: {
           address_line_1: "address_line_1",
+          address_line_2: "address_line_2",
           city: "city",
           zip: "zip",
           country_code: "country_code",

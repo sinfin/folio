@@ -9,7 +9,8 @@ class Folio::Console::Addresses::ShowForModelCellTest < Folio::Console::CellTest
     assert html.has_css?(".f-c-addresses-show-for-model")
 
     user.create_primary_address!(name: "Mr. Ipsum",
-                                 address_line_1: "Foo bar 1",
+                                 address_line_1: "Foo bar",
+                                 address_line_2: "1",
                                  city: "Prague",
                                  zip: "111 11",
                                  country_code: "CZ")

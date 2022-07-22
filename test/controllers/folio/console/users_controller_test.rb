@@ -42,8 +42,8 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
         secondary_address_attributes: {
           name: "Foo Von Bar",
           company_name: "",
-          address_line_1: "Example steet 75",
-          address_line_2: "",
+          address_line_1: "Example steet",
+          address_line_2: "75",
           city: "Somewhere",
           zip: "12345",
           country_code: "CZ"

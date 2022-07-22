@@ -25,6 +25,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
             :type,
             presence: true
 
+  validates :address_line_2,
+            if: :should_validate_address_line_2?,
+            presence: true
+
   validates :phone,
             phone: true,
             if: :should_validate_phone?
@@ -84,6 +88,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
     end
   end
 
+  def self.country_codes_with_required_address_line_2
+    %w[CZ SK]
+  end
+
   private
     def should_validate_country_code?
       true
@@ -91,6 +99,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
 
     def should_validate_phone?
       phone.present?
+    end
+
+    def should_validate_address_line_2?
+      self.class.country_codes_with_required_address_line_2.include?(country_code)
     end
 end
 

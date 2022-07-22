@@ -38,7 +38,8 @@ class Folio::UserFlowTest < ActionDispatch::IntegrationTest
     page.find('.f-devise--invitations-edit input[name="user[first_name]"]').set "First"
     page.find('.f-devise--invitations-edit input[name="user[last_name]"]').set "Last"
 
-    page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][address_line_1]"]').set "Foo 1"
+    page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][address_line_1]"]').set "Foo"
+    page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][address_line_2]"]').set "1"
     page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][zip]"]').set "Foo"
     page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][city]"]').set "Foo"
     page.find('.f-devise--invitations-edit select[name="user[primary_address_attributes][country_code]"]').set "CZ"
@@ -53,7 +54,8 @@ class Folio::UserFlowTest < ActionDispatch::IntegrationTest
     assert_equal "Last", user.last_name
 
     assert user.primary_address
-    assert_equal "Foo 1", user.primary_address.address_line_1
+    assert_equal "Foo", user.primary_address.address_line_1
+    assert_equal "1", user.primary_address.address_line_2
   end
 
   test "omniauth - new user" do

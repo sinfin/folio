@@ -147,6 +147,7 @@ FactoryBot.define do
 
   factory :folio_address_primary, class: "Folio::Address::Primary" do
     address_line_1 { "address_line_1" }
+    address_line_2 { "address_line_2" }
     city { "city" }
     zip { "zip" }
     country_code { "country_code" }
