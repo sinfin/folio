@@ -51,6 +51,14 @@
             = g.input :company_name
 
             .row
+              .col-lg-7
+                = g.input :identification_number
+
+            .row
+              .col-lg-7
+                = g.input :vat_identification_number
+
+            .row
               .col-lg-7.f-addresses-fields__address-line-1
                 = address_line_input g, :address_line_1, required: required
 
@@ -67,11 +75,3 @@
             .row
               .col-lg-7
                 = country_code_input(g)
-
-            .row
-              .col-lg-7
-                = g.input :email
-
-            .row
-              .col-lg-7
-                = g.input :phone, as: :phone
