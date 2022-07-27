@@ -2,7 +2,7 @@
 
 module Folio::AtomsHelper
   def render_atoms(atoms, only: [], except: [], cell_options: {})
-    atoms.map do |atom|
+    atoms.filter_map do |atom|
       next if only.present? && !only.include?(atom.class)
       next if except.present? && except.include?(atom.class)
 
@@ -13,11 +13,11 @@ module Folio::AtomsHelper
       else
         render "folio/atoms/#{atom.partial_name}", data: atom
       end
-    end.compact.join("").html_safe
+    end.join("").html_safe
   end
 
   def render_atoms_in_molecules(atoms_in_molecules, only: [], except: [], cell_options: {})
-    atoms_in_molecules.map do |molecule, atoms|
+    atoms_in_molecules.filter_map do |molecule, atoms|
       if only.present?
         atoms = atoms.select { |a| only.include?(a.class) }
       end
@@ -41,8 +41,8 @@ module Folio::AtomsHelper
           end
         end
       else
-        render_atoms(atoms, cell_options: cell_options)
+        render_atoms(atoms, cell_options:)
       end
-    end.compact.join("").html_safe
+    end.join("").html_safe
   end
 end

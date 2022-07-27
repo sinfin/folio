@@ -27,4 +27,4 @@ $(document).on 'change', '.f-c-boolean-toggle__input', (e) ->
     error: (jXHR) ->
       $wrap.removeClass('f-c-boolean-toggle--loading')
       $input.prop('checked', !$input.prop('checked'))
-      window.FolioConsole.flashMessageFromApiErrors(jXHR.responseJSON)
+      window.FolioConsole.Flash.flashMessageFromApiErrors(jXHR.responseJSON)

@@ -1,32 +1,47 @@
 # frozen_string_literal: true
 
-require "rubygems"
-require "sitemap_generator"
-require "aws-sdk-s3"
+require "folio/sitemap_generator"
 
-SitemapGenerator::Sitemap.default_host = "https://#{Folio::Site.instance.domain}"
-SitemapGenerator::Sitemap.sitemaps_path = "sitemaps/"
+# for single site configuration
 
-unless Rails.env.development?
-  SitemapGenerator::Sitemap.public_path = "tmp/"
-  SitemapGenerator::Sitemap.adapter = SitemapGenerator::AwsSdkAdapter.new(
-    ENV["S3_BUCKET_NAME"],
-    aws_access_key_id: ENV["AWS_ACCESS_KEY_ID"],
-    aws_secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-    aws_region: ENV["S3_REGION"]
-  )
-end
+SitemapGenerator::Sitemap.default_host = "http://#{Folio.instance.domain}"
+SitemapGenerator::Sitemap.sitemaps_path = "sitemaps"
 
 SitemapGenerator::Sitemap.create do
-  Folio::Page.published.find_each do |page|
-    I18n.with_locale(page.locale || I18n.locale) do
-      add(
-        page_path(page),
-        lastmod: page.updated_at,
-        changefreq: "monthly",
-        priority: 0.5,
-        images: page.image_sitemap
-      )
-    end
+  default_url_options[:only_path] = true
+
+  includes_image_sitemap_scope(Folio::Page).published.find_each do |page|
+    next unless page.class.public?
+
+    add(
+      page_path(page),
+      changefreq: "monthly",
+      priority: 0.5,
+      images: page.image_sitemap
+    )
   end
 end
+
+# for multiple site configuration
+#
+# Folio::Site.all.each do |site|
+#   I18n.locale = site.locale
+#
+#   SitemapGenerator::Sitemap.default_host = "http://#{site.domain}"
+#   SitemapGenerator::Sitemap.sitemaps_path = "sitemaps/#{site.domain}"
+#
+#   SitemapGenerator::Sitemap.create do
+#     default_url_options[:only_path] = true
+#
+#     includes_image_sitemap_scope(site.pages).published.find_each do |page|
+#       next unless page.class.public?
+#
+#       add(
+#         page_path(page),
+#         changefreq: "monthly",
+#         priority: 0.5,
+#         images: page.image_sitemap
+#       )
+#     end
+#   end
+# end

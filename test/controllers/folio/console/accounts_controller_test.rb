@@ -23,13 +23,15 @@ class Folio::Console::AccountsControllerTest < Folio::Console::BaseControllerTes
   end
 
   test "create" do
-    params = build(:folio_admin_account).serializable_hash
+    params = build(:folio_admin_account, email: "custom@email-for-this.test").serializable_hash
 
     assert_difference("Folio::Account.count", 1) do
       post url_for([:console, Folio::Account]), params: {
         account: params,
       }
     end
+
+    assert_redirected_to url_for([:edit, :console, Folio::Account.find_by_email!("custom@email-for-this.test")])
   end
 
   test "update" do

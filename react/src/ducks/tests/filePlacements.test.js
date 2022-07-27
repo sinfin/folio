@@ -1,3 +1,5 @@
+import 'folioTestSetup'
+
 import filePlacementsReducer, {
   initialState,
   setOriginalPlacements,

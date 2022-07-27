@@ -2,6 +2,7 @@
 
 class Folio::Lead < Folio::ApplicationRecord
   include AASM
+  include Folio::BelongsToSite
   include PgSearch::Model
 
   has_sanitized_fields :email, :phone, :note, :name
@@ -106,4 +107,9 @@ end
 #  url             :string
 #  additional_data :json
 #  aasm_state      :string           default("submitted")
+#  site_id         :bigint(8)
+#
+# Indexes
+#
+#  index_folio_leads_on_site_id  (site_id)
 #

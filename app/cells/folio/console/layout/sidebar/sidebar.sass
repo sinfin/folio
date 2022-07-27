@@ -22,8 +22,19 @@
       color: $white
       text-decoration: none
 
+  &__part-title
+    text-transform: uppercase
+    font-weight:
+    display: block
+    color: #979797
+    border-top: 1px solid rgba(#979797, 0.42)
+    padding: 20px 20px 10px
+
   &__ul
     padding: 10px 0
+
+  &__part-title + &__ul
+    padding-top: 0
 
   &__ul + &__ul
     border-top: 1px solid rgba(#979797, 0.42)

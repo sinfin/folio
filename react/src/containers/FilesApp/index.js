@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
+import { uniqueId } from 'lodash'
 
-import { getFiles, thumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
+import { getFiles, messageBusThumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
 import { openFileModal } from 'ducks/fileModal'
 
 import SingleSelect from 'containers/SingleSelect'
@@ -19,7 +20,7 @@ class FilesApp extends Component {
     if (this.shouldAutoLoadFiles()) {
       this.loadFiles(this.props.app.fileType, this.props.app.filesUrl)
     }
-    this.listenOnActionCable()
+    this.listenOnMessageBus()
     window.addEventListener('checkLazyload', forceCheck)
   }
 
@@ -29,15 +30,20 @@ class FilesApp extends Component {
     }
   }
 
-  listenOnActionCable () {
-    if (!window.FolioCable) return
-    this.cableSubscription = window.FolioCable.cable.subscriptions.create('FolioThumbnailsChannel', {
-      received: (data) => {
-        if (!data) return
-        if (!data.temporary_url || !data.url) return
-        this.props.dispatch(thumbnailGenerated('images', data.temporary_url, data.url))
-      }
-    })
+  listenOnMessageBus () {
+    if (!window.Folio.MessageBus.callbacks) return
+
+    this.messageBusCallbackKey = `Folio::GenerateThumbnailJob-react-files-app-${uniqueId()}`
+
+    window.Folio.MessageBus.callbacks[this.messageBusCallbackKey] = (data) => {
+      if (!data || data.type !== 'Folio::GenerateThumbnailJob') return
+      if (!data.data.temporary_url || !data.data.url) return
+      this.props.dispatch(messageBusThumbnailGenerated(
+        this.props.app.fileType,
+        this.props.app.filesUrl,
+        data.data
+      ))
+    }
   }
 
   shouldAutoLoadFiles () {

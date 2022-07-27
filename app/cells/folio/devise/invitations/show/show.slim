@@ -1,0 +1,11 @@
+.f-devise-invitations-show
+  h1 = t('.title')
+
+  p = cstypo t('.text', email: model[:email])
+
+  = form do |f|
+    = f.hidden_field :email, value: @model[:email]
+
+    p
+      button.f-devise-invitations-show__submit type="submit"
+        = t('.resend_email')

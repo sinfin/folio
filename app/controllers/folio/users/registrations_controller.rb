@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::Users::RegistrationsController < Devise::RegistrationsController
+  prepend_before_action :authenticate_scope!, only: [:edit_password, :update_password]
+
   include Folio::Users::DeviseControllerBase
+
+  def new
+    fail ActionController::MethodNotAllowed, ""
+  end
 
   def edit
     if params[:pw]
@@ -14,7 +20,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :phone])
+    fail ActionController::MethodNotAllowed, ""
 
     build_resource(sign_up_params)
 
@@ -65,7 +71,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
             json = {}
           end
 
-          render json: json, status: 200
+          render json:, status: 200
         else
           clean_up_passwords resource
           set_minimum_password_length
@@ -76,15 +82,46 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
           cell_flash = ActionDispatch::Flash::FlashHash.new
           cell_flash[:alert] = message
 
-          html = cell("folio/devise/registrations/new",
-                      resource: resource,
+          html = cell("folio/devise/invitations/new",
+                      resource:,
                       resource_name: :user,
                       modal: true,
                       flash: cell_flash).show
 
-          render json: { errors: errors, data: html }, status: 401
+          render json: { errors:, data: html }, status: 401
         end
       end
+    end
+  end
+
+  def edit_password
+  end
+
+  def update_password
+    user = current_user
+
+    if user.has_generated_password?
+      update_password_params = params.require(:user)
+                                     .permit(:password,
+                                             :password_confirmation)
+
+      success = user.update(update_password_params)
+    else
+      update_password_params = params.require(:user)
+                                     .permit(:password,
+                                             :password_confirmation,
+                                             :current_password)
+
+      success = user.update_with_password(update_password_params)
+    end
+
+    if success
+      bypass_sign_in user
+      redirect_to main_app.send(Rails.application.config.folio_users_after_password_change_path),
+                  flash: { success: t("folio.devise.registrations.update_password.success") }
+    else
+      flash.now[:alert] = t("folio.devise.registrations.update_password.failure")
+      render :edit_password
     end
   end
 

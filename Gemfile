@@ -11,15 +11,24 @@ gemspec
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
-gem "mini_racer", platforms: :ruby
 gem "premailer", github: "sinfin/premailer"
 gem "premailer-rails"
 gem "rubyzip"
 gem "rack-mini-profiler"
-gem "turbolinks"
 gem "uglifier", ">= 1.3.0"
 gem "show_for"
 gem "sidekiq"
+gem "sprockets", "~> 4.0"
+gem "sprockets-rails"
+
+gem "dragonfly", "1.4.0"
+gem "dragonfly-s3_data_store"
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+# gem "dragonfly_libvips", path: "../dragonfly_libvips"
+
+gem "cells"
+gem "cells-slim", "0.0.6"
+gem "cells-rails", github: "sinfin/cells-rails"
 
 group :test do
   gem "minitest", "~> 5.14.4"

@@ -1,0 +1,51 @@
+.f-devise-resource-form
+  = form do |f|
+    - if model[:use_password]
+      = title t('.title_with_password')
+    - else
+      = title t('.title_without_password')
+
+    p.f-devise__perex = t('.perex')
+
+    == cell('folio/devise/flash', model[:flash])
+
+    - @f = f
+
+    = render(:_top)
+
+    = f.hidden_field :invitation_token, readonly: true
+
+    .f-devise__narrow
+      - if model[:lock_email]
+        == email_input(f,
+                       autofocus: false,
+                       label: t('.email_label'),
+                       disabled: true)
+
+        = f.hidden_field :email
+      - else
+        == email_input(f, autofocus: false, label: t('.email_label'))
+
+      - if model[:use_password]
+        .f-devise-invitations-edit__password-wrap
+          == password_input(f,
+                            :password,
+                            autocomplete: 'new-password',
+                            label: t('.password_label'),
+                            keep_password: true)
+
+    - if show_address?(f)
+      == cell('folio/addresses/fields', f)
+
+    = render(:_bottom)
+
+    = f.input :subscribed_to_newsletter,
+              label: t(".subscribed_to_newsletter_label")
+
+    - @f = f
+    = render(:_disclaimer)
+    - @f = nil
+
+    = submit_button(f, t('.submit'))
+
+    - @f = nil

@@ -34,7 +34,7 @@ module Folio::Singleton
       if new_record?
         errors.add(:base, :invalid) if self.class.exists?
       else
-        errors.add(:base, :invalid) if self.class.where.not(id: id).exists?
+        errors.add(:base, :invalid) if self.class.where.not(id:).exists?
       end
     end
 end

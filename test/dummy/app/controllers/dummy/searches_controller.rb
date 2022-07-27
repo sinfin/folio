@@ -61,7 +61,7 @@ class Dummy::SearchesController < ApplicationController
         @search[:klasses][meta[:klass]] = {
           pagy: klass_pagy,
           records: klass_records,
-          count: count,
+          count:,
           label: "#{label} (#{count})",
           href: tab_href,
           results_cell: meta[:results_cell] || DEFAULT_RESULTS_CELL,
@@ -75,7 +75,7 @@ class Dummy::SearchesController < ApplicationController
 
           @search[:tabs] << {
             label: "#{label} (#{count})",
-            active: active,
+            active:,
             href: tab_href,
           }
 

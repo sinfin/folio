@@ -21,7 +21,7 @@ export default function formGroupClassName (key, errors = {}, structure = {}) {
     }
 
     if (structure[key].character_counter) {
-      classNames.push('f-c-string-input-character-counter__parent')
+      classNames.push('f-input-character-counter-wrap__parent')
     }
   }
 

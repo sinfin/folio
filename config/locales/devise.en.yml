@@ -10,25 +10,45 @@ en:
         footer: If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
 
     omniauth_callbacks:
-      signed_up: "Welcome! You have signed up successfully."
+      signed_in: Signed in successfully.
+      signed_up: Signed up successfully.
 
   folio:
     devise:
       submit: Submit
       forgotten_password_link: Forgotten password?
-      register_button: Create new account
+      invite_button: Create new account
       sign_in_link: Have an account?
       sign_in_link_inner: Sign in
 
+      resource_form:
+        email_label: E-mail (used for signing in)
+        password_label: Password
+        subscribed_to_newsletter_label: Subscribe to our newsletter
+        title_with_password: Set your password
+        title_without_password: Finish registration
+        perex: To complete the registration, please fill in the following form.
+        submit: Finish registration
+
       invitations:
-        edit:
-          title: Set your password
+        new:
+          email_label: E-mail (used for signing in)
+          phone_label: Phone
+          sign_up: Create account
+          title: Sign up
+          gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
+          failure: Failed to submit the registration. Please try again later.
+
+        show:
+          title: E-mail confirmation
+          text: Please confirm your email address by clicking on the link we sent to the email %{email} you entered. A confirmation email should arrive within a few minutes.
+          resend_email: Resend the confirmation email
 
       sessions:
         new:
           title: Sign in
           sign_in: Sign in
-          invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.
+          failure: Failed to sign in. Please try again later.
 
         create:
           invalid: Invalid e-mail or password
@@ -43,13 +63,6 @@ en:
           change_password: Set my password
 
       registrations:
-        new:
-          email_label: E-mail (used for signing in)
-          phone_label: Phone
-          sign_up: Create account
-          title: Sign up
-          gdpr_content: By submitting the form, I acknowledge that my personal data will be processed in accordance with our privacy policy and I agree to the general terms and conditions.
-
         edit:
           update: Update
           title: Account information
@@ -58,6 +71,16 @@ en:
           pending_reconfirmation: We're waiting for you to confirm the change to %{email}
           sent_reset_password_instructions: You'll receive an e-mail with instruction in a moment.
           email_blank: To sign in via password you have to enter an e-mail address first.
+
+        edit_password:
+          change_password: Change password
+          new_password: New password
+          new_password_confirmation: New password (check)
+          title: Change password
+
+        update_password:
+          success: Password was changed.
+          failure: Failed to change password.
 
       confirmations:
         new:
@@ -88,9 +111,18 @@ en:
         resend_link: Resend
 
     users:
-      registrations:
+      invitations:
         create:
           failure: Failed to create an account. Please check the marked fields bellow.
 
       omniauth_callbacks:
         added_provider: "%{provider} account linked."
+
+        new_user:
+          invalid_session_data: Invalid sign in.
+
+        create_user:
+          failure: Failed to finish the registration.
+
+        resolve_conflict:
+          invalid_conflict_token_flash: Link is no longer valid. Try to sign in again.

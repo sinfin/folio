@@ -39,7 +39,7 @@ module Folio::ImageHelper
                    options.reverse_merge(
                      alt: placement.try(:alt) || "",
                      title: placement.try(:title),
-                     retina_multiplier: retina_multiplier,
+                     retina_multiplier:,
                    ))
   end
 
@@ -81,7 +81,7 @@ module Folio::ImageHelper
                options.reverse_merge(
                  alt: placement.try(:alt) || "",
                  title: placement.try(:title),
-                 retina_multiplier: retina_multiplier,
+                 retina_multiplier:,
                ))
   end
 end

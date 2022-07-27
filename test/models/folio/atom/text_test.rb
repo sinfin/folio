@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::Atom::TextTest < Cell::TestCase
   test "renders" do
-    create(:folio_site)
+    create_and_host_site
 
     atom = create_atom(Dummy::Atom::Text, content: "<p>bar</p>")
     html = cell(atom.class.cell_name, atom).(:show)

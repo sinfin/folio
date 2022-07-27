@@ -46,7 +46,7 @@ class <%= application_namespace %>::Ui::ShareCell < ApplicationCell
   end
 
   def twitter_url
-    h = { url: url }
+    h = { url: }
     "https://twitter.com/share?#{h.to_query}"
   end
 

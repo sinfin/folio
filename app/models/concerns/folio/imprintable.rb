@@ -28,12 +28,12 @@ module Folio::Imprintable
       end
       methods = :type if association_class.has_attribute?(:type)
       define_method(:"imprint_#{association}") do
-        write_attribute(imprint_field, send(association).serializable_hash(include: include_hash, methods: methods))
+        write_attribute(imprint_field, send(association).serializable_hash(include: include_hash, methods:))
       end
 
       define_method(:"imprint_#{association}!") do
         update_columns(
-          imprint_field => send(association).serializable_hash(include: include_hash, methods: methods)
+          imprint_field => send(association).serializable_hash(include: include_hash, methods:)
         )
       end
 

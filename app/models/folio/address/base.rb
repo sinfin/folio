@@ -25,6 +25,14 @@ class Folio::Address::Base < Folio::ApplicationRecord
             :type,
             presence: true
 
+  validates :address_line_2,
+            if: :should_validate_address_line_2?,
+            presence: true
+
+  validates :phone,
+            phone: true,
+            if: :should_validate_phone?
+
   audited only: %i[address_line_1 address_line_2 city country_code name zip]
 
   def country
@@ -32,7 +40,7 @@ class Folio::Address::Base < Folio::ApplicationRecord
   end
 
   def to_label
-    [address_line_1, address_line_2].map(&:presence).compact.join(", ")
+    [address_line_1, address_line_2].filter_map(&:presence).join(", ")
   end
 
   def self.sti_paths
@@ -72,13 +80,29 @@ class Folio::Address::Base < Folio::ApplicationRecord
     ]
   end
 
-  def self.priority_countries
-    []
+  def self.priority_countries(locale: nil)
+    if locale == :cs
+      %w[CZ SK]
+    else
+      []
+    end
+  end
+
+  def self.country_codes_with_required_address_line_2
+    %w[CZ SK]
   end
 
   private
     def should_validate_country_code?
       true
+    end
+
+    def should_validate_phone?
+      phone.present?
+    end
+
+    def should_validate_address_line_2?
+      self.class.country_codes_with_required_address_line_2.include?(country_code)
     end
 end
 

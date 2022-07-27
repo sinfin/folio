@@ -11,7 +11,7 @@ class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
   #   config.folio_pages_ancestry
 
   # setup do
-  #   create(:folio_site)
+  #   create_and_host_site
   #   @category = create(:folio_page)
   #   @page = create(:folio_page, parent: @category)
 
@@ -77,7 +77,7 @@ class Folio::PagesControllerTest < ActionDispatch::IntegrationTest
   # end
 
   setup do
-    create(:folio_site)
+    create_and_host_site
     @page = create(:folio_page)
   end
 

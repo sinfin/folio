@@ -11,7 +11,7 @@ class Folio::Mailchimp::CreateOrUpdateSubscriptionJob < ApplicationJob
 
       mailchimp_api.create_or_update_member(email,
                                             merge_vars: subscription.merge_vars,
-                                            status: status)
+                                            status:)
 
       if subscription.tags.present?
         mailchimp_api.add_member_tags(email,

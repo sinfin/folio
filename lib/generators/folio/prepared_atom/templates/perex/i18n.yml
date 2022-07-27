@@ -1,11 +1,11 @@
 ---
-en:
+cs:
   activerecord:
     attributes:
       application_namespace_path/atom/perex: 
     models:
       application_namespace_path/atom/perex: Perex
-cs:
+en:
   activerecord:
     attributes:
       application_namespace_path/atom/perex: 

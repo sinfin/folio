@@ -41,10 +41,27 @@ class Folio::BlogGenerator < Rails::Generators::Base
     inject_into_file "config/routes.rb", after: "scope module: :folio do\n    namespace :console do\n      namespace :#{application_namespace_path} do\n" do <<~'RUBY'
         namespace :blog do
           resources :articles, except: %i[show]
-          resources :topics, except: %i[show]
+          resources :topics, except: %i[show] do
+            post :set_positions, on: :collection
+          end
         end
 
     RUBY
+    end
+  end
+
+  def add_atoms_to_showcase
+    return if File.read(Rails.root.join("data/atoms_showcase.yml")).include?("::Atom::Blog::Articles::Card::Large")
+    append_file "data/atoms_showcase.yml" do <<~'YAML'
+      - type: Redside::Atom::Blog::Articles::Card::Large
+        article: true
+
+      - type: Redside::Atom::Blog::Articles::Card::Medium
+        article: true
+
+      - type: Redside::Atom::Blog::Articles::Card::Small
+        article: true
+    YAML
     end
   end
 

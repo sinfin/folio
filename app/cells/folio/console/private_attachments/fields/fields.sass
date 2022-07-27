@@ -1,0 +1,65 @@
+.f-c-private-attachments-fields-dropzone
+  position: relative
+
+  &::before
+    position: absolute
+    z-index: -1
+    top: - $grid-gutter-half
+    right: - $grid-gutter-half
+    bottom: - $grid-gutter-half
+    left: - $grid-gutter-half
+    transition: $transition-base
+    border-radius: $card-border-radius
+    content: ''
+    display: block
+
+  .dz-drag-hover &::before
+    background: #d3eaf6
+
+  &__trigger
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 2
+    cursor: pointer
+
+.f-c-private-attachments-fields
+  position: relative
+  z-index: 3
+
+  &__row
+    position: relative
+    z-index: 2
+
+  &__file-col
+    width: (( 40px + $grid-gutter-half ))
+    height: 40px
+    flex: 0 0 (( 40px + $grid-gutter-half ))
+    display: flex
+    align-items: center
+    justify-content: center
+    padding-right: 0
+    position: relative
+
+  &__file-ico
+    font-size: 18px
+
+    &, &:hover
+      color: inherit
+
+  &__file-loader
+    position: relative
+
+  &__dropzone-progress-bar
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 1
+    background: $green
+    width: 0
+    transition: width .1s
+    opacity: 0.25

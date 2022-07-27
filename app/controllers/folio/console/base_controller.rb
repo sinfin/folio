@@ -3,9 +3,10 @@
 require "csv"
 
 class Folio::Console::BaseController < Folio::ApplicationController
-  include Pagy::Backend
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
+  include Folio::HasCurrentSite
+  include Pagy::Backend
 
   before_action :custom_authenticate_account!
 
@@ -31,11 +32,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
   #   redirect_to dashboard_path, alert: exception.message
   # end
 
-  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false, catalogue_collection_actions: nil)
+  def self.folio_console_controller_for(class_name, as: nil, except: [], csv: false, catalogue_collection_actions: nil, through: nil)
     as_s = as.present? ? as.to_s : nil
 
     define_method :folio_console_controller_for_as do
       as_s
+    end
+
+    define_method :folio_console_controller_for_through do
+      through
     end
 
     define_method :folio_console_controller_for_handle_csv do
@@ -60,10 +65,27 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     respond_to :json, only: %i[update]
 
-    load_and_authorize_resource(as, class: class_name,
-                                    except: except,
-                                    parent: (false if as.present?))
+    if through
+      through_as = through.demodulize.underscore
 
+      load_and_authorize_resource(through_as, class: through)
+
+      load_and_authorize_resource(as, class: class_name,
+                                      except:,
+                                      parent: (false if as.present?),
+                                      through: through_as)
+    else
+      load_and_authorize_resource(as, class: class_name,
+                                      except:,
+                                      parent: (false if as.present?))
+    end
+
+    # keep this under load_and_authorize_resource
+    if klass.try(:has_belongs_to_site?)
+      before_action :filter_records_by_belongs_to_site
+    end
+
+    before_action :add_through_breadcrumbs
     before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs
 
@@ -130,12 +152,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
   def filter_params
     params.permit(:by_query, *index_filters.keys)
   end
-
-  def current_site
-    @current_site ||= Folio::Site.instance
-  end
-
-  helper_method :current_site
 
   private
     # TODO: authorize account
@@ -287,7 +303,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       filename = "#{name}-#{Date.today}.csv".split(".")
                                             .map(&:parameterize)
                                             .join(".")
-      send_data data, filename: filename
+      send_data data, filename:
     end
 
     def index_tabs
@@ -311,9 +327,35 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
+    def add_through_breadcrumbs
+      return unless folio_console_controller_for_through
+      through_klass = folio_console_controller_for_through.constantize
+
+      add_breadcrumb(through_klass.model_name.human(count: 2),
+                     url_for([:console, through_klass]))
+
+      through_record = instance_variable_get("@#{through_klass.model_name.element}")
+
+      if through_record
+        add_breadcrumb(through_record.to_label, console_show_or_edit_path(through_record))
+      end
+    end
+
     def add_collection_breadcrumbs
-      add_breadcrumb(@klass.model_name.human(count: 2),
-                     url_for([:console, @klass]))
+      if folio_console_controller_for_through
+        begin
+          through_klass = folio_console_controller_for_through.constantize
+          through_record = instance_variable_get("@#{through_klass.model_name.element}")
+
+          add_breadcrumb(@klass.model_name.human(count: 2),
+                         console_show_or_edit_path(through_record))
+        rescue NoMethodError
+          add_breadcrumb(@klass.model_name.human(count: 2))
+        end
+      else
+        add_breadcrumb(@klass.model_name.human(count: 2),
+                       url_for([:console, @klass]))
+      end
     rescue NoMethodError
     end
 
@@ -322,19 +364,84 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if folio_console_record.new_record?
           add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
         else
-          begin
-            add_breadcrumb(folio_console_record.to_label,
-                           url_for([:console, folio_console_record, action: :show]))
-          rescue StandardError
-            add_breadcrumb(folio_console_record.to_label,
-                           url_for([:console, folio_console_record, action: :edit]))
+          if folio_console_controller_for_through
+            through_klass = folio_console_controller_for_through.constantize
+            through_record = instance_variable_get("@#{through_klass.model_name.element}")
+
+            record_url = console_show_or_edit_path(folio_console_record, through: through_record)
+          else
+            record_url = console_show_or_edit_path(folio_console_record)
           end
+
+          add_breadcrumb(folio_console_record.to_label, record_url)
         end
       end
-    rescue NoMethodError
+    rescue StandardError
+      add_breadcrumb(folio_console_record.to_label)
     end
 
     def custom_authenticate_account!
       authenticate_account!
+    end
+
+    def console_show_or_edit_path(record, through: nil, other_params: {})
+      return nil if record.nil?
+
+      begin
+        if through
+          url = url_for([:console, through, record, other_params])
+        else
+          url = url_for([:console, record, other_params])
+        end
+      rescue NoMethodError, ActionController::RoutingError
+        return nil
+      end
+
+      valid_routes_parent = nil
+
+      [ Folio::Engine, main_app ].each do |routes_parent|
+        recognized = routes_parent.routes.recognize_path(url, method: :get)
+
+        if recognized && recognized[:controller].include?("/console/")
+          valid_routes_parent = routes_parent
+          break
+        end
+      rescue ActionController::RoutingError
+      end
+
+      return url if valid_routes_parent
+
+      begin
+        if through
+          url_for([:edit, :console, through, record])
+        else
+          url_for([:edit, :console, record])
+        end
+      rescue NoMethodError, ActionController::RoutingError
+        nil
+      end
+    end
+
+    def folio_console_record_variable_name(plural: false)
+      "@#{folio_console_name_base(plural:)}".to_sym
+    end
+
+    def folio_console_record
+      instance_variable_get(folio_console_record_variable_name)
+    end
+
+    def folio_console_records
+      instance_variable_get(folio_console_record_variable_name(plural: true))
+    end
+
+    def filter_records_by_belongs_to_site
+      if records = folio_console_records
+        instance_variable_set(folio_console_record_variable_name(plural: true),
+                              records.where(site: current_site))
+      elsif record = folio_console_record
+        if record.persisted? && record.site != current_site
+          fail ActiveRecord::RecordNotFound
+        end
+      end
     end
 end

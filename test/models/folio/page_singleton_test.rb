@@ -18,7 +18,7 @@ class Folio::PageSingletonTest < ActiveSupport::TestCase
   end
 
   test "can only have one" do
-    create(:folio_site)
+    create_and_host_site
 
     assert FirstSingleton.create!(title: "foo")
 

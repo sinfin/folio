@@ -4,7 +4,10 @@ require "test_helper"
 
 class <%= application_namespace %>::Atom::ContactFormCellTest < Cell::TestCase
   test "show" do
-    atom = create_atom(<%= application_namespace %>::Atom::ContactForm)
+    create_and_host_site
+    placement = create(:folio_page, site: @site)
+
+    atom = create_atom(<%= application_namespace %>::Atom::ContactForm, placement:)
     html = cell(atom.class.cell_name, atom).(:show)
     assert html
   end

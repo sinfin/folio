@@ -96,7 +96,7 @@ module Folio::HasAtoms
 
     included do
       atom_locales.each do |locale|
-        has_many "#{locale}_atoms".to_sym, -> { ordered.where(locale: locale) },
+        has_many "#{locale}_atoms".to_sym, -> { ordered.where(locale:) },
                                            class_name: "Folio::Atom::Base",
                                            as: :placement,
                                            inverse_of: :placement,
@@ -130,8 +130,14 @@ module Folio::HasAtoms
       send("#{locale}_atoms")
     end
 
-    def atoms_in_molecules
-      Folio::Atom.atoms_in_molecules(atoms)
+    def atoms_in_molecules(includes: nil, includes_cover: false)
+      if includes
+        Folio::Atom.atoms_in_molecules(atoms.includes(*includes))
+      elsif includes_cover
+        Folio::Atom.atoms_in_molecules(atoms.includes(cover_placement: :file))
+      else
+        Folio::Atom.atoms_in_molecules(atoms)
+      end
     end
 
     def atom_image_placements

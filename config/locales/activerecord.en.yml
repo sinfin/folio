@@ -52,15 +52,6 @@ en:
         google_analytics_tracking_code_v4: Google analytics - tracking code - V4
         header_message: Header message
         locales: Languages
-        social_links/appstore: Appstore
-        social_links/facebook: Facebook
-        social_links/google_play: Google play
-        social_links/instagram: Instagram
-        social_links/linkedin: LinkedIn
-        social_links/messenger: Messenger
-        social_links/pinterest: Pinterest
-        social_links/twitter: Twitter
-        social_links/youtube: Youtube
       folio/email_template:
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject
@@ -82,17 +73,17 @@ en:
         keyword/FOLIO_LEAD_PHONE: Phone entered in the lead form
         keyword/FOLIO_LEAD_URL: Submission URL
         keyword/ROOT_URL: Root URL of the website
-        keyword/USER_ACCEPT_INVITATION_URL: URL used to accept invitation
+        keyword/SITE_TITLE: Name of the website
+        keyword/USER_ACCEPT_INVITATION_URL: URL used to finish the registration
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
       folio/user:
-        last_sign_in_at: Last sign in
-        sign_in_count: Sign in count
         confirmed_at: Confirmed at
     errors:
       messages:
         indestructible: The record cannot be removed.
         file_format: 'is invalid. Allowed types: %{types}'
+        wrong_namespace: The record type does not match the site type.
       models:
         folio/lead:
           attributes:
@@ -182,6 +173,7 @@ en:
     first_name: First name
     is_active: Active
     last_name: Last name
+    last_sign_in_at: Last sign in
     locale: Translation
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
@@ -193,7 +185,17 @@ en:
     published: Published
     published_at: Published at
     sensitive_content: Contains sensitive content
+    sign_in_count: Sign in count
     slug: Slug
+    social_links/appstore: Appstore
+    social_links/facebook: Facebook
+    social_links/google_play: Google play
+    social_links/instagram: Instagram
+    social_links/linkedin: LinkedIn
+    social_links/messenger: Messenger
+    social_links/pinterest: Pinterest
+    social_links/twitter: Twitter
+    social_links/youtube: Youtube
     state: State
     tag_list: Keywords
     title: Title

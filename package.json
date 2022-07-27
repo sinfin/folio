@@ -1,13 +1,15 @@
 {
   "name": "folio",
   "version": "0.0.0",
-  "private": true,
-  "dependencies": {},
-  "scripts": {},
-  "devDependencies": {},
   "standard": {
     "globals": [
-      "$"
+      "$",
+      "jQuery",
+      "Turbolinks",
+      "PhotoSwipe",
+      "PhotoSwipeUI_Default",
+      "Image",
+      "Event"
     ]
   }
 }

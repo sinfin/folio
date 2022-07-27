@@ -1,12 +1,4 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/images:
-        same_width: Align to grid
-        title: Caption under the gallery
-    models:
-      application_namespace_path/atom/images: Images (gallery)
 cs:
   activerecord:
     attributes:
@@ -15,3 +7,11 @@ cs:
         title: Popisek pod galerií
     models:
       application_namespace_path/atom/images: Obrázky (galerie)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images:
+        same_width: Align to grid
+        title: Caption under the gallery
+    models:
+      application_namespace_path/atom/images: Images (gallery)

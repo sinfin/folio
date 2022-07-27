@@ -4,15 +4,20 @@
 //= require justified-layout
 //= require slick-carousel/slick/slick.min
 //= require js-cookie/src/js.cookie
+//= require clipboard/dist/clipboard
 
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
 
 <%- if Rails.application.config.folio_users -%>//= require folio/devise
 <%- end -%>
+//= require folio/_message-bus
+//= require folio/addresses
 //= require folio/atoms
 //= require folio/cookie_consent/cookie_consent
+//= require folio/csrf
 //= require folio/debounce
+//= require folio/input/phone
 //= require folio/lazyload
 //= require folio/lightbox
 

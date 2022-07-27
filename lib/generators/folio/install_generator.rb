@@ -19,7 +19,7 @@ module Folio
         gem "slim-rails"
         gem "cells"
         gem "cells-slim", "0.0.6"
-        gem "cells-rails", "0.1.0"
+        gem "cells-rails", github: "sinfin/cells-rails"
         gem "route_translator"
         gem "breadcrumbs_on_rails"
         gem "sentry-raven"
@@ -33,6 +33,10 @@ module Folio
         gem "faker", require: false
         gem "aws-sdk-s3", require: false
 
+        gem "dragonfly", "1.4.0"
+        gem "dragonfly-s3_data_store"
+        gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+
         gem "sidekiq", "~> 6"
         gem "sidekiq-cron", "1.2.0"
         gem "redis-namespace", "1.8.1"
@@ -40,6 +44,7 @@ module Folio
         gem "status-page", "0.1.5"
 
         gem "rack-mini-profiler"
+        gem "turbolinks"
 
         gem_group :test do
           gem "factory_bot"
@@ -94,6 +99,7 @@ module Folio
           "app/models/application_record.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
           "app/overrides/cells/folio/ui_cell_override.rb",
+          "app/overrides/cells/folio/ui/atoms_cell_override.rb",
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
@@ -102,14 +108,13 @@ module Folio
           "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
-          "config/locales/activerecord.cs.yml",
-          "config/locales/activerecord.en.yml",
           "config/routes.rb",
-          "config/schedule.rb",
           "config/sitemap.rb",
           "data/atoms_showcase.yml",
           "data/seed/pages/homepage.yml",
           "db/seeds.rb",
+          "db/migrate/20220120132205_rm_files_mime_type_column.rb",
+          "db/migrate/20220214083648_rm_private_attachments_mime_type_column.rb",
           "lib/tasks/developer_tools.rake",
           "public/maintenance.html",
           "test/factories.rb",
@@ -172,9 +177,6 @@ module Folio
     config.autoload_paths << Rails.root.join("app/lib")
     config.eager_load_paths << Rails.root.join("app/lib")
 
-    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_components")
-    Rails.autoloaders.main.ignore("#{::Folio::Engine.root}/app/lib/folio/console/simple_form_inputs")
-
     overrides = [
       Folio::Engine.root.join("app/overrides").to_s,
       Rails.root.join("app/overrides").to_s,
@@ -195,7 +197,7 @@ module Folio
       end
 
       def development_settings
-        gsub_file "config/environments/development.rb", /  config\.action_mailer\.raise_delivery_errors = false/ do
+        gsub_file "config/environments/development.rb", "config.action_mailer.raise_delivery_errors = false" do
           [
             "config.action_mailer.raise_delivery_errors = true",
             "config.action_mailer.delivery_method = :letter_opener",
@@ -205,11 +207,16 @@ module Folio
       end
 
       def production_settings
-        gsub_file "config/environments/production.rb", "config.assets.js_compressor = :uglifier", "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: false) # change to true to use es6"
+        gsub_file "config/environments/production.rb", "# config.assets.css_compressor = :sass" do
+          [
+            "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: true)",
+            "# config.assets.css_compressor = :sass",
+          ].join("\n  ")
+        end
       end
 
       def log_tag_settings
-        %w[config/environments/production.rb config/environments/staging.rb].each do |path|
+        %w[config/environments/production.rb].each do |path|
           gsub_file path,
                     "config.log_tags = [ :request_id ]",
                     <<~RUBY.chomp

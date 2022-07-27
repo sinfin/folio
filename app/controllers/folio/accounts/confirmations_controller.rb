@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Accounts::ConfirmationsController < Devise::ConfirmationsController
-  layout "folio/console/devise"
+  include Folio::Accounts::DeviseControllerBase
 
   def new
     super

@@ -6,20 +6,18 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   test "new" do
-    create(:folio_site)
+    create_and_host_site
     sign_in create(:folio_user)
 
-    assert_raises(ActionController::MethodNotAllowed) do
-      get main_app.new_user_invitation_path
-    end
+    get main_app.new_user_invitation_path
+    assert_response(:ok)
   end
 
   test "create" do
-    create(:folio_site)
+    create_and_host_site
     sign_in create(:folio_user)
 
-
-    assert_raises(ActionController::MethodNotAllowed) do
+    assert_difference("Folio::User.count", 1) do
       post main_app.user_invitation_path, params: {
         user: {
           email: "email@email.email"
@@ -29,14 +27,14 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit" do
-    create(:folio_site)
+    create_and_host_site
     user = Folio::User.invite!(email: "email@email.email")
     get main_app.accept_user_invitation_path(invitation_token: user.raw_invitation_token)
     assert_response(:ok)
   end
 
   test "update" do
-    create(:folio_site)
+    create_and_host_site
 
     user = Folio::User.invite!(email: "email@email.email",
                                first_name: "a",
@@ -48,10 +46,38 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
         invitation_token: user.raw_invitation_token,
         password: "New@Password.123",
         password_confirmation: "New@Password.123",
+        primary_address_attributes: {
+          address_line_1: "address_line_1",
+          address_line_2: "address_line_2",
+          city: "city",
+          zip: "zip",
+          country_code: "country_code",
+        }
       }
     }
 
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_accept_path)
     assert user.reload.invitation_accepted?
+  end
+
+  test "show" do
+    create_and_host_site
+
+    get main_app.user_invitation_path
+    # redirect without :folio_user_invited_email in session
+    assert_redirected_to main_app.new_user_invitation_path
+
+    assert_difference("Folio::User.count", 1) do
+      post main_app.user_invitation_path, params: {
+        user: {
+          email: "email@email.email"
+        }
+      }
+    end
+
+    assert_redirected_to main_app.user_invitation_path
+    follow_redirect!
+    # render with :folio_user_invited_email in session
+    assert_select ".f-devise-invitations-show"
   end
 end

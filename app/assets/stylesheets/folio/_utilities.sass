@@ -1,8 +1,20 @@
+=media-screen-breakpoint-down($name, $breakpoints: $grid-breakpoints)
+  @media screen and (max-width: breakpoint-max($name, $breakpoints))
+    @content
+
+=media-print-breakpoint-up($name, $breakpoints: $grid-breakpoints)
+  @media print, (min-width: breakpoint-min($name, $breakpoints))
+    @content
+
 =mq-mobile-menu
-  +media-breakpoint-down(md)
+  +media-screen-breakpoint-down(md)
     @content
 
 =mq-desktop-menu
+  +media-print-breakpoint-up(lg)
+    @content
+
+=mq-desktop-menu-screen
   +media-breakpoint-up(lg)
     @content
 

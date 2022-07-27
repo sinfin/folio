@@ -6,26 +6,23 @@ class Folio::ImageTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   test "additional data - white" do
-    white = create(:folio_image)
-    assert_nil(white.additional_data)
+    image = create(:folio_image, file: Folio::Engine.root.join("test/fixtures/folio/test.gif"))
+    assert_nil image.reload.additional_data
 
-    perform_enqueued_jobs do
-      white = create(:folio_image)
-      white.reload
-      assert_equal("#FFFFFF", white.additional_data["dominant_color"])
-      assert_equal(false, white.additional_data["dark"])
-    end
-  end
-
-  test "additional data - black" do
-    black = create(:folio_image, :black)
-    assert_nil(black.additional_data)
-
-    perform_enqueued_jobs do
-      black = create(:folio_image, :black)
-      black.reload
-      assert_equal("#000000", black.additional_data["dominant_color"])
-      assert_equal(true, black.additional_data["dark"])
+    [
+      ["test-black.gif", "#000000", true],
+      ["test-black.jpg", "#000000", true],
+      ["test-black.png", "#000000", true],
+      ["test.gif", "#FFFFFF", false],
+      ["test.jpg", "#FFFFFF", false],
+      ["test.png", "#FFFFFF", false],
+    ].each do |file_name, dominant_color, dark|
+      perform_enqueued_jobs do
+        image = create(:folio_image, file: Folio::Engine.root.join("test/fixtures/folio", file_name))
+        assert(image.reload.additional_data)
+        assert_equal(dominant_color, image.additional_data["dominant_color"])
+        assert_equal(dark, image.additional_data["dark"])
+      end
     end
   end
 end

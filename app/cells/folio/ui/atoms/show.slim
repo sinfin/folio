@@ -1,39 +1,48 @@
 .f-ui-atoms
+  - if sites.size > 1 && "#{application_namespace}::Ui::Tabs".safe_constantize
+    .container-fluid
+      == cell("#{application_namespace_path}/ui/tabs", sites_tabs_model)
+
+  .container-fluid
+    h1.mb-a
+      a.text-decoration-none href="/folio/ui"
+        ' UI Kit / Atoms
+        - if sites.size > 1
+          ' - #{current_site.to_label}
+
   .px-h
-    h1.mt-0.mb-a
-      a.text-decoration-none href="/folio/ui/atoms" UI Kit / Atoms
-
-    - page.atoms_in_molecules.each do |molecule, atoms|
-      - if molecule.present?
-        .row.border-top.f-ui-atoms__row id=atoms.first.type
-          == cell('folio/ui/atoms/sidebar',
-                  atoms.first,
-                  molecule: molecule)
-
-          .col-lg-10.py-atom.px-lg-4
-            .f-ui-atoms__molecule[
-              class=container_class_name_for_atom(atoms.first)
-            ]
-              div class="#{classname_prefix}-atoms"
-                == cell(molecule, atoms, cell_options)
-      - else
-        - atoms.each do |atom|
-          .row.border-top.f-ui-atoms__row id=atom.type
+    - placements.each do |type, placement|
+      - placement.atoms_in_molecules.each do |molecule, atoms|
+        - if molecule.present?
+          .row.border-top.f-ui-atoms__row id=atoms.first.type
             == cell('folio/ui/atoms/sidebar',
-                    atom,
+                    atoms.first,
                     molecule: molecule)
 
             .col-lg-10.py-atom.px-lg-4
-              .f-ui-atoms__atom[
-                class=container_class_name_for_atom(atom)
+              .f-ui-atoms__molecule[
+                class=container_class_name_for_atom(atoms.first)
               ]
-                - if atom.valid?
-                  div class="#{classname_prefix}-atoms"
-                    == cell(atom.class.cell_name,
-                            atom,
-                            cell_options(atom.cell_options))
-                - else
-                  .container-fluid.py-a
-                    .text-danger
-                      p: strong = t('.invalid')
-                      p = atom.errors.full_messages.join(" ")
+                div class="#{classname_prefix}-atoms"
+                  == cell(molecule, atoms, cell_options)
+        - else
+          - atoms.each do |atom|
+            .row.border-top.f-ui-atoms__row id=atom.type
+              == cell('folio/ui/atoms/sidebar',
+                      atom,
+                      molecule: molecule)
+
+              .col-lg-10.py-atom.px-lg-4
+                .f-ui-atoms__atom[
+                  class=container_class_name_for_atom(atom)
+                ]
+                  - if atom.valid?
+                    div class="#{classname_prefix}-atoms"
+                      == cell(atom.class.cell_name,
+                              atom,
+                              cell_options(atom.cell_options))
+                  - else
+                    .container-fluid.py-a
+                      .text-danger
+                        p: strong = t('.invalid')
+                        p = atom.errors.full_messages.join(" ")

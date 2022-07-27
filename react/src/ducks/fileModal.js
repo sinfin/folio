@@ -1,8 +1,8 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
+import { omit } from 'lodash'
 
-import { apiGet, apiPost, apiFilePost } from 'utils/api'
-import { flashError } from 'utils/flash'
-import { updatedFiles, UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE } from 'ducks/files'
+import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
+import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_THUMBNAIL_GENERATED } from 'ducks/files'
 
 // Constants
 
@@ -10,8 +10,11 @@ const OPEN_FILE_MODAL = 'fileModal/OPEN_FILE_MODAL'
 const CLOSE_FILE_MODAL = 'fileModal/CLOSE_FILE_MODAL'
 const UPDATE_FILE_THUMBNAIL = 'fileModal/UPDATE_FILE_THUMBNAIL'
 const UPDATED_FILE_MODAL_FILE = 'fileModal/UPDATED_FILE_MODAL_FILE'
+const DESTROY_FILE_THUMBNAIL = 'fileModal/DESTROY_FILE_THUMBNAIL'
+const DESTROY_FILE_THUMBNAIL_FAILED = 'fileModal/DESTROY_FILE_THUMBNAIL_FAILED'
 const UPLOAD_NEW_FILE_INSTEAD = 'fileModal/UPLOAD_NEW_FILE_INSTEAD'
 const UPLOAD_NEW_FILE_INSTEAD_SUCCESS = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_SUCCESS'
+const UPLOAD_NEW_FILE_INSTEAD_FAILURE = 'fileModal/UPLOAD_NEW_FILE_INSTEAD_FAILURE'
 const MARK_MODAL_FILE_AS_UPDATING = 'fileModal/MARK_MODAL_FILE_AS_UPDATING'
 const MARK_MODAL_FILE_AS_UPDATED = 'fileModal/MARK_MODAL_FILE_AS_UPDATED'
 const LOADED_FILE_MODAL_PLACEMENTS = 'fileModal/LOADED_FILE_MODAL_PLACEMENTS'
@@ -31,6 +34,14 @@ export function updateFileThumbnail (fileType, filesUrl, file, thumbKey, params)
   return { type: UPDATE_FILE_THUMBNAIL, fileType, filesUrl, file, thumbKey, params }
 }
 
+export function destroyFileThumbnail (fileType, filesUrl, file, thumbKey, thumb) {
+  return { type: DESTROY_FILE_THUMBNAIL, fileType, filesUrl, file, thumbKey, thumb }
+}
+
+export function destroyFileThumbnailFailed (fileType, filesUrl, file, thumbKey, thumb) {
+  return { type: DESTROY_FILE_THUMBNAIL_FAILED, fileType, filesUrl, file, thumbKey, thumb }
+}
+
 export function updatedFileModalFile (file) {
   return { type: UPDATED_FILE_MODAL_FILE, file }
 }
@@ -41,6 +52,10 @@ export function uploadNewFileInstead (fileType, filesUrl, file, fileIo) {
 
 export function uploadNewFileInsteadSuccess (file) {
   return { type: UPLOAD_NEW_FILE_INSTEAD_SUCCESS, file }
+}
+
+export function uploadNewFileInsteadFailure (file) {
+  return { type: UPLOAD_NEW_FILE_INSTEAD_FAILURE, file }
 }
 
 export function markModalFileAsUpdating (file) {
@@ -64,6 +79,22 @@ export function changeFilePlacementsPage (file, page) {
 export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
+function * destroyFileThumbnailPerform (action) {
+  if (action.file.attributes.react_type !== 'image') return
+
+  try {
+    const url = `${action.filesUrl}/${action.file.id}/destroy_file_thumbnail`
+    yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
+  } catch (e) {
+    window.FolioConsole.Flash.alert(e.message)
+    yield put(destroyFileThumbnailFailed(action.fileType, action.filesUrl, action.file, action.thumbKey, action.thumb))
+  }
+}
+
+function * destroyFileThumbnailSaga () {
+  yield takeEvery(DESTROY_FILE_THUMBNAIL, destroyFileThumbnailPerform)
+}
+
 function * updateFileThumbnailPerform (action) {
   if (action.file.attributes.react_type !== 'image') return
 
@@ -72,7 +103,7 @@ function * updateFileThumbnailPerform (action) {
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -82,15 +113,21 @@ function * updateFileThumbnailSaga () {
 
 function * uploadNewFileInsteadPerform (action) {
   try {
-    const url = `${action.filesUrl}/${action.file.id}/change_file`
-    const data = new FormData()
-    data.append('file[attributes][file]', action.fileIo)
-    const response = yield call(apiFilePost, url, data)
-    yield put(updatedFileModalFile(response.data))
-    yield put(updatedFiles(action.fileType, [response.data]))
-    yield put(uploadNewFileInsteadSuccess(response.data))
+    const result = yield call(window.FolioConsole.S3Upload.newUpload, {
+      filesUrl: action.filesUrl,
+      file: action.fileIo
+    })
+
+    yield call(apiXhrFilePut, result.s3_url, action.fileIo)
+
+    yield call(window.FolioConsole.S3Upload.finishedUpload, {
+      filesUrl: action.filesUrl,
+      s3_path: result.s3_path,
+      type: action.fileType,
+      existingId: action.file.id
+    })
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(`${e.status}: ${e.statusText}`)
   }
 }
 
@@ -119,7 +156,7 @@ function * openFileModalPerform (action) {
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -133,7 +170,7 @@ function * changeFilePlacementsPagePerform (action) {
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -146,7 +183,8 @@ export const fileModalSagas = [
   uploadNewFileInsteadSaga,
   handleFileUpdateSaga,
   openFileModalSaga,
-  changeFilePlacementsPageSaga
+  changeFilePlacementsPageSaga,
+  destroyFileThumbnailSaga
 ]
 
 // State
@@ -215,6 +253,33 @@ function modalReducer (state = initialState, action) {
       }
     }
 
+    case DESTROY_FILE_THUMBNAIL:
+      return {
+        ...state,
+        file: {
+          ...state.file,
+          attributes: {
+            ...state.file.attributes,
+            thumbnail_sizes: omit(state.file.attributes.thumbnail_sizes, action.thumbKey)
+          }
+        }
+      }
+
+    case DESTROY_FILE_THUMBNAIL_FAILED:
+      return {
+        ...state,
+        file: {
+          ...state.file,
+          attributes: {
+            ...state.file.attributes,
+            thumbnail_sizes: {
+              ...state.file.attributes.thumbnail_sizes,
+              [action.thumbKey]: action.thumb
+            }
+          }
+        }
+      }
+
     case UPLOAD_NEW_FILE_INSTEAD:
       return {
         ...state,
@@ -222,6 +287,17 @@ function modalReducer (state = initialState, action) {
       }
 
     case UPLOAD_NEW_FILE_INSTEAD_SUCCESS: {
+      if (state.file && state.file.id === action.file.id) {
+        return {
+          ...state,
+          uploadingNew: false
+        }
+      } else {
+        return state
+      }
+    }
+
+    case UPLOAD_NEW_FILE_INSTEAD_FAILURE: {
       if (state.file && state.file.id === action.file.id) {
         return {
           ...state,
@@ -277,6 +353,26 @@ function modalReducer (state = initialState, action) {
           filePlacements: {
             ...state.filePlacements,
             loading: true
+          }
+        }
+      } else {
+        return state
+      }
+    }
+
+    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
+      if (state.file && Number(state.file.id) === Number(action.data.id)) {
+        return {
+          ...state,
+          file: {
+            ...state.file,
+            attributes: {
+              ...state.file.attributes,
+              thumbnail_sizes: {
+                ...state.file.attributes.thumbnail_sizes,
+                [action.data.thumb_key]: action.data.thumb
+              }
+            }
           }
         }
       } else {

@@ -34,7 +34,7 @@ class Folio::Console::PrivateAttachments::SingleDropzoneCellTest < Folio::Consol
     assert html.has_css?(".f-c-private-attachments-single-dropzone__upload-btn")
 
     Folio::PrivateAttachment.create!(
-      attachmentable: attachmentable,
+      attachmentable:,
       file: Folio::Engine.root.join("test/fixtures/folio/test.gif")
     )
     attachmentable.reload

@@ -2,6 +2,23 @@
 
 module Folio::HasPrivateAttachments
   extend ActiveSupport::Concern
+  include Folio::AcceptsPersistedNestedAttributes
+
+  class_methods do
+    def accepts_persisted_nested_attributes_for
+      ary = []
+
+      reflections.each do |name, reflection|
+        if reflection.options[:as] == :attachmentable
+          if reflection.options[:class_name] && reflection.options[:class_name].constantize <= Folio::PrivateAttachment
+            ary << name
+          end
+        end
+      end
+
+      ary
+    end
+  end
 
   included do
     has_many :private_attachments, -> { ordered },

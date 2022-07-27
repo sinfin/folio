@@ -1,9 +1,11 @@
+import 'folioTestSetup'
+
 import filesReducer, {
   initialState,
   getFiles,
   getFilesSuccess,
   uploadedFile,
-  thumbnailGenerated,
+  messageBusThumbnailGenerated,
   updatedFiles,
   updateFile,
   updateFileSuccess,
@@ -14,7 +16,8 @@ import filesReducer, {
 } from '../files'
 
 import { IMAGES } from 'constants/tests/files'
-const fileMock = { id: '999', type: 'file', attributes: { id: 999, file_size: 326774, file_name: 'bar.jpg', type: 'Folio::Image', thumb: 'foo/bar.jpg', source_url: 'foo/bar.jpg', url: '/foo/bar.jpg', dominant_color: '#2F312F', tags: [], placements: [], extension: 'JPEG' }, links: { edit: '/console/images/999/edit' } }
+
+export const fileMock = { id: '999', type: 'file', attributes: { id: 999, file_size: 326774, file_name: 'bar.jpg', type: 'Folio::Image', thumb: 'foo/bar.jpg', source_url: 'foo/bar.jpg', url: '/foo/bar.jpg', dominant_color: '#2F312F', tags: [], placements: [], extension: 'JPEG' }, links: { edit: '/console/images/999/edit' } }
 const firstThumb = IMAGES[0].attributes.thumb
 const pagination = {
   from: 1,
@@ -50,9 +53,9 @@ describe('filesReducer', () => {
     expect(state['Folio::Image'].records.length).toEqual(4)
   })
 
-  it('thumbnailGenerated', () => {
+  it('messageBusThumbnailGenerated', () => {
     expect(state['Folio::Image'].records[0].attributes.thumb).toEqual(firstThumb)
-    state = filesReducer(state, thumbnailGenerated('Folio::Image', firstThumb, '/foo.jpg'))
+    state = filesReducer(state, messageBusThumbnailGenerated('Folio::Image', firstThumb, { id: Number(IMAGES[0].id), url: '/foo.jpg', thumb_key: '250x250', thumb: { url: '/foo.jpg' } }))
     expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
   })
 

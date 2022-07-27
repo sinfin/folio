@@ -2,7 +2,6 @@
 
 class Folio::Image < Folio::File
   include Folio::DragonflyFormatValidation
-  include Folio::Thumbnails
   include Folio::Sitemap::Image
 
   validate_file_format
@@ -30,13 +29,17 @@ class Folio::Image < Folio::File
     metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
   end
 
+  def thumbnailable?
+    true
+  end
+
   def self.react_type
     "image"
   end
 
   private
     def metadata_compose(tags)
-      string_arr = tags.collect { |tag| file_metadata.try("[]", tag) }.compact.uniq
+      string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
       return nil if string_arr.size == 0
       string_arr.join(", ")
     end
@@ -56,7 +59,6 @@ end
 #  file_width           :integer
 #  file_height          :integer
 #  file_size            :bigint(8)
-#  mime_type            :string(255)
 #  additional_data      :json
 #  file_metadata        :json
 #  hash_id              :string
@@ -65,6 +67,7 @@ end
 #  file_placements_size :integer
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
+#  file_mime_type       :string
 #
 # Indexes
 #

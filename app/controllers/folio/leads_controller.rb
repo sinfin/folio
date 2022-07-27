@@ -18,6 +18,10 @@ class Folio::LeadsController < Folio::ApplicationController
 
     @lead = check_recaptcha_if_needed(lead)
 
+    if !Rails.application.config.folio_site_is_a_singleton
+      @lead.site = current_site
+    end
+
     success = @lead.save
 
     Folio::LeadMailer.notification_email(@lead).deliver_later if success

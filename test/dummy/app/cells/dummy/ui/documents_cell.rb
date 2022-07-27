@@ -19,8 +19,6 @@ class Dummy::Ui::DocumentsCell < ApplicationCell
   end
 
   def download_path(*args)
-    controller.download_path(*args)
-  rescue NoMethodError
-    controller.main_app.download_path(*args)
+    controller.folio.download_path(*args)
   end
 end

@@ -6,7 +6,7 @@ class Folio::Console::Api::TagsController < Folio::Console::Api::BaseController
     context = params[:context].presence || "tags"
 
     scope = ActsAsTaggableOn::Tag.joins(:taggings)
-                                 .where(taggings: { context: context })
+                                 .where(taggings: { context: })
 
     if q.present?
       scope = scope.by_query(q)

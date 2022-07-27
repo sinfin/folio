@@ -1,0 +1,35 @@
+$light-gray: #F3F6F6 !default
+$folio-addresses-fields-max-width: 645px !default
+$folio-addresses-fields-margin: 1.5 * $grid-gutter-width 0 !default
+$folio-addresses-fields-padding: $grid-gutter-width !default
+$folio-addresses-fields-background: $light-gray !default
+$folio-addresses-fields-nested-background: $white !default
+$folio-addresses-fields-nested-padding-x: $grid-gutter-half !default
+$folio-addresses-fields-nested-padding-y: 9px !default
+
+.f-addresses-fields
+  max-width: $folio-addresses-fields-max-width
+  padding: $folio-addresses-fields-padding
+  background: $folio-addresses-fields-background
+  margin: $folio-addresses-fields-margin
+
+  &__nested
+    background: $folio-addresses-fields-nested-background
+    padding: $folio-addresses-fields-nested-padding-y $folio-addresses-fields-nested-padding-x
+
+  .f-togglable-fields__label
+    margin: 0
+
+  .f-addresses-fields__nested-content
+    padding: 2 * $folio-addresses-fields-nested-padding-y 0 $folio-addresses-fields-nested-padding-y
+    margin-bottom: - $spacer
+
+  &__fields-wrap:not([data-country-code="CZ"]):not([data-country-code="SK"]) &__address-line-1,
+  &__fields-wrap:not([data-country-code="CZ"]):not([data-country-code="SK"]) &__address-line-2
+    flex-basis: 100%
+    max-width: 100%
+
+  &__fields-wrap[data-country-code="CZ"] &__address-line-label--regular,
+  &__fields-wrap[data-country-code="SK"] &__address-line-label--regular,
+  &__fields-wrap:not([data-country-code="CZ"]):not([data-country-code="SK"]) &__address-line-label--inline
+    display: none

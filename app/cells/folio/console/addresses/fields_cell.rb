@@ -10,11 +10,17 @@ class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
     ]
   end
 
-  def input(g, key)
+  def input(g, key, required: false)
     if key == :country_code
-      g.input(key, priority: g.object.class.priority_countries)
+      g.input(key, priority: g.object.class.priority_countries, required:)
     else
-      g.input(key)
+      g.input(key, required:)
     end
+  end
+
+  def required?(key, attributes)
+    return true if model.object.send("should_validate_#{key}?")
+    all_blank = attributes.all? { |attr, val| attr == "type" || val.blank? }
+    !all_blank
   end
 end

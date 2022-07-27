@@ -51,17 +51,17 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     content = nil
 
     full_class_name = cell_class_name(name,
-                                      class_name: class_name,
-                                      spacey: spacey,
-                                      small: small,
-                                      aligned: aligned,
-                                      compact: compact,
-                                      media_query: media_query,
-                                      skip_desktop_header: skip_desktop_header)
+                                      class_name:,
+                                      spacey:,
+                                      small:,
+                                      aligned:,
+                                      compact:,
+                                      media_query:,
+                                      skip_desktop_header:)
 
     if rendering_header?
       @header_html += content_tag(:div,
-                                  label_for(name, skip_desktop_header: skip_desktop_header, allow_sorting: true),
+                                  label_for(name, skip_desktop_header:, allow_sorting: true),
                                   class: full_class_name)
     else
       if block_given?
@@ -105,7 +105,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       val = nil
     end
 
-    attribute(name, val, small: small)
+    attribute(name, val, small:)
   end
 
   def type
@@ -113,15 +113,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def edit_link(attr = nil, sanitize: false, &block)
-    resource_link([:edit, :console, record], attr, sanitize: sanitize, &block)
+    resource_link([:edit, :console, record], attr, sanitize:, &block)
   end
 
   def show_link(attr = nil, sanitize: false, &block)
-    resource_link([:console, record], attr, sanitize: sanitize, &block)
+    resource_link([:console, record], attr, sanitize:, &block)
   end
 
   def date(attr = nil, small: false)
-    attribute(attr, small: small) do
+    attribute(attr, small:) do
       val = record.send(attr)
       l(val, format: :short) if val.present?
     end
@@ -171,14 +171,16 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         e = sanitize_string(e)
       end
 
-      icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
-      "#{e} #{icon}"
+      if e.present?
+        icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
+        "#{e} #{icon}"
+      end
     end
   end
 
   def state(active: true, spacey: false)
-    attribute(:state, spacey: spacey) do
-      cell("folio/console/state", record, active: active)
+    attribute(:state, spacey:) do
+      cell("folio/console/state", record, active:)
     end
   end
 
@@ -214,7 +216,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     attribute(name, compact: true, aligned: true) do
       cell("folio/console/private_attachments/single_dropzone",
            record,
-           opts.merge(name: name, minimal: true, type: type))
+           opts.merge(name:, minimal: true, type:))
     end
   end
 
@@ -316,8 +318,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         base = klass.human_attribute_name(attr)
 
         if allow_sorting && arrows = cell("folio/console/catalogue_sort_arrows",
-                                          klass: klass,
-                                          attr: attr).show
+                                          klass:,
+                                          attr:).show
           content_tag(:span, "#{base} #{arrows}", class: "f-c-catalogue__label-with-arrows")
         else
           base
@@ -373,11 +375,11 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
           cell("folio/console/group_by_day_header",
                scope: model[:records],
-               date: date,
+               date:,
                attribute: model[:group_by_day],
                before_label: @before_lambda_label,
                label_lambda: @before_lambda_label_lambda,
-               klass: klass).show.try(:html_safe)
+               klass:).show.try(:html_safe)
         end
       else
         @before_lambda = false
@@ -433,7 +435,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
         simple_form_for("",
                         url: url_for(["collection_#{action}".to_sym, :console, model[:klass]]),
-                        method: method,
+                        method:,
                         html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |f|
           button_tag("#{icon} #{t(".actions.#{action}")}", opts)
         end

@@ -30,13 +30,8 @@
     +social-sites-hover-color
 
   &__social-ico
-    font-size: 36px
     margin: $grid-gutter-half
 
   +media-breakpoint-up(lg)
     &__left
       margin-right: $grid-gutter-width
-
-  +media-breakpoint-down(md)
-    &__social-ico
-      font-size: 28px

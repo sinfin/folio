@@ -54,7 +54,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: "external-link-alt",
         button: "light",
         target: "_blank",
-        url: -> (record) { safe_url_for([record, locale: locale]) },
+        url: -> (record) { safe_url_for([record, locale:]) },
       },
       arrange: {
         name: :arrange,
@@ -88,7 +88,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       end
     end
 
-    acts.map do |action|
+    acts.filter_map do |action|
       if action[:confirm]
         if action[:confirm].is_a?(String)
           confirmation = action[:confirm]
@@ -112,7 +112,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         link_to("", url, opts)
       rescue ActionController::UrlGenerationError
       end
-    end.compact
+    end
   end
 
   def sort_array_hashes_first(ary)

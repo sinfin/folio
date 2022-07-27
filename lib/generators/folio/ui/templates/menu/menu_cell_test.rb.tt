@@ -4,7 +4,9 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::MenuCellTest < Cell::TestCase
   test "show" do
-    menu = <%= application_namespace %>::Menu::Header.create!(locale: :en)
+    create_and_host_site
+
+    menu = <%= application_namespace %>::Menu::Header.create!(locale: :en, site: @site)
 
     html = cell("<%= application_namespace_path %>/ui/menu", menu).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-menu")

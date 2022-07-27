@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Users::ComebacksControllerTest < ActionDispatch::IntegrationTest
   test "show" do
-    create(:folio_site)
+    create_and_host_site
 
     get folio.users_comeback_path, params: { to: main_app.new_user_session_path }, headers: { "HTTP_REFERER" => "/foo" }
 

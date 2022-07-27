@@ -6,14 +6,17 @@ module Folio::ApiControllerBase
   included do
     respond_to :json
     rescue_from StandardError, with: :render_error
+    skip_before_action :handle_crossdomain_devise
   end
 
   private
     def render_json(data)
-      render json: { data: data }, root: false
+      render json: { data: }, root: false
     end
 
     def render_error(e)
+      Raven.capture_exception(e) if defined?(Raven)
+
       responses = Rails.configuration.action_dispatch.rescue_responses
       status = responses[e.class.name] || 500
 
@@ -25,14 +28,14 @@ module Folio::ApiControllerBase
         }
       ]
 
-      render json: { errors: errors }, status: status
+      render json: { errors: }, status:
     end
 
     def render_record(model, serializer = nil, include: [], meta: nil)
       serializer ||= serializer_for(model)
 
       if model.valid?
-        render json: serializer.new(model, include: include, meta: meta)
+        render json: serializer.new(model, include:, meta:)
                                .serializable_hash
       else
         render_invalid model
@@ -41,15 +44,15 @@ module Folio::ApiControllerBase
 
     def json_from_records(models, serializer = nil, include: [], meta: nil)
       serializer ||= serializer_for(models.first)
-      serializer.new(models, include: include, meta: meta)
+      serializer.new(models, include:, meta:)
                 .serializable_hash
     end
 
     def render_records(models, serializer = nil, include: [], meta: nil)
       render json: json_from_records(models,
                                      serializer,
-                                     include: include,
-                                     meta: meta)
+                                     include:,
+                                     meta:)
     end
 
     def render_invalid(model)
@@ -61,7 +64,7 @@ module Folio::ApiControllerBase
         }
       end
 
-      render json: { errors: errors }, status: 400
+      render json: { errors: }, status: 400
     end
 
     def render_selectize_options(models, label_method: nil)
@@ -93,7 +96,7 @@ module Folio::ApiControllerBase
         end
       end
 
-      render json: { results: ary, meta: meta }
+      render json: { results: ary, meta: }
     end
 
     def serializer_for(model)

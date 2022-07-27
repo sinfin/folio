@@ -4,13 +4,14 @@ module Folio::ApplicationControllerBase
   extend ActiveSupport::Concern
   include Folio::SetMetaVariables
   include Folio::HasCurrentSite
+  include Folio::Devise::CrossdomainController
 
   included do
     include Pagy::Backend
 
     protect_from_forgery with: :exception
 
-    layout "folio/application"
+    layout :current_site_based_layout
 
     before_action :set_i18n_locale
 
@@ -24,7 +25,11 @@ module Folio::ApplicationControllerBase
   end
 
   def default_url_options
-    { only_path: true }
+    if Rails.application.config.folio_site_is_a_singleton
+      { only_path: true }
+    else
+      { host: current_site.env_aware_domain }
+    end
   end
 
   def url_for(options = nil)
@@ -35,10 +40,6 @@ module Folio::ApplicationControllerBase
     else
       super(options)
     end
-  end
-
-  def current_site
-    @current_site ||= Folio::Site.instance
   end
 
   private
@@ -85,5 +86,13 @@ module Folio::ApplicationControllerBase
           cookies.signed[:u_for_log] = nil if cookies.signed[:u_for_log]
         end
       end
+    end
+
+    def current_site_based_layout
+      current_site ? current_site.layout_name : "folio/application"
+    end
+
+    def authenticate_inviter!
+      # allow anonymous invites
     end
 end

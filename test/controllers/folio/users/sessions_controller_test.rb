@@ -6,7 +6,7 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    create(:folio_site)
+    create_and_host_site
 
     @params = {
       email: "email@email.email",
@@ -35,47 +35,5 @@ class Folio::Users::SessionsControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
     get main_app.destroy_user_session_path
     assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_out_path)
-  end
-
-  if Rails.application.config.folio_users_omniauth_providers.present?
-    test "pending" do
-      user = create(:folio_user)
-      auth = create_omniauth_authentication(user.email, "foo")
-
-      assert_not auth.find_or_create_user!
-
-      get main_app.new_user_session_path(pending: 1)
-      assert_select ".f-devise-omniauth-conflict", false
-
-      do_omniauth_callback(auth)
-
-      get main_app.new_user_session_path(pending: 1)
-      assert_select ".f-devise-omniauth-conflict"
-    end
-
-    test "conflict_token" do
-      user = create(:folio_user)
-      auth = create_omniauth_authentication(user.email, "foo")
-
-      assert_not auth.find_or_create_user!
-      assert_equal(user.id, auth.reload.conflict_user_id)
-
-      get main_app.new_user_session_path(conflict_token: "foo")
-      assert_redirected_to main_app.new_user_session_path
-
-      assert_nil(auth.reload.folio_user_id)
-
-      get main_app.new_user_session_path(conflict_token: auth.conflict_token)
-      assert_redirected_to main_app.send(Rails.application.config.folio_users_after_sign_in_path)
-
-      assert_equal(user.id, auth.reload.folio_user_id)
-    end
-
-    def do_omniauth_callback(auth)
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.mock_auth[:facebook] = omniauth_authentication_openstruct(auth.email, auth.nickname)
-
-      get user_facebook_omniauth_callback_url, headers: { "omniauth.auth" => OmniAuth.config.mock_auth[:facebook] }
-    end
   end
 end

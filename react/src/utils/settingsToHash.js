@@ -18,7 +18,16 @@ export default function settingsToHash () {
       if (key) {
         let val
 
-        if ($setting.hasClass('selectized')) {
+        if ($setting.data('atom-setting-value')) {
+          val = $setting.data('atom-setting-value')
+        } else if ($setting.attr('data-atom-setting-value-json')) {
+          const raw = $setting.attr('data-atom-setting-value-json')
+          try {
+            val = JSON.parse(raw)
+          } catch {
+            val = null
+          }
+        } else if ($setting.hasClass('selectized')) {
           val = $setting[0].selectize.getValue()
         } else if ($setting.hasClass('folio-console-react-picker')) {
           val = getJsonFromReactPicker($setting)
@@ -30,13 +39,6 @@ export default function settingsToHash () {
             if (val.length === 0) val = null
           } else if ($setting.find('.f-c-file-placement-list__empty').length) {
             val = null
-          } else if ($setting.find('.f-c-js-atoms-placement-setting__value').length) {
-            const raw = $setting.find('.f-c-js-atoms-placement-setting__value').attr('data-atom-setting-value')
-            try {
-              val = JSON.parse(raw)
-            } catch {
-              val = null
-            }
           } else {
             hash.loading = true
             return

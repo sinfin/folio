@@ -5,12 +5,16 @@ class Folio::SensitiveContentModalCell < ApplicationCell
   CLASS_NAME = ".#{CLASS_NAME_BASE}"
 
   def show
-    cell(::Rails.application.config.folio_modal_cell_name || ui_modal_cell_name,
-         class: CLASS_NAME_BASE,
-         body: render,
-         header: t(".title"),
-         primary: { label: t(".accept"), class: "f-sensitive-content-modal__accept" },
-         secondary: { label: t(".cancel") })
+    if ::Rails.application.config.folio_modal_cell_name || ui_modal_cell_name
+      cell(::Rails.application.config.folio_modal_cell_name || ui_modal_cell_name,
+           class: CLASS_NAME_BASE,
+           body: render,
+           header: t(".title"),
+           primary: { label: t(".accept"), class: "f-sensitive-content-modal__accept" },
+           secondary: { label: t(".cancel") })
+    end
+  rescue NameError
+    # ui not initialized
   end
 
   def ui_modal_cell_name

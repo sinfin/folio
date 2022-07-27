@@ -4,7 +4,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :default
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
-    return if /svg/.match?(image.mime_type)
+    return if /svg/.match?(image.file_mime_type)
 
     # need to reload here because of parallel jobs
     image.reload
@@ -15,7 +15,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
     Dragonfly.app.datastore.destroy(present_uid) if present_uid
 
-    new_thumb = make_thumb(image, size, quality, x: x, y: y)
+    new_thumb = make_thumb(image, size, quality, x:, y:)
 
     # need to reload here because of parallel jobs
     image.with_lock do
@@ -24,63 +24,101 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       image.update!(thumbnail_sizes: thumbnail_sizes.merge(size => new_thumb))
     end
 
-    cable_urls = {}
-
-    if new_thumb[:private]
-      cable_urls[:url] = Dragonfly.app.datastore.url_for(new_thumb[:uid], expires: 1.hour.from_now)
-
-      if new_thumb[:webp_url]
-        cable_urls[:webp_url] = Dragonfly.app.datastore.url_for(new_thumb[:webp_uid], expires: 1.hour.from_now)
-      end
-    else
-      cable_urls[:url] = new_thumb[:url]
-      cable_urls[:webp_url] = new_thumb[:webp_url]
-    end
-
-    ActionCable.server.broadcast(FolioThumbnailsChannel::STREAM,
-      temporary_url: image.temporary_url(size),
-      temporary_s3_url: image.temporary_s3_url(size),
-      url: cable_urls[:url],
-      webp_url: cable_urls[:webp_url],
-      width: new_thumb[:width],
-      height: new_thumb[:height],
-    )
+    MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
+                       {
+                         type: "Folio::GenerateThumbnailJob",
+                         data: {
+                           id: image.id,
+                           temporary_url: image.temporary_url(size),
+                           url: new_thumb[:url],
+                           webp_url: new_thumb[:webp_url],
+                           thumb_key: size,
+                           thumb: new_thumb,
+                         }
+                       }.to_json
 
     image
   end
 
   private
-    def make_thumb(image, size, quality, x: nil, y: nil)
-      make_webp = false
+    def make_thumb(image, raw_size, quality, x: nil, y: nil)
+      size = raw_size.ends_with?("#") ? "#{raw_size}c" : raw_size
+      make_webp = true
 
-      if /png/.match?(image.try(:mime_type))
-        if Rails.application.config.folio_dragonfly_keep_png
-          thumbnail = image_file(image).thumb(size, format: :png, x: x, y: y)
-        else
-          thumbnail = image_file(image).add_white_background
-                                       .thumb(size, format: :jpg, x: x, y: y)
-                                       .encode("jpg", "-quality #{quality}")
-                                       .jpegoptim
+      if image.animated_gif?
+        thumbnail = image_file(image).animated_gif_resize(size)
+        make_webp = false
+        format = :gif
+      else
+        add_white_background = false
+        format = :jpg
+
+        if image.try(:file_mime_type) == "image/png"
+          if Rails.application.config.folio_dragonfly_keep_png
+            format = :png
+            add_white_background = false
+          else
+            add_white_background = true
+          end
+        elsif image.try(:file_mime_type) == "application/pdf"
+          # TODO frame
+          add_white_background = true
         end
 
-        make_webp = true
-      elsif image.animated_gif?
-        thumbnail = image_file(image).animated_gif_resize(size)
-      elsif /pdf/.match?(image.try(:mime_type))
-        # "frame" option has to be set as string key
-        # https://github.com/markevans/dragonfly/issues/483
-        thumbnail = image_file(image).add_white_background
-                                     .thumb(size, format: :jpg, "frame" => 0, x: x, y: y)
-                                     .encode("jpg", "-quality #{quality}")
-                                     .jpegoptim
-      else
-        thumbnail = image_file(image).thumb(size, format: :jpg, x: x, y: y)
-                                     .auto_orient
-                                     .encode("jpg", "-quality #{quality}")
-                                     .cmyk_to_srgb
-                                     .jpegoptim
+        thumbnail = image_file(image)
+        geometry = size
 
-        make_webp = true
+        if size.include?("#")
+          _m, crop_width_f, crop_height_f = size.match(/(\d+)x(\d+)/).to_a.map(&:to_f)
+
+          if crop_width_f > image.file_width || crop_height_f > image.file_height || !x.nil? || !y.nil?
+            thumbnail = thumbnail.thumb("#{crop_width_f.to_i}x#{crop_height_f.to_i}^", format:)
+          end
+
+          if !x.nil? || !y.nil?
+            image_width_f = image.file_width.to_f
+            image_height_f = image.file_height.to_f
+
+            fill_width_f = if image_width_f / image_height_f > crop_width_f / crop_height_f
+              # original is wider than the required thumb rectangle -> reduce height
+              image_width_f * crop_height_f / image_height_f
+            else
+              # original is narrower than the required crop rectangle -> reduce width
+              crop_width_f
+            end
+
+            fill_height_f = fill_width_f * image_height_f / image_width_f
+
+            x_px = [((x || 0) * fill_width_f.ceil).floor, fill_width_f.floor - crop_width_f].min
+            y_px = [((y || 0) * fill_height_f.ceil).floor, fill_height_f.floor - crop_height_f].min
+
+            geometry = "#{crop_width_f.to_i}x#{crop_height_f.to_i}+#{x_px.floor}+#{y_px.floor}"
+          end
+        end
+
+        if add_white_background
+          format = :jpg
+          thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
+        end
+
+        thumbnail = thumbnail.thumb(geometry, format:)
+        thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
+        thumbnail = thumbnail.jpegoptim if format == :jpg
+
+        thumbnail
+      end
+
+      if image.file_name
+        case format.to_sym
+        when :jpg
+          thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".jpg")
+        when :png
+          thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".png")
+        when :gif
+          thumbnail.name = image.file_name.gsub(/\.\w+\z/, ".gif")
+        else
+          thumbnail.name = image.file_name
+        end
       end
 
       if opts = image.try(:thumbnail_store_options)
@@ -95,15 +133,20 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         is_private = false
       end
 
+      # fix dragonfly content mime type after converting
+      # otherwise image_properties (width/height) break
+      # keep the string key!
+      thumbnail.content.add_meta("mime_type" => thumbnail.mime_type)
+
       base = {
-        uid: uid,
+        uid:,
         signature: thumbnail.signature,
         url: Dragonfly.app.datastore.url_for(uid),
         width: thumbnail.width,
         height: thumbnail.height,
-        quality: quality,
-        x: x,
-        y: y,
+        quality:,
+        x:,
+        y:,
         private: is_private,
       }
 
@@ -122,7 +165,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         end
 
         base.merge(
-          webp_uid: webp_uid,
+          webp_uid:,
           webp_url: Dragonfly.app.datastore.url_for(webp_uid),
           webp_signature: webp.signature,
         )
@@ -133,9 +176,13 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
     def image_file(image)
       if Rails.env.development? && ENV["DEV_S3_DRAGONFLY"] && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
-        image.development_safe_file(logger)
+        thumbnail = image.development_safe_file(logger)
       else
-        image.file
+        thumbnail = image.file
       end
+
+      thumbnail.name = image.file_name
+
+      thumbnail
     end
 end

@@ -16,4 +16,3 @@ html[
       = yield
 
     == cell('folio/sensitive_content_modal')
-    == cell('folio/photoswipe')

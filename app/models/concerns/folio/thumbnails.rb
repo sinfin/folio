@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require "mini_magick"
-
+# rubocop:disable OpenStruct
 module Folio::Thumbnails
   extend ActiveSupport::Concern
 
@@ -30,7 +29,7 @@ module Folio::Thumbnails
   #
   def thumb(w_x_h, quality: 82, immediate: false, force: false, x: nil, y: nil, override_test_behaviour: false)
     fail_for_non_images
-    return thumb_in_test_env(w_x_h, quality: quality) if Rails.env.test? && !override_test_behaviour
+    return thumb_in_test_env(w_x_h, quality:) if Rails.env.test? && !override_test_behaviour
 
     if !force && thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:uid]
       hash = thumbnail_sizes[w_x_h]
@@ -48,13 +47,12 @@ module Folio::Thumbnails
       if svg?
         # private svgs won't work, but that should rarely be the case
         url = file.remote_url
-        width = file_width
-        height = file_height
+        width, height = get_svg_dimensions(w_x_h)
       else
         width, height = w_x_h.split("x").map(&:to_i)
 
         if immediate || self.class.immediate_thumbnails
-          image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force: force, x: x, y: y)
+          image = Folio::GenerateThumbnailJob.perform_now(self, w_x_h, quality, force:, x:, y:)
           return OpenStruct.new(image.thumbnail_sizes[w_x_h])
         else
           if thumbnail_sizes[w_x_h] && thumbnail_sizes[w_x_h][:started_generating_at] && thumbnail_sizes[w_x_h][:started_generating_at] > 5.minutes.ago
@@ -72,10 +70,10 @@ module Folio::Thumbnails
                   signature: nil,
                   x: nil,
                   y: nil,
-                  url: url,
-                  width: width,
-                  height: height,
-                  quality: quality,
+                  url:,
+                  width:,
+                  height:,
+                  quality:,
                   started_generating_at: Time.current,
                   temporary_url: url,
                 }))
@@ -86,7 +84,7 @@ module Folio::Thumbnails
 
             return response if response
 
-            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force: force, x: x, y: y)
+            Folio::GenerateThumbnailJob.perform_later(self, w_x_h, quality, force:, x:, y:)
           end
         end
       end
@@ -94,26 +92,26 @@ module Folio::Thumbnails
       OpenStruct.new(
         uid: nil,
         signature: nil,
-        url: url,
-        width: width,
-        height: height,
+        url:,
+        width:,
+        height:,
         x: nil,
         y: nil,
-        quality: quality
+        quality:
       )
     end
   end
 
   def admin_thumb(immediate: false, force: false)
     thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE,
-          immediate: immediate,
-          force: force)
+          immediate:,
+          force:)
   end
 
   def lightbox_thumb(immediate: false, force: false)
     thumb(Folio::CellLightbox::LIGHTBOX_SIZE,
-          immediate: immediate,
-          force: force)
+          immediate:,
+          force:)
   end
 
   def thumb_in_test_env(w_x_h, quality: 90)
@@ -123,11 +121,11 @@ module Folio::Thumbnails
       uid: nil,
       signature: nil,
       url: temporary_url(w_x_h),
-      width: width,
-      height: height,
+      width:,
+      height:,
       x: nil,
       y: nil,
-      quality: quality
+      quality:
     )
   end
 
@@ -146,18 +144,29 @@ module Folio::Thumbnails
     file.present? && file.width >= file.height
   end
 
+  def jpg?
+    file_mime_type.ends_with?("jpeg")
+  end
+
   def svg?
-    mime_type =~ /svg/
+    file_mime_type =~ /svg/
   end
 
   def gif?
-    mime_type =~ /gif/
+    file_mime_type =~ /gif/
   end
 
   def animated_gif?
     return false unless gif?
     return false unless self.respond_to?(:additional_data)
-    additional_data["animated"].presence || false
+
+    if additional_data.present?
+      additional_data["animated"].present?
+    else
+      Folio::Files::SetAdditionalDataJob.perform_now(self)
+      reload
+      additional_data.present? && additional_data["animated"].present?
+    end
   end
 
   def largest_thumb_key
@@ -200,7 +209,7 @@ module Folio::Thumbnails
         joiner = ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"].ends_with?("/") ? "" : "/"
         production_s3_url = "#{ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]}#{joiner}#{file_uid}"
 
-        headers = { "Content-Type" => mime_type }
+        headers = { "Content-Type" => file_mime_type }
         default_meta = {
           "name" => file_name,
           "model_class" => self.class.to_s,
@@ -244,34 +253,34 @@ module Folio::Thumbnails
     end
   end
 
+  def thumbnailable?
+    true
+  end
+
   private
     def reset_thumbnails
-      fail_for_non_images
-
-      delete_thumbnails if file_uid_changed?
+      delete_thumbnails if file_uid_changed? && has_attribute?("thumbnail_sizes")
     end
 
     def delete_thumbnails
-      fail_for_non_images
-
-      if self.thumbnail_sizes.present?
+      if self.try(:thumbnail_sizes).present?
         Folio::DeleteThumbnailsJob.perform_later(self.thumbnail_sizes)
         self.thumbnail_sizes = {}
       end
     end
 
     def fail_for_non_images
-      fail "You can only thumbnail images." unless has_attribute?("thumbnail_sizes")
+      fail "You can only thumbnail images." unless has_attribute?("thumbnail_sizes") && thumbnailable?
     end
 
-    def mime_type_image?
-      IMAGE_MIME_TYPES.include? mime_type
+    def file_mime_type_image?
+      IMAGE_MIME_TYPES.include? file_mime_type
     end
 
     def run_set_additional_data_job
       return unless file.present?
       return unless persisted?
-      return unless mime_type_image?
+      return unless file_mime_type_image?
       return unless self.respond_to?(:additional_data)
       return if additional_data?
       return if svg?
@@ -284,4 +293,38 @@ module Folio::Thumbnails
         logger.info(msg)
       end
     end
+
+    def get_svg_dimensions(w_x_h)
+      original_width = file.width.to_f
+      original_height = file.height.to_f
+      return [0, 0] if !original_width || !original_height
+
+      if w_x_h.include?("#")
+        return w_x_h.split("x", 2).map { |p| p.to_i }
+      elsif w_x_h.match?(/\d+x\d+/)
+        max_width, max_height = w_x_h.split("x", 2).map { |p| p.to_f }
+      elsif matches = w_x_h.match(/(\d+)x/)
+        max_width = matches[1].to_f
+        max_height = 9999.0
+      elsif matches = w_x_h.match(/x(\d+)/)
+        max_width = 9999.0
+        max_height = matches[1].to_f
+      else
+        return [0, 0]
+      end
+
+      max_ratio = max_width / max_height
+      original_ratio = original_width / original_height
+
+      if original_ratio > max_ratio
+        target_width = max_width.to_i
+        target_height = (max_width / original_width * original_height).ceil.to_i
+      else
+        target_height = max_height.to_i
+        target_width = (max_height / original_height * original_width).ceil.to_i
+      end
+
+      [target_width, target_height]
+    end
 end
+# rubocop:enable OpenStruct

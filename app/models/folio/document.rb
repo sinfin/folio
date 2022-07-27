@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Document < Folio::File
+  def thumbnailable?
+    file_mime_type_image? || file_mime_type == "application/pdf"
+  end
 end
 
 # == Schema Information
@@ -11,13 +14,12 @@ end
 #  file_uid             :string
 #  file_name            :string
 #  type                 :string
-#  thumbnail_sizes      :text             default("--- {}\n")
+#  thumbnail_sizes      :text             default({})
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  file_width           :integer
 #  file_height          :integer
 #  file_size            :bigint(8)
-#  mime_type            :string(255)
 #  additional_data      :json
 #  file_metadata        :json
 #  hash_id              :string
@@ -26,6 +28,7 @@ end
 #  file_placements_size :integer
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
+#  file_mime_type       :string
 #
 # Indexes
 #

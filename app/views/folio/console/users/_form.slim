@@ -6,7 +6,7 @@
   = tab :content
     .row
       .col-lg-8
-        = f.input :email
+        = f.input :email, required: f.object.new_record?
 
         - if ::Rails.application.config.folio_users_require_phone
           = f.input :phone
@@ -22,12 +22,13 @@
                   autosize: true,
                   input_html: { class: "bg-postit-note", rows: 4 }
 
-    .row
-      .col-lg-8
-        == cell('folio/console/addresses/fields', f)
+    - if ::Rails.application.config.folio_users_use_address
+      .row
+        .col-lg-8
+          == cell('folio/console/addresses/fields', f)
 
-    - if File.exists?(Rails.root.join("app/views/folio/console/users/_additional_form_fields.slim"))
-      = render partial: "folio/console/users/additional_form_fields", \
-              locals: { f: f }
+    - if File.exist?(Rails.root.join("app/views/folio/console/users/_additional_form_fields.slim"))
+      = render partial: "folio/console/users/additional_form_fields",
+               locals: { f: f }
 
 = form_footer f

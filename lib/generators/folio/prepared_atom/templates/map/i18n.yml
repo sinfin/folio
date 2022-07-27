@@ -1,11 +1,4 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/map:
-        latlng: GPS coordiations (i.e. 50.091254894762635, 14.401627227698018)
-    models:
-      application_namespace_path/atom/map: Map
 cs:
   activerecord:
     attributes:
@@ -13,3 +6,10 @@ cs:
         latlng: GPS souřadnice ve formátu 50.091254894762635, 14.401627227698018
     models:
       application_namespace_path/atom/map: Mapa
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/map:
+        latlng: GPS coordiations (i.e. 50.091254894762635, 14.401627227698018)
+    models:
+      application_namespace_path/atom/map: Map

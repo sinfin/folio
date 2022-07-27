@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 class Folio::User < Folio::ApplicationRecord
+  include Folio::Devise::DeliverLater
   include Folio::Filterable
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscription
-  include Folio::Devise::DeliverLater
 
   has_sanitized_fields :email, :first_name, :last_name, :nickname
 
   # used to validate before inviting from console in /console/users/new
   attribute :skip_password_validation, :boolean, default: false
+
+  # used to handle address validation when changing password
+  attr_accessor :devise_resetting_password
 
   selected_device_modules = %i[
     database_authenticatable
@@ -20,7 +23,6 @@ class Folio::User < Folio::ApplicationRecord
     invitable
   ]
 
-  selected_device_modules << :registerable if Rails.application.config.folio_users_registerable
   selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 
@@ -108,9 +110,68 @@ class Folio::User < Folio::ApplicationRecord
     end
   end
 
+  def reset_password(new_password, new_password_confirmation)
+    self.devise_resetting_password = true
+    super
+  end
+
+  def self.new_from_auth(auth)
+    user = self.new
+
+    user.email = auth.email
+
+    if auth.nickname.present?
+      ary = auth.nickname.split(/\s+/, 2)
+      user.first_name = ary[0]
+      user.last_name = ary[1]
+    end
+
+    user.authentications << auth
+
+    user
+  end
+
+  def self.controller_strong_params_for_create
+    address_strong_params = %i[
+      id
+      _destroy
+      name
+      company_name
+      address_line_1
+      address_line_2
+      zip
+      city
+      country_code
+      phone
+    ]
+
+    [
+      :first_name,
+      :last_name,
+      :nickname,
+      :phone,
+      :subscribed_to_newsletter,
+      :use_secondary_address,
+      primary_address_attributes: address_strong_params,
+      secondary_address_attributes: address_strong_params,
+    ] + additional_controller_strong_params_for_create
+  end
+
+  def self.additional_controller_strong_params_for_create
+    []
+  end
+
+  def authenticatable_salt
+    "#{super}#{sign_out_salt_part}"
+  end
+
+  def sign_out_everywhere!
+    self.update_column(:sign_out_salt_part, SecureRandom.hex)
+  end
+
   private
     def validate_first_name_and_last_name?
-      authentications.blank? || nickname.blank?
+      invitation_accepted_at?
     end
 
     def validate_phone?
@@ -139,7 +200,7 @@ class Folio::User < Folio::ApplicationRecord
     end
 
     def update_has_generated_password
-      if will_save_change_to_encrypted_password?
+      if will_save_change_to_encrypted_password? && !will_save_change_to_has_generated_password?
         self.has_generated_password = false
       end
     end
@@ -149,45 +210,49 @@ end
 #
 # Table name: folio_users
 #
-#  id                       :bigint(8)        not null, primary key
-#  email                    :string
-#  encrypted_password       :string           default(""), not null
-#  reset_password_token     :string
-#  reset_password_sent_at   :datetime
-#  remember_created_at      :datetime
-#  sign_in_count            :integer          default(0), not null
-#  current_sign_in_at       :datetime
-#  last_sign_in_at          :datetime
-#  current_sign_in_ip       :inet
-#  last_sign_in_ip          :inet
-#  confirmation_token       :string
-#  confirmed_at             :datetime
-#  confirmation_sent_at     :datetime
-#  unconfirmed_email        :string
-#  first_name               :string
-#  last_name                :string
-#  admin_note               :text
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  invitation_token         :string
-#  invitation_created_at    :datetime
-#  invitation_sent_at       :datetime
-#  invitation_accepted_at   :datetime
-#  invitation_limit         :integer
-#  invited_by_type          :string
-#  invited_by_id            :bigint(8)
-#  invitations_count        :integer          default(0)
-#  nickname                 :string
-#  use_secondary_address    :boolean          default(FALSE)
-#  primary_address_id       :bigint(8)
-#  secondary_address_id     :bigint(8)
-#  subscribed_to_newsletter :boolean          default(FALSE)
-#  has_generated_password   :boolean          default(FALSE)
-#  phone                    :string
+#  id                        :bigint(8)        not null, primary key
+#  email                     :string
+#  encrypted_password        :string           default(""), not null
+#  reset_password_token      :string
+#  reset_password_sent_at    :datetime
+#  remember_created_at       :datetime
+#  sign_in_count             :integer          default(0), not null
+#  current_sign_in_at        :datetime
+#  last_sign_in_at           :datetime
+#  current_sign_in_ip        :inet
+#  last_sign_in_ip           :inet
+#  confirmation_token        :string
+#  confirmed_at              :datetime
+#  confirmation_sent_at      :datetime
+#  unconfirmed_email         :string
+#  first_name                :string
+#  last_name                 :string
+#  admin_note                :text
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  invitation_token          :string
+#  invitation_created_at     :datetime
+#  invitation_sent_at        :datetime
+#  invitation_accepted_at    :datetime
+#  invitation_limit          :integer
+#  invited_by_type           :string
+#  invited_by_id             :integer
+#  invitations_count         :integer          default(0)
+#  nickname                  :string
+#  use_secondary_address     :boolean          default(FALSE)
+#  primary_address_id        :bigint(8)
+#  secondary_address_id      :bigint(8)
+#  subscribed_to_newsletter  :boolean          default(FALSE)
+#  has_generated_password    :boolean          default(FALSE)
+#  phone                     :string
+#  crossdomain_devise_token  :string
+#  crossdomain_devise_set_at :datetime
+#  sign_out_salt_part        :string
 #
 # Indexes
 #
 #  index_folio_users_on_confirmation_token                 (confirmation_token) UNIQUE
+#  index_folio_users_on_crossdomain_devise_token           (crossdomain_devise_token)
 #  index_folio_users_on_email                              (email)
 #  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
 #  index_folio_users_on_invited_by_id                      (invited_by_id)

@@ -2,7 +2,6 @@ import { uniqueId } from 'lodash'
 import { takeLatest, put, call, select } from 'redux-saga/effects'
 
 import { apiPost } from 'utils/api'
-import { flashError } from 'utils/flash'
 
 // Constants
 
@@ -138,7 +137,7 @@ function * triggerDirtyFormOrSubmit (action) {
       }
     } catch (e) {
       yield put(setSubmitting(false))
-      flashError(e.message)
+      window.FolioConsole.Flash.alert(e.message)
     }
   } else {
     const $wrap = window.jQuery('.folio-react-wrap--notes-fields')

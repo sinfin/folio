@@ -6,7 +6,7 @@ class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
 
   test "publishable_hint" do
-    create(:folio_site)
+    create_and_host_site
 
     @page = create(:folio_page)
     get url_for([@page, locale: @page.locale])

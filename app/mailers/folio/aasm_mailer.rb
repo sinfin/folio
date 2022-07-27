@@ -7,7 +7,7 @@ class Folio::AasmMailer < Folio::ApplicationMailer
     @simple_text = simple_text
 
     mail to: email,
-         subject: subject,
+         subject:,
          bcc: self.class.bcc_email,
          reply_to: self.class.reply_to_email,
          from: self.class.from_email
@@ -22,6 +22,6 @@ class Folio::AasmMailer < Folio::ApplicationMailer
   end
 
   def self.from_email
-    Rails.application.config.folio_aasm_mailer_config.try(:[], :from) || Folio::Site.instance.email_from.presence || Folio::Site.instance.email
+    Rails.application.config.folio_aasm_mailer_config.try(:[], :from) || Folio.site_instance_for_mailers.email_from.presence || Folio.site_instance_for_mailers.email
   end
 end

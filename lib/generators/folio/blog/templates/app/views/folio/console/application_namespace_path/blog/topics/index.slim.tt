@@ -17,4 +17,5 @@
     locale_flag
     published_toggle
     featured_toggle
+    position_controls
     actions :preview, :edit, :destroy

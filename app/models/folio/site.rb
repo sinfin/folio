@@ -1,8 +1,29 @@
 # frozen_string_literal: true
 
 class Folio::Site < Folio::ApplicationRecord
+  include Folio::FriendlyId
   include Folio::HasHeaderMessage
-  include Folio::Singleton
+  include Folio::Positionable
+
+  if Rails.application.config.folio_site_is_a_singleton
+    include Folio::Singleton
+  else
+    # use specific STI types if site is not a singleton
+    validates :type,
+              presence: true
+
+    [
+      [:email_templates, "Folio::EmailTemplate"],
+      [:leads, "Folio::Lead"],
+      [:menus, "Folio::Menu"],
+      [:newsletter_subscriptions, "Folio::NewsletterSubscription"],
+      [:pages, "Folio::Page"],
+    ].each do |key, class_name|
+      has_many key, class_name:,
+                    foreign_key: :site_id,
+                    dependent: :nullify
+    end
+  end
 
   # Validations
   validates :title, :email, :locale, :locales,
@@ -41,6 +62,36 @@ class Folio::Site < Folio::ApplicationRecord
 
       send(attr).delete(" ").split(",")
     end
+  end
+
+  def env_aware_root_url
+    "http://#{env_aware_domain}/"
+  end
+
+  def env_aware_domain
+    if Rails.env.development?
+      "dev-#{domain}:3000"
+    else
+      domain
+    end
+  end
+
+  def layout_name
+    "folio/application"
+  end
+
+  def layout_assets_path
+    "application"
+  end
+
+  def i18n_key_base
+    @i18n_key_base ||= self.class.to_s.deconstantize.underscore
+  end
+
+  def layout_twitter_meta
+    {
+      "twitter:card" => "summary",
+    }
   end
 
   private
@@ -82,8 +133,14 @@ end
 #  header_message_published          :boolean          default(FALSE)
 #  header_message_published_from     :datetime
 #  header_message_published_until    :datetime
+#  type                              :string
+#  slug                              :string
+#  position                          :integer
 #
 # Indexes
 #
-#  index_folio_sites_on_domain  (domain)
+#  index_folio_sites_on_domain    (domain)
+#  index_folio_sites_on_position  (position)
+#  index_folio_sites_on_slug      (slug)
+#  index_folio_sites_on_type      (type)
 #

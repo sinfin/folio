@@ -1,13 +1,13 @@
 ---
-en:
-  activerecord:
-    attributes:
-      application_namespace_path/atom/hr: 
-    models:
-      application_namespace_path/atom/hr: Line (horizontal)
 cs:
   activerecord:
     attributes:
       application_namespace_path/atom/hr: 
     models:
       application_namespace_path/atom/hr: Linka (vodorovná)
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/hr: 
+    models:
+      application_namespace_path/atom/hr: Line (horizontal)

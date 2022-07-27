@@ -13,54 +13,8 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
             format: { with: Folio::EMAIL_REGEXP },
             if: :email?
 
-  validates :conflict_token,
-            uniqueness: true,
-            if: :conflict_token?
-
   def human_provider
     self.class.human_provider(provider)
-  end
-
-  def find_or_create_user!
-    return user if user.present?
-
-    if email.present?
-      existing_user = Folio::User.find_by(email: email)
-    else
-      existing_user = nil
-    end
-
-    if existing_user
-      conflict_token = nil
-
-      loop do
-        conflict_token = SecureRandom.urlsafe_base64(16)
-                                     .gsub(/-|_/, ("a".."z").to_a[rand(26)])
-
-        break unless self.class.exists?(conflict_token: conflict_token)
-      end
-
-      update_columns(conflict_user_id: existing_user.id,
-                     conflict_token: conflict_token)
-
-      false
-    else
-      first_name = nil
-      last_name = nil
-
-      if nickname.include?(" ")
-        first_name, last_name = nickname.split(" ", 2)
-      end
-
-      Folio::User.create!(password: Devise.friendly_token[0, 20] + "a6C", # appendix to always fullfill standard requirements
-                          has_generated_password: true,
-                          nickname: nickname,
-                          first_name: first_name,
-                          last_name: last_name,
-                          authentications: [self],
-                          email: email,
-                          confirmed_at: Rails.application.config.folio_users_confirmable ? Time.zone.now : nil)
-    end
   end
 
   def self.human_provider(provider)
@@ -88,7 +42,7 @@ end
 # Table name: folio_omniauth_authentications
 #
 #  id               :bigint(8)        not null, primary key
-#  folio_user_id    :bigint(8)
+#  folio_user_id    :integer
 #  uid              :string
 #  provider         :string
 #  email            :string

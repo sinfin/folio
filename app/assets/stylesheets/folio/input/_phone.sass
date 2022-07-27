@@ -1,0 +1,35 @@
+@import "intlTelInput"
+
+.iti
+  display: block
+  font-size: $input-font-size
+
+.iti__flag
+  background-image: image-url("intl-tel-input-flags.png")
+
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)
+    background-image: image-url("intl-tel-input-flags@2x.png")
+
+.iti__selected-flag
+  position: relative
+  padding: 0 (( 2 * $input-padding-x - 6px )) 0 $input-padding-x
+
+  .iti--separate-dial-code &
+    background-color: transparent
+
+  &::after
+    content: ''
+    position: absolute
+    top: $input-padding-y
+    bottom: $input-padding-y
+    right: $input-padding-x - 6px
+    border-right: 1px solid $input-border-color
+
+.iti--allow-dropdown input,
+.iti--allow-dropdown input[type=text],
+.iti--allow-dropdown input[type=tel],
+.iti--separate-dial-code input,
+.iti--separate-dial-code input[type=text],
+.iti--separate-dial-code input[type=tel]
+  padding-right: $input-padding-x
+  padding-left: 0

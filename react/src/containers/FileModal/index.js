@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { uniqueId } from 'lodash'
 
 import ReactModal from 'react-modal'
 
-import { updateFile, deleteFile } from 'ducks/files'
+import { updateFile, deleteFile, updatedFiles } from 'ducks/files'
 import {
   updateFileThumbnail,
+  destroyFileThumbnail,
   closeFileModal,
   fileModalSelector,
   uploadNewFileInstead,
+  uploadNewFileInsteadSuccess,
+  uploadNewFileInsteadFailure,
+  updatedFileModalFile,
   markModalFileAsUpdating,
   changeFilePlacementsPage
 } from 'ducks/fileModal'
@@ -34,6 +39,14 @@ class FileModal extends Component {
     }
   }
 
+  componentDidMount () {
+    this.listenOnMessageBus()
+  }
+
+  componentWillUnmount () {
+    this.stopListeningOnMessageBus()
+  }
+
   componentDidUpdate (prevProps) {
     if (this.props.fileModal.file) {
       if (!prevProps.fileModal.file || (prevProps.fileModal.updating && this.props.fileModal.updating === false)) {
@@ -46,6 +59,35 @@ class FileModal extends Component {
         })
       }
     }
+  }
+
+  listenOnMessageBus () {
+    if (!window.Folio.MessageBus.callbacks) return
+
+    this.messageBusCallbackKey = `Folio::GenerateThumbnailJob-react-files-app-file-modal-${uniqueId()}`
+
+    window.Folio.MessageBus.callbacks[this.messageBusCallbackKey] = (msg) => {
+      if (!msg) return
+      if (!this.props.fileModal.file) return
+
+      if (msg.type === 'Folio::CreateFileFromS3Job' && msg.data.file) {
+        if (Number(msg.data.file.id) === Number(this.props.fileModal.file.id)) {
+          if (msg.data.type === 'replace-success') {
+            this.props.dispatch(updatedFileModalFile(msg.data.file))
+            this.props.dispatch(updatedFiles(this.props.fileModal.fileType, [msg.data.file]))
+            this.props.dispatch(uploadNewFileInsteadSuccess(msg.data.file))
+          } else if (msg.data.type === 'replace-failure') {
+            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+            this.props.dispatch(uploadNewFileInsteadFailure(this.props.fileModal.file))
+          }
+        }
+      }
+    }
+  }
+
+  stopListeningOnMessageBus () {
+    delete window.Folio.MessageBus.callbacks[this.messageBusCallbackKey]
+    this.messageBusCallbackKey = null
   }
 
   saveModal = () => {
@@ -65,6 +107,16 @@ class FileModal extends Component {
       this.props.fileModal.file,
       thumbKey,
       params))
+  }
+
+  destroyThumbnail = (thumbKey, thumb) => {
+    this.props.dispatch(destroyFileThumbnail(
+      this.props.fileModal.fileType,
+      this.props.fileModal.filesUrl,
+      this.props.fileModal.file,
+      thumbKey,
+      thumb
+    ))
   }
 
   deleteFile = (file) => {
@@ -105,6 +157,7 @@ class FileModal extends Component {
             saveModal={this.saveModal}
             closeFileModal={this.closeFileModal}
             updateThumbnail={this.updateThumbnail}
+            destroyThumbnail={this.destroyThumbnail}
             deleteFile={this.deleteFile}
             uploadNewFileInstead={this.uploadNewFileInstead}
             onValueChange={this.onValueChange}

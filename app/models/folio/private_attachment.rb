@@ -2,7 +2,6 @@
 
 class Folio::PrivateAttachment < Folio::ApplicationRecord
   include Folio::HasHashId
-  include Folio::MimeTypeDetection
   include Folio::Positionable
   include Folio::SanitizeFilename
   extend Folio::InheritenceBaseNaming
@@ -19,30 +18,21 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   validates :file,
             presence: true
 
-  before_save :set_mime_type
-
   def title
     super.presence || file_name
   end
 
   def file_extension
-    if /msword/.match?(mime_type)
+    if /msword/.match?(file_mime_type)
       /docx/.match?(file_name) ? :docx : :doc
     else
-      Mime::Type.lookup(mime_type).symbol
+      Mime::Type.lookup(file_mime_type).symbol
     end
   end
 
   def self.hash_id_additional_classes
     [Folio::File]
   end
-
-  private
-    def set_mime_type
-      return unless file.present?
-      return unless respond_to?(:mime_type)
-      self.mime_type = get_mime_type(file)
-    end
 end
 
 # == Schema Information
@@ -62,11 +52,11 @@ end
 #  file_width          :integer
 #  file_height         :integer
 #  file_size           :bigint(8)
-#  mime_type           :string(255)
 #  additional_data     :json
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  hash_id             :string
+#  file_mime_type      :string
 #
 # Indexes
 #

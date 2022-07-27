@@ -1,0 +1,218 @@
+- mailer: Devise::Mailer
+  action: reset_password_instructions
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+  required_keywords:
+    - USER_CHANGE_PASSWORD_URL
+  title_cs: Uživatelské účty - obnova hesla
+  title_en: Users - password reset
+  subject_cs: Instrukce k nastavení nového hesla
+  subject_en: Reset password instructions
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CHANGE_PASSWORD_URL}">Změnit heslo</a></p>
+
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.</p>
+
+  body_html_en: |
+    <p>Hello!</p>
+
+    <p>Someone has requested a link to change your password, and you can do this through the link below.</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CHANGE_PASSWORD_URL}">Change my password</a></p>
+
+    <p>If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.</p>
+  body_text_cs: |
+    Dobrý den,
+
+    někdo si vyžádal odkaz pro změnu Vašeho hesla. Změnu můžete provést pomocí odkazu níže.
+
+    {USER_CHANGE_PASSWORD_URL}
+
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail. Vaše heslo se nezmění dokud neotevřete výše uvedený odkaz a nevytvoříte si nové heslo.
+
+  body_text_en: |
+    Hello!
+
+    Someone has requested a link to change your password, and you can do this through the link below.
+
+    {USER_CHANGE_PASSWORD_URL}
+
+    If you didn't request this, please ignore this email. Your password won't change until you access the link above and create a new one.
+
+- mailer: Devise::Mailer
+  action: invitation_instructions
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+    - SITE_TITLE
+  required_keywords:
+    - USER_ACCEPT_INVITATION_URL
+  title_cs: Uživatelské účty - registrace
+  title_en: Users - registration
+  subject_cs: Pozvánka
+  subject_en: Invitation instructions
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>děkujeme za registraci na webu {SITE_TITLE}. Registraci prosíme dokončete kliknutím na tlačítko:</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Potvrdit registraci</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
+
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail.</p>
+
+    <p>S přátelským pozdravem</p>
+
+    <p>{SITE_TITLE}</p>
+  body_html_en: |
+    <p>Hello,</p>
+
+    <p>thank you for registering at {SITE_TITLE}. Please complete the registration by clicking the button:</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_ACCEPT_INVITATION_URL}">Confirm registration</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_ACCEPT_INVITATION_URL}">{USER_ACCEPT_INVITATION_URL}</a></p>
+
+    <p>If you did not request this, please ignore this email.</p>
+
+    <p>With kind regards,</p>
+
+    <p>{SITE_TITLE}</p>
+  body_text_cs: |
+    Dobrý den,
+
+    děkujeme za registraci na webu {SITE_TITLE}. Registraci prosíme dokončete kliknutím na odkaz:
+
+    {USER_ACCEPT_INVITATION_URL}
+
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail.
+
+    S přátelským pozdravem
+    {SITE_TITLE}
+  body_text_en: |
+    Hello,
+
+    thank you for registering at {SITE_TITLE}. Please complete the registration by clicking the link:
+
+    {USER_ACCEPT_INVITATION_URL}
+
+    If you did not request this, please ignore this email.
+
+    With kind regards,
+    {SITE_TITLE}
+
+- mailer: Folio::DeviseMailer
+  action: omniauth_conflict
+  optional_keywords:
+    - USER_EMAIL
+    - ROOT_URL
+    - DOMAIN
+    - USER_CONFLICT_PROVIDER
+  required_keywords:
+    - USER_CONFLICT_RESOLVE_URL
+  title_cs: Uživatelské účty - omniauth konflikt
+  title_en: Users - omniauth conflict
+  subject_cs: Dokončení přihlášení
+  subject_en: Complete the login verification
+  body_html_cs: |
+    <p>Dobrý den,</p>
+
+    <p>pro dokončení {USER_CONFLICT_PROVIDER} přihlášení klikněte na odkaz níže:</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFLICT_RESOLVE_URL}">Dokončit přihlášení</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFLICT_RESOLVE_URL}">{USER_CONFLICT_RESOLVE_URL}</a></p>
+
+    <p>Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.</p>
+  body_html_en: |
+    <p>Hello!</p>
+
+    <p>to finish signing in via {USER_CONFLICT_PROVIDER} click the link bellow:</p>
+
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{USER_CONFLICT_RESOLVE_URL}">Sign in</a></p>
+
+    <p class="small"><a class="text-muted" href="{USER_CONFLICT_RESOLVE_URL}">{USER_CONFLICT_RESOLVE_URL}</a></p>
+
+    <p>If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.</p>
+  body_text_cs: |
+    Dobrý den,
+
+    pro dokončení {USER_CONFLICT_PROVIDER} přihlášení klikněte na odkaz níže:
+
+    {USER_CONFLICT_RESOLVE_URL}
+
+    Pokud jste si toto nevyžádali, ignorujte tento e-mail. Váš účet se nezmění dokud neotevřete výše uvedený odkaz.
+
+  body_text_en: |
+    Hello!
+
+    to finish signing in via {USER_CONFLICT_PROVIDER} click the link bellow:
+
+    {USER_CONFLICT_RESOLVE_URL}
+
+    If you don't want to sign in, ignore this e-mail. Your account will not be updated unless you click the link.
+
+- mailer: Folio::LeadMailer
+  action: notification_email
+  optional_keywords:
+    - ROOT_URL
+    - DOMAIN
+    - FOLIO_LEAD_ID
+    - FOLIO_LEAD_EMAIL
+    - FOLIO_LEAD_PHONE
+    - FOLIO_LEAD_NOTE
+    - FOLIO_LEAD_CREATED_AT
+    - FOLIO_LEAD_NAME
+    - FOLIO_LEAD_URL
+    - FOLIO_LEAD_CONSOLE_URL
+  title_cs: Formuláře - nový formulář
+  title_en: Leads - new lead
+  subject_cs: "{DOMAIN} - nový formulář"
+  subject_en: "{DOMAIN} - new lead"
+  body_html_cs: |
+    <p><strong>E-mail:</strong><br>{FOLIO_LEAD_EMAIL}</p>
+    <p><strong>Telefon:</strong><br>{FOLIO_LEAD_PHONE}</p>
+    <p><strong>URL:</strong><br>{FOLIO_LEAD_URL}</p>
+    <p><strong>Odesláno:</strong><br>{FOLIO_LEAD_CREATED_AT}</p>
+    <p><strong>Poznámka:</strong><br>{FOLIO_LEAD_NOTE}</p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{FOLIO_LEAD_CONSOLE_URL}">Zobrazit v administraci</a></p>
+
+  body_html_en: |
+    <p><strong>E-mail:</strong><br>{FOLIO_LEAD_EMAIL}</p>
+    <p><strong>Phone:</strong><br>{FOLIO_LEAD_PHONE}</p>
+    <p><strong>URL:</strong><br>{FOLIO_LEAD_URL}</p>
+    <p><strong>Submitted:</strong><br>{FOLIO_LEAD_CREATED_AT}</p>
+    <p><strong>Note:</strong><br>{FOLIO_LEAD_NOTE}</p>
+    <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-primary" href="{FOLIO_LEAD_CONSOLE_URL}">Show in console</a></p>
+  body_text_cs: |
+    E-mail: {FOLIO_LEAD_EMAIL}
+    Telefon: {FOLIO_LEAD_PHONE}
+    URL: {FOLIO_LEAD_URL}
+
+    Poznámka:
+
+    {FOLIO_LEAD_NOTE}
+
+    ---------------------------
+
+    Zasláno: {FOLIO_LEAD_CREATED_AT}
+  body_text_en: |
+    E-mail: {FOLIO_LEAD_EMAIL}
+    Phone: {FOLIO_LEAD_PHONE}
+    URL: {FOLIO_LEAD_URL}
+
+    Note:
+
+    {FOLIO_LEAD_NOTE}
+
+    ---------------------------
+
+    Submitted: {FOLIO_LEAD_CREATED_AT}

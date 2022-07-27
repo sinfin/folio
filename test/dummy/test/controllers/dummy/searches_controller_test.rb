@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::SearchesControllerTest < ActionDispatch::IntegrationTest
   test "show" do
-    create(:folio_site)
+    create_and_host_site
 
     get dummy_search_path
     assert_response(:ok)
@@ -42,7 +42,7 @@ class Dummy::SearchesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "autocomplete" do
-    create(:folio_site)
+    create_and_host_site
 
     get autocomplete_dummy_search_path
     assert_response(:ok)

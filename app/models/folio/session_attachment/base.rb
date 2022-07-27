@@ -34,17 +34,14 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
                          optional: true,
                          touch: true
 
-  before_validation :set_file_mime_type
   after_save :pregenerate_thumbnails
-
-  alias_attribute :mime_type, :file_mime_type
 
   def to_h
     {
       id: hash_id,
-      file_name: file_name,
-      file_size: file_size,
-      file_mime_type: file_mime_type,
+      file_name:,
+      file_size:,
+      file_mime_type:,
       thumb: to_h_thumb,
     }
   end
@@ -99,12 +96,6 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   end
 
   private
-    def set_file_mime_type
-      return unless will_save_change_to_file_uid?
-      return unless file.present?
-      self.file_mime_type = file.mime_type
-    end
-
     def validate_type
       return errors.add(:type, :blank) if type.blank?
       return errors.add(:type, :invalid) if type.start_with?("Folio::")
@@ -133,7 +124,7 @@ end
 #  type            :string
 #  web_session_id  :string
 #  placement_type  :string
-#  placement_id    :bigint(8)
+#  placement_id    :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  file_width      :integer

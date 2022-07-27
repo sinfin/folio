@@ -1,4 +1,4 @@
-$modals = $('.folio-console-react-modal')
+$modals = $('.f-c-r-modal')
 
 if $modals.length
   $modals.on 'shown.bs.modal', ->

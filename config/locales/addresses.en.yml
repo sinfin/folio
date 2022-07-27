@@ -1,0 +1,10 @@
+---
+en:
+  folio:
+    addresses:
+      fields:
+        title: Contact information
+        address_line_1_regular: Address line 1
+        address_line_1_inline: Street
+        address_line_2_regular: Address line 2
+        address_line_2_inline: Number

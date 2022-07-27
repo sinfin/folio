@@ -2,19 +2,19 @@
 
 module Folio::Console::FormsHelper
   def translated_inputs(f, key, *args)
-    model = { f: f, key: key, args: args }
+    model = { f:, key:, args: }
     cell("folio/console/translated_inputs", model).show.html_safe
   end
 
   def translated_inputs_for_locales(f, key, locales, *args)
-    model = { f: f, key: key, args: args }
+    model = { f:, key:, args: }
     cell("folio/console/translated_inputs",
          model,
-         locales: locales).show.html_safe
+         locales:).show.html_safe
   end
 
   def private_attachments_fields(f, options = {})
-    render partial: "private_attachments", locals: options.merge(f: f)
+    render partial: "private_attachments", locals: options.merge(f:)
   end
 
   def link_to_remove_association(*args)
@@ -25,7 +25,7 @@ module Folio::Console::FormsHelper
       data.merge!(args[key][:data])
     end
 
-    args[key] = (args[key] || {}).merge(data: data)
+    args[key] = (args[key] || {}).merge(data:)
     super(*args)
   end
 
@@ -64,7 +64,12 @@ module Folio::Console::FormsHelper
                   "horizontal"
     layout_class = "f-c-simple-form-with-atoms--layout-#{layout_code}"
 
-    if model.class.try(:console_atoms_expanded_settings)
+    expandable = true
+
+    if model.class.try(:console_atoms_expandable) == false
+      expanded_class = "f-c-simple-form-with-atoms--expanded-form f-c-simple-form-with-atoms--non-expandable"
+      expandable = false
+    elsif model.class.try(:console_atoms_expanded_settings)
       expanded_class = "f-c-simple-form-with-atoms--expanded-form"
     else
       expanded_class = nil
@@ -78,15 +83,14 @@ module Folio::Console::FormsHelper
                            expanded_class].compact.join(" ")
 
     form_footer_options = opts.delete(:form_footer_options) || {}
-    console_atoms_path_proc = opts.delete(:console_atoms_path_proc) || -> (keys, key) { console_atoms_path(keys: keys, default_locale: key) }
 
     render layout: "folio/console/partials/simple_form_with_atoms",
            locals: {
-             model: model,
-             opts: opts,
-             layout_code: layout_code,
-             form_footer_options: form_footer_options,
-             console_atoms_path_proc: console_atoms_path_proc,
+             model:,
+             opts:,
+             layout_code:,
+             form_footer_options:,
+             expandable:,
            },
            &block
   end

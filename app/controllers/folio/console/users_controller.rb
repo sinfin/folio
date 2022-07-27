@@ -17,11 +17,18 @@ class Folio::Console::UsersController < Folio::Console::BaseController
                 flash: { success: t(".success", label: @user.to_label) }
   end
 
+  def new
+    @user.creating_in_console = 1
+  end
+
   def create
-    @user = @klass.new(user_params.merge(skip_password_validation: 1))
+    create_params = user_params.merge(skip_password_validation: 1,
+                                      creating_in_console: 1)
+
+    @user = @klass.new(create_params)
 
     if @user.valid?
-      @user = @klass.invite!(user_params)
+      @user = @klass.invite!(create_params)
     end
 
     respond_with @user, location: respond_with_location
@@ -29,13 +36,15 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   private
     def after_impersonate_path
-      main_app.root_path
+      main_app.send(Rails.application.config.folio_users_after_impersonate_path)
     end
 
     def user_params
       params.require(:user)
             .permit(*(@klass.column_names - ["id"]),
-                    *addresses_strong_params)
+                    *addresses_strong_params,
+                    *file_placements_strong_params,
+                    *private_attachments_strong_params)
     end
 
     def index_filters

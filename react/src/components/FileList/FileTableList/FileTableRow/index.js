@@ -1,5 +1,4 @@
 import React from 'react'
-import LazyLoad from 'react-lazyload'
 
 import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'containers/Tags'
@@ -20,7 +19,16 @@ const FileTableRow = ({
   if (file._destroying) return null
 
   let className = 'f-c-file-table__tr'
-  const persistedOnClick = !file.attributes.uploading && onClick
+
+  let persistedOnClick
+
+  if (!file.attributes.uploading) {
+    if (massSelect) {
+      persistedOnClick = (e) => massSelect(file, !file.massSelected)
+    } else if (onClick) {
+      persistedOnClick = () => onClick(file)
+    }
+  }
 
   if (file.attributes.freshlyUploaded) {
     className = 'f-c-file-table__tr f-c-file-table__tr--fresh'
@@ -34,16 +42,18 @@ const FileTableRow = ({
   return (
     <div
       className={className}
-      onClick={persistedOnClick ? () => onClick(file) : undefined}
+      onClick={persistedOnClick}
     >
       {massSelect && (
-        <div className='f-c-file-table__td f-c-file-table__td--mass-select pl-0'>
-          <input
-            type='checkbox'
-            checked={file.massSelected || false}
-            onChange={(e) => massSelect(file, !file.massSelected)}
-            className='f-c-file-table__mass-select-checkbox'
-          />
+        <div className='f-c-file-table__td f-c-file-table__td--mass-select'>
+          {file.attributes.uploading ? null : (
+            <input
+              type='checkbox'
+              checked={file.massSelected || false}
+              onChange={persistedOnClick}
+              className='f-c-file-table__mass-select-checkbox'
+            />
+          )}
         </div>
       )}
 
@@ -52,18 +62,12 @@ const FileTableRow = ({
           <FileUploadProgress progress={file.attributes.progress} />
 
           <div className='f-c-file-table__img-wrap'>
-            {file.attributes.thumb && (
-              <a
-                href={file.attributes.source_url}
-                target='_blank'
-                className='f-c-file-table__img-a'
-                rel='noopener noreferrer'
-                onClick={(e) => e.stopPropagation()}
-              >
-                <LazyLoad height={50} once overflow>
-                  <Picture file={file} imageClassName='f-c-file-table__img' />
-                </LazyLoad>
-              </a>
+            {(file.attributes.thumb || file.attributes.dataThumbnail) && (
+              <Picture
+                file={file}
+                imageClassName='f-c-file-table__img'
+                lazyload={{ height: 50, once: true, overflow: true }}
+              />
             )}
           </div>
         </div>
@@ -100,7 +104,7 @@ const FileTableRow = ({
         <Tags file={file} fileType={fileType} filesUrl={filesUrl} />
       </div>
 
-      <div className='f-c-file-table__td f-c-file-table__td--actions pr-0'>
+      <div className='f-c-file-table__td f-c-file-table__td--actions'>
         {file.attributes.uploading ? null : (
           <React.Fragment>
             {openFileModal ? (

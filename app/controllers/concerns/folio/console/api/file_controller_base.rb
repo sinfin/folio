@@ -18,12 +18,7 @@ module Folio::Console::Api::FileControllerBase
       json = index_json
     end
 
-    render json: json
-  end
-
-  def create
-    file = @klass.create(file_params)
-    render_record(file, Folio::Console::FileSerializer)
+    render json:
   end
 
   def update
@@ -41,7 +36,7 @@ module Folio::Console::Api::FileControllerBase
       }
     end
 
-    render_record(folio_console_record, Folio::Console::FileSerializer, meta: meta)
+    render_record(folio_console_record, Folio::Console::FileSerializer, meta:)
   end
 
   def destroy
@@ -98,7 +93,7 @@ module Folio::Console::Api::FileControllerBase
 
     render_record(folio_console_record,
                   Folio::Console::FileSerializer,
-                  meta: meta)
+                  meta:)
   end
 
   def mass_download
@@ -151,7 +146,7 @@ module Folio::Console::Api::FileControllerBase
       pagination, records = pagy(folio_console_records.ordered, items: 60)
       meta = meta_from_pagy(pagination).merge(react_type: @klass.react_type)
 
-      json_from_records(records, Folio::Console::FileSerializer, meta: meta)
+      json_from_records(records, Folio::Console::FileSerializer, meta:)
     end
 
     def index_cache_key

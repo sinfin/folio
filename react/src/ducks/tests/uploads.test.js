@@ -1,53 +1,24 @@
+import 'folioTestSetup'
+
 import uploadsReducer, {
-  initialState,
-  addedFile,
-  thumbnail,
-  finishedUpload,
-  error,
-  progress,
+  defaultUploadsKeyState,
+  defaultTag,
   setUploadAttributes,
   clearUploadedIds,
-  defaultTag
+  showTagger,
+  closeTagger,
+  addDropzoneFile,
+  updateDropzoneFile,
+  removeDropzoneFile,
+  thumbnailDropzoneFile
 } from '../uploads'
 
 describe('uploadsReducer', () => {
   let state
-  const fileMock = { name: 'foo.jpg', lastModified: 1, size: 1, type: 'foo/bar' }
+  const S3_PATH = '/file/s3_path'
 
   beforeEach(() => {
-    state = uploadsReducer(initialState, addedFile('Folio::Image', fileMock))
-  })
-
-  it('addedFile', () => {
-    expect(state['Folio::Image'].records['foo.jpg|1|1']).not.toEqual(undefined)
-  })
-
-  it('thumbnail', () => {
-    expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.thumb).toEqual(null)
-    state = uploadsReducer(state, thumbnail('Folio::Image', fileMock, 'foo'))
-    expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.thumb).toEqual('foo')
-  })
-
-  it('finishedUpload', () => {
-    expect(state['Folio::Image'].showTagger).toEqual(false)
-    expect(state['Folio::Image'].records['foo.jpg|1|1']).not.toEqual(undefined)
-    expect(state['Folio::Image'].uploadedIds).toEqual([])
-    state = uploadsReducer(state, finishedUpload('Folio::Image', fileMock, 999))
-    expect(state['Folio::Image'].showTagger).toEqual(true)
-    expect(state['Folio::Image'].records['foo.jpg|1|1']).toEqual(undefined)
-    expect(state['Folio::Image'].uploadedIds).toEqual([999])
-  })
-
-  it('error', () => {
-    expect(state['Folio::Image'].records['foo.jpg|1|1']).not.toEqual(undefined)
-    state = uploadsReducer(state, error('Folio::Image', fileMock, 'ooops'))
-    expect(state['Folio::Image'].records['foo.jpg|1|1']).toEqual(undefined)
-  })
-
-  it('progress', () => {
-    expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.progress).toEqual(0)
-    state = uploadsReducer(state, progress('Folio::Image', fileMock, 25))
-    expect(state['Folio::Image'].records['foo.jpg|1|1'].attributes.progress).toEqual(25)
+    state = { 'Folio::Image': { ...defaultUploadsKeyState } }
   })
 
   it('setUploadAttributes', () => {
@@ -57,10 +28,69 @@ describe('uploadsReducer', () => {
     expect(state['Folio::Image'].showTagger).toEqual(false)
   })
 
-  it('clearUploadedIds', () => {
-    state = uploadsReducer(state, finishedUpload('Folio::Image', fileMock, 999))
-    expect(state['Folio::Image'].uploadedIds).toEqual([999])
-    state = uploadsReducer(state, clearUploadedIds('Folio::Image', [999]))
+  it('showTagger, clearUploadedIds', () => {
+    expect(state['Folio::Image'].showTagger).toEqual(false)
     expect(state['Folio::Image'].uploadedIds).toEqual([])
+
+    state = uploadsReducer(state, showTagger('Folio::Image', '1'))
+    expect(state['Folio::Image'].showTagger).toEqual(true)
+    expect(state['Folio::Image'].uploadedIds).toEqual(['1'])
+
+    state = uploadsReducer(state, clearUploadedIds('Folio::Image', ['1']))
+    expect(state['Folio::Image'].uploadedIds).toEqual([])
+  })
+
+  it('showTagger, closeTagger', () => {
+    expect(state['Folio::Image'].showTagger).toEqual(false)
+    expect(state['Folio::Image'].uploadedIds).toEqual([])
+
+    state = uploadsReducer(state, showTagger('Folio::Image', '1'))
+    expect(state['Folio::Image'].showTagger).toEqual(true)
+    expect(state['Folio::Image'].uploadedIds).toEqual(['1'])
+
+    state = uploadsReducer(state, closeTagger('Folio::Image'))
+    expect(state['Folio::Image'].showTagger).toEqual(false)
+    expect(state['Folio::Image'].uploadedIds).toEqual([])
+  })
+
+  it('addDropzoneFile', () => {
+    expect(state['Folio::Image'].dropzoneFiles).toEqual({})
+    state = uploadsReducer(state, addDropzoneFile('Folio::Image', S3_PATH))
+    expect(state['Folio::Image'].dropzoneFiles).toEqual({ [S3_PATH]: { attributes: { progress: 0 } } })
+  })
+
+  it('updateDropzoneFile', () => {
+    state = uploadsReducer(state, addDropzoneFile('Folio::Image', S3_PATH))
+    expect(state['Folio::Image'].dropzoneFiles[S3_PATH].attributes.progress).toEqual(0)
+
+    state = uploadsReducer(state, updateDropzoneFile('Folio::Image', S3_PATH, { progress: 33 }))
+    expect(state['Folio::Image'].dropzoneFiles[S3_PATH].attributes).toEqual({ progress: 33 })
+  })
+
+  it('removeDropzoneFile', () => {
+    expect(state['Folio::Image'].dropzoneFiles).toEqual({})
+    state = uploadsReducer(state, addDropzoneFile('Folio::Image', S3_PATH))
+    expect(state['Folio::Image'].dropzoneFiles).toEqual({ [S3_PATH]: { attributes: { progress: 0 } } })
+
+    state = uploadsReducer(state, removeDropzoneFile('Folio::Image', S3_PATH))
+    expect(state['Folio::Image'].dropzoneFiles).toEqual({})
+  })
+
+  it('thumbnailDropzoneFile', () => {
+    state = uploadsReducer(state, addDropzoneFile('Folio::Image', S3_PATH))
+    expect(state['Folio::Image'].dropzoneFiles[S3_PATH].attributes.dataThumbnail).toEqual(undefined)
+
+    state = uploadsReducer(state, thumbnailDropzoneFile('Folio::Image', S3_PATH, 'foo'))
+    expect(state['Folio::Image'].dropzoneFiles[S3_PATH].attributes).toEqual({ dataThumbnail: 'foo', progress: 0 })
+  })
+
+  it('pending thumbnailDropzoneFile', () => {
+    state = uploadsReducer(state, thumbnailDropzoneFile('Folio::Image', S3_PATH, 'foo'))
+    expect(state['Folio::Image'].dropzoneFiles[S3_PATH]).toEqual(undefined)
+    expect(state['Folio::Image'].pendingDataThumbnails[S3_PATH]).toEqual('foo')
+
+    state = uploadsReducer(state, addDropzoneFile('Folio::Image', S3_PATH))
+    expect(state['Folio::Image'].dropzoneFiles).toEqual({ [S3_PATH]: { attributes: { progress: 0, dataThumbnail: 'foo' } } })
+    expect(state['Folio::Image'].pendingDataThumbnails[S3_PATH]).toEqual(undefined)
   })
 })

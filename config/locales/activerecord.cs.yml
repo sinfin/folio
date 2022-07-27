@@ -60,15 +60,6 @@ cs:
         google_analytics_tracking_code_v4: Google analytics - trackovací kód V4
         header_message: Oznámení v hlavičce webu
         locales: Jazyky
-        social_links/appstore: Appstore
-        social_links/facebook: Facebook
-        social_links/google_play: Google play
-        social_links/instagram: Instagram
-        social_links/linkedin: LinkedIn
-        social_links/messenger: Messenger
-        social_links/pinterest: Pinterest
-        social_links/twitter: Twitter
-        social_links/youtube: Youtube
         system_email: Systémová e-mailová adresa
         system_email_copy: Systémová e-mailová adresa (kopie)
       folio/email_template:
@@ -92,7 +83,8 @@ cs:
         keyword/FOLIO_LEAD_PHONE: Telefon vyplněný ve formuláři
         keyword/FOLIO_LEAD_URL: Adresa, ze které byl odeslán formulář
         keyword/ROOT_URL: URL adresa domovské stránky
-        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro přijetí pozvánky na web
+        keyword/SITE_TITLE: Název webu
+        keyword/USER_ACCEPT_INVITATION_URL: Adresa pro dokončení registrace
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:
@@ -100,14 +92,12 @@ cs:
         authentications: Propojení
         created_at: Vytvořen
         confirmed_at: Potvrzen
-        last_sign_in_at: Poslední přihlášení
         nickname: Přezdívka
         password: Heslo
         password_confirmation: Heslo (kontrola)
-        sign_in_count: Počet přihlášení
       folio/address/base:
-        address_line_1: Ulice a číslo
-        address_line_2: Druhý řádek adresy
+        address_line_1: Ulice
+        address_line_2: Číslo
         city: Město
         company_name: Název firmy
         country_code: Země
@@ -123,6 +113,7 @@ cs:
       messages:
         indestructible: Záznam není možné odstranit.
         file_format: 'není povolen. Povolené typy: %{types}'
+        wrong_namespace: Typ záznamu neodpovídá typu webové stránky.
       models:
         folio/atom/base:
           attributes:
@@ -257,6 +248,7 @@ cs:
     image_placements: Obrázky
     is_active: Aktivní
     last_name: Příjmení
+    last_sign_in_at: Poslední přihlášení
     locale: Překlad
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
@@ -272,7 +264,17 @@ cs:
     published_at: Zveřejněno k datu
     secondary_address: Adresa - doplňková
     sensitive_content: Obsahuje citlivý obsah
+    sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy
+    social_links/appstore: Appstore
+    social_links/facebook: Facebook
+    social_links/google_play: Google play
+    social_links/instagram: Instagram
+    social_links/linkedin: LinkedIn
+    social_links/messenger: Messenger
+    social_links/pinterest: Pinterest
+    social_links/twitter: Twitter
+    social_links/youtube: Youtube
     state: Stav
     tag_list: Klíčová slova
     title: Název

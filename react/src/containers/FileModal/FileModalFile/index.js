@@ -17,7 +17,7 @@ import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, readOnly, changeFilePlacementsPage }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage }) => {
   const file = fileModal.file
   const isImage = file.attributes.react_type === 'image'
   let download = file.attributes.file_name
@@ -45,10 +45,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
           {isImage && (
             <div className='col-lg-7 mb-3'>
               <MainImageOuter>
-                <div style={{
-                  backgroundColor: file.attributes.dominant_color,
-                  paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%`
-                }} />
+                <div style={{ paddingTop: `${100 * file.attributes.file_height / file.attributes.file_width}%` }} />
 
                 <MainImageInner>
                   <MainImage src={file.attributes.source_url} />
@@ -93,6 +90,8 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 </button>
               )}
             </div>
+
+            <p>ID: {file.attributes.id}</p>
 
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>
@@ -182,7 +181,11 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
         <div className={isImage ? 'row mt-3' : 'mt-3'}>
           {isImage && (
             <div className='col-lg-7 mb-3'>
-              <ThumbnailSizes file={file} updateThumbnail={updateThumbnail} />
+              <ThumbnailSizes
+                file={file}
+                updateThumbnail={updateThumbnail}
+                destroyThumbnail={destroyThumbnail}
+              />
             </div>
           )}
 

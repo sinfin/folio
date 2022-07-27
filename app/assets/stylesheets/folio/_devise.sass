@@ -1,10 +1,11 @@
-$folio-devise-form-control-max-width: 290px !default
+$folio-devise-danger-color: $danger !default
+$folio-devise-narrow-max-width: 307px !default
 $folio-devise-modal-max-width: 640px !default
 $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !default
 
 .f-devise
-  .form-control
-    max-width: $folio-devise-form-control-max-width
+  &__narrow
+    max-width: $folio-devise-narrow-max-width
 
   &__loader
     display: none
@@ -38,4 +39,8 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
     padding: 0 $grid-gutter-width / 2
     flex: 1 1 auto
 
+  &__danger
+    color: $folio-devise-danger-color
+
+@import '../../../cells/folio/addresses/**/*'
 @import '../../../cells/folio/devise/**/*'

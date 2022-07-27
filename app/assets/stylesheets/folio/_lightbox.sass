@@ -1,26 +1,29 @@
-@import 'photoswipe/src/css/main'
-@import 'photoswipe/src/css/default-skin/default-skin'
+@import 'photoswipe'
+@import 'photoswipe-dynamic-caption-plugin'
 
-.pswp__button,
-.pswp__button--arrow--left:before,
-.pswp__button--arrow--right:before
-  background-image: asset-url('photoswipe/src/css/default-skin/default-skin.png')
+$folio-lightbox-caption-font-size: 13px !default
+$folio-lightbox-caption-line-height: 18px !default
+$folio-lightbox-caption-mobile-font-size: $folio-lightbox-caption-font-size !default
+$folio-lightbox-caption-mobile-line-height: $folio-lightbox-caption-line-height !default
+$folio-lightbox-caption-author-color: $text-muted !default
+$folio-lightbox-caption-author-margin-top: 8px !default
+$folio-lightbox-caption-font-family: $font-family-sans-serif !default
 
-.pswp__button--arrow--left,
-.pswp__button--arrow--right
-  background-image: none
+.f-pswp__caption
+  font-size: $folio-lightbox-caption-font-size
+  line-height: $folio-lightbox-caption-line-height
+  font-family: $folio-lightbox-caption-font-family
 
-.pswp__caption__center
-  max-width: 930px
-  padding-left: 15px
-  padding-right: 15px
+  @if variable-exists(font-size-media-breakpoint)
+    +media-breakpoint-down($font-size-media-breakpoint)
+      font-size: $folio-lightbox-caption-mobile-font-size
+      line-height: $folio-lightbox-caption-mobile-line-height
 
-@media (-webkit-min-device-pixel-ratio: 1.1), (-webkit-min-device-pixel-ratio: 1.09375), (min-resolution: 105dpi), (min-resolution: 1.1dppx)
-  .pswp--svg .pswp__button,
-  .pswp--svg .pswp__button--arrow--left:before,
-  .pswp--svg .pswp__button--arrow--right:before
-    background-image: asset-url('photoswipe/src/css/default-skin/default-skin.svg')
+.f-pswp__caption-author
+  color: $folio-lightbox-caption-author-color
 
-  .pswp--svg .pswp__button--arrow--left,
-  .pswp--svg .pswp__button--arrow--right
-    background-image: none
+.f-pswp__caption-caption + .f-pswp__caption-author
+  margin-top: $folio-lightbox-caption-author-margin-top
+
+.pswp__dynamic-caption--below
+  max-width: 100%

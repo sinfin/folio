@@ -1,0 +1,10 @@
+---
+cs:
+  folio:
+    addresses:
+      fields:
+        title: Kontaktní údaje
+        address_line_1_regular: Adresa 1
+        address_line_1_inline: Ulice
+        address_line_2_regular: Adresa 2
+        address_line_2_inline: Číslo

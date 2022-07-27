@@ -75,7 +75,7 @@ load = ($input, $form, $wrap) ->
       else
         Turbolinks.visist("#{$form.prop('action')}?q=#{value}")
 
-debouncedLoad = window.folioDebounce(load, 300)
+debouncedLoad = window.Folio.debounce(load, 300)
 
 $(document)
   .on 'turbolinks:load', ->

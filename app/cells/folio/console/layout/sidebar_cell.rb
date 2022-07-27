@@ -7,84 +7,78 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def link_groups
     if ::Rails.application.config.folio_console_sidebar_link_class_names
-      class_names = ::Rails.application
-                           .config
-                           .folio_console_sidebar_link_class_names
+      ::Rails.application
+             .config
+             .folio_console_sidebar_link_class_names
     else
-      class_names = prepended_link_class_names +
-                    [[
-                      "Folio::Page",
-                      :homepage,
-                      "Folio::Menu",
-                      "Folio::Image",
-                      "Folio::Document",
-                      "Folio::ContentTemplate",
-                    ]] +
-                    runner_up_link_class_names +
-                    folio_link_class_names +
-                    appended_link_class_names
+      prepended_link_class_names +
+      main_class_names +
+      runner_up_link_class_names +
+      secondary_class_names +
+      appended_link_class_names
     end
-
-    link_groups_from(class_names)
   end
 
-  def link_groups_from(class_name)
-    if class_name.is_a?(Array)
-      class_name.map { |cn| link_groups_from(cn) }.compact
-    else
-      return if skip_link_class_names.include?(class_name)
+  def link_from(link_source)
+    return if skip_link_class_names.include?(link_source)
 
-      if class_name == :homepage
-        if homepage_instance
-          path = controller.url_for([:edit, :console, homepage_instance])
-          link(t(".homepage"), path)
-        end
-      elsif class_name.is_a?(Hash) &&
-         (class_name[:klass] || class_name[:label]) &&
-         class_name[:path]
+    if link_source == :homepage
+      if homepage_instance
+        path = controller.url_for([:edit, :console, homepage_instance])
+        link(t(".homepage"), path)
+      end
+    elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && link_source[:path]
+      if link_source[:klass]
+        return if controller.cannot?(:read, link_source[:klass].constantize)
+      end
 
-        if class_name[:klass]
-          return if controller.cannot?(:read, class_name[:klass].constantize)
-        end
+      label = if link_source[:label]
+        link_source[:label].is_a?(Symbol) ? t(".#{link_source[:label]}") : link_source[:label]
+      elsif link_source[:klass]
+        label_from(link_source[:klass].constantize)
+      else
+        ""
+      end
 
-        label = if class_name[:label]
-          t(".#{class_name[:label]}")
-        elsif class_name[:klass]
-          label_from(class_name[:klass].constantize)
-        else
-          ""
-        end
+      if link_source[:path].is_a?(String)
+        path = link_source[:path]
+      else
+        path_params = link_source[:params].presence || {}
 
         begin
-          path = controller.send(class_name[:path])
+          path = controller.send(link_source[:path], path_params)
         rescue NoMethodError
-          path = controller.main_app.send(class_name[:path])
+          path = controller.main_app.send(link_source[:path], path_params)
         end
+      end
 
-        paths = (class_name[:paths] || []).map do |p|
-          controller.send(p)
-        rescue NoMethodError
-          controller.main_app.send(p)
-        end
+      paths = (link_source[:paths] || []).map do |p|
+        controller.send(p)
+      rescue NoMethodError
+        controller.main_app.send(p)
+      end
 
-        if class_name[:icon]
-          link(nil, path, active_start_with: class_name[:active_start_with]) do
-            concat(content_tag(:i, "", class: "#{class_name[:icon]} f-c-layout-sidebar__icon"))
-            concat(label)
-          end
-        else
-          link(label, path, paths: paths,
-                            active_start_with: class_name[:active_start_with])
+      if path.include?("?")
+        paths << path.split("?", 2)[0]
+      end
+
+      if link_source[:icon]
+        link(nil, path, active_start_with: link_source[:active_start_with]) do
+          concat(content_tag(:i, "", class: "#{link_source[:icon]} f-c-layout-sidebar__icon"))
+          concat(label)
         end
       else
-        klass = class_name.constantize
-
-        return if controller.cannot?(:read, klass)
-
-        label = label_from(klass)
-        path = controller.url_for([:console, klass])
-        link(label, path)
+        link(label, path, paths:,
+                          active_start_with: link_source[:active_start_with])
       end
+    else
+      klass = link_source.constantize
+
+      return if controller.cannot?(:read, klass)
+
+      label = label_from(klass)
+      path = controller.url_for([:console, klass])
+      link(label, path)
     end
   end
 
@@ -115,24 +109,111 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     end
   end
 
-  def folio_link_class_names
-    [
-      ::Rails.application.config.folio_users ? %w[Folio::User] : nil,
-      %w[
-        Folio::NewsletterSubscription
-        Folio::Lead
-      ],
+  def main_class_names
+    if ::Rails.application.config.folio_site_is_a_singleton
+      [{
+        links: [
+          "Folio::Page",
+          :homepage,
+          "Folio::Menu",
+          "Folio::Image",
+          "Folio::Document",
+          "Folio::ContentTemplate",
+        ]
+      }]
+    else
       [
-        "Folio::Account",
-        "Folio::EmailTemplate",
         {
-          klass: "Folio::Site",
-          icon: "fa fa-cogs",
-          path: :edit_console_site_path,
-          label: "settings"
+          links: [
+            "Folio::Image",
+            "Folio::Document",
+            "Folio::ContentTemplate",
+          ]
+        }
+      ] + Folio::Site.ordered.map do |site|
+        link_for_class = -> (klass) do
+          {
+            klass: klass.to_s,
+            path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+          }
+        end
+
+        site_links = {
+          console_sidebar_prepended_links: [],
+          console_sidebar_before_menu_links: [],
+        }
+
+        %i[
+          console_sidebar_before_menu_links
+          console_sidebar_prepended_links
+        ].each do |key|
+          values = site.class.try(key)
+          if values.present?
+            values.each do |link_or_hash|
+              if link_or_hash.is_a?(Hash)
+                site_links[key] << link_or_hash
+              else
+                site_links[key] << link_for_class.call(link_or_hash.constantize)
+              end
+            end
+          end
+        end
+
+        {
+          title: site.title,
+          links: site_links[:console_sidebar_prepended_links].compact + [
+            link_for_class.call(Folio::Page),
+            homepage_for_site(site)
+          ].compact + site_links[:console_sidebar_before_menu_links].compact + [
+            link_for_class.call(Folio::Menu),
+            link_for_class.call(Folio::Lead),
+            link_for_class.call(Folio::NewsletterSubscription),
+            link_for_class.call(Folio::EmailTemplate),
+            {
+              klass: "Folio::Site",
+              icon: "fa fa-cogs",
+              path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+              label: t(".settings")
+            },
+          ].compact
+        }
+      end
+    end
+  end
+
+  def secondary_class_names
+    if ::Rails.application.config.folio_site_is_a_singleton
+      [
+        show_users? ? { links: %w[Folio::User] } : nil,
+        {
+          links: %w[
+            Folio::Lead
+            Folio::NewsletterSubscription
+          ],
         },
+        {
+          links: [
+            "Folio::Account",
+            "Folio::EmailTemplate",
+            {
+              klass: "Folio::Site",
+              icon: "fa fa-cogs",
+              path: :edit_console_site_path,
+              label: t(".settings")
+            },
+          ]
+        }
+      ].compact
+    else
+      [
+        {
+          links: [
+            ::Rails.application.config.folio_users ? "Folio::User" : nil,
+            "Folio::Account",
+          ].compact
+        }
       ]
-    ].compact
+    end
   end
 
   def prepended_link_class_names
@@ -166,5 +247,20 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def homepage_instance
     @homepage_instance ||= "#{::Rails.application.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false)
+  end
+
+  def homepage_for_site(site)
+    instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false)
+
+    if instance
+      {
+        label: t(".homepage"),
+        path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
+      }
+    end
+  end
+
+  def show_users?
+    ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
   end
 end

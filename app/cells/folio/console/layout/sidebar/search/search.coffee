@@ -24,7 +24,7 @@ search = (input) ->
       if $wrap.find('.f-c-searches-results__li').length is 0
         $wrap.addClass('f-c-layout-sidebar-search--error')
 
-debouncedSearch = $.debounce(search, 300)
+debouncedSearch = window.Folio.debounce(search, 300)
 
 handle = (e) ->
   $wrap ||= $('.f-c-layout-sidebar-search')

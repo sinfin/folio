@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= class_name.pluralize %>::Show::HeaderCellTest < Cell::TestCase
+  test "show" do
+    create(:folio_site)
+    model = create(:<%= model_resource_name %>)
+    html = cell("<%= namespace_path_base %>/<%= element_name.pluralize %>/show/header", model).(:show)
+    assert html.has_css?(".<%= cell_class_name %>")
+  end
+end

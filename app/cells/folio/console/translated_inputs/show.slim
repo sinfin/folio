@@ -5,7 +5,7 @@
     .f-c-translated-inputs
       = f.label key
 
-      .row
+      .row.f-c-translated-inputs__row
         - translations.each do |locale|
           .col-md.f-c-translated-inputs__col
             = f.input "#{key}_#{locale}".to_sym, *args_with_locale(locale)

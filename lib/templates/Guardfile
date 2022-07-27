@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-guard :rubocop, cli: ["--auto-correct-all"] do
+guard :rubocop, cli: ["--autocorrect-all"] do
   watch(%r{^(app|config|db|test)/.+\.rb$})
   watch(%r{^lib/.+\.(rb|rake)$})
 

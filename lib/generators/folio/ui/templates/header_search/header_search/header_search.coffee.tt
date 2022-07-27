@@ -93,7 +93,7 @@ loadAutocomplete = (input) ->
     error: ->
       stopAutocomplete($wrap)
 
-debouncedLoadAutocomplete = window.folioDebounce(loadAutocomplete, 300)
+debouncedLoadAutocomplete = window.Folio.debounce(loadAutocomplete, 300)
 
 $(document)
   .on 'click', '.<%= classname_prefix %>-ui-header-search__a', (e) ->

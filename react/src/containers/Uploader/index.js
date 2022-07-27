@@ -1,97 +1,76 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import DropzoneComponent from 'react-dropzone-component'
-import styled from 'styled-components'
-import { uniqueId } from 'lodash'
-
-import { CSRF } from 'utils/api'
-import { flashMessageFromApiErrors } from 'utils/flash'
 
 import Loader from 'components/Loader'
+
 import {
-  addedFile,
-  thumbnail,
-  success,
-  error,
-  progress,
+  showTagger,
+  addDropzoneFile,
+  updateDropzoneFile,
+  removeDropzoneFile,
+  thumbnailDropzoneFile,
   makeUploadsSelector
 } from 'ducks/uploads'
 
-import { HIDDEN_DROPZONE_TRIGGER_CLASSNAME } from './constants'
+import { uploadedFile } from 'ducks/files'
 
 const date = new Date()
 let month = date.getMonth() + 1
 if (month < 10) month = `0${month}`
 
-const StyledDropzone = styled(DropzoneComponent)`
-  .dz-default.dz-message {
-    display: none;
-  }
-
-  .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME} {
-    position: absolute;
-    visibility: hidden;
-    width: 0;
-    height: 0;
-  }
-`
-
 export const UploaderContext = React.createContext(() => {})
 
 class Uploader extends Component {
-  state = { uploaderClassName: uniqueId('folio-console-uploader-') }
-
-  dropzone = null
-
-  eventHandlers () {
-    const { dispatch, fileType } = this.props
-
-    return {
-      addedfile: (file) => dispatch(addedFile(fileType, file)),
-      thumbnail: (file, dataUrl) => dispatch(thumbnail(fileType, file, dataUrl)),
-      success: (file, response) => dispatch(success(fileType, file, response)),
-      error: (file, message) => {
-        dispatch(error(fileType, file, flashMessageFromApiErrors(message)))
-      },
-      uploadprogress: (file, percentage) => dispatch(progress(fileType, file, Math.round(percentage))),
-      init: (dropzone) => { this.dropzone = dropzone }
-    }
-  }
-
-  config () {
-    return {
-      iconFiletypes: ['.jpg', '.png', '.gif'],
-      showFiletypeIcon: false,
-      postUrl: this.props.filesUrl
-    }
-  }
-
-  djsConfig () {
-    const params = {}
-    params['file[type]'] = this.props.fileType
-    params['file[attributes][type]'] = this.props.fileType
-    params['file[attributes][tag_list]'] = this.props.uploads.uploadAttributes.tags.join(',')
-
-    return {
-      headers: CSRF,
-      paramName: 'file[attributes][file]',
-      previewTemplate: '<span></span>',
-      clickable: `.${this.state.uploaderClassName} .${HIDDEN_DROPZONE_TRIGGER_CLASSNAME}`,
-      thumbnailMethod: 'contain',
-      thumbnailWidth: 150,
-      thumbnailHeight: 150,
-      timeout: 0,
-      parallelUploads: 5,
-      maxFilesize: 4096,
-      params
-    }
+  constructor (props) {
+    super(props)
+    this.dropzoneDivRef = React.createRef()
   }
 
   triggerFileInput = () => {
-    this.dropzone.hiddenFileInput.click()
+    window.FolioConsole.S3Upload.triggerDropzone(this.dropzone)
+  }
+
+  componentDidMount () {
+    this.dropzone = window.FolioConsole.S3Upload.createConsoleDropzone({
+      element: this.dropzoneDivRef.current,
+      filesUrl: this.props.filesUrl,
+      fileType: this.props.fileType,
+      onStart: (s3Path, fileAttributes) => {
+        this.props.dispatch(addDropzoneFile(this.props.fileType, s3Path, fileAttributes))
+      },
+      onSuccess: (s3Path, fileFromApi) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
+        this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
+        this.props.dispatch(uploadedFile(this.props.fileType, fileFromApi))
+        this.props.dispatch(showTagger(this.props.fileType, fileFromApi.id))
+      },
+      onFailure: (s3Path) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
+        this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
+      },
+      onProgress: (s3Path, progress) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
+        this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, { progress }))
+      },
+      onThumbnail: (s3Path, dataThumbnail) => {
+        if (!this.props.uploads.dropzoneFiles[s3Path]) return
+
+        this.props.dispatch(thumbnailDropzoneFile(this.props.fileType, s3Path, dataThumbnail))
+      },
+      dropzoneOptions: {
+        clickable: true,
+        previewsContainer: false,
+        previewTemplate: '',
+        disablePreviews: true
+      }
+    })
   }
 
   componentWillUnmount () {
+    window.FolioConsole.S3Upload.destroyDropzone(this.dropzone)
     this.dropzone = null
   }
 
@@ -101,22 +80,16 @@ class Uploader extends Component {
 
     return (
       <UploaderContext.Provider value={this.triggerFileInput}>
-        <StyledDropzone
-          config={this.config()}
-          djsConfig={this.djsConfig()}
-          eventHandlers={this.eventHandlers()}
-          className={this.state.uploaderClassName}
-        >
+        <div className='f-c-r-dropzone' ref={this.dropzoneDivRef}>
           {this.props.children}
-          <span className={HIDDEN_DROPZONE_TRIGGER_CLASSNAME} />
-        </StyledDropzone>
+        </div>
       </UploaderContext.Provider>
     )
   }
 }
 
 const mapStateToProps = (state, props) => ({
-  uploads: makeUploadsSelector(props.fileType)(state)
+  uploads: props.fileType ? makeUploadsSelector(props.fileType)(state) : null
 })
 
 function mapDispatchToProps (dispatch) {

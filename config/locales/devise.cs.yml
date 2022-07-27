@@ -26,19 +26,38 @@ cs:
     devise:
       submit: Odeslat
       forgotten_password_link: Zapomenuté heslo?
-      register_button: Vytvořit nový účet
+      invite_button: Vytvořit nový účet
       sign_in_link: Již u nás máte účet?
       sign_in_link_inner: Přihlašte se
 
+      resource_form:
+        email_label: E-mail (slouží pro přihlášení)
+        password_label: Zvolte heslo pro další přihlášení
+        subscribed_to_newsletter_label: Mám zájem o odběr novinek na e-mail
+        title_with_password: Nastavte si heslo
+        title_without_password: Dokončení registrace
+        perex: Pro dokončení registrace prosíme doplňte následující údaje.
+        submit: Dokončit registraci
+
       invitations:
-        edit:
-          title: Nastavte si heslo
+        new:
+          email_label: E-mail (slouží pro přihlášení)
+          phone_label: Telefon
+          sign_up: Vytvořit účet
+          title: Registrace
+          gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.
+          failure: Registrace se nezdařila. Zkuste to prosím znovu.
+
+        show:
+          title: Potvrzení e-mailu
+          text: Prosíme potvrďte Vaší e-mailovou adresu kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          resend_email: Znovu zaslat ověřovací e-mail
 
       sessions:
         new:
           title: Přihlášení
           sign_in: Přihlásit se
-          invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.
+          failure: Přihlášení se nezdařilo. Zkuste to prosím znovu.
 
         create:
           invalid: Neplatný e-mail nebo heslo
@@ -53,13 +72,6 @@ cs:
           change_password: Nastavit nové heslo
 
       registrations:
-        new:
-          email_label: E-mail (slouží pro přihlášení)
-          phone_label: Telefon
-          sign_up: Vytvořit účet
-          title: Registrace
-          gdpr_content: Odesláním formuláře beru na vědomí, že mé osobní údaje budou zpracovány dle našich zásad ochrany osobních údajů a souhlasím se všeobecnými obchodními podmínkami.
-
         edit:
           update: Uložit
           title: Osobní údaje
@@ -68,6 +80,16 @@ cs:
           pending_reconfirmation: Čekáme na potvrzení změny na %{email}
           sent_reset_password_instructions: Za několik minut obdržíte e-mail s instrukcemi pro nastavení nového hesla.
           email_blank: Pro přihlášení pomocí hesla je potřeba nejprve vyplnit e-mailovou adresu.
+
+        edit_password:
+          change_password: Změnit heslo
+          new_password: Nové heslo
+          new_password_confirmation: Nové heslo (kontrola)
+          title: Změna hesla
+
+        update_password:
+          success: Heslo bylo změněno.
+          failure: Heslo se nepodařilo změnit.
 
       confirmations:
         new:
@@ -99,9 +121,18 @@ cs:
         resend_link: Zaslat znovu
 
     users:
-      registrations:
+      invitations:
         create:
           failure: Účet se nepodařilo vytvořit. Prosíme zkontrolujte označená pole.
 
       omniauth_callbacks:
         added_provider: "%{provider} účet úspěšně připojen."
+
+        new_user:
+          invalid_session_data: Neplatné přihlášení.
+
+        create_user:
+          failure: Registraci se nepodařilo dokončit.
+
+        resolve_conflict:
+          invalid_conflict_token_flash: Odkaz již není platný. Zkuste se přihlásit znovu.

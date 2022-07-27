@@ -188,3 +188,13 @@
   url: https://www.google.com/
 
 - type: <%= application_namespace %>::Atom::Share
+
+- type: <%= application_namespace %>::Atom::Images
+  images: true
+  same_width: true
+  _showcase: "same_width: true"
+
+- type: <%= application_namespace %>::Atom::Images
+  images: true
+  same_width: false
+  _showcase: "same_width: false"

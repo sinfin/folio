@@ -41,7 +41,7 @@ class ApplicationCell < Folio::ApplicationCell
     end
 
     def current_page_singleton(klass, fail_on_missing: false)
-      controller.try(:current_page_singleton, klass, fail_on_missing: fail_on_missing)
+      controller.try(:current_page_singleton, klass, fail_on_missing:)
     end
   end
 end

@@ -28,14 +28,14 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
       href: controller.new_session_path(resource_name))
   end
 
-  def register_button_class_name
+  def invite_button_class_name
     "btn btn-outline-primary"
   end
 
-  def register_button
-    link_to(t("folio.devise.register_button"),
-            controller.new_registration_path(resource_name),
-            class: "f-devise-modal-aware-link #{register_button_class_name}")
+  def invite_button
+    link_to(t("folio.devise.invite_button"),
+            controller.new_invitation_path(resource_name),
+            class: "f-devise-modal-aware-link #{invite_button_class_name}")
   end
 
   def submit_button(f, label)
@@ -50,6 +50,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
 
   def email_input(f, opts = {})
     f.input :email, opts.merge(required: true,
+                               disabled: opts[:disabled],
                                input_html: {
                                 autofocus: opts[:autofocus].nil? ? true : opts[:autofocus],
                                 autocomplete: "email",
@@ -69,7 +70,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   def password_input(f, field, opts = {})
     cell("folio/devise/password_input",
          f,
-         opts.merge(field: field))
+         opts.merge(field:))
   end
 
   def attribute_input(f, field, opts = {})
@@ -83,10 +84,10 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
     "btn btn-outline-primary btn-xs-block"
   end
 
-  def registrations_perex
+  def invitations_perex
   end
 
-  def registration_gdpr_content
+  def invitations_gdpr_content
     content_tag(:p, t(".gdpr_content"))
   end
 
@@ -100,5 +101,13 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
 
   def omniauth_button_icon(key)
     cell("folio/devise/omniauth/icon", key, size: 24)
+  end
+
+  def application_namespace
+    ::Rails.application.class.name.deconstantize
+  end
+
+  def application_namespace_path
+    application_namespace.underscore
   end
 end

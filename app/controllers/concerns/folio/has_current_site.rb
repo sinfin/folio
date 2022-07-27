@@ -8,6 +8,6 @@ module Folio::HasCurrentSite
   end
 
   def current_site
-    @current_site ||= Folio::Site.instance
+    @current_site ||= Folio.current_site(request:)
   end
 end

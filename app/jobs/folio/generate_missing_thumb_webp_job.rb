@@ -4,7 +4,7 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
   queue_as :slow
 
   def perform(image)
-    return if /svg/.match?(image.mime_type)
+    return if /svg/.match?(image.file_mime_type)
     return if image.animated_gif?
 
     # need to reload here because of parallel jobs
@@ -23,7 +23,7 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes: thumbnail_sizes)
+        image.update!(thumbnail_sizes:)
       end
     end
   end
@@ -37,7 +37,7 @@ class Folio::GenerateMissingThumbWebpJob < Folio::ApplicationJob
       webp_uid = webp.store
 
       data.merge(
-        webp_uid: webp_uid,
+        webp_uid:,
         webp_url: Dragonfly.app.datastore.url_for(webp_uid),
         webp_signature: webp.signature,
       )

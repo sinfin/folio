@@ -1,11 +1,11 @@
 ---
-en:
+cs:
   activerecord:
     attributes:
       application_namespace_path/atom/card: 
     models:
       application_namespace_path/atom/card: 
-cs:
+en:
   activerecord:
     attributes:
       application_namespace_path/atom/card: 

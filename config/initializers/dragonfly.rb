@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
-require "dragonfly"
-require "dragonfly/s3_data_store"
-require "open3"
-
 Dragonfly.logger = Rails.logger
 Rails.application.middleware.use Dragonfly::Middleware
 
@@ -26,24 +22,31 @@ def shell(*command)
 end
 
 Dragonfly.app.configure do
-  plugin :imagemagick
+  plugin :libvips
 
-  processor :cmyk_to_srgb do |content, *args|
-    if /CMYK/.match?(shell("identify", content.file.path))
+  analyser :mime_type do |content|
+    content.shell_eval do |path|
+      "file --brief --mime-type #{path}"
+    end.chomp
+  end
+
+  processor :normalize_profiles_via_liblcms2 do |content, *args|
+    if shell("which", "jpgicc").blank?
+      msg = "Missing jpgicc binary. Profiles not normalized."
+      Raven.capture_message msg if defined?(Raven)
+      logger.error msg if defined?(logger)
+      content
+    else
       content.shell_update escape: false do |old_path, new_path|
-        cmyk_icc = "#{Folio::Engine.root}/data/icc_profiles/PSOuncoated_v3_FOGRA52.icc"
-        srgb_icc = "#{Folio::Engine.root}/data/icc_profiles/sRGB_v4_ICC_preference.icc"
-        "convert -profile #{cmyk_icc} '#{old_path}' -profile #{srgb_icc} -colorspace sRGB '#{new_path}'"
+        "jpgicc #{old_path} #{new_path}"
       end
     end
   end
 
   processor :flatten do |content, *args|
-    content.process! :convert, "-flatten"
-  end
-
-  processor :auto_orient do |content, *args|
-    content.process! :convert, "-auto-orient"
+    # TODO
+    # content.process! :convert, "-flatten"
+    content
   end
 
   processor :jpegoptim do |content, *args|
@@ -65,10 +68,6 @@ Dragonfly.app.configure do
     content.shell_update do |old_path, new_path|
       "gifsicle --resize-fit #{size} #{old_path} --output #{new_path}"
     end
-  end
-
-  processor :add_white_background do |content, *args|
-    content.process! :convert, "-background white -alpha remove"
   end
 
   processor :convert_to_webp do |content, *args|
@@ -99,10 +98,12 @@ Dragonfly.app.configure do
 
   url_format "/media/:job/:sha/:name"
 
-  if Rails.env.test? || (Rails.env.development? && !ENV["DEV_S3_DRAGONFLY"])
+  if Rails.env.test?
     datastore :file,
               root_path: Rails.root.join("public/system/dragonfly/#{Rails.env}/files"),
               server_root: Rails.root.join("public")
+  elsif Rails.env.development? && !File.exist?(Rails.root.join(".env"))
+    puts "\nMissing .env file, not setting up dragonfly correctly.\n\n"
   else
     datastore :s3,
               bucket_name: ENV.fetch("S3_BUCKET_NAME"),

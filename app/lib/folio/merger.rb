@@ -51,12 +51,12 @@ class Folio::Merger
       if bang
         @original.update!(attrs)
         @duplicate.reload.destroy!
-        post_merge_update(bang: bang)
+        post_merge_update(bang:)
         success = true
       else
         success = @original.update(attrs)
         @duplicate.reload.destroy
-        success = success && (post_merge_update(bang: bang) != false)
+        success = success && (post_merge_update(bang:) != false)
       end
 
       success

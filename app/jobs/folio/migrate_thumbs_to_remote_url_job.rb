@@ -4,7 +4,7 @@ class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
   queue_as :slow
 
   def perform(image)
-    return if /svg/.match?(image.mime_type)
+    return if /svg/.match?(image.file_mime_type)
     return if image.animated_gif?
 
     # need to reload here because of parallel jobs
@@ -24,7 +24,7 @@ class Folio::MigrateThumbsToRemoteUrlJob < Folio::ApplicationJob
       end
 
       if changed
-        image.update!(thumbnail_sizes: thumbnail_sizes)
+        image.update!(thumbnail_sizes:)
       end
     end
   end

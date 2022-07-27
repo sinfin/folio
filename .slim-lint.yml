@@ -3,7 +3,9 @@ linters:
     enabled: false
 
 exclude:
+  - app/cells/folio/addresses/fields/show.slim
   - app/cells/folio/console/console_notes/catalogue_tooltip/show.slim
+  - app/cells/folio/console/private_attachments/fields/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/cookie_consent/show.slim
   - app/cells/folio/devise/modal/_close.slim
@@ -15,12 +17,15 @@ exclude:
   - app/cells/folio/ui/_typo.slim
   - app/cells/folio/ui/show.slim
   - app/views/folio/console/accounts/_form.slim
+  - app/views/folio/console/base/_private_attachments.slim
   - app/views/folio/console/pages/index.slim
+  - app/views/folio/console/partials/_react_modals.slim
   - app/views/folio/console/partials/_translations.slim
   - app/views/folio/console/users/_form.slim
   - app/views/layouts/folio/_analytics.slim
   - app/views/layouts/folio/_cookieconsent.slim
   - app/views/layouts/folio/console/_head.slim
   - app/views/layouts/folio/console/application.slim
+  - app/views/layouts/folio/mailer.html.slim
   - lib/generators/folio/console/scaffold/templates/*
   - test/dummy/app/cells/dummy/ui/menu/show.slim

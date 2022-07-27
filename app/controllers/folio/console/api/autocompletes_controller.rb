@@ -25,8 +25,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       scope = scope.limit(25)
-                   .map(&:to_autocomplete_label)
-                   .compact
+                   .filter_map(&:to_autocomplete_label)
                    .uniq
                    .first(10)
 
@@ -180,7 +179,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
             {
               id: record.id,
-              text: text,
+              text:,
               label: text,
               value: Folio::Console::StiHelper.sti_record_to_select_value(record),
               type: klass.to_s

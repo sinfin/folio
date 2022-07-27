@@ -10,6 +10,7 @@ class Folio::Devise::PasswordInputCell < Folio::Devise::ApplicationCell
                   autocomplete: options[:autocomplete],
                   class: "f-devise-password-input__input",
                   id: nil,
+                  value: options[:keep_password] ? model.object.send(options[:field]) : nil,
                 }
   end
 end

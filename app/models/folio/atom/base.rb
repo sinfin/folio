@@ -28,16 +28,17 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   VALID_PLACEMENT_TYPES = nil
 
-  FORM_LAYOUT = [
-    "ATTACHMENTS",
-    "ASSOCIATIONS",
-    "STRUCTURE",
-  ]
+  FORM_LAYOUT = {
+    rows: [
+      "ATTACHMENTS",
+      "ASSOCIATIONS",
+      "STRUCTURE",
+    ]
+  }
 
   self.table_name = "folio_atoms"
 
   audited associated_with: :placement,
-          except: [:data_for_search],
           if: :placement_has_audited_atoms?
 
   attr_readonly :type
@@ -48,8 +49,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
              touch: true,
              required: true
   scope :by_type, -> (type) { where(type: type.to_s) }
-
-  before_save :set_data_for_search
 
   validates :type, presence: true
   validate :validate_placement
@@ -68,11 +67,11 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def to_h
     {
-      id: id,
-      type: type,
-      position: position,
-      placement_type: placement_type,
-      placement_id: placement_id,
+      id:,
+      type:,
+      position:,
+      placement_type:,
+      placement_id:,
       data: data || {},
     }.merge(attachments_to_h).merge(associations_to_h)
   end
@@ -205,6 +204,16 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     super - [inheritance_column]
   end
 
+  def self.default_atom_values
+    # { STRUCTURE_KEY => value }
+    # i.e. { content: "<p>hello</p>" }
+    {}
+  end
+
+  def data_for_search
+    data.try(:values).try(:join, "\n").presence
+  end
+
   private
     def klass
       # as type can be changed
@@ -229,10 +238,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
       end
     end
 
-    def set_data_for_search
-      self.data_for_search = data.try(:values).try(:join, "\n").presence
-    end
-
     def placement_has_audited_atoms?
       placement.class.try(:has_audited_atoms?)
     end
@@ -248,17 +253,16 @@ end
 #
 # Table name: folio_atoms
 #
-#  id              :bigint(8)        not null, primary key
-#  type            :string
-#  position        :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  placement_type  :string
-#  placement_id    :bigint(8)
-#  locale          :string
-#  data            :jsonb
-#  associations    :jsonb
-#  data_for_search :text
+#  id             :bigint(8)        not null, primary key
+#  type           :string
+#  position       :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  placement_type :string
+#  placement_id   :bigint(8)
+#  locale         :string
+#  data           :jsonb
+#  associations   :jsonb
 #
 # Indexes
 #

@@ -1,29 +1,39 @@
 # frozen_string_literal: true
 
 module Folio::MailerEmailTemplates
-  def email_template_for(action = nil, mailer: nil)
+  def email_template_for(action = nil, mailer: nil, bang: false)
     action ||= action_name
     mailer ||= self.class.to_s
-    Folio::EmailTemplate.find_by(mailer: mailer, action: action)
+
+    find_by = { mailer:, action: }
+
+    unless Rails.application.config.folio_site_is_a_singleton
+      find_by[:site] = Folio.site_instance_for_mailers
+    end
+
+    if bang
+      Folio::EmailTemplate.find_by!(find_by)
+    else
+      Folio::EmailTemplate.find_by(find_by)
+    end
   end
 
   def email_template_for!(action = nil, mailer: nil)
-    action ||= action_name
-    mailer ||= self.class.to_s
-    Folio::EmailTemplate.find_by!(mailer: mailer, action: action)
+    email_template_for(action, mailer:, bang: true)
   end
 
   def email_template_mail(sym_data = {}, opts = {})
     @data = sym_data.stringify_keys
     @email_template = email_template_for!
 
-    @data[:ROOT_URL] = root_url(only_path: false)
-    @data[:DOMAIN] = Folio::Site.instance.domain
+    @data[:ROOT_URL] = "#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
+    @data[:SITE_TITLE] = Folio.site_instance_for_mailers.title
+    @data[:DOMAIN] = Folio.site_instance_for_mailers.domain
 
     opts[:subject] = @email_template.render_subject(@data)
     opts[:to] ||= self.class.system_email
     opts[:cc] ||= self.class.system_email_copy
-    opts[:from] ||= Folio::Site.instance.email
+    opts[:from] ||= Folio.site_instance_for_mailers.email
     opts[:template_path] = "folio/email_templates"
     opts[:template_name] = "mail"
 
@@ -36,8 +46,9 @@ module Folio::MailerEmailTemplates
 
     if @email_template.present?
       @data ||= {}
-      @data[:ROOT_URL] = root_url(only_path: false)
-      @data[:DOMAIN] = Folio::Site.instance.domain
+      @data[:ROOT_URL] = "#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
+      @data[:SITE_TITLE] = Folio.site_instance_for_mailers.title
+      @data[:DOMAIN] = Folio.site_instance_for_mailers.domain
       @data[:USER_EMAIL] = record.email
 
       opts[:subject] = @email_template.render_subject(@data)

@@ -3,9 +3,9 @@
 class Folio::File < Folio::ApplicationRecord
   include Folio::Filterable
   include Folio::HasHashId
-  include Folio::MimeTypeDetection
   include Folio::SanitizeFilename
   include Folio::Taggable
+  include Folio::Thumbnails
 
   dragonfly_accessor :file do
     after_assign :sanitize_filename
@@ -67,7 +67,6 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
-  before_validation :set_mime_type
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job!
@@ -77,20 +76,20 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def file_extension
-    if /msword/.match?(mime_type)
+    if /msword/.match?(file_mime_type)
       /docx/.match?(file_name) ? :docx : :doc
     else
-      Mime::Type.lookup(mime_type).symbol
+      Mime::Type.lookup(file_mime_type).symbol
     end
   end
 
   def to_h
     {
-      thumb: is_a?(Folio::Image) ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
-      file_size: file_size,
-      file_name: file_name,
-      type: type,
-      id: id,
+      thumb: thumbnailable? ? thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE).url : nil,
+      file_size:,
+      file_name:,
+      type:,
+      id:,
     }
   end
 
@@ -113,17 +112,10 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   def run_after_save_job!
-    Folio::Files::AfterSaveJob.perform_later(self)
+    Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
   end
 
   private
-    def set_mime_type
-      return unless will_save_change_to_file_uid?
-      return unless file.present?
-      return unless respond_to?(:mime_type)
-      self.mime_type = get_mime_type(file)
-    end
-
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
     end
@@ -141,13 +133,12 @@ end
 #  file_uid             :string
 #  file_name            :string
 #  type                 :string
-#  thumbnail_sizes      :text             default("--- {}\n")
+#  thumbnail_sizes      :text             default({})
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
 #  file_width           :integer
 #  file_height          :integer
 #  file_size            :bigint(8)
-#  mime_type            :string(255)
 #  additional_data      :json
 #  file_metadata        :json
 #  hash_id              :string
@@ -156,6 +147,7 @@ end
 #  file_placements_size :integer
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
+#  file_mime_type       :string
 #
 # Indexes
 #

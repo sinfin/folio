@@ -9,10 +9,14 @@
 //= require folio-bootstrap/js/dist/util
 //= require folio-bootstrap/js/dist/modal
 
+//= require folio/_message-bus
+//= require folio/addresses
 //= require folio/atoms
 //= require folio/cookie_consent/cookie_consent
+//= require folio/csrf
 //= require folio/debounce
 //= require folio/devise
+//= require folio/input/phone
 //= require folio/lazyload
 //= require folio/lightbox
 
@@ -30,5 +34,6 @@
 //= require dummy/ui/modal/modal
 //= require dummy/ui/navigation/navigation
 
+//= require dummy/atom/images/images
 //= require dummy/atom/map/map
 //= require dummy/molecule/hero/hero

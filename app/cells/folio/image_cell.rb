@@ -15,7 +15,8 @@ class Folio::ImageCell < Folio::ApplicationCell
                         :round,
                         :static?,
                         :sensitive_content?,
-                        :vertical_image?
+                        :vertical_image?,
+                        :custom_lightbox
 
   def show
     render if size
@@ -42,8 +43,8 @@ class Folio::ImageCell < Folio::ApplicationCell
         src: model[:normal],
         srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
         webp_src: model[:webp_normal],
-        webp_srcset: webp_srcset,
-        use_webp: use_webp,
+        webp_srcset:,
+        use_webp:,
       }
     else
       if model.is_a?(Folio::FilePlacement::Base)
@@ -55,13 +56,13 @@ class Folio::ImageCell < Folio::ApplicationCell
       normal = file.thumb(size)
 
       h = {
-        normal: normal,
+        normal:,
         src: normal.url,
         alt: options[:alt] || "",
         title: options[:title],
       }
 
-      unless /svg/.match?(file.mime_type)
+      unless /svg/.match?(file.file_mime_type)
         retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
 
         retina = file.thumb(retina_size)
@@ -254,7 +255,7 @@ class Folio::ImageCell < Folio::ApplicationCell
         h = h.merge(options[:lightbox])
       elsif model.is_a?(Folio::FilePlacement::Base)
         h = h.merge(lightbox(model))
-        h["data-lightbox-title"] ||= options[:title] || options[:title]
+        h["data-lightbox-caption"] ||= options[:title]
       else
         h = h.merge(lightbox_from_image(model))
       end

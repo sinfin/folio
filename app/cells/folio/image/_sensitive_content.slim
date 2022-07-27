@@ -1,6 +1,6 @@
 .f-image__sensitive-content[
   title=t('.sensitive_content_title')
-  onclick="event.stopPropagation(); event.preventDefault(); return window.folioImageSensitiveContentModal('#{Folio::SensitiveContentModalCell::CLASS_NAME}')"
+  onclick="event.stopPropagation(); event.preventDefault(); return window.Folio.ImageSensitiveContentModal.open('#{Folio::SensitiveContentModalCell::CLASS_NAME}')"
 ]
   svg[
     class="f-image__sensitive-content-svg"

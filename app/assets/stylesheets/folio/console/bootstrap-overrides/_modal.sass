@@ -1,13 +1,13 @@
-.folio-console-react-modal
+.f-c-r-modal
   .modal-open &
     overflow: hidden
 
-  .modal-header
-    margin-top: - $modal-inner-padding
-
-  .modal-dialog
+  &__modal-dialog
     min-width: 320px
     height: calc(100% - 3.5rem)
+
+    +media-breakpoint-up(lg)
+      max-width: 1056px
 
     .modal-content,
     .modal-body,
@@ -18,6 +18,7 @@
   .modal-body
     position: relative
     z-index: 1
+    padding: 0
 
   .close
     position: absolute
@@ -31,27 +32,24 @@
     .modal-dialog
       max-width: 100%
 
-.folio-console-modal__scroll-wrap
+.f-c-r-modal__scroll-wrap
   height: 100%
   display: flex
   flex-direction: column
 
-.folio-console-modal__scroll-fixed
+.f-c-r-modal__scroll-fixed
   flex: 0 0 auto
   position: relative
   z-index: 2
-  margin: 0 (( - $modal-inner-padding ))
 
   .alert
     margin-top: 1rem
 
-.folio-console-modal__scroll-inner
+.f-c-r-modal__scroll-inner
   +border-bottom-radius($modal-content-border-radius)
   flex: 1 1 auto
   position: relative
   z-index: 1
-  margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
-  padding: $modal-inner-padding
 
 .modal-body .modal-footer
   margin: $modal-inner-padding (( - $modal-inner-padding )) (( - $modal-inner-padding ))
@@ -91,18 +89,18 @@
     overflow-y: auto
 
 +media-breakpoint-up(sm)
-  .folio-console-modal__scroll-wrap
+  .f-c-r-modal__scroll-wrap
     height: 100%
     display: flex
     flex-direction: column
 
-  .folio-console-modal__scroll-inner
+  .f-c-r-modal__scroll-inner
     overflow-y: auto
     overflow-x: hidden
     -webkit-overflow-scrolling: touch
 
 +media-breakpoint-down(xs)
-  .folio-console-react-modal
+  .f-c-r-modal
     .close
       height: 3rem
       top: 0
@@ -110,11 +108,10 @@
     .modal-body
       padding: 0
 
-  .folio-console-modal__scroll-wrap
+  .f-c-r-modal__scroll-wrap
     overflow-y: auto
     overflow-x: hidden
     -webkit-overflow-scrolling: touch
-    padding: $modal-inner-padding
 
-  .folio-console-modal__scroll-fixed
+  .f-c-r-modal__scroll-fixed
     position: static

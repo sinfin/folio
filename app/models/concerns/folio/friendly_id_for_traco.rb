@@ -6,13 +6,24 @@ module Folio::FriendlyIdForTraco
   included do
     extend FriendlyId
 
-    friendly_id :slug_candidates, use: %i[slugged history simple_i18n]
+    if defined?(self::FRIENDLY_ID_SCOPE)
+      friendly_id :slug_candidates, use: %i[slugged history simple_i18n scoped], scope: self::FRIENDLY_ID_SCOPE
 
-    I18n.available_locales.each do |locale|
-      validates "slug_#{locale}".to_sym,
-                presence: true,
-                uniqueness: true,
-                format: { with: /[a-z][0-9a-z-]+/ }
+      I18n.available_locales.each do |locale|
+        validates "slug_#{locale}".to_sym,
+                  presence: true,
+                  uniqueness: { scope: self::FRIENDLY_ID_SCOPE },
+                  format: { with: /[a-z][0-9a-z-]+/ }
+      end
+    else
+      friendly_id :slug_candidates, use: %i[slugged history simple_i18n]
+
+      I18n.available_locales.each do |locale|
+        validates "slug_#{locale}".to_sym,
+                  presence: true,
+                  uniqueness: true,
+                  format: { with: /[a-z][0-9a-z-]+/ }
+      end
     end
 
     before_validation :set_missing_slugs

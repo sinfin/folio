@@ -4,7 +4,8 @@
 
     = f.hidden_field :reset_password_token
 
-    == password_input(f, :password, autocomplete: 'new-password')
-    == password_input(f, :password_confirmation, autocomplete: 'new-password')
+    .f-devise__narrow
+      == password_input(f, :password, autocomplete: 'new-password')
+      == password_input(f, :password_confirmation, autocomplete: 'new-password')
 
     = submit_button(f, t('.change_password'))

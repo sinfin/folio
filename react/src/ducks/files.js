@@ -1,5 +1,4 @@
 import { apiGet, apiPut, apiDelete } from 'utils/api'
-import { flashError, flashSuccess } from 'utils/flash'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find, without, omit } from 'lodash'
 
@@ -13,7 +12,7 @@ import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 const GET_FILES = 'files/GET_FILES'
 const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
-const THUMBNAIL_GENERATED = 'files/THUMBNAIL_GENERATED'
+export const MESSAGE_BUS_THUMBNAIL_GENERATED = 'files/MESSAGE_BUS_THUMBNAIL_GENERATED'
 const DELETE_FILE = 'files/DELETE_FILE'
 const DELETE_FILE_FAILURE = 'files/DELETE_FILE_FAILURE'
 const UPDATE_FILE = 'files/UPDATE_FILE'
@@ -40,8 +39,8 @@ export function uploadedFile (fileType, file) {
   return { type: UPLOADED_FILE, fileType, file }
 }
 
-export function thumbnailGenerated (fileType, temporaryUrl, url) {
-  return { type: THUMBNAIL_GENERATED, fileType, temporaryUrl, url }
+export function messageBusThumbnailGenerated (fileType, filesUrl, data) {
+  return { type: MESSAGE_BUS_THUMBNAIL_GENERATED, fileType, filesUrl, data }
 }
 
 export function updatedFiles (fileType, files) {
@@ -96,7 +95,7 @@ function * getFilesPerform (action) {
     const response = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.fileType, response.data, response.meta))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -118,7 +117,7 @@ function * updateFilePerform (action) {
     const response = yield call(apiPut, fullUrl, data)
     yield put(updateFileSuccess(action.fileType, action.file, response.data))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
     yield put(updateFileFailure(action.fileType, action.file))
   }
 }
@@ -136,7 +135,7 @@ function * changeFilesPagePerform (action) {
     }
     yield put(getFiles(action.fileType, action.filesUrl, query))
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -151,14 +150,14 @@ function * massDeletePerform (action) {
     const fullUrl = `${filesUrl}/mass_destroy?ids=${massSelectedIds.join(',')}`
     const res = yield call(apiDelete, fullUrl)
     if (res.error) {
-      flashError(res.error)
+      window.FolioConsole.Flash.alert(res.error)
     } else {
-      flashSuccess(res.data.message)
+      window.FolioConsole.Flash.success(res.data.message)
       yield put(removedFiles(action.fileType, massSelectedIds))
       yield put(massCancel(action.fileType))
     }
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -170,12 +169,12 @@ function * deleteFilePerform (action) {
   try {
     const res = yield call(apiDelete, `${action.filesUrl}/${action.file.id}`)
     if (res.error) {
-      flashError(res.error)
+      window.FolioConsole.Flash.alert(res.error)
     } else {
       yield put(removedFiles(action.fileType, [action.file.id]))
     }
   } catch (e) {
-    flashError(e.message)
+    window.FolioConsole.Flash.alert(e.message)
   }
 }
 
@@ -242,7 +241,13 @@ export const makeFilesForListSelector = (fileType) => (state) => {
   }
 
   return [
-    ...Object.values(uploads.records).map((upload) => ({ ...upload, attributes: { ...upload.attributes, uploading: true } })),
+    ...Object.keys(uploads.dropzoneFiles).map((s3Path) => ({
+      id: s3Path,
+      attributes: {
+        ...uploads.dropzoneFiles[s3Path].attributes,
+        uploading: true
+      }
+    })),
     ...files
   ]
 }
@@ -331,22 +336,35 @@ function filesReducer (rawState = initialState, action) {
         }
       }
 
-    case THUMBNAIL_GENERATED: {
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          records: state[action.fileType].records.map((record) => {
-            if (record.attributes.thumb !== action.temporaryUrl) return record
+    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
+      const fileTypesHash = {}
+      const fileTypes = action.fileType ? [action.fileType] : Object.keys(state)
+
+      fileTypes.forEach((fileType) => {
+        fileTypesHash[fileType] = {
+          ...state[fileType],
+          records: state[fileType].records.map((record) => {
+            if (Number(record.id) !== Number(action.data.id)) return record
+
             return {
               ...record,
               attributes: {
                 ...record.attributes,
-                thumb: action.url
+                thumb: action.data.thumb_key === '250x250' ? action.data.url : record.attributes.thumb,
+                webp_thumb: action.data.thumb_key === '250x250' ? action.data.webp_url : record.attributes.webp_thumb,
+                thumbnail_sizes: {
+                  ...record.attributes.thumbnail_sizes,
+                  [action.data.thumb_key]: action.data.thumb
+                }
               }
             }
           })
         }
+      })
+
+      return {
+        ...state,
+        ...fileTypesHash
       }
     }
 

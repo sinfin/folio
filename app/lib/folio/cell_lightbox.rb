@@ -7,8 +7,10 @@ module Folio::CellLightbox
 
   def lightbox(placement)
     if placement && placement.file
-      lightbox_from_image(placement.file).merge(
-        "data-lightbox-title" => placement.try(:title),
+      base = lightbox_from_image(placement.file)
+
+      base.merge(
+        "data-lightbox-caption" => placement.try(:title).presence || base["data-lightbox-caption"].presence,
       )
     else
       {}
@@ -23,6 +25,8 @@ module Folio::CellLightbox
         "data-lightbox-webp-src" => thumb.webp_url,
         "data-lightbox-width" => thumb.width,
         "data-lightbox-height" => thumb.height,
+        "data-lightbox-author" => file.try(:author).presence,
+        "data-lightbox-caption" => file.try(:description).presence,
       }
     else
       {}
@@ -30,7 +34,7 @@ module Folio::CellLightbox
   end
 
   def lightbox_from_private_attachment(pa)
-    if pa && pa.mime_type && pa.mime_type.starts_with?("image/")
+    if pa && pa.file_mime_type && pa.file_mime_type.starts_with?("image/")
       {
         "data-lightbox-src" => pa.file.url,
         "data-lightbox-width" => pa.file_width,
@@ -50,7 +54,8 @@ module Folio::CellLightbox
         webp_src: thumb.webp_url,
         w: thumb.width,
         h: thumb.height,
-        title: placement.try(:title),
+        caption: placement.try(:title).presence || placement.file.try(:description).presence,
+        author: placement.file.try(:author).presence,
       }
     end
 

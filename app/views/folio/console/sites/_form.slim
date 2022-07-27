@@ -40,9 +40,15 @@ ruby:
     = render partial: 'folio/console/sites/additional_form_fields', \
              locals: { f: f }
 
-    = f.input :domain
+    - if Rails.application.config.folio_site_is_a_singleton
+      = f.input :domain
+
     = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
                                           checked: f.object.locales
+
+    - if Module.const_defined?(:Boutique)
+      = render partial: "folio/console/sites/boutique_additional_form_fields",
+               locals: { f: f }
 
   = tab :contacts
     = f.input :email

@@ -14,6 +14,24 @@ class Folio::UiCell < Folio::ApplicationCell
     end
   end
 
+  def sites
+    @sites ||= Folio::Site.ordered.to_a
+  end
+
+  def sites_tabs_model
+    @sites.map do |site|
+      {
+        href: sites_tabs_href(site),
+        active: site == current_site,
+        label: site.to_label
+      }
+    end
+  end
+
+  def sites_tabs_href(site)
+    controller.folio.folio_ui_url(host: site.env_aware_domain, only_path: false)
+  end
+
   def typo_titles
     %w[h1 h2 h3 h4 h5]
   end

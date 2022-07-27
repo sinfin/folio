@@ -89,7 +89,7 @@ FactoryBot.define do
       end
 
       after(:create) do |menu, evaluator|
-        create_list(:folio_menu_item, evaluator.items_count, menu: menu)
+        create_list(:folio_menu_item, evaluator.items_count, menu:)
       end
     end
   end
@@ -133,6 +133,7 @@ FactoryBot.define do
     first_name { "first_name" }
     last_name { "last_name" }
     phone { "+420604123123" }
+    association(:primary_address, factory: :folio_address_primary)
   end
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
@@ -142,6 +143,14 @@ FactoryBot.define do
   factory :folio_console_note, class: "Folio::ConsoleNote" do
     content { "content" }
     association(:target, factory: :folio_page)
+  end
+
+  factory :folio_address_primary, class: "Folio::Address::Primary" do
+    address_line_1 { "address_line_1" }
+    address_line_2 { "address_line_2" }
+    city { "city" }
+    zip { "zip" }
+    country_code { "country_code" }
   end
 
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu
@@ -155,5 +164,24 @@ FactoryBot.define do
   factory :dummy_blog_topic, class: "Dummy::Blog::Topic" do
     sequence(:title) { |i| "Topic title #{i + 1}" }
     published { true }
+  end
+end
+
+unless Rails.application.config.folio_site_is_a_singleton
+  if Rails.application.config.folio_site_default_test_factory
+    FactoryBot.modify do
+      %i[
+        folio_email_template
+        folio_lead
+        folio_menu
+        folio_newsletter_subscription
+        folio_page
+      ].each do |key|
+        factory key do
+          association :site, factory: Rails.application.config.folio_site_default_test_factory
+          initialize_with { new(site: Folio::Site.first) }
+        end
+      end
+    end
   end
 end

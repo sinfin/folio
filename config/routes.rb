@@ -19,8 +19,6 @@ Folio::Engine.routes.draw do
     get "/comeback", to: "comebacks#show"
   end
 
-  root to: "home#index"
-
   namespace :console do
     root to: "dashboard#index"
     resources :dashboard, only: :index
@@ -56,7 +54,7 @@ Folio::Engine.routes.draw do
     end
     resources :newsletter_subscriptions, only: %i[index destroy]
 
-    resources :accounts do
+    resources :accounts, except: %i[show] do
       member { post :invite_and_copy }
     end
 
@@ -119,7 +117,7 @@ Folio::Engine.routes.draw do
         end
       end
 
-      resources :images, only: %i[index create update destroy] do
+      resources :images, only: %i[index update destroy] do
         collection do
           post :tag
           delete :mass_destroy
@@ -127,11 +125,12 @@ Folio::Engine.routes.draw do
         end
         member do
           post :update_file_thumbnail
+          post :destroy_file_thumbnail
           post :change_file
         end
       end
 
-      resources :documents, only: %i[index create update destroy] do
+      resources :documents, only: %i[index update destroy] do
         collection do
           post :tag
           delete :mass_destroy
@@ -140,6 +139,11 @@ Folio::Engine.routes.draw do
         member do
           post :change_file
         end
+      end
+
+      resource :s3_signer, only: [], controller: "s3_signer" do
+        post :s3_before
+        post :s3_after
       end
     end
 
@@ -165,9 +169,13 @@ Folio::Engine.routes.draw do
   get "/folio/ui/mobile_typo", to: "ui#mobile_typo"
   get "/folio/ui/atoms", to: "ui#atoms"
 
-  get "/download/:hash_id/*name", to: "downloads#show",
-                                  as: :download,
-                                  constraints: { name: /.*/ }
+  get "/download/:hash_id(/*name)", to: "downloads#show",
+                                    as: :download,
+                                    constraints: { name: /.*/ }
+
+  unless Rails.application.config.folio_site_is_a_singleton
+    get "/robots.txt" => "robots#index"
+  end
 
   get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 

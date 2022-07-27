@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::EmailTemplate < Folio::ApplicationRecord
+  include Folio::BelongsToSite
   include Folio::FriendlyId
 
   validates :mailer, :action,
@@ -10,7 +11,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
   validate :validate_bodies
 
   validates :action,
-            uniqueness: { scope: %i[mailer] },
+            uniqueness: { scope: %i[mailer site_id] },
             presence: true
 
   scope :ordered, -> { order(:title) }
@@ -22,7 +23,11 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
   end
 
   def slug_candidates
-    "#{mailer.gsub('::', '_')}-#{action}"
+    if site && site.slug
+      "#{mailer.gsub('::', '_')}-#{action}-#{site.slug}"
+    else
+      "#{mailer.gsub('::', '_')}-#{action}"
+    end
   end
 
   def human_keywords
@@ -95,7 +100,7 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
             required_keywords.each do |key|
               unless value.include?("{#{key}}")
                 message = I18n.t("activerecord.attributes.folio/email_template.missing_keyword", keyword: key)
-                self.errors.add column_name, :missing_keyword, message: message
+                self.errors.add column_name, :missing_keyword, message:
               end
             end
           end
@@ -133,8 +138,10 @@ end
 #  subject_cs        :string
 #  body_html_cs      :text
 #  body_text_cs      :text
+#  site_id           :bigint(8)
 #
 # Indexes
 #
-#  index_folio_email_templates_on_slug  (slug)
+#  index_folio_email_templates_on_site_id  (site_id)
+#  index_folio_email_templates_on_slug     (slug)
 #

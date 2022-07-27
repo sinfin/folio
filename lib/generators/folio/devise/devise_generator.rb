@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require Folio::Engine.root.join("lib/generators/folio/generator_base")
+
 class Folio::DeviseGenerator < Rails::Generators::Base
+  include Folio::GeneratorBase
+
   desc "Sets devise up for application"
   source_root File.expand_path("templates", __dir__)
 
@@ -35,6 +39,15 @@ class Folio::DeviseGenerator < Rails::Generators::Base
                          module: "application_namespace_path/folio/users",
                          omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
+      devise_scope :user do
+        get "/users/invitation", to: "application_namespace_path/folio/users/invitations#show", as: nil
+        get "/users/registrations/edit_password", to: "application_namespace_path/folio/users/registrations#edit_password"
+        patch "/users/registrations/update_password", to: "application_namespace_path/folio/users/registrations#update_password"
+        get "/users/auth/conflict", to: "application_namespace_path/folio/users/omniauth_callbacks#conflict"
+        get "/users/auth/resolve_conflict", to: "application_namespace_path/folio/users/omniauth_callbacks#resolve_conflict"
+        get "/users/auth/new_user", to: "application_namespace_path/folio/users/omniauth_callbacks#new_user"
+        post "/users/auth/create_user", to: "application_namespace_path/folio/users/omniauth_callbacks#create_user"
+      end
     RUBY
 
     str = str.gsub("application_namespace_path", application_namespace_path)
@@ -75,13 +88,4 @@ class Folio::DeviseGenerator < Rails::Generators::Base
       puts "Skipping css - no application.sass"
     end
   end
-
-  private
-    def application_namespace
-      @application_namespace ||= Rails.application.class.parent
-    end
-
-    def application_namespace_path
-      @application_namespace_path ||= application_namespace.to_s.underscore
-    end
 end

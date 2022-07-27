@@ -6,7 +6,7 @@ class Dummy::Blog::TopicsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    create(:folio_site)
+    create_and_host_site
   end
 
   test "show" do

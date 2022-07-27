@@ -1,3 +1,5 @@
+import 'folioTestSetup'
+
 import atomsReducer, {
   initialState,
   setAtomsData,

@@ -6,7 +6,7 @@ class Folio::Accounts::SessionsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    create(:folio_site)
+    create_and_host_site
     @params = {
       email: "email@email.email",
       password: "Complex@Password.123",

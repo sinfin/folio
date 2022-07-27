@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_14_084147) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_05_06_055106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -32,7 +31,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "comment"
     t.string "remote_address"
     t.string "request_uuid"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.integer "placement_version"
     t.index ["associated_type", "associated_id"], name: "associated_index"
     t.index ["auditable_type", "auditable_id", "version"], name: "auditable_index"
@@ -51,9 +50,9 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.text "meta_description"
     t.boolean "featured"
     t.boolean "published"
-    t.datetime "published_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "published_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["featured"], name: "index_dummy_blog_articles_on_featured"
     t.index ["locale"], name: "index_dummy_blog_articles_on_locale"
     t.index ["published"], name: "index_dummy_blog_articles_on_published"
@@ -62,11 +61,11 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
   end
 
   create_table "dummy_blog_topic_article_links", force: :cascade do |t|
-    t.bigint "dummy_blog_topic_id"
-    t.bigint "dummy_blog_article_id"
+    t.integer "dummy_blog_topic_id"
+    t.integer "dummy_blog_article_id"
     t.integer "position"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["dummy_blog_article_id"], name: "dummy_blog_topic_article_links_a_id"
     t.index ["dummy_blog_topic_id"], name: "dummy_blog_topic_article_links_t_id"
   end
@@ -82,8 +81,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.integer "position"
     t.string "meta_title"
     t.text "meta_description"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["featured"], name: "index_dummy_blog_topics_on_featured"
     t.index ["locale"], name: "index_dummy_blog_topics_on_locale"
     t.index ["position"], name: "index_dummy_blog_topics_on_position"
@@ -95,27 +94,31 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "first_name"
     t.string "last_name"
     t.string "role"
     t.boolean "is_active", default: true
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
+    t.string "crossdomain_devise_token"
+    t.datetime "crossdomain_devise_set_at"
+    t.string "sign_out_salt_part"
+    t.index ["crossdomain_devise_token"], name: "index_folio_accounts_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
@@ -138,22 +141,21 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "phone"
     t.string "email"
     t.string "type"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["type"], name: "index_folio_addresses_on_type"
   end
 
   create_table "folio_atoms", force: :cascade do |t|
     t.string "type"
     t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "placement_type"
     t.bigint "placement_id"
     t.string "locale"
     t.jsonb "data", default: {}
     t.jsonb "associations", default: {}
-    t.text "data_for_search"
     t.index ["placement_type", "placement_id"], name: "index_folio_atoms_on_placement_type_and_placement_id"
   end
 
@@ -163,11 +165,11 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.bigint "target_id"
     t.bigint "created_by_id"
     t.bigint "closed_by_id"
-    t.datetime "closed_at"
-    t.datetime "due_at"
+    t.datetime "closed_at", precision: nil
+    t.datetime "due_at", precision: nil
     t.integer "position"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["closed_by_id"], name: "index_folio_console_notes_on_closed_by_id"
     t.index ["created_by_id"], name: "index_folio_console_notes_on_created_by_id"
     t.index ["target_type", "target_id"], name: "index_folio_console_notes_on_target"
@@ -177,8 +179,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.text "content"
     t.integer "position"
     t.string "type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "title"
     t.index ["position"], name: "index_folio_content_templates_on_position"
     t.index ["type"], name: "index_folio_content_templates_on_type"
@@ -194,11 +196,13 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.text "body_text_en"
     t.jsonb "required_keywords"
     t.jsonb "optional_keywords"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "subject_cs"
     t.text "body_html_cs"
     t.text "body_text_cs"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_email_templates_on_site_id"
     t.index ["slug"], name: "index_folio_email_templates_on_slug"
   end
 
@@ -207,8 +211,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.bigint "placement_id"
     t.bigint "file_id"
     t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "type"
     t.text "title"
     t.string "alt"
@@ -226,12 +230,11 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "file_name"
     t.string "type"
     t.text "thumbnail_sizes", default: "--- {}\n"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "file_width"
     t.integer "file_height"
     t.bigint "file_size"
-    t.string "mime_type", limit: 255
     t.json "additional_data"
     t.json "file_metadata"
     t.string "hash_id"
@@ -240,6 +243,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.integer "file_placements_size"
     t.string "file_name_for_search"
     t.boolean "sensitive_content", default: false
+    t.string "file_mime_type"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
@@ -254,12 +258,14 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "email"
     t.string "phone"
     t.text "note"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "name"
     t.string "url"
     t.json "additional_data"
     t.string "aasm_state", default: "submitted"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_leads_on_site_id"
   end
 
   create_table "folio_menu_items", force: :cascade do |t|
@@ -268,8 +274,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "title"
     t.string "rails_path"
     t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "target_type"
     t.bigint "target_id"
     t.string "url"
@@ -283,27 +289,31 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
 
   create_table "folio_menus", force: :cascade do |t|
     t.string "type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "locale"
     t.string "title"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_menus_on_site_id"
     t.index ["type"], name: "index_folio_menus_on_type"
   end
 
   create_table "folio_newsletter_subscriptions", force: :cascade do |t|
     t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "subscribable_type"
     t.bigint "subscribable_id"
     t.boolean "active", default: true
     t.string "tags"
     t.text "merge_vars"
+    t.bigint "site_id"
+    t.index ["site_id"], name: "index_folio_newsletter_subscriptions_on_site_id"
     t.index ["subscribable_type", "subscribable_id"], name: "index_folio_newsletter_subscriptions_on_subscribable"
   end
 
   create_table "folio_omniauth_authentications", force: :cascade do |t|
-    t.bigint "folio_user_id"
+    t.integer "folio_user_id"
     t.string "uid"
     t.string "provider"
     t.string "email"
@@ -312,8 +322,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.json "raw_info"
     t.string "conflict_token"
     t.integer "conflict_user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["folio_user_id"], name: "index_folio_omniauth_authentications_on_folio_user_id"
   end
 
@@ -328,12 +338,15 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.boolean "featured"
     t.integer "position"
     t.boolean "published"
-    t.datetime "published_at"
+    t.datetime "published_at", precision: nil
     t.integer "original_id"
     t.string "locale", limit: 6
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "ancestry_slug"
+    t.bigint "site_id"
+    t.text "atoms_data_for_search"
+    t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"
@@ -341,6 +354,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.index ["position"], name: "index_folio_pages_on_position"
     t.index ["published"], name: "index_folio_pages_on_published"
     t.index ["published_at"], name: "index_folio_pages_on_published_at"
+    t.index ["site_id"], name: "index_folio_pages_on_site_id"
     t.index ["slug"], name: "index_folio_pages_on_slug"
     t.index ["type"], name: "index_folio_pages_on_type"
   end
@@ -358,11 +372,11 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.integer "file_width"
     t.integer "file_height"
     t.bigint "file_size"
-    t.string "mime_type", limit: 255
     t.json "additional_data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "hash_id"
+    t.string "file_mime_type"
     t.index ["attachmentable_type", "attachmentable_id"], name: "index_folio_private_attachments_on_attachmentable"
     t.index ["type"], name: "index_folio_private_attachments_on_type"
   end
@@ -376,9 +390,9 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "type"
     t.string "web_session_id"
     t.string "placement_type"
-    t.bigint "placement_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.integer "placement_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "file_width"
     t.integer "file_height"
     t.json "thumbnail_sizes", default: {}
@@ -395,8 +409,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "phone"
     t.string "locale"
     t.string "locales", default: [], array: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "google_analytics_tracking_code"
     t.string "facebook_pixel_code"
     t.json "social_links"
@@ -408,38 +422,44 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "google_analytics_tracking_code_v4"
     t.text "header_message"
     t.boolean "header_message_published", default: false
-    t.datetime "header_message_published_from"
-    t.datetime "header_message_published_until"
+    t.datetime "header_message_published_from", precision: nil
+    t.datetime "header_message_published_until", precision: nil
+    t.string "type"
+    t.string "slug"
+    t.integer "position"
     t.index ["domain"], name: "index_folio_sites_on_domain"
+    t.index ["position"], name: "index_folio_sites_on_position"
+    t.index ["slug"], name: "index_folio_sites_on_slug"
+    t.index ["type"], name: "index_folio_sites_on_type"
   end
 
   create_table "folio_users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.string "first_name"
     t.string "last_name"
     t.text "admin_note"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "invitation_token"
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.string "invited_by_type"
-    t.bigint "invited_by_id"
+    t.integer "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "nickname"
     t.boolean "use_secondary_address", default: false
@@ -448,7 +468,11 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.boolean "subscribed_to_newsletter", default: false
     t.boolean "has_generated_password", default: false
     t.string "phone"
+    t.string "crossdomain_devise_token"
+    t.datetime "crossdomain_devise_set_at"
+    t.string "sign_out_salt_part"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
+    t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_folio_users_on_invited_by_id"
@@ -463,7 +487,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
     t.string "scope"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
@@ -474,8 +498,8 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.text "content"
     t.string "searchable_type"
     t.bigint "searchable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
@@ -487,7 +511,7 @@ ActiveRecord::Schema.define(version: 2022_03_14_084147) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"

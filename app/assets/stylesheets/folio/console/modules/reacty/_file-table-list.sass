@@ -2,17 +2,20 @@
   margin-bottom: 0
 
   .card-body &
-    td
+    margin-left: - $card-spacer-x
+    margin-right: - $card-spacer-x
+
+    &__td
       &:first-child
-        border-left: 1px solid $border-color
+        padding-left: $card-spacer-x
       &:last-child
-        border-right: 1px solid $border-color
+        padding-right: $card-spacer-x
 
   &-wrap
     position: relative
     min-width: 100%
 
-    .folio-console-dropzone-trigger
+    .f-c-r-dropzone-trigger
       +unbutton
       background: $table-hover-bg
       width: 100%
@@ -33,9 +36,6 @@
   &--hover &__tr:not(&__tr--uploading):not(&__tr--header):hover &__td
     background: $table-hover-bg
 
-  &__td:first-child
-    padding-left: 0
-
   &__img-wrap
     display: flex
     width: 50px
@@ -47,9 +47,6 @@
     max-width: 50px
     max-height: 50px
     display: block
-
-  &__img-a
-    cursor: zoom-in
 
   &__file-placements-count
     pointer-events: none
@@ -158,21 +155,6 @@
       height: 0
       display: block
       padding: 0
-
-    &__td--image &__img-a
-      display: flex
-      width: 50px
-      height: 50px
-      align-items: center
-      justify-content: center
-      position: absolute
-      top: 50%
-      left: 0
-      padding-left: 0
-      transform: translate(0, -50%)
-
-    .f-c-file-table-wrap--image.f-c-file-table-wrap--mass-select &__img-a
-      left: 25px
 
     &__td--mass-select &__mass-select-checkbox
       position: absolute

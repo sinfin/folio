@@ -1,52 +1,22 @@
-import { flashError } from 'utils/flash'
-import { takeLatest, takeEvery, call, select, put } from 'redux-saga/effects'
-import { omit, without } from 'lodash'
+import { takeEvery, call, select, put } from 'redux-saga/effects'
+import { without, omit } from 'lodash'
 
 import { apiPost } from 'utils/api'
-import { uploadedFile, updatedFiles } from 'ducks/files'
+import { updatedFiles } from 'ducks/files'
 import { filesUrlSelector } from 'ducks/app'
 
 // Constants
 
-const ADDED_FILE = 'uploads/ADDED_FILE'
-const THUMBNAIL = 'uploads/THUMBNAIL'
-const SUCCESS = 'uploads/SUCCESS'
-const ERROR = 'uploads/ERROR'
-const FINISHED_UPLOAD = 'uploads/FINISHED_UPLOAD'
-const PROGRESS = 'uploads/PROGRESS'
 const SET_UPLOAD_ATTRIBUTES = 'uploads/SET_UPLOAD_ATTRIBUTES'
 const CLEAR_UPLOADED_IDS = 'uploads/CLEAR_UPLOADED_IDS'
+const SHOW_TAGGER = 'uploads/SHOW_TAGGER'
 const CLOSE_TAGGER = 'uploads/CLOSE_TAGGER'
-
-const idFromFile = (file) => {
-  return [file.name, file.lastModified, file.size].join('|')
-}
+const ADD_DROPZONE_FILE = 'uploads/ADD_DROPZONE_FILE'
+const UPDATE_DROPZONE_FILE = 'uploads/UPDATE_DROPZONE_FILE'
+const REMOVE_DROPZONE_FILE = 'uploads/REMOVE_DROPZONE_FILE'
+const THUMBNAIL_DROPZONE_FILE = 'uploads/THUMBNAIL_DROPZONE_FILE'
 
 // Actions
-
-export function addedFile (fileType, file) {
-  return { type: ADDED_FILE, fileType, file }
-}
-
-export function thumbnail (fileType, file, dataUrl) {
-  return { type: THUMBNAIL, fileType, file, dataUrl }
-}
-
-export function success (fileType, file, response) {
-  return { type: SUCCESS, fileType, file, response }
-}
-
-export function finishedUpload (fileType, file, uploadedFileId) {
-  return { type: FINISHED_UPLOAD, fileType, file, uploadedFileId }
-}
-
-export function error (fileType, file, error) {
-  return { type: ERROR, fileType, file, error }
-}
-
-export function progress (fileType, file, percentage) {
-  return { type: PROGRESS, fileType, file, percentage }
-}
 
 export function setUploadAttributes (fileType, attributes) {
   return { type: SET_UPLOAD_ATTRIBUTES, fileType, attributes }
@@ -56,37 +26,31 @@ export function clearUploadedIds (fileType, ids) {
   return { type: CLEAR_UPLOADED_IDS, fileType, ids }
 }
 
+export function showTagger (fileType, fileFromApiId) {
+  return { type: SHOW_TAGGER, fileType, fileFromApiId }
+}
+
 export function closeTagger (fileType) {
   return { type: CLOSE_TAGGER, fileType }
 }
 
+export function addDropzoneFile (fileType, s3Path, attributes) {
+  return { type: ADD_DROPZONE_FILE, fileType, s3Path, attributes }
+}
+
+export function updateDropzoneFile (fileType, s3Path, attributes) {
+  return { type: UPDATE_DROPZONE_FILE, fileType, s3Path, attributes }
+}
+
+export function removeDropzoneFile (fileType, s3Path) {
+  return { type: REMOVE_DROPZONE_FILE, fileType, s3Path }
+}
+
+export function thumbnailDropzoneFile (fileType, s3Path, dataThumbnail) {
+  return { type: THUMBNAIL_DROPZONE_FILE, fileType, s3Path, dataThumbnail }
+}
+
 // Sagas
-
-function * uploadsErrorPerform (action) {
-  yield call(flashError, action.error)
-}
-
-function * uploadsErrorSaga () {
-  yield takeLatest(ERROR, uploadsErrorPerform)
-}
-
-function * uploadedFilePerform (action) {
-  const id = idFromFile(action.file)
-  const upload = yield select(makeUploadSelector(action.fileType)(id))
-  const data = action.response.data
-  yield put(finishedUpload(action.fileType, action.file, data.id))
-  yield put(uploadedFile(action.fileType, {
-    ...data,
-    attributes: {
-      ...data.attributes,
-      thumb: upload.thumb || data.attributes.thumb
-    }
-  }))
-}
-
-function * uploadedFileSaga () {
-  yield takeLatest(SUCCESS, uploadedFilePerform)
-}
 
 function * setUploadAttributesPerform (action) {
   const { uploadedIds, uploadAttributes } = yield select(makeUploadsSelector(action.fileType))
@@ -105,8 +69,6 @@ function * setUploadAttributesSaga () {
 }
 
 export const uploadsSagas = [
-  uploadsErrorSaga,
-  uploadedFileSaga,
   setUploadAttributesSaga
 ]
 
@@ -117,25 +79,21 @@ export const makeUploadsSelector = (fileType) => (state) => {
   return base
 }
 
-export const makeUploadSelector = (fileType) => (id) => (state) => {
-  const base = state.uploads[fileType] || defaultUploadsKeyState
-  return base.records[id]
-}
-
 // State
 
 const date = new Date()
 export const defaultTag = `${date.getFullYear()}/${date.getMonth() + 1}`
 
-const defaultUploadsKeyState = {
-  records: {},
+export const defaultUploadsKeyState = {
   showTagger: false,
   uploadAttributes: {
     tags: [defaultTag],
     author: null,
     description: null
   },
-  uploadedIds: []
+  uploadedIds: [],
+  dropzoneFiles: {},
+  pendingDataThumbnails: {}
 }
 
 const initialState = {}
@@ -149,93 +107,7 @@ function uploadsReducer (rawState = initialState, action) {
     state[action.fileType] = { ...defaultUploadsKeyState }
   }
 
-  const id = action.file ? idFromFile(action.file) : null
-
   switch (action.type) {
-    case ADDED_FILE:
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          records: {
-            ...state[action.fileType].records,
-            [id]: {
-              id,
-              attributes: {
-                file: action.file,
-                file_size: action.file.size,
-                file_name: action.file.name,
-                extension: action.file.type.split('/').pop().toUpperCase(),
-                tags: state[action.fileType].uploadAttributes.tags,
-                author: state[action.fileType].uploadAttributes.author,
-                description: state[action.fileType].uploadAttributes.description,
-                thumb: null,
-                progress: 0
-              }
-            }
-          }
-        }
-      }
-
-    case THUMBNAIL: {
-      if (!state[action.fileType].records[id]) return state
-
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          records: {
-            ...state[action.fileType].records,
-            [id]: {
-              ...state[action.fileType].records[id],
-              attributes: {
-                ...state[action.fileType].records[id].attributes,
-                thumb: action.dataUrl
-              }
-            }
-          }
-        }
-      }
-    }
-
-    case PROGRESS:
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          records: {
-            ...state[action.fileType].records,
-            [id]: {
-              ...state[action.fileType].records[id],
-              attributes: {
-                ...state[action.fileType].records[id].attributes,
-                progress: action.percentage
-              }
-            }
-          }
-        }
-      }
-
-    case FINISHED_UPLOAD:
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          showTagger: true,
-          records: omit(state[action.fileType].records, [id]),
-          uploadedIds: [...state[action.fileType].uploadedIds, action.uploadedFileId]
-        }
-      }
-
-    case ERROR:
-      return {
-        ...state,
-        [action.fileType]: {
-          ...state[action.fileType],
-          records: omit(state[action.fileType].records, [id])
-        }
-      }
-
     case SET_UPLOAD_ATTRIBUTES:
       return {
         ...state,
@@ -260,9 +132,106 @@ function uploadsReducer (rawState = initialState, action) {
         ...state,
         [action.fileType]: {
           ...defaultUploadsKeyState,
-          records: state[action.fileType].records
+          uploadedIds: []
         }
       }
+
+    case SHOW_TAGGER: {
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          showTagger: true,
+          uploadedIds: [
+            ...state[action.fileType].uploadedIds,
+            action.fileFromApiId
+          ]
+        }
+      }
+    }
+
+    case ADD_DROPZONE_FILE: {
+      const pendingDataThumbnail = state[action.fileType].pendingDataThumbnails[action.s3Path]
+
+      const newAttributes = { ...action.attributes, progress: 0 }
+
+      if (pendingDataThumbnail) {
+        newAttributes.dataThumbnail = pendingDataThumbnail
+      }
+
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          dropzoneFiles: {
+            ...state[action.fileType].dropzoneFiles,
+            [action.s3Path]: {
+              attributes: newAttributes
+            }
+          },
+          pendingDataThumbnails: omit(state[action.fileType].pendingDataThumbnails, action.s3Path)
+        }
+      }
+    }
+
+    case UPDATE_DROPZONE_FILE:
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          dropzoneFiles: {
+            ...state[action.fileType].dropzoneFiles,
+            [action.s3Path]: {
+              ...state[action.fileType][action.s3Path],
+              attributes: {
+                ...state[action.fileType].dropzoneFiles[action.s3Path].attributes,
+                ...action.attributes
+              }
+            }
+          }
+        }
+      }
+
+    case REMOVE_DROPZONE_FILE:
+      return {
+        ...state,
+        [action.fileType]: {
+          ...state[action.fileType],
+          dropzoneFiles: omit(state[action.fileType].dropzoneFiles, action.s3Path)
+        }
+      }
+
+    case THUMBNAIL_DROPZONE_FILE: {
+      if (state[action.fileType].dropzoneFiles[action.s3Path]) {
+        return {
+          ...state,
+          [action.fileType]: {
+            ...state[action.fileType],
+            dropzoneFiles: {
+              ...state[action.fileType].dropzoneFiles,
+              [action.s3Path]: {
+                ...state[action.fileType][action.s3Path],
+                attributes: {
+                  ...state[action.fileType].dropzoneFiles[action.s3Path].attributes,
+                  dataThumbnail: action.dataThumbnail
+                }
+              }
+            }
+          }
+        }
+      } else {
+        return {
+          ...state,
+          [action.fileType]: {
+            ...state[action.fileType],
+            pendingDataThumbnails: {
+              ...state[action.fileType].pendingDataThumbnails,
+              [action.s3Path]: action.dataThumbnail
+            }
+          }
+        }
+      }
+    }
 
     default:
       return state

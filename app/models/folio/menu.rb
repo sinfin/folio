@@ -2,6 +2,7 @@
 
 class Folio::Menu < Folio::ApplicationRecord
   extend Folio::InheritenceBaseNaming
+  include Folio::BelongsToSite
   include Folio::StiPreload
 
   # Relations
@@ -15,7 +16,7 @@ class Folio::Menu < Folio::ApplicationRecord
 
   validates :title,
             presence: true,
-            uniqueness: true
+            uniqueness: Rails.application.config.folio_site_is_a_singleton ? true : { scope: :site_id }
 
   alias_attribute :items, :menu_items
   before_validation :set_default_title
@@ -23,8 +24,18 @@ class Folio::Menu < Folio::ApplicationRecord
   scope :ordered, -> { order(type: :asc, locale: :asc) }
 
   scope :by_type, -> (type) do
-    where(type: type)
+    where(type:)
   end
+
+  pg_search_scope :by_query,
+                  against: {
+                    title: "A",
+                    type: "B",
+                  },
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
 
   def available_targets
     if Rails.application.config.folio_using_traco ||
@@ -102,8 +113,10 @@ end
 #  updated_at :datetime         not null
 #  locale     :string
 #  title      :string
+#  site_id    :bigint(8)
 #
 # Indexes
 #
-#  index_folio_menus_on_type  (type)
+#  index_folio_menus_on_site_id  (site_id)
+#  index_folio_menus_on_type     (type)
 #

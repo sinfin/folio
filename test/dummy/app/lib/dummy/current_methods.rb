@@ -28,6 +28,6 @@ module Dummy::CurrentMethods
       h
     end
 
-    @current_page_singletons[klass.to_s] ||= klass.instance(fail_on_missing: fail_on_missing)
+    @current_page_singletons[klass.to_s] ||= klass.instance(fail_on_missing:)
   end
 end

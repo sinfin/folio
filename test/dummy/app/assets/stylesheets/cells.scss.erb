@@ -1,6 +1,0 @@
-<% base = Rails.root.join('app/cells') %>
-<% Dir.glob("#{base}/**/*.sass").each do |file| %>
-<% unless file =~ %r{/_[^/]+\.sass} or file =~ /atoms\/previews\/previews\.sass/ %>
-@import '<%= file.gsub("#{base}/", '') %>';
-<% end %>
-<% end %>

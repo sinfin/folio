@@ -5,8 +5,8 @@ export default function CharacterCounter ({ value, hasHint }) {
   if (value && value.length) count = value.length
 
   return (
-    <span className='f-c-string-input-character-counter small'>
-      <span className='f-c-string-input-character-counter__current'>{count}</span>
+    <span className='f-input-character-counter-wrap small'>
+      <span className='f-input-character-counter-wrap__current'>{count}</span>
       {' '}
       {window.FolioConsole.translations.shortForCharacter}
     </span>

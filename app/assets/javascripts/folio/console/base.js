@@ -6,12 +6,8 @@
 //= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require daterangepicker.min
 //= require slideout.js/dist/slideout
-//= require jquery-debounce/jquery.debounce
 //= require multiselect/js/jquery.multi-select
-//= require autosize/dist/autosize
-//= require spectrum/spectrum
 //= require js-cookie/src/js.cookie
-//= require cleave.js/dist/cleave
 //= require jquery.kinetic/index
 //= require dropzone/dist/dropzone
 //= require clipboard/dist/clipboard
@@ -33,21 +29,26 @@
 //= require ./redactor/_definedlinks
 //= require ./redactor/_init
 
-//= require folio/cable
 //= require folio/lazyload
 //= require folio/lightbox
 //= require folio/debounce
 //= require folio/throttle
+//= require folio/input
 //= require folio/image/image
 
+// keep the order!
+//= require folio/console/_flash
+//= require folio/console/_api
+//= require folio/console/_s3-upload
+
+//= require folio/_message-bus
+
 //= require folio/console/_bootstrap-tabs-lazyload
-//= require folio/console/_cocoon-prompt-file-input
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_data-auto-submit
 //= require folio/console/_data-change-value
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
-//= require folio/console/_flash
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
@@ -59,6 +60,7 @@
 //= require folio/console/boolean_toggle/boolean_toggle
 //= require folio/console/catalogue/catalogue
 //= require folio/console/clipboard_copy/clipboard_copy
+//= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header
@@ -75,21 +77,13 @@
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal
-//= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
+//= require folio/console/private_attachments/fields/fields
 //= require folio/console/private_attachments/single_dropzone/single_dropzone
 //= require folio/console/publishable_inputs/publishable_inputs
 //= require folio/console/react_picker/react_picker
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 //= require folio/console/tagsinput/tagsinput
-
-//= require folio/console/simple_form_inputs/_character_counter_input
-//= require folio/console/simple_form_inputs/_collection_select_input
-//= require folio/console/simple_form_inputs/_color_input
-//= require folio/console/simple_form_inputs/_date_time_input
-//= require folio/console/simple_form_inputs/_redactor_input
-//= require folio/console/simple_form_inputs/_string_input
-//= require folio/console/simple_form_inputs/_text_input
 
 //= require ./pages_table
 

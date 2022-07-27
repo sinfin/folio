@@ -53,15 +53,15 @@ class Folio::MenuItem < Folio::ApplicationRecord
 
   def to_h
     {
-      id: id,
-      position: position,
-      rails_path: rails_path,
-      target_id: target_id,
-      target_type: target_type,
-      title: title,
-      url: url,
-      open_in_new: open_in_new,
-      style: style,
+      id:,
+      position:,
+      rails_path:,
+      target_id:,
+      target_type:,
+      title:,
+      url:,
+      open_in_new:,
+      style:,
     }
   end
 

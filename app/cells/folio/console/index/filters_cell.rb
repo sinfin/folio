@@ -98,14 +98,14 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                                                              scope: data[:scope],
                                                              order_scope: data[:order_scope],
                                                              slug: data[:slug])
-        autocomplete_select(f, key, url: url)
+        autocomplete_select(f, key, url:)
       else
         url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
                                                                      scope: data[:scope],
                                                                      order_scope: data[:order_scope],
                                                                      slug: data[:slug],
                                                                      label_method: data[:label_method])
-        select2_select(f, key, data, url: url)
+        select2_select(f, key, data, url:)
       end
     else
       f.input key, collection: collection(key),
@@ -142,7 +142,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       end
     end
 
-    f.input key, collection: collection,
+    f.input key, collection:,
                  force_collection: true,
                  label: false,
                  remote: url,

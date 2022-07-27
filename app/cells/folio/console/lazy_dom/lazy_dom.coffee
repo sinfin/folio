@@ -10,7 +10,7 @@ $ ->
         $this.html(data)
         $this.trigger('folio:lazy-dom-loaded')
         window.updateAllFolioLazyLoadInstances()
-        window.updateAllFolioLightboxInstances()
+        window.Folio.Lightbox.updateAll()
       error: (jxHr) ->
         $this.html("<p class=\"f-c-lazy-dom__title\">#{$this.data('error')}</p>#{jxHr.status}: #{jxHr.statusText}")
         $this.addClass('f-c-lazy-dom--error')

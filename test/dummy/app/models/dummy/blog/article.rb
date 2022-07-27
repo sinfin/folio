@@ -44,17 +44,17 @@ class Dummy::Blog::Article < ApplicationRecord
 
   scope :ordered, -> { order(published_at: :desc) }
   scope :featured, -> { where(featured: true) }
-  scope :by_locale, -> (locale) { where(locale: locale) }
+  scope :by_locale, -> (locale) { where(locale:) }
 
   scope :by_topic, -> (topic) do
     ids = Dummy::Blog::TopicArticleLink.select(:dummy_blog_article_id)
-                                          .where(topic: topic)
+                                          .where(topic:)
 
     where(id: ids)
   end
 
   scope :by_topic_slug, -> (slug) do
-    topic = Dummy::Blog::Topic.find_by(slug: slug)
+    topic = Dummy::Blog::Topic.find_by(slug:)
 
     if topic
       by_topic(topic)
@@ -76,8 +76,8 @@ class Dummy::Blog::Article < ApplicationRecord
 
   def to_ui_article_card_model
     to_ui_article_meta.merge(
-      cover_placement: cover_placement,
-      title: title,
+      cover_placement:,
+      title:,
       url_for_args: self,
       content: ActionController::Base.helpers.content_tag(:p, perex),
     )
@@ -129,11 +129,11 @@ class Dummy::Blog::Article < ApplicationRecord
         end
 
         hash = {
-          title: title,
+          title:,
           perex: params[:perex] && params[:perex][locale],
           cover_placement: params[:cover_placement] && Folio::FilePlacement::Cover.new(params[:cover_placement][locale].permit(:file_id, :alt)),
           to_ui_article_meta: {
-            tag_records: tag_records,
+            tag_records:,
             published_at: safe_published_at,
           }
         }
