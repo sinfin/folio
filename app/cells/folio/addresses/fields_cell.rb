@@ -35,8 +35,10 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
 
   def country_code_input(g)
     g.input :country_code,
+            only: g.object.class.allowed_countries,
             priority: g.object.class.priority_countries(locale: I18n.locale),
-            input_html: { class: "f-addresses-fields__country-code-input" }
+            input_html: { class: "f-addresses-fields__country-code-input" },
+            include_blank: false
   end
 
   def address_line_input(g, key, required: false)
