@@ -23,13 +23,16 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
 
   def data_country_code(key)
     model.object.send(key).try(:country_code) || begin
-      if key == :primary_address
-        Folio::Address::Primary.priority_countries(locale: I18n.locale).first
-      elsif key == :secondary_address
-        Folio::Address::Secondary.priority_countries(locale: I18n.locale).first
-      else
-        Folio::Address::Base.priority_countries(locale: I18n.locale).first
+      address_class = case key
+                      when :primary_address
+                        Folio::Address::Primary
+                      when :secondary_address
+                        Folio::Address::Secondary
+                      else
+                        Folio::Address::Base
       end
+
+      address_class.priority_countries(locale: I18n.locale).first || address_class.allowed_countries.try(:first)
     end
   end
 
