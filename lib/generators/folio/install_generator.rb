@@ -73,7 +73,7 @@ module Folio
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
-          "config/initializers/asse ts.rb",
+          "config/initializers/assets.rb",
           "config/initializers/folio.rb",
           "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
@@ -100,10 +100,10 @@ module Folio
           ".gitignore",
           ".rubocop.yml",
           ".slim-lint.yml",
+          "app/assets/config/manifest.js",
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
-          "app/"
           "bin/bower",
           "config/secrets.yml",
           "data/email_templates_data.yml",
@@ -122,13 +122,6 @@ module Folio
           ::Rails.root.join("app/cells/#{project_name}")
         ].each do |path|
           FileUtils.mkdir_p path
-        end
-      end
-
-      def add_folio_assets
-        inject_into_file "app/assets/config/manifest.js", before: /\A/ do  <<~'RUBY'
-          //= link folio_manifest.js
-        RUBY
         end
       end
 
