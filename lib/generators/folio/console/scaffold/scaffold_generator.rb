@@ -131,7 +131,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
     def controller_file_path
       if options[:through]
-        super.gsub(/\A#{application_namespace_path}/, "#{application_namespace_path}/#{options[:through].demodulize.tableize}")
+        super.gsub(/\A#{base_module_path}/, "#{base_module_path}/#{options[:through].demodulize.tableize}")
       else
         super
       end
@@ -139,7 +139,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
     def controller_class_name
       if options[:through]
-        super.gsub(/\A#{application_namespace}/, "#{application_namespace}::#{options[:through].demodulize.pluralize}")
+        super.gsub(/\A#{base_namespace}/, "#{base_namespace}::#{options[:through].demodulize.pluralize}")
       else
         super
       end
@@ -158,6 +158,30 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
         "resource_link [:edit, :console, @#{options[:through].demodulize.underscore}, @#{instance_variable_name}], :to_label"
       else
         "edit_link :to_label"
+      end
+    end
+
+    def base_module_path
+      base_namespace.underscore
+    end
+
+    def base_namespace
+      class_name.split("::").first
+    end
+
+    def test_path_args_for_index_s
+      if options[:through]
+        ":console, @#{options[:through].demodulize.underscore}, #{class_name}"
+      else
+        ":console, #{class_name}"
+      end
+    end
+
+    def test_path_args_for_record_s
+      if options[:through]
+        ":console, @#{options[:through].demodulize.underscore}, model"
+      else
+        ":console, model"
       end
     end
 end
