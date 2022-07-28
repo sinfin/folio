@@ -80,7 +80,7 @@ class Folio::Address::Base < Folio::ApplicationRecord
     ]
   end
 
-  def self.allowed_countries
+  def self.countries_whitelist
     # all
     nil
   end

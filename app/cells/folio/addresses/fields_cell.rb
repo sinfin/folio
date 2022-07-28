@@ -32,13 +32,13 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
                         Folio::Address::Base
       end
 
-      address_class.priority_countries(locale: I18n.locale).first || address_class.allowed_countries.try(:first)
+      address_class.priority_countries(locale: I18n.locale).first || address_class.countries_whitelist.try(:first)
     end
   end
 
   def country_code_input(g)
     g.input :country_code,
-            only: g.object.class.allowed_countries,
+            only: g.object.class.countries_whitelist,
             priority: g.object.class.priority_countries(locale: I18n.locale),
             input_html: { class: "f-addresses-fields__country-code-input" },
             include_blank: false
