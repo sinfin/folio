@@ -7,14 +7,4 @@ class Folio::Accounts::SessionsController < Devise::SessionsController
     current_account.sign_out_everywhere! if Rails.application.config.folio_crossdomain_devise && current_account
     super
   end
-
-  def after_sign_in_path_for(_resource)
-    stored_location_for(:account).presence || console_root_path
-  end
-
-  def after_sign_out_path_for(_resource)
-    folio.new_account_session_path
-  rescue NoMethodError
-    main_app.new_account_session_path
-  end
 end
