@@ -93,8 +93,6 @@ cs:
         created_at: Vytvořen
         confirmed_at: Potvrzen
         nickname: Přezdívka
-        password: Heslo
-        password_confirmation: Heslo (kontrola)
       folio/address/base:
         address_line_1: Ulice
         address_line_2: Číslo
@@ -281,6 +279,8 @@ cs:
     to_label: Název
     url: URL
     use_secondary_address: Použít doplňkovou adresu
+    password: Heslo
+    password_confirmation: Heslo (kontrola)
 
   errors:
     messages:
