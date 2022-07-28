@@ -69,6 +69,16 @@ class Folio::DeviseMailer < Devise::Mailer
 
       method_name = method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
 
+      if Rails.application.config.folio_crossdomain_devise && Folio.site_for_crossdomain_devise
+        extra = { only_path: false, host: Folio.site_for_crossdomain_devise.env_aware_domain }
+
+        if args.present?
+          args[0].merge!(extra)
+        else
+          args = [extra]
+        end
+      end
+
       main_app.send(method_name, *args)
     rescue StandardError
       send(method_name, *args)
