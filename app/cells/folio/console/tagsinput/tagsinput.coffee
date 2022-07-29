@@ -1,4 +1,4 @@
-#= require selectize/standalone/selectize
+#= require selectize
 
 makeItems = (separator, string) ->
   if string
