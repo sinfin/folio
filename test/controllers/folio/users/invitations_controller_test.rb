@@ -65,6 +65,8 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+
     create_and_host_site
 
     get main_app.user_invitation_path
