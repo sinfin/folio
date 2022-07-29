@@ -34,7 +34,7 @@ PATH
       rails (~> 5.1.2)
       rails-assets-jquery (~> 3.2.1)
       rails-assets-photoswipe
-      rails-assets-selectize (~> 0.12.4)
+      rails-assets-selectize (~> 0.12)
       responders
       sass-rails
       simple_form
@@ -353,13 +353,8 @@ GEM
       railties (= 5.1.7)
       sprockets-rails (>= 2.0.0)
     rails-assets-jquery (3.2.1)
-    rails-assets-microplugin (0.0.3)
     rails-assets-photoswipe (5.2.2)
-    rails-assets-selectize (0.12.6)
-      rails-assets-jquery (>= 1.7.0)
-      rails-assets-microplugin (~> 0.0.0)
-      rails-assets-sifter (~> 0.5.0)
-    rails-assets-sifter (0.5.3)
+    rails-assets-selectize (0.13.6)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
