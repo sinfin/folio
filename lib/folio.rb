@@ -27,7 +27,7 @@ require 'jquery-rails'
 require 'dropzonejs-rails'
 require 'countries'
 require 'breadcrumbs_on_rails'
-require 'rails-assets-selectize'
+require 'selectize-rails'
 require 'ahoy_matey'
 require 'invisible_captcha'
 

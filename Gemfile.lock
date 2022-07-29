@@ -33,10 +33,9 @@ PATH
       pg_search
       rails (~> 5.1.2)
       rails-assets-jquery (~> 3.2.1)
-      rails-assets-photoswipe
-      rails-assets-selectize (~> 0.12)
       responders
       sass-rails
+      selectize-rails
       simple_form
       sitemap_generator
       slim
@@ -353,8 +352,6 @@ GEM
       railties (= 5.1.7)
       sprockets-rails (>= 2.0.0)
     rails-assets-jquery (3.2.1)
-    rails-assets-photoswipe (5.2.2)
-    rails-assets-selectize (0.13.6)
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
@@ -416,6 +413,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    selectize-rails (0.12.6)
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
