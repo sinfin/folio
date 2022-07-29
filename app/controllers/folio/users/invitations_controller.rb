@@ -3,6 +3,8 @@
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
 
+  before_action :disallow_public_invitations_if_needed, only: %i[create new]
+
   def show
     if session[:folio_user_invited_email]
       @email = session[:folio_user_invited_email]
@@ -92,5 +94,10 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
   private
     def update_resource_params
       params.require(:user).permit(*Folio::User.controller_strong_params_for_create).to_h.merge(super)
+    end
+
+    def disallow_public_invitations_if_needed
+      return if Rails.application.config.folio_users_publicly_invitable
+      fail "Not allowed to publicly invite."
     end
 end

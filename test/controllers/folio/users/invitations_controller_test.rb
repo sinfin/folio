@@ -6,6 +6,8 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   test "new" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+
     create_and_host_site
     sign_in create(:folio_user)
 
@@ -14,6 +16,8 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create" do
+    skip unless Rails.application.config.folio_users_publicly_invitable
+
     create_and_host_site
     sign_in create(:folio_user)
 
