@@ -29,7 +29,15 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def query_autocomplete
     if model.new.respond_to?(:to_label)
-      controller.folio.console_api_autocomplete_path(klass: model.to_s)
+      opts = { klass: model.to_s }
+
+      if options[:query_filters]
+        options[:query_filters].each do |key, val|
+          opts["filter_#{key}"] = val
+        end
+      end
+
+      controller.folio.console_api_autocomplete_path(opts)
     end
   end
 

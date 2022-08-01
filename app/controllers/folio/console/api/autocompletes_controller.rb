@@ -18,6 +18,16 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.send(p_scope)
       end
 
+      params.each do |key, val|
+        if key.starts_with?("filter_by_")
+          filter_scope_name = key.delete_prefix("filter_")
+
+          if scope.respond_to?(filter_scope_name)
+            scope = scope.send(filter_scope_name, val)
+          end
+        end
+      end
+
       scope = scope.by_query(q) if q.present?
 
       if p_order.present? && scope.respond_to?(p_order)
