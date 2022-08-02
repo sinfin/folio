@@ -56,6 +56,12 @@ window.Folio.Input.Phone.onBlur = (e) => {
   }
 }
 
+window.Folio.Input.Phone.copyBootstrapValidationClassNames = (input) => {
+  if (input.classList.contains("is-invalid")) {
+    input.closest('.iti').classList.add('is-invalid')
+  }
+}
+
 window.Folio.Input.Phone.bind = (input) => {
   const hiddenInput = document.createElement('input')
   hiddenInput.type = 'hidden'
@@ -76,6 +82,7 @@ window.Folio.Input.Phone.bind = (input) => {
   input.intlTelInput = window.intlTelInput(input, fullOpts)
 
   window.Folio.Input.Phone.removeDialCodeIfNeeded(input)
+  window.Folio.Input.Phone.copyBootstrapValidationClassNames(input)
 }
 
 window.Folio.Input.Phone.unbind = (input) => {
