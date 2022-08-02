@@ -35,7 +35,9 @@
 
       .row
         .col-lg-7
-          = g.input :phone, as: :phone
+          = g.input :phone,
+                    as: :phone,
+                    default_country_code: data_country_code(:primary_address)
 
   .f-addresses-fields__nested
     = togglable_fields model, :use_secondary_address

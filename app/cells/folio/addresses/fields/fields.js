@@ -1,6 +1,7 @@
 $(document)
   .on('change', '.f-addresses-fields__country-code-input', (e) => {
-    $(e.currentTarget)
-      .closest('.f-addresses-fields__fields-wrap')
-      .attr('data-country-code', e.currentTarget.value)
+    const $wrap = $(e.currentTarget).closest('.f-addresses-fields__fields-wrap')
+    $wrap.attr('data-country-code', e.currentTarget.value)
+
+    window.Folio.Input.Phone.onAddressCountryCodeChange($wrap, e.currentTarget.value)
   })

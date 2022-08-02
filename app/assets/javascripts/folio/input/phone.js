@@ -14,6 +14,15 @@ window.Folio.Input.Phone.intlTelInputOptions = {
   autoPlaceholder: 'aggressive'
 }
 
+window.Folio.Input.Phone.onAddressCountryCodeChange = ($wrap, countryCode) => {
+  $wrap.find(window.Folio.Input.Phone.SELECTOR).each((i, input) => {
+    if (input.value) return
+
+    input.intlTelInput.setCountry(countryCode)
+    window.Folio.Input.Phone.onChangeForInput(input)
+  })
+}
+
 window.Folio.Input.Phone.removeDialCodeIfNeeded = (input) => {
   const dialCode = `+${input.intlTelInput.selectedCountryData.dialCode}`
 
@@ -25,8 +34,7 @@ window.Folio.Input.Phone.removeDialCodeIfNeeded = (input) => {
   }
 }
 
-window.Folio.Input.Phone.onChange = (e) => {
-  const input = e.target
+window.Folio.Input.Phone.onChangeForInput = (input) => {
   const dialCode = `+${input.intlTelInput.selectedCountryData.dialCode}`
 
   let value = input.value.replace(/ /g, '')
@@ -36,6 +44,10 @@ window.Folio.Input.Phone.onChange = (e) => {
   }
 
   input.folioInputPhoneHiddenInput.value = `${dialCode} ${value}`
+}
+
+window.Folio.Input.Phone.onChange = (e) => {
+  window.Folio.Input.Phone.onChangeForInput(e.target)
 }
 
 window.Folio.Input.Phone.onBlur = (e) => {
@@ -58,7 +70,10 @@ window.Folio.Input.Phone.bind = (input) => {
   input.addEventListener('countrychange', window.Folio.Input.Phone.onChange)
   input.addEventListener('blur', window.Folio.Input.Phone.onBlur)
 
-  input.intlTelInput = window.intlTelInput(input, window.Folio.Input.Phone.intlTelInputOptions)
+  const fullOpts = $.extend({}, window.Folio.Input.Phone.intlTelInputOptions)
+  if (input.dataset.defaultCountryCode) fullOpts.initialCountry = input.dataset.defaultCountryCode
+
+  input.intlTelInput = window.intlTelInput(input, fullOpts)
 
   window.Folio.Input.Phone.removeDialCodeIfNeeded(input)
 }
