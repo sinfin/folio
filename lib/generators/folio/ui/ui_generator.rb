@@ -5,6 +5,8 @@ require Folio::Engine.root.join("lib/generators/folio/generator_base")
 class Folio::UiGenerator < Rails::Generators::NamedBase
   include Folio::GeneratorBase
 
+  desc "Creates usefull cells for basic things in UI (headers, cards, footers...)."
+
   source_root File.expand_path("templates", __dir__)
 
   class UnknownCell < StandardError; end

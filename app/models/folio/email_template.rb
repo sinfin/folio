@@ -18,6 +18,61 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
 
   translates :subject, :body
 
+  def self.load_templates_from_yaml(file_path)
+    return false unless File.exist?(file_path)
+
+    records = YAML.load_file(file_path)
+    return 0 unless records
+
+    Folio::Site.find_each do |site|
+      records.each do |raw|
+        msg_action = "Adding"
+
+        next if raw["site_class"] && raw["site_class"] != site.class.to_s
+
+        find_by = { mailer: raw["mailer"], action: raw["action"] }
+
+        unless Rails.application.config.folio_site_is_a_singleton
+          find_by[:site] = site
+        end
+
+        if em = Folio::EmailTemplate.find_by(find_by)
+          if raw["destroy"]
+            msg_action = "Destroying"
+            em.destroy!
+          elsif ENV["FORCE"]
+            msg_action = "Overwriting (FORCE=1)"
+            em.destroy!
+          else
+            unless Rails.env.test?
+              puts "Skipping existing email template for #{raw["mailer"]}##{raw["action"]} for site #{site.to_label}"
+            end
+            next
+          end
+        end
+
+        unless Rails.env.test?
+          puts "#{msg_action} email template for #{raw["mailer"]}##{raw["action"]} for site #{site.to_label}"
+        end
+
+        next if raw["destroy"]
+
+        data = raw.slice(*Folio::EmailTemplate.column_names)
+
+        default_locale = Rails.application.config.folio_console_locale
+        data["title"] = raw["title_#{default_locale}"].presence
+        data["title"] ||= data["title_en"]
+
+        unless Rails.application.config.folio_site_is_a_singleton
+          data["site"] = site
+        end
+
+        Folio::EmailTemplate.create!(data)
+      end
+    end
+    records.size
+  end
+
   def to_label
     title.presence || "#{mailer}##{action}"
   end

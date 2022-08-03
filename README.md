@@ -27,6 +27,14 @@ Then run migrations
 $ rails db:migrate
 ```
 
+Then You can seed some pages and sites
+
+```bash
+rails db:seed
+```
+
+Folio is build on philosophy "You can have it, if You want, but it is not required."
+So for example, You can build CMS pages bysed on Atoms, but they are not added  during installation of gem. You have to add them for Yourself (see Github Wiki).
 Take a look to, not only Folio, handy generators by
 ```bash
 $ rails g
