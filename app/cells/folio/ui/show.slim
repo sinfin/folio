@@ -199,21 +199,21 @@
 
     h3 Pagination
 
-    - if "#{application_namespace}::Ui::Pagy".safe_constantize
+    - if "#{application_namespace}::Ui::PagyCell".safe_constantize
       == cell("#{application_namespace_path}/ui/pagy", pagy_model)
     - else
       = missing_cell("pagy")
 
     h3 Tabs
 
-    - if "#{application_namespace}::Ui::Tabs".safe_constantize
+    - if "#{application_namespace}::Ui::TabsCell".safe_constantize
       == cell("#{application_namespace_path}/ui/tabs", tabs_model)
     - else
       = missing_cell("tabs")
 
     h3 Flash
 
-    - if "#{application_namespace}::Ui::Flash".safe_constantize
+    - if "#{application_namespace}::Ui::FlashCell".safe_constantize
       .row.f-ui__flash
         - flash_models.each do |flash_model|
           .col-md-6.mb-g
@@ -223,7 +223,7 @@
 
     h3 Navigation
 
-    - if "#{application_namespace}::Ui::Navigation".safe_constantize
+    - if "#{application_namespace}::Ui::NavigationCell".safe_constantize
       - if navigation_model
         == cell("#{application_namespace_path}/ui/navigation", navigation_model)
       - else
@@ -233,7 +233,7 @@
 
     h3 Documents
 
-    - if "#{application_namespace}::Ui::Documents".safe_constantize
+    - if "#{application_namespace}::Ui::DocumentsCell".safe_constantize
       - if documents_model.present?
         == cell("#{application_namespace_path}/ui/documents", documents_model)
       - else
