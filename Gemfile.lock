@@ -48,11 +48,14 @@ PATH
       pg
       pg_search (= 2.3.2)
       phonelib
+      premailer-rails
       rails (~> 7)
       rails-i18n (~> 7)
       recaptcha (= 4.13.1)
       responders
+      rubyzip
       sass-rails
+      show_for
       sidekiq
       sidekiq-cron
       simple_form
@@ -629,7 +632,6 @@ DEPENDENCIES
   i18n-tasks
   letter_opener
   minitest
-  premailer-rails
   pry-byebug
   pry-rails
   puma (< 6)
@@ -640,8 +642,6 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rails_config
   rubocop-rake
-  rubyzip
-  show_for
   sprockets (~> 4.0)
   sprockets-rails
 

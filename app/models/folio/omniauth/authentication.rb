@@ -26,8 +26,6 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
   end
 
   def self.from_omniauth_auth(o)
-    # return nil if o.blank?
-
     auth = find_or_initialize_by(provider: o.provider, uid: o.uid)
     auth.email = o.info.email if o.info.email.present?
     auth.nickname = o.info.username || o.info.nickname || o.info.name

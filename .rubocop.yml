@@ -25,6 +25,3 @@ AllCops:
     - 'test/dummy/public/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
-
-Style/HashSyntax:
-  EnforcedShorthandSyntax: either

@@ -23,7 +23,7 @@ class Folio::MergerTest < ActiveSupport::TestCase
     reference = create_atom(ReferenceAtom, page: duplicate)
     assert_equal(duplicate.id, reference.page.id)
 
-    merger.merge!( # how to merge these two
+    merger.merge!( # info: receipt how to merge these two
       title: Folio::Merger::DUPLICATE,
       slug: Folio::Merger::ORIGINAL,
       atoms: Folio::Merger::DUPLICATE,

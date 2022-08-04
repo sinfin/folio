@@ -73,7 +73,7 @@ module Folio
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/layouts/folio/application.slim",
           "config/database.yml",
-          "config/initializers/asse ts.rb",
+          "config/initializers/assets.rb",
           "config/initializers/folio.rb",
           "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
@@ -103,7 +103,6 @@ module Folio
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
-          "app/"
           "bin/bower",
           "config/secrets.yml",
           "data/email_templates_data.yml",
