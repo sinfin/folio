@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  #s.add_dependency "aasm"
+  s.add_dependency "aasm"
   s.add_dependency "acts-as-taggable-on"
   s.add_dependency "after_commit_everywhere"
   s.add_dependency "ancestry"
@@ -33,16 +33,16 @@ Gem::Specification.new do |s|
   s.add_dependency "countries"
   s.add_dependency "country_select"
   s.add_dependency "devise_invitable"
-  #s.add_dependency "devise-bootstrap-views"
-  #s.add_dependency "devise-i18n"
+  s.add_dependency "devise-bootstrap-views"
+  s.add_dependency "devise-i18n"
   s.add_dependency "devise"
-  #s.add_dependency "discard"
+  # s.add_dependency "discard"
   s.add_dependency "dotenv-rails"
-  # s.add_dependency "dragonfly_libvips"
-  # s.add_dependency "dragonfly-s3_data_store"
+  # s.add_dependency "dragonfly_libvips" # we have our version in Gemfile
+  s.add_dependency "dragonfly-s3_data_store"
   # s.add_dependency "dragonfly"
   s.add_dependency "dropzonejs-rails"
-  #s.add_dependency "fast_jsonapi"
+  s.add_dependency "fast_jsonapi"
   s.add_dependency "friendly_id"
   s.add_dependency "gibbon" # for mailchimp requests
   s.add_dependency "invisible_captcha"
@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
   # s.add_dependency "premailer-rails"
   s.add_dependency "rails-i18n", "~> 7"
   s.add_dependency "rails", "~> 7"
-  # s.add_dependency "recaptcha", "4.13.1"
+  s.add_dependency "recaptcha", "4.13.1"
   s.add_dependency "responders"
   s.add_dependency "sass-rails"
   # s.add_dependency "show_for"
@@ -75,7 +75,7 @@ Gem::Specification.new do |s|
   s.add_dependency "slim"
   s.add_dependency "traco"
   s.add_dependency "turbolinks"
-  #s.add_dependency "uglifier"
+  s.add_dependency "uglifier"
   s.add_dependency "whenever"
   # s.add_dependency "zip"
 

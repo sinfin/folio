@@ -29,11 +29,8 @@ PATH
       devise-bootstrap-views
       devise-i18n
       devise_invitable
-      discard
       dotenv-rails
-      dragonfly
       dragonfly-s3_data_store
-      dragonfly_libvips
       dropzonejs-rails
       fast_jsonapi
       friendly_id
@@ -51,23 +48,21 @@ PATH
       pg
       pg_search (= 2.3.2)
       phonelib
-      premailer-rails
       rails (~> 7)
       rails-i18n (~> 7)
       recaptcha (= 4.13.1)
       responders
       sass-rails
-      show_for
       sidekiq
       sidekiq-cron
       simple_form
       sitemap_generator
+      slim
       slim-rails
       traco
       turbolinks
       uglifier
       whenever
-      zip
 
 GEM
   remote: https://rubygems.org/
@@ -249,8 +244,6 @@ GEM
       actionmailer (>= 5.0)
       devise (>= 4.6)
     digest (3.1.0)
-    discard (1.2.1)
-      activerecord (>= 4.2, < 8)
     dotenv (2.8.0)
     dotenv-rails (2.8.0)
       dotenv (= 2.8.0)
@@ -588,7 +581,6 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.4)
     strscan (3.0.4)
     temple (0.8.2)
     terminal-table (3.0.2)
@@ -618,7 +610,6 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.6.0)
-    zip (2.0.2)
 
 PLATFORMS
   x86_64-linux
