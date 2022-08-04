@@ -46,7 +46,7 @@ Take a look to, not only Folio, handy generators by
 $ rails g
 ```
 
-Due usage of `dragonfly_libvips` gem from onfly processing images, You need to have installed `libvips` and `gifsicle` on your system.
+Due usage of `dragonfly_libvips` gem from on-fly processing images, You need to have installed `libvips`, `jpegtran`, `jpgicc`,`exiftool`, `cwebp` and `gifsicle` on your system.
 
 ## Attachments
 
