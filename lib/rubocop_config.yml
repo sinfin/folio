@@ -31,6 +31,3 @@ Lint/UselessAssignment:
   Exclude:
     - 'db/seeds.rb'
     - 'lib/tasks/developer_tools.rake'
-
-Style/HashSyntax:
-  EnforcedShorthandSyntax: either
