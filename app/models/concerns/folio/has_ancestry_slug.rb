@@ -44,6 +44,7 @@ module Folio::HasAncestrySlug
     if destroyed?
       self.class.base_class.where("ancestry_slug LIKE ?", "#{slug}%").each do |record|
         record.update_ancestry_slug!
+        record.update_children_ancestry_slugs!(force: true)
       end
     elsif force || saved_change_to_slug? || saved_change_to_ancestry?
       if children?
