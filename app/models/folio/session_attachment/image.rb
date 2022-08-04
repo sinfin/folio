@@ -26,7 +26,7 @@ end
 #  type            :string
 #  web_session_id  :string
 #  placement_type  :string
-#  placement_id    :integer
+#  placement_id    :bigint(8)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  file_width      :integer

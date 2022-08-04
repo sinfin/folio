@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Folio::Engine.root.join("app/models/folio/omniauth") # to load Folio::Omniauth namespace
+
 if Rails.application.config.folio_users
   require "omniauth"
   require "omniauth-facebook"

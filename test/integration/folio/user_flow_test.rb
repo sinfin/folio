@@ -42,7 +42,7 @@ class Folio::UserFlowTest < ActionDispatch::IntegrationTest
     page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][address_line_2]"]').set "1"
     page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][zip]"]').set "Foo"
     page.find('.f-devise--invitations-edit input[name="user[primary_address_attributes][city]"]').set "Foo"
-    page.find('.f-devise--invitations-edit select[name="user[primary_address_attributes][country_code]"]').set "CZ"
+    page.find('.f-devise--invitations-edit select[name="user[primary_address_attributes][country_code]"]').select "Itálie"
 
     page.find(".f-devise--invitations-edit [type=\"submit\"]").click
 

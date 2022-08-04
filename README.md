@@ -1,5 +1,12 @@
 # Folio
-Short description and motivation.
+
+A collection of Ruby on Rails mixins and generators, an administration framework. Contains some basic models so that you don't have to make them for every website you create. Consists mostly of:
+
++ `Folio::Page` model for individual web pages, consisting of content parts called `Folio::Atom`
++ Administration in `/console` for `Folio::Account` administrators with a simple generator to add custom models.
++ User management for `Folio::User` model.
+
+Folio uses [Trailblazer cells](https://github.com/trailblazer/cells) with [Slim](http://slim-lang.com/) templates, [MessageBus](https://github.com/discourse/message_bus) for WebSockets-like messaging, Sidekiq and PostgreSQL.
 
 ## Usage
 Run `bundle exec rails app:folio:prepare_dummy_app`.
@@ -20,7 +27,7 @@ Run:
 ```bash
 $ rails generate folio:install
 ```
-which will copy bunch of things into your, hopefilly clean, app
+which will copy bunch of things into your, hopefully clean, app
 
 Then run migrations
 ```bash
@@ -28,9 +35,8 @@ $ rails db:migrate
 ```
 
 Then You can seed some pages and sites
-
 ```bash
-rails db:seed
+$ rails db:seed
 ```
 
 Folio is build on philosophy "You can have it, if You want, but it is not required."
@@ -40,7 +46,7 @@ Take a look to, not only Folio, handy generators by
 $ rails g
 ```
 
-Due usage of `dragonfly_libvips` gem from onfly processing images, You need to have installed `libvips` and `gifsicle` on your system.
+Due usage of `dragonfly_libvips` gem from on-fly processing images, You need to have installed `libvips`, `jpegtran`, `jpgicc`,`exiftool`, `cwebp` and `gifsicle` on your system.
 
 ## Attachments
 

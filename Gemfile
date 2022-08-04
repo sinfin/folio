@@ -11,30 +11,16 @@ gemspec
 # your gemspec. These might include edge Rails or gems from your path or
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
-gem "premailer", github: "sinfin/premailer"
-gem "premailer-rails"
-gem "rubyzip"
+
 gem "rack-mini-profiler"
-gem "uglifier", ">= 1.3.0"
-gem "show_for"
-gem "sidekiq"
 gem "sprockets", "~> 4.0"
 gem "sprockets-rails"
 
-gem "dragonfly", "1.4.0"
-gem "dragonfly-s3_data_store"
-gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
 # gem "dragonfly_libvips", path: "../dragonfly_libvips"
 
-gem "cells"
-gem "cells-slim", "0.0.6"
-gem "cells-rails", github: "sinfin/cells-rails"
-
-group :test do
-  gem "minitest", "~> 5.14.4"
-  gem "factory_bot"
-  gem "capybara", "~> 2.13"
-end
+gem "cells-rails", "~> 0.1.5"
+gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
 
 group :development do
   gem "puma", "< 6"
@@ -42,8 +28,6 @@ group :development do
 end
 
 group :development, :test do
-  # Call 'binding.pry' anywhere in the code to stop execution and get a debugger console
-  gem "pry-rails"
-  gem "pry-byebug"
   gem "faker"
+  gem "pry-byebug"
 end

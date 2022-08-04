@@ -6,7 +6,9 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
   test "index" do
     get url_for([:console, Folio::User])
     assert_response :success
+
     create(:folio_user)
+
     get url_for([:console, Folio::User])
     assert_response :success
   end
