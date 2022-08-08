@@ -46,7 +46,6 @@ All notable changes to this project will be documented in this file.
 ## 2021-03-24
 ### Added
 - added `Rails.application.config.folio_site_is_a_singleton` and `Folio::Site` STI support
->>>>>>> petr/dragonfly-libvips-multi-site-rails-7
 
 ## 2021-03-21
 ### Added
