@@ -130,7 +130,7 @@ module Folio
             deprecations << "Missing index_folio_pages_on_by_query index on folio_pages. That is probably caused by using traco title_* attributes. Add a custom one."
           end
 
-          if !Rails.env.test? && ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
+          if !Rails.env.test? && ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates WHERE mailer ='Folio::DeviseMailer' LIMIT 1;").rows.size == 0
             deprecations << "There are no email templates present. Seed them via rake folio:email_templates:idp_seed"
           end
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
