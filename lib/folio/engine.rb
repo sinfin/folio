@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+begin
+  require 'factory_bot_rails'
+rescue LoadError
+end
+
 module Folio
   class Engine < ::Rails::Engine
     isolate_namespace Folio
@@ -85,6 +90,8 @@ module Folio
         ]
       }
     }
+
+    config.factory_bot.definition_file_paths += [self.root.join('test/factories')] if defined?(FactoryBotRails)
 
     initializer :append_folio_assets_paths do |app|
       app.config.assets.paths << self.root.join("app/cells")

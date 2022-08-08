@@ -87,7 +87,6 @@ module Folio
           "db/migrate/20220214083648_rm_private_attachments_mime_type_column.rb",
           "lib/tasks/developer_tools.rake",
           "public/maintenance.html",
-          "test/factories.rb",
           "test/test_helper.rb",
           "vendor/assets/bower.json",
         ].each { |f| template "#{f}.tt", f.gsub("application_namespace_path", application_namespace_path) }
