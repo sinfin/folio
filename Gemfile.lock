@@ -267,6 +267,9 @@ GEM
     execjs (2.8.1)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     faker (2.21.0)
       i18n (>= 1.8.11, < 2)
     faraday (2.3.0)
@@ -624,7 +627,7 @@ DEPENDENCIES
   cells-rails (~> 0.1.5)
   cells-slim (~> 0.0.6)
   dragonfly_libvips!
-  factory_bot
+  factory_bot_rails
   faker
   folio!
   guard-rubocop
