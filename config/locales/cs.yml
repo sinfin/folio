@@ -5,7 +5,8 @@ cs:
   more: Více
   date:
     formats:
-      short: "%d. %m. %Y"
+      short: "%-d. %-m. %Y"
+      default: "%-d. %-m. %Y"
   dragonfly:
     invalid_format: Nepodporovaný formát
   'false': Ne
@@ -69,6 +70,7 @@ cs:
       separator: "|"
   time:
     formats:
-      short_with_seconds: "%d %m %Y, %H:%M:%S"
-      short: "%d %m %Y %H:%M"
+      short_with_seconds: "%-d %-m %Y, %H:%M:%S"
+      short: "%-d %-m %Y, %H:%M"
+      default: "%-d. %-m. %Y, %H:%M"
   'true': Ano
