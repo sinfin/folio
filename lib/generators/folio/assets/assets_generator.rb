@@ -56,6 +56,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
 
     %w[
+      lib/generators/folio/assets/templates/data/icons.yaml
       lib/generators/folio/assets/templates/data/icons/*.svg
       lib/generators/folio/assets/templates/app/assets/fonts/*
       lib/generators/folio/assets/templates/public/*
