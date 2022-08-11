@@ -52,9 +52,11 @@ namespace :developer_tools do
   end
 
   task idp_seed_singleton_menus: :environment do
-    create_menu_item = Proc.new do |menu, item_data, parent|
+    create_menu_item = Proc.new do |menu, item_data, parent, position|
       mi = menu.menu_items.build(title: item_data["title"],
-                                 rails_path: item_data["rails_path"])
+                                 rails_path: item_data["rails_path"],
+                                 url: item_data["url"],
+                                 position:)
 
       if item_data["page_singleton_class"].present?
         mi.target = item_data["page_singleton_class"].constantize.instance
@@ -84,12 +86,14 @@ namespace :developer_tools do
           menu = klass.create!(title: data["title"], locale: "en")
 
           if data["links"].present?
+            count = 0
+
             data["links"].each do |link|
-              mi = create_menu_item.call(menu, link, nil)
+              mi = create_menu_item.call(menu, link, nil, count += 1)
 
               if link["children"]
                 link["children"].each do |child_link|
-                  create_menu_item.call(menu, child_link, mi)
+                  create_menu_item.call(menu, child_link, mi, count += 1)
                 end
               end
             end
