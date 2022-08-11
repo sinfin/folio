@@ -44,7 +44,8 @@ class Folio::Console::UsersController < Folio::Console::BaseController
             .permit(*(@klass.column_names - ["id"]),
                     *addresses_strong_params,
                     *file_placements_strong_params,
-                    *private_attachments_strong_params)
+                    *private_attachments_strong_params,
+                    *additional_user_params)
     end
 
     def index_filters
@@ -56,6 +57,10 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def folio_console_record_includes
+      []
+    end
+
+    def additional_user_params
       []
     end
 end
