@@ -37,6 +37,7 @@ cs:
         title_with_password: Nastavte si heslo
         title_without_password: Dokončení registrace
         perex: Pro dokončení registrace prosíme doplňte následující údaje.
+        perex_with_orders: Prosíme o doplnění následujících údajů, abychom mohli založit Váš uživatelský účet a vyřídit objednávku.
         submit: Dokončit registraci
 
       invitations:
@@ -50,7 +51,8 @@ cs:
 
         show:
           title: Potvrzení e-mailu
-          text: Prosíme potvrďte Vaší e-mailovou adresu kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          title_with_orders: Děkujeme za objednávku
+          text: <strong>Prosíme potvrďte nyní Vaší e-mailovou adresu kliknutím na odkaz</strong>, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
           resend_email: Znovu zaslat ověřovací e-mail
 
       sessions:

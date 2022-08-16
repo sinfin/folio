@@ -5,7 +5,11 @@
     - else
       = title t('.title_without_password')
 
-    p.f-devise__perex = t('.perex')
+    p.f-devise__perex.font-weight-bold
+      - if f.object.try(:orders).try(:exists?)
+        = t('.perex_with_orders')
+      - else
+        = t('.perex')
 
     == cell('folio/devise/flash', model[:flash])
 

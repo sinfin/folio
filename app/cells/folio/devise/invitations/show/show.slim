@@ -1,7 +1,12 @@
 .f-devise-invitations-show
-  h1 = t('.title')
+  h1
+    - if resource && resource.try(:orders).try(:exists?)
+      = t('.title_with_orders')
+    - else
+      = t('.title')
 
-  p = cstypo t('.text', email: model[:email])
+  p
+    = cstypo t('.text', email: model[:email]).html_safe
 
   = form do |f|
     = f.hidden_field :email, value: @model[:email]

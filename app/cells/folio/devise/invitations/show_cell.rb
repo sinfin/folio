@@ -16,4 +16,12 @@ class Folio::Devise::Invitations::ShowCell < Folio::Devise::ApplicationCell
 
     simple_form_for(resource, opts, &block)
   end
+
+  def resource
+    @resource ||= if model[:resource] && model[:resource].persisted?
+      model[:resource]
+    else
+      model[:resource].class.find_by(email: model[:email], sign_in_count: 0) || model[:resource]
+    end
+  end
 end

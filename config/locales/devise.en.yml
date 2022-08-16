@@ -28,6 +28,7 @@ en:
         title_with_password: Set your password
         title_without_password: Finish registration
         perex: To complete the registration, please fill in the following form.
+        perex_with_orders: Please fill in the following form so that we can finish creating your user account and complete the order.
         submit: Finish registration
 
       invitations:
@@ -41,7 +42,8 @@ en:
 
         show:
           title: E-mail confirmation
-          text: Please confirm your email address by clicking on the link we sent to the email %{email} you entered. A confirmation email should arrive within a few minutes.
+          title_with_orders: Thank you for your order!
+          text: <strong>Please confirm your email address by clicking on the link</strong> we've sent to the email %{email} you entered. A confirmation email should arrive within a few minutes.
           resend_email: Resend the confirmation email
 
       sessions:
