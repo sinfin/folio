@@ -25,6 +25,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   dropzoneOptions,
   element,
   fileType,
+  filterMessageBusMessages,
   onStart,
   onProgress,
   onSuccess,
@@ -139,6 +140,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
     if (!msg) return
     if (msg.type !== 'Folio::CreateFileFromS3Job') return
     if (msg.data.file_type !== fileType) return
+    if (filterMessageBusMessages && !filterMessageBusMessages(msg)) return
 
     switch (msg.data.type) {
       case 'start':

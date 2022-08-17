@@ -65,6 +65,13 @@ class Uploader extends Component {
         previewsContainer: false,
         previewTemplate: '',
         disablePreviews: true
+      },
+      filterMessageBusMessages: (msg) => {
+        if (msg && msg.data && msg.data.s3_path && this.props.uploads && this.props.uploads.dropzoneFiles[msg.data.s3_path]) {
+          return true
+        } else {
+          return false
+        }
       }
     })
   }
