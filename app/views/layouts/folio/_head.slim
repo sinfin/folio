@@ -9,29 +9,31 @@ meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
 meta charset="utf-8"
 meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
 
-title = public_page_title
-
-- if public_page_description.present?
-  meta[
-    name="description"
-    content=public_page_description
-  ]
-
 meta name="viewport" content=meta_viewport
 
-- if public_page_canonical_url.present?
-  link rel="canonical" href=public_page_canonical_url
+- cache_if @folio_meta_variables_cache_key, @folio_meta_variables_cache_key
+  title = public_page_title
 
-meta property="og:title"        content=og_title
+  - if public_page_description.present?
+    meta[
+      name="description"
+      content=public_page_description
+    ]
 
-- if og_description.present?
-  meta property="og:description"  content=og_description
+  - if public_page_canonical_url.present?
+    link rel="canonical" href=public_page_canonical_url
 
-meta property="og:site_name"    content=og_site_name
-meta property="og:url"          content=og_url
-meta property="og:image"        content=og_image
-meta property="og:image:width"  content=og_image_width
-meta property="og:image:height" content=og_image_height
+  meta property="og:title"        content=og_title
+
+  - if og_description.present?
+    meta property="og:description"  content=og_description
+    meta name="twitter:description" content=og_description
+
+  meta property="og:site_name"    content=og_site_name
+  meta property="og:url"          content=og_url
+  meta property="og:image"        content=og_image
+  meta property="og:image:width"  content=og_image_width
+  meta property="og:image:height" content=og_image_height
 
 meta name="turbolinks-cache-control" content=turbolinks_cache_control
 
@@ -40,8 +42,6 @@ meta name="turbolinks-cache-control" content=turbolinks_cache_control
 
 meta name="twitter:title" content=og_title
 meta name="twitter:image" content=og_image
-- if og_description.present?
-  meta name="twitter:description" content=og_description
 
 = csrf_meta_tags
 
@@ -53,8 +53,11 @@ meta name="twitter:image" content=og_image
                         'data-turbolinks-track': 'reload')
 
   == render partial: 'layouts/folio/analytics'
-  / keep under analytics
-  == cell('folio/cookie_consent', request.hostname)
+
+  - cache_if respond_to?(:cache_key_base),
+             ['head-cookie-consent', request.hostname] + cache_key_base
+    / keep under analytics
+    == cell('folio/cookie_consent', request.hostname)
 
   - unless skip_javascript
     = javascript_include_tag javascript, 'data-turbolinks-track' => 'reload', \
