@@ -53,6 +53,28 @@ class Folio::Devise::CrossdomainHandler
     end
   end
 
+  def authenticate_user_on_slave_site!
+    set_slave_session_before_redirect
+
+    result_params = {
+      only_path: false,
+      host: master_site.env_aware_domain,
+      crossdomain: session[SESSION_KEY][:token],
+      site: current_site.slug,
+      resource_name:,
+    }
+
+    if %w[registrations invitations].include?(controller_name)
+      Result.new(action: :redirect_to_master_invitations_new,
+                 resource_name:,
+                 params: result_params)
+    else
+      Result.new(action: :redirect_to_master_sessions_new,
+                 resource_name:,
+                 params: result_params)
+    end
+  end
+
   private
     def supports_crossdomain_devise?
       !!master_site
@@ -124,27 +146,8 @@ class Folio::Devise::CrossdomainHandler
         end
       end
 
-      if devise_controller
-        set_slave_session_before_redirect
 
-        result_params = {
-          only_path: false,
-          host: master_site.env_aware_domain,
-          crossdomain: session[SESSION_KEY][:token],
-          site: current_site.slug,
-          resource_name:,
-        }
-
-        if %w[registrations invitations].include?(controller_name)
-          return Result.new(action: :redirect_to_master_invitations_new,
-                            resource_name:,
-                            params: result_params)
-        else
-          return Result.new(action: :redirect_to_master_sessions_new,
-                            resource_name:,
-                            params: result_params)
-        end
-      end
+      return authenticate_user_on_slave_site! if devise_controller
 
       Result.new(action: :noop)
     end
