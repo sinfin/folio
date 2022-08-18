@@ -25,6 +25,10 @@ def create_and_host_site(key: nil, attributes: {})
   @site
 end
 
+class ActiveSupport::TestCase
+  parallelize
+end
+
 class Cell::TestCase
   controller ApplicationController
   include FactoryBot::Syntax::Methods
