@@ -9,6 +9,7 @@ class Folio::Devise::Invitations::ShowCell < Folio::Devise::ApplicationCell
     opts = {
       url: controller.invitation_path(resource_name),
       as: resource_name,
+      method: :post,
       html: {
         id: nil
       },
