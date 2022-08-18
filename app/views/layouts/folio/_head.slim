@@ -54,8 +54,8 @@ meta name="twitter:image" content=og_image
 
   == render partial: 'layouts/folio/analytics'
 
-  - cache_if respond_to?(:cache_key_base),
-             ['head-cookie-consent', request.hostname] + cache_key_base
+  - ckb = try(:cache_key_base)
+  - cache_if ckb, ['head-cookie-consent', request.hostname] + (ckb || [])
     / keep under analytics
     == cell('folio/cookie_consent', request.hostname)
 
