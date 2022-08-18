@@ -15,7 +15,7 @@ else
 bindMultiSelects = ->
   $('select[multiple]')
     .not('.f-c-js-manual')
-    .not('.f-c-collection-remote-select-input')
+    .not('.f-input--collection-remote-select')
     .multiSelect
       selectableHeader: text(window.FolioConsole.translations.selectable)
       selectionHeader: text(window.FolioConsole.translations.selected)
