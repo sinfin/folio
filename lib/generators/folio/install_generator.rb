@@ -100,6 +100,7 @@ module Folio
           ".gitignore",
           ".rubocop.yml",
           ".slim-lint.yml",
+          "app/assets/config/manifest.js",
           "app/views/devise/invitations/edit.slim",
           "app/views/folio/pages/show.slim",
           "app/views/home/index.slim",
@@ -113,6 +114,13 @@ module Folio
           "vendor/assets/redactor/redactor.js",
         ].each { |f| copy_file f, f }
 
+        [
+          "app/cells/#{application_namespace_path}/.keep",
+        ].each do |f|
+          FileUtils.mkdir_p(::File.dirname(f))
+          FileUtils.touch(f)
+        end
+
         copy_file Folio::Engine.root.join(".ruby-version"), ".ruby-version"
       end
 
@@ -121,13 +129,6 @@ module Folio
           ::Rails.root.join("app/cells/#{project_name}")
         ].each do |path|
           FileUtils.mkdir_p path
-        end
-      end
-
-      def add_folio_assets
-        inject_into_file "app/assets/config/manifest.js", before: /\A/ do  <<~'RUBY'
-          //= link folio_manifest.js
-        RUBY
         end
       end
 
