@@ -27,7 +27,7 @@ window.Folio.Input.Numeral.bind = (input) => {
     .removeAttr('name')
     .prop('type', 'string')
 
-  $input.after`<input type="hidden" name="${name}" value="${input.value}">`
+  $input.after(`<input type="hidden" name="${name}" value="${input.value}">`)
 
   input.folioInputNumeralCleave = new window.Cleave(input, window.Folio.Input.Numeral.cleaveOpts)
 }
