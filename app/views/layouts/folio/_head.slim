@@ -11,10 +11,13 @@ meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"
 
 meta name="viewport" content=meta_viewport
 
-- if @folio_meta_variables_cache_key && \
-     meta_html = Rails.cache.fetch(@folio_meta_variables_cache_key) && \
-     meta_html.present?
-  == meta_html
+- if @folio_meta_variables_cache_key
+  - meta_html = Rails.cache.read(@folio_meta_variables_cache_key)
+  - if meta_html.present?
+    == meta_html
+  - else
+    - Rails.cache.fetch(@folio_meta_variables_cache_key)
+      = render partial: 'layouts/folio/cacheable_head'
 - else
   = render partial: 'layouts/folio/cacheable_head'
 
