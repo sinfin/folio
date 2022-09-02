@@ -40,7 +40,15 @@ class Folio::Address::Base < Folio::ApplicationRecord
   end
 
   def to_label
-    [address_line_1, address_line_2].filter_map(&:presence).join(", ")
+    address_lines_separator = should_validate_address_line_2? ? " " : ", "
+
+    [
+      name,
+      [address_line_1, address_line_2].join(address_lines_separator),
+      [zip, city].join(" "),
+      country_code,
+      phone
+    ].filter_map(&:presence).join(", ")
   end
 
   def self.sti_paths
