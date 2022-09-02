@@ -9,7 +9,13 @@ title = public_page_title
 - if public_page_canonical_url.present?
   link rel="canonical" href=public_page_canonical_url
 
-meta property="og:title"        content=og_title
+meta property="og:title" content=og_title
+
+- current_site.layout_twitter_meta.each do |name, content|
+  meta name=name content=content
+
+meta name="twitter:title" content=og_title
+meta name="twitter:image" content=og_image
 
 - if og_description.present?
   meta property="og:description"  content=og_description

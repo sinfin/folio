@@ -19,12 +19,6 @@ meta name="viewport" content=meta_viewport
 
 meta name="turbolinks-cache-control" content=turbolinks_cache_control
 
-- current_site.layout_twitter_meta.each do |name, content|
-  meta name=name content=content
-
-meta name="twitter:title" content=og_title
-meta name="twitter:image" content=og_image
-
 = csrf_meta_tags
 
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
