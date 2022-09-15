@@ -43,8 +43,9 @@
 
     = render(:_bottom)
 
-    = f.input :subscribed_to_newsletter,
-              label: t(".subscribed_to_newsletter_label")
+    - if show_subscribed_to_newsletter?(f)
+      = f.input :subscribed_to_newsletter,
+                label: t(".subscribed_to_newsletter_label")
 
     - @f = f
     = render(:_disclaimer)
