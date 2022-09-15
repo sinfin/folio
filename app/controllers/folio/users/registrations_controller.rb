@@ -6,7 +6,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   include Folio::Users::DeviseControllerBase
 
   def new
-    fail ActionController::MethodNotAllowed, ""
+    fail ActionController::MethodNotAllowed, "Registartions are created by inviting user, not directly"
   end
 
   def edit
@@ -20,7 +20,7 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def create
-    fail ActionController::MethodNotAllowed, ""
+    fail ActionController::MethodNotAllowed, "Registartions are created by inviting user, not directly"
 
     build_resource(sign_up_params)
 

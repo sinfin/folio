@@ -8,6 +8,9 @@ module Folio::BelongsToSite
                       required: false
 
     validate :validate_belongs_to_site
+
+    scope :by_site, ->(site) { where(site: site) }
+    scope :by_site_id, ->(site_id) { where(site_id: site_id) }
   end
 
   class_methods do

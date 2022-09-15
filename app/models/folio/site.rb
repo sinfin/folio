@@ -94,6 +94,13 @@ class Folio::Site < Folio::ApplicationRecord
     }
   end
 
+  def <=>(other)
+    res = self.title <=> other.title
+    return res unless res.zero?
+
+    self.id <=> other.id
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
