@@ -5,7 +5,7 @@ require Folio::Engine.root.join("lib/generators/folio/generator_base")
 class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
   include Folio::GeneratorBase
 
-  desc "Creates usefull atoms for use in CMS pages (text, image, person, document ...). You can get just one of them (`rails g r g folio:prepared_atom card/small`) or all of them (`rails g folio:prepared_atom all`)"
+  desc "Creates usefull atoms for use in CMS pages (text, image, person, document ...). You can get just one of them (`rails g folio:prepared_atom card/small`) or all of them (`rails g folio:prepared_atom all`)"
 
   source_root File.expand_path("templates", __dir__)
 
