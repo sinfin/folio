@@ -1,9 +1,28 @@
 //= require folio/input/_framework
+//= require moment/moment
+//= require moment/locale/cs
+//= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.DateTime = {}
+
+if (window.FolioConsole && window.FolioConsole.translations) {
+  window.Folio.Input.DateTime.i18n = {
+    clearDate: window.FolioConsole.translations.clearDate
+  }
+} else {
+  if (document.documentElement.lang === 'cs') {
+    window.Folio.Input.DateTime.i18n = {
+      clearDate: 'Vymazat datum'
+    }
+  } else {
+    window.Folio.Input.DateTime.i18n = {
+      clearDate: 'Clear date'
+    }
+  }
+}
 
 window.Folio.Input.DateTime.SELECTOR = '.f-input--date'
 
@@ -44,7 +63,7 @@ window.Folio.Input.DateTime.onDatepickerShow = (e) => {
     $picker.append(`
       <div class="bootstrap-datetimepicker-widget__reset-wrap">
         <span class="f-c-with-icon text-danger bootstrap-datetimepicker-widget__reset cursor-pointer">
-          <span class="fa fa-trash-alt"></span> ${window.FolioConsole.translations.clearDate}
+          <span class="fa fa-trash-alt"></span> ${window.Folio.Input.DateTime.i18n.clearDate}
           </span>
       </div>
     `)
