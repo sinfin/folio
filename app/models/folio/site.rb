@@ -94,6 +94,20 @@ class Folio::Site < Folio::ApplicationRecord
     }
   end
 
+  def console_form_tabs_base
+    %i[
+      header_message
+      contacts
+      analytics
+      site_social_links
+      settings
+    ]
+  end
+
+  def console_form_tabs
+    console_form_tabs_base
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|

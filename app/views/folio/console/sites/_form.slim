@@ -6,76 +6,12 @@ ruby:
 
 = form_header f, right: cache_clear_button
 
-= tabs [:header_message, :contacts, :analytics, :site_social_links, :settings]
+= tabs current_site.console_form_tabs
 
 .tab-content
-  = tab :header_message
-    .d-lg-flex.align-items-center
-      .flex-shrink-0.mr-g
-        = f.input :header_message_published,
-                  label: t('.header_message_published')
-
-      .row
-        .col-lg-6.d-lg-flex.align-items-center.mb-3
-          .mb-2.mb-lg-0.mr-2 = t('.header_message_published_from')
-          = f.input :header_message_published_from,
-                    label: false,
-                    wrapper_html: { class: 'm-0' }
-
-        .col-lg-6.d-lg-flex.align-items-center.mb-3
-          .mb-2.mb-lg-0.mr-2 = t('.header_message_published_until')
-          = f.input :header_message_published_until,
-                    label: false,
-                    wrapper_html: { class: 'm-0' }
-
-    = f.input :header_message,
-              as: :redactor,
-              label: false,
-              input_html: { placeholder: t('.header_message') }
-
-  = tab :settings
-    = f.input :title
-    = f.input :description, as: :text, autosize: true
-
-    = render partial: 'folio/console/sites/additional_form_fields', \
-             locals: { f: f }
-
-    - if Rails.application.config.folio_site_is_a_singleton
-      = f.input :domain
-
-    = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
-                                          checked: f.object.locales
-
-    - if Module.const_defined?(:Boutique)
-      = render partial: "folio/console/sites/boutique_additional_form_fields",
+  - current_site.console_form_tabs.each do |tab_key|
+    = tab tab_key
+      = render partial: "folio/console/sites/form_tabs/#{tab_key}",
                locals: { f: f }
-
-  = tab :contacts
-    = f.input :email
-    = f.input :phone
-    = f.input :address, as: :text, autosize: true
-
-    = f.input :email_from
-    = f.input :system_email
-    = f.input :system_email_copy
-
-  = tab :analytics
-    .row
-      .col-md
-        = f.input :google_analytics_tracking_code_v4
-      .col-md
-        = f.input :google_analytics_tracking_code
-
-    = f.input :facebook_pixel_code
-
-  = tab :site_social_links
-    = f.simple_fields_for :social_links do |g|
-      - Folio::Site.social_link_sites.each do |key|
-        - value = f.object.social_links.try(:[], key.to_s)
-        - i18n_key = "social_links/#{key}"
-        = g.input key, \
-                  required: false, \
-                  label: Folio::Site.human_attribute_name(i18n_key), \
-                  input_html: { value: value }
 
 = form_footer f
