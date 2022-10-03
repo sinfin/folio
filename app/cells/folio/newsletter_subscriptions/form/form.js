@@ -9,6 +9,15 @@ $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) 
   $form.addClass('f-newsletter-subscriptions-form-submitting')
 
   $.post($form.attr('action'), $form.serialize()).always((response) => {
-    $wrap.replaceWith(response)
+    const $response = $(response)
+    $wrap.replaceWith($response)
+
+    $response.trigger('folio:submitted')
+
+    if ($response.find('.f-newsletter-subscriptions-form__message').length) {
+      $response.trigger('folio:success')
+    } else {
+      $response.trigger('folio:failure')
+    }
   })
 })
