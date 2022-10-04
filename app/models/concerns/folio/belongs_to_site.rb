@@ -8,6 +8,8 @@ module Folio::BelongsToSite
                       required: false
 
     validate :validate_belongs_to_site
+
+    scope :by_atom_setting_site_id, -> (site_id) { where(site_id:) }
   end
 
   class_methods do
