@@ -22,6 +22,9 @@
     = f.hidden_field :locale, value: locales.first
 
 - else
+  / required for atom select filtering by site to work
+  = f.input :site_id, as: :hidden, atom_setting: :site_id
+
   - unless f.object.class.try(:singleton?)
     = f.input :title, hint: false
 
