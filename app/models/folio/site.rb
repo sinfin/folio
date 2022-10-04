@@ -76,6 +76,12 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  def pretty_domain
+    if domain.present?
+      domain.delete_prefix("www.")
+    end
+  end
+
   def layout_name
     "folio/application"
   end

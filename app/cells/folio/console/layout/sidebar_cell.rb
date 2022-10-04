@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
-  def site_name
-    current_site.title
-  end
-
   def link_groups
     if ::Rails.application.config.folio_console_sidebar_link_class_names
       ::Rails.application
@@ -65,7 +61,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       if link_source[:icon]
         link(nil, path, active_start_with: link_source[:active_start_with]) do
           concat(content_tag(:i, "", class: "#{link_source[:icon]} f-c-layout-sidebar__icon"))
-          concat(label)
+          concat(content_tag(:span, label, class: "f-c-layout-sidebar__span"))
         end
       else
         link(label, path, paths:,
@@ -105,7 +101,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     if block_given?
       link_to(path, class: class_names, &block)
     else
-      link_to(label, path, class: class_names)
+      link_to(content_tag(:span, label, class: "f-c-layout-sidebar__span"), path, class: class_names)
     end
   end
 
@@ -160,7 +156,9 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         end
 
         {
-          title: site.title,
+          title: site.pretty_domain,
+          collapsed: current_site != site,
+          expanded: current_site == site,
           links: site_links[:console_sidebar_prepended_links].compact + [
             link_for_class.call(Folio::Page),
             homepage_for_site(site)
@@ -262,5 +260,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def show_users?
     ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
+  end
+
+  def group_class_name(group)
+    ary = []
+
+    ary << "f-c-layout-sidebar__group--collapsed" if group[:collapsed]
+    ary << "f-c-layout-sidebar__group--expanded" if group[:expanded]
+
+    ary
   end
 end

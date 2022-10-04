@@ -1,7 +1,7 @@
 aside#f-c-layout-sidebar.f-c-layout-sidebar
   .f-c-layout-sidebar__part
     a.f-c-layout-sidebar__title href=controller.console_root_path
-      = site_name
+      = current_site.pretty_domain
 
   .f-c-layout-sidebar__part
     = cell('folio/console/layout/sidebar/search')
@@ -11,13 +11,14 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
 
     - link_groups.each do |group|
       - if group && group[:links].present?
-        - if group[:title]
-          .f-c-layout-sidebar__part-title.small
-            = group[:title]
+        .f-c-layout-sidebar__group class=group_class_name(group)
+          - if group[:title]
+            .f-c-layout-sidebar__part-title
+              = group[:title]
 
-        ul.f-c-layout-sidebar__ul
-          - group[:links].each do |link_source|
-            li.f-c-layout-sidebar__li
-              = link_from(link_source)
+          ul.f-c-layout-sidebar__ul
+            - group[:links].each do |link_source|
+              li.f-c-layout-sidebar__li
+                = link_from(link_source)
 
     = render(:_appended)
