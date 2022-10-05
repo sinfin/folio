@@ -114,6 +114,10 @@ class Folio::Site < Folio::ApplicationRecord
     console_form_tabs_base
   end
 
+  def og_image_fallback
+    "/fb-share.png"
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
