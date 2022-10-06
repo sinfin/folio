@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "pg_search", "= 2.3.2"
   s.add_dependency "friendly_id", "~> 5.3.0"
   s.add_dependency "ancestry", "~> 4.1.0"
-  s.add_dependency "mini_racer", "~> 0.4.0"
+  s.add_dependency "mini_racer"
   s.add_dependency "mini_magick"
   s.add_dependency "sidekiq"
   s.add_dependency "sidekiq-cron"
@@ -76,7 +76,6 @@ Gem::Specification.new do |s|
   s.add_dependency "devise-i18n"
   s.add_dependency "devise-bootstrap-views"
 
-  s.add_development_dependency "sqlite3"
   s.add_development_dependency "pry-rails"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "rubocop-rails_config"
