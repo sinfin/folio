@@ -32,7 +32,6 @@ Folio::Engine.routes.draw do
     resources :newsletter_subscriptions, only: %i[index destroy]
     resources :accounts
     resources :sites
-    resources :visits, only: %i[index show]
   end
 
   get '/admin' => redirect('/console')

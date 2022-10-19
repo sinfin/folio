@@ -4,7 +4,6 @@ PATH
     folio (0.1.0)
       active_model_serializers (~> 0.10.0)
       acts-as-taggable-on (~> 5.0)
-      ahoy_matey (~> 1)
       ancestry
       bootstrap (~> 4.0.0.beta)
       breadcrumbs_on_rails
@@ -90,17 +89,6 @@ GEM
       activerecord (>= 4.2.8)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
-    ahoy_matey (1.6.1)
-      addressable
-      browser (~> 2.0)
-      geocoder
-      rack-attack (< 6)
-      railties
-      referer-parser (>= 0.3.0)
-      request_store
-      safely_block (>= 0.1.1)
-      user_agent_parser
-      uuidtools
     ancestry (3.2.1)
       activerecord (>= 4.2.0)
     annotate (3.2.0)

@@ -23,10 +23,6 @@ en:
         index:
           title: Sites
 
-      visits:
-        index:
-          title: Visits
-
       accounts:
         index:
           title: Accounts

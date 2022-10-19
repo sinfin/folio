@@ -4,7 +4,6 @@ module Folio
   class Site < ApplicationRecord
     # Relations
     has_many :nodes, class_name: 'Folio::Node'
-    has_many :visits
 
     # Validations
     validates :title, presence: true

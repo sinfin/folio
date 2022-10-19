@@ -35,6 +35,5 @@ ARC
 [ ] pinyin transkripce titles na slugy (https://github.com/janx/ruby-pinyin)
 
 [ ] fb meta fields
-[ ] ahoy tracking
 [ ] GAdwords tracking / obecny JS tracking
 [ ] node history

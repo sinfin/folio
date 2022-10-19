@@ -52,7 +52,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'cells-rails'
   s.add_dependency 'cells-slim'
   s.add_dependency 'selectize-rails'
-  s.add_dependency 'ahoy_matey', '~> 1'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
