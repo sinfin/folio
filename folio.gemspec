@@ -52,6 +52,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cells-rails'
   s.add_dependency 'cells-slim'
   s.add_dependency 'selectize-rails'
+  s.add_dependency 'mini_racer', '~> 0.4.0'
 
   s.add_dependency 'dragonfly'
   s.add_dependency 'dragonfly-s3_data_store'
