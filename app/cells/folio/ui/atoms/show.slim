@@ -27,6 +27,7 @@
                   == cell(molecule, atoms, cell_options)
         - else
           - atoms.each do |atom|
+            - next if atom.type.nil?
             .row.border-top.f-ui-atoms__row id=atom.type
               == cell('folio/ui/atoms/sidebar',
                       atom,

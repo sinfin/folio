@@ -67,6 +67,7 @@ class Folio::Ui::AtomsCell < Folio::UiCell
         attrs = handle_attributes(attrs)
 
         attrs.delete("_showcase")
+        attrs.delete("_separate")
         attrs.delete("_placement_type")
         molecule = attrs.delete("_molecule").presence || 1
 
@@ -132,6 +133,10 @@ class Folio::Ui::AtomsCell < Folio::UiCell
           atom = h[data["_placement_type"]].atoms.build(attrs)
           atom.data["_placement_type"] = data["_placement_type"] || "Folio::Page"
           atom.data["_showcase"] = data["_showcase"]
+        end
+
+        if data["_separate"]
+          h[data["_placement_type"]].atoms.build({ type: nil })
         end
       end
 
