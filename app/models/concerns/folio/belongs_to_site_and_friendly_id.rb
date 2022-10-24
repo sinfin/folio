@@ -3,10 +3,12 @@
 module Folio::BelongsToSiteAndFriendlyId
   extend ActiveSupport::Concern
 
-  include Folio::BelongsToSite
+  included do
+    include Folio::BelongsToSite
 
-  FRIENDLY_ID_SCOPE = :site_id
-  include Folio::FriendlyId
+    const_set(:FRIENDLY_ID_SCOPE, :site_id)
+    include Folio::FriendlyId
+  end
 
   private
     def slug_candidates
