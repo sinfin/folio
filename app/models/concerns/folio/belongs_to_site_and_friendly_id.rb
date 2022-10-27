@@ -8,19 +8,20 @@ module Folio::BelongsToSiteAndFriendlyId
 
     const_set(:FRIENDLY_ID_SCOPE, :site_id)
     include Folio::FriendlyId
-  end
 
-  private
-    def slug_candidates
-      if site
-        [
-          to_label,
-          "#{site.slug} #{to_label}",
-          "#{site.slug} #{to_label} 2",
-          "#{site.slug} #{to_label} 3",
-        ]
-      else
-        %i[to_label]
+    private
+      def slug_candidates
+        if site
+          [
+            slug.presence,
+            to_label,
+            "#{site.slug} #{to_label}",
+            "#{site.slug} #{to_label} 2",
+            "#{site.slug} #{to_label} 3",
+          ].compact
+        else
+          %i[to_label]
+        end
       end
-    end
+  end
 end
