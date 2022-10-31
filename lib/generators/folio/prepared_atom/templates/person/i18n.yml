@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/person: 
+      application_namespace_path/atom/person:
     models:
       application_namespace_path/atom/person: Osoba (karta střední)
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/person: 
+      application_namespace_path/atom/person:
     models:
       application_namespace_path/atom/person: Person

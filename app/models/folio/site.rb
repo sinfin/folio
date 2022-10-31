@@ -47,6 +47,7 @@ class Folio::Site < Folio::ApplicationRecord
     # class method is better than a constant as one might want to override it
     %i[facebook
        instagram
+       tiktok
        twitter
        linkedin
        youtube

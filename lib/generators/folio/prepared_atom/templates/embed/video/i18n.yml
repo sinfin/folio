@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/embed/video: 
+      application_namespace_path/atom/embed/video:
     models:
       application_namespace_path/atom/embed/video: Video (vložený kód)
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/embed/video: 
+      application_namespace_path/atom/embed/video:
     models:
       application_namespace_path/atom/embed/video: Video (embed)
