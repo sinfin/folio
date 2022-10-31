@@ -65,6 +65,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     respond_to :json, only: %i[update]
 
+    # keep this above load_and_authorize_resource
+    if klass.try(:has_belongs_to_site?)
+      before_action :load_belongs_to_site_resource
+    end
+
     if through
       through_as = through.demodulize.underscore
 
@@ -442,6 +447,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if record.persisted? && record.site != current_site
           fail ActiveRecord::RecordNotFound
         end
+      end
+    end
+
+    def load_belongs_to_site_resource
+      # setting i.e. @page makes cancancan skip the load
+      if params[:id].present?
+        name = folio_console_record_variable_name(plural: false)
+        instance_variable_set(name, @klass.where(site: current_site).find(params[:id]))
       end
     end
 end
