@@ -47,6 +47,7 @@ class Folio::Site < Folio::ApplicationRecord
     # class method is better than a constant as one might want to override it
     %i[facebook
        instagram
+       tiktok
        twitter
        linkedin
        youtube
@@ -76,6 +77,12 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  def pretty_domain
+    if domain.present?
+      domain.delete_prefix("www.")
+    end
+  end
+
   def layout_name
     "folio/application"
   end
@@ -99,6 +106,24 @@ class Folio::Site < Folio::ApplicationRecord
     return res unless res.zero?
 
     self.id <=> other.id
+  end
+  
+  def console_form_tabs_base
+    %i[
+      header_message
+      contacts
+      analytics
+      site_social_links
+      settings
+    ]
+  end
+
+  def console_form_tabs
+    console_form_tabs_base
+  end
+
+  def og_image_fallback
+    "/fb-share.png"
   end
 
   private

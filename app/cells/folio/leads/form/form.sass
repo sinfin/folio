@@ -1,3 +1,5 @@
+$f-leads-form-row-spacer: $grid-gutter-half !default
+
 .f-leads-form
   position: relative
 
@@ -30,7 +32,7 @@
     z-index: 1
 
   &__row + &__row
-    margin-top: $grid-gutter-half
+    margin-top: $f-leads-form-row-spacer
 
   &--submitted &__form
     visibility: hidden

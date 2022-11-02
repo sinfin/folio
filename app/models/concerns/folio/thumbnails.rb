@@ -281,6 +281,7 @@ module Folio::Thumbnails
       return unless file.present?
       return unless persisted?
       return unless file_mime_type_image?
+      return unless saved_change_to_file_mime_type?
       return unless self.respond_to?(:additional_data)
       return if additional_data?
       return if svg?

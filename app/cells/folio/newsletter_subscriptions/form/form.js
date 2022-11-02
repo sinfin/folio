@@ -8,11 +8,16 @@ $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) 
   const $wrap = $form.closest('.f-newsletter-subscriptions-form')
   $form.addClass('f-newsletter-subscriptions-form-submitting')
 
-  $form
-    .find(`input[name="${window.Folio.Csrf.tokenParam}"]`)
-    .val(window.Folio.Csrf.token)
-
   $.post($form.attr('action'), $form.serialize()).always((response) => {
-    $wrap.replaceWith(response)
+    const $response = $(response)
+    $wrap.replaceWith($response)
+
+    $response.trigger('folio:submitted')
+
+    if ($response.find('.f-newsletter-subscriptions-form__message').length) {
+      $response.trigger('folio:success')
+    } else {
+      $response.trigger('folio:failure')
+    }
   })
 })

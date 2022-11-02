@@ -57,6 +57,9 @@ search:
 share:
   width: 24
   height: 24
+tiktok:
+  width: 32
+  height: 32
 twitter:
   width: 32
   height: 32

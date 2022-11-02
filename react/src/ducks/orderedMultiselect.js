@@ -38,14 +38,14 @@ function * triggerAtomSettingUpdate (action) {
   const orderedMultiselect = yield select(orderedMultiselectSelector)
   if (orderedMultiselect.atomSetting) {
     const $wrap = window.jQuery('.folio-react-wrap--ordered-multiselect')
-    $wrap.trigger('folioCustomChange')
+    $wrap.find('.f-c-js-atoms-placement-setting').trigger('folioCustomChange')
     $wrap.closest('.f-c-simple-form-with-atoms__form, .f-c-dirty-simple-form').trigger('change')
     yield $wrap
   }
 }
 
 function * triggerAtomSettingUpdateSaga () {
-  yield takeLatest(UPDATE_ITEMS, triggerAtomSettingUpdate)
+  yield takeLatest([ADD_ITEM, UPDATE_ITEMS, REMOVE_ITEM], triggerAtomSettingUpdate)
 }
 
 export const orderedMultiselectSagas = [

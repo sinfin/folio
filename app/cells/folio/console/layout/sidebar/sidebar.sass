@@ -26,9 +26,35 @@
     text-transform: uppercase
     font-weight:
     display: block
-    color: #979797
-    border-top: 1px solid rgba(#979797, 0.42)
-    padding: 20px 20px 10px
+    color: #AAADAD
+    font-weight: $font-weight-bold
+    font-size: 11.5px
+    line-height: 13px
+    padding: 13px 30px 12px 15px
+    position: relative
+    cursor: pointer
+
+    &::after
+      content: ""
+      display: block
+      width: 0
+      height: 0
+      border-style: solid
+      border-width: 0 5px 5px 5px
+      border-color: transparent transparent $white transparent
+      position: absolute
+      top: 50%
+      right: 12px
+      transform: translate(0, -50%)
+
+  &__group--collapsed &__part-title
+    cursor: pointer
+
+  &__group--collapsed &__part-title:hover
+    background: rgba(#212529, 0.35)
+
+  &__group--collapsed &__part-title::after
+    transform: translate(0, -50%) rotate(180deg)
 
   &__ul
     padding: 10px 0
@@ -41,10 +67,11 @@
 
   &__a
     display: block
-    padding: 10px 20px
+    padding: 9px 15px 8px
 
     +plain-hover-focus
       color: $gray-200
+      text-decoration: none
 
     &--active
       font-weight: $font-weight-bold
@@ -52,5 +79,17 @@
       +plain-hover-focus
         color: $white
 
+  &__a:hover &__span
+    text-decoration: underline
+
   &__icon
     margin: 0 7px 0 0
+
+  &__group
+    border-top: 1px solid rgba(#979797, 0.42)
+
+  &__group--collapsed &__ul
+    display: none
+
+  &__group--expanded
+    background: #212529

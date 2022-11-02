@@ -4,6 +4,9 @@ ADVANCED_OPTIONS =
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
+  callbacks:
+    changed: ->
+      $(@rootElement).trigger('change')
 
 OPTIONS =
   plugins: ['table', 'button', 'character_counter', 'definedlinks']
@@ -13,6 +16,9 @@ OPTIONS =
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
+  callbacks:
+    changed: ->
+      $(@rootElement).trigger('change')
 
 EMAIL_OPTIONS =
   plugins: ['button', 'character_counter']
@@ -20,6 +26,9 @@ EMAIL_OPTIONS =
   toolbarFixed: true
   lang: document.documentElement.lang
   formatting: []
+  callbacks:
+    changed: ->
+      $(@rootElement).trigger('change')
 
 PEREX_OPTIONS =
   plugins: ['character_counter', 'definedlinks']
@@ -28,6 +37,9 @@ PEREX_OPTIONS =
   toolbarFixed: true
   lang: document.documentElement.lang
   linkNewTab: true
+  callbacks:
+    changed: ->
+      $(@rootElement).trigger('change')
 
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')

@@ -9,7 +9,7 @@ class Folio::Page < Folio::ApplicationRecord
       include Folio::HasAncestrySlugForTraco
     end
   else
-    include Folio::FriendlyId
+    include Folio::BelongsToSiteAndFriendlyId
 
     if Rails.application.config.folio_pages_ancestry
       include Folio::HasAncestry
@@ -18,7 +18,6 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   extend Folio::InheritenceBaseNaming
-  include Folio::BelongsToSite
   include Folio::HasAttachments
   include Folio::Publishable::WithDate
   include Folio::Sitemap::Base

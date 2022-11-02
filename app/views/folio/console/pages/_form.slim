@@ -1,6 +1,9 @@
 - show_translations = Rails.application.config.folio_pages_translations && \
                       f.object.persisted?
 
+/ required for atom select filtering by site to work
+= f.input :site_id, as: :hidden, atom_setting: :site_id
+
 = tabs [:content]
 
 .tab-content

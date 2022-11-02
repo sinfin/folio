@@ -219,12 +219,14 @@ cs:
       sites:
         form:
           clear_cache: Smazat cache
-          header_message: Text oznámení
-          header_message_published: Zapnuto
-          header_message_published_from: 'Od:'
-          header_message_published_until: 'Do:'
         clear_cache:
           success: Cache byla úspěšně smazána.
+        form_tabs:
+          header_message:
+            header_message: Text oznámení
+            header_message_published: Zapnuto
+            header_message_published_from: 'Od:'
+            header_message_published_until: 'Do:'
       users:
         send_reset_password_email:
           success: Instrukce pro reset hesla odeslány e-mailem

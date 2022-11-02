@@ -60,6 +60,8 @@ class Folio::ImageCell < Folio::ApplicationCell
         src: normal.url,
         alt: options[:alt] || "",
         title: options[:title],
+        width: normal[:width],
+        height: normal[:height],
       }
 
       unless /svg/.match?(file.file_mime_type)

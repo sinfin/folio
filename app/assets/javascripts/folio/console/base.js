@@ -1,9 +1,6 @@
 //= require jquery
 //= require rails-ujs
 //= require folio-bootstrap/dist/js/bootstrap.bundle
-//= require moment/moment
-//= require moment/locale/cs
-//= require eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min
 //= require daterangepicker.min
 //= require slideout.js/dist/slideout
 //= require multiselect/js/jquery.multi-select
@@ -67,6 +64,7 @@
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search
+//= require folio/console/layout/sidebar/sidebar
 //= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios

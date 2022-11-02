@@ -2,6 +2,7 @@
 
 class Folio::CreateFileFromS3Job < ApplicationJob
   include Folio::S3Client
+  include Folio::Shell
 
   queue_as :default
 
@@ -42,6 +43,8 @@ class Folio::CreateFileFromS3Job < ApplicationJob
 
       test_aware_download_from_s3(s3_path, tmp_file_path)
       test_aware_s3_delete(s3_path)
+
+      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
 
       file.file = File.open(tmp_file_path)
 
@@ -127,5 +130,32 @@ class Folio::CreateFileFromS3Job < ApplicationJob
                            type: "Folio::CreateFileFromS3Job",
                            data: hash,
                          }.to_json
+    end
+
+    def ensure_proper_file_extension_for_mime_type(tmp_file_path)
+      file_mime_type = shell("file", "--brief", "--mime-type", tmp_file_path)
+
+      ext = case file_mime_type
+            when "image/jpeg"
+              ".jpg"
+            when "image/png"
+              ".png"
+            when "image/gif"
+              ".gif"
+            when "image/bmp"
+              ".bmp"
+            when "image/svg", "image/svg+xml"
+              ".svg"
+            else
+              nil
+      end
+
+      if ext && !tmp_file_path.ends_with?(ext)
+        new_file_path = "#{tmp_file_path}#{ext}"
+        FileUtils.cp(tmp_file_path, new_file_path)
+        new_file_path
+      else
+        tmp_file_path
+      end
     end
 end

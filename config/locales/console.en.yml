@@ -216,12 +216,14 @@ en:
       sites:
         form:
           clear_cache: Clear cache
-          header_message: Message text
-          header_message_published: Enabled
-          header_message_published_from: 'From:'
-          header_message_published_until: 'To:'
         clear_cache:
           success: Cache was cleared successfully.
+        form_tabs:
+          header_message:
+            header_message: Message text
+            header_message_published: Enabled
+            header_message_published_from: 'From:'
+            header_message_published_until: 'To:'
       users:
         send_reset_password_email:
           success: Email with instructions for password reset has been sent

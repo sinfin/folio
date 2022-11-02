@@ -38,7 +38,7 @@ module Folio::Devise::CrossdomainController
         redirect_to main_app.send("new_#{result.resource_name}_session_path")
 
       when :redirect_to_master_invitations_new
-        redirect_to main_app.send("new_#{result.resource_name}_invititation_url", result.params),
+        redirect_to main_app.send("new_#{result.resource_name}_invitation_url", result.params),
                     allow_other_host: true
 
       when :redirect_to_master_sessions_new

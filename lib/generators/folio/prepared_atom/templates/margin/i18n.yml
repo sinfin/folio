@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/margin: 
+      application_namespace_path/atom/margin:
     models:
       application_namespace_path/atom/margin: Odsazení
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/margin: 
+      application_namespace_path/atom/margin:
     models:
       application_namespace_path/atom/margin: Margin

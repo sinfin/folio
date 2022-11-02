@@ -1,3 +1,68 @@
+@import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker'
+
+.bootstrap-datetimepicker-widget
+  &.dropdown-menu
+    max-width: 275px
+    padding: 0
+
+    &.bottom:before
+      border-bottom-color: $border-color
+
+    &.top:before
+      border-top-color: $border-color
+
+  a[data-action]
+    padding: 0
+
+  thead
+    th
+      padding-top: 0.25 * $spacer
+      padding-bottom: 0.25 * $spacer
+
+  &__reset-wrap
+    border-top: 1px solid $border-color
+    padding: $spacer $spacer / 4
+    text-align: center
+    cursor: pointer
+
+  .timepicker
+    border-top: 1px solid $border-color
+
+  .timepicker-picker
+    table
+      width: auto
+      margin-left: auto
+      margin-right: auto
+
+      td, td span
+        height: 30px
+        width: 30px
+        line-height: 30px
+
+  .timepicker-hour,
+  .timepicker-minute,
+  .timepicker-second
+    width: 30px
+
+  .row
+    display: block
+    margin: 0
+
+  .datepicker,
+  .timepicker
+    max-width: none !important
+    padding: $grid-gutter-half
+
+  .fa
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    margin: 0 !important
+
+  &__reset .fa
+    margin-right: 7px !important
+    margin-bottom: -1px !important
+
 .simple_form .form-group
   &.date,
   &.datetime
