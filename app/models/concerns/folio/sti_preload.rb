@@ -23,6 +23,8 @@ module Folio::StiPreload
       end
 
       def preload_sti
+        return if sti_paths.blank? && sti_file_paths.blank?
+
         preload_path = -> (path) do
           relative_path = path.sub(/.*\/app\/models\//, "").delete_suffix(".rb")
           classified = "#{relative_path}/X".classify.delete_suffix("::X")
