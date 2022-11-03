@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-11-03
+### Added
+- added `default_gravity` to `Folio::File`
+
 ## 2021-09-23
 ### Changed
 - refactored console site form - added tab configuration to `current_site.console_form_tabs` for easier extending in `main_app`

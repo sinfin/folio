@@ -151,6 +151,26 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </FormGroup>
 
+            <FormGroup>
+              <Label>{window.FolioConsole.translations.fileDefaultGravity}</Label>
+              {readOnly ? (
+                <p className='m-0'>{formState.default_gravity}</p>
+              ) : (
+                <Input
+                  value={formState.default_gravity}
+                  onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
+                  name='default_gravity'
+                  type='select'
+                >
+                  {file.attributes.default_gravities_for_select.map((opt) => (
+                    <option value={opt[1]} key={opt[1]}>
+                      {opt[0]}
+                    </option>
+                  ))}
+                </Input>
+              )}
+            </FormGroup>
+
             {readOnly ? (
               formState.sensitiveContent ? <p>{window.FolioConsole.translations.fileSensitiveContent}</p> : null
             ) : (

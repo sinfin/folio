@@ -7,6 +7,14 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Thumbnails
 
+  DEFAULT_GRAVITIES = %w[
+    center
+    east
+    north
+    south
+    west
+  ]
+
   dragonfly_accessor :file do
     after_assign :sanitize_filename
   end
@@ -18,6 +26,10 @@ class Folio::File < Folio::ApplicationRecord
   # Validations
   validates :file, :type,
             presence: true
+
+  validates :default_gravity,
+            inclusion: { in: DEFAULT_GRAVITIES },
+            allow_nil: true
 
   # Scopes
   scope :ordered, -> { order(created_at: :desc) }
@@ -115,6 +127,12 @@ class Folio::File < Folio::ApplicationRecord
     Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
   end
 
+  def self.default_gravities_for_select
+    DEFAULT_GRAVITIES.map do |gravity|
+      [human_attribute_name("default_gravity/#{gravity}"), gravity]
+    end
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
@@ -148,6 +166,7 @@ end
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
 #  file_mime_type       :string
+#  default_gravity      :string
 #
 # Indexes
 #

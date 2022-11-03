@@ -133,6 +133,7 @@ module Folio::Console::Api::FileControllerBase
                         :author,
                         :description,
                         :sensitive_content,
+                        :default_gravity,
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?

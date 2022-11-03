@@ -20,6 +20,12 @@ cs:
         content: Obsah
       folio/file:
         author: Autor
+        default_gravity: Výchozí ořez
+        default_gravity/center: Uprostřed
+        default_gravity/east: Vpravo
+        default_gravity/north: Nahoře
+        default_gravity/south: Dole
+        default_gravity/west: Vlevo
         description: Popis
         mime_type: Typ souboru
       folio/image:

@@ -27,15 +27,17 @@ class FileModal extends Component {
 
   constructor (props) {
     super(props)
+
     if (props.fileModal.file) {
       this.state = {
         author: props.fileModal.file.attributes.author,
         description: props.fileModal.file.attributes.description,
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
-        tags: props.fileModal.file.attributes.tags
+        tags: props.fileModal.file.attributes.tags,
+        default_gravity: props.fileModal.file.attributes.default_gravity
       }
     } else {
-      this.state = { author: null, description: null, sensitive_content: false, tags: [] }
+      this.state = { author: null, description: null, sensitive_content: false, default_gravity: '', tags: [] }
     }
   }
 
@@ -55,7 +57,8 @@ class FileModal extends Component {
           author: this.props.fileModal.file.attributes.author,
           description: this.props.fileModal.file.attributes.description,
           sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
-          tags: this.props.fileModal.file.attributes.tags
+          tags: this.props.fileModal.file.attributes.tags,
+          default_gravity: this.props.fileModal.file.attributes.default_gravity
         })
       }
     }

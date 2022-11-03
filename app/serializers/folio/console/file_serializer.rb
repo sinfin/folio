@@ -16,7 +16,9 @@ class Folio::Console::FileSerializer
              :author,
              :description,
              :file_placements_size,
-             :sensitive_content
+             :sensitive_content,
+             :default_gravity,
+             :default_gravities_for_select
 
   attribute :react_type do |object|
     object.class.react_type
@@ -57,5 +59,9 @@ class Folio::Console::FileSerializer
   attribute :file_name do |object|
     object.file_name.presence ||
     "#{object.class.model_name.human} ##{object.id}"
+  end
+
+  attribute :default_gravities_for_select do |object|
+    object.class.default_gravities_for_select
   end
 end

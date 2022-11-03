@@ -16,6 +16,12 @@ en:
         content: Content
       folio/file:
         mime_type: File type
+        default_gravity: Default crop
+        default_gravity/center: Center
+        default_gravity/east: East
+        default_gravity/north: North
+        default_gravity/south: South
+        default_gravity/west: West
       folio/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions

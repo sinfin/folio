@@ -29,6 +29,7 @@ end
 #  file_name_for_search :string
 #  sensitive_content    :boolean          default(FALSE)
 #  file_mime_type       :string
+#  default_gravity      :string
 #
 # Indexes
 #
