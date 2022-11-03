@@ -42,7 +42,25 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
   private
     def make_thumb(image, raw_size, quality, x: nil, y: nil)
-      size = raw_size.ends_with?("#") ? "#{raw_size}c" : raw_size
+      if raw_size.ends_with?("#")
+        gravity = case image.try(:default_gravity)
+                  when "east"
+                    "e"
+                  when "north"
+                    "n"
+                  when "south"
+                    "s"
+                  when "west"
+                    "w"
+                  else
+                    "c"
+        end
+
+        size = "#{raw_size}#{gravity}"
+      else
+        size = raw_size
+      end
+
       make_webp = true
 
       if image.animated_gif?
@@ -175,7 +193,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     end
 
     def image_file(image)
-      if Rails.env.development? && ENV["DEV_S3_DRAGONFLY"] && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
+      if Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"] && image.respond_to?(:development_safe_file)
         thumbnail = image.development_safe_file(logger)
       else
         thumbnail = image.file

@@ -198,7 +198,7 @@ module Folio::Thumbnails
   end
 
   def development_safe_file(logger = nil)
-    if persisted? && Rails.env.development? && ENV["DEV_S3_DRAGONFLY"] && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]
+    if persisted? && Rails.env.development? && ENV["DRAGONFLY_PRODUCTION_S3_URL_BASE"]
       logger ||= Rails.logger
       datastore = file.app.datastore
       content, _meta = datastore.read(file_uid)
