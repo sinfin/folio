@@ -19,9 +19,9 @@ module Folio::LocalizedSingleton
   private
     def validate_singularity
       if new_record?
-        errors.add(:base, :invalid) if self.class.exists?(locale:)
+        errors.add(:type, "There is already #{self.class} record for locale '#{locale}'") if self.class.exists?(locale:)
       else
-        errors.add(:base, :invalid) if self.class.where.not(id:).exists?(locale:)
+        errors.add(:type, "There is already #{self.class} record for locale '#{locale}'") if self.class.where.not(id:).exists?(locale:)
       end
     end
 end
