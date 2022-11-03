@@ -119,6 +119,10 @@ class Folio::Site < Folio::ApplicationRecord
     "/fb-share.png"
   end
 
+  def console_dashboard_redirect_path_name
+    Rails.application.config.folio_console_dashboard_redirect
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
