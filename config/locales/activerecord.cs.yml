@@ -290,3 +290,6 @@ cs:
     attributes:
       verified_captcha:
         invalid: Potvrďte prosím, že nejste robot 🤖
+      type:
+        already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' s 'locale = \"%{rec_locale}\"'."
+        already_exists: "Je povolen jen jeden záznam '%{class}'."
