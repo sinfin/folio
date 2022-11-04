@@ -97,6 +97,8 @@ en:
           attributes:
             phone:
               invalid: is invalid. Please enter a full number including country code, i.e. +420604123456
+            password:
+              weak_password: is weak.Try at least 8 characters from lowercase and uppercase letters, numbers and symbols.
     models:
       folio/account:
         one: Account

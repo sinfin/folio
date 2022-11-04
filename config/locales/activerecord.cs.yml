@@ -133,6 +133,8 @@ cs:
           attributes:
             phone:
               invalid: nemá správný formát. Zadejte prosím celé číslo včetně předvolby. Např. +420604123456
+            password:
+              weak_password: je příliš slabé. Zkuste alespoň 8 znaků namíchaných z velkých a malých písmen, číslic a symbolů.
     models:
       folio/account:
         few: Administrátoři
