@@ -19,30 +19,26 @@ module Folio::Sitemap
         placements += self.atom_image_placements
       end
 
-      if size.nil?
-        image_placement_variants = []
-
-        placements.each do |ip|
-          key = ip.image.largest_thumb_key
-          image_placement_variants << ip.to_sitemap(key) unless key.nil?
-        end
-
-        image_placement_variants.uniq
-      else
-        placements.uniq.collect { |ip| ip.to_sitemap(size) }
-      end
+      placements.uniq { |ip| ip.file_id }
+                .filter_map { |ip| ip.to_sitemap(size) }
     end
   end
 
   module Image
     extend ActiveSupport::Concern
 
+    def to_sitemap_loc(size = nil)
+      # return thumbnail only if it's already generated
+      hash = thumbnail_sizes[size || largest_thumb_key]
+      hash[:url] if hash && hash[:uid] && !hash[:private]
+    end
+
     def to_sitemap_title
-      self.title || self.file_name
+      title || file_name
     end
 
     def to_sitemap_caption
-      self.caption
+      caption
     end
   end
 
@@ -50,25 +46,25 @@ module Folio::Sitemap
     module Image
       extend ActiveSupport::Concern
 
-      def to_sitemap_loc(size)
-        self.file.thumb(size, immediate: true).url
-      end
-
       def to_sitemap_title
-        self.alt || self.file.to_sitemap_title
+        alt || file.to_sitemap_title
       end
 
       def to_sitemap_caption
-        [self.placement_title, self.title, self.file.to_sitemap_caption].compact.join(" / ")
+        [placement_title, title, file.to_sitemap_caption].compact.join(" / ")
       end
 
-      def to_sitemap(size)
+      def to_sitemap(size = nil)
+        loc = file.to_sitemap_loc(size)
+
+        return if loc.nil?
+
         {
-          loc: self.to_sitemap_loc(size),
-          title: self.to_sitemap_title,
-          caption: self.to_sitemap_caption,
-          geo_location: self.file.geo_location
-        }
+          loc:,
+          title: to_sitemap_title,
+          caption: to_sitemap_caption,
+          geo_location: file.geo_location
+        }.compact
       end
     end
   end
