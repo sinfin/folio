@@ -8,7 +8,7 @@ module Folio::MailerEmailTemplates
     find_by = { mailer:, action: }
 
     unless Rails.application.config.folio_site_is_a_singleton
-      find_by[:site] = Folio.site_instance_for_mailers
+      find_by[:site] = site
     end
 
     if bang
@@ -24,16 +24,17 @@ module Folio::MailerEmailTemplates
 
   def email_template_mail(sym_data = {}, opts = {})
     @data = sym_data.stringify_keys
+    @site = opts.delete(:site)
     @email_template = email_template_for!
 
-    @data[:ROOT_URL] = "#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
-    @data[:SITE_TITLE] = Folio.site_instance_for_mailers.title
-    @data[:DOMAIN] = Folio.site_instance_for_mailers.domain
+    @data[:ROOT_URL] = site.env_aware_root_url
+    @data[:SITE_TITLE] = site.title
+    @data[:DOMAIN] = site.domain
 
     opts[:subject] = @email_template.render_subject(@data)
-    opts[:to] ||= self.class.system_email
-    opts[:cc] ||= self.class.system_email_copy
-    opts[:from] ||= Folio.site_instance_for_mailers.email
+    opts[:to] ||= system_email
+    opts[:cc] ||= system_email_copy
+    opts[:from] ||= site.email
     opts[:template_path] = "folio/email_templates"
     opts[:template_name] = "mail"
 
@@ -46,9 +47,9 @@ module Folio::MailerEmailTemplates
 
     if @email_template.present?
       @data ||= {}
-      @data[:ROOT_URL] = "#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
-      @data[:SITE_TITLE] = Folio.site_instance_for_mailers.title
-      @data[:DOMAIN] = Folio.site_instance_for_mailers.domain
+      @data[:ROOT_URL] = site.env_aware_root_url
+      @data[:SITE_TITLE] = site.title
+      @data[:DOMAIN] = site.domain
       @data[:USER_EMAIL] = record.email
 
       opts[:subject] = @email_template.render_subject(@data)

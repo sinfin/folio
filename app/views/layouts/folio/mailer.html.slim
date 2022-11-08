@@ -31,7 +31,7 @@ html[
                   td align="left" valign="top"
                     .f-mailer__logo-wrap
                       a.f-mailer__logo[
-                        href="#{Rails.env.staging? || Rails.env.production? ? "https" : "http"}://#{Folio.site_instance_for_mailers.domain}"
+                        href=site.env_aware_root_url
                         target="_blank"
                       ]
                         = render 'folio/mailer/logo'

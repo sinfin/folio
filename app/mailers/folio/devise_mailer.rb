@@ -3,11 +3,12 @@
 class Folio::DeviseMailer < Devise::Mailer
   include DeviseInvitable::Mailer
   include DeviseInvitable::Controllers::Helpers
+  include Folio::MailerBase
   include Folio::MailerEmailTemplates
 
   layout "folio/mailer"
 
-  default from: ->(*) { Folio.site_instance_for_mailers.email }
+  default from: ->(*) { site.email }
 
   def devise_mail(record, action, opts = {}, &block)
     full_opts = devise_opts_from_template(opts, action, record)
@@ -45,18 +46,6 @@ class Folio::DeviseMailer < Devise::Mailer
 
     email_template_mail template_data,
                         headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"))
-  end
-
-  def self.system_email
-    if Folio.site_instance_for_mailers.system_email.present?
-      Folio.site_instance_for_mailers.system_email_array
-    else
-      Folio.site_instance_for_mailers.email
-    end
-  end
-
-  def self.system_email_copy
-    Folio.site_instance_for_mailers.system_email_copy_array if Folio.site_instance_for_mailers.system_email_copy.present?
   end
 
   private

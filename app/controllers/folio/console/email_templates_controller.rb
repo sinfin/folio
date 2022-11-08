@@ -5,6 +5,7 @@ class Folio::Console::EmailTemplatesController < Folio::Console::BaseController
 
   def index
     # disable pagination
+    @email_templates = @email_templates.ordered
   end
 
   private
