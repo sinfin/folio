@@ -32,9 +32,9 @@ module Folio::Singleton
   private
     def validate_singularity
       if new_record?
-        errors.add(:base, :invalid) if self.class.exists?
+        errors.add(:type, :already_exists, class: self.class) if self.class.exists?
       else
-        errors.add(:base, :invalid) if self.class.where.not(id:).exists?
+        errors.add(:type, :already_exists, class: self.class) if self.class.where.not(id:).exists?
       end
     end
 end

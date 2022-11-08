@@ -103,6 +103,8 @@ en:
           attributes:
             phone:
               invalid: is invalid. Please enter a full number including country code, i.e. +420604123456
+            password:
+              weak_password: is weak.Try at least 8 characters from lowercase and uppercase letters, numbers and symbols.
     models:
       folio/account:
         one: Account
@@ -216,3 +218,6 @@ en:
     attributes:
       verified_captcha:
         invalid: Please verify you're not a robot 🤖
+      type:
+        already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
+        already_exists: "Only one record of '%{class}' is allowed."
