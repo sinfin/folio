@@ -24,6 +24,7 @@
 //= require ./redactor/_table
 //= require ./redactor/_video
 //= require ./redactor/_definedlinks
+//= require ./redactor/_linksrel
 //= require ./redactor/_init
 
 //= require folio/lazyload

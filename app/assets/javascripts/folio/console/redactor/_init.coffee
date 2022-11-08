@@ -1,5 +1,5 @@
 ADVANCED_OPTIONS =
-  plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks']
+  plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel']
   toolbarFixed: true
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
@@ -9,7 +9,7 @@ ADVANCED_OPTIONS =
       $(@rootElement).trigger('change')
 
 OPTIONS =
-  plugins: ['table', 'button', 'character_counter', 'definedlinks']
+  plugins: ['table', 'button', 'character_counter', 'definedlinks', 'linksrel']
   buttonsHide: ['file', 'image']
   toolbarFixed: true
   definedlinks: '/console/api/links.json'
@@ -31,7 +31,7 @@ EMAIL_OPTIONS =
       $(@rootElement).trigger('change')
 
 PEREX_OPTIONS =
-  plugins: ['character_counter', 'definedlinks']
+  plugins: ['character_counter', 'definedlinks', 'linksrel']
   buttonsHide: ['file', 'image', 'html', 'format', 'bold', 'italic', 'deleted', 'lists']
   breakline: true
   toolbarFixed: true
