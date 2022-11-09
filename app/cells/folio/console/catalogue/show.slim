@@ -48,25 +48,28 @@ div class=wrap_class_name
         - model[:records].each_with_index do |rec, i|
           = before_lambda.call(rec, model[:records], i) if before_lambda
 
-          .f-c-catalogue__row
-            - if model[:merge]
-              .f-c-catalogue__cell.f-c-catalogue__cell--merge
-                == cell('folio/console/merges/index/radios', rec)
+          - html = record_html(rec)
 
-            - if collection_actions
-              .f-c-catalogue__cell.f-c-catalogue__cell--collection-actions
-                label[
-                  class="f-c-catalogue__collection-actions-label"
-                ]
-                  input[
-                    class="form-check-input"
-                    class="f-c-catalogue__collection-actions-checkbox"
-                    type="checkbox"
-                    name="ids[]"
-                    value=rec.id
+          - if html.present?
+            .f-c-catalogue__row
+              - if model[:merge]
+                .f-c-catalogue__cell.f-c-catalogue__cell--merge
+                  == cell('folio/console/merges/index/radios', rec)
+
+              - if collection_actions
+                .f-c-catalogue__cell.f-c-catalogue__cell--collection-actions
+                  label[
+                    class="f-c-catalogue__collection-actions-label"
                   ]
+                    input[
+                      class="form-check-input"
+                      class="f-c-catalogue__collection-actions-checkbox"
+                      type="checkbox"
+                      name="ids[]"
+                      value=rec.id
+                    ]
 
-            = record_html(rec)
+              = html
 
           = after_lambda.call(rec, model[:records], i) if after_lambda
 
