@@ -3,7 +3,7 @@
 module Folio::SetMetaVariables
   extend ActiveSupport::Concern
 
-  def set_meta_variables(instance, mappings = {})
+  def set_meta_variables(instance, mappings = {}, page: nil)
     m = {
       title: :to_label,
       image: :cover,
@@ -24,10 +24,17 @@ module Folio::SetMetaVariables
 
     title = instance.try(m[:title]).presence
     og_title = instance.try(m[:meta_title]).presence
-    @public_page_title = og_title || title
+
+    if page.present?
+      page_suffix = " (#{page})"
+      title += page_suffix if title.present?
+      og_title += page_suffix if og_title.present?
+    end
 
     description = instance.try(m[:description]).presence
     og_description = instance.try(m[:meta_description]).presence
+
+    @public_page_title = og_title || title
     @public_page_description = og_description || description
 
     if @public_page_description.present?
