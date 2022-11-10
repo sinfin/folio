@@ -28,10 +28,19 @@ window.Folio.Input.CharacterCounter.templateMax = (count, max) => (
 window.Folio.Input.CharacterCounter.onKeyupOrChange = (e) => {
   const $this = $(e.currentTarget)
 
-  $this
-    .closest('.f-input-character-counter-wrap__parent')
+  const length = $this.val().length
+  const max = parseInt($this.data('character-counter'))
+  const $wrap = $this.closest('.f-input-character-counter-wrap__parent')
+
+  if (!isNaN(max)) {
+    $wrap
+      .find('.f-input-character-counter-wrap')
+      .toggleClass('f-input-character-counter-wrap--invalid', length > max)
+  }
+
+  $wrap
     .find('.f-input-character-counter-wrap__current')
-    .text($this.val().length)
+    .text(length)
 }
 
 window.Folio.Input.CharacterCounter.bind = (input) => {
@@ -55,6 +64,12 @@ window.Folio.Input.CharacterCounter.bind = (input) => {
     $group.append(window.Folio.Input.CharacterCounter.templateBasic(count))
   } else {
     $group.append(window.Folio.Input.CharacterCounter.templateMax(count, max))
+
+    if (count > max) {
+      $group
+        .find('.f-input-character-counter-wrap')
+        .addClass('f-input-character-counter-wrap--invalid')
+    }
   }
 
   $input.on('keyup.fcStringInputCharacterCounter change.fcStringInputCharacterCounter',
