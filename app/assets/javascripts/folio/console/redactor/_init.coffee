@@ -1,3 +1,6 @@
+changedCallback = ->
+  $(@rootElement).trigger('change')
+
 ADVANCED_OPTIONS =
   plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel']
   toolbarFixed: true
@@ -5,8 +8,7 @@ ADVANCED_OPTIONS =
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
   callbacks:
-    changed: ->
-      $(@rootElement).trigger('change')
+    changed: changedCallback
 
 OPTIONS =
   plugins: ['table', 'button', 'character_counter', 'definedlinks', 'linksrel']
@@ -17,8 +19,7 @@ OPTIONS =
   formatting: ['p', 'h2', 'h3', 'h4']
   linkNewTab: true
   callbacks:
-    changed: ->
-      $(@rootElement).trigger('change')
+    changed: changedCallback
 
 EMAIL_OPTIONS =
   plugins: ['button', 'character_counter']
@@ -27,8 +28,7 @@ EMAIL_OPTIONS =
   lang: document.documentElement.lang
   formatting: []
   callbacks:
-    changed: ->
-      $(@rootElement).trigger('change')
+    changed: changedCallback
 
 PEREX_OPTIONS =
   plugins: ['character_counter', 'definedlinks', 'linksrel']
@@ -38,8 +38,7 @@ PEREX_OPTIONS =
   lang: document.documentElement.lang
   linkNewTab: true
   callbacks:
-    changed: ->
-      $(@rootElement).trigger('change')
+    changed: changedCallback
 
 window.folioConsoleInitRedactor = (node, options = {}, additional = {}) ->
   return if node.classList.contains('redactor-source')

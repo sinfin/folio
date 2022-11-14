@@ -232,6 +232,9 @@ export const serializedFormAtomsSelector = (state) => (
 
 // Sagas
 function * updateAtomPreviews (action) {
+  const atomsState = yield select(atomsSelector)
+  if (atomsState.form && atomsState.form.dirty) return
+
   yield put(closeFormAtom())
   const $ = window.jQuery
   const $iframes = $('.f-c-simple-form-with-atoms__iframe')
