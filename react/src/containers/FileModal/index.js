@@ -144,7 +144,7 @@ class FileModal extends Component {
   }
 
   render () {
-    const { fileModal, readOnly } = this.props
+    const { fileModal, readOnly, canDestroyFiles } = this.props
     const isOpen = fileModal.file !== null
 
     return (
@@ -161,6 +161,7 @@ class FileModal extends Component {
             closeFileModal={this.closeFileModal}
             updateThumbnail={this.updateThumbnail}
             destroyThumbnail={this.destroyThumbnail}
+            canDestroyFiles={canDestroyFiles}
             deleteFile={this.deleteFile}
             uploadNewFileInstead={this.uploadNewFileInstead}
             onValueChange={this.onValueChange}

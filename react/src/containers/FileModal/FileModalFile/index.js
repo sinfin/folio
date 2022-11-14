@@ -17,7 +17,7 @@ import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles }) => {
   const file = fileModal.file
   const isImage = file.attributes.react_type === 'image'
   let download = file.attributes.file_name
@@ -68,7 +68,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 <span className='d-none d-sm-inline'>{window.FolioConsole.translations.downloadOriginal}</span>
               </a>
 
-              {!readOnly && (
+              {(canDestroyFiles && !readOnly) && (
                 <div className='btn btn-secondary mr-2 mb-2 position-relative overflow-hidden'>
                   <span className='fa fa-edit mr-0 mr-sm-2' />
                   <span className='d-none d-sm-inline'>{window.FolioConsole.translations.replace}</span>
@@ -77,7 +77,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 </div>
               )}
 
-              {!readOnly && (
+              {(canDestroyFiles && !readOnly) && (
                 <button
                   className={`btn btn-danger mb-2 ${notAllowedCursor}`}
                   type='button'
@@ -157,7 +157,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 <p className='m-0'>{formState.default_gravity}</p>
               ) : (
                 <Input
-                  value={formState.default_gravity}
+                  value={formState.default_gravity || file.attributes.default_gravities_for_select[0][1]}
                   onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
                   name='default_gravity'
                   type='select'

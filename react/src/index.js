@@ -11,7 +11,7 @@ import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import OrderedMultiselectApp from 'containers/OrderedMultiselectApp'
 import NotesFieldsApp from 'containers/NotesFieldsApp'
-import { setMode, setFileType, setFilesUrl, setReadOnly, setNoFileUsage, setFileReactType } from 'ducks/app'
+import { setMode, setFileType, setFilesUrl, setReadOnly, setNoFileUsage, setFileReactType, setCanDestroyFiles } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
@@ -127,16 +127,24 @@ window.FolioConsole.React.init = (domRoot) => {
         asJson: false
       },
       {
+        key: 'canDestroyFiles',
+        action: setCanDestroyFiles,
+        asJson: false,
+        fallbackValue: false
+      },
+      {
         key: 'atoms',
         action: setAtomsData,
         asJson: true
       }
     ]
-    DOM_DATA.forEach(({ key, action, asJson }) => {
+    DOM_DATA.forEach(({ key, action, asJson, fallbackValue }) => {
       let data = domRoot.dataset[key] || null
       if (data) {
         if (asJson) data = JSON.parse(data)
         store.dispatch(action(data))
+      } else if (typeof fallbackValue !== 'undefined') {
+        store.dispatch(action(fallbackValue))
       }
     })
 
