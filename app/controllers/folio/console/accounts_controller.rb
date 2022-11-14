@@ -32,13 +32,15 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
   private
     def account_params
       p = params.require(:account)
-                .permit(:role,
-                        :email,
+                .permit(:email,
                         :first_name,
                         :last_name,
                         :is_active,
-                        :password)
+                        :password,
+                        roles: [])
       p.delete(:password) unless p[:password].present?
+      p[:roles] = p[:roles].filter_map(&:presence) if p[:roles].present?
+
       p
     end
 

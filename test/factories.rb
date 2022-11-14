@@ -74,7 +74,7 @@ FactoryBot.define do
   factory :folio_admin_account, class: "Folio::Account" do
     sequence(:email) { |i| "test-#{i}@test.com" }
     password { "Complex@Password.123" }
-    role { :superuser }
+    roles { %w[superuser] }
     first_name { "Test" }
     last_name { "Dummy" }
   end

@@ -4,10 +4,10 @@ cs:
     attributes:
       folio/account:
         full_name: Jméno
-        role: Uživatelská role
-        role/superuser: Superuser
-        role/administrator: Administrátor
-        role/manager: Manažer
+        roles: Uživatelská role
+        roles/superuser: Superuser
+        roles/administrator: Administrátor
+        roles/manager: Manažer
       folio/atom/base:
         content: Obsah
         perex: Perex

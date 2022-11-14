@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-11-14
+### Changed
+- changed accounts to use `roles` array instead of a `role` string - update abilities in projects if needed!
+
 ## 2021-11-03
 ### Added
 - added `default_gravity` to `Folio::File`

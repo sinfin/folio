@@ -4,10 +4,10 @@ en:
     attributes:
       folio/account:
         full_name: Name
-        role: Role
-        role/superuser: Superuser
-        role/administrator: Administrator
-        role/manager: Manager
+        roles: Role
+        roles/superuser: Superuser
+        roles/administrator: Administrator
+        roles/manager: Manager
       folio/atom/base:
         content: Content
         perex: Perex

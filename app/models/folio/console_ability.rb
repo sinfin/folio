@@ -6,17 +6,16 @@ class Folio::ConsoleAbility
   def initialize(account)
     account ||= Folio::Account.new
 
-    case account.role
-    when "manager"
+    if account.roles.include?("superuser")
+      can :manage, :all
+    elsif account.roles.include?("administrator")
+      can :manage, :all
+      cannot :manage, :sidekiq
+    elsif account.roles.include?("manager")
       can :manage, :all
       cannot :manage, :sidekiq
       cannot :manage, Folio::Account, role: "superuser"
       cannot :manage, Folio::Account, role: "administrator"
-    when "administrator"
-      can :manage, :all
-      cannot :manage, :sidekiq
-    when "superuser"
-      can :manage, :all
     end
 
     Rails.application.config.folio_console_ability_lambda.call(self, account)

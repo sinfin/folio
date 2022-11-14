@@ -10,7 +10,7 @@ class Folio::Account < Folio::ApplicationRecord
          :validatable,
          :invitable
 
-  validate :validate_role
+  validate :validate_roles
   validates :first_name, :last_name, presence: true
 
   attribute :skip_password_validation, :boolean, default: false
@@ -43,7 +43,7 @@ class Folio::Account < Folio::ApplicationRecord
   }
 
   scope :by_role, -> (role) {
-    where(role:)
+    where("roles ?| array[:roles]", roles: [role])
   }
 
   def can_manage_sidekiq?
@@ -72,14 +72,14 @@ class Folio::Account < Folio::ApplicationRecord
     super && self.is_active?
   end
 
-  def human_role_name
-    if role
+  def human_role_names
+    roles.map do |role|
       self.class.human_role_name(role)
     end
   end
 
   def account_roles_for_select
-    if role_index = self.class.roles.find_index(role)
+    if role_index = self.class.roles.find_index(roles.first)
       self.class.roles[role_index..-1]
     else
       []
@@ -97,12 +97,12 @@ class Folio::Account < Folio::ApplicationRecord
 
   def self.roles_for_select(selectable_roles = nil)
     (selectable_roles || roles).map do |role|
-      [human_attribute_name("role/#{role}"), role]
+      [human_attribute_name("roles/#{role}"), role]
     end
   end
 
   def self.human_role_name(role)
-    human_attribute_name("role/#{role}")
+    human_attribute_name("roles/#{role}")
   end
 
   def password_required?
@@ -122,9 +122,11 @@ class Folio::Account < Folio::ApplicationRecord
   end
 
   private
-    def validate_role
-      if self.class.roles.exclude?(role)
-        self.errors.add :role, :invalid
+    def validate_roles
+      if roles.blank?
+        errors.add :roles, :missing
+      elsif roles.any? { |role| self.class.roles.exclude?(role) }
+        errors.add :roles, :invalid
       end
     end
 end
@@ -148,7 +150,6 @@ end
 #  updated_at                :datetime         not null
 #  first_name                :string
 #  last_name                 :string
-#  role                      :string
 #  is_active                 :boolean          default(TRUE)
 #  invitation_token          :string
 #  invitation_created_at     :datetime
@@ -161,6 +162,7 @@ end
 #  crossdomain_devise_token  :string
 #  crossdomain_devise_set_at :datetime
 #  sign_out_salt_part        :string
+#  roles                     :jsonb
 #
 # Indexes
 #
