@@ -5,6 +5,7 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
 
   def index
     @pagy, @accounts = pagy(@accounts)
+    @accounts = @accounts.select { |a| can?(:manage, a) }
   end
 
   def create
