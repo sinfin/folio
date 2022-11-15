@@ -126,55 +126,61 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             "Folio::ContentTemplate",
           ]
         }
-      ] + Folio::Site.ordered.map do |site|
-        link_for_class = -> (klass) do
-          {
-            klass: klass.to_s,
-            path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+      ] + Folio::Site.ordered.filter_map do |site|
+        if controller.can?(:read, site)
+          link_for_class = -> (klass) do
+            {
+              klass: klass.to_s,
+              path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+            }
+          end
+
+          site_links = {
+            console_sidebar_prepended_links: [],
+            console_sidebar_before_menu_links: [],
           }
-        end
 
-        site_links = {
-          console_sidebar_prepended_links: [],
-          console_sidebar_before_menu_links: [],
-        }
-
-        %i[
-          console_sidebar_before_menu_links
-          console_sidebar_prepended_links
-        ].each do |key|
-          values = site.class.try(key)
-          if values.present?
-            values.each do |link_or_hash|
-              if link_or_hash.is_a?(Hash)
-                site_links[key] << link_or_hash
-              else
-                site_links[key] << link_for_class.call(link_or_hash.constantize)
+          %i[
+            console_sidebar_before_menu_links
+            console_sidebar_prepended_links
+          ].each do |key|
+            values = site.class.try(key)
+            if values.present?
+              values.each do |link_or_hash|
+                if link_or_hash.is_a?(Hash)
+                  if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
+                    site_links[key] << link_or_hash
+                  end
+                else
+                  site_links[key] << link_for_class.call(link_or_hash.constantize)
+                end
               end
             end
           end
-        end
 
-        {
-          title: site.pretty_domain,
-          collapsed: current_site != site,
-          expanded: current_site == site,
-          links: site_links[:console_sidebar_prepended_links].compact + [
-            link_for_class.call(Folio::Page),
-            homepage_for_site(site)
-          ].compact + site_links[:console_sidebar_before_menu_links].compact + [
-            link_for_class.call(Folio::Menu),
-            link_for_class.call(Folio::Lead),
-            link_for_class.call(Folio::NewsletterSubscription),
-            link_for_class.call(Folio::EmailTemplate),
-            {
-              klass: "Folio::Site",
-              icon: "fa fa-cogs",
-              path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-              label: t(".settings")
-            },
-          ].compact
-        }
+          {
+            title: site.pretty_domain,
+            collapsed: current_site != site,
+            expanded: current_site == site,
+            links: site_links[:console_sidebar_prepended_links].compact + [
+              link_for_class.call(Folio::Page),
+              homepage_for_site(site)
+            ].compact + site_links[:console_sidebar_before_menu_links].compact + [
+              link_for_class.call(Folio::Menu),
+              link_for_class.call(Folio::Lead),
+              link_for_class.call(Folio::NewsletterSubscription),
+              link_for_class.call(Folio::EmailTemplate),
+              controller.can?(:manage, site) ? (
+                {
+                  klass: "Folio::Site",
+                  icon: "fa fa-cogs",
+                  path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+                  label: t(".settings"),
+                }
+              ) : nil,
+            ].compact
+          }
+        end
       end
     end
   end
@@ -250,7 +256,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def homepage_for_site(site)
     instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false)
 
-    if instance
+    if instance && controller.can?(:manage, Folio::Page)
       {
         label: t(".homepage"),
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
