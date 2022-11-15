@@ -249,7 +249,7 @@ if Rails.env.development?
 
   Folio::Account.create!(email: "test@test.test",
                          password: "test@test.test",
-                         role: :superuser,
+                         roles: %w[superuser],
                          first_name: "Test",
                          last_name: "Dummy")
 
