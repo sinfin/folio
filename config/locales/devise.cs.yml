@@ -28,7 +28,7 @@ cs:
       forgotten_password_link: Zapomenuté heslo?
       invite_button: Vytvořit nový účet
       sign_in_link: Již u nás máte účet?
-      sign_in_link_inner: Přihlašte se
+      sign_in_link_inner: Přihlaste se
 
       resource_form:
         email_label: E-mail (slouží pro přihlášení)
@@ -104,7 +104,7 @@ cs:
           google_oauth2: Google
           twitter: Twitter
 
-        sessions: "Přihlašte se pomocí:"
+        sessions: "Přihlaste se pomocí:"
         registrations: "Zaregistujte se pomocí:"
         or: "Nebo:"
         authentications:
