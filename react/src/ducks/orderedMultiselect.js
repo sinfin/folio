@@ -100,7 +100,7 @@ function orderedMultiselectReducer (state = initialState, action) {
       }
 
     case REMOVE_ITEM: {
-      const removedIds = state.removedIds
+      const removedIds = [...state.removedIds]
       if (action.item.id) removedIds.push(action.item.id)
 
       return {
