@@ -130,6 +130,31 @@ module Folio::Publishable
       }
     end
 
+    class_methods do
+      def cache_published_hash
+        now = Time.zone.now
+        sql = sanitize_sql(["SELECT md5(
+                              array_to_string(
+                                array(
+                                  SELECT id
+                                  FROM #{table_name}
+                                  WHERE
+                                    published = true AND
+                                    (published_from IS NULL OR published_from < ?) AND
+                                    (published_until IS NULL OR published_until > ?) AND
+                                    (published_from > ? OR published_until < ?)
+                                ),
+                              ',')
+                            );",
+                            3.days.from_now,
+                            3.days.ago,
+                            now,
+                            now])
+
+        connection.query_value(sql)
+      end
+    end
+
     def published?
       if published.present?
         if published_from.present? && published_from >= Time.zone.now
