@@ -109,6 +109,10 @@ class Folio::Account < Folio::ApplicationRecord
     human_attribute_name("roles/#{role}")
   end
 
+  def self.additional_params
+    []
+  end
+
   def password_required?
     if skip_password_validation?
       false
