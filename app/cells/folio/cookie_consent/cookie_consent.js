@@ -50,12 +50,7 @@ if (window.Folio.CookieConsent.configuration) {
         .off('turbolinks:before-render', window.Folio.CookieConsent.onBeforeRender)
     }
 
-    if (window.dataLayer) {
-      window.dataLayer.push({
-        event: 'cookieConsent',
-        level: cookie.level
-      })
-    }
+    window.Folio.CookieConsent.onAcceptDataLayer(cookie)
 
     if (window.Folio.CookieConsent.runAfterAccept.length) {
       window.Folio.CookieConsent.runAfterAccept.forEach((callback) => {
@@ -65,6 +60,15 @@ if (window.Folio.CookieConsent.configuration) {
     }
 
     window.Folio.CookieConsent.changeRunAfterAcceptPushMethod()
+  }
+
+  window.Folio.CookieConsent.onAcceptDataLayer = (cookie) => {
+    if (window.dataLayer) {
+      window.dataLayer.push({
+        event: 'cookieConsent',
+        level: cookie.level
+      })
+    }
   }
 
   window.Folio.CookieConsent.cookieConsent = window.initCookieConsent()
