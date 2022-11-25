@@ -27,10 +27,21 @@ module Folio
         gem "cells-rails", "~> 0.1.5"
         gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
 
-        gem_group :development do
-          gem "puma", "< 6" # remove if twice in Gemfile
-          gem "i18n-tasks"
+        group :development do
+          gem "rubocop"
+          gem "rubocop-minitest"
+          gem "rubocop-performance"
+          gem "rubocop-rails"
+          gem "rubocop-rails_config"
+          gem "rubocop-rake"
           gem "annotate"
+          gem "guard-rubocop"
+          gem "guard-slimlint"
+          gem "letter_opener"
+          gem "pry-rails"
+          gem "slack-notifier"
+          gem "better_errors"
+          gem "binding_of_caller"
         end
 
         gem_group :development, :test do
@@ -78,6 +89,8 @@ module Folio
           "config/initializers/namespace.rb",
           "config/initializers/raven.rb",
           "config/initializers/smtp.rb",
+          "config/locales/application_namespace_path/menu.cs.yml",
+          "config/locales/application_namespace_path/menu.en.yml",
           "config/routes.rb",
           "config/sitemap.rb",
           "data/atoms_showcase.yml",

@@ -1,0 +1,4 @@
+cs:
+  <%= project_name %>:
+    menu:
+      root_path: Úvodní stránka

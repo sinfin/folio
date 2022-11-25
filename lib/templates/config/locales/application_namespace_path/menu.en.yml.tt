@@ -1,0 +1,4 @@
+en:
+  <%= project_name %>:
+    menu:
+      root_path: Homepage
