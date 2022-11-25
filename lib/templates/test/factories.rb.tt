@@ -3,4 +3,5 @@
 require_relative Folio::Engine.root.join('test/factories')
 
 FactoryBot.define do
+  factory :<%= application_namespace_path %>_menu, class: "<%= application_namespace %>::Menu::Navigation", parent: :folio_menu
 end
