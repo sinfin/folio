@@ -71,10 +71,12 @@ class Folio::BlogGenerator < Rails::Generators::Base
     return if File.read(path).include?("Blog::Article")
 
     content = <<~'RUBY'
-      Rails.application.config.folio_console_sidebar_runner_up_link_class_names = [%w[
-        application_namespace::Blog::Article
-        application_namespace::Blog::Topic
-      ]]
+      Rails.application.config.folio_console_sidebar_runner_up_link_class_names = [{
+        links: %w[
+          application_namespace::Blog::Article
+          application_namespace::Blog::Topic
+        ]
+      }]
     RUBY
 
     append_to_file "config/initializers/folio.rb" do

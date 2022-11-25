@@ -138,11 +138,13 @@ class <%= application_namespace %>::Blog::Article < ApplicationRecord
           }
         }
 
+        # rubocop:disable OpenStruct
         settings[locale] << {
           cell_name: "<%= application_namespace_path %>/blog/articles/show_header",
           model: OpenStruct.new(hash),
           key: :title,
         }
+        # rubocop:enable OpenStruct
       end
     end
 
