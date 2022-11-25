@@ -79,7 +79,7 @@ FactoryBot.define do
     last_name { "Dummy" }
   end
 
-  factory :folio_menu, class: "Folio::Menu::Page" do
+  factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
     sequence(:title) { |i| "Menu #{i}" }
 
