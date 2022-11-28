@@ -2,7 +2,7 @@
 
 def create_atom(klass, *fill_attrs, **data_attrs)
   attrs = data_attrs.merge(type: klass.to_s)
-  attrs[:placement] ||= create(:folio_page)
+  attrs[:placement] ||= create(:folio_page, site: @site)
 
   fill_attrs.each do |field|
     attrs[field] = case field

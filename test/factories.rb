@@ -170,8 +170,7 @@ unless Rails.application.config.folio_site_is_a_singleton
         folio_page
       ].each do |key|
         factory key do
-          association :site, factory: Rails.application.config.folio_site_default_test_factory
-          initialize_with { new(site: Folio::Site.first) }
+          after(:build) { |model| model.site ||= Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
         end
       end
     end
