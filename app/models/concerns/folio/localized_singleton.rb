@@ -5,14 +5,14 @@ module Folio::LocalizedSingleton
   include Folio::Singleton
 
   class_methods do
-    def instance(fail_on_missing: true, includes: nil)
+    def instance(fail_on_missing: true, includes: nil, locale: nil, site: nil)
       if includes
         scope = self.includes(*includes)
       else
         scope = self
       end
 
-      scope.find_by_locale(I18n.locale).presence || (fail_on_missing ? fail_on_missing_instance : nil)
+      scope.find_by_locale(locale || I18n.locale).presence || (fail_on_missing ? fail_on_missing_instance : nil)
     end
   end
 

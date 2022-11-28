@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-11-28
+### Added
+- added `Folio::PerSiteSingleton` and update console to use the locale of `current_site`
+
 ## 2021-11-14
 ### Changed
 - changed accounts to use `roles` array instead of a `role` string - update abilities in projects if needed!

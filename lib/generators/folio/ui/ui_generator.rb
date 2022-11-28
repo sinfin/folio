@@ -82,7 +82,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
     Dir["#{base}**/*.yml.tt"].each do |path|
       relative_path = path.to_s.delete_prefix(base)
       puts relative_path
-      template "ymls/#{relative_path}", relative_path.delete_suffix('.tt')
+      template "ymls/#{relative_path}", relative_path.delete_suffix(".tt")
     end
   end
 

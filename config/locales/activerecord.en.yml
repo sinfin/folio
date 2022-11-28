@@ -219,5 +219,6 @@ en:
       verified_captcha:
         invalid: Please verify you're not a robot 🤖
       type:
+        already_exists_for_site: "Only one record of '%{class}' for each site is allowed."
         already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
         already_exists: "Only one record of '%{class}' is allowed."

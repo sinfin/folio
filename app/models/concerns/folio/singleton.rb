@@ -11,7 +11,7 @@ module Folio::Singleton
   end
 
   class_methods do
-    def instance(fail_on_missing: true, includes: nil)
+    def instance(fail_on_missing: true, includes: nil, site: nil)
       if includes
         scope = self.includes(*includes)
       else
