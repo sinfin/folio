@@ -41,7 +41,7 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
   end
 
   test "set_specific_relations" do
-    menu = create(:folio_menu)
+    menu = create(:folio_menu_page)
     page = create(:folio_page)
     menu_item = create(:folio_menu_item, menu:, target: page)
     assert_equal(page.id, menu_item.folio_page_id)
@@ -56,7 +56,7 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
     assert build(:folio_menu_item, menu:, target: page, style: "red").valid?
     assert_not build(:folio_menu_item, menu:, target: page, style: "foo").valid?
 
-    menu = create(:folio_menu)
+    menu = create(:folio_menu_page)
     assert build(:folio_menu_item, menu:, target: page, style: nil).valid?
     assert_not build(:folio_menu_item, menu:, target: page, style: "red").valid?
     assert_not build(:folio_menu_item, menu:, target: page, style: "foo").valid?

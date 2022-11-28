@@ -9,13 +9,14 @@ class Folio::Console::MenusControllerTest < Folio::Console::BaseControllerTest
   end
 
   test "edit" do
-    menu = create(:folio_menu_with_menu_items)
+    menu = create(:folio_menu_page)
+    create(:folio_menu_item, menu:)
     get url_for([:edit, :console, menu])
     assert_response :success
   end
 
   test "update" do
-    menu = create(:folio_menu)
+    menu = create(:folio_menu_page)
     assert_equal(0, menu.menu_items.count)
 
     put url_for([:console, menu]), params: {

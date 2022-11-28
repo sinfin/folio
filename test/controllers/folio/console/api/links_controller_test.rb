@@ -36,7 +36,7 @@ class Folio::Console::Api::LinksControllerTest < Folio::Console::BaseControllerT
           end
       end
 
-      create(:folio_menu_item, title: "Test", target: page)
+      create(:folio_menu_item, title: "Test", target: page, menu: create(:folio_menu_page))
 
       get console_api_links_path
       assert_equal([{ "label" => "Homepage", "url" => "/", "title" => "Homepage" },

@@ -10,7 +10,7 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
       get out_console_transport_path(class_name: "Folio::Page", id: 1)
     end
 
-    menu = create(:folio_menu)
+    menu = create(:folio_menu_page)
     sign_in @admin
     assert_raises(ActionController::ParameterMissing) do
       get out_console_transport_path(class_name: "Folio::Menu", id: menu)

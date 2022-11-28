@@ -82,17 +82,9 @@ FactoryBot.define do
   factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
     sequence(:title) { |i| "Menu #{i}" }
-
-    factory :folio_menu_with_menu_items do
-      transient do
-        items_count { 3 }
-      end
-
-      after(:create) do |menu, evaluator|
-        create_list(:folio_menu_item, evaluator.items_count, menu:)
-      end
-    end
   end
+
+  factory :folio_menu_page, class: "Folio::Menu::Page", parent: :folio_menu
 
   factory :folio_menu_item, class: "Folio::MenuItem" do
     association :menu, factory: :folio_menu
