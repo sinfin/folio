@@ -75,7 +75,7 @@ module Folio::Console::DefaultActions
       end
       format.json do
         if folio_console_record.valid?
-          render json: {}, status: 200
+          render json: response_json_for_valid_update, status: 200
         else
           errors = [
             {
@@ -299,5 +299,9 @@ module Folio::Console::DefaultActions
       folio_console_record.valid?
       messages = folio_console_record.errors.full_messages
       messages.join(" ")
+    end
+
+    def response_json_for_valid_update
+      {}
     end
 end
