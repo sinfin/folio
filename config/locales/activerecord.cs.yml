@@ -27,7 +27,6 @@ cs:
         default_gravity/south: Dole
         default_gravity/west: Vlevo
         description: Popis
-        mime_type: Typ souboru
       folio/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
@@ -250,6 +249,7 @@ cs:
     featured: Zvýrazněno
     figcaption: Popisek
     file: Soubor
+    file_mime_type: Typ souboru
     first_name: Jméno
     image_placements: Obrázky
     is_active: Aktivní
