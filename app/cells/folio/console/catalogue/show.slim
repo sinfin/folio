@@ -39,7 +39,10 @@ div class=wrap_class_name
 
       - if model[:ancestry]
         - model[:records].each do |rec, children|
-          .f-c-catalogue__row.f-c-catalogue__row--ancestry-root data-depth="0"
+          .f-c-catalogue__row.f-c-catalogue__row--ancestry-root[
+            data-depth="0"
+            class=(row_class_lambda ? row_class_lambda.call(rec) : nil)
+          ]
             = record_html(rec)
 
           = render_ancestry_children(children)
@@ -51,7 +54,9 @@ div class=wrap_class_name
           - html = record_html(rec)
 
           - if html.present?
-            .f-c-catalogue__row
+            .f-c-catalogue__row[
+              class=(row_class_lambda ? row_class_lambda.call(rec) : nil)
+            ]
               - if model[:merge]
                 .f-c-catalogue__cell.f-c-catalogue__cell--merge
                   == cell('folio/console/merges/index/radios', rec)

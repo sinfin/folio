@@ -351,6 +351,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       cn
     end
 
+    def row_class_lambda
+      return @row_class_lambda unless @row_class_lambda.nil?
+      if model[:row_class_lambda]
+        @row_class_lambda = model[:row_class_lambda]
+      else
+        @row_class_lambda = false
+      end
+    end
+
     def before_lambda
       return @before_lambda unless @before_lambda.nil?
 
@@ -396,11 +405,17 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       if children.present?
         children.each do |child, subchildren|
+          class_name = "f-c-catalogue__row "\
+                       "f-c-catalogue__row--ancestry-child "\
+                       "f-c-catalogue__row--ancestry-depth-#{depth}"
+
+          if row_class_lambda
+            class_name += " #{row_class_lambda.call(child)}"
+          end
+
           html += content_tag(:div,
                               record_html(child),
-                              class: "f-c-catalogue__row "\
-                                     "f-c-catalogue__row--ancestry-child "\
-                                     "f-c-catalogue__row--ancestry-depth-#{depth}",
+                              class: class_name,
                               "data-depth" => depth)
 
           html += render_ancestry_children(subchildren, depth + 1)
