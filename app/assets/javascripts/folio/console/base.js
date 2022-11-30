@@ -2,7 +2,7 @@
 //= require rails-ujs
 //= require folio-bootstrap/dist/js/bootstrap.bundle
 //= require daterangepicker.min
-//= require slideout.js/dist/slideout
+//= require slideout
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
 //= require jquery.kinetic/index

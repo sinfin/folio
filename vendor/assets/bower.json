@@ -12,7 +12,6 @@
     "selectize": "^0.12.6",
     "sinfin-selectize-bootstrap-4-style": "sinfin/selectize-bootstrap-4-style#cddc9b76",
     "moment": "^2.24.0",
-    "slideout.js": "https://github.com/mango/slideout.git#^1.0.1",
     "font-awesome": "^5.7.1",
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
     "multiselect": "^0.9.12",
