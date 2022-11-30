@@ -34,6 +34,9 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
 
     assert_equal token,
                  session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
+
+    assert_equal true,
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:redirected_to_sessions_new]
   end
 
   test "master_site - valid params and signed in user" do
@@ -77,6 +80,37 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
 
     assert_equal token,
                  session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
+
+    assert_equal true,
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:redirected_to_sessions_new]
+  end
+
+  test "master_site - valid session and no user, but already redirected" do
+    token = make_devise_token
+
+    make_session({
+      token:,
+      target_site_slug: "target-site-slug",
+      resource_name: "user",
+      redirected_to_sessions_new: true
+    })
+    result = new_result(master_site: current_site)
+
+    assert_equal :noop, result.action
+
+    assert session.present?
+
+    assert_equal "user",
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:resource_name]
+
+    assert_equal "target-site-slug",
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
+
+    assert_equal token,
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:token]
+
+    assert_equal true,
+                 session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:redirected_to_sessions_new]
   end
 
   test "master_site - noop for devise controllers" do

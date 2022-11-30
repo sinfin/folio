@@ -111,9 +111,16 @@ class Folio::Devise::CrossdomainHandler
                       only_path: false,
                     })
         else
-          session[SESSION_KEY] = { target_site_slug:, token:, resource_name: }
+          did_redirect_before = session[SESSION_KEY] && session[SESSION_KEY]["redirected_to_sessions_new"]
 
-          if devise_controller
+          session[SESSION_KEY] = {
+            target_site_slug:,
+            token:,
+            resource_name:,
+            redirected_to_sessions_new: true,
+          }
+
+          if devise_controller || did_redirect_before
             Result.new(action: :noop)
           else
             Result.new(action: :redirect_to_sessions_new, resource_name:)

@@ -113,9 +113,9 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
 
     def controller_params_permit
       if options[:through]
-        rows = ["*(@klass.column_names - [\"id\", \"#{options[:through].demodulize.underscore}_id\"])"]
+        rows = ["*(@klass.column_names - %w[id site_id #{options[:through].demodulize.underscore}_id])"]
       else
-        rows = ['*(@klass.column_names - ["id"])']
+        rows = ["*(@klass.column_names - %w[id site_id])"]
       end
 
       if has_attachmentable?
