@@ -107,6 +107,10 @@ Folio::Engine.routes.draw do
 
       resources :links, only: %i[index]
 
+      resource :current_account, only: [] do
+        post :console_path_ping
+      end
+
       resources :console_notes, only: [] do
         member do
           post :toggle_closed_at

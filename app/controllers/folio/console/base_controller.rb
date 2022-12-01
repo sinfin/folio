@@ -12,6 +12,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :add_root_breadcrumb
 
+  before_action :update_current_account_console_path
+  before_action :set_show_current_account_console_path_bar
+
   before_action do
     if (params[:rmp] && account_signed_in?) || ENV["FORCE_MINI_PROFILER"]
       Rack::MiniProfiler.authorize_request
@@ -452,6 +455,18 @@ class Folio::Console::BaseController < Folio::ApplicationController
       if params[:id].present?
         name = folio_console_record_variable_name(plural: false)
         instance_variable_set(name, @klass.where(site: current_site).find(params[:id]))
+      end
+    end
+
+    def update_current_account_console_path
+      return if request.path.start_with?("/console/api")
+      return if request.path.start_with?("/console/atoms")
+      current_account.update_console_path!(request.path)
+    end
+
+    def set_show_current_account_console_path_bar
+      if action_name == "edit" || action_name == "update"
+        @show_current_account_console_path_bar = true
       end
     end
 end

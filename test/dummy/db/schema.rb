@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_14_091221) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_01_075948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
@@ -118,6 +118,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_14_091221) do
     t.datetime "crossdomain_devise_set_at"
     t.string "sign_out_salt_part"
     t.jsonb "roles", default: []
+    t.string "console_path"
+    t.datetime "console_path_updated_at"
     t.index ["crossdomain_devise_token"], name: "index_folio_accounts_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_accounts_on_email", unique: true
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true

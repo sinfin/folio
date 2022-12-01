@@ -50,6 +50,10 @@ class Folio::Account < Folio::ApplicationRecord
     where("roles ?| array[:roles]", roles:)
   }
 
+  scope :currently_editing_path, -> (path) do
+    where(console_path: path).where("console_path_updated_at > ?", 5.minutes.ago)
+  end
+
   def can_manage_sidekiq?
     Folio::ConsoleAbility.new(self).can?(:manage, :sidekiq)
   end
@@ -129,6 +133,11 @@ class Folio::Account < Folio::ApplicationRecord
     self.update_column(:sign_out_salt_part, SecureRandom.hex)
   end
 
+  def update_console_path!(console_path)
+    update_columns(console_path:,
+                   console_path_updated_at: Time.current)
+  end
+
   private
     def validate_roles
       if roles.blank?
@@ -171,6 +180,8 @@ end
 #  crossdomain_devise_set_at :datetime
 #  sign_out_salt_part        :string
 #  roles                     :jsonb
+#  console_path              :string
+#  console_path_updated_at   :datetime
 #
 # Indexes
 #

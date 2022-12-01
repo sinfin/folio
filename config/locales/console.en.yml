@@ -88,6 +88,10 @@ en:
         update:
           success: Templates updated.
       create: Create
+      current_accounts:
+        console_path_bar:
+          title: This page is being edited by
+          text: Wait for them to finish. If you edit now, you might lose the content you are working on.
       delete: Remove
       documents:
         edit:

@@ -88,6 +88,10 @@ cs:
         update:
           success: Šablony upraveny.
       create: Vytvořit
+      current_accounts:
+        console_path_bar:
+          title: Tuto stránku nyní upravuje
+          text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
       delete: Smazat
       documents:
         edit:
