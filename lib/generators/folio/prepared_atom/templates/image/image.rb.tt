@@ -5,6 +5,7 @@ class <%= application_namespace %>::Atom::Image < Folio::Atom::Base
 
   STRUCTURE = {
     title: :string,
+    alt: :string,
   }
 
   ASSOCIATIONS = {}

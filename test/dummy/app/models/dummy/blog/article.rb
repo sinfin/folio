@@ -138,11 +138,13 @@ class Dummy::Blog::Article < ApplicationRecord
           }
         }
 
+        # rubocop:disable OpenStruct
         settings[locale] << {
           cell_name: "dummy/blog/articles/show_header",
           model: OpenStruct.new(hash),
           key: :title,
         }
+        # rubocop:enable OpenStruct
       end
     end
 

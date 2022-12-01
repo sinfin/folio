@@ -4,6 +4,8 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::ShareCellTest < Cell::TestCase
   test "show" do
+    create_and_host_site
+
     html = cell("<%= application_namespace_path %>/ui/share", nil).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-share")
   end

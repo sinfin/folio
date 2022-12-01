@@ -5,6 +5,7 @@ class Dummy::Atom::Image < Folio::Atom::Base
 
   STRUCTURE = {
     title: :string,
+    alt: :string,
   }
 
   ASSOCIATIONS = {}

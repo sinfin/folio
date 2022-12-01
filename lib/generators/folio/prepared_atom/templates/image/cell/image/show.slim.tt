@@ -1,7 +1,10 @@
 .<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-image
   .container-fluid.<%= classname_prefix %>-rich-text
     figure
-      = image(model.cover_placement, THUMB_SIZE, lightbox: true)
+      = image(model.cover_placement,
+              THUMB_SIZE,
+              lightbox: true,
+              alt: model.alt)
 
       - if model.title.present?
         figcaption
