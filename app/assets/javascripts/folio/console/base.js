@@ -1,7 +1,6 @@
 //= require jquery
 //= require rails-ujs
 //= require folio-bootstrap/dist/js/bootstrap.bundle
-//= require daterangepicker.min
 //= require slideout
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
@@ -33,6 +32,9 @@
 //= require folio/throttle
 //= require folio/input
 //= require folio/image/image
+
+// must be under folio/input
+//= require daterangepicker.min
 
 // keep the order!
 //= require folio/console/_flash
