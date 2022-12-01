@@ -3,7 +3,9 @@
 //= require photoswipe-dynamic-caption-plugin.esm
 
 window.Folio = window.Folio || {}
-window.Folio.Lightbox = {}
+window.Folio.Lightbox = window.Folio.Lightbox || {}
+
+window.Folio.Lightbox.dynamicCaptionType = window.Folio.Lightbox.dynamicCaptionType || 'auto'
 
 window.Folio.Lightbox.calls = []
 
@@ -109,7 +111,7 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
 
       that.photoSwipe = new window.Folio.PhotoSwipe({
         dataSource: items,
-        index: index
+        index
       })
 
       if (that.options.changeCallback) {
@@ -120,6 +122,7 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
         on: () => {},
         pswp: that.photoSwipe
       }, {
+        type: window.Folio.Lightbox.dynamicCaptionType,
         captionContent: (slide) => {
           if (slide.data.caption || slide.data.author) {
             let content = '<div class="f-pswp__caption">'
@@ -176,7 +179,7 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
       caption: $el.data('lightbox-caption') || $el.next('figcaption').text(),
       author: $el.data('lightbox-author'),
       src: window.Folio.Webp.supported ? $el.data('lightbox-webp-src') : $el.data('lightbox-src'),
-      el: el
+      el
     }
   }
 
