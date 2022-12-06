@@ -48,7 +48,7 @@ module Folio::ApplicationControllerBase
       # If an old id or a numeric id was used to find the record, then
       # the request path will not match the post_path, and we should do
       # a 301 redirect that uses the current friendly id.
-      if request.path != correct_path_or_url &&
+      if request.fullpath != correct_path_or_url &&
          request.url != correct_path_or_url
         redirect_to(correct_path_or_url, status: :moved_permanently)
         true
