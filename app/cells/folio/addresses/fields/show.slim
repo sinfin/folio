@@ -9,71 +9,75 @@
     .col-lg-6
       = model.input :last_name, required: true
 
-  .f-addresses-fields__fields-wrap[
-    data-country-code=data_country_code(:primary_address)
-  ]
-    - model.simple_fields_for :primary_address do |g|
-      - required = required?(:primary_address, g.object.attributes)
+  - if show_primary_address_fields?
+    .f-addresses-fields__fields-wrap[
+      class="f-addresses-fields__fields-wrap--primary-address"
+      data-country-code=data_country_code(:primary_address)
+    ]
+      - model.simple_fields_for :primary_address do |g|
+        - required = required?(:primary_address, g.object.attributes)
 
-      .row
-        .col-lg-7.f-addresses-fields__address-line-1
-          = address_line_input g, :address_line_1, required: required
+        .row
+          .col-lg-7.f-addresses-fields__address-line-1
+            = address_line_input g, :address_line_1, required: required
 
-        .col-lg-5.f-addresses-fields__address-line-2
-          = address_line_input g, :address_line_2, required: required
+          .col-lg-5.f-addresses-fields__address-line-2
+            = address_line_input g, :address_line_2, required: required
 
-      .row
-        .col-lg-5
-          = g.input :zip, required: required
+        .row
+          .col-lg-5
+            = g.input :zip, required: required
 
-        .col-lg-7
-          = g.input :city, required: required
+          .col-lg-7
+            = g.input :city, required: required
 
-      .row
-        .col-lg-7
-          = country_code_input(g)
+        .row
+          .col-lg-7
+            = country_code_input(g)
 
-      .row
-        .col-lg-7
-          = g.input :phone,
-                    as: :phone,
-                    default_country_code: data_country_code(:primary_address)
+        .row
+          .col-lg-7
+            = g.input :phone,
+                      as: :phone,
+                      default_country_code: data_country_code(:primary_address)
 
-  .f-addresses-fields__nested
-    = togglable_fields model, :use_secondary_address
-      .f-addresses-fields__nested-content
-        .f-addresses-fields__fields-wrap[
-          data-country-code=data_country_code(:secondary_address)
-        ]
-          - model.simple_fields_for :secondary_address do |g|
-            - required = required?(:secondary_address, g.object.attributes)
+  - if show_secondary_address_fields?
+    .f-addresses-fields__nested
+      = togglable_fields model, :use_secondary_address
+        .f-addresses-fields__nested-content
+          .f-addresses-fields__fields-wrap[
+            class="f-addresses-fields__fields-wrap--secondary-address"
+            data-country-code=data_country_code(:secondary_address)
+          ]
+            - model.simple_fields_for :secondary_address do |g|
+              - required = required?(:secondary_address, g.object.attributes)
 
-            = g.input :name
+              = g.input :name
 
-            = g.input :company_name
+              = g.input :company_name
 
-            .row
-              .col-lg-7
-                = g.input :identification_number
+              .row
+                .col-lg-7
+                  = g.input :identification_number
 
-            .row
-              .col-lg-7
-                = g.input :vat_identification_number
+              .row
+                .col-lg-7
+                  = g.input :vat_identification_number
 
-            .row
-              .col-lg-7.f-addresses-fields__address-line-1
-                = address_line_input g, :address_line_1, required: required
+              .row
+                .col-lg-7.f-addresses-fields__address-line-1
+                  = address_line_input g, :address_line_1, required: required
 
-              .col-lg-5.f-addresses-fields__address-line-2
-                = address_line_input g, :address_line_2, required: required
+                .col-lg-5.f-addresses-fields__address-line-2
+                  = address_line_input g, :address_line_2, required: required
 
-            .row
-              .col-lg-5
-                = g.input :zip, required: required
+              .row
+                .col-lg-5
+                  = g.input :zip, required: required
 
-              .col-lg-7
-                = g.input :city, required: required
+                .col-lg-7
+                  = g.input :city, required: required
 
-            .row
-              .col-lg-7
-                = country_code_input(g)
+              .row
+                .col-lg-7
+                  = country_code_input(g)

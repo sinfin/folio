@@ -5,10 +5,16 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
 
   def show
     %i[primary_address secondary_address].each do |key|
-      model.object.send("build_#{key}") if model.object.send(key).nil?
+      model.object.send("build_#{key}") if send("show_#{key}_fields?") && model.object.send(key).nil?
     end
 
     render
+  end
+
+  %i[primary_address secondary_address].each do |key|
+    define_method("show_#{key}_fields?") do
+      options[key] != false
+    end
   end
 
   def title_tag
