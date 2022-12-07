@@ -36,16 +36,18 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     end
   end
 
-  def country_code_input(g)
+  def country_code_input(g, disabled: false)
     g.input :country_code,
+            disabled:,
             only: g.object.class.countries_whitelist,
             priority: g.object.class.priority_countries(locale: I18n.locale),
             input_html: { class: "f-addresses-fields__country-code-input" },
             include_blank: false
   end
 
-  def address_line_input(g, key, required: false)
+  def address_line_input(g, key, disabled: false, required: false)
     g.input key,
+            disabled:,
             required:,
             label: "<span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--regular\">#{t(".#{key}_regular")}</span> \
                     <span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--inline\">#{t(".#{key}_inline")}</span>".html_safe
