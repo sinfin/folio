@@ -64,14 +64,4 @@ class Folio::ApplicationCell < Cell::ViewModel
       concat(content_tag(:div, class: "f-togglable-fields__content", &block))
     end
   end
-
-  unless ::Rails.application.config.folio_site_is_a_singleton
-    def t(str, **options)
-      if str.starts_with?(".")
-        super(str.gsub(/\A\./, ".#{current_site.i18n_key_base}."), **options, default: super)
-      else
-        super
-      end
-    end
-  end
 end
