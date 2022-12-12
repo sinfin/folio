@@ -21,6 +21,7 @@ module Folio
         gem "show_for"
         gem "sprockets", "~> 4.0"
         gem "sprockets-rails" # remove if twice in Gemfile
+        gem "sentry-raven"
 
         gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
 
