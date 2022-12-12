@@ -20,4 +20,4 @@
     <%= attribute_inputs %>
     <%- end -%>
 
-= form_footer f
+<%- unless has_atoms? -%>= form_footer f<%- end -%>
