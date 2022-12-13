@@ -39,6 +39,7 @@ module Folio
     config.folio_use_og_image = true
     config.folio_aasm_mailer_config = {}
     config.folio_site_is_a_singleton = true
+    config.folio_site_cache_current_site = true
     config.folio_site_validate_belongs_to_namespace = false
     config.folio_site_default_test_factory = nil
     config.folio_cell_generator_class_name_prefixes = {}

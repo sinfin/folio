@@ -28,8 +28,13 @@ class ApplicationCell < Folio::ApplicationCell
         end
       end
     end
+
+    def cache_key_base
+      []
+    end
   else
     %i[
+      cache_key_base
       current_user
       user_signed_in?
       current_header_menu

@@ -65,7 +65,7 @@ module <%= application_namespace %>::CacheKeys
             cache_key_updated_at,
             cache_key_counts,
             cache_key_blog_articles_published_hash,
-            current_site.id,
+            request.host,
           ],
           set_at: Time.zone.now,
         }
