@@ -1,4 +1,7 @@
+@import 'folio-bootstrap/scss/dropdown'
 @import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker'
+
+$folio-input-date-time-icon: false !default
 
 .bootstrap-datetimepicker-widget
   &.dropdown-menu
@@ -63,26 +66,27 @@
     margin-right: 7px !important
     margin-bottom: -1px !important
 
-.simple_form .form-group
-  &.date,
-  &.datetime
-    .d-flex
-      position: relative
+@if $folio-input-date-time-icon
+  .simple_form .form-group
+    &.date,
+    &.datetime
+      .d-flex
+        position: relative
 
-      &:after
-        +material-icon-style
-        content: 'date_range'
-        position: absolute
-        top: 0
-        right: 0
-        width: $input-height
-        height: $input-height
-        pointer-events: none
-        font-size: 18px
-        display: flex
-        align-items: center
-        justify-content: center
-        color: $gray-600
+        &:after
+          +material-icon-style
+          content: 'date_range'
+          position: absolute
+          top: 0
+          right: 0
+          width: $input-height
+          height: $input-height
+          pointer-events: none
+          font-size: 18px
+          display: flex
+          align-items: center
+          justify-content: center
+          color: $gray-600
 
-    .f-input--date
-      padding-right: $input-height
+      .f-input--date
+        padding-right: $input-height

@@ -37,15 +37,15 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
     vertical: 'bottom'
   },
   icons: {
-    time: 'fa fa-clock',
-    date: 'fa fa-calendar',
-    up: 'fa fa-chevron-up',
-    down: 'fa fa-chevron-down',
-    previous: 'fa fa-chevron-left',
-    next: 'fa fa-chevron-right',
-    today: 'fa fa-calendar-star',
-    clear: 'fa fa-trash',
-    close: 'fa fa-times'
+    time: 'fa fa-clock f-input__ico f-input__ico--time',
+    date: 'fa fa-calendar f-input__ico f-input__ico--date',
+    up: 'fa fa-chevron-up f-input__ico f-input__ico--up',
+    down: 'fa fa-chevron-down f-input__ico f-input__ico--down',
+    previous: 'fa fa-chevron-left f-input__ico f-input__ico--previous',
+    next: 'fa fa-chevron-right f-input__ico f-input__ico--next',
+    today: 'fa fa-calendar-star f-input__ico f-input__ico--today',
+    clear: 'fa fa-trash f-input__ico f-input__ico--clear',
+    close: 'fa fa-times f-input__ico f-input__ico--close'
   }
 }
 
@@ -63,7 +63,7 @@ window.Folio.Input.DateTime.onDatepickerShow = (e) => {
     $picker.append(`
       <div class="bootstrap-datetimepicker-widget__reset-wrap">
         <span class="f-c-with-icon text-danger bootstrap-datetimepicker-widget__reset cursor-pointer">
-          <span class="fa fa-trash-alt"></span> ${window.Folio.Input.DateTime.i18n.clearDate}
+          <span class="fa fa-trash-alt f-input__ico f-input__ico--trash-alt"></span> ${window.Folio.Input.DateTime.i18n.clearDate}
           </span>
       </div>
     `)
