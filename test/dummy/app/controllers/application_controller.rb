@@ -5,4 +5,5 @@ class ApplicationController < ActionController::Base
   helper Folio::Engine.helpers
 
   include Dummy::CurrentMethods
+  include Folio::CacheMethods
 end

@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-12-13
+### Added
+- added `Folio::CacheMethods`
+
 ## 2021-12-01
 ### Added
 - added console notifications when editing/updating the same path as a different account (using `console_path` on `Folio::Account`)

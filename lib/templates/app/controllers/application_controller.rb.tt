@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
   include Folio::ApplicationControllerBase
   helper Folio::Engine.helpers
 
+  include Folio::CacheMethods
+  include <%= application_namespace %>::CacheKeys
   include <%= application_namespace %>::CurrentMethods
 
   before_action :handle_rmp
