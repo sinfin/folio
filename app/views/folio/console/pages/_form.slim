@@ -56,5 +56,6 @@
                            folio_perex: true
 
     == cell('folio/console/tagsinput', f)
-    = translated_inputs f, :meta_title
-    = translated_inputs f, :meta_description, autosize: true
+    = translated_inputs f, :meta_title, character_counter: true
+    = translated_inputs f, :meta_description, autosize: true,
+                                              character_counter: true

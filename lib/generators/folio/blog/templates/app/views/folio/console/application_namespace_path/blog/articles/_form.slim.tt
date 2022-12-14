@@ -22,7 +22,8 @@
 
         = react_ordered_multiselect(f, :topics, atom_setting: :topics)
 
-        = f.input :meta_title
-        = f.input :meta_description
+        = f.input :meta_title, character_counter: true
+        = f.input :meta_description, autosize: true,
+                                     character_counter: true
 
 = form_footer f
