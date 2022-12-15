@@ -32,19 +32,10 @@ class Folio::User < Folio::ApplicationRecord
 
   devise(*selected_device_modules, devise_options)
 
-  pg_search_scope :by_query,
-                  against: [:email, :last_name, :first_name, :nickname],
-                  ignoring: :accents,
-                  using: {
-                    tsearch: { prefix: true }
-                  }
-
   has_many :authentications, class_name: "Folio::Omniauth::Authentication",
                              foreign_key: :folio_user_id,
                              inverse_of: :user,
                              dependent: :destroy
-
-  scope :ordered, -> { order(id: :desc) }
 
   validates :first_name, :last_name,
             presence: true,
@@ -57,6 +48,38 @@ class Folio::User < Folio::ApplicationRecord
   after_invitation_accepted :update_newsletter_subscription
 
   before_update :update_has_generated_password
+
+  pg_search_scope :by_query,
+                  against: [:email, :last_name, :first_name, :nickname],
+                  ignoring: :accents,
+                  using: {
+                    tsearch: { prefix: true }
+                  }
+
+  scope :ordered, -> { order(id: :desc) }
+
+  scope :by_address_identification_number_query, -> (q) {
+    subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
+    where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
+  }
+
+  pg_search_scope :by_full_name_query,
+                  against: %i[last_name first_name],
+                  ignoring: :accents,
+                  using: { trigram: { word_similarity: true } }
+
+  pg_search_scope :by_addresses_query,
+                  associated_against: {
+                    primary_address: %i[name company_name address_line_1 address_line_2 zip city],
+                    secondary_address: %i[name company_name address_line_1 address_line_2 zip city],
+                  },
+                  ignoring: :accents,
+                  using: { trigram: { word_similarity: true } }
+
+  pg_search_scope :by_email_query,
+                  against: %i[email],
+                  ignoring: :accents,
+                  using: { trigram: { word_similarity: true } }
 
   def full_name
     if first_name.present? || last_name.present?
