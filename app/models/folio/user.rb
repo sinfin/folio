@@ -84,6 +84,13 @@ class Folio::User < Folio::ApplicationRecord
     end
   end
 
+  def <=>(other)
+    res = self.full_name <=> other.full_name
+    return res unless res.zero?
+
+    self.id <=> other.id
+  end
+
   def remember_me
     super.nil? ? "1" : super
   end
