@@ -1,9 +1,11 @@
-window.folioConsoleBindIndexFiltersAutocomplete = ($input) ->
-  # Don't autosubmit form
-  $input.on 'change', (e) -> e.stopPropagation()
+window.folioConsoleBindIndexFiltersAutocomplete = ($input, className) ->
+  unless className
+    className = "f-c-index-filters__autocomplete-input"
+    # Don't autosubmit form
+    $input.on 'change', (e) -> e.stopPropagation()
 
   $input
-    .addClass('f-c-index-filters__autocomplete-input--bound')
+    .addClass("#{className}--bound")
     .autocomplete
       minLength: 0
       select: (e, ui) ->
@@ -97,7 +99,22 @@ initDaterangepicker = ($input) ->
 
 $ ->
   $('.f-c-index-filters__autocomplete-input').each ->
-    window.folioConsoleBindIndexFiltersAutocomplete($(this))
+    window.folioConsoleBindIndexFiltersAutocomplete($(this), 'f-c-index-filters__autocomplete-input')
 
   $('.f-c-index-filters__date-range-input').each ->
     initDaterangepicker($(this))
+
+  $('.f-c-index-filters__text-autocomplete-reset')
+    .on 'click', (e) ->
+      e.preventDefault()
+      $button = $(this)
+
+      $button
+        .closest('.f-c-index-filters__text-autocomplete-wrap')
+        .find('.f-c-index-filters__text-autocomplete-input')
+        .val("")
+
+      $button.closest('form').submit()
+
+  $('.f-c-index-filters__text-autocomplete-input').each ->
+    window.folioConsoleBindIndexFiltersAutocomplete($(this), 'f-c-index-filters__text-autocomplete-input')

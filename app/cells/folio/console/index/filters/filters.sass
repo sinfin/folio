@@ -71,6 +71,28 @@
     display: flex
     align-items: center
 
+  &__text-autocomplete-wrap
+    position: relative
+
+    .form-group__custom-html
+      position: absolute
+      top: 0
+      right: 0
+      z-index: 2
+
+  &__text-autocomplete-input
+    padding-right: 33px
+    position: relative
+    z-index: 1
+
+  &__text-autocomplete-reset
+    +unbutton
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 33px
+    height: $input-height
+
   +media-breakpoint-up(md)
     &__wrap
       display: flex

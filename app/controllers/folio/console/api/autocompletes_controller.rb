@@ -56,6 +56,8 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       if q.present?
         if scope.respond_to?("by_#{field}")
           scope = scope.send("by_#{field}", q)
+        elsif scope.respond_to?("by_#{field}_query")
+          scope = scope.send("by_#{field}_query", q)
         else
           scope = scope.where("#{field} ILIKE ?", "%#{q}%")
         end

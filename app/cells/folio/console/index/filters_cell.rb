@@ -87,18 +87,34 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                  wrapper: false
   end
 
-  def select(f, key)
+  def input(f, key)
     data = index_filters[key]
 
     if data.is_a?(String)
-      autocomplete_select(f, key, url: data)
+      autocomplete_input(f, key, url: data)
     elsif data.is_a?(Hash)
-      if data[:autocomplete]
+      if data[:as] == :text
+        if data[:autocomplete_attribute]
+          url = Folio::Engine.app.url_helpers.url_for([
+            :field,
+            :console,
+            :api,
+            :autocomplete,
+            klass: data[:autocomplete_klass] || controller.instance_variable_get("@klass"),
+            field: data[:autocomplete_attribute],
+            only_path: true,
+          ])
+
+          text_autocomplete_input(f, key, url:)
+        else
+          text_input(f, key)
+        end
+      elsif data[:autocomplete]
         url = controller.folio.console_api_autocomplete_path(klass: data[:klass],
                                                              scope: data[:scope],
                                                              order_scope: data[:order_scope],
                                                              slug: data[:slug])
-        autocomplete_select(f, key, url:)
+        autocomplete_input(f, key, url:)
       else
         url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
                                                                      scope: data[:scope],
@@ -115,7 +131,35 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     end
   end
 
-  def autocomplete_select(f, key, url:)
+  def text_input(f, key)
+    f.input key, label: false,
+                 input_html: {
+                   class: "f-c-index-filters__text-input",
+                   placeholder: blank_label(key),
+                   value: controller.params[key]
+                 },
+                 wrapper_html: {
+                   class: "f-c-index-filters__text-input-wrap"
+                 }
+  end
+
+  def text_autocomplete_input(f, key, url:)
+    f.input key, label: false,
+                 input_html: {
+                   class: "f-c-index-filters__text-autocomplete-input",
+                   "data-url" => url,
+                   "data-controller" => controller.class.to_s.underscore,
+                   placeholder: "#{label_for_key(key)}...",
+                   value: controller.params[key],
+                   autocomplete: "off",
+                 },
+                 wrapper_html: {
+                   class: "f-c-index-filters__text-autocomplete-wrap"
+                 },
+                 custom_html: controller.params[key].present? ? "<button type=\"button\" class=\"f-c-index-filters__text-autocomplete-reset fa fa-times\"></button>" : nil
+  end
+
+  def autocomplete_input(f, key, url:, wrapper_class: "f-c-index-filters__autocomplete-wrap")
     f.input key, label: false,
                  input_html: {
                    class: "f-c-index-filters__autocomplete-input",
@@ -125,7 +169,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    value: controller.params[key]
                  },
                  wrapper_html: {
-                   class: "f-c-index-filters__autocomplete-wrap"
+                   class: wrapper_class
                  }
   end
 
