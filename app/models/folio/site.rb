@@ -101,6 +101,13 @@ class Folio::Site < Folio::ApplicationRecord
     }
   end
 
+  def <=>(other)
+    res = self.title <=> other.title
+    return res unless res.zero?
+
+    self.id <=> other.id
+  end
+
   def console_form_tabs_base
     %i[
       header_message

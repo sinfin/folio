@@ -58,6 +58,13 @@ class Folio::User < Folio::ApplicationRecord
 
   before_update :update_has_generated_password
 
+  def <=>(other)
+    res = self.full_name <=> other.full_name
+    return res unless res.zero?
+
+    self.id <=> other.id
+  end
+
   def full_name
     if first_name.present? || last_name.present?
       "#{first_name} #{last_name}".strip

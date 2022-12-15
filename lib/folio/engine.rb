@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+begin
+  require 'factory_bot_rails'
+rescue LoadError
+end
+
 module Folio
   class Engine < ::Rails::Engine
     isolate_namespace Folio
@@ -87,6 +92,8 @@ module Folio
       }
     }
 
+    config.factory_bot.definition_file_paths += [self.root.join('test/factories')] if defined?(FactoryBotRails)
+
     initializer :append_folio_assets_paths do |app|
       app.config.assets.paths << self.root.join("app/cells")
       app.config.assets.paths << self.root.join("vendor/assets/javascripts")
@@ -100,7 +107,7 @@ module Folio
     end
 
     initializer :append_migrations do |app|
-      unless app.root.to_s.include? root.to_s
+      unless app.root.to_s.include?(root.to_s + "/")
         config.paths["db/migrate"].expanded.each do |expanded_path|
           app.config.paths["db/migrate"] << expanded_path
         end
@@ -124,7 +131,7 @@ module Folio
             deprecations << "Missing index_folio_pages_on_by_query index on folio_pages. That is probably caused by using traco title_* attributes. Add a custom one."
           end
 
-          if !Rails.env.test? && ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates LIMIT 1;").rows.size == 0
+          if !Rails.env.test? && ActiveRecord::Base.connection.exec_query("SELECT id FROM folio_email_templates WHERE mailer ='Folio::DeviseMailer' LIMIT 1;").rows.size == 0
             deprecations << "There are no email templates present. Seed them via rake folio:email_templates:idp_seed"
           end
         rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished, ActiveRecord::StatementInvalid
