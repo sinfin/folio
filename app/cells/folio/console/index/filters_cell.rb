@@ -119,8 +119,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: "#{label_for_key(key)}...",
                  },
                  wrapper: :input_group,
-                 wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                 input_group_append: controller.params[key].present? ? input_group_append : nil
+                 wrapper_html: { class: "f-c-index-filters__date-range-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
+                 input_group_append: controller.params[key].present? ? input_group_append : nil,
+                 custom_html: content_tag(:span, "date_range", class: "mi mi--16 f-c-index-filters__date-range-input-ico")
   end
 
   def text_input(f, key)
