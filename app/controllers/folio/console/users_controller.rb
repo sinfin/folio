@@ -48,7 +48,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
                     *additional_user_params)
     end
 
-    def index_filters
+    def default_index_filters
       {
         by_full_name_query: {
           as: :text,
@@ -67,6 +67,10 @@ class Folio::Console::UsersController < Folio::Console::BaseController
           autocomplete_attribute: :email,
         },
       }
+    end
+
+    def index_filters
+      default_index_filters
     end
 
     def folio_console_collection_includes
