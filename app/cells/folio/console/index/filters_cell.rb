@@ -54,11 +54,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def blank_label(key)
-    if controller.params[key].present?
-      "× #{t('folio.console.actions.cancel')}"
-    else
-      "#{label_for_key(key)}..."
-    end
+    "#{label_for_key(key)}..."
   end
 
   def label_for_key(key)
@@ -74,17 +70,6 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def cancel_url
     model[:cancel_url] ||
     request.path
-  end
-
-  def date_range_input(f, key)
-    f.input key, label: false,
-                 input_html: {
-                   class: "f-c-index-filters__date-range-input",
-                   value: controller.params[key],
-                   autocomplete: "off",
-                   placeholder: "#{label_for_key(key)}...",
-                 },
-                 wrapper: false
   end
 
   def input(f, key)
@@ -127,8 +112,22 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       f.input key, collection: collection(key),
                    include_blank: blank_label(key),
                    selected: controller.params[key],
-                   label: false
+                   label: false,
+                   wrapper: :input_group,
+                   input_group_append: controller.params[key].present? ? input_group_append : nil
     end
+  end
+
+  def date_range_input(f, key)
+    f.input key, label: false,
+                 input_html: {
+                   class: "f-c-index-filters__date-range-input",
+                   value: controller.params[key],
+                   autocomplete: "off",
+                   placeholder: "#{label_for_key(key)}...",
+                 },
+                 wrapper: :input_group,
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
   def text_input(f, key)
@@ -138,9 +137,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: blank_label(key),
                    value: controller.params[key]
                  },
-                 wrapper_html: {
-                   class: "f-c-index-filters__text-input-wrap"
-                 }
+                 wrapper_html: { class: "f-c-index-filters__text-input-wrap" },
+                 wrapper: :input_group,
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
   def text_autocomplete_input(f, key, url:)
@@ -153,10 +152,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    value: controller.params[key],
                    autocomplete: "off",
                  },
-                 wrapper_html: {
-                   class: "f-c-index-filters__text-autocomplete-wrap"
-                 },
-                 custom_html: controller.params[key].present? ? "<button type=\"button\" class=\"f-c-index-filters__text-autocomplete-reset fa fa-times\"></button>" : nil
+                 wrapper_html: { class: "f-c-index-filters__text-autocomplete-wrap" },
+                 wrapper: :input_group,
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
   def autocomplete_input(f, key, url:, wrapper_class: "f-c-index-filters__autocomplete-wrap")
@@ -168,9 +166,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: blank_label(key),
                    value: controller.params[key]
                  },
-                 wrapper_html: {
-                   class: wrapper_class
-                 }
+                 wrapper_html: { class: wrapper_class },
+                 wrapper: :input_group,
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
   def select2_select(f, key, data, url:)
@@ -194,8 +192,12 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    class: "f-c-index-filters__select2-input",
                    "data-placeholder" => "#{label_for_key(key)}...",
                  },
-                 wrapper_html: {
-                   class: "f-c-index-filters__select2-wrap"
-                 }
+                 wrapper_html: { class: "f-c-index-filters__select2-wrap" },
+                 wrapper: :input_group,
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
+  end
+
+  def input_group_append
+    button_tag("", type: "button", class: "btn fa fa-times f-c-index-filters__reset-input")
   end
 end

@@ -104,14 +104,14 @@ $ ->
   $('.f-c-index-filters__date-range-input').each ->
     initDaterangepicker($(this))
 
-  $('.f-c-index-filters__text-autocomplete-reset')
+  $('.f-c-index-filters__reset-input')
     .on 'click', (e) ->
       e.preventDefault()
       $button = $(this)
 
       $button
-        .closest('.f-c-index-filters__text-autocomplete-wrap')
-        .find('.f-c-index-filters__text-autocomplete-input')
+        .closest('.input-group')
+        .find('.form-control')
         .val("")
 
       $button.closest('form').submit()

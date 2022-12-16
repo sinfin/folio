@@ -84,6 +84,7 @@ en:
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
         keyword/USER_EMAIL: User e-mail
       folio/user:
+        address_identification_number: Indentification number
         confirmed_at: Confirmed at
     errors:
       messages:

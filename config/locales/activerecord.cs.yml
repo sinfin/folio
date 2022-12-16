@@ -93,10 +93,13 @@ cs:
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:
+        address_identification_number: IČO
+        addresses: Adresa
         admin_note: Poznámka (viditelná jen adminstrátory)
         authentications: Propojení
-        created_at: Vytvořen
         confirmed_at: Potvrzen
+        created_at: Vytvořen
+        full_name: Jméno
         nickname: Přezdívka
       folio/address/base:
         address_line_1: Ulice

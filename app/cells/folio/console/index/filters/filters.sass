@@ -3,6 +3,9 @@
   margin-top: - $spacer
   margin-bottom: $spacer
 
+  .input-group
+    margin-bottom: $spacer
+
   .f-c-index-header__tabs-wrap ~ &
     margin-top: - $nav-tabs-margin
 
@@ -70,28 +73,10 @@
     height: 100%
     display: flex
     align-items: center
+    z-index: 3
 
-  &__text-autocomplete-wrap
-    position: relative
-
-    .form-group__custom-html
-      position: absolute
-      top: 0
-      right: 0
-      z-index: 2
-
-  &__text-autocomplete-input
-    padding-right: 33px
-    position: relative
-    z-index: 1
-
-  &__text-autocomplete-reset
-    +unbutton
-    display: flex
-    align-items: center
-    justify-content: center
-    width: 33px
-    height: $input-height
+  &__reset-input
+    background: $input-bg
 
   +media-breakpoint-up(md)
     &__wrap
@@ -102,13 +87,18 @@
       display: flex
       align-items: center
       flex-wrap: wrap
-      margin-top: -2px
-      margin-bottom: -2px
+      padding: $grid-gutter-half / 4 0
 
     &__title
       padding: 4px 0
 
-    .form-group
-      flex: 0 0 210px
-      width: 210px
-      margin: 2px $grid-gutter-half 2px 0
+    .form-group,
+    .input-group
+      flex: 0 0 235px
+      width: 235px
+      margin: $grid-gutter-half / 4 $grid-gutter-half / 2 $grid-gutter-half / 4 0
+
+  +media-breakpoint-down(md)
+    .form-group,
+    .input-group
+      margin-bottom: $grid-gutter-half

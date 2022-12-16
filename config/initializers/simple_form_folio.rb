@@ -36,4 +36,20 @@ SimpleForm.setup do |config|
 
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
   end
+
+  config.wrappers :input_group, tag: "div", class: "input-group", error_class: "text-danger has-danger" do |b|
+    b.use :html5
+    b.use :placeholder
+    b.optional :maxlength
+    b.optional :minlength
+    b.optional :pattern
+    b.optional :min_max
+    b.optional :readonly
+
+    b.use :input, class: "form-control"
+    b.use :error, wrap_with: { tag: "small", class: "form-text" }
+    b.use :hint,  wrap_with: { tag: "small", class: "form-text" }
+
+    b.use :input_group_append, wrap_with: { tag: "div", class: "input-group-append" }
+  end
 end
