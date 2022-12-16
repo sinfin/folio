@@ -75,9 +75,11 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
             :api,
             :autocomplete,
             klass: data[:autocomplete_klass] || controller.instance_variable_get("@klass"),
+            scope: data[:scope].presence,
+            order_scope: data[:order_scope].presence,
             field: data[:autocomplete_attribute],
             only_path: true,
-          ])
+          ].compact)
 
           text_autocomplete_input(f, key, url:)
         else
@@ -117,6 +119,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: "#{label_for_key(key)}...",
                  },
                  wrapper: :input_group,
+                 wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
@@ -127,7 +130,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: blank_label(key),
                    value: controller.params[key]
                  },
-                 wrapper_html: { class: "f-c-index-filters__text-input-wrap" },
+                 wrapper_html: { class: "f-c-index-filters__text-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  wrapper: :input_group,
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end
@@ -142,12 +145,12 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    value: controller.params[key],
                    autocomplete: "off",
                  },
-                 wrapper_html: { class: "f-c-index-filters__text-autocomplete-wrap" },
+                 wrapper_html: { class: "f-c-index-filters__text-autocomplete-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  wrapper: :input_group,
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
-  def autocomplete_input(f, key, url:, wrapper_class: "f-c-index-filters__autocomplete-wrap")
+  def autocomplete_input(f, key, url:)
     f.input key, label: false,
                  input_html: {
                    class: "f-c-index-filters__autocomplete-input",
@@ -156,7 +159,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    placeholder: blank_label(key),
                    value: controller.params[key]
                  },
-                 wrapper_html: { class: wrapper_class },
+                 wrapper_html: { class: "f-c-index-filters__autocomplete-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  wrapper: :input_group,
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end
@@ -182,7 +185,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    class: "f-c-index-filters__select2-input",
                    "data-placeholder" => "#{label_for_key(key)}...",
                  },
-                 wrapper_html: { class: "f-c-index-filters__select2-wrap" },
+                 wrapper_html: { class: "f-c-index-filters__select2-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  wrapper: :input_group,
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end

@@ -27,8 +27,14 @@
       justify-content: center
       padding-bottom: 2px
 
+      .input-group &
+        display: none
+
     .select2-selection__placeholder
       color: inherit
+
+      .input-group--empty &
+        color: $input-placeholder-color
 
   .select2-search--dropdown
     .select2-search__field
@@ -42,3 +48,12 @@
 
   .select2-results__option--highlighted[aria-selected]
     background: $blue
+
+  .input-group &:not(:last-child)
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+    position: relative
+    flex: 1 1 auto
+    width: 1% !important
+    min-width: 0
+    margin-bottom: 0

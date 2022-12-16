@@ -49,9 +49,24 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     klass = params.require(:klass).safe_constantize
     field = params.require(:field)
     q = params[:q]
+    p_scope = params[:scope]
+    p_order = params[:order_scope]
+    p_without = params[:without]
 
     if klass && klass.column_names.include?(field)
       scope = klass.unscope(:order).where.not(field => nil)
+
+      if p_scope.present? && scope.respond_to?(p_scope)
+        scope = scope.send(p_scope)
+      end
+
+      if p_without.present?
+        scope = scope.where.not(id: p_without.split(","))
+      end
+
+      scope = filter_by_atom_setting_params(scope)
+
+      scope = scope.by_query(q) if q.present?
 
       if q.present?
         if scope.respond_to?("by_#{field}")
@@ -63,12 +78,20 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         end
       end
 
-      ary = scope.group(field)
-                 .unscope(:order)
-                 .order("count_id DESC")
-                 .limit(10)
-                 .count("id")
-                 .keys
+      ary = if p_order.present? && scope.respond_to?(p_order)
+        scope.unscope(:order)
+             .send(p_order)
+             .distinct(field)
+             .limit(10)
+             .pluck(field)
+      else
+        scope.group(field)
+             .unscope(:order)
+             .order("count_id DESC")
+             .limit(10)
+             .count("id")
+             .keys
+      end
 
       render json: { data: ary }
     else

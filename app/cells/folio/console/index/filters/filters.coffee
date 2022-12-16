@@ -18,7 +18,7 @@ window.folioConsoleBindIndexFiltersAutocomplete = ($input, className) ->
             q: request.term
             controller: $input.data('controller')
           success: (data) ->
-            response(data.data)
+            response(data.data.map((el) => String(el)))
     .on 'focus.indexFiltersAutocomplete', ->
       $input.autocomplete('search', $input.val())
 
