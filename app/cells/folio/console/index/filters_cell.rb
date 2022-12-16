@@ -29,7 +29,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def collection(key)
-    base = index_filters[key].map do |value|
+    index_filters[key].map do |value|
       if value == true
         [t("true"), true]
       elsif value == false
@@ -39,17 +39,6 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       else
         value
       end
-    end
-
-    if controller.params[key].present?
-      base.map do |label, value|
-        [
-          "#{label_for_key(key)} - #{label}",
-          value,
-        ]
-      end
-    else
-      base
     end
   end
 
@@ -114,6 +103,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                    selected: controller.params[key],
                    label: false,
                    wrapper: :input_group,
+                   wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                    input_group_append: controller.params[key].present? ? input_group_append : nil
     end
   end
