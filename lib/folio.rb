@@ -66,7 +66,7 @@ module Folio
     if Rails.application.config.folio_site_is_a_singleton
       Folio::Site.instance
     else
-      fail "You must implement this yourself"
+      fail "You must implement :current_site yourself"
     end
   end
 
