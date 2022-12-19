@@ -57,6 +57,10 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     nil
   end
 
+  def self.splittable_by_attribute
+    nil
+  end
+
   def cell_options
     nil
   end

@@ -51,6 +51,7 @@ en:
         selectImage: Select image
         selectPlaceholder: Select...
         shortForCharacter: chr.
+        startSplittingAtom: Split into parts
         thumbnailSizes: Generated thumbnails
         title: Title
         usage: Usage

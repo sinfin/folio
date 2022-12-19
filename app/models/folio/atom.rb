@@ -7,6 +7,7 @@ module Folio::Atom
 
   def self.structures
     str = {}
+
     Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
       structure = {}
 
@@ -17,6 +18,7 @@ module Folio::Atom
           type: value,
           character_counter: value == :text,
           default_values: klass.default_atom_values[key],
+          splittable: klass.splittable_by_attribute == key,
         }
 
         if value.is_a?(Array)
@@ -94,6 +96,7 @@ module Folio::Atom
         molecule_secondary: klass.molecule_secondary,
       }
     end
+
     str
   end
 

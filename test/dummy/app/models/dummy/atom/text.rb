@@ -24,6 +24,10 @@ class Dummy::Atom::Text < Folio::Atom::Base
   def self.console_insert_row
     0
   end
+
+  def self.splittable_by_attribute
+    :content
+  end
 end
 
 # == Schema Information

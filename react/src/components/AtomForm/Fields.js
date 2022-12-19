@@ -2,7 +2,7 @@ import React from 'react'
 
 import Field from './Field'
 
-export default function Fields ({ atom, index, onChange, onValueChange }) {
+export default function Fields ({ atom, index, onChange, onValueChange, startSplittingAtom }) {
   return (
     <React.Fragment>
       {Object.keys(atom.record.meta.structure).map((field) => (
@@ -13,6 +13,7 @@ export default function Fields ({ atom, index, onChange, onValueChange }) {
           index={index}
           onChange={onChange}
           onValueChange={onValueChange}
+          startSplittingAtom={startSplittingAtom}
         />
       ))}
     </React.Fragment>

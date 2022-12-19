@@ -51,6 +51,7 @@ cs:
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
         shortForCharacter: zn.
+        startSplittingAtom: Rozdělit na části
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití

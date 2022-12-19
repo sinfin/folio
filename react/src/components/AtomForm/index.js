@@ -92,6 +92,10 @@ class AtomForm extends React.PureComponent {
     }
   }
 
+  startSplittingAtom = (atom) => {
+    console.log('startSplittingAtom', atom)
+  }
+
   renderHint (text, molecule) {
     return (
       <AtomFormHint molecule={molecule}>
@@ -238,6 +242,7 @@ class AtomForm extends React.PureComponent {
                       onValueChange={this.onValueChange}
                       index={index}
                       style={makeStyle()}
+                      startSplittingAtom={this.startSplittingAtom}
                     />
                   )
                 } else if (input === 'ATTACHMENTS') {
@@ -262,6 +267,7 @@ class AtomForm extends React.PureComponent {
                       onValueChange={this.onValueChange}
                       style={makeStyle()}
                       index={index}
+                      startSplittingAtom={this.startSplittingAtom}
                     />
                   )
                 }
