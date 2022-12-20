@@ -17,6 +17,8 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
+    resource.update_column(:source_site_id, source_site_for_user.id) if resource_invited
+
     respond_to do |format|
       # need to override devise invitable here with devise default
       format.html do
@@ -97,7 +99,6 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
             .permit(*Folio::User.controller_strong_params_for_create)
             .to_h
             .merge(super)
-            .merge(source_site: source_site_for_user)
     end
 
     def disallow_public_invitations_if_needed
