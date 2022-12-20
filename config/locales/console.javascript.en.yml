@@ -6,6 +6,8 @@ en:
         add: Add
         addMenuItem: Add link
         addPlaceholder: Add...
+        atomSplittingText: Select where the text will be split
+        atomSplittingTitle: Do you really wish to split the text into parts?
         availableDocuments: Available documents
         availableImages: Available images
         cancel: Cancel
@@ -51,6 +53,7 @@ en:
         selectImage: Select image
         selectPlaceholder: Select...
         shortForCharacter: chr.
+        split: Split
         startSplittingAtom: Split into parts
         thumbnailSizes: Generated thumbnails
         title: Title

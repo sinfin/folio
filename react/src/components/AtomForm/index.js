@@ -1,14 +1,18 @@
 import React from 'react'
 import { Button, Input } from 'reactstrap'
 import { isEqual } from 'lodash'
+import ReactModal from 'react-modal'
 
 import NestedModelControls from 'components/NestedModelControls'
+
+import splitAtomValueToParts from './utils/splitAtomValueToParts'
 
 import Associations from './Associations'
 import Fields from './Fields'
 import Field from './Field'
 import MultiAttachments from './MultiAttachments'
 import SingleAttachments from './SingleAttachments'
+import SplittableModal from './SplittableModal'
 
 import AtomFormWrap from './styled/AtomFormWrap'
 import AtomFormHint from './styled/AtomFormHint'
@@ -18,8 +22,10 @@ import AtomFormCardRow from './styled/AtomFormCardRow'
 import AtomFormCardColumns from './styled/AtomFormCardColumns'
 import AtomFormCardColumn from './styled/AtomFormCardColumn'
 
+ReactModal.setAppElement('body')
+
 class AtomForm extends React.PureComponent {
-  state = { focusedIndex: null }
+  state = { focusedIndex: null, splittable: null }
 
   constructor (props) {
     super(props)
@@ -92,8 +98,29 @@ class AtomForm extends React.PureComponent {
     }
   }
 
-  startSplittingAtom = (atom) => {
-    console.log('startSplittingAtom', atom)
+  startSplittingAtom = (atom, field) => {
+    const value = atom.record.data[field]
+    let parts
+
+    if (atom.record.meta.structure[field].type === 'richtext') {
+      parts = splitAtomValueToParts({ value, isRichText: true })
+    } else if (atom.record.meta.structure[field].type === 'text') {
+      parts = splitAtomValueToParts({ value, isRichText: false })
+    } else {
+      return
+    }
+
+    this.setState({ ...this.state, splittable: { atom, field, parts } })
+  }
+
+  splittableSave = (splitIndices) => {
+    console.log('splittableSave', splitIndices)
+
+    this.splittableCancel()
+  }
+
+  splittableCancel = () => {
+    this.setState({ ...this.state, splittable: null })
   }
 
   renderHint (text, molecule) {
@@ -329,6 +356,20 @@ class AtomForm extends React.PureComponent {
             </Button>
           ))}
         </div>
+
+        <ReactModal
+          isOpen={!!this.state.splittable}
+          onRequestClose={this.closeSplittableModal}
+          className='ReactModal ReactModal--AtomFormSplittable'
+        >
+          {this.state.splittable ? (
+            <SplittableModal
+              splittable={this.state.splittable}
+              save={this.splittableSave}
+              cancel={this.splittableCancel}
+            />
+          ) : null}
+        </ReactModal>
       </AtomFormWrap>
     )
   }

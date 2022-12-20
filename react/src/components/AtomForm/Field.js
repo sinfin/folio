@@ -56,7 +56,7 @@ export default function Field ({ atom, field, index, onChange, onValueChange, st
       )}
 
       {meta.structure[field].splittable && (
-        <SplittableButton startSplittingAtom={() => { startSplittingAtom(atom) }} />
+        <SplittableButton startSplittingAtom={() => { startSplittingAtom(atom, field) }} />
       )}
 
       <EmptyFormText hasErrors={atom.errors[field]} structure={meta.structure[field]} />

@@ -10,6 +10,7 @@ import {
   editAtoms,
   removeAtoms,
   validateAndSaveFormAtom,
+  saveFormAtoms,
   closeFormAtom,
   moveAtomsToIndex,
   updateFormAtomType,
@@ -92,6 +93,10 @@ class Atoms extends React.PureComponent {
     this.props.dispatch(validateAndSaveFormAtom())
   }
 
+  saveFormAtomsWithoutValidation = () => {
+    this.props.dispatch(saveFormAtoms())
+  }
+
   removeFormAtomAttachment = (index, attachmentKey) => {
     if (confirm()) {
       this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
@@ -127,6 +132,7 @@ class Atoms extends React.PureComponent {
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
             saveFormAtoms={this.validateAndSaveFormAtom}
+            saveFormAtomsWithoutValidation={this.saveFormAtomsWithoutValidation}
             closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(index, key, value) => this.props.dispatch(updateFormAtomValue(index, key, value))}
