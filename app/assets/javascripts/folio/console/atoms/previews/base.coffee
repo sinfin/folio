@@ -147,6 +147,32 @@ handleInsertClick = (e) ->
     contentable: $a.attr('data-contentable') is 'true'
   window.top.postMessage(data, window.origin)
 
+handleSplitableJoinTriggerClick = (e) ->
+  e.preventDefault()
+  e.stopPropagation()
+  $trigger = $(this)
+  $insert = $trigger.closest('.f-c-atoms-previews__insert')
+  hideInsert($insert)
+  $previous = $insert.prev('.f-c-atoms-previews__preview')
+  $next = $insert.next('.f-c-atoms-previews__preview')
+  field = $previous.data('atom-splittable')
+  return if field isnt $next.data('atom-splittable')
+  indices = []
+
+  $previous.data('indices').forEach (index) => indices.push(index)
+  $next.data('indices').forEach (index) => indices.push(index)
+
+  $locale = $trigger.closest('.f-c-atoms-previews__locale')
+  rootKey = $locale.data('root-key')
+
+  data =
+    type: 'splittableJoinAtomsPrompt'
+    rootKey: rootKey
+    indices: indices
+    field: field
+
+  window.top.postMessage(data, window.origin)
+
 sendResizeMessage = ->
   data =
     type: 'setHeight'
@@ -262,6 +288,7 @@ $(document)
   .on 'click', '.f-c-atoms-previews__controls-overlay', handleOverlayClick
   .on 'click', '.f-c-atoms-previews__button--remove', handleRemoveClick
   .on 'click', '.f-c-atoms-previews__insert-a', handleInsertClick
+  .on 'click', '.f-c-atoms-previews__insert-splittable-join-trigger', handleSplitableJoinTriggerClick
   .on 'click', '.f-c-atoms-previews__insert-hint', showInsertHint
   .on 'click', '.f-c-atoms-previews__controls-mobile-overlay', handleMobileclick
   .on 'click', 'a, button', (e) -> e.preventDefault()

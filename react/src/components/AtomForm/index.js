@@ -378,7 +378,7 @@ class AtomForm extends React.PureComponent {
 
         <ReactModal
           isOpen={!!this.state.splittable}
-          onRequestClose={this.closeSplittableModal}
+          onRequestClose={this.splittableCancel}
           className='ReactModal ReactModal--AtomFormSplittable'
         >
           {this.state.splittable ? (

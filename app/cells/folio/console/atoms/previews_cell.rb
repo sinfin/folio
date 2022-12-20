@@ -77,4 +77,12 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   def atom_additional_options
     { console_preview: true, console_preview_settings_param: options[:settings_param] }
   end
+
+  def splittable_class_name(atoms, atom, atom_index)
+    field = atom.class.splittable_by_attribute
+
+    if field && atoms[atom_index + 1] && atoms[atom_index + 1].class.splittable_by_attribute == field
+      "f-c-atoms-previews__preview--splittable-can-be-joined"
+    end
+  end
 end

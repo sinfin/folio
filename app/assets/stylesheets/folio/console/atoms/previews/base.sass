@@ -159,7 +159,7 @@ $fa-font-path: 'font-awesome/webfonts' !default
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
     letter-spacing: normal
     min-height: 20px
-    margin-top: -1 * $spacer
+    margin-top: -0.5 * $spacer
 
     &:before
       content: ''
@@ -305,6 +305,19 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
   &__insert-spacer &__insert-inner
     display: block !important
+
+  &__insert-splittable-join-trigger
+    position: absolute
+    top: -7px
+    left: 10px
+    cursor: pointer
+    padding: 0 4px
+    background: $white
+    z-index: 2
+    display: none
+
+  &__preview--splittable-can-be-joined + &__insert:not(&__insert--active) &__insert-splittable-join-trigger
+    display: block
 
   html.media-breakpoint-up-lg &
     &__preview:hover,

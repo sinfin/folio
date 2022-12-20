@@ -26,7 +26,7 @@ class SplittableModal extends React.PureComponent {
         </div>
 
         <div className='modal-body'>
-          <p>{window.FolioConsole.translations.atomSplittingText}</p>
+          <p className='mb-2'>{window.FolioConsole.translations.atomSplittingText}</p>
 
           <SplittableModalPartsWrap>
             {this.props.splittable.parts.map((part, index) => (
@@ -56,7 +56,7 @@ class SplittableModal extends React.PureComponent {
           </Button>
 
           <Button color='dark' onClick={() => { this.props.save(this.state.splitIndices) }}>
-            {window.FolioConsole.translations.save}
+            {window.FolioConsole.translations.atomSplittingSubmit}
           </Button>
         </div>
       </div>

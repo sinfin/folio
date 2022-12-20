@@ -6,6 +6,10 @@ cs:
         add: Přidat
         addMenuItem: Přidat odkaz
         addPlaceholder: Přidat...
+        atomSplittableJoinSubmit: Sloučit
+        atomSplittableJoinText: Náhled sloučení
+        atomSplittableJoinTitle: Opravdu si přejete sloučit části?
+        atomSplittingSubmit: Rozdělit
         atomSplittingText: Vyberte, kde bude text rozdělen
         atomSplittingTitle: Opravdu si přejete rozdělit text na části?
         availableDocuments: Dostupné dokumenty

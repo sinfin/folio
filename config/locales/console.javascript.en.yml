@@ -6,6 +6,10 @@ en:
         add: Add
         addMenuItem: Add link
         addPlaceholder: Add...
+        atomSplittableJoinSubmit: Merge
+        atomSplittableJoinText: Merge preview
+        atomSplittableJoinTitle: Do you really want to merge the parts?
+        atomSplittingSubmit: Split
         atomSplittingText: Select where the text will be split
         atomSplittingTitle: Do you really wish to split the text into parts?
         availableDocuments: Available documents
