@@ -39,7 +39,7 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
   React.useEffect(() => {
     if (type === 'collection') {
       const { collection } = structure[key]
-      if (collection && !defaultValue && defaultValue !== collection[0][1]) {
+      if (collection && collection[0][1] !== null && defaultValue !== collection[0][1]) {
         onValueChange(index, collection[0][1], key)
       }
     }

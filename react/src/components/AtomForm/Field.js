@@ -5,8 +5,9 @@ import formGroupClassName from './utils/formGroupClassName'
 import AtomInput from './AtomInput'
 import CharacterCounter from './CharacterCounter'
 import EmptyFormText from './EmptyFormText'
+import SplittableButton from './SplittableButton'
 
-export default function Field ({ atom, field, index, onChange, onValueChange }) {
+export default function Field ({ atom, field, index, onChange, onValueChange, startSplittingAtom }) {
   const { meta } = atom.record
   const isCheck = meta.structure[field] && meta.structure[field].type === 'boolean'
 
@@ -52,6 +53,10 @@ export default function Field ({ atom, field, index, onChange, onValueChange }) 
 
       {atom.errors[field] && (
         <FormText className='invalid-feedback' color='danger'>{atom.errors[field]}</FormText>
+      )}
+
+      {meta.structure[field].splittable && (
+        <SplittableButton startSplittingAtom={() => { startSplittingAtom(atom, field) }} />
       )}
 
       <EmptyFormText hasErrors={atom.errors[field]} structure={meta.structure[field]} />

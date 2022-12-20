@@ -50,6 +50,8 @@ div class=class_name data-klass=options[:klass]
                 data-indices=[index]
                 data-contentable=atom.class.contentable?.to_s
                 data-atom-klass=atom.class.to_s
+                data-atom-splittable=atom.class.splittable_by_attribute
+                class=splittable_class_name(atoms, atom, atom_index)
               ]
                 .f-c-atoms-previews__preview-inner
                   = atom_cell(atom)

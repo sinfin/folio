@@ -93,5 +93,4 @@ receiveMessage = (e) ->
     when 'setHeight' then setHeight()
     when 'editSetting' then editSetting(e.data.locale, e.data.setting)
 
-
 window.addEventListener('message', receiveMessage, false)

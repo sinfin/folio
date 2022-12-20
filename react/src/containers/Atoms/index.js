@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import ReactModal from 'react-modal'
 
 import {
   addAtomToForm,
@@ -10,6 +11,7 @@ import {
   editAtoms,
   removeAtoms,
   validateAndSaveFormAtom,
+  saveFormAtoms,
   closeFormAtom,
   moveAtomsToIndex,
   updateFormAtomType,
@@ -20,16 +22,23 @@ import {
   moveFormAtom,
   removeFormAtom,
   validateAndSubmitGlobalForm,
-  refreshAtomPreviews
+  refreshAtomPreviews,
+  splitFormAtom,
+  mergeSplittableAtoms
 } from 'ducks/atoms'
 import { openFileModal } from 'ducks/fileModal'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
+import SplittableJoinModal from 'components/SplittableJoinModal'
 import { confirm } from 'utils/confirmed'
 
 import { FILE_TRIGGER_EVENT } from './constants'
 
+ReactModal.setAppElement('body')
+
 class Atoms extends React.PureComponent {
+  state = { splittable: null }
+
   constructor (props) {
     super(props)
     const $ = window.jQuery
@@ -76,6 +85,10 @@ class Atoms extends React.PureComponent {
           this.refreshPreview()
           break
         }
+        case 'splittableJoinAtomsPrompt': {
+          this.startSplittable(data)
+          break
+        }
         default:
           // do nothing
       }
@@ -92,6 +105,10 @@ class Atoms extends React.PureComponent {
     this.props.dispatch(validateAndSaveFormAtom())
   }
 
+  saveFormAtomsWithoutValidation = () => {
+    this.props.dispatch(saveFormAtoms())
+  }
+
   removeFormAtomAttachment = (index, attachmentKey) => {
     if (confirm()) {
       this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
@@ -100,6 +117,38 @@ class Atoms extends React.PureComponent {
 
   refreshPreview = () => {
     this.props.dispatch(refreshAtomPreviews())
+  }
+
+  getSplittableContent (rootKey, indices, field) {
+    let content = ''
+    const atoms = this.props.atoms.atoms[rootKey]
+
+    indices.forEach((index) => {
+      content += atoms[index].data[field]
+    })
+
+    return content
+  }
+
+  startSplittable ({ rootKey, indices, field }) {
+    this.setState({ ...this.state,
+      splittable: {
+        rootKey,
+        indices,
+        field,
+        content: this.getSplittableContent(rootKey, indices, field)
+      } })
+  }
+
+  splittableSave = () => {
+    this.props.dispatch(mergeSplittableAtoms(this.state.splittable.rootKey,
+      this.state.splittable.indices,
+      this.state.splittable.field))
+    this.splittableCancel()
+  }
+
+  splittableCancel = () => {
+    this.setState({ ...this.state, splittable: null })
   }
 
   handleFileTrigger ({ attachmentKey, data, index }) {
@@ -127,6 +176,7 @@ class Atoms extends React.PureComponent {
             namespace={`${namespace}[${form.rootKey}_attributes]`}
             rootKey={form.rootKey}
             saveFormAtoms={this.validateAndSaveFormAtom}
+            saveFormAtomsWithoutValidation={this.saveFormAtomsWithoutValidation}
             closeFormAtom={this.confirmedDirtyClose}
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(index, key, value) => this.props.dispatch(updateFormAtomValue(index, key, value))}
@@ -139,8 +189,23 @@ class Atoms extends React.PureComponent {
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
             validateAndSubmitGlobalForm={() => this.props.dispatch(validateAndSubmitGlobalForm())}
             openFileModal={(fileType, filesUrl, file) => this.props.dispatch(openFileModal(fileType, filesUrl, file))}
+            splitFormAtom={(field, parts) => this.props.dispatch(splitFormAtom(field, parts))}
           />
         )}
+
+        <ReactModal
+          isOpen={!!this.state.splittable}
+          onRequestClose={this.splittableCancel}
+          className='ReactModal ReactModal--AtomsSplittableJoin'
+        >
+          {this.state.splittable ? (
+            <SplittableJoinModal
+              content={this.state.splittable.content}
+              save={this.splittableSave}
+              cancel={this.splittableCancel}
+            />
+          ) : null}
+        </ReactModal>
       </React.Fragment>
     )
   }

@@ -6,6 +6,12 @@ cs:
         add: Přidat
         addMenuItem: Přidat odkaz
         addPlaceholder: Přidat...
+        atomSplittableJoinSubmit: Sloučit
+        atomSplittableJoinText: Náhled sloučení
+        atomSplittableJoinTitle: Opravdu si přejete sloučit části?
+        atomSplittingSubmit: Rozdělit
+        atomSplittingText: Vyberte, kde bude text rozdělen
+        atomSplittingTitle: Opravdu si přejete rozdělit text na části?
         availableDocuments: Dostupné dokumenty
         availableImages: Dostupné obrázky
         cancel: Zrušit
@@ -51,6 +57,8 @@ cs:
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
         shortForCharacter: zn.
+        split: Rozdělit
+        startSplittingAtom: Rozdělit na části
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití

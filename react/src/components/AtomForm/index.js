@@ -1,14 +1,18 @@
 import React from 'react'
 import { Button, Input } from 'reactstrap'
 import { isEqual } from 'lodash'
+import ReactModal from 'react-modal'
 
 import NestedModelControls from 'components/NestedModelControls'
+
+import splitAtomValueToParts from './utils/splitAtomValueToParts'
 
 import Associations from './Associations'
 import Fields from './Fields'
 import Field from './Field'
 import MultiAttachments from './MultiAttachments'
 import SingleAttachments from './SingleAttachments'
+import SplittableModal from './SplittableModal'
 
 import AtomFormWrap from './styled/AtomFormWrap'
 import AtomFormHint from './styled/AtomFormHint'
@@ -18,8 +22,10 @@ import AtomFormCardRow from './styled/AtomFormCardRow'
 import AtomFormCardColumns from './styled/AtomFormCardColumns'
 import AtomFormCardColumn from './styled/AtomFormCardColumn'
 
+ReactModal.setAppElement('body')
+
 class AtomForm extends React.PureComponent {
-  state = { focusedIndex: null }
+  state = { focusedIndex: null, splittable: null }
 
   constructor (props) {
     super(props)
@@ -90,6 +96,50 @@ class AtomForm extends React.PureComponent {
       this.saveFormAtoms()
       return false
     }
+  }
+
+  startSplittingAtom = (atom, field) => {
+    const value = atom.record.data[field]
+    let parts
+
+    if (atom.record.meta.structure[field].type === 'richtext') {
+      parts = splitAtomValueToParts({ value, isRichText: true })
+    } else if (atom.record.meta.structure[field].type === 'text') {
+      parts = splitAtomValueToParts({ value, isRichText: false })
+    } else {
+      return
+    }
+
+    this.setState({ ...this.state, splittable: { atom, field, parts } })
+  }
+
+  splittableSave = (splitIndices) => {
+    if (splitIndices && splitIndices.length > 0) {
+      const parts = []
+      let currentPart = ''
+
+      this.state.splittable.parts.forEach((part, partIndex) => {
+        if (splitIndices.indexOf(partIndex) !== -1) {
+          parts.push(currentPart)
+          currentPart = ''
+        }
+
+        currentPart += part
+      })
+
+      if (currentPart !== '') {
+        parts.push(currentPart)
+      }
+
+      this.props.splitFormAtom(this.state.splittable.field, parts)
+      this.props.saveFormAtomsWithoutValidation()
+    }
+
+    this.splittableCancel()
+  }
+
+  splittableCancel = () => {
+    this.setState({ ...this.state, splittable: null })
   }
 
   renderHint (text, molecule) {
@@ -238,6 +288,7 @@ class AtomForm extends React.PureComponent {
                       onValueChange={this.onValueChange}
                       index={index}
                       style={makeStyle()}
+                      startSplittingAtom={this.startSplittingAtom}
                     />
                   )
                 } else if (input === 'ATTACHMENTS') {
@@ -262,6 +313,7 @@ class AtomForm extends React.PureComponent {
                       onValueChange={this.onValueChange}
                       style={makeStyle()}
                       index={index}
+                      startSplittingAtom={this.startSplittingAtom}
                     />
                   )
                 }
@@ -323,6 +375,20 @@ class AtomForm extends React.PureComponent {
             </Button>
           ))}
         </div>
+
+        <ReactModal
+          isOpen={!!this.state.splittable}
+          onRequestClose={this.splittableCancel}
+          className='ReactModal ReactModal--AtomFormSplittable'
+        >
+          {this.state.splittable ? (
+            <SplittableModal
+              splittable={this.state.splittable}
+              save={this.splittableSave}
+              cancel={this.splittableCancel}
+            />
+          ) : null}
+        </ReactModal>
       </AtomFormWrap>
     )
   }

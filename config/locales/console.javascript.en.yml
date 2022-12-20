@@ -6,6 +6,12 @@ en:
         add: Add
         addMenuItem: Add link
         addPlaceholder: Add...
+        atomSplittableJoinSubmit: Merge
+        atomSplittableJoinText: Merge preview
+        atomSplittableJoinTitle: Do you really want to merge the parts?
+        atomSplittingSubmit: Split
+        atomSplittingText: Select where the text will be split
+        atomSplittingTitle: Do you really wish to split the text into parts?
         availableDocuments: Available documents
         availableImages: Available images
         cancel: Cancel
@@ -51,6 +57,8 @@ en:
         selectImage: Select image
         selectPlaceholder: Select...
         shortForCharacter: chr.
+        split: Split
+        startSplittingAtom: Split into parts
         thumbnailSizes: Generated thumbnails
         title: Title
         usage: Usage
