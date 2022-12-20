@@ -21,7 +21,8 @@ import {
   moveFormAtom,
   removeFormAtom,
   validateAndSubmitGlobalForm,
-  refreshAtomPreviews
+  refreshAtomPreviews,
+  splitFormAtom
 } from 'ducks/atoms'
 import { openFileModal } from 'ducks/fileModal'
 import AtomForm from 'components/AtomForm'
@@ -145,6 +146,7 @@ class Atoms extends React.PureComponent {
             removeFormAtom={(index) => this.props.dispatch(removeFormAtom(index))}
             validateAndSubmitGlobalForm={() => this.props.dispatch(validateAndSubmitGlobalForm())}
             openFileModal={(fileType, filesUrl, file) => this.props.dispatch(openFileModal(fileType, filesUrl, file))}
+            splitFormAtom={(field, parts) => this.props.dispatch(splitFormAtom(field, parts))}
           />
         )}
       </React.Fragment>

@@ -1,4 +1,4 @@
-export function combineAtoms ({ oldAtoms, newAtoms, formAction, indices, edit }) {
+export default function combineAtoms ({ oldAtoms, newAtoms, formAction, indices, edit }) {
   let atoms = []
 
   switch (formAction) {

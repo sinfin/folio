@@ -23,7 +23,8 @@ import atomsReducer, {
   atomFormPlacementsSort,
   atomFormPlacementsChangeTitle,
   atomFormPlacementsChangeAlt,
-  createContentlessAtom
+  createContentlessAtom,
+  splitFormAtom
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -343,5 +344,27 @@ describe('atomsReducer', () => {
     state = atomsReducer(state, createContentlessAtom('atoms', 'prepend', [0], 'Dummy::Atom::DaVinci'))
     expect(state.atoms.atoms[0].id).toEqual(null)
     expect(state.atoms.atoms[0].type).toEqual('Dummy::Atom::DaVinci')
+  })
+
+  it('splitFormAtom', () => {
+    state = atomsReducer(state, editAtoms('atoms', [0]))
+    expect(state.form.indices).toEqual([0])
+    expect(state.form.atoms.length).toEqual(1)
+    expect(state.form.atoms[0].record.data.content).toEqual('<p>lorem ipsum</p><p>dolor sit</p>')
+    expect(state.form.atoms[0].record.data.highlight).toEqual('red')
+
+    const oldId = state.form.atoms[0].record.id
+    const oldLodashId = state.form.atoms[0].record.lodashId
+
+    state = atomsReducer(state, splitFormAtom('content', ['<p>lorem ipsum</p>', '<p>dolor sit</p>']))
+    expect(state.form.atoms.length).toEqual(2)
+    expect(state.form.atoms[0].record.data.content).toEqual('<p>lorem ipsum</p>')
+    expect(state.form.atoms[0].record.data.highlight).toEqual('red')
+    expect(state.form.atoms[0].record.lodashId).toEqual(oldLodashId)
+    expect(state.form.atoms[0].record.id).toEqual(oldId)
+    expect(state.form.atoms[1].record.data.content).toEqual('<p>dolor sit</p>')
+    expect(state.form.atoms[1].record.data.highlight).toEqual('red')
+    expect(state.form.atoms[1].record.lodashId).not.toEqual(oldLodashId)
+    expect(state.form.atoms[1].record.id).toEqual(null)
   })
 })

@@ -114,7 +114,26 @@ class AtomForm extends React.PureComponent {
   }
 
   splittableSave = (splitIndices) => {
-    console.log('splittableSave', splitIndices)
+    if (splitIndices && splitIndices.length > 0) {
+      const parts = []
+      let currentPart = ''
+
+      this.state.splittable.parts.forEach((part, partIndex) => {
+        if (splitIndices.indexOf(partIndex) !== -1) {
+          parts.push(currentPart)
+          currentPart = ''
+        }
+
+        currentPart += part
+      })
+
+      if (currentPart !== '') {
+        parts.push(currentPart)
+      }
+
+      this.props.splitFormAtom(this.state.splittable.field, parts)
+      this.props.saveFormAtomsWithoutValidation()
+    }
 
     this.splittableCancel()
   }

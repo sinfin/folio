@@ -5,7 +5,7 @@ import { takeEvery, takeLatest, call, select, put } from 'redux-saga/effects'
 import { apiHtmlPost, apiPost } from 'utils/api'
 import arrayMove from 'utils/arrayMove'
 
-import { combineAtoms } from 'ducks/utils/atoms'
+import combineAtoms from 'utils/combineAtoms'
 import settingsToHash from 'utils/settingsToHash'
 import atomsDefaultDataFromStructure from 'utils/atomsDefaultDataFromStructure'
 
@@ -35,6 +35,7 @@ const ATOM_FORM_PLACEMENTS_UNSELECT = 'atoms/ATOM_FORM_PLACEMENTS_UNSELECT'
 const ATOM_FORM_PLACEMENTS_SORT = 'atoms/ATOM_FORM_PLACEMENTS_SORT'
 const ATOM_FORM_PLACEMENTS_CHANGE = 'atoms/ATOM_FORM_PLACEMENTS_CHANGE'
 const REFRESH_ATOM_PREVIEWS = 'atoms/REFRESH_ATOM_PREVIEWS'
+const SPLIT_FORM_ATOM = 'atoms/SPLIT_FORM_ATOM'
 
 // Actions
 
@@ -112,6 +113,10 @@ export function moveFormAtom (from, to) {
 
 export function removeFormAtom (index) {
   return { type: REMOVE_FORM_ATOM, index }
+}
+
+export function splitFormAtom (field, parts) {
+  return { type: SPLIT_FORM_ATOM, field, parts }
 }
 
 export function atomFormPlacementsSelect (index, attachmentKey, file) {
@@ -925,6 +930,32 @@ function atomsReducer (state = initialState, action) {
               return atom
             }
           })
+        }
+      }
+    }
+
+    case SPLIT_FORM_ATOM: {
+      const atom = state.form.atoms[0]
+
+      const atoms = action.parts.map((part, partIndex) => ({
+        ...atom,
+        record: {
+          ...atom.record,
+          id: partIndex === 0 ? atom.record.id : null,
+          lodashId: partIndex === 0 ? atom.record.lodashId : uniqueId('atom_'),
+          data: {
+            ...atom.record.data,
+            [action.field]: part
+          }
+        }
+      }))
+
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          dirty: true,
+          atoms
         }
       }
     }
