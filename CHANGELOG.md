@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-12-20
+### Added
+- added `splittable_by_attribute` to atoms
+
 ## 2021-12-13
 ### Added
 - added `Folio::CacheMethods`
