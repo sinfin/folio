@@ -36,6 +36,7 @@ const ATOM_FORM_PLACEMENTS_SORT = 'atoms/ATOM_FORM_PLACEMENTS_SORT'
 const ATOM_FORM_PLACEMENTS_CHANGE = 'atoms/ATOM_FORM_PLACEMENTS_CHANGE'
 const REFRESH_ATOM_PREVIEWS = 'atoms/REFRESH_ATOM_PREVIEWS'
 const SPLIT_FORM_ATOM = 'atoms/SPLIT_FORM_ATOM'
+const MERGE_SPLITTABLE_ATOMS = 'atoms/MERGE_SPLITTABLE_ATOMS'
 
 // Actions
 
@@ -145,6 +146,10 @@ export function atomFormPlacementsChangeAlt (index, attachmentKey, filePlacement
 
 export function refreshAtomPreviews () {
   return { type: REFRESH_ATOM_PREVIEWS }
+}
+
+export function mergeSplittableAtoms (rootKey, indices, field) {
+  return { type: MERGE_SPLITTABLE_ATOMS, rootKey, indices, field }
 }
 
 // Selectors
@@ -303,6 +308,8 @@ function * updateAtomPreviews (action) {
 
 function * updateAtomPreviewsSaga () {
   yield [
+    takeEvery(MERGE_SPLITTABLE_ATOMS, updateAtomPreviews),
+    takeEvery(SPLIT_FORM_ATOM, updateAtomPreviews),
     takeEvery(REMOVE_ATOMS, updateAtomPreviews),
     takeEvery(MOVE_ATOMS_TO_INDEX, updateAtomPreviews),
     takeEvery(SAVE_FORM_ATOMS, updateAtomPreviews),
@@ -956,6 +963,48 @@ function atomsReducer (state = initialState, action) {
           ...state.form,
           dirty: true,
           atoms
+        }
+      }
+    }
+
+    case MERGE_SPLITTABLE_ATOMS: {
+      const [indexToKeep, ...indicesToDelete] = action.indices
+      let content = ''
+
+      action.indices.forEach((index) => {
+        content += state.atoms[action.rootKey][index]['data'][action.field]
+      })
+
+      const destroyedIds = []
+      const atoms = []
+
+      state.atoms[action.rootKey].forEach((atom, i) => {
+        if (indicesToDelete.indexOf(i) !== -1) {
+          if (atom.id) {
+            destroyedIds.push(atom.id)
+          }
+        } else if (indexToKeep === i) {
+          atoms.push({
+            ...atom,
+            data: {
+              ...atom.data,
+              [action.field]: content
+            }
+          })
+        } else {
+          atoms.push(atom)
+        }
+      })
+
+      return {
+        ...state,
+        destroyedIds: {
+          ...state.destroyedIds,
+          [action.rootKey]: [...state.destroyedIds[action.rootKey], ...destroyedIds]
+        },
+        atoms: {
+          ...state.atoms,
+          [action.rootKey]: atoms
         }
       }
     }

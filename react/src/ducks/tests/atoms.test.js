@@ -24,7 +24,8 @@ import atomsReducer, {
   atomFormPlacementsChangeTitle,
   atomFormPlacementsChangeAlt,
   createContentlessAtom,
-  splitFormAtom
+  splitFormAtom,
+  mergeSplittableAtoms
 } from '../atoms'
 
 import { SINGLE_LOCALE_ATOMS, MULTI_LOCALE_ATOMS } from 'constants/tests/atoms'
@@ -366,5 +367,40 @@ describe('atomsReducer', () => {
     expect(state.form.atoms[1].record.data.highlight).toEqual('red')
     expect(state.form.atoms[1].record.lodashId).not.toEqual(oldLodashId)
     expect(state.form.atoms[1].record.id).toEqual(null)
+  })
+
+  it('mergeSplittableAtoms', () => {
+    const firstId = state.atoms.atoms[0].id
+    const secondId = state.atoms.atoms[1].id
+
+    expect(state.atoms.atoms[0].data.content).toEqual('<p>lorem ipsum</p><p>dolor sit</p>')
+    expect(state.atoms.atoms[1].data.content).toEqual('<p>lorem ipsum</p><p>dolor sit</p>')
+    expect(state.destroyedIds.atoms).toEqual([])
+
+    state = atomsReducer(state, mergeSplittableAtoms('atoms', [0, 1], 'content'))
+
+    expect(state.atoms.atoms[0].id).toEqual(firstId)
+    expect(state.atoms.atoms[1].id).not.toEqual(secondId)
+    expect(state.destroyedIds.atoms).toEqual([secondId])
+    expect(state.atoms.atoms[0].data.content).toEqual('<p>lorem ipsum</p><p>dolor sit</p><p>lorem ipsum</p><p>dolor sit</p>')
+
+    // expect(state.atoms.atoms.indices).toEqual([0])
+    // expect(state.form.atoms.length).toEqual(1)
+    // expect(state.form.atoms[0].record.data.content).toEqual('<p>lorem ipsum</p><p>dolor sit</p>')
+    // expect(state.form.atoms[0].record.data.highlight).toEqual('red')
+
+    // const oldId = state.form.atoms[0].record.id
+    // const oldLodashId = state.form.atoms[0].record.lodashId
+
+    // state = atomsReducer(state, splitFormAtom('content', ['<p>lorem ipsum</p>', '<p>dolor sit</p>']))
+    // expect(state.form.atoms.length).toEqual(2)
+    // expect(state.form.atoms[0].record.data.content).toEqual('<p>lorem ipsum</p>')
+    // expect(state.form.atoms[0].record.data.highlight).toEqual('red')
+    // expect(state.form.atoms[0].record.lodashId).toEqual(oldLodashId)
+    // expect(state.form.atoms[0].record.id).toEqual(oldId)
+    // expect(state.form.atoms[1].record.data.content).toEqual('<p>dolor sit</p>')
+    // expect(state.form.atoms[1].record.data.highlight).toEqual('red')
+    // expect(state.form.atoms[1].record.lodashId).not.toEqual(oldLodashId)
+    // expect(state.form.atoms[1].record.id).toEqual(null)
   })
 })

@@ -23,7 +23,8 @@ import {
   removeFormAtom,
   validateAndSubmitGlobalForm,
   refreshAtomPreviews,
-  splitFormAtom
+  splitFormAtom,
+  mergeSplittableAtoms
 } from 'ducks/atoms'
 import { openFileModal } from 'ducks/fileModal'
 import AtomForm from 'components/AtomForm'
@@ -118,7 +119,7 @@ class Atoms extends React.PureComponent {
     this.props.dispatch(refreshAtomPreviews())
   }
 
-  startSplittable ({ rootKey, indices, field }) {
+  getSplittableContent (rootKey, indices, field) {
     let content = ''
     const atoms = this.props.atoms.atoms[rootKey]
 
@@ -126,31 +127,23 @@ class Atoms extends React.PureComponent {
       content += atoms[index].data[field]
     })
 
-    this.setState({ ...this.state, splittable: { rootKey, indices, content } })
+    return content
   }
 
-  splittableSave = (splitIndices) => {
-    if (splitIndices && splitIndices.length > 0) {
-      const parts = []
-      let currentPart = ''
+  startSplittable ({ rootKey, indices, field }) {
+    this.setState({ ...this.state,
+      splittable: {
+        rootKey,
+        indices,
+        field,
+        content: this.getSplittableContent(rootKey, indices, field)
+      } })
+  }
 
-      this.state.splittable.parts.forEach((part, partIndex) => {
-        if (splitIndices.indexOf(partIndex) !== -1) {
-          parts.push(currentPart)
-          currentPart = ''
-        }
-
-        currentPart += part
-      })
-
-      if (currentPart !== '') {
-        parts.push(currentPart)
-      }
-
-      this.props.splitFormAtom(this.state.splittable.field, parts)
-      this.props.saveFormAtomsWithoutValidation()
-    }
-
+  splittableSave = () => {
+    this.props.dispatch(mergeSplittableAtoms(this.state.splittable.rootKey,
+      this.state.splittable.indices,
+      this.state.splittable.field))
     this.splittableCancel()
   }
 
