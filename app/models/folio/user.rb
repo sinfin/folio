@@ -14,6 +14,9 @@ class Folio::User < Folio::ApplicationRecord
   # used to handle address validation when changing password
   attr_accessor :devise_resetting_password
 
+  belongs_to :source_site, class_name: "Folio::Site",
+                           required: false
+
   selected_device_modules = %i[
     database_authenticatable
     recoverable
@@ -278,6 +281,7 @@ end
 #  crossdomain_devise_token  :string
 #  crossdomain_devise_set_at :datetime
 #  sign_out_salt_part        :string
+#  source_site_id            :bigint(8)
 #
 # Indexes
 #
@@ -290,4 +294,5 @@ end
 #  index_folio_users_on_primary_address_id                 (primary_address_id)
 #  index_folio_users_on_reset_password_token               (reset_password_token) UNIQUE
 #  index_folio_users_on_secondary_address_id               (secondary_address_id)
+#  index_folio_users_on_source_site_id                     (source_site_id)
 #

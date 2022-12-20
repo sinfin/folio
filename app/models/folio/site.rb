@@ -25,6 +25,11 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  has_many :source_users, class_name: "Folio::User",
+                          foreign_key: :source_site_id,
+                          inverse_of: :source_site,
+                          dependent: :nullify
+
   # Validations
   validates :title, :email, :locale, :locales,
             presence: true

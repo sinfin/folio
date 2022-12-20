@@ -93,11 +93,23 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
   private
     def update_resource_params
-      params.require(:user).permit(*Folio::User.controller_strong_params_for_create).to_h.merge(super)
+      params.require(:user)
+            .permit(*Folio::User.controller_strong_params_for_create)
+            .to_h
+            .merge(super)
+            .merge(source_site: source_site_for_user)
     end
 
     def disallow_public_invitations_if_needed
       return if Rails.application.config.folio_users_publicly_invitable
       fail "Not allowed to publicly invite."
+    end
+
+    def source_site_for_user
+      if session && session[Folio::Devise::CrossdomainHandler::SESSION_KEY] && site_slug = session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
+        return Folio::Site.find(site_slug)
+      end
+
+      current_site
     end
 end

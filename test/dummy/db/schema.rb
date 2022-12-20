@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_15_125626) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_20_115303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -475,6 +475,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_15_125626) do
     t.string "crossdomain_devise_token"
     t.datetime "crossdomain_devise_set_at"
     t.string "sign_out_salt_part"
+    t.bigint "source_site_id"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
@@ -484,6 +485,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_15_125626) do
     t.index ["primary_address_id"], name: "index_folio_users_on_primary_address_id"
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
     t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
+    t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
