@@ -6,10 +6,8 @@
   - if model.respond_to?(:by_query) && options[:by_query] != false
     = query_form do |f|
       .input-group
-        = f.input(:by_query, label: false, \
-                             wrapper: false, \
-                             autocomplete: query_autocomplete, \
-                             input_html: { value: params[:by_query], id: nil })
+        = by_query_input(f)
+
         .input-group-append
           button[
             class="btn"

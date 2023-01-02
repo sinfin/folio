@@ -108,4 +108,16 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     ::Rails.application.config.folio_show_transportable_frontend &&
     model.try(:transportable?)
   end
+
+  def by_query_input(f)
+    f.input(:by_query,
+            label: false,
+            wrapper: false,
+            autocomplete: query_autocomplete,
+            input_html: {
+              value: params[:by_query],
+              id: nil,
+              placeholder: options[:by_query_placeholder]
+            })
+  end
 end
