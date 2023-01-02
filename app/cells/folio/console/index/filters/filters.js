@@ -89,6 +89,26 @@ window.FolioConsole.Index.Filters.initDaterangepicker = ($input) => {
   })
 }
 
+window.FolioConsole.Index.Filters.cleanSubmit = ($form) => {
+  const params = new URLSearchParams()
+
+  $form.serializeArray().forEach((hash) => {
+    if (hash.value) {
+      params.set(hash.name, hash.value)
+    }
+  })
+
+  let url = $form.prop('action')
+  const data = params.toString()
+
+  if (data !== '') {
+    const joiner = url.indexOf("?") === -1 ? "?" : "&"
+    url = `${url}${joiner}${data}`
+  }
+
+  window.location.href = url
+}
+
 window.FolioConsole.Index.Filters.bind = () => {
   $('.f-c-index-filters__autocomplete-input').each((i, el) => {
     window.FolioConsole.Index.Filters.bindAutocompletes($(el), 'f-c-index-filters__autocomplete-input')
@@ -103,6 +123,11 @@ window.FolioConsole.Index.Filters.bind = () => {
     const $button = $(e.currentTarget)
     $button.closest('.input-group').find('.form-control').val('')
     $button.closest('form').submit()
+  })
+
+  $('.f-c-index-filters').on('submit', (e) => {
+    e.preventDefault()
+    window.FolioConsole.Index.Filters.cleanSubmit($(e.currentTarget))
   })
 
   $('.f-c-index-filters__text-autocomplete-input').each((i, el) => {
