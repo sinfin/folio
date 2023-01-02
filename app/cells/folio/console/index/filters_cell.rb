@@ -9,7 +9,25 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def index_filters
-    model[:index_filters]
+    @index_filters ||= begin
+      h = {}
+
+      model[:index_filters].each do |key, config|
+        if config == :date_range
+          h[key] = { as: :date_range }
+        elsif config.is_a?(Array)
+          h[key] = { as: :collection, collection: config }
+        elsif config.is_a?(String)
+          h[key] = { as: :autocomplete, url: config }
+        elsif config.is_a?(Hash)
+          h[key] = config
+        else
+          raise "Invalid index filter type - #{key}"
+        end
+      end
+
+      h
+    end
   end
 
   def form(&block)
@@ -25,17 +43,13 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def filtered?
-    index_filters.keys.any? { |key| controller.params[key].present? }
+    index_filters.any? do |key, _config|
+      filtered_by?(key)
+    end
   end
 
   def collection(key)
-    ary = if index_filters[key].is_a?(Hash) && index_filters[key][:collection]
-      index_filters[key][:collection]
-    else
-      index_filters[key]
-    end
-
-    ary.map do |value|
+    index_filters[key][:collection].map do |value|
       if value == true
         [t("true"), true]
       elsif value == false
@@ -70,45 +84,41 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def input(f, key)
     data = index_filters[key]
 
-    if data.is_a?(String)
-      autocomplete_input(f, key, url: data)
-    elsif data.is_a?(Hash)
-      if data[:collection].present?
-        collection_input(f, key)
-      elsif data[:as] == :text
-        if data[:autocomplete_attribute]
-          url = Folio::Engine.app.url_helpers.url_for([
-            :field,
-            :console,
-            :api,
-            :autocomplete,
-            klass: data[:autocomplete_klass] || controller.instance_variable_get("@klass"),
-            scope: data[:scope].presence,
-            order_scope: data[:order_scope].presence,
-            field: data[:autocomplete_attribute],
-            only_path: true,
-          ].compact)
-
-          text_autocomplete_input(f, key, url:)
-        else
-          text_input(f, key)
-        end
-      elsif data[:autocomplete]
-        url = controller.folio.console_api_autocomplete_path(klass: data[:klass],
-                                                             scope: data[:scope],
-                                                             order_scope: data[:order_scope],
-                                                             slug: data[:slug])
-        autocomplete_input(f, key, url:)
-      else
-        url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
-                                                                     scope: data[:scope],
-                                                                     order_scope: data[:order_scope],
-                                                                     slug: data[:slug],
-                                                                     label_method: data[:label_method])
-        select2_select(f, key, data, url:)
-      end
-    else
+    if data[:as] == :collection
       collection_input(f, key)
+    elsif data[:as] == :date_range
+      date_range_input(f, key)
+    elsif data[:as] == :text
+      if data[:autocomplete_attribute]
+        url = Folio::Engine.app.url_helpers.url_for([
+          :field,
+          :console,
+          :api,
+          :autocomplete,
+          klass: data[:autocomplete_klass] || controller.instance_variable_get("@klass"),
+          scope: data[:scope].presence,
+          order_scope: data[:order_scope].presence,
+          field: data[:autocomplete_attribute],
+          only_path: true,
+        ].compact)
+
+        text_autocomplete_input(f, key, url:)
+      else
+        text_input(f, key)
+      end
+    elsif data[:autocomplete]
+      url = data[:url] || controller.folio.console_api_autocomplete_path(klass: data[:klass],
+                                                                         scope: data[:scope],
+                                                                         order_scope: data[:order_scope],
+                                                                         slug: data[:slug])
+      autocomplete_input(f, key, url:)
+    else
+      url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
+                                                                   scope: data[:scope],
+                                                                   order_scope: data[:order_scope],
+                                                                   slug: data[:slug],
+                                                                   label_method: data[:label_method])
+      select2_select(f, key, data, url:)
     end
   end
 
@@ -124,6 +134,20 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                  wrapper_html: { class: "f-c-index-filters__date-range-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  input_group_append: controller.params[key].present? ? input_group_append : nil,
                  custom_html: content_tag(:span, "date_range", class: "mi mi--16 f-c-index-filters__date-range-input-ico")
+  end
+
+  def numeric_range_input(f, key, type:)
+    full_key = "#{key}_#{type}".to_sym
+
+    f.input full_key, label: false,
+                      input_html: {
+                        class: "f-c-index-filters__numeric-range-input",
+                        value: controller.params[full_key],
+                        autocomplete: "off",
+                        placeholder: t(".numeric_range.#{type}"),
+                        type: "number",
+                      },
+                      wrapper: false
   end
 
   def text_input(f, key)
@@ -208,16 +232,28 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def filter_style_for_key(key)
-    width = if index_filters[key].is_a?(Hash) && index_filters[key][:width]
+    width = if index_filters[key][:width]
       if index_filters[key][:width].is_a?(Numeric)
         "#{index_filters[key][:width]}px"
       else
         index_filters[key][:width]
       end
+    elsif index_filters[key][:as] == :numeric_range
+      "auto"
     else
       "235px"
     end
 
     "width: #{width}"
+  end
+
+  def filtered_by?(key)
+    config = index_filters[key]
+
+    if config[:as] == :numeric_range
+      controller.params["#{key}_from"].present? || controller.params["#{key}_to"].present?
+    else
+      controller.params[key].present?
+    end
   end
 end

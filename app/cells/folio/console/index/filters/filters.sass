@@ -9,6 +9,28 @@
   .f-c-index-header__tabs-wrap ~ &
     margin-top: - $nav-tabs-margin
 
+  &__numeric-range
+    background: #DBDBDB
+
+  &__numeric-range > &__numeric-range-input
+    width: 65px
+    flex: 0 0 auto
+    appearance: textfield
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button
+      appearance: none
+      margin: 0
+
+  &__numeric-range .input-group-prepend
+    display: flex
+    align-items: center
+
+    label
+      margin: 0
+      padding: 0 10px
+      line-height: $input-height
+
   &__inner
     flex: 1 1 auto
 

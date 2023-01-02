@@ -155,7 +155,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   end
 
   def filter_params
-    params.permit(:by_query, *index_filters.keys)
+    params.permit(:by_query, *index_filters_keys)
   end
 
   private
@@ -166,6 +166,21 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def index_filters
       {}
+    end
+
+    def index_filters_keys
+      ary = []
+
+      index_filters.each do |key, config|
+        if config.is_a?(Hash) && config[:as] == :numeric_range
+          ary << "#{key}_from".to_sym
+          ary << "#{key}_to".to_sym
+        else
+          ary << key
+        end
+      end
+
+      ary
     end
 
     def current_ability

@@ -4,12 +4,23 @@
       strong.f-c-index-filters__title = t('.title')
 
       .f-c-index-filters__inner
-        - index_filters.keys.each do |key|
+        - index_filters.each do |key, config|
           .f-c-index-filters__filter[
             style=filter_style_for_key(key)
           ]
-            - if index_filters[key] == :date_range
-              = date_range_input(f, key)
+            - if config[:as] == :numeric_range
+              .f-c-index-filters__numeric-range.input-group
+                .input-group-prepend
+                  = f.label "#{key}_from", label_for_key(key)
+
+                = numeric_range_input(f, key, type: "from")
+
+                = numeric_range_input(f, key, type: "to")
+
+                - if filtered_by?(key)
+                  .input-group-append
+                    = input_group_append
+
             - else
               = input(f, key)
 

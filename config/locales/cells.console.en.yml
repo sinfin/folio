@@ -6,6 +6,9 @@ en:
         filters:
           title: Filter
           cancel: Cancel filters
+          numeric_range:
+            from: From
+            to: To
 
         header:
           add: Add
