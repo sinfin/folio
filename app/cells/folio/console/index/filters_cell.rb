@@ -35,15 +35,26 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       method: :get,
       url: request.path,
       html: {
-        class: "f-c-index-filters f-c-anti-container-fluid",
+        class: "f-c-index-filters #{form_expanded_class_name} f-c-anti-container-fluid",
         "data-auto-submit" => true,
       }
     }
     simple_form_for "", opts, &block
   end
 
+  def form_expanded_class_name
+    return nil unless filtered?
+    return nil unless has_collapsible?
+
+    if index_filters.any? { |key, config| config[:collapsed] && filtered_by?(key) }
+      "f-c-index-filters--expanded"
+    end
+  end
+
   def filtered?
-    index_filters.any? do |key, _config|
+    return @filtered unless @filtered.nil?
+
+    @filtered = index_filters.any? do |key, _config|
       filtered_by?(key)
     end
   end
@@ -231,14 +242,20 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     button_tag("", type: "button", class: "btn fa fa-times f-c-index-filters__reset-input")
   end
 
-  def filter_style_for_key(key)
-    width = if index_filters[key][:width]
-      if index_filters[key][:width].is_a?(Numeric)
-        "#{index_filters[key][:width]}px"
+  def collapsible_class_name(config)
+    if config[:collapsed]
+      "f-c-index-filters__filter--collapsible"
+    end
+  end
+
+  def filter_style(config)
+    width = if config[:width]
+      if config[:width].is_a?(Numeric)
+        "#{config[:width]}px"
       else
-        index_filters[key][:width]
+        config[:width]
       end
-    elsif index_filters[key][:as] == :numeric_range
+    elsif config[:as] == :numeric_range
       "auto"
     else
       "235px"
@@ -255,5 +272,10 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     else
       controller.params[key].present?
     end
+  end
+
+  def has_collapsible?
+    return @has_collapsible unless @has_collapsible.nil?
+    @has_collapsible = index_filters.any? { |_key, config| config[:collapsed] }
   end
 end

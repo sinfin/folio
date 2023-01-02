@@ -31,7 +31,7 @@
       padding: 0 10px
       line-height: $input-height
 
-  &__inner
+  &__filters
     flex: 1 1 auto
 
   &__title
@@ -43,9 +43,15 @@
     min-height: 35px
     display: flex
 
-  &__cancel-wrap
-    flex: 0 0 100%
-    text-align: center
+  &__toggle
+    cursor: pointer
+    display: flex
+
+  &--expanded &__toggle-ico
+    transform: rotate(180deg)
+
+  &:not(&--expanded) &__filter--collapsible
+    display: none
 
   &__autocomplete-wrap
     position: relative
@@ -109,21 +115,30 @@
   +media-breakpoint-up(md)
     &__wrap
       display: flex
-      align-items: center
+      align-items: flex-start
 
-    &__inner
+    &__filters
       display: flex
-      align-items: center
+      align-items: flex-start
       flex-wrap: wrap
       padding: $grid-gutter-half / 4 0
 
-    &__title
-      align-self: flex-start
+    &__title,
+    &__cancel-wrap,
+    &__toggle-wrap
       line-height: $input-height
       display: flex
       align-items: center
-      margin: $grid-gutter-half / 4 $grid-gutter-half $grid-gutter-half / 4 0
+      margin: $grid-gutter-half / 4 0
       padding: 4px 0 0
+      flex: 0 0 auto
+
+    &__title
+      margin-right: $grid-gutter-half
+
+    &__cancel-wrap,
+    &__toggle-wrap
+      margin-left: $grid-gutter-width
 
     &__filter
       flex: 0 0 auto
@@ -131,9 +146,28 @@
       margin: $grid-gutter-half / 4 $grid-gutter-half / 2 $grid-gutter-half / 4 0
 
   +media-breakpoint-down(sm)
-    &__inner
+    &__filters
       padding-bottom: 3 * $grid-gutter-half / 4
 
     &__filter
       margin-bottom: $grid-gutter-half / 2
       width: 100% !important
+
+    &__cancel-wrap
+      flex: 0 0 100%
+      width: 100% !important
+      text-align: center
+      padding-bottom: $grid-gutter-half
+
+    &__toggle-wrap,
+    &__toggle-wrap + &__cancel-wrap
+      flex: 0 0 50%
+      width: 50% !important
+      margin-bottom: $grid-gutter-half / 2
+      text-align: left
+      display: inline-flex
+      padding-bottom: $grid-gutter-half
+
+    &__toggle-wrap + &__cancel-wrap
+      text-align: right
+      justify-content: flex-end

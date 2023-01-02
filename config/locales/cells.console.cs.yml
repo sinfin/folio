@@ -9,6 +9,7 @@ cs:
           numeric_range:
             from: Od
             to: Do
+          collapsible_toggle: Podrobný filtr
 
         header:
           add: Přidat

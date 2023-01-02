@@ -118,6 +118,13 @@ window.FolioConsole.Index.Filters.bind = () => {
     window.FolioConsole.Index.Filters.initDaterangepicker($(el))
   })
 
+  $('.f-c-index-filters__toggle').on('click', (e) => {
+    e.preventDefault()
+    $(e.currentTarget)
+      .closest('.f-c-index-filters')
+      .toggleClass('f-c-index-filters--expanded')
+  })
+
   $('.f-c-index-filters__reset-input').on('click', (e) => {
     e.preventDefault()
     const $button = $(e.currentTarget)

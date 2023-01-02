@@ -21,8 +21,8 @@
               href=query_reset_url
             ]
 
-        - if controller.send(:index_filters).present?
-          - controller.send(:index_filters).keys.each do |key|
+        - if controller.send(:index_filters_keys).present?
+          - controller.send(:index_filters_keys).each do |key|
             - if controller.params[key].present?
               = f.hidden_field key, value: controller.params[key], id: nil
 

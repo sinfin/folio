@@ -9,6 +9,7 @@ en:
           numeric_range:
             from: From
             to: To
+          collapsible_toggle: Detailed filter
 
         header:
           add: Add
