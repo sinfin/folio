@@ -29,7 +29,13 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def collection(key)
-    index_filters[key].map do |value|
+    ary = if index_filters[key].is_a?(Hash) && index_filters[key][:collection]
+      index_filters[key][:collection]
+    else
+      index_filters[key]
+    end
+
+    ary.map do |value|
       if value == true
         [t("true"), true]
       elsif value == false
@@ -67,7 +73,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     if data.is_a?(String)
       autocomplete_input(f, key, url: data)
     elsif data.is_a?(Hash)
-      if data[:as] == :text
+      if data[:collection].present?
+        collection_input(f, key)
+      elsif data[:as] == :text
         if data[:autocomplete_attribute]
           url = Folio::Engine.app.url_helpers.url_for([
             :field,
@@ -100,13 +108,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
         select2_select(f, key, data, url:)
       end
     else
-      f.input key, collection: collection(key),
-                   include_blank: blank_label(key),
-                   selected: controller.params[key],
-                   label: false,
-                   wrapper: :input_group,
-                   wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                   input_group_append: controller.params[key].present? ? input_group_append : nil
+      collection_input(f, key)
     end
   end
 
@@ -191,7 +193,31 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                  input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
+  def collection_input(f, key)
+    f.input key, collection: collection(key),
+                 include_blank: blank_label(key),
+                 selected: controller.params[key],
+                 label: false,
+                 wrapper: :input_group,
+                 wrapper_html: { class: "input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
+  end
+
   def input_group_append
     button_tag("", type: "button", class: "btn fa fa-times f-c-index-filters__reset-input")
+  end
+
+  def filter_style_for_key(key)
+    width = if index_filters[key].is_a?(Hash) && index_filters[key][:width]
+      if index_filters[key][:width].is_a?(Numeric)
+        "#{index_filters[key][:width]}px"
+      else
+        index_filters[key][:width]
+      end
+    else
+      "235px"
+    end
+
+    "width: #{width}"
   end
 end

@@ -1,14 +1,17 @@
 = form do |f|
   .container-fluid
     .f-c-index-filters__wrap
-      strong.f-c-index-filters__title.mr-md-g = t('.title')
+      strong.f-c-index-filters__title = t('.title')
 
       .f-c-index-filters__inner
         - index_filters.keys.each do |key|
-          - if index_filters[key] == :date_range
-            = date_range_input(f, key)
-          - else
-            = input(f, key)
+          .f-c-index-filters__filter[
+            style=filter_style_for_key(key)
+          ]
+            - if index_filters[key] == :date_range
+              = date_range_input(f, key)
+            - else
+              = input(f, key)
 
         - if filtered?
           .f-c-index-filters__cancel-wrap

@@ -9,9 +9,6 @@
   .f-c-index-header__tabs-wrap ~ &
     margin-top: - $nav-tabs-margin
 
-  &__wrap
-    padding: 4px 0
-
   &__inner
     flex: 1 1 auto
 
@@ -82,6 +79,11 @@
   &__reset-input
     background: $input-bg
 
+  .form-group,
+  .input-group
+    width: 100%
+    margin: 0
+
   +media-breakpoint-up(md)
     &__wrap
       display: flex
@@ -94,15 +96,22 @@
       padding: $grid-gutter-half / 4 0
 
     &__title
-      padding: 4px 0
+      align-self: flex-start
+      line-height: $input-height
+      display: flex
+      align-items: center
+      margin: $grid-gutter-half / 4 $grid-gutter-half $grid-gutter-half / 4 0
+      padding: 4px 0 0
 
-    .form-group,
-    .input-group
-      flex: 0 0 235px
+    &__filter
+      flex: 0 0 auto
       width: 235px
       margin: $grid-gutter-half / 4 $grid-gutter-half / 2 $grid-gutter-half / 4 0
 
-  +media-breakpoint-down(md)
-    .form-group,
-    .input-group
-      margin-bottom: $grid-gutter-half
+  +media-breakpoint-down(sm)
+    &__inner
+      padding-bottom: 3 * $grid-gutter-half / 4
+
+    &__filter
+      margin-bottom: $grid-gutter-half / 2
+      width: 100% !important
