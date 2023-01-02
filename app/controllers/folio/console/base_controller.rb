@@ -169,18 +169,20 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def index_filters_keys
-      ary = []
+      @index_filters_keys ||= begin
+        ary = []
 
-      index_filters.each do |key, config|
-        if config.is_a?(Hash) && config[:as] == :numeric_range
-          ary << "#{key}_from".to_sym
-          ary << "#{key}_to".to_sym
-        else
-          ary << key
+        index_filters.each do |key, config|
+          if config.is_a?(Hash) && config[:as] == :numeric_range
+            ary << "#{key}_from".to_sym
+            ary << "#{key}_to".to_sym
+          else
+            ary << key
+          end
         end
-      end
 
-      ary
+        ary
+      end
     end
 
     def current_ability

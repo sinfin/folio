@@ -62,7 +62,7 @@
   .f-c-index-header__tabs-wrap
     == cell('folio/console/index/tabs', \
             options[:tabs], \
-            index_filters: controller.send(:index_filters), \
+            index_filters_keys: controller.send(:index_filters_keys), \
             params: controller.params)
 
 - if options[:above_filters]

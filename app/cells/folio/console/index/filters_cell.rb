@@ -99,6 +99,8 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       collection_input(f, key)
     elsif data[:as] == :date_range
       date_range_input(f, key)
+    elsif data[:as] == :hidden
+      hidden_input(f, key)
     elsif data[:as] == :text
       if data[:autocomplete_attribute]
         url = Folio::Engine.app.url_helpers.url_for([
@@ -267,7 +269,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def filtered_by?(key)
     config = index_filters[key]
 
-    if config[:as] == :numeric_range
+    if config[:as] == :hidden
+      false
+    elsif config[:as] == :numeric_range
       controller.params["#{key}_from"].present? || controller.params["#{key}_to"].present?
     else
       controller.params[key].present?
@@ -277,5 +281,11 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def has_collapsible?
     return @has_collapsible unless @has_collapsible.nil?
     @has_collapsible = index_filters.any? { |_key, config| config[:collapsed] }
+  end
+
+  def hidden_input(f, key)
+    if controller.params[key].present?
+      f.hidden_field key, value: controller.params[key]
+    end
   end
 end

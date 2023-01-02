@@ -242,7 +242,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
         elsif attr == :type
           content = record.class.model_name.human
         else
-          content = record.public_send(attr)
+          content = record.public_send(attr) || ""
         end
 
         if sanitize
