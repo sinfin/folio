@@ -5,8 +5,8 @@ handler = ($form) ->
   handled = true
   beforeunload = -> 'Changes you made may not be saved.'
   $('.f-c-form-footer').addClass('f-c-form-footer--dirty')
-  $(window).on 'beforeunload', beforeunload
-  $form.on 'submit', -> $(window).off('beforeunload')
+  $(window).on 'beforeunload.folioDirtyForms', beforeunload
+  $form.on 'submit', -> $(window).off('beforeunload.folioDirtyForms')
   $form.off 'change.folioDirtyForms single-nested-change.folioDirtyForms'
 
 $('.simple_form')
@@ -32,3 +32,6 @@ receiveMessage = (e) ->
     when 'setFormAsDirty' then handler($('.f-c-simple-form-with-atoms'))
 
 window.addEventListener('message', receiveMessage, false)
+
+$(document).on 'submit', ->
+  $(window).off('beforeunload.folioDirtyForms')
