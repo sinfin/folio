@@ -91,6 +91,9 @@ class ModalSingleSelect extends ModalSelect {
     $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
 
     const $setting = $fields.closest('[data-atom-setting]')
+
+    window.postMessage({ type: 'setFormAsDirty' }, window.origin)
+
     if ($setting.length) {
       window.postMessage({ type: 'refreshPreview' })
     }
