@@ -1,6 +1,8 @@
 span.f-c-clipboard-copy data-clipboard-text=model
   - if options[:as_button]
-    span.btn.btn-primary.f-c-clipboard-copy__btn
+    span.btn.f-c-clipboard-copy__btn[
+      class=(options[:button_variant] || "btn-primary")
+    ]
       .f-c-clipboard-copy__icons
         span.f-c-clipboard-copy__ico.mi
           ' content_copy
@@ -8,7 +10,7 @@ span.f-c-clipboard-copy data-clipboard-text=model
         span.f-c-clipboard-copy__done.mi
           ' done
 
-      = t('.copy')
+      = options[:button_label] || t('.copy')
 
   - else
     span.f-c-clipboard-copy__span
