@@ -21,7 +21,11 @@ module Folio::ApplicationControllerBase
   end
 
   def set_i18n_locale
-    I18n.locale = params[:locale] || current_site.locale
+    if params[:locale] && current_site.locales.include?(params[:locale])
+      I18n.locale = params[:locale]
+    else
+      I18n.locale = current_site.locale
+    end
   end
 
   def default_url_options
