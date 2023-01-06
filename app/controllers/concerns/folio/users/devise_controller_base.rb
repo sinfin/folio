@@ -35,6 +35,14 @@ module Folio::Users::DeviseControllerBase
     end
   end
 
+  def is_flashing_format?
+    if @force_flash
+      true
+    else
+      super
+    end
+  end
+
   protected
     # override devise signed in check - redirect to source site if needed
     def require_no_authentication

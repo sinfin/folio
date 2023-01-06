@@ -37,7 +37,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
           respond_with_navigational(resource) { render :new, status: :unprocessable_entity }
         end
       end
-      # custom fro JSON api
+      # custom for JSON api
       format.json do
         @force_flash = true
 
@@ -83,14 +83,6 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
   def after_invite_path_for(_inviter, resource)
     session[:folio_user_invited_email] = resource.email
     user_invitation_path
-  end
-
-  def is_flashing_format?
-    if @force_flash
-      true
-    else
-      super
-    end
   end
 
   private

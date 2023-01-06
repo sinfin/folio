@@ -138,14 +138,6 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def is_flashing_format?
-    if @force_flash
-      true
-    else
-      super
-    end
-  end
-
   private
     def sign_up_params
       params.require(:user).permit(*additional_user_params).to_h.merge(super)

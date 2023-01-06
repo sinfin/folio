@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-01-06
+### Changed
+- reinvite `Folio::User` when signing in using an e-mail of an user with a pending invitation
+
 ## 2021-12-20
 ### Added
 - added `splittable_by_attribute` to atoms
