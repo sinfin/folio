@@ -117,6 +117,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         if add_white_background
           format = :jpg
           thumbnail = thumbnail.encode("jpg", output_options: { background: 255 })
+          thumbnail.meta["mime_type"] = "image/jpeg"
         end
 
         thumbnail = thumbnail.thumb(geometry, format:)
