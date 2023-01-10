@@ -80,22 +80,11 @@
 .re-button-tooltip
   display: none !important
 
-.redactor-styles ol[type="a"]
-  &, li
-    list-style: lower-alpha
-
-.redactor-styles ol[type="A"]
-  &, li
-    list-style: upper-alpha
-
-.redactor-styles ol[type="i"]
-  &, li
-    list-style: lower-roman
-
-.redactor-styles ol[type="I"]
-  &, li
-    list-style: upper-roman
-
-.redactor-styles ol[type="1"]
-  &, li
-    list-style: decimal
+.redactor-styles
+  ol[type="a"],
+  ol[type="A"],
+  ol[type="i"],
+  ol[type="I"],
+  ol[type="1"]
+    li
+      list-style-type: inherit
