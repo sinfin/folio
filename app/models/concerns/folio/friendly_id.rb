@@ -27,7 +27,8 @@ module Folio::FriendlyId
 
   private
     def slug_candidates
-      %i[to_label]
+      # fixes https://github.com/norman/friendly_id/issues/983
+      %i[slug to_label]
     end
 
     def strip_and_downcase_slug
