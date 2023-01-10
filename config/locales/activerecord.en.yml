@@ -187,6 +187,8 @@ en:
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
     name: Name
+    og_image: OG image
+    og_image_placement: OG image
     perex: Perex
     phone: Phone
     position: Position

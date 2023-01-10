@@ -2,6 +2,7 @@
 
 class Folio::Site < Folio::ApplicationRecord
   include Folio::FriendlyId
+  include Folio::HasAttachments
   include Folio::HasHeaderMessage
   include Folio::Positionable
 
@@ -125,6 +126,16 @@ class Folio::Site < Folio::ApplicationRecord
 
   def console_form_tabs
     console_form_tabs_base
+  end
+
+  def og_image_with_fallback
+    Rails.cache.fetch(["site#og_image_with_fallback", id, updated_at, ENV["CURRENT_RELEASE_COMMIT_HASH"]]) do
+      if og_image
+        og_image.thumb(Folio::OG_IMAGE_DIMENSIONS).url
+      else
+        og_image_fallback
+      end
+    end
   end
 
   def og_image_fallback

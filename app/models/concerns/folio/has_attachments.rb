@@ -30,6 +30,10 @@ module Folio::HasAttachments
     has_one_placement(:document,
                       placement_key: :document_placement,
                       placement: "Folio::FilePlacement::SingleDocument")
+
+    has_one_placement(:og_image,
+                      placement_key: :og_image_placement,
+                      placement: "Folio::FilePlacement::OgImage")
   end
 
   class_methods do

@@ -214,6 +214,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       hash = {}
 
       (additional_file_placements_strong_params_keys + %i[
+        og_image_placement_attributes
         cover_placement_attributes
         document_placement_attributes
         document_placements_attributes

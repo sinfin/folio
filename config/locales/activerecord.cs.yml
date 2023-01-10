@@ -262,6 +262,10 @@ cs:
     meta_description: Alternativní popis (SEO - Meta Description)
     meta_title: Alternativní titulek (SEO - Meta Title)
     name: Jméno
+    og_image: OG obrázek
+    og_image_placement: OG obrázek
+    password: Heslo
+    password_confirmation: Heslo (kontrola)
     perex: Perex
     phone: Telefon
     position: Pořadí
@@ -291,8 +295,6 @@ cs:
     to_label: Název
     url: URL
     use_secondary_address: Použít doplňkovou adresu
-    password: Heslo
-    password_confirmation: Heslo (kontrola)
 
   errors:
     messages:

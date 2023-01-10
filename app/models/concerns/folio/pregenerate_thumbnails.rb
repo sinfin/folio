@@ -16,6 +16,10 @@ module Folio::PregenerateThumbnails
       # admin thumbnail
       file.thumb(Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
 
+      if is_a?(Folio::FilePlacement::OgImage)
+        file.thumb(Folio::OG_IMAGE_DIMENSIONS)
+      end
+
       # public page thumbnails
       return unless respond_to?(:placement)
       versions = placement.class.try(:pregenerated_thumbnails)

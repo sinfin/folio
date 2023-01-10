@@ -10,6 +10,8 @@
 = f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
                                       checked: f.object.locales
 
+= react_picker(f, :og_image_placement)
+
 - if Module.const_defined?(:Boutique)
   = render partial: "folio/console/sites/boutique_additional_form_fields",
            locals: { f: f }
