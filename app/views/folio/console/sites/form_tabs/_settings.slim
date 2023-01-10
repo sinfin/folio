@@ -1,5 +1,8 @@
 = f.input :title
+
 = f.input :description, as: :text, autosize: true
+
+= f.input :copyright_info_source
 
 = render partial: 'folio/console/sites/additional_form_fields', \
          locals: { f: f }

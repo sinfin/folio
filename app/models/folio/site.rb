@@ -146,6 +146,12 @@ class Folio::Site < Folio::ApplicationRecord
     Rails.application.config.folio_console_dashboard_redirect
   end
 
+  def copyright_info
+    if copyright_info_source
+      copyright_info_source.gsub("{YEAR}", Time.current.year.to_s)
+    end
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
@@ -188,6 +194,7 @@ end
 #  type                              :string
 #  slug                              :string
 #  position                          :integer
+#  copyright_info_source             :string
 #
 # Indexes
 #

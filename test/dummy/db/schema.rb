@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_20_115303) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -431,6 +431,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_20_115303) do
     t.string "type"
     t.string "slug"
     t.integer "position"
+    t.string "copyright_info_source"
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"

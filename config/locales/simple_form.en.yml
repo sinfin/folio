@@ -9,6 +9,7 @@ en:
     hints:
       defaults:
         alt: Image alternative text. Displayed on image loading failure.
+        copyright_info_source: The text {YEAR} will be replaced by the current year.
         featured: Used to display a page on the homepage or other selections.
         locale: Language variant
         meta_description: SEO, Optional. This description appears on a search engine page.

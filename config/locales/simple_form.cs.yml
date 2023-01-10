@@ -9,6 +9,7 @@ cs:
     hints:
       defaults:
         alt: Alternativní text obrázku. Zobrazuje se v případě nenačtení obrázku.
+        copyright_info_source: Text {YEAR} bude nahrazen aktuálním rokem.
         featured: Bývá využito pro zobrazení stránky na homepage nebo v jiných výběrech.
         locale: Jazyková verze.
         meta_description: Nepovinný údaj. Tato varianta perexu se může objevit v popisu ve vyhledávačích. Důležité pro SEO.

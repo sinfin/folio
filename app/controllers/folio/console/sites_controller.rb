@@ -35,6 +35,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         header_message_published_until
         header_message
         address
+        copyright_info_source
       ]
 
       ary << :domain if Rails.application.config.folio_site_is_a_singleton

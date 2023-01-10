@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 2021-01-10
 ### Added
 - added `Folio::FilePlacement::OgImage` to default file plcaement types, add `Folio::HasAttachments` and update fallback og:image
+- added `copyright_info_source` to `Folio::Site`
 
 ## 2021-01-06
 ### Changed

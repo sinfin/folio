@@ -58,6 +58,8 @@ cs:
         type: Typ
       folio/site:
         address: Adresa
+        copyright_info: Copyright
+        copyright_info_source: Copyright
         domain: Doména
         email_from: E-mail odesílatele
         facebook_pixel_code: Facebook pixel - kód

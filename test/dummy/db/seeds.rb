@@ -69,6 +69,7 @@ Folio::Site.create!(title: "Sinfin.digital",
                     locales: ["cs", "en", "de"],
                     email: "info@sinfin.cz",
                     phone: "+420 123 456 789",
+                    copyright_info_source: "© Sinfin.digital {YEAR}",
                     social_links: {
                       facebook: "https://www.facebook.com/",
                       instagram: "https://www.instagram.com/",

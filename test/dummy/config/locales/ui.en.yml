@@ -6,7 +6,6 @@ en:
         text: By submitting you agree to our %{link}.
         link: privacy policy
       footer:
-        copyright: "© Copyright info %{year}"
         follow_us: Follow us
         newsletter: Newsletter signup
       share:

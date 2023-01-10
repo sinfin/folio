@@ -23,7 +23,7 @@
     .d-ui-footer__copyright
       .d-flex.flex-wrap.pt-g.pb-h
         .mr-s.mb-h
-          = t('.copyright', year: Time.zone.now.year)
+          = current_site.copyright_info
 
         - if menu
           - menu.menu_items.includes(:page).each do |menu_item|

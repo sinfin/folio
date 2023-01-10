@@ -52,6 +52,8 @@ en:
         type: Layout / content
       folio/site:
         address: Address
+        copyright_info: Copyright
+        copyright_info_source: Copyright
         domain: Domain
         facebook_pixel_code: Facebook pixel - code
         google_analytics_tracking_code: Google analytics - tracking code
