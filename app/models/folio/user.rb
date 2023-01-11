@@ -55,9 +55,7 @@ class Folio::User < Folio::ApplicationRecord
   pg_search_scope :by_query,
                   against: [:email, :last_name, :first_name, :nickname],
                   ignoring: :accents,
-                  using: {
-                    tsearch: { prefix: true }
-                  }
+                  using: { tsearch: { prefix: true } }
 
   scope :ordered, -> { order(id: :desc) }
 
@@ -79,10 +77,23 @@ class Folio::User < Folio::ApplicationRecord
                   ignoring: :accents,
                   using: { trigram: { word_similarity: true } }
 
-  pg_search_scope :by_email_query,
+  pg_search_scope :by_email_query_tsearch,
+                  against: %i[email],
+                  ignoring: :accents,
+                  using: { tsearch: { prefix: true } }
+
+  pg_search_scope :by_email_query_trigram,
                   against: %i[email],
                   ignoring: :accents,
                   using: { trigram: { word_similarity: true } }
+
+  scope :by_email_query, -> (email) {
+    if email && email.match?(Folio::EMAIL_REGEXP)
+      by_email_query_tsearch(email)
+    else
+      by_email_query_trigram(email)
+    end
+  }
 
   def full_name
     if first_name.present? || last_name.present?
