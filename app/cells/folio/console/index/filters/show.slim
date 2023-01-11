@@ -34,12 +34,13 @@
             = t('.collapsible_toggle')
             .f-c-index-filters__toggle-ico.fa.fa-caret-down
 
-      - if filtered?
-        .f-c-index-filters__cancel-wrap
-          == cell('folio/console/cancel',
-                  cancel_url,
-                  label: t('.cancel'),
-                  class_name: "f-c-index-filters__cancel")
+      .f-c-index-filters__cancel-wrap[
+        class=(filtered? ? nil : "f-c-index-filters__cancel-wrap--hidden")
+      ]
+        == cell('folio/console/cancel',
+                cancel_url,
+                label: t('.cancel'),
+                class_name: "f-c-index-filters__cancel")
 
       = f.input :by_query, as: :hidden,
                            input_html: { value: controller.params[:by_query] }

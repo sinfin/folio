@@ -140,6 +140,10 @@
     &__toggle-wrap
       margin-left: $grid-gutter-width
 
+    &__cancel-wrap
+      &--hidden
+        visibility: hidden
+
     &__filter
       flex: 0 0 auto
       width: 235px
@@ -158,6 +162,9 @@
       width: 100% !important
       text-align: center
       padding-bottom: $grid-gutter-half
+
+      &--hidden
+        display: none
 
     &__toggle-wrap,
     &__toggle-wrap + &__cancel-wrap
