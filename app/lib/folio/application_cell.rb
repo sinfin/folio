@@ -30,7 +30,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def current_site
-    controller.current_site
+    options[:current_site] || controller.current_site
   end
 
   def image(placement, size, opts = {})
