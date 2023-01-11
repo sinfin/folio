@@ -105,6 +105,6 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
   def email_belongs_to_invited_pending_user?(email)
     user = Folio::User.find_by(email:)
-    user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
+    user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
   end
 end
