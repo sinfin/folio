@@ -47,7 +47,7 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
             disabled:,
             only: g.object.class.countries_whitelist,
             priority: g.object.class.priority_countries(locale: I18n.locale),
-            input_html: { class: "f-addresses-fields__country-code-input" },
+            input_html: { class: "f-addresses-fields__country-code-input", id: nil },
             include_blank: false
   end
 
@@ -55,6 +55,7 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     g.input key,
             disabled:,
             required:,
+            input_html: { id: nil },
             label: "<span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--regular\">#{t(".#{key}_regular")}</span> \
                     <span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--inline\">#{t(".#{key}_inline")}</span>".html_safe
   end
