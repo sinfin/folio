@@ -14,7 +14,6 @@ window.Folio.Input.Phone.countryNames = {
 
 window.Folio.Input.Phone.intlTelInputOptions = {
   separateDialCode: true,
-  dropdownContainer: document.body,
   autoPlaceholder: 'aggressive'
 }
 
@@ -78,7 +77,7 @@ window.Folio.Input.Phone.bind = (input) => {
   input.addEventListener('countrychange', window.Folio.Input.Phone.onChange)
   input.addEventListener('blur', window.Folio.Input.Phone.onBlur)
 
-  const fullOpts = $.extend({}, window.Folio.Input.Phone.intlTelInputOptions)
+  const fullOpts = $.extend({}, window.Folio.Input.Phone.intlTelInputOptions, { dropdownContainer: document.body })
   if (input.dataset.defaultCountryCode) fullOpts.initialCountry = input.dataset.defaultCountryCode
 
   if (document.documentElement.lang == "cs" || document.documentElement.lang == "sk") {
@@ -94,9 +93,10 @@ window.Folio.Input.Phone.bind = (input) => {
 }
 
 window.Folio.Input.Phone.unbind = (input) => {
-  input.removeEventListener('change', window.Folio.Input.Phone.onChange)
-  input.removeEventListener('countrychange', window.Folio.Input.Phone.onChange)
-  input.removeEventListener('blur', window.Folio.Input.Phone.onBlur)
+  if (input.intlTelInput) {
+    input.intlTelInput.destroy()
+    input.intlTelInput = null
+  }
 
   if (input.folioInputPhoneHiddenInput) {
     input.name = input.folioInputPhoneHiddenInput.name
@@ -105,10 +105,9 @@ window.Folio.Input.Phone.unbind = (input) => {
     input.folioInputPhoneHiddenInput = null
   }
 
-  if (input.intlTelInput) {
-    input.intlTelInput.destroy()
-    input.intlTelInput = null
-  }
+  input.removeEventListener('change', window.Folio.Input.Phone.onChange)
+  input.removeEventListener('countrychange', window.Folio.Input.Phone.onChange)
+  input.removeEventListener('blur', window.Folio.Input.Phone.onBlur)
 }
 
 if (window.Folio.Input.Phone.countryNames[document.documentElement.lang]) {
