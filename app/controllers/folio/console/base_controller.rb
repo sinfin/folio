@@ -95,40 +95,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     before_action :add_record_breadcrumbs
 
     only = except.include?(:index) ? %i[merge] : %i[index merge]
-    before_action only: only do
-      name = folio_console_record_variable_name(plural: true)
-
-      if folio_console_collection_includes.present?
-        with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
-        instance_variable_set(name, with_include)
-      end
-
-      if filter_params.present? &&
-         instance_variable_get(name).respond_to?(:filter_by_params)
-        filtered = instance_variable_get(name).filter_by_params(filter_params)
-        instance_variable_set(name, filtered)
-      end
-
-      if params[:sort].present?
-        # sort_*_asc or sort_*_desc
-        sort = params[:sort].to_s
-        scope_name = "sort_by_#{sort}"
-
-        if instance_variable_get(name).respond_to?(scope_name)
-          @sorted_by_param = scope_name
-          sorted = instance_variable_get(name).send(scope_name)
-          instance_variable_set(name, sorted)
-        else
-          @sorted_by_param = nil
-        end
-      end
-
-      if params[:sort].
-         instance_variable_get(name).respond_to?(:sort_by_params)
-        filtered = instance_variable_get(name).filter_by_params(filter_params)
-        instance_variable_set(name, filtered)
-      end
-    end
+    before_action :filter_folio_console_collection, only: only
 
     prepend_before_action except: (except + [:index]) do
       name = folio_console_record_variable_name(plural: false)
@@ -473,6 +440,40 @@ class Folio::Console::BaseController < Folio::ApplicationController
       if params[:id].present?
         name = folio_console_record_variable_name(plural: false)
         instance_variable_set(name, @klass.where(site: current_site).find(params[:id]))
+      end
+    end
+
+    def filter_folio_console_collection
+      name = folio_console_record_variable_name(plural: true)
+
+      if folio_console_collection_includes.present?
+        with_include = instance_variable_get(name).includes(*folio_console_collection_includes)
+        instance_variable_set(name, with_include)
+      end
+
+      if filter_params.present? &&
+        instance_variable_get(name).respond_to?(:filter_by_params)
+        filtered = instance_variable_get(name).filter_by_params(filter_params)
+        instance_variable_set(name, filtered)
+      end
+
+      if params[:sort].present?
+        # sort_*_asc or sort_*_desc
+        sort = params[:sort].to_s
+        scope_name = "sort_by_#{sort}"
+
+        if instance_variable_get(name).respond_to?(scope_name)
+          @sorted_by_param = scope_name
+          sorted = instance_variable_get(name).send(scope_name)
+          instance_variable_set(name, sorted)
+        else
+          @sorted_by_param = nil
+        end
+      end
+
+      if params[:sort].instance_variable_get(name).respond_to?(:sort_by_params)
+        filtered = instance_variable_get(name).filter_by_params(filter_params)
+        instance_variable_set(name, filtered)
       end
     end
 
