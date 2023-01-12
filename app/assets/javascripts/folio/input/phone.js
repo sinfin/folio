@@ -21,9 +21,7 @@ window.Folio.Input.Phone.intlTelInputOptions = {
 window.Folio.Input.Phone.onAddressCountryCodeChange = ($wrap, countryCode) => {
   $wrap.find(window.Folio.Input.Phone.SELECTOR).each((i, input) => {
     if (input.value) return
-
     input.intlTelInput.setCountry(countryCode)
-    window.Folio.Input.Phone.onChangeForInput(input)
   })
 }
 
@@ -47,7 +45,7 @@ window.Folio.Input.Phone.onChangeForInput = (input) => {
     value = value.replace(dialCode, '')
   }
 
-  input.folioInputPhoneHiddenInput.value = `${dialCode} ${value}`
+  input.folioInputPhoneHiddenInput.value = value ? `${dialCode} ${value}` : ""
 }
 
 window.Folio.Input.Phone.onChange = (e) => {
