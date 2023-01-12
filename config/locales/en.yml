@@ -3,9 +3,6 @@ en:
   all: All
   homepage: Homepage
   more: More
-  date:
-    formats:
-      short: "%d %m %Y"
   dragonfly:
     invalid_format: Invalid format
   'false': "No"
@@ -67,8 +64,4 @@ en:
     title:
       default: ''
       separator: "|"
-  time:
-    formats:
-      short_with_seconds: "%d %m %Y, %H:%M:%S"
-      short: "%d %m %Y %H:%M"
   'true': "Yes"
