@@ -9,12 +9,17 @@ class Folio::Users::ComebacksController < ApplicationController
   end
 
   private
+    def permitted_params
+      params.permit(:landing,
+                    :to)
+    end
+
     def landing_param
-      params.permit(:landing)[:landing] || fallback
+      permitted_params[:landing] || fallback
     end
 
     def to_param
-      params.permit(:to)[:to]
+      permitted_params[:to]
     end
 
     def fallback
