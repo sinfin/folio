@@ -28,7 +28,10 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
           if resource
             set_flash_message!(:notice, :signed_in)
+
             sign_in(resource_name, resource)
+            acquire_orphan_records!
+
             yield resource if block_given?
             respond_with resource, location: after_sign_in_path_for(resource)
           else
@@ -44,6 +47,8 @@ class Folio::Users::SessionsController < Devise::SessionsController
 
           if resource
             sign_in(resource_name, resource)
+            acquire_orphan_records!
+
             @force_flash = true
             set_flash_message!(:notice, :signed_in)
             render json: {}, status: 200

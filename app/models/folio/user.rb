@@ -213,6 +213,9 @@ class Folio::User < Folio::ApplicationRecord
     self.update_column(:sign_out_salt_part, SecureRandom.hex)
   end
 
+  def acquire_orphan_records!(old_session_id:)
+  end
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?

@@ -49,4 +49,8 @@ module Folio::Users::DeviseControllerBase
       result = handle_crossdomain_devise
       super if result && result.action == :noop
     end
+
+    def acquire_orphan_records!
+      resource.acquire_orphan_records!(old_session_id: session.id.public_id)
+    end
 end
