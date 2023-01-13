@@ -30,7 +30,6 @@ class Folio::Users::SessionsController < Devise::SessionsController
             set_flash_message!(:notice, :signed_in)
 
             sign_in(resource_name, resource)
-            acquire_orphan_records!
 
             yield resource if block_given?
             respond_with resource, location: after_sign_in_path_for(resource)
@@ -41,13 +40,14 @@ class Folio::Users::SessionsController < Devise::SessionsController
         end
 
         format.json do
+          store_location_for(:user, request.referrer) if request.referrer
+
           warden_exception_or_user = catch :warden do
             self.resource = warden.authenticate(auth_options)
           end
 
           if resource
             sign_in(resource_name, resource)
-            acquire_orphan_records!
 
             @force_flash = true
             set_flash_message!(:notice, :signed_in)

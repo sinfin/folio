@@ -53,6 +53,8 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
               }
             }
           else
+            store_location_for(:user, request.referrer) if request.referrer
+
             json = {
               data: {
                 url: after_invite_path_for(current_inviter, resource),

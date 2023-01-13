@@ -47,7 +47,6 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
         session.delete(:pending_folio_authentication)
 
         sign_in(resource_name, @user)
-        acquire_orphan_records!
         set_flash_message!(:notice, :signed_in) if is_flashing_format?
         resource.after_database_authentication
 
@@ -92,7 +91,6 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
                                       conflict_user_id: nil)
 
         sign_in(resource_name, @user)
-        acquire_orphan_records!
 
         @force_flash = true
         set_flash_message!(:notice, :signed_in)
@@ -131,7 +129,6 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
       else
         if user = auth.user
           sign_in(:user, user)
-          acquire_orphan_records!
 
           set_flash_message!(:success, :signed_in)
           redirect_to after_sign_in_path_for(resource)

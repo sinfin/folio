@@ -43,6 +43,11 @@ module Folio::Users::DeviseControllerBase
     end
   end
 
+  def sign_in(resource_or_scope, *args)
+    super
+    acquire_orphan_records!
+  end
+
   protected
     # override devise signed in check - redirect to source site if needed
     def require_no_authentication
@@ -51,6 +56,8 @@ module Folio::Users::DeviseControllerBase
     end
 
     def acquire_orphan_records!
-      resource.acquire_orphan_records!(old_session_id: session.id.public_id)
+      if resource && session && session.id && session.id.public_id
+        resource.acquire_orphan_records!(old_session_id: session.id.public_id)
+      end
     end
 end
