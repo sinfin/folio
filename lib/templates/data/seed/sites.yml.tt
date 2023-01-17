@@ -1,0 +1,17 @@
+- type: Folio::Site
+  title: <%= project_name %>
+  slug: <%= project_name %>
+  domain: <%= project_name %>.localhost
+  locale: 'cs'
+  locales: ['cs']
+  email: 'info@<%= project_name %>.localhost'
+  phone: '+420 123 456 789'
+  address: |
+    <%= project_name %> 123
+    123 45 bar
+  copyright_info_source: © <%= project_name %> {YEAR}
+  social_links:
+    facebook: 'https://www.facebook.com/<%= project_name %>'
+    twitter: 'https://twitter.com/<%= project_name %>'
+    linkedin: 'https://www.linkedin.com/company/<%= project_name %>'
+  position: 1

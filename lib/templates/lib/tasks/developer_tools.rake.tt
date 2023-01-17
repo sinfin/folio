@@ -1,6 +1,34 @@
 # frozen_string_literal: true
 
 namespace :developer_tools do
+  task idp_seed_all: :environment do
+    Rake::Task["developer_tools:idp_seed_singleton_sites"].invoke
+    Rake::Task["developer_tools:idp_seed_singleton_pages"].invoke
+    Rake::Task["developer_tools:idp_seed_page_titles"].invoke
+    Rake::Task["developer_tools:idp_seed_singleton_menus"].invoke
+  end
+
+  task idp_seed_singleton_sites: :environment do
+    Rails.logger.silence do
+      ary = YAML.load_file(Rails.root.join("data/seed/sites.yml"))
+
+      if ENV["FORCE"]
+        Folio::Site.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+      end
+
+      ary.each do |data|
+        klass = data["type"].constantize
+
+        if !klass.exists?(locale: data["locale"]) || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
+          klass.create!(data)
+          puts "Created #{klass} - #{data["locale"]}"
+        else
+          puts "Skipping existing #{klass} - #{data["locale"]}"
+        end
+      end
+    end
+  end
+
   task idp_seed_singleton_pages: :environment do
     Rails.logger.silence do
       Dir.glob(Rails.root.join("data/seed/pages/*.yml")).each do |yaml_path|
