@@ -9,8 +9,6 @@ module <%= application_namespace %>::CacheKeys
     folio_pages
     folio_private_attachments
     folio_sites
-    <%= application_namespace_path %>_blog_articles
-    <%= application_namespace_path %>_blog_topics
   ]
 
   CACHE_KEY_TABLE_NAMES_SQL_IN = CACHE_KEY_TABLE_NAMES.map { |tn| "'#{tn}'" }.join(",")
@@ -39,10 +37,6 @@ module <%= application_namespace %>::CacheKeys
     @cache_key_data ||= ActiveRecord::Base.connection.execute(CACHE_KEY_TABLE_NAMES_SQL).to_a
   end
 
-  def cache_key_blog_articles_published_hash
-    @cache_key_blog_articles_published_hash ||= <%= application_namespace %>::Blog::Article.cache_published_hash
-  end
-
   def cache_key_counts
     @cache_key_counts ||= cache_key_data.map { |d| d["count"] }.join("-")
   end
@@ -64,7 +58,6 @@ module <%= application_namespace %>::CacheKeys
             ENV["CURRENT_RELEASE_COMMIT_HASH"],
             cache_key_updated_at,
             cache_key_counts,
-            cache_key_blog_articles_published_hash,
             request.host,
           ],
           set_at: Time.zone.now,
