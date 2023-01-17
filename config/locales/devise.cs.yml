@@ -52,7 +52,7 @@ cs:
         show:
           title: Potvrzení e-mailu
           title_with_orders: Děkujeme za objednávku
-          text: <strong>Prosíme potvrďte nyní Vaší e-mailovou adresu kliknutím na odkaz</strong>, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
+          text: <strong>Prosíme potvrďte nyní Vaší e-mailovou adresu</strong> kliknutím na odkaz, který jsme zaslali na zadaný e-mail %{email}. Potvrzující e-mail by měl přijít během několika minut.
           resend_email: Znovu zaslat ověřovací e-mail
 
       sessions:

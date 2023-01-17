@@ -1,3 +1,5 @@
+$f-devise-invitations-show-strong-color: inherit !default
+
 .f-devise-invitations-show
   &__submit
     +unbutton
@@ -7,3 +9,9 @@
     &:hover
       color: $link-hover-color
       text-decoration: $link-hover-decoration
+
+  &__text
+    max-width: 810px
+
+    strong
+      color: $f-devise-invitations-show-strong-color

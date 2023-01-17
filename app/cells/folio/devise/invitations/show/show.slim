@@ -5,7 +5,7 @@
     - else
       = t('.title')
 
-  p
+  p.f-devise-invitations-show__text.font-size-lg
     = cstypo t('.text', email: model[:email]).html_safe
 
   = form do |f|

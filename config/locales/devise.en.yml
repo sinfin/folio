@@ -43,7 +43,7 @@ en:
         show:
           title: E-mail confirmation
           title_with_orders: Thank you for your order!
-          text: <strong>Please confirm your email address by clicking on the link</strong> we've sent to the email %{email} you entered. A confirmation email should arrive within a few minutes.
+          text: <strong>Please confirm your email address</strong> by clicking on the link we've sent to the email %{email} you entered. A confirmation email should arrive within a few minutes.
           resend_email: Resend the confirmation email
 
       sessions:
