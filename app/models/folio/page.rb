@@ -13,7 +13,7 @@ class Folio::Page < Folio::ApplicationRecord
       include Folio::FriendlyIdWithLocale
 
       validates :locale,
-                inclusion: { in: I18n.available_locales }
+                inclusion: { in: I18n.available_locales.map(&:to_s) }
     else
       include Folio::BelongsToSiteAndFriendlyId
 
