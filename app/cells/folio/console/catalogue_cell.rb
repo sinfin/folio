@@ -128,7 +128,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def locale_flag(locale_attr = :locale)
-    attribute(locale_attr, compact: true, aligned: true) do
+    attribute(locale_attr, compact: true, aligned: true, skip_desktop_header: true) do
       if record.send(locale_attr)
         country_flag(record.send(locale_attr))
       end

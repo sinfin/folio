@@ -185,7 +185,7 @@ en:
     is_active: Active
     last_name: Last name
     last_sign_in_at: Last sign in
-    locale: Translation
+    locale: Locale
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title
     name: Name
