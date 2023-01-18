@@ -20,7 +20,7 @@ module Folio::BelongsToSiteAndFriendlyId
             "#{site.slug} #{to_label} 3",
           ].compact
         else
-          %i[to_label]
+          %i[slug to_label]
         end
       end
   end

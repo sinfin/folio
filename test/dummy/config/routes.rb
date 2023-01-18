@@ -57,7 +57,7 @@ Rails.application.routes.draw do
     end
   end
 
-  if Rails.application.config.folio_pages_translations
+  if Rails.application.config.folio_pages_locales
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
       if Rails.application.config.folio_pages_ancestry
         get "/*path", to: "pages#show", as: "page"

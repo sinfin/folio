@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-01-18
+### Changed
+- changed `folio_pages_translations` config to `folio_pages_locales` and updated logic
+
 ## 2021-01-13
 ### Added
 - added overridable `acquire_orphan_records!` to `Folio::User`. Use it to acquire relevant records based on the session id before it gets changed by Warden.

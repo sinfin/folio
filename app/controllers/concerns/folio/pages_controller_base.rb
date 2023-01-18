@@ -72,7 +72,7 @@ module Folio::PagesControllerBase
     end
 
     def filter_pages_by_locale(pages)
-      if Rails.application.config.folio_pages_translations
+      if Rails.application.config.folio_pages_locales
         pages.by_locale(I18n.locale)
       else
         pages

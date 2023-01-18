@@ -20,11 +20,12 @@ class Folio::Console::PagesController < Folio::Console::BaseController
   private
     def index_filters
       {
+        by_locale: Rails.application.config.folio_pages_locales ? I18n.available_locales : nil,
         by_type: Folio::Page.recursive_subclasses.map do |klass|
                    [klass.model_name.human, klass]
                  end,
         by_published: [true, false],
-      }
+      }.compact
     end
 
     def page_params

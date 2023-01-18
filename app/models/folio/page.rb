@@ -9,11 +9,18 @@ class Folio::Page < Folio::ApplicationRecord
       include Folio::HasAncestrySlugForTraco
     end
   else
-    include Folio::BelongsToSiteAndFriendlyId
+    if Rails.application.config.folio_using_traco
+      include Folio::FriendlyIdWithLocale
 
-    if Rails.application.config.folio_pages_ancestry
-      include Folio::HasAncestry
-      include Folio::HasAncestrySlug
+      validates :locale,
+                inclusion: { in: I18n.available_locales }
+    else
+      include Folio::BelongsToSiteAndFriendlyId
+
+      if Rails.application.config.folio_pages_ancestry
+        include Folio::HasAncestry
+        include Folio::HasAncestrySlug
+      end
     end
   end
 
@@ -45,10 +52,6 @@ class Folio::Page < Folio::ApplicationRecord
     has_audited_atoms
   end
 
-  if Rails.application.config.folio_pages_translations
-    include Folio::Translatable
-  end
-
   if Rails.application.config.folio_using_traco
     include Folio::HasAtoms::Localized
 
@@ -75,6 +78,10 @@ class Folio::Page < Folio::ApplicationRecord
     else
       where(type:)
     end
+  }
+
+  scope :by_locale, -> (locale) {
+    where(locale:)
   }
 
   before_save :set_atoms_data_for_search

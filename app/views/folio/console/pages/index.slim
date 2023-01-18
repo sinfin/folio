@@ -2,8 +2,8 @@
 
 = catalogue(@catalogue_model, @catalogue_options)
   ruby:
+    locale_flag if Rails.application.config.folio_pages_locales
     edit_link :title
-    locale_flag if Rails.application.config.folio_pages_translations
     type
     featured_toggle
     published_toggle

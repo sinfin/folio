@@ -1,6 +1,3 @@
-- show_translations = Rails.application.config.folio_pages_translations && \
-                      f.object.persisted?
-
 / required for atom select filtering by site to work
 = f.input :site_id, as: :hidden, atom_setting: :site_id
 
@@ -22,11 +19,11 @@
       = f.input :type, collection: collection, \
                        include_blank: false
 
-    - if Rails.application.config.folio_pages_translations || \
+    - if Rails.application.config.folio_pages_locales || \
          Rails.application.config.folio_pages_ancestry
       .row
-        - if Rails.application.config.folio_pages_translations
-          - locales = Rails.application.config.folio_pages_translations
+        - if Rails.application.config.folio_pages_locales
+          - locales = Rails.application.config.folio_pages_locales
           - locales = I18n.available_locales unless locales.is_a?(Array)
 
           .col
