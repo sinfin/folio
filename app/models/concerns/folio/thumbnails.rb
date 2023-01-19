@@ -314,6 +314,8 @@ module Folio::Thumbnails
         return [0, 0]
       end
 
+      return [0, 0] if original_width == 0 || original_height == 0
+
       max_ratio = max_width / max_height
       original_ratio = original_width / original_height
 
