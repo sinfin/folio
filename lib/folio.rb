@@ -52,7 +52,7 @@ module Folio
     en_US: "US"
   }
 
-  EMAIL_REGEXP = /[^@]+@[^@]+/
+  EMAIL_REGEXP = /[^@]+@[^@]+\.[^@]+/
   OG_IMAGE_DIMENSIONS = "1200x630#"
 
   # respect app/assets/javascripts/folio/_message-bus.js
