@@ -149,11 +149,11 @@ module Folio::Thumbnails
   end
 
   def svg?
-    file_mime_type =~ /svg/
+    file_mime_type.include?("svg")
   end
 
   def gif?
-    file_mime_type =~ /gif/
+    file_mime_type.include?("gif")
   end
 
   def animated_gif?

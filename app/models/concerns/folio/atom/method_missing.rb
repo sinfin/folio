@@ -13,7 +13,7 @@ module Folio::Atom::MethodMissing
                                                 .to_sym
 
     if respond_to_missing?(name_without_operator)
-      if klass::ASSOCIATIONS.keys.include?(name_for_association)
+      if klass::ASSOCIATIONS.key?(name_for_association)
         method_missing_association(method_name, arguments)
       else
         method_missing_data(method_name, arguments[0])
@@ -31,8 +31,8 @@ module Folio::Atom::MethodMissing
                                                 .gsub(/_(id|type)$/, "")
                                                 .to_sym
 
-    klass::STRUCTURE.keys.include?(name_without_operator) ||
-    klass::ASSOCIATIONS.keys.include?(name_for_association) ||
+    klass::STRUCTURE.key?(name_without_operator) ||
+    klass::ASSOCIATIONS.key?(name_for_association) ||
     super
   end
 

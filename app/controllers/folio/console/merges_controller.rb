@@ -40,11 +40,7 @@ class Folio::Console::MergesController < Folio::Console::BaseController
   def create
     if @merger.merge(params.require(:merge).permit(@merger.permitted_params))
       flash[:notice] = t(".success")
-      if params[:url]
-        redirect_to params[:url]
-      else
-        redirect_to url_for([:edit, :console, @merger.original])
-      end
+      redirect_to params[:url] || url_for([:edit, :console, @merger.original])
     else
       flash.now[:alert] = t(".failure")
       render :new

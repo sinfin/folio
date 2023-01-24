@@ -21,7 +21,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def self.folio_file_placement(class_name, name = nil)
-    belongs_to :file, class_name: class_name,
+    belongs_to :file, class_name:,
                       inverse_of: :file_placements,
                       required: true
 

@@ -27,11 +27,7 @@ module Folio::PagesControllerBase
 
   private
     def render_page
-      if @page.class.view_name
-        render @page.class.view_name
-      else
-        render "folio/pages/show"
-      end
+      render @page.class.view_name || "folio/pages/show"
     end
 
     def find_page

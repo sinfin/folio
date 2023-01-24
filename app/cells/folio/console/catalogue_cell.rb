@@ -353,11 +353,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     def row_class_lambda
       return @row_class_lambda unless @row_class_lambda.nil?
-      if model[:row_class_lambda]
-        @row_class_lambda = model[:row_class_lambda]
-      else
-        @row_class_lambda = false
-      end
+      @row_class_lambda = model[:row_class_lambda] || false
     end
 
     def before_lambda

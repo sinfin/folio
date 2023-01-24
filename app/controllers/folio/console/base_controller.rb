@@ -95,7 +95,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     before_action :add_record_breadcrumbs
 
     only = except.include?(:index) ? %i[merge] : %i[index merge]
-    before_action :filter_folio_console_collection, only: only
+    before_action(:filter_folio_console_collection, only:)
 
     prepend_before_action except: (except + [:index]) do
       name = folio_console_record_variable_name(plural: false)

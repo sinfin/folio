@@ -2,17 +2,17 @@
 
 class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def link_groups
-    if ::Rails.application.config.folio_console_sidebar_link_class_names
-      ::Rails.application
-             .config
-             .folio_console_sidebar_link_class_names
-    else
-      prepended_link_class_names +
-      main_class_names +
-      runner_up_link_class_names +
-      secondary_class_names +
-      appended_link_class_names
-    end
+    ::Rails.application
+           .config
+           .folio_console_sidebar_link_class_names || default_link_groups
+  end
+
+  def default_link_groups
+    prepended_link_class_names +
+    main_class_names +
+    runner_up_link_class_names +
+    secondary_class_names +
+    appended_link_class_names
   end
 
   def link_from(link_source)

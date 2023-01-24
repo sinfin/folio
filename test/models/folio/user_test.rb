@@ -17,9 +17,9 @@ class Folio::UserTest < ActiveSupport::TestCase
     assert user.newsletter_subscription
     assert user.newsletter_subscription.active?
 
-    assert 1, Folio::NewsletterSubscription.count
+    assert_equal 1, Folio::NewsletterSubscription.count
     user.destroy!
-    assert 0, Folio::NewsletterSubscription.count
+    assert_equal 0, Folio::NewsletterSubscription.count
   end
 
   test "do not store second address if it is not in use" do
