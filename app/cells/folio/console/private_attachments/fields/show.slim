@@ -28,7 +28,10 @@
                         input_html: { class: "f-c-private-attachments-fields__title-input" },
                         wrapper_html: { class: "mb-0" }
         .col-auto
-          == cell('folio/console/nested_model_controls', model, no_margin: true)
+          == cell('folio/console/nested_model_controls',
+                  model,
+                  no_margin: true,
+                  single: options[:single])
 
       - if model.object.new_record?
         .f-c-private-attachments-fields__dropzone-progress-bar

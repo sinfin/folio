@@ -8,10 +8,10 @@ window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
   const $el = $(el)
 
   const dropzone = window.FolioConsole.S3Upload.createConsoleDropzone({
-    element: document.body,
+    element: el.getAttribute('data-dropzone-to-body') === 'true' ? document.body : el,
     fileType: el.getAttribute('data-file-type'),
     dropzoneOptions: {
-      clickable: `${window.FolioConsole.PrivateAttachments.Fields.SELECTOR}__trigger`,
+      clickable: el.querySelector(`${window.FolioConsole.PrivateAttachments.Fields.SELECTOR}__trigger`),
       previewsContainer: false,
       previewTemplate: '',
       disablePreviews: true
@@ -104,10 +104,19 @@ window.FolioConsole.PrivateAttachments.Fields.destroyAll = () => {
   window.FolioConsole.PrivateAttachments.Fields.destroyIn($('body'))
 }
 
+window.FolioConsole.PrivateAttachments.Fields.updateSingleFields = (e) => {
+  const $el = $(e.currentTarget)
+
+  $el
+    .find('.f-c-private-attachments-fields-dropzone__add')
+    .prop('hidden', $el.find('.f-c-private-attachments-fields:visible').length > 0)
+}
+
 if (typeof(Turbolinks) === 'undefiend') {
   $(() => { window.FolioConsole.PrivateAttachments.Fields.initAll() })
 } else {
   $(document)
     .on('turbolinks:load', window.FolioConsole.PrivateAttachments.Fields.initAll)
     .on('turbolinks:before-render', window.FolioConsole.PrivateAttachments.Fields.destroyAll)
+    .on('change cocoon:after-remove', '.f-c-private-attachments-fields-dropzone[data-dropzone-single="true"]', window.FolioConsole.PrivateAttachments.Fields.updateSingleFields)
 }
