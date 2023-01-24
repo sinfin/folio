@@ -7,7 +7,7 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     bind_user_and_redirect
   end
 
-  def twitter
+  def twitter2
     bind_user_and_redirect
   end
 
@@ -105,6 +105,10 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
   private
     def bind_user_and_redirect
       auth = Folio::Omniauth::Authentication.from_request(request)
+
+      if request.env["omniauth.origin"] && Folio::Site.any? { |site| request.env["omniauth.origin"].include?(site.env_aware_domain) }
+        store_location_for(:user, request.env["omniauth.origin"])
+      end
 
       if user_signed_in?
         target_url = stored_location_for(:user).presence || main_app.send(Rails.application.config.folio_users_after_sign_in_path)

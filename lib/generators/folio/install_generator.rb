@@ -22,6 +22,11 @@ module Folio
         gem "sprockets", "~> 4.0"
         gem "sprockets-rails" # remove if twice in Gemfile
         gem "sentry-raven"
+        gem "omniauth"
+        gem "omniauth-facebook"
+        gem "omniauth-google-oauth2"
+        gem "omniauth-twitter2"
+        gem "omniauth-rails_csrf_protection"
 
         gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
 

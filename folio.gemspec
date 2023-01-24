@@ -52,7 +52,8 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri"
   s.add_dependency "omniauth-facebook"
   s.add_dependency "omniauth-google-oauth2"
-  s.add_dependency "omniauth-twitter"
+  s.add_dependency "omniauth-twitter2"
+  s.add_dependency "omniauth-rails_csrf_protection"
   s.add_dependency "omniauth"
   s.add_dependency "pagy"
   s.add_dependency "pg_search", "= 2.3.2"
@@ -78,6 +79,7 @@ Gem::Specification.new do |s|
   s.add_dependency "turbolinks"
   s.add_dependency "uglifier"
   s.add_dependency "whenever"
+  s.add_dependency "redis"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors

@@ -22,6 +22,12 @@ gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geome
 gem "cells-rails", "~> 0.1.5"
 gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
 
+gem "omniauth-facebook"
+gem "omniauth-google-oauth2"
+gem "omniauth-twitter2"
+gem "omniauth-rails_csrf_protection"
+gem "omniauth"
+
 group :development do
   gem "puma", "< 6"
   gem "i18n-tasks"

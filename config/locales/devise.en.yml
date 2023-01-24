@@ -93,7 +93,7 @@ en:
         providers:
           facebook: Facebook
           google_oauth2: Google
-          twitter: Twitter
+          twitter2: Twitter
         sessions: "Sign in via:"
         registrations: "Sign up via:"
         or: "Or:"

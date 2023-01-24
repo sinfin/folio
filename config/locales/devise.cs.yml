@@ -102,7 +102,7 @@ cs:
         providers:
           facebook: Facebook
           google_oauth2: Google
-          twitter: Twitter
+          twitter2: Twitter
 
         sessions: "Přihlaste se pomocí:"
         registrations: "Zaregistujte se pomocí:"
@@ -118,7 +118,7 @@ cs:
       omniauth_conflict:
         title: Přihlášení
         conflict: V minulosti jste se již přihlašoval pomocí e-mailu “%{email}”.
-        instructions: Posíme o dokončení přihlášení <strong>ověření pomocí kliknutí na odkaz v mailu</strong>, který jsme vám zaslali.
+        instructions: Posíme o dokončení přihlášení <strong>ověřením pomocí kliknutí na odkaz v mailu</strong>, který jsme vám zaslali.
         resend: E-mail nepřišel?
         resend_link: Zaslat znovu
 

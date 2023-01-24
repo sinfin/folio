@@ -7,9 +7,11 @@
 
   .f-devise-omniauth__buttons
     - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
-      a.f-devise-omniauth__button[
-        href=url_for_key(key)
+      button.f-devise-omniauth__button[
         class=omniauth_button_class_name
+        class=Folio::Devise::Omniauth::FormsCell::TRIGGER_CLASS_NAME
+        type="button"
+        data-provider=key
       ]
         = omniauth_button_icon(key)
         = omniauth_button_label(key)

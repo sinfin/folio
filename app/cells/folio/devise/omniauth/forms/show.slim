@@ -1,0 +1,7 @@
+.f-devise-omniauth-forms hidden=true
+  - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
+    = omniauth_sign_in_form(key)
+      button.f-devise-omniauth-forms__button[
+        type="submit"
+        data-provider=key
+      ]

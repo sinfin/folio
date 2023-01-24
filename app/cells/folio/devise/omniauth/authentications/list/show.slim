@@ -1,27 +1,32 @@
 .f-devise-omniauth-authentications-list
-  - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
-    .f-devise-omniauth-authentications-list__provider
-      == cell('folio/devise/omniauth/icon', key, color: true)
+  .d-inline-block
+    - ::Rails.application.config.folio_users_omniauth_providers.each do |key|
+      .f-devise-omniauth-authentications-list__provider
+        == cell('folio/devise/omniauth/icon', key, color: true)
 
-      - if auth = authentication_for(key)
-        .f-devise-omniauth-authentications-list__nickname[
-          class="f-devise-omniauth-authentications-list__nickname--linked"
-        ]
-          = auth.nickname
+        - if auth = authentication_for(key)
+          .f-devise-omniauth-authentications-list__nickname[
+            class="f-devise-omniauth-authentications-list__nickname--linked"
+          ]
+            = auth.nickname
 
-        - if can_remove_auth?
+          - if can_remove_auth?
+            .f-devise-omniauth-authentications-list__action
+              = link_to t('.unlink'),
+                        unlink_url_for(key),
+                        method: :delete,
+                        "data-confirm" => t('folio.console.confirmation')
+
+        - else
+          .f-devise-omniauth-authentications-list__nickname[
+            class="f-devise-omniauth-authentications-list__nickname--missing"
+          ]
+            = t('.missing')
+
           .f-devise-omniauth-authentications-list__action
-            = link_to t('.unlink'),
-                      unlink_url_for(key),
-                      method: :delete,
-                      "data-confirm" => t('folio.console.confirmation')
-
-      - else
-        .f-devise-omniauth-authentications-list__nickname[
-          class="f-devise-omniauth-authentications-list__nickname--missing"
-        ]
-          = t('.missing')
-
-        .f-devise-omniauth-authentications-list__action
-          a href=url_for_key(key)
-            = t('.link')
+            button.f-devise-omniauth-authentications-list__link-btn[
+              class=Folio::Devise::Omniauth::FormsCell::TRIGGER_CLASS_NAME
+              type="button"
+              data-provider=key
+            ]
+              = t('.link')

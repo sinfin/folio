@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-01-24
+### Changed
+- updated omniauth gems and switched to `omniauth-twitter2` - update your ENV accordingly
+
 ## 2021-01-18
 ### Changed
 - changed `folio_pages_translations` config to `folio_pages_locales` and updated logic

@@ -9,8 +9,22 @@
   &__action
     margin-left: $grid-gutter-width
 
+  &__nickname
+    flex: 1 1 auto
+
   &__nickname--missing
     color: $text-muted
 
+  &__link-btn
+    +unbutton
+    text-decoration: $link-decoration
+    cursor: pointer
+    color: $link-color
+
+    &:hover
+      text-decoration: $link-hover-decoration
+      color: $link-hover-color
+
   .f-devise-omniauth-icon
     margin: -5px 10px -5px 0
+
