@@ -12,9 +12,9 @@ module Folio::FriendlyIdWithLocale
         [
           slug.presence,
           to_label,
-          "#{site.slug} #{to_label}",
-          "#{site.slug} #{to_label} 2",
-          "#{site.slug} #{to_label} 3",
+          "#{locale} #{to_label}",
+          "#{locale} #{to_label} 2",
+          "#{locale} #{to_label} 3",
         ].compact
       end
   end
