@@ -2,11 +2,16 @@
 
 = catalogue(@catalogue_model, @catalogue_options)
   ruby:
-    locale_flag if Rails.application.config.folio_pages_locales
     edit_link :title
+
     type
+
+    locale_flag if Rails.application.config.folio_pages_locales
+
     featured_toggle
+
     published_toggle
+
     date(:published_at)
 
     position_controls if model && model[:ancestry]
