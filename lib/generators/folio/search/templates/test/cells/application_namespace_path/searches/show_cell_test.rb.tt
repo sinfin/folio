@@ -14,7 +14,6 @@ class <%= application_namespace %>::Searches::ShowCellTest < Cell::TestCase
     html = cell("<%= application_namespace_path %>/searches/show", model).(:show)
     assert html.has_css?(".<%= classname_prefix %>-searches-show")
     assert_not html.has_css?(".<%= classname_prefix %>-searches-show__results")
-    assert_not html.has_css?(".<%= classname_prefix %>-searches-show__tabs")
     assert_equal "", html.find(".<%= classname_prefix %>-searches-show__tabs").text
 
     model = {
