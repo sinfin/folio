@@ -72,6 +72,10 @@ class Folio::Page < Folio::ApplicationRecord
   scope :ordered,  -> { order(position: :asc, created_at: :asc) }
   scope :featured,  -> { where(featured: true) }
 
+  scope :by_atom_setting_locale, -> (locale) {
+    where(locale:)
+  }
+
   scope :by_type, -> (type) {
     if type == "Folio::Page"
       where(type: [type, nil])
