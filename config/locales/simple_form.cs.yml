@@ -14,6 +14,7 @@ cs:
         meta_description: Nepovinný údaj. Tato varianta perexu se může objevit v popisu ve vyhledávačích. Důležité pro SEO.
         meta_title: Nepovinný údaj. Tato varianta titulku se může objevit v stránky ve vyhledávačích. Důležité pro SEO.
         slug: Ponechte prázdné pro automatické vyplnění. Povoleny jsou jen znaky <strong>a-z</strong>, <strong>0-9</strong> a <strong>pomlčka</strong>. Po změně funguje i původní varianta.
+        tag_list: Seznam klíčových slov sloužící pro rychlejší vyhledávání nebo kategorizaci a zobrazování obsahu na webu.
       account:
         edit_password: Nevyplňujte, pokud nechcete měnit
       node:

@@ -14,6 +14,7 @@ en:
         meta_description: SEO, Optional. This description appears on a search engine page.
         meta_title: SEO, Optional. This title may appear on a search engine page.
         slug: Filled automatically. Only <strong>a-z</strong>, <strong>0-9</strong> and <strong>dash</strong> characters are accepted. Changing this doesn't break old URLs.
+        tag_list: Used for faster searching/categorization and content display.
       account:
         edit_password: Leave blank if you don't want to change
     'no': 'No'
