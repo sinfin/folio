@@ -3,6 +3,10 @@
 class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   queue_as :default
 
+  discard_on(ActiveJob::DeserializationError) do |job, e|
+    Raven.capture_exception(e) if defined?(Raven)
+  end
+
   def perform(image, size, quality, x: nil, y: nil, force: false)
     return if /svg/.match?(image.file_mime_type)
 

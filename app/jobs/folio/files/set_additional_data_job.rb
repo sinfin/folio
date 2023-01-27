@@ -3,6 +3,10 @@
 class Folio::Files::SetAdditionalDataJob < Folio::ApplicationJob
   queue_as :slow
 
+  discard_on(ActiveJob::DeserializationError) do |job, e|
+    Raven.capture_exception(e) if defined?(Raven)
+  end
+
   def perform(file_model)
     additional_data = file_model.additional_data || {}
 
