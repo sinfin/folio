@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::HomeControllerTest < ActionDispatch::IntegrationTest
+  test "index" do
+    create_and_host_site
+    create_page_singleton(<%= application_namespace %>::Page::Homepage)
+    get root_path(locale: @site.locale)
+    assert_response :ok
+  end
+end

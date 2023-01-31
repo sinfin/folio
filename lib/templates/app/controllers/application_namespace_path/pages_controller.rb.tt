@@ -1,0 +1,5 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::PagesController < ApplicationController
+  include Folio::PagesControllerBase
+end

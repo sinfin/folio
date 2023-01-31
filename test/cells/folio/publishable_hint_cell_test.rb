@@ -21,9 +21,8 @@ class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
     login_as(account, scope: :account)
 
     get url_for([@page, locale: @page.locale])
+    assert_response(:ok)
 
-    assert_redirected_to url_for([:preview, @page]) # , locale: @page.locale])
-    follow_redirect!
     assert_select ".folio-publishable-hint"
 
     @page.update!(published: true)

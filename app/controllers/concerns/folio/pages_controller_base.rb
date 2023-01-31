@@ -4,32 +4,20 @@ module Folio::PagesControllerBase
   extend ActiveSupport::Concern
 
   included do
-    include Folio::UrlHelper
-
     before_action :find_page, :add_meta
   end
 
   def show
-    if @page.published?
-      render_page unless force_correct_path_for_page
-    else
-      redirect_to(action: :preview)
-    end
-  end
-
-  def preview
-    if @page.published?
-      redirect_to(action: :show)
-    else
-      render_page
+    unless force_correct_path_for_page
+      if @page.class.view_name
+        render @page.class.view_name
+      else
+        render
+      end
     end
   end
 
   private
-    def render_page
-      render @page.class.view_name || "folio/pages/show"
-    end
-
     def find_page
       if Rails.application.config.folio_pages_ancestry
         path = params[:path].split("/")
@@ -42,15 +30,10 @@ module Folio::PagesControllerBase
                           last: path.size - 1 == i)
         end
       else
-        if page_includes.present?
-          base = pages_scope.includes(*page_includes)
-        else
-          base = pages_scope
-        end
+        @page = pages_scope.published_or_admin(current_account.present?)
+                           .friendly
+                           .find(params[:id])
 
-        @page = base.published_or_admin(current_account.present?)
-                    .friendly
-                    .find(params[:id])
         add_breadcrumb @page.title, url_for(@page)
       end
 
@@ -97,10 +80,6 @@ module Folio::PagesControllerBase
                   .friendly
                   .find(slug)
       add_breadcrumb @page.title, nested_page_path(@page)
-    end
-
-    def page_includes
-      []
     end
 
     def force_correct_path_for_page

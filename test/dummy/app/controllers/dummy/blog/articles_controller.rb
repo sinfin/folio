@@ -21,19 +21,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
   end
 
   def show
-    if @article.published?
-      force_correct_path(url_for(@article))
-    else
-      redirect_to action: :preview
-    end
-  end
-
-  def preview
-    if @article.published?
-      redirect_to action: :show
-    else
-      render :show
-    end
+    force_correct_path(url_for(@article))
   end
 
   private

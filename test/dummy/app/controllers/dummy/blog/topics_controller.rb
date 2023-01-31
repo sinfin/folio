@@ -5,19 +5,7 @@ class Dummy::Blog::TopicsController < ApplicationController
   before_action :find_topic, only: [:show, :preview]
 
   def show
-    if @topic.published?
-      force_correct_path(url_for(@topic))
-    else
-      redirect_to action: :preview
-    end
-  end
-
-  def preview
-    if @topic.published?
-      redirect_to action: :show
-    else
-      render :show
-    end
+    force_correct_path(url_for(@topic))
   end
 
   private

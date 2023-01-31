@@ -141,7 +141,6 @@ class Folio::Page < Folio::ApplicationRecord
   end
 
   def self.view_name
-    "folio/pages/show"
   end
 
   def self.public_rails_path

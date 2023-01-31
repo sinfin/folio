@@ -24,15 +24,11 @@ class Folio::BlogGenerator < Rails::Generators::Base
     return if File.read(Rails.root.join("config/routes.rb")).include?("namespace :blog")
     inject_into_file "config/routes.rb", after: "scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do\n" do <<~'RUBY'
       namespace :blog do
-        resources :articles, only: %i[show] do
-          member { get :preview }
-        end
+        resources :articles, only: %i[show]
 
         get "/", to: "articles#index", as: :articles
 
-        resources :topics, only: %i[show] do
-          member { get :preview }
-        end
+        resources :topics, only: %i[show]
       end
 
     RUBY

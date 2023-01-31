@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HomeController < ApplicationController
+class Dummy::HomeController < ApplicationController
   def index
     @page = Dummy::Page::Homepage.instance(fail_on_missing: false)
     set_meta_variables(@page) if @page

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: "home#index"
+  root to: "dummy/home#index"
 
   mount Folio::Engine => "/"
 
@@ -27,6 +27,17 @@ Rails.application.routes.draw do
   get "/lead_form", to: "home#lead_form"
   get "/gallery", to: "home#gallery"
 
+  scope module: :folio do
+    namespace :console do
+      namespace :dummy do
+        namespace :blog do
+          resources :articles, except: %i[show]
+          resources :topics, except: %i[show]
+        end
+      end
+    end
+  end
+
   scope module: :dummy, as: :dummy do
     resource :search, only: %i[show] do
       get :autocomplete
@@ -46,34 +57,19 @@ Rails.application.routes.draw do
     end
   end
 
-  scope module: :folio do
-    namespace :console do
-      namespace :dummy do
-        namespace :blog do
-          resources :articles, except: %i[show]
-          resources :topics, except: %i[show]
-        end
-      end
-    end
-  end
-
   if Rails.application.config.folio_pages_locales
     scope "/:locale", locale: /#{I18n.available_locales.join('|')}/ do
       if Rails.application.config.folio_pages_ancestry
-        get "/*path", to: "pages#show", as: "page"
+        get "/*path", to: "dummy/pages#show", as: "page"
       else
-        resources :pages, only: [:show], path: ""
+        resources :pages, controller: "dummy/pages", only: [:show], path: ""
       end
     end
   else
     if Rails.application.config.folio_pages_ancestry
-      get "/*path", to: "pages#show", as: "page" do
-        member { get :preview }
-      end
+      get "/*path", to: "dummy/pages#show", as: "page"
     else
-      resources :pages, only: [:show], path: "" do
-        member { get :preview }
-      end
+      resources :pages, controller: "dummy/pages", only: [:show], path: ""
     end
   end
 end

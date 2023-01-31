@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## 2021-01-31
 ### Changed
 - `force_correct_path` now ignores get params by default
+- dropped the obsolete `preview` actions from controllers and templates
 
 ## 2021-01-24
 ### Changed
