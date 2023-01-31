@@ -5,26 +5,13 @@ require "capybara/rails"
 require "capybara/minitest"
 require "factory_bot"
 require Folio::Engine.root.join("test/create_atom_helper")
+require Folio::Engine.root.join("test/create_and_host_site")
 require Folio::Engine.root.join("test/create_page_singleton")
 require Folio::Engine.root.join("test/omniauth_helper")
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
-
-def create_and_host_site(key: nil, attributes: {})
-  @site = create(key || Rails.application.config.folio_site_default_test_factory || :folio_site,
-                 attributes)
-
-  Rails.application.routes.default_url_options[:host] = @site.domain
-  Rails.application.routes.default_url_options[:only_path] = false
-
-  if self.respond_to?(:host!)
-    host!(@site.domain)
-  end
-
-  @site
-end
 
 class ActiveSupport::TestCase
   parallelize
