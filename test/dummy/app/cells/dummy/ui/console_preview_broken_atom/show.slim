@@ -1,0 +1,13 @@
+.d-ui-console-preview-broken-atom
+  .container-fluid
+    .bg-red.p-g.text-center
+      = icon(:warning, height: 40, class: "text-white")
+
+      h3.text-center.text-white.my-3
+        = model.class.model_name.human
+
+      .text-center.text-white.font-family-headings
+        ' Špatně nastavený atom. Veřejně nebude zobrazen.
+        - if options[:message]
+          br
+          = options[:message]
