@@ -2,6 +2,8 @@
 
 class Folio::Page < Folio::ApplicationRecord
   if Rails.application.config.folio_using_traco
+    include Folio::BelongsToSite
+    const_set(:FRIENDLY_ID_SCOPE, :site_id)
     include Folio::FriendlyIdForTraco
 
     if Rails.application.config.folio_pages_ancestry
@@ -9,18 +11,11 @@ class Folio::Page < Folio::ApplicationRecord
       include Folio::HasAncestrySlugForTraco
     end
   else
-    if Rails.application.config.folio_using_traco
-      include Folio::FriendlyIdWithLocale
+    include Folio::BelongsToSiteAndFriendlyId
 
-      validates :locale,
-                inclusion: { in: I18n.available_locales.map(&:to_s) }
-    else
-      include Folio::BelongsToSiteAndFriendlyId
-
-      if Rails.application.config.folio_pages_ancestry
-        include Folio::HasAncestry
-        include Folio::HasAncestrySlug
-      end
+    if Rails.application.config.folio_pages_ancestry
+      include Folio::HasAncestry
+      include Folio::HasAncestrySlug
     end
   end
 
