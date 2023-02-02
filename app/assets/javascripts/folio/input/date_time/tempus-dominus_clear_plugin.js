@@ -3,7 +3,7 @@ const clearPlugin = (_, tdClasses) => {
 
   tdClasses.Display.prototype._buildWidget = function () {
     oldBuildWidget.call(this)
-    const label = window.Folio.Input.DateTime.i18n && window.Folio.Input.DateTime.i18n.clearDate || 'Clear date'
+    const label = (window.Folio.Input.DateTime.i18n && window.Folio.Input.DateTime.i18n.clearDate) || 'Clear date'
 
     const clearWidget = document.createElement('div')
 
@@ -16,7 +16,8 @@ const clearPlugin = (_, tdClasses) => {
     clearWidget.appendChild(icon)
     clearWidget.appendChild(document.createTextNode(label))
 
-    this._widget.querySelector('.td-row').appendChild(clearWidget)
+    const target = this._widget.querySelector('.time-container') || this._widget.querySelector('.date-container')
+    target.after(clearWidget)
   }
 }
 

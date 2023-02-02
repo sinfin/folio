@@ -2,7 +2,7 @@ $folio-input-date-time-icon: true !default
 $folio-input-date-time-icon-background-url: image-url("folio/input/date_time/input-background-ico.svg") !default
 $folio-input-date-time-icon-background-size: 18px 18px !default
 $folio-input-date-time-icon-opacity: 0.5 !default
-$folio-input-date-time-widget-padding: $grid-gutter-width / 2 !default
+$folio-input-date-time-widget-padding: $grid-gutter-width / 3 !default
 $folio-input-date-time-widget-box-shadow: $box-shadow !default
 
 $td-light: $white
@@ -25,6 +25,11 @@ $td-text-shadow: none
 
 .tempus-dominus-widget
   box-shadow: $folio-input-date-time-widget-box-shadow
+  width: 250px !important
+  padding: 0 !important
+
+  .date-container-days
+    grid-auto-rows: 30px
 
   svg
     width: 2em
@@ -34,19 +39,17 @@ $td-text-shadow: none
     width: 1.6em
     height: 1.6em
 
-  &.timepicker-sbs
-    width: 290px
-    padding: 0
+  &.timepicker-sbs .td-row
+    flex-direction: column
 
-    .td-row
-      flex-direction: column
+  .date-container,
+  .time-container,
+  .clear-container
+    width: 100% !important
+    padding: $folio-input-date-time-widget-padding
 
-      .td-half
-        width: 100%
-        padding: $folio-input-date-time-widget-padding
-
-        + .td-half
-          border-top: 1px solid $border-color
+    &:not(:first-child)
+      border-top: 1px solid $border-color
 
   .calendar-header
     display: flex

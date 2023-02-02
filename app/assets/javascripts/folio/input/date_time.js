@@ -50,6 +50,17 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
 
 window.Folio.Input.DateTime.DATE_CONFIG = {
   ...window.Folio.Input.DateTime.DATE_TIME_CONFIG,
+  display: {
+    ...window.Folio.Input.DateTime.DATE_TIME_CONFIG.display,
+    sideBySide: false,
+    components: {
+      ...window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.components,
+      clock: false,
+      hours: false,
+      minutes: false,
+      seconds: false,
+    }
+  },
   localization: {
     ...window.Folio.Input.DateTime.DATE_TIME_CONFIG.localization,
     format: 'dd. MM. yyyy'
@@ -75,7 +86,7 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
     const newIcons = {}
 
     Object.keys(window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.icons).forEach((key) => {
-      newIcons[key] = key === "type" ? "sprites" : `${input.dataset.spriteUrl}#${key}`
+      newIcons[key] = key === 'type' ? 'sprites' : `${input.dataset.spriteUrl}#${key}`
     })
 
     window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.icons = newIcons
