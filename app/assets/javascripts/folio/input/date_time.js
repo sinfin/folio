@@ -17,6 +17,8 @@ window.Folio.Input.DateTime = {}
 
 window.Folio.Input.DateTime.SELECTOR = '.f-input--date'
 
+window.Folio.Input.DateTime.changedIconsToSvg = false
+
 window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
   display: {
     sideBySide: true,
@@ -31,6 +33,9 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
       today: 'fa fa-calendar-star f-input__ico f-input__ico--today',
       clear: 'fa fa-trash-alt f-input__ico f-input__ico--clear',
       close: 'fa fa-times f-input__ico f-input__ico--close'
+    },
+    components: {
+      useTwentyfourHour: true
     },
     theme: 'light'
   },
@@ -65,7 +70,24 @@ if (!window.Folio.Input.DateTime.i18n.clearDate) {
   }
 }
 
+window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
+  if (!window.Folio.Input.DateTime.changedIconsToSvg && input && input.dataset.spriteUrl) {
+    const newIcons = {}
+
+    Object.keys(window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.icons).forEach((key) => {
+      newIcons[key] = key === "type" ? "sprites" : `${input.dataset.spriteUrl}#${key}`
+    })
+
+    window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.icons = newIcons
+    window.Folio.Input.DateTime.DATE_CONFIG.display.icons = newIcons
+
+    window.Folio.Input.DateTime.changedIconsToSvg = true
+  }
+}
+
 window.Folio.Input.DateTime.bind = (input, opts = {}) => {
+  window.Folio.Input.DateTime.updateIconsIfNeeded(input)
+
   let fullOpts
 
   if (input.classList.contains('f-input--date-time')) {
