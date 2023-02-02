@@ -12,7 +12,7 @@ bower_components/folio-bootstrap/*
 bower_components/folio-bootstrap/dist/*
 !bower_components/folio-bootstrap/dist/js
 bower_components/folio-bootstrap/dist/js/*
-!bower_components/folio-bootstrap/dist/js/bootstrap.bundle.js
+!bower_components/folio-bootstrap/dist/js/bootstrap.js
 bower_components/folio-bootstrap/js/*
 !bower_components/folio-bootstrap/js/dist
 bower_components/folio-bootstrap/js/dist/*.map
@@ -28,12 +28,6 @@ bower_components/moment/src
 bower_components/font-awesome/*
 !bower_components/font-awesome/scss
 !bower_components/font-awesome/webfonts
-
-bower_components/eonasdan-bootstrap-datetimepicker/*
-!bower_components/eonasdan-bootstrap-datetimepicker/build
-!bower_components/eonasdan-bootstrap-datetimepicker/src
-bower_components/eonasdan-bootstrap-datetimepicker/src/*
-!bower_components/eonasdan-bootstrap-datetimepicker/src/sass
 
 bower_components/multiselect/test
 
@@ -52,3 +46,8 @@ bower_components/select2/*
 bower_components/slick-carousel/*
 bower_components/slick-carousel/slick/fonts
 !bower_components/slick-carousel/slick
+
+bower_components/tempus-dominus-scss/*
+!bower_components/tempus-dominus-scss/src
+bower_components/tempus-dominus-scss/src/*
+!bower_components/tempus-dominus-scss/src/scss
