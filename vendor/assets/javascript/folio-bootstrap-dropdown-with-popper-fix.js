@@ -9,8 +9,6 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Dropdown = factory(global.jQuery, global.Popper, global.Util));
 }(this, (function ($, Popper, Util) { 'use strict';
 
-  console.warn("Folio - you are using folio-bootstrap/js/dist/dropdown.js, which is incompatible with Popper 2.*! Use folio-bootstrap-dropdown-with-popper-fix.js instead!")
-
   $ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
   Popper = Popper && Object.prototype.hasOwnProperty.call(Popper, 'default') ? Popper['default'] : Popper;
   Util = Util && Object.prototype.hasOwnProperty.call(Util, 'default') ? Util['default'] : Util;
@@ -175,7 +173,8 @@
           $(parent).addClass(CLASS_NAME_POSITION_STATIC);
         }
 
-        this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
+        // this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
+        this._popper = window.Popper.createPopper(referenceElement, this._menu, this._getPopperConfig());
       } // If this is a touch-enabled device we add extra
       // empty mouseover listeners to the body's immediate children;
       // only needed because of broken event delegation on iOS

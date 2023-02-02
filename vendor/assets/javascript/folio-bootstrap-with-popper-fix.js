@@ -9,8 +9,6 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bootstrap = {}, global.jQuery, global.Popper));
 }(this, (function (exports, $, Popper) { 'use strict';
 
-  console.warn("Folio - you are using folio-bootstrap/dist/js/bootstrap.js, which is incompatible with Popper 2.*! Use folio-bootstrap-with-popper-fix.js instead!")
-
   $ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
   Popper = Popper && Object.prototype.hasOwnProperty.call(Popper, 'default') ? Popper['default'] : Popper;
 
@@ -1670,7 +1668,8 @@
           $(parent).addClass(CLASS_NAME_POSITION_STATIC);
         }
 
-        this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
+        // this._popper = new Popper(referenceElement, this._menu, this._getPopperConfig());
+        this._popper = window.Popper.createPopper(referenceElement, this._menu, this._getPopperConfig());
       } // If this is a touch-enabled device we add extra
       // empty mouseover listeners to the body's immediate children;
       // only needed because of broken event delegation on iOS
@@ -2986,7 +2985,8 @@
         }
 
         $(this.element).trigger(this.constructor.Event.INSERTED);
-        this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment));
+        // this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment));
+        this._popper = window.Popper.createPopper(this.element, tip, this._getPopperConfig(attachment));
         $(tip).addClass(CLASS_NAME_SHOW$4); // If this is a touch-enabled device we add extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS

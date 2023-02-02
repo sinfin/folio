@@ -9,8 +9,6 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Tooltip = factory(global.jQuery, global.Popper, global.Util));
 }(this, (function ($, Popper, Util) { 'use strict';
 
-  console.warn("Folio - you are using folio-bootstrap/js/dist/tooltip.js, which is incompatible with Popper 2.*! Use folio-bootstrap-tooltip-with-popper-fix.js instead!")
-
   $ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
   Popper = Popper && Object.prototype.hasOwnProperty.call(Popper, 'default') ? Popper['default'] : Popper;
   Util = Util && Object.prototype.hasOwnProperty.call(Util, 'default') ? Util['default'] : Util;
@@ -362,7 +360,10 @@
         }
 
         $(this.element).trigger(this.constructor.Event.INSERTED);
-        this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment));
+
+        // this._popper = new Popper(this.element, tip, this._getPopperConfig(attachment));
+        this._popper = window.Popper.createPopper(this.element, tip, this._getPopperConfig(attachment));
+
         $(tip).addClass(CLASS_NAME_SHOW); // If this is a touch-enabled device we add extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS
