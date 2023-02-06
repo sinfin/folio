@@ -34,7 +34,7 @@ module Folio::MailerEmailTemplates
     opts[:subject] = @email_template.render_subject(@data)
     opts[:to] ||= system_email
     opts[:cc] ||= system_email_copy
-    opts[:from] ||= site.email
+    opts[:from] ||= site.email_from.presence || site.email
     opts[:template_path] = "folio/email_templates"
     opts[:template_name] = "mail"
 
