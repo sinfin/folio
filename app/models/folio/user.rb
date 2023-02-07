@@ -173,6 +173,10 @@ class Folio::User < Folio::ApplicationRecord
 
     user.email = auth.email
 
+    if Rails.application.config.folio_users_confirm_email_change
+      user.confirmed_at = Time.current
+    end
+
     if auth.nickname.present?
       ary = auth.nickname.split(/\s+/, 2)
       user.first_name = ary[0]
