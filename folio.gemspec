@@ -80,6 +80,7 @@ Gem::Specification.new do |s|
   s.add_dependency "uglifier"
   s.add_dependency "whenever"
   s.add_dependency "redis"
+  s.add_dependency "terser"
 
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors

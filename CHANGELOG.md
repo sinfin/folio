@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2021-02-07
+### Changed
+- use `:terser` as the default `js_compressor`, remove `Folio::SelectiveUglifier`
+
 ## 2021-01-31
 ### Changed
 - `force_correct_path` now ignores get params by default

@@ -36,6 +36,7 @@ require "fast_jsonapi"
 require "traco"
 require "aws-sdk-s3"
 require "message_bus"
+require "terser"
 
 require "dragonfly"
 require "dragonfly/s3_data_store"
@@ -87,7 +88,3 @@ module Folio
     site.layout_assets_path
   end
 end
-
-# only `folio/lib` directory is loaded when processing Rails `config/environments/*`
-require "uglifier"
-require_relative "../app/lib/folio/selective_uglifier.rb"

@@ -210,7 +210,7 @@ module Folio
       def production_settings
         gsub_file "config/environments/production.rb", "# config.assets.css_compressor = :sass" do
           [
-            "config.assets.js_compressor = Folio::SelectiveUglifier.new(harmony: true)",
+            "config.assets.js_compressor = :terser",
             "# config.assets.css_compressor = :sass",
           ].join("\n  ")
         end
