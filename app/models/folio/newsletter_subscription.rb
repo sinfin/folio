@@ -12,9 +12,22 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
             format: { with: Folio::EMAIL_REGEXP }
 
   validates :email,
-            uniqueness: true
+            uniqueness: { scope: :site_id }
 
   default_scope { order(id: :desc) }
+
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+  scope :by_active, -> (bool) {
+    case bool
+    when true, "true"
+      active
+    when false, "false"
+      inactive
+    else
+      all
+    end
+  }
 
   pg_search_scope :by_query,
                   against: %i[email],
@@ -44,7 +57,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   end
 
   def self.csv_attribute_names
-    %i[id email created_at]
+    %i[id email active created_at]
   end
 
   def csv_attributes(controller = nil)
