@@ -197,12 +197,8 @@
             hour12: true,
         })
             .formatToParts(new Date(2022, 3, 4, 13))
-            .find((p) => p.type === 'dayPeriod')
-        if (meridiem && meridiem.value) {
-            return input.toLowerCase() === meridiem.value.toLowerCase();
-        } else {
-            return false;
-        }
+            .find((p) => p.type === 'dayPeriod')?.value;
+        return input.toLowerCase() === meridiem.toLowerCase();
     }
     correctHours(time) {
         const { afternoon } = time;
