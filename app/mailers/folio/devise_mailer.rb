@@ -16,12 +16,12 @@ class Folio::DeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
-    @data = {
-      USER_CHANGE_PASSWORD_URL: scoped_url_method(record,
-                                                  :edit_password_url,
-                                                  reset_password_token: token)
-    }
-    super(record, token, opts)
+    @data ||= {}
+    @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
+                                                         :edit_password_url,
+                                                         reset_password_token: token)
+
+    super
   end
 
   def invitation_instructions(record, token, opts = {})
@@ -30,7 +30,18 @@ class Folio::DeviseMailer < Devise::Mailer
                                                            :accept_invitation_url,
                                                            invitation_token: token)
 
-    super(record, token, opts)
+    super
+  end
+
+  def confirmation_instructions(record, token, opts = {})
+    @token = token
+
+    @data ||= {}
+    @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
+                                                      :confirmation_url,
+                                                      confirmation_token: @token)
+
+    super
   end
 
   def omniauth_conflict(authentication, opts = {})
@@ -56,7 +67,11 @@ class Folio::DeviseMailer < Devise::Mailer
         scoped = "user"
       end
 
-      method_name = method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
+      method_name = if method.to_s.include?("confirmation")
+        "#{scoped}_#{method}"
+      else
+        method.to_s.gsub(/\A([a-z]+)_/, "\\1_#{scoped}_")
+      end
 
       if Rails.application.config.folio_crossdomain_devise && Folio.site_for_crossdomain_devise
         extra = { only_path: false, host: Folio.site_for_crossdomain_devise.env_aware_domain }

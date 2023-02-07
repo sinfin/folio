@@ -26,7 +26,16 @@ class Folio::User < Folio::ApplicationRecord
     invitable
   ]
 
-  selected_device_modules << :confirmable if Rails.application.config.folio_users_confirmable
+  if Rails.application.config.folio_users_confirmable
+    selected_device_modules << :confirmable
+  elsif Rails.application.config.folio_users_confirm_email_change
+    selected_device_modules << :confirmable
+
+    def self.should_confirm_email_change?
+      true
+    end
+  end
+
   selected_device_modules << :omniauthable if Rails.application.config.folio_users_omniauth_providers.present?
 
   devise_options = {

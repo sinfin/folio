@@ -84,6 +84,7 @@ en:
         keyword/SITE_TITLE: Name of the website
         keyword/USER_ACCEPT_INVITATION_URL: URL used to finish the registration
         keyword/USER_CHANGE_PASSWORD_URL: URL used to set new password
+        keyword/USER_CONFIRMATION_URL: URL used to confirm changes
         keyword/USER_EMAIL: User e-mail
       folio/user:
         address_identification_number: Indentification number

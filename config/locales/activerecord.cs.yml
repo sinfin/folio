@@ -92,6 +92,7 @@ cs:
         keyword/SITE_TITLE: Název webu
         keyword/USER_ACCEPT_INVITATION_URL: Adresa pro dokončení registrace
         keyword/USER_CHANGE_PASSWORD_URL: Adresa pro nastavení nového hesla
+        keyword/USER_CONFIRMATION_URL: Adresa pro potvrzení změn
         keyword/USER_EMAIL: E-mail uživatele
       folio/user:
         address_identification_number: IČO
