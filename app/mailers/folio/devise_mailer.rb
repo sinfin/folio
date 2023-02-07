@@ -74,7 +74,7 @@ class Folio::DeviseMailer < Devise::Mailer
       end
 
       if Rails.application.config.folio_crossdomain_devise && Folio.site_for_crossdomain_devise
-        extra = { only_path: false, host: Folio.site_for_crossdomain_devise.env_aware_domain }
+        extra = { only_path: false, host: Folio.site_for_crossdomain_devise.env_aware_domain, protocol: "https" }
 
         if args.present?
           args[0].merge!(extra)
