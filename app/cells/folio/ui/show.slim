@@ -245,32 +245,35 @@
 
     p Regular
 
-    .my-4
-      == cell("#{application_namespace_path}/ui/share")
+    - if "#{application_namespace}::Ui::ShareCell".safe_constantize
+      .my-4
+        == cell("#{application_namespace_path}/ui/share")
 
-    p Collapsible on mobile
+      p Collapsible on mobile
 
-    .my-4
-      == cell("#{application_namespace_path}/ui/share",
-              nil,
-              mobile_collapsible: true)
+      .my-4
+        == cell("#{application_namespace_path}/ui/share",
+                nil,
+                mobile_collapsible: true)
 
-    h3 Clipboard
+    - if "#{application_namespace}::Ui::ClipboardCell".safe_constantize
+      h3 Clipboard
 
-    == cell("#{application_namespace_path}/ui/clipboard", "text in clipboard")
+      == cell("#{application_namespace_path}/ui/clipboard", "text in clipboard")
 
-    h3 Cards
+    - if "#{application_namespace}::Ui::CardList".safe_constantize
+      h3 Cards
 
-    h4 Large
+      h4 Large
 
-    == cell("#{application_namespace_path}/ui/card_list", card_variants)
+      == cell("#{application_namespace_path}/ui/card_list", card_variants)
 
-    h4 Medium
+      h4 Medium
 
-    == cell("#{application_namespace_path}/ui/card_list", card_variants(medium: true))
+      == cell("#{application_namespace_path}/ui/card_list", card_variants(medium: true))
 
-    h4 Small
+      h4 Small
 
-    == cell("#{application_namespace_path}/ui/card_list", card_variants(small: true))
+      == cell("#{application_namespace_path}/ui/card_list", card_variants(small: true))
 
     == render(:_show_more)
