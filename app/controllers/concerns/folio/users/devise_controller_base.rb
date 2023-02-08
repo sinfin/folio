@@ -48,6 +48,11 @@ module Folio::Users::DeviseControllerBase
     acquire_orphan_records!
   end
 
+  def email_belongs_to_invited_pending_user?(email)
+    user = Folio::User.find_by(email:)
+    user && user.invitation_created_at? && user.invitation_accepted_at.nil? && user.sign_in_count == 0
+  end
+
   protected
     # override devise signed in check - redirect to source site if needed
     def require_no_authentication
