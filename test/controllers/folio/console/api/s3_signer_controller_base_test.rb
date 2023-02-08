@@ -40,7 +40,7 @@ class Folio::Console::Api::S3SignerControllerTest < Folio::Console::BaseControll
         assert_response 422
       end
 
-      test_path = "#{Folio::S3Client::TEST_PATH}/test-#{klass.model_name.singular}.gif"
+      test_path = "#{Folio::S3Client::TEST_PATH}/test-#{klass.model_name.singular}-#{file.id}.gif"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
@@ -48,12 +48,12 @@ class Folio::Console::Api::S3SignerControllerTest < Folio::Console::BaseControll
 
       assert_difference("#{klass}.count", 0) do
         perform_enqueued_jobs do
-          post s3_after_console_api_s3_signer_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: file.id }
+          post s3_after_console_api_s3_signer_path, params: { s3_path: "test-#{klass.model_name.singular}-#{file.id}.gif", type: klass.to_s, existing_id: file.id }
           assert_response(:ok)
         end
       end
 
-      assert_equal("test-#{klass.model_name.singular}.gif", file.reload.file_name)
+      assert_equal("test-#{klass.model_name.singular}-#{file.id}.gif", file.reload.file_name)
     end
   end
 end
