@@ -60,9 +60,9 @@
 
 - if options[:tabs]
   .f-c-index-header__tabs-wrap
-    == cell('folio/console/index/tabs', \
-            options[:tabs], \
-            index_filters_keys: controller.send(:index_filters_keys), \
+    == cell('folio/console/index/tabs',
+            options[:tabs],
+            index_filters_keys: controller.send(:index_filters_keys),
             params: controller.params)
 
 - if options[:above_filters]
@@ -72,7 +72,8 @@
      options[:index_filters] != false
   == cell('folio/console/index/filters', \
           klass: model, \
-          index_filters: controller.send(:index_filters))
+          index_filters: controller.send(:index_filters),
+          cancel_url: options[:filters_cancel_url])
 
 - if options[:pagy]
   .f-c-index-header__pagy
