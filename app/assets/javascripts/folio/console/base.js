@@ -9,6 +9,8 @@
 //= require dropzone/dist/dropzone
 //= require clipboard/dist/clipboard
 //= require strftime
+//= require moment/moment
+//= require moment/locale/cs
 
 //= require jquery-ui/jquery-ui
 //= require selectize/dist/js/standalone/selectize
