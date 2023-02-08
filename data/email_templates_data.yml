@@ -175,7 +175,7 @@
 
     {SITE_TITLE}
 
-- mailer: Folio::DeviseMailer
+- mailer: Devise::Mailer
   action: omniauth_conflict
   optional_keywords:
     - USER_EMAIL

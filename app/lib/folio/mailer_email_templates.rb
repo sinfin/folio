@@ -25,7 +25,7 @@ module Folio::MailerEmailTemplates
   def email_template_mail(sym_data = {}, opts = {})
     @data = sym_data.stringify_keys
     @site = opts.delete(:site)
-    @email_template = email_template_for!
+    @email_template = email_template_for!(mailer: opts.delete(:mailer))
 
     @data[:ROOT_URL] = site.env_aware_root_url
     @data[:SITE_TITLE] = site.title
@@ -53,6 +53,8 @@ module Folio::MailerEmailTemplates
       @data[:USER_EMAIL] = record.email
 
       opts[:subject] = @email_template.render_subject(@data)
+      opts[:cc] ||= system_email_copy
+      opts[:from] ||= site.email_from.presence || site.email
       opts[:template_path] = "folio/email_templates"
       opts[:template_name] = "mail"
     end

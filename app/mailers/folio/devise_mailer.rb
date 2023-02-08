@@ -56,7 +56,8 @@ class Folio::DeviseMailer < Devise::Mailer
     }
 
     email_template_mail template_data,
-                        headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"))
+                        headers_for(:omniauth_conflict, opts).merge(subject: t("devise.mailer.omniauth_conflict.subject"),
+                                                                    mailer: "Devise::Mailer")
   end
 
   private
