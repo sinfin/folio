@@ -2,7 +2,7 @@
 
 SimpleForm::Inputs::DateTimeInput.class_eval do
   def input(wrapper_options = nil)
-    value = @builder.object.public_send(attribute_name)
+    value = @builder.object.try(attribute_name)
 
     if value.present?
       input_html_options[:value] = I18n.l(value, format: :console_short)
@@ -16,7 +16,7 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
     input_html_options[:class] ||= []
     input_html_options[:class] << "f-input"
 
-    type = @builder.object.class.type_for_attribute(attribute_name).type
+    type = @builder.object.class.respond_to?(:type_for_attribute) ? @builder.object.class.type_for_attribute(attribute_name).type : :date
 
     input_html_options[:class] << "f-input--date"
 
