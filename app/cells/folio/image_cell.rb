@@ -57,8 +57,8 @@ class Folio::ImageCell < Folio::ApplicationCell
       h = {
         normal: normal,
         src: normal.url,
-        alt: model.try(:alt) || "",
-        title: model.try(:title),
+        alt: model.try(:alt) || options[:alt] || "",
+        title: model.try(:title) || options[:title],
       }
 
       unless /svg/.match?(file.mime_type)
