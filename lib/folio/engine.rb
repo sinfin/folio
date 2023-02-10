@@ -10,6 +10,9 @@ module Folio
       g.helper false
     end
 
+    # can remove this once we get rid of "serialize" in app/models/concerns/folio/thumbnails.rb and app/models/folio/newsletter_subscription.rb
+    config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
+
     config.assets.paths << self.root.join("app/cells")
     config.assets.paths << self.root.join("vendor/assets/javascripts")
     config.assets.paths << self.root.join("vendor/assets/bower_components")
