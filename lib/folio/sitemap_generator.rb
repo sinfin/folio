@@ -40,3 +40,14 @@ unless Rails.env.development?
     aws_region: ENV["S3_REGION"]
   )
 end
+
+unless Rails.application.config.folio_site_is_a_singleton
+  # override urls in sitemap index file because of the way SitemapController is set up
+  SitemapGenerator::Builder::SitemapIndexUrl.class_eval do
+    alias_method :original_initialize, :initialize
+    def initialize(path, options = {})
+      path.location[:sitemaps_path] = "sitemaps" unless path.is_a?(SitemapGenerator::Builder::SitemapIndexFile)
+      original_initialize(path, options)
+    end
+  end
+end
