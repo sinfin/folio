@@ -14,6 +14,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = klass.all
 
+      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
+        scope = scope.by_site(current_site)
+      end
+
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)
       end
@@ -55,6 +59,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
     if klass && klass.column_names.include?(field)
       scope = klass.unscope(:order).where.not(field => nil)
+
+      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
+        scope = scope.by_site(current_site)
+      end
 
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)
@@ -109,6 +117,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
 
+      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
+        scope = scope.by_site(current_site)
+      end
+
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)
       end
@@ -140,6 +152,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
+
+      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
+        scope = scope.by_site(current_site)
+      end
 
       if p_scope.present? && scope.respond_to?(p_scope)
         scope = scope.send(p_scope)
@@ -183,6 +199,10 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         klass = class_name.safe_constantize
         if klass && klass < ActiveRecord::Base
           scope = klass.all
+
+          if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
+            scope = scope.by_site(current_site)
+          end
 
           if p_scope.present? && scope.respond_to?(p_scope)
             scope = scope.send(p_scope)
