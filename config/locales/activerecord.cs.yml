@@ -105,6 +105,7 @@ cs:
         created_at: Vytvořen
         full_name: Jméno
         nickname: Přezdívka
+        subscribed_to_newsletter: Přihlášení do newsletteru
       folio/address/base:
         address_line_1: Ulice
         address_line_2: Číslo

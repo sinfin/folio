@@ -23,6 +23,17 @@
       = s.attribute :authentications
         == cell('folio/console/authentications/list', s.object)
 
+      = s.attribute :subscribed_to_newsletter
+        - if Rails.application.config.folio_site_is_a_singleton
+          = t(s.object.subscribed_to_newsletter)
+        - else
+          ul
+            - s.object.newsletter_subscriptions.includes(:site).each do |ns|
+              li
+                span.mr-2
+                  = ns.active ? icon("check-circle") : icon("times-circle")
+                = ns.site.pretty_domain.capitalize
+
   - if @user.admin_note.present?
     .col-lg-4
       .card

@@ -41,6 +41,7 @@ module Folio::HasNewsletterSubscriptions
                                  tags: subscription_tags,
                                  active:,
                                  subscribable: self)
+
           unless did_create
             Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\", site \"#{site.domain}\" - failed to create.") if defined?(Raven)
           end
