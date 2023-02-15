@@ -25,13 +25,19 @@ module Folio::HasNewsletterSubscriptions
       else
         return unless newsletter_subscriptions_enabled?
 
-        site_ids = newsletter_subscriptions.map(&:site_id)
-        to_create = Folio::NewsletterSubscription.subscribable_sites.reject { |site| site.id.in?(site_ids) }
+        subscribable_sites = Folio::NewsletterSubscription.subscribable_sites
+
+        if respond_to?(:source_site) && source_site.present? && source_site.in?(subscribable_sites)
+          subscribable_source_site = source_site
+        end
+
+        present_site_ids = newsletter_subscriptions.map(&:site_id)
+        to_create = subscribable_sites.reject { |site| site.id.in?(present_site_ids) }
         to_create.each do |site|
           ns = site.newsletter_subscriptions.find_by_email(subscription_email) || site.newsletter_subscriptions.build(email: subscription_email)
 
-          if respond_to?(:source_site) && source_site.present? && source_site != site
-            active = false
+          if subscribable_source_site.present?
+            active = subscribable_source_site == site
           else
             active = should_subscribe_to_newsletter?
           end
