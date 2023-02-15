@@ -30,7 +30,7 @@ module Folio::HasNewsletterSubscriptions
         to_create.each do |site|
           ns = site.newsletter_subscriptions.find_by_email(subscription_email) || site.newsletter_subscriptions.build(email: subscription_email)
 
-          if respond_to?(:source_site) && source_site.present? && site != site
+          if respond_to?(:source_site) && source_site.present? && source_site != site
             active = false
           else
             active = should_subscribe_to_newsletter?
