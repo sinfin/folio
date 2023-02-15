@@ -4,7 +4,7 @@ module Folio::Subscribable
   extend ActiveSupport::Concern
 
   included do
-    ActiveSupport::Deprecation.warn("Folio::Subscribable is deprecated, use Folio::HasNewsletterSubscription instead!")
+    ActiveSupport::Deprecation.warn("Folio::Subscribable is deprecated, use Folio::HasNewsletterSubscriptions instead!")
   end
 
   def subscribe

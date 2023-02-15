@@ -3,7 +3,7 @@
 class Folio::Mailchimp::SubscribeJob < ApplicationJob
   queue_as :default
 
-  # deprecated, use Folio::HasNewsletterSubscription & Folio::Mailchimp::CreateOrUpdateSubscriptionJob
+  # deprecated, use Folio::HasNewsletterSubscriptions & Folio::Mailchimp::CreateOrUpdateSubscriptionJob
 
   def perform(email, merge_vars: {}, tags: [], status: nil)
     mailchimp = Folio::Mailchimp::Api.new

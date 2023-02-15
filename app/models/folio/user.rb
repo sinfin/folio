@@ -4,7 +4,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Devise::DeliverLater
   include Folio::Filterable
   include Folio::HasAddresses
-  include Folio::HasNewsletterSubscription
+  include Folio::HasNewsletterSubscriptions
 
   has_sanitized_fields :email, :first_name, :last_name, :nickname
 
@@ -57,7 +57,7 @@ class Folio::User < Folio::ApplicationRecord
             phone: true,
             if: :validate_phone?
 
-  after_invitation_accepted :update_newsletter_subscription
+  after_invitation_accepted :create_newsletter_subscriptions
 
   before_update :update_has_generated_password
 
@@ -238,14 +238,18 @@ class Folio::User < Folio::ApplicationRecord
       Rails.application.config.folio_users_require_phone
     end
 
-    def should_subscribe_to_newsletter?
+    def newsletter_subscriptions_enabled?
       # skip users that
-      # - haven't accepted invitaton
+      # - haven't accepted invitation
       # - haven't confirmed their email address
-      return if created_by_invite? && !invitation_accepted_at?
-      return if !confirmed_at? && confirmation_required_for_invited?
+      return false if created_by_invite? && !invitation_accepted_at?
+      return false if !confirmed_at? && confirmation_required_for_invited?
 
-      subscribed_to_newsletter?
+      true
+    end
+
+    def should_subscribe_to_newsletter?
+      newsletter_subscriptions_enabled? && subscribed_to_newsletter?
     end
 
     def subscription_email

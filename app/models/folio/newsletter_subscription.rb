@@ -6,7 +6,8 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   has_sanitized_fields :email
 
   belongs_to :subscribable, polymorphic: true,
-                            optional: true
+                            optional: true,
+                            inverse_of: :newsletter_subscriptions
 
   validates :email,
             format: { with: Folio::EMAIL_REGEXP }
