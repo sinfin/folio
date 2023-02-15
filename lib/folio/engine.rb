@@ -32,6 +32,7 @@ module Folio
     config.folio_console_sidebar_runner_up_link_class_names = []
     config.folio_console_sidebar_skip_link_class_names = []
     config.folio_console_sidebar_force_hide_users = false
+    config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
     config.folio_show_transportable_frontend = false

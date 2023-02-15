@@ -72,9 +72,13 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
 
   private
     def update_mailchimp_subscription(email_for_subscription = nil)
-      if Rails.env.production? || ENV["DEV_MAILCHIMP"]
-        Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription || email)
-      end
+      return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp
+      return unless Rails.env.production? || ENV["DEV_MAILCHIMP"]
+
+      # TODO: multiple mailchimp lists not implemented yet
+      return unless Rails.application.config.folio_site_is_a_singleton
+
+      Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription || email)
     end
 end
 
