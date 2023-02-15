@@ -14,6 +14,8 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   validates :email,
             uniqueness: { scope: :site_id }
 
+  validate :validate_belongs_to_subscribable_site
+
   default_scope { order(id: :desc) }
 
   scope :active, -> { where(active: true) }
@@ -66,6 +68,10 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
     end
   end
 
+  def self.subscribable_sites
+    Folio::Site.all
+  end
+
   def self.clears_page_cache_on_save?
     false
   end
@@ -79,6 +85,12 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
       return unless Rails.application.config.folio_site_is_a_singleton
 
       Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription || email)
+    end
+
+    def validate_belongs_to_subscribable_site
+      return if Rails.application.config.folio_site_is_a_singleton
+
+      errors.add(:site, :invalid) unless site.in?(self.class.subscribable_sites)
     end
 end
 
