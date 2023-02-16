@@ -96,6 +96,11 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
   }
 }
 
+window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
+  input.folioInputTempusDominus.hide()
+  $(input).trigger('change')
+}
+
 window.Folio.Input.DateTime.bind = (input, opts = {}) => {
   window.Folio.Input.DateTime.updateIconsIfNeeded(input)
 
@@ -108,9 +113,15 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
   }
 
   input.folioInputTempusDominus = new window.tempusDominus.TempusDominus(input, fullOpts)
+  input.folioInputTempusDominusChangeSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.change, window.Folio.Input.DateTime.makeOnChange(input))
 }
 
 window.Folio.Input.DateTime.unbind = (input) => {
+  if (input.folioInputTempusDominusChangeSubscription) {
+    input.folioInputTempusDominusChangeSubscription.unsubscribe()
+    input.folioInputTempusDominusChangeSubscription = null
+  }
+
   if (input.folioInputTempusDominus) {
     input.folioInputTempusDominus.dispose()
     input.folioInputTempusDominus = null
