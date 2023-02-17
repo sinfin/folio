@@ -5,12 +5,11 @@ $(document).on('change', '.f-c-publishable-inputs__checkbox', function () {
   $parent.toggleClass('f-c-publishable-inputs__box--active', this.checked)
 
   if (this.checked) {
-    const $input = $parent.find('.f-c-publishable-inputs__input').first()
+    const $input = $parent.find(window.Folio.Input.DateTime.SELECTOR).first()
 
-    if ($input.length && !$input.val()) {
-      const format = $input.data('DateTimePicker').options().format
-      const now = window.moment()
-      $input.val(now.format(format))
+    if ($input.length && !$input.val() && $input.prop('folioInputTempusDominus')) {
+      const oneMinuteAgo = new Date() - 60 * 1000
+      $input.val($input.prop('folioInputTempusDominus').dates.formatInput(new window.tempusDominus.DateTime(oneMinuteAgo)))
     }
   }
 })
