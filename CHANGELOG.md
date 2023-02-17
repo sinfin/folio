@@ -1,66 +1,70 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## 2021-02-07
+## 2023-02-17
+### Added
+- added `folio_users_non_get_referrer_rewrite_proc` config to enable rewriting post/patch referrer paths (such as `/orders/confirm`) to relevant get paths (such as `/orders/edit`)
+
+## 2023-02-07
 ### Changed
 - use `:terser` as the default `js_compressor`, remove `Folio::SelectiveUglifier`
 
-## 2021-01-31
+## 2023-01-31
 ### Changed
 - `force_correct_path` now ignores get params by default
 - dropped the obsolete `preview` actions from controllers and templates
 
-## 2021-01-24
+## 2023-01-24
 ### Changed
 - updated omniauth gems and switched to `omniauth-twitter2` - update your ENV accordingly
 
-## 2021-01-18
+## 2023-01-18
 ### Changed
 - changed `folio_pages_translations` config to `folio_pages_locales` and updated logic
 
-## 2021-01-13
+## 2023-01-13
 ### Added
 - added overridable `acquire_orphan_records!` to `Folio::User`. Use it to acquire relevant records based on the session id before it gets changed by Warden.
 
-## 2021-01-10
+## 2023-01-10
 ### Added
 - added `Folio::FilePlacement::OgImage` to default file plcaement types, add `Folio::HasAttachments` and update fallback og:image
 - added `copyright_info_source` to `Folio::Site`
 
-## 2021-01-06
+## 2023-01-06
 ### Changed
 - reinvite `Folio::User` when signing in using an e-mail of an user with a pending invitation
 
-## 2021-12-20
+## 2022-12-20
 ### Added
 - added `splittable_by_attribute` to atoms
 - added `source_site` relation to users
 
-## 2021-12-13
+## 2022-12-13
 ### Added
 - added `Folio::CacheMethods`
 
-## 2021-12-01
+## 2022-12-01
 ### Added
 - added console notifications when editing/updating the same path as a different account (using `console_path` on `Folio::Account`)
 
-## 2021-11-28
+## 2022-11-28
 ### Added
 - added `Folio::PerSiteSingleton` and update console to use the locale of `current_site`
 
-## 2021-11-14
+## 2022-11-14
 ### Changed
 - changed accounts to use `roles` array instead of a `role` string - update abilities in projects if needed!
 
-## 2021-11-03
+## 2022-11-03
 ### Added
 - added `default_gravity` to `Folio::File`
 
-## 2021-09-23
+## 2022-09-23
 ### Changed
 - refactored console site form - added tab configuration to `current_site.console_form_tabs` for easier extending in `main_app`
 
-## 2021-07-19
+## 2022-07-19
 ### Changed
 - refactored simple form inputs - check your js/coffee code (especially console) for manual input functionality and update accordingly
 
@@ -69,73 +73,73 @@ All notable changes to this project will be documented in this file.
 - gem dependency changed to `s.add_dependency "acts-as-taggable-on", "~> 9.0"` (allowing usage of ActiveRecord 6.1.4 and above)
 - version bump to `0.2.0`
 
-## 2021-06-27
+## 2022-06-27
 ### Added
 - added `Rails.application.config.folio_users_after_impersonate_path`
 
-## 2021-05-16
+## 2022-05-16
 ### Added
 - added `folio:scaffold` generator
 
-## 2021-05-09
+## 2022-05-09
 ### Added
 - added `Rails.application.config.folio_console_react_modal_types`
 
-## 2021-05-02
+## 2022-05-02
 ### Changed
 - converted email templates generator to `folio:email_templates:idp_seed` rake task
 
-## 2021-05-02
+## 2022-05-02
 ### Changed
 - use `:invitable` instead of `:registerable` for folio users
 - changed `Rails.application.config.folio_users_registerable` -> `Rails.application.config.folio_users_publicly_invitable`
 
-## 2021-04-25
+## 2022-04-25
 ### Changed
 - updated photoswipe and `folio/lightbox` - remove `folio/photoswipe` cell calls
 
-## 2021-04-14
+## 2022-04-14
 ### Removed
 - removed `data_for_search` column from atoms
 
-## 2021-03-25
+## 2022-03-25
 ### Changed
 - update `folio_console_sidebar_*` config syntax to use hashes with `{ links: [] }`
 
-## 2021-03-24
+## 2022-03-24
 ### Added
 - added `Rails.application.config.folio_site_is_a_singleton` and `Folio::Site` STI support
 
-## 2021-03-21
+## 2022-03-21
 ### Added
 - added `Folio::ConsoleNote` model and `Folio::HasConsoleNotes` concern
 
-## 2021-02-21
+## 2022-02-21
 ### Added
 - added `self.default_atom_values` to atoms
 
-## 2021-02-04
+## 2022-02-04
 ### Added
 - added `Rails.application.config.folio_console_ability_lambda` for easier console ability tweaks
 
-## 2021-02-04
+## 2022-02-04
 ### Changed
 - added sidekiq web to folio routes, hidden behind an `authenticate` lambda - remove it from application routes!
 
-## 2021-01-31
+## 2022-01-31
 ### Added
 - added `through` support for `folio_console_controller_for`
 
-## 2021-01-31
+## 2022-01-31
 ### Changed
 - changed the syntax of `FORM_LAYOUT` for atoms - use nested rows/columns hashes
 
-## 2021-01-20
+## 2022-01-20
 ### Changed
 - changed api files controllers to use direct s3 upload
 - added `file_mime_type` for `Folio::File`, whilst keeping `mime_type` column so that there's not a 500 during deployment - create a per-project migration removing it
 
-## 2021-01-11
+## 2022-01-11
 ### Changed
 - changed console flash javascript - upgrade all your JS code using flash (grep `window.FolioConsole.flash` and replace via the new methods defined in `app/assets/javascripts/folio/console/_flash.es6`)
 

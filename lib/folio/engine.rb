@@ -67,6 +67,8 @@ module Folio
     config.folio_users_after_password_change_path = :root_path
     config.folio_users_after_impersonate_path = config.folio_users_after_sign_in_path
 
+    config.folio_users_non_get_referrer_rewrite_proc = -> (referrer) { }
+
     config.folio_console_ability_lambda = -> (ability, account) { }
 
     config.folio_console_react_modal_types = %w[Folio::Image Folio::Document]

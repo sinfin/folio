@@ -20,6 +20,9 @@
     .f-devise__under-submit-links
       = forgotten_password_link
 
+    - if model[:modal_non_get_request]
+      input name="modal_non_get_request" value="1" type="hidden"
+
     span.folio-loader.f-devise__loader
 
   - if ::Rails.application.config.folio_users_publicly_invitable

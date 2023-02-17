@@ -29,6 +29,9 @@
     - unless omniauth_above?
       == cell('folio/devise/omniauth', 'registrations')
 
+    - if model[:modal_non_get_request]
+      input name="modal_non_get_request" value="1" type="hidden"
+
     span.folio-loader.f-devise__loader
 
   .f-devise__bottom-action-wrap

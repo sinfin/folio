@@ -53,7 +53,19 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
               }
             }
           else
-            store_location_for(:user, request.referrer) if request.referrer
+            if request.referrer
+              if params[:modal_non_get_request].blank?
+                store_location_for(:user, request.referrer)
+              elsif path = Rails.application.config.folio_users_non_get_referrer_rewrite_proc.call(request.referrer)
+                store_location_for(:user, path)
+              else
+                # remove stored
+                stored_location_for(:user)
+              end
+            else
+              # remove stored
+              stored_location_for(:user)
+            end
 
             json = {
               data: {
@@ -74,7 +86,8 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
                       resource:,
                       resource_name: :user,
                       modal: true,
-                      flash: cell_flash).show
+                      flash: cell_flash,
+                      modal_non_get_request: params[:modal_non_get_request].present?).show
 
           render json: { errors:, data: html }, status: 401
         end
