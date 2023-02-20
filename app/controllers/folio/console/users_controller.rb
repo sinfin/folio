@@ -5,6 +5,8 @@ class Folio::Console::UsersController < Folio::Console::BaseController
                                csv: true,
                                catalogue_collection_actions: %i[destroy csv]
 
+  before_action :skip_email_reconfirmation, only: [:update]
+
   def send_reset_password_email
     @user.send_reset_password_instructions
     redirect_back fallback_location: url_for([:console, @user]),
@@ -83,5 +85,9 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
     def additional_user_params
       []
+    end
+
+    def skip_email_reconfirmation
+      @user.skip_reconfirmation! if Rails.application.config.folio_users_confirm_email_change
     end
 end
