@@ -22,6 +22,8 @@ class Folio::Devise::ResourceFormCell < Folio::Devise::ApplicationCell
 
   def show_address?(f)
     return true if f.object.primary_address.blank?
+    return true if f.object.first_name.blank? || f.object.first_name_changed?
+    return true if f.object.last_name.blank? || f.object.last_name_changed?
     return false if f.object.primary_address.persisted? && f.object.primary_address.valid? && !f.object.primary_address.changed?
     true
   end
