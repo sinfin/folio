@@ -28,6 +28,8 @@ module Folio
         gem "omniauth-twitter2"
         gem "omniauth-rails_csrf_protection"
 
+        gem "faker", require: false
+
         gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
 
         gem "cells-rails", "~> 0.1.5"
@@ -51,7 +53,6 @@ module Folio
         end
 
         gem_group :development, :test do
-          gem "faker"
           gem "pry-byebug"
         end
 
