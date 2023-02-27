@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 def create_page_singleton(klass, attrs = {})
-  page = create(:folio_page, { site: @site, locale: @site.locale }.merge(attrs)).becomes!(klass)
+  default_hash = @site ? { site: @site, locale: @site.locale } : {}
+
+  page = create(:folio_page, default_hash.merge(attrs)).becomes!(klass)
   page.save!
 
   page
