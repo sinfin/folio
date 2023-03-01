@@ -34,14 +34,12 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
       clear: 'fa fa-trash-alt f-input__ico f-input__ico--clear',
       close: 'fa fa-times f-input__ico f-input__ico--close'
     },
-    components: {
-      useTwentyfourHour: true
-    },
     theme: 'light'
   },
   localization: {
     locale: document.documentElement.lang,
-    format: 'dd. MM. yyyy HH:mm'
+    format: 'dd. MM. yyyy HH:mm',
+    hourCycle: 'h24',
   },
   keepInvalid: false,
   useCurrent: false,
@@ -97,7 +95,10 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
 }
 
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
-  input.folioInputTempusDominus.hide()
+  if (input.value === "" || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
+    input.folioInputTempusDominus.hide()
+  }
+
   $(input).trigger('change')
 }
 
