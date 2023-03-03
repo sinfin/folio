@@ -76,7 +76,6 @@ Gem::Specification.new do |s|
   s.add_dependency "devise-i18n"
   s.add_dependency "devise-bootstrap-views"
 
-  s.add_development_dependency "sqlite3"
   s.add_development_dependency "pry-rails"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "rubocop-rails_config"
