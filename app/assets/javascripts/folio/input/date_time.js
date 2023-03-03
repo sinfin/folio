@@ -39,7 +39,7 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
   localization: {
     locale: document.documentElement.lang,
     format: 'dd. MM. yyyy HH:mm',
-    hourCycle: 'h24',
+    hourCycle: 'h23',
   },
   keepInvalid: false,
   useCurrent: false,
