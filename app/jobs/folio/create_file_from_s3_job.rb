@@ -10,7 +10,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     sidekiq_options retry: false
   end
 
-  def perform(s3_path:, type:, existing_id: nil)
+  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil)
     return unless s3_path
     return unless type
     klass = type.safe_constantize
@@ -48,6 +48,10 @@ class Folio::CreateFileFromS3Job < ApplicationJob
 
       file.file = File.open(tmp_file_path)
 
+      if file.respond_to?("web_session_id=")
+        file.web_session_id = web_session_id
+      end
+
       if file.save
         if file.try(:thumbnailable?)
           file.try(:admin_thumb, immediate: true)
@@ -80,8 +84,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       name = model.class.base_class.name.gsub("Folio::", "")
       serializer = "Folio::Console::#{name}Serializer".safe_constantize
       serializer ||= "#{name}Serializer".safe_constantize
-      fail ArgumentError.new("Unknown serializer") if serializer.nil?
-      serializer
+      serializer || Folio::GenericDropzoneSerializer
     end
 
     def serialized_file(model)

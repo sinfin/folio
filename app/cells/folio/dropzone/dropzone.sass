@@ -15,101 +15,101 @@
     min-height: $input-height
     position: relative
 
-    &.dropzone
-      padding: 0
-      border: 0
-      background: transparent
-      display: flex
-      align-items: center
+    // &.dropzone
+    //   padding: 0
+    //   border: 0
+    //   background: transparent
+    //   display: flex
+    //   align-items: center
 
-      .dz-button
-        +button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-line-height, $btn-border-radius)
-        +transition($btn-transition)
-        display: inline-block
-        font-family: $btn-font-family
-        font-weight: $btn-font-weight
-        color: $body-color
-        text-align: center
-        text-decoration: none
-        white-space: $btn-white-space
-        vertical-align: middle
-        user-select: none
-        background-color: transparent
-        border: $btn-border-width solid transparent
-        +button-outline-variant($primary)
+    //   .dz-button
+    //     +button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-line-height, $btn-border-radius)
+    //     +transition($btn-transition)
+    //     display: inline-block
+    //     font-family: $btn-font-family
+    //     font-weight: $btn-font-weight
+    //     color: $body-color
+    //     text-align: center
+    //     text-decoration: none
+    //     white-space: $btn-white-space
+    //     vertical-align: middle
+    //     user-select: none
+    //     background-color: transparent
+    //     border: $btn-border-width solid transparent
+    //     +button-outline-variant($primary)
 
-      .dz-message
-        margin: 0
-        text-align: left
-        width: 100%
+    //   .dz-message
+    //     margin: 0
+    //     text-align: left
+    //     width: 100%
 
-        > span
-          display: block
+    //     > span
+    //       display: block
 
-      .dz-image
-        box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.26)
-        border-radius: 0
+    //   .dz-image
+    //     box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.26)
+    //     border-radius: 0
 
-        img
-          width: 100%
-          height: 100%
-          object-fit: cover
+    //     img
+    //       width: 100%
+    //       height: 100%
+    //       object-fit: cover
 
-      .dz-preview
-        margin: 0 (( $grid-gutter-width / 2 + 25 )) $grid-gutter-width / 2 0
-        background: $white
+    //   .dz-preview
+    //     margin: 0 (( $grid-gutter-width / 2 + 25 )) $grid-gutter-width / 2 0
+    //     background: $white
 
-        &.dz-image-preview
-          background: none
+    //     &.dz-image-preview
+    //       background: none
 
-          .dz-details
-            display: none
+    //       .dz-details
+    //         display: none
 
-        &.dz-file-preview
-          .dz-image
-            display: none
+    //     &.dz-file-preview
+    //       .dz-image
+    //         display: none
 
-          .dz-details
-            padding: $spacer / 2
-            position: static
-            display: flex
-            flex-direction: column
-            justify-content: center
-            align-items: center
-            width: 120px
-            height: 120px
-            overflow: hidden
+    //       .dz-details
+    //         padding: $spacer / 2
+    //         position: static
+    //         display: flex
+    //         flex-direction: column
+    //         justify-content: center
+    //         align-items: center
+    //         width: 120px
+    //         height: 120px
+    //         overflow: hidden
 
-            .dz-size
-              margin: $spacer / 2 0 $spacer / 4 0
+    //         .dz-size
+    //           margin: $spacer / 2 0 $spacer / 4 0
 
-            .dz-filename span
-              border: 0 !important
+    //         .dz-filename span
+    //           border: 0 !important
 
-            &:before
-              background: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3Cpath d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"/%3E%3C/svg%3E') center center no-repeat
-              display: block
-              content: ''
-              width: 24px
-              height: 24px
+    //         &:before
+    //           background: url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3Cpath d="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z"/%3E%3C/svg%3E') center center no-repeat
+    //           display: block
+    //           content: ''
+    //           width: 24px
+    //           height: 24px
 
-        &:hover .dz-image img
-          transform: none
-          filter: none
+    //     &:hover .dz-image img
+    //       transform: none
+    //       filter: none
 
-        .dz-filename
-          white-space: nowrap !important
-          width: 100% !important
-          overflow: hidden !important
-          text-overflow: ellipsis !important
+    //     .dz-filename
+    //       white-space: nowrap !important
+    //       width: 100% !important
+    //       overflow: hidden !important
+    //       text-overflow: ellipsis !important
 
-        .dz-remove
-          background: $white url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3Cpath d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/%3E%3C/svg%3E') center center no-repeat
-          position: absolute
-          top: 0
-          right: 0
-          display: block
-          content: ''
-          width: 24px
-          height: 24px
-          z-index: 15
+    //     .dz-remove
+    //       background: $white url('data:image/svg+xml;utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"%3E%3Cpath d="M0 0h24v24H0z" fill="none"/%3E%3Cpath d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/%3E%3C/svg%3E') center center no-repeat
+    //       position: absolute
+    //       top: 0
+    //       right: 0
+    //       display: block
+    //       content: ''
+    //       width: 24px
+    //       height: 24px
+    //       z-index: 15

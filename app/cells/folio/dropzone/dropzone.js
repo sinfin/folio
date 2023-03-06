@@ -1,4 +1,5 @@
 //= require folio/api
+//= require folio/s3-upload
 //= require dropzone/dist/dropzone
 
 window.Folio = window.Folio || {}
@@ -9,92 +10,97 @@ window.Folio.Dropzone.SELECTOR = '.f-dropzone__dropzone'
 window.Folio.Dropzone.bind = (wrap) => {
   const $wrap = $(wrap)
 
-  const options = {
-    ...$wrap.data('dict'),
-    url: $wrap.data('create-url'),
-    paramName: $wrap.data('param-name'),
-    addRemoveLinks: true,
-    createImageThumbnails: $wrap.data('create-thumbnails'),
-    maxThumbnailFilesize: 15,
-    thumbnailWidth: 250,
-    thumbnailHeight: 250,
-    maxFilesize: 100,
-    maxFiles: $wrap.data('max-files') || null,
-    timeout: 0,
-    acceptedFiles: $wrap.data('file-formats') || null,
-    removedfile: function (file) {
-      let id, url
-      if (file.status !== 'error') {
-        try {
-          id = file.id || JSON.parse(file.xhr.response).id
-          url = $wrap.data('destroy-url').replace('ID', id)
-          $.ajax({
-            method: 'DELETE',
-            url,
-            success: function () {
-              return $(file.previewElement).remove()
-            },
-            error: function () {
-              return window.alert($wrap.data('destroy-failure'))
-            }
-          })
-        } catch (error) {
-          window.alert($wrap.data('destroy-failure'))
-        }
-      }
-      return $wrap.toggleClass('dz-started', $wrap.find('.dz-preview').length !== 0)
-    }
-  }
+  wrap.classList.add('dropzone')
 
-  $wrap.addClass('dropzone').dropzone(options)
-
-  wrap.dropzone.on('error', function (file, message) {
-    window.alert(message)
-    $(file.previewElement).remove()
-    return this.removeFile(file)
+  window.Folio.S3Upload.createDropzone({
+    element: wrap,
+    fileType: wrap.getAttribute('data-file-type'),
+    dontRemoveFileOnSuccess: true,
+    dropzoneOptions: {
+      clickable: wrap,
+      createImageThumbnails: wrap.getAttribute('data-create-thumbnails') !== null,
+      previewsContainer: null,
+    },
   })
 
-  if ($wrap.data('index-url')) {
-    $.get($wrap.data('index-url'), (res) => {
-      let attachment, file, i, len
-      if (res) {
-        for (i = 0, len = res.length; i < len; i++) {
-          attachment = res[i]
-          file = {
-            id: attachment.id,
-            name: attachment.file_name,
-            size: attachment.file_size
-          }
-          wrap.dropzone.files.push(file)
-          wrap.dropzone.emit('addedfile', file)
-          if (attachment.thumb) {
-            wrap.dropzone.emit('thumbnail', file, attachment.thumb)
-          }
-          wrap.dropzone.emit('complete', file)
-        }
-      }
-      return $wrap.removeClass('f-dropzone__dropzone--loading')
-    })
-  }
+  // const options = {
+  //   ...$wrap.data('dict'),
+  //   url: $wrap.data('create-url'),
+  //   paramName: $wrap.data('param-name'),
+  //   addRemoveLinks: true,
+  //   createImageThumbnails: $wrap.data('create-thumbnails'),
+  //   maxThumbnailFilesize: 15,
+  //   thumbnailWidth: 250,
+  //   thumbnailHeight: 250,
+  //   maxFilesize: 100,
+  //   maxFiles: $wrap.data('max-files') || null,
+  //   timeout: 0,
+  //   acceptedFiles: $wrap.data('file-formats') || null,
+  //   removedfile: function (file) {
+  //     let id, url
+  //     if (file.status !== 'error') {
+  //       try {
+  //         id = file.id || JSON.parse(file.xhr.response).id
+  //         url = $wrap.data('destroy-url').replace('ID', id)
+  //         $.ajax({
+  //           method: 'DELETE',
+  //           url,
+  //           success: function () {
+  //             return $(file.previewElement).remove()
+  //           },
+  //           error: function () {
+  //             return window.alert($wrap.data('destroy-failure'))
+  //           }
+  //         })
+  //       } catch (error) {
+  //         window.alert($wrap.data('destroy-failure'))
+  //       }
+  //     }
+  //     return $wrap.toggleClass('dz-started', $wrap.find('.dz-preview').length !== 0)
+  //   }
+  // }
 
-  if ($wrap.data('records')) {
-    return $wrap.data('records').forEach((attachment) => {
-      const file = {
-        id: attachment.id,
-        name: attachment.file_name,
-        size: attachment.file_size
-      }
+  // if ($wrap.data('index-url')) {
+  //   $.get($wrap.data('index-url'), (res) => {
+  //     let attachment, file, i, len
+  //     if (res) {
+  //       for (i = 0, len = res.length; i < len; i++) {
+  //         attachment = res[i]
+  //         file = {
+  //           id: attachment.id,
+  //           name: attachment.file_name,
+  //           size: attachment.file_size
+  //         }
+  //         wrap.dropzone.files.push(file)
+  //         wrap.dropzone.emit('addedfile', file)
+  //         if (attachment.thumb) {
+  //           wrap.dropzone.emit('thumbnail', file, attachment.thumb)
+  //         }
+  //         wrap.dropzone.emit('complete', file)
+  //       }
+  //     }
+  //     return $wrap.removeClass('f-dropzone__dropzone--loading')
+  //   })
+  // }
 
-      wrap.dropzone.files.push(file)
-      wrap.dropzone.emit('addedfile', file)
+  // if ($wrap.data('records')) {
+  //   return $wrap.data('records').forEach((attachment) => {
+  //     const file = {
+  //       id: attachment.id,
+  //       name: attachment.file_name,
+  //       size: attachment.file_size
+  //     }
 
-      if (attachment.thumb) {
-        wrap.dropzone.emit('thumbnail', file, attachment.thumb)
-      }
+  //     wrap.dropzone.files.push(file)
+  //     wrap.dropzone.emit('addedfile', file)
 
-      return wrap.dropzone.emit('complete', file)
-    })
-  }
+  //     if (attachment.thumb) {
+  //       wrap.dropzone.emit('thumbnail', file, attachment.thumb)
+  //     }
+
+  //     return wrap.dropzone.emit('complete', file)
+  //   })
+  // }
 }
 
 window.Folio.Dropzone.unbind = (dropzone) => {

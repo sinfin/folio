@@ -33,7 +33,10 @@ class Folio::Api::S3SignerController < Folio::Api::BaseController
     file_klass = type.safe_constantize
 
     if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(s3_path)
-      Folio::CreateFileFromS3Job.perform_later(s3_path:, type:, existing_id: params[:existing_id].try(:to_i))
+      Folio::CreateFileFromS3Job.perform_later(s3_path:,
+                                               type:,
+                                               existing_id: params[:existing_id].try(:to_i),
+                                               web_session_id: session.id.public_id)
       render json: {}
     else
       render json: {}, status: 422

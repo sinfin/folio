@@ -9,6 +9,7 @@ class Folio::SessionAttachments::DropzoneCell < Folio::ApplicationCell
       param_name: "folio_session_attachment[file]",
       create_thumbnails: model < Folio::SessionAttachment::Image,
       file_formats:,
+      file_type: model.to_s,
       max_file_size: 20,
     }
   end

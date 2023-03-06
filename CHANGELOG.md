@@ -1,6 +1,20 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-03-06
+### Changed
+- moved s3 signer controller out of console
+- moved javascript files around
+
+```
+folio/console/_flash     -> folio/console/flash
+folio/console/_api       -> folio/api
+folio/console/_s3-upload -> folio/s3-upload
+folio/_message-bus       -> folio/message-bus
+```
+
+- started to refactor `Folio::DropzoneCell` to work with direct s3 uploads - needs some styling still
+
 ## 2023-02-17
 ### Added
 - added `folio_users_non_get_referrer_rewrite_proc` config to enable rewriting post/patch referrer paths (such as `/orders/confirm`) to relevant get paths (such as `/orders/edit`)

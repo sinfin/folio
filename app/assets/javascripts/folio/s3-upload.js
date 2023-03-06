@@ -30,7 +30,9 @@ window.Folio.S3Upload.createDropzone = ({
   onProgress,
   onSuccess,
   onFailure,
-  onThumbnail
+  onThumbnail,
+  folioConsole,
+  dontRemoveFileOnSuccess
 }) => {
   if (!fileType) throw new Error('Missing fileType')
   if (!element) throw new Error('Missing element')
@@ -41,7 +43,6 @@ window.Folio.S3Upload.createDropzone = ({
     url: '#',
     method: 'PUT',
     paramName: 'file',
-    previewTemplate: window.Folio.S3Upload.consolePreviewTemplate(),
     previewsContainer: null,
     clickable: true,
     thumbnailMethod: 'contain',
@@ -90,7 +91,9 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     error: function (file, message) {
-      window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+      if (window.FolioConsole && window.FolioConsole.Flash) {
+        window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+      }
 
       const dropzone = this
 
@@ -108,7 +111,7 @@ window.Folio.S3Upload.createDropzone = ({
 
       if (onProgress) onProgress(file.s3_path, rounded)
 
-      if (file.previewElement) {
+      if (folioConsole && file.previewElement) {
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__slider, .f-c-r-dropzone__preview-progress-inner')
@@ -150,11 +153,13 @@ window.Folio.S3Upload.createDropzone = ({
           }
         })
       case 'success': {
-        dropzone.files.forEach((file) => {
-          if (file.s3_path === msg.data.s3_path) {
-            setTimeout(() => { dropzone.removeFile(file) }, 0)
-          }
-        })
+        if (!dontRemoveFileOnSuccess) {
+          dropzone.files.forEach((file) => {
+            if (file.s3_path === msg.data.s3_path) {
+              setTimeout(() => { dropzone.removeFile(file) }, 0)
+            }
+          })
+        }
 
         if (onSuccess) onSuccess(msg.data.s3_path, msg.data.file)
 
@@ -162,7 +167,11 @@ window.Folio.S3Upload.createDropzone = ({
       }
       case 'failure': {
         if (msg.data.errors && msg.data.errors.length) {
-          window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+          if (window.FolioConsole && window.FolioConsole.Flash) {
+            window.FolioConsole.Flash.alert(msg.data.errors.join('<br>'))
+          } else {
+            window.alert(msg.data.errors.join('\n'))
+          }
         }
 
         dropzone.files.forEach((file) => {
@@ -182,8 +191,12 @@ window.Folio.S3Upload.createDropzone = ({
 
 window.Folio.S3Upload.createConsoleDropzone = (opts) => {
   const options = {
-    previewTemplate: window.Folio.S3Upload.consolePreviewTemplate(),
-    ...opts
+    ...opts,
+    folioConsole: true,
+    dropzoneOptions: {
+      ...opts.dropzoneOptions,
+      previewTemplate: window.Folio.S3Upload.consolePreviewTemplate()
+    }
   }
 
   return window.Folio.S3Upload.createDropzone(options)
