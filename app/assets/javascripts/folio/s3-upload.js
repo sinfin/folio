@@ -32,7 +32,8 @@ window.Folio.S3Upload.createDropzone = ({
   onFailure,
   onThumbnail,
   folioConsole,
-  dontRemoveFileOnSuccess
+  dontRemoveFileOnSuccess,
+  hidden
 }) => {
   if (!fileType) throw new Error('Missing fileType')
   if (!element) throw new Error('Missing element')
@@ -139,11 +140,27 @@ window.Folio.S3Upload.createDropzone = ({
   const dropzone = new window.Dropzone(element, options)
   dropzone.dropzoneId = dropzoneId
 
+  filterMessageBusMessages = filterMessageBusMessages || ((msg) => {
+    const s3Path = msg && msg.data && msg.data.s3_path
+
+    if (!s3Path) return false
+
+    let isFromThisDropzone = false
+
+    dropzone.files.forEach((file) => {
+      if (file.s3_path === s3Path) {
+        isFromThisDropzone = true
+      }
+    })
+
+    return isFromThisDropzone
+  })
+
   window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzoneId}`] = (msg) => {
     if (!msg) return
     if (msg.type !== 'Folio::CreateFileFromS3Job') return
     if (msg.data.file_type !== fileType) return
-    if (filterMessageBusMessages && !filterMessageBusMessages(msg)) return
+    if (!filterMessageBusMessages(msg)) return
 
     switch (msg.data.type) {
       case 'start':
@@ -182,7 +199,6 @@ window.Folio.S3Upload.createDropzone = ({
 
         if (onFailure) onFailure(msg.data.s3_path)
       }
-      default:
     }
   }
 
@@ -196,6 +212,20 @@ window.Folio.S3Upload.createConsoleDropzone = (opts) => {
     dropzoneOptions: {
       ...opts.dropzoneOptions,
       previewTemplate: window.Folio.S3Upload.consolePreviewTemplate()
+    }
+  }
+
+  return window.Folio.S3Upload.createDropzone(options)
+}
+
+window.Folio.S3Upload.createHiddenDropzone = (opts) => {
+  const options = {
+    ...opts,
+    hidden: true,
+    dropzoneOptions: {
+      ...opts.dropzoneOptions,
+      disablePreviews: true,
+      previewsContainer: false
     }
   }
 
