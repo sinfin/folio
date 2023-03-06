@@ -2,12 +2,12 @@ window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.PrivateAttachments = window.FolioConsole.PrivateAttachments || {}
 window.FolioConsole.PrivateAttachments.Fields = {}
 
-window.FolioConsole.PrivateAttachments.Fields.SELECTOR = ".f-c-private-attachments-fields-dropzone"
+window.FolioConsole.PrivateAttachments.Fields.SELECTOR = '.f-c-private-attachments-fields-dropzone'
 
 window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
   const $el = $(el)
 
-  const dropzone = window.FolioConsole.S3Upload.createConsoleDropzone({
+  const dropzone = window.Folio.S3Upload.createConsoleDropzone({
     element: el.getAttribute('data-dropzone-to-body') === 'true' ? document.body : el,
     fileType: el.getAttribute('data-file-type'),
     dropzoneOptions: {
@@ -89,7 +89,7 @@ window.FolioConsole.PrivateAttachments.Fields.destroy = (el) => {
   const dropzone = $(el).data('folioConsoleDropzone')
 
   if (dropzone) {
-    window.FolioConsole.S3Upload.destroyDropzone(dropzone)
+    window.Folio.S3Upload.destroyDropzone(dropzone)
     $(el).data('folioConsoleDropzone', null)
   }
 }
@@ -112,7 +112,7 @@ window.FolioConsole.PrivateAttachments.Fields.updateSingleFields = (e) => {
     .prop('hidden', $el.find('.f-c-private-attachments-fields:visible').length > 0)
 }
 
-if (typeof(Turbolinks) === 'undefiend') {
+if (typeof (Turbolinks) === 'undefiend') {
   $(() => { window.FolioConsole.PrivateAttachments.Fields.initAll() })
 } else {
   $(document)

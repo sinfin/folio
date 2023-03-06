@@ -27,11 +27,11 @@ class Uploader extends Component {
   }
 
   triggerFileInput = () => {
-    window.FolioConsole.S3Upload.triggerDropzone(this.dropzone)
+    window.Folio.S3Upload.triggerDropzone(this.dropzone)
   }
 
   componentDidMount () {
-    this.dropzone = window.FolioConsole.S3Upload.createConsoleDropzone({
+    this.dropzone = window.Folio.S3Upload.createConsoleDropzone({
       element: this.dropzoneDivRef.current,
       filesUrl: this.props.filesUrl,
       fileType: this.props.fileType,
@@ -77,7 +77,7 @@ class Uploader extends Component {
   }
 
   componentWillUnmount () {
-    window.FolioConsole.S3Upload.destroyDropzone(this.dropzone)
+    window.Folio.S3Upload.destroyDropzone(this.dropzone)
     this.dropzone = null
   }
 

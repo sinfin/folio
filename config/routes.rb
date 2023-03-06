@@ -144,11 +144,6 @@ Folio::Engine.routes.draw do
           post :change_file
         end
       end
-
-      resource :s3_signer, only: [], controller: "s3_signer" do
-        post :s3_before
-        post :s3_after
-      end
     end
 
     resource :merge, only: [:new, :create],
@@ -168,6 +163,15 @@ Folio::Engine.routes.draw do
   resources :newsletter_subscriptions, only: %i[create]
   resources :session_attachments, only: %i[create index destroy],
                                   as: :folio_session_attachments
+
+  scope :folio, as: :folio do
+    namespace :api do
+      resource :s3_signer, only: [], controller: "s3_signer" do
+        post :s3_before
+        post :s3_after
+      end
+    end
+  end
 
   get "/folio/ui", to: "ui#ui"
   get "/folio/ui/mobile_typo", to: "ui#mobile_typo"

@@ -5,7 +5,7 @@
 #= require jquery-ui/jquery-ui
 #= require justified-layout
 #= require folio/atoms
-#= require folio/_message-bus
+#= require folio/message-bus
 #= require folio/lazyload
 #= require folio/lightbox
 #= require folio/debounce

@@ -113,14 +113,14 @@ function * updateFileThumbnailSaga () {
 
 function * uploadNewFileInsteadPerform (action) {
   try {
-    const result = yield call(window.FolioConsole.S3Upload.newUpload, {
+    const result = yield call(window.Folio.S3Upload.newUpload, {
       filesUrl: action.filesUrl,
       file: action.fileIo
     })
 
     yield call(apiXhrFilePut, result.s3_url, action.fileIo)
 
-    yield call(window.FolioConsole.S3Upload.finishedUpload, {
+    yield call(window.Folio.S3Upload.finishedUpload, {
       filesUrl: action.filesUrl,
       s3_path: result.s3_path,
       type: action.fileType,

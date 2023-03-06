@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-class Folio::Console::Api::S3SignerController < Folio::Console::Api::BaseController
+class Folio::Api::S3SignerController < Folio::Api::BaseController
   include Folio::S3Client
+
+  before_action :authenticate_s3_signer!
 
   def s3_before # return settings for S3 file upload
     file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
@@ -43,5 +45,12 @@ class Folio::Console::Api::S3SignerController < Folio::Console::Api::BaseControl
       Rails.application.config.folio_direct_s3_upload_class_names.any? do |class_name|
         file_klass <= class_name.constantize
       end
+    end
+
+    def authenticate_s3_signer!
+      return if Rails.application.config.folio_direct_s3_upload_allow_public
+      return if current_account
+      return if Rails.application.config.folio_direct_s3_upload_allow_for_users && user_signed_in?
+      fail CanCan::AccessDenied
     end
 end

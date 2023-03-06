@@ -1,17 +1,17 @@
-window.FolioConsole = window.FolioConsole || {}
-window.FolioConsole.S3Upload = {}
+window.Folio = window.Folio || {}
+window.Folio.S3Upload = {}
 
-window.FolioConsole.S3Upload.newUpload = ({ file }) => {
-  return window.FolioConsole.Api.apiPost('/console/api/s3_signer/s3_before', { file_name: file.name })
+window.Folio.S3Upload.newUpload = ({ file }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3_signer/s3_before', { file_name: file.name })
 }
 
-window.FolioConsole.S3Upload.finishedUpload = ({ s3_path, type, existingId }) => {
-  return window.FolioConsole.Api.apiPost('/console/api/s3_signer/s3_after', { s3_path, type, existing_id: existingId })
+window.Folio.S3Upload.finishedUpload = ({ s3_path, type, existingId }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3_signer/s3_after', { s3_path, type, existing_id: existingId })
 }
 
-window.FolioConsole.S3Upload.previousDropzoneId = 0
+window.Folio.S3Upload.previousDropzoneId = 0
 
-window.FolioConsole.S3Upload.consolePreviewTemplate = () => `
+window.Folio.S3Upload.consolePreviewTemplate = () => `
   <div class="f-c-r-dropzone__preview">
     <img data-dz-thumbnail class="f-c-r-dropzone__preview-thumbnail" />
     <div class="f-c-r-dropzone__preview-progress">
@@ -21,7 +21,7 @@ window.FolioConsole.S3Upload.consolePreviewTemplate = () => `
   </div>
 `
 
-window.FolioConsole.S3Upload.createConsoleDropzone = ({
+window.Folio.S3Upload.createDropzone = ({
   dropzoneOptions,
   element,
   fileType,
@@ -30,18 +30,18 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   onProgress,
   onSuccess,
   onFailure,
-  onThumbnail,
+  onThumbnail
 }) => {
-  if (!fileType) throw "Missing fileType"
-  if (!element) throw "Missing element"
+  if (!fileType) throw new Error('Missing fileType')
+  if (!element) throw new Error('Missing element')
 
-  const dropzoneId = window.FolioConsole.S3Upload.previousDropzoneId += 1
+  const dropzoneId = window.Folio.S3Upload.previousDropzoneId += 1
 
   const options = {
-    url: "#",
+    url: '#',
     method: 'PUT',
     paramName: 'file',
-    previewTemplate: window.FolioConsole.S3Upload.consolePreviewTemplate(),
+    previewTemplate: window.Folio.S3Upload.consolePreviewTemplate(),
     previewsContainer: null,
     clickable: true,
     thumbnailMethod: 'contain',
@@ -60,7 +60,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
     accept: function (file, done) {
       const dropzone = this
 
-      window.FolioConsole.S3Upload.newUpload({ file })
+      window.Folio.S3Upload.newUpload({ file })
         .then((result) => {
           file.file_name = result.file_name
           file.s3_path = result.s3_path
@@ -83,7 +83,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
     },
 
     success: function (file) {
-      window.FolioConsole.S3Upload.finishedUpload({
+      window.Folio.S3Upload.finishedUpload({
         s3_path: file.s3_path,
         type: fileType
       })
@@ -112,7 +112,7 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__slider, .f-c-r-dropzone__preview-progress-inner')
-          .style['width'] = `${rounded}%`
+          .style.width = `${rounded}%`
 
         file
           .previewElement
@@ -130,10 +130,10 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
       }
     },
 
-    ...(dropzoneOptions || {}),
+    ...(dropzoneOptions || {})
   }
 
-  const dropzone = new Dropzone(element, options)
+  const dropzone = new window.Dropzone(element, options)
   dropzone.dropzoneId = dropzoneId
 
   window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzoneId}`] = (msg) => {
@@ -172,8 +172,6 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
         })
 
         if (onFailure) onFailure(msg.data.s3_path)
-
-        return
       }
       default:
     }
@@ -182,11 +180,20 @@ window.FolioConsole.S3Upload.createConsoleDropzone = ({
   return dropzone
 }
 
-window.FolioConsole.S3Upload.destroyDropzone = (dropzone) => {
+window.Folio.S3Upload.createConsoleDropzone = (opts) => {
+  const options = {
+    previewTemplate: window.Folio.S3Upload.consolePreviewTemplate(),
+    ...opts
+  }
+
+  return window.Folio.S3Upload.createDropzone(options)
+}
+
+window.Folio.S3Upload.destroyDropzone = (dropzone) => {
   delete window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzone.dropzoneId}`]
   dropzone.destroy()
 }
 
-window.FolioConsole.S3Upload.triggerDropzone = (dropzone) => {
+window.Folio.S3Upload.triggerDropzone = (dropzone) => {
   dropzone.hiddenFileInput.click()
 }

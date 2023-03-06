@@ -56,7 +56,7 @@ module Folio
   EMAIL_REGEXP = /[^@]+@[^@]+\.[^@]+/
   OG_IMAGE_DIMENSIONS = "1200x630#"
 
-  # respect app/assets/javascripts/folio/_message-bus.js
+  # respect app/assets/javascripts/folio/message-bus.js
   MESSAGE_BUS_CHANNEL = "folio_messagebus_channel"
 
   def self.table_name_prefix

@@ -40,11 +40,10 @@
 //= require daterangepicker.min
 
 // keep the order!
-//= require folio/console/_flash
-//= require folio/console/_api
-//= require folio/console/_s3-upload
-
-//= require folio/_message-bus
+//= require folio/api
+//= require folio/s3-upload
+//= require folio/console/flash
+//= require folio/message-bus
 
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-set-position

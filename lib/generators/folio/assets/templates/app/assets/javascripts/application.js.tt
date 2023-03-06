@@ -11,7 +11,7 @@
 
 <%- if Rails.application.config.folio_users -%>//= require folio/devise
 <%- end -%>
-//= require folio/_message-bus
+//= require folio/message-bus
 //= require folio/addresses
 //= require folio/atoms
 //= require folio/cookie_consent/cookie_consent

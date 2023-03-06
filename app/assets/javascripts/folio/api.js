@@ -1,21 +1,23 @@
-window.FolioConsole = window.FolioConsole || {}
-window.FolioConsole.Api = {}
+window.Folio = window.Folio || {}
+window.Folio.Api = {}
 
 const meta = document.querySelector('meta[name="csrf-token"]')
 
-window.FolioConsole.Api.CSRF_TOKEN = meta ? {
-  'X-CSRF-Token': meta.getAttribute('content')
-} : {}
+window.Folio.Api.CSRF_TOKEN = meta
+  ? {
+      'X-CSRF-Token': meta.getAttribute('content')
+    }
+  : {}
 
-window.FolioConsole.Api.JSON_HEADERS = {
-  ...window.FolioConsole.Api.CSRF_TOKEN,
-  'Accept': 'application/json',
+window.Folio.Api.JSON_HEADERS = {
+  ...window.Folio.Api.CSRF_TOKEN,
+  Accept: 'application/json',
   'Content-Type': 'application/json'
 }
 
-window.FolioConsole.Api.HTML_HEADERS = {
-  ...window.FolioConsole.Api.CSRF_TOKEN,
-  'Accept': 'text/html',
+window.Folio.Api.HTML_HEADERS = {
+  ...window.Folio.Api.CSRF_TOKEN,
+  Accept: 'text/html',
   'Content-Type': 'application/json'
 }
 
@@ -62,10 +64,10 @@ function flashMessageFromMeta (response) {
   return response
 }
 
-window.FolioConsole.Api.api = (method, url, body) => {
+window.Folio.Api.api = (method, url, body) => {
   const data = {
     method,
-    headers: window.FolioConsole.Api.JSON_HEADERS,
+    headers: window.Folio.Api.JSON_HEADERS,
     credentials: 'same-origin'
   }
 
@@ -75,26 +77,26 @@ window.FolioConsole.Api.api = (method, url, body) => {
   return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
 }
 
-window.FolioConsole.Api.apiPost = (url, body) => {
-  return window.FolioConsole.Api.api('POST', url, body)
+window.Folio.Api.apiPost = (url, body) => {
+  return window.Folio.Api.api('POST', url, body)
 }
 
-window.FolioConsole.Api.apiPut = (url, body) => {
-  return window.FolioConsole.Api.api('PUT', url, body)
+window.Folio.Api.apiPut = (url, body) => {
+  return window.Folio.Api.api('PUT', url, body)
 }
 
-window.FolioConsole.Api.apiGet = (url, body = null) => {
-  return window.FolioConsole.Api.api('GET', url, body)
+window.Folio.Api.apiGet = (url, body = null) => {
+  return window.Folio.Api.api('GET', url, body)
 }
 
-window.FolioConsole.Api.apiDelete = (url) => {
-  return window.FolioConsole.Api.api('DELETE', url, null)
+window.Folio.Api.apiDelete = (url) => {
+  return window.Folio.Api.api('DELETE', url, null)
 }
 
-window.FolioConsole.Api.htmlApi = (method, url, body) => {
+window.Folio.Api.htmlApi = (method, url, body) => {
   const data = {
     method,
-    headers: window.FolioConsole.Api.HTML_HEADERS,
+    headers: window.Folio.Api.HTML_HEADERS,
     credentials: 'same-origin'
   }
   // need to have this extra for MS Edge
@@ -103,13 +105,13 @@ window.FolioConsole.Api.htmlApi = (method, url, body) => {
   return fetch(url, data).then(checkResponse).then(responseToHtml).then(flashMessageFromMeta)
 }
 
-window.FolioConsole.Api.apiHtmlPost = (url, body) => {
-  return window.FolioConsole.Api.htmlApi('POST', url, body)
+window.Folio.Api.apiHtmlPost = (url, body) => {
+  return window.Folio.Api.htmlApi('POST', url, body)
 }
 
-window.FolioConsole.Api.apiXhrFilePut = (url, file) => {
+window.Folio.Api.apiXhrFilePut = (url, file) => {
   return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest()
+    const xhr = new window.XMLHttpRequest()
 
     xhr.open('PUT', url)
 
