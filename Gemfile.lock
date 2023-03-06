@@ -58,8 +58,8 @@ PATH
       rubyzip
       sass-rails
       show_for
-      sidekiq
-      sidekiq-cron
+      sidekiq (~> 6.5)
+      sidekiq-cron (= 1.8.0)
       simple_form
       sitemap_generator
       slim
@@ -225,7 +225,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorize (0.8.1)
-    concurrent-ruby (1.2.0)
+    concurrent-ruby (1.2.2)
     connection_pool (2.3.0)
     countries (5.3.0)
       unaccent (~> 0.3)
@@ -452,7 +452,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.6.2)
-    rack (2.2.6.2)
+    rack (2.2.6.3)
     rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
     rack-protection (3.0.5)
@@ -497,7 +497,7 @@ GEM
       json
     redis (5.0.6)
       redis-client (>= 0.9.0)
-    redis-client (0.12.1)
+    redis-client (0.13.0)
       connection_pool
     regexp_parser (2.6.2)
     responders (3.0.1)
@@ -556,13 +556,12 @@ GEM
     show_for (0.8.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
-    sidekiq (7.0.3)
-      concurrent-ruby (< 2)
-      connection_pool (>= 2.3.0)
-      rack (>= 2.2.4)
-      redis-client (>= 0.11.0)
-    sidekiq-cron (1.9.1)
-      fugit (~> 1.8)
+    sidekiq (6.5.5)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.5.0)
+    sidekiq-cron (1.8.0)
+      fugit (~> 1)
       sidekiq (>= 4.2.1)
     simple_form (5.1.0)
       actionpack (>= 5.2)
@@ -603,7 +602,7 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
     uglifier (4.2.0)

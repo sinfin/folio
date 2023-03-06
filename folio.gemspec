@@ -67,8 +67,9 @@ Gem::Specification.new do |s|
   s.add_dependency "rubyzip"
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
-  s.add_dependency "sidekiq-cron"
-  s.add_dependency "sidekiq"
+  s.add_dependency "sidekiq-cron", "1.8.0"
+  s.add_dependency "sidekiq", "~> 6.5"
+
   s.add_dependency "simple_form"
   s.add_dependency "sitemap_generator"
   # s.add_dependency "cells-slim", "~> 0.1.1" # need to be in Gemfile
