@@ -23,9 +23,6 @@ Rails.application.routes.draw do
   end
 
   resource :test, only: [:show]
-  get "/dropzone", to: "home#dropzone"
-  get "/lead_form", to: "home#lead_form"
-  get "/gallery", to: "home#gallery"
 
   scope module: :folio do
     namespace :console do
@@ -39,6 +36,12 @@ Rails.application.routes.draw do
   end
 
   scope module: :dummy, as: :dummy do
+    scope module: :home do
+      get :dropzone
+      get :lead_form
+      get :gallery
+    end
+
     resource :search, only: %i[show] do
       get :autocomplete
       get :pages

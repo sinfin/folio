@@ -20,6 +20,7 @@
 //= require folio/lazyload
 //= require folio/lightbox
 
+//= require folio/dropzone/dropzone
 //= require folio/image/image
 //= require folio/leads/form/form
 //= require folio/sensitive_content_modal/sensitive_content_modal
