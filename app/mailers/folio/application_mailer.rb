@@ -7,4 +7,12 @@ class Folio::ApplicationMailer < ActionMailer::Base
 
   default from: -> { site.email_from.presence || site.email }
   layout "folio/mailer"
+
+  def cell(name, model = nil, options = {}, constant = ::Cell::ViewModel, &block)
+    options[:context] ||= {}
+    options[:context][:controller] = self
+    options[:context][:mailer] = self
+
+    constant.cell(name, model, options, &block)
+  end
 end
