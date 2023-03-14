@@ -27,7 +27,7 @@ class Dummy::Blog::ArticlesControllerTest < ActionDispatch::IntegrationTest
 
     assert_raises(ActiveRecord::RecordNotFound) { get url_for(article) }
 
-    sign_in create(:folio_admin_account)
+    sign_in create(:folio_account)
     get url_for(article)
     assert_response(:ok)
   end

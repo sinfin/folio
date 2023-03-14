@@ -18,7 +18,7 @@ class <%= controller_name %>Test < ActionDispatch::IntegrationTest
 
     assert_raises(ActiveRecord::RecordNotFound) { get url_for(<%= element_name %>) }
 
-    sign_in create(:folio_admin_account)
+    sign_in create(:folio_account)
     get url_for(<%= element_name %>)
     assert_redirected_to url_for([:preview, <%= element_name %>])
   end
@@ -27,7 +27,7 @@ class <%= controller_name %>Test < ActionDispatch::IntegrationTest
     <%= element_name %> = create(:<%= model_resource_name %>, published: false)
     assert_raises(ActiveRecord::RecordNotFound) { get url_for([:preview, <%= element_name %>]) }
 
-    admin = create(:folio_admin_account)
+    admin = create(:folio_account)
     sign_in admin
     get url_for([:preview, <%= element_name %>])
 

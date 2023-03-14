@@ -17,7 +17,7 @@ class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
       get url_for([@page, locale: @page.locale])
     end
 
-    account = create(:folio_admin_account)
+    account = create(:folio_account)
     login_as(account, scope: :account)
 
     get url_for([@page, locale: @page.locale])

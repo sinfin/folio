@@ -12,7 +12,7 @@ class Folio::Accounts::SessionsControllerTest < ActionDispatch::IntegrationTest
       password: "Complex@Password.123",
     }
 
-    @admin = create(:folio_admin_account, @params)
+    @admin = create(:folio_account, @params)
   end
 
   test "sign_in redirect to request page" do

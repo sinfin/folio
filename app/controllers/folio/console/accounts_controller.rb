@@ -41,9 +41,19 @@ class Folio::Console::AccountsController < Folio::Console::BaseController
                         *Folio::Account.additional_params,
                         roles: [])
       p.delete(:password) unless p[:password].present?
-      p[:roles] = p[:roles].filter_map(&:presence) if p[:roles].present?
+
+      roles = filter_account_params_roles(p.delete(:roles))
+      p[:roles] = roles if roles.present?
 
       p
+    end
+
+    def filter_account_params_roles(roles)
+      if roles.present?
+        roles.select do |role|
+          Folio::Account.roles.include?(role)
+        end
+      end
     end
 
     def index_filters

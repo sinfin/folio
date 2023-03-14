@@ -42,7 +42,7 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
 
   def setup
     create_site
-    @admin = create(:folio_admin_account)
+    @admin = create(:folio_account)
     sign_in @admin
   end
 

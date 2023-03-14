@@ -11,7 +11,7 @@ class Folio::DeviseMailerTest < ActionMailer::TestCase
   end
 
   test "reset_password_instructions" do
-    account = create(:folio_admin_account)
+    account = create(:folio_account)
 
     mail = Folio::DeviseMailer.reset_password_instructions(account, "TOKEN")
     assert_equal [account.email], mail.to
@@ -19,7 +19,7 @@ class Folio::DeviseMailerTest < ActionMailer::TestCase
   end
 
   test "invitation_instructions" do
-    account = create(:folio_admin_account)
+    account = create(:folio_account)
 
     mail = Folio::DeviseMailer.invitation_instructions(account, "TOKEN")
     assert_equal [account.email], mail.to
