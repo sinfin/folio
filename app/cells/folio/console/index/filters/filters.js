@@ -77,6 +77,11 @@ window.FolioConsole.Index.Filters.initDaterangepicker = ($input) => {
       'Tento rok': [window.moment().startOf('year'), window.moment().endOf('year')],
       'Minulý rok': [window.moment().subtract(1, 'year').startOf('year'), window.moment().subtract(1, 'year').endOf('year')]
     }
+  } else {
+    opts.locale = {
+      format: 'DD.MM.YYYY',
+      separator: ' - '
+    }
   }
 
   $input.daterangepicker(opts)
