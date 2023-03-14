@@ -15,6 +15,20 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     appended_link_class_names
   end
 
+  def filtered_link_groups_with_links
+    link_groups.filter_map do |group|
+      I18n.with_locale(group[:locale] || I18n.locale) do
+        if group[:links].present?
+          links = group[:links].filter_map { |l| link_from(l) }
+
+          if links.present?
+            group.merge(links:)
+          end
+        end
+      end
+    end
+  end
+
   def link_from(link_source)
     return if skip_link_class_names.include?(link_source)
 

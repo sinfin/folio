@@ -9,7 +9,7 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
   .f-c-layout-sidebar__part.f-c-layout-sidebar__part--overflowable
     = render(:_prepended)
 
-    - link_groups.each do |group|
+    - filtered_link_groups_with_links.each do |group|
       - if group && group[:links].present?
         - I18n.with_locale(group[:locale] || I18n.locale)
           .f-c-layout-sidebar__group class=group_class_name(group)
@@ -18,8 +18,8 @@ aside#f-c-layout-sidebar.f-c-layout-sidebar
                 = group[:title]
 
             ul.f-c-layout-sidebar__ul
-              - group[:links].each do |link_source|
+              - group[:links].each do |link|
                 li.f-c-layout-sidebar__li
-                  = link_from(link_source)
+                  == link
 
     = render(:_appended)
