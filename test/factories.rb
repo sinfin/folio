@@ -71,13 +71,15 @@ FactoryBot.define do
     note { "Officiis perferendis commodi." }
   end
 
-  factory :folio_admin_account, class: "Folio::Account" do
+  factory :folio_account, class: "Folio::Account" do
     sequence(:email) { |i| "test-#{i}@test.com" }
     password { "Complex@Password.123" }
     roles { %w[superuser] }
     first_name { "Test" }
     last_name { "Dummy" }
   end
+
+  factory :folio_admin_account, parent: :folio_account
 
   factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
