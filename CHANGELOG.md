@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-03-15
+### Added
+- added `Folio::HasRoles` and used it for `Folio::Account`
+### Changed
+- use cancancan `accessible_by` in console index actions
+
 ## 2023-03-06
 ### Changed
 - moved s3 signer controller out of console

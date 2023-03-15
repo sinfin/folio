@@ -39,7 +39,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && link_source[:path]
       if link_source[:klass]
-        return if controller.cannot?(:read, link_source[:klass].constantize)
+        return if controller.cannot?(:index, link_source[:klass].constantize)
       end
 
       label = if link_source[:label]
@@ -84,7 +84,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     else
       klass = link_source.constantize
 
-      return if controller.cannot?(:read, klass)
+      return if controller.cannot?(:index, klass)
 
       label = label_from(klass)
       path = controller.url_for([:console, klass])
@@ -273,7 +273,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def homepage_for_site(site)
     instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
 
-    if instance && controller.can?(:manage, Folio::Page)
+    if instance && controller.can?(:index, Folio::Page)
       {
         label: t(".homepage"),
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),

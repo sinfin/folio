@@ -58,11 +58,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
       handles_set_positions_for klass
     end
 
-    if klass.method_defined?(:revisions)
-      before_action :load_revisions, only: [klass.audited_view_name, :revision]
-      before_action :find_revision, only: [:revision, :restore]
-    end
-
     respond_to :json, only: %i[update]
 
     # keep this above load_and_authorize_resource
@@ -85,6 +80,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                       parent: (false if as.present?))
     end
 
+    if klass.method_defined?(:revisions)
+      before_action :load_revisions, only: [klass.audited_view_name, :revision]
+      before_action :find_revision, only: [:revision, :restore]
+    end
+
     # keep this under load_and_authorize_resource
     if klass.try(:has_belongs_to_site?)
       before_action :filter_records_by_belongs_to_site
@@ -96,19 +96,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     only = except.include?(:index) ? %i[merge] : %i[index merge]
     before_action(:filter_folio_console_collection, only:)
-
-    prepend_before_action except: (except + [:index]) do
-      name = folio_console_record_variable_name(plural: false)
-
-      if folio_console_record_includes.present?
-        begin
-          scope = klass.includes(*folio_console_record_includes)
-          scope = scope.friendly if scope.respond_to?(:friendly)
-          instance_variable_set(name, scope.find(params[:id]))
-        rescue ActiveRecord::RecordNotFound
-        end
-      end
-    end
 
     prepend_before_action do
       @klass = klass
@@ -126,11 +113,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
   end
 
   private
-    # TODO: authorize account
-    # def authorize_admin_user!
-    #   authorize! :manage, :all
-    # end
-
     def index_filters
       {}
     end
@@ -425,7 +407,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def filter_records_by_belongs_to_site
-      if records = folio_console_records
+      records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
+
+      if records
         instance_variable_set(folio_console_record_variable_name(plural: true),
                               records.where(site: current_site))
       elsif record = folio_console_record
@@ -487,5 +471,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
       if action_name == "edit" || action_name == "update"
         @show_current_account_console_path_bar = true
       end
+    end
+
+    def self.cancancan_accessible_by_action
+      :update
     end
 end

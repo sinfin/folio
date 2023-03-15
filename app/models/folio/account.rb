@@ -2,6 +2,7 @@
 
 class Folio::Account < Folio::ApplicationRecord
   include Folio::Devise::DeliverLater
+  include Folio::HasRoles
 
   devise :database_authenticatable,
          :recoverable,
@@ -10,7 +11,6 @@ class Folio::Account < Folio::ApplicationRecord
          :validatable,
          :invitable
 
-  validate :validate_roles
   validates :first_name, :last_name, presence: true
 
   attribute :skip_password_validation, :boolean, default: false
@@ -40,14 +40,6 @@ class Folio::Account < Folio::ApplicationRecord
     else
       where(is_active: true)
     end
-  }
-
-  scope :by_role, -> (role) {
-    by_roles([role])
-  }
-
-  scope :by_roles, -> (roles) {
-    where("roles ?| array[:roles]", roles:)
   }
 
   scope :currently_editing_path, -> (path) do
@@ -80,12 +72,6 @@ class Folio::Account < Folio::ApplicationRecord
     super && self.is_active?
   end
 
-  def human_role_names
-    roles.map do |role|
-      self.class.human_role_name(role)
-    end
-  end
-
   def account_roles_for_select
     if role_index = self.class.roles.find_index(roles.first)
       self.class.roles[role_index..-1]
@@ -101,16 +87,6 @@ class Folio::Account < Folio::ApplicationRecord
   def self.roles
     # keep the order by strength (strongest first)!
     %w[superuser administrator manager]
-  end
-
-  def self.roles_for_select(selectable_roles = nil)
-    (selectable_roles || roles).map do |role|
-      [human_attribute_name("roles/#{role}"), role]
-    end
-  end
-
-  def self.human_role_name(role)
-    human_attribute_name("roles/#{role}")
   end
 
   def self.additional_params
@@ -137,15 +113,6 @@ class Folio::Account < Folio::ApplicationRecord
     update_columns(console_path:,
                    console_path_updated_at: Time.current)
   end
-
-  private
-    def validate_roles
-      if roles.blank?
-        errors.add :roles, :missing
-      elsif roles.any? { |role| self.class.roles.exclude?(role) }
-        errors.add :roles, :invalid
-      end
-    end
 end
 
 # == Schema Information

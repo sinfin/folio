@@ -3,11 +3,6 @@
 class Folio::Console::AccountsController < Folio::Console::BaseController
   folio_console_controller_for "Folio::Account"
 
-  def index
-    @pagy, @accounts = pagy(@accounts)
-    @accounts = @accounts.select { |a| can?(:manage, a) }
-  end
-
   def create
     @account = Folio::Account.invite!(account_params)
     respond_with @account, location: respond_with_location

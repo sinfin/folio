@@ -4,14 +4,14 @@ module Folio::Console::DefaultActions
   extend ActiveSupport::Concern
 
   def index
+    records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
+
     unless @sorted_by_param
-      if folio_console_records.respond_to?(:ordered)
-        records = folio_console_records.ordered
+      if records.respond_to?(:ordered)
+        records = records.ordered
       else
-        records = folio_console_records.order(id: :desc)
+        records = records.order(id: :desc)
       end
-    else
-      records = folio_console_records
     end
 
     if self.folio_console_controller_for_handle_csv
