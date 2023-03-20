@@ -7,20 +7,20 @@ module Folio::HasRoles
     validate :validate_roles
     before_validation :normalize_roles
 
-    scope :without_role, -> (role) {
-      where.not("roles ? :role", role:)
+    scope :without_role, -> (role_to_check) {
+      where.not("roles ? :role", role: role_to_check)
     }
 
-    scope :without_roles, -> (role) {
-      where.not("roles ?| array[:roles]", roles:)
+    scope :without_roles, -> (roles_to_check) {
+      where.not("roles ?| array[:roles]", roles: roles_to_check)
     }
 
-    scope :by_role, -> (role) {
-      where("roles ? :role", role:)
+    scope :by_role, -> (role_to_check) {
+      where("roles ? :role", role: role_to_check)
     }
 
-    scope :by_roles, -> (roles) {
-      where("roles ?| array[:roles]", roles:)
+    scope :by_roles, -> (roles_to_check) {
+      where("roles ?| array[:roles]", roles: roles_to_check)
     }
   end
 
@@ -45,21 +45,21 @@ module Folio::HasRoles
     end
   end
 
-  def has_role?(role)
-    roles.include?(role.to_s)
+  def has_role?(role_to_check)
+    roles.include?(role_to_check.to_s)
   end
 
   def has_any_roles?(roles_to_check)
-    roles_to_check.any? { |role| roles.include?(role) }
+    roles_to_check.any? { |role_to_check| roles.include?(role_to_check.to_s) }
   end
 
   def has_all_roles?(roles_to_check)
-    roles_to_check.all? { |role| roles.include?(role) }
+    roles_to_check.all? { |role_to_check| roles.include?(role_to_check.to_s) }
   end
 
   def human_role_names
-    roles.map do |role|
-      self.class.human_role_name(role)
+    roles.map do |role_for_name|
+      self.class.human_role_name(role_for_name)
     end
   end
 
@@ -77,7 +77,7 @@ module Folio::HasRoles
       self.roles = if self.roles.blank?
         []
       else
-        self.class.roles.select { |role| roles.include?(role) }
+        self.class.roles.select { |role_to_check| roles.include?(role_to_check.to_s) }
       end
     end
 end
