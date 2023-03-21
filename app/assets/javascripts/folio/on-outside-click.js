@@ -1,11 +1,22 @@
-window.Folio = window.Folio || {}
+(() => {
+  window.Folio = window.Folio || {}
 
-window.Folio.onOutsideClick = (selector, callback) => {
-  window.jQuery(document).on('click.folioOnOutsideClick', (e) => {
-    const $target = window.jQuery(e.target)
-    if ($target.closest(selector).length) return
+  let count = 0
 
-    window.jQuery(document).off('click.folioOnOutsideClick')
-    callback(e, [selector])
-  })
-}
+  const counter = () => {
+    count += 1
+    return count
+  }
+
+  window.Folio.onOutsideClick = (selector, callback) => {
+    const thisCount = counter()
+
+    window.jQuery(document).on(`click.folioOnOutsideClick${thisCount}`, (e) => {
+      const $target = window.jQuery(e.target)
+      if ($target.closest(selector).length) return
+
+      window.jQuery(document).off(`click.folioOnOutsideClick${thisCount}`)
+      callback(e, [selector])
+    })
+  }
+})()
