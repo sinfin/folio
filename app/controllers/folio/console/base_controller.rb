@@ -407,9 +407,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def filter_records_by_belongs_to_site
-      records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
+      if folio_console_records
+        records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
 
-      if records
         instance_variable_set(folio_console_record_variable_name(plural: true),
                               records.where(site: current_site))
       elsif record = folio_console_record
