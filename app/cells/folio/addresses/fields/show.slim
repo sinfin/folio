@@ -3,11 +3,12 @@
     = options[:title] || t('.title')
 
   .row
-    .col-lg-6
-      = model.input :first_name, required: true, input_html: { id: nil }
+    - unless options[:use_primary_address_name]
+      .col-lg-6
+        = model.input :first_name, required: true, input_html: { id: nil }
 
-    .col-lg-6
-      = model.input :last_name, required: true, input_html: { id: nil }
+      .col-lg-6
+        = model.input :last_name, required: true, input_html: { id: nil }
 
   - if show_primary_address_fields?
     .f-addresses-fields__fields-wrap[
@@ -16,6 +17,9 @@
     ]
       - model.simple_fields_for :primary_address do |g|
         - required = required?(:primary_address, g.object.attributes)
+
+        - if options[:use_primary_address_name]
+          = g.input :name, required: required
 
         .row
           .col-lg-7.f-addresses-fields__address-line-1
