@@ -18,6 +18,8 @@ module Folio::ApplicationControllerBase
     before_action :set_cookies_for_log
 
     helper_method :current_site
+
+    add_flash_types :success, :warning, :info
   end
 
   def set_i18n_locale
