@@ -1,6 +1,7 @@
 import { call, takeEvery, put, select } from 'redux-saga/effects'
 import { omit } from 'lodash'
 
+import urlWithAffix from 'utils/urlWithAffix'
 import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
 import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_THUMBNAIL_GENERATED } from 'ducks/files'
 
@@ -83,7 +84,7 @@ function * destroyFileThumbnailPerform (action) {
   if (action.file.attributes.react_type !== 'image') return
 
   try {
-    const url = `${action.filesUrl}/${action.file.id}/destroy_file_thumbnail`
+    const url = urlWithAffix(action.filesUrl, `/${action.file.id}/destroy_file_thumbnail`)
     yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
   } catch (e) {
     window.FolioConsole.Flash.alert(e.message)
@@ -99,7 +100,7 @@ function * updateFileThumbnailPerform (action) {
   if (action.file.attributes.react_type !== 'image') return
 
   try {
-    const url = `${action.filesUrl}/${action.file.id}/update_file_thumbnail`
+    const url = urlWithAffix(action.filesUrl, `/${action.file.id}/update_file_thumbnail`)
     const response = yield call(apiPost, url, { ...action.params, thumb_key: action.thumbKey })
     yield put(updatedFileModalFile(response.data))
   } catch (e) {

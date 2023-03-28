@@ -7,10 +7,12 @@ import {
   makeMassSelectedIdsSelector
 } from 'ducks/files'
 
+import urlWithAffix from 'utils/urlWithAffix'
+
 import FileMassActionsWrap from './styled/FileMassActionsWrap'
 
 function downloadHref (filesUrl, massSelectedIds) {
-  return `${filesUrl}/mass_download?ids=${massSelectedIds.join(',')}`
+  return urlWithAffix(filesUrl, `/mass_download?ids=${massSelectedIds.join(',')}`)
 }
 
 function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, fileType, dispatchMassCancel, dispatchMassDelete, filesUrl }) {

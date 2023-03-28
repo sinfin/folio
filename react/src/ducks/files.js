@@ -2,6 +2,7 @@ import { apiGet, apiPut, apiDelete } from 'utils/api'
 import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects'
 import { filter, find, without, omit } from 'lodash'
 
+import urlWithAffix from 'utils/urlWithAffix'
 import { filesUrlSelector } from 'ducks/app'
 import { makeUploadsSelector } from 'ducks/uploads'
 import { makeFiltersQuerySelector } from 'ducks/filters'
@@ -91,7 +92,7 @@ export function massCancel (fileType) {
 
 function * getFilesPerform (action) {
   try {
-    const filesUrl = `${action.filesUrl}?${action.query}`
+    const filesUrl = urlWithAffix(action.filesUrl, `?${action.query}`)
     const response = yield call(apiGet, filesUrl)
     yield put(getFilesSuccess(action.fileType, response.data, response.meta))
   } catch (e) {
@@ -107,7 +108,7 @@ function * getFilesSaga () {
 function * updateFilePerform (action) {
   try {
     const { file, filesUrl, attributes } = action
-    const fullUrl = `${filesUrl}/${file.id}`
+    const fullUrl = urlWithAffix(filesUrl, `/${file.id}`)
     const data = {
       file: {
         id: file.id,
@@ -147,7 +148,7 @@ function * massDeletePerform (action) {
   try {
     const { massSelectedIds } = yield select(makeMassSelectedIdsSelector(action.fileType))
     const filesUrl = yield select(filesUrlSelector)
-    const fullUrl = `${filesUrl}/mass_destroy?ids=${massSelectedIds.join(',')}`
+    const fullUrl = urlWithAffix(filesUrl, `/mass_destroy?ids=${massSelectedIds.join(',')}`)
     const res = yield call(apiDelete, fullUrl)
     if (res.error) {
       window.FolioConsole.Flash.alert(res.error)
@@ -167,7 +168,7 @@ function * massDeleteSaga () {
 
 function * deleteFilePerform (action) {
   try {
-    const res = yield call(apiDelete, `${action.filesUrl}/${action.file.id}`)
+    const res = yield call(apiDelete, urlWithAffix(action.filesUrl, `/${action.file.id}`))
     if (res.error) {
       window.FolioConsole.Flash.alert(res.error)
     } else {
