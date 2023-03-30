@@ -38,7 +38,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       end
 
       {
-        alt: "",
+        alt: options[:alt] || "",
         src: model[:normal],
         srcset: model[:retina] ? "#{model[:normal]} 1x, #{model[:retina]} #{retina_multiplier}x" : nil,
         webp_src: model[:webp_normal],
@@ -57,7 +57,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       h = {
         normal: normal,
         src: normal.url,
-        alt: model.try(:alt) || "",
+        alt: model.try(:alt) || options[:alt] || "",
         title: model.try(:title),
       }
 
