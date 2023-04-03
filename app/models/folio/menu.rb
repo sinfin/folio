@@ -54,7 +54,7 @@ class Folio::Menu < Folio::ApplicationRecord
     []
   end
 
-  def self.styles_for_react_select
+  def self.styles_for_react_select(site:, locale:)
     if self.styles.present?
       nil_ary = [[human_attribute_name("style/nil"), ""]]
       nil_ary + self.styles.without(:nil).map do |style|
