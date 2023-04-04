@@ -4,6 +4,10 @@ class Folio::ConsoleCell < Folio::ApplicationCell
   include Folio::Console::CellsHelper
   include Folio::Cell::HtmlSafeFieldsFor
 
+  delegate :safe_url_for,
+           :through_aware_console_url_for,
+           to: :controller
+
   def url_for(*args)
     controller.url_for(*args)
   end
@@ -27,30 +31,5 @@ class Folio::ConsoleCell < Folio::ApplicationCell
     style = opts[:height] ? "font-size: #{opts[:height]}px" : nil
 
     content_tag(:i, name, class: "mi #{opts[:class]}", style:)
-  end
-
-  def safe_url_for(opts)
-    controller.url_for(opts)
-  rescue StandardError
-  end
-
-  def through_aware_console_url_for(record, action: nil, hash: nil, safe: false)
-    through_record = if controller.try(:folio_console_controller_for_through)
-      through_record_name = controller.folio_console_controller_for_through.constantize.model_name.element
-      controller.instance_variable_get("@#{through_record_name}")
-    end
-
-    opts = []
-    opts << action if action
-    opts << :console
-    opts << through_record if through_record
-    opts << record
-    opts << hash if hash
-
-    if safe
-      safe_url_for(opts)
-    else
-      url_for(opts)
-    end
   end
 end

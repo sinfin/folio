@@ -145,14 +145,6 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       end
     end
 
-    def form_url_for_array_string
-      if options[:through]
-        "[:console, @#{options[:through].demodulize.underscore}, @#{instance_variable_name}]"
-      else
-        "[:console, @#{instance_variable_name}]"
-      end
-    end
-
     def catalogue_edit_link
       if options[:through]
         "resource_link [:edit, :console, @#{options[:through].demodulize.underscore}, @#{instance_variable_name}], :to_label"

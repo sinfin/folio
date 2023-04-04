@@ -112,6 +112,36 @@ class Folio::Console::BaseController < Folio::ApplicationController
     params.permit(:by_query, *index_filters_keys)
   end
 
+  def safe_url_for(opts)
+    url_for(opts)
+  rescue StandardError
+  end
+
+  helper_method :through_aware_console_url_for
+
+  def through_aware_console_url_for(record, action: nil, hash: {}, safe: false)
+    through_record = if try(:folio_console_controller_for_through)
+      through_record_name = folio_console_controller_for_through.constantize.model_name.element
+      instance_variable_get("@#{through_record_name}")
+    end
+
+    hash[:action] = action
+
+    opts = []
+    opts << :console
+    opts << through_record if through_record
+    opts << record
+    opts << hash
+
+    if safe
+      safe_url_for(opts)
+    else
+      url_for(opts)
+    end
+  end
+
+  helper_method :through_aware_console_url_for
+
   private
     def index_filters
       {}

@@ -61,11 +61,14 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
 
   def new_button(&block)
     url = options[:new_url] ? send(options[:new_url]) : through_aware_console_url_for(model, action: :new, safe: true)
-    html_opts = { title: t(".add"),
-                  class: "btn btn-success "\
-                         "f-c-index-header__btn f-c-index-header__btn--new" }
-    link_to(url, html_opts, &block)
-  rescue NoMethodError
+
+    if url
+      html_opts = { title: t(".add"),
+                    class: "btn btn-success "\
+                           "f-c-index-header__btn f-c-index-header__btn--new" }
+
+      link_to(url, html_opts, &block)
+    end
   end
 
   def new_dropdown_title

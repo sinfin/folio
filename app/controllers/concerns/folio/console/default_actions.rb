@@ -250,13 +250,7 @@ module Folio::Console::DefaultActions
 
     def respond_with_location(prevalidate: nil)
       if folio_console_record.destroyed?
-        if folio_console_controller_for_through
-          through_klass = folio_console_controller_for_through.constantize
-          through_record = instance_variable_get("@#{through_klass.model_name.element}")
-          index_url = console_show_or_edit_path(through_record)
-        else
-          index_url = url_for([:console, @klass])
-        end
+        index_url = through_aware_console_url_for(@klass)
 
         if !request.referrer || request.referrer.include?(index_url)
           index_url
