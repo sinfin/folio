@@ -113,11 +113,11 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   def edit_link(attr = nil, sanitize: false, &block)
-    resource_link([:edit, :console, record], attr, sanitize:, &block)
+    resource_link(through_aware_console_url_for(record, action: :edit), attr, sanitize:, &block)
   end
 
   def show_link(attr = nil, sanitize: false, &block)
-    resource_link([:console, record], attr, sanitize:, &block)
+    resource_link(through_aware_console_url_for(record), attr, sanitize:, &block)
   end
 
   def date(attr = nil, small: false, alert_threshold: nil)
@@ -235,7 +235,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   private
-    def resource_link(url_for_args, attr = nil, sanitize: false)
+    def resource_link(url_or_args, attr = nil, sanitize: false)
       attribute(attr, spacey: true) do
         if block_given?
           content = yield(record)
@@ -249,7 +249,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
           content = sanitize_string(content)
         end
 
-        url = controller.url_for(url_for_args)
+        url = if url_or_args.is_a?(String)
+          url_or_args
+        else
+          controller.url_for(url_or_args)
+        end
+
         link_to(content, url)
       end
     end

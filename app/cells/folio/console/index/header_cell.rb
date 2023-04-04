@@ -11,9 +11,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     if options[:query_url]
       send(options[:query_url])
     elsif options[:folio_console_merge]
-      url_for([:merge, :console, model])
+      through_aware_console_url_for(model, action: :merge)
     else
-      url_for([:console, model])
+      through_aware_console_url_for(model)
     end
   end
 
@@ -53,14 +53,14 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     if options[:query_url]
       send(options[:query_url], h)
     elsif options[:folio_console_merge]
-      url_for([:merge, :console, model, h])
+      through_aware_console_url_for(model, action: :merge, hash: h)
     else
-      url_for([:console, model, h])
+      through_aware_console_url_for(model, hash: h)
     end
   end
 
   def new_button(&block)
-    url = options[:new_url] ? send(options[:new_url]) : url_for([:console, model, action: :new])
+    url = options[:new_url] ? send(options[:new_url]) : through_aware_console_url_for(model, action: :new, safe: true)
     html_opts = { title: t(".add"),
                   class: "btn btn-success "\
                          "f-c-index-header__btn f-c-index-header__btn--new" }
@@ -76,7 +76,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     options[:new_dropdown_links] || options[:types].map do |klass|
       {
         title: klass.model_name.human,
-        url: url_for([:console, model, action: :new, type: klass.to_s]),
+        url: through_aware_console_url_for(model, action: :new, hash: { type: klass.to_s }, safe: true),
       }
     end
   end
@@ -94,14 +94,14 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
         end
       end
 
-      url_for([:console, model, h])
+      through_aware_console_url_for(model, hash: h)
     else
       options[:csv].try(:[], :url) || options[:csv]
     end
   end
 
   def title_url
-    options[:query_url] ? send(options[:query_url]) : url_for([:console, model])
+    options[:query_url] ? send(options[:query_url]) : through_aware_console_url_for(model)
   end
 
   def show_transportable_dropdown?
