@@ -344,21 +344,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def add_collection_breadcrumbs
-      if folio_console_controller_for_through
-        begin
-          through_klass = folio_console_controller_for_through.constantize
-          through_record = instance_variable_get("@#{through_klass.model_name.element}")
-
-          add_breadcrumb(@klass.model_name.human(count: 2),
-                         console_show_or_edit_path(through_record))
-        rescue NoMethodError
-          add_breadcrumb(@klass.model_name.human(count: 2))
-        end
-      else
-        add_breadcrumb(@klass.model_name.human(count: 2),
-                       url_for([:console, @klass]))
-      end
-    rescue NoMethodError
+      add_breadcrumb(@klass.model_name.human(count: 2),
+                     through_aware_console_url_for(@klass, safe: true))
     end
 
     def add_record_breadcrumbs
