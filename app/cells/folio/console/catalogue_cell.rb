@@ -120,10 +120,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     resource_link([:console, record], attr, sanitize:, &block)
   end
 
-  def date(attr = nil, small: false)
+  def date(attr = nil, small: false, alert_threshold: nil)
     attribute(attr, small:) do
       val = record.send(attr)
-      l(val, format: :short) if val.present?
+      cell("folio/console/catalogue/date", val, small:, alert_threshold:)
     end
   end
 

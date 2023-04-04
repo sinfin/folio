@@ -318,7 +318,11 @@ cs:
     formats:
       console_short: "%d. %m. %Y"
       console_group_by_day: '%a %-d. %B. %Y'
+      console_short_date: '%d. %m. %Y'
+
   time:
     formats:
       console_short: "%d. %m. %Y %H:%M"
       console_group_by_day: '%a %-d. %B. %Y'
+      console_short_date: '%d. %m. %Y'
+      console_short_time: '%H:%M'
