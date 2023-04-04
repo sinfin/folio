@@ -11,7 +11,7 @@ module Folio::HasHashId
     validates :hash_id,
               presence: true,
               uniqueness: true,
-              format: { with: /[0-9a-z-]+/ }
+              format: { with: /[0-9a-zA-Z-]+/ }
   end
 
   def hash_id
