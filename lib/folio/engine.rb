@@ -32,6 +32,7 @@ module Folio
     config.folio_console_sidebar_runner_up_link_class_names = []
     config.folio_console_sidebar_skip_link_class_names = []
     config.folio_console_sidebar_force_hide_users = false
+    config.folio_console_default_routes_contstraints = {}
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
@@ -44,6 +45,7 @@ module Folio
     config.folio_site_validate_belongs_to_namespace = false
     config.folio_site_default_test_factory = nil
     config.folio_cell_generator_class_name_prefixes = {}
+    config.folio_allow_users_to_console = false
 
     config.folio_direct_s3_upload_class_names = %w[
       Folio::File

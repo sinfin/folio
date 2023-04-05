@@ -259,31 +259,17 @@ module Folio::Console::DefaultActions
         end
       else
         if folio_console_record.persisted?
-          if folio_console_controller_for_through
-            through_klass = folio_console_controller_for_through.constantize
-            through_record = instance_variable_get("@#{through_klass.model_name.element}")
-          else
-            through_record = nil
-          end
-
           begin
             if action_name == "create"
               console_show_or_edit_path(folio_console_record,
-                                        through: through_record,
                                         other_params: { prevalidate: prevalidate ? 1 : nil })
             else
-              if through_record
-                url_for([:edit, :console, through_record, folio_console_record, prevalidate: prevalidate ? 1 : nil])
-              else
-                url_for([:edit, :console, folio_console_record, prevalidate: prevalidate ? 1 : nil])
-              end
+              through_aware_console_url_for(folio_console_record,
+                                            action: :edit,
+                                            hash: prevalidate ? { prevalidate: 1 } : nil)
             end
           rescue ActionController::UrlGenerationError, NoMethodError
-            if try(:through_record)
-              console_show_or_edit_path(through_record)
-            else
-              url_for([:console, @klass])
-            end
+            url_for([:console, @klass])
           end
         end
       end

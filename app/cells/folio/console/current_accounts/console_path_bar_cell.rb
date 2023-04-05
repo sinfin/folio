@@ -6,8 +6,9 @@ class Folio::Console::CurrentAccounts::ConsolePathBarCell < Folio::ConsoleCell
   end
 
   def other_account_at_path
+    return false unless current_account
     return @other_account_at_path unless @other_account_at_path.nil?
-    @other_account_at_path = Folio::Account.currently_editing_path(request.path).where.not(id: controller.current_account.id).first || false
+    @other_account_at_path = Folio::Account.currently_editing_path(request.path).where.not(id: current_account.id).first || false
   end
 
   def hidden?

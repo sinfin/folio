@@ -8,7 +8,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_url
-    if options[:query_url]
+    if options[:query_url].is_a?(String)
+      options[:query_url]
+    elsif options[:query_url].is_a?(Symbol)
       send(options[:query_url])
     elsif options[:folio_console_merge]
       through_aware_console_url_for(model, action: :merge)

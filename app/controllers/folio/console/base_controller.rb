@@ -125,10 +125,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
       instance_variable_get("@#{through_record_name}")
     end
 
+    hash ||= {}
     hash[:action] = action
 
-    opts = []
-    opts << :console
+    opts = [:console]
     opts << through_record if through_record
     opts << record
     opts << hash
@@ -165,7 +165,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def current_ability
-      @current_ability ||= Folio::ConsoleAbility.new(current_account)
+      @current_ability ||= if Rails.application.config.folio_allow_users_to_console
+        Folio::ConsoleAbility.new(current_account || current_user)
+      else
+        Folio::ConsoleAbility.new(current_account)
+      end
     end
 
     def add_root_breadcrumb
@@ -353,15 +357,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if folio_console_record.new_record?
           add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
         else
-          if folio_console_controller_for_through
-            through_klass = folio_console_controller_for_through.constantize
-            through_record = instance_variable_get("@#{through_klass.model_name.element}")
-
-            record_url = console_show_or_edit_path(folio_console_record, through: through_record)
-          else
-            record_url = console_show_or_edit_path(folio_console_record)
-          end
-
+          record_url = console_show_or_edit_path(folio_console_record)
           add_breadcrumb(folio_console_record.to_label, record_url)
         end
       end
@@ -370,18 +366,18 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def custom_authenticate_account!
-      authenticate_account!
+      if Rails.application.config.folio_allow_users_to_console && current_user
+        authenticate_user!
+      else
+        authenticate_account!
+      end
     end
 
-    def console_show_or_edit_path(record, through: nil, other_params: {})
+    def console_show_or_edit_path(record, other_params: {})
       return nil if record.nil?
 
       begin
-        if through
-          url = url_for([:console, through, record, other_params])
-        else
-          url = url_for([:console, record, other_params])
-        end
+        url = through_aware_console_url_for(record, hash: other_params)
       rescue NoMethodError, ActionController::RoutingError
         return nil
       end
@@ -401,11 +397,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return url if valid_routes_parent
 
       begin
-        if through
-          url_for([:edit, :console, through, record])
-        else
-          url_for([:edit, :console, record])
-        end
+        through_aware_console_url_for(record, action: :edit)
       rescue NoMethodError, ActionController::RoutingError
         nil
       end
@@ -479,6 +471,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def update_current_account_console_path
+      return unless current_account
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
       current_account.update_console_path!(request.path)

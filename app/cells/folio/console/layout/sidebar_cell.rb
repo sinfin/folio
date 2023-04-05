@@ -293,4 +293,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     ary
   end
+
+  def show_search?
+    true
+  end
 end

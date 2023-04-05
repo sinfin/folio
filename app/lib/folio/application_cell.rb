@@ -64,4 +64,32 @@ class Folio::ApplicationCell < Cell::ViewModel
       concat(content_tag(:div, class: "f-togglable-fields__content", &block))
     end
   end
+
+  def current_user
+    get_from_options_or_controller(:current_user)
+  end
+
+  def user_signed_in?
+    get_from_options_or_controller(:user_signed_in?)
+  end
+
+  def current_account
+    get_from_options_or_controller(:current_account)
+  end
+
+  def account_signed_in?
+    get_from_options_or_controller(:account_signed_in?)
+  end
+
+  def get_from_options_or_controller(method_sym)
+    if options.has_key?(method_sym)
+      options[method_sym]
+    else
+      begin
+        controller.try(method_sym)
+      rescue Devise::MissingWarden
+        nil
+      end
+    end
+  end
 end

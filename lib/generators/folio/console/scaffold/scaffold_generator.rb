@@ -78,7 +78,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def class_name
-      options['class_name'] || super.gsub("Folio::Folio::", "Folio::")
+      options["class_name"] || super.gsub("Folio::Folio::", "Folio::")
     end
 
     def attributes_names
