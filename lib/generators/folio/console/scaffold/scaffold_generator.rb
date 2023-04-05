@@ -6,6 +6,8 @@ require Folio::Engine.root.join("lib/generators/folio/generator_base")
 class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   include Folio::GeneratorBase
 
+  class_option :class_name, type: :string, default: nil
+
   source_root File.expand_path("../templates", __FILE__)
 
   hook_for :orm, as: :scaffold
@@ -76,7 +78,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
     end
 
     def class_name
-      super.gsub("Folio::Folio::", "Folio::")
+      options['class_name'] || super.gsub("Folio::Folio::", "Folio::")
     end
 
     def attributes_names
