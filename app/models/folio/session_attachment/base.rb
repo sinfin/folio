@@ -47,8 +47,8 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   end
 
   def file_extension
-    if /msword/.match?(file_mime_type)
-      /docx/.match?(file_name) ? :docx : :doc
+    if file_mime_type.include?("msword")
+      file_name.include?("docx") ? :docx : :doc
     else
       Mime::Type.lookup(file_mime_type).symbol
     end

@@ -8,7 +8,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   end
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
-    return if /svg/.match?(image.file_mime_type)
+    return if image.file_mime_type.include?("svg")
 
     # need to reload here because of parallel jobs
     image.reload

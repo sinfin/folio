@@ -64,7 +64,7 @@ class Folio::ImageCell < Folio::ApplicationCell
         height: normal[:height],
       }
 
-      unless /svg/.match?(file.file_mime_type)
+      unless file.file_mime_type.include?("svg")
         retina_size = size.gsub(/\d+/) { |n| n.to_i * retina_multiplier }
 
         retina = file.thumb(retina_size)
