@@ -282,6 +282,14 @@ module Folio::Console::DefaultActions
     end
 
     def response_json_for_valid_update
-      {}
+      if params[:_trigger] == "f-c-boolean-toggle"
+        {
+          data: {
+            f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show
+          }
+        }
+      else
+        {}
+      end
     end
 end

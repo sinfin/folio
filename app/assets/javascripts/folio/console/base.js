@@ -40,6 +40,7 @@
 //= require daterangepicker.min
 
 // keep the order!
+//= require folio/stimulus
 //= require folio/api
 //= require folio/s3-upload
 //= require folio/console/flash

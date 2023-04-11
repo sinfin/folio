@@ -58,6 +58,9 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
     {
       url:,
       confirmation: input_data_confirmation,
+      action: "f-c-boolean-toggle#inputChange",
+      "f-c-boolean-toggle-target" => "input",
+      "f-c-boolean-toggle-loading-class" => "f-c-boolean-toggle--loading",
     }.compact
   end
 end
