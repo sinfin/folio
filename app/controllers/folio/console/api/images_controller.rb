@@ -12,7 +12,7 @@ class Folio::Console::Api::ImagesController < Folio::Console::Api::BaseControlle
     thumb = @image.thumbnail_sizes[thumb_key]
 
     if thumb[:x] != x || thumb[:y] != y
-      @image.thumb(thumb_key, immediate: true, force: true, x:, y:)
+      @image.thumb(thumb_key, force: true, x:, y:)
     end
 
     render_record(@image.reload, Folio::Console::FileSerializer)
