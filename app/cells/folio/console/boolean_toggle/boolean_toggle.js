@@ -10,7 +10,9 @@ window.Folio.Stimulus.register('f-c-boolean-toggle', class extends window.Stimul
       }
     }
 
-    if (this.hasLoadingClass) return
+    if (this.element.classList.contains(this.loadingClass)) return
+
+    this.element.classList.add(this.loadingClass)
 
     const parts = this.inputTarget.name.replace(/\]/g, '').split('[')
 
@@ -27,6 +29,8 @@ window.Folio.Stimulus.register('f-c-boolean-toggle', class extends window.Stimul
       .Api
       .apiPut(this.inputTarget.dataset.url, data)
       .then((res) => {
+        this.element.classList.remove(this.loadingClass)
+
         if (res && res.data && res.data.f_c_catalogue_published_dates) {
           const cell = this
             .element
@@ -39,6 +43,7 @@ window.Folio.Stimulus.register('f-c-boolean-toggle', class extends window.Stimul
         }
       })
       .catch(() => {
+        this.element.classList.remove(this.loadingClass)
         this.inputTarget.checked = !this.inputTarget.checked
       })
   }

@@ -1,5 +1,10 @@
 .f-c-boolean-toggle
   position: relative
+  transition: $transition-base
+
+  &--loading
+    cursor: wait
+    opacity: 0.2
 
   &:not(&--show-label):not(&--verbose)
     width: 2.25rem
