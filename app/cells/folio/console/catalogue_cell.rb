@@ -127,6 +127,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def published_dates
+    attribute(:published_dates, compact: true) do
+      cell("folio/console/catalogue/published_dates", record)
+    end
+  end
+
   def locale_flag(locale_attr = :locale)
     attribute(locale_attr, compact: true, aligned: true, skip_desktop_header: true) do
       if record.send(locale_attr)

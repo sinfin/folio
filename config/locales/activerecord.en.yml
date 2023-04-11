@@ -198,6 +198,7 @@ en:
     private_attachments: Files
     published: Published
     published_at: Published at
+    published_dates: Date
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug

@@ -1,0 +1,7 @@
+.small class=class_name
+  - if model.respond_to?(:published_from) && model.respond_to?(:published_until)
+    ' #{t('.from')}: #{pretty(model.published_from)}
+    br
+    ' #{t('.until')}: #{pretty(model.published_until)}
+  - elsif model.respond_to?(:published_at)
+    = pretty(model.published_at)

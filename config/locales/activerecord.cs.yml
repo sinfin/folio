@@ -280,6 +280,7 @@ cs:
     published/true: Zveřejněno
     published: Zveřejněno
     published_at: Zveřejněno k datu
+    published_dates: Datum
     secondary_address: Adresa - doplňková
     sensitive_content: Obsahuje citlivý obsah
     sign_in_count: Počet přihlášení
