@@ -366,11 +366,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def custom_authenticate_account!
-      if Rails.application.config.folio_allow_users_to_console && current_user
-        authenticate_user!
-      else
-        authenticate_account!
-      end
+      authenticate_account!
     end
 
     def console_show_or_edit_path(record, other_params: {})
