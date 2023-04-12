@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 module Folio::Atom
-  def self.types
-    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true)
+  def self.klasses_for(klass:)
+    ary = if klass.atom_class_names_whitelist
+      klass.atom_class_names_whitelist.map(&:constantize)
+    else
+      Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true)
+    end
+
+    ary.select { |atom_klass| atom_klass.valid_for_placement_class?(klass) }
   end
 
-  def self.structures
+  def self.structures_for(klass:)
     str = {}
 
-    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
+    klasses_for(klass:).each do |klass|
       structure = {}
 
       klass::STRUCTURE.each do |key, value|

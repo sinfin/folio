@@ -37,12 +37,8 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def sorted_types
-    ary = Folio::Atom.types
+    ary = Folio::Atom.klasses_for(klass: options[:klass])
                      .reject { |klass| klass.molecule_secondary }
-
-    if options[:klass]
-      ary = ary.select { |klass| klass.valid_for_placement_class?(options[:klass]) }
-    end
 
     ary = ary.sort_by { |klass| I18n.transliterate(klass.model_name.human) }
 

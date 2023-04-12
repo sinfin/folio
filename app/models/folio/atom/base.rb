@@ -134,6 +134,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   end
 
   def valid_for_placement?(placement)
+    if placement.class.atom_class_names_whitelist.present?
+      if placement.class.atom_class_names_whitelist.exclude?(type)
+        return false
+      end
+    end
+
     if self.class::VALID_PLACEMENT_TYPES.present?
       if self.class::VALID_PLACEMENT_TYPES.none? { |type| placement.is_a?(type.constantize) }
         return false
