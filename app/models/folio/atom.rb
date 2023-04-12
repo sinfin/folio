@@ -42,14 +42,7 @@ module Folio::Atom
         reflection = klass.reflections[key.to_s]
         plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
         file_type = reflection.source_reflection.options[:class_name]
-        files_url = nil
-        url_for_args = [:console, :api, file_type.constantize, only_path: true]
-
-        begin
-          files_url = Folio::Engine.app.url_helpers.url_for(url_for_args)
-        rescue StandardError
-          files_url = Rails.application.routes.url_helpers.url_for(url_for_args)
-        end
+        files_url = Rails.application.config.folio_atom_files_url.call(file_type.constantize)
 
         {
           file_type:,

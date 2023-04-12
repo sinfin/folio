@@ -46,6 +46,15 @@ module Folio
     config.folio_site_default_test_factory = nil
     config.folio_cell_generator_class_name_prefixes = {}
     config.folio_allow_users_to_console = false
+    config.folio_atom_files_url = -> (file_klass) {
+      url_for_args = [:console, :api, file_klass, only_path: true]
+
+      begin
+        Folio::Engine.app.url_helpers.url_for(url_for_args)
+      rescue StandardError
+        Rails.application.routes.url_helpers.url_for(url_for_args)
+      end
+    }
 
     config.folio_direct_s3_upload_class_names = %w[
       Folio::File

@@ -2,7 +2,7 @@
 
 class Folio::Console::CurrentAccounts::ConsolePathBarCell < Folio::ConsoleCell
   def show
-    render if model
+    render if model && current_account
   end
 
   def other_account_at_path
