@@ -25,11 +25,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :thumb do |object|
-    object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.is_a?(Folio::Image)
+    object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.class.react_type == "image"
   end
 
   attribute :webp_thumb do |object|
-    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.is_a?(Folio::Image)
+    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.class.react_type == "image"
   end
 
   attribute :source_url do |object|
@@ -37,11 +37,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :url do |object|
-    object.file.url if object.is_a?(Folio::Image)
+    object.file.url if object.class.react_type == "image"
   end
 
   attribute :dominant_color do |object|
-    if object.is_a?(Folio::Image)
+    if object.class.react_type == "image"
       if object.additional_data
         object.additional_data["dominant_color"]
       end
