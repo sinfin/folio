@@ -10,7 +10,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     sidekiq_options retry: false
   end
 
-  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil)
+  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil)
     return unless s3_path
     return unless type
     klass = type.safe_constantize
@@ -50,6 +50,10 @@ class Folio::CreateFileFromS3Job < ApplicationJob
 
       if file.respond_to?("web_session_id=")
         file.web_session_id = web_session_id
+      end
+
+      if file.respond_to?("user_id=")
+        file.user_id = user_id
       end
 
       if file.save

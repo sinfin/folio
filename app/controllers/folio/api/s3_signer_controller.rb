@@ -36,7 +36,8 @@ class Folio::Api::S3SignerController < Folio::Api::BaseController
       Folio::CreateFileFromS3Job.perform_later(s3_path:,
                                                type:,
                                                existing_id: params[:existing_id].try(:to_i),
-                                               web_session_id: session.id.public_id)
+                                               web_session_id: session.id.public_id,
+                                               user_id: current_user.try(:id))
       render json: {}
     else
       render json: {}, status: 422
@@ -54,6 +55,7 @@ class Folio::Api::S3SignerController < Folio::Api::BaseController
       return if Rails.application.config.folio_direct_s3_upload_allow_public
       return if current_account
       return if Rails.application.config.folio_direct_s3_upload_allow_for_users && user_signed_in?
+      return if Rails.application.config.folio_allow_users_to_console && user_signed_in?
       fail CanCan::AccessDenied
     end
 end
