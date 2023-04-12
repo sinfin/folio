@@ -103,9 +103,6 @@ Folio::Engine.routes.draw do
 
         resources :private_attachments, only: %i[create destroy]
 
-        resources :file_placements, only: %i[index],
-                                    path: "files/:file_id/file_placements"
-
         resources :links, only: %i[index]
 
         resource :current_account, only: [] do
@@ -149,13 +146,19 @@ Folio::Engine.routes.draw do
 
       resource :merge, only: [:new, :create],
                        path: "merge/:klass/:original_id/:duplicate_id"
+    end
 
-      resources :atoms, only: [:index] do
-        collection do
-          get :placement_preview, path: "placement_preview/:klass/:id"
-          post :preview
-          post :validate
-        end
+    # these are outside of constraint by design
+    namespace :api do
+      resources :file_placements, only: %i[index],
+                                  path: "files/:file_id/file_placements"
+    end
+
+    resources :atoms, only: [:index] do
+      collection do
+        get :placement_preview, path: "placement_preview/:klass/:id"
+        post :preview
+        post :validate
       end
     end
   end

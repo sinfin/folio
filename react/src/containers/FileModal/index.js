@@ -144,7 +144,7 @@ class FileModal extends Component {
   }
 
   render () {
-    const { fileModal, readOnly, canDestroyFiles } = this.props
+    const { fileModal, readOnly, canDestroyFiles, taggable } = this.props
     const isOpen = fileModal.file !== null
 
     return (
@@ -156,6 +156,7 @@ class FileModal extends Component {
         {fileModal.file && (
           <FileModalFile
             fileModal={fileModal}
+            taggable={taggable}
             onTagsChange={this.onTagsChange}
             saveModal={this.saveModal}
             closeFileModal={this.closeFileModal}

@@ -33,8 +33,8 @@ class SingleSelect extends LazyLoadCheckingComponent {
     return (
       <Fragment>
         {this.props.inModal && <ModalTitleAndUpload fileType={this.props.fileType} fileTypeIsImage={this.props.fileTypeIsImage} />}
-        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
-        <UploadTagger fileType={this.props.fileType} />
+        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} taggable={this.props.taggable} />
+        <UploadTagger fileType={this.props.fileType} taggable={this.props.taggable} />
       </Fragment>
     )
   }
@@ -59,6 +59,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
               fileType={this.props.fileType}
               filesUrl={this.props.filesUrl}
               selecting='single'
+              taggable={this.props.taggable}
               dropzoneTrigger
             />
           </Uploader>

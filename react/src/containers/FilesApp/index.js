@@ -55,18 +55,18 @@ class FilesApp extends Component {
   }
 
   renderMode () {
-    const { mode, fileType, filesUrl, readOnly, reactType } = this.props.app
+    const { mode, fileType, filesUrl, readOnly, reactType, taggable } = this.props.app
 
     if (mode === 'multi-select') {
-      return <MultiSelect fileType={fileType} filesUrl={filesUrl} />
+      return <MultiSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} />
     }
 
     if (mode === 'single-select') {
-      return <SingleSelect fileType={fileType} filesUrl={filesUrl} />
+      return <SingleSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} />
     }
 
     if (mode === 'index') {
-      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} />
+      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} taggable={taggable} />
     }
 
     if (mode === 'modal-single-select') {
@@ -74,6 +74,7 @@ class FilesApp extends Component {
         <ModalSingleSelect
           fileType={fileType}
           filesUrl={filesUrl}
+          taggable={taggable}
           reactType={reactType}
           loadFiles={this.loadFiles}
           openFileModal={this.openFileModal}
@@ -101,6 +102,7 @@ class FilesApp extends Component {
 
         <FileModal
           readOnly={this.props.app.readOnly}
+          taggable={this.props.app.taggable}
           canDestroyFiles={this.props.app.canDestroyFiles}
         />
       </FilesAppWrap>

@@ -107,6 +107,7 @@ class ModalSingleSelect extends ModalSelect {
         selectFile={this.selectFile}
         fileType={this.props.fileType}
         filesUrl={this.props.filesUrl}
+        taggable={this.props.taggable}
         inModal
       />
     )

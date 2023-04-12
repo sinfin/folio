@@ -75,6 +75,7 @@ class MultiSelect extends React.PureComponent {
         changeFilesPage={this.changeFilesPage}
         openFileModal={this.openFileModal}
         shouldLoadFiles={!this.props.inModal}
+        taggable={this.props.taggable}
       />
     )
   }

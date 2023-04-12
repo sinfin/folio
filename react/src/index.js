@@ -11,7 +11,7 @@ import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import OrderedMultiselectApp from 'containers/OrderedMultiselectApp'
 import NotesFieldsApp from 'containers/NotesFieldsApp'
-import { setMode, setFileType, setFilesUrl, setReadOnly, setNoFileUsage, setFileReactType, setCanDestroyFiles } from 'ducks/app'
+import { setMode, setFileType, setFilesUrl, setReadOnly, setTaggable, setNoFileUsage, setFileReactType, setCanDestroyFiles } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
@@ -124,6 +124,11 @@ window.FolioConsole.React.init = (domRoot) => {
       {
         key: 'readOnly',
         action: setReadOnly,
+        asJson: false
+      },
+      {
+        key: 'taggable',
+        action: setTaggable,
         asJson: false
       },
       {

@@ -41,7 +41,7 @@ class FileFilter extends Component {
   }
 
   render () {
-    const { filters, margined, fileUsage } = this.props
+    const { filters, margined, fileUsage, taggable } = this.props
 
     return (
       <Wrap margined={margined} className='bg-100'>
@@ -90,16 +90,18 @@ class FileFilter extends Component {
             </div>
           )}
 
-          <div className='col-12 col-sm-6 col-xl-3'>
-            <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
-              <TagsInput
-                value={filters.tags}
-                onTagsChange={this.onTagsChange}
-                noAutofocus
-                notCreatable
-              />
-            </FormGroup>
-          </div>
+          {taggable && (
+            <div className='col-12 col-sm-6 col-xl-3'>
+              <FormGroup className='mb-0 mb-xl-0 form-group--react-select'>
+                <TagsInput
+                  value={filters.tags}
+                  onTagsChange={this.onTagsChange}
+                  noAutofocus
+                  notCreatable
+                />
+              </FormGroup>
+            </div>
+          )}
 
           {filters.active && (
             <div className='col-12 col-xl-1'>

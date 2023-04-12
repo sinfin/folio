@@ -17,7 +17,7 @@ import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable }) => {
   const file = fileModal.file
   const isImage = file.attributes.react_type === 'image'
   let download = file.attributes.file_name
@@ -107,32 +107,34 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </FormGroup>
 
-            <div className='form-group string optional file_tag_list'>
-              <label className='control-label string optional'>
-                {window.FolioConsole.translations.tagsLabel}
-              </label>
+            {taggable && (
+              <div className='form-group string optional file_tag_list'>
+                <label className='control-label string optional'>
+                  {window.FolioConsole.translations.tagsLabel}
+                </label>
 
-              {readOnly ? (
-                formState.tags.length ? (
-                  <PrettyTags tags={formState.tags} />
+                {readOnly ? (
+                  formState.tags.length ? (
+                    <PrettyTags tags={formState.tags} />
+                  ) : (
+                    <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                  )
                 ) : (
-                  <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-                )
-              ) : (
-                <React.Fragment>
-                  <TagsInput
-                    value={formState.tags}
-                    onTagsChange={onTagsChange}
-                    submit={saveModal}
-                    noAutofocus
-                  />
+                  <React.Fragment>
+                    <TagsInput
+                      value={formState.tags}
+                      onTagsChange={onTagsChange}
+                      submit={saveModal}
+                      noAutofocus
+                    />
 
-                  <small className='form-text'>
-                    {window.FolioConsole.translations.tagsHint}
-                  </small>
-                </React.Fragment>
-              )}
-            </div>
+                    <small className='form-text'>
+                      {window.FolioConsole.translations.tagsHint}
+                    </small>
+                  </React.Fragment>
+                )}
+              </div>
+            )}
 
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileDescription}</Label>

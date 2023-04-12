@@ -133,6 +133,10 @@ class Folio::File < Folio::ApplicationRecord
     end
   end
 
+  def self.react_taggable
+    true
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
