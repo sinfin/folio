@@ -42,7 +42,9 @@ window.Folio.Stimulus.register('f-c-boolean-toggle', class extends window.Stimul
           }
         }
       })
-      .catch(() => {
+      .catch((res) => {
+        window.FolioConsole.Flash.alert(res.message)
+
         this.element.classList.remove(this.loadingClass)
         this.inputTarget.checked = !this.inputTarget.checked
       })

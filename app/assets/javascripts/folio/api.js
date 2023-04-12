@@ -25,7 +25,21 @@ const fallbackMessage = (response) => `${response.status}: ${response.statusText
 
 const jsonError = (json) => {
   if (!json) return null
-  return json.error || null
+
+  if (json.error) {
+    return json.error
+  } else if (json.errors) {
+    const parts = []
+
+    json.errors.forEach((err) => {
+      parts.push(err.title)
+      parts.push(err.detail)
+    })
+
+    return parts.join(' ')
+  }
+
+  return null
 }
 
 function checkResponse (response) {
@@ -122,18 +136,12 @@ window.Folio.Api.apiXhrFilePut = (url, file) => {
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(xhr.response)
       } else {
-        reject({
-          status: xhr.status,
-          statusText: xhr.statusText
-        })
+        reject(new Error(`${xhr.status} ${xhr.statusText}`))
       }
     }
 
     xhr.onerror = () => {
-      reject({
-        status: xhr.status,
-        statusText: xhr.statusText
-      })
+      reject(new Error(`${xhr.status} ${xhr.statusText}`))
     }
 
     xhr.send(file)
