@@ -146,7 +146,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
       if opts = image.try(:thumbnail_store_options)
         if path_base = opts.delete(:path_base)
-          opts[:path] = "#{path_base}/#{size}/#{thumbnail.name}"
+          opts[:path] = "#{path_base}/#{size_for_s3_path(size)}/#{thumbnail.name}"
         end
 
         uid = thumbnail.store(opts)
@@ -179,7 +179,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
 
         if opts = image.try(:thumbnail_store_options)
           if path_base = opts.delete(:path_base)
-            opts[:path] = "#{path_base}/#{size}/#{webp.name}"
+            opts[:path] = "#{path_base}/#{size_for_s3_path(size)}/#{webp.name}"
           end
 
           webp_uid = webp.store(opts)
@@ -207,5 +207,12 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       thumbnail.name = image.file_name
 
       thumbnail
+    end
+
+    def size_for_s3_path(size)
+      size.gsub("#", "H")
+          .gsub(">", "GT")
+          .gsub("<", "LT")
+          .gsub(/\W/, "")
     end
 end
