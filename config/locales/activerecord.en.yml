@@ -92,7 +92,7 @@ en:
     errors:
       messages:
         indestructible: The record cannot be removed.
-        file_format: 'is invalid. Allowed types: %{types}'
+        file_format: '%{file_mime_type} is invalid. Allowed types: %{types}'
         wrong_namespace: The record type does not match the site type.
       models:
         folio/lead:
