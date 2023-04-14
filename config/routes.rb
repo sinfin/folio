@@ -94,13 +94,6 @@ Folio::Engine.routes.draw do
           post :event
         end
 
-        resource :autocomplete, only: %i[show] do
-          get :field
-          get :selectize
-          get :select2
-          get :react_select
-        end
-
         resources :private_attachments, only: %i[create destroy]
 
         resources :links, only: %i[index]
@@ -150,6 +143,13 @@ Folio::Engine.routes.draw do
 
     # these are outside of constraint by design
     namespace :api do
+      resource :autocomplete, only: %i[show] do
+        get :field
+        get :selectize
+        get :select2
+        get :react_select
+      end
+
       resources :file_placements, only: %i[index],
                                   path: "files/:file_id/file_placements"
     end
