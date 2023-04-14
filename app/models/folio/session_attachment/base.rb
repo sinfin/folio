@@ -59,7 +59,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
 
   def thumbnail_store_options
     {
-      path: "session_attachments/#{hash_id}",
+      path_base: "session_attachments/#{hash_id}",
       headers: { "x-amz-acl" => "private" },
       private: true,
     }

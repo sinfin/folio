@@ -145,8 +145,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       end
 
       if opts = image.try(:thumbnail_store_options)
-        if opts[:path]
-          opts[:path] += "/#{size}/#{thumbnail.name}"
+        if path_base = opts.delete(:path_base)
+          opts[:path] = "#{path_base}/#{size}/#{thumbnail.name}"
         end
 
         uid = thumbnail.store(opts)
@@ -178,8 +178,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         webp.name = Pathname(webp.name).sub_ext(".webp").to_s
 
         if opts = image.try(:thumbnail_store_options)
-          if opts[:path]
-            opts[:path] += "/#{size}/#{webp.name}"
+          if path_base = opts.delete(:path_base)
+            opts[:path] = "#{path_base}/#{size}/#{webp.name}"
           end
 
           webp_uid = webp.store(opts)
