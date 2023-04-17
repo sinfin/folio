@@ -39,7 +39,7 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
   localization: {
     locale: document.documentElement.lang,
     format: 'dd. MM. yyyy, HH:mm',
-    hourCycle: 'h23',
+    hourCycle: 'h23'
   },
   keepInvalid: false,
   useCurrent: false,
@@ -56,7 +56,7 @@ window.Folio.Input.DateTime.DATE_CONFIG = {
       clock: false,
       hours: false,
       minutes: false,
-      seconds: false,
+      seconds: false
     }
   },
   localization: {
@@ -95,14 +95,18 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
 }
 
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
-  if (input.value === "" || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
+  if (input.value === '' || (e.date && !e.oldDate) || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
     input.folioInputTempusDominus.hide()
   }
 
-  $(input).trigger('change')
+  if (e.date === e.oldDate) return
+
+  input.dispatchEvent(new window.Event('input', { bubbles: true }))
+  input.dispatchEvent(new window.Event('change', { bubbles: true }))
 }
 
 window.Folio.Input.DateTime.bind = (input, opts = {}) => {
+  window.Folio.Input.DateTime.unbind(input)
   window.Folio.Input.DateTime.updateIconsIfNeeded(input)
 
   let fullOpts

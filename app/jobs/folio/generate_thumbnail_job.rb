@@ -210,7 +210,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
     end
 
     def size_for_s3_path(size)
-      size.gsub("#", "H")
+      size.tr("#", "H")
           .gsub(">", "GT")
           .gsub("<", "LT")
           .gsub(/\W/, "")

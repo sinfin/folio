@@ -1,6 +1,11 @@
 div class=class_name
   .f-c-show-header__flex
-    = render(:_title)
+    .f-c-show-header__titles
+      = render(:_title)
+
+      - if options[:subtitle].present?
+        h2.f-c-show-header__h2
+          = sanitize_string(options[:subtitle])
 
     .f-c-show-header__right
       - if model.respond_to?(:aasm)

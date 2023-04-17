@@ -12,8 +12,14 @@
     border-bottom: 0
     padding-bottom: 0
 
-  &__h1
+  &__titles
     margin: 0 $grid-gutter-width 0 0
+
+  &__h1
+    margin: 0
+
+  &__h2
+    margin: $spacer / 2 0 0
 
   &__right
     margin-left: auto
@@ -22,14 +28,14 @@
     align-items: center
 
   +media-breakpoint-up(md)
-    &__h1
+    &__titles
       flex: 1
 
   +media-breakpoint-down(md)
     &__flex
       display: block
 
-    &__h1
+    &__titles
       flex: 0 0 100%
       margin-bottom: $spacer / 2
 
