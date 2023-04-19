@@ -5,11 +5,17 @@ module Folio::Publishable
     extend ActiveSupport::Concern
 
     included do
-      scope :published, -> { where(published: true) }
+      scope :folio_published, -> { where(published: true) }
+
+      scope :published, -> { folio_published }
+
       scope :published_or_admin, -> (admin) { admin ? all : published }
-      scope :unpublished, -> { where("#{table_name}.published != ? OR "\
-                                     "#{table_name}.published IS NULL",
-                                     true) }
+
+      scope :folio_unpublished, -> { where("#{table_name}.published != ? OR "\
+                                           "#{table_name}.published IS NULL",
+                                           true) }
+
+      scope :unpublished, -> { folio_unpublished }
 
       scope :by_published, -> (bool) {
         case bool
@@ -23,8 +29,12 @@ module Folio::Publishable
       }
     end
 
-    def published?
+    def folio_published?
       published.present?
+    end
+
+    def published?
+      folio_published?
     end
   end
 
@@ -32,21 +42,25 @@ module Folio::Publishable
     extend ActiveSupport::Concern
 
     included do
-      scope :published, -> {
+      scope :folio_published, -> {
         where("#{table_name}.published = ? AND "\
               "(#{table_name}.published_at IS NULL OR #{table_name}.published_at <= ?)",
               true,
               Time.zone.now)
       }
 
+      scope :published, -> { folio_published }
+
       scope :published_or_admin, -> (admin) { admin ? all : published }
 
-      scope :unpublished, -> {
+      scope :folio_unpublished, -> {
         where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
               "(#{table_name}.published_at IS NOT NULL AND #{table_name}.published_at > ?)",
               true,
               Time.zone.now)
       }
+
+      scope :unpublished, -> { folio_unpublished }
 
       scope :by_published, -> (bool) {
         case bool
@@ -81,7 +95,7 @@ module Folio::Publishable
       end
     end
 
-    def published?
+    def folio_published?
       if published.present?
         if published_at.present?
           published_at <= Time.zone.now
@@ -92,13 +106,17 @@ module Folio::Publishable
         false
       end
     end
+
+    def published?
+      folio_published?
+    end
   end
 
   module Within
     extend ActiveSupport::Concern
 
     included do
-      scope :published, -> {
+      scope :folio_published, -> {
         where("#{table_name}.published = ? AND "\
               "(#{table_name}.published_from IS NULL OR #{table_name}.published_from <= ?) AND "\
               "(#{table_name}.published_until IS NULL OR #{table_name}.published_until >= ?)",
@@ -107,9 +125,11 @@ module Folio::Publishable
               Time.zone.now)
       }
 
+      scope :published, -> { folio_published }
+
       scope :published_or_admin, -> (admin) { admin ? all : published }
 
-      scope :unpublished, -> {
+      scope :folio_unpublished, -> {
         where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
               "(#{table_name}.published_from IS NOT NULL AND #{table_name}.published_from >= ?) OR "\
               "(#{table_name}.published_until IS NOT NULL AND #{table_name}.published_until <= ?)",
@@ -117,6 +137,8 @@ module Folio::Publishable
               Time.zone.now,
               Time.zone.now)
       }
+
+      scope :unpublished, -> { folio_unpublished }
 
       scope :by_published, -> (bool) {
         case bool
@@ -155,7 +177,7 @@ module Folio::Publishable
       end
     end
 
-    def published?
+    def folio_published?
       if published.present?
         if published_from.present? && published_from >= Time.zone.now
           return false
@@ -169,6 +191,10 @@ module Folio::Publishable
       else
         false
       end
+    end
+
+    def published?
+      folio_published?
     end
   end
 end
