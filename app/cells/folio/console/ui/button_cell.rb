@@ -7,7 +7,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       type: model[:type] || :button,
       class: "f-c-ui-button btn btn-#{model[:variant]} #{model[:class]}",
       data: model[:data],
-      action: model[:action],
+      name: model[:name],
       hidden: model[:hidden],
     }
 
