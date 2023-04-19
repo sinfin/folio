@@ -94,6 +94,18 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
   }
 }
 
+window.Folio.Input.DateTime.makeOnShow = (input) => {
+  if (input.dataset.default) {
+    return () => {
+      if (input.folioInputTempusDominus && !input.folioInputDidSetDefault && input.value === "") {
+        input.folioInputDidSetDefault = true
+        input.folioInputTempusDominus.dates.setFromInput(input.dataset.default)
+      }
+    }
+  }
+}
+
+
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
   if (input.value === '' || (e.date && !e.oldDate) || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
     input.folioInputTempusDominus.hide()
@@ -119,12 +131,23 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
 
   input.folioInputTempusDominus = new window.tempusDominus.TempusDominus(input, fullOpts)
   input.folioInputTempusDominusChangeSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.change, window.Folio.Input.DateTime.makeOnChange(input))
+
+  const onShow = window.Folio.Input.DateTime.makeOnShow(input)
+
+  if (onShow) {
+    input.folioInputTempusDominusShowSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.show, onShow)
+  }
 }
 
 window.Folio.Input.DateTime.unbind = (input) => {
   if (input.folioInputTempusDominusChangeSubscription) {
     input.folioInputTempusDominusChangeSubscription.unsubscribe()
     input.folioInputTempusDominusChangeSubscription = null
+  }
+
+  if (input.folioInputTempusDominusShowSubscription) {
+    input.folioInputTempusDominusShowSubscription.unsubscribe()
+    input.folioInputTempusDominusShowSubscription = null
   }
 
   if (input.folioInputTempusDominus) {
