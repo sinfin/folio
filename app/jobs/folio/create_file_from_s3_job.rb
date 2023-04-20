@@ -52,7 +52,7 @@ class Folio::CreateFileFromS3Job < ApplicationJob
         file.web_session_id = web_session_id
       end
 
-      if user_id && file.respond_to?("user_id=")
+      if user_id && file.respond_to?("user=")
         file.user = Folio::User.find(user_id)
       end
 
