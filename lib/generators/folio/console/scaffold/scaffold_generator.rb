@@ -81,6 +81,14 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
       options["class_name"] || super.gsub("Folio::Folio::", "Folio::")
     end
 
+    def table_name
+      if options["class_name"]
+        options["class_name"].constantize.table_name
+      else
+        super
+      end
+    end
+
     def attributes_names
       super.presence || fallback_attributes_names
     end
