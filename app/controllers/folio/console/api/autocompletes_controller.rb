@@ -246,7 +246,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       scope
     end
 
-    def apply_param_scope(scope)
+    def default_apply_param_scope(scope)
       p_scope = params[:scope]
 
       if p_scope.present? && scope.respond_to?(p_scope)
@@ -254,5 +254,9 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
       end
 
       scope
+    end
+
+    def apply_param_scope(scope)
+      default_apply_param_scope(scope)
     end
 end
