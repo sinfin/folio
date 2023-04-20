@@ -4,7 +4,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   def show
     klass = params.require(:klass).safe_constantize
     q = params[:q]
-    p_scope = params[:scope]
     p_order = params[:order_scope]
 
     if klass &&
@@ -18,9 +17,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.by_site(current_site)
       end
 
-      if p_scope.present? && scope.respond_to?(p_scope)
-        scope = scope.send(p_scope)
-      end
+      scope = apply_param_scope(scope)
 
       params.each do |key, val|
         if key.starts_with?("filter_by_")
@@ -53,7 +50,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     klass = params.require(:klass).safe_constantize
     field = params.require(:field)
     q = params[:q]
-    p_scope = params[:scope]
     p_order = params[:order_scope]
     p_without = params[:without]
 
@@ -64,9 +60,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.by_site(current_site)
       end
 
-      if p_scope.present? && scope.respond_to?(p_scope)
-        scope = scope.send(p_scope)
-      end
+      scope = apply_param_scope(scope)
 
       if p_without.present?
         scope = scope.where.not(id: p_without.split(","))
@@ -110,7 +104,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   def selectize
     klass = params.require(:klass).safe_constantize
     q = params[:q]
-    p_scope = params[:scope]
     p_order = params[:order_scope]
     p_without = params[:without]
 
@@ -121,9 +114,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.by_site(current_site)
       end
 
-      if p_scope.present? && scope.respond_to?(p_scope)
-        scope = scope.send(p_scope)
-      end
+      scope = apply_param_scope(scope)
 
       if p_without.present?
         scope = scope.where.not(id: p_without.split(","))
@@ -146,7 +137,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   def select2
     klass = params.require(:klass).safe_constantize
     q = params[:q]
-    p_scope = params[:scope]
     p_order = params[:order_scope]
     p_without = params[:without]
 
@@ -157,9 +147,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         scope = scope.by_site(current_site)
       end
 
-      if p_scope.present? && scope.respond_to?(p_scope)
-        scope = scope.send(p_scope)
-      end
+      scope = apply_param_scope(scope)
 
       if p_without.present?
         scope = scope.where.not(id: p_without.split(","))
@@ -186,7 +174,6 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
   def react_select
     class_names = params.require(:class_names).split(",")
     q = params[:q]
-    p_scope = params[:scope]
     p_order = params[:order_scope]
     p_without = params[:without]
 
@@ -204,9 +191,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
             scope = scope.by_site(current_site)
           end
 
-          if p_scope.present? && scope.respond_to?(p_scope)
-            scope = scope.send(p_scope)
-          end
+          scope = apply_param_scope(scope)
 
           if p_without.present?
             scope = scope.where.not(id: p_without.split(","))
@@ -256,6 +241,16 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         if scope.respond_to?(key)
           scope = scope.send(key, params[key])
         end
+      end
+
+      scope
+    end
+
+    def apply_param_scope(scope)
+      p_scope = params[:scope]
+
+      if p_scope.present? && scope.respond_to?(p_scope)
+        scope = scope.send(p_scope)
       end
 
       scope
