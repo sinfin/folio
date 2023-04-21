@@ -82,6 +82,9 @@ module Folio
     config.folio_users_signed_in_root_path = :root_path
     config.folio_users_after_password_change_path = :root_path
     config.folio_users_after_impersonate_path = config.folio_users_after_sign_in_path
+    config.folio_users_after_impersonate_path_proc = -> (controller, user) {
+      controller.main_app.send(Rails.application.config.folio_users_after_impersonate_path)
+    }
 
     config.folio_users_non_get_referrer_rewrite_proc = -> (referrer) { }
 

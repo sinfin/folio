@@ -14,6 +14,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   end
 
   def impersonate
+    current_user.sign_out_everywhere! if current_user
     bypass_sign_in @user, scope: :user
     redirect_to after_impersonate_path,
                 flash: { success: t(".success", label: @user.to_label) }
@@ -38,7 +39,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   private
     def after_impersonate_path
-      main_app.send(Rails.application.config.folio_users_after_impersonate_path)
+      Rails.application.config.folio_users_after_impersonate_path_proc.call(self, @user)
     end
 
     def user_params

@@ -2,7 +2,9 @@
 All notable changes to this project will be documented in this file.
 
 ## 2023-04-21
-### removed
+### Added
+- added `Rails.application.config.folio_users_after_impersonate_path_proc` which uses `folio_users_after_impersonate_path` by default
+### Removed
 - removed `folio/console/tagsinput` cell, use `as: :tags` simple form input instead
 
 ## 2023-03-15
