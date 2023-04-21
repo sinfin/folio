@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Api::TagsController < Folio::Console::Api::BaseController
-  def react_select
+  def index
     q = params[:q]
     context = params[:context].presence || "tags"
 

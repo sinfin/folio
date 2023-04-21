@@ -86,10 +86,6 @@ Folio::Engine.routes.draw do
       end
 
       namespace :api do
-        resource :tags, only: [] do
-          get :react_select
-        end
-
         resource :aasm, only: [], controller: "aasm" do
           post :event
         end
@@ -143,6 +139,8 @@ Folio::Engine.routes.draw do
 
     # these are outside of constraint by design
     namespace :api do
+      resources :tags, only: %i[index]
+
       resource :autocomplete, only: %i[show] do
         get :field
         get :selectize

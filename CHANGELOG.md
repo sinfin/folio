@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-04-21
+### removed
+- removed `folio/console/tagsinput` cell, use `as: :tags` simple form input instead
+
 ## 2023-03-15
 ### Added
 - added `Folio::HasRoles` and used it for `Folio::Account`

@@ -13,8 +13,8 @@
 //= require moment/locale/cs
 
 //= require jquery-ui/jquery-ui
-//= require selectize/dist/js/standalone/selectize
-//= require select2/dist/js/select2
+//= require selectize
+//= require select2/dist/js/select2.full
 //= require select2/dist/js/i18n/cs
 
 //= require cocoon
@@ -29,6 +29,11 @@
 //= require ./redactor/_linksrel
 //= require ./redactor/_init
 
+//= require folio/stimulus
+//= require folio/api
+//= require folio/s3-upload
+//= require folio/message-bus
+
 //= require folio/lazyload
 //= require folio/lightbox
 //= require folio/debounce
@@ -39,12 +44,7 @@
 // must be under folio/input
 //= require daterangepicker.min
 
-// keep the order!
-//= require folio/stimulus
-//= require folio/api
-//= require folio/s3-upload
 //= require folio/console/flash
-//= require folio/message-bus
 
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-set-position
@@ -88,7 +88,6 @@
 //= require folio/console/react_picker/react_picker
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
-//= require folio/console/tagsinput/tagsinput
 
 //= require ./pages_table
 
