@@ -20,16 +20,16 @@ class Folio::Console::FileSerializer
              :default_gravity,
              :default_gravities_for_select
 
-  attribute :react_type do |object|
-    object.class.react_type
+  attribute :human_type do |object|
+    object.class.human_type
   end
 
   attribute :thumb do |object|
-    object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.class.react_type == "image"
+    object.thumb(ADMIN_THUMBNAIL_SIZE).url if object.class.human_type == "image"
   end
 
   attribute :webp_thumb do |object|
-    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.class.react_type == "image"
+    object.thumb(ADMIN_THUMBNAIL_SIZE).webp_url if object.class.human_type == "image"
   end
 
   attribute :source_url do |object|
@@ -37,11 +37,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :url do |object|
-    object.file.url if object.class.react_type == "image"
+    object.file.url if object.class.human_type == "image"
   end
 
   attribute :dominant_color do |object|
-    if object.class.react_type == "image"
+    if object.class.human_type == "image"
       if object.additional_data
         object.additional_data["dominant_color"]
       end

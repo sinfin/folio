@@ -4,6 +4,7 @@ module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
+    render "folio/console/file/index"
   end
 
   private

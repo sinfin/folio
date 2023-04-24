@@ -1,0 +1,9 @@
+= index_header react_new: true
+
+.folio-react-wrap[
+  data-file-type=@klass.to_s
+  data-files-url=url_for([:console, :api, @klass])
+  data-mode='index'
+  data-taggable='1'
+  data-can-destroy-files=(can?(:destroy, @klass) ? "1" : nil)
+]

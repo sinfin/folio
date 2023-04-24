@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::File::Image < Folio::File
-  include Folio::DragonflyFormatValidation
   include Folio::Sitemap::Image
 
   validate_file_format
@@ -33,7 +32,7 @@ class Folio::File::Image < Folio::File
     true
   end
 
-  def self.react_type
+  def self.human_type
     "image"
   end
 
@@ -69,6 +68,7 @@ end
 #  sensitive_content    :boolean          default(FALSE)
 #  file_mime_type       :string
 #  default_gravity      :string
+#  file_track_duration  :integer
 #
 # Indexes
 #

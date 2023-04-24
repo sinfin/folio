@@ -5,9 +5,4 @@ class Folio::Console::File::ImagesController < Folio::Console::BaseController
 
   folio_console_controller_for "Folio::File::Image", except: %w[index]
   authorize_resource class: "Folio::File::Image", only: %i[index]
-
-  private
-    def image_params
-      file_params
-    end
 end

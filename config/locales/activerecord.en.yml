@@ -22,7 +22,7 @@ en:
         default_gravity/north: North
         default_gravity/south: South
         default_gravity/west: West
-      folio/image:
+      folio/file/image:
         file_placements: Placements
         thumbnail_sizes: Generated versions
       folio/lead:
@@ -121,13 +121,19 @@ en:
         other: Content templates
       folio/content_template/aasm_email_subject: State upddate - email subject
       folio/content_template/aasm_email_text: State upddate - email content
-      folio/document:
+      folio/file/document:
         one: Document
         other: Documents
       folio/file:
         one: File
         other: Files
-      folio/image:
+      folio/file/audio:
+        one: Audio
+        other: Audios
+      folio/file/video:
+        one: Video
+        other: Videos
+      folio/file/image:
         one: Image
         other: Images
       folio/lead:

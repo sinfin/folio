@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
-class Folio::File::Document < Folio::File
+class Folio::File::Video < Folio::File
+  validate_file_format %w[video/mp4 video/webm]
+
   def thumbnailable?
-    file_mime_type_image? || file_mime_type == "application/pdf"
+    true
+  end
+
+  def self.human_type
+    "video"
   end
 end
 

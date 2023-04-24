@@ -145,7 +145,7 @@ module Folio::Console::Api::FileControllerBase
 
     def index_json
       pagination, records = pagy(folio_console_records.ordered, items: 60)
-      meta = meta_from_pagy(pagination).merge(react_type: @klass.react_type)
+      meta = meta_from_pagy(pagination).merge(human_type: @klass.human_type)
 
       json_from_records(records, Folio::Console::FileSerializer, meta:)
     end

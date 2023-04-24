@@ -45,6 +45,12 @@ module Folio
     config.folio_site_validate_belongs_to_namespace = false
     config.folio_site_default_test_factory = nil
     config.folio_cell_generator_class_name_prefixes = {}
+    config.folio_file_types_for_routes = %w[
+      Folio::File::Image
+      Folio::File::Document
+      Folio::File::Audio
+      Folio::File::Video
+    ]
     config.folio_allow_users_to_console = false
     config.folio_atom_files_url = -> (file_klass) {
       url_for_args = [:console, :api, file_klass, only_path: true]

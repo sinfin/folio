@@ -265,6 +265,8 @@ en:
           show_current: Show current version
         sidebar:
           homepage: Homepage
+          audio: Audios
+          video: Videos
       private_attachments:
         single_dropzone:
           download: Download

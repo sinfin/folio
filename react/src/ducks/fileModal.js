@@ -81,7 +81,7 @@ export const fileModalSelector = (state) => state.fileModal
 
 // Sagas
 function * destroyFileThumbnailPerform (action) {
-  if (action.file.attributes.react_type !== 'image') return
+  if (action.file.attributes.human_type !== 'image') return
 
   try {
     const url = urlWithAffix(action.filesUrl, `/${action.file.id}/destroy_file_thumbnail`)
@@ -97,7 +97,7 @@ function * destroyFileThumbnailSaga () {
 }
 
 function * updateFileThumbnailPerform (action) {
-  if (action.file.attributes.react_type !== 'image') return
+  if (action.file.attributes.human_type !== 'image') return
 
   try {
     const url = urlWithAffix(action.filesUrl, `/${action.file.id}/update_file_thumbnail`)

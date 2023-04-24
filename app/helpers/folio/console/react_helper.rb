@@ -59,7 +59,7 @@ module Folio::Console::ReactHelper
                   "class" => "folio-react-wrap",
                   "data-file-type" => file_type,
                   "data-files-url" => url,
-                  "data-react-type" => klass.react_type,
+                  "data-react-type" => klass.human_type,
                   "data-taggable" => klass.react_taggable ? "1" : nil,
                   "data-mode" => "modal-single-select")
     end
@@ -151,7 +151,7 @@ module Folio::Console::ReactHelper
       "data-original-placements" => placements,
       "data-file-type" => file_type,
       "data-files-url" => url,
-      "data-react-type" => klass.react_type,
+      "data-react-type" => klass.human_type,
       "data-mode" => "multi-select",
       "data-attachmentable" => attachmentable,
       "data-placement-type" => type,

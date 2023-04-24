@@ -127,6 +127,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           :homepage,
           "Folio::Menu",
           "Folio::File::Image",
+          { klass: "Folio::File::Video", path: url_for([:console, Folio::File::Video]), label: t(".video") },
+          { klass: "Folio::File::Audio", path: url_for([:console, Folio::File::Audio]), label: t(".audio") },
           "Folio::File::Document",
           "Folio::ContentTemplate",
         ]

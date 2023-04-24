@@ -254,7 +254,8 @@ module Folio::Thumbnails
   end
 
   def thumbnailable?
-    true
+    # override this for images
+    false
   end
 
   private

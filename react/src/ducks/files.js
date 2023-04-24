@@ -323,8 +323,8 @@ function filesReducer (rawState = initialState, action) {
           records: action.records,
           loading: false,
           loaded: true,
-          pagination: omit(action.meta, ['react_type']),
-          reactType: action.meta.react_type
+          pagination: omit(action.meta, ['human_type']),
+          reactType: action.meta.human_type
         }
       }
 

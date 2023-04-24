@@ -22,12 +22,12 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
     end
   end
 
-  def react_type
-    @react_type ||= options[:file_type].constantize.react_type
+  def human_type
+    @human_type ||= options[:file_type].constantize.human_type
   end
 
   def render_fields
-    if react_type == "image"
+    if human_type == "image"
       render("_image_fields")
     else
       render("_document_fields")

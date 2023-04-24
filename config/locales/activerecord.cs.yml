@@ -27,7 +27,7 @@ cs:
         default_gravity/south: Dole
         default_gravity/west: Vlevo
         description: Popis
-      folio/image:
+      folio/file/image:
         file_placements: Použití
         thumbnail_sizes: Vygenerované verze
       folio/lead:
@@ -167,7 +167,7 @@ cs:
         few: Kategorie
         one: Kategorie
         other: Kategorií
-      folio/document:
+      folio/file/document:
         few: Soubory
         one: Soubor
         other: Souborů
@@ -175,7 +175,15 @@ cs:
         few: Soubory
         one: Soubor
         other: Souborů
-      folio/image:
+      folio/file/audio:
+        one: Audio stopa
+        few: Audio stopy
+        other: Audio stop
+      folio/file/video:
+        one: Video stopa
+        few: Video stopy
+        other: Video stop
+      folio/file/image:
         few: Obrázky
         one: Obrázek
         other: Obrázků

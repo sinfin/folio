@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-class Folio::File::Document < Folio::File
-  def thumbnailable?
-    file_mime_type_image? || file_mime_type == "application/pdf"
+class Folio::File::Audio < Folio::File
+  validate_file_format %w[audio/mpeg audio/aac audio/x-hx-aac-adts]
+
+  def self.human_type
+    "audio"
   end
 end
 

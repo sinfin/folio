@@ -19,7 +19,7 @@ import FileEditInput from './styled/FileEditInput'
 
 export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable }) => {
   const file = fileModal.file
-  const isImage = file.attributes.react_type === 'image'
+  const isImage = file.attributes.human_type === 'image'
   let download = file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 

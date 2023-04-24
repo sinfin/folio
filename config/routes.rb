@@ -47,8 +47,9 @@ Folio::Engine.routes.draw do
       resources :menus, except: %i[show]
 
       namespace :file do
-        resources :images, only: %i[index]
-        resources :documents, only: %i[index]
+        Rails.application.config.folio_file_types_for_routes.each do |type|
+          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index]
+        end
       end
 
       resources :leads, only: %i[index show edit update destroy] do
@@ -111,27 +112,24 @@ Folio::Engine.routes.draw do
         end
 
         namespace :file do
-          resources :images, only: %i[index update destroy] do
-            collection do
-              post :tag
-              delete :mass_destroy
-              get :mass_download
-            end
-            member do
-              post :update_file_thumbnail
-              post :destroy_file_thumbnail
-              post :change_file
-            end
-          end
+          Rails.application.config.folio_file_types_for_routes.each do |type|
+            klass = type.constantize
+            key = type.constantize.model_name.element.pluralize.to_sym
 
-          resources :documents, only: %i[index update destroy] do
-            collection do
-              post :tag
-              delete :mass_destroy
-              get :mass_download
-            end
-            member do
-              post :change_file
+            resources key, only: %i[index update destroy] do
+              collection do
+                post :tag
+                delete :mass_destroy
+                get :mass_download
+              end
+              member do
+                post :change_file
+
+                if klass.human_type == "image"
+                  post :update_file_thumbnail
+                  post :destroy_file_thumbnail
+                end
+              end
             end
           end
         end

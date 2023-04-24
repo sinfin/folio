@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Folio::File < Folio::ApplicationRecord
+  include Folio::DragonflyFormatValidation
   include Folio::Filterable
   include Folio::HasHashId
   include Folio::SanitizeFilename
   include Folio::Taggable
   include Folio::Thumbnails
+  include Folio::StiPreload
 
   DEFAULT_GRAVITIES = %w[
     center
@@ -79,6 +81,7 @@ class Folio::File < Folio::ApplicationRecord
     by_file_name_for_search(sanitize_filename_for_search(query))
   end
 
+  before_validation :set_file_track_duration, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job!
@@ -114,7 +117,7 @@ class Folio::File < Folio::ApplicationRecord
     [Folio::PrivateAttachment]
   end
 
-  def self.react_type
+  def self.human_type
     "document"
   end
 
@@ -127,6 +130,10 @@ class Folio::File < Folio::ApplicationRecord
     Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
   end
 
+  def thumbnailable?
+    false
+  end
+
   def self.default_gravities_for_select
     DEFAULT_GRAVITIES.map do |gravity|
       [human_attribute_name("default_gravity/#{gravity}"), gravity]
@@ -137,6 +144,27 @@ class Folio::File < Folio::ApplicationRecord
     true
   end
 
+  def self.sti_paths
+    [
+      Folio::Engine.root.join("app/models/folio/file"),
+      Rails.root.join("app/models/**/file"),
+    ]
+  end
+
+  def file_track_duration_in_ffmpeg_format
+    if file_track_duration
+      quarter = file_track_duration / 4
+
+      seconds = quarter
+      minutes = seconds / 60
+      seconds -= minutes * 60
+      hours = minutes / 60
+      minutes -= hours * 60
+
+      "#{hours.to_s.rjust(2, '0')}:#{minutes.to_s.rjust(2, '0')}:#{seconds.to_s.rjust(2, '0')}.00"
+    end
+  end
+
   private
     def set_file_name_for_search
       self.file_name_for_search = self.class.sanitize_filename_for_search(file_name)
@@ -144,6 +172,12 @@ class Folio::File < Folio::ApplicationRecord
 
     def check_usage_before_destroy
       throw(:abort) if file_placements.exists?
+    end
+
+    def set_file_track_duration
+      if %w[audio video].include?(self.class.human_type)
+        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type)
+      end
     end
 end
 
@@ -171,6 +205,7 @@ end
 #  sensitive_content    :boolean          default(FALSE)
 #  file_mime_type       :string
 #  default_gravity      :string
+#  file_track_duration  :integer
 #
 # Indexes
 #

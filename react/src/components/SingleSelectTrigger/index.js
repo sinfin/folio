@@ -14,7 +14,7 @@ function triggerModal (fileType, data) {
 function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, index }) {
   const present = data && !data._destroy
   const filesUrl = attachmentType.files_url
-  const asImage = present && data.file.attributes.react_type === 'image'
+  const asImage = present && data.file.attributes.human_type === 'image'
   const fileType = attachmentType.file_type
 
   const trigger = () => {
