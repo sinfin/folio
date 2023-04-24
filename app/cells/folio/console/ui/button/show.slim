@@ -1,5 +1,8 @@
 *tag
   - if model[:icon]
-    i.mi.f-c-ui-button__icon = model[:icon]
+    = icon(model[:icon], class: "f-c-ui-button__icon")
 
   span.f-c-ui-button__label = model[:label]
+
+  - if model[:right_icon]
+    = icon(model[:right_icon], class: "f-c-ui-button__right-icon")

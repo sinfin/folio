@@ -2,20 +2,31 @@
 
 class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
   def tag
-    base = {
-      tag: :button,
-      type: model[:type] || :button,
-      class: "f-c-ui-button btn btn-#{model[:variant]} #{model[:class]}",
-      data: model[:data],
-      name: model[:name],
-      hidden: model[:hidden],
-    }
+    h = model.without(*blacklist)
 
-    if model[:href]
-      base[:tag] = :a
-      base[:href] = model[:href]
+    if h[:href]
+      h[:tag] ||= :a
+    else
+      h[:tag] ||= :button
+      h[:type] ||= :button
     end
 
-    base
+    h[:class] = "f-c-ui-button btn btn-#{model[:variant] || "primary"}"
+
+    if model[:class]
+      h[:class] += " #{model[:class]}"
+    end
+
+    h
+  end
+
+  def blacklist
+    %i[
+      label
+      icon
+      right_icon
+      class
+      variant
+    ]
   end
 end
