@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControllerTest
-  [Folio::Document, Folio::Image].each do |klass|
+  [Folio::File::Document, Folio::File::Image].each do |klass|
     test "#{klass} - index" do
       get url_for([:console, :api, klass])
       assert_response :success

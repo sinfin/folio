@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::FilePlacement::OgImage < Folio::FilePlacement::Base
-  folio_file_placement "Folio::Image", :og_image_placement
+  folio_file_placement "Folio::File::Image", :og_image_placement
 end
 
 # == Schema Information
@@ -23,9 +23,9 @@ end
 #
 # Indexes
 #
-#  index_folio_file_placements_on_file_id                          (file_id)
-#  index_folio_file_placements_on_placement_title                  (placement_title)
-#  index_folio_file_placements_on_placement_title_type             (placement_title_type)
-#  index_folio_file_placements_on_placement_type_and_placement_id  (placement_type,placement_id)
-#  index_folio_file_placements_on_type                             (type)
+#  index_folio_file_placements_on_file_id               (file_id)
+#  index_folio_file_placements_on_placement             (placement_type,placement_id)
+#  index_folio_file_placements_on_placement_title       (placement_title)
+#  index_folio_file_placements_on_placement_title_type  (placement_title_type)
+#  index_folio_file_placements_on_type                  (type)
 #

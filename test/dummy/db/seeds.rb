@@ -32,7 +32,7 @@ destroy_all Dummy::Blog::Topic
 def unsplash_pic(square = false)
   puts "Creating unsplash pic"
 
-  image = Folio::Image.new
+  image = Folio::File::Image.new
   scale = 0.5 + rand / 2
   w = (scale * 2560).to_i
   h = (square ? scale * 2560 : scale * 1440).to_i
@@ -51,7 +51,7 @@ end
 def file_pic(file_instance)
   puts "Creating file pic"
 
-  image = Folio::Image.new
+  image = Folio::File::Image.new
   image.file = file_instance
   image.save!
 
@@ -84,7 +84,7 @@ puts "Creating about page"
 about = Folio::Page.create!(title: "O nás",
                             published: true,
                             published_at: 1.month.ago)
-about.cover = Folio::Image.first
+about.cover = Folio::File::Image.first
 about.image_placements.each { |ip|
   name = "Lorem Ipsum"
   ip.update_attributes!(alt: name, title: "Portrait of #{name}")
@@ -213,7 +213,7 @@ end
 
 puts "Created Dummy::Menu::Footer"
 
-images = Folio::Image.tagged_with("unsplash").to_a
+images = Folio::File::Image.tagged_with("unsplash").to_a
 
 puts "Creating Dummy::Blog::Topic"
 

@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-04-24
+### Changed
+- renamed `Folio::Image` to `Folio::File::Image` and `Folio::Document` to `Folio::File::Document`
+### Removed
+- removed legacy `Folio::ImageHelper`
+
 ## 2023-04-21
 ### Added
 - added `Rails.application.config.folio_users_after_impersonate_path_proc` which uses `folio_users_after_impersonate_path` by default
@@ -556,8 +562,8 @@ folio/_message-bus       -> folio/message-bus
 - Changed console react helpers:
   - Changed `react_image_select(f)` -> `react_picker(f, :cover_placement)`
   - Changed `react_images_select(f)` -> `react_picker(f, :image_placements)`
-  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :document_placement, file_type: 'Folio::Document')`
-  - Changed `react_document_select(f, multi: true)` -> `react_picker(f, :document_placements, file_type: 'Folio::Document')`
+  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :document_placement, file_type: 'Folio::File::Document')`
+  - Changed `react_document_select(f, multi: true)` -> `react_picker(f, :document_placements, file_type: 'Folio::File::Document')`
 
 ## 2018-11-09
 ### Added

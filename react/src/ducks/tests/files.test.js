@@ -17,7 +17,7 @@ import filesReducer, {
 
 import { IMAGES } from 'constants/tests/files'
 
-export const fileMock = { id: '999', type: 'file', attributes: { id: 999, file_size: 326774, file_name: 'bar.jpg', type: 'Folio::Image', thumb: 'foo/bar.jpg', source_url: 'foo/bar.jpg', url: '/foo/bar.jpg', dominant_color: '#2F312F', tags: [], placements: [], extension: 'JPEG' }, links: { edit: '/console/images/999/edit' } }
+export const fileMock = { id: '999', type: 'file', attributes: { id: 999, file_size: 326774, file_name: 'bar.jpg', type: 'Folio::File::Image', thumb: 'foo/bar.jpg', source_url: 'foo/bar.jpg', url: '/foo/bar.jpg', dominant_color: '#2F312F', tags: [], placements: [], extension: 'JPEG' }, links: { edit: '/console/images/999/edit' } }
 const firstThumb = IMAGES[0].attributes.thumb
 const pagination = {
   from: 1,
@@ -31,36 +31,36 @@ describe('filesReducer', () => {
   let state
 
   beforeEach(() => {
-    state = filesReducer(initialState, getFilesSuccess('Folio::Image', IMAGES, pagination))
+    state = filesReducer(initialState, getFilesSuccess('Folio::File::Image', IMAGES, pagination))
   })
 
   it('getFiles', () => {
-    state = filesReducer(initialState, getFiles('Folio::Image'))
-    expect(state['Folio::Image'].loading).toEqual(true)
-    expect(state['Folio::Image'].loaded).toEqual(false)
-    expect(state['Folio::Image'].records).toEqual([])
+    state = filesReducer(initialState, getFiles('Folio::File::Image'))
+    expect(state['Folio::File::Image'].loading).toEqual(true)
+    expect(state['Folio::File::Image'].loaded).toEqual(false)
+    expect(state['Folio::File::Image'].records).toEqual([])
   })
 
   it('getFilesSuccess', () => {
-    expect(state['Folio::Image'].loading).toEqual(false)
-    expect(state['Folio::Image'].loaded).toEqual(true)
-    expect(state['Folio::Image'].records).toEqual(IMAGES)
+    expect(state['Folio::File::Image'].loading).toEqual(false)
+    expect(state['Folio::File::Image'].loaded).toEqual(true)
+    expect(state['Folio::File::Image'].records).toEqual(IMAGES)
   })
 
   it('uploadedFile', () => {
-    expect(state['Folio::Image'].records.length).toEqual(3)
-    state = filesReducer(state, uploadedFile('Folio::Image', fileMock))
-    expect(state['Folio::Image'].records.length).toEqual(4)
+    expect(state['Folio::File::Image'].records.length).toEqual(3)
+    state = filesReducer(state, uploadedFile('Folio::File::Image', fileMock))
+    expect(state['Folio::File::Image'].records.length).toEqual(4)
   })
 
   it('messageBusThumbnailGenerated', () => {
-    expect(state['Folio::Image'].records[0].attributes.thumb).toEqual(firstThumb)
-    state = filesReducer(state, messageBusThumbnailGenerated('Folio::Image', firstThumb, { id: Number(IMAGES[0].id), url: '/foo.jpg', thumb_key: '250x250', thumb: { url: '/foo.jpg' } }))
-    expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual(firstThumb)
+    state = filesReducer(state, messageBusThumbnailGenerated('Folio::File::Image', firstThumb, { id: Number(IMAGES[0].id), url: '/foo.jpg', thumb_key: '250x250', thumb: { url: '/foo.jpg' } }))
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
   })
 
   it('updatedFiles', () => {
-    expect(state['Folio::Image'].records[0].attributes.thumb).toEqual(firstThumb)
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual(firstThumb)
     const records = [{
       ...IMAGES[0],
       attributes: {
@@ -68,28 +68,28 @@ describe('filesReducer', () => {
         thumb: '/foo.jpg'
       }
     }]
-    state = filesReducer(state, updatedFiles('Folio::Image', records))
-    expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
+    state = filesReducer(state, updatedFiles('Folio::File::Image', records))
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
   })
 
   it('updateFile', () => {
-    expect(state['Folio::Image'].records[0].attributes.updating).toEqual(undefined)
-    expect(state['Folio::Image'].records[0].attributes.tags).toEqual([])
-    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', state['Folio::Image'].records[0], { tags: ['foo'] }))
-    expect(state['Folio::Image'].records[0].attributes.updating).toEqual(true)
-    expect(state['Folio::Image'].records[0].attributes.tags).toEqual(['foo'])
+    expect(state['Folio::File::Image'].records[0].attributes.updating).toEqual(undefined)
+    expect(state['Folio::File::Image'].records[0].attributes.tags).toEqual([])
+    state = filesReducer(state, updateFile('Folio::File::Image', '/console/api/images', state['Folio::File::Image'].records[0], { tags: ['foo'] }))
+    expect(state['Folio::File::Image'].records[0].attributes.updating).toEqual(true)
+    expect(state['Folio::File::Image'].records[0].attributes.tags).toEqual(['foo'])
   })
 
   it('updateFile', () => {
-    expect(state['Folio::Image'].records[0].attributes.updating).toEqual(undefined)
-    expect(state['Folio::Image'].records[0].attributes.tags).toEqual([])
-    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', state['Folio::Image'].records[0], { tags: ['foo'] }))
-    expect(state['Folio::Image'].records[0].attributes.updating).toEqual(true)
-    expect(state['Folio::Image'].records[0].attributes.tags).toEqual(['foo'])
+    expect(state['Folio::File::Image'].records[0].attributes.updating).toEqual(undefined)
+    expect(state['Folio::File::Image'].records[0].attributes.tags).toEqual([])
+    state = filesReducer(state, updateFile('Folio::File::Image', '/console/api/images', state['Folio::File::Image'].records[0], { tags: ['foo'] }))
+    expect(state['Folio::File::Image'].records[0].attributes.updating).toEqual(true)
+    expect(state['Folio::File::Image'].records[0].attributes.tags).toEqual(['foo'])
   })
 
   it('updateFileSuccess', () => {
-    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', state['Folio::Image'].records[0], { thumb: '/foo.jpg' }))
+    state = filesReducer(state, updateFile('Folio::File::Image', '/console/api/images', state['Folio::File::Image'].records[0], { thumb: '/foo.jpg' }))
     const response = {
       ...IMAGES[0],
       attributes: {
@@ -97,27 +97,27 @@ describe('filesReducer', () => {
         thumb: '/foo.jpg'
       }
     }
-    state = filesReducer(state, updateFileSuccess('Folio::Image', state['Folio::Image'].records[0], response))
-    expect(state['Folio::Image'].records[0].attributes.updating).toEqual(undefined)
-    expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
+    state = filesReducer(state, updateFileSuccess('Folio::File::Image', state['Folio::File::Image'].records[0], response))
+    expect(state['Folio::File::Image'].records[0].attributes.updating).toEqual(undefined)
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
   })
 
   it('updateFileFailure', () => {
-    const image = state['Folio::Image'].records[0]
-    state = filesReducer(state, updateFile('Folio::Image', '/console/api/images', image, { thumb: '/foo.jpg' }))
-    expect(state['Folio::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
-    state = filesReducer(state, updateFileFailure('Folio::Image', image))
-    expect(state['Folio::Image'].records[0].attributes.thumb).not.toEqual('/foo.jpg')
+    const image = state['Folio::File::Image'].records[0]
+    state = filesReducer(state, updateFile('Folio::File::Image', '/console/api/images', image, { thumb: '/foo.jpg' }))
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
+    state = filesReducer(state, updateFileFailure('Folio::File::Image', image))
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).not.toEqual('/foo.jpg')
   })
 
   it('deleteFile', () => {
-    const image = state['Folio::Image'].records[0]
-    state = filesReducer(state, deleteFile('Folio::Image', '/console/api/images', image))
-    expect(state['Folio::Image'].records[0]._destroying).toEqual(true)
-    state = filesReducer(state, deleteFileFailure('Folio::Image', image))
-    expect(state['Folio::Image'].records[0]._destroying).toEqual(undefined)
-    expect(state['Folio::Image'].records[0].id).toEqual(image.id)
-    state = filesReducer(state, removedFiles('Folio::Image', [image.id]))
-    expect(state['Folio::Image'].records[0].id).not.toEqual(image.id)
+    const image = state['Folio::File::Image'].records[0]
+    state = filesReducer(state, deleteFile('Folio::File::Image', '/console/api/images', image))
+    expect(state['Folio::File::Image'].records[0]._destroying).toEqual(true)
+    state = filesReducer(state, deleteFileFailure('Folio::File::Image', image))
+    expect(state['Folio::File::Image'].records[0]._destroying).toEqual(undefined)
+    expect(state['Folio::File::Image'].records[0].id).toEqual(image.id)
+    state = filesReducer(state, removedFiles('Folio::File::Image', [image.id]))
+    expect(state['Folio::File::Image'].records[0].id).not.toEqual(image.id)
   })
 })

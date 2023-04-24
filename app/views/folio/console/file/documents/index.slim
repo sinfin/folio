@@ -1,0 +1,9 @@
+= index_header react_new: true
+
+.folio-react-wrap[
+  data-file-type='Folio::File::Document'
+  data-files-url=url_for([:console, :api, Folio::File::Document])
+  data-mode='index'
+  data-taggable='1'
+  data-can-destroy-files=(can?(:destroy, Folio::File::Document) ? "1" : nil)
+]

@@ -5,7 +5,7 @@ module Folio::Console::ReactHelper
                    attachmentable: "page",
                    type: :image_placements,
                    atom_setting: nil)
-    react_files("Folio::Image",
+    react_files("Folio::File::Image",
                 selected_placements,
                 attachmentable:,
                 type:,
@@ -16,14 +16,14 @@ module Folio::Console::ReactHelper
                       attachmentable: "page",
                       type: :document_placements,
                       atom_setting: nil)
-    react_files("Folio::Document",
+    react_files("Folio::File::Document",
                 selected_placements,
                 attachmentable:,
                 type:,
                 atom_setting:)
   end
 
-  def react_picker(f, placement_key, file_type: "Folio::Image", title: nil, atom_setting: nil)
+  def react_picker(f, placement_key, file_type: "Folio::File::Image", title: nil, atom_setting: nil)
     raw cell("folio/console/react_picker", f, placement_key:,
                                               title:,
                                               file_type:,

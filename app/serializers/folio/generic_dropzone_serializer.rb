@@ -15,6 +15,6 @@ class Folio::GenericDropzoneSerializer
   end
 
   attribute :url do |object|
-    object.file.url if object.is_a?(Folio::Image)
+    object.file.url if object.is_a?(Folio::File::Image)
   end
 end

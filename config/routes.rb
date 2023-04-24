@@ -46,8 +46,10 @@ Folio::Engine.routes.draw do
 
       resources :menus, except: %i[show]
 
-      resources :images, only: %i[index]
-      resources :documents, only: %i[index]
+      namespace :file do
+        resources :images, only: %i[index]
+        resources :documents, only: %i[index]
+      end
 
       resources :leads, only: %i[index show edit update destroy] do
         collection { post :mass_handle }
@@ -108,27 +110,29 @@ Folio::Engine.routes.draw do
           end
         end
 
-        resources :images, only: %i[index update destroy] do
-          collection do
-            post :tag
-            delete :mass_destroy
-            get :mass_download
+        namespace :file do
+          resources :images, only: %i[index update destroy] do
+            collection do
+              post :tag
+              delete :mass_destroy
+              get :mass_download
+            end
+            member do
+              post :update_file_thumbnail
+              post :destroy_file_thumbnail
+              post :change_file
+            end
           end
-          member do
-            post :update_file_thumbnail
-            post :destroy_file_thumbnail
-            post :change_file
-          end
-        end
 
-        resources :documents, only: %i[index update destroy] do
-          collection do
-            post :tag
-            delete :mass_destroy
-            get :mass_download
-          end
-          member do
-            post :change_file
+          resources :documents, only: %i[index update destroy] do
+            collection do
+              post :tag
+              delete :mass_destroy
+              get :mass_download
+            end
+            member do
+              post :change_file
+            end
           end
         end
       end

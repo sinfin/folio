@@ -33,12 +33,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   def self.folio_image_placement(name = nil)
     include Folio::PregenerateThumbnails
-    folio_file_placement("Folio::Image", name)
+    folio_file_placement("Folio::File::Image", name)
     self.class_eval { alias :image :file }
   end
 
   def self.folio_document_placement(name = nil)
-    folio_file_placement("Folio::Document", name)
+    folio_file_placement("Folio::File::Document", name)
   end
 
   def run_after_save_job!
@@ -69,9 +69,9 @@ end
 #
 # Indexes
 #
-#  index_folio_file_placements_on_file_id                          (file_id)
-#  index_folio_file_placements_on_placement_title                  (placement_title)
-#  index_folio_file_placements_on_placement_title_type             (placement_title_type)
-#  index_folio_file_placements_on_placement_type_and_placement_id  (placement_type,placement_id)
-#  index_folio_file_placements_on_type                             (type)
+#  index_folio_file_placements_on_file_id               (file_id)
+#  index_folio_file_placements_on_placement             (placement_type,placement_id)
+#  index_folio_file_placements_on_placement_title       (placement_title)
+#  index_folio_file_placements_on_placement_title_type  (placement_title_type)
+#  index_folio_file_placements_on_type                  (type)
 #

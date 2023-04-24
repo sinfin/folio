@@ -14,7 +14,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     end
 
     assert_equal(0, MyFilePlacement.count)
-    document = create(:folio_document)
+    document = create(:folio_file_document)
 
     my_page = MyPage.create!(title: "MyPage",
                              my_file_placement_attributes: { file: document })
@@ -30,9 +30,9 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
 
     page = FirstAsCover.create!(title: "FirstAsCover")
 
-    one = create(:folio_image)
-    two = create(:folio_image)
-    three = create(:folio_image)
+    one = create(:folio_file_image)
+    two = create(:folio_file_image)
+    three = create(:folio_file_image)
 
     page.update!(image_placements_attributes: [{ file_id: one.id, position: 1 }])
     assert page.reload.cover

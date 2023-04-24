@@ -12,7 +12,7 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
     sign_in @admin
   end
 
-  [Folio::Document, Folio::Image, Folio::PrivateAttachment].each do |klass|
+  [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
     test "#{klass} - s3_before" do
       post s3_before_folio_api_s3_signer_path, params: { file_name: "Intricate fílě name.jpg" }
       assert_response :success

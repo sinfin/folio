@@ -1,9 +1,48 @@
 # frozen_string_literal: true
 
-class Folio::Document < Folio::File
-  def thumbnailable?
-    file_mime_type_image? || file_mime_type == "application/pdf"
+class Folio::File::Image < Folio::File
+  include Folio::DragonflyFormatValidation
+  include Folio::Sitemap::Image
+
+  validate_file_format
+
+  dragonfly_accessor :file do
+    after_assign :sanitize_filename
+    after_assign { |file| file.metadata }
   end
+
+  # Get from metadata
+  def title
+    metadata_compose(["Headline", "Title"])
+  end
+
+  def caption
+    metadata_compose(["Caption", "Description", "Abstract"])
+  end
+
+  def keywords
+    metadata_compose(["Keywords"])
+  end
+
+  def geo_location
+    # Geographic location, e.g.: Limerick, Ireland
+    metadata_compose(["LocationName", "SubLocation", "City", "ProvinceState", "CountryName"])
+  end
+
+  def thumbnailable?
+    true
+  end
+
+  def self.react_type
+    "image"
+  end
+
+  private
+    def metadata_compose(tags)
+      string_arr = tags.filter_map { |tag| file_metadata.try("[]", tag) }.uniq
+      return nil if string_arr.size == 0
+      string_arr.join(", ")
+    end
 end
 
 # == Schema Information

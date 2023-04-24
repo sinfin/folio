@@ -101,7 +101,7 @@ class Folio::UiCell < Folio::ApplicationCell
   end
 
   def documents_model
-    documents = Folio::Document.last(3)
+    documents = Folio::File::Document.last(3)
 
     documents.map do |doc|
       Folio::FilePlacement::Document.new(file: doc)
@@ -109,7 +109,7 @@ class Folio::UiCell < Folio::ApplicationCell
   end
 
   def image
-    @image ||= Folio::Image.tagged_with("unsplash").first
+    @image ||= Folio::File::Image.tagged_with("unsplash").first
   end
 
   def card_model

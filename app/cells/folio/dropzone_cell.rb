@@ -13,7 +13,7 @@ class Folio::DropzoneCell < Folio::ApplicationCell
       "create-thumbnails" => model[:create_thumbnails] ? "true" : nil,
       "param-name" => param_name,
       "file-formats" => file_formats,
-      "file-type" => model[:file_type] || "Folio::Document",
+      "file-type" => model[:file_type] || "Folio::File::Document",
       "records" => records,
       "destroy-failure" => destroy_failure,
       "max-files" => model[:max_files],

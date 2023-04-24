@@ -35,21 +35,21 @@ FactoryBot.define do
   factory :folio_page_cookies, parent: :folio_page, class: "Folio::Page::Cookies"
 
   factory :folio_document_placement, class: "Folio::FilePlacement::Document" do
-    association :file, factory: :folio_document
+    association :file, factory: :folio_file_document
     association :placement, factory: :folio_page
   end
 
   factory :folio_image_placement, class: "Folio::FilePlacement::Image" do
-    association :file, factory: :folio_image
+    association :file, factory: :folio_file_image
     association :placement, factory: :folio_page
   end
 
   factory :folio_cover_placement, class: "Folio::FilePlacement::Cover" do
-    association :file, factory: :folio_image
+    association :file, factory: :folio_file_image
     association :placement, factory: :folio_page
   end
 
-  factory :folio_image, class: "Folio::Image" do
+  factory :folio_file_image, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
 
     trait :black do
@@ -57,7 +57,7 @@ FactoryBot.define do
     end
   end
 
-  factory :folio_document, class: "Folio::Document" do
+  factory :folio_file_document, class: "Folio::File::Document" do
     file { Folio::Engine.root.join("test/fixtures/folio/empty.pdf") }
   end
 

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::Molecule::LogoCellTest < Cell::TestCase
   test "show" do
-    cover = create(:folio_image)
+    cover = create(:folio_file_image)
     placement = create(:folio_page)
 
     atoms = Array.new(2) do

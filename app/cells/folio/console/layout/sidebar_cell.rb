@@ -126,8 +126,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           "Folio::Page",
           :homepage,
           "Folio::Menu",
-          "Folio::Image",
-          "Folio::Document",
+          "Folio::File::Image",
+          "Folio::File::Document",
           "Folio::ContentTemplate",
         ]
       }]
@@ -135,8 +135,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       [
         {
           links: [
-            "Folio::Image",
-            "Folio::Document",
+            "Folio::File::Image",
+            "Folio::File::Document",
             "Folio::ContentTemplate",
           ]
         }

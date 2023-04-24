@@ -59,9 +59,9 @@ Ubuntu: `sudo apt install exiftool`
 MacOS: `brew install exiftool`
 
 Every uploaded file will be processed and all the metadata will be saved
-to the `Folio::Image.file_metadata` field.
+to the `Folio::File::Image.file_metadata` field.
 
-For a manual analysis of a file call `Dragonfly.app.fetch(Folio::Image.last.file_uid).metadata`
+For a manual analysis of a file call `Dragonfly.app.fetch(Folio::File::Image.last.file_uid).metadata`
 or `rake folio:file:metadata` for batch processing of already downloaded but not
  processed files.
 
