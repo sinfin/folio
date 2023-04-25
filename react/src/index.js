@@ -11,8 +11,9 @@ import AncestryApp from 'containers/AncestryApp'
 import MenuFormApp from 'containers/MenuFormApp'
 import OrderedMultiselectApp from 'containers/OrderedMultiselectApp'
 import NotesFieldsApp from 'containers/NotesFieldsApp'
-import { setMode, setFileType, setFilesUrl, setReadOnly, setTaggable, setNoFileUsage, setFileReactType, setCanDestroyFiles } from 'ducks/app'
+import { setMode, setFileType, setFilesUrl, setIndexUrl, setReadOnly, setTaggable, setNoFileUsage, setFileReactType, setCanDestroyFiles } from 'ducks/app'
 import { setMenusData } from 'ducks/menus'
+import { openFileModal } from 'ducks/fileModal'
 import { setAncestryData } from 'ducks/ancestry'
 import { setAtomsData } from 'ducks/atoms'
 import { setOriginalPlacements, setAttachmentable, setPlacementType } from 'ducks/filePlacements'
@@ -112,6 +113,11 @@ window.FolioConsole.React.init = (domRoot) => {
         asJson: false
       },
       {
+        key: 'indexUrl',
+        action: setIndexUrl,
+        asJson: false
+      },
+      {
         key: 'filesUrl',
         action: setFilesUrl,
         asJson: false
@@ -178,6 +184,26 @@ window.FolioConsole.React.init = (domRoot) => {
         if (data) {
           if (asJson) data = JSON.parse(data)
           store.dispatch(action(fileType, data))
+        }
+      })
+    }
+
+    const DATA_WITH_TYPE_AND_URL = [
+      {
+        key: 'fileForModal',
+        action: openFileModal,
+        asJson: true
+      }
+    ]
+
+    const filesUrl = domRoot.dataset.filesUrl
+
+    if (fileType && filesUrl) {
+      DATA_WITH_TYPE_AND_URL.forEach(({ key, action, asJson }) => {
+        let data = domRoot.dataset[key] || null
+        if (data) {
+          if (asJson) data = JSON.parse(data)
+          store.dispatch(action(fileType, filesUrl, data))
         }
       })
     }

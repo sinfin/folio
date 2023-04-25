@@ -7,6 +7,14 @@ module Folio::Console::FileControllerBase
     render "folio/console/file/index"
   end
 
+  def show
+    @file_for_modal = Folio::Console::FileSerializer.new(folio_console_record)
+                                                    .serializable_hash[:data]
+                                                    .to_json
+
+    render "folio/console/file/index"
+  end
+
   private
     def file_params
       p = params.require(:file)

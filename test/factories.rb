@@ -61,6 +61,14 @@ FactoryBot.define do
     file { Folio::Engine.root.join("test/fixtures/folio/empty.pdf") }
   end
 
+  factory :folio_file_audio, class: "Folio::File::Audio" do
+    file { Folio::Engine.root.join("test/fixtures/folio/blank.mp3") }
+  end
+
+  factory :folio_file_video, class: "Folio::File::Video" do
+    file { Folio::Engine.root.join("test/fixtures/folio/blank.mp4") }
+  end
+
   factory :folio_private_attachment, class: "Folio::PrivateAttachment" do
     file { Folio::Engine.root.join("test/fixtures/folio/empty.pdf") }
   end

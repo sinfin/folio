@@ -4,6 +4,7 @@ import { omit } from 'lodash'
 import urlWithAffix from 'utils/urlWithAffix'
 import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
 import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_THUMBNAIL_GENERATED } from 'ducks/files'
+import { indexUrlSelector } from 'ducks/app'
 
 // Constants
 
@@ -153,6 +154,12 @@ function * handleFileUpdateSaga () {
 
 function * openFileModalPerform (action) {
   try {
+    const indexUrl = yield select(indexUrlSelector)
+
+    if (indexUrl) {
+      window.history.replaceState(null, '', urlWithAffix(indexUrl, `/${action.file.id}`))
+    }
+
     const url = `/console/api/files/${action.file.id}/file_placements`
     const response = yield call(apiGet, url)
     yield put(loadedFileModalPlacements(action.file, response.data, response.meta))
@@ -163,6 +170,22 @@ function * openFileModalPerform (action) {
 
 function * openFileModalSaga () {
   yield takeEvery(OPEN_FILE_MODAL, openFileModalPerform)
+}
+
+function * closeFileModalPerform (action) {
+  try {
+    const indexUrl = yield select(indexUrlSelector)
+
+    if (indexUrl) {
+      window.history.replaceState(null, '', indexUrl)
+    }
+  } catch (e) {
+    window.FolioConsole.Flash.alert(e.message)
+  }
+}
+
+function * closeFileModalSaga () {
+  yield takeEvery(CLOSE_FILE_MODAL, closeFileModalPerform)
 }
 
 function * changeFilePlacementsPagePerform (action) {
@@ -184,6 +207,7 @@ export const fileModalSagas = [
   uploadNewFileInsteadSaga,
   handleFileUpdateSaga,
   openFileModalSaga,
+  closeFileModalSaga,
   changeFilePlacementsPageSaga,
   destroyFileThumbnailSaga
 ]

@@ -48,7 +48,7 @@ Folio::Engine.routes.draw do
 
       namespace :file do
         Rails.application.config.folio_file_types_for_routes.each do |type|
-          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index]
+          resources type.constantize.model_name.element.pluralize.to_sym, only: %i[index show]
         end
       end
 
@@ -123,8 +123,6 @@ Folio::Engine.routes.draw do
                 get :mass_download
               end
               member do
-                post :change_file
-
                 if klass.human_type == "image"
                   post :update_file_thumbnail
                   post :destroy_file_thumbnail
