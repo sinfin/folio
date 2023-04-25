@@ -39,6 +39,7 @@
 //= require folio/debounce
 //= require folio/throttle
 //= require folio/input
+//= require folio/player/player
 //= require folio/image/image
 
 // must be under folio/input

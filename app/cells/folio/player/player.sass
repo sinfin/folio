@@ -1,0 +1,179 @@
+@import 'video-js'
+
+$medium-gray: #E8E8E8 !default
+$gray-medium-dark: #6F7172 !default
+$transition-duration: .3s !default
+
+$f-player-background: $medium-gray !default
+$f-player-color: $gray-medium-dark !default
+$f-player-border-radius: $border-radius !default
+$f-player-min-height: 84px !default
+$f-player-play-button-background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='36' height='36' rx='4' fill='black'/%3E%3Cpath d='M14 11.14V25.14L25 18.14L14 11.14Z' fill='white'/%3E%3C/svg%3E%0A") !default
+$f-player-pause-button-background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='36' height='36' rx='4' fill='black'/%3E%3Cpath d='M20 25H24V11H20M12 25H16V11H12V25Z' fill='white'/%3E%3C/svg%3E%0A") !default
+$f-player-play-button-width: 36px !default
+$f-player-play-button-height: 36px !default
+$f-player-control-bar-padding: 18px 24px 24px !default
+$f-player-control-font-size: $font-size-sm !default
+$f-player-current-time-font-weight: $font-weight-bold !default
+$f-player-control-bar-spacer: 18px !default
+$f-player-title-padding: 18px 24px 0 !default
+$f-player-transition-duration: $transition-duration !default
+
+.f-player
+  background: $f-player-background
+  border-radius: $f-player-border-radius
+  color: $f-player-color
+  min-height: $f-player-min-height
+  position: relative
+  font-size: $f-player-control-font-size
+  line-height: inherit
+
+  &__player
+    background: transparent
+    color: inherit
+    width: 100%
+    height: auto
+    min-height: $f-player-min-height
+    font-size: inherit
+    line-height: inherit
+
+    .vjs-menu-button-inline
+    .vjs-menu-button-inline .vjs-menu,
+    .vjs-has-started .vjs-control-bar,
+    .vjs-audio-only-mode .vjs-control-bar
+    .vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar,
+    .vjs-progress-holder,
+    &.vjs-user-inactive .vjs-progress-control .vjs-mouse-display
+    .vjs-volume-panel
+    .vjs-volume-panel.vjs-hover .vjs-volume-control,
+    .vjs-volume-panel:active .vjs-volume-control,
+    .vjs-volume-panel:focus .vjs-volume-control,
+    .vjs-volume-panel .vjs-volume-control:active,
+    .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control,
+    .vjs-volume-panel .vjs-volume-control.vjs-slider-active,
+    .vjs-volume-panel.vjs-hover .vjs-volume-control.vjs-volume-vertical,
+    .vjs-volume-panel:active .vjs-volume-control.vjs-volume-vertical,
+    .vjs-volume-panel:focus .vjs-volume-control.vjs-volume-vertical,
+    .vjs-volume-panel .vjs-volume-control:active.vjs-volume-vertical,
+    .vjs-volume-panel.vjs-hover .vjs-mute-control ~ .vjs-volume-control.vjs-volume-vertical,
+    .vjs-volume-panel .vjs-volume-control.vjs-slider-active.vjs-volume-vertical,
+    .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover,
+    .vjs-volume-panel.vjs-volume-panel-horizontal:active,
+    .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active,
+    .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-hover,
+    .vjs-volume-panel.vjs-volume-panel-horizontal:active,
+    .vjs-volume-panel.vjs-volume-panel-horizontal.vjs-slider-active,
+    .vjs-volume-panel .vjs-volume-control.vjs-volume-vertical,
+    .vjs-volume-panel .vjs-volume-control.vjs-volume-horizontal,
+    .video-js.vjs-user-inactive .vjs-volume-control .vjs-mouse-display,
+    .vjs-title-bar,
+    .vjs-playing.vjs-user-inactive .vjs-title-bar
+      transition-duration: $f-player-transition-duration !important
+      transition-delay: 0s !important
+
+    .vjs-control-bar
+      background: transparent
+      display: flex
+      align-items: center
+      flex-wrap: wrap
+      gap: $f-player-control-bar-spacer / 2 $f-player-control-bar-spacer
+
+    .vjs-play-control
+      width: $f-player-play-button-width
+      height: $f-player-play-button-height
+
+      .vjs-icon-placeholder
+        background: transparent $f-player-play-button-background-image center center no-repeat
+        background-size: contain
+        width: $f-player-play-button-width
+        height: $f-player-play-button-height
+
+        &::before
+          display: none
+
+      &.vjs-playing .vjs-icon-placeholder
+        background-image: $f-player-pause-button-background-image
+
+    .vjs-control-bar
+      padding: $f-player-control-bar-padding
+      position: relative
+      top: auto
+      bottom: auto
+      left: auto
+      right: auto
+
+    .vjs-control,
+    .vjs-time-control
+      width: auto
+      height: auto
+      font-size: inherit
+      line-height: inherit
+      min-width: 0
+      padding: 0
+      flex: 0 0 auto
+
+    .vjs-progress-control
+      flex-grow: 1
+
+    .vjs-folio-player-title
+      padding: $f-player-title-padding
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+
+    .vjs-time-control
+      display: block
+
+      &.vjs-duration
+        margin-left: - $f-player-control-bar-spacer
+
+      &.vjs-remaining-time
+        display: none
+
+      &.vjs-time-divider
+        padding: 0 0.5ch
+
+      &.vjs-current-time
+        font-weight: $f-player-current-time-font-weight
+        margin-right: - $f-player-control-bar-spacer
+
+    &.vjs-paused
+      .vjs-big-play-button
+        display: none
+
+      .vjs-control-bar
+        display: flex
+
+    .vjs-modal-dialog .vjs-modal-dialog-content,
+    .vjs-modal-dialog,
+    .vjs-button > .vjs-icon-placeholder:before,
+    .vjs-big-play-button .vjs-icon-placeholder:before
+      position: static
+
+    .vjs-volume-bar
+      margin: 0
+
+    .vjs-mute-control
+      margin-right: 10px
+
+    .vjs-volume-panel
+      display: flex
+      align-items: center
+      width: auto !important
+      margin-right: -22px
+      transition: all .1s
+
+      &.vjs-hover
+        margin-right: 0
+
+    .vjs-volume-control.vjs-volume-horizontal
+      width: 0px
+      display: flex
+      align-items: center
+
+    &--audio
+      .vjs-text-track-display
+        display: none
+
+      .vjs-control-bar
+        height: auto

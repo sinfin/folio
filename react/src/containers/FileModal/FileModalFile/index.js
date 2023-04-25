@@ -9,6 +9,7 @@ import ThumbnailSizes from 'components/ThumbnailSizes'
 import FileUsage from 'components/FileUsage'
 import PrettyTags from 'components/PrettyTags'
 import AutocompleteInput from 'components/AutocompleteInput'
+import FolioPlayer from 'components/FolioPlayer'
 
 import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 
@@ -20,6 +21,7 @@ import FileEditInput from './styled/FileEditInput'
 export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable }) => {
   const file = fileModal.file
   const isImage = file.attributes.human_type === 'image'
+  const isAudio = file.attributes.human_type === 'audio'
   let download = file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 
@@ -90,6 +92,8 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 </button>
               )}
             </div>
+
+            {isAudio && <FolioPlayer file={file} />}
 
             <p>ID: {file.attributes.id}</p>
 
