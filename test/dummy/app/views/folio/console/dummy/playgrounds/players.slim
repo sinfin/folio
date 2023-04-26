@@ -2,4 +2,7 @@ h1 Players
 
 h2 Audio
 
-== cell('folio/player', Folio::File::Audio.last)
+- if Folio::File::Audio.last
+  == cell('folio/player', Folio::File::Audio.last)
+- else
+  p.text-danger Upload an audio file first!

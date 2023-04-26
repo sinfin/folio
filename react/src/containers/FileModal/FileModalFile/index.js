@@ -93,9 +93,9 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </div>
 
-            {isAudio && <FolioPlayer file={file} />}
-
             <p>ID: {file.attributes.id}</p>
+
+            {isAudio && <div className='form-group'><FolioPlayer file={file} /></div>}
 
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>

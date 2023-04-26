@@ -5,9 +5,7 @@ export default function FolioPlayer ({ file }) {
     <div
       className='f-player'
       data-controller='f-player'
-      data-f-player-src-value={file.attributes.source_url}
-      data-f-player-title-value={file.attributes.file_name}
-      data-f-player-author-value={file.attributes.author}
+      data-file={JSON.stringify(file)}
     />
   )
 }

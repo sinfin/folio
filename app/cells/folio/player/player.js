@@ -8,7 +8,10 @@ window.Folio.Player.themeColor = window.Folio.Player.themeColor || '#000000'
 window.Folio.Player.defaultOptions = {
   video: {},
   audio: {
-    playbackRates: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
+    playbackRates: [2, 1.5, 1.25, 1, 0.75, 0.5, 0.25],
+    controlBar: {
+      fullscreenToggle: false
+    }
   }
 }
 
@@ -19,7 +22,7 @@ class FolioPlayerTitleComponent extends window.videojs.getComponent('Component')
   }
 
   createEl () {
-    return videojs.dom.createEl('div', { className: 'vjs-folio-player-title' })
+    return window.videojs.dom.createEl('div', { className: 'vjs-folio-player-title' })
   }
 
   updateTextContent (text) {
@@ -29,6 +32,24 @@ class FolioPlayerTitleComponent extends window.videojs.getComponent('Component')
 }
 
 window.videojs.registerComponent('FolioPlayerTitle', FolioPlayerTitleComponent)
+
+class FolioPlayerSeekButtonComponent extends window.videojs.getComponent('Button') {
+  buildCSSClass () {
+    return `vjs-control vjs-folio-player-seek-button vjs-folio-player-seek-button--${this.options_.direction}`
+  }
+
+  handleClick (e) {
+    const now = this.player_.currentTime();
+
+    if (this.options_.direction === 'forward') {
+      this.player_.currentTime(Math.min(now + 15, this.player_.duration()));
+    } else {
+      this.player_.currentTime(Math.max(0, now - 15));
+    }
+  }
+}
+
+window.videojs.registerComponent('FolioPlayerSeekButton', FolioPlayerSeekButtonComponent)
 
 window.Folio.Player.bind = (el) => {
   const fileAttributes = JSON.parse(el.dataset.file).attributes
@@ -65,19 +86,23 @@ window.Folio.Player.bind = (el) => {
   const children = el.folioPlayer.children()
 
   for (let i = 0; i < children.length; i += 1) {
-    opts = children[i].options && children[i].options()
-    if (opts && opts.name === "ControlBar") {
+    const opts = children[i].options && children[i].options()
+    if (opts && opts.name === 'ControlBar') {
       el.folioPlayer.addChild('FolioPlayerTitle', { title: fileAttributes.file_name }, i)
       break
     }
   }
+
+  const controlBar = el.folioPlayer.getChild('ControlBar')
+  controlBar.addChild("FolioPlayerSeekButton", { direction: "backward" })
+  controlBar.addChild("FolioPlayerSeekButton", { direction: "forward" })
 }
 
 window.Folio.Player.unbind = (el) => {
-  // if (el.folioPlayer) {
-  //   el.folioPlayer.destroy()
-  //   el.folioPlayer = null
-  // }
+  if (el.folioPlayer) {
+    el.folioPlayer.dispose()
+    el.folioPlayer = null
+  }
 }
 
 window.Folio.Stimulus.register('f-player', class extends window.Stimulus.Controller {
