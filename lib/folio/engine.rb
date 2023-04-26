@@ -96,7 +96,7 @@ module Folio
 
     config.folio_console_ability_lambda = -> (ability, account) { }
 
-    config.folio_console_react_modal_types = %w[Folio::File::Image Folio::File::Document]
+    config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
     config.folio_cookie_consent_configuration = {
       enabled: true,

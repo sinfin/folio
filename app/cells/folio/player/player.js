@@ -15,6 +15,22 @@ window.Folio.Player.defaultOptions = {
   }
 }
 
+window.Folio.Player.create = (serializedFile) => {
+  const player = document.createElement('div')
+
+  player.classList.add('f-player')
+  player.dataset.controller = "f-player"
+  player.dataset.file = JSON.stringify(serializedFile)
+
+  const loader = document.createElement('div')
+  loader.classList.add('folio-loader')
+  loader.classList.add('folio-loader--transparent')
+
+  player.appendChild(loader)
+
+  return player
+}
+
 class FolioPlayerTitleComponent extends window.videojs.getComponent('Component') {
   constructor (player, options = {}) {
     super(player, options)

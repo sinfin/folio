@@ -1,0 +1,56 @@
+.f-c-file-picker data=data class="form-group"
+  = html_safe_fields_for model[:f], model[:placement_key], build: true do |fp|
+    = fp.hidden_field :id, "data-f-c-file-picker-target" => "idInput"
+
+    - if fp.object.persisted?
+      = fp.hidden_field :_destroy,
+                        value: 1,
+                        disabled: !fp.object.marked_for_destruction?
+
+    .f-c-file-picker__player-wrap data-f-c-file-picker-target="playerWrap"
+
+    .f-c-file-picker__btn-wrap
+      == cell('folio/console/ui/button',
+              class: "f-c-file-picker__btn",
+              variant: :success,
+              label: t('.add_file'),
+              icon: :add,
+              "data-action" => "f-c-file-picker#onBtnClick")
+
+
+    / - if fp.object.marked_for_destruction?
+    /   = fp.hidden_field :_destroy, value: 1
+    / - else
+    /   .nested-fields[
+    /     class="folio-console-thumbnail"
+    /     class="folio-console-thumbnail--image"
+    /     class="f-c-add-file"
+    /     class="cursor-pointer"
+    /     data-file-type=options[:file_type]
+    /   ]
+    /     = fp.hidden_field :_destroy, value: 0
+    /     = fp.hidden_field :file_id
+
+    /     .folio-console-thumbnail__inner
+    /       .folio-console-thumbnail__img-wrap
+    /         = image(fp)
+
+    /         button[
+    /           type='button'
+    /           class='btn btn-secondary fa fa-edit'
+    /           class='f-c-file-list__file-btn f-c-file-list__file-btn--edit'
+    /           class='folio-console-react-picker__edit'
+    /           data={ file: serialized_file(fp), \
+    /                  'file-type' => options[:file_type] }
+    /         ]
+
+    /         button[
+    /           type='button'
+    /           class='btn btn-danger fa fa-times'
+    /           class='f-c-file-list__file-btn f-c-file-list__file-btn--destroy'
+    /           data-destroy-association=true
+    /         ]
+
+    /     = fp.hidden_field :alt
+    /     small.folio-console-thumbnail__alt
+    /       ' alt: #{fp.object.alt}

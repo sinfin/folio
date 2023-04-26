@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
+  def file_picker(f:, placement_key:, file_type:)
+    raw cell("folio/console/file/picker",
+             f:,
+             placement_key:,
+             file_type:)
+  end
+
+  def file_picker_for_audio_cover(f)
+    file_picker(f:,
+                placement_key: :audio_cover_placement,
+                file_type: "Folio::File::Audio")
+  end
+
   def react_images(selected_placements = nil,
                    attachmentable: "page",
                    type: :image_placements,
@@ -23,6 +36,14 @@ module Folio::Console::ReactHelper
                 atom_setting:)
   end
 
+  def react_audio_cover_picker(f, placement_key: :audio_cover_placement, file_type: "Folio::File::Audio", title: nil, atom_setting: nil)
+    react_picker(f,
+                 placement_key,
+                 file_type:,
+                 title:,
+                 atom_setting:)
+  end
+
   def react_picker(f, placement_key, file_type: "Folio::File::Image", title: nil, atom_setting: nil)
     raw cell("folio/console/react_picker", f, placement_key:,
                                               title:,
@@ -37,7 +58,7 @@ module Folio::Console::ReactHelper
   end
 
   def react_modal_for(file_type, opts: {})
-    if ["new", "edit", "create", "update"].include?(action_name)
+    if ["new", "edit", "create", "update"].include?(action_name) || controller.try(:force_use_react_modals?)
       klass = file_type.constantize
 
       url = if opts && opts[:url_name]

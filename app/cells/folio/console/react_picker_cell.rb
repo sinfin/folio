@@ -27,11 +27,7 @@ class Folio::Console::ReactPickerCell < Folio::ConsoleCell
   end
 
   def render_fields
-    if human_type == "image"
-      render("_image_fields")
-    else
-      render("_document_fields")
-    end
+    render("_#{human_type}_fields")
   end
 
   def image(fp, class_name = "")

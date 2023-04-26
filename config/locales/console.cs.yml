@@ -218,6 +218,9 @@ cs:
           settings: Nastavení
       react_picker:
         add: Přidat
+      file:
+        picker:
+          add_file: Přidat soubor
       really_delete: Jste si jist, že chcete smazat "%{title}"?
       remove_confirmation: Odebrat?
       sites:

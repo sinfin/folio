@@ -1,0 +1,11 @@
+$medium-gray: #E8E8E8 !default
+
+.f-c-file-picker
+  &__btn-wrap
+    background: $medium-gray
+    border-radius: $border-radius
+    padding: 24px
+
+  &[data-f-c-file-picker-has-file-value="false"] &__player-wrap,
+  &[data-f-c-file-picker-has-file-value="true"] &__btn-wrap
+    display: none

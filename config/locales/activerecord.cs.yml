@@ -251,6 +251,7 @@ cs:
   attributes:
     aasm_state: Stav
     article: Článek
+    audio_cover_placement: Audio stopa
     button_label: Text tlačítka
     console_notes: Poznámky (interní údaj)
     content: Obsah
@@ -309,6 +310,7 @@ cs:
     to_label: Název
     url: URL
     use_secondary_address: Použít doplňkovou adresu
+    video_cover_placement: Video stopa
 
   errors:
     messages:

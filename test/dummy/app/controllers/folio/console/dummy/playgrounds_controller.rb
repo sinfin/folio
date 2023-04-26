@@ -3,4 +3,8 @@
 class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseController
   def players
   end
+
+  def force_use_react_modals?
+    true
+  end
 end

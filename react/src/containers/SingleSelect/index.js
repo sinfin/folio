@@ -24,8 +24,6 @@ class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
     if (this.props.selectFile) {
       this.props.selectFile(this.props.fileType, file)
-    } else if (window.folioConsoleInsertImage) {
-      window.folioConsoleInsertImage(file)
     }
   }
 

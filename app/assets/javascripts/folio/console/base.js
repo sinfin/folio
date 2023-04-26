@@ -66,6 +66,7 @@
 //= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip
 //= require folio/console/current_accounts/console_path_bar/console_path_bar
+//= require folio/console/file/picker/picker
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header

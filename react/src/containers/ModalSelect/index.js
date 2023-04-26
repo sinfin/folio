@@ -25,8 +25,9 @@ class ModalSelect extends Component {
 
     const eventName = this.eventName()
     if (eventName) {
-      $(document).on(eventName, (e, eventData) => {
-        this.setState(eventData)
+      window.addEventListener(eventName, (e) => {
+        console.log(e)
+        this.setState({ el: e.target })
         this.props.loadFiles(this.props.fileType, this.props.filesUrl)
         this.onOpen(e.target)
         this.jQueryModal().modal('show')
@@ -49,32 +50,6 @@ class ModalSelect extends Component {
 
   selectingImage () {
     return this.props.reactType === 'image'
-  }
-
-  fileTemplate (file, prefix) {
-    throw new Error('Not implemented')
-  }
-
-  inputName ($el) {
-    const $ = window.jQuery
-
-    const $nestedInput = $el.parents('.nested-fields').find('input').filter((i, input) => (
-      $(input).closest('.folio-console-react-picker').length === 0
-    ))
-
-    let name
-
-    if ($nestedInput.length) {
-      const match = $nestedInput.attr('name').match(/(\w+\[\w+\](\[\w+\])*)(?:\[\w+\])(?:\[\d+\])?(?:\[\w+\])?/)
-      if (match) name = match[1]
-    }
-
-    if (!name) {
-      const $genericInput = $el.closest('form').find('.form-control[name*="["]').first()
-      name = $genericInput.attr('name').split('[')[0]
-    }
-
-    return name
   }
 
   render () {

@@ -64,39 +64,20 @@ class ModalSingleSelect extends ModalSelect {
       }])
       return this.jQueryModal().modal('hide')
     }
+
     if (!this.state.el) return
 
-    const $el = $(this.state.el)
-    const $wrap = $el.closest('.folio-console-react-picker')
-    const $fields = $wrap.find('.folio-console-react-picker__files')
+    console.log({
+      bubbles: true,
+      detail: { file }
+    })
 
-    const name = this.inputName($el)
-    const placementKey = $fields.data('placement-key')
-    const attributesKey = `[${placementKey}_attributes]`
-    const prefix = `${name}${attributesKey}`.replace(`${attributesKey}${attributesKey}`, attributesKey)
-
-    const $newFile = $(`
-      <div class="nested-fields folio-console-thumbnail folio-console-thumbnail--${this.selectingImage() ? 'image' : 'document'} f-c-add-file cursor-pointer" data-file-type="${fileType}">
-        <input type="hidden" name="${prefix}[_destroy]" value="0" />
-        <input type="hidden" name="${prefix}[file_id]" value="${file.id}" />
-        ${this.fileTemplate(file, prefix)}
-      </div>
-    `)
-
-    $newFile
-      .find('.folio-console-react-picker__edit')
-      .attr('data-file', JSON.stringify(file))
-
-    $fields.html($newFile)
-    $fields.closest('[data-cocoon-single-nested]').trigger('single-nested-change')
-
-    const $setting = $fields.closest('[data-atom-setting]')
+    this.state.el.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.props.fileType}/selected`, {
+      bubbles: true,
+      detail: { file }
+    }))
 
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
-
-    if ($setting.length) {
-      window.postMessage({ type: 'refreshPreview' })
-    }
 
     this.jQueryModal().modal('hide')
   }

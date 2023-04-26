@@ -215,6 +215,9 @@ en:
           settings: Settings
       react_picker:
         add: Add
+      file:
+        picker:
+          add_file: Add file
       really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
       sites:

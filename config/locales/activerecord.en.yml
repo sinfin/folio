@@ -178,6 +178,7 @@ en:
   attributes:
     aasm_state: State
     article: Article
+    audio_cover_placement: Audio
     button_label: Button label
     console_notes: Notes (internal)
     content: Content
@@ -223,6 +224,7 @@ en:
     title: Title
     to_label: Label
     url: URL
+    video_cover_placement: Video
 
   errors:
     messages:

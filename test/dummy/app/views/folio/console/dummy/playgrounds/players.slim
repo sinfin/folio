@@ -6,3 +6,9 @@ h2 Audio
   == cell('folio/player', Folio::File::Audio.last)
 - else
   p.text-danger Upload an audio file first!
+
+h2 Audio form
+
+= simple_form_for Folio::Page.last, url: url_for([:console, Folio::Page]) do |f|
+  = f.input :title, as: :hidden
+  = file_picker_for_audio_cover(f)
