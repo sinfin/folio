@@ -17,7 +17,13 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def header_html
     return @header_html if @header_html
-    @record = model[:records].first
+
+    if model[:ancestry]
+      @record, _children = model[:records].first
+    else
+      @record = model[:records].first
+    end
+
     @header_html = ""
     instance_eval(&model[:block])
     @header_html
