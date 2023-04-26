@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.string "slug"
     t.text "perex"
     t.string "locale", default: "cs"
+    t.string "preview_token"
     t.string "meta_title"
     t.text "meta_description"
     t.boolean "featured"
@@ -80,6 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.boolean "featured"
     t.integer "articles_count", default: 0
     t.integer "position"
+    t.string "preview_token"
     t.string "meta_title"
     t.text "meta_description"
     t.datetime "created_at", null: false
@@ -350,6 +352,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_10_062852) do
     t.string "ancestry_slug"
     t.bigint "site_id"
     t.text "atoms_data_for_search"
+    t.string "preview_token"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
     t.index ["featured"], name: "index_folio_pages_on_featured"

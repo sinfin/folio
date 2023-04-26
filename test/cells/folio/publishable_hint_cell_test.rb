@@ -17,10 +17,7 @@ class Folio::PublishableHintCellTest < ActionDispatch::IntegrationTest
       get url_for([@page, locale: @page.locale])
     end
 
-    account = create(:folio_account)
-    login_as(account, scope: :account)
-
-    get url_for([@page, locale: @page.locale])
+    get url_for([@page, locale: @page.locale, Folio::Publishable::PREVIEW_PARAM_NAME => @page.preview_token])
     assert_response(:ok)
 
     assert_select ".folio-publishable-hint"

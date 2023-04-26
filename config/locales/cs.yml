@@ -52,6 +52,7 @@ cs:
         title_long: Nastavení stránky %{site}
     publishable_hint:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
+      preview_token_hint: Stránka je až do publikování viditelná jen na této adrese.
     image:
       sensitive_content_title: Tento obrázek obsahuje citlivý obsah, který je možné zobrazit až po ověření věku.
     sensitive_content_modal:

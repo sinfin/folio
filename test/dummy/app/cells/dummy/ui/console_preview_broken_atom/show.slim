@@ -7,7 +7,11 @@
         = model.class.model_name.human
 
       .text-center.text-white.font-family-headings
-        ' Špatně nastavený atom. Veřejně nebude zobrazen.
+        - if I18n.locale == :cs
+          ' Špatně nastavený atom. Veřejně nebude zobrazen.
+        - else
+          ' Invalid atom. Will not be show publicly.
+
         - if options[:message]
           br
           = options[:message]

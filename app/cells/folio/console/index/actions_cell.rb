@@ -54,7 +54,13 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: "external-link-alt",
         button: "light",
         target: "_blank",
-        url: -> (record) { safe_url_for([record, locale:]) },
+        url: -> (record) do
+          if record.respond_to?(:published?) && token = record.try(:preview_token)
+            safe_url_for([record, locale:, Folio::Publishable::PREVIEW_PARAM_NAME => token])
+          else
+            safe_url_for([record, locale:])
+          end
+        end
       },
       arrange: {
         name: :arrange,

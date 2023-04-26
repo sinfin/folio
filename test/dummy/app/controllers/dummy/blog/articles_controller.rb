@@ -26,7 +26,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
 
   private
     def find_article
-      @article = @klass.published_or_admin(account_signed_in?)
+      @article = @klass.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
                        .by_locale(I18n.locale)
                        .includes(cover_placement: :file)
                        .friendly.find(params[:id])

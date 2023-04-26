@@ -9,6 +9,8 @@ class CreateBlog < ActiveRecord::Migration[6.0]
 
       t.string :locale, default: I18n.default_locale
 
+      t.string :preview_token
+
       t.string :meta_title
       t.text :meta_description
 
@@ -38,6 +40,8 @@ class CreateBlog < ActiveRecord::Migration[6.0]
       t.integer :articles_count, default: 0
 
       t.integer :position
+
+      t.string :preview_token
 
       t.string :meta_title
       t.text :meta_description

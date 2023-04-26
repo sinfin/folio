@@ -18,9 +18,20 @@
 
     if record.is_a?(Folio::Page) && record.class.try(:public?)
       locale = I18n.available_locales.size > 1 ? I18n.locale : nil
-      actions({ preview: controller.main_app.page_path(record.to_preview_param, locale: locale) }, :edit, :destroy)
+
+      preview = if record.published? && !model[:ancestry]
+        controller.main_app.page_path(record.to_preview_param,
+                                      locale: locale)
+      else
+        controller.main_app.page_path(record.to_preview_param,
+                                      locale: locale,
+                                      Folio::Publishable::PREVIEW_PARAM_NAME => record.preview_token)
+      end
+
+      actions({ preview: }, :edit, :destroy)
     elsif record.is_a?(Folio::Page) && record.class.try(:public_rails_path)
       locale = I18n.available_locales.size > 1 ? I18n.locale : nil
+
       actions({ preview: controller.main_app.send(record.class.public_rails_path, locale: locale) },
               :edit,
               :destroy)

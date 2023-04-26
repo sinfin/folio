@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-04-26
+### Added
+- added `preview_token` functionality to `Folio::Publishable` concern, added `preview_token` param to pages - add `preview_token` column to your publishable models!
+
 ## 2023-03-15
 ### Added
 - added `Folio::HasRoles` and used it for `Folio::Account`

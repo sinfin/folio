@@ -1,15 +1,23 @@
 # frozen_string_literal: true
 
 module Folio::Publishable
-  module Basic
+  PREVIEW_PARAM_NAME = :preview
+
+  module Commons
     extend ActiveSupport::Concern
 
     included do
-      scope :published, -> { where(published: true) }
+      before_validation :generate_preview_token
+
       scope :published_or_admin, -> (admin) { admin ? all : published }
-      scope :unpublished, -> { where("#{table_name}.published != ? OR "\
-                                     "#{table_name}.published IS NULL",
-                                     true) }
+
+      scope :published_or_preview_token, -> (preview_token) do
+        if preview_token.present?
+          where(preview_token:)
+        else
+          published
+        end
+      end
 
       scope :by_published, -> (bool) {
         case bool
@@ -21,6 +29,39 @@ module Folio::Publishable
           all
         end
       }
+    end
+
+    class_methods do
+      def use_preview_tokens?
+        true
+      end
+    end
+
+    def reset_preview_token!
+      self.preview_token = nil
+      generate_preview_token
+      update_column(:preview_token, preview_token)
+      self.preview_token = nil
+    end
+
+    private
+      def generate_preview_token
+        return unless self.class.use_preview_tokens?
+        return if preview_token.present?
+        self.preview_token = SecureRandom.urlsafe_base64(8)
+                                         .gsub(/-|_/, ("a".."z").to_a[rand(26)])
+      end
+  end
+
+  module Basic
+    extend ActiveSupport::Concern
+    include Commons
+
+    included do
+      scope :published, -> { where(published: true) }
+      scope :unpublished, -> { where("#{table_name}.published != ? OR "\
+                                     "#{table_name}.published IS NULL",
+                                     true) }
     end
 
     def published?
@@ -30,6 +71,7 @@ module Folio::Publishable
 
   module WithDate
     extend ActiveSupport::Concern
+    include Commons
 
     included do
       scope :published, -> {
@@ -39,24 +81,11 @@ module Folio::Publishable
               Time.zone.now)
       }
 
-      scope :published_or_admin, -> (admin) { admin ? all : published }
-
       scope :unpublished, -> {
         where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
               "(#{table_name}.published_at IS NOT NULL AND #{table_name}.published_at > ?)",
               true,
               Time.zone.now)
-      }
-
-      scope :by_published, -> (bool) {
-        case bool
-        when true, "true"
-          published
-        when false, "false"
-          unpublished
-        else
-          all
-        end
       }
     end
 
@@ -96,6 +125,7 @@ module Folio::Publishable
 
   module Within
     extend ActiveSupport::Concern
+    include Commons
 
     included do
       scope :published, -> {
@@ -107,8 +137,6 @@ module Folio::Publishable
               Time.zone.now)
       }
 
-      scope :published_or_admin, -> (admin) { admin ? all : published }
-
       scope :unpublished, -> {
         where("(#{table_name}.published != ? OR #{table_name}.published IS NULL) OR "\
               "(#{table_name}.published_from IS NOT NULL AND #{table_name}.published_from >= ?) OR "\
@@ -116,17 +144,6 @@ module Folio::Publishable
               true,
               Time.zone.now,
               Time.zone.now)
-      }
-
-      scope :by_published, -> (bool) {
-        case bool
-        when true, "true"
-          published
-        when false, "false"
-          unpublished
-        else
-          all
-        end
       }
     end
 

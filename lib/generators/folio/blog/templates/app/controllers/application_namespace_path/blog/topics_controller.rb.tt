@@ -10,7 +10,7 @@ class <%= application_namespace %>::Blog::TopicsController < ApplicationControll
 
   private
     def find_topic
-      @topic = @klass.published_or_admin(account_signed_in?)
+      @topic = @klass.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
                      .by_locale(I18n.locale)
                      .friendly.find(params[:id])
 
