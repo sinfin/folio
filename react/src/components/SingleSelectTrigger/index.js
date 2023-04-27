@@ -1,14 +1,14 @@
 import React from 'react'
 import { Button } from 'reactstrap'
 
-import { EVENT_NAME } from 'containers/ModalSelect/ModalSingleSelect/constants'
+import { EVENT_NAME_BASE } from 'containers/ModalSingleSelect'
 import { FILE_TRIGGER_EVENT } from 'containers/Atoms/constants'
 import FileHoverButtons from 'components/FileHoverButtons'
 import SingleSelectTriggerWrap from './styled/SingleSelectTriggerWrap'
 import Picture from 'components/Picture'
 
 function triggerModal (fileType, data) {
-  window.jQuery(document).trigger(`${EVENT_NAME}/${fileType}`, [data])
+  window.dispatchEvent(new window.CustomEvent(`${EVENT_NAME_BASE}/${fileType}/showModal`, { bubbles: true, detail: { singleSelectTrigger: data } }))
 }
 
 function SingleSelectTrigger ({ data, attachmentType, openFileModal, remove, index }) {

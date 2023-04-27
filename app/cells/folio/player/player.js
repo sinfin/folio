@@ -1,5 +1,7 @@
 //= require video.min
 
+//= require ./_videojs-components
+
 window.Folio = window.Folio || {}
 window.Folio.Player = window.Folio.Player || {}
 
@@ -15,12 +17,16 @@ window.Folio.Player.defaultOptions = {
   }
 }
 
-window.Folio.Player.create = (serializedFile) => {
+window.Folio.Player.create = (serializedFile, opts) => {
   const player = document.createElement('div')
 
   player.classList.add('f-player')
   player.dataset.controller = "f-player"
   player.dataset.file = JSON.stringify(serializedFile)
+
+  if (opts.showFormControls) {
+    player.dataset.fPlayerShowFormControlsValue = "true"
+  }
 
   const loader = document.createElement('div')
   loader.classList.add('folio-loader')
@@ -31,44 +37,9 @@ window.Folio.Player.create = (serializedFile) => {
   return player
 }
 
-class FolioPlayerTitleComponent extends window.videojs.getComponent('Component') {
-  constructor (player, options = {}) {
-    super(player, options)
-    if (options.title) this.updateTextContent(options.title)
-  }
-
-  createEl () {
-    return window.videojs.dom.createEl('div', { className: 'vjs-folio-player-title' })
-  }
-
-  updateTextContent (text) {
-    window.videojs.emptyEl(this.el())
-    window.videojs.appendContent(this.el(), text)
-  }
-}
-
-window.videojs.registerComponent('FolioPlayerTitle', FolioPlayerTitleComponent)
-
-class FolioPlayerSeekButtonComponent extends window.videojs.getComponent('Button') {
-  buildCSSClass () {
-    return `vjs-control vjs-folio-player-seek-button vjs-folio-player-seek-button--${this.options_.direction}`
-  }
-
-  handleClick (e) {
-    const now = this.player_.currentTime();
-
-    if (this.options_.direction === 'forward') {
-      this.player_.currentTime(Math.min(now + 15, this.player_.duration()));
-    } else {
-      this.player_.currentTime(Math.max(0, now - 15));
-    }
-  }
-}
-
-window.videojs.registerComponent('FolioPlayerSeekButton', FolioPlayerSeekButtonComponent)
-
-window.Folio.Player.bind = (el) => {
-  const fileAttributes = JSON.parse(el.dataset.file).attributes
+window.Folio.Player.bind = (el, opts) => {
+  const file = JSON.parse(el.dataset.file)
+  const fileAttributes = file.attributes
 
   if (fileAttributes.human_type !== 'audio' && fileAttributes.human_type !== 'video') {
     throw new Error(`Unsupported file human_type: ${fileAttributes.human_type}`)
@@ -112,6 +83,11 @@ window.Folio.Player.bind = (el) => {
   const controlBar = el.folioPlayer.getChild('ControlBar')
   controlBar.addChild("FolioPlayerSeekButton", { direction: "backward" })
   controlBar.addChild("FolioPlayerSeekButton", { direction: "forward" })
+
+  if (opts.showFormControls) {
+    controlBar.addChild("FolioPlayerFormControl", { action: "modal", file })
+    controlBar.addChild("FolioPlayerFormControl", { action: "destroy" })
+  }
 }
 
 window.Folio.Player.unbind = (el) => {
@@ -122,8 +98,12 @@ window.Folio.Player.unbind = (el) => {
 }
 
 window.Folio.Stimulus.register('f-player', class extends window.Stimulus.Controller {
+  static values = {
+    showFormControls: Boolean,
+  }
+
   connect () {
-    window.Folio.Player.bind(this.element)
+    window.Folio.Player.bind(this.element, { showFormControls: this.showFormControlsValue })
   }
 
   disconnect () {

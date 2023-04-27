@@ -183,12 +183,34 @@ function * deleteFileSaga () {
   yield takeLatest(DELETE_FILE, deleteFilePerform)
 }
 
+function * updatedFilePerform (action) {
+  try {
+    const elements = document.querySelectorAll(`[data-file*='{"id":"${action.response.id}']`)
+
+    if (elements.length) {
+      const fileData = JSON.stringify(action.response)
+
+      for (let i = 0; i < elements.length; ++i) {
+        elements[i].dataset.file = fileData
+      }
+    }
+
+    yield true
+  } catch (e) {
+  }
+}
+
+function * updatedFileSaga () {
+  yield takeEvery(UPDATE_FILE_SUCCESS, updatedFilePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
   updateFileSaga,
   changeFilesPageSaga,
   massDeleteSaga,
-  deleteFileSaga
+  deleteFileSaga,
+  updatedFileSaga
 ]
 
 // Selectors

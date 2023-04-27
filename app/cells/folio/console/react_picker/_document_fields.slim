@@ -16,9 +16,6 @@
       .folio-console-thumbnail__inner
         strong.folio-console-thumbnail__title = fp.object.to_label
 
-        = fp.hidden_field :title, value: fp.object.to_label, \
-                                  'data-file-name' => fp.object.file && fp.object.file.file_name
-
         button[
           type='button'
           class='f-c-file-list__file-btn f-c-file-list__file-btn--edit'

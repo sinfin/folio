@@ -10,5 +10,12 @@ h2 Audio
 h2 Audio form
 
 = simple_form_for Folio::Page.last, url: url_for([:console, Folio::Page]) do |f|
-  = f.input :title, as: :hidden
+  = file_picker_for_audio_cover(f)
+
+h2 Audio form present
+
+- page = Folio::Page.new
+- page.build_audio_cover_placement(file: Folio::File::Audio.last)
+
+= simple_form_for page, url: url_for([:console, Folio::Page]) do |f|
   = file_picker_for_audio_cover(f)

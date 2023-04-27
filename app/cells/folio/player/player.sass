@@ -8,11 +8,13 @@ $transition-duration: .3s !default
 $f-player-background: $medium-gray !default
 $f-player-color: $gray-medium-dark !default
 $f-player-border-radius: $border-radius !default
-$f-player-min-height: 84px !default
+$f-player-min-height: 113px !default
 $f-player-play-button-background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='36' height='36' rx='4' fill='currentColor'/%3E%3Cpath d='M14 11.14V25.14L25 18.14L14 11.14Z' fill='white'/%3E%3C/svg%3E%0A") !default
 $f-player-pause-button-background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='36' height='36' rx='4' fill='currentColor'/%3E%3Cpath d='M20 25H24V11H20M12 25H16V11H12V25Z' fill='white'/%3E%3C/svg%3E%0A") !default
-$f-player-seek-backward-background-image: url("data:image/svg+xml,%3Csvg width='16' height='18' viewBox='0 0 16 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 11.5C16 15.09 13.09 18 9.5 18H2V16H9.5C12 16 14 14 14 11.5C14 9 12 7 9.5 7H3.83L6.91 10.09L5.5 11.5L0 6L5.5 0.5L6.92 1.91L3.83 5H9.5C13.09 5 16 7.91 16 11.5Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
-$f-player-seek-forward-background-image: url("data:image/svg+xml,%3Csvg width='16' height='18' viewBox='0 0 16 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 16H14V18H6.5C2.91 18 0 15.09 0 11.5C0 7.91 2.91 5 6.5 5H12.17L9.08 1.91L10.5 0.5L16 6L10.5 11.5L9.09 10.09L12.17 7H6.5C4 7 2 9 2 11.5C2 14 4 16 6.5 16Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
+$f-player-seek-backward-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 13.5C20 17.09 17.09 20 13.5 20H6V18H13.5C16 18 18 16 18 13.5C18 11 16 9 13.5 9H7.83L10.91 12.09L9.5 13.5L4 8L9.5 2.5L10.92 3.91L7.83 7H13.5C17.09 7 20 9.91 20 13.5Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
+$f-player-seek-forward-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 18H18V20H10.5C6.91 20 4 17.09 4 13.5C4 9.91 6.91 7 10.5 7H16.17L13.08 3.91L14.5 2.5L20 8L14.5 13.5L13.09 12.09L16.17 9H10.5C8 9 6 11 6 13.5C6 16 8 18 10.5 18Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
+$f-player-action-modal-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 3C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 20.11 20.1 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19ZM16.7 9.35C16.92 9.14 16.92 8.79 16.7 8.58L15.42 7.3C15.21 7.08 14.86 7.08 14.65 7.3L13.65 8.3L15.7 10.35L16.7 9.35ZM7 14.94V17H9.06L15.12 10.94L13.06 8.88L7 14.94Z' fill='%233B4548'/%3E%3C/svg%3E%0A") !default
+$f-player-action-destroy-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z' fill='%23F0655D'/%3E%3C/svg%3E%0A") !default
 $f-player-play-button-width: 36px !default
 $f-player-play-button-height: 36px !default
 $f-player-control-bar-padding: 18px 24px 24px !default
@@ -89,7 +91,7 @@ $f-player-progress-secondary: $gray !default
       display: flex
       align-items: center
       flex-wrap: wrap
-      gap: $f-player-control-bar-spacer / 2 $f-player-control-bar-spacer
+      gap: 10px
       padding: $f-player-control-bar-padding
       position: relative
       top: auto
@@ -100,7 +102,7 @@ $f-player-progress-secondary: $gray !default
     .vjs-play-control
       width: $f-player-play-button-width
       height: $f-player-play-button-height
-      margin-right: 5px
+      margin-right: 10px
 
       .vjs-icon-placeholder
         background: transparent $f-player-play-button-background-image center center no-repeat
@@ -118,6 +120,8 @@ $f-player-progress-secondary: $gray !default
     .vjs-time-control
       width: auto
       height: auto
+      min-width: 24px
+      min-height: 24px
       font-size: inherit
       line-height: inherit
       min-width: 0
@@ -142,14 +146,24 @@ $f-player-progress-secondary: $gray !default
 
     .vjs-folio-player-seek-button
       margin-top: -2px
-      width: 16px
-      height: 18px
+      width: 24px
+      height: 24px
       background: transparent $f-player-seek-backward-background-image center center no-repeat
       background-size: cover
       order: 2
 
       &--forward
         background-image: $f-player-seek-forward-background-image
+
+    .vjs-folio-player-form-control
+      margin-top: -2px
+      width: 24px
+      height: 24px
+      background: transparent $f-player-action-modal-background-image center center no-repeat
+      background-size: cover
+
+      &--destroy
+        background-image: $f-player-action-destroy-background-image
 
     .vjs-folio-player-title
       padding: $f-player-title-padding
@@ -158,10 +172,11 @@ $f-player-progress-secondary: $gray !default
       white-space: nowrap
 
     .vjs-time-control
-      display: block
+      display: flex
+      align-items: center
 
       &.vjs-duration
-        margin-left: - $f-player-control-bar-spacer
+        margin-left: -10px
 
       &.vjs-remaining-time
         display: none
@@ -171,7 +186,7 @@ $f-player-progress-secondary: $gray !default
 
       &.vjs-current-time
         font-weight: $f-player-current-time-font-weight
-        margin-right: - $f-player-control-bar-spacer
+        margin-right: -10px
 
     &.vjs-paused
       .vjs-big-play-button
@@ -206,15 +221,17 @@ $f-player-progress-secondary: $gray !default
       width: auto !important
       margin-right: -22px
       transition: all .1s
+      padding-left: 5px
+      padding-right: 5px
 
       &.vjs-hover
         margin-right: 0
 
     .vjs-playback-rate.vjs-control
       padding-left: 10px
-      padding-right: 10px
-      margin-left: -10px
-      margin-right: -10px
+      padding-right: 5px
+      margin-left: -5px
+      margin-right: -5px
       display: flex
       align-items: center
       align-self: stretch

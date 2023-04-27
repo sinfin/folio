@@ -9,7 +9,7 @@ import { openFileModal } from 'ducks/fileModal'
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
-import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
+import ModalSingleSelect from 'containers/ModalSingleSelect'
 import FileModal from 'containers/FileModal'
 import Atoms from 'containers/Atoms'
 
