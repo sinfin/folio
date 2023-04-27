@@ -10,8 +10,13 @@ class Folio::Console::Form::FooterCell < Folio::ConsoleCell
     return nil unless model
     return nil unless model.object.persisted?
     return nil if options[:preview_button] == false
+    return options[:preview_path]  if options[:preview_path]
 
-    options[:preview_path] || url_for([model.object])
+    if model.object.respond_to?(:published?) && token = model.object.try(:preview_token)
+      url_for([model.object, Folio::Publishable::PREVIEW_PARAM_NAME => token])
+    else
+      url_for(model.object)
+    end
   rescue NoMethodError
   end
 

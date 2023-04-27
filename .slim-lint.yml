@@ -19,6 +19,7 @@ exclude:
   - app/views/folio/console/accounts/_form.slim
   - app/views/folio/console/base/_private_attachments.slim
   - app/views/folio/console/menus/_form.slim
+  - app/views/folio/console/pages/edit.slim
   - app/views/folio/console/pages/index.slim
   - app/views/folio/console/partials/_react_modals.slim
   - app/views/folio/console/partials/_translations.slim
