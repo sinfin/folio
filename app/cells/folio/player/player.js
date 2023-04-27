@@ -67,7 +67,12 @@ window.Folio.Player.bind = (el, opts) => {
     ...window.Folio.Player.defaultOptions[fileAttributes.human_type],
     controls: true,
     autoplay: false,
-    preload: 'auto'
+    preload: 'auto',
+    responsive: true,
+    breakpoints: {
+      xsmall: 360,
+      medium: 574
+    }
   })
 
   const children = el.folioPlayer.children()

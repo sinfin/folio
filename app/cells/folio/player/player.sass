@@ -289,8 +289,10 @@ $f-player-progress-secondary: $gray !default
       .vjs-control-bar
         height: auto
 
-  +media-breakpoint-down(xs)
-    &__player
+    &.vjs-layout-tiny,
+    &.vjs-layout-x-small,
+    &.vjs-layout-small,
+    &.vjs-layout-medium
       .vjs-progress-control
         order: 0
         flex: 0 0 100%
@@ -303,3 +305,12 @@ $f-player-progress-secondary: $gray !default
 
       .vjs-play-control
         margin-right: 5px
+
+    &.vjs-layout-x-small .vjs-custom-control-spacer
+      display: none
+
+    &.vjs-layout-x-small .vjs-progress-control
+      display: flex
+
+    &.vjs-layout-small .vjs-current-time, &.vjs-layout-small .vjs-time-divider, &.vjs-layout-small .vjs-duration, &.vjs-layout-small .vjs-playback-rate, &.vjs-layout-small .vjs-volume-control
+      display: flex
