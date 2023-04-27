@@ -1,3 +1,5 @@
+//= require folio/capitalize
+
 class FolioPlayerVideoSpacerComponent extends window.videojs.getComponent('Component') {
   constructor (player, options = {}) {
     super(player, options)
@@ -80,9 +82,7 @@ class FolioPlayerFormControlComponent extends window.videojs.getComponent('Butto
       type: 'button'
     }, attributes)
 
-    const capitalize = (s) => `${s[0].toUpperCase()}${s.slice(1)}`
-
-    attributes['data-action'] = `f-c-file-picker#onFormControl${capitalize(this.options_.action)}Click`
+    attributes['data-action'] = `f-c-file-picker#onFormControl${window.Folio.capitalize(this.options_.action)}Click`
 
     if (this.options_.file) {
       attributes['data-file'] = JSON.stringify(this.options_.file)

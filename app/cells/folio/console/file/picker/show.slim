@@ -1,4 +1,8 @@
-.f-c-file-picker data=data class="form-group"
+.f-c-file-picker[
+  data=data
+  class="form-group"
+  class="f-c-file-picker--as-#{klass.human_type}"
+]
   = model[:f].label model[:placement_key]
 
   = html_safe_fields_for model[:f], model[:placement_key], build: true do |fp|
@@ -12,19 +16,18 @@
     = fp.hidden_field :file_id,
                       "data-f-c-file-picker-target" => "fileIdInput"
 
-    .f-c-file-picker__player-wrap data-f-c-file-picker-target="playerWrap"
+    .f-c-file-picker__content data-f-c-file-picker-target="content"
       - if file_placement && file_placement.file
-        - if %w[audio video].include?(file_placement.file.class.human_type)
-          == cell('folio/player',
-                  file_placement.file,
-                  show_form_controls: true)
+        == cell(content_cell_name,
+                file_placement.file,
+                show_form_controls: true)
 
     .f-c-file-picker__btn-wrap
       == cell('folio/console/ui/button',
               class: "f-c-file-picker__btn",
               variant: :success,
-              label: t('.add_file'),
-              icon: :add,
+              label: btn_label,
+              icon: :plus,
               "data-action" => "f-c-file-picker#onBtnClick")
 
     - if hint = hint_for(fp)

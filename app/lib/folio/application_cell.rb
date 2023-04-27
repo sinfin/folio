@@ -92,4 +92,8 @@ class Folio::ApplicationCell < Cell::ViewModel
       end
     end
   end
+
+  def folio_icon(name, opts = {})
+    cell("folio/ui/icon", name, opts)
+  end
 end

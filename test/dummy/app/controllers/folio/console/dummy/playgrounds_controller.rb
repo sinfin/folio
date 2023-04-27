@@ -4,6 +4,9 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
   def players
   end
 
+  def pickers
+  end
+
   def force_use_react_modals?
     true
   end

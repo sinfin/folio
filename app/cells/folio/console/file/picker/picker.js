@@ -1,9 +1,9 @@
 window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.Controller {
-  static targets = ["idInput", "playerWrap", "fileIdInput", "destroyInput"]
+  static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput']
 
   static values = {
     fileType: String,
-    hasFile: Boolean,
+    hasFile: Boolean
   }
 
   connect () {
@@ -21,44 +21,54 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   clear () {
-    this.destroyInputTarget.value = "1"
+    this.destroyInputTarget.value = '1'
     this.destroyInputTarget.disabled = false
 
-    this.fileIdInputTarget.value = ""
+    this.fileIdInputTarget.value = ''
 
     this.hasFileValue = false
-    this.playerWrapTarget.innerHTML = ""
+    this.contentTarget.innerHTML = ''
   }
 
   onSelected (e) {
-    this.destroyInputTarget.value = "0"
+    this.destroyInputTarget.value = '0'
     this.destroyInputTarget.disabled = true
 
     this.fileIdInputTarget.value = e.detail.file.id
 
-    this.createPlayer(e.detail.file)
+    this.contentTarget.innerHTML = ""
+    this.hasFileValue = true
+
+    switch (e.detail.file.attributes.human_type) {
+      case 'audio':
+      case 'video':
+        return this.createPlayer(e.detail.file)
+      case 'image':
+        return this.createThumbnail(e.detail.file)
+      case 'document':
+        return this.createDocument(e.detail.file)
+      default:
+        throw new Error(`Unknown human_type ${e.detail.file.attributes.human_type}`)
+    }
+  }
+
+  createThumbnail (serializedFile) {
+    this.contentTarget.appendChild(window.FolioConsole.File.Picker.Thumb.create(serializedFile))
   }
 
   createPlayer (serializedFile) {
-    let existing
-
-    while (existing = this.playerWrapTarget.querySelector('.f-player')) {
-      this.playerWrapTarget.removeChild(existing)
-    }
-
-    this.hasFileValue = true
-    this.playerWrapTarget.appendChild(window.Folio.Player.create(serializedFile, { showFormControls: true }))
+    this.contentTarget.appendChild(window.Folio.Player.create(serializedFile, { showFormControls: true }))
   }
 
   onBtnClick (e) {
     e.preventDefault()
-    e.target.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showModal`, { bubbles: true }))
+    e.currentTarget.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showModal`, { bubbles: true }))
   }
 
   onFormControlModalClick (e) {
     e.preventDefault()
-    console.log(e)
-    e.target.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showFileModal`, { bubbles: true, detail: { file: JSON.parse(e.target.dataset.file) } }))
+
+    e.currentTarget.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showFileModal`, { bubbles: true, detail: { file: JSON.parse(e.currentTarget.dataset.file) } }))
   }
 
   onFormControlDestroyClick (e) {

@@ -3,10 +3,6 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
   head
     = render partial: 'layouts/folio/console/head'
 
-    - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
-      = preload_link_tag font_path('Roboto-Regular.woff2')
-      = preload_link_tag font_path('Roboto-Bold.woff2')
-
   body.f-c-layout-body
     == cell('folio/console/layout/sidebar')
 

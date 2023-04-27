@@ -8,6 +8,18 @@ module Folio::Console::ReactHelper
              file_type:)
   end
 
+  def file_picker_for_cover(f)
+    file_picker(f:,
+                placement_key: :cover_placement,
+                file_type: "Folio::File::Image")
+  end
+
+  def file_picker_for_document(f)
+    file_picker(f:,
+                placement_key: :document_placement,
+                file_type: "Folio::File::Document")
+  end
+
   def file_picker_for_audio_cover(f)
     file_picker(f:,
                 placement_key: :audio_cover_placement,

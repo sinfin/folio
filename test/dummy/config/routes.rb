@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       namespace :dummy do
         resource :playground, only: %i[] do
           get :players
+          get :pickers
         end
 
         namespace :blog do
