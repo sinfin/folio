@@ -82,6 +82,7 @@ class Folio::File < Folio::ApplicationRecord
   end
 
   before_validation :set_file_track_duration, if: :file_uid_changed?
+  before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job!
@@ -177,6 +178,12 @@ class Folio::File < Folio::ApplicationRecord
     def set_file_track_duration
       if %w[audio video].include?(self.class.human_type)
         self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type)
+      end
+    end
+
+    def set_video_file_dimensions
+      if %w[video].include?(self.class.human_type)
+        self.file_width, self.file_height = Folio::File::GetVideoDimensionsJob.perform_now(file.path, self.class.human_type)
       end
     end
 end
