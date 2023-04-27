@@ -31,6 +31,10 @@ module Folio::HasAttachments
                       placement_key: :audio_cover_placement,
                       placement: "Folio::FilePlacement::AudioCover")
 
+    has_one_placement(:video_cover,
+                      placement_key: :video_cover_placement,
+                      placement: "Folio::FilePlacement::VideoCover")
+
     has_one_placement(:document,
                       placement_key: :document_placement,
                       placement: "Folio::FilePlacement::SingleDocument")

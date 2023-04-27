@@ -22,6 +22,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
   const file = fileModal.file
   const isImage = file.attributes.human_type === 'image'
   const isAudio = file.attributes.human_type === 'audio'
+  const isVideo = file.attributes.human_type === 'video'
   let download = file.attributes.file_name
   if (download.indexOf('.') === -1) { download = undefined }
 
@@ -95,7 +96,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
 
             <p>ID: {file.attributes.id}</p>
 
-            {isAudio && <div className='form-group'><FolioPlayer file={file} /></div>}
+            {(isAudio || isVideo) && <div className='form-group'><FolioPlayer file={file} /></div>}
 
             <FormGroup>
               <Label>{window.FolioConsole.translations.fileAuthor}</Label>

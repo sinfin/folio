@@ -14,6 +14,12 @@ module Folio::Console::ReactHelper
                 file_type: "Folio::File::Audio")
   end
 
+  def file_picker_for_video_cover(f)
+    file_picker(f:,
+                placement_key: :video_cover_placement,
+                file_type: "Folio::File::Video")
+  end
+
   def react_images(selected_placements = nil,
                    attachmentable: "page",
                    type: :image_placements,

@@ -19,3 +19,23 @@ h2 Audio form present
 
 = simple_form_for page, url: url_for([:console, Folio::Page]) do |f|
   = file_picker_for_audio_cover(f)
+
+h2 Video
+
+- if Folio::File::Video.last
+  == cell('folio/player', Folio::File::Video.last)
+- else
+  p.text-danger Upload a video file first!
+
+h2 Video form
+
+= simple_form_for Folio::Page.last, url: url_for([:console, Folio::Page]) do |f|
+  = file_picker_for_video_cover(f)
+
+h2 Video form present
+
+- page = Folio::Page.new
+- page.build_video_cover_placement(file: Folio::File::Video.last)
+
+= simple_form_for page, url: url_for([:console, Folio::Page]) do |f|
+  = file_picker_for_video_cover(f)

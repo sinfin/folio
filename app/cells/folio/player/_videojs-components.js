@@ -1,3 +1,30 @@
+class FolioPlayerVideoSpacerComponent extends window.videojs.getComponent('Component') {
+  constructor (player, options = {}) {
+    super(player, options)
+    this.addSpacer()
+    this.appendVideo()
+  }
+
+  createEl () {
+    return window.videojs.dom.createEl('div', { className: 'vjs-folio-player-video-spacer' })
+  }
+
+  appendVideo () {
+    window.setTimeout(() => {
+      this.el().appendChild(this.options_.videoElement)
+    }, 0)
+  }
+
+  addSpacer () {
+    const spacer = document.createElement('div')
+    spacer.classList.add('vjs-folio-player-video-spacer__spacer')
+    spacer.style.paddingTop = `${Math.round(100 * (100 * this.options_.videoSize.height / this.options_.videoSize.width)) / 100}%`
+    this.el().appendChild(spacer)
+  }
+}
+
+window.videojs.registerComponent('FolioPlayerVideoSpacer', FolioPlayerVideoSpacerComponent)
+
 class FolioPlayerTitleComponent extends window.videojs.getComponent('Component') {
   constructor (player, options = {}) {
     super(player, options)

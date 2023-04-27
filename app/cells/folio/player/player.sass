@@ -8,42 +8,43 @@ $transition-duration: .3s !default
 $f-player-background: $medium-gray !default
 $f-player-color: $gray-medium-dark !default
 $f-player-border-radius: $border-radius !default
-$f-player-min-height: 113px !default
 $f-player-play-button-background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='36' height='36' rx='4' fill='currentColor'/%3E%3Cpath d='M14 11.14V25.14L25 18.14L14 11.14Z' fill='white'/%3E%3C/svg%3E%0A") !default
 $f-player-pause-button-background-image: url("data:image/svg+xml,%3Csvg width='36' height='36' viewBox='0 0 36 36' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='36' height='36' rx='4' fill='currentColor'/%3E%3Cpath d='M20 25H24V11H20M12 25H16V11H12V25Z' fill='white'/%3E%3C/svg%3E%0A") !default
 $f-player-seek-backward-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 13.5C20 17.09 17.09 20 13.5 20H6V18H13.5C16 18 18 16 18 13.5C18 11 16 9 13.5 9H7.83L10.91 12.09L9.5 13.5L4 8L9.5 2.5L10.92 3.91L7.83 7H13.5C17.09 7 20 9.91 20 13.5Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
 $f-player-seek-forward-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 18H18V20H10.5C6.91 20 4 17.09 4 13.5C4 9.91 6.91 7 10.5 7H16.17L13.08 3.91L14.5 2.5L20 8L14.5 13.5L13.09 12.09L16.17 9H10.5C8 9 6 11 6 13.5C6 16 8 18 10.5 18Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
 $f-player-action-modal-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 3C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 20.11 20.1 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19ZM16.7 9.35C16.92 9.14 16.92 8.79 16.7 8.58L15.42 7.3C15.21 7.08 14.86 7.08 14.65 7.3L13.65 8.3L15.7 10.35L16.7 9.35ZM7 14.94V17H9.06L15.12 10.94L13.06 8.88L7 14.94Z' fill='%233B4548'/%3E%3C/svg%3E%0A") !default
 $f-player-action-destroy-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z' fill='%23F0655D'/%3E%3C/svg%3E%0A") !default
+$f-player-fullscreen-background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 5H10V7H7V10H5V5ZM14 5H19V10H17V7H14V5ZM17 14H19V19H14V17H17V14ZM10 17V19H5V14H7V17H10Z' fill='%236F7172'/%3E%3C/svg%3E%0A") !default
 $f-player-play-button-width: 36px !default
 $f-player-play-button-height: 36px !default
-$f-player-control-bar-padding: 14px 24px 24px !default
+$f-player-control-bar-padding: 24px !default
 $f-player-control-font-size: $font-size-sm !default
 $f-player-current-time-font-weight: $font-weight-bold !default
 $f-player-control-bar-spacer: 18px !default
-$f-player-title-padding: 18px 24px 0 !default
 $f-player-transition-duration: $transition-duration !default
 $f-player-progress-primary: $blue !default
 $f-player-progress-secondary: $gray !default
 
 .f-player
-  background: $f-player-background
-  border-radius: $f-player-border-radius
-  color: $f-player-color
-  min-height: $f-player-min-height
   position: relative
+  color: $f-player-color
   font-size: $f-player-control-font-size
   line-height: inherit
   font-family: inherit
+  min-height: 113px
+  background: $f-player-background
+  border-radius: $f-player-border-radius
+  position: relative
+  width: 100%
 
   &__player
-    background: transparent
     color: inherit
-    width: 100%
-    height: auto
-    min-height: $f-player-min-height
+    font-family: inherit
     font-size: inherit
+    height: auto
     line-height: inherit
+    width: 100%
+    background: transparent
 
     &,
     .vjs-volume-bar,
@@ -99,6 +100,12 @@ $f-player-progress-secondary: $gray !default
       bottom: auto
       left: auto
       right: auto
+      height: auto
+
+    &.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar
+      opacity: 1
+      visibility: visible
+      pointer-events: all
 
     .vjs-play-control
       width: $f-player-play-button-width
@@ -117,6 +124,18 @@ $f-player-progress-secondary: $gray !default
       &.vjs-playing .vjs-icon-placeholder
         background-image: $f-player-pause-button-background-image
 
+    .vjs-fullscreen-control
+      width: 24px
+      height: 24px
+
+      .vjs-icon-placeholder
+        background: transparent $f-player-fullscreen-background-image center center no-repeat
+        width: 24px
+        height: 24px
+
+        &::before
+          display: none
+
     .vjs-control,
     .vjs-time-control
       width: auto
@@ -131,16 +150,19 @@ $f-player-progress-secondary: $gray !default
       order: 10
 
     .vjs-play-control
-      order: 1
+      order: 2
 
-    .vjs-volume-panel
-      order: 4
-
-    .vjs-playback-rate.vjs-control
+    .vjs-folio-player-seek-button
       order: 3
 
-    .vjs-time-control
+    .vjs-playback-rate.vjs-control
+      order: 4
+
+    .vjs-volume-panel
       order: 5
+
+    .vjs-time-control
+      order: 6
 
     .vjs-progress-control
       flex-grow: 1
@@ -151,7 +173,6 @@ $f-player-progress-secondary: $gray !default
       height: 24px
       background: transparent $f-player-seek-backward-background-image center center no-repeat
       background-size: cover
-      order: 2
 
       &--forward
         background-image: $f-player-seek-forward-background-image
@@ -166,11 +187,16 @@ $f-player-progress-secondary: $gray !default
       &--destroy
         background-image: $f-player-action-destroy-background-image
 
+      &--modal
+        margin-left: auto
+
     .vjs-folio-player-title
-      padding: $f-player-title-padding
       overflow: hidden
       text-overflow: ellipsis
       white-space: nowrap
+      flex: 0 0 100%
+      margin-bottom: 6px
+      order: 0
 
     .vjs-time-control
       display: flex
@@ -282,12 +308,38 @@ $f-player-progress-secondary: $gray !default
     .vjs-progress-control .vjs-progress-holder
       margin: 0 5px
 
-    &--audio
-      .vjs-text-track-display
-        display: none
+    .vjs-folio-player-video-spacer
+      position: relative
+      border-top-left-radius: $border-radius
+      border-top-right-radius: $border-radius
+      overflow: hidden
+
+    .vjs-tech
+      position: absolute
+      width: 100%
+      height: 100%
+
+    .vjs-text-track-display
+      display: none
+
+    &.vjs-fullscreen
+      display: flex
+      flex-direction: column
+      border-radius: 0
+
+      .vjs-tech
+        position: relative
+        width: 100%
+        height: 100%
+
+      .vjs-folio-player-video-spacer
+        flex: 1 1 auto
+
+        &__spacer
+          display: none
 
       .vjs-control-bar
-        height: auto
+        flex: 0 0 auto
 
     &.vjs-layout-tiny,
     &.vjs-layout-x-small,
@@ -298,10 +350,7 @@ $f-player-progress-secondary: $gray !default
         flex: 0 0 100%
 
       .vjs-control-bar
-        padding: 8px 12px 12px
-
-      .vjs-folio-player-title
-        padding: 12px 12px 0
+        padding: 12px
 
       .vjs-play-control
         margin-right: 5px
@@ -314,3 +363,19 @@ $f-player-progress-secondary: $gray !default
 
     &.vjs-layout-small .vjs-current-time, &.vjs-layout-small .vjs-time-divider, &.vjs-layout-small .vjs-duration, &.vjs-layout-small .vjs-playback-rate, &.vjs-layout-small .vjs-volume-control
       display: flex
+
+  &--video
+    max-width: 555px
+    min-height: 450px
+
+    &__player
+     .vjs-folio-player-title
+       order: 1
+
+  &--audio
+    &__player
+      .vjs-text-track-display
+        display: none
+
+      .vjs-control-bar
+        height: auto
