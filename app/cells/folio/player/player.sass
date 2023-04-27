@@ -278,9 +278,27 @@ $f-player-progress-secondary: $gray !default
     .vjs-progress-holder .vjs-load-progress
       display: none
 
+    .vjs-progress-control .vjs-progress-holder
+      margin: 0 5px
+
     &--audio
       .vjs-text-track-display
         display: none
 
       .vjs-control-bar
         height: auto
+
+  +media-breakpoint-down(xs)
+    &__player
+      .vjs-progress-control
+        order: 0
+        flex: 0 0 100%
+
+      .vjs-control-bar
+        padding: 8px 12px 12px
+
+      .vjs-folio-player-title
+        padding: 12px 12px 0
+
+      .vjs-play-control
+        margin-right: 5px
