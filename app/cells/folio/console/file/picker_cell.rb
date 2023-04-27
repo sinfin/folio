@@ -18,7 +18,7 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
   end
 
   def btn_label
-    if %w[image document].exclude?(klass.human_type)
+    if klass.human_type != "image"
       t(".add_file")
     end
   end
@@ -31,8 +31,10 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
     case klass.human_type
     when "audio", "video"
       "folio/player"
-    when "image", "document"
+    when "image"
       "folio/console/file/picker/thumb"
+    when "document"
+      "folio/console/file/picker/document"
     else
       fail "Unknown human_type #{klass.human_type}"
     end

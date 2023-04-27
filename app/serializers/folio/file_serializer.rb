@@ -15,4 +15,8 @@ class Folio::FileSerializer
   attribute :source_url do |object|
     object.file.remote_url
   end
+
+  attribute :extension do |object|
+    Mime::Type.lookup(object.file_mime_type).symbol.to_s.upcase
+  end
 end

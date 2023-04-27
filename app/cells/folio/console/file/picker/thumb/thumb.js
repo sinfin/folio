@@ -1,5 +1,3 @@
-//= require folio/capitalize
-
 window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.File = window.FolioConsole.File || {}
 window.FolioConsole.File.Picker = window.FolioConsole.File.Picker || {}
@@ -22,7 +20,12 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
 
     this.setDominantColor(fileAttributes)
     this.addPicture(fileAttributes)
-    this.addControls(fileAttributes)
+
+    window.FolioConsole.File.Picker.addControlsForStimulusController({
+      element: this.element,
+      parent: this.element,
+      className: 'f-c-file-picker-thumb',
+    })
   }
 
   setDominantColor (fileAttributes) {
@@ -48,23 +51,5 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     picture.appendChild(img)
 
     this.element.appendChild(picture)
-  }
-
-  addControls (fileAttributes) {
-    ['modal', 'destroy'].forEach((key) => {
-      const button = document.createElement('button')
-
-      button.type = 'button'
-      button.className = `f-c-file-picker-thumb__btn f-c-file-picker-thumb__btn--${key}`
-
-      if (key === 'modal') button.dataset.file = this.element.dataset.file
-
-      const icon = window.Folio.Ui.Icon.create(key === 'modal' ? 'edit' : 'close')
-      button.appendChild(icon)
-
-      button.dataset.action = `f-c-file-picker#onFormControl${window.Folio.capitalize(key)}Click`
-
-      this.element.appendChild(button)
-    })
   }
 })

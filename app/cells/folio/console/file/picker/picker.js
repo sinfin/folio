@@ -1,3 +1,27 @@
+//= require folio/capitalize
+
+window.FolioConsole = window.FolioConsole || {}
+window.FolioConsole.File = window.FolioConsole.File || {}
+window.FolioConsole.File.Picker = window.FolioConsole.File.Picker || {}
+
+window.FolioConsole.File.Picker.addControlsForStimulusController = (opts) => {
+  ['modal', 'destroy'].forEach((key) => {
+    const button = document.createElement('button')
+
+    button.type = 'button'
+    button.className = `${opts.className}__btn ${opts.className}__btn--${key}`
+
+    if (key === 'modal') button.dataset.file = opts.element.dataset.file
+
+    const icon = window.Folio.Ui.Icon.create(key === 'modal' ? 'edit' : 'close')
+    button.appendChild(icon)
+
+    button.dataset.action = `f-c-file-picker#onFormControl${window.Folio.capitalize(key)}Click`
+
+    opts.parent.appendChild(button)
+  })
+}
+
 window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.Controller {
   static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput']
 
@@ -54,6 +78,10 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
   createThumbnail (serializedFile) {
     this.contentTarget.appendChild(window.FolioConsole.File.Picker.Thumb.create(serializedFile))
+  }
+
+  createDocument (serializedFile) {
+    this.contentTarget.appendChild(window.FolioConsole.File.Picker.Document.create(serializedFile))
   }
 
   createPlayer (serializedFile) {

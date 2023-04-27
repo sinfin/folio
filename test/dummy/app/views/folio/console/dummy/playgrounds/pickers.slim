@@ -7,7 +7,7 @@ h2 Blank
 = simple_form_for blank_page, url: url_for([:console, Folio::Page]) do |f|
   = file_picker_for_cover(f)
 
-  / = file_picker_for_document(f)
+  = file_picker_for_document(f)
 
   = file_picker_for_audio_cover(f)
 
@@ -24,7 +24,7 @@ h2 Filled
 = simple_form_for filled_page, url: url_for([:console, Folio::Page]) do |f|
   = file_picker_for_cover(f)
 
-  / = file_picker_for_document(f)
+  = file_picker_for_document(f)
 
   = file_picker_for_audio_cover(f)
 
