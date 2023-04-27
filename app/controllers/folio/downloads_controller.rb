@@ -5,7 +5,7 @@ class Folio::DownloadsController < ActionController::Base
   before_action :find_file
 
   def show
-    redirect_to @file.file.remote_url
+    redirect_to @file.file.remote_url, allow_other_host: true
   end
 
   private

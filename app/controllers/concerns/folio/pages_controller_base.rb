@@ -20,19 +20,24 @@ module Folio::PagesControllerBase
   private
     def find_page
       if Rails.application.config.folio_pages_ancestry
-        path = params[:path].split("/")
+        path_parts = params[:path].split("/")
+        pages = []
 
-        set_nested_page(pages_scope, path.shift, last: path.size == 1)
+        first_slug = path_parts.shift
+        pages << set_nested_page(pages_scope, first_slug, last: path_parts.size == 0)
 
-        path.each_with_index do |slug, i|
-          set_nested_page(filter_pages_by_locale(@page.children),
-                          slug,
-                          last: path.size - 1 == i)
+        path_parts.each_with_index do |slug, i|
+          pages << set_nested_page(filter_pages_by_locale(@page.children),
+                                   slug,
+                                   last: path_parts.size - 1 == i)
+        end
+
+        if !@preview_token_valid_for_last && pages.any? { |page| !page.published? }
+          fail ActiveRecord::RecordNotFound
         end
       else
-        @page = pages_scope.published_or_admin(current_account.present?)
-                           .friendly
-                           .find(params[:id])
+        @page = pages_scope.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
+                           .friendly.find(params[:id])
 
         add_breadcrumb @page.title, url_for(@page)
       end
@@ -70,16 +75,23 @@ module Folio::PagesControllerBase
     end
 
     def set_nested_page(scoped, slug, last: false)
-      if last && page_includes.present?
-        base = scoped.includes(*page_includes)
-      else
-        base = scoped
+      base = scoped
+
+      if last
+        base = base.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
       end
 
-      @page = base.published_or_admin(current_account.present?)
-                  .friendly
-                  .find(slug)
+      @page = base.friendly.find(slug)
+
+      if last
+        @preview_token_valid_for_last = params[Folio::Publishable::PREVIEW_PARAM_NAME] == @page.preview_token
+      end
+
+      @ancestry_any_unpublished ||= !@page.published?
+
       add_breadcrumb @page.title, nested_page_path(@page)
+
+      @page
     end
 
     def force_correct_path_for_page
