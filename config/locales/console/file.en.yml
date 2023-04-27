@@ -5,3 +5,6 @@ en:
       file:
         picker:
           add_file: Add file
+          hint:
+            Folio::File::Audio: "Supported formats: MP3, AAC do 1000 MB"
+            Folio::File::Video: "Supported formats: MP4, WebM do 1000 MB"

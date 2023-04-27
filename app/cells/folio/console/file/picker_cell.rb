@@ -12,4 +12,8 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
   def file_placement
     @file_placement ||= model[:f].object.send(model[:placement_key])
   end
+
+  def hint_for(fp)
+    t(".hint.#{fp.object.class.reflections["file"].class_name}", default: nil)
+  end
 end

@@ -24,3 +24,7 @@
               label: t('.add_file'),
               icon: :add,
               "data-action" => "f-c-file-picker#onBtnClick")
+
+    - if hint = hint_for(fp)
+      .f-c-file-picker__hint.form-text
+        = hint

@@ -5,3 +5,6 @@ cs:
       file:
         picker:
           add_file: Přidat soubor
+          hint:
+            Folio::File::Audio: "Podporované formáty: MP3, AAC do 1000 MB"
+            Folio::File::Video: "Podporované formáty: MP4, WebM do 1000 MB"
