@@ -514,7 +514,7 @@ folio/_message-bus       -> folio/message-bus
 
 ## 2019-01-14
 ### Changed
-- Changed `bootstrap/` to `folio-bootstrap/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`
+- Changed `bootstrap/` to `folio-bootstrap-4/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`
 - Changed `filter` in `Folio::Filterable` to `filter_by_params`
 
 ## 2019-01-09

@@ -9,7 +9,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bootstrap = {}, global.jQuery, global.Popper));
 }(this, (function (exports, $, Popper) { 'use strict';
 
-  console.warn("Folio - you are using folio-bootstrap/dist/js/bootstrap.js, which is incompatible with Popper 2.*! Use folio-bootstrap-with-popper-fix.js instead!")
+  console.warn("Folio - you are using folio-bootstrap-4/dist/js/bootstrap.js, which is incompatible with Popper 2.*! Use folio-bootstrap-4-with-popper-fix.js instead!")
 
   $ = $ && Object.prototype.hasOwnProperty.call($, 'default') ? $['default'] : $;
   Popper = Popper && Object.prototype.hasOwnProperty.call(Popper, 'default') ? Popper['default'] : Popper;

@@ -5,7 +5,7 @@
   ],
   "version": "0.0.0",
   "dependencies": {
-    "folio-bootstrap": "https://github.com/twbs/bootstrap.git#v4.5.2",
+    "folio-bootstrap-4": "https://github.com/twbs/bootstrap.git#v4.5.2",
     "jquery-ui": "^1.12.1",
     "vanilla-lazyload": "^11.0.6",
     "moment": "^2.24.0",

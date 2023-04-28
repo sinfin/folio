@@ -1,7 +1,7 @@
 //= require jquery
 //= require rails-ujs
 //= require popper.min
-//= require folio-bootstrap-with-popper-fix
+//= require folio-bootstrap-4-with-popper-fix
 //= require slideout
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie

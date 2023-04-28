@@ -6,8 +6,8 @@
 //= require clipboard/dist/clipboard
 //= require js-cookie/src/js.cookie
 
-//= require folio-bootstrap/js/dist/util
-//= require folio-bootstrap/js/dist/modal
+//= require folio-bootstrap-4/js/dist/util
+//= require folio-bootstrap-4/js/dist/modal
 
 //= require folio/message-bus
 //= require folio/addresses
