@@ -1,62 +1,41 @@
-@import 'folio/console/variables'
-@import 'folio/console/fonts'
-@import 'folio/console/custom-bootstrap'
-@import 'folio/console/post-bootstrap-variables'
-@import 'selectize/selectize.bootstrap4.scss'
+@import 'folio/utilities'
+
+=mq-mobile-menu
+  +media-screen-breakpoint-down(lg)
+    @content
+
+=mq-desktop-menu
+  +media-print-breakpoint-up(lg)
+    @content
+
+=mq-desktop-menu-screen
+  +media-breakpoint-up(lg)
+    @content
+
+@import './variables'
+@import './mixins'
+
+@import 'folio-bootstrap-5/scss/bootstrap'
+
+@import './fonts'
+
+@import 'selectize/selectize.bootstrap5'
 @import 'select2/dist/css/select2'
 @import 'balloon.css/balloon'
 @import 'font-awesome/scss/fontawesome'
 @import 'multiselect/css/multi-select'
 @import 'daterangepicker'
-
-=mq-mobile-catalogue
-  @media screen and (max-width: 1365px)
-    @content
-
-=mq-desktop-catalogue
-  @media (min-width: 1366px)
-    @content
-
-$grid-gutter-half: $grid-gutter-width / 2
-
-@import '../utilities'
-
-@import 'folio/material-icons'
-
-@import 'bootstrap-overrides'
-@import 'plugin-overrides'
-
+@import 'select2/dist/css/select2'
+@import 'multiselect/css/multi-select'
+@import 'daterangepicker'
 @import 'redactor'
-@import 'redactor-overrides'
 
-@import '../loader'
-@import '../animations/pulsing'
-@import 'modules/devise'
-@import 'modules/flags'
-@import 'modules/font-awesome'
-@import 'modules/layout'
-@import 'modules/lightbox'
-@import 'modules/nested-fields-with-files'
-@import 'modules/react-image-select'
-@import 'modules/react/modal'
-@import 'modules/react/atom_settings_header'
-@import 'modules/reacty/dropzone'
-@import 'modules/reacty/dropzone-trigger'
-@import 'modules/reacty/file-placement-list'
-@import 'modules/reacty/file-table-list'
-@import 'modules/reacty/file-thumbnail-list'
-@import 'modules/reacty/file-upload-progress'
-@import 'modules/reacty/pretty-tags'
-@import 'modules/reacty/menu'
-@import 'modules/simple-form'
-@import 'modules/simple-form-with-atoms'
-@import 'modules/smart-row'
-@import 'modules/thumbnail'
-@import 'modules/togglable-fields'
-@import 'modules/with-aside'
+@import './bootstrap-overrides'
+@import './plugin-overrides'
 
-@import 'modules/react/ordered_multiselect_app'
-@import 'modules/react/notes_fields_app'
+@import 'folio/loader'
+
+@import './modules/**/*'
 
 @import 'folio/devise'
 @import 'folio/input'

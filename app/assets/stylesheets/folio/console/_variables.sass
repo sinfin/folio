@@ -1,209 +1,35 @@
-$fieldset-margin: 3rem !default
-$nav-tabs-margin: 1.5rem !default
+$grid-gutter-width: px-to-rem(24px)
+$grid-gutter-half: $grid-gutter-width / 2
 
-$alert-border-radius: 0 !default
+$gray-600: #6c757d
 
-$spacer: 1rem !default
+$white: #FFFFFF
+$black: #000000
+$dark-gray: #3B4548
+$gray-medium-dark: #6F7172
+$gray: #C9CBCC
+$light-gray: #F5F5F5
+$medium-gray: #E8E8E8
+$blue: #4C84FD
+$orange: #FF9A52
+$green-bright: #31EB92
+$green: #00B594
+$yellow: #F1CA45
+$red: #F0655D
+$violet: #5D2382
+$copper: #C1852C
+$gold: #D3AF51
 
-// Color system
-//
-$blue:    #2194D2 !default
-$indigo:  #7028B3 !default
-$purple:  #5D2482 !default
-$pink:    #EE6CA4 !default
-$red:     #F1655D !default
-$orange:  #FFA500 !default
-$yellow:  #FACD35 !default
-$green:   #589E92 !default
-$teal:    #95C6B3 !default
-$cyan:    #3FB6C7 !default
-$white:   #ffffff !default
-
-$gray-50: #F9F9F9 !default
-$gray-100: #F5F5F5 !default
-$gray-200: #E8E8E8
-$gray-300: #DEE2E6 !default
-$gray-500: #A7A7A7 !default
-$gray-600: #6c757d !default
-$gray-800: #343A40 !default
-
-$light-gray: $gray-100
-$medium-gray: $gray-200
+$primary: $blue
+$secondary: $gray-600
 
 $green-background: #C7EBE4
-$red-background: #FFD4D4
+$red-background: #F4DEDD
+$blue-background: #E4F0FC
 
-$primary: $purple !default
-$secondary: $gray-600 !default
-$light: #AAADAD !default
-$danger: $red !default
-$info: #BFC4C4 !default
-$dark: $gray-800 !default
-$input-placeholder-color: $info !default
-$aside-bg: #f8f9fa !default
+$f-c-state-colors-default: $gray
+$f-c-state-colors: ( red: $red, green: $green, yellow: $yellow, dark: $dark-gray, secondary: $secondary, purple: $violet, orange: $orange )
 
-$body-color: #212529 !default
-$body-bg: $white !default
-$text-muted: $gray-500 !default
-$text-semi-muted: #495057 !default
-
-$font-family-sans-serif-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
-$font-family-sans-serif: "Roboto", $font-family-sans-serif-default
-
-$font-weight-normal: 400 !default
-$font-weight-medium: 500 !default
-$font-weight-bold: 700 !default
-
-$enable-validation-icons: false !default
-
-$link-color: $blue !default
-
-$line-height-base: 1.4 !default
-$border-width: 1px !default
-
-// Components
-//
-// Define common padding and border radius sizes and more.
-$border-radius: 4px !default
-$border-radius-lg: .25rem !default
-$border-radius-sm: .15rem !default
-
-// Fonts
-//
-$font-size-base: 14 / 16 * 1rem !default
-$font-size-lg: 16 / 16 * 1rem !default
-$font-size-sm: 12 / 16 * 1rem !default
-$font-size-tiny: 12 / 16 * 1rem !default
-
-// Headings
-//
-$headings-margin-top: 2 * $spacer !default
-$headings-margin-bottom: $spacer !default
-$headings-font-weight: $font-weight-bold !default
-
-$h1-margin-top: 0 !default
-$h1-margin-bottom: $spacer !default
-$h2-margin-top: 2 * $spacer !default
-$h2-margin-bottom: $spacer !default
-$h3-margin-top: 2 * $spacer !default
-$h3-margin-bottom: $spacer !default
-
-
-// Buttons
-//
-$btn-border-radius: 0 !default
-$btn-border-radius-lg: 0 !default
-$btn-border-radius-sm: 0 !default
-
-$spacer: 1rem !default
-$card-spacer-x: $spacer !default
-$card-spacer-y: $spacer !default
-
-// Modals
-//
-$modal-md: 550px !default
-$modal-lg: 1025px !default
-$modal-inner-padding: 1rem
-
-// Tables
-$table-border-color: $gray-200 !default
-$table-accent-bg: $gray-50 !default
-$table-hover-bg: $gray-50 !default
-
-// Breadcrumbs
-$breadcrumb-padding-y: 0.438rem !default
-$breadcrumb-padding-x: 0 !default
-$breadcrumb-item-padding: .5rem !default
-$breadcrumb-margin-bottom: 0 !default
-
-$breadcrumb-bg: transparent !default
-$breadcrumb-divider-color: #5a5d61 !default
-$breadcrumb-active-color: #5a5d61 !default
-$breadcrumb-divider: "/" !default
-
-// Forms
-$form-text-margin-top: 0.5rem !default
-
-$input-btn-padding-y: 7px !default
-$input-btn-padding-x: 10px !default
-$input-btn-font-size: 14px !default
-$input-btn-line-height: 1.29 !default
-
-$input-btn-padding-y-sm: 3px !default
-$input-btn-padding-x-sm: 6px !default
-$input-btn-font-size-sm: 12px !default
-$input-btn-line-height-sm: 17 / 12 !default
-
-$input-btn-padding-y-lg: 17px !default
-$input-btn-padding-x-lg: 55px !default
-$input-btn-font-size-lg: 18px !default
-$input-btn-line-height-lg: 23 / 18 !default
-
-$input-color: $body-color !default
-$input-placeholder-color: rgba($body-color, 0.5) !default
-$input-font-size: 14px !default
-$input-line-height: 20px !default
-
-$input-padding-x: 10px !default
-$input-padding-y: 5px !default
-
-$input-border-width: 1px !default
-$input-height-border: 2px !default
-
-$input-height-inner: 33px !default
-$input-height-inner-half: 1
-$input-height-inner-quarter: 1
-$input-height: $input-height-inner + $input-height-border !default
-
-$input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-sm) + $input-btn-padding-y-sm * 2 !default
-$input-height-sm: $input-height-inner-sm + $input-height-border !default
-
-$input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2 !default
-$input-height-lg: $input-height-inner-lg + $input-height-border !default
-
-$custom-select-indicator-padding: 18px
-
-$btn-fa-line-height: 33px !default
-
-// Spacers
-$grid-gutter-width: 30px !default
-$spacers: ( g: $grid-gutter-width, h: $grid-gutter-width / 2 ) !default
-
-// Navs
-$nav-link-disabled-color: $gray-300 !default
-$nav-tabs-border-color: $body-color !default
-$nav-tabs-border-width: 1px !default
-$nav-tabs-border-radius: 0 !default
-$nav-tabs-link-hover-border-color: rgba($gray-300, 0.5) !default
-$nav-tabs-link-active-color: $body-color !default
-$nav-tabs-link-active-bg: transparent !default
-$nav-tabs-link-active-border-color: transparent transparent $body-color !default
-
-$badge-padding-y: 0.33em !default
-
-// Custom
-//
-$fa-font-size-base: 1em !default
-$fa-font-path: 'font-awesome/webfonts' !default
-
-$grid-breakpoints: ( xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px, xxl: 1550px ) !default
-$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1140px, xxl: 1550px ) !default
-
-$card-border-radius: 0 !default
-
-$footer-height: 65px !default
-$footer-height-xxl: 95px !default
-
-$custom-select-padding-x: 18px
-$custom-select-indicator-padding: 18px
-$custom-select-feedback-icon-padding-right: 18px
-$custom-select-feedback-icon-position: center right
-
-$background-color-default: #aaadad !default
-$background-colors: ( red: #f0655d, green: #589e92, yellow: #facd35, dark: #212529, secondary: $secondary, purple: $purple, orange: $orange ) !default
-
-$folio-console-dropzone-trigger-background: #e9ecef
-
-$folio-input-date-time-icon: true
-
-$f-ui-button-loading-opacity: 0.15
+$font-size-base: to-rem(14)
+$font-size-sm: to-rem(12)
+$font-size-lg: to-rem(16)

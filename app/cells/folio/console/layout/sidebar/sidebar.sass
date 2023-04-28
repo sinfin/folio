@@ -18,7 +18,7 @@
     display: block
     padding: $grid-gutter-half
 
-    +plain-hover-focus
+    &, &:hover, &:focus
       color: $white
       text-decoration: none
 
@@ -69,14 +69,14 @@
     display: block
     padding: 9px 15px 8px
 
-    +plain-hover-focus
+    &, &:hover, &:focus
       color: $gray-200
       text-decoration: none
 
     &--active
       font-weight: $font-weight-bold
 
-      +plain-hover-focus
+      &, &:hover, &:focus
         color: $white
 
   &__a:hover &__span
@@ -93,3 +93,7 @@
 
   &__group--expanded
     background: #212529
+
+  +mq-mobile-menu
+    &:not(.slideout-menu)
+      display: none

@@ -4,18 +4,19 @@
 // in app/assets/stylesheets/folio/console/base.sass
 // otherwise
 
-$fa-font-path: 'font-awesome/webfonts' !default
+// $fa-font-path: 'font-awesome/webfonts' !default
 
-@import 'font-awesome/scss/fontawesome'
-@import 'folio/console/variables'
-@import 'folio-bootstrap-4/scss/functions'
-@import 'folio-bootstrap-4/scss/variables'
-@import 'folio-bootstrap-4/scss/mixins'
-@import 'folio/console/plugin-overrides/font-awesome'
-@import 'folio/console/modules/font-awesome'
-@import 'folio/material-icons'
-@import 'folio/console/with_icon/with_icon'
 @import 'folio/utilities'
+
+// @import 'font-awesome/scss/fontawesome'
+@import 'folio/console/variables'
+@import 'folio-bootstrap-5/scss/functions'
+@import 'folio-bootstrap-5/scss/variables'
+@import 'folio-bootstrap-5/scss/mixins'
+// @import 'folio/console/plugin-overrides/font-awesome'
+// @import 'folio/console/modules/font-awesome'
+// @import 'folio/material-icons'
+@import 'folio/console/with_icon/with_icon'
 
 = button-style
   +unbutton
@@ -36,7 +37,10 @@ $fa-font-path: 'font-awesome/webfonts' !default
 .f-c-atoms-previews
   $insert-bg: #6C757E
 
-  padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width (( 105px + $grid-gutter-width ))
+  @if is-px($grid-gutter-width)
+    padding: calc(#{$grid-gutter-width + 10px} + #{$input-btn-focus-width}) $grid-gutter-width (( 105px + $grid-gutter-width ))
+  @else
+    padding: calc(#{$grid-gutter-width + px-to-rem(10px)} + #{$input-btn-focus-width}) $grid-gutter-width (( px-to-rem(105px) + $grid-gutter-width ))
 
   &--non-interactive
     padding: $grid-gutter-width / 2
@@ -129,13 +133,13 @@ $fa-font-path: 'font-awesome/webfonts' !default
 
     &--arrow
       +button-variant($white, $white)
-      +plain-hover-focus
+      &, &:hover, &:focus
         border-color: #BFC4C4
 
     &--handle
       +button-variant($white, $white)
       cursor: move
-      +plain-hover-focus
+      &, &:hover, &:focus
         border-color: #BFC4C4
 
     &--remove
@@ -276,11 +280,11 @@ $fa-font-path: 'font-awesome/webfonts' !default
     .mi, .fa
       margin-right: 7px
 
-    +plain-hover-focus
+    &, &:hover, &:focus
       color: $white
       text-decoration: none
 
-    +hover-focus
+    &:hover, &:focus
       background: darken($secondary, 7.5%)
 
   &__insert--active

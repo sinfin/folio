@@ -12,7 +12,11 @@
 
 .iti__selected-flag
   position: relative
-  padding: 0 (( 2 * $input-padding-x - 6px )) 0 $input-padding-x
+
+  @if is-px($input-padding-x)
+    padding: 0 (( 2 * $input-padding-x - 6px )) 0 $input-padding-x
+  @else
+    padding: 0 (( 2 * $input-padding-x - px-to-rem(6px) )) 0 $input-padding-x
 
   .iti--separate-dial-code &
     background-color: transparent
@@ -22,7 +26,10 @@
     position: absolute
     top: $input-padding-y
     bottom: $input-padding-y
-    right: $input-padding-x - 6px
+    @if is-px($input-padding-x)
+      right: $input-padding-x - 6px
+    @else
+      right: $input-padding-x - px-to-rem(6px)
     border-right: 1px solid $input-border-color
 
 .iti--allow-dropdown input,

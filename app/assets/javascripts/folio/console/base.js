@@ -2,7 +2,6 @@
 //= require rails-ujs
 //= require popper.min
 //= require folio-bootstrap-4-with-popper-fix
-//= require slideout
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
 //= require jquery.kinetic/index
@@ -81,9 +80,7 @@
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
 //= require folio/console/modules/_dirty-forms
-//= require folio/console/modules/_layout
 //= require folio/console/modules/_multiselect
-//= require folio/console/modules/_with-aside
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal

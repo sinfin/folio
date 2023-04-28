@@ -24,7 +24,7 @@ $f-c-layout-header-color: $dark !default
   .breadcrumb + &
     margin-left: auto
 
-  +plain-hover-focus
+  &, &:hover, &:focus
     color: inherit
 
 .f-c-layout-header__toggle
@@ -85,17 +85,18 @@ $f-c-layout-header-color: $dark !default
             display: flex
             align-items: center
 
-            +plain-hover-focus
+            &, &:hover, &:focus
               text-decoration: none
 
-            &:before
-              +material-icon-style
-              content: 'arrow_back'
-              margin-right: 4px
-              position: relative
-              top: -1px
-              color: $f-c-layout-header-color
-              font-size: inherit
+            // TODO @mreq material ico
+            // &:before
+            //   +material-icon-style
+            //   content: 'arrow_back'
+            //   margin-right: 4px
+            //   position: relative
+            //   top: -1px
+            //   color: $f-c-layout-header-color
+            //   font-size: inherit
 
       &.active:last-child:nth-child(2)
         display: block

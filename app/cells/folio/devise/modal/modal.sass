@@ -6,7 +6,10 @@
     max-width: $folio-devise-modal-registrations-max-width
 
   .f-devise__title
-    padding-right: 40px + $grid-gutter-width / 2
+    @if is-px($grid-gutter-width)
+      padding-right: 40px + $grid-gutter-width / 2
+    @else
+      padding-right: px-to-rem(40px) + $grid-gutter-width / 2
     margin-top: 0
     font-size: $h3-font-size
 

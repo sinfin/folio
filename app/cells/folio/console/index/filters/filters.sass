@@ -6,8 +6,9 @@
   .input-group
     margin-bottom: $spacer
 
-  .f-c-index-header__tabs-wrap ~ &
-    margin-top: - $nav-tabs-margin
+  // TODO @mreq nav tabs margin
+  // .f-c-index-header__tabs-wrap ~ &
+  //   margin-top: - $nav-tabs-margin
 
   &__numeric-range
     background: #DBDBDB
@@ -57,18 +58,19 @@
   &__autocomplete-wrap
     position: relative
 
-    &:before
-      +pseudo-font-awesome-icon($fa-var-chevron-down)
-      position: absolute
-      top: 0
-      right: 0
-      width: 30px
-      height: $input-height
-      pointer-events: none
-      z-index: 2
-      display: flex
-      align-items: center
-      justify-content: center
+    // TODO @mreq pseudo-font-awesome-icon
+    // &:before
+    //   +pseudo-font-awesome-icon($fa-var-chevron-down)
+    //   position: absolute
+    //   top: 0
+    //   right: 0
+    //   width: 30px
+    //   height: $input-height
+    //   pointer-events: none
+    //   z-index: 2
+    //   display: flex
+    //   align-items: center
+    //   justify-content: center
 
     &:after
       content: ''
