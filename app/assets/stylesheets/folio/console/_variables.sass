@@ -1,8 +1,6 @@
 $grid-gutter-width: px-to-rem(24px)
 $grid-gutter-half: $grid-gutter-width / 2
 
-$gray-600: #6c757d
-
 $white: #FFFFFF
 $black: #000000
 $dark-gray: #3B4548
@@ -19,17 +17,87 @@ $red: #F0655D
 $violet: #5D2382
 $copper: #C1852C
 $gold: #D3AF51
+$antracite: #212529
 
-$primary: $blue
+$gray-600: #6c757d
+$gray-900: $antracite
+
+$primary: $black
 $secondary: $gray-600
+
+$link-color: $blue
+$link-decoration: none
+$link-hover-color: $link-color
+$link-hover-decoration: underline
 
 $green-background: #C7EBE4
 $red-background: #F4DEDD
 $blue-background: #E4F0FC
 
+$f-c-transition-duration: .15s
+$f-c-transition-base: all $f-c-transition-duration ease-in-out
+
+$f-c-box-shadow-card: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
+$f-c-box-shadow-card-hover: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 10px 2px rgba(0, 0, 0, 0.1)
+$f-c-box-shadow-overlay: 0px 1px 4px rgba(0, 0, 0, 0.2), 2px 2px 40px rgba(0, 0, 0, 0.25)
+$f-c-box-shadow-image: 0px 1px 2px rgba(0, 0, 0, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.25)
+
+$f-c-btn-opacity: 1
+$f-c-btn-hover-opacity: 0.7
 $f-c-state-colors-default: $gray
 $f-c-state-colors: ( red: $red, green: $green, yellow: $yellow, dark: $dark-gray, secondary: $secondary, purple: $violet, orange: $orange )
 
 $font-size-base: to-rem(14)
 $font-size-sm: to-rem(12)
 $font-size-lg: to-rem(16)
+
+$font-weight-bold: 700
+
+$headings-font-weight: $font-weight-bold
+$headings-color: $antracite
+
+$h1-font-size: px-to-rem(32px)
+$h2-font-size: px-to-rem(24px)
+$h3-font-size: px-to-rem(18px)
+$h4-font-size: px-to-rem(14px)
+$h5-font-size: $h4-font-size
+$h6-font-size: $h4-font-size
+
+$body-color: $antracite
+
+$line-height-base: 20 / 14
+$line-height-sm: 17 / 12
+$line-height-lg: 22 / 16
+
+$font-family-sans-serif-default: system-ui, -apple-system, "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+$font-family-sans-serif: "Roboto", $font-family-sans-serif-default
+$font-family-base: $font-family-sans-serif
+
+$input-btn-focus-box-shadow: none
+$btn-line-height: 1.2
+$btn-font-weight: $font-weight-bold
+$btn-active-box-shadow: none
+$btn-disabled-opacity: 0.5
+$input-btn-padding-y: px-to-rem(5px)
+$input-btn-padding-x: px-to-rem(11px)
+
+$border-radius: px-to-rem(4px)
+
+$btn-transition: $f-c-transition-base
+
+$form-label-margin-bottom: px-to-rem(5px)
+$form-text-margin-top: $form-label-margin-bottom
+
+$input-color: $dark-gray
+$input-border-color: $gray
+$input-border-width: 1px
+$input-focus-border-color: $dark-gray
+$input-padding-y: px-to-rem(8px - 1)
+$input-padding-x: px-to-rem(8px - 1)
+// $input-height-inner: px-to-rem(36px - 2)
+
+$dropdown-border-width: 0
+$dropdown-box-shadow: $f-c-box-shadow-overlay
+
+$enable-rfs: false
+$enable-validation-icons: false

@@ -61,15 +61,29 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     end
   end
 
-  def new_button(&block)
-    url = options[:new_url] ? send(options[:new_url]) : through_aware_console_url_for(model, action: :new, safe: true)
+  def new_button_model
+    @new_button_model ||= begin
+      opts = {
+        variant: :success,
+        icon: :plus,
+        class: "f-c-index-header__btn f-c-index-header__btn--new",
+        label: t(".add")
+      }
 
-    if url
-      html_opts = { title: t(".add"),
-                    class: "btn btn-success "\
-                           "f-c-index-header__btn f-c-index-header__btn--new" }
+      if options[:react_new]
+        opts[:class] += " f-c-index-header__btn--react"
+        opts
+      elsif options[:new_button] != false
+        if options[:types] || options[:new_dropdown_links]
+          opts
+        else
+          opts[:href] = options[:new_url] ? send(options[:new_url]) : through_aware_console_url_for(model, action: :new, safe: true)
 
-      link_to(url, html_opts, &block)
+          if opts[:href]
+            opts
+          end
+        end
+      end
     end
   end
 

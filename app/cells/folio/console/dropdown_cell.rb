@@ -5,10 +5,6 @@ class Folio::Console::DropdownCell < Folio::ConsoleCell
     render if links.present?
   end
 
-  def title
-    model[:title]
-  end
-
   def links
     model[:links]
   end
@@ -17,7 +13,11 @@ class Folio::Console::DropdownCell < Folio::ConsoleCell
     model[:menu_align] || :right
   end
 
-  def class_name
-    model[:class_name] || "btn btn-secondary"
+  def button_model
+    model[:button_model].merge("aria-expanded" => "false",
+                               "aria-haspopup" => "true",
+                               "data-toggle" => "dropdown",
+                               "class" => model[:button_model][:class] ? "#{model[:button_model][:class]} dropdown-toggle" : "dropdown-toggle",
+                               "label" => model[:title])
   end
 end

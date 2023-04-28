@@ -1,12 +1,5 @@
 .dropdown
-  button.dropdown-toggle [
-    class=class_name
-    aria-expanded="false"
-    aria-haspopup="true"
-    data-toggle="dropdown"
-    type="button"
-  ]
-    = title
+  == cell('folio/console/ui/button', button_model)
 
   .dropdown-menu class=('dropdown-menu-right' if menu_align == :right)
     - links.each do |link|

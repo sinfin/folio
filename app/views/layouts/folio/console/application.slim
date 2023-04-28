@@ -7,8 +7,8 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
     == cell('folio/console/layout/sidebar')
 
     .f-c-layout-main#f-c-layout-main
-      == cell('folio/console/layout/header', \
-              rendered_breadcrumbs, \
+      == cell('folio/console/layout/header',
+              breadcrumbs_on_rails: @breadcrumbs_on_rails,
               audited_revisions: @audited_revisions,
               audited_revision: @audited_revision)
 

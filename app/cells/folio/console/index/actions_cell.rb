@@ -16,43 +16,39 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     @default_actions ||= {
       destroy: {
         name: :destroy,
-        icon: "trash-alt",
-        button: "danger",
+        icon: :delete,
+        variant: :danger,
         method: :delete,
         confirm: true,
         url: -> (record) { through_aware_console_url_for(record, safe: true) },
       },
       discard: {
         name: :discard,
-        icon: "trash-alt",
-        button: "secondary",
+        icon: :archive,
+        variant: :danger,
         method: :delete,
         confirm: true,
         url: -> (record) { through_aware_console_url_for(record, action: :discard, safe: true) },
       },
       undiscard: {
         name: :undiscard,
-        icon: "redo-alt",
-        button: "secondary",
+        icon: :arrow_u_left_top,
         method: :post,
         url: -> (record) { through_aware_console_url_for(record, action: :undiscard, safe: true) },
       },
       edit: {
         name: :edit,
-        icon: "edit",
-        button: "secondary",
+        icon: :edit,
         url: -> (record) { through_aware_console_url_for(record, action: :edit, safe: true) },
       },
       show: {
         name: :show,
-        icon: "eye",
-        button: "light",
+        icon: :eye,
         url: -> (record) { through_aware_console_url_for(record, safe: true) },
       },
       preview: {
         name: :preview,
-        icon: "external-link-alt",
-        button: "light",
+        icon: :open_in_new,
         target: "_blank",
         url: -> (record) do
           if record.respond_to?(:published?) && token = record.try(:preview_token)
@@ -64,8 +60,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       },
       arrange: {
         name: :arrange,
-        icon: "list",
-        button: "light",
+        icon: :format_list_bulleted,
         url: nil,
       },
     }
@@ -105,19 +100,13 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         confirmation = nil
       end
 
-      opts = {
-        title: t("folio.console.actions.#{action[:name]}"),
-        class: "btn btn-#{action[:button]} fa fa-#{action[:icon]}",
-        method: action[:method],
-        target: action[:target],
-        'data-confirm': confirmation,
-      }
-
-      begin
-        url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
-        link_to("", url, opts)
-      rescue ActionController::UrlGenerationError
-      end
+      link_to(folio_icon(action[:icon]),
+              action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url],
+              title: t("folio.console.actions.#{action[:name]}"),
+              method: action[:method],
+              target: action[:target],
+              class: "f-c-index-actions__link text-#{action[:variant] || "reset"}",
+              'data-confirm': confirmation)
     end
   end
 

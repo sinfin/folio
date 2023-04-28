@@ -1,0 +1,25 @@
+.btn
+  --#{$prefix}btn-border-color: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-active-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-active-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-active-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-disabled-color: #{$gray-medium-dark}
+  --#{$prefix}btn-disabled-bg: #{$gray}
+  --#{$prefix}btn-disabled-border-color: #{$gray}
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  gap: $grid-gutter-width / 3
+  opacity: $f-c-btn-opacity
+
+  &:hover, &:focus
+    opacity: $f-c-btn-hover-opacity
+
+.btn-primary,
+.btn-danger,
+.btn-success,
+.btn-dark
+  --#{$prefix}btn-color: #{$white}

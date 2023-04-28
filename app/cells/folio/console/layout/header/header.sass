@@ -1,105 +1,75 @@
-$f-c-layout-header-background: #e9ecef !default
-$f-c-layout-header-color: $dark !default
+$f-c-layout-header-color: $gray-medium-dark !default
+$f-c-layout-header-bg: $light-gray !default
 
 .f-c-layout-header
-  background: $f-c-layout-header-background
   position: relative
+  color: $f-c-layout-header-color
+  background: $f-c-layout-header-bg
 
-  .breadcrumb
-    border-radius: 0
-    margin: 0 $grid-gutter-width 0 0
-    background: transparent
+  &__breadcrumbs
+    display: flex
+    align-items: center
+    flex-wrap: wrap
 
-  &, &__sign-out-link, .breadcrumb-link
-    color: $f-c-layout-header-color
+  &__breadcrumb,
+  &__breadcrumb-inner
+    display: flex
+    align-items: center
 
-.f-c-layout-header__inner
-  display: flex
-  align-items: stretch
+  &__breadcrumbs,
+  &__breadcrumb
+    gap: $grid-gutter-width / 6
 
-.f-c-layout-header__sign-out-link
-  display: flex
-  align-items: center
+  &__inner
+    display: flex
+    align-items: stretch
+    min-height: 36px
+    gap: $grid-gutter-width / 2
 
-  .breadcrumb + &
+  &__sign-out-link
+    display: flex
+    align-items: center
     margin-left: auto
+    gap: $grid-gutter-width / 6
 
-  &, &:hover, &:focus
-    color: inherit
+  &__toggle
+    +unbutton
+    background: $gray-800
+    color: $white
+    width: 50px
+    height: 100%
+    position: absolute
+    top: 0
+    left: 0
+    font-size: 16px
+    line-height: 35px
+    cursor: pointer
+    flex: 0 0 35px
+    margin-right: $spacer
 
-.f-c-layout-header__toggle
-  +unbutton
-  background: $gray-800
-  color: $white
-  width: 50px
-  height: 100%
-  position: absolute
-  top: 0
-  left: 0
-  font-size: 16px
-  line-height: 35px
-  cursor: pointer
-  flex: 0 0 35px
-  margin-right: $spacer
+  +mq-desktop-menu
+    &__toggle
+      display: none
 
-+mq-desktop-menu
-  .f-c-layout-header__toggle
-    display: none
-
-  .f-c-layout-header
-    box-shadow: 0 1px 6px rgba(0, 0, 0, .1)
-    border-bottom: 1px solid #d0d0d0
-
-  .f-c-layout-header__sign-out-link
-    padding-right: 15px
-    padding-left: 15px
-
-+mq-mobile-menu
-  .f-c-layout-header
+  +mq-mobile-menu
     padding-left: 50px
 
-  .f-c-layout-header__sign-out-link__label
-    display: none
-
-  .f-c-with-icon.f-c-layout-header__sign-out-link
-    width: 35px
-    justify-content: flex-end
-
-    .fa.f-c-layout-header__sign-out-link-icon
-      margin: 0
-
-  .f-c-layout-header
-    .breadcrumb-item
+    &__sign-out-link__label
       display: none
-      padding: 0
 
-      &:last-child,
-      &:nth-last-child(2)
-        &:not(.active):not(:first-child)
-          display: block
+    &__sign-out-link
+      width: 35px
+      justify-content: flex-end
 
-          &:before
-            display: none
+      .fa.f-c-layout-header__sign-out-link-icon
+        margin: 0
 
-          a
-            display: flex
-            align-items: center
+    &__breadcrumb
+      display: none
 
-            &, &:hover, &:focus
-              text-decoration: none
+      &--mobile
+        flex-direction: row-reverse
+        display: flex
 
-            // TODO @mreq material ico
-            // &:before
-            //   +material-icon-style
-            //   content: 'arrow_back'
-            //   margin-right: 4px
-            //   position: relative
-            //   top: -1px
-            //   color: $f-c-layout-header-color
-            //   font-size: inherit
-
-      &.active:last-child:nth-child(2)
-        display: block
-
-        &:before
-          display: none
+    &__breadcrumb-delimiter
+      transform: rotate(180deg)

@@ -1,9 +1,12 @@
 .f-c-ui-button
-  display: inline-flex
-  align-items: center
-  justify-content: center
-  gap: 5px 10px
+  &__icon
+    margin-left: - 1 * px-to-rem(11px - 7)
 
-  &__icon,
+    &:last-child
+      margin-right: - 1 * px-to-rem(11px - 7)
+
+    &:only-child
+      margin: 0 (( - 1 * px-to-rem(11px - 5) ))
+
   &__right-icon
-    margin: -2px 0 0 !important
+    margin-right: - 1 * px-to-rem(11px - 7)

@@ -4,7 +4,8 @@ class Folio::Ui::IconCell < ApplicationCell
   ICONS = YAML.load_file(::Folio::Engine.root.join("data/folio_icons.yaml")).deep_symbolize_keys
 
   def show
-    render if model.present? && default_size
+    raise "Unknown icon - #{model}" if model.blank? || !default_size
+    render
   end
 
   def default_size

@@ -1,9 +1,13 @@
 *tag
   - if model[:icon]
-    = folio_icon(model[:icon], class: "f-c-ui-button__icon")
+    = folio_icon(model[:icon],
+                 height: 24,
+                 class: "f-c-ui-button__icon")
 
   - if model[:label]
     span.f-c-ui-button__label = model[:label]
 
   - if model[:right_icon]
-    = folio_icon(model[:right_icon], class: "f-c-ui-button__right-icon")
+    = folio_icon(model[:right_icon],
+                 height: 24,
+                 class: "f-c-ui-button__right-icon")

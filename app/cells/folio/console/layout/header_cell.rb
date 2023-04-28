@@ -14,4 +14,10 @@ class Folio::Console::Layout::HeaderCell < Folio::ConsoleCell
       end
     end
   end
+
+  def breadcrumb_position_class_name(i)
+    if model[:breadcrumbs_on_rails].size - 2 == i
+      "f-c-layout-header__breadcrumb--mobile"
+    end
+  end
 end

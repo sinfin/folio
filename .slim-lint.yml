@@ -6,6 +6,7 @@ exclude:
   - app/cells/folio/addresses/fields/show.slim
   - app/cells/folio/console/catalogue/published_dates/show.slim
   - app/cells/folio/console/console_notes/catalogue_tooltip/show.slim
+  - app/cells/folio/console/layout/header/show.slim
   - app/cells/folio/console/private_attachments/fields/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/cookie_consent/show.slim
