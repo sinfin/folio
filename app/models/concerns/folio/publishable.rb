@@ -41,6 +41,10 @@ module Folio::Publishable
       end
     end
 
+    def published?
+      folio_published?
+    end
+
     def reset_preview_token!
       self.preview_token = nil
       generate_preview_token
@@ -70,7 +74,7 @@ module Folio::Publishable
       }
     end
 
-    def published?
+    def folio_published?
       published.present?
     end
   end
@@ -116,7 +120,7 @@ module Folio::Publishable
       end
     end
 
-    def published?
+    def folio_published?
       if published.present?
         if published_at.present?
           published_at <= Time.zone.now
@@ -178,7 +182,7 @@ module Folio::Publishable
       end
     end
 
-    def published?
+    def folio_published?
       if published.present?
         if published_from.present? && published_from >= Time.zone.now
           return false

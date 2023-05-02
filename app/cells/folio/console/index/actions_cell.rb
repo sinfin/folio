@@ -7,12 +7,6 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
   end
 
   def default_actions
-    if I18n.available_locales.size > 1
-      locale = model.try(:locale) || I18n.default_locale
-    else
-      locale = nil
-    end
-
     @default_actions ||= {
       destroy: {
         name: :destroy,
@@ -51,11 +45,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         icon: :open_in_new,
         target: "_blank",
         url: -> (record) do
-          if record.respond_to?(:published?) && token = record.try(:preview_token)
-            safe_url_for([record, locale:, Folio::Publishable::PREVIEW_PARAM_NAME => token])
-          else
-            safe_url_for([record, locale:])
-          end
+          preview_url_for(record)
         end
       },
       arrange: {

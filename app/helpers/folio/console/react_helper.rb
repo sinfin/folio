@@ -14,6 +14,12 @@ module Folio::Console::ReactHelper
                 file_type: "Folio::File::Image")
   end
 
+  def file_picker_for_og_image(f)
+    file_picker(f:,
+                placement_key: :og_image_placement,
+                file_type: "Folio::File::Image")
+  end
+
   def file_picker_for_document(f)
     file_picker(f:,
                 placement_key: :document_placement,
@@ -52,21 +58,6 @@ module Folio::Console::ReactHelper
                 attachmentable:,
                 type:,
                 atom_setting:)
-  end
-
-  def react_audio_cover_picker(f, placement_key: :audio_cover_placement, file_type: "Folio::File::Audio", title: nil, atom_setting: nil)
-    react_picker(f,
-                 placement_key,
-                 file_type:,
-                 title:,
-                 atom_setting:)
-  end
-
-  def react_picker(f, placement_key, file_type: "Folio::File::Image", title: nil, atom_setting: nil)
-    raw cell("folio/console/react_picker", f, placement_key:,
-                                              title:,
-                                              file_type:,
-                                              atom_setting:)
   end
 
   def react_ancestry(klass, max_nesting_depth: 2)

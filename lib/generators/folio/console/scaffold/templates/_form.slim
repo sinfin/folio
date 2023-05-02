@@ -7,7 +7,7 @@
     <%- if has_attachmentable? -%>
     .row
       .col-md-auto
-        = react_picker(f, :cover_placement)
+        = file_picker_for_cover(f)
       .col-md
         <%- if publishable? -%>
         == cell('folio/console/publishable_inputs', f)

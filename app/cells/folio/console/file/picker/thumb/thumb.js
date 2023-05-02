@@ -20,6 +20,7 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
 
     this.setDominantColor(fileAttributes)
     this.addPicture(fileAttributes)
+    this.addChangeOverlay(fileAttributes)
 
     window.FolioConsole.File.Picker.addControlsForStimulusController({
       element: this.element,
@@ -51,5 +52,13 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     picture.appendChild(img)
 
     this.element.appendChild(picture)
+  }
+
+  addChangeOverlay () {
+    const overlay = document.createElement('div')
+    overlay.className = 'f-c-file-picker-thumb__action'
+    overlay.dataset.action = "click->f-c-file-picker#onBtnClick"
+
+    this.element.appendChild(overlay)
   }
 })
