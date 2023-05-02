@@ -78,7 +78,7 @@ window.Folio.Player.bind = (el, opts) => {
     responsive: true,
     breakpoints: {
       xsmall: 360,
-      medium: 574
+      medium: 554
     }
   })
 
