@@ -113,6 +113,6 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   triggerPreviewRefresh () {
-    document.dispatchEvent(new window.CustomEvent('folioConsoleCustomChange', { bubbles: true }))
+    this.element.dispatchEvent(new window.CustomEvent('folioConsoleCustomChange', { bubbles: true }))
   }
 })
