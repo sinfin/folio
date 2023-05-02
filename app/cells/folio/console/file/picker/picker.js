@@ -52,6 +52,8 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
     this.hasFileValue = false
     this.contentTarget.innerHTML = ''
+
+    this.triggerPreviewRefresh()
   }
 
   onSelected (e) {
@@ -60,20 +62,25 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
     this.fileIdInputTarget.value = e.detail.file.id
 
-    this.contentTarget.innerHTML = ""
+    this.contentTarget.innerHTML = ''
     this.hasFileValue = true
 
     switch (e.detail.file.attributes.human_type) {
       case 'audio':
       case 'video':
-        return this.createPlayer(e.detail.file)
+        this.createPlayer(e.detail.file)
+        break
       case 'image':
-        return this.createThumbnail(e.detail.file)
+        this.createThumbnail(e.detail.file)
+        break
       case 'document':
-        return this.createDocument(e.detail.file)
+        this.createDocument(e.detail.file)
+        break
       default:
         throw new Error(`Unknown human_type ${e.detail.file.attributes.human_type}`)
     }
+
+    this.triggerPreviewRefresh()
   }
 
   createThumbnail (serializedFile) {
@@ -103,5 +110,9 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
     e.preventDefault()
     if (!window.confirm(window.FolioConsole.translations.removePrompt)) return
     this.clear()
+  }
+
+  triggerPreviewRefresh () {
+    document.dispatchEvent(new window.CustomEvent('folioConsoleCustomChange', { bubbles: true }))
   }
 })
