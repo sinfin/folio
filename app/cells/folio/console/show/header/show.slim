@@ -33,7 +33,8 @@ div class=class_name
           class=(options[:add] ? 'ml-h' : 'ml-lg-h')
         ]
           i.fa.fa-edit.f-c-show-header__btn-ico
-          span.f-c-show-header__btn-text = t('folio.console.actions.edit')
+          span.f-c-show-header__btn-text
+            = options[:edit_label] || t('folio.console.actions.edit')
 
       - if destroy_url
         = link_to destroy_url, \
