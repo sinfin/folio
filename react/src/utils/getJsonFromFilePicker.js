@@ -2,7 +2,8 @@ const WHITELIST = ['file_id', 'alt', 'title']
 
 const nameFromInput = (input) => input.name.match(/\[(\w+)\]/g).pop().replace('[', '').replace(']', '')
 
-export default function getJsonFromReactPicker ($element) {
+export default function getJsonFromFilePicker ($element) {
+  console.log($element)
   const $inputs = $element.find('input')
 
   if ($inputs.length === 0) return null

@@ -135,6 +135,10 @@ class Folio::File < Folio::ApplicationRecord
     false
   end
 
+  def private?
+    false
+  end
+
   def self.default_gravities_for_select
     DEFAULT_GRAVITIES.map do |gravity|
       [human_attribute_name("default_gravity/#{gravity}"), gravity]

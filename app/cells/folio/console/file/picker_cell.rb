@@ -6,6 +6,7 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
       "controller" => "f-c-file-picker",
       "f-c-file-picker-file-type-value" => model[:file_type],
       "f-c-file-picker-has-file-value" => file_placement && file_placement.file ? "true" : "false",
+      "atom-setting" => model[:placement_key],
     }
   end
 

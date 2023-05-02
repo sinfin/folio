@@ -33,7 +33,7 @@ $(document)
       locale: $this.data('locale') or null
       value: $this.val()
 
-  .on 'change folioCustomChange', '.f-c-js-atoms-placement-setting', (e) ->
+  .on 'change folioConsoleCustomChange folioCustomChange', '.f-c-js-atoms-placement-setting', (e) ->
     window.postMessage({ type: 'refreshPreview' }, window.origin)
     # used to refresh react select async options
     window.setTimeout (-> $(document).trigger('folioAtomSettingChanged')), 0

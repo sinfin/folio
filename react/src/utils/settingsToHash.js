@@ -1,5 +1,5 @@
 import getJsonFromMultiSelectDom from 'utils/getJsonFromMultiSelectDom'
-import getJsonFromReactPicker from 'utils/getJsonFromReactPicker'
+import getJsonFromFilePicker from 'utils/getJsonFromFilePicker'
 
 export default function settingsToHash () {
   const $ = window.jQuery
@@ -29,8 +29,8 @@ export default function settingsToHash () {
           }
         } else if ($setting.hasClass('selectized')) {
           val = $setting[0].selectize.getValue()
-        } else if ($setting.hasClass('folio-console-react-picker')) {
-          val = getJsonFromReactPicker($setting)
+        } else if ($setting.hasClass('f-c-file-picker')) {
+          val = getJsonFromFilePicker($setting)
         } else if ($setting.hasClass('form-check-input')) {
           val = $setting[0].checked
         } else if ($setting.hasClass('folio-react-wrap')) {

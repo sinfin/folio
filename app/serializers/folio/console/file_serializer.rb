@@ -33,7 +33,11 @@ class Folio::Console::FileSerializer
   end
 
   attribute :source_url do |object|
-    object.file.remote_url
+    if object.try(:private?)
+      object.file.remote_url(expires: 1.hour.from_now)
+    else
+      object.file.remote_url
+    end
   end
 
   attribute :url do |object|
