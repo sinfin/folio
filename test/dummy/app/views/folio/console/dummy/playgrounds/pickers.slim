@@ -15,11 +15,12 @@ h2 Blank
 
 h2 Filled
 
-- filled_page = Folio::Page.new
-- filled_page.build_cover_placement(file: Folio::File::Image.last)
-- filled_page.build_document_placement(file: Folio::File::Document.last)
-- filled_page.build_audio_cover_placement(file: Folio::File::Audio.last)
-- filled_page.build_video_cover_placement(file: Folio::File::Video.last)
+ruby:
+  filled_page = Folio::Page.new
+  filled_page.build_cover_placement(file: Folio::File::Image.last)
+  filled_page.build_document_placement(file: Folio::File::Document.last)
+  filled_page.build_audio_cover_placement(file: Folio::File::Audio.last)
+  filled_page.build_video_cover_placement(file: Folio::File::Video.last)
 
 = simple_form_for filled_page, url: url_for([:console, Folio::Page]) do |f|
   = file_picker_for_cover(f)

@@ -216,8 +216,6 @@ cs:
         simple_form_with_atoms:
           editor: Editor
           settings: Nastavení
-      react_picker:
-        add: Přidat
       file:
         picker:
           add_file: Přidat soubor

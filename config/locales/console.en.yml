@@ -213,8 +213,6 @@ en:
         simple_form_with_atoms:
           editor: Editor
           settings: Settings
-      react_picker:
-        add: Add
       file:
         picker:
           add_file: Add file

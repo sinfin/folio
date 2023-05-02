@@ -7,6 +7,7 @@ class Folio::Console::File::Picker::ThumbCell < Folio::ConsoleCell
       "file" => Folio::Console::FileSerializer.new(model)
                                               .serializable_hash[:data]
                                               .to_json,
+      "action" => "f-c-file-picker#onBtnClick",
     }
   end
 end

@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-05-02
+### Changed
+- removed `react_picker` and added `file_picker_for_*`
+
 ## 2023-04-26
 ### Added
 - added `preview_token` functionality to `Folio::Publishable` concern, added `preview_token` param to pages - add `preview_token` column to your publishable models!

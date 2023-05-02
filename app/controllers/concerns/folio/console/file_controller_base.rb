@@ -4,7 +4,7 @@ module Folio::Console::FileControllerBase
   extend ActiveSupport::Concern
 
   def index
-    render "folio/console/file/index"
+    render index_view_name
   end
 
   def show
@@ -12,7 +12,7 @@ module Folio::Console::FileControllerBase
                                                     .serializable_hash[:data]
                                                     .to_json
 
-    render "folio/console/file/index"
+    render index_view_name
   end
 
   private
@@ -34,5 +34,9 @@ module Folio::Console::FileControllerBase
 
     def folio_console_record_includes
       [:file_placements]
+    end
+
+    def index_view_name
+      "folio/console/file/index"
     end
 end

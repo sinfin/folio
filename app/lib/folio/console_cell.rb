@@ -32,4 +32,19 @@ class Folio::ConsoleCell < Folio::ApplicationCell
 
     content_tag(:i, name, class: "mi #{opts[:class]}", style:)
   end
+
+  def preview_url_for(record)
+    args = {}
+
+    if record.respond_to?(:published?) && token = record.try(:preview_token)
+      args[Folio::Publishable::PREVIEW_PARAM_NAME] = token
+    end
+
+    if record.respond_to?(:locale)
+      args[:locale] = record.locale
+    end
+
+    url_for([record, args])
+  rescue NoMethodError
+  end
 end
