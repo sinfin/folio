@@ -82,7 +82,7 @@ class FolioPlayerFormControlComponent extends window.videojs.getComponent('Butto
       type: 'button'
     }, attributes)
 
-    attributes['data-action'] = `f-c-file-picker#onFormControl${window.Folio.capitalize(this.options_.action)}Click`
+    attributes['data-action'] = `${this.options_.formControlsController || 'f-c-file-picker'}#onFormControl${window.Folio.capitalize(this.options_.action)}Click`
 
     if (this.options_.file) {
       attributes['data-file'] = JSON.stringify(this.options_.file)

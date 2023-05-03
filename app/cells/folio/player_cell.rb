@@ -4,10 +4,9 @@ class Folio::PlayerCell < ApplicationCell
   def data
     {
       "controller" => "f-player",
-      "file" => serializer.new(model)
-                          .serializable_hash[:data]
-                          .to_json,
+      "file" => (options[:file_hash] || serializer.new(model).serializable_hash[:data]).to_json,
       "f-player-show-form-controls-value" => options[:show_form_controls] ? "true" : "false",
+      "f-player-form-controls-controller-value" => options[:form_controls_controller],
     }
   end
 
