@@ -11,7 +11,7 @@
         == cell('folio/console/ui/button',
                 variant: :icon,
                 type: :submit,
-                icon: :search)
+                icon: :magnify)
 
         - if controller.send(:index_filters_keys).present?
           - controller.send(:index_filters_keys).each do |key|
