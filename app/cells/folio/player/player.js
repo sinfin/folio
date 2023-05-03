@@ -1,5 +1,5 @@
 //= require video.min
-
+//= require folio/waveform
 //= require ./_videojs-components
 
 window.Folio = window.Folio || {}
@@ -102,6 +102,12 @@ window.Folio.Player.bind = (el, opts) => {
 
   if (fileAttributes.human_type === 'video') {
     el.folioPlayer.addChild('FolioPlayerVideoSpacer', { videoSize, videoElement: el.querySelector('video') }, 0)
+  } else if (fileAttributes.human_type === 'audio') {
+    el.querySelector('.vjs-progress-control').classList.add('vjs-progress-control--waveform')
+
+    el.folioPlayer.on('playerresize', (e) => {
+      window.Folio.Player.waveform(fileAttributes.id || 0, el)
+    })
   }
 
   el.classList.add('f-player--bound')
@@ -114,6 +120,41 @@ window.Folio.Player.unbind = (el) => {
   }
 
   el.classList.remove('f-player--bound')
+}
+
+window.Folio.Player.waveform = (id, el) => {
+  const existing = el.querySelectorAll('.f-player__waveform-wrap')
+
+  for (let i = 0; i < existing.length; i += 1) {
+    existing[i].parentNode.removeChild(existing[i])
+  }
+
+  const control = el.querySelector('.vjs-progress-control')
+  const progress = control.querySelector('.vjs-play-progress')
+  control.classList.add('vjs-progress-control--waveform')
+
+  window.setTimeout(() => {
+    const progressSvg = Folio.waveform({
+      id: id,
+      width: control.clientWidth,
+      height: 20,
+      class: "f-player__waveform",
+    })
+
+    const backgroundSvg = progressSvg.cloneNode(true)
+    const backgroundWrap = document.createElement('div')
+    backgroundWrap.classList.add('f-player__waveform-wrap')
+    backgroundWrap.classList.add('f-player__waveform-wrap--background')
+    backgroundWrap.appendChild(backgroundSvg)
+    control.appendChild(backgroundWrap)
+
+    const progressWrap = document.createElement('div')
+    progressWrap.classList.add('f-player__waveform-wrap')
+    progressWrap.classList.add('f-player__waveform-wrap--progress')
+    progressWrap.appendChild(progressSvg)
+
+    progress.appendChild(progressWrap)
+  }, 0)
 }
 
 window.Folio.Stimulus.register('f-player', class extends window.Stimulus.Controller {

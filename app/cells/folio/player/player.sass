@@ -107,6 +107,9 @@ $f-player-progress-secondary: $gray !default
       visibility: visible
       pointer-events: all
 
+    .vjs-volume-level
+      background: $f-player-progress-secondary
+
     .vjs-play-control
       width: $f-player-play-button-width
       height: $f-player-play-button-height
@@ -172,6 +175,8 @@ $f-player-progress-secondary: $gray !default
     .vjs-progress-holder
       height: 4px
       background-color: $f-player-progress-secondary
+      color: $black
+      margin: 0 13px
 
       .vjs-play-progress
         background-color: transparent
@@ -186,6 +191,25 @@ $f-player-progress-secondary: $gray !default
       right: -8px
       border-radius: 8px
       background-color: $f-player-progress-primary
+
+    .vjs-progress-control--waveform
+      margin: 0 10px
+
+      .vjs-mouse-display
+        background-color: $f-player-progress-primary
+
+      .vjs-progress-holder
+        background: transparent
+        height: 24px
+        margin: 0
+        position: relative
+        z-index: 2
+
+      .vjs-play-progress
+        color: $blue
+
+        &::before
+          display: none
 
     .vjs-folio-player-seek-button
       margin-top: -2px
@@ -323,9 +347,6 @@ $f-player-progress-secondary: $gray !default
     .vjs-progress-holder .vjs-load-progress
       display: none
 
-    .vjs-progress-control .vjs-progress-holder
-      margin: 0 13px
-
     .vjs-folio-player-video-spacer
       position: relative
       border-top-left-radius: $border-radius
@@ -367,6 +388,7 @@ $f-player-progress-secondary: $gray !default
       .vjs-progress-control
         order: 0
         flex: 0 0 100%
+        margin: 0 !important
 
       .vjs-control-bar
         padding: 12px
@@ -382,6 +404,24 @@ $f-player-progress-secondary: $gray !default
 
     &.vjs-layout-small .vjs-current-time, &.vjs-layout-small .vjs-time-divider, &.vjs-layout-small .vjs-duration, &.vjs-layout-small .vjs-playback-rate, &.vjs-layout-small .vjs-volume-control
       display: flex
+
+  &__waveform-wrap
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 1
+    pointer-events: none
+    overflow: hidden
+
+  &__waveform
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 1
+    pointer-events: none
+    height: 100%
 
   &--video
     max-width: 555px
