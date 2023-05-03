@@ -239,6 +239,9 @@ $f-player-progress-secondary: $gray !default
       background-color: $f-player-progress-primary
       color: $f-player-progress-primary
 
+    .vjs-play-progress .vjs-time-tooltip
+      display: none !important
+
     .vjs-slider
       background-color: $f-player-progress-secondary
 
@@ -366,7 +369,7 @@ $f-player-progress-secondary: $gray !default
 
   &--video
     max-width: 555px
-    min-height: 450px
+    min-height: 396px
 
     &__player
      .vjs-folio-player-title
@@ -379,3 +382,6 @@ $f-player-progress-secondary: $gray !default
 
       .vjs-control-bar
         height: auto
+
+  &--bound
+    min-height: 0

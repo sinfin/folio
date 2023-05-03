@@ -22,11 +22,15 @@ window.Folio.Player.create = (serializedFile, opts) => {
 
   player.classList.add('f-player')
   player.classList.add(`f-player--${serializedFile.attributes.human_type}`)
-  player.dataset.controller = "f-player"
+  player.dataset.controller = 'f-player'
   player.dataset.file = JSON.stringify(serializedFile)
 
   if (opts.showFormControls) {
-    player.dataset.fPlayerShowFormControlsValue = "true"
+    player.dataset.fPlayerShowFormControlsValue = 'true'
+  }
+
+  if (opts.formControlsController) {
+    player.dataset.fPlayerFormControlsControllerValue = opts.formControlsController
   }
 
   const loader = document.createElement('div')
@@ -87,18 +91,20 @@ window.Folio.Player.bind = (el, opts) => {
   controlBar.addChild('FolioPlayerTitle', { title: fileAttributes.file_name }, 1)
 
   if (fileAttributes.human_type === 'audio') {
-    controlBar.addChild("FolioPlayerSeekButton", { direction: "backward" })
-    controlBar.addChild("FolioPlayerSeekButton", { direction: "forward" })
+    controlBar.addChild('FolioPlayerSeekButton', { direction: 'backward' })
+    controlBar.addChild('FolioPlayerSeekButton', { direction: 'forward' })
   }
 
   if (opts.showFormControls) {
-    controlBar.addChild("FolioPlayerFormControl", { action: "modal", file })
-    controlBar.addChild("FolioPlayerFormControl", { action: "destroy" })
+    controlBar.addChild('FolioPlayerFormControl', { action: 'modal', file, formControlsController: opts.formControlsController })
+    controlBar.addChild('FolioPlayerFormControl', { action: 'destroy', file, formControlsController: opts.formControlsController })
   }
 
   if (fileAttributes.human_type === 'video') {
     el.folioPlayer.addChild('FolioPlayerVideoSpacer', { videoSize, videoElement: el.querySelector('video') }, 0)
   }
+
+  el.classList.add('f-player--bound')
 }
 
 window.Folio.Player.unbind = (el) => {
@@ -106,15 +112,21 @@ window.Folio.Player.unbind = (el) => {
     el.folioPlayer.dispose()
     el.folioPlayer = null
   }
+
+  el.classList.remove('f-player--bound')
 }
 
 window.Folio.Stimulus.register('f-player', class extends window.Stimulus.Controller {
   static values = {
     showFormControls: Boolean,
+    formControlsController: { type: String, default: 'f-c-file-picker' }
   }
 
   connect () {
-    window.Folio.Player.bind(this.element, { showFormControls: this.showFormControlsValue })
+    window.Folio.Player.bind(this.element, {
+      showFormControls: this.showFormControlsValue,
+      formControlsController: this.formControlsControllerValue
+    })
   }
 
   disconnect () {
