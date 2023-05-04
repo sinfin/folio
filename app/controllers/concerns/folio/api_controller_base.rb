@@ -84,7 +84,13 @@ module Folio::ApiControllerBase
 
     def render_select2_options(models, label_method: nil, id_method: nil, meta: nil)
       label_method ||= :to_console_label
-      id_method ||= params[:slug] ? :slug : :id
+      id_method ||= if params[:id_method] && models.present? && models.first.class.column_names.include?(params[:id_method])
+        params[:id_method]
+      elsif params[:slug]
+        :slug
+      else
+        :id
+      end
 
       ary = models.map do |model|
         h = { id: model.send(id_method), text: model.send(label_method) }
