@@ -24,20 +24,20 @@ module Folio::Console::IndexFiltersRangeScopes
 
   class_methods do
     def folio_console_index_filter_range_scope(attr)
-      scope "by_#{attr}_range".to_sym, -> (arg) do
+      scope "by_#{attr}_range".to_sym, -> (range_str) do
         from, to = range_str.split(/ ?- ?/)
 
         runner = self
 
         if from.present?
           from_date_time = DateTime.parse(from)
-          runner = runner.where(arg => from_date_time..)
+          runner = runner.where(attr => from_date_time..)
         end
 
         if to.present?
           to = "#{to} 23:59" if to.exclude?(":")
           to_date_time = DateTime.parse(to)
-          runner = runner.where(arg => ..to_date_time)
+          runner = runner.where(attr => ..to_date_time)
         end
 
         runner
