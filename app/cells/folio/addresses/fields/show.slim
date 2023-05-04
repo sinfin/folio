@@ -4,10 +4,10 @@
 
   .row
     - unless options[:use_primary_address_name]
-      .col-lg-6
+      div class=column_size_class_name(6)
         = model.input :first_name, required: true, input_html: { id: nil }
 
-      .col-lg-6
+      div class=column_size_class_name(6)
         = model.input :last_name, required: true, input_html: { id: nil }
 
   - if show_primary_address_fields?
@@ -22,25 +22,25 @@
           = g.input :name, required: required
 
         .row
-          .col-lg-7.f-addresses-fields__address-line-1
+          .f-addresses-fields__address-line-1 class=column_size_class_name(7)
             = address_line_input g, :address_line_1, required: required
 
-          .col-lg-5.f-addresses-fields__address-line-2
+          .f-addresses-fields__address-line-2 class=column_size_class_name(5)
             = address_line_input g, :address_line_2, required: required
 
         .row
-          .col-lg-5
+          div class=column_size_class_name(7)
             = g.input :zip, required: required, input_html: { id: nil }
 
-          .col-lg-7
+          div class=column_size_class_name(5)
             = g.input :city, required: required, input_html: { id: nil }
 
         .row
-          .col-lg-7
+          div class=column_size_class_name(7)
             = country_code_input(g)
 
         .row
-          .col-lg-7
+          div class=column_size_class_name(7)
             = g.input :phone,
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
@@ -62,27 +62,27 @@
               = g.input :company_name, input_html: { id: nil }
 
               .row
-                .col-lg-7
+                div class=column_size_class_name(7)
                   = g.input :identification_number, input_html: { id: nil }
 
               .row
-                .col-lg-7
+                div class=column_size_class_name(7)
                   = g.input :vat_identification_number, input_html: { id: nil }
 
               .row
-                .col-lg-7.f-addresses-fields__address-line-1
+                .f-addresses-fields__address-line-1 class=column_size_class_name(7)
                   = address_line_input g, :address_line_1, required: required
 
-                .col-lg-5.f-addresses-fields__address-line-2
+                .f-addresses-fields__address-line-2 class=column_size_class_name(5)
                   = address_line_input g, :address_line_2, required: required
 
               .row
-                .col-lg-5
+                div class=column_size_class_name(5)
                   = g.input :zip, required: required, input_html: { id: nil }
 
-                .col-lg-7
+                div class=column_size_class_name(7)
                   = g.input :city, required: required, input_html: { id: nil }
 
               .row
-                .col-lg-7
+                div class=column_size_class_name(7)
                   = country_code_input(g)

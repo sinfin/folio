@@ -59,4 +59,10 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
             label: "<span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--regular\">#{t(".#{key}_regular")}</span> \
                     <span class=\"f-addresses-fields__address-line-label f-addresses-fields__address-line-label--inline\">#{t(".#{key}_inline")}</span>".html_safe
   end
+
+  def column_size_class_name(size)
+    mq = options[:column_size_mq] || "lg"
+
+    "col-#{mq}-#{size}"
+  end
 end

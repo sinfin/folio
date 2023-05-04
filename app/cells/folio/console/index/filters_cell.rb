@@ -95,6 +95,10 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   def input(f, key)
     data = index_filters[key]
 
+    id_method = if data[:id_method] && data[:klass].constantize.column_names.include?(data[:id_method].to_s)
+      data[:id_method].to_s
+    end
+
     if data[:as] == :collection
       collection_input(f, key)
     elsif data[:as] == :date_range
@@ -123,14 +127,17 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       url = data[:url] || controller.folio.console_api_autocomplete_path(klass: data[:klass],
                                                                          scope: data[:scope],
                                                                          order_scope: data[:order_scope],
-                                                                         slug: data[:slug])
+                                                                         slug: data[:slug],
+                                                                         id_method:)
       autocomplete_input(f, key, url:)
     else
       url = controller.folio.select2_console_api_autocomplete_path(klass: data[:klass],
                                                                    scope: data[:scope],
                                                                    order_scope: data[:order_scope],
                                                                    slug: data[:slug],
+                                                                   id_method:,
                                                                    label_method: data[:label_method])
+
       select2_select(f, key, data, url:)
     end
   end
@@ -208,11 +215,16 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     collection = []
 
     if controller.params[key].present?
-      if data[:slug]
-        record = data[:klass].constantize.find_by_slug(controller.params[key])
+      klass = data[:klass].constantize
+
+      if data[:id_method] && klass.column_names.include?(data[:id_method].to_s)
+        record = klass.find_by(data[:id_method] => controller.params[key])
+        collection << [record.to_console_label, record.send(data[:id_method]), selected: true] if record
+      elsif data[:slug]
+        record = klass.find_by_slug(controller.params[key])
         collection << [record.to_console_label, record.slug, selected: true] if record
       else
-        record = data[:klass].constantize.find_by_id(controller.params[key])
+        record = klass.find_by_id(controller.params[key])
         collection << [record.to_console_label, record.id, selected: true] if record
       end
     end

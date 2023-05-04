@@ -22,7 +22,7 @@ $f-player-control-font-size: $font-size-sm !default
 $f-player-current-time-font-weight: $font-weight-bold !default
 $f-player-control-bar-spacer: 18px !default
 $f-player-transition-duration: $transition-duration !default
-$f-player-progress-primary: $blue !default
+$f-player-progress-primary: $gray-medium-dark !default
 $f-player-progress-secondary: $gray !default
 
 .f-player
@@ -107,6 +107,9 @@ $f-player-progress-secondary: $gray !default
       visibility: visible
       pointer-events: all
 
+    .vjs-volume-level
+      background: $f-player-progress-secondary
+
     .vjs-play-control
       width: $f-player-play-button-width
       height: $f-player-play-button-height
@@ -166,6 +169,47 @@ $f-player-progress-secondary: $gray !default
 
     .vjs-progress-control
       flex-grow: 1
+      position: relative
+      top: -1px
+
+    .vjs-progress-holder
+      height: 4px
+      background-color: $f-player-progress-secondary
+      color: $black
+      margin: 0 13px
+
+      .vjs-play-progress
+        background-color: transparent
+
+    .vjs-play-progress::before
+      content: ""
+      display: block
+      width: 16px
+      height: 16px
+      line-height: 16px
+      top: -8px + (4px / 2)
+      right: -8px
+      border-radius: 8px
+      background-color: $f-player-progress-primary
+
+    .vjs-progress-control--waveform
+      margin: 0 10px
+
+      .vjs-mouse-display
+        background-color: $f-player-progress-primary
+
+      .vjs-progress-holder
+        background: transparent
+        height: 24px
+        margin: 0
+        position: relative
+        z-index: 2
+
+      .vjs-play-progress
+        color: $blue
+
+        &::before
+          display: none
 
     .vjs-folio-player-seek-button
       margin-top: -2px
@@ -234,10 +278,8 @@ $f-player-progress-secondary: $gray !default
     .vjs-mute-control
       margin-right: 10px
 
-    .vjs-volume-level,
-    .vjs-play-progress
-      background-color: $f-player-progress-primary
-      color: $f-player-progress-primary
+    .vjs-play-progress .vjs-time-tooltip
+      display: none !important
 
     .vjs-slider
       background-color: $f-player-progress-secondary
@@ -305,9 +347,6 @@ $f-player-progress-secondary: $gray !default
     .vjs-progress-holder .vjs-load-progress
       display: none
 
-    .vjs-progress-control .vjs-progress-holder
-      margin: 0 5px
-
     .vjs-folio-player-video-spacer
       position: relative
       border-top-left-radius: $border-radius
@@ -318,6 +357,7 @@ $f-player-progress-secondary: $gray !default
       position: absolute
       width: 100%
       height: 100%
+      outline: 0
 
     .vjs-text-track-display
       display: none
@@ -348,6 +388,7 @@ $f-player-progress-secondary: $gray !default
       .vjs-progress-control
         order: 0
         flex: 0 0 100%
+        margin: 0 !important
 
       .vjs-control-bar
         padding: 12px
@@ -364,9 +405,27 @@ $f-player-progress-secondary: $gray !default
     &.vjs-layout-small .vjs-current-time, &.vjs-layout-small .vjs-time-divider, &.vjs-layout-small .vjs-duration, &.vjs-layout-small .vjs-playback-rate, &.vjs-layout-small .vjs-volume-control
       display: flex
 
+  &__waveform-wrap
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 1
+    pointer-events: none
+    overflow: hidden
+
+  &__waveform
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 1
+    pointer-events: none
+    height: 100%
+
   &--video
     max-width: 555px
-    min-height: 450px
+    min-height: 396px
 
     &__player
      .vjs-folio-player-title
@@ -379,3 +438,6 @@ $f-player-progress-secondary: $gray !default
 
       .vjs-control-bar
         height: auto
+
+  &--bound
+    min-height: 0

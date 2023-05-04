@@ -21,3 +21,10 @@ test/dummy/vendor/assets/redactor/*.js
 !/vendor/assets/bower_components/material-design-icons/font
 /vendor/assets/bower_components/material-design-icons/font/*
 !/vendor/assets/bower_components/material-design-icons/font/MaterialIcons-Regular.ttf
+
+node_modules/*
+!node_modules/mersenne-twister
+node_modules/mersenne-twister/*
+!node_modules/mersenne-twister/src
+node_modules/mersenne-twister/src/*
+!node_modules/mersenne-twister/src/mersenne-twister.js
