@@ -12,49 +12,21 @@ class Folio::CreateFileFromS3Job < ApplicationJob
 
   def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil)
     return unless s3_path
-    return unless type
-    klass = type.safe_constantize
-    return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
-
     unless test_aware_s3_exists?(s3_path)
       # probably handled it already in another job
       return
     end
+    return unless type
+
+    klass = type.safe_constantize
+    return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
 
     broadcast_start(s3_path:, file_type: type)
 
-    if existing_id
-      file = klass.find(existing_id)
-      replacing_file = true
-
-      if file.try(:thumbnailable?) && file.try(:thumbnail_sizes).is_a?(Hash)
-        thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
-      else
-        thumbnail_keys_to_recreate = []
-      end
-    else
-      file = klass.new
-      replacing_file = false
-      thumbnail_keys_to_recreate = []
-    end
+    file, replacing_file, thumbnail_keys_to_recreate = prepare_file_model(klass, id: existing_id, web_session_id:, user_id: )
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
-      tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
-
-      test_aware_download_from_s3(s3_path, tmp_file_path)
-      test_aware_s3_delete(s3_path)
-
-      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
-
-      file.file = File.open(tmp_file_path)
-
-      if file.respond_to?("web_session_id=")
-        file.web_session_id = web_session_id
-      end
-
-      if user_id && file.respond_to?("user=")
-        file.user = Folio::User.find(user_id)
-      end
+      file.file = downloaded_file(s3_path, tmpdir)
 
       if file.save
         if file.try(:thumbnailable?)
@@ -164,5 +136,38 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       else
         tmp_file_path
       end
+    end
+
+    def prepare_file_model(klass, id: , web_session_id:, user_id: )
+      if id
+        file = klass.find(id)
+        replacing_file = true
+
+        if file.try(:thumbnailable?) && file.try(:thumbnail_sizes).is_a?(Hash)
+          thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
+        else
+          thumbnail_keys_to_recreate = []
+        end
+      else
+        file = klass.new
+        replacing_file = false
+        thumbnail_keys_to_recreate = []
+      end
+
+      file.web_session_id = web_session_id if file.respond_to?("web_session_id=")
+      file.user = Folio::User.find(user_id) if user_id && file.respond_to?("user=")
+
+      [file, replacing_file, thumbnail_keys_to_recreate]
+    end
+
+    def downloaded_file(s3_path, tmpdir)
+      tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
+
+      test_aware_download_from_s3(s3_path, tmp_file_path)
+      test_aware_s3_delete(s3_path)
+
+      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
+
+      File.open(tmp_file_path)
     end
 end
