@@ -83,6 +83,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to main_app.user_invitation_path
     follow_redirect!
+
     # render with :folio_user_invited_email in session
     assert_select ".f-devise-invitations-show"
   end
