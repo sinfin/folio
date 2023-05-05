@@ -69,6 +69,7 @@ end
 #  file_mime_type       :string
 #  default_gravity      :string
 #  file_track_duration  :integer
+#  aasm_state           :string
 #
 # Indexes
 #

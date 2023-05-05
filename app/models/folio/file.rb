@@ -8,6 +8,7 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
+  include Folio::HasAasmStates
 
   DEFAULT_GRAVITIES = %w[
     center
@@ -52,6 +53,10 @@ class Folio::File < Folio::ApplicationRecord
       tagged_with(tags)
     end
   end
+  # workaround for filenames with dashes & underscores
+  scope :by_file_name, -> (query) do
+    by_file_name_for_search(sanitize_filename_for_search(query))
+  end
 
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],
@@ -76,16 +81,29 @@ class Folio::File < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-  # workaround for filenames with dashes & underscores
-  scope :by_file_name, -> (query) do
-    by_file_name_for_search(sanitize_filename_for_search(query))
-  end
-
   before_validation :set_file_track_duration, if: :file_uid_changed?
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
-  after_save :run_after_save_job!
+  after_save :update_placements!
+  after_save :process!, if: :attached_file_changed?
+
+  aasm do
+    state :unprocessed, initial: true, color: :white
+    state :processing, color: :orange
+    state :ready, color: :green
+
+    event :process do
+      transitions from: :unprocessed, to: :processing
+      transitions from: :ready, to: :processing
+      after :process_attached_file
+    end
+
+    event :processing_done do
+      transitions from: :processing, to: :ready
+    end
+  end
+
 
   def title
     file_name
@@ -127,8 +145,24 @@ class Folio::File < Folio::ApplicationRecord
                .gsub("_", "{u}")
   end
 
-  def run_after_save_job!
+  def update_placements!
     Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+  end
+
+  def process_attached_file
+    regenerate_thumbnails if try(:thumbnailable?)
+    processing_done!
+  end
+
+  def attached_file_changed?
+    (saved_changes[:file_uid] || changes[:file_uid]).present?
+  end
+
+  def regenerate_thumbnails
+    try(:admin_thumb, immediate: true)
+    if try(:thumbnail_sizes).is_a?(Hash)
+      thumbnail_sizes.keys.each { |t_key| file.thumb(t_key) }
+    end
   end
 
   def thumbnailable?
@@ -217,6 +251,7 @@ end
 #  file_mime_type       :string
 #  default_gravity      :string
 #  file_track_duration  :integer
+#  aasm_state           :string
 #
 # Indexes
 #

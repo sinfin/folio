@@ -23,18 +23,13 @@ class Folio::CreateFileFromS3Job < ApplicationJob
 
     broadcast_start(s3_path:, file_type: type)
 
-    file, replacing_file, thumbnail_keys_to_recreate = prepare_file_model(klass, id: existing_id, web_session_id:, user_id: )
+    file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:)
+    replacing_file = file.persisted?
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
       file.file = downloaded_file(s3_path, tmpdir)
 
       if file.save
-        if file.try(:thumbnailable?)
-          file.try(:admin_thumb, immediate: true)
-
-          thumbnail_keys_to_recreate.each { |thumbnail_key| file.thumb(thumbnail_key) }
-        end
-
         if replacing_file
           broadcast_replace_success(file: file.reload, file_type: type)
         else
@@ -138,26 +133,17 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       end
     end
 
-    def prepare_file_model(klass, id: , web_session_id:, user_id: )
+    def prepare_file_model(klass, id:, web_session_id:, user_id:)
       if id
         file = klass.find(id)
-        replacing_file = true
-
-        if file.try(:thumbnailable?) && file.try(:thumbnail_sizes).is_a?(Hash)
-          thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
-        else
-          thumbnail_keys_to_recreate = []
-        end
       else
         file = klass.new
-        replacing_file = false
-        thumbnail_keys_to_recreate = []
       end
 
       file.web_session_id = web_session_id if file.respond_to?("web_session_id=")
       file.user = Folio::User.find(user_id) if user_id && file.respond_to?("user=")
 
-      [file, replacing_file, thumbnail_keys_to_recreate]
+      file
     end
 
     def downloaded_file(s3_path, tmpdir)
