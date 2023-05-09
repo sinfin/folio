@@ -47,6 +47,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon" # for mailchimp requests
   s.add_dependency "invisible_captcha"
   s.add_dependency "jquery-rails"
+  s.add_dependency "jwt"
   s.add_dependency "message_bus"
   s.add_dependency "multi_exiftool"
   s.add_dependency "nokogiri"

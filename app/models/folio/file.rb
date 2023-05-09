@@ -85,8 +85,9 @@ class Folio::File < Folio::ApplicationRecord
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
-  after_save :update_placements!
+  after_save :run_after_save_job
   after_save :process!, if: :attached_file_changed?
+  after_destroy :destroy_attached_file
 
   aasm do
     state :unprocessed, initial: true, color: :white
@@ -145,13 +146,17 @@ class Folio::File < Folio::ApplicationRecord
                .gsub("_", "{u}")
   end
 
-  def update_placements!
+  def run_after_save_job
+    # updating placements
     Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
   end
 
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
     processing_done!
+  end
+
+  def destroy_attached_file
   end
 
   def attached_file_changed?

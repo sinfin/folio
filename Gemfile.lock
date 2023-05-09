@@ -37,6 +37,7 @@ PATH
       gibbon
       invisible_captcha
       jquery-rails
+      jwt
       message_bus
       multi_exiftool
       nokogiri

@@ -46,7 +46,7 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def run_file_after_save_job!
-    file.update_placements! if file
+    file.run_after_save_job if file # updates placements
   end
 end
 
