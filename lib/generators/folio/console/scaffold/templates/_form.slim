@@ -10,12 +10,12 @@
         = file_picker_for_cover(f)
       .col-md
         <%- if publishable? -%>
-        == cell('folio/console/publishable_inputs', f)
+        = publishable_inputs(f)
         <%- end -%>
         <%= attribute_inputs %>
     <%- else -%>
     <%- if publishable? -%>
-    == cell('folio/console/publishable_inputs', f)
+    = publishable_inputs(f)
     <%- end -%>
     <%= attribute_inputs %>
     <%- end -%>

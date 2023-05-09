@@ -251,9 +251,10 @@ en:
       lazy_dom:
         error: 'Failed to load data:'
       publishable_inputs:
-        from: from (optional)
-        to: to (optional)
-        at: date (optional)
+        item:
+          from: from (optional)
+          to: to (optional)
+          at: date (optional)
       react_ancestry:
         invalid: Some of the records are invalid. It's required to fix these first in order to change structure. Invalid records are marked red.
       layout:

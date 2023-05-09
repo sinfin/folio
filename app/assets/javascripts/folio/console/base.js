@@ -89,7 +89,7 @@
 //= require folio/console/new_record_modal/new_record_modal
 //= require folio/console/private_attachments/fields/fields
 //= require folio/console/private_attachments/single_dropzone/single_dropzone
-//= require folio/console/publishable_inputs/publishable_inputs
+//= require folio/console/publishable_inputs/item/item
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 

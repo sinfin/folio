@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
 class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
-  def f
-    model
+  def show
+    render if fields.present?
   end
 
-  def input_html(class_name = nil, placeholder: nil)
-    b = { class: class_name }
-    b[:id] = nil if options[:no_input_ids]
-    b[:name] = nil if options[:no_input_names]
-    b[:placeholder] = placeholder
-    b
+  def f
+    model
   end
 
   def publishable_with_date?
@@ -25,9 +21,15 @@ class Folio::Console::PublishableInputsCell < Folio::ConsoleCell
     f.object.respond_to?(:featured_from) && f.object.respond_to?(:featured_until)
   end
 
-  def atom_setting(field)
-    if options[:atom_setting]
-      field
+  def fields
+    @fields ||= begin
+      ary = %i[published featured]
+
+      ary += options[:additional_fields] if options[:additional_fields]
+
+      ary.filter do |field|
+        f.object.respond_to?(field)
+      end
     end
   end
 end
