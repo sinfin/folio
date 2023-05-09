@@ -30,9 +30,9 @@ window.Folio.Input.Tags.bind = (input, opts) => {
     },
     render: {
       option_create: (data, escape) => (`
-        <div>
+        <div class="create option">
           ${window.FolioConsole.translations.add}
-          <strong>#{escape(data.input)}</strong>&hellip;
+          <strong>${escape(data.input)}</strong>&hellip;
         </div>
       `)
     }
@@ -58,7 +58,7 @@ window.Folio.Stimulus.register('f-input-tags', class extends window.Stimulus.Con
     if (this.initializing) {
       window.Folio.Input.Tags.bind(this.element, {
         url: this.urlValue,
-        tagsContext: this.tagsContextValue,
+        tagsContext: this.tagsContextValue
       })
     }
   }
