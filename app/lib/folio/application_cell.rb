@@ -4,6 +4,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
   include Folio::CstypoHelper
+  include Folio::IconHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 
@@ -91,9 +92,5 @@ class Folio::ApplicationCell < Cell::ViewModel
         nil
       end
     end
-  end
-
-  def folio_icon(name, opts = {})
-    cell("folio/ui/icon", name, opts)
   end
 end
