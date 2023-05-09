@@ -51,8 +51,7 @@ class Folio::Console::ScaffoldGenerator < Erb::Generators::ScaffoldGenerator
   end
 
   def form_tabs
-    base = [:content]
-    base
+    "%i[content]"
   end
 
   def index_scope
