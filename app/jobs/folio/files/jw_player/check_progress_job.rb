@@ -23,10 +23,11 @@ class Folio::Files::JwPlayer::CheckProgressJob < ApplicationJob
       return nil if response.has_key?("message")
 
       if response["status"] == "ready"
-        media_file.remote_services_data["metadata"] = response
         if @preview
+          media_file.remote_services_data["preview"] = response
           media_file.preview_media_processed!
         else
+          media_file.remote_services_data["full"] = response
           media_file.full_media_processed!
         end
       else

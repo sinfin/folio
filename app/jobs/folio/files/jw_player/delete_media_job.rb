@@ -3,13 +3,8 @@
 class Folio::Files::JwPlayer::DeleteMediaJob < ApplicationJob
   queue_as :default
 
-  def perform(media_file)
-    if media_file.remote_key.present?
-      Folio::JwPlayer::Api.new(media_file).delete_media(preview: false)
-    end
-
-    if media_file.remote_preview_key.present?
-      Folio::JwPlayer::Api.new(media_file).delete_media(preview: true)
-    end
+  MFileStruct = Struct.new(:remote_key)
+  def perform(original_key)
+    Folio::JwPlayer::Api.new(MFileStruct.new(original_key)).delete_media
   end
 end

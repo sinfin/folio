@@ -7,6 +7,7 @@ require "openssl"
 class Folio::JwPlayer::Api
   SITE_ID = ENV.fetch("JWPLAYER_API_KEY")
   SECRET = ENV.fetch("JWPLAYER_API_SECRET")
+  LOG_CALLS = ENV.fetch("JWPLAYER_LOG_CALLS") == "true"
 
   attr_reader :media_file, :preview
   def initialize(media_file)
@@ -23,7 +24,7 @@ class Folio::JwPlayer::Api
   end
 
   def remote_key
-    preview ? media_file.remote_preview_key : media_file.remote_key
+    @remote_key ||= preview ? media_file.remote_preview_key : media_file.remote_key
   end
 
   def create_media(preview: false)
@@ -43,8 +44,8 @@ class Folio::JwPlayer::Api
     patch(media_uri, params(preview))
   end
 
-  def delete_media(preview: false)
-    @preview = preview
+  def delete_media
+    # media_file is struct set with correct (full/preview)_key as `remote_key`
     delete(media_uri)
   end
 
@@ -125,15 +126,19 @@ class Folio::JwPlayer::Api
       request["accept"] = "application/json"
       request["Authorization"] = "Bearer #{SECRET}"
 
-      puts("Calling JWPlayer #{uri} with #{request.to_json}")
+      log_call("Calling JWPlayer #{uri} with #{request.to_json}")
 
       response = http.request(request)
-      json = JSON.parse(response.read_body)
+      json = JSON.parse(response.read_body || "{}")
 
-      puts("Got JWPlayer response #{response.to_json}  with body: #{json}")
+      log_call("Got JWPlayer response #{response.to_json}  with body: #{json}")
 
 
       raise "Response #{response.code}: #{json["errors"]}" if json["errors"].present?
       json
+    end
+
+    def log_call(msg)
+      Rails.logger.info msg if LOG_CALLS
     end
 end

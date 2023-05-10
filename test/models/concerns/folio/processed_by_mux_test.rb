@@ -2,12 +2,12 @@
 
 require "test_helper"
 
-class Folio::ProcessedByJwPlayerTest < ActiveSupport::TestCase
+class Folio::ProcessedByMuxTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
   attr_reader :tv_file
 
   class TestMediaFile < Folio::File::Video
-    include Folio::ProcessedByJwPlayer
+    include Folio::ProcessedByMux
   end
 
   setup do
@@ -23,21 +23,21 @@ class Folio::ProcessedByJwPlayerTest < ActiveSupport::TestCase
   end
 
   test "#create_full_media" do
-    assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::CreateFullMediaJob do
+    assert_enqueued_jobs 1, only: Folio::Files::Mux::CreateFullMediaJob do
       tv_file.create_full_media
     end
 
     assert tv_file.processing?, "AASM state #{tv_file.aasm_state}"
     assert_equal "enqueued", tv_file.processing_state, tv_file.remote_services_data
-    assert_equal "jw_player", tv_file.processing_service
+    assert_equal "mux", tv_file.processing_service
   end
 
   # called from preriodic check job or webhook
   test "#full_media_processed!" do
     tv_file.remote_services_data = {
-      "service" => "jw_player",
-      "processing_state" => "full_media_processing", # set by Folio::Files::JwPlayer::CreateFullMediaJob
-      "remote_key" => "bflmpsvz" # set by Folio::Files::JwPlayer::CreateFullMediaJob
+      "service" => "mux",
+      "processing_state" => "full_media_processing", # set by Folio::Files::Mux::CreateFullMediaJob
+      "remote_key" => "bflmpsvz" # set by Folio::Files::Mux::CreateFullMediaJob
     }
 
     assert_not tv_file.full_media_processed?
@@ -52,12 +52,12 @@ class Folio::ProcessedByJwPlayerTest < ActiveSupport::TestCase
 
   test "#create_preview_media" do
     tv_file.remote_services_data = {
-      "service" => "jw_player",
+      "service" => "mux",
       "processing_state" => "full_media_processed", # set by `full_media_processed` method
-      "remote_key" => "bflmpsvz" # set by Folio::Files::JwPlayer::CreateFullMediaJob
+      "remote_key" => "bflmpsvz" # set by Folio::Files::Mux::CreateFullMediaJob
     }
 
-    assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::CreatePreviewMediaJob do
+    assert_enqueued_jobs 1, only: Folio::Files::Mux::CreatePreviewMediaJob do
       tv_file.create_preview_media
     end
 
@@ -68,10 +68,10 @@ class Folio::ProcessedByJwPlayerTest < ActiveSupport::TestCase
   # called from preriodic check job or webhook
   test "#preview_media_processed!" do
     tv_file.remote_services_data = {
-      "service" => "jw_player",
-      "processing_state" => "preview_media_processing", # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
-      "remote_key" => "bflmpsvz", # set by Folio::Files::JwPlayer::CreateFullMediaJob
-      "remote_preview_key" => "hchkrdtn" # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
+      "service" => "mux",
+      "processing_state" => "preview_media_processing", # set by Folio::Files::Mux::CreatePreviewMediaJob
+      "remote_key" => "bflmpsvz", # set by Folio::Files::Mux::CreateFullMediaJob
+      "remote_preview_key" => "hchkrdtn" # set by Folio::Files::Mux::CreatePreviewMediaJob
     }
 
     assert tv_file.full_media_processed?
@@ -87,13 +87,13 @@ class Folio::ProcessedByJwPlayerTest < ActiveSupport::TestCase
 
   test "deletes remote media on destroy" do
     tv_file.remote_services_data = {
-      "service" => "jw_player",
-      "processing_state" => "preview_media_processing", # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
-      "remote_key" => "bflmpsvz", # set by Folio::Files::JwPlayer::CreateFullMediaJob
-      "remote_preview_key" => "hchkrdtn" # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
+      "service" => "mux",
+      "processing_state" => "preview_media_processing", # set by Folio::Files::Mux::CreatePreviewMediaJob
+      "remote_key" => "bflmpsvz", # set by Folio::Files::Mux::CreateFullMediaJob
+      "remote_preview_key" => "hchkrdtn" # set by Folio::Files::Mux::CreatePreviewMediaJob
     }
 
-    assert_enqueued_jobs 2, only: Folio::Files::JwPlayer::DeleteMediaJob  do
+    assert_enqueued_jobs 2, only: Folio::Files::Mux::DeleteMediaJob  do
       tv_file.destroy
     end
   end

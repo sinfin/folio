@@ -50,6 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency "jwt"
   s.add_dependency "message_bus"
   s.add_dependency "multi_exiftool"
+  s.add_dependency "mux_ruby", "~> 3.9.0"
   s.add_dependency "nokogiri"
   s.add_dependency "omniauth-facebook"
   s.add_dependency "omniauth-google-oauth2"
