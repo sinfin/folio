@@ -19,8 +19,11 @@ class Folio::JwPlayer::Api
   end
 
   def media_uri
-    remote_key = preview ? media_file.remote_preview_key : media_file.remote_key
     URI(base_uri.to_s + remote_key)
+  end
+
+  def remote_key
+    preview ? media_file.remote_preview_key : media_file.remote_key
   end
 
   def create_media(preview: false)
@@ -29,7 +32,8 @@ class Folio::JwPlayer::Api
     post(base_uri, params(preview))
   end
 
-  def check_media
+  def check_media(preview: false)
+    @preview = preview
     get(media_uri)
   end
 
@@ -60,6 +64,7 @@ class Folio::JwPlayer::Api
         upload_data = { download_url: media_file.file.remote_url(expires: 1.hour.from_now),
                         method: "fetch" }
       when Dragonfly::FileDataStore
+        fail
         # response = post(url, params)
         # absolute_path = Dragonfly.app.datastore.server_root + media_file.file.remote_url
         # upload_local(File.new(absolute_path), response)

@@ -19,7 +19,7 @@ class Folio::Files::JwPlayer::CheckProgressJob < ApplicationJob
 
   private
     def update_jw_metadata!
-      response = Folio::JwPlayer::Api.new(media_file).check_media
+      response = Folio::JwPlayer::Api.new(media_file).check_media(preview: @preview)
       return nil if response.has_key?("message")
 
       if response["status"] == "ready"
