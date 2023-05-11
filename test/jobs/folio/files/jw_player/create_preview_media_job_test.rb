@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Files::JwPlayer::CreatePreviewMediaJobTest < ActiveJob::TestCase
   class TestVideoFile < Folio::File::Video
-    include Folio::ProcessedByJwPlayer
+    include Folio::JwPlayer::FileProcessing
   end
 
   test "calls api and updates remote_services_data" do

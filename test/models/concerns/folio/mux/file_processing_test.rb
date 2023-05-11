@@ -2,12 +2,12 @@
 
 require "test_helper"
 
-class Folio::ProcessedByMuxTest < ActiveSupport::TestCase
+class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
   attr_reader :tv_file
 
   class TestMediaFile < Folio::File::Video
-    include Folio::ProcessedByMux
+    include Folio::Mux::FileProcessing
   end
 
   setup do

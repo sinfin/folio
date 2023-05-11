@@ -2,12 +2,12 @@
 
 require "test_helper"
 
-class Folio::ProcessedByJwPlayerTest < ActiveSupport::TestCase
+class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
   attr_reader :tv_file
 
   class TestMediaFile < Folio::File::Video
-    include Folio::ProcessedByJwPlayer
+    include Folio::JwPlayer::FileProcessing
   end
 
   setup do

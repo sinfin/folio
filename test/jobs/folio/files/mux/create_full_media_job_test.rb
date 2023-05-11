@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Files::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
   class TestVideoFile < Folio::File::Video
-    include Folio::ProcessedByMux
+    include Folio::Mux::FileProcessing
   end
 
   ResponseDataStruct = Struct.new(:id, :status, :duration)

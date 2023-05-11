@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::ProcessedByJwPlayer
+module Folio::Mux::FileProcessing
   extend ActiveSupport::Concern
 
   PROCESSING_STATES = %w[enqueued
@@ -9,10 +9,13 @@ module Folio::ProcessedByJwPlayer
                          preview_media_processing
                          preview_media_processed]
   included do
-    missing_envs = ENV.fetch("JWPLAYER_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("JWPLAYER_API_SECRET").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs = ENV.fetch("MUX_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs ||= ENV.fetch("MUX_API_SECRET").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs ||= ENV.fetch("MUX_SIGNING_KEY").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs ||= ENV.fetch("MUX_SIGNING_PRIVATE_KEY").to_s.gsub("find-me-in-vault", "").blank?
+
     if missing_envs
-      raise 'requires filled ENV["JWPLAYER_API_KEY"] and ENV["JWPLAYER_API_SECRET"]'
+      raise 'requires filled ENVs :"MUX_API_KEY", "MUX_API_SECRET", "MUX_SIGNING_KEY", "MUX_SIGNING_PRIVATE_KEY"'
     end
 
     require "jwt"
@@ -24,8 +27,8 @@ module Folio::ProcessedByJwPlayer
   end
 
   def destroy_attached_file
-    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_key)
-    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_preview_key)
+    Folio::Files::Mux::DeleteMediaJob.perform_later(self.remote_key)
+    Folio::Files::Mux::DeleteMediaJob.perform_later(self.remote_preview_key)
   end
 
   def remote_key
@@ -37,23 +40,27 @@ module Folio::ProcessedByJwPlayer
   end
 
   def remote_full_url
-    "https://cdn.jwplayer.com/v2/media/#{remote_key}"
+    "https://stream.mux.com/#{public_full_playback_id}"
   end
 
   # player needs to send headers `{ "alg": "HS256",  "typ": "JWT"}`
   def remote_signed_full_url(expires_at = 2.hours.from_now)
+    playback_id = signed_full_playback_id
+
     params = {
-      "resource" => remote_full_url,
-      "exp" => expires_at.to_i
+      sub: playback_id,
+      aud: "v",	# Audience (intended application of the token):	v => (Video or Subtitles/Closed Captions)
+      exp: expires_at.to_i,
+      kid: ENV.fetch("MUX_SIGNING_KEY")
     }
+    token = JWT.encode(params, ENV.fetch("MUX_SIGNING_PRIVATE_KEY"), "RS256")
 
-    token = JWT.encode(params, ENV.fetch("JWPLAYER_API_SECRET"), "HS256")
-
-    "#{remote_full_url}?token=#{token}"
+    "https://stream.mux.com/#{playback_id}?token=#{token}"
   end
 
   def remote_preview_url
-    "https://cdn.jwplayer.com/v2/media/#{remote_preview_key}"
+    playback_id = remote_services_data["preview"]["playback_ids"].first["id"]
+    "https://stream.mux.com/#{playback_id}"
   end
 
   def processing_state
@@ -84,13 +91,13 @@ module Folio::ProcessedByJwPlayer
   end
 
   def create_full_media
-    Folio::Files::JwPlayer::CreateFullMediaJob.perform_later(self)
+    Folio::Files::Mux::CreateFullMediaJob.perform_later(self)
     rsd = remote_services_data || {}
-    self.remote_services_data = rsd.merge!({ "service" => "jw_player", "processing_state" => "enqueued" })
+    self.remote_services_data = rsd.merge!({ "service" => "mux", "processing_state" => "enqueued" })
   end
 
   def create_preview_media
-    Folio::Files::JwPlayer::CreatePreviewMediaJob.perform_later(self)
+    Folio::Files::Mux::CreatePreviewMediaJob.perform_later(self)
   end
 
   def preview_starts_at_second
@@ -113,8 +120,16 @@ module Folio::ProcessedByJwPlayer
     if (remote_services_data || {}).dig("preview_interval").present?
       preview_ends_at_second - preview_starts_at_second
     else
-      pd = (duration_in_seconds * 0.3).to_i # 30% of full media
+      pd = (duration_in_seconds * 0.3).to_i
       (pd < 2) ? 2 : pd
     end
+  end
+
+  def singed_full_playback_id
+    remote_services_data["full"]["playback_ids"].detect { |pb| pb["policy"] == "signed" }["id"]
+  end
+
+  def public_full_playback_id
+    remote_services_data["full"]["playback_ids"].detect { |pb| pb["policy"] == "public" }["id"]
   end
 end

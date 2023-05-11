@@ -4,7 +4,7 @@ require "test_helper"
 
 class Folio::Files::Mux::DeleteMediaJobTest < ActiveJob::TestCase
   class TestVideoFile < Folio::File::Video
-    include Folio::ProcessedByMux
+    include Folio::Mux::FileProcessing
   end
 
   test "calls api and updates remote_services_data" do
