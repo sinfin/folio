@@ -10,6 +10,8 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::StiPreload
   include Folio::HasAasmStates
 
+  READY_STATE = :ready
+
   DEFAULT_GRAVITIES = %w[
     center
     east
@@ -92,16 +94,16 @@ class Folio::File < Folio::ApplicationRecord
   aasm do
     state :unprocessed, initial: true, color: :white
     state :processing, color: :orange
-    state :ready, color: :green
+    state READY_STATE, color: :green
 
     event :process do
       transitions from: :unprocessed, to: :processing
-      transitions from: :ready, to: :processing
+      transitions from: READY_STATE, to: :processing
       after :process_attached_file
     end
 
     event :processing_done do
-      transitions from: :processing, to: :ready
+      transitions from: :processing, to: READY_STATE
     end
   end
 
