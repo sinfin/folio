@@ -89,7 +89,9 @@ $f-player-progress-secondary: $gray !default
       transition-delay: 0s !important
 
     .vjs-control-bar
-      background: transparent
+      background: $f-player-background
+      border-bottom-left-radius: $f-player-border-radius
+      border-bottom-right-radius: $f-player-border-radius
       display: flex
       align-items: center
       flex-wrap: wrap
@@ -101,6 +103,9 @@ $f-player-progress-secondary: $gray !default
       left: auto
       right: auto
       height: auto
+
+    &.vjs-fullscreen .vjs-control-bar
+      border-radius: 0
 
     &.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar
       opacity: 1

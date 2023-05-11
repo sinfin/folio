@@ -41,6 +41,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                          }
                        }.to_json
 
+    broadcast_file_update(image)
+
     image
   end
 

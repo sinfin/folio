@@ -59,6 +59,7 @@ cs:
         shortForCharacter: zn.
         split: Rozdělit
         startSplittingAtom: Rozdělit na části
+        state: Stav
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití

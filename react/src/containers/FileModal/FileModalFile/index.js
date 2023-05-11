@@ -96,6 +96,15 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
 
             <p>ID: {file.attributes.id}</p>
 
+            <p className='mb-1'>{window.FolioConsole.translations.state}:</p>
+
+            <div className='f-c-state mb-3'>
+              <div className='f-c-state__state'>
+                <div className={`f-c-state__state-square f-c-state__state-square--color-${file.attributes.aasm_state_color}`} />
+                {file.attributes.aasm_state_human}
+              </div>
+            </div>
+
             {(isAudio || isVideo) && <div className='form-group'><FolioPlayer file={file} /></div>}
 
             <FormGroup>

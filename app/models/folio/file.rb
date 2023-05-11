@@ -92,7 +92,7 @@ class Folio::File < Folio::ApplicationRecord
   after_destroy :destroy_attached_file
 
   aasm do
-    state :unprocessed, initial: true, color: :white
+    state :unprocessed, initial: true, color: :red
     state :processing, color: :orange
     state READY_STATE, color: :green
 

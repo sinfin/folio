@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::JwPlayer::DeleteMediaJob < ApplicationJob
+class Folio::JwPlayer::DeleteMediaJob < Folio::ApplicationJob
   queue_as :default
 
   MFileStruct = Struct.new(:remote_key)

@@ -18,7 +18,8 @@ class Folio::Console::FileSerializer
              :file_placements_size,
              :sensitive_content,
              :default_gravity,
-             :default_gravities_for_select
+             :default_gravities_for_select,
+             :aasm_state
 
   attribute :human_type do |object|
     object.class.human_type
@@ -67,5 +68,18 @@ class Folio::Console::FileSerializer
 
   attribute :default_gravities_for_select do |object|
     object.class.default_gravities_for_select
+  end
+
+  attribute :aasm_state_human do |object|
+    object.aasm.human_state
+  end
+
+  attribute :aasm_state_color do |object|
+    if object.aasm_state
+      state_object = Folio::File.last.aasm.state_object_for_name(object.aasm_state.to_sym)
+      if state_object && state_object.options
+        state_object.options[:color]
+      end
+    end
   end
 end

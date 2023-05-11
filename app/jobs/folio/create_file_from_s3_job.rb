@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::CreateFileFromS3Job < ApplicationJob
+class Folio::CreateFileFromS3Job < Folio::ApplicationJob
   include Folio::S3Client
   include Folio::Shell
 
@@ -51,17 +51,6 @@ class Folio::CreateFileFromS3Job < ApplicationJob
   end
 
   private
-    def serializer_for(model)
-      name = model.class.base_class.name.gsub("Folio::", "")
-      serializer = "Folio::Console::#{name}Serializer".safe_constantize
-      serializer ||= "#{name}Serializer".safe_constantize
-      serializer || Folio::GenericDropzoneSerializer
-    end
-
-    def serialized_file(model)
-      serializer_for(model).new(model).serializable_hash
-    end
-
     def broadcast_start(s3_path:, file_type:)
       broadcast({ s3_path:, type: "start", started_at: Time.current.to_i * 1000, file_type: })
     end

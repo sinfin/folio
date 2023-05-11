@@ -59,6 +59,7 @@ en:
         shortForCharacter: chr.
         split: Split
         startSplittingAtom: Split into parts
+        state: State
         thumbnailSizes: Generated thumbnails
         title: Title
         usage: Usage

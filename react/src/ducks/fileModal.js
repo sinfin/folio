@@ -3,7 +3,7 @@ import { omit } from 'lodash'
 
 import urlWithAffix from 'utils/urlWithAffix'
 import { apiGet, apiPost, apiXhrFilePut } from 'utils/api'
-import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_THUMBNAIL_GENERATED } from 'ducks/files'
+import { UPDATE_FILE_SUCCESS, UPDATE_FILE_FAILURE, MESSAGE_BUS_FILE_UPDATED } from 'ducks/files'
 import { indexUrlSelector } from 'ducks/app'
 
 // Constants
@@ -385,20 +385,11 @@ function modalReducer (state = initialState, action) {
       }
     }
 
-    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
-      if (state.file && Number(state.file.id) === Number(action.data.id)) {
+    case MESSAGE_BUS_FILE_UPDATED: {
+      if (state.file && Number(state.file.id) === Number(action.file.id)) {
         return {
           ...state,
-          file: {
-            ...state.file,
-            attributes: {
-              ...state.file.attributes,
-              thumbnail_sizes: {
-                ...state.file.attributes.thumbnail_sizes,
-                [action.data.thumb_key]: action.data.thumb
-              }
-            }
-          }
+          file: action.file
         }
       } else {
         return state

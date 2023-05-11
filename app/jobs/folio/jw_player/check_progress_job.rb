@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::JwPlayer::CheckProgressJob < ApplicationJob
+class Folio::JwPlayer::CheckProgressJob < Folio::ApplicationJob
   retry_on Folio::JwPlayer::MetadataNotAvailable, wait: 30.seconds, attempts: 25
 
   queue_as :default
@@ -30,6 +30,8 @@ class Folio::JwPlayer::CheckProgressJob < ApplicationJob
           media_file.remote_services_data["full"] = response
           media_file.full_media_processed!
         end
+
+        broadcast_file_update(media_file)
       else
         nil
       end

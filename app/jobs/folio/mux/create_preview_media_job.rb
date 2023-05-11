@@ -25,6 +25,8 @@ class Folio::Mux::CreatePreviewMediaJob < Folio::ApplicationJob
 
       Folio::Mux::CheckProgressJob.set(wait: 10.seconds).perform_later(media_file, preview: true)
       Folio::Mux::DeleteMediaJob.perform_later(original_remote_key) if original_remote_key.present?
+
+      broadcast_file_update(media_file)
     else
       fail response.to_s
     end
