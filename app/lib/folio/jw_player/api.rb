@@ -55,8 +55,7 @@ class Folio::JwPlayer::Api
         title: media_file.file_name + (preview ? " - preview" : ""),
         author: media_file.author,
         description: media_file.description,
-        tags: media_file.tag_list.join(",").presence,
-        # external_id: "TESTx" + media_file.id.to_s
+        tags: media_file.jwplayer_tags.presence,
       }.compact
 
       upload_data = {}

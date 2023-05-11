@@ -24,8 +24,8 @@ module Folio::JwPlayer::FileProcessing
   end
 
   def destroy_attached_file
-    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_key)
-    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_preview_key)
+    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_key) if self.remote_key
+    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_preview_key) if self.remote_preview_key
   end
 
   def remote_key
@@ -116,5 +116,17 @@ module Folio::JwPlayer::FileProcessing
       pd = (duration_in_seconds * 0.3).to_i # 30% of full media
       (pd < 2) ? 2 : pd
     end
+  end
+
+  def default_jwplayer_tags
+    [
+      "folio",
+      "folio-env-#{Rails.env}",
+      self.class.to_s,
+    ]
+  end
+
+  def jwplayer_tags
+    default_jwplayer_tags
   end
 end
