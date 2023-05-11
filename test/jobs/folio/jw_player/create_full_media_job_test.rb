@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Files::JwPlayer::CreateFullMediaJobTest < ActiveJob::TestCase
+class Folio::JwPlayer::CreateFullMediaJobTest < ActiveJob::TestCase
   class TestVideoFile < Folio::File::Video
     include Folio::JwPlayer::FileProcessing
   end
@@ -10,7 +10,7 @@ class Folio::Files::JwPlayer::CreateFullMediaJobTest < ActiveJob::TestCase
   test "calls api and updates remote_services_data" do
     tv_file = TestVideoFile.new
     tv_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
-    assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::CreateFullMediaJob do
+    assert_enqueued_jobs 1, only: Folio::JwPlayer::CreateFullMediaJob do
       tv_file.save!
     end
 
@@ -23,13 +23,13 @@ class Folio::Files::JwPlayer::CreateFullMediaJobTest < ActiveJob::TestCase
     api_mock.expect(:create_media, response, [])
     api_mock.expect(:==, false, [:not_passed])
 
-    assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::CheckProgressJob do
-      # assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::DeleteMediaJob
+    assert_enqueued_jobs 1, only: Folio::JwPlayer::CheckProgressJob do
+      # assert_enqueued_jobs 1, only: Folio::JwPlayer::DeleteMediaJob
       expect_method_called_on(object: Folio::JwPlayer::Api,
                                       method: :new,
                                       args: [tv_file],
                                       return_value: api_mock) do
-        Folio::Files::JwPlayer::CreateFullMediaJob.perform_now(tv_file)
+        Folio::JwPlayer::CreateFullMediaJob.perform_now(tv_file)
       end
     end
     api_mock.verify

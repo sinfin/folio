@@ -23,7 +23,7 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
   end
 
   test "#create_full_media" do
-    assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::CreateFullMediaJob do
+    assert_enqueued_jobs 1, only: Folio::JwPlayer::CreateFullMediaJob do
       tv_file.create_full_media
     end
 
@@ -36,8 +36,8 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
   test "#full_media_processed!" do
     tv_file.remote_services_data = {
       "service" => "jw_player",
-      "processing_state" => "full_media_processing", # set by Folio::Files::JwPlayer::CreateFullMediaJob
-      "remote_key" => "bflmpsvz" # set by Folio::Files::JwPlayer::CreateFullMediaJob
+      "processing_state" => "full_media_processing", # set by Folio::JwPlayer::CreateFullMediaJob
+      "remote_key" => "bflmpsvz" # set by Folio::JwPlayer::CreateFullMediaJob
     }
 
     assert_not tv_file.full_media_processed?
@@ -54,10 +54,10 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
     tv_file.remote_services_data = {
       "service" => "jw_player",
       "processing_state" => "full_media_processed", # set by `full_media_processed` method
-      "remote_key" => "bflmpsvz" # set by Folio::Files::JwPlayer::CreateFullMediaJob
+      "remote_key" => "bflmpsvz" # set by Folio::JwPlayer::CreateFullMediaJob
     }
 
-    assert_enqueued_jobs 1, only: Folio::Files::JwPlayer::CreatePreviewMediaJob do
+    assert_enqueued_jobs 1, only: Folio::JwPlayer::CreatePreviewMediaJob do
       tv_file.create_preview_media
     end
 
@@ -69,9 +69,9 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
   test "#preview_media_processed!" do
     tv_file.remote_services_data = {
       "service" => "jw_player",
-      "processing_state" => "preview_media_processing", # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
-      "remote_key" => "bflmpsvz", # set by Folio::Files::JwPlayer::CreateFullMediaJob
-      "remote_preview_key" => "hchkrdtn" # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
+      "processing_state" => "preview_media_processing", # set by Folio::JwPlayer::CreatePreviewMediaJob
+      "remote_key" => "bflmpsvz", # set by Folio::JwPlayer::CreateFullMediaJob
+      "remote_preview_key" => "hchkrdtn" # set by Folio::JwPlayer::CreatePreviewMediaJob
     }
 
     assert tv_file.full_media_processed?
@@ -88,12 +88,12 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
   test "deletes remote media on destroy" do
     tv_file.remote_services_data = {
       "service" => "jw_player",
-      "processing_state" => "preview_media_processing", # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
-      "remote_key" => "bflmpsvz", # set by Folio::Files::JwPlayer::CreateFullMediaJob
-      "remote_preview_key" => "hchkrdtn" # set by Folio::Files::JwPlayer::CreatePreviewMediaJob
+      "processing_state" => "preview_media_processing", # set by Folio::JwPlayer::CreatePreviewMediaJob
+      "remote_key" => "bflmpsvz", # set by Folio::JwPlayer::CreateFullMediaJob
+      "remote_preview_key" => "hchkrdtn" # set by Folio::JwPlayer::CreatePreviewMediaJob
     }
 
-    assert_enqueued_jobs 2, only: Folio::Files::JwPlayer::DeleteMediaJob  do
+    assert_enqueued_jobs 2, only: Folio::JwPlayer::DeleteMediaJob  do
       tv_file.destroy
     end
   end

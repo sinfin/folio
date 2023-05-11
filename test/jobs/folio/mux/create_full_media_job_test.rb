@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Files::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
+class Folio::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
   class TestVideoFile < Folio::File::Video
     include Folio::Mux::FileProcessing
   end
@@ -19,7 +19,7 @@ class Folio::Files::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
   test "calls api and updates remote_services_data" do
     tv_file = TestVideoFile.new
     tv_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
-    assert_enqueued_jobs 1, only: Folio::Files::Mux::CreateFullMediaJob do
+    assert_enqueued_jobs 1, only: Folio::Mux::CreateFullMediaJob do
       tv_file.save!
     end
 
@@ -32,13 +32,13 @@ class Folio::Files::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
     api_mock.expect(:create_media, response, [])
     api_mock.expect(:==, false, [:not_passed])
 
-    assert_enqueued_jobs 1, only: Folio::Files::Mux::CheckProgressJob do
-      # assert_enqueued_jobs 1, only: Folio::Files::Mux::DeleteMediaJob
+    assert_enqueued_jobs 1, only: Folio::Mux::CheckProgressJob do
+      # assert_enqueued_jobs 1, only: Folio::Mux::DeleteMediaJob
       expect_method_called_on(object: Folio::Mux::Api,
                                       method: :new,
                                       args: [tv_file],
                                       return_value: api_mock) do
-        Folio::Files::Mux::CreateFullMediaJob.perform_now(tv_file)
+        Folio::Mux::CreateFullMediaJob.perform_now(tv_file)
       end
     end
     api_mock.verify

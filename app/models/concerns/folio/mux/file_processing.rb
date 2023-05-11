@@ -27,8 +27,8 @@ module Folio::Mux::FileProcessing
   end
 
   def destroy_attached_file
-    Folio::Files::Mux::DeleteMediaJob.perform_later(self.remote_key)
-    Folio::Files::Mux::DeleteMediaJob.perform_later(self.remote_preview_key)
+    Folio::Mux::DeleteMediaJob.perform_later(self.remote_key)
+    Folio::Mux::DeleteMediaJob.perform_later(self.remote_preview_key)
   end
 
   def remote_key
@@ -91,13 +91,13 @@ module Folio::Mux::FileProcessing
   end
 
   def create_full_media
-    Folio::Files::Mux::CreateFullMediaJob.perform_later(self)
+    Folio::Mux::CreateFullMediaJob.perform_later(self)
     rsd = remote_services_data || {}
     self.remote_services_data = rsd.merge!({ "service" => "mux", "processing_state" => "enqueued" })
   end
 
   def create_preview_media
-    Folio::Files::Mux::CreatePreviewMediaJob.perform_later(self)
+    Folio::Mux::CreatePreviewMediaJob.perform_later(self)
   end
 
   def preview_starts_at_second

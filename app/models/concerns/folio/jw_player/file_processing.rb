@@ -24,8 +24,8 @@ module Folio::JwPlayer::FileProcessing
   end
 
   def destroy_attached_file
-    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_key) if self.remote_key
-    Folio::Files::JwPlayer::DeleteMediaJob.perform_later(self.remote_preview_key) if self.remote_preview_key
+    Folio::JwPlayer::DeleteMediaJob.perform_later(self.remote_key) if self.remote_key
+    Folio::JwPlayer::DeleteMediaJob.perform_later(self.remote_preview_key) if self.remote_preview_key
   end
 
   def remote_key
@@ -84,13 +84,13 @@ module Folio::JwPlayer::FileProcessing
   end
 
   def create_full_media
-    Folio::Files::JwPlayer::CreateFullMediaJob.perform_later(self)
+    Folio::JwPlayer::CreateFullMediaJob.perform_later(self)
     rsd = remote_services_data || {}
     self.remote_services_data = rsd.merge!({ "service" => "jw_player", "processing_state" => "enqueued" })
   end
 
   def create_preview_media
-    Folio::Files::JwPlayer::CreatePreviewMediaJob.perform_later(self)
+    Folio::JwPlayer::CreatePreviewMediaJob.perform_later(self)
   end
 
   def preview_starts_at_second

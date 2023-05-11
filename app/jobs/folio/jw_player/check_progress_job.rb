@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Files::JwPlayer::CheckProgressJob < ApplicationJob
+class Folio::JwPlayer::CheckProgressJob < ApplicationJob
   retry_on Folio::JwPlayer::MetadataNotAvailable, wait: 30.seconds, attempts: 25
 
   queue_as :default

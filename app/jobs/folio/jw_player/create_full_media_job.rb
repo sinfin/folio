@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Files::JwPlayer::CreateFullMediaJob < Folio::ApplicationJob
+class Folio::JwPlayer::CreateFullMediaJob < Folio::ApplicationJob
   # Discard if file no longer exists
   discard_on ActiveJob::DeserializationError
 
@@ -20,8 +20,8 @@ class Folio::Files::JwPlayer::CreateFullMediaJob < Folio::ApplicationJob
       })
       media_file.save!
 
-      Folio::Files::JwPlayer::CheckProgressJob.set(wait: 10.seconds).perform_later(media_file, preview: false)
-      Folio::Files::JwPlayer::DeleteMediaJob.perform_later(original_remote_key) if original_remote_key.present?
+      Folio::JwPlayer::CheckProgressJob.set(wait: 10.seconds).perform_later(media_file, preview: false)
+      Folio::JwPlayer::DeleteMediaJob.perform_later(original_remote_key) if original_remote_key.present?
     else
       fail response.to_s
     end

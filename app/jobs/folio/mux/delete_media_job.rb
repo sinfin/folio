@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Files::Mux::DeleteMediaJob < ApplicationJob
+class Folio::Mux::DeleteMediaJob < ApplicationJob
   queue_as :default
 
   MFileStruct = Struct.new(:remote_key)

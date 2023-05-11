@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Files::Mux::CheckProgressJob < ApplicationJob
+class Folio::Mux::CheckProgressJob < ApplicationJob
   retry_on Folio::Mux::MetadataNotAvailable, wait: 30.seconds, attempts: 25
 
   queue_as :default
