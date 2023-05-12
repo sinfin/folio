@@ -62,10 +62,6 @@ module Folio::JwPlayer::FileProcessing
     "https://cdn.jwplayer.com/v2/media/#{remote_preview_key}"
   end
 
-  def processing_name
-    "jw_player"
-  end
-
   def processing_state
     remote_services_data["processing_state"]
   end

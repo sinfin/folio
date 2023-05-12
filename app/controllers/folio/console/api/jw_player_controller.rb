@@ -4,7 +4,7 @@ class Folio::Console::Api::JwPlayerController < Folio::Console::Api::BaseControl
   def video_url
     file = Folio::File.find(params.require(:file_id))
 
-    if file.try(:processing_name) == "jw_player" && file.remote_key
+    if file.try(:processing_service) == "jw_player" && file.remote_key
       response = HTTParty.get(file.remote_signed_full_url)
 
       if response && response["playlist"].present?

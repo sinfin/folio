@@ -84,12 +84,26 @@ class Folio::Console::FileSerializer
   end
 
   attribute :jw_player_api_url do |object|
-    if object.try(:processing_name) == "jw_player"
+    if object.try(:processing_service) == "jw_player"
       if object.remote_key
         Folio::Engine.routes
                      .url_helpers
                      .video_url_console_api_jw_player_path(file_id: object.id)
       end
+    end
+  end
+
+  attribute :player_source_mime_type do |object|
+    if object.try(:processing_service) == "mux" && object.ready?
+      "application/x-mpegurl"
+    else
+      object.file_mime_type
+    end
+  end
+
+  attribute :mux_source_url do |object|
+    if object.try(:processing_service) == "mux" && object.ready?
+      object.remote_signed_full_url
     end
   end
 end

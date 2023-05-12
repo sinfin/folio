@@ -50,10 +50,15 @@ window.Folio.Player.innerBind = (el, opts, file) => {
   }
 
   const child = document.createElement(fileAttributes.human_type)
-  child.src = fileAttributes.source_url
   child.autoplay = false
   child.controls = true
   child.muted = false
+
+  const source = document.createElement('source')
+  source.type = fileAttributes.player_source_mime_type
+  source.src = fileAttributes.mux_source_url || fileAttributes.source_url
+
+  child.appendChild(source)
 
   const videoSize = { width: 1600, height: 900 }
 
