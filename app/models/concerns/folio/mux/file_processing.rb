@@ -56,12 +56,12 @@ module Folio::Mux::FileProcessing
 
     token = JWT.encode(params, rsa_private, "RS256")
 
-    "https://stream.mux.com/#{signed_full_playback_id}?token=#{token}"
+    "https://stream.mux.com/#{signed_full_playback_id}.m3u8?token=#{token}"
   end
 
   def remote_preview_url
     playback_id = remote_services_data["preview"]["playback_ids"].first["id"]
-    "https://stream.mux.com/#{playback_id}"
+    "https://stream.mux.com/#{playback_id}.m3u8"
   end
 
   def processing_state
