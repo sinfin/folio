@@ -6,7 +6,7 @@ require "openssl"
 
 class Folio::JwPlayer::Api
   SITE_ID = ENV.fetch("JWPLAYER_API_KEY")
-  SECRET = ENV.fetch("JWPLAYER_API_SECRET")
+  SECRET = ENV.fetch("JWPLAYER_API_V2_SECRET")
   LOG_CALLS = ENV.fetch("JWPLAYER_LOG_CALLS") == "true"
 
   attr_reader :media_file, :preview

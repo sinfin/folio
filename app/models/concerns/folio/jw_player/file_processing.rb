@@ -9,10 +9,12 @@ module Folio::JwPlayer::FileProcessing
                          preview_media_processing
                          preview_media_processed]
   included do
-    missing_envs = ENV.fetch("JWPLAYER_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
-    missing_envs ||= ENV.fetch("JWPLAYER_API_SECRET").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs ||= ENV.fetch("JWPLAYER_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs ||= ENV.fetch("JWPLAYER_API_V1_SECRET").to_s.gsub("find-me-in-vault", "").blank?
+    missing_envs ||= ENV.fetch("JWPLAYER_API_V2_SECRET").to_s.gsub("find-me-in-vault", "").blank?
+
     if missing_envs
-      raise 'requires filled ENV["JWPLAYER_API_KEY"] and ENV["JWPLAYER_API_SECRET"]'
+      raise 'requires filled ENV["JWPLAYER_API_KEY"], ENV["JWPLAYER_API_V1_SECRET"] and ENV["JWPLAYER_API_V2_SECRET"]'
     end
 
     require "jwt"
@@ -36,18 +38,22 @@ module Folio::JwPlayer::FileProcessing
     remote_services_data["remote_preview_key"]
   end
 
+  def remote_path
+    "/v2/media/#{remote_key}"
+  end
+
   def remote_full_url
-    "https://cdn.jwplayer.com/v2/media/#{remote_key}"
+    "https://cdn.jwplayer.com#{remote_path}"
   end
 
   # player needs to send headers `{ "alg": "HS256",  "typ": "JWT"}`
   def remote_signed_full_url(expires_at = 2.hours.from_now)
     params = {
-      "resource" => remote_full_url,
+      "resource" => remote_path,
       "exp" => expires_at.to_i
     }
 
-    token = JWT.encode(params, ENV.fetch("JWPLAYER_API_SECRET"), "HS256")
+    token = JWT.encode(params, ENV.fetch("JWPLAYER_API_V1_SECRET"), "HS256", typ: "JWT")
 
     "#{remote_full_url}?token=#{token}"
   end
