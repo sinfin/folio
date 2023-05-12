@@ -42,8 +42,7 @@ window.Folio.Player.create = (serializedFile, opts) => {
   return player
 }
 
-window.Folio.Player.bind = (el, opts) => {
-  const file = JSON.parse(el.dataset.file)
+window.Folio.Player.innerBind = (el, opts, file) => {
   const fileAttributes = file.attributes
 
   if (fileAttributes.human_type !== 'audio' && fileAttributes.human_type !== 'video') {
@@ -113,6 +112,35 @@ window.Folio.Player.bind = (el, opts) => {
   el.classList.add('f-player--bound')
 }
 
+window.Folio.Player.bind = (el, opts) => {
+  let file = JSON.parse(el.dataset.file)
+
+  if (file.attributes.jw_player_api_url && !file.attributes.handled_jw_player_api_url) {
+    window.Folio.Api.apiGet(file.attributes.jw_player_api_url)
+      .then((res) => {
+        if (res && res.data && res.data.attributes) {
+          file = {
+            ...file,
+            attributes: {
+              ...file.attributes,
+              ...res.data.attributes,
+              handled_jw_player_api_url: true
+            }
+          }
+
+          el.dataset.file = JSON.stringify(file)
+          window.Folio.Player.innerBind(el, opts, file)
+        }
+      })
+      .catch((e) => {
+        console.error('Failed to get jw_player_api_url')
+        window.Folio.Player.innerBind(el, opts, file)
+      })
+  } else {
+    window.Folio.Player.innerBind(el, opts, file)
+  }
+}
+
 window.Folio.Player.unbind = (el) => {
   if (el.folioPlayer) {
     el.folioPlayer.dispose()
@@ -134,11 +162,11 @@ window.Folio.Player.waveform = (id, el) => {
   control.classList.add('vjs-progress-control--waveform')
 
   window.setTimeout(() => {
-    const progressSvg = Folio.waveform({
-      id: id,
+    const progressSvg = window.Folio.waveform({
+      id,
       width: control.clientWidth,
       height: 20,
-      class: "f-player__waveform",
+      class: 'f-player__waveform'
     })
 
     const backgroundSvg = progressSvg.cloneNode(true)

@@ -62,6 +62,10 @@ module Folio::JwPlayer::FileProcessing
     "https://cdn.jwplayer.com/v2/media/#{remote_preview_key}"
   end
 
+  def processing_name
+    "jw_player"
+  end
+
   def processing_state
     remote_services_data["processing_state"]
   end
@@ -124,7 +128,7 @@ module Folio::JwPlayer::FileProcessing
     end
   end
 
-  def default_jwplayer_tags
+  def default_jw_player_tags
     [
       "folio",
       "folio-env-#{Rails.env}",
@@ -132,7 +136,7 @@ module Folio::JwPlayer::FileProcessing
     ]
   end
 
-  def jwplayer_tags
-    default_jwplayer_tags
+  def jw_player_tags
+    default_jw_player_tags
   end
 end

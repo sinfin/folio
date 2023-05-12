@@ -139,6 +139,10 @@ Folio::Engine.routes.draw do
 
     # these are outside of constraint by design
     namespace :api do
+      resource :jw_player, only: [], controller: "jw_player" do
+        get :video_url
+      end
+
       resources :tags, only: %i[index]
 
       resource :autocomplete, only: %i[show] do

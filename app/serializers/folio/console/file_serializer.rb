@@ -82,4 +82,14 @@ class Folio::Console::FileSerializer
       end
     end
   end
+
+  attribute :jw_player_api_url do |object|
+    if object.try(:processing_name) == "jw_player"
+      if object.remote_key
+        Folio::Engine.routes
+                     .url_helpers
+                     .video_url_console_api_jw_player_path(file_id: object.id)
+      end
+    end
+  end
 end
