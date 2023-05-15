@@ -11,6 +11,10 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
     bind_user_and_redirect
   end
 
+  def apple
+    bind_user_and_redirect
+  end
+
   def google_oauth2
     bind_user_and_redirect
   end

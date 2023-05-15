@@ -91,6 +91,7 @@ en:
 
       omniauth:
         providers:
+          apple: Apple
           facebook: Facebook
           google_oauth2: Google
           twitter2: Twitter

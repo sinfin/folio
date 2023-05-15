@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
   s.add_dependency "omniauth-facebook"
   s.add_dependency "omniauth-google-oauth2"
   s.add_dependency "omniauth-twitter2"
+  s.add_dependency "omniauth-apple"
   s.add_dependency "omniauth-rails_csrf_protection"
   s.add_dependency "omniauth"
   s.add_dependency "pagy"
