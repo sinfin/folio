@@ -97,4 +97,16 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
       tv_file.destroy
     end
   end
+
+  test "sets preview periode on destroy" do
+    assert_nil tv_file.remote_services_data
+    assert_equal 30, tv_file.preview_duration_in_seconds
+    assert_equal 30, tv_file.preview_duration
+
+    tv_file.update(preview_duration: 99)
+
+    assert_equal 99, tv_file.reload.preview_duration_in_seconds
+    assert_equal 99, tv_file.preview_duration
+    assert_equal({ "preview_interval" => { "start_at" => 0, "end_at" => 99 } }, tv_file.remote_services_data)
+  end
 end

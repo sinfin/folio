@@ -2,12 +2,8 @@
 
 module Folio::Mux::FileProcessing
   extend ActiveSupport::Concern
+  include Folio::MediaFileProcessingBase
 
-  PROCESSING_STATES = %w[enqueued
-                         full_media_processing
-                         full_media_processed
-                         preview_media_processing
-                         preview_media_processed]
   included do
     missing_envs = ENV.fetch("MUX_API_KEY").to_s.gsub("find-me-in-vault", "").blank?
     missing_envs ||= ENV.fetch("MUX_API_SECRET").to_s.gsub("find-me-in-vault", "").blank?
@@ -19,24 +15,6 @@ module Folio::Mux::FileProcessing
     end
 
     require "jwt"
-  end
-
-  def process_attached_file
-    regenerate_thumbnails if try(:thumbnailable?)
-    create_full_media # ensure call processing_done! after all processing is complete
-  end
-
-  def destroy_attached_file
-    Folio::Mux::DeleteMediaJob.perform_later(self.remote_key)
-    Folio::Mux::DeleteMediaJob.perform_later(self.remote_preview_key)
-  end
-
-  def remote_key
-    remote_services_data["remote_key"]
-  end
-
-  def remote_preview_key
-    remote_services_data["remote_preview_key"]
   end
 
   def remote_full_url
@@ -68,66 +46,17 @@ module Folio::Mux::FileProcessing
     "https://stream.mux.com/#{playback_id}.m3u8"
   end
 
-  def processing_state
-    remote_services_data["processing_state"]
+
+  def full_media_job_class
+    Folio::Mux::CreateFullMediaJob
   end
 
-  def processing_service
-    remote_services_data["service"]
+  def preview_media_job_class
+    Folio::Mux::CreatePreviewMediaJob
   end
 
-  def full_media_processed!
-    remote_services_data["processing_state"] = "full_media_processed"
-    save!
-    create_preview_media
-  end
-
-  def preview_media_processed!
-    remote_services_data["processing_state"] = "preview_media_processed"
-    processing_done!
-  end
-
-  def full_media_processed?
-    PROCESSING_STATES.index("full_media_processed") <= PROCESSING_STATES.index(processing_state).to_i
-  end
-
-  def preview_media_processed?
-    PROCESSING_STATES.index("preview_media_processed") <= PROCESSING_STATES.index(processing_state).to_i
-  end
-
-  def create_full_media
-    Folio::Mux::CreateFullMediaJob.perform_later(self)
-    rsd = remote_services_data || {}
-    self.remote_services_data = rsd.merge!({ "service" => "mux", "processing_state" => "enqueued" })
-  end
-
-  def create_preview_media
-    Folio::Mux::CreatePreviewMediaJob.perform_later(self)
-  end
-
-  def preview_starts_at_second
-    preview_inteval["start_at"]
-  end
-
-  def preview_ends_at_second
-    preview_inteval["end_at"]
-  end
-
-  def preview_inteval
-    (remote_services_data || {}).dig("preview_interval") || { "start_at" => 0, "end_at" => preview_duration_in_seconds }
-  end
-
-  def duration_in_seconds
-    (remote_services_data || {}).dig("full", "duration").to_i
-  end
-
-  def preview_duration_in_seconds
-    if (remote_services_data || {}).dig("preview_interval").present?
-      preview_ends_at_second - preview_starts_at_second
-    else
-      pd = (duration_in_seconds * 0.3).to_i
-      (pd < 2) ? 2 : pd
-    end
+  def delete_media_job_class
+    Folio::Mux::DeleteMediaJob
   end
 
   def signed_full_playback_id
@@ -136,5 +65,9 @@ module Folio::Mux::FileProcessing
 
   def public_full_playback_id
     remote_services_data["full"]["playback_ids"].detect { |pb| pb["policy"] == "public" }["id"]
+  end
+
+  def processed_by
+    "mux"
   end
 end
