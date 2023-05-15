@@ -45,16 +45,20 @@ module Folio::Mux::FileProcessing
 
   # player needs to send headers `{ "alg": "HS256",  "typ": "JWT"}`
   def remote_signed_full_url(expires_at = 2.hours.from_now)
-    params = {
-      sub: signed_full_playback_id,
-      aud: "v",	# Audience (intended application of the token):	v => (Video or Subtitles/Closed Captions)
-      exp: expires_at.to_i,
-      kid: ENV.fetch("MUX_SIGNING_KEY")
-    }
+    if Rails.env.test?
+      token = "test"
+    else
+      params = {
+        sub: signed_full_playback_id,
+        aud: "v",	# Audience (intended application of the token):	v => (Video or Subtitles/Closed Captions)
+        exp: expires_at.to_i,
+        kid: ENV.fetch("MUX_SIGNING_KEY")
+      }
 
-    rsa_private = OpenSSL::PKey::RSA.new(Base64.decode64(ENV.fetch("MUX_SIGNING_PRIVATE_KEY")))
+      rsa_private = OpenSSL::PKey::RSA.new(Base64.decode64(ENV.fetch("MUX_SIGNING_PRIVATE_KEY")))
 
-    token = JWT.encode(params, rsa_private, "RS256")
+      token = JWT.encode(params, rsa_private, "RS256")
+    end
 
     "https://stream.mux.com/#{signed_full_playback_id}.m3u8?token=#{token}"
   end

@@ -53,7 +53,11 @@ module Folio::JwPlayer::FileProcessing
       "exp" => expires_at.to_i
     }
 
-    token = JWT.encode(params, ENV.fetch("JWPLAYER_API_V1_SECRET"), "HS256", typ: "JWT")
+    if Rails.env.test?
+      token = "test"
+    else
+      token = JWT.encode(params, ENV.fetch("JWPLAYER_API_V1_SECRET"), "HS256", typ: "JWT")
+    end
 
     "#{remote_full_url}?token=#{token}"
   end
