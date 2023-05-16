@@ -35,6 +35,16 @@ class Cell::TestCase
   end
 end
 
+class Folio::CapybaraTest < ActionDispatch::IntegrationTest
+  include Capybara::DSL
+  include Capybara::Minitest::Assertions
+
+  def teardown
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
+  end
+end
+
 class Folio::Console::CellTest < Cell::TestCase
   controller Folio::Console::BaseController
 end
