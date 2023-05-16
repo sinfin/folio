@@ -102,10 +102,10 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
   private
     def update_resource_params
-      params.require(:user)
-            .permit(*Folio::User.controller_strong_params_for_create)
-            .to_h
-            .merge(super)
+      h = params.require(:user)
+                .permit(*Folio::User.controller_strong_params_for_create)
+                .to_h
+      super.merge(h)
     end
 
     def disallow_public_invitations_if_needed
