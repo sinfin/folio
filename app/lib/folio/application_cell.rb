@@ -5,6 +5,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   include ActionView::Helpers::TranslationHelper
   include Folio::CstypoHelper
   include Folio::IconHelper
+  include Folio::ImageHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 
@@ -35,7 +36,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def image(placement, size, opts = {})
-    cell("folio/image", placement, opts.merge(size:))
+    folio_image(placement, size, opts)
   end
 
   def menu_url_for(menu_item)
