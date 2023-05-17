@@ -2,6 +2,8 @@
 
 class Folio::Devise::ResourceFormCell < Folio::Devise::ApplicationCell
   include ActionView::Helpers::FormOptionsHelper
+  # to be used in _top and _bottom overrides
+  include Folio::Cell::HtmlSafeFieldsFor
 
   def form(&block)
     opts = {
