@@ -1,91 +1,99 @@
-//= require folio/input/_framework
+//= require folio/i18n
 
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.CharacterCounter = {}
 
-window.Folio.Input.CharacterCounter.SELECTOR = '.f-input--character-counter'
-
-window.Folio.Input.CharacterCounter.templateBasic = (count) => (
-  `<span class="f-input-character-counter-wrap small">
-     <span class="f-input-character-counter-wrap__current">${count}</span>
-     ${window.FolioConsole.translations.shortForCharacter}
-   </span>`
-)
-
-window.Folio.Input.CharacterCounter.templateMax = (count, max) => (
-  `<span class="f-input-character-counter-wrap small">
-     <span class="f-input-character-counter-wrap__current">${count}</span>
-     /
-     <span class="f-input-character-counter-wrap__max">
-       ${max}
-       ${window.FolioConsole.translations.shortForCharacter}
-     </span>
-   </span>`
-)
-
-window.Folio.Input.CharacterCounter.onKeyupOrChange = (e) => {
-  const $this = $(e.currentTarget)
-
-  const length = $this.val().length
-  const max = parseInt($this.data('character-counter'))
-  const $wrap = $this.closest('.f-input-character-counter-wrap__parent')
-
-  if (!isNaN(max)) {
-    $wrap
-      .find('.f-input-character-counter-wrap')
-      .toggleClass('f-input-character-counter-wrap--invalid', length > max)
+window.Folio.Input.CharacterCounter.i18n = {
+  cs: {
+    shortForCharacter: 'zn.'
+  },
+  en: {
+    shortForCharacter: 'ch.'
   }
-
-  $wrap
-    .find('.f-input-character-counter-wrap__current')
-    .text(length)
 }
 
-window.Folio.Input.CharacterCounter.bind = (input) => {
-  const $input = $(input)
-  const $group = $input.closest('.form-group')
-
-  $group.addClass('f-input-character-counter-wrap__parent')
-
-  let $formText = $group.find('.form-text')
-
-  if ($formText.length === 0) {
-    $formText = $('<small class="form-text text-muted f-input-character-counter-wrap__form-text">&nbsp;</small>')
-    $group.append($formText)
+window.Folio.Stimulus.register('f-input-character-counter', class extends window.Stimulus.Controller {
+  static values = {
+    max: Number
   }
 
-  const max = parseInt($input.data('character-counter'))
+  connect () {
+    this.addElementToFormGroup()
+  }
 
-  const count = $input.val().length
+  disconnect () {
+    this.removeElementFromFormGroup()
+  }
 
-  if (isNaN(max)) {
-    $group.append(window.Folio.Input.CharacterCounter.templateBasic(count))
-  } else {
-    $group.append(window.Folio.Input.CharacterCounter.templateMax(count, max))
+  onInput (e) {
+    const length = this.element.value.length
+    const formGroup = this.element.closest('.form-group')
+    const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
+    const current = wrap.querySelector('.f-input-character-counter-wrap__current')
 
-    if (count > max) {
-      $group
-        .find('.f-input-character-counter-wrap')
-        .addClass('f-input-character-counter-wrap--invalid')
+    if (this.maxValue) {
+      wrap.classList.toggle('text-danger', length > this.maxValue)
     }
+
+    current.innerText = length
   }
 
-  $input.on('keyup.fcStringInputCharacterCounter change.fcStringInputCharacterCounter',
-    window.Folio.Input.CharacterCounter.onKeyupOrChange)
-}
+  addElementToFormGroup () {
+    const formGroup = this.element.closest('.form-group')
 
-window.Folio.Input.CharacterCounter.unbind = (input) => {
-  const $input = $(input)
+    if (!formGroup) {
+      throw new Error('Missing parent form-group element.')
+    }
 
-  $input
-    .off('keyup.fcStringInputCharacterCounter change.fcStringInputCharacterCounter',
-      window.Folio.Input.CharacterCounter.onKeyupOrChange)
-    .closest('.form-group')
-    .removeClass('f-input-character-counter-wrap__parent')
-    .find('.f-input-character-counter-wrap, .f-input-character-counter-wrap__form-text')
-    .remove()
-}
+    formGroup.style.position = 'relative'
 
-window.Folio.Input.framework(window.Folio.Input.CharacterCounter)
+    const existingTexts = formGroup.querySelectorAll('.form-text')
+
+    for (let i = 0; i < existingTexts.length; i++) {
+      const existingText = existingTexts[i]
+      existingText.style.paddingRight = '75px'
+    }
+
+    const wrap = document.createElement('small')
+
+    wrap.classList.add('f-input-character-counter-wrap')
+    wrap.classList.add('form-text')
+    wrap.style.position = 'absolute'
+    wrap.style.right = 0
+
+    const currentLength = this.element.value.length
+
+    const current = document.createElement('span')
+    current.classList.add('f-input-character-counter-wrap__current')
+    current.innerText = currentLength
+
+    wrap.appendChild(current)
+
+    if (this.maxValue) {
+      const max = document.createElement('span')
+
+      max.classList.add('f-input-character-counter-wrap__max')
+      max.innerText = ` / ${this.maxValue}`
+
+      wrap.appendChild(max)
+
+      if (currentLength > this.maxValue) {
+        wrap.classList.add('text-danger')
+      }
+    }
+
+    wrap.appendChild(document.createTextNode(` ${Folio.i18n(window.Folio.Input.CharacterCounter.i18n, 'shortForCharacter')}`))
+
+    this.element.insertAdjacentElement('afterend', wrap)
+  }
+
+  removeElementFromFormGroup () {
+    const formGroup = this.element.closest('.form-group')
+    const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
+
+    if (!wrap) return
+    wrap.parentElement().removeChild(wrap)
+  }
+})
