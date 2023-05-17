@@ -10,6 +10,10 @@ module Folio::BelongsToSiteAndFriendlyId
     include Folio::FriendlyId
 
     private
+      def should_generate_new_friendly_id?
+        send(friendly_id_config.slug_column).nil? && super
+      end
+
       def slug_candidates
         %i[slug to_label site_slug_candidate]
       end
