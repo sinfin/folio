@@ -1,9 +1,10 @@
 .f-addresses-fields
-  *title_tag
-    = options[:title] || t('.title')
+  - unless options[:title] == false
+    *title_tag
+      = options[:title] || t('.title')
 
   .row
-    - unless options[:use_primary_address_name]
+    - unless options[:names] == false
       div class=column_size_class_name(6)
         = model.input :first_name, required: true, input_html: { id: nil }
 
@@ -18,7 +19,7 @@
       - model.simple_fields_for :primary_address do |g|
         - required = required?(:primary_address, g.object.attributes)
 
-        - if options[:use_primary_address_name]
+        - if options[:primary_address_name]
           = g.input :name, required: required
 
         .row
@@ -29,10 +30,10 @@
             = address_line_input g, :address_line_2, required: required
 
         .row
-          div class=column_size_class_name(7)
+          div class=column_size_class_name(5)
             = g.input :zip, required: required, input_html: { id: nil }
 
-          div class=column_size_class_name(5)
+          div class=column_size_class_name(7)
             = g.input :city, required: required, input_html: { id: nil }
 
         .row
@@ -48,7 +49,7 @@
 
   - if show_secondary_address_fields?
     .f-addresses-fields__nested
-      = togglable_fields model, :use_secondary_address
+      = togglable_fields model, :use_secondary_address, label: options[:use_secondary_address_label]
         .f-addresses-fields__nested-content
           .f-addresses-fields__fields-wrap[
             class="f-addresses-fields__fields-wrap--secondary-address"
@@ -62,11 +63,10 @@
               = g.input :company_name, input_html: { id: nil }
 
               .row
-                div class=column_size_class_name(7)
+                div class=column_size_class_name(6)
                   = g.input :identification_number, input_html: { id: nil }
 
-              .row
-                div class=column_size_class_name(7)
+                div class=column_size_class_name(6)
                   = g.input :vat_identification_number, input_html: { id: nil }
 
               .row
