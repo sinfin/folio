@@ -11,16 +11,12 @@ module Folio::BelongsToSiteAndFriendlyId
 
     private
       def slug_candidates
+        %i[slug to_label site_slug_candidate]
+      end
+
+      def site_slug_candidate
         if site
-          [
-            slug.presence,
-            to_label,
-            "#{site.slug} #{to_label}",
-            "#{site.slug} #{to_label} 2",
-            "#{site.slug} #{to_label} 3",
-          ].compact
-        else
-          %i[slug to_label]
+          "#{site.slug} #{to_label}"
         end
       end
   end
