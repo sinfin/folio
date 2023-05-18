@@ -53,6 +53,10 @@ class Folio::User < Folio::ApplicationRecord
             presence: true,
             if: :validate_first_name_and_last_name?
 
+  validates :email,
+            format: { with: Folio::EMAIL_REGEXP },
+            if: :email?
+
   validates :phone,
             phone: true,
             if: :validate_phone?
