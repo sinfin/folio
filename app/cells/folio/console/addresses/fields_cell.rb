@@ -25,9 +25,10 @@ class Folio::Console::Addresses::FieldsCell < Folio::ConsoleCell
     if key == :country_code
       g.input(key, only: g.object.class.countries_whitelist,
                    priority: g.object.class.priority_countries(locale: I18n.locale),
-                   include_blank: false)
+                   include_blank: false,
+                   disabled: options[:disabled])
     else
-      g.input(key, required:)
+      g.input(key, required:, disabled: options[:disabled])
     end
   end
 
