@@ -70,6 +70,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rubyzip"
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
+  s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "1.8.0"
   s.add_dependency "sidekiq", "~> 6.5"
 
