@@ -20,6 +20,10 @@ module Folio::MediaFileProcessingBase
     delete_media_job_class.perform_later(self.remote_preview_key) if self.remote_preview_key
   end
 
+  def remote_services_data
+    super || {}
+  end
+
   def remote_key
     remote_services_data["remote_key"]
   end
