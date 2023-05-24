@@ -93,7 +93,8 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
       f.input(col, label: note_label,
                    input_html: { rows: note_rows, value: note_value })
     else
-      f.input(col, label: t(".#{col}"))
+      label = options[:"#{col}_label"].presence || t(".#{col}")
+      f.input(col, label: label.html_safe)
     end
   end
 
