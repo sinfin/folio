@@ -32,4 +32,20 @@ class Folio::LeadsControllerTest < ActionDispatch::IntegrationTest
     html = Nokogiri::HTML(response.body)
     assert_equal 1, html.css(".f-leads-form--submitted").size
   end
+
+  test "label" do
+    post url_for(Folio::Lead), params: {
+      lead: {
+        email: "foo@bar.baz",
+        note: "foo",
+      },
+      cell_options: {
+        email_label: "foobar"
+      }
+    }
+
+    assert_response(:success)
+    html = Nokogiri::HTML(response.body)
+    assert_equal "foobar", html.at("label.email").text
+  end
 end

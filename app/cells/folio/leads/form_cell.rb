@@ -59,8 +59,28 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
     3
   end
 
+  def input_keys
+    input_keys = []
+    input_keys.push(*layout[:cols]) if layout[:cols].present?
+    input_keys.push(*layout[:rows].flatten) if layout[:rows].present?
+    input_keys
+  end
+
+  def label_options
+    ary = []
+
+    input_keys.each do |key|
+      ary << :"#{key}_label" if options[:"#{key}_label"].present?
+    end
+
+    ary
+  end
+
   def remember_option_keys
-    Folio::LeadsController::REMEMBER_OPTION_KEYS
+    [
+      *Folio::LeadsController::REMEMBER_OPTION_KEYS,
+      *label_options
+    ]
   end
 
   def additional_data_input(f)
