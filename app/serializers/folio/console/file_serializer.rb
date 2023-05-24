@@ -106,4 +106,8 @@ class Folio::Console::FileSerializer
       object.remote_signed_full_url
     end
   end
+
+  attribute :preview_duration do |object|
+    object.try(:preview_duration)
+  end
 end

@@ -104,6 +104,7 @@ module Folio::Console::Api::FileControllerBase
                         :description,
                         :sensitive_content,
                         :default_gravity,
+                        :preview_duration,
                         tags: [])
 
       if p[:tags].present? && p[:tag_list].blank?
