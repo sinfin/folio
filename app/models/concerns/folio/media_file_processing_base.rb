@@ -3,6 +3,8 @@
 module Folio::MediaFileProcessingBase
   extend ActiveSupport::Concern
 
+  DEFAULT_PREVIEW_DURATION = 30
+
   PROCESSING_STATES = %w[enqueued
     full_media_processing
     full_media_processed
@@ -86,7 +88,11 @@ module Folio::MediaFileProcessingBase
   end
 
   def preview_duration=(secs)
+    secs = secs.to_i if secs.is_a?(String)
+    secs ||= DEFAULT_PREVIEW_DURATION
+
     @preview_duration = ActiveSupport::Duration.build(secs)
+
     self.remote_services_data = (remote_services_data || {}).merge("preview_interval" => { "start_at" => 0, "end_at" => @preview_duration.in_seconds })
   end
 
@@ -98,7 +104,7 @@ module Folio::MediaFileProcessingBase
     if (remote_services_data || {}).dig("preview_interval").present?
       preview_ends_at_second - preview_starts_at_second
     else
-      30
+      DEFAULT_PREVIEW_DURATION
     end
   end
 end
