@@ -70,9 +70,9 @@ Dragonfly.app.configure do
     end
   end
 
-  processor :ffmpeg_screenshot_to_jpg do |content, file_track_duration_in_ffmpeg_format, *args|
+  processor :ffmpeg_screenshot_to_jpg do |content, screenshot_time_in_ffmpeg_format, *args|
     content.shell_update ext: "jpg" do |old_path, new_path|
-      "ffmpeg -y -i #{old_path} -ss #{file_track_duration_in_ffmpeg_format} -frames:v 1 #{new_path}"
+      "ffmpeg -y -i #{old_path} -ss #{screenshot_time_in_ffmpeg_format} -frames:v 1 #{new_path}"
     end
   end
 

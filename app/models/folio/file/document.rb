@@ -10,28 +10,30 @@ end
 #
 # Table name: folio_files
 #
-#  id                   :bigint(8)        not null, primary key
-#  file_uid             :string
-#  file_name            :string
-#  type                 :string
-#  thumbnail_sizes      :text             default({})
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  file_width           :integer
-#  file_height          :integer
-#  file_size            :bigint(8)
-#  additional_data      :json
-#  file_metadata        :json
-#  hash_id              :string
-#  author               :string
-#  description          :text
-#  file_placements_size :integer
-#  file_name_for_search :string
-#  sensitive_content    :boolean          default(FALSE)
-#  file_mime_type       :string
-#  default_gravity      :string
-#  file_track_duration  :integer
-#  aasm_state           :string
+#  id                                :bigint(8)        not null, primary key
+#  file_uid                          :string
+#  file_name                         :string
+#  type                              :string
+#  thumbnail_sizes                   :text             default({})
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  file_width                        :integer
+#  file_height                       :integer
+#  file_size                         :bigint(8)
+#  additional_data                   :json
+#  file_metadata                     :json
+#  hash_id                           :string
+#  author                            :string
+#  description                       :text
+#  file_placements_size              :integer
+#  file_name_for_search              :string
+#  sensitive_content                 :boolean          default(FALSE)
+#  file_mime_type                    :string
+#  default_gravity                   :string
+#  file_track_duration               :integer
+#  aasm_state                        :string
+#  remote_services_data              :json
+#  preview_track_duration_in_seconds :integer
 #
 # Indexes
 #

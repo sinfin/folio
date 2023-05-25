@@ -6,13 +6,13 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
   attr_reader :tv_file
 
-  class TestMediaFile < Folio::File::Video
+  class TestMediaFile < Folio::File::Audio
     include Folio::Mux::FileProcessing
   end
 
   setup do
     @tv_file = TestMediaFile.new
-    @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
+    @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/test_7secs.mp3")
 
     assert tv_file.unprocessed?
     # to stop callback processing chain, we stub call to `create_full_media`
@@ -95,6 +95,23 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
 
     assert_enqueued_jobs 2, only: Folio::Mux::DeleteMediaJob  do
       tv_file.destroy
+    end
+  end
+
+  test "updates preview media on file.preview_duration change" do
+    tv_file.remote_services_data = {
+      "service" => "mux",
+      "processing_state" => "preview_media_processing", # set by Folio::Mux::CreatePreviewMediaJob
+      "remote_key" => "bflmpsvz", # set by Folio::Mux::CreateFullMediaJob
+      "remote_preview_key" => "hchkrdtn" # set by Folio::Mux::CreatePreviewMediaJob
+    }
+    tv_file.save!
+    assert_equal 7, tv_file.file_track_duration_in_seconds
+    assert_equal 7, tv_file.preview_duration_in_seconds
+
+    assert_enqueued_jobs 1, only: Folio::Mux::CreatePreviewMediaJob do # will enqueue delet job for previous preview
+      tv_file.preview_duration = 5
+      tv_file.save!
     end
   end
 end

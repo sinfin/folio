@@ -207,7 +207,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       end
 
       if image.class.human_type == "video"
-        thumbnail = thumbnail.ffmpeg_screenshot_to_jpg(image.file_track_duration_in_ffmpeg_format)
+        thumbnail = thumbnail.ffmpeg_screenshot_to_jpg(image.screenshot_time_in_ffmpeg_format)
         thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg")
       else
         thumbnail.name = image.file_name

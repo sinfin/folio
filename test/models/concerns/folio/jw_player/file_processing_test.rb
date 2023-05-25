@@ -12,7 +12,7 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
 
   setup do
     @tv_file = TestMediaFile.new
-    @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
+    @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/test_7secs.mp4")
 
     assert tv_file.unprocessed?
     # to stop callback processing chain, we stub call to `create_full_media`
@@ -100,13 +100,13 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
 
   test "sets preview periode on destroy" do
     assert_equal({}, tv_file.remote_services_data)
-    assert_equal 30, tv_file.preview_duration_in_seconds
-    assert_equal 30, tv_file.preview_duration
+    assert_equal 7, tv_file.preview_duration_in_seconds
+    assert_equal 7, tv_file.preview_duration
 
-    tv_file.update(preview_duration: 99)
+    tv_file.update(preview_duration: 4)
 
-    assert_equal 99, tv_file.reload.preview_duration_in_seconds
-    assert_equal 99, tv_file.preview_duration
-    assert_equal({ "preview_interval" => { "start_at" => 0, "end_at" => 99 } }, tv_file.remote_services_data)
+    assert_equal 4, tv_file.reload.preview_duration_in_seconds
+    assert_equal 4, tv_file.preview_duration
+    assert_equal({ "preview_interval" => { "start_at" => 0, "end_at" => 4 } }, tv_file.remote_services_data)
   end
 end

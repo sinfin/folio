@@ -11,6 +11,9 @@ module Folio::MediaFileProcessingBase
     preview_media_processing
     preview_media_processed]
 
+  included do
+    after_commit :update_preview_media_length, on: :update
+  end
 
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
@@ -20,6 +23,12 @@ module Folio::MediaFileProcessingBase
   def destroy_attached_file
     delete_media_job_class.perform_later(self.remote_key) if self.remote_key
     delete_media_job_class.perform_later(self.remote_preview_key) if self.remote_preview_key
+  end
+
+  def update_preview_media_length
+    # delete current preview and create new one
+    # both handled by
+    create_preview_media if saved_changes["preview_track_duration_in_seconds"].present?
   end
 
   def remote_services_data
@@ -84,27 +93,31 @@ module Folio::MediaFileProcessingBase
   end
 
   def duration_in_seconds
-    (remote_services_data || {}).dig("full", "duration").to_i
+    file_track_duration_in_seconds || (remote_services_data || {}).dig("full", "duration").to_i
+  end
+
+  def preview_duration_in_seconds
+    return preview_track_duration_in_seconds if preview_track_duration_in_seconds.present?
+
+    if (remote_services_data || {}).dig("preview_interval").present?
+      preview_ends_at_second - preview_starts_at_second
+    else
+      [file_track_duration_in_seconds, DEFAULT_PREVIEW_DURATION].min
+    end
   end
 
   def preview_duration=(secs)
     secs = secs.to_i if secs.is_a?(String)
     secs ||= DEFAULT_PREVIEW_DURATION
+    secs = [secs, file_track_duration_in_seconds].min if file_track_duration_in_seconds.to_i.positive?
+
+    self.preview_track_duration_in_seconds = secs
+    self.remote_services_data = (remote_services_data || {}).merge("preview_interval" => { "start_at" => 0, "end_at" => secs })
 
     @preview_duration = ActiveSupport::Duration.build(secs)
-
-    self.remote_services_data = (remote_services_data || {}).merge("preview_interval" => { "start_at" => 0, "end_at" => @preview_duration.in_seconds })
   end
 
   def preview_duration
     @preview_duration ||= ActiveSupport::Duration.build(preview_duration_in_seconds)
-  end
-
-  def preview_duration_in_seconds
-    if (remote_services_data || {}).dig("preview_interval").present?
-      preview_ends_at_second - preview_starts_at_second
-    else
-      DEFAULT_PREVIEW_DURATION
-    end
   end
 end

@@ -197,9 +197,13 @@ class Folio::File < Folio::ApplicationRecord
     ]
   end
 
-  def file_track_duration_in_ffmpeg_format
+  def file_track_duration_in_seconds
+    file_track_duration
+  end
+
+  def screenshot_time_in_ffmpeg_format
     if file_track_duration
-      quarter = file_track_duration / 4
+      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
 
       seconds = quarter
       minutes = seconds / 60
@@ -222,7 +226,7 @@ class Folio::File < Folio::ApplicationRecord
 
     def set_file_track_duration
       if %w[audio video].include?(self.class.human_type)
-        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type)
+        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type) # in seconds
       end
     end
 
@@ -237,28 +241,30 @@ end
 #
 # Table name: folio_files
 #
-#  id                   :bigint(8)        not null, primary key
-#  file_uid             :string
-#  file_name            :string
-#  type                 :string
-#  thumbnail_sizes      :text             default({})
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  file_width           :integer
-#  file_height          :integer
-#  file_size            :bigint(8)
-#  additional_data      :json
-#  file_metadata        :json
-#  hash_id              :string
-#  author               :string
-#  description          :text
-#  file_placements_size :integer
-#  file_name_for_search :string
-#  sensitive_content    :boolean          default(FALSE)
-#  file_mime_type       :string
-#  default_gravity      :string
-#  file_track_duration  :integer
-#  aasm_state           :string
+#  id                                :bigint(8)        not null, primary key
+#  file_uid                          :string
+#  file_name                         :string
+#  type                              :string
+#  thumbnail_sizes                   :text             default({})
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  file_width                        :integer
+#  file_height                       :integer
+#  file_size                         :bigint(8)
+#  additional_data                   :json
+#  file_metadata                     :json
+#  hash_id                           :string
+#  author                            :string
+#  description                       :text
+#  file_placements_size              :integer
+#  file_name_for_search              :string
+#  sensitive_content                 :boolean          default(FALSE)
+#  file_mime_type                    :string
+#  default_gravity                   :string
+#  file_track_duration               :integer
+#  aasm_state                        :string
+#  remote_services_data              :json
+#  preview_track_duration_in_seconds :integer
 #
 # Indexes
 #
