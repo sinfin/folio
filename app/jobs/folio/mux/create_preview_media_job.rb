@@ -7,12 +7,10 @@ class Folio::Mux::CreatePreviewMediaJob < Folio::ApplicationJob
   queue_as :default
 
   def perform(media_file)
-    return if media_file.remote_preview_key.present?
-
     response = Folio::Mux::Api.new(media_file).create_media(preview: true)
 
     if response.data.status == "preparing"
-      rs_data = media_file.remote_services_data.presence || {}
+      rs_data = media_file.remote_services_data.presence
       original_remote_key = rs_data["remote_preview_key"]
 
       media_file.remote_services_data = rs_data.merge({

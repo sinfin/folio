@@ -28,7 +28,11 @@ module Folio::MediaFileProcessingBase
   def update_preview_media_length
     # delete current preview and create new one
     # both handled by
-    create_preview_media if saved_changes["preview_track_duration_in_seconds"].present?
+    changes_on_duration = saved_changes["preview_track_duration_in_seconds"]
+    if changes_on_duration.present?
+      reprocess!
+      create_preview_media
+    end
   end
 
   def remote_services_data

@@ -7,12 +7,10 @@ class Folio::JwPlayer::CreatePreviewMediaJob < Folio::ApplicationJob
   queue_as :default
 
   def perform(media_file)
-    return if media_file.remote_preview_key.present?
-
     response = Folio::JwPlayer::Api.new(media_file).create_media(preview: true)
 
     if response["status"] == "processing"
-      rs_data = media_file.remote_services_data.presence || {}
+      rs_data = media_file.remote_services_data
       original_remote_key = rs_data["remote_preview_key"]
 
       media_file.remote_services_data = rs_data.merge({

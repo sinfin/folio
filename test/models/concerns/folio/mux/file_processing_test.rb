@@ -108,8 +108,11 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
     tv_file.save!
     assert_equal 7, tv_file.file_track_duration_in_seconds
     assert_equal 7, tv_file.preview_duration_in_seconds
+    assert tv_file.processing?
 
-    assert_enqueued_jobs 1, only: Folio::Mux::CreatePreviewMediaJob do # will enqueue delet job for previous preview
+    tv_file.processing_done!
+
+    assert_enqueued_jobs 1, only: Folio::Mux::CreatePreviewMediaJob do # will enqueue delete job for previous preview
       tv_file.preview_duration = 5
       tv_file.save!
     end

@@ -105,6 +105,10 @@ class Folio::File < Folio::ApplicationRecord
     event :processing_done do
       transitions from: :processing, to: READY_STATE
     end
+
+    event :reprocess do
+      transitions from: READY_STATE, to: :processing
+    end
   end
 
 
