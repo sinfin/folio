@@ -237,6 +237,8 @@ GEM
       unaccent (~> 0.3)
     country_select (8.0.1)
       countries (~> 5.0)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     css_parser (1.14.0)
       addressable
@@ -334,6 +336,7 @@ GEM
       guard (~> 2.14, >= 2.14.2)
       guard-compat (~> 1.2, >= 1.2.1)
       slim_lint (~> 0.15)
+    hashdiff (1.0.1)
     hashie (5.0.0)
     highline (2.1.0)
     htmlentities (4.3.4)
@@ -634,9 +637,14 @@ GEM
       execjs (>= 0.3.0, < 3)
     unaccent (0.4.0)
     unicode-display_width (2.4.2)
+    vcr (6.1.0)
     version_gem (1.1.2)
     warden (1.2.9)
       rack (>= 2.0.9)
+    webmock (3.18.1)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -682,6 +690,8 @@ DEPENDENCIES
   rubocop-rake
   sprockets (~> 4.0)
   sprockets-rails
+  vcr
+  webmock
 
 BUNDLED WITH
    2.3.5
