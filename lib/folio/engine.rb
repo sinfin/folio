@@ -70,6 +70,9 @@ module Folio
 
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
+    config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
+      {}
+    }
 
     config.folio_users = false
     config.folio_users_require_phone = false

@@ -10,7 +10,7 @@ class Folio::CreateFileFromS3Job < Folio::ApplicationJob
     sidekiq_options retry: false
   end
 
-  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil)
+  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
     return unless s3_path
     unless test_aware_s3_exists?(s3_path)
       # probably handled it already in another job
@@ -23,7 +23,7 @@ class Folio::CreateFileFromS3Job < Folio::ApplicationJob
 
     broadcast_start(s3_path:, file_type: type)
 
-    file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:)
+    file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:, attributes:)
     replacing_file = file.persisted?
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
@@ -122,7 +122,7 @@ class Folio::CreateFileFromS3Job < Folio::ApplicationJob
       end
     end
 
-    def prepare_file_model(klass, id:, web_session_id:, user_id:)
+    def prepare_file_model(klass, id:, web_session_id:, user_id:, attributes: {})
       if id
         file = klass.find(id)
       else
@@ -131,6 +131,7 @@ class Folio::CreateFileFromS3Job < Folio::ApplicationJob
 
       file.web_session_id = web_session_id if file.respond_to?("web_session_id=")
       file.user = Folio::User.find(user_id) if user_id && file.respond_to?("user=")
+      file.assign_attributes(attributes) if attributes.present?
 
       file
     end

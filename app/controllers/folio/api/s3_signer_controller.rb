@@ -37,7 +37,8 @@ class Folio::Api::S3SignerController < Folio::Api::BaseController
                                                type:,
                                                existing_id: params[:existing_id].try(:to_i),
                                                web_session_id: session.id.public_id,
-                                               user_id: current_user.try(:id))
+                                               user_id: current_user.try(:id),
+                                               attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
       render json: {}
     else
       render json: {}, status: 422
