@@ -59,6 +59,8 @@ module Folio
 
         gem_group :test do
           gem "factory_bot"
+          gem "vcr"
+          gem "webmock"
         end
       end
 
