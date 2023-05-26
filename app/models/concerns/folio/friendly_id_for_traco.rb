@@ -4,7 +4,7 @@ module Folio::FriendlyIdForTraco
   extend ActiveSupport::Concern
 
   included do
-    extend FriendlyId
+    include Folio::FriendlyId::History
 
     if defined?(self::FRIENDLY_ID_SCOPE)
       friendly_id :slug_candidates, use: %i[slugged history simple_i18n scoped], scope: self::FRIENDLY_ID_SCOPE
