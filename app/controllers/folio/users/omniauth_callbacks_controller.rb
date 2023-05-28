@@ -183,4 +183,10 @@ class Folio::Users::OmniauthCallbacksController < Devise::OmniauthCallbacksContr
             .permit(:email,
                     *Folio::User.controller_strong_params_for_create)
     end
+
+    def verified_request?
+      # fix of `ERROR -- omniauth: (apple) Authentication failure! csrf_detected: OmniAuth::Strategies::OAuth2::CallbackError, csrf_detected | CSRF detected`
+      # see https://github.com/nhosoya/omniauth-apple/issues/54#issuecomment-1409644107
+      action_name == "apple" || super
+    end
 end
