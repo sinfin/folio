@@ -49,7 +49,7 @@ module Folio
          "OMNIAUTH_#{provider_key.to_s.upcase}_CLIENT_SECRET"]
       end
 
-      raise ":#{provider_key} Omniauth requires ENV variablaes #{required_keys} !" if required_keys.any? { |key| ENV[key].blank? }
+      raise ":#{provider_key} Omniauth requires ENV variablaes #{required_keys} !" if required_keys.any? { |key| ENV[key].blank? || ENV[key] == "find-me-in-vault" }
     end
   end
 end
