@@ -1,7 +1,6 @@
 aside#f-c-layout-sidebar.f-c-layout-sidebar data-controller="f-c-layout-sidebar"
   .f-c-layout-sidebar__part
-    a.f-c-layout-sidebar__title href=controller.console_root_path
-      = current_site.pretty_domain
+    == cell('folio/console/layout/sidebar/title')
 
   / - if show_search?
   /   .f-c-layout-sidebar__part

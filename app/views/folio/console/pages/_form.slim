@@ -5,7 +5,7 @@
 
 .tab-content
   = tab :content
-    == cell('folio/console/publishable_inputs', f)
+    = publishable_inputs(f)
 
     .d-md-flex
       = file_picker_for_cover(f)

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 import { uniqueId } from 'lodash'
 
-import { getFiles, messageBusThumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
+import { getFiles, messageBusFileUpdated, makeFilesLoadedSelector } from 'ducks/files'
 import { openFileModal } from 'ducks/fileModal'
 
 import SingleSelect from 'containers/SingleSelect'
@@ -33,12 +33,11 @@ class FilesApp extends Component {
   listenOnMessageBus () {
     if (!window.Folio.MessageBus.callbacks) return
 
-    this.messageBusCallbackKey = `Folio::GenerateThumbnailJob-react-files-app-${uniqueId()}`
+    this.messageBusCallbackKey = `Folio::ApplicationJob/file_update-react-files-app-${uniqueId()}`
 
     window.Folio.MessageBus.callbacks[this.messageBusCallbackKey] = (data) => {
-      if (!data || data.type !== 'Folio::GenerateThumbnailJob') return
-      if (!data.data.temporary_url || !data.data.url) return
-      this.props.dispatch(messageBusThumbnailGenerated(
+      if (!data || data.type !== 'Folio::ApplicationJob/file_update') return
+      this.props.dispatch(messageBusFileUpdated(
         this.props.app.fileType,
         this.props.app.filesUrl,
         data.data

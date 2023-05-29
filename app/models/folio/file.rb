@@ -8,6 +8,9 @@ class Folio::File < Folio::ApplicationRecord
   include Folio::Taggable
   include Folio::Thumbnails
   include Folio::StiPreload
+  include Folio::HasAasmStates
+
+  READY_STATE = :ready
 
   DEFAULT_GRAVITIES = %w[
     center
@@ -52,6 +55,10 @@ class Folio::File < Folio::ApplicationRecord
       tagged_with(tags)
     end
   end
+  # workaround for filenames with dashes & underscores
+  scope :by_file_name, -> (query) do
+    by_file_name_for_search(sanitize_filename_for_search(query))
+  end
 
   pg_search_scope :by_file_name_for_search,
                   against: [:file_name_for_search],
@@ -76,16 +83,34 @@ class Folio::File < Folio::ApplicationRecord
                     tsearch: { prefix: true }
                   }
 
-  # workaround for filenames with dashes & underscores
-  scope :by_file_name, -> (query) do
-    by_file_name_for_search(sanitize_filename_for_search(query))
-  end
-
   before_validation :set_file_track_duration, if: :file_uid_changed?
   before_validation :set_video_file_dimensions, if: :file_uid_changed?
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
-  after_save :run_after_save_job!
+  after_save :run_after_save_job
+  after_save :process!, if: :attached_file_changed?
+  after_destroy :destroy_attached_file
+
+  aasm do
+    state :unprocessed, initial: true, color: :red
+    state :processing, color: :orange
+    state READY_STATE, color: :green
+
+    event :process do
+      transitions from: :unprocessed, to: :processing
+      transitions from: READY_STATE, to: :processing
+      after :process_attached_file
+    end
+
+    event :processing_done do
+      transitions from: :processing, to: READY_STATE
+    end
+
+    event :reprocess do
+      transitions from: READY_STATE, to: :processing
+    end
+  end
+
 
   def title
     file_name
@@ -127,8 +152,28 @@ class Folio::File < Folio::ApplicationRecord
                .gsub("_", "{u}")
   end
 
-  def run_after_save_job!
+  def run_after_save_job
+    # updating placements
     Folio::Files::AfterSaveJob.perform_later(self) unless ENV["SKIP_FOLIO_FILE_AFTER_SAVE_JOB"]
+  end
+
+  def process_attached_file
+    regenerate_thumbnails if try(:thumbnailable?)
+    processing_done!
+  end
+
+  def destroy_attached_file
+  end
+
+  def attached_file_changed?
+    (saved_changes[:file_uid] || changes[:file_uid]).present?
+  end
+
+  def regenerate_thumbnails
+    try(:admin_thumb, immediate: true)
+    if try(:thumbnail_sizes).is_a?(Hash)
+      thumbnail_sizes.keys.each { |t_key| file.thumb(t_key) }
+    end
   end
 
   def thumbnailable?
@@ -156,9 +201,13 @@ class Folio::File < Folio::ApplicationRecord
     ]
   end
 
-  def file_track_duration_in_ffmpeg_format
+  def file_track_duration_in_seconds
+    file_track_duration
+  end
+
+  def screenshot_time_in_ffmpeg_format
     if file_track_duration
-      quarter = file_track_duration / 4
+      quarter = file_track_duration / 4  # take screenshot at 1/4 of the video
 
       seconds = quarter
       minutes = seconds / 60
@@ -181,7 +230,7 @@ class Folio::File < Folio::ApplicationRecord
 
     def set_file_track_duration
       if %w[audio video].include?(self.class.human_type)
-        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type)
+        self.file_track_duration = Folio::File::GetFileTrackDurationJob.perform_now(file.path, self.class.human_type) # in seconds
       end
     end
 
@@ -196,27 +245,30 @@ end
 #
 # Table name: folio_files
 #
-#  id                   :bigint(8)        not null, primary key
-#  file_uid             :string
-#  file_name            :string
-#  type                 :string
-#  thumbnail_sizes      :text             default({})
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  file_width           :integer
-#  file_height          :integer
-#  file_size            :bigint(8)
-#  additional_data      :json
-#  file_metadata        :json
-#  hash_id              :string
-#  author               :string
-#  description          :text
-#  file_placements_size :integer
-#  file_name_for_search :string
-#  sensitive_content    :boolean          default(FALSE)
-#  file_mime_type       :string
-#  default_gravity      :string
-#  file_track_duration  :integer
+#  id                                :bigint(8)        not null, primary key
+#  file_uid                          :string
+#  file_name                         :string
+#  type                              :string
+#  thumbnail_sizes                   :text             default({})
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  file_width                        :integer
+#  file_height                       :integer
+#  file_size                         :bigint(8)
+#  additional_data                   :json
+#  file_metadata                     :json
+#  hash_id                           :string
+#  author                            :string
+#  description                       :text
+#  file_placements_size              :integer
+#  file_name_for_search              :string
+#  sensitive_content                 :boolean          default(FALSE)
+#  file_mime_type                    :string
+#  default_gravity                   :string
+#  file_track_duration               :integer
+#  aasm_state                        :string
+#  remote_services_data              :json
+#  preview_track_duration_in_seconds :integer
 #
 # Indexes
 #

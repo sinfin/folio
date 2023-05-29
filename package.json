@@ -9,7 +9,8 @@
       "PhotoSwipe",
       "PhotoSwipeUI_Default",
       "Image",
-      "Event"
+      "Event",
+      "Folio"
     ]
   },
   "dependencies": {

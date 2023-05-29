@@ -75,7 +75,7 @@ module Folio::Console::DefaultActions
       end
       format.json do
         if folio_console_record.valid?
-          render json: response_json_for_valid_update, status: 200
+          response_with_json_for_valid_update
         else
           errors = [
             {
@@ -281,15 +281,20 @@ module Folio::Console::DefaultActions
       messages.join(" ")
     end
 
-    def response_json_for_valid_update
+    def response_with_json_for_valid_update
       if params[:_trigger] == "f-c-boolean-toggle"
-        {
+        render json: {
           data: {
-            f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show
+            f_c_catalogue_published_dates: cell("folio/console/catalogue/published_dates", folio_console_record).show,
+          },
+          meta: {
+            flash: {
+              success: t("flash.actions.update.success", resource_name: @klass.model_name.human)
+            },
           }
-        }
+        }, status: 200
       else
-        {}
+        render json: {}, status: 200
       end
     end
 end

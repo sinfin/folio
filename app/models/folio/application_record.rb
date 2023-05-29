@@ -3,6 +3,7 @@
 class Folio::ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  include Folio::Console::IndexFiltersRangeScopes
   include Folio::Filterable
   include Folio::HasSanitizedFields
   include Folio::NillifyBlanks

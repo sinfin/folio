@@ -89,10 +89,6 @@ Folio::Engine.routes.draw do
       end
 
       namespace :api do
-        resource :aasm, only: [], controller: "aasm" do
-          post :event
-        end
-
         resources :private_attachments, only: %i[create destroy]
 
         resources :links, only: %i[index]
@@ -139,6 +135,14 @@ Folio::Engine.routes.draw do
 
     # these are outside of constraint by design
     namespace :api do
+      resource :aasm, only: [], controller: "aasm" do
+        post :event
+      end
+
+      resource :jw_player, only: [], controller: "jw_player" do
+        get :video_url
+      end
+
       resources :tags, only: %i[index]
 
       resource :autocomplete, only: %i[show] do

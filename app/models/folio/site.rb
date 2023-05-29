@@ -152,6 +152,9 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  def folio_console_sidebar_title_image_path
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|

@@ -32,6 +32,8 @@ module Folio
     config.folio_console_sidebar_runner_up_link_class_names = []
     config.folio_console_sidebar_skip_link_class_names = []
     config.folio_console_sidebar_force_hide_users = false
+    config.folio_console_sidebar_title_items = -> (sidebar_cell) { nil }
+    config.folio_console_sidebar_title_new_item = -> (sidebar_cell) { nil }
     config.folio_console_default_routes_contstraints = {}
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
@@ -70,6 +72,9 @@ module Folio
 
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
+    config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
+      {}
+    }
 
     config.folio_users = false
     config.folio_users_require_phone = false
@@ -78,7 +83,7 @@ module Folio
     config.folio_users_confirm_email_change = true
     config.folio_users_publicly_invitable = true
     config.folio_users_use_address = true
-    config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter2]
+    config.folio_users_omniauth_providers = %i[facebook google_oauth2 twitter2 apple]
     config.folio_users_after_ajax_sign_up_redirect = false
     config.folio_users_after_sign_in_path = :root_path
     config.folio_users_after_sign_up_path = :root_path

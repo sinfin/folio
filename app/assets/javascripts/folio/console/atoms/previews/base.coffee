@@ -9,7 +9,9 @@
 #= require folio/lazyload
 #= require folio/lightbox
 #= require folio/debounce
+#= require folio/stimulus
 #= require folio/console/atoms/previews/main_app
+#= require folio/console/file/preview_reloader/preview_reloader
 
 lazyloadAll = ->
   window.folioLazyloadInstances.forEach (instance) ->

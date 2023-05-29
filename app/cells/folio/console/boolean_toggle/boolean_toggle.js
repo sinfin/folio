@@ -32,13 +32,13 @@ window.Folio.Stimulus.register('f-c-boolean-toggle', class extends window.Stimul
         this.element.classList.remove(this.loadingClass)
 
         if (res && res.data && res.data.f_c_catalogue_published_dates) {
-          const cell = this
-            .element
-            .closest('.f-c-catalogue__row')
-            .querySelector('.f-c-catalogue__cell--published_dates .f-c-catalogue__cell-value')
+          const row = this.element.closest('.f-c-catalogue__row')
+          if (row) {
+            const cell = row.querySelector('.f-c-catalogue__cell--published_dates .f-c-catalogue__cell-value')
 
-          if (cell) {
-            cell.innerHTML = res.data.f_c_catalogue_published_dates
+            if (cell) {
+              cell.innerHTML = res.data.f_c_catalogue_published_dates
+            }
           }
         }
       })

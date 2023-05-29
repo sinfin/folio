@@ -23,11 +23,7 @@ class Folio::Console::BooleanToggleCell < Folio::ConsoleCell
   end
 
   def input_label
-    if options[:show_label]
-      "#{options[:show_label]}:"
-    else
-      ""
-    end
+    options[:show_label] || ""
   end
 
   def input_checked?

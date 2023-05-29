@@ -9,6 +9,10 @@ class Folio::FilePlacements::AfterSaveJob < Folio::ApplicationJob
   # use SQL commands only!
   # save/update would cause an infinite loop as this is hooked in after_save
   def perform(file_placement)
+    update_placement_title(file_placement)
+  end
+
+  def update_placement_title(file_placement)
     placement = file_placement.placement
 
     if placement.present?

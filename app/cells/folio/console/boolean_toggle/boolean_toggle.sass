@@ -10,22 +10,20 @@
     width: 2.25rem
 
   &--show-label
-    padding-right: 2.5rem
+    padding-left: 2.5rem
 
   &--show-label &__switch
     padding-left: 0
 
   &--show-label &__label
     &:before
-      left: auto
-      right: -2.25rem
+      left: -2.25rem
 
     &:after
-      left: auto
-      right: calc(-2.25rem + 14px)
+      left: calc(-2.25rem + 14px)
 
   &--show-label &__input:checked ~ &__label::after
-    transform: translateX(0.75rem)
+    transform: translateX(-12px)
 
   &__label-on,
   &__label-off

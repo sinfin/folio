@@ -69,6 +69,7 @@
 //= require folio/console/file/picker/document/document
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb
+//= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header
@@ -76,6 +77,7 @@
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search
 //= require folio/console/layout/sidebar/sidebar
+//= require folio/console/layout/sidebar/title/title
 //= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
@@ -86,7 +88,7 @@
 //= require folio/console/new_record_modal/new_record_modal
 //= require folio/console/private_attachments/fields/fields
 //= require folio/console/private_attachments/single_dropzone/single_dropzone
-//= require folio/console/publishable_inputs/publishable_inputs
+//= require folio/console/publishable_inputs/item/item
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 

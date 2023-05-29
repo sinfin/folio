@@ -12,4 +12,4 @@
 //= link folio/input/date_time/svg-sprite.svg
 //= link folio/input/date_time/input-background-ico.svg
 
-//= link folio_svg_sprite.svg
+//= link_tree ../images

@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module Folio::Console::FormsHelper
+  def publishable_inputs(f, additional_fields = nil)
+    cell("folio/console/publishable_inputs",
+         f,
+         additional_fields:).show.html_safe
+  end
+
   def translated_inputs(f, key, *args)
     model = { f:, key:, args: }
     cell("folio/console/translated_inputs", model).show.html_safe

@@ -6,6 +6,7 @@ div[
   .custom-control.custom-switch.f-c-boolean-toggle__switch
     input.f-c-boolean-toggle__input.custom-control-input[
       type="checkbox"
+      class="f-c-dont-set-dirty-forms"
       id=id
       checked=input_checked?
       name=name
@@ -15,7 +16,7 @@ div[
       for=id
     ]
       - if options[:verbose]
-        .f.f-c-boolean-toggle__label-on = verbose_label(true)
-        .f.f-c-boolean-toggle__label-off = verbose_label(false)
+        .f-c-boolean-toggle__label-on = verbose_label(true)
+        .f-c-boolean-toggle__label-off = verbose_label(false)
       - else
-        span = input_label
+        span.f-c-boolean-toggle__label-generic = input_label

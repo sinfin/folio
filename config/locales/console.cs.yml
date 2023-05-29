@@ -254,9 +254,10 @@ cs:
       lazy_dom:
         error: 'Nepodařilo se načíst data:'
       publishable_inputs:
-        from: od (nepovinné)
-        to: do (nepovinné)
-        at: k datu (nepovinné)
+        item:
+          from: od (nepovinné)
+          to: do (nepovinné)
+          at: k datu (nepovinné)
       react_ancestry:
         invalid: Některé záznamy nejsou validní. Pro změnu struktury je potřeba je opravit. Ve stromové stuktuře jsou označeny červeně.
       layout:

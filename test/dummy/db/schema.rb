@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_02_111133) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_25_120905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -251,6 +251,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_111133) do
     t.string "file_mime_type"
     t.string "default_gravity"
     t.integer "file_track_duration"
+    t.string "aasm_state"
+    t.json "remote_services_data", default: {}
+    t.integer "preview_track_duration_in_seconds"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

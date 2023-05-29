@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::CreateFileFromS3Job < ApplicationJob
+class Folio::CreateFileFromS3Job < Folio::ApplicationJob
   include Folio::S3Client
   include Folio::Shell
 
@@ -10,59 +10,26 @@ class Folio::CreateFileFromS3Job < ApplicationJob
     sidekiq_options retry: false
   end
 
-  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil)
+  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
     return unless s3_path
-    return unless type
-    klass = type.safe_constantize
-    return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
-
     unless test_aware_s3_exists?(s3_path)
       # probably handled it already in another job
       return
     end
+    return unless type
+
+    klass = type.safe_constantize
+    return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
 
     broadcast_start(s3_path:, file_type: type)
 
-    if existing_id
-      file = klass.find(existing_id)
-      replacing_file = true
-
-      if file.try(:thumbnailable?) && file.try(:thumbnail_sizes).is_a?(Hash)
-        thumbnail_keys_to_recreate = file.thumbnail_sizes.keys
-      else
-        thumbnail_keys_to_recreate = []
-      end
-    else
-      file = klass.new
-      replacing_file = false
-      thumbnail_keys_to_recreate = []
-    end
+    file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:, attributes:)
+    replacing_file = file.persisted?
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
-      tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
-
-      test_aware_download_from_s3(s3_path, tmp_file_path)
-      test_aware_s3_delete(s3_path)
-
-      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
-
-      file.file = File.open(tmp_file_path)
-
-      if file.respond_to?("web_session_id=")
-        file.web_session_id = web_session_id
-      end
-
-      if user_id && file.respond_to?("user=")
-        file.user = Folio::User.find(user_id)
-      end
+      file.file = downloaded_file(s3_path, tmpdir)
 
       if file.save
-        if file.try(:thumbnailable?)
-          file.try(:admin_thumb, immediate: true)
-
-          thumbnail_keys_to_recreate.each { |thumbnail_key| file.thumb(thumbnail_key) }
-        end
-
         if replacing_file
           broadcast_replace_success(file: file.reload, file_type: type)
         else
@@ -84,17 +51,6 @@ class Folio::CreateFileFromS3Job < ApplicationJob
   end
 
   private
-    def serializer_for(model)
-      name = model.class.base_class.name.gsub("Folio::", "")
-      serializer = "Folio::Console::#{name}Serializer".safe_constantize
-      serializer ||= "#{name}Serializer".safe_constantize
-      serializer || Folio::GenericDropzoneSerializer
-    end
-
-    def serialized_file(model)
-      serializer_for(model).new(model).serializable_hash
-    end
-
     def broadcast_start(s3_path:, file_type:)
       broadcast({ s3_path:, type: "start", started_at: Time.current.to_i * 1000, file_type: })
     end
@@ -164,5 +120,30 @@ class Folio::CreateFileFromS3Job < ApplicationJob
       else
         tmp_file_path
       end
+    end
+
+    def prepare_file_model(klass, id:, web_session_id:, user_id:, attributes: {})
+      if id
+        file = klass.find(id)
+      else
+        file = klass.new
+      end
+
+      file.web_session_id = web_session_id if file.respond_to?("web_session_id=")
+      file.user = Folio::User.find(user_id) if user_id && file.respond_to?("user=")
+      file.assign_attributes(attributes) if attributes.present?
+
+      file
+    end
+
+    def downloaded_file(s3_path, tmpdir)
+      tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
+
+      test_aware_download_from_s3(s3_path, tmp_file_path)
+      test_aware_s3_delete(s3_path)
+
+      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
+
+      File.open(tmp_file_path)
     end
 end

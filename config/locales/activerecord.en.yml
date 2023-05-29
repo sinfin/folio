@@ -16,6 +16,7 @@ en:
         content: Content
       folio/file:
         mime_type: File type
+        preview_duration: How many seconds are free?
         default_gravity: Default crop
         default_gravity/center: Center
         default_gravity/east: East

@@ -20,6 +20,7 @@ cs:
         content: Obsah
       folio/file:
         author: Autor
+        preview_duration: Kolik vteřin je zdarma?
         default_gravity: Výchozí ořez
         default_gravity/center: Uprostřed
         default_gravity/east: Vpravo

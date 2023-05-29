@@ -8,7 +8,7 @@
       .col-md-auto
         = file_picker_for_cover(f)
       .col-md
-        == cell('folio/console/publishable_inputs', f, atom_setting: true)
+        = publishable_inputs(f)
 
         = f.input :title, atom_setting: :title
         = f.input :slug

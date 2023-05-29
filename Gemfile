@@ -25,6 +25,7 @@ gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not a
 gem "omniauth-facebook"
 gem "omniauth-google-oauth2"
 gem "omniauth-twitter2"
+gem "omniauth-apple"
 gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 

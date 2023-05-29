@@ -15,9 +15,12 @@
           - address_required = address_required?(key, g.object.attributes)
           - fields_layout(g, key).each do |row|
             - if row.is_a?(Hash)
-              .row
-                - row.each do |key, col|
-                  div class="col-md-#{col}"
-                    = input(g, key, address_required: address_required)
+              - if row[:_html]
+                == row[:_html]
+              - else
+                .row
+                  - row.each do |key, col|
+                    div class="col-md-#{col}"
+                      = input(g, key, address_required: address_required)
             - elsif row.is_a?(Symbol)
               = input(g, row, address_required: address_required)

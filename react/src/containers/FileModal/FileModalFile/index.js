@@ -96,6 +96,15 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
 
             <p>ID: {file.attributes.id}</p>
 
+            <p className='mb-1'>{window.FolioConsole.translations.state}:</p>
+
+            <div className='f-c-state mb-3'>
+              <div className='f-c-state__state'>
+                <div className={`f-c-state__state-square f-c-state__state-square--color-${file.attributes.aasm_state_color}`} />
+                {file.attributes.aasm_state_human}
+              </div>
+            </div>
+
             {(isAudio || isVideo) && <div className='form-group'><FolioPlayer file={file} /></div>}
 
             <FormGroup>
@@ -158,25 +167,52 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </FormGroup>
 
-            <FormGroup>
-              <Label>{window.FolioConsole.translations.fileDefaultGravity}</Label>
-              {readOnly ? (
-                <p className='m-0'>{formState.default_gravity}</p>
-              ) : (
-                <Input
-                  value={formState.default_gravity || file.attributes.default_gravities_for_select[0][1]}
-                  onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
-                  name='default_gravity'
-                  type='select'
-                >
-                  {file.attributes.default_gravities_for_select.map((opt) => (
-                    <option value={opt[1]} key={opt[1]}>
-                      {opt[0]}
-                    </option>
-                  ))}
-                </Input>
-              )}
-            </FormGroup>
+            {
+              isImage && (
+                <FormGroup>
+                  <Label>{window.FolioConsole.translations.fileDefaultGravity}</Label>
+                  {readOnly ? (
+                    <p className='m-0'>{formState.default_gravity}</p>
+                  ) : (
+                    <Input
+                      value={formState.default_gravity || file.attributes.default_gravities_for_select[0][1]}
+                      onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
+                      name='default_gravity'
+                      type='select'
+                    >
+                      {file.attributes.default_gravities_for_select.map((opt) => (
+                        <option value={opt[1]} key={opt[1]}>
+                          {opt[0]}
+                        </option>
+                      ))}
+                    </Input>
+                  )}
+                </FormGroup>
+              )
+            }
+            {
+              typeof file.attributes.preview_duration === 'number' && (
+                <FormGroup>
+                  <Label>{window.FolioConsole.translations.filePreviewDuration}</Label>
+                  {readOnly ? (
+                    <p className='m-0'>{formState.preview_duration}</p>
+                  ) : (
+                    <Input
+                      value={formState.preview_duration || 30}
+                      onChange={(e) => onValueChange('preview_duration', e.currentTarget.value)}
+                      name='preview_duration'
+                      type='number'
+                    >
+                      {file.attributes.default_gravities_for_select.map((opt) => (
+                        <option value={opt[1]} key={opt[1]}>
+                          {opt[0]}
+                        </option>
+                      ))}
+                    </Input>
+                  )}
+                </FormGroup>
+              )
+            }
 
             {readOnly ? (
               formState.sensitiveContent ? <p>{window.FolioConsole.translations.fileSensitiveContent}</p> : null
