@@ -152,7 +152,7 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
-  def thumb_for_console_header
+  def folio_console_sidebar_title_image_path
   end
 
   private

@@ -23,7 +23,7 @@ class Folio::Console::Layout::Sidebar::TitleCell < Folio::ConsoleCell
       {
         label: current_site.pretty_domain,
         href: controller.console_root_path,
-        image: current_site.thumb_for_console_header || image_path("folio/console/sidebar-site-logo.svg"),
+        image: current_site.folio_console_sidebar_title_image_path || image_path("folio/console/sidebar-site-logo.svg"),
         active: true,
       }
     ]
