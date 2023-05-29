@@ -34,7 +34,13 @@ class Folio::Ui::IconCell < ApplicationCell
       height = "#{default_size[:height]}px"
     end
 
-    "width: #{width}; height: #{height}"
+    base = "width: #{width}; height: #{height}"
+
+    if options[:top].is_a?(Numeric)
+      "#{base}; position: relative; top: #{options[:top]}px"
+    else
+      base
+    end
   end
 
   def option_size_to_str(val)

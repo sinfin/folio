@@ -1,0 +1,51 @@
+.f-c-layout-sidebar-title[
+  data-controller="f-c-layout-sidebar-title"
+  data-f-c-layout-sidebar-title-expanded-class="f-c-layout-sidebar-title--expanded"
+]
+  - if active_item
+    .f-c-layout-sidebar-title__active-item
+      a.f-c-layout-sidebar-title__item href=active_item[:href]
+        - if active_item[:image]
+          img.f-c-layout-sidebar-title__img[
+            src=active_item[:image]
+            class=(active_item[:image_rounded] ? 'f-c-layout-sidebar-title__img--rounded' : nil)
+            width="32"
+            height="32"
+          ]
+
+        span.f-c-layout-sidebar-title__label
+          = active_item[:label]
+
+      - if items.size > 1 || new_item
+        button.f-c-layout-sidebar-title__active-arrow[
+          data-action="f-c-layout-sidebar-title#collapsibleToggle"
+        ]
+          = folio_icon(:menu_down)
+
+  - if items.size > 1 || new_item
+    .f-c-layout-sidebar-title__collapsed
+      - if items.size > 1
+        .f-c-layout-sidebar-title__collapsed
+          - items.each_with_index do |item, index|
+            - next if index.zero?
+            a.f-c-layout-sidebar-title__item href=item[:href]
+              - if item[:image]
+                img.f-c-layout-sidebar-title__img[
+                  src=item[:image]
+                  class=(item[:image_rounded] ? 'f-c-layout-sidebar-title__img--rounded' : nil)
+                  width="32"
+                  height="32"
+                ]
+
+              span.f-c-layout-sidebar-title__label
+                = item[:label]
+
+      - if new_item
+        a.f-c-layout-sidebar-title__new-item href=new_item[:href]
+          = folio_icon(:plus_circle,
+                       height: 14,
+                       class: "f-c-layout-sidebar-title__new-item-ico",
+                       top: -1)
+
+          .f-c-layout-sidebar-title__new-item-label
+            = new_item[:label]

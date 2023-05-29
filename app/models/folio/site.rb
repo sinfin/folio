@@ -152,6 +152,9 @@ class Folio::Site < Folio::ApplicationRecord
     end
   end
 
+  def thumb_for_console_header
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
