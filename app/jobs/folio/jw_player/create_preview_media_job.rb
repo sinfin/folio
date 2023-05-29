@@ -17,7 +17,7 @@ class Folio::JwPlayer::CreatePreviewMediaJob < Folio::ApplicationJob
         "service" => "jw_player",
         "remote_preview_key" => response["id"],
         "processing_state" => "preview_media_processing",
-        "preview_inteval" => media_file.preview_inteval
+        "preview_interval" => media_file.preview_interval
       })
       media_file.save!
 
