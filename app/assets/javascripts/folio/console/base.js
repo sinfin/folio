@@ -70,6 +70,7 @@
 //= require folio/console/file/picker/document/document
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb
+//= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header
