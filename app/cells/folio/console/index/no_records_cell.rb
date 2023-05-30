@@ -2,9 +2,11 @@
 
 class Folio::Console::Index::NoRecordsCell < Folio::ConsoleCell
   def new_link
-    url = options[:url].presence || url_for([:console, model, action: :new])
+    url = options[:url].presence || through_aware_console_url_for(model, action: :new, safe: true)
+
+    return if url.nil?
+
     html_opts = { title: t(".new") }
     link_to(t(".new"), url, html_opts)
-  rescue ActionController::UrlGenerationError, NoMethodError
   end
 end
