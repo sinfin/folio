@@ -139,4 +139,23 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
               placeholder: options[:by_query_placeholder]
             })
   end
+
+  def query_buttons
+    submit = cell("folio/console/ui/button",
+                  variant: :icon,
+                  type: :submit,
+                  icon: :magnify)
+
+    if controller.params[:by_query].present?
+      [
+        cell("folio/console/ui/button",
+             variant: :icon,
+             href: query_reset_url,
+             icon: :close),
+        submit
+      ]
+    else
+      [submit]
+    end
+  end
 end
