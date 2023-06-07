@@ -59,7 +59,7 @@ editSetting = (locale, key) ->
 
   if $setting.length
     selectTab($setting)
-    $scroll = $setting.closest('.f-c-simple-form-with-atoms__scroll')
+    $scroll = $(document.documentElement)
 
     callback = ->
       setTimeout((-> $setting.addClass('f-c-js-atoms-placement-setting--highlighted')), 0)

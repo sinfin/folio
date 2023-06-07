@@ -61,7 +61,6 @@ $ ->
         ), 500
 
       if offset > $(window).height() / 2
-        $scroll = $formGroup.closest('.f-c-with-aside__scroll, .f-c-simple-form-with-atoms__scroll, .f-c-layout-main-container')
-        $scroll.animate scrollTop: offset - $scroll.offset().top - 10, callback
+        $(document.documentElement).animate scrollTop: offset - $scroll.offset().top - 10, callback
       else
         callback()
