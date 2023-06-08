@@ -11,20 +11,24 @@ export default function combineAtoms ({ oldAtoms, newAtoms, formAction, indices,
     default: {
       if (edit) {
         oldAtoms.forEach((atom, i) => {
-          if (indices.indexOf(i) === -1) {
-            atoms.push(atom)
-          } else if (i === indices[0]) {
+          if (i === indices[0]) {
             atoms = [...atoms, ...newAtoms]
+          } else {
+            atoms.push(atom)
           }
         })
       } else {
-        oldAtoms.forEach((atom, i) => {
-          if (indices.indexOf(i) === -1) {
-            atoms.push(atom)
-          } else if (i === indices[0]) {
-            atoms = [...atoms, ...newAtoms, atom]
-          }
-        })
+        if (oldAtoms.length === indices[0]) {
+          atoms = [...oldAtoms, ...newAtoms]
+        } else {
+          oldAtoms.forEach((atom, i) => {
+            if (i === indices[0]) {
+              atoms = [...atoms, ...newAtoms, atom]
+            } else {
+              atoms.push(atom)
+            }
+          })
+        }
       }
     }
   }
