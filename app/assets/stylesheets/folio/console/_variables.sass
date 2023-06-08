@@ -1,4 +1,5 @@
-$grid-gutter-width: px-to-rem(24px)
+$grid-gutter-base: px-to-rem(8px)
+$grid-gutter-width: 3 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
 
 $white: #FFFFFF
@@ -19,11 +20,22 @@ $copper: #C1852C
 $gold: #D3AF51
 $antracite: #212529
 
+$gray-100: #f8f9fa
 $gray-600: #6c757d
 $gray-900: $antracite
 
+$cyan: #0dcaf0 !default
+
 $primary: $black
 $secondary: $gray-600
+$success: $green !default
+$info: $cyan !default
+$warning: $yellow !default
+$danger: $red !default
+$light: $gray-100 !default
+$dark: $gray-900 !default
+
+$theme-colors: ( "primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "medium-gray": $medium-gray )
 
 $link-color: $blue
 $link-decoration: none
@@ -101,3 +113,8 @@ $dropdown-box-shadow: $f-c-box-shadow-overlay
 
 $enable-rfs: false
 $enable-validation-icons: false
+
+$spacer: $grid-gutter-half
+
+$card-spacer-y: $grid-gutter-width
+$card-spacer-x: $grid-gutter-width

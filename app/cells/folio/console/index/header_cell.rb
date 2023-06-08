@@ -47,7 +47,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def query_reset_url
     h = {}
 
-    index_filters.keys.each do |key|
+    index_filters_hash.keys.each do |key|
       if controller.params[key].present?
         h[key] = controller.params[key]
       end
@@ -69,7 +69,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
         by_query: controller.params[:by_query],
       }
 
-      index_filters.keys.each do |key|
+      index_filters_hash.keys.each do |key|
         if controller.params[key].present?
           h[key] = controller.params[key]
         end
