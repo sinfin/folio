@@ -2,6 +2,7 @@
 
 class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include Folio::Console::Cell::IndexFilters
 
   def title
     options[:title] || model.model_name.human(count: 2)
@@ -46,7 +47,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def query_reset_url
     h = {}
 
-    controller.send(:index_filters).keys.each do |key|
+    index_filters.keys.each do |key|
       if controller.params[key].present?
         h[key] = controller.params[key]
       end
@@ -61,45 +62,6 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     end
   end
 
-  def new_button_model
-    @new_button_model ||= begin
-      opts = {
-        variant: :success,
-        icon: :plus,
-        class: "f-c-index-header__btn f-c-index-header__btn--new",
-        label: t(".add")
-      }
-
-      if options[:react_new]
-        opts[:class] += " f-c-index-header__btn--react"
-        opts
-      elsif options[:new_button] != false
-        if options[:types] || options[:new_dropdown_links]
-          opts
-        else
-          opts[:href] = options[:new_url] ? send(options[:new_url]) : through_aware_console_url_for(model, action: :new, safe: true)
-
-          if opts[:href]
-            opts
-          end
-        end
-      end
-    end
-  end
-
-  def new_dropdown_title
-    render(:_new_dropdown_title)
-  end
-
-  def new_dropdown_links
-    options[:new_dropdown_links] || options[:types].map do |klass|
-      {
-        title: klass.model_name.human,
-        url: through_aware_console_url_for(model, action: :new, hash: { type: klass.to_s }, safe: true),
-      }
-    end
-  end
-
   def csv_path
     if options[:csv] == true
       h = {
@@ -107,7 +69,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
         by_query: controller.params[:by_query],
       }
 
-      controller.send(:index_filters).keys.each do |key|
+      index_filters.keys.each do |key|
         if controller.params[key].present?
           h[key] = controller.params[key]
         end

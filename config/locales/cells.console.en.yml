@@ -11,13 +11,15 @@ en:
             to: To
           collapsible_toggle: Detailed filter
 
-        header:
+        new_button:
           add: Add
+
+        header:
           csv: CSV
 
         no_records:
-          text: There are no records.
-          new: Create one?
+          filtered: No records match the specified filters.
+          none: There are no records yet.
 
       form:
         footer:

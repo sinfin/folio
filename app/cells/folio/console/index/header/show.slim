@@ -24,15 +24,12 @@
             icon: :download,
             label: options[:csv].try(:[], :label) || "CSV")
 
-  - if options[:new_button] != false && new_button_model
-    - if options[:types] || options[:new_dropdown_links]
-      .f-c-index-header__new-dropdown
-        == cell('folio/console/dropdown',
-                title: t('.add'),
-                button_model: new_button_model,
-                links: new_dropdown_links)
-    - else
-      == cell('folio/console/ui/button', new_button_model)
+  - if options[:new_button] != false
+    == cell('folio/console/index/new_button',
+            klass: model,
+            react: options[:react_new],
+            types: options[:types],
+            new_dropdown_links: options[:new_dropdown_links])
 
   - if show_transportable_dropdown?
     .f-c-index-header__transportable-dropdown
@@ -48,11 +45,9 @@
 - if options[:above_filters]
   == options[:above_filters]
 
-- if controller.send(:index_filters).present? && \
-     options[:index_filters] != false
-  == cell('folio/console/index/filters', \
-          klass: model, \
-          index_filters: controller.send(:index_filters),
+- if options[:index_filters] != false && index_filters.present?
+  == cell('folio/console/index/filters',
+          klass: model,
           cancel_url: options[:filters_cancel_url])
 
 - if options[:pagy]

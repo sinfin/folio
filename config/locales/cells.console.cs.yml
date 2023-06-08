@@ -11,13 +11,15 @@ cs:
             to: Do
           collapsible_toggle: Podrobný filtr
 
-        header:
+        new_button:
           add: Přidat
+
+        header:
           csv: CSV
 
         no_records:
-          text: Žádné záznamy.
-          new: Vytvořit?
+          filtered: Zadaným filtrům neodpovídají žádné záznamy.
+          none: Zde zatím nejsou žádné záznamy.
 
       form:
         footer:

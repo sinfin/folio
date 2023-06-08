@@ -60,11 +60,17 @@ module Folio::Mux::FileProcessing
   end
 
   def signed_full_playback_id
-    remote_services_data["full"]["playback_ids"].detect { |pb| pb["policy"] == "signed" }["id"]
+    pb = full_playbacks.detect { |pb| pb["policy"] == "signed" }
+    pb && pb["id"]
   end
 
   def public_full_playback_id
-    remote_services_data["full"]["playback_ids"].detect { |pb| pb["policy"] == "public" }["id"]
+    pb = full_playbacks.detect { |pb| pb["policy"] == "public" }
+    pb && pb["id"]
+  end
+
+  def full_playbacks
+    remote_services_data.dig("full", "playback_ids") || []
   end
 
   def processed_by

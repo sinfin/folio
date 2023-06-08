@@ -17,7 +17,7 @@ class Folio::Mux::CreatePreviewMediaJob < Folio::ApplicationJob
         "service" => "mux",
         "remote_preview_key" => response.data.id,
         "processing_state" => "preview_media_processing",
-        "preview_inteval" => media_file.preview_inteval
+        "preview_interval" => media_file.preview_interval
       })
       media_file.save!
 

@@ -1,4 +1,9 @@
-p.f-c-index-no-records
-  = t('.text')
-  '
-  = new_link
+.f-c-index-no-records
+  - if filtered?
+    p: strong = t('.filtered')
+  - else
+    .card
+      .card-body.bg-medium-gray
+        h3.card-text.mt-0 = t('.none')
+
+        == cell('folio/console/index/new_button', model)

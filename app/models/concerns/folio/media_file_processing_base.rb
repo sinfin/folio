@@ -27,12 +27,14 @@ module Folio::MediaFileProcessingBase
 
   def update_preview_media_length
     # delete current preview and create new one
-    # both handled by
+    # both handled by `create_preview_media`
     changes_on_duration = saved_changes["preview_track_duration_in_seconds"]
-    if changes_on_duration.present?
-      reprocess!
-      create_preview_media
-    end
+    return if changes_on_duration.blank?
+    return if changes_on_duration[0].nil?
+    return unless full_media_processed?
+
+    reprocess!
+    create_preview_media
   end
 
   def remote_services_data
@@ -85,14 +87,14 @@ module Folio::MediaFileProcessingBase
   end
 
   def preview_starts_at_second
-    preview_inteval["start_at"]
+    preview_interval["start_at"]
   end
 
   def preview_ends_at_second
-    preview_inteval["end_at"]
+    preview_interval["end_at"]
   end
 
-  def preview_inteval
+  def preview_interval
     (remote_services_data || {}).dig("preview_interval") || { "start_at" => 0, "end_at" => preview_duration_in_seconds }
   end
 

@@ -41,6 +41,7 @@
 //= require folio/player/player
 //= require folio/image/image
 //= require folio/ui/icon/icon
+//= require folio/click-trigger
 
 // must be under folio/input
 //= require daterangepicker.min
@@ -72,7 +73,6 @@
 //= require folio/console/file/preview_reloader/preview_reloader
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
-//= require folio/console/index/header/header
 //= require folio/console/index/images/images
 //= require folio/console/index/position_buttons/position_buttons
 //= require folio/console/layout/sidebar/search/search

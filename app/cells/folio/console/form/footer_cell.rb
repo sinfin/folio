@@ -2,8 +2,7 @@
 
 class Folio::Console::Form::FooterCell < Folio::ConsoleCell
   def back_path
-    options[:back_path] || url_for([:console, model.object.class])
-  rescue NoMethodError
+    options[:back_path] || through_aware_console_url_for(model.object.class, safe: true)
   end
 
   def preview_path
