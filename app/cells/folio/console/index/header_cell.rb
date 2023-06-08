@@ -2,6 +2,7 @@
 
 class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include Folio::Console::Cell::IndexFilters
 
   def title
     options[:title] || model.model_name.human(count: 2)
@@ -46,7 +47,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def query_reset_url
     h = {}
 
-    controller.send(:index_filters).keys.each do |key|
+    index_filters.keys.each do |key|
       if controller.params[key].present?
         h[key] = controller.params[key]
       end
@@ -93,7 +94,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
         by_query: controller.params[:by_query],
       }
 
-      controller.send(:index_filters).keys.each do |key|
+      index_filters.keys.each do |key|
         if controller.params[key].present?
           h[key] = controller.params[key]
         end

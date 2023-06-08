@@ -46,8 +46,8 @@
   - elsif options[:new_button] != false
     - if options[:types] || options[:new_dropdown_links]
       .f-c-index-header__new-dropdown
-        == cell('folio/console/dropdown', title: render(:_new_button_label),  \
-                                          class_name: 'btn btn-success', \
+        == cell('folio/console/dropdown', title: render(:_new_button_label),
+                                          class_name: 'btn btn-success',
                                           links: new_dropdown_links)
 
     - else
@@ -68,11 +68,9 @@
 - if options[:above_filters]
   == options[:above_filters]
 
-- if controller.send(:index_filters).present? && \
-     options[:index_filters] != false
-  == cell('folio/console/index/filters', \
-          klass: model, \
-          index_filters: controller.send(:index_filters),
+- if options[:index_filters] != false && index_filters.present?
+  == cell('folio/console/index/filters',
+          klass: model,
           cancel_url: options[:filters_cancel_url])
 
 - if options[:pagy]
