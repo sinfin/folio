@@ -1,41 +1,47 @@
 # frozen_string_literal: true
 
 module Folio::Console::ReactHelper
-  def file_picker(f:, placement_key:, file_type:)
+  def file_picker(f:, placement_key:, file_type:, hint: nil)
     raw cell("folio/console/file/picker",
              f:,
              placement_key:,
-             file_type:)
+             file_type:,
+             hint:)
   end
 
-  def file_picker_for_cover(f)
+  def file_picker_for_cover(f, hint: nil)
     file_picker(f:,
                 placement_key: :cover_placement,
-                file_type: "Folio::File::Image")
+                file_type: "Folio::File::Image",
+                hint:)
   end
 
-  def file_picker_for_og_image(f)
+  def file_picker_for_og_image(f, hint: nil)
     file_picker(f:,
                 placement_key: :og_image_placement,
-                file_type: "Folio::File::Image")
+                file_type: "Folio::File::Image",
+                hint:)
   end
 
-  def file_picker_for_document(f)
+  def file_picker_for_document(f, hint: nil)
     file_picker(f:,
                 placement_key: :document_placement,
-                file_type: "Folio::File::Document")
+                file_type: "Folio::File::Document",
+                hint:)
   end
 
-  def file_picker_for_audio_cover(f)
+  def file_picker_for_audio_cover(f, hint: nil)
     file_picker(f:,
                 placement_key: :audio_cover_placement,
-                file_type: "Folio::File::Audio")
+                file_type: "Folio::File::Audio",
+                hint:)
   end
 
-  def file_picker_for_video_cover(f)
+  def file_picker_for_video_cover(f, hint: nil)
     file_picker(f:,
                 placement_key: :video_cover_placement,
-                file_type: "Folio::File::Video")
+                file_type: "Folio::File::Video",
+                hint:)
   end
 
   def react_images(selected_placements = nil,
