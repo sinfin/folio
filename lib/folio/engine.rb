@@ -141,6 +141,13 @@ module Folio
       end
     end
 
+    initializer :add_folio_maintenance_middleware do |app|
+      if ENV["FOLIO_MAINTENANCE"]
+        require "rack/folio/maintenance_middleware"
+        app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
+      end
+    end
+
     begin
       initializer :deprecations_and_important_messages do |app|
         deprecations = []
