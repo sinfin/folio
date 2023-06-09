@@ -152,7 +152,7 @@ FactoryBot.define do
     address_line_2 { "address_line_2" }
     city { "city" }
     zip { "zip" }
-    country_code { "country_code" }
+    country_code { "cc" }
   end
 
   factory :dummy_menu, class: "Dummy::Menu::Navigation", parent: :folio_menu

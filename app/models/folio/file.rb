@@ -92,9 +92,10 @@ class Folio::File < Folio::ApplicationRecord
   after_destroy :destroy_attached_file
 
   aasm do
-    state :unprocessed, initial: true, color: :red
+    state :unprocessed, initial: true, color: :yellow
     state :processing, color: :orange
     state READY_STATE, color: :green
+    state :processing_failed, color: :red
 
     event :process do
       transitions from: :unprocessed, to: :processing
@@ -104,6 +105,10 @@ class Folio::File < Folio::ApplicationRecord
 
     event :processing_done do
       transitions from: :processing, to: READY_STATE
+    end
+
+    event :processing_failed do
+      transitions from: :processing, to: :processing_failed
     end
 
     event :reprocess do

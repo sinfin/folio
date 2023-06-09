@@ -31,8 +31,13 @@ class Folio::Mux::CheckProgressJob < Folio::ApplicationJob
         end
 
         broadcast_file_update(media_file)
-      else
-        nil
+      elsif response.data.status == "errored"
+        media_file.remote_services_data["error"] = response.data.errors
+        media_file.processing_failed!
+
+        broadcast_file_update(media_file)
+
+        raise "Mux error: #{response.data.errors}"
       end
     end
 end

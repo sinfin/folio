@@ -46,6 +46,9 @@ module Folio::Mux::FileProcessing
     "https://stream.mux.com/#{playback_id}.m3u8"
   end
 
+  def remote_signed_preview_url(_expires_at)
+    remote_preview_url
+  end
 
   def full_media_job_class
     Folio::Mux::CreateFullMediaJob
@@ -57,6 +60,10 @@ module Folio::Mux::FileProcessing
 
   def delete_media_job_class
     Folio::Mux::DeleteMediaJob
+  end
+
+  def check_media_processing_job_class
+    Folio::Mux::CheckProgressJob
   end
 
   def signed_full_playback_id

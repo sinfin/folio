@@ -68,6 +68,10 @@ module Folio::JwPlayer::FileProcessing
     Folio::JwPlayer::DeleteMediaJob
   end
 
+  def check_media_processing_job_class
+    Folio::JwPlayer::CheckProgressJob
+  end
+
   def default_jw_player_tags
     [
       "folio",
