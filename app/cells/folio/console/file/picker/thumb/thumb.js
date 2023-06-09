@@ -59,6 +59,19 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     overlay.className = 'f-c-file-picker-thumb__action'
     overlay.dataset.action = "click->f-c-file-picker#onBtnClick"
 
+    if (window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Button) {
+      const overlayIconWrap = document.createElement('div')
+      overlayIconWrap.className = 'f-c-file-picker-thumb__action-icon-wrap'
+
+      overlayIconWrap.appendChild(window.FolioConsole.Ui.Button.create({
+        icon: "swap_horizontal",
+        variant: "gray-medium-dark",
+        class: "f-c-file-picker-thumb__action-btn",
+      }))
+
+      overlay.appendChild(overlayIconWrap)
+    }
+
     this.element.appendChild(overlay)
   }
 })

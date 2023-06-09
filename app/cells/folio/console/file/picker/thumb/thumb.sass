@@ -26,6 +26,18 @@ $medium-gray: #E8E8E8 !default
     left: 0
     z-index: 2
     cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__action-btn
+    flex: 0 0 auto
+    opacity: 0.5
+    pointer-events: none
+    transition: $transition-base
+
+  &__action:hover &__action-btn
+    opacity: 0.7
 
   &__btn
     position: absolute
