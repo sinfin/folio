@@ -79,9 +79,7 @@ div class=wrap_class_name
           = after_lambda.call(rec, model[:records], i) if after_lambda
 
   - else
-    == cell('folio/console/index/no_records',
-            klass,
-            types: model[:types])
+    == cell('folio/console/index/no_records', klass)
 
   span.folio-loader.f-c-catalogue__loader
 
