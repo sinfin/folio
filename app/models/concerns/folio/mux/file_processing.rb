@@ -42,7 +42,12 @@ module Folio::Mux::FileProcessing
   end
 
   def remote_preview_url
-    playback_id = remote_services_data["preview"]["playback_ids"].first["id"]
+    playback_id = if Rails.env.test?
+      "test"
+    else
+      remote_services_data["preview"]["playback_ids"].first["id"]
+    end
+
     "https://stream.mux.com/#{playback_id}.m3u8"
   end
 
