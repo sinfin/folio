@@ -37,7 +37,7 @@ Dragonfly.app.configure do
       name, ext = File.basename(content.file.path).split(".")
       path = "#{Dir.tmpdir}/#{name}-srgb.#{ext}"
       image.colourspace("srgb").jpegsave(path)
-      content.update(path)
+      content.update(File.open(path))
     end
   end
 
