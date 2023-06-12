@@ -117,11 +117,13 @@ $f-player-progress-secondary: $gray !default
       background: transparent !important
 
     &.vjs-error .vjs-error-display
+      flex: 1 1 auto
       display: flex
       align-items: center
       justify-content: center
       gap: $f-player-control-bar-padding
       padding: $f-player-control-bar-padding
+      order: 1
 
       .vjs-modal-dialog-content
         padding: 0
@@ -132,6 +134,26 @@ $f-player-progress-secondary: $gray !default
       .f-player__error-ico
         color: $danger
         order: 1
+
+    .f-player--with-form-controls &.vjs-error
+      display: flex
+      align-items: center
+      justify-content: center
+
+      .vjs-control-bar
+        display: flex !important
+        flex: 0 0 auto
+        width: auto
+        order: 2
+
+        > *
+          display: none !important
+
+        > .vjs-folio-player-form-control
+          display: inline-block !important
+
+          &.vjs-folio-player-form-control--modal
+            margin-left: 0
 
     .vjs-volume-level
       background: $f-player-progress-secondary

@@ -102,6 +102,8 @@ window.Folio.Player.innerBind = (el, opts, file) => {
   if (opts.showFormControls) {
     controlBar.addChild('FolioPlayerFormControl', { action: 'modal', file, formControlsController: opts.formControlsController })
     controlBar.addChild('FolioPlayerFormControl', { action: 'destroy', file, formControlsController: opts.formControlsController })
+
+    el.classList.add('f-player--with-form-controls')
   }
 
   if (fileAttributes.human_type === 'video') {
