@@ -202,13 +202,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                       onChange={(e) => onValueChange('preview_duration', e.currentTarget.value)}
                       name='preview_duration'
                       type='number'
-                    >
-                      {file.attributes.default_gravities_for_select.map((opt) => (
-                        <option value={opt[1]} key={opt[1]}>
-                          {opt[0]}
-                        </option>
-                      ))}
-                    </Input>
+                    />
                   )}
                 </FormGroup>
               )

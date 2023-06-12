@@ -5,7 +5,7 @@ import filesReducer, {
   getFiles,
   getFilesSuccess,
   uploadedFile,
-  messageBusThumbnailGenerated,
+  messageBusFileUpdated,
   updatedFiles,
   updateFile,
   updateFileSuccess,
@@ -53,10 +53,10 @@ describe('filesReducer', () => {
     expect(state['Folio::File::Image'].records.length).toEqual(4)
   })
 
-  it('messageBusThumbnailGenerated', () => {
+  it('messageBusFileUpdated', () => {
     expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual(firstThumb)
-    state = filesReducer(state, messageBusThumbnailGenerated('Folio::File::Image', firstThumb, { id: Number(IMAGES[0].id), url: '/foo.jpg', thumb_key: '250x250', thumb: { url: '/foo.jpg' } }))
-    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual('/foo.jpg')
+    state = filesReducer(state, messageBusFileUpdated('Folio::File::Image', '/console/api/images', fileMock))
+    expect(state['Folio::File::Image'].records[0].attributes.thumb).toEqual('/system/dragonfly/development/files/2019/08/01/5i4xexj0kb_image_blakecheekk_vcan0gpydtq.jpg')
   })
 
   it('updatedFiles', () => {
