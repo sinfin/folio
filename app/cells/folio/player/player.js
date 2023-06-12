@@ -114,6 +114,10 @@ window.Folio.Player.innerBind = (el, opts, file) => {
     })
   }
 
+  const errorDisplay = el.folioPlayer.getChild('ErrorDisplay')
+
+  errorDisplay.el_.appendChild(window.Folio.Ui.Icon.create('alert', { class: 'f-player__error-ico' }))
+
   el.classList.add('f-player--bound')
 }
 

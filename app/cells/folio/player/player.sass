@@ -48,7 +48,8 @@ $f-player-progress-secondary: $gray !default
 
     &,
     .vjs-volume-bar,
-    .vjs-progress-holder
+    .vjs-progress-holder,
+    .vjs-modal-dialog
       // disable tooltips
       &::before,
       &::after
@@ -111,6 +112,26 @@ $f-player-progress-secondary: $gray !default
       opacity: 1
       visibility: visible
       pointer-events: all
+
+    .vjs-modal-dialog
+      background: transparent !important
+
+    &.vjs-error .vjs-error-display
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: $f-player-control-bar-padding
+      padding: $f-player-control-bar-padding
+
+      .vjs-modal-dialog-content
+        padding: 0
+        font-size: $font-size-sm
+        text-align: left
+        order: 2
+
+      .f-player__error-ico
+        color: $danger
+        order: 1
 
     .vjs-volume-level
       background: $f-player-progress-secondary
@@ -283,7 +304,8 @@ $f-player-progress-secondary: $gray !default
     .vjs-mute-control
       margin-right: 10px
 
-    .vjs-play-progress .vjs-time-tooltip
+    .vjs-play-progress .vjs-time-tooltip,
+    .vjs-modal-dialog-description
       display: none !important
 
     .vjs-slider
