@@ -88,7 +88,7 @@ class Folio::File < Folio::ApplicationRecord
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job
-  after_save :process!, if: :attached_file_changed?
+  after_commit :process!, if: :attached_file_changed?
   after_destroy :destroy_attached_file
 
   aasm do
