@@ -12,7 +12,7 @@ class Folio::Console::Catalogue::PublishedDatesCell < Folio::ConsoleCell
     return false unless model.read_attribute(:published)
 
     if model.respond_to?(:published_at)
-      @success = model.published_at <= Time.current
+      @success = model.published_at.nil? || model.published_at <= Time.current
     elsif model.respond_to?(:published_from) && model.respond_to?(:published_until)
       @success = (model.published_from.nil? || model.published_from <= Time.current) &&
                  (model.published_until.nil? || model.published_until >= Time.current)
