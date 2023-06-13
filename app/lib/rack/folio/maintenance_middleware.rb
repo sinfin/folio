@@ -3,7 +3,7 @@
 module Rack
   module Folio
     class MaintenanceMiddleware
-      WHITELIST_REGEX = /\A\/(console|sidekiq|assets|accounts|api\/s3|app\/status\.json)/
+      WHITELIST_REGEX = /\A\/(console|sidekiq|assets|accounts|folio\/api|app\/status\.json)/
 
       def initialize(app)
         @app = app
