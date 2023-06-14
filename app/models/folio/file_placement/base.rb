@@ -46,7 +46,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def run_file_after_save_job!
-    file.run_after_save_job if file # updates placements
+    if file
+      file.run_after_save_job
+    elsif changed_attributes && changed_attributes["file_id"]
+      file_before_destroy = Folio::File.find_by(id: changed_attributes["file_id"])
+      file_before_destroy.run_after_save_job if file_before_destroy
+    end
   end
 end
 
