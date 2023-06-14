@@ -21,8 +21,8 @@ window.Folio.Ui.Icon.create = (name, options = {}) => {
     svg.style.height = 'auto'
     svg.style.width = `${options.width}px`
   } else {
-    svg.style.height = defaultSize.height
-    svg.style.width = defaultSize.width
+    svg.style.height = `${defaultSize.height}px`
+    svg.style.width = `${defaultSize.width}px`
   }
 
   svg.classList.add('f-ui-icon')
