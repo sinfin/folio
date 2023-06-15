@@ -41,7 +41,7 @@ module Folio::Publishable
       self.preview_token = nil
       generate_preview_token
       update_column(:preview_token, preview_token)
-      self.preview_token = nil
+      self.preview_token
     end
 
     private
