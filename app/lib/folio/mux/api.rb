@@ -25,6 +25,7 @@ class Folio::Mux::Api
 
   def create_media(preview: false)
     rq = MuxRuby::CreateAssetRequest.new
+    rq.mp4_support = "standard" # to be able get .m4a and .mp4
 
     if preview
       rq.input = [{ url: "mux://assets/#{media_file.remote_key}",
@@ -51,6 +52,16 @@ class Folio::Mux::Api
     # log_call("Checked asset info #{remote_key}: #{assets_api.get_asset_input_info(response.data.id)}")
     response
   end
+
+  def request_mp4_support(preview: false)
+    mp4_req = MuxRuby::UpdateAssetMP4SupportRequest.new
+    mp4_req.mp4_support = "standard"
+
+    response = assets_api.update_asset_mp4_support(remote_key, mp4_req)
+    log_call("Request MP4 support #{remote_key}: #{response.to_json}")
+    response
+  end
+
 
   def update_file(preview: false)
     raise "Not Implemented"

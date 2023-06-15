@@ -21,7 +21,7 @@ class Folio::Mux::CheckProgressJob < Folio::ApplicationJob
     def update_mux_metadata!
       response = Folio::Mux::Api.new(media_file).check_media(preview: @preview)
 
-      if response.data.status == "ready"
+      if response.data.status == "ready" && response.data.static_renditions.status == "ready"
         if @preview
           media_file.remote_services_data["preview"] = response.data
           media_file.preview_media_processed!
