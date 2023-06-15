@@ -53,7 +53,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   end
 
   # every method call should use the attribute method
-  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, &block)
+  def attribute(name = nil, value = nil, class_name: nil, spacey: false, compact: false, media_query: nil, skip_desktop_header: false, small: false, aligned: false, sanitize: false, hidden: false, &block)
     content = nil
 
     full_class_name = cell_class_name(name,
@@ -68,7 +68,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     if rendering_header?
       @header_html += content_tag(:div,
                                   label_for(name, skip_desktop_header:, allow_sorting: true),
-                                  class: full_class_name)
+                                  class: full_class_name,
+                                  hidden: hidden ? "" : nil)
     else
       if block_given?
         content = block.call(self.record)
@@ -84,7 +85,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       @record_html += content_tag(:div,
                                   "#{tbody_label_for(name)}#{value_div}",
-                                  class: full_class_name)
+                                  class: full_class_name,
+                                  hidden: hidden ? "" : nil)
     end
   end
 

@@ -46,8 +46,6 @@
 // must be under folio/input
 //= require daterangepicker.min
 
-//= require folio/console/flash
-
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-set-position
 //= require folio/console/_data-auto-submit
@@ -73,6 +71,8 @@
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
+//= require folio/console/file/processing_notifier/processing_notifier
+//= require folio/console/flash/flash
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/header/header

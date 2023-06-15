@@ -5,8 +5,18 @@
         class=bootstrap_class_for(msg_type)
         role="alert"
       ]
-        button.close data-dismiss="alert"
-          span.mi close
+        - if msg_type.to_sym == :pending
+          .f-c-flash-wrap__loader-wrap
+            span.f-c-flash-wrap__loader[
+              class="folio-loader"
+              class="folio-loader--tiny"
+              class="folio-loader--transparent"
+              class="folio-loader--white"
+            ]
+        - else
+          = folio_icon(flash_icon_key(msg_type))
 
-        i class=fa_icon_for(msg_type)
-        = message
+        == message
+
+        button.close data-dismiss="alert"
+          = folio_icon(:close)
