@@ -177,6 +177,10 @@ Folio::Engine.routes.draw do
         post :s3_before
         post :s3_after
       end
+
+      resource :ares, only: [], controller: "ares" do
+        post :subject
+      end
     end
   end
 
