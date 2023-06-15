@@ -2,6 +2,15 @@
   - if model[:icon]
     = folio_icon(model[:icon], class: "f-c-ui-button__icon")
 
+  - if model[:loader]
+    span.f-c-ui-button__loader-wrap
+      span.f-c-ui-button__loader[
+        class="folio-loader"
+        class="folio-loader--transparent"
+        class="folio-loader--tiny"
+        class="folio-loader--white"
+      ]
+
   - if model[:label]
     span.f-c-ui-button__label = model[:label]
 
