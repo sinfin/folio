@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::JwPlayer::CheckProgressJob < Folio::ApplicationJob
+  discard_on ActiveJob::DeserializationError
   retry_on Folio::JwPlayer::MetadataNotAvailable, wait: 30.seconds, attempts: 25
 
   queue_as :default
