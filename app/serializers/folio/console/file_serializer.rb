@@ -84,7 +84,7 @@ class Folio::Console::FileSerializer
   end
 
   attribute :jw_player_api_url do |object|
-    if object.try(:processing_service) == "jw_player"
+    if object.try(:processing_service) == "jw_player" && object.ready?
       if object.remote_key
         Folio::Engine.routes
                      .url_helpers
