@@ -51,7 +51,7 @@ window.Folio.S3Upload.createDropzone = ({
     thumbnailHeight: 150,
     timeout: 0,
     parallelUploads: 1,
-    maxFilesize: 9537,
+    maxFilesize: 5120,
     autoProcessQueue: false,
 
     sending: function (file, xhr) {
