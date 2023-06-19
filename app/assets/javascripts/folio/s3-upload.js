@@ -51,7 +51,7 @@ window.Folio.S3Upload.createDropzone = ({
     thumbnailHeight: 150,
     timeout: 0,
     parallelUploads: 1,
-    maxFilesize: 4096,
+    maxFilesize: 9537,
     autoProcessQueue: false,
 
     sending: function (file, xhr) {
@@ -93,7 +93,11 @@ window.Folio.S3Upload.createDropzone = ({
 
     error: function (file, message) {
       if (window.FolioConsole && window.FolioConsole.Flash) {
-        window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+        if (typeof message === "string") {
+          window.FolioConsole.Flash.alert(message)
+        } else {
+          window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+        }
       }
 
       const dropzone = this
@@ -135,6 +139,11 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     ...(dropzoneOptions || {})
+  }
+
+  if (document.documentElement.lang === "cs") {
+    options.dictFileTooBig = "Soubor je přiliš veliký ({{filesize}}MiB). Maximální velikost: {{maxFilesize}}MiB."
+    options.dictInvalidFileType = "Soubory tohoto typu nejsou povoleny."
   }
 
   const dropzone = new window.Dropzone(element, options)
