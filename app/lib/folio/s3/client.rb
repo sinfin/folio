@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Folio::S3Client
+module Folio::S3::Client
   TEST_PATH = "/tmp/folio_tmp_user_photo_uploads"
 
   def s3_client

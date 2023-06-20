@@ -1,48 +1,51 @@
 # frozen_string_literal: true
 
 class Folio::Api::S3Controller < Folio::Api::BaseController
-  include Folio::S3Client
+  include Folio::S3::Client
 
   before_action :authenticate_s3!
+  before_action :get_file_name_and_s3_path, only: %i[before multipart_before]
 
   def before # return settings for S3 file upload
-    file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
+    presigned_url = test_aware_presign_url(@s3_path)
 
-    session[:init] = true unless session.id
-
-    s3_path = [
-      "tmp_folio_file_uploads",
-      "session",
-      session.id.public_id,
-      SecureRandom.urlsafe_base64(16),
-      file_name,
-    ]
-
-    s3_path = s3_path.join("/")
-
-    presigned_url = test_aware_presign_url(s3_path)
-
-    render json: { s3_url: presigned_url, file_name:, s3_path: }
+    render json: {
+      s3_url: presigned_url,
+      file_name: @file_name,
+      s3_path: @s3_path,
+    }
   end
 
   # somewhere between, JS on FE directly loads file to S3 and returns it's s3_path
 
   def after # load back file from S3 and process it
-    s3_path = params.require(:s3_path)
+    @s3_path = params.require(:s3_path)
     type = params.require(:type)
     file_klass = type.safe_constantize
 
-    if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(s3_path)
-      Folio::CreateFileFromS3Job.perform_later(s3_path:,
-                                               type:,
-                                               existing_id: params[:existing_id].try(:to_i),
-                                               web_session_id: session.id.public_id,
-                                               user_id: current_user.try(:id),
-                                               attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
+    if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(@s3_path)
+      Folio::S3::CreateFileJob.perform_later(s3_path: @s3_path,
+                                             type:,
+                                             existing_id: params[:existing_id].try(:to_i),
+                                             web_session_id: session.id.public_id,
+                                             user_id: current_user.try(:id),
+                                             attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
       render json: {}
     else
       render json: {}, status: 422
     end
+  end
+
+  def multipart_before
+    response = s3_client.create_multipart_upload(bucket: s3_bucket, key: @s3_path)
+
+    # TODO schedule a clear job
+
+    render json: {
+      upload_id: response.upload_id,
+      file_name: @file_name,
+      s3_path: @s3_path,
+    }
   end
 
   private
@@ -58,5 +61,19 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
       return if Rails.application.config.folio_direct_s3_upload_allow_for_users && user_signed_in?
       return if Rails.application.config.folio_allow_users_to_console && user_signed_in?
       fail CanCan::AccessDenied
+    end
+
+    def get_file_name_and_s3_path
+      @file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
+
+      session[:init] = true unless session.id
+
+      @s3_path = [
+        "tmp_folio_file_uploads",
+        "session",
+        session.id.public_id,
+        SecureRandom.urlsafe_base64(16),
+        @file_name,
+      ].join("/")
     end
 end

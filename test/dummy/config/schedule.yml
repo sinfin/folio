@@ -1,0 +1,5 @@
+folio_s3_clear_multipart_uploads:
+  cron: "0 */4 * * *"
+  class: Folio::S3::ClearMultipartUploadsJob
+  active_job: true
+  date_as_argument: false

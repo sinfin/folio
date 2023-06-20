@@ -82,7 +82,7 @@ class FileModal extends Component {
       if (!msg) return
       if (!this.props.fileModal.file) return
 
-      if (msg.type === 'Folio::CreateFileFromS3Job' && msg.data.file) {
+      if (msg.type === 'Folio::S3::CreateFileJob' && msg.data.file) {
         if (Number(msg.data.file.id) === Number(this.props.fileModal.file.id)) {
           if (msg.data.type === 'replace-success') {
             this.props.dispatch(updatedFileModalFile(msg.data.file))

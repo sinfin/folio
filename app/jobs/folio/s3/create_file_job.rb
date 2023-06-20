@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class Folio::CreateFileFromS3Job < Folio::ApplicationJob
-  include Folio::S3Client
+class Folio::S3::CreateFileJob < Folio::ApplicationJob
+  include Folio::S3::Client
   include Folio::Shell
 
   queue_as :default
@@ -90,7 +90,7 @@ class Folio::CreateFileFromS3Job < Folio::ApplicationJob
     def broadcast(hash)
       MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
                          {
-                           type: "Folio::CreateFileFromS3Job",
+                           type: "Folio::S3::CreateFileJob",
                            data: hash,
                          }.to_json
     end

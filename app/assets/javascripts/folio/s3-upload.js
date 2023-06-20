@@ -167,9 +167,9 @@ window.Folio.S3Upload.createDropzone = ({
     return isFromThisDropzone
   })
 
-  window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzoneId}`] = (msg) => {
+  window.Folio.MessageBus.callbacks[`Folio::S3::CreateFileJob-dropzone-${dropzoneId}`] = (msg) => {
     if (!msg) return
-    if (msg.type !== 'Folio::CreateFileFromS3Job') return
+    if (msg.type !== 'Folio::S3::CreateFileJob') return
     if (msg.data.file_type !== fileType) return
     if (!filterMessageBusMessages(msg)) return
 
@@ -244,7 +244,7 @@ window.Folio.S3Upload.createHiddenDropzone = (opts) => {
 }
 
 window.Folio.S3Upload.destroyDropzone = (dropzone) => {
-  delete window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzone.dropzoneId}`]
+  delete window.Folio.MessageBus.callbacks[`Folio::S3::CreateFileJob-dropzone-${dropzone.dropzoneId}`]
   dropzone.destroy()
 }
 
