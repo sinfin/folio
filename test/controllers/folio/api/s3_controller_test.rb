@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
+class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Folio::Engine.routes.url_helpers
 
@@ -13,8 +13,8 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
   end
 
   [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
-    test "#{klass} - s3_before" do
-      post s3_before_folio_api_s3_signer_path, params: { file_name: "Intricate fílě name.jpg" }
+    test "#{klass} - before" do
+      post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }
       assert_response :success
 
       json = response.parsed_body
@@ -23,9 +23,9 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
       assert_equal "intricate-file-name.jpg", json["file_name"]
     end
 
-    test "#{klass} - s3_after" do
+    test "#{klass} - after" do
       assert_enqueued_jobs(0) do
-        post s3_after_folio_api_s3_signer_path, params: { s3_path: "foo", type: klass.to_s, existing_id: nil }
+        post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: nil }
         assert_response 422
       end
 
@@ -35,17 +35,17 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
 
       assert_difference("#{klass}.count", 1) do
         perform_enqueued_jobs do
-          post s3_after_folio_api_s3_signer_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }
+          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }
           assert_response(:ok)
         end
       end
     end
 
-    test "#{klass} - s3_after with existing id" do
+    test "#{klass} - after with existing id" do
       file = create(klass.model_name.singular, file_name: "foo.gif")
 
       assert_enqueued_jobs(0) do
-        post s3_after_folio_api_s3_signer_path, params: { s3_path: "foo", type: klass.to_s, existing_id: file.id }
+        post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: file.id }
         assert_response 422
       end
 
@@ -57,7 +57,7 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
 
       assert_difference("#{klass}.count", 0) do
         perform_enqueued_jobs do
-          post s3_after_folio_api_s3_signer_path, params: { s3_path: "test-#{klass.model_name.singular}-#{file.id}.gif", type: klass.to_s, existing_id: file.id }
+          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}-#{file.id}.gif", type: klass.to_s, existing_id: file.id }
           assert_response(:ok)
         end
       end
@@ -68,7 +68,7 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
     test "#{klass} - unauthorized for no account" do
       sign_out @admin
 
-      post s3_before_folio_api_s3_signer_path, params: { file_name: "Intricate fílě name.jpg" }
+      post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }
       assert_response :unauthorized
 
       test_path = "#{Folio::S3Client::TEST_PATH}/test-#{klass.model_name.singular}.gif"
@@ -77,7 +77,7 @@ class Folio::Api::S3SignerControllerTest < ActionDispatch::IntegrationTest
 
       assert_difference("#{klass}.count", 0) do
         perform_enqueued_jobs do
-          post s3_after_folio_api_s3_signer_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }
+          post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }
           assert_response :unauthorized
         end
       end

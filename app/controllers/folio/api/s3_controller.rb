@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-class Folio::Api::S3SignerController < Folio::Api::BaseController
+class Folio::Api::S3Controller < Folio::Api::BaseController
   include Folio::S3Client
 
-  before_action :authenticate_s3_signer!
+  before_action :authenticate_s3!
 
-  def s3_before # return settings for S3 file upload
+  def before # return settings for S3 file upload
     file_name = params.require(:file_name).split(".").map(&:parameterize).join(".")
 
     session[:init] = true unless session.id
@@ -27,7 +27,7 @@ class Folio::Api::S3SignerController < Folio::Api::BaseController
 
   # somewhere between, JS on FE directly loads file to S3 and returns it's s3_path
 
-  def s3_after # load back file from S3 and process it
+  def after # load back file from S3 and process it
     s3_path = params.require(:s3_path)
     type = params.require(:type)
     file_klass = type.safe_constantize
@@ -52,7 +52,7 @@ class Folio::Api::S3SignerController < Folio::Api::BaseController
       end
     end
 
-    def authenticate_s3_signer!
+    def authenticate_s3!
       return if Rails.application.config.folio_direct_s3_upload_allow_public
       return if current_account
       return if Rails.application.config.folio_direct_s3_upload_allow_for_users && user_signed_in?

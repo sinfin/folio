@@ -4,11 +4,11 @@ window.Folio = window.Folio || {}
 window.Folio.S3Upload = {}
 
 window.Folio.S3Upload.newUpload = ({ file }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3_signer/s3_before', { file_name: file.name })
+  return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name })
 }
 
 window.Folio.S3Upload.finishedUpload = ({ s3_path, type, existingId }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3_signer/s3_after', { s3_path, type, existing_id: existingId })
+  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path, type, existing_id: existingId })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
