@@ -1,3 +1,5 @@
+//= require dropzone-6-0-0-beta-1
+
 window.Folio = window.Folio || {}
 window.Folio.S3Upload = {}
 

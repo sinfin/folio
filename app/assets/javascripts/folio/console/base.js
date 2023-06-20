@@ -6,7 +6,6 @@
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
 //= require jquery.kinetic/index
-//= require dropzone/dist/dropzone
 //= require clipboard/dist/clipboard
 //= require strftime
 //= require moment/moment
