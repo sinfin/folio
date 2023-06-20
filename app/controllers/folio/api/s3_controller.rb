@@ -19,33 +19,31 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
   # somewhere between, JS on FE directly loads file to S3 and returns it's s3_path
 
   def after # load back file from S3 and process it
-    @s3_path = params.require(:s3_path)
-    type = params.require(:type)
-    file_klass = type.safe_constantize
-
-    if file_klass && allowed_klass?(file_klass) && test_aware_s3_exists?(@s3_path)
-      Folio::S3::CreateFileJob.perform_later(s3_path: @s3_path,
-                                             type:,
-                                             existing_id: params[:existing_id].try(:to_i),
-                                             web_session_id: session.id.public_id,
-                                             user_id: current_user.try(:id),
-                                             attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
-      render json: {}
-    else
-      render json: {}, status: 422
-    end
+    handle_after(Folio::S3::CreateFileJob)
   end
 
   def multipart_before
+    chunk_count = params.require(:chunk_count).to_i
+
+    raise(StandardError, "chunk_count must be > 0") unless chunk_count > 0
+    raise(StandardError, "chunk_count must be <= 10") unless chunk_count <= 10
+
     response = s3_client.create_multipart_upload(bucket: s3_bucket, key: @s3_path)
 
-    # TODO schedule a clear job
+    chunk_s3_urls = chunk_count.times.map do |i|
+      test_aware_presign_url("#{@s3_path}.part.#{i + 1}")
+    end
 
     render json: {
       upload_id: response.upload_id,
       file_name: @file_name,
       s3_path: @s3_path,
+      chunk_s3_urls:,
     }
+  end
+
+  def multipart_after
+    handle_after(Folio::S3::CombineChunksJob, multipart: true)
   end
 
   private
@@ -75,5 +73,23 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
         SecureRandom.urlsafe_base64(16),
         @file_name,
       ].join("/")
+    end
+
+    def handle_after(job_klass, multipart: false)
+      @s3_path = params.require(:s3_path)
+      type = params.require(:type)
+      file_klass = type.safe_constantize
+
+      if file_klass && allowed_klass?(file_klass) && (multipart || test_aware_s3_exists?(@s3_path))
+        job_klass.perform_later(s3_path: @s3_path,
+                                type:,
+                                existing_id: params[:existing_id].try(:to_i),
+                                web_session_id: session.id.public_id,
+                                user_id: current_user.try(:id),
+                                attributes: Rails.application.config.folio_direct_s3_upload_attributes_for_job_proc.call(self))
+        render json: {}
+      else
+        render json: {}, status: 422
+      end
     end
 end

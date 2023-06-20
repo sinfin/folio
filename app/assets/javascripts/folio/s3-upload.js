@@ -1,4 +1,4 @@
-//= require dropzone-6-0-0-beta-1
+//= require dropzone-6-0-0-beta-2
 
 window.Folio = window.Folio || {}
 window.Folio.S3Upload = {}
@@ -7,8 +7,35 @@ window.Folio.S3Upload.newUpload = ({ file }) => {
   return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name })
 }
 
-window.Folio.S3Upload.finishedUpload = ({ s3_path, type, existingId }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path, type, existing_id: existingId })
+window.Folio.S3Upload.finishedUpload = ({ file, type, existingId }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path: file.s3_path, type, existing_id: existingId })
+}
+
+window.Folio.S3Upload.newMultipartUpload = ({ file }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3/multipart_before', { file_name: file.name, chunk_count: file.chunk_count })
+}
+
+window.Folio.S3Upload.finishedMultipartUpload = ({ file, type, existingId }) => {
+  const parts = file.upload.chunks.map((chunk) => {
+    const etagMatch = chunk.responseHeaders.match(/etag: "([^"]+)"/i)
+
+    if (!etagMatch) throw new Error('Failed to get etag headers from S3 response. Make sure you have "ETag" in "ExposeHeaders" in your CORS S3 config.')
+
+    return {
+      etag: etagMatch[1],
+      part_number: chunk.index + 1,
+    }
+  })
+
+  console.log('posting')
+
+  return window.Folio.Api.apiPost('/folio/api/s3/multipart_after', {
+    s3_path: file.s3_path,
+    type,
+    parts,
+    upload_id: file.upload_id,
+    existing_id: existingId
+  })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
@@ -40,6 +67,7 @@ window.Folio.S3Upload.createDropzone = ({
   if (!fileType) throw new Error('Missing fileType')
   if (!element) throw new Error('Missing element')
 
+  const useMultipart = true
   const dropzoneId = window.Folio.S3Upload.previousDropzoneId += 1
 
   const options = {
@@ -56,46 +84,73 @@ window.Folio.S3Upload.createDropzone = ({
     maxFilesize: 5120,
     autoProcessQueue: false,
 
-    sending: function (file, xhr) {
-      const _send = xhr.send
-      xhr.send = () => { _send.call(xhr, file) }
-    },
+    // sending: function (file, xhr) {
+    //   console.log(xhr)
+    //   // const _send = xhr.send
+    //   // xhr.send = () => { _send.call(xhr, file) }
+    // },
 
     accept: function (file, done) {
       const dropzone = this
 
-      window.Folio.S3Upload.newUpload({ file })
-        .then((result) => {
-          file.file_name = result.file_name
-          file.s3_path = result.s3_path
-          file.s3_url = result.s3_url
+      const handleResult = (result) => {
+        file.file_name = result.file_name
+        file.s3_path = result.s3_path
 
-          if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
-            file.thumbnail_notified = true
-            onThumbnail(file.s3_path, file.dataURL)
-          }
+        if (result.s3_url) file.s3_url = result.s3_url
+        if (result.upload_id) file.upload_id = result.upload_id
+        if (result.chunk_s3_urls) file.chunk_s3_urls = result.chunk_s3_urls
 
-          if (onStart) onStart(file.s3_path, { file_name: result.file_name, file_size: file.size })
+        if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
+          file.thumbnail_notified = true
+          onThumbnail(file.s3_path, file.dataURL)
+        }
 
-          done()
+        if (onStart) onStart(file.s3_path, { file_name: result.file_name, file_size: file.size })
 
-          setTimeout(() => dropzone.processFile(file), 0)
-        })
-        .catch((err) => {
-          done('Failed to get an S3 signed upload URL', err)
-        })
+        done()
+
+        setTimeout(() => dropzone.processFile(file), 0)
+      }
+
+      if (useMultipart) {
+        file.chunk_count = Math.ceil(file.size / this.options.chunkSize)
+
+        window.Folio.S3Upload.newMultipartUpload({ file })
+          .then(handleResult)
+          .catch((err) => {
+            done('Failed to get an S3 multipart upload', err)
+          })
+      } else {
+        window.Folio.S3Upload.newUpload({ file })
+          .then(handleResult)
+          .catch((err) => {
+            done('Failed to get an S3 signed upload URL', err)
+          })
+      }
     },
 
     success: function (file) {
-      window.Folio.S3Upload.finishedUpload({
-        s3_path: file.s3_path,
-        type: fileType
-      })
+      if (file.chunk_s3_urls) {
+        window.Folio.S3Upload.finishedMultipartUpload({
+          file,
+          type: fileType
+        }).catch((err) => {
+          this.options.error(file, err.message)
+        })
+      } else {
+        window.Folio.S3Upload.finishedUpload({
+          file,
+          type: fileType
+        }).catch((err) => {
+          this.options.error(file, err.message)
+        })
+      }
     },
 
     error: function (file, message) {
       if (window.FolioConsole && window.FolioConsole.Flash) {
-        if (typeof message === "string") {
+        if (typeof message === 'string') {
           window.FolioConsole.Flash.alert(message)
         } else {
           window.FolioConsole.Flash.flashMessageFromApiErrors(message)
@@ -103,14 +158,19 @@ window.Folio.S3Upload.createDropzone = ({
       }
 
       const dropzone = this
-
-      setTimeout(() => { dropzone.removeFile(file) }, 0)
+      if (dropzone.removeFile) {
+        setTimeout(() => { dropzone.removeFile(file) }, 0)
+      }
 
       if (onFailure) onFailure(file.s3_path)
     },
 
     processing: function (file) {
-      this.options.url = file.s3_url
+      if (file.chunk_s3_urls) {
+        this.options.url = (_, dataBlocks) => file.chunk_s3_urls[dataBlocks[0].chunkIndex]
+      } else {
+        this.options.url = file.s3_url
+      }
     },
 
     uploadprogress: function (file, progress, _bytesSent) {
@@ -143,9 +203,22 @@ window.Folio.S3Upload.createDropzone = ({
     ...(dropzoneOptions || {})
   }
 
-  if (document.documentElement.lang === "cs") {
-    options.dictFileTooBig = "Soubor je přiliš veliký ({{filesize}}MiB). Maximální velikost: {{maxFilesize}}MiB."
-    options.dictInvalidFileType = "Soubory tohoto typu nejsou povoleny."
+  if (useMultipart) {
+    options.maxFilesize = 10240 // mb
+    options.uploadMultiple = false
+    options.chunking = true
+    options.forceChunking = true
+    options.chunkSize = 100 * 1000 * 1024 // bytes
+    options.parallelChunkUploads = true
+    options.retryChunks = true
+    options.retryChunksLimit = 3
+    options.defaultHeaders = false
+    options.binaryBody = true
+  }
+
+  if (document.documentElement.lang === 'cs') {
+    options.dictFileTooBig = 'Soubor je přiliš veliký ({{filesize}}MiB). Maximální velikost: {{maxFilesize}}MiB.'
+    options.dictInvalidFileType = 'Soubory tohoto typu nejsou povoleny.'
   }
 
   const dropzone = new window.Dropzone(element, options)

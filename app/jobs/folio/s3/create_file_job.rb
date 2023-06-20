@@ -1,98 +1,43 @@
 # frozen_string_literal: true
 
-class Folio::S3::CreateFileJob < Folio::ApplicationJob
-  include Folio::S3::Client
-  include Folio::Shell
+class Folio::S3::CreateFileJob < Folio::S3::BaseJob
+  def perform_for_valid(s3_path:, klass:, existing_id:, web_session_id:, user_id:, attributes:)
+    broadcast_start(s3_path:, file_type: klass.to_s)
 
-  queue_as :default
-
-  if defined?(sidekiq_options)
-    sidekiq_options retry: false
-  end
-
-  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
-    return unless s3_path
-    unless test_aware_s3_exists?(s3_path)
-      # probably handled it already in another job
-      return
-    end
-    return unless type
-
-    klass = type.safe_constantize
-    return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
-
-    broadcast_start(s3_path:, file_type: type)
-
-    file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:, attributes:)
-    replacing_file = file.persisted?
+    @file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:, attributes:)
+    replacing_file = @file.persisted?
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
-      file.file = downloaded_file(s3_path, tmpdir)
+      @file.file = downloaded_file(s3_path, tmpdir)
 
-      if file.save
+      if @file.save
         if replacing_file
-          broadcast_replace_success(file: file.reload, file_type: type)
+          broadcast_replace_success(file: @file.reload, file_type: klass.to_s)
         else
-          broadcast_success(file: file.reload, s3_path:, file_type: type)
+          broadcast_success(file: @file.reload, s3_path:, file_type: klass.to_s)
         end
       else
         if replacing_file
-          broadcast_replace_error(file:, file_type: type)
+          broadcast_replace_error(file: @file, file_type: klass.to_s)
         else
-          broadcast_error(file:, s3_path:, file_type: type)
+          broadcast_error(file: @file, s3_path:, file_type: klass.to_s)
         end
       end
     end
-  rescue StandardError => e
-    broadcast_error(file:, s3_path:, error: e, file_type: type)
-    raise e
   ensure
     test_aware_s3_delete(s3_path)
   end
 
   private
-    def broadcast_start(s3_path:, file_type:)
-      broadcast({ s3_path:, type: "start", started_at: Time.current.to_i * 1000, file_type: })
-    end
+    def downloaded_file(s3_path, tmpdir)
+      tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
 
-    def broadcast_success(s3_path:, file:, file_type:)
-      broadcast({ s3_path:, type: "success", file: serialized_file(file)[:data], file_type: })
-    end
+      test_aware_download_from_s3(s3_path, tmp_file_path)
+      test_aware_s3_delete(s3_path)
 
-    def broadcast_error(s3_path:, file: nil, error: nil, file_type:)
-      if error
-        errors = [error.message]
-      elsif file && file.errors
-        errors = file.errors.full_messages
-      else
-        errors = nil
-      end
+      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
 
-      broadcast({ s3_path:, type: "failure", errors:, file_type: })
-    end
-
-    def broadcast_replace_success(file:, file_type:)
-      broadcast({ type: "replace-success", file: serialized_file(file)[:data], file_type: })
-    end
-
-    def broadcast_replace_error(file:, error: nil, file_type:)
-      if error
-        errors = [error.message]
-      elsif file && file.errors
-        errors = file.errors.full_messages
-      else
-        errors = nil
-      end
-
-      broadcast({ type: "replace-failure", file: serialized_file(file)[:data], errors:, file_type: })
-    end
-
-    def broadcast(hash)
-      MessageBus.publish Folio::MESSAGE_BUS_CHANNEL,
-                         {
-                           type: "Folio::S3::CreateFileJob",
-                           data: hash,
-                         }.to_json
+      File.open(tmp_file_path)
     end
 
     def ensure_proper_file_extension_for_mime_type(tmp_file_path)
@@ -124,26 +69,15 @@ class Folio::S3::CreateFileJob < Folio::ApplicationJob
 
     def prepare_file_model(klass, id:, web_session_id:, user_id:, attributes: {})
       if id
-        file = klass.find(id)
+        @file = klass.find(id)
       else
-        file = klass.new
+        @file = klass.new
       end
 
-      file.web_session_id = web_session_id if file.respond_to?("web_session_id=")
-      file.user = Folio::User.find(user_id) if user_id && file.respond_to?("user=")
-      file.assign_attributes(attributes) if attributes.present?
+      @file.web_session_id = web_session_id if @file.respond_to?("web_session_id=")
+      @file.user = Folio::User.find(user_id) if user_id && @file.respond_to?("user=")
+      @file.assign_attributes(attributes) if attributes.present?
 
-      file
-    end
-
-    def downloaded_file(s3_path, tmpdir)
-      tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
-
-      test_aware_download_from_s3(s3_path, tmp_file_path)
-      test_aware_s3_delete(s3_path)
-
-      tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
-
-      File.open(tmp_file_path)
+      @file
     end
 end

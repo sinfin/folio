@@ -177,6 +177,7 @@ Folio::Engine.routes.draw do
         post :before
         post :after
         post :multipart_before
+        post :multipart_part_before
         post :multipart_after
       end
 
