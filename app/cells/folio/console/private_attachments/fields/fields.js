@@ -55,13 +55,13 @@ window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
       if ($fields.length !== 1) return
       $fields.remove()
     },
-    onProgress: (s3Path, progress) => {
+    onProgress: (s3Path, roundedProgress, text) => {
       const $fields = $el.find(`.f-c-private-attachments-fields[data-s3-path="${s3Path}"]`)
       if ($fields.length !== 1) return
-      const rounded = Math.round(progress)
+
       $fields
         .find('.f-c-private-attachments-fields__dropzone-progress-bar')
-        .css('width', `${rounded}%`)
+        .css('width', `${roundedProgress}%`)
     }
   })
 

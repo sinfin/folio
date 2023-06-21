@@ -59,7 +59,7 @@ const FileTableRow = ({
 
       {fileTypeIsImage ? (
         <div className='f-c-file-table__td f-c-file-table__td--image py-0'>
-          <FileUploadProgress progress={file.attributes.progress} />
+          <FileUploadProgress progress={file.attributes.progress} progressText={file.attributes.progressText} />
 
           <div className='f-c-file-table__img-wrap'>
             {(file.attributes.thumb || file.attributes.dataThumbnail) && (
@@ -73,7 +73,7 @@ const FileTableRow = ({
         </div>
       ) : (
         <div className='f-c-file-table__td f-c-file-table__td--extension'>
-          <FileUploadProgress progress={file.attributes.progress} />
+          <FileUploadProgress progress={file.attributes.progress} progressText={file.attributes.progressText} />
           <span className='f-c-file-table__extension'>{file.attributes.extension}</span>
         </div>
       )}
@@ -86,7 +86,7 @@ const FileTableRow = ({
 
       <div className='f-c-file-table__td f-c-file-table__td--size'>
         <div className='f-c-file-table__td-min-height'>
-          {numberToHumanSize(file.attributes.file_size)}
+          {file.attributes.uploading && file.attributes.progress === 100 ? null : numberToHumanSize(file.attributes.file_size)}
         </div>
       </div>
 

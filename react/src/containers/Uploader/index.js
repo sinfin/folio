@@ -51,10 +51,10 @@ class Uploader extends Component {
 
         this.props.dispatch(removeDropzoneFile(this.props.fileType, s3Path))
       },
-      onProgress: (s3Path, progress) => {
+      onProgress: (s3Path, progress, progressText) => {
         if (!this.props.uploads.dropzoneFiles[s3Path]) return
 
-        this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, { progress }))
+        this.props.dispatch(updateDropzoneFile(this.props.fileType, s3Path, { progress, progressText }))
       },
       onThumbnail: (s3Path, dataThumbnail) => {
         if (!this.props.uploads.dropzoneFiles[s3Path]) return

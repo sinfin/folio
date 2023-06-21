@@ -6,10 +6,12 @@ window.Folio.S3Upload = {}
 
 window.Folio.S3Upload.i18n = {
   cs: {
-    finalizing: 'Dokončuji…'
+    finalizing: 'Dokončuji…',
+    processing: 'Probíhá zpracování souboru…',
   },
   en: {
-    finalizing: 'Finalizing…'
+    finalizing: 'Finalizing…',
+    processing: 'The file is being processed…'
   }
 }
 
@@ -168,8 +170,19 @@ window.Folio.S3Upload.createDropzone = ({
 
     uploadprogress: function (file, progress, _bytesSent) {
       const rounded = Math.round(progress)
+      let text
 
-      if (onProgress) onProgress(file.s3_path, rounded)
+      if (rounded === 100) {
+        if (fileHumanType !== "image" && file.size && file.size > (25 * 1000 * 1024)) {
+          text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'processing')
+        } else {
+          text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing')
+        }
+      } else {
+        text = `${rounded}%`
+      }
+
+      if (onProgress) onProgress(file.s3_path, rounded, text)
 
       if (folioConsole && file.previewElement) {
         file
@@ -180,7 +193,7 @@ window.Folio.S3Upload.createDropzone = ({
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__inner, .f-c-r-dropzone__preview-progress-text')
-          .innerText = (rounded === 100 ? window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing') : `${rounded}%`)
+          .innerText = text
       }
     },
 
