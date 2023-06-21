@@ -28,14 +28,11 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     raise(StandardError, "chunk_count must be > 0") unless chunk_count > 0
     raise(StandardError, "chunk_count must be <= 10") unless chunk_count <= 10
 
-    response = s3_client.create_multipart_upload(bucket: s3_bucket, key: @s3_path)
-
     chunk_s3_urls = chunk_count.times.map do |i|
       test_aware_presign_url("#{@s3_path}.part.#{i + 1}")
     end
 
     render json: {
-      upload_id: response.upload_id,
       file_name: @file_name,
       s3_path: @s3_path,
       chunk_s3_urls:,

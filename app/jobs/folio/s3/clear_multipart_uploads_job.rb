@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
-class Folio::S3::ClearMultipartUploadsJob < Folio::ApplicationJob
-  include Folio::S3::Client
-
+class Folio::S3::ClearMultipartUploadsJob < Folio::S3::BaseJob
   THRESHOLD = 4.hours
-
-  queue_as :default
-
-  if defined?(sidekiq_options)
-    sidekiq_options retry: false
-  end
 
   def perform(all: false)
     response = s3_client.list_multipart_uploads(bucket: s3_bucket)

@@ -1,7 +1,17 @@
 //= require dropzone-6-0-0-beta-2
+//= require folio/i18n
 
 window.Folio = window.Folio || {}
 window.Folio.S3Upload = {}
+
+window.Folio.S3Upload.i18n = {
+  cs: {
+    finalizing: 'Dokončuji…',
+  },
+  en: {
+    finalizing: 'Finalizing…',
+  }
+}
 
 window.Folio.S3Upload.newUpload = ({ file }) => {
   return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name })
@@ -23,17 +33,14 @@ window.Folio.S3Upload.finishedMultipartUpload = ({ file, type, existingId }) => 
 
     return {
       etag: etagMatch[1],
-      part_number: chunk.index + 1,
+      part_number: chunk.index + 1
     }
   })
-
-  console.log('posting')
 
   return window.Folio.Api.apiPost('/folio/api/s3/multipart_after', {
     s3_path: file.s3_path,
     type,
     parts,
-    upload_id: file.upload_id,
     existing_id: existingId
   })
 }
@@ -67,7 +74,6 @@ window.Folio.S3Upload.createDropzone = ({
   if (!fileType) throw new Error('Missing fileType')
   if (!element) throw new Error('Missing element')
 
-  const useMultipart = true
   const dropzoneId = window.Folio.S3Upload.previousDropzoneId += 1
 
   const options = {
@@ -81,14 +87,17 @@ window.Folio.S3Upload.createDropzone = ({
     thumbnailHeight: 150,
     timeout: 0,
     parallelUploads: 1,
-    maxFilesize: 5120,
     autoProcessQueue: false,
-
-    // sending: function (file, xhr) {
-    //   console.log(xhr)
-    //   // const _send = xhr.send
-    //   // xhr.send = () => { _send.call(xhr, file) }
-    // },
+    maxFilesize: 10240, // mb
+    uploadMultiple: false,
+    chunking: true,
+    forceChunking: true,
+    chunkSize: 2000 * 1000 * 1024, // bytes
+    parallelChunkUploads: true,
+    retryChunks: true,
+    retryChunksLimit: 3,
+    defaultHeaders: false,
+    binaryBody: true,
 
     accept: function (file, done) {
       const dropzone = this
@@ -98,7 +107,6 @@ window.Folio.S3Upload.createDropzone = ({
         file.s3_path = result.s3_path
 
         if (result.s3_url) file.s3_url = result.s3_url
-        if (result.upload_id) file.upload_id = result.upload_id
         if (result.chunk_s3_urls) file.chunk_s3_urls = result.chunk_s3_urls
 
         if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
@@ -113,19 +121,19 @@ window.Folio.S3Upload.createDropzone = ({
         setTimeout(() => dropzone.processFile(file), 0)
       }
 
-      if (useMultipart) {
-        file.chunk_count = Math.ceil(file.size / this.options.chunkSize)
+      file.chunk_count = Math.ceil(file.size / this.options.chunkSize)
 
-        window.Folio.S3Upload.newMultipartUpload({ file })
-          .then(handleResult)
-          .catch((err) => {
-            done('Failed to get an S3 multipart upload', err)
-          })
-      } else {
+      if (file.chunk_count === 1) {
         window.Folio.S3Upload.newUpload({ file })
           .then(handleResult)
           .catch((err) => {
             done('Failed to get an S3 signed upload URL', err)
+          })
+      } else {
+        window.Folio.S3Upload.newMultipartUpload({ file })
+          .then(handleResult)
+          .catch((err) => {
+            done('Failed to get an S3 multipart upload', err)
           })
       }
     },
@@ -187,7 +195,7 @@ window.Folio.S3Upload.createDropzone = ({
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__inner, .f-c-r-dropzone__preview-progress-text')
-          .innerText = rounded === 100 ? window.FolioConsole.translations.finalizing : `${rounded}%`
+          .innerText = (rounded === 100 ? window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing') : `${rounded}%`)
       }
     },
 
@@ -201,19 +209,6 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     ...(dropzoneOptions || {})
-  }
-
-  if (useMultipart) {
-    options.maxFilesize = 10240 // mb
-    options.uploadMultiple = false
-    options.chunking = true
-    options.forceChunking = true
-    options.chunkSize = 100 * 1000 * 1024 // bytes
-    options.parallelChunkUploads = true
-    options.retryChunks = true
-    options.retryChunksLimit = 3
-    options.defaultHeaders = false
-    options.binaryBody = true
   }
 
   if (document.documentElement.lang === 'cs') {
@@ -247,12 +242,6 @@ window.Folio.S3Upload.createDropzone = ({
     if (!filterMessageBusMessages(msg)) return
 
     switch (msg.data.type) {
-      case 'start':
-        return dropzone.files.forEach((file) => {
-          if (file.s3_path === msg.data.s3_path) {
-            file.s3_job_started_at = new Date()
-          }
-        })
       case 'success': {
         if (!dontRemoveFileOnSuccess) {
           dropzone.files.forEach((file) => {
