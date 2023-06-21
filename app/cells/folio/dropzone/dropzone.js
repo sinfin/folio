@@ -14,6 +14,7 @@ window.Folio.Dropzone.bind = (wrap) => {
   window.Folio.S3Upload.createDropzone({
     element: wrap,
     fileType: wrap.getAttribute('data-file-type'),
+    fileHumanType: wrap.getAttribute('data-file-human-type'),
     dontRemoveFileOnSuccess: true,
     dropzoneOptions: {
       clickable: wrap,

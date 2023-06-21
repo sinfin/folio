@@ -45,6 +45,7 @@ window.Folio.S3Upload.createDropzone = ({
   dropzoneOptions,
   element,
   fileType,
+  fileHumanType,
   filterMessageBusMessages,
   onStart,
   onProgress,
@@ -72,7 +73,7 @@ window.Folio.S3Upload.createDropzone = ({
     timeout: 0,
     parallelUploads: 1,
     autoProcessQueue: false,
-    maxFilesize: 10240, // mb
+    maxFilesize: (fileHumanType === "image" ? 512 : 10240), // mb
     uploadMultiple: false,
     chunking: true,
     forceChunking: true,

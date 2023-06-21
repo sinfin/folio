@@ -57,15 +57,15 @@ class FilesApp extends Component {
     const { mode, fileType, filesUrl, readOnly, reactType, taggable } = this.props.app
 
     if (mode === 'multi-select') {
-      return <MultiSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} />
+      return <MultiSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} reactType={reactType} />
     }
 
     if (mode === 'single-select') {
-      return <SingleSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} />
+      return <SingleSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} reactType={reactType} />
     }
 
     if (mode === 'index') {
-      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} taggable={taggable} />
+      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} taggable={taggable} reactType={reactType} />
     }
 
     if (mode === 'modal-single-select') {

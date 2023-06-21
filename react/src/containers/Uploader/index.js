@@ -35,6 +35,7 @@ class Uploader extends Component {
       element: this.dropzoneDivRef.current,
       filesUrl: this.props.filesUrl,
       fileType: this.props.fileType,
+      fileHumanType: this.props.reactType,
       onStart: (s3Path, fileAttributes) => {
         this.props.dispatch(addDropzoneFile(this.props.fileType, s3Path, fileAttributes))
       },

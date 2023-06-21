@@ -45,7 +45,7 @@ class SingleSelect extends LazyLoadCheckingComponent {
         header={this.renderHeader()}
       >
         {this.props.filesStatus.loading ? <Loader standalone /> : (
-          <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
+          <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl} reactType={this.props.reactType}>
             <FileList
               files={this.props.filesForList}
               fileTypeIsImage={this.props.fileTypeIsImage}

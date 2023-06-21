@@ -10,6 +10,7 @@ window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
   const dropzone = window.Folio.S3Upload.createConsoleDropzone({
     element: el.getAttribute('data-dropzone-to-body') === 'true' ? document.body : el,
     fileType: el.getAttribute('data-file-type'),
+    fileHumanType: el.getAttribute('data-file-human-type'),
     dropzoneOptions: {
       clickable: el.querySelector(`${window.FolioConsole.PrivateAttachments.Fields.SELECTOR}__trigger`),
       previewsContainer: false,
