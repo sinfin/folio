@@ -24,10 +24,10 @@ class Folio::S3::CombineChunksJob < Folio::S3::BaseJob
 
     Folio::S3::CreateFileJob.perform_later(s3_path:,
                                            type: klass.to_s,
-                                           existing_id: nil,
-                                           web_session_id: nil,
-                                           user_id: nil,
-                                           attributes: {})
+                                           existing_id:,
+                                           web_session_id:,
+                                           user_id:,
+                                           attributes:)
   ensure
     s3_client.list_objects(bucket: s3_bucket, prefix: "#{s3_path}.")
              .contents
