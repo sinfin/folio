@@ -6,10 +6,10 @@ window.Folio.S3Upload = {}
 
 window.Folio.S3Upload.i18n = {
   cs: {
-    finalizing: 'Dokončuji…',
+    finalizing: 'Dokončuji…'
   },
   en: {
-    finalizing: 'Finalizing…',
+    finalizing: 'Finalizing…'
   }
 }
 
@@ -26,23 +26,7 @@ window.Folio.S3Upload.newMultipartUpload = ({ file }) => {
 }
 
 window.Folio.S3Upload.finishedMultipartUpload = ({ file, type, existingId }) => {
-  const parts = file.upload.chunks.map((chunk) => {
-    const etagMatch = chunk.responseHeaders.match(/etag: "([^"]+)"/i)
-
-    if (!etagMatch) throw new Error('Failed to get etag headers from S3 response. Make sure you have "ETag" in "ExposeHeaders" in your CORS S3 config.')
-
-    return {
-      etag: etagMatch[1],
-      part_number: chunk.index + 1
-    }
-  })
-
-  return window.Folio.Api.apiPost('/folio/api/s3/multipart_after', {
-    s3_path: file.s3_path,
-    type,
-    parts,
-    existing_id: existingId
-  })
+  return window.Folio.Api.apiPost('/folio/api/s3/multipart_after', { s3_path: file.s3_path, type, existing_id: existingId })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
