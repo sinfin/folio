@@ -3,9 +3,9 @@
 require "mux_ruby"
 
 class Folio::Mux::Api
-  API_ID = ENV.fetch("MUX_API_KEY")
-  API_SECRET = ENV.fetch("MUX_API_SECRET")
-  LOG_CALLS = ENV.fetch("MUX_LOG_CALLS") == "true"
+  API_ID = ENV["MUX_API_KEY"]
+  API_SECRET = ENV["MUX_API_SECRET"]
+  LOG_CALLS = ENV["MUX_LOG_CALLS"] == "true"
 
   MuxRuby.configure do |config|
     config.username = API_ID
