@@ -176,16 +176,6 @@ module Folio
           deprecations << "The main_app js/coffee file has moved from app/cells/folio/console/atoms/previews to app/assets/javascripts/folio/console/atoms/previews"
         end
 
-        schedule_yml_path = Rails.root.join("config/schedule.yml")
-
-        if File.exist?(schedule_yml_path)
-          unless File.read(schedule_yml_path).include?("Folio::S3::ClearMultipartUploadsJob")
-            deprecations << "Missing Folio::S3::ClearMultipartUploadsJob in config/schedule.yml! Run rake folio:s3:update_schedule_yml"
-          end
-        else
-          deprecations << "Missing config/schedule.yml! Run rake folio:s3:update_schedule_yml"
-        end
-
         if deprecations.present?
           puts "\nFolio deprecations:"
           deprecations.each do |msg|

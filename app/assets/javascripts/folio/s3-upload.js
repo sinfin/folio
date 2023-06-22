@@ -7,7 +7,7 @@ window.Folio.S3Upload = {}
 window.Folio.S3Upload.i18n = {
   cs: {
     finalizing: 'Dokončuji…',
-    processing: 'Probíhá zpracování souboru…',
+    processing: 'Probíhá zpracování souboru…'
   },
   en: {
     finalizing: 'Finalizing…',
@@ -21,14 +21,6 @@ window.Folio.S3Upload.newUpload = ({ file }) => {
 
 window.Folio.S3Upload.finishedUpload = ({ file, type, existingId }) => {
   return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path: file.s3_path, type, existing_id: existingId })
-}
-
-window.Folio.S3Upload.newMultipartUpload = ({ file }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3/multipart_before', { file_name: file.name, chunk_count: file.chunk_count })
-}
-
-window.Folio.S3Upload.finishedMultipartUpload = ({ file, type, existingId }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3/multipart_after', { s3_path: file.s3_path, type, existing_id: existingId })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
@@ -75,16 +67,7 @@ window.Folio.S3Upload.createDropzone = ({
     timeout: 0,
     parallelUploads: 1,
     autoProcessQueue: false,
-    maxFilesize: (fileHumanType === "image" ? 512 : 10240), // mb
-    uploadMultiple: false,
-    chunking: true,
-    forceChunking: true,
-    chunkSize: 2000 * 1000 * 1024, // bytes
-    parallelChunkUploads: true,
-    retryChunks: true,
-    retryChunksLimit: 3,
-    defaultHeaders: false,
-    binaryBody: true,
+    maxFilesize: (fileHumanType === 'image' ? 512 : 5120), // mb
 
     accept: function (file, done) {
       const dropzone = this
@@ -92,9 +75,7 @@ window.Folio.S3Upload.createDropzone = ({
       const handleResult = (result) => {
         file.file_name = result.file_name
         file.s3_path = result.s3_path
-
-        if (result.s3_url) file.s3_url = result.s3_url
-        if (result.chunk_s3_urls) file.chunk_s3_urls = result.chunk_s3_urls
+        file.s3_url = result.s3_url
 
         if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
           file.thumbnail_notified = true
@@ -108,39 +89,20 @@ window.Folio.S3Upload.createDropzone = ({
         setTimeout(() => dropzone.processFile(file), 0)
       }
 
-      file.chunk_count = Math.ceil(file.size / this.options.chunkSize)
-
-      if (file.chunk_count === 1) {
-        window.Folio.S3Upload.newUpload({ file })
-          .then(handleResult)
-          .catch((err) => {
-            done('Failed to get an S3 signed upload URL', err)
-          })
-      } else {
-        window.Folio.S3Upload.newMultipartUpload({ file })
-          .then(handleResult)
-          .catch((err) => {
-            done('Failed to get an S3 multipart upload', err)
-          })
-      }
+      window.Folio.S3Upload.newUpload({ file })
+        .then(handleResult)
+        .catch((err) => {
+          done('Failed to get an S3 signed upload URL', err)
+        })
     },
 
     success: function (file) {
-      if (file.chunk_s3_urls) {
-        window.Folio.S3Upload.finishedMultipartUpload({
-          file,
-          type: fileType
-        }).catch((err) => {
-          this.options.error(file, err.message)
-        })
-      } else {
-        window.Folio.S3Upload.finishedUpload({
-          file,
-          type: fileType
-        }).catch((err) => {
-          this.options.error(file, err.message)
-        })
-      }
+      window.Folio.S3Upload.finishedUpload({
+        file,
+        type: fileType
+      }).catch((err) => {
+        this.options.error(file, err.message)
+      })
     },
 
     error: function (file, message) {
@@ -161,11 +123,12 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     processing: function (file) {
-      if (file.chunk_s3_urls) {
-        this.options.url = (_, dataBlocks) => file.chunk_s3_urls[dataBlocks[0].chunkIndex]
-      } else {
-        this.options.url = file.s3_url
-      }
+      this.options.url = file.s3_url
+    },
+
+    sending: function (file, xhr) {
+      const _send = xhr.send
+      xhr.send = () => { _send.call(xhr, file) }
     },
 
     uploadprogress: function (file, progress, _bytesSent) {
@@ -173,7 +136,7 @@ window.Folio.S3Upload.createDropzone = ({
       let text
 
       if (rounded === 100) {
-        if (fileHumanType !== "image" && file.size && file.size > (25 * 1000 * 1024)) {
+        if (fileHumanType !== 'image' && file.size && file.size > (25 * 1000 * 1024)) {
           text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'processing')
         } else {
           text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing')

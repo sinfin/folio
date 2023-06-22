@@ -9,7 +9,6 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
       @file.file = downloaded_file(s3_path, tmpdir)
-      @file.file.meta["folio_s3_path"] = s3_path
 
       if @file.save
         if replacing_file
