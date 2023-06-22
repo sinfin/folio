@@ -9,7 +9,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     sidekiq_options retry: false
   end
 
-  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {})
+  def perform(s3_path:, type:, existing_id: nil, web_session_id: nil, user_id: nil, attributes: {}, from_chunks: false)
     return unless s3_path
     return unless type
 
@@ -21,7 +21,7 @@ class Folio::S3::BaseJob < Folio::ApplicationJob
     klass = type.safe_constantize
     return unless Rails.application.config.folio_direct_s3_upload_class_names.any? { |class_name| klass <= class_name.constantize }
 
-    perform_for_valid(s3_path:, klass:, existing_id:, web_session_id:, user_id:, attributes:)
+    perform_for_valid(s3_path:, klass:, existing_id:, web_session_id:, user_id:, attributes:, from_chunks:)
   rescue StandardError => e
     broadcast_error(file: @file, s3_path:, error: e, file_type: type)
     raise e

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::S3::CreateFileJob < Folio::S3::BaseJob
-  def perform_for_valid(s3_path:, klass:, existing_id:, web_session_id:, user_id:, attributes:)
+  def perform_for_valid(s3_path:, klass:, existing_id:, web_session_id:, user_id:, attributes:, from_chunks:)
     broadcast_start(s3_path:, file_type: klass.to_s)
 
     @file = prepare_file_model(klass, id: existing_id, web_session_id:, user_id:, attributes:)
@@ -10,6 +10,10 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
       @file.file = downloaded_file(s3_path, tmpdir)
       @file.file.meta["folio_s3_path"] = s3_path
+
+      if from_chunks && @file.file_size && @file.file_size >= 5.gigabytes
+        @file.file.meta["folio_s3_from_chunks"] = true
+      end
 
       if @file.save
         if replacing_file
@@ -27,6 +31,12 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
     end
   ensure
     test_aware_s3_delete(s3_path)
+
+    if from_chunks
+      s3_client.list_objects(bucket: s3_bucket, prefix: "#{s3_path}.")
+               .contents
+               .each { |s3_struct_for_part| test_aware_s3_delete(s3_struct_for_part.key) }
+    end
   end
 
   private
