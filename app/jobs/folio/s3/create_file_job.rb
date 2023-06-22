@@ -9,6 +9,7 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
 
     Dir.mktmpdir("folio-file-s3") do |tmpdir|
       @file.file = downloaded_file(s3_path, tmpdir)
+      @file.file.meta["folio_s3_path"] = s3_path
 
       if @file.save
         if replacing_file
@@ -33,7 +34,6 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       tmp_file_path = "#{tmpdir}/#{s3_path.split("/").pop}"
 
       test_aware_download_from_s3(s3_path, tmp_file_path)
-      test_aware_s3_delete(s3_path)
 
       tmp_file_path = ensure_proper_file_extension_for_mime_type(tmp_file_path)
 
