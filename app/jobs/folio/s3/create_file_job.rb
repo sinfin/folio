@@ -59,7 +59,7 @@ class Folio::S3::CreateFileJob < Folio::S3::BaseJob
       end
 
       if ext && !tmp_file_path.ends_with?(ext)
-        new_file_path = "#{tmp_file_path}#{ext}"
+        new_file_path = "#{tmp_file_path.gsub(/\.\w+\z/, '')}#{ext}"
         FileUtils.cp(tmp_file_path, new_file_path)
         new_file_path
       else
