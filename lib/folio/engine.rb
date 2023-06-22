@@ -41,6 +41,7 @@ module Folio
     config.folio_show_transportable_frontend = false
     config.folio_modal_cell_name = nil
     config.folio_use_og_image = true
+    config.folio_mailer_global_bcc = nil
     config.folio_aasm_mailer_config = {}
     config.folio_site_is_a_singleton = true
     config.folio_site_cache_current_site = true
