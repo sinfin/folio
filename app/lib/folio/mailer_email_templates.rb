@@ -33,7 +33,7 @@ module Folio::MailerEmailTemplates
 
     opts[:subject] = @email_template.render_subject(@data)
     opts[:to] ||= system_email
-    opts[:bcc] ||= system_email_copy
+    opts[:bcc] = email_template_bcc_string(opts[:bcc])
     opts[:from] ||= site.email_from.presence || site.email
     opts[:template_path] = "folio/email_templates"
     opts[:template_name] = "mail"
@@ -53,12 +53,40 @@ module Folio::MailerEmailTemplates
       @data[:USER_EMAIL] = record.email
 
       opts[:subject] = @email_template.render_subject(@data)
-      opts[:bcc] ||= system_email_copy
+      opts[:bcc] = email_template_bcc_string(opts[:bcc])
       opts[:from] ||= site.email_from.presence || site.email
       opts[:template_path] = "folio/email_templates"
       opts[:template_name] = "mail"
     end
 
     opts
+  end
+
+  def email_template_bcc_string(bcc)
+    ary = if bcc.present?
+      if system_email_copy.is_a?(String)
+        bcc.split(/,\s+/)
+      elsif system_email_copy.is_a?(Array)
+        bcc
+      else
+        []
+      end
+    else
+      []
+    end
+
+    if system_email_copy.present?
+      if system_email_copy.is_a?(String)
+        ary << system_email_copy
+      elsif system_email_copy.is_a?(Array)
+        ary += system_email_copy
+      end
+    end
+
+    if Rails.application.config.folio_mailer_global_bcc.present?
+      ary << Rails.application.config.folio_mailer_global_bcc
+    end
+
+    ary.join(", ")
   end
 end
