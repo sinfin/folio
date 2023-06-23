@@ -153,6 +153,7 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   def folio_console_sidebar_title_image_path
+    ::Rails.application.config.folio_console_sidebar_title_image_path
   end
 
   private

@@ -34,6 +34,7 @@ module Folio
     config.folio_console_sidebar_force_hide_users = false
     config.folio_console_sidebar_title_items = -> (sidebar_cell) { nil }
     config.folio_console_sidebar_title_new_item = -> (sidebar_cell) { nil }
+    config.folio_console_sidebar_title_image_path = nil
     config.folio_console_default_routes_contstraints = {}
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
