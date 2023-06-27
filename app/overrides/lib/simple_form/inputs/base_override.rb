@@ -8,6 +8,9 @@ SimpleForm::Inputs::Base.class_eval do
       input_html_options["data-controller"] = name
     end
 
+    input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
+    input_html_classes << "f-input--#{name.to_s.delete_prefix("f-input-")}"
+
     opts.each do |opt, value|
       input_html_options["data-#{name}-#{opt.to_s.tr('_', '-')}-value"] = value
     end

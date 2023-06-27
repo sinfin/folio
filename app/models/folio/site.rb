@@ -143,7 +143,7 @@ class Folio::Site < Folio::ApplicationRecord
   end
 
   def console_dashboard_redirect_path_name
-    Rails.application.config.folio_console_dashboard_redirect
+    Rails.application.config.folio_console_report_redirect
   end
 
   def copyright_info

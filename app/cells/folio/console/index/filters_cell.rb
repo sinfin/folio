@@ -144,16 +144,15 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
 
   def date_range_input(f, key)
     f.input key, label: false,
+                 as: :date_range,
                  input_html: {
                    class: "f-c-index-filters__date-range-input",
                    value: controller.params[key],
-                   autocomplete: "off",
                    placeholder: "#{label_for_key(key)}...",
                  },
                  wrapper: :input_group,
                  wrapper_html: { class: "f-c-index-filters__date-range-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                 input_group_append: controller.params[key].present? ? input_group_append : nil,
-                 custom_html: content_tag(:span, "date_range", class: "mi mi--16 f-c-index-filters__date-range-input-ico")
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
   def numeric_range_input(f, key, type:)

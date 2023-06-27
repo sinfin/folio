@@ -1,0 +1,10 @@
+.f-c-reports-index
+  = form do |f|
+    h1.f-c-reports-index__h1 = model[:title] || t('.title')
+
+    .f-c-reports-index__header-controls
+      = group_by_input(f)
+      = date_range_input(f)
+
+  section.f-c-reports-index__body
+    = report_html

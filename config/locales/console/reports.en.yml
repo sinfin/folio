@@ -1,0 +1,11 @@
+---
+en:
+  folio:
+    console:
+      reports:
+        index:
+          title: Statistics
+          group_by:
+            day: Day
+            week: Week
+            month: Month
