@@ -8,6 +8,17 @@
     margin: 0
     flex: 1 1 auto
 
+  &__h1-a
+    text-decoration: none
+    color: inherit
+
+    &:hover
+      color: inherit
+      text-decoration: underline
+
+  &__hr
+    margin: $grid-gutter-width 0
+
   &__header-controls
     display: flex
     flex-wrap: wrap
@@ -20,3 +31,16 @@
   &__header-date-wrap
     width: 215px
     margin: 0
+
+  &__body
+    position: relative
+    min-height: 150px
+
+  &__error
+    font-weight: $font-weight-bold
+    color: $danger
+    text-align: center
+
+  &[data-f-c-reports-index-loading-value="true"] &__content,
+  &:not(&[data-f-c-reports-index-loading-value="true"]) &__loader
+    display: none

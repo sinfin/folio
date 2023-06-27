@@ -8,6 +8,8 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
   PARAM_FOR_GROUP_BY = :report_by
   PARAM_FOR_DATE = :report_date
 
+  class_name "f-c-reports-index", :loading?
+
   attr_accessor :date_time_from, :date_time_to, :group_by, :report_html
 
   def show
@@ -20,9 +22,16 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
     render
   end
 
+  def data
+    {
+      "controller" => "f-c-reports-index",
+      "f-c-reports-index-loading-value" => loading? ? "true" : "false",
+    }
+  end
+
   def set_date_time_attributes
     if params[PARAM_FOR_DATE].present? &&
-       params[PARAM_FOR_DATE].match?(/\d{1,2}\.\d{1,2}\.\d{4} - \d{1,2}\.\d{1,2}\.\d{4}/)
+       params[PARAM_FOR_DATE].match?(/\d{1,2}\.\s?\d{1,2}\.\s?\d{4} - \d{1,2}\.\s?\d{1,2}\.\s?\d{4}/)
       from, to = params[PARAM_FOR_DATE].split(/ - /)
 
       if from.present?
@@ -57,7 +66,11 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
     opts = {
       url:,
       method: :get,
-      html: { class: "f-c-reports-index__form" },
+      html: {
+        class: "f-c-reports-index__form",
+        "data-action" => "submit->f-c-reports-index#onFormSubmit change->f-c-reports-index#onFormChange",
+        "data-f-c-reports-index-target" => "form"
+      },
     }
 
     simple_form_for("", opts, &block)
@@ -71,7 +84,10 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
     f.input PARAM_FOR_GROUP_BY,
             collection: VALID_GROUP_BY.map { |key| [t(".group_by.#{key}"), key] },
             selected: group_by,
-            input_html: { class: "f-c-reports-index__header-group-by-input" },
+            input_html: {
+              class: "f-c-reports-index__header-group-by-input",
+              "data-f-c-reports-index-target" => "groupByInput"
+            },
             wrapper_html: { class: "f-c-reports-index__header-group-by-wrap" },
             label: false
   end
@@ -79,8 +95,16 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
   def date_range_input(f)
     f.input PARAM_FOR_DATE,
             as: :date_range,
-            input_html: { class: "f-c-reports-index__header-date-input", value: "#{l(@date_time_from.to_date, format: :console_short)} - #{l(@date_time_to.to_date, format: :console_short)}" },
+            input_html: {
+              class: "f-c-reports-index__header-date-input",
+              value: "#{l(@date_time_from.to_date, format: :console_short)} - #{l(@date_time_to.to_date, format: :console_short)}",
+              "data-f-c-reports-index-target" => "dateInput"
+            },
             wrapper_html: { class: "f-c-reports-index__header-date-wrap" },
             label: false
+  end
+
+  def loading?
+    params[PARAM_FOR_GROUP_BY].blank? || params[PARAM_FOR_DATE].blank? || params[:_ajax].blank?
   end
 end
