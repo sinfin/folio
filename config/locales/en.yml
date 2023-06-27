@@ -7,6 +7,9 @@ en:
     invalid_format: Invalid format
   'false': "No"
   folio:
+    price:
+      default_currency: 'CZK'
+      free: "Free"
     errors:
       show:
         back_to_home: back to the homepage

@@ -7,6 +7,9 @@ cs:
     invalid_format: Nepodporovaný formát
   'false': Ne
   folio:
+    price:
+      default_currency: 'Kč'
+      free: "Zdarma"
     errors:
       show:
         back_to_home: zpět na homepage
