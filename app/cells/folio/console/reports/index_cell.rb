@@ -4,6 +4,8 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
 
+  include Folio::Console::Reports::Index::HtmlDsl
+
   VALID_GROUP_BY = %w[ day week month ]
   PARAM_FOR_GROUP_BY = :report_by
   PARAM_FOR_DATE = :report_date
@@ -52,14 +54,6 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
 
   def set_group_by_attribute
     @group_by = VALID_GROUP_BY.include?(params[PARAM_FOR_GROUP_BY]) ? params[PARAM_FOR_GROUP_BY] : VALID_GROUP_BY.first
-  end
-
-  def title(string, tag: :h2)
-    @report_html += content_tag(tag, string, class: "f-c-reports-index__title f-c-reports-index__title--#{tag}")
-  end
-
-  def hr
-    @report_html += tag(:hr, class: "f-c-reports-index__hr")
   end
 
   def form(&block)
