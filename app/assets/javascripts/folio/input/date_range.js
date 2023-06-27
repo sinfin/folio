@@ -65,7 +65,7 @@ window.Folio.Input.DateRange.bindDatepicker = (el) => {
     const ed = picker.endDate
 
     $element.val(`${sd.format(picker.locale.format)} - ${ed.format(picker.locale.format)}`)
-    $element.trigger('change')
+    el.dispatchEvent(new window.Event('change', { bubbles: true }))
   })
 }
 
