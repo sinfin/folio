@@ -1,0 +1,12 @@
+---
+cs:
+  folio:
+    console:
+      report:
+        title: Statistiky
+        group_by:
+          day: Den
+          week: Týden
+          month: Měsíc
+        box:
+          total: Celkem

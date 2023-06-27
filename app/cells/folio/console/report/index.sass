@@ -1,4 +1,4 @@
-.f-c-reports-index
+.f-c-report
   &__form
     display: flex
     flex-wrap: wrap
@@ -41,6 +41,22 @@
     color: $danger
     text-align: center
 
-  &[data-f-c-reports-index-loading-value="true"] &__content,
-  &:not(&[data-f-c-reports-index-loading-value="true"]) &__loader
+  &[data-f-c-report-loading-value="true"] &__content,
+  &:not(&[data-f-c-report-loading-value="true"]) &__loader
     display: none
+
+  &__item
+    margin: $grid-gutter-width 0
+
+    &:first-child
+      margin-top: 0 !important
+
+    &:last-child
+      margin-bottom: 0 !important
+
+    &--title
+      margin-top: 5 * $grid-gutter-width / 4
+      margin-bottom: $grid-gutter-width / 2
+
+    &--title + &--text
+      margin-top: $grid-gutter-width / 2

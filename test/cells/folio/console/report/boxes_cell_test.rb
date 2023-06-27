@@ -1,10 +1,10 @@
-= folio_console_report
-  ruby:
-    title 'Přehled prodeje'
+# frozen_string_literal: true
 
-    text 'Přehled prodeje produktů za zvolené období.'
+require "test_helper"
 
-    boxes [
+class Folio::Console::Report::BoxesCellTest < Folio::Console::CellTest
+  test "show" do
+    model = [
       {
         title: "Prodaná předplatná",
         stats: {
@@ -24,6 +24,7 @@
       }
     ]
 
-    hr
-
-    title 'foo'
+    html = cell("folio/console/report/boxes", model).(:show)
+    assert html.has_css?(".f-c-report-box")
+  end
+end

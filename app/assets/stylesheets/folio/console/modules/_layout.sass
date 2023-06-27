@@ -26,8 +26,7 @@
   min-height: 100%
 
 .f-c-layout-main-container
-  padding-top: $spacer
-  padding-bottom: $spacer
+  padding: $grid-gutter-width
   position: relative
   z-index: 1
   flex: 1 1 auto
@@ -71,6 +70,9 @@
       left: 0
 
 +mq-mobile-menu
+  .f-c-layout-main-container
+    padding: $grid-gutter-width / 2
+
   .f-c-layout-sidebar
     display: none
 

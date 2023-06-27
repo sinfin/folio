@@ -1,0 +1,19 @@
+.f-c-report data=data
+  = form do |f|
+    h1.f-c-report__h1
+      a.f-c-report__h1-a href=url
+        = model[:title] || t('.title')
+
+    .f-c-report__header-controls
+      = group_by_input(f)
+      = date_range_input(f)
+
+  hr.f-c-report__hr
+
+  section.f-c-report__body
+    .f-c-report__content[
+      data-f-c-report-target="content"
+    ]
+      = report_html
+
+    span.folio-loader.f-c-report__loader

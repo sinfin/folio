@@ -93,7 +93,7 @@
 //= require folio/console/private_attachments/fields/fields
 //= require folio/console/private_attachments/single_dropzone/single_dropzone
 //= require folio/console/publishable_inputs/item/item
-//= require folio/console/reports/index/index
+//= require folio/console/report
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 

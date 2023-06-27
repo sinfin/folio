@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
+class Folio::Console::ReportCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
 
-  include Folio::Console::Reports::Index::HtmlDsl
+  include Folio::Console::Report::Dsl
 
   VALID_GROUP_BY = %w[ day week month ]
   PARAM_FOR_GROUP_BY = :report_by
   PARAM_FOR_DATE = :report_date
 
-  class_name "f-c-reports-index", :loading?
+  class_name "f-c-report", :loading?
 
   attr_accessor :date_time_from, :date_time_to, :group_by, :report_html
 
@@ -26,8 +26,8 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
 
   def data
     {
-      "controller" => "f-c-reports-index",
-      "f-c-reports-index-loading-value" => loading? ? "true" : "false",
+      "controller" => "f-c-report",
+      "f-c-report-loading-value" => loading? ? "true" : "false",
     }
   end
 
@@ -61,9 +61,9 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
       url:,
       method: :get,
       html: {
-        class: "f-c-reports-index__form",
-        "data-action" => "submit->f-c-reports-index#onFormSubmit change->f-c-reports-index#onFormChange",
-        "data-f-c-reports-index-target" => "form"
+        class: "f-c-report__form",
+        "data-action" => "submit->f-c-report#onFormSubmit change->f-c-report#onFormChange",
+        "data-f-c-report-target" => "form"
       },
     }
 
@@ -79,10 +79,10 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
             collection: VALID_GROUP_BY.map { |key| [t(".group_by.#{key}"), key] },
             selected: group_by,
             input_html: {
-              class: "f-c-reports-index__header-group-by-input",
-              "data-f-c-reports-index-target" => "groupByInput"
+              class: "f-c-report__header-group-by-input",
+              "data-f-c-report-target" => "groupByInput"
             },
-            wrapper_html: { class: "f-c-reports-index__header-group-by-wrap" },
+            wrapper_html: { class: "f-c-report__header-group-by-wrap" },
             label: false
   end
 
@@ -90,11 +90,11 @@ class Folio::Console::Reports::IndexCell < Folio::ConsoleCell
     f.input PARAM_FOR_DATE,
             as: :date_range,
             input_html: {
-              class: "f-c-reports-index__header-date-input",
+              class: "f-c-report__header-date-input",
               value: "#{l(@date_time_from.to_date, format: :console_short)} - #{l(@date_time_to.to_date, format: :console_short)}",
-              "data-f-c-reports-index-target" => "dateInput"
+              "data-f-c-report-target" => "dateInput"
             },
-            wrapper_html: { class: "f-c-reports-index__header-date-wrap" },
+            wrapper_html: { class: "f-c-report__header-date-wrap" },
             label: false
   end
 

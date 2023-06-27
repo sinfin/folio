@@ -11,7 +11,7 @@ window.FolioConsole.Reports.Index.i18n = {
   }
 }
 
-window.Folio.Stimulus.register('f-c-reports-index', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Controller {
   static targets = ['form', 'dateInput', 'groupByInput', 'content']
 
   static values = {
@@ -59,7 +59,7 @@ window.Folio.Stimulus.register('f-c-reports-index', class extends window.Stimulu
   handleLoadSuccess (res) {
     const parser = new window.DOMParser()
     const doc = parser.parseFromString(res, 'text/html')
-    const index = doc.querySelector('.f-c-reports-index')
+    const index = doc.querySelector('.f-c-report')
 
     if (index) {
       this.element.replaceWith(index)
@@ -75,7 +75,7 @@ window.Folio.Stimulus.register('f-c-reports-index', class extends window.Stimulu
 
     const errorDiv = document.createElement('p')
 
-    errorDiv.classList.add('f-c-reports-index__error')
+    errorDiv.classList.add('f-c-report__error')
     errorDiv.innerText = error.message
 
     this.contentTarget.appendChild(errorDiv)
