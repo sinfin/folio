@@ -81,12 +81,15 @@ function flashMessageFromMeta (response) {
   return response
 }
 
-window.Folio.Api.api = (method, url, body) => {
+window.Folio.Api.api = (method, url, body, signal) => {
   const data = {
     method,
     headers: window.Folio.Api.JSON_HEADERS,
     credentials: 'same-origin'
   }
+
+  // AbortController signal
+  if (signal) data.signal = signal
 
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
@@ -102,24 +105,32 @@ window.Folio.Api.apiPut = (url, body) => {
   return window.Folio.Api.api('PUT', url, body)
 }
 
-window.Folio.Api.apiGet = (url, body = null) => {
-  return window.Folio.Api.api('GET', url, body)
+window.Folio.Api.apiGet = (url, body = null, signal) => {
+  return window.Folio.Api.api('GET', url, body, signal)
 }
 
 window.Folio.Api.apiDelete = (url) => {
   return window.Folio.Api.api('DELETE', url, null)
 }
 
-window.Folio.Api.htmlApi = (method, url, body) => {
+window.Folio.Api.htmlApi = (method, url, body, signal) => {
   const data = {
     method,
     headers: window.Folio.Api.HTML_HEADERS,
     credentials: 'same-origin'
   }
+
+  // AbortController signal
+  if (signal) data.signal = signal
+
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
   return fetch(url, data).then(checkResponse).then(responseToHtml).then(flashMessageFromMeta)
+}
+
+window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
+  return window.Folio.Api.htmlApi('GET', url, body, signal)
 }
 
 window.Folio.Api.apiHtmlPost = (url, body) => {
