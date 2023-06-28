@@ -28,6 +28,48 @@ class Folio::Report
     }
   end
 
+  def counts_per_span(scope:, condition_proc:)
+    ary = scope.to_a
+
+    total = []
+    current = []
+    added = []
+    removed = []
+
+    last = []
+    init = true
+
+    date_spans.each do |span_start|
+      span_end = span_start + date_increment
+
+      filtered = []
+
+      ary.each do |record|
+        if condition_proc.call(record, span_start, span_end)
+          filtered << record.id if filtered.exclude?(record.id)
+        end
+      end
+
+      if init
+        init = false
+        newly_added = 0
+        newly_removed = 0
+      else
+        newly_added = (filtered - last).size
+        newly_removed = -1 * (last - filtered).size
+      end
+
+      total << filtered.size
+      current << filtered.size - newly_added
+      added << newly_added
+      removed << newly_removed
+
+      last = filtered
+    end
+
+    { total:, current:, added:, removed: }
+  end
+
   private
     def respect_max_date_spans_count_and_create_spans
       @disabled_group_by_keys = []
