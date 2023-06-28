@@ -1,8 +1,8 @@
 window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.Reports = window.FolioConsole.Reports || {}
-window.FolioConsole.Reports.Index = {}
+window.FolioConsole.Report = {}
 
-window.FolioConsole.Reports.Index.i18n = {
+window.FolioConsole.Report.i18n = {
   cs: {
     loadFailure: "Nepodařilo se načíst data. Zkuste to prosím později.",
   },
@@ -76,7 +76,7 @@ window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Contr
         if (dateWrap) dateWrap.dataset.controller = "f-c-danger-box-shadow-blink"
       }
     } else {
-      this.handleLoadError(new Error(window.Folio.i18n(window.FolioConsole.Reports.Index.i18n, 'loadFailure')))
+      this.handleLoadError(new Error(window.Folio.i18n(window.FolioConsole.Report.i18n, 'loadFailure')))
     }
   }
 
