@@ -3,7 +3,6 @@
 class DateRangeInput < SimpleForm::Inputs::StringInput
   def input(wrapper_options = nil)
     register_stimulus("f-input-date-range")
-    input_html_options["data-action"] = "f-input-date-range#onInput"
 
     input_html_options["autocomplete"] = "off"
 
