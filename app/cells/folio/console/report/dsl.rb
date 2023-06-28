@@ -44,4 +44,9 @@ module Folio::Console::Report::Dsl
     report_item(:stacked_chart,
                 cell("folio/console/report/stacked_chart", hash, chart_data:))
   end
+
+  def text_stats(ary)
+    report_item(:text_stats,
+                cell("folio/console/report/text_stats", ary))
+  end
 end
