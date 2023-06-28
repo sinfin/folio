@@ -13,11 +13,11 @@ class Folio::Report
     @group_by = group_by
     @date_time_to = date_time_to
     @date_time_from = date_time_from
-    respect_max_data_point_count_and_create_spans
+    respect_max_date_spans_count_and_create_spans
   end
 
-  def self.max_data_point_count
-    53
+  def self.max_date_spans_count
+    366
   end
 
   def chart_data
@@ -28,7 +28,7 @@ class Folio::Report
   end
 
   private
-    def respect_max_data_point_count_and_create_spans
+    def respect_max_date_spans_count_and_create_spans
       @date_time_to = Time.current.to_datetime if @date_time_to > Time.current
 
       if @date_time_to - @date_time_from > 4.years
@@ -37,11 +37,11 @@ class Folio::Report
 
       diff_in_days = (@date_time_to - @date_time_from).to_i
 
-      if @group_by == "day" && diff_in_days > self.class.max_data_point_count
+      if @group_by == "day" && diff_in_days > self.class.max_date_spans_count
         @group_by = "week"
       end
 
-      if @group_by == "week" && diff_in_days / 7.0 > self.class.max_data_point_count
+      if @group_by == "week" && diff_in_days / 7.0 > self.class.max_date_spans_count
         @group_by = "month"
       end
 
