@@ -32,6 +32,7 @@
 //= require folio/api
 //= require folio/s3-upload
 //= require folio/message-bus
+//= require folio/remote-js
 
 //= require folio/lazyload
 //= require folio/lightbox
@@ -40,6 +41,7 @@
 //= require folio/input
 //= require folio/player/player
 //= require folio/image/image
+//= require folio/chart/chart
 //= require folio/ui/icon/icon
 
 // must be under folio/input

@@ -29,4 +29,40 @@ class Folio::Console::Report::AreaChartCell < Folio::ConsoleCell
       "text-muted"
     end
   end
+
+  def chart_model
+    {
+      data: {
+        datasets: [{
+          borderColor: "#4C84FD",
+          backgroundColor: "#E4F0FC",
+          fill: true,
+          label: model[:title],
+          data: model[:values],
+        }],
+        labels: Array.new(model[:values].size) { |i| i },
+      },
+      type: :line,
+      options: {
+        layout: {
+          autoPadding: false,
+        },
+        scales: {
+          x: { display: false },
+          y: { display: false },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        elements: {
+          point: {
+            pointStyle: false,
+          },
+        },
+        animation: { duration: 0 },
+      }
+    }
+  end
 end

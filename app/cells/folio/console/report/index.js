@@ -19,7 +19,6 @@ window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Contr
   }
 
   connect () {
-    console.log('connect')
     if (this.loadingValue) this.load()
   }
 

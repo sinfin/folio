@@ -34,5 +34,9 @@
         = t('folio.console.report.missing_data')
 
   - if model[:values].present?
-    .f-c-report-area-chart__bottom
-      ' graph
+    .f-c-report-area-chart__chart
+      .f-c-report-area-chart__chart-inner
+        == cell('folio/chart',
+                chart_model,
+                overlay: true,
+                border_bottom_radius: true)

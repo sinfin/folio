@@ -7,6 +7,8 @@ cs:
     invalid_format: Nepodporovaný formát
   'false': Ne
   folio:
+    chart:
+      js_load_error: Nepodařilo se načíst javascript pro tvorbu grafů.
     price:
       default_currency: 'Kč'
       free: "Zdarma"
