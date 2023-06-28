@@ -59,6 +59,7 @@ class Folio::Console::Report::AreaChartCell < Folio::ConsoleCell
         elements: {
           point: {
             pointStyle: false,
+            hitRadius: 10,
           },
         },
         animation: { duration: 0 },
