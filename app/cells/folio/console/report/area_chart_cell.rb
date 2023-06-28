@@ -9,9 +9,9 @@ class Folio::Console::Report::AreaChartCell < Folio::ConsoleCell
       last = model[:values].last.to_f
 
       if first.zero?
-        -100
+        nil
       elsif last.zero?
-        100
+        -100
       else
         (100 * (last - first) / first).round
       end
