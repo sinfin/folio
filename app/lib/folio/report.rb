@@ -10,10 +10,10 @@ class Folio::Report
                 :date_format,
                 :date_increment
 
-  def initialize(group_by:, date_time_to:, date_time_from:)
+  def initialize(group_by:, date_time_from:, date_time_to:)
     @group_by = group_by
-    @date_time_to = date_time_to
     @date_time_from = date_time_from
+    @date_time_to = date_time_to
     respect_max_date_spans_count_and_create_spans
   end
 
