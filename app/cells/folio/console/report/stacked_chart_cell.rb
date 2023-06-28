@@ -11,7 +11,7 @@ class Folio::Console::Report::StackedChartCell < Folio::ConsoleCell
     {
       type: "bar",
       data: {
-        labels: options[:chart_data][:date_labels],
+        labels: options[:report].date_labels,
         datasets: model.map do |hash|
           {
             label: hash[:label],

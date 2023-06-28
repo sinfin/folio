@@ -33,7 +33,7 @@
       .f-c-report-area-chart__missing-data.small
         = t('folio.console.report.missing_data')
 
-  - if model[:values].present?
+  - if model[:values].present? && model[:values].size > 1
     .f-c-report-area-chart__chart
       .f-c-report-area-chart__chart-inner
         == cell('folio/chart',
