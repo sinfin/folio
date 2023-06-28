@@ -4,6 +4,7 @@ class Folio::Report
   attr_accessor :date_time_from,
                 :date_time_to,
                 :group_by,
+                :disabled_group_by_keys,
                 :date_spans,
                 :date_labels,
                 :date_format,
@@ -29,6 +30,8 @@ class Folio::Report
 
   private
     def respect_max_date_spans_count_and_create_spans
+      @disabled_group_by_keys = []
+
       @date_time_to = Time.current.to_datetime if @date_time_to > Time.current
 
       if @date_time_to - @date_time_from > 4.years
@@ -36,13 +39,25 @@ class Folio::Report
       end
 
       diff_in_days = (@date_time_to - @date_time_from).to_i
+      diff_in_weeks = diff_in_days / 7.0
+      diff_in_months = diff_in_days / (365.25 / 12)
 
-      if @group_by == "day" && diff_in_days > self.class.max_date_spans_count
-        @group_by = "week"
-      end
+      if diff_in_days > self.class.max_date_spans_count
+        @disabled_group_by_keys << "day"
+        @group_by = "week" if @group_by == "day"
 
-      if @group_by == "week" && diff_in_days / 7.0 > self.class.max_date_spans_count
-        @group_by = "month"
+        if diff_in_days / 7.0 > self.class.max_date_spans_count
+          @disabled_group_by_keys << "week"
+          @group_by = "month" if @group_by == "week"
+        end
+      elsif diff_in_months < 1
+        @disabled_group_by_keys << "month"
+        @group_by = "week" if @group_by == "month"
+
+        if diff_in_weeks < 1
+          @disabled_group_by_keys << "week"
+          @group_by = "day" if @group_by == "week"
+        end
       end
 
       @date_spans = []

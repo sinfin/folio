@@ -46,22 +46,35 @@ window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Contr
     const joiner = urlBase.indexOf('?') === -1 ? '?' : '&'
     const url = `${urlBase}${joiner}${params.toString()}`
 
+    const originalParams = new URLSearchParams(window.location.search)
+    const changedDate = originalParams.get(this.dateInputTarget.name) !== this.dateInputTarget.value
+    const changedGroupBy = originalParams.get(this.groupByInputTarget.name) !== this.groupByInputTarget.value
 
     window.Folio.Api.apiHtmlGet(`${url}&_ajax=1`, null, this.abortController.signal)
       .then((res) => {
         window.history.pushState(null, "", url)
-        this.handleLoadSuccess(res)
+        this.handleLoadSuccess({ res, changedDate, changedGroupBy })
       })
       .catch((error) => this.handleLoadError(error))
   }
 
-  handleLoadSuccess (res) {
+  handleLoadSuccess ({ res, changedDate, changedGroupBy }) {
     const parser = new window.DOMParser()
     const doc = parser.parseFromString(res, 'text/html')
     const index = doc.querySelector('.f-c-report')
 
     if (index) {
       this.element.replaceWith(index)
+
+      if (changedGroupBy) {
+        const groupByWrap = index.querySelector('.f-c-report__header-group-by-wrap')
+        if (groupByWrap) groupByWrap.dataset.controller = "f-c-danger-box-shadow-blink"
+      }
+
+      if (changedDate) {
+        const dateWrap = index.querySelector('.f-c-report__header-date-wrap')
+        if (dateWrap) dateWrap.dataset.controller = "f-c-danger-box-shadow-blink"
+      }
     } else {
       this.handleLoadError(new Error(window.Folio.i18n(window.FolioConsole.Reports.Index.i18n, 'loadFailure')))
     }

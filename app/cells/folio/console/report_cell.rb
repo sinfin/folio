@@ -81,7 +81,7 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
 
   def group_by_input(f)
     f.input PARAM_FOR_GROUP_BY,
-            collection: VALID_GROUP_BY.map { |key| [t(".group_by.#{key}"), key] },
+            collection: VALID_GROUP_BY.map { |key| [t(".group_by.#{key}"), key, disabled: report.disabled_group_by_keys.include?(key)] },
             selected: report.group_by,
             input_html: {
               class: "f-c-report__header-group-by-input",
