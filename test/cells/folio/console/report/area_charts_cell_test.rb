@@ -24,7 +24,7 @@ class Folio::Console::Report::AreaChartsCellTest < Folio::Console::CellTest
     ]
 
     opts = {
-      graphs_data: {
+      chart_data: {
         date_spans: [2.days.ago, 1.day.ago],
         date_labels: %w[foo bar],
       }

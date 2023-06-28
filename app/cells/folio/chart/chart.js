@@ -13,7 +13,6 @@ window.Folio.Chart.innerBind = (el) => {
   canvas.className = 'f-chart__canvas'
   el.appendChild(canvas)
 
-  console.log(JSON.parse(el.dataset.chart))
   el.folioChart = new Chart(canvas, JSON.parse(el.dataset.chart))
 }
 

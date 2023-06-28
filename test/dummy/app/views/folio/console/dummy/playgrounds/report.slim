@@ -21,21 +21,21 @@
       {
         title: "Předplatitelé",
         text: "Celkem",
-        values: moving_average.call(Array.new(graphs_data[:date_labels].size) do
+        values: moving_average.call(Array.new(chart_data[:date_labels].size) do
           rand(10000).round
         end),
       },
       {
         title: "Shlédnutí a přehrání",
         text: "Celkem na webu",
-        values: moving_average.call(Array.new(graphs_data[:date_labels].size) do
+        values: moving_average.call(Array.new(chart_data[:date_labels].size) do
           rand(10000).round
         end),
       },
       {
         title: "Doba přehrávání",
         text: "Průměrná doba přehrávání na webu",
-        values: moving_average.call(Array.new(graphs_data[:date_labels].size) do
+        values: moving_average.call(Array.new(chart_data[:date_labels].size) do
           rand(20)
         end),
         unit: 'min',
@@ -68,4 +68,28 @@
 
     hr
 
-    title 'foo'
+    title 'Předplatitelé'
+
+    stacked_chart [
+      {
+        label: "Aktivní",
+        color: :blue,
+        values: moving_average.call(Array.new(chart_data[:date_labels].size) do
+          rand(1000).round
+        end)
+      },
+      {
+        label: "Noví",
+        color: :green,
+        values: moving_average.call(Array.new(chart_data[:date_labels].size) do
+          rand(100).round
+        end)
+      },
+      {
+        label: "Odpadlí",
+        color: :red,
+        values: moving_average.call(Array.new(chart_data[:date_labels].size) do
+          -1 * rand(100).round
+        end)
+      }
+    ]

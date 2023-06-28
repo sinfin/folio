@@ -143,8 +143,8 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
     end
   end
 
-  def graphs_data
-    @graphs_data ||= {
+  def chart_data
+    @chart_data ||= {
       date_spans: @date_spans,
       date_labels: @date_labels,
     }
