@@ -4,7 +4,28 @@ require "test_helper"
 
 class Folio::ChartCellTest < Cell::TestCase
   test "show" do
-    html = cell("folio/chart", nil).(:show)
-    assert html.has_css?(".folio--folio-chart")
+    model = {
+      data: {
+        datasets: [{
+          borderColor: "#4C84FD",
+          backgroundColor: "#E4F0FC",
+          fill: true,
+          label: "Předplatitelé",
+          data: [1, 2]
+        }],
+        labels: ["a", "b"]
+      },
+      type: :line,
+      options: {
+        layout: { autoPadding: false },
+        scales: { x: { display: false }, y: { display: false } },
+        plugins: { legend: { display: false } },
+        elements: { point: { pointStyle: false } },
+        animation: { duration: 0 }
+      }
+    }
+
+    html = cell("folio/chart", model).(:show)
+    assert html.has_css?(".f-chart")
   end
 end

@@ -21,17 +21,23 @@
       {
         title: "Předplatitelé",
         text: "Celkem",
-        values: moving_average.call(Array.new(30) { rand(10000) }),
+        values: moving_average.call(Array.new(graphs_data[:date_labels].size) do
+          rand(10000).round
+        end),
       },
       {
         title: "Shlédnutí a přehrání",
         text: "Celkem na webu",
-        values: moving_average.call(Array.new(30) { rand(10000) }),
+        values: moving_average.call(Array.new(graphs_data[:date_labels].size) do
+          rand(10000).round
+        end),
       },
       {
         title: "Doba přehrávání",
         text: "Průměrná doba přehrávání na webu",
-        values: moving_average.call(Array.new(30) { rand(20) }),
+        values: moving_average.call(Array.new(graphs_data[:date_labels].size) do
+          rand(20)
+        end),
         unit: 'min',
       },
     ]

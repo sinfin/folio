@@ -10,7 +10,14 @@ class Folio::Console::Report::AreaChartCellTest < Folio::Console::CellTest
       values: Array.new(2) { rand(10000) },
     }
 
-    html = cell("folio/console/report/area_chart", model).(:show)
+    opts = {
+      graphs_data: {
+        date_spans: [2.days.ago, 1.day.ago],
+        date_labels: %w[foo bar],
+      }
+    }
+
+    html = cell("folio/console/report/area_chart", model, opts).(:show)
     assert html.has_css?(".f-c-report-area-chart")
   end
 end

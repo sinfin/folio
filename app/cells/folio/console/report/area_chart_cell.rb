@@ -40,7 +40,7 @@ class Folio::Console::Report::AreaChartCell < Folio::ConsoleCell
           label: model[:title],
           data: model[:values],
         }],
-        labels: Array.new(model[:values].size) { |i| i },
+        labels: options[:graphs_data][:date_labels],
       },
       type: :line,
       options: {

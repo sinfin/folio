@@ -32,11 +32,11 @@ module Folio::Console::Report::Dsl
 
   def area_chart(hash)
     report_item(:area_chart,
-                cell("folio/console/report/area_chart", hash))
+                cell("folio/console/report/area_chart", hash, graphs_data:))
   end
 
   def area_charts(hashes)
     report_item(:area_charts,
-                cell("folio/console/report/area_charts", hashes))
+                cell("folio/console/report/area_charts", hashes, graphs_data:))
   end
 end
