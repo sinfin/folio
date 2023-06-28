@@ -52,8 +52,8 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
       end
     end
 
-    h[:date_time_from] ||= Time.current.beginning_of_month
-    h[:date_time_to] ||= Time.current.end_of_month
+    h[:date_time_from] ||= Time.current.to_datetime.beginning_of_month
+    h[:date_time_to] ||= Time.current.to_datetime.end_of_month
 
     h[:date_time_from] = h[:date_time_from].beginning_of_day
     h[:date_time_to] = h[:date_time_to].end_of_day

@@ -29,7 +29,7 @@ class Folio::Report
 
   private
     def respect_max_data_point_count_and_create_spans
-      @date_time_to = Time.current if @date_time_to > Time.current
+      @date_time_to = Time.current.to_datetime if @date_time_to > Time.current
 
       if @date_time_to - @date_time_from > 4.years
         @date_time_from = @date_time_to - 4.years
