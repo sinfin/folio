@@ -1,5 +1,4 @@
 // TODO bootstrap5
-$gray-medium-dark: #6F7172 !default
 
 .f-c-report-box
   width: 360px
@@ -17,7 +16,6 @@ $gray-medium-dark: #6F7172 !default
     line-height: 21.6px
 
   &__stats
-    color: $gray-medium-dark
     margin-top: $grid-gutter-width / 2
 
     &:first-child
@@ -27,7 +25,6 @@ $gray-medium-dark: #6F7172 !default
     margin-top: $grid-gutter-width / 12
 
   &__total
-    color: $gray-medium-dark
     padding-top: $grid-gutter-width
     margin-top: auto
 
@@ -42,8 +39,5 @@ $gray-medium-dark: #6F7172 !default
     font-weight: $font-weight-bold
     font-size: $font-size-lg
 
-    &--positive
-      color: #00B594
-
-    &--negative
-      color: #F0655D
+  +media-breakpoint-down(xs)
+    width: 100%

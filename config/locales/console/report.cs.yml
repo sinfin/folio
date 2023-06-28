@@ -4,6 +4,7 @@ cs:
     console:
       report:
         title: Statistiky
+        missing_data: Pro zvolené období nejsou k dispozici žádná data.
         group_by:
           day: Den
           week: Týden

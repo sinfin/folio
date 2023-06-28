@@ -4,7 +4,7 @@
       = model[:title]
 
   - if model[:stats]
-    ul.f-c-report-box__stats.small
+    ul.f-c-report-box__stats.small.text-muted
       - model[:stats].each do |label, value|
         li.f-c-report-box__stat
           span.f-c-report-box__stat-label<> = "#{label}:"
@@ -12,7 +12,8 @@
 
   - if total_value
     .f-c-report-box__total
-      .f-c-report-box__total-label.small = t('.total')
+      .f-c-report-box__total-label.small.text-muted
+        = t('.total')
 
-      div class=total_value_classes
+      .f-c-report-box__total-value class=total_value_classes
         = formatted_total_value

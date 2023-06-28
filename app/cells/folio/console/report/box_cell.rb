@@ -16,16 +16,12 @@ class Folio::Console::Report::BoxCell < Folio::ConsoleCell
   end
 
   def total_value_classes
-    base = "f-c-report-box__total-value"
-
-    if total_value.is_a?(Numeric)
-      if total_value > 0
-        "#{base} #{base}--positive"
-      else
-        "#{base} #{base}--negative"
-      end
+    if total_value.is_a?(Numeric) && total_value > 0
+      "text-success"
+    elsif total_value.is_a?(Numeric) && total_value < 0
+      "text-danger"
     else
-      base
+      "text-muted"
     end
   end
 end

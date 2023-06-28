@@ -1,0 +1,38 @@
+.f-c-report-area-chart
+  .f-c-report-area-chart__top
+    - if model[:title]
+      .h4.f-c-report-area-chart__title
+        = model[:title]
+
+    - if model[:values].present?
+      - if model[:text]
+        .f-c-report-area-chart__text.small.text-muted
+          = model[:text]
+
+      .h2.f-c-report-area-chart__last-value
+        = number_with_precision(model[:values].last,
+                                delimiter: ' ',
+                                precision: 0)
+
+        - if model[:unit].present?
+          '  #{model[:unit]}
+
+      - if trend
+        .h3.f-c-report-area-chart__trend
+          - if trend > 0
+            .text-success
+              ' +#{trend} %
+          - elsif trend < 0
+            .text-danger
+              ' #{trend} %
+          - else
+            .text-muted
+              ' 0 %
+
+    - else
+      .f-c-report-area-chart__missing-data.small
+        = t('folio.console.report.missing_data')
+
+  - if model[:values].present?
+    .f-c-report-area-chart__bottom
+      ' graph

@@ -4,6 +4,7 @@ en:
     console:
       report:
         title: Statistics
+        missing_data: No data available for the selected period.
         group_by:
           day: Day
           week: Week

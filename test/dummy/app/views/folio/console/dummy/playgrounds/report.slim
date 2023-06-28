@@ -1,5 +1,41 @@
 = folio_console_report
   ruby:
+    moving_average = Proc.new do |ary|
+      i = 0
+      new_ary = []
+
+      while ary[i]
+        if i.zero?
+          new_ary << ary[i].to_f
+        else
+          new_ary << (ary[i] + ary[i - 1]) / 2.0
+        end
+
+        i += 1
+      end
+
+      new_ary
+    end
+
+    area_charts [
+      {
+        title: "Předplatitelé",
+        text: "Celkem",
+        values: moving_average.call(Array.new(30) { rand(10000) }),
+      },
+      {
+        title: "Shlédnutí a přehrání",
+        text: "Celkem na webu",
+        values: moving_average.call(Array.new(30) { rand(10000) }),
+      },
+      {
+        title: "Doba přehrávání",
+        text: "Průměrná doba přehrávání na webu",
+        values: moving_average.call(Array.new(30) { rand(20) }),
+        unit: 'min',
+      },
+    ]
+
     title 'Přehled prodeje'
 
     text 'Přehled prodeje produktů za zvolené období.'

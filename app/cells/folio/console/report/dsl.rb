@@ -12,7 +12,7 @@ module Folio::Console::Report::Dsl
 
   def text(string, tag: :p)
     report_item(:text,
-                content_tag(tag, string, class: "m-0"))
+                content_tag(tag, string, class: "m-0 small text-muted"))
   end
 
   def hr
@@ -28,5 +28,15 @@ module Folio::Console::Report::Dsl
   def boxes(hashes)
     report_item(:boxes,
                 cell("folio/console/report/boxes", hashes))
+  end
+
+  def area_chart(hash)
+    report_item(:area_chart,
+                cell("folio/console/report/area_chart", hash))
+  end
+
+  def area_charts(hashes)
+    report_item(:area_charts,
+                cell("folio/console/report/area_charts", hashes))
   end
 end
