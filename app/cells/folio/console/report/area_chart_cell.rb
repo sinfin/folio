@@ -49,7 +49,7 @@ class Folio::Console::Report::AreaChartCell < Folio::ConsoleCell
         },
         scales: {
           x: { display: false },
-          y: { display: false },
+          y: { display: false, min: 0 },
         },
         plugins: {
           legend: {

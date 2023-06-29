@@ -36,7 +36,8 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
 
   def attributes_for_report
     h = {
-      group_by: VALID_GROUP_BY.include?(params[PARAM_FOR_GROUP_BY]) ? params[PARAM_FOR_GROUP_BY] : VALID_GROUP_BY.first
+      group_by: VALID_GROUP_BY.include?(params[PARAM_FOR_GROUP_BY]) ? params[PARAM_FOR_GROUP_BY] : VALID_GROUP_BY.first,
+      controller:,
     }
 
     if params[PARAM_FOR_DATE].present? &&

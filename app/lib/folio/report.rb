@@ -8,12 +8,14 @@ class Folio::Report
                 :date_spans,
                 :date_labels,
                 :date_format,
-                :date_increment
+                :date_increment,
+                :controller
 
-  def initialize(group_by:, date_time_from:, date_time_to:)
+  def initialize(group_by:, date_time_from:, date_time_to:, controller:)
     @group_by = group_by
     @date_time_from = date_time_from
     @date_time_to = date_time_to
+    @controller = controller
     respect_max_date_spans_count_and_create_spans
   end
 
@@ -68,6 +70,10 @@ class Folio::Report
     end
 
     { total:, current:, added:, removed: }
+  end
+
+  def ruby_date_range
+    @ruby_date_range ||= @date_time_from..@date_time_to
   end
 
   private
