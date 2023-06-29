@@ -4,10 +4,10 @@ window.FolioConsole.Report = {}
 
 window.FolioConsole.Report.i18n = {
   cs: {
-    loadFailure: "Nepodařilo se načíst data. Zkuste to prosím později.",
+    loadFailure: 'Nepodařilo se načíst data. Zkuste to prosím později.'
   },
   en: {
-    loadFailure: "Failed to load data. Please try again later.",
+    loadFailure: 'Failed to load data. Please try again later.'
   }
 }
 
@@ -46,34 +46,37 @@ window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Contr
     const joiner = urlBase.indexOf('?') === -1 ? '?' : '&'
     const url = `${urlBase}${joiner}${params.toString()}`
 
-    const originalParams = new URLSearchParams(window.location.search)
-    const changedDate = originalParams.get(this.dateInputTarget.name) !== this.dateInputTarget.value
-    const changedGroupBy = originalParams.get(this.groupByInputTarget.name) !== this.groupByInputTarget.value
-
     window.Folio.Api.apiHtmlGet(`${url}&_ajax=1`, null, this.abortController.signal)
       .then((res) => {
-        window.history.pushState(null, "", url)
-        this.handleLoadSuccess({ res, changedDate, changedGroupBy })
+        this.handleLoadSuccess(res)
+        window.history.pushState(null, '', url)
       })
       .catch((error) => this.handleLoadError(error))
   }
 
-  handleLoadSuccess ({ res, changedDate, changedGroupBy }) {
+  handleLoadSuccess (res) {
     const parser = new window.DOMParser()
     const doc = parser.parseFromString(res, 'text/html')
     const index = doc.querySelector('.f-c-report')
 
     if (index) {
+      const oldDateValue = this.dateInputTarget.value
+      const oldDateParam = this.dateInputTarget.dataset.paramValue
+      const oldGroupByValue = this.groupByInputTarget.value
+      const oldGroupByParam = this.groupByInputTarget.dataset.paramValue
+
       this.element.replaceWith(index)
 
-      if (changedGroupBy) {
-        const groupByWrap = index.querySelector('.f-c-report__header-group-by-wrap')
-        if (groupByWrap) groupByWrap.dataset.controller = "f-c-danger-box-shadow-blink"
+      const newGroupByInput = index.querySelector('.f-c-report__header-group-by-input')
+      if (oldGroupByValue !== newGroupByInput.value || (oldGroupByParam && oldGroupByParam !== newGroupByInput.value)) {
+        const groupByWrap = newGroupByInput.closest('.f-c-report__header-group-by-wrap')
+        if (groupByWrap) groupByWrap.dataset.controller = 'f-c-danger-box-shadow-blink'
       }
 
-      if (changedDate) {
-        const dateWrap = index.querySelector('.f-c-report__header-date-wrap')
-        if (dateWrap) dateWrap.dataset.controller = "f-c-danger-box-shadow-blink"
+      const newDateInput = index.querySelector('.f-c-report__header-date-input')
+      if (oldDateValue !== newDateInput.value || (oldDateParam && oldDateParam !== newDateInput.value)) {
+        const dateWrap = newDateInput.closest('.f-c-report__header-date-wrap')
+        if (dateWrap) dateWrap.dataset.controller = 'f-c-danger-box-shadow-blink'
       }
     } else {
       this.handleLoadError(new Error(window.Folio.i18n(window.FolioConsole.Report.i18n, 'loadFailure')))
@@ -81,9 +84,9 @@ window.Folio.Stimulus.register('f-c-report', class extends window.Stimulus.Contr
   }
 
   handleLoadError (error) {
-    if (error.name === "AbortError") return
+    if (error.name === 'AbortError') return
 
-    this.contentTarget.innerHTML = ""
+    this.contentTarget.innerHTML = ''
 
     const errorDiv = document.createElement('p')
 

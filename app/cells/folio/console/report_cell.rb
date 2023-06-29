@@ -85,7 +85,8 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
             selected: report.group_by,
             input_html: {
               class: "f-c-report__header-group-by-input",
-              "data-f-c-report-target" => "groupByInput"
+              "data-f-c-report-target" => "groupByInput",
+              "data-param-value" => params[:_ajax] ? nil : params[PARAM_FOR_GROUP_BY],
             },
             wrapper_html: { class: "f-c-report__header-group-by-wrap" },
             label: false
@@ -94,10 +95,12 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
   def date_range_input(f)
     f.input PARAM_FOR_DATE,
             as: :date_range,
+            max_date: Time.current,
             input_html: {
               class: "f-c-report__header-date-input",
               value: "#{l(report.date_time_from.to_date, format: :console_short)} - #{l(report.date_time_to.to_date, format: :console_short)}",
-              "data-f-c-report-target" => "dateInput"
+              "data-f-c-report-target" => "dateInput",
+              "data-param-value" => params[:_ajax] ? nil : params[PARAM_FOR_DATE],
             },
             wrapper_html: { class: "f-c-report__header-date-wrap" },
             label: false
