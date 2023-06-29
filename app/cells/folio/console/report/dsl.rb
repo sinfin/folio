@@ -20,6 +20,10 @@ module Folio::Console::Report::Dsl
                 tag(:hr, class: "m-0"))
   end
 
+  def html(content)
+    report_item(:html, content)
+  end
+
   def box(hash)
     report_item(:box,
                 cell("folio/console/report/box", hash, report:))
