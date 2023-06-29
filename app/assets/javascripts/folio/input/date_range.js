@@ -49,7 +49,7 @@ window.Folio.Input.DateRange.OPTIONS = {
   autoUpdateInput: false
 }
 
-window.Folio.Input.DateRange.bindDatepicker = (el) => {
+window.Folio.Input.DateRange.bindDatepicker = (el, opts) => {
   const $element = $(el)
 
   el.insertAdjacentElement('afterend',
@@ -57,7 +57,8 @@ window.Folio.Input.DateRange.bindDatepicker = (el) => {
 
   $element.daterangepicker({
     ...window.Folio.Input.DateRange.OPTIONS,
-    ...Folio.i18n(window.Folio.Input.DateRange.i18n, 'config')
+    ...Folio.i18n(window.Folio.Input.DateRange.i18n, 'config'),
+    ...opts,
   })
 
   $element.on('apply.daterangepicker', function (e, picker) {
@@ -81,8 +82,10 @@ window.Folio.Input.DateRange.unbindDatepicker = (el) => {
 }
 
 window.Folio.Stimulus.register('f-input-date-range', class extends window.Stimulus.Controller {
+  static values = { maxDate: String }
+
   connect () {
-    window.Folio.Input.DateRange.bindDatepicker(this.element)
+    window.Folio.Input.DateRange.bindDatepicker(this.element, { maxDate: this.maxDateValue })
   }
 
   disconnect () {
