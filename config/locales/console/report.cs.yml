@@ -11,3 +11,4 @@ cs:
           month: Měsíc
         box:
           total: Celkem
+        invalid_date_range: Vybrané období je příliš dlouhé. Zvolte maximálně %{max} měsíců.

@@ -11,3 +11,4 @@ en:
           month: Month
         box:
           total: Total
+        invalid_date_range: Selected period is too long. Select a maximum of %{max} months.

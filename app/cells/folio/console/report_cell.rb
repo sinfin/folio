@@ -17,8 +17,10 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
   def show
     @report = report_klass.new(**attributes_for_report)
 
-    @report_html = ""
-    instance_eval(&options[:block])
+    if report.valid_date_range?
+      @report_html = ""
+      instance_eval(&options[:block])
+    end
 
     render
   end
@@ -45,16 +47,27 @@ class Folio::Console::ReportCell < Folio::ConsoleCell
       from, to = params[PARAM_FOR_DATE].split(/ - /)
 
       if from.present?
-        h[:date_time_from] = DateTime.parse(from)
+        begin
+          h[:date_time_from] = DateTime.parse(from)
+        rescue StandardError
+        end
       end
 
       if to.present?
-        h[:date_time_to] = DateTime.parse(to)
+        begin
+          h[:date_time_to] = DateTime.parse(to)
+        rescue StandardError
+        end
       end
     end
 
     h[:date_time_from] ||= Time.current.to_datetime.beginning_of_month
     h[:date_time_to] ||= Time.current.to_datetime.end_of_month
+
+    if h[:date_time_to] <= h[:date_time_from]
+      h[:date_time_from] = Time.current.to_datetime.beginning_of_month
+      h[:date_time_to] = Time.current.to_datetime.end_of_month
+    end
 
     h[:date_time_from] = h[:date_time_from].beginning_of_day
     h[:date_time_to] = h[:date_time_to].end_of_day

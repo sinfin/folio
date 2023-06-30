@@ -23,6 +23,10 @@ class Folio::Report
     366
   end
 
+  def valid_date_range?
+    (@date_time_to - @date_time_from).to_i <= self.class.max_date_spans_count
+  end
+
   def chart_data
     @chart_data ||= {
       date_spans: @date_spans,

@@ -14,6 +14,9 @@
     .f-c-report__content[
       data-f-c-report-target="content"
     ]
-      = report_html
+      - if report.valid_date_range?
+        = report_html
+      - else
+        p = t('.invalid_date_range', max: report.class.max_date_spans_count)
 
     span.folio-loader.f-c-report__loader
