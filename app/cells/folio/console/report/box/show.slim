@@ -8,7 +8,8 @@
       - model[:stats].each do |label, value|
         li.f-c-report-box__stat
           span.f-c-report-box__stat-label<> = "#{label}:"
-          span.f-c-report-box__stat-value<> = value
+          span.f-c-report-box__stat-value<>
+            = value.zero? ? '&ndash;' : value
 
   - if total_value
     .f-c-report-box__total

@@ -4,7 +4,9 @@ class Folio::PriceCell < Folio::ApplicationCell
   include ActionView::Helpers::NumberHelper
 
   def show
-    if options[:zero_as_text] && model.zero?
+    if model == "&ndash;"
+      "&ndash; #{options[:currency] || t(".default_currency")}"
+    elsif options[:zero_as_text] && model.zero?
       t(".free")
     else
       number_to_currency(model,
