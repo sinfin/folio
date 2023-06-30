@@ -8,7 +8,7 @@ class Folio::Console::Report::BoxCell < Folio::ConsoleCell
   def formatted_total_value
     @formatted_total_value ||= if total_value
       if total_value.zero?
-        folio_price('&ndash;')
+        folio_price("&ndash;")
       elsif model[:total_price]
         folio_price(total_value)
       else
