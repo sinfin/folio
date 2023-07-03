@@ -4,7 +4,7 @@
       strong.f-c-index-filters__title = t('.title')
 
       .f-c-index-filters__filters
-        - index_filters.each do |key, config|
+        - index_filters_hash.each do |key, config|
           - if config[:as] == :hidden
             = hidden_input(f, key)
           - else
