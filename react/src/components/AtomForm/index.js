@@ -186,13 +186,17 @@ class AtomForm extends React.PureComponent {
       })
     }
 
+    const usedTypes = this.props.form.atoms.map((atom) => atom.record.type)
+    const typeForValue = this.props.atomTypes.find(({ key }) => usedTypes.indexOf(key) !== -1)
+    const typeValue = typeForValue ? typeForValue.key : undefined
+
     return (
       <AtomFormWrap>
         <div className='f-c-r-atoms-settings-header'>
           <div className='f-c-r-atoms-settings-header__title'>
             <Input
               type='select'
-              value={this.props.form.atoms[0].record.type}
+              value={typeValue}
               name={`${prefix}[type]`}
               onChange={this.onTypeChange}
               className='folio-console-atom-type-select'

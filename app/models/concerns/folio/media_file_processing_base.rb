@@ -17,6 +17,7 @@ module Folio::MediaFileProcessingBase
 
   def process_attached_file
     regenerate_thumbnails if try(:thumbnailable?)
+    self.update(remote_services_data: { "processing_step_started_at" => Time.current })
     create_full_media # ensure call processing_done! after all processing is complete
   end
 
@@ -59,12 +60,14 @@ module Folio::MediaFileProcessingBase
 
   def full_media_processed!
     remote_services_data["processing_state"] = "full_media_processed"
+    remote_services_data["processing_step_started_at"] = Time.current
     save!
     create_preview_media
   end
 
   def preview_media_processed!
     remote_services_data["processing_state"] = "preview_media_processed"
+    remote_services_data["processing_step_started_at"] = Time.current
     processing_done!
   end
 
@@ -79,11 +82,16 @@ module Folio::MediaFileProcessingBase
   def create_full_media
     full_media_job_class.perform_later(self)
     rsd = remote_services_data || {}
-    self.remote_services_data = rsd.merge!({ "service" => processed_by, "processing_state" => "enqueued" })
+    self.update(remote_services_data: rsd.merge!({ "service" => processed_by, "processing_state" => "enqueued", "processing_step_started_at" => Time.current }))
   end
 
   def create_preview_media
     preview_media_job_class.perform_later(self)
+    self.update(remote_services_data: self.remote_services_data.merge!({ "processing_step_started_at" => Time.current }))
+  end
+
+  def check_media_processing(preview: false)
+    check_media_processing_job_class.perform_later(self, preview:)
   end
 
   def preview_starts_at_second

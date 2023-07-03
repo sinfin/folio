@@ -14,6 +14,5 @@ class Folio::Console::FlashCellTest < Folio::Console::CellTest
     flash_hash[:error] = "foo"
     html = cell("folio/console/flash", flash_hash).(:show)
     assert html.has_css?(".alert-danger")
-    assert html.has_css?(".fa-times-circle")
   end
 end

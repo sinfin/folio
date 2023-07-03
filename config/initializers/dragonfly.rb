@@ -30,6 +30,17 @@ Dragonfly.app.configure do
     end.chomp
   end
 
+  processor :convert_grayscale_to_srgb do |content, *args|
+    image = Vips::Image.new_from_file(content.file.path)
+
+    if image.interpretation == :"b-w"
+      name, ext = File.basename(content.file.path).split(".")
+      path = "#{Dir.tmpdir}/#{name}-srgb.#{ext}"
+      image.colourspace("srgb").jpegsave(path)
+      content.update(File.open(path))
+    end
+  end
+
   processor :normalize_profiles_via_liblcms2 do |content, *args|
     if shell("which", "jpgicc").blank?
       msg = "Missing jpgicc binary. Profiles not normalized."

@@ -14,7 +14,21 @@ module Folio
                          :country_code,
                          keyword_init: true)
 
+    class ConnectionError < StandardError; end
+    class ARESError < StandardError; end
+    class ParseError < StandardError; end
+    class InvalidIdentificationNumberError < StandardError; end
+
     def self.get(identification_number)
+      get!(identification_number)
+    rescue ConnectionError,
+           ARESError,
+           ParseError,
+           InvalidIdentificationNumberError
+      Subject.new
+    end
+
+    def self.get!(identification_number)
       query = {
         ver: "1.0.3",
         ico: identification_number,
@@ -22,7 +36,25 @@ module Folio
 
       response = HTTParty.get("http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?#{query}")
 
-      xml = Nokogiri::XML(response.body)
+      if response.code != 200
+        raise ConnectionError, "#{response.code} #{response.message}"
+      end
+
+      xml = begin
+        Nokogiri::XML(response.body)
+      rescue StandardError => e
+        raise ParseError, e.message
+      end
+
+      if error_text = xml.xpath("//D:ET")[0]&.text
+        msg = error_text.strip
+
+        if msg == "Chyba 23 - chyba ic" || msg.include?("nenalezeno")
+          raise InvalidIdentificationNumberError, msg
+        else
+          raise ARESError, msg
+        end
+      end
 
       Subject.new(identification_number: xml.xpath("//D:ICO")[0]&.text,
                   vat_identification_number: xml.xpath("//D:DIC")[0]&.text,

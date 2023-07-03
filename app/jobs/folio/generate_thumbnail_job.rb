@@ -127,6 +127,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         end
 
         thumbnail = thumbnail.thumb(geometry, format:)
+        thumbnail = thumbnail.convert_grayscale_to_srgb(format:) if image.jpg? && format == :jpg
         thumbnail = thumbnail.normalize_profiles_via_liblcms2 if image.jpg? && format == :jpg
         thumbnail = thumbnail.jpegoptim if format == :jpg
 

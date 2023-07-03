@@ -64,6 +64,11 @@ $folio-loader-inverse-foreground: white !default
   &--transparent
     background-color: transparent
 
+  &--white
+    &:before
+      border-color: rgba($folio-loader-inverse-foreground, 0.2)
+      border-left-color: $folio-loader-inverse-foreground
+
   .folio-inversed-loader &
     background: $folio-loader-inverse-background
 

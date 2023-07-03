@@ -22,7 +22,7 @@ module Folio::Mux::FileProcessing
   end
 
   # player needs to send headers `{ "alg": "HS256",  "typ": "JWT"}`
-  def remote_signed_full_url(expires_at = 2.hours.from_now)
+  def remote_signed_full_url(expires_at: 2.hours.from_now, format: "m3u8")
     if Rails.env.test?
       token = "test"
     else
@@ -38,14 +38,32 @@ module Folio::Mux::FileProcessing
       token = JWT.encode(params, rsa_private, "RS256")
     end
 
-    "https://stream.mux.com/#{signed_full_playback_id}.m3u8?token=#{token}"
+    case format
+    when "m4a"
+      "https://stream.mux.com/#{signed_full_playback_id}/audio.m4a?token=#{token}"
+    else
+      "https://stream.mux.com/#{signed_full_playback_id}.m3u8?token=#{token}"
+    end
   end
 
-  def remote_preview_url
-    playback_id = remote_services_data["preview"]["playback_ids"].first["id"]
-    "https://stream.mux.com/#{playback_id}.m3u8"
+  def remote_preview_url(format: "m3u8")
+    playback_id = if Rails.env.test?
+      "test"
+    else
+      remote_services_data["preview"]["playback_ids"].first["id"]
+    end
+
+    case format
+    when "m4a"
+      "https://stream.mux.com/#{playback_id}/audio.m4a"
+    else
+      "https://stream.mux.com/#{playback_id}.m3u8"
+    end
   end
 
+  def remote_signed_preview_url(_expires_at)
+    remote_preview_url
+  end
 
   def full_media_job_class
     Folio::Mux::CreateFullMediaJob
@@ -57,6 +75,10 @@ module Folio::Mux::FileProcessing
 
   def delete_media_job_class
     Folio::Mux::DeleteMediaJob
+  end
+
+  def check_media_processing_job_class
+    Folio::Mux::CheckProgressJob
   end
 
   def signed_full_playback_id

@@ -99,7 +99,6 @@ en:
           file_hint: Do not input anything to keep the original file.
       documents_management: Documents management
       file_title_prompt: Displayed file name
-      finalizing: Finalizing
       footer:
         text: Administration console for %{site_name}.
       gallery_management: Gallery management

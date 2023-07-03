@@ -1,0 +1,104 @@
+= folio_console_report
+  ruby:
+    moving_average = Proc.new do |ary|
+      i = 0
+      new_ary = []
+
+      while ary[i]
+        if i.zero?
+          new_ary << ary[i].to_f
+        else
+          new_ary << (ary[i] + ary[i - 1]) / 2.0
+        end
+
+        i += 1
+      end
+
+      new_ary
+    end
+
+    area_charts [
+      {
+        title: "Předplatitelé",
+        text: "Celkem",
+        values: moving_average.call(Array.new(report.date_labels.size) do
+          rand(10000).round
+        end),
+      },
+      {
+        title: "Shlédnutí a přehrání",
+        text: "Celkem na webu",
+        values: moving_average.call(Array.new(report.date_labels.size) do
+          rand(10000).round
+        end),
+      },
+      {
+        title: "Doba přehrávání",
+        text: "Průměrná doba přehrávání na webu",
+        values: moving_average.call(Array.new(report.date_labels.size) do
+          rand(20)
+        end),
+        unit: 'min',
+      },
+    ]
+
+    title 'Přehled prodeje'
+
+    text 'Přehled prodeje produktů za zvolené období.'
+
+    boxes [
+      {
+        title: "Prodaná předplatná",
+        stats: {
+          "Počet nákupů" => 253,
+          "Počet předplatitelů" => 120,
+          "Z toho prémiových předplatitelů" => 12,
+        },
+        total_price: 450000
+      },
+      {
+        title: "Ukončená předplatná",
+        stats: {
+          "Počet ukončení" => 253,
+          "Počet předplatitelů" => 120,
+        },
+        total_price: -10000
+      }
+    ]
+
+    hr
+
+    title 'Předplatitelé'
+
+    text 'Přehled počtu předplatitelů za zvolené období'
+
+    text_stats [
+      { label: "Celkový počet aktivních předplatných", value: 12111 },
+      { label: "Verze A", value: 2111 },
+      { label: "Verze B", value: 2111 },
+      { label: "Verze C", value: 2111 },
+    ]
+
+    stacked_chart [
+      {
+        label: "Aktivní",
+        color: :blue,
+        values: moving_average.call(Array.new(report.date_labels.size) do
+          rand(1000).round
+        end)
+      },
+      {
+        label: "Noví",
+        color: :green,
+        values: moving_average.call(Array.new(report.date_labels.size) do
+          rand(100).round
+        end)
+      },
+      {
+        label: "Odpadlí",
+        color: :red,
+        values: moving_average.call(Array.new(report.date_labels.size) do
+          -1 * rand(100).round
+        end)
+      }
+    ]

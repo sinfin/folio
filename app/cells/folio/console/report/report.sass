@@ -1,0 +1,76 @@
+// TODO bootstrap5
+
+.f-c-report
+  .text-success
+    color: #00B594 !important
+
+  .text-danger
+    color: #F0655D !important
+
+  &__form
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-width / 2
+
+  &__h1
+    margin: 0
+    flex: 1 1 auto
+
+  &__h1-a
+    text-decoration: none
+    color: inherit
+
+    &:hover
+      color: inherit
+      text-decoration: underline
+
+  &__hr
+    margin: $grid-gutter-width 0
+
+  &__header-controls
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-width / 3
+
+  &__header-group-by-wrap
+    width: 90px
+    margin: 0
+
+  &__header-date-wrap
+    width: 215px
+    margin: 0
+
+  &__body
+    position: relative
+    min-height: 150px
+
+  &__error
+    font-weight: $font-weight-bold
+    color: $danger
+    text-align: center
+
+  &[data-f-c-report-loading-value="true"] &__content,
+  &:not(&[data-f-c-report-loading-value="true"]) &__loader
+    display: none
+
+  &__item
+    margin: $grid-gutter-width 0
+
+    &:first-child
+      margin-top: 0 !important
+
+    &:last-child
+      margin-bottom: 0 !important
+
+    &--title
+      margin-top: 5 * $grid-gutter-width / 4
+      margin-bottom: $grid-gutter-width / 2
+
+    &--title + &--text
+      margin-top: $grid-gutter-width / 2
+
+    &--title + &--text_stats,
+      margin-top: $grid-gutter-width / 2
+
+    &--text + &--text_stats
+      margin-top: - $grid-gutter-width / 2

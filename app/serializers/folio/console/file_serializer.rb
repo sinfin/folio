@@ -84,7 +84,7 @@ class Folio::Console::FileSerializer
   end
 
   attribute :jw_player_api_url do |object|
-    if object.try(:processing_service) == "jw_player"
+    if object.try(:processing_service) == "jw_player" && object.ready?
       if object.remote_key
         Folio::Engine.routes
                      .url_helpers
@@ -96,8 +96,12 @@ class Folio::Console::FileSerializer
   attribute :player_source_mime_type do |object|
     if object.try(:processing_service) == "mux" && object.ready?
       "application/x-mpegurl"
-    else
-      object.file_mime_type
+    elsif object.file_mime_type
+      if object.file_mime_type.match?(%r{audio/.+-aac-.+})
+        "audio/aac"
+      else
+        object.file_mime_type
+      end
     end
   end
 

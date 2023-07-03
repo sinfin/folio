@@ -5,7 +5,6 @@
 //= require multiselect/js/jquery.multi-select
 //= require js-cookie/src/js.cookie
 //= require jquery.kinetic/index
-//= require dropzone/dist/dropzone
 //= require clipboard/dist/clipboard
 //= require strftime
 //= require moment/moment
@@ -32,6 +31,7 @@
 //= require folio/api
 //= require folio/s3-upload
 //= require folio/message-bus
+//= require folio/remote-js
 
 //= require folio/lazyload
 //= require folio/lightbox
@@ -40,13 +40,12 @@
 //= require folio/input
 //= require folio/player/player
 //= require folio/image/image
+//= require folio/chart/chart
 //= require folio/ui/icon/icon
 //= require folio/click-trigger
 
 // must be under folio/input
 //= require daterangepicker.min
-
-//= require folio/console/flash
 
 //= require folio/console/_bootstrap-tabs-lazyload
 //= require folio/console/_cocoon-set-position
@@ -57,6 +56,9 @@
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
+//= require folio/console/danger-box-shadow-blink
+
+//= require folio/console/ui/button/button
 
 //= require folio/console/aasm/email_modal/email_modal
 //= require folio/console/accounts/invite_and_copy/invite_and_copy
@@ -71,6 +73,8 @@
 //= require folio/console/file/picker/picker
 //= require folio/console/file/picker/thumb/thumb
 //= require folio/console/file/preview_reloader/preview_reloader
+//= require folio/console/file/processing_notifier/processing_notifier
+//= require folio/console/flash/flash
 //= require folio/console/form/errors/errors
 //= require folio/console/index/filters/filters
 //= require folio/console/index/images/images
@@ -89,6 +93,7 @@
 //= require folio/console/private_attachments/fields/fields
 //= require folio/console/private_attachments/single_dropzone/single_dropzone
 //= require folio/console/publishable_inputs/item/item
+//= require folio/console/report/report
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 

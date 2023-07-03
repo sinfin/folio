@@ -173,9 +173,13 @@ Folio::Engine.routes.draw do
 
   scope :folio, as: :folio do
     namespace :api do
-      resource :s3_signer, only: [], controller: "s3_signer" do
-        post :s3_before
-        post :s3_after
+      resource :s3, only: [], controller: "s3" do
+        post :before
+        post :after
+      end
+
+      resource :ares, only: [], controller: "ares" do
+        post :subject
       end
     end
   end

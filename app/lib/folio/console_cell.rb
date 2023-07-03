@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::ConsoleCell < Folio::ApplicationCell
-  include Folio::Console::CellsHelper
   include Folio::Cell::HtmlSafeFieldsFor
+  include Folio::Console::CellsHelper
+  include Folio::Console::ReportsHelper
 
   delegate :safe_url_for,
            :through_aware_console_url_for,

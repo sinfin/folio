@@ -46,7 +46,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def run_file_after_save_job!
-    file.run_after_save_job if file # updates placements
+    if file
+      file.run_after_save_job
+    elsif changed_attributes && changed_attributes["file_id"]
+      file_before_destroy = Folio::File.find_by(id: changed_attributes["file_id"])
+      file_before_destroy.run_after_save_job if file_before_destroy
+    end
   end
 end
 
@@ -69,9 +74,9 @@ end
 #
 # Indexes
 #
-#  index_folio_file_placements_on_file_id               (file_id)
-#  index_folio_file_placements_on_placement             (placement_type,placement_id)
-#  index_folio_file_placements_on_placement_title       (placement_title)
-#  index_folio_file_placements_on_placement_title_type  (placement_title_type)
-#  index_folio_file_placements_on_type                  (type)
+#  index_folio_file_placements_on_file_id                          (file_id)
+#  index_folio_file_placements_on_placement_title                  (placement_title)
+#  index_folio_file_placements_on_placement_title_type             (placement_title_type)
+#  index_folio_file_placements_on_placement_type_and_placement_id  (placement_type,placement_id)
+#  index_folio_file_placements_on_type                             (type)
 #

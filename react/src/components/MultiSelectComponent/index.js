@@ -24,7 +24,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
     if (!this.props.filesStatus.loaded) return <Loader />
 
     return (
-      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
+      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl} reactType={this.props.reactType}>
         <Card
           highlighted
           header={window.FolioConsole.translations[`selected${this.props.fileType}`]}

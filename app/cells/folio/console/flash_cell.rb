@@ -5,6 +5,8 @@ class Folio::Console::FlashCell < Folio::ConsoleCell
     success: "alert-success",
     error: "alert-danger",
     alert: "alert-warning",
+    info: "alert-info",
+    pending: "alert-pending",
     notice: "alert-success"
   }.freeze
 
@@ -12,14 +14,14 @@ class Folio::Console::FlashCell < Folio::ConsoleCell
     BOOTSTRAP_CLASSES[msg_type.to_sym] || msg_type
   end
 
-  FA_ICONS = {
-    success: "fa fa-mr fa-check-circle",
-    error: "fa fa-mr fa-times-circle",
-    alert: "fa fa-mr fa-times-circle",
-    notice: "fa fa-mr fa-info-circle"
-  }.freeze
-
-  def fa_icon_for(msg_type)
-    FA_ICONS[msg_type.to_sym] || msg_type
+  def flash_icon_key(msg_type)
+    case msg_type.to_sym
+    when :success
+      :check_circle_outline
+    when :info, :notice
+      :information_outline
+    else
+      :alert
+    end
   end
 end

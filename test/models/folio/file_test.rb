@@ -60,9 +60,9 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert_equal [file2], Folio::File.by_file_name("foo-bar")
   end
 
-  test "have 3 basic states" do
+  test "have 4 basic states" do
     file = Folio::File.new
-    assert_equal [:unprocessed, :processing, :ready], file.class.all_state_names
+    assert_equal [:unprocessed, :processing, :ready, :processing_failed], file.class.all_state_names
     assert file.unprocessed?
   end
 

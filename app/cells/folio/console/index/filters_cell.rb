@@ -3,10 +3,31 @@
 class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
-  include Folio::Console::Cell::IndexFilters
 
   def klass
     model[:klass]
+  end
+
+  def index_filters
+    @index_filters ||= begin
+      h = {}
+
+      model[:index_filters].each do |key, config|
+        if config == :date_range
+          h[key] = { as: :date_range }
+        elsif config.is_a?(Array)
+          h[key] = { as: :collection, collection: config }
+        elsif config.is_a?(String)
+          h[key] = { as: :autocomplete, url: config }
+        elsif config.is_a?(Hash)
+          h[key] = config
+        else
+          raise "Invalid index filter type - #{key}"
+        end
+      end
+
+      h
+    end
   end
 
   def form(&block)
@@ -25,13 +46,21 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     return nil unless filtered?
     return nil unless has_collapsible?
 
-    if index_filters_hash.any? { |key, config| config[:collapsed] && filtered_by?(key) }
+    if index_filters.any? { |key, config| config[:collapsed] && filtered_by?(key) }
       "f-c-index-filters--expanded"
     end
   end
 
+  def filtered?
+    return @filtered unless @filtered.nil?
+
+    @filtered = index_filters.any? do |key, _config|
+      filtered_by?(key)
+    end
+  end
+
   def collection(key)
-    index_filters_hash[key][:collection].map do |value|
+    index_filters[key][:collection].map do |value|
       if value == true
         [t("true"), true]
       elsif value == false
@@ -64,7 +93,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def input(f, key)
-    data = index_filters_hash[key]
+    data = index_filters[key]
 
     id_method = if data[:id_method] && data[:klass].constantize.column_names.include?(data[:id_method].to_s)
       data[:id_method].to_s
@@ -115,16 +144,15 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
 
   def date_range_input(f, key)
     f.input key, label: false,
+                 as: :date_range,
                  input_html: {
                    class: "f-c-index-filters__date-range-input",
                    value: controller.params[key],
-                   autocomplete: "off",
                    placeholder: "#{label_for_key(key)}...",
                  },
                  wrapper: :input_group,
                  wrapper_html: { class: "f-c-index-filters__date-range-input-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
-                 input_group_append: controller.params[key].present? ? input_group_append : nil,
-                 custom_html: content_tag(:span, "date_range", class: "mi mi--16 f-c-index-filters__date-range-input-ico")
+                 input_group_append: controller.params[key].present? ? input_group_append : nil
   end
 
   def numeric_range_input(f, key, type:)
@@ -249,9 +277,21 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     "width: #{width}"
   end
 
+  def filtered_by?(key)
+    config = index_filters[key]
+
+    if config[:as] == :hidden
+      false
+    elsif config[:as] == :numeric_range
+      controller.params["#{key}_from"].present? || controller.params["#{key}_to"].present?
+    else
+      controller.params[key].present?
+    end
+  end
+
   def has_collapsible?
     return @has_collapsible unless @has_collapsible.nil?
-    @has_collapsible = index_filters_hash.any? { |_key, config| config[:collapsed] }
+    @has_collapsible = index_filters.any? { |_key, config| config[:collapsed] }
   end
 
   def hidden_input(f, key)

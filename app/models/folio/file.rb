@@ -88,13 +88,14 @@ class Folio::File < Folio::ApplicationRecord
   before_save :set_file_name_for_search, if: :file_name_changed?
   before_destroy :check_usage_before_destroy
   after_save :run_after_save_job
-  after_save :process!, if: :attached_file_changed?
+  after_commit :process!, if: :attached_file_changed?
   after_destroy :destroy_attached_file
 
   aasm do
-    state :unprocessed, initial: true, color: :red
+    state :unprocessed, initial: true, color: :yellow
     state :processing, color: :orange
     state READY_STATE, color: :green
+    state :processing_failed, color: :red
 
     event :process do
       transitions from: :unprocessed, to: :processing
@@ -104,6 +105,11 @@ class Folio::File < Folio::ApplicationRecord
 
     event :processing_done do
       transitions from: :processing, to: READY_STATE
+      transitions from: READY_STATE, to: READY_STATE
+    end
+
+    event :processing_failed do
+      transitions from: :processing, to: :processing_failed
     end
 
     event :reprocess do

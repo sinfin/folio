@@ -14,6 +14,7 @@ class Folio::DropzoneCell < Folio::ApplicationCell
       "param-name" => param_name,
       "file-formats" => file_formats,
       "file-type" => model[:file_type] || "Folio::File::Document",
+      "file-human-type" => model[:file_type].try(:constantize).try(:human_type) || "document",
       "records" => records,
       "destroy-failure" => destroy_failure,
       "max-files" => model[:max_files],

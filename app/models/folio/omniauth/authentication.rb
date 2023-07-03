@@ -30,7 +30,7 @@ class Folio::Omniauth::Authentication < Folio::ApplicationRecord
     if o.info.email.present?
       auth.email = o.info.email unless untrusted_email?(o.info.email)
     end
-    auth.nickname = o.info.username || o.info.nickname || o.info.name
+    auth.nickname = o.info.username || o.info.nickname || o.info.name || "unnamed_user@#{o.provider}"
     auth.raw_info = o.extra.raw_info
     auth.access_token = o.credentials.token
     auth.save!

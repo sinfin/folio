@@ -7,6 +7,11 @@ en:
     invalid_format: Invalid format
   'false': "No"
   folio:
+    chart:
+      js_load_error: Failed to load javascript needed for charts.
+    price:
+      default_currency: 'CZK'
+      free: "Free"
     errors:
       show:
         back_to_home: back to the homepage

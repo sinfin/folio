@@ -99,7 +99,6 @@ cs:
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
       documents_management: Správa dokumentů
       file_title_prompt: Název souboru
-      finalizing: Dokončuji
       footer:
         text: Administrace webu %{site_name}.
       gallery_management: Správa galerie

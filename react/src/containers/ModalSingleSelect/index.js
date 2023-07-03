@@ -66,6 +66,7 @@ class ModalSingleSelect extends Component {
         fileType={this.props.fileType}
         filesUrl={this.props.filesUrl}
         taggable={this.props.taggable}
+        reactType={this.props.reactType}
         inModal
       />
     )

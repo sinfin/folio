@@ -1,12 +1,26 @@
+//= require dropzone-6-0-0-beta-2
+//= require folio/i18n
+
 window.Folio = window.Folio || {}
 window.Folio.S3Upload = {}
 
-window.Folio.S3Upload.newUpload = ({ file }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3_signer/s3_before', { file_name: file.name })
+window.Folio.S3Upload.i18n = {
+  cs: {
+    finalizing: 'Dokončuji…',
+    processing: 'Probíhá zpracování souboru…'
+  },
+  en: {
+    finalizing: 'Finalizing…',
+    processing: 'The file is being processed…'
+  }
 }
 
-window.Folio.S3Upload.finishedUpload = ({ s3_path, type, existingId }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3_signer/s3_after', { s3_path, type, existing_id: existingId })
+window.Folio.S3Upload.newUpload = ({ file }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name })
+}
+
+window.Folio.S3Upload.finishedUpload = ({ file, type, existingId }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path: file.s3_path, type, existing_id: existingId })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
@@ -25,6 +39,7 @@ window.Folio.S3Upload.createDropzone = ({
   dropzoneOptions,
   element,
   fileType,
+  fileHumanType,
   filterMessageBusMessages,
   onStart,
   onProgress,
@@ -51,34 +66,31 @@ window.Folio.S3Upload.createDropzone = ({
     thumbnailHeight: 150,
     timeout: 0,
     parallelUploads: 1,
-    maxFilesize: 4096,
     autoProcessQueue: false,
-
-    sending: function (file, xhr) {
-      const _send = xhr.send
-      xhr.send = () => { _send.call(xhr, file) }
-    },
+    maxFilesize: (fileHumanType === 'image' ? 512 : 5120), // mb
 
     accept: function (file, done) {
       const dropzone = this
 
+      const handleResult = (result) => {
+        file.file_name = result.file_name
+        file.s3_path = result.s3_path
+        file.s3_url = result.s3_url
+
+        if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
+          file.thumbnail_notified = true
+          onThumbnail(file.s3_path, file.dataURL)
+        }
+
+        if (onStart) onStart(file.s3_path, { file_name: result.file_name, file_size: file.size })
+
+        done()
+
+        setTimeout(() => dropzone.processFile(file), 0)
+      }
+
       window.Folio.S3Upload.newUpload({ file })
-        .then((result) => {
-          file.file_name = result.file_name
-          file.s3_path = result.s3_path
-          file.s3_url = result.s3_url
-
-          if (onThumbnail && file.dataURL && !file.thumbnail_notified) {
-            file.thumbnail_notified = true
-            onThumbnail(file.s3_path, file.dataURL)
-          }
-
-          if (onStart) onStart(file.s3_path, { file_name: result.file_name, file_size: file.size })
-
-          done()
-
-          setTimeout(() => dropzone.processFile(file), 0)
-        })
+        .then(handleResult)
         .catch((err) => {
           done('Failed to get an S3 signed upload URL', err)
         })
@@ -86,19 +98,26 @@ window.Folio.S3Upload.createDropzone = ({
 
     success: function (file) {
       window.Folio.S3Upload.finishedUpload({
-        s3_path: file.s3_path,
+        file,
         type: fileType
+      }).catch((err) => {
+        this.options.error(file, err.message)
       })
     },
 
     error: function (file, message) {
       if (window.FolioConsole && window.FolioConsole.Flash) {
-        window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+        if (typeof message === 'string') {
+          window.FolioConsole.Flash.alert(message)
+        } else {
+          window.FolioConsole.Flash.flashMessageFromApiErrors(message)
+        }
       }
 
       const dropzone = this
-
-      setTimeout(() => { dropzone.removeFile(file) }, 0)
+      if (dropzone.removeFile) {
+        setTimeout(() => { dropzone.removeFile(file) }, 0)
+      }
 
       if (onFailure) onFailure(file.s3_path)
     },
@@ -107,10 +126,26 @@ window.Folio.S3Upload.createDropzone = ({
       this.options.url = file.s3_url
     },
 
+    sending: function (file, xhr) {
+      const _send = xhr.send
+      xhr.send = () => { _send.call(xhr, file) }
+    },
+
     uploadprogress: function (file, progress, _bytesSent) {
       const rounded = Math.round(progress)
+      let text
 
-      if (onProgress) onProgress(file.s3_path, rounded)
+      if (rounded === 100) {
+        if (fileHumanType !== 'image' && file.size && file.size > (25 * 1000 * 1024)) {
+          text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'processing')
+        } else {
+          text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing')
+        }
+      } else {
+        text = `${rounded}%`
+      }
+
+      if (onProgress) onProgress(file.s3_path, rounded, text)
 
       if (folioConsole && file.previewElement) {
         file
@@ -121,7 +156,7 @@ window.Folio.S3Upload.createDropzone = ({
         file
           .previewElement
           .querySelector('.f-c-r-file-upload-progress__inner, .f-c-r-dropzone__preview-progress-text')
-          .innerText = rounded === 100 ? window.FolioConsole.translations.finalizing : `${rounded}%`
+          .innerText = text
       }
     },
 
@@ -135,6 +170,11 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     ...(dropzoneOptions || {})
+  }
+
+  if (document.documentElement.lang === 'cs') {
+    options.dictFileTooBig = 'Soubor je přiliš veliký ({{filesize}}MiB). Maximální velikost: {{maxFilesize}}MiB.'
+    options.dictInvalidFileType = 'Soubory tohoto typu nejsou povoleny.'
   }
 
   const dropzone = new window.Dropzone(element, options)
@@ -156,19 +196,13 @@ window.Folio.S3Upload.createDropzone = ({
     return isFromThisDropzone
   })
 
-  window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzoneId}`] = (msg) => {
+  window.Folio.MessageBus.callbacks[`Folio::S3::CreateFileJob-dropzone-${dropzoneId}`] = (msg) => {
     if (!msg) return
-    if (msg.type !== 'Folio::CreateFileFromS3Job') return
+    if (msg.type !== 'Folio::S3::CreateFileJob') return
     if (msg.data.file_type !== fileType) return
     if (!filterMessageBusMessages(msg)) return
 
     switch (msg.data.type) {
-      case 'start':
-        return dropzone.files.forEach((file) => {
-          if (file.s3_path === msg.data.s3_path) {
-            file.s3_job_started_at = new Date()
-          }
-        })
       case 'success': {
         if (!dontRemoveFileOnSuccess) {
           dropzone.files.forEach((file) => {
@@ -233,7 +267,7 @@ window.Folio.S3Upload.createHiddenDropzone = (opts) => {
 }
 
 window.Folio.S3Upload.destroyDropzone = (dropzone) => {
-  delete window.Folio.MessageBus.callbacks[`Folio::CreateFileFromS3Job-dropzone-${dropzone.dropzoneId}`]
+  delete window.Folio.MessageBus.callbacks[`Folio::S3::CreateFileJob-dropzone-${dropzone.dropzoneId}`]
   dropzone.destroy()
 }
 

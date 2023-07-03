@@ -15,7 +15,7 @@ class Folio::Console::File::PickerCell < Folio::ConsoleCell
   end
 
   def hint_for(fp)
-    t(".hint.#{fp.object.class.reflections["file"].class_name}", default: nil)
+    model[:hint].presence || t(".hint.#{fp.object.class.reflections["file"].class_name}", default: nil)
   end
 
   def btn_label

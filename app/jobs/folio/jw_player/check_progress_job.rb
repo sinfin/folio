@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::JwPlayer::CheckProgressJob < Folio::ApplicationJob
+  discard_on ActiveJob::DeserializationError
   retry_on Folio::JwPlayer::MetadataNotAvailable, wait: 30.seconds, attempts: 25
 
   queue_as :default
@@ -32,8 +33,13 @@ class Folio::JwPlayer::CheckProgressJob < Folio::ApplicationJob
         end
 
         broadcast_file_update(media_file)
-      else
-        nil
+      elsif response["status"] == "failed"
+        media_file.remote_services_data["error"] = response["error_message"]
+        media_file.processing_failed!
+
+        broadcast_file_update(media_file)
+
+        raise "JwPlayer error: #{response["error_message"]}"
       end
     end
 end

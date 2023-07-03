@@ -1,0 +1,9 @@
+.f-c-report-text-stats.text-muted.small
+  - model.each do |hash|
+    .f-c-report-text-stats__stat
+      span.f-c-report-text-stats__stat-label<>
+        = "#{hash[:label]}:"
+      span.f-c-report-text-stats__stat-value<>
+        = number_with_precision(hash[:value],
+                                delimiter: ' ',
+                                precision: 0)

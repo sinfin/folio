@@ -1,10 +1,13 @@
 - key ||= :private_attachments
 - body = true unless defined?(body)
 - single = false unless defined?(single)
+- file_type = f.object.class.reflections[key.to_s].options[:class_name]
+- file_klass = file_type.constantize
 
 div[
   class=Folio::Console::PrivateAttachments::FieldsCell::DROPZONE_CLASS_NAME
   data-file-type=f.object.class.reflections[key.to_s].options[:class_name]
+  data-file-human-type=(file_klass.try(:human_type) || "document")
   data-dropzone-to-body=body.to_s
   data-dropzone-single=single.to_s
 ]

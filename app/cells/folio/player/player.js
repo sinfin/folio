@@ -102,6 +102,8 @@ window.Folio.Player.innerBind = (el, opts, file) => {
   if (opts.showFormControls) {
     controlBar.addChild('FolioPlayerFormControl', { action: 'modal', file, formControlsController: opts.formControlsController })
     controlBar.addChild('FolioPlayerFormControl', { action: 'destroy', file, formControlsController: opts.formControlsController })
+
+    el.classList.add('f-player--with-form-controls')
   }
 
   if (fileAttributes.human_type === 'video') {
@@ -113,6 +115,10 @@ window.Folio.Player.innerBind = (el, opts, file) => {
       window.Folio.Player.waveform(fileAttributes.id || 0, el)
     })
   }
+
+  const errorDisplay = el.folioPlayer.getChild('ErrorDisplay')
+
+  errorDisplay.el_.appendChild(window.Folio.Ui.Icon.create('alert', { class: 'f-player__error-ico' }))
 
   el.classList.add('f-player--bound')
 }

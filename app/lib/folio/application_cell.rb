@@ -94,4 +94,8 @@ class Folio::ApplicationCell < Cell::ViewModel
       end
     end
   end
+
+  def folio_price(number, price_options = {})
+    cell("folio/price", number, price_options)
+  end
 end

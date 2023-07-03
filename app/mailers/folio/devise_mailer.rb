@@ -8,7 +8,8 @@ class Folio::DeviseMailer < Devise::Mailer
 
   layout "folio/mailer"
 
-  default from: ->(*) { site.email }
+  default from: ->(*) { site.email },
+          bcc: Rails.application.config.folio_mailer_global_bcc
 
   def devise_mail(record, action, opts = {}, &block)
     full_opts = devise_opts_from_template(opts, action, record)

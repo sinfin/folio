@@ -25,7 +25,7 @@ module Folio
     config.folio_pages_perex_richtext = false
     config.folio_pages_locales = false
     config.folio_console_locale = :cs
-    config.folio_console_dashboard_redirect = :console_pages_path
+    config.folio_console_report_redirect = :console_pages_path
     config.folio_console_sidebar_link_class_names = nil
     config.folio_console_sidebar_prepended_link_class_names = []
     config.folio_console_sidebar_appended_link_class_names = []
@@ -34,6 +34,7 @@ module Folio
     config.folio_console_sidebar_force_hide_users = false
     config.folio_console_sidebar_title_items = -> (sidebar_cell) { nil }
     config.folio_console_sidebar_title_new_item = -> (sidebar_cell) { nil }
+    config.folio_console_sidebar_title_image_path = nil
     config.folio_console_default_routes_contstraints = {}
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
@@ -41,6 +42,7 @@ module Folio
     config.folio_show_transportable_frontend = false
     config.folio_modal_cell_name = nil
     config.folio_use_og_image = true
+    config.folio_mailer_global_bcc = nil
     config.folio_aasm_mailer_config = {}
     config.folio_site_is_a_singleton = true
     config.folio_site_cache_current_site = true
@@ -139,6 +141,13 @@ module Folio
         config.paths["db/migrate"].expanded.each do |expanded_path|
           app.config.paths["db/migrate"] << expanded_path
         end
+      end
+    end
+
+    initializer :add_folio_maintenance_middleware do |app|
+      if ENV["FOLIO_MAINTENANCE"]
+        require "rack/folio/maintenance_middleware"
+        app.config.middleware.use(Rack::Folio::MaintenanceMiddleware)
       end
     end
 
