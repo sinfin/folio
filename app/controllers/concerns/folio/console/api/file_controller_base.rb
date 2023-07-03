@@ -94,18 +94,30 @@ module Folio::Console::Api::FileControllerBase
       params.permit(:by_file_name, :by_placement, :by_tags, :by_used)
     end
 
+    def file_params_whitelist
+      ary = [
+        :tag_list,
+        :type,
+        :file,
+        :author,
+        :description,
+        :sensitive_content,
+        :default_gravity,
+      ]
+
+      if @klass.new.respond_to?("preview_duration=")
+        ary << :preview_duration
+      end
+
+      ary << { tags: [] }
+
+      ary
+    end
+
     def file_params
       p = params.require(:file)
                 .require(:attributes)
-                .permit(:tag_list,
-                        :type,
-                        :file,
-                        :author,
-                        :description,
-                        :sensitive_content,
-                        :default_gravity,
-                        :preview_duration,
-                        tags: [])
+                .permit(*file_params_whitelist)
 
       if p[:tags].present? && p[:tag_list].blank?
         p[:tag_list] = p.delete(:tags).join(",")
