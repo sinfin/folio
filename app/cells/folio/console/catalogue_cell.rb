@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Folio::Console::CatalogueCell < Folio::ConsoleCell
-  include Folio::Console::FlagHelper
   include SimpleForm::ActionViewExtensions::FormHelper
 
   attr_reader :record
@@ -144,7 +143,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
   def locale_flag(locale_attr = :locale)
     attribute(locale_attr, compact: true, aligned: true, skip_desktop_header: true) do
       if record.send(locale_attr)
-        country_flag(record.send(locale_attr))
+        cell("folio/console/ui/flag", record.send(locale_attr))
       end
     end
   end
