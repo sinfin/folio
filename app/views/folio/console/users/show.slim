@@ -7,7 +7,9 @@
 .row
   .col-lg-8
     = show_for @user do |s|
-      = s.email
+      = s.attribute :email
+        == mail_to(s.object.email, s.object.email)
+
       - if ::Rails.application.config.folio_users_require_phone
         = s.attribute :phone
       = s.attribute :first_name

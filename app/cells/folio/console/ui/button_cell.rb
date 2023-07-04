@@ -11,7 +11,11 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:type] ||= :button
     end
 
-    h[:class] = "f-c-ui-button btn btn-#{model[:variant] || "primary"}"
+    h[:class] = "f-c-ui-button btn btn-#{variant}"
+
+    if model[:confirm]
+      h["data-confirm"] = t("folio.console.confirmation")
+    end
 
     if model[:class]
       h[:class] += " #{model[:class]}"
@@ -27,6 +31,15 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       right_icon
       class
       variant
+      confirm
     ]
+  end
+
+  def variant
+    if model[:variant] == :medium_dark
+      "medium-dark"
+    else
+      model[:variant] || "primary"
+    end
   end
 end

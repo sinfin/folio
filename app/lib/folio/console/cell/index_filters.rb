@@ -2,7 +2,9 @@
 
 module Folio::Console::Cell::IndexFilters
   def index_filters
-    controller.try(:index_filters)
+    if controller.respond_to?(:index_filters, true)
+      controller.send(:index_filters)
+    end
   end
 
   def index_filters_hash

@@ -33,9 +33,6 @@ $f-c-layout-header-bg: $light-gray !default
     gap: $grid-gutter-width / 6
 
   &__toggle
-    +unbutton
-    background: $gray-800
-    color: $white
     width: 50px
     height: 100%
     position: absolute
@@ -46,6 +43,12 @@ $f-c-layout-header-bg: $light-gray !default
     cursor: pointer
     flex: 0 0 35px
     margin-right: $spacer
+    border-radius: 0
+
+    &, &:hover, &:focus
+      border-color: $gray-800
+      background: $gray-800
+      color: $white
 
   +mq-desktop-menu
     &__toggle

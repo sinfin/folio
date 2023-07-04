@@ -1,8 +1,6 @@
 = form do |f|
   .container-fluid
     .f-c-index-filters__wrap
-      strong.f-c-index-filters__title = t('.title')
-
       .f-c-index-filters__filters
         - index_filters_hash.each do |key, config|
           - if config[:as] == :hidden

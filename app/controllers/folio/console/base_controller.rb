@@ -173,7 +173,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def add_root_breadcrumb
-      add_breadcrumb '<i class="fa fa-home" style="min-width: 16px; min-height: 14px;"></i>'.html_safe, console_root_path
+      add_breadcrumb cell("folio/ui/icon", :home, height: 16).show.html_safe, console_root_path
     end
 
     def additional_file_placements_strong_params_keys

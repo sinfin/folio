@@ -223,7 +223,10 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
   end
 
   def input_group_append
-    button_tag("", type: "button", class: "btn fa fa-times f-c-index-filters__reset-input")
+    cell("folio/console/ui/button",
+         class: "f-c-index-filters__reset-input",
+         variant: :medium_dark,
+         icon: :close)
   end
 
   def collapsible_class_name(config)

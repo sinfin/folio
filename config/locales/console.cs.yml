@@ -201,8 +201,6 @@ cs:
           confirm_de: Chcete přeložit stránku do němčiny?
           confirm_en: Chcete přeložit stránku do angličtiny?
       partials:
-        auth_links:
-          logout: Odhlásit
         tabs:
           analytics: Analytika
           contacts: Emaily a kontakty

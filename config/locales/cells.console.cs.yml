@@ -4,7 +4,6 @@ cs:
     console:
       index:
         filters:
-          title: Filtr
           cancel: Zrušit filtry
           numeric_range:
             from: Od

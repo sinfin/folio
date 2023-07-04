@@ -20,7 +20,8 @@
             ]
               ' Hunter George
 
-            .fa.fa-times.fa--14.text-danger[
-              class="f-c-merges-index-footer__label-remove"
-              data-key=key
-            ]
+            = folio_icon(:close,
+                         height: 16,
+                         class: "text-danger \
+                                 f-c-merges-index-footer__label-remove",
+                         data: { key: })

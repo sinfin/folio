@@ -36,11 +36,6 @@
   &__filters
     flex: 1 1 auto
 
-  &__title
-    flex: 0 0 auto
-    padding: $spacer 0
-    display: block
-
   &__cancel
     min-height: 35px
     display: flex
@@ -107,8 +102,8 @@
     align-items: center
     z-index: 3
 
-  &__reset-input
-    background: $input-bg
+  &__wrap
+    padding: $grid-gutter-width / 3 0
 
   .form-group,
   .input-group
@@ -124,20 +119,16 @@
       display: flex
       align-items: flex-start
       flex-wrap: wrap
-      padding: $grid-gutter-half / 4 0
+      gap: $grid-gutter-width / 3
+      flex: 1 1 auto
 
-    &__title,
     &__cancel-wrap,
     &__toggle-wrap
       line-height: $input-height
       display: flex
       align-items: center
-      margin: $grid-gutter-half / 4 0
       padding: 4px 0 0
       flex: 0 0 auto
-
-    &__title
-      margin-right: $grid-gutter-half
 
     &__cancel-wrap,
     &__toggle-wrap
@@ -150,7 +141,6 @@
     &__filter
       flex: 0 0 auto
       width: 235px
-      margin: $grid-gutter-half / 4 $grid-gutter-half / 2 $grid-gutter-half / 4 0
 
   +media-breakpoint-down(sm)
     &__filters

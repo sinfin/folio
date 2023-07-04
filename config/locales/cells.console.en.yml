@@ -4,7 +4,6 @@ en:
     console:
       index:
         filters:
-          title: Filter
           cancel: Cancel filters
           numeric_range:
             from: From

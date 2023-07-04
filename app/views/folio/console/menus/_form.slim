@@ -1,8 +1,10 @@
 = form_header f
   - if f.object.persisted?
-    button.btn.btn-success.f-c-js-menus-form-add type="button"
-      i.fa.fa-plus
-      = t('folio.console.javascript.addMenuItem')
+    == cell('folio/console/ui/button',
+            variant: :success,
+            class: 'f-c-js-menus-form-add',
+            icon: :plus,
+            label: t('folio.console.javascript.addMenuItem'))
 
 - if f.object.new_record?
   = f.input :title, hint: false

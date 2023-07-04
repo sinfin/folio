@@ -108,6 +108,9 @@ edit:
 eye:
   width: 24
   height: 24
+face:
+  width: 24
+  height: 24
 file_document:
   width: 24
   height: 24
@@ -153,6 +156,9 @@ laptop:
 link:
   width: 24
   height: 24
+lock:
+  width: 24
+  height: 24
 logout_variant:
   width: 24
   height: 24
@@ -181,6 +187,9 @@ menu_swap:
   width: 24
   height: 24
 menu_up:
+  width: 24
+  height: 24
+message:
   width: 24
   height: 24
 microphone:

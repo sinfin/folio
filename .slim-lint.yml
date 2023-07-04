@@ -9,6 +9,7 @@ exclude:
   - app/cells/folio/console/layout/header/show.slim
   - app/cells/folio/console/layout/sidebar/title/show.slim
   - app/cells/folio/console/private_attachments/fields/show.slim
+  - app/cells/folio/console/private_attachments/single_dropzone/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/cookie_consent/show.slim
   - app/cells/folio/devise/modal/_close.slim

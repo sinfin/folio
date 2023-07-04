@@ -1,9 +1,8 @@
 .f-c-layout-header.small
-  button.f-c-layout-header__toggle[
-    type="button"
-    class="fa fa-bars"
-    class="f-c-js-sidebar-toggle"
-  ]
+  == cell('folio/console/ui/button',
+          variant: :transparent,
+          icon: :menu,
+          class: "f-c-layout-header__toggle f-c-js-sidebar-toggle")
 
   .container-fluid
     .f-c-layout-header__inner

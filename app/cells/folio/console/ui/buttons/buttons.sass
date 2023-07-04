@@ -1,7 +1,10 @@
 .f-c-ui-buttons
   display: flex
   flex-wrap: wrap
-  gap: $grid-gutter-width / 3
+  gap: $f-c-ui-buttons-gap
+
+  &--nowrap
+    flex-wrap: nowrap
 
   &--vertical
     flex-direction: column

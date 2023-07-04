@@ -4,6 +4,7 @@ import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'containers/Tags'
 import Picture from 'components/Picture'
 
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FileUploadProgress from 'components/FileUploadProgress'
 
@@ -107,12 +108,12 @@ const FileTableRow = ({
 
       <div className='f-c-file-table__td f-c-file-table__td--actions'>
         {file.attributes.uploading ? null : (
-          <React.Fragment>
+          <FolioConsoleUiButtons nowrap>
             {openFileModal ? (
-              <span
+              <FolioConsoleUiButton
+                icon='edit'
                 onClick={(e) => { e.stopPropagation(); openFileModal(file) }}
-                className={`btn fa ${readOnly ? 'btn-light fa-eye' : 'btn-secondary fa-edit'}`}
-                rel='noopener noreferrer'
+                variant='secondary'
               />
             ) : undefined}
 
@@ -122,9 +123,10 @@ const FileTableRow = ({
               target='_blank'
               rel='noopener noreferrer'
               download={download}
+              variant='primary'
               icon='download'
             />
-          </React.Fragment>
+          </FolioConsoleUiButtons>
         )}
       </div>
     </div>

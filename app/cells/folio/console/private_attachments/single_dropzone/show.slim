@@ -13,12 +13,11 @@ div class=class_name
           = t('.download')
 
         .f-c-private-attachments-single-dropzone__upload.mr-3 data=upload_data
-          span.f-c-private-attachments-single-dropzone__upload-ico[
-            class="fa fa-edit text-black"
-          ]
+          = folio_icon(:edit,
+                       class: "text-black f-c-private-attachments-single-dropzone__upload-ico")
 
         .f-c-private-attachments-single-dropzone__destroy data=destroy_data
-          span.fa.fa-trash
+          = folio_icon(:delete)
 
   - else
     .f-c-private-attachments-single-dropzone__upload data=upload_data

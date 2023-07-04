@@ -9,40 +9,43 @@ div class=class_name
 
     .f-c-show-header__right
       - if model.respond_to?(:aasm)
-        .mr-h.flex-shrink-0
+        .flex-shrink-0
           == cell('folio/console/state', model)
 
       - if options[:add]
-        a.ml-lg-h.flex-shrink-0.btn.btn-success href=options[:add][:href]
-          i.fa.fa-plus.f-c-show-header__btn-ico
-          span.f-c-show-header__btn-text = options[:add][:label]
+        == cell('folio/console/ui/button',
+                variant: :success,
+                href: options[:add][:href],
+                icon: :plus,
+                label: options[:add][:label],
+                class: "ms-lg-h flex-shrink-0")
 
       - if options[:right]
         == options[:right]
 
       - if preview_url
-        a.btn.btn-light.ml-lg-h href=preview_url target="_blank"
-          i.fa.fa-external-link-alt.f-c-show-header__btn-ico
-          span.f-c-show-header__btn-text
-            = t('folio.console.actions.preview')
+        == cell('folio/console/ui/button',
+                href: preview_url,
+                variant: :secondary,
+                target: "_blank",
+                icon: :open_in_new,
+                label: t('folio.console.actions.preview'))
 
       - if options[:edit] != false && edit_url
-        a.ml-h.flex-shrink-0[
-          href=edit_url
-          class=edit_class_name
-          class=(options[:add] ? 'ml-h' : 'ml-lg-h')
-        ]
-          i.fa.fa-edit.f-c-show-header__btn-ico
-          span.f-c-show-header__btn-text
-            = options[:edit_label] || t('folio.console.actions.edit')
+        == cell('folio/console/ui/button',
+                href: edit_url,
+                variant: :secondary,
+                icon: :edit,
+                label: t('folio.console.actions.edit'))
 
       - if destroy_url
-        = link_to destroy_url, \
-                  method: :delete, \
-                  'class' => "ml-h flex-shrink-0 #{destroy_class_name}", \
-                  'data-confirm' => t('folio.console.confirmation')
-          i.fa.fa-trash.f-c-show-header__btn-ico
-          span.f-c-show-header__btn-text = t('folio.console.actions.destroy')
+        == cell('folio/console/ui/button',
+                href: destroy_url,
+                variant: :danger,
+                icon: :delete,
+                label: t('folio.console.actions.destroy'),
+                'data-confirm' => t('folio.console.confirmation'),
+                'data-method' => :delete)
 
   - if options[:tabs]
     .mt-3

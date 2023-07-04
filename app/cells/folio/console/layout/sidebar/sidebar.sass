@@ -67,7 +67,9 @@
     border-top: 1px solid rgba(#979797, 0.42)
 
   &__a
-    display: block
+    display: flex
+    align-items: center
+    gap: $f-c-ui-with-icon-gap
     padding: 9px 15px 8px
 
     &, &:hover, &:focus
@@ -82,9 +84,6 @@
 
   &__a:hover &__span
     text-decoration: underline
-
-  &__icon
-    margin: 0 7px 0 0
 
   &__group + &__group
     border-top: 1px solid rgba(#979797, 0.42)

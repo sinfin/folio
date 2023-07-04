@@ -74,7 +74,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
       if link_source[:icon]
         link(nil, path, active_start_with: link_source[:active_start_with]) do
-          concat(content_tag(:i, "", class: "#{link_source[:icon]} f-c-layout-sidebar__icon"))
+          concat(folio_icon(link_source[:icon], class: "f-c-layout-sidebar__icon", height: 16))
           concat(content_tag(:span, label, class: "f-c-layout-sidebar__span"))
         end
       else
@@ -191,7 +191,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 controller.can?(:manage, site) ? (
                   {
                     klass: "Folio::Site",
-                    icon: "fa fa-cogs",
+                    icon: :cog,
                     path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
                     label: t(".settings"),
                   }
@@ -220,7 +220,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             "Folio::EmailTemplate",
             {
               klass: "Folio::Site",
-              icon: "fa fa-cogs",
+              icon: :cog,
               path: :edit_console_site_path,
               label: t(".settings")
             },
