@@ -5,35 +5,54 @@ window.Folio.Ui.Icon = window.Folio.Ui.Icon || {}
 window.Folio.Ui.Icon.SVG_NS = 'http://www.w3.org/2000/svg'
 window.Folio.Ui.Icon.SVG_XLINK = 'http://www.w3.org/1999/xlink'
 
-window.Folio.Ui.Icon.create = (name, options = {}) => {
+window.Folio.Ui.Icon.data = (name, options = {}) => {
   if (!window.Folio.Ui.Icon.svgSpritePath) throw new Error("Missing svgSpritePath. Add cell('folio/ui/icon').render(:_head) to <head>.")
 
-  const defaultSize = window.Folio.Ui.Icon.defaultSizes[name]
-  if (!defaultSize) throw new Error(`Unknown icon ${name}`)
+  const data = { name }
 
-  const svg = document.createElementNS(window.Folio.Ui.Icon.SVG_NS, 'svg')
-  svg.setAttribute('viewBox', `0 0 ${defaultSize.width} ${defaultSize.height}`)
+  data.defaultSize = window.Folio.Ui.Icon.defaultSizes[name]
+  if (!data.defaultSize) throw new Error(`Unknown icon ${name}`)
+
+  data.viewBox = `0 0 ${data.defaultSize.width} ${data.defaultSize.height}`
+
+  data.style = {}
 
   if (options.height) {
-    svg.style.height = `${options.height}px`
-    svg.style.width = 'auto'
+    data.style.height = `${options.height}px`
+    data.style.width = 'auto'
   } else if (options.width) {
-    svg.style.height = 'auto'
-    svg.style.width = `${options.width}px`
+    data.style.height = 'auto'
+    data.style.width = `${options.width}px`
   } else {
-    svg.style.height = `${defaultSize.height}px`
-    svg.style.width = `${defaultSize.width}px`
+    data.style.height = `${data.defaultSize.height}px`
+    data.style.width = `${data.defaultSize.width}px`
   }
 
-  svg.classList.add('f-ui-icon')
-  svg.classList.add(`f-ui-icon--${name}`)
+  data.classNames = ['f-ui-icon', `f-ui-icon--${name}`]
 
-  if (options.class) svg.classList.add(options.class)
+  if (options.class) data.classNames.push(options.class)
+
+  data.href = `${window.Folio.Ui.Icon.svgSpritePath}#${name}`
+
+  return data
+}
+
+window.Folio.Ui.Icon.create = (name, options = {}) => {
+  const data = window.Folio.Ui.Icon.data(name, options)
+
+  const svg = document.createElementNS(window.Folio.Ui.Icon.SVG_NS, 'svg')
+  svg.setAttribute('viewBox', data.viewBox)
+
+  Object.keys(data.style).forEach((key) => {
+    svg.style[key] = data.style[key]
+  })
+
+  data.classNames.forEach((className) => {
+    svg.classList.add(className)
+  })
 
   const use = document.createElementNS(window.Folio.Ui.Icon.SVG_NS, 'use')
-  use.setAttributeNS(window.Folio.Ui.Icon.SVG_XLINK,
-    'xlink:href',
-                     `${window.Folio.Ui.Icon.svgSpritePath}#${name}`)
+  use.setAttributeNS(window.Folio.Ui.Icon.SVG_XLINK, 'xlink:href', data.href)
 
   svg.appendChild(use)
 

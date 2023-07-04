@@ -11,6 +11,7 @@ import {
 import { fileUsageSelector } from 'ducks/app'
 
 import TagsInput from 'components/TagsInput'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import InputWithSearchIcon from 'components/InputWithSearchIcon'
 
 import Wrap from './styled/Wrap'
@@ -106,11 +107,7 @@ class FileFilter extends Component {
           {filters.active && (
             <div className='col-12 col-xl-1'>
               <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ml-auto text-center text-xl-right'>
-                <button
-                  type='button'
-                  className='btn btn-danger fa fa-times'
-                  onClick={this.onReset}
-                />
+                <FolioConsoleUiButton onClick={this.onReset} variant='danger' icon='close' />
               </FormGroup>
             </div>
           )}

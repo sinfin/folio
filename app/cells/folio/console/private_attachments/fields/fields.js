@@ -36,9 +36,13 @@ window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
         .find('.f-c-private-attachments-fields__card')
         .addClass('card--fresh')
 
+      const a = document.createElement('a')
+      a.href = fileFromApi.attributes.expiring_url
+      a.appendChild(window.Folio.Icon.create("file_document", { class: "f-c-private-attachments-fields__file-ico" }))
+
       $fields
-        .find('.f-c-private-attachments-fields__file-col')
-        .html(`<a class="fa fa-file f-c-private-attachments-fields__file-ico" href="${fileFromApi.attributes.expiring_url}" target="_blank"></a>`)
+        .find('.f-c-private-attachments-fields__file-col')[0]
+        .appendChild(a)
 
       $fields
         .find('.f-c-private-attachments-fields__id-input')

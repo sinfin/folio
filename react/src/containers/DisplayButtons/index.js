@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+
 import {
   DISPLAY_CARDS,
   DISPLAY_THUMBS,
@@ -14,10 +16,12 @@ import Button from './styled/Button'
 const DisplayButton = ({ active, onClick, icon }) => (
   <Button
     type='button'
-    className={`btn btn-secondary ${icon}`}
+    className='btn btn-secondary'
     onClick={onClick}
     active={active}
-  />
+  >
+    <FolioUiIcon name={icon} />
+  </Button>
 )
 
 const DisplayButtons = ({ display, dispatch }) => (
@@ -25,12 +29,12 @@ const DisplayButtons = ({ display, dispatch }) => (
     <DisplayButton
       active={display === DISPLAY_CARDS}
       onClick={() => { dispatch(setCardsDisplay()) }}
-      icon='fa fa-th-list'
+      icon='th-list'
     />
     <DisplayButton
       active={display === DISPLAY_THUMBS}
       onClick={() => { dispatch(setThumbsDisplay()) }}
-      icon='fa fa-th-large'
+      icon='th-large'
     />
   </div>
 )

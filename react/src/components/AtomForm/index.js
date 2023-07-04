@@ -4,6 +4,7 @@ import { isEqual } from 'lodash'
 import ReactModal from 'react-modal'
 
 import NestedModelControls from 'components/NestedModelControls'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import splitAtomValueToParts from './utils/splitAtomValueToParts'
 
@@ -374,7 +375,7 @@ class AtomForm extends React.PureComponent {
 
           {addButtons.map((type) => (
             <Button color='success' type='button' className='mr-2' onClick={() => { this.props.addAtom(type.type) }} key={type.type}>
-              <i className='fa fa-plus' />
+              <FolioUiIcon name='plus' />
               {type.title}
             </Button>
           ))}

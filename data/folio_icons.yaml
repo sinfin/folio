@@ -228,6 +228,12 @@ table:
 text:
   width: 24
   height: 24
+th-large:
+  width: 24
+  height: 24
+th-list:
+  width: 24
+  height: 24
 tune_vertical_variant:
   width: 24
   height: 24
