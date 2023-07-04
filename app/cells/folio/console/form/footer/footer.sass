@@ -25,11 +25,10 @@
 
   &__btn
     min-width: 100px
-    text-align: center
 
   &__ribbon
     overflow: hidden
-    padding-left: 25px
+    padding-left: 15px
     padding-right: 20px
     position: relative
     height: $input-height
@@ -45,15 +44,15 @@
       width: 0
       height: 0
       border-style: solid
-      border-width: 17.5px 20px 17.5px 0
-      border-color: transparent $light-gray transparent transparent
+      border-width: 17.5px 10px 17.5px 0
+      border-color: transparent $medium-gray transparent transparent
 
     &:after
-      background: $light-gray
+      background: $medium-gray
       height: 100%
       position: absolute
       top: 0
-      left: 20px
+      left: 10px
       right: 0
       bottom: 0
       content: ''
@@ -66,6 +65,11 @@
 
   & &__ribbon
     display: none
+
+  &__container
+    display: flex
+    flex-wrap: wrap
+    gap: $f-c-ui-buttons-gap
 
   &--dirty &__btn--submit
     animation: heartBeat 1.5s 1 linear

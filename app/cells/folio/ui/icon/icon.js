@@ -30,7 +30,9 @@ window.Folio.Ui.Icon.data = (name, options = {}) => {
 
   data.classNames = ['f-ui-icon', `f-ui-icon--${name}`]
 
-  if (options.class) data.classNames.push(options.class)
+  if (options.class) {
+    options.class.split(" ").forEach((className) => data.classNames.push(className))
+  }
 
   data.href = `${window.Folio.Ui.Icon.svgSpritePath}#${name}`
 

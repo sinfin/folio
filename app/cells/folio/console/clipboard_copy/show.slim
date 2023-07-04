@@ -1,21 +1,12 @@
 span.f-c-clipboard-copy data-clipboard-text=model
   - if options[:as_button]
-    span.btn.f-c-clipboard-copy__btn[
-      class=(options[:button_variant] || "btn-primary")
-    ]
-      .f-c-clipboard-copy__icons
-        span.f-c-clipboard-copy__ico.mi
-          ' content_copy
-
-        span.f-c-clipboard-copy__done.mi
-          ' done
-
-      = options[:button_label] || t('.copy')
+    == cell('folio/console/ui/button',
+            label: options[:button_label] || t('.copy'),
+            variant: options[:button_variant] || :primary,
+            html_left:,
+            class: "f-c-clipboard-copy__btn")
 
   - else
     span.f-c-clipboard-copy__span
-      span.f-c-clipboard-copy__ico.mi
-        ' content_copy
-
-      span.f-c-clipboard-copy__done.mi
-        ' done
+      = folio_icon(:content_copy, height: 16, class: "f-c-clipboard-copy__ico")
+      = folio_icon(:check, height: 16, class: "f-c-clipboard-copy__done")

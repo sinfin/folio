@@ -195,6 +195,9 @@ message:
 microphone:
   width: 24
   height: 24
+more_vert:
+  width: 24
+  height: 24
 open_in_new:
   width: 24
   height: 24

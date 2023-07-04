@@ -1,5 +1,6 @@
 import React from 'react'
 
+import FolioUiIcon from 'components/FolioUiIcon'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import AncestryItemWrap from './styled/AncestryItemWrap'
 
@@ -9,10 +10,10 @@ function AncestryItem ({ node }) {
   return (
     <AncestryItemWrap invalid={!node.valid}>
       {node.valid ? null : (
-        <span className='text-danger mi mr-2'>warning</span>
+        <FolioUiIcon name='alert' class='text-danger me-2' />
       )}
 
-      <a href={editURL} className='mr-h'>{node.to_label}</a>
+      <a href={editURL} className='me-h'>{node.to_label}</a>
 
       <div className='f-c-index-actions'>
         <FolioConsoleUiButton

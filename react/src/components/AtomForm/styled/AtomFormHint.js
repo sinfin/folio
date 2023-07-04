@@ -7,7 +7,7 @@ export default styled.div`
 
   ${(props) => props.molecule ? 'margin: 1rem 0;' : 'margin: 3rem 0 0;'}
 
-  .mi {
+  .f-ui-icon {
     position: absolute;
     top: 0;
     left: 0;

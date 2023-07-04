@@ -457,7 +457,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
           opts[:icon] = :delete
           method = :delete
         else
-          opts[:icon] = :reload
+          opts[:icon] = :arrow_u_left_top
           method = :post
         end
 

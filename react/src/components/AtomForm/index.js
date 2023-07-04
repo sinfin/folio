@@ -4,6 +4,7 @@ import { isEqual } from 'lodash'
 import ReactModal from 'react-modal'
 
 import NestedModelControls from 'components/NestedModelControls'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FolioUiIcon from 'components/FolioUiIcon'
 
 import splitAtomValueToParts from './utils/splitAtomValueToParts'
@@ -146,7 +147,7 @@ class AtomForm extends React.PureComponent {
   renderHint (text, molecule) {
     return (
       <AtomFormHint molecule={molecule}>
-        <span className='mi'>info</span>
+        <FolioUiIcon name='info' />
         {text.split(/\n/).map((part, i) => <p key={i} dangerouslySetInnerHTML={{ __html: part }} />)}
       </AtomFormHint>
     )
@@ -209,20 +210,20 @@ class AtomForm extends React.PureComponent {
           </div>
 
           <div className='f-c-r-atoms-settings-header__controls'>
-            <button
+            <FolioConsoleUiButton
               type='button'
-              className='btn btn-primary f-c-r-atoms-settings-header__button'
+              variant='primary'
+              className='f-c-r-atoms-settings-header__button'
               onClick={this.saveFormAtoms}
-            >
-              {window.FolioConsole.translations.done}
-            </button>
+              label={window.FolioConsole.translations.done}
+            />
 
             <button
               type='button'
-              className='f-c-r-atoms-settings-header__close mi'
+              className='f-c-r-atoms-settings-header__close'
               onClick={this.props.closeFormAtom}
             >
-              close
+              <FolioUiIcon name='close' />
             </button>
           </div>
         </div>

@@ -28,12 +28,6 @@ class Folio::ConsoleCell < Folio::ApplicationCell
     end
   end
 
-  def icon(name, opts = {})
-    style = opts[:height] ? "font-size: #{opts[:height]}px" : nil
-
-    content_tag(:i, name, class: "mi #{opts[:class]}", style:)
-  end
-
   def preview_url_for(record)
     args = {}
 

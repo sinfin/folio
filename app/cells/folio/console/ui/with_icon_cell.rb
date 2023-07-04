@@ -7,7 +7,7 @@ class Folio::Console::Ui::WithIconCell < Folio::ConsoleCell
     h = options[:tag] || {}
 
     h[:class] = "#{class_name} #{options[:class]}"
-    h[:tag] ||= :div
+    h[:tag] ||= :span
 
     if options[:href]
       h[:tag] = :a
