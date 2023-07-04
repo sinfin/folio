@@ -97,8 +97,6 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 
-//= require ./pages_table
-
 //= require folio/console/main_app
 
 // So that we can use frontend turbolinks-bound scripts

@@ -4,6 +4,7 @@ import Scroller from './Scroller'
 
 import { RawPicture } from 'components/Picture'
 import FolioUiIcon from 'components/FolioUiIcon'
+import FolioUiWithIcon from 'components/FolioUiWithIcon'
 
 class ThumbnailSize extends React.Component {
   constructor (props) {
@@ -60,10 +61,14 @@ class ThumbnailSize extends React.Component {
             </div>
 
             {editable && (
-              <div className='f-c-with-icon cursor-pointer text-semi-muted mt-1 text-nowrap' onClick={() => { this.setState({ ...this.state, editing: true }) }}>
-                <span className='mi mi--18'>crop</span>
+              <FolioUiWithIcon
+                class='cursor-pointer text-semi-muted mt-1 text-nowrap'
+                icon='crop'
+                iconHeight={16}
+                onClick={() => { this.setState({ ...this.state, editing: true }) }}
+              >
                 {window.FolioConsole.translations.editOffset}
-              </div>
+              </FolioUiWithIcon>
             )}
           </div>
         )}

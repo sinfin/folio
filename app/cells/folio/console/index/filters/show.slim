@@ -30,17 +30,19 @@
 
       - if has_collapsible?
         .f-c-index-filters__toggle-wrap
-          .f-c-index-filters__toggle.f-c-with-icon.f-c-with-icon--reversed
-            = t('.collapsible_toggle')
-            .f-c-index-filters__toggle-ico.fa.fa-caret-down
+          == cell('folio/console/ui/with_icon',
+                  t('.collapsible_toggle'),
+                  class: 'f-c-index-filters__toggle',
+                  right_icon: :menu_down)
 
       .f-c-index-filters__cancel-wrap[
         class=(filtered? ? nil : "f-c-index-filters__cancel-wrap--hidden")
       ]
-        == cell('folio/console/cancel',
-                cancel_url,
-                label: t('.cancel'),
-                class_name: "f-c-index-filters__cancel")
+        == cell('folio/console/ui/with_icon',
+                t('.cancel'),
+                href: cancel_url,
+                icon: :close,
+                class: "text-danger f-c-index-filters__cancel")
 
       = f.input :by_query, as: :hidden,
                            input_html: { value: controller.params[:by_query] }

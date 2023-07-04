@@ -3,12 +3,12 @@
     ul.f-c-private-attachments-list__ul
       - model.each do |pa|
         li.f-c-private-attachments-list__li.my-2
-          a.f-c-private-attachments-list__a[
-            href=pa.file.remote_url(expires: 1.hour.from_now)
-            target="_blank"
-            class="f-c-with-icon"
-          ]
-            span.mi.mi--18 insert_drive_file
-            span = pa.to_label
+          == cell('folio/console/ui/with_icon',
+                  pa.to_label,
+                  icon: :file_document,
+                  href: pa.file.remote_url(expires: 1.hour.from_now),
+                  target: "_blank",
+                  class: 'f-c-private-attachments-list__a')
+
   - else
     .text-muted = t('folio.console.blank')

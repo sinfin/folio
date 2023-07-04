@@ -18,29 +18,35 @@ class Folio::Console::NestedModelControlsCell < Folio::ConsoleCell
     options[:only].blank? || options[:only] == :destroy
   end
 
-  def btn_group_class_name
-    if options[:vertical]
-      "btn-group-vertical"
-    else
-      if handle_destroy?
-        "btn-group mr-3"
-      else
-        "btn-group"
-      end
-    end
-  end
-
   def destroy_label
-    if options[:vertical]
-      ""
-    else
+    unless options[:vertical]
       t(".destroy")
     end
   end
 
-  def destroy_button_class_name
-    class_name = ["btn btn-danger f-c-nested-model-controls__destroy-button"]
-    class_name << "fa fa-trash-alt" if options[:vertical]
-    class_name
+  def buttons_model
+    ary = []
+
+    if handle_position?
+      %w[up down].each do |direction|
+        ary << {
+          icon: "arrow_#{direction}".to_sym,
+          class: "f-c-nested-model-controls__position-button",
+          variant: :secondary,
+          "data-direction" => direction,
+        }
+      end
+    end
+
+    if handle_destroy?
+      ary << {
+        icon: :delete,
+        class: "f-c-nested-model-controls__destroy-button",
+        variant: :danger,
+        label: destroy_label,
+      }
+    end
+
+    ary
   end
 end

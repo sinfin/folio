@@ -185,7 +185,7 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
       end
 
       if e.present?
-        icon = mail_to(e, "", class: "fa fa--small ml-1 fa-envelope")
+        icon = mail_to(e, folio_icon(:mail_outline, height: 16))
         "#{e} #{icon}"
       end
     end
@@ -441,22 +441,23 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
     def collection_action_for(action)
       opts = {
-        type: "submit",
-        class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}",
+        class: "f-c-catalogue__collection-actions-bar-button f-c-catalogue__collection-actions-bar-button--#{action}}",
+        label: t(".actions.#{action}"),
+        variant: :secondary,
       }
 
       if %i[destroy discard undiscard].include?(action)
+        opts[:type] = :submit
+
         if action == :destroy
-          opts[:class] += " btn btn-danger"
-          icon = '<span class="fa fa-trash-alt"></span>'
+          opts[:variant] = :danger
+          opts[:icon] = :delete
           method = :delete
         elsif action == :discard
-          opts[:class] += " btn btn-secondary"
-          icon = '<span class="fa fa-trash-alt"></span>'
+          opts[:icon] = :delete
           method = :delete
         else
-          opts[:class] += " btn btn-secondary"
-          icon = '<span class="fa fa-redo-alt"></span>'
+          opts[:icon] = :reload
           method = :post
         end
 
@@ -466,18 +467,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
                         url: url_for(["collection_#{action}".to_sym, :console, model[:klass]]),
                         method:,
                         html: { class: "f-c-catalogue__collection-actions-bar-form" }) do |f|
-          button_tag("#{icon} #{t(".actions.#{action}")}", opts)
+          cell("folio/console/ui/button", opts)
         end
       elsif action == :csv
-        opts[:class] += " btn btn-secondary"
-        icon = '<span class="fa fa-download"></span>'
-        url = url_for([:collection_csv, :console, model[:klass]])
+        opts[:icon] = :download
+        opts[:href] = url_for([:collection_csv, :console, model[:klass]])
+        opts[:target] = "_blank"
+        opts["data-url-base"] = opts[:href]
 
-        link_to("#{icon} #{t(".actions.#{action}")}",
-                url,
-                class: opts[:class],
-                target: "_blank",
-                "data-url-base" => url)
+        cell("folio/console/ui/button", opts)
       else
         nil
       end

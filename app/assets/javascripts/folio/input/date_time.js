@@ -24,15 +24,15 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
     sideBySide: true,
     icons: {
       type: 'icons',
-      time: 'fa fa-clock f-input__ico f-input__ico--time',
-      date: 'fa fa-calendar f-input__ico f-input__ico--date',
-      up: 'fa fa-chevron-up f-input__ico f-input__ico--up',
-      down: 'fa fa-chevron-down f-input__ico f-input__ico--down',
-      previous: 'fa fa-chevron-left f-input__ico f-input__ico--previous',
-      next: 'fa fa-chevron-right f-input__ico f-input__ico--next',
-      today: 'fa fa-calendar-star f-input__ico f-input__ico--today',
-      clear: 'fa fa-trash-alt f-input__ico f-input__ico--clear',
-      close: 'fa fa-times f-input__ico f-input__ico--close'
+      time: 'f-input__ico f-input__ico--time',
+      date: 'f-input__ico f-input__ico--date',
+      up: 'f-input__ico f-input__ico--up',
+      down: 'f-input__ico f-input__ico--down',
+      previous: 'f-input__ico f-input__ico--previous',
+      next: 'f-input__ico f-input__ico--next',
+      today: 'f-input__ico f-input__ico--today',
+      clear: 'f-input__ico f-input__ico--clear',
+      close: 'f-input__ico f-input__ico--close'
     },
     theme: 'light'
   },

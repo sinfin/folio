@@ -13,26 +13,26 @@
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--first"
           ]
-            = link.call(1, icon('fast-backward'))
+            = link.call(1, icon(:chevron_double_left))
 
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--prev"
           ]
-            = link.call(model.prev, icon('step-backward'))
+            = link.call(model.prev, icon(:chevron_left))
 
         - else
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--first f-c-pagination__page--disabled"
           ]
-            = icon('fast-backward')
+            = icon(:chevron_double_left)
 
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--prev f-c-pagination__page--disabled"
           ]
-            = icon('step-backward')
+            = icon(:chevron_left)
 
         .f-c-pagination__pages
           / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
@@ -55,20 +55,20 @@
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--next"
-          ] == link.call(model.next, icon('step-forward'))
+          ] == link.call(model.next, icon(:chevron_right))
 
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--last"
-          ] == link.call(model.last, icon('fast-forward'))
+          ] == link.call(model.last, icon(:chevron_double_right))
 
         - else
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--next f-c-pagination__page--disabled"
-          ] = icon('step-forward')
+          ] = icon(:chevron_right)
 
           span.f-c-pagination__page[
             class="f-c-pagination__page--with-ico"
             class="f-c-pagination__page--last f-c-pagination__page--disabled"
-          ] = icon('fast-forward')
+          ] = icon(:chevron_double_right)

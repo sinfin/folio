@@ -41,11 +41,9 @@
               model[:audited_revisions],
               audited_revision: model[:audited_revision])
 
-      = link_to log_out_path, \
-                method: Devise.sign_out_via, \
-                class: 'f-c-layout-header__sign-out-link f-c-with-icon text-reset'
-        = folio_icon(:logout_variant,
-                     height: 16,
-                     class: "f-c-layout-header__sign-out-link-icon")
-
-        span.f-c-layout-header__sign-out-link__label = t('.sign_out')
+      == cell('folio/console/ui/with_icon',
+              t('.sign_out'),
+              href: log_out_path,
+              icon: :logout_variant,
+              icon_options: { height: 14 },
+              class: 'f-c-layout-header__sign-out-link text-reset')

@@ -12,6 +12,6 @@ class Folio::Console::PaginationCell < Folio::ConsoleCell
   end
 
   def icon(code)
-    %{<span class="f-c-pagination__ico fa fa-#{code}"></span>}.html_safe
+    folio_icon(code, class: "f-c-pagination__ico")
   end
 end
