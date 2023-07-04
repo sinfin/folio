@@ -3,6 +3,7 @@ import React from 'react'
 import Scroller from './Scroller'
 
 import { RawPicture } from 'components/Picture'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 class ThumbnailSize extends React.Component {
   constructor (props) {
@@ -53,7 +54,9 @@ class ThumbnailSize extends React.Component {
             <div className='mt-2 pt-1 small d-flex align-items-center'>
               {thumbKey}
 
-              <div className='pl-3 ml-auto fa fa-trash-alt cursor-pointer' onClick={this.destroy} />
+              <div className='pl-3 ml-auto fa cursor-pointer' onClick={this.destroy}>
+                <FolioUiIcon name='delete' />
+              </div>
             </div>
 
             {editable && (

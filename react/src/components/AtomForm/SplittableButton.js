@@ -1,15 +1,17 @@
 import React from 'react'
-import { Button } from 'reactstrap'
 
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import AtomFormSplittableButtonWrap from './styled/AtomFormSplittableButtonWrap'
 
 export default function SplittableButton ({ startSplittingAtom }) {
   return (
     <AtomFormSplittableButtonWrap>
-      <Button color='secondary' onClick={startSplittingAtom} className='btn-mini'>
-        <span className='fa fa-unlink' />
-        {window.FolioConsole.translations.startSplittingAtom}
-      </Button>
+      <FolioConsoleUiButton
+        variant='secondary'
+        onClick={startSplittingAtom}
+        icon='link'
+        label={window.FolioConsole.translations.startSplittingAtom}
+      />
     </AtomFormSplittableButtonWrap>
   )
 }

@@ -3,38 +3,34 @@
     .f-c-atoms-previews__controls
       .f-c-atoms-previews__controls-overlay
       .f-c-atoms-previews__buttons
-        button.mi[
-          type="button"
-          class="f-c-atoms-previews__button"
-          class="f-c-atoms-previews__button--edit"
-        ]
-          ' edit
+        == cell('folio/console/ui/button',
+                variant: :secondary,
+                icon: :edit,
+                class: "f-c-atoms-previews__button \
+                        f-c-atoms-previews__button--edit")
 
-        button.mi[
-          type="button"
-          class="f-c-atoms-previews__button"
-          class="f-c-atoms-previews__button--arrow"
-          class="f-c-atoms-previews__button--arrow-up"
-        ]
-          ' arrow_upward
+        == cell('folio/console/ui/button',
+                variant: :secondary,
+                icon: :arrow_up,
+                class: "f-c-atoms-previews__button \
+                        f-c-atoms-previews__button--arrow-up")
 
-        button.mi[
-          type="button"
-          class="f-c-atoms-previews__button"
-          class="f-c-atoms-previews__button--arrow"
-          class="f-c-atoms-previews__button--arrow-down"
-        ]
-          ' arrow_downward
+        == cell('folio/console/ui/button',
+                variant: :secondary,
+                icon: :arrow_down,
+                class: "f-c-atoms-previews__button \
+                        f-c-atoms-previews__button--arrow-down")
 
-        span.fa.fa-arrows-alt-v[
-          class="f-c-atoms-previews__button"
-          class="f-c-atoms-previews__button--handle"
-        ]
+        == cell('folio/console/ui/button',
+                variant: :secondary,
+                icon: :arrow_up_down,
+                class: "f-c-atoms-previews__button \
+                        f-c-atoms-previews__button--handle")
 
-        button.mi[
-          type="button"
-          class="f-c-atoms-previews__button"
-          class="f-c-atoms-previews__button--remove"
-        ]
-          ' delete
+        == cell('folio/console/ui/button',
+                variant: :danger,
+                icon: :delete,
+                class: "f-c-atoms-previews__button \
+                        f-c-atoms-previews__button--remove")
+
       .f-c-atoms-previews__controls-mobile-overlay

@@ -10,6 +10,8 @@ import FileUsage from 'components/FileUsage'
 import PrettyTags from 'components/PrettyTags'
 import AutocompleteInput from 'components/AutocompleteInput'
 import FolioPlayer from 'components/FolioPlayer'
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 
@@ -59,40 +61,40 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             </div>
           )}
           <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
-            <div className='d-flex flex-wrap mb-2'>
-              <a
+            <FolioConsoleUiButtons className='mb-2'>
+              <FolioConsoleUiButton
                 href={file.attributes.source_url}
-                className='btn btn-secondary mr-2 mb-2'
+                variant='secondary'
                 target='_blank'
                 rel='noopener noreferrer'
                 download={download}
-              >
-                <span className='fa fa-download mr-0 mr-sm-2' />
-                <span className='d-none d-sm-inline'>{window.FolioConsole.translations.downloadOriginal}</span>
-              </a>
+                icon='download'
+                label={window.FolioConsole.translations.downloadOriginal}
+              />
 
               {(canDestroyFiles && !readOnly) && (
-                <div className='btn btn-secondary mr-2 mb-2 position-relative overflow-hidden'>
-                  <span className='fa fa-edit mr-0 mr-sm-2' />
-                  <span className='d-none d-sm-inline'>{window.FolioConsole.translations.replace}</span>
-
+                <FolioConsoleUiButton
+                  class='overflow-hidden position-relative'
+                  icon='edit'
+                  variant='secondary'
+                  label={window.FolioConsole.translations.replace}
+                >
                   <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />
-                </div>
+                </FolioConsoleUiButton>
               )}
 
               {(canDestroyFiles && !readOnly) && (
-                <button
-                  className={`btn btn-danger mb-2 ${notAllowedCursor}`}
-                  type='button'
+                <FolioConsoleUiButton
+                  class={notAllowedCursor}
                   onClick={onDeleteClick}
                   disabled={indestructible}
                   title={indestructible ? window.FolioConsole.translations.indestructibleFile : undefined}
-                >
-                  <span className='fa fa-trash-alt mr-0 mr-sm-2' />
-                  <span className='d-none d-sm-inline font-weight-bold'>{window.FolioConsole.translations.destroy}</span>
-                </button>
+                  variant='danger'
+                  icon='delete'
+                  label={window.FolioConsole.translations.destroy}
+                />
               )}
-            </div>
+            </FolioConsoleUiButtons>
 
             <p>ID: {file.attributes.id}</p>
 

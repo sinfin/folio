@@ -2,6 +2,7 @@ import React from 'react'
 import { unescape } from 'lodash'
 
 import DisplayButtons from 'containers/DisplayButtons'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import PaginationWrap from './styled/PaginationWrap'
 
@@ -63,20 +64,20 @@ function PaginationComponent ({ changePage, pagination, setCardsDisplay, setThum
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {prevActive ? (
                   <a href='#1' onClick={makeOnClick(1, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-fast-backward' />
+                    <FolioUiIcon class='f-c-pagination__ico' name='chevron_double_left' />
                   </a>
                 ) : (
-                  <span className='f-c-pagination__ico fa fa-fast-backward' />
+                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_double_left' />
                 )}
               </div>
 
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {prevActive ? (
                   <a href={`#${prev}`} onClick={makeOnClick(prev, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-step-backward' />
+                    <FolioUiIcon class='f-c-pagination__ico' name='chevron_left' />
                   </a>
                 ) : (
-                  <span className='f-c-pagination__ico fa fa-step-backward' />
+                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_left' />
                 )}
               </div>
 
@@ -97,20 +98,20 @@ function PaginationComponent ({ changePage, pagination, setCardsDisplay, setThum
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {nextActive ? (
                   <a href={`#${next}`} onClick={makeOnClick(next, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-step-forward' />
+                    <FolioUiIcon class='f-c-pagination__ico' name='chevron_right' />
                   </a>
                 ) : (
-                  <span className='f-c-pagination__ico fa fa-step-forward' />
+                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_right' />
                 )}
               </div>
 
               <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
                 {nextActive ? (
                   <a href='#1' onClick={makeOnClick(max, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-fast-forward' />
+                    <FolioUiIcon class='f-c-pagination__ico' name='chevron_double_right' />
                   </a>
                 ) : (
-                  <span className='f-c-pagination__ico fa fa-fast-forward' />
+                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_double_right' />
                 )}
               </div>
             </div>

@@ -1,6 +1,8 @@
 import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+
 class Form extends React.Component {
   state = { content: '', originalContent: '' }
 
@@ -48,17 +50,17 @@ class Form extends React.Component {
           autoFocus
         />
 
-        <button
-          type='button'
-          className='btn btn-sm btn-primary f-c-r-notes-fields-app-form__button'
+        <FolioConsoleUiButton
+          class='f-c-r-notes-fields-app-form__button'
+          variant='primary'
           onClick={this.save}
-        >
-          {window.FolioConsole.translations.save}
-        </button>
+          label={window.FolioConsole.translations.save}
+        />
 
-        <button
-          type='button'
-          className='fa fa-times text-danger f-c-r-notes-fields-app-form__close'
+        <FolioConsoleUiButton
+          variant='danger'
+          className='f-c-r-notes-fields-app-form__close'
+          icon='close'
           onClick={this.close}
         />
       </div>

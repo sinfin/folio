@@ -4,6 +4,7 @@ import numberToHumanSize from 'utils/numberToHumanSize'
 import Tags from 'containers/Tags'
 import Picture from 'components/Picture'
 
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FileUploadProgress from 'components/FileUploadProgress'
 
 const FileTableRow = ({
@@ -115,12 +116,13 @@ const FileTableRow = ({
               />
             ) : undefined}
 
-            <a // eslint-disable-line
+            <FolioConsoleUiButton
               href={file.attributes.source_url}
-              className='btn btn-secondary fa fa-download ml-2'
+              class='ml-2'
               target='_blank'
               rel='noopener noreferrer'
               download={download}
+              icon='download'
             />
           </React.Fragment>
         )}

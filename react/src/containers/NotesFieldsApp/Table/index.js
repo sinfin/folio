@@ -2,6 +2,8 @@ import React from 'react'
 
 import DueDate from './DueDate'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+
 export default function Table ({
   notesForTable,
   editNote,
@@ -37,13 +39,15 @@ export default function Table ({
             onChange={(dueAt) => changeDueDate(note, dueAt)}
           />
 
-          <span
-            className='f-c-r-notes-fields-app-table__action fa fa--12 fa-edit mr-2'
+          <FolioUiIcon
+            class='f-c-r-notes-fields-app-table__action'
+            name='edit'
             onClick={() => editNote(note)}
           />
 
-          <span
-            className='f-c-r-notes-fields-app-table__action fa fa-times text-danger'
+          <FolioUiIcon
+            class='f-c-r-notes-fields-app-table__action text-danger'
+            name='close'
             onClick={() => removeNote(note)}
           />
         </div>

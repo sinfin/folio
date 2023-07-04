@@ -2,6 +2,7 @@ import React from 'react'
 
 import { DROPZONE_TRIGGER_CLASSNAME } from 'containers/Uploader/constants'
 import { UploaderContext } from 'containers/Uploader'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 class DropzoneTrigger extends React.PureComponent {
   static contextType = UploaderContext
@@ -14,7 +15,7 @@ class DropzoneTrigger extends React.PureComponent {
         className={`f-c-file-list__dropzone-trigger ${DROPZONE_TRIGGER_CLASSNAME}`}
         onClick={this.onClick}
       >
-        <i className='fa fa-plus-circle' />
+        <FolioUiIcon name='plus_circle' />
       </div>
     )
   }

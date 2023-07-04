@@ -110,34 +110,7 @@
     display: flex
     height: 24px + 10px
     z-index: 2
-
-  &__button
-    +button-style
-    margin-left: 15px
-
-    &--edit
-      +button-variant($secondary, $secondary)
-
-      .f-c-atoms-previews__preview[data-contentable="false"] &
-        display: none
-
-    &--settings
-      +button-variant($secondary, $secondary)
-      margin-right: 20px
-
-    &--arrow
-      +button-variant($white, $white)
-      &, &:hover, &:focus
-        border-color: #BFC4C4
-
-    &--handle
-      +button-variant($white, $white)
-      cursor: move
-      &, &:hover, &:focus
-        border-color: #BFC4C4
-
-    &--remove
-      +button-variant($danger, $danger)
+    gap: $grid-gutter-half
 
   &__controls-overlay
     position: absolute
@@ -347,14 +320,6 @@
       visibility: visible
 
     &__button
-      width: 40px
-      height: 40px
-      flex: 0 0 40px
-      font-size: 20px
-
-      &:first-child
-        margin-left: 0
-
       &--handle
         display: none
 

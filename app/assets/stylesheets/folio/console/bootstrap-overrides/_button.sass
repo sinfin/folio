@@ -23,3 +23,12 @@
 .btn-success,
 .btn-dark
   --#{$prefix}btn-color: #{$white}
+
+.btn-transparent
+  &, &:hover, &:focus
+    border-color: transparent
+    background: transparent
+    appearance: none
+    cursor: pointer
+    outline: 0
+    box-shadow: none

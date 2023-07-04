@@ -10,7 +10,7 @@ function FolioConsoleUiButtonContents (props) {
       )}
 
       {props.label && (
-        <span class='f-c-ui-button__label'>{props.label}</span>
+        <span className='f-c-ui-button__label'>{props.label}</span>
       )}
 
       {props.rightIcon && (
@@ -26,7 +26,15 @@ export default function FolioConsoleUiButton (props) {
 
   if (props.href) {
     return (
-      <a className={className} href={props.href} onClick={props.onClick}>
+      <a
+        title={props.title}
+        className={className}
+        href={props.href}
+        onClick={props.onClick}
+        target={props.target}
+        download={props.download}
+        rel={props.rel}
+      >
         <FolioConsoleUiButtonContents
           icon={props.icon}
           label={props.label}
@@ -36,12 +44,19 @@ export default function FolioConsoleUiButton (props) {
     )
   } else {
     return (
-      <button className={className} type={props.type || 'button'} onClick={props.onClick}>
+      <button
+        title={props.title}
+        className={className}
+        type={props.type || 'button'}
+        onClick={props.onClick}
+        disabled={props.disabled}
+      >
         <FolioConsoleUiButtonContents
           icon={props.icon}
           label={props.label}
           rightIcon={props.rightIcon}
         />
+        {props.children}
       </button>
     )
   }

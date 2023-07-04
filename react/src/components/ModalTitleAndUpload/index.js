@@ -1,5 +1,7 @@
 import React from 'react'
 
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+
 class ModalTitleAndUpload extends React.PureComponent {
   triggerUpload = () => {
     window.jQuery('.f-c-r-modal.show .f-c-r-dropzone-trigger').click()
@@ -12,14 +14,13 @@ class ModalTitleAndUpload extends React.PureComponent {
           {this.props.fileTypeIsImage ? window.FolioConsole.translations.selectImage : window.FolioConsole.translations.selectDocument }
         </h3>
 
-        <button
-          className='btn btn-success my-n2 ml-auto'
-          type='button'
+        <FolioConsoleUiButton
+          class='my-n2 ml-auto'
           onClick={this.triggerUpload}
-        >
-          <i className='fa fa-plus' />
-          {window.FolioConsole.translations.add}
-        </button>
+          icon='plus'
+          variant='success'
+          label={window.FolioConsole.translations.add}
+        />
       </div>
     )
   }

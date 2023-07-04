@@ -9,6 +9,7 @@ export default function FolioUiIcon (props) {
       className={data.classNames.join(' ')}
       style={data.style}
       viewBox={data.viewBox}
+      onClick={props.onClick}
     >
       <use xlinkHref={data.href} />
     </svg>
