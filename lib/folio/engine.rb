@@ -180,14 +180,9 @@ module Folio
 
         if deprecations.present?
           puts "\nFolio deprecations:"
-          deprecations.each do |msg|
-            Raven.capture_message(msg) if defined?(Raven)
 
-            if defined?(logger)
-              logger.error(msg)
-            else
-              puts msg
-            end
+          deprecations.each do |msg|
+            Folio::Deprecation.log(msg)
           end
 
           puts ""
