@@ -1,0 +1,25 @@
+.nav-tabs
+  margin-bottom: $grid-gutter-width
+  border-bottom: 1px solid $border-color
+  position: relative
+  z-index: 2
+
+  .nav-link
+    border: 0
+    border-bottom: 4px solid transparent
+    padding-left: 0
+    padding-right: 0
+    margin-right: $grid-gutter-width
+
+    &.active
+      font-weight: $font-weight-bold
+
+.tab-content
+  position: relative
+  z-index: 1
+
+.nav-pills
+  .nav-item
+    .nav-link.active
+      background-color: $gray-500
+      border-radius: 0
