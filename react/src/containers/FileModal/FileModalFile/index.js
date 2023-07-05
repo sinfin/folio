@@ -76,7 +76,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 <FolioConsoleUiButton
                   class='overflow-hidden position-relative'
                   icon='edit'
-                  variant='secondary'
+                  variant='warning'
                   label={window.FolioConsole.translations.replace}
                 >
                   <FileEditInput type='file' onClick={onEditClick} onChange={(e) => uploadNewFileInstead(e.target.files[0])} />

@@ -45,7 +45,7 @@ window.Folio.Input.ContentTemplates.bind = (input) => {
   })
 
   const $flex = $(`<div class="f-input-content-templates-dropdown">
-    <span class="ml-3 small f-input-content-templates-dropdown__toggle dropdown-toggle" data-toggle="dropdown">${window.FolioConsole.translations.contentTemplates}
+    <span class="ml-3 small f-input-content-templates-dropdown__toggle dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">${window.FolioConsole.translations.contentTemplates}
     </span>
   </div>`)
 

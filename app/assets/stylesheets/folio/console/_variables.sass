@@ -35,6 +35,8 @@ $danger: $red !default
 $light: $gray-100 !default
 $dark: $gray-900 !default
 
+$text-muted: $gray-medium-dark
+
 $theme-colors: ( "primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "medium-gray": $medium-gray )
 
 $link-color: $blue
@@ -48,6 +50,8 @@ $blue-background: #E4F0FC
 
 $f-c-transition-duration: .15s
 $f-c-transition-base: all $f-c-transition-duration ease-in-out
+
+$f-c-form-group-spacer: 2 * $grid-gutter-width / 3
 
 $f-c-box-shadow-card: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 15px 2px rgba(0, 0, 0, 0.15)
 $f-c-box-shadow-card-hover: 0px 1px 3px rgba(0, 0, 0, 0.15), 2px 2px 10px 2px rgba(0, 0, 0, 0.1)
@@ -70,6 +74,7 @@ $font-weight-bold: 700
 
 $headings-font-weight: $font-weight-bold
 $headings-color: $antracite
+$headings-margin-bottom: $grid-gutter-width
 
 $h1-font-size: px-to-rem(32px)
 $h2-font-size: px-to-rem(24px)
@@ -121,3 +126,12 @@ $spacer: $grid-gutter-half
 
 $card-spacer-y: $grid-gutter-width
 $card-spacer-x: $grid-gutter-width
+
+$modal-content-box-shadow-xs: $f-c-box-shadow-overlay
+$modal-content-box-shadow-sm-up: $f-c-box-shadow-overlay
+$modal-md: 640px
+$modal-inner-padding: $grid-gutter-width
+$modal-header-padding-y: 2 * $grid-gutter-width / 3
+
+$form-text-margin-top: $grid-gutter-width / 4
+$form-text-font-size: $font-size-sm

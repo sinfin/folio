@@ -29,6 +29,11 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       end
     end
 
+    if model[:modal].present?
+      h["data-bs-toggle"] = "modal"
+      h["data-bs-target"] = model[:modal]
+    end
+
     h
   end
 
@@ -40,6 +45,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       class
       variant
       confirm
+      modal
     ]
   end
 

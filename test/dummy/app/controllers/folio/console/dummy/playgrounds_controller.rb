@@ -10,6 +10,9 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
   def report
   end
 
+  def modals
+  end
+
   def force_use_react_modals?
     true
   end

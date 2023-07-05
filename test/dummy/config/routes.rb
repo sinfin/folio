@@ -31,6 +31,7 @@ Rails.application.routes.draw do
           get :players
           get :pickers
           get :report
+          get :modals
         end
 
         namespace :blog do

@@ -8,10 +8,14 @@
         .modal-header
           = model[:header]
           = render(:_close)
+      - elsif model[:title].present?
+        .modal-header
+          .h3.modal-title = cstypo model[:title]
+          = render(:_close)
 
       .modal-body
         = model[:body]
-        = render(:_close) unless model[:header]
+        = render(:_close) if !model[:header] && model[:title].blank?
 
       - if model[:footer]
         .modal-footer

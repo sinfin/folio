@@ -59,7 +59,7 @@ window.FolioConsole.Flash.flash = (msg, type = 'success', autohide = false, data
   if (autohide) {
     const autohideDelay = typeof autohide === 'number' ? autohide : 5000
     setTimeout(() => {
-      flash.querySelector('[data-dismiss]').click()
+      flash.querySelector('[data-bs-dismiss]').click()
     }, autohideDelay)
   }
 }

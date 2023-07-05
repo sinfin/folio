@@ -30,6 +30,7 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
 
     input_html_options["autocomplete"] = "off"
     input_html_options["data-toggle"] = "datetimepicker"
+    input_html_options["data-bs-toggle"] = "datetimepicker"
     input_html_options["data-sprite-url"] = ActionController::Base.helpers.image_path("folio/input/date_time/svg-sprite.svg")
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
