@@ -27,6 +27,7 @@
 
 .f-c-layout-atoms__html
   overflow-y: auto
+  overflow-x: hidden
 
 .f-c-atoms-previews
   $insert-bg: #6C757E
@@ -112,6 +113,28 @@
     z-index: 2
     gap: $grid-gutter-half
 
+  &__button
+    border: 1px solid $dark
+    background: $white
+    color: $dark
+    cursor: pointer
+    padding: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 24px
+    height: 24px
+
+    &--secondary
+      color: $white
+      background: $secondary
+      border-color: $secondary
+
+    &--danger
+      color: $white
+      background: $danger
+      border-color: $danger
+
   &__controls-overlay
     position: absolute
     top: 0
@@ -174,7 +197,9 @@
 
   &__insert-hint-btn
     +button-style
-    +button-variant($secondary, $secondary)
+    background: #6c757d
+    border-color: #6c757d
+    color: $white
     width: 20px
     height: 20px
     flex: 0 0 20px
@@ -188,7 +213,9 @@
 
   &__insert-hint-big-btn
     +button-style
-    +button-variant($secondary, $secondary)
+    background: #6c757d
+    border-color: #6c757d
+    color: $white
     display: none
     height: 35px
     min-width: 140px

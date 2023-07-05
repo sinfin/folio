@@ -201,7 +201,7 @@ class AtomForm extends React.PureComponent {
               value={typeValue}
               name={`${prefix}[type]`}
               onChange={this.onTypeChange}
-              className='folio-console-atom-type-select'
+              className='folio-console-atom-type-select select'
             >
               {this.props.atomTypes.map(({ key, title }) => (
                 <option key={key} value={key}>{title}</option>

@@ -2,8 +2,10 @@
   .f-c-atoms-previews__controls
     .f-c-atoms-previews__controls-overlay
     .f-c-atoms-previews__buttons
-      == cell('folio/console/ui/button',
-              variant: :secondary,
-              icon: :cog,
-              class: "f-c-atoms-previews__button \
-                      f-c-atoms-previews__button--settings")
+      button[
+        type="button"
+        class="f-c-atoms-previews__button"
+        class="f-c-atoms-previews__button--secondary"
+        class="f-c-atoms-previews__button--settings"
+      ]
+        = folio_icon(:cog, height: 16)

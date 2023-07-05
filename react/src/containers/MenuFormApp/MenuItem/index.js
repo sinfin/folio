@@ -109,6 +109,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
             value={node.style || ''}
             onChange={onChangeFn}
             name='style'
+            className='select'
           >
             {styleOptions}
           </Input>

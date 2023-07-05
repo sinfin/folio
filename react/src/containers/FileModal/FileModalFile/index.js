@@ -181,6 +181,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                       onChange={(e) => onValueChange('default_gravity', e.currentTarget.value)}
                       name='default_gravity'
                       type='select'
+                      className='select'
                     >
                       {file.attributes.default_gravities_for_select.map((opt) => (
                         <option value={opt[1]} key={opt[1]}>

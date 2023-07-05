@@ -80,7 +80,7 @@ class FileFilter extends Component {
                   onChange={this.onInputChange}
                   placeholder={window.FolioConsole.translations.usagePlaceholder}
                   name='used'
-                  className='form-control--select'
+                  className='form-control--select select'
                   required
                 >
                   <option value=''>{window.FolioConsole.translations.usagePlaceholder}</option>

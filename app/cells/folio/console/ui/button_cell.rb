@@ -21,6 +21,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:class] += " #{model[:class]}"
     end
 
+    if model[:atoms_previews]
+      h[:class] += " f-c-ui-button--atoms-previews f-c-ui-button--atoms-previews-#{variant}"
+    end
+
     h
   end
 
