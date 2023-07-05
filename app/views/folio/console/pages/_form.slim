@@ -7,10 +7,11 @@
   = tab :content
     = publishable_inputs(f)
 
-    .d-md-flex
-      = file_picker_for_cover(f)
+    .f-c-with-file-picker.row
+      .col-md-auto
+        = file_picker_for_cover(f)
 
-      .ml-md-g
+      .col-md
         == translated_inputs f, :title, folio_label: true
         == translated_inputs f, :slug
 

@@ -7,7 +7,7 @@ div class=class_name data=data
               atom_setting: field
 
     - if date_at?
-      .f-c-publishable-inputs-item__date
+      .f-c-publishable-inputs-item__date.small
         = f.input "#{field}_at",
                   label: false,
                   hint: false,
@@ -16,7 +16,7 @@ div class=class_name data=data
                   atom_setting: "#{field}_at"
 
     - elsif date_between?
-      .f-c-publishable-inputs-item__date
+      .f-c-publishable-inputs-item__date.small
         = f.input "#{field}_from",
                   label: false,
                   hint: false,

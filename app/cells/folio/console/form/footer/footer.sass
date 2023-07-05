@@ -11,14 +11,13 @@
     transform: scale(1)
 
 .f-c-form-footer
-  padding-top: $grid-gutter-half
-  padding-bottom: $grid-gutter-half
-  background: rgba(255, 255, 255, .84)
-  position: fixed
-  left: 0
-  right: 0
+  padding-top: 2 * $grid-gutter-width / 3
+  padding-bottom: 2 * $grid-gutter-width / 3
+  background: $white
+  position: sticky
   bottom: 0
   z-index: 999
+  box-shadow: $f-c-box-shadow-card
 
   .f-c-layout-html.slideout-open &
     display: none
@@ -78,21 +77,3 @@
 
   &--dirty &__ribbon
     display: flex
-
-  +media-breakpoint-up(xxl)
-    padding-top: $grid-gutter-width
-    padding-bottom: $grid-gutter-width
-
-  +mq-desktop-menu
-    left: 220px
-
-// TODO @mreq position sticky footer
-.f-c-form-footer-spacer
-  visibility: hidden
-  margin-top: map-get($spacers, 3)
-  // height: $footer-height
-  margin-bottom: - $spacer
-  flex: 0 0 auto
-
-  // +media-breakpoint-up(xxl)
-  //   height: $footer-height-xxl
