@@ -1,7 +1,7 @@
 .ReactModalPortal
   @extend .modal
 
-  .ReactModal__Body--open &
+  .ReactModal__Body--open &:not(:empty)
     display: block
 
 .ReactModal__Overlay

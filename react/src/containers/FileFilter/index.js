@@ -45,7 +45,7 @@ class FileFilter extends Component {
     const { filters, margined, fileUsage, taggable } = this.props
 
     return (
-      <Wrap margined={margined} className='bg-100'>
+      <Wrap margined={margined} className='f-c-r-file-filter-wrap'>
         <div className='row'>
           <div className='col-12 col-sm-6 col-xl-3'>
             <FormGroup className='mb-2 mb-sm-2 mb-xl-0'>

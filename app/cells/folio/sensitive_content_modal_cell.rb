@@ -9,7 +9,7 @@ class Folio::SensitiveContentModalCell < ApplicationCell
       cell(::Rails.application.config.folio_modal_cell_name || ui_modal_cell_name,
            class: CLASS_NAME_BASE,
            body: render,
-           header: t(".title"),
+           title: t(".title"),
            primary: { label: t(".accept"), class: "f-sensitive-content-modal__accept" },
            secondary: { label: t(".cancel") })
     end

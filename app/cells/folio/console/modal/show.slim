@@ -1,4 +1,9 @@
-.modal.f-c-modal role="dialog" tabindex="-1" class=model[:class]
+.modal.f-c-modal[
+  role="dialog"
+  tabindex="-1"
+  class=model[:class]
+  data=model[:data]
+]
   .modal-dialog[
     role="document"
     class="modal-#{model[:size].presence || 'md'}"
@@ -8,9 +13,14 @@
         .modal-header
           = model[:header]
           = render(:_close)
-      - elsif model[:title].present?
+      - elsif model[:title].present? || model[:new_button].present?
         .modal-header
-          .h3.modal-title = cstypo model[:title]
+          .h3.modal-title
+            = cstypo(model[:title]) if model[:title].present?
+
+          - if model[:new_button]
+            == cell('folio/console/index/new_button', react: true)
+
           = render(:_close)
 
       .modal-body

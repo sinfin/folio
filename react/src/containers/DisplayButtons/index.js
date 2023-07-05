@@ -28,12 +28,12 @@ const DisplayButtons = ({ display, dispatch }) => (
   <div className='btn-group folio-console-react-display-controls'>
     <DisplayButton
       active={display === DISPLAY_CARDS}
-      onClick={() => { dispatch(setCardsDisplay()) }}
+      onClick={(e) => { e.currentTarget.blur(); dispatch(setCardsDisplay()) }}
       icon='th-list'
     />
     <DisplayButton
       active={display === DISPLAY_THUMBS}
-      onClick={() => { dispatch(setThumbsDisplay()) }}
+      onClick={(e) => { e.currentTarget.blur(); dispatch(setThumbsDisplay()) }}
       icon='th-large'
     />
   </div>

@@ -11,6 +11,8 @@ import {
 
 import AutocompleteInput from 'components/AutocompleteInput'
 import TagsInput from 'components/TagsInput'
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 
@@ -93,23 +95,19 @@ class UploadTagger extends React.PureComponent {
           />
         </FormGroup>
 
-        <div className='d-flex'>
-          <button
-            className='btn btn-success mr-2'
-            type='button'
+        <FolioConsoleUiButtons>
+          <FolioConsoleUiButton
             onClick={this.setUploadAttributes}
-          >
-            {window.FolioConsole.translations.save}
-          </button>
+            variant='success'
+            label={window.FolioConsole.translations.save}
+          />
 
-          <button
-            className='btn btn-secondary'
-            type='button'
+          <FolioConsoleUiButton
             onClick={this.close}
-          >
-            {window.FolioConsole.translations.close}
-          </button>
-        </div>
+            vairant='secondary'
+            label={window.FolioConsole.translations.close}
+          />
+        </FolioConsoleUiButtons>
       </div>
     )
   }

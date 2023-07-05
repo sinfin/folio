@@ -315,6 +315,13 @@ cs:
             subject: Předmět e-mailu
             text: Obsah e-mailu
 
+      react:
+        modal:
+          title: Zvolte soubor
+          title/image: Zvolte obrázek
+          title/video: Zvolte video
+          title/audio: Zvolte audio
+
   date:
     formats:
       console_short: "%d. %m. %Y"

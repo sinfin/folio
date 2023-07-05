@@ -312,6 +312,13 @@ en:
             subject: E-mail subject
             text: E-mail content
 
+      react:
+        modal:
+          title: Pick a file
+          title/image: Pick an image
+          title/video: Pick a video
+          title/audio: Pick an audio
+
   date:
     formats:
       console_short: "%d. %m. %Y"

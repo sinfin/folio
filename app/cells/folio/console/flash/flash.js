@@ -28,7 +28,7 @@ window.FolioConsole.Flash.alert = (content, data = {}) => {
   return window.FolioConsole.Flash.flash({
     ...data,
     content,
-    variant: 'alert',
+    variant: 'danger',
   })
 }
 

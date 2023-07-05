@@ -72,35 +72,6 @@ module Folio::Console::ReactHelper
              max_nesting_depth:)
   end
 
-  def react_modal_for(file_type, opts: {})
-    if ["new", "edit", "create", "update"].include?(action_name) || controller.try(:force_use_react_modals?)
-      klass = file_type.constantize
-
-      url = if opts && opts[:url_name]
-        main_app.send(opts[:url_name])
-      else
-        begin
-          url_for([:console, :api, klass])
-        rescue StandardError
-          if file_type.start_with?("Folio::")
-            folio.url_for([:console, :api, klass])
-          else
-            main_app.url_for([:console, :api, klass])
-          end
-        end
-      end
-
-      content_tag(:div,
-                  nil,
-                  "class" => "folio-react-wrap",
-                  "data-file-type" => file_type,
-                  "data-files-url" => url,
-                  "data-react-type" => klass.human_type,
-                  "data-taggable" => klass.react_taggable ? "1" : nil,
-                  "data-mode" => "modal-single-select")
-    end
-  end
-
   def console_form_atoms(f)
     if f.object.class.respond_to?(:atom_locales)
       atoms = {}
