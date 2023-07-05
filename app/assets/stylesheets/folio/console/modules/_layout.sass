@@ -30,6 +30,10 @@
   z-index: 1
   flex: 1 1 auto
 
+.f-c-anti-container-fluid
+  margin-left: - $grid-gutter-width
+  margin-right: - $grid-gutter-width
+
 +mq-desktop-menu
   .f-c-layout-body
     &:not(&--devise)
@@ -69,6 +73,10 @@
 +mq-mobile-menu
   .f-c-layout-main-container
     padding: $grid-gutter-width / 2
+
+  .f-c-anti-container-fluid
+    margin-left: - $grid-gutter-width / 2
+    margin-right: - $grid-gutter-width / 2
 
   .f-c-layout-sidebar
     display: none

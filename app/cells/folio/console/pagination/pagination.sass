@@ -1,15 +1,25 @@
 .f-c-pagination
-  margin-top: 1.5 * $spacer
-  padding-bottom: 0.5 * $spacer
+  margin: $grid-gutter-width 0
+  color: $gray-medium-dark
+  display: flex
+  gap: $grid-gutter-half $grid-gutter-width
+  flex-wrap: wrap
+
+  &__info
+    max-width: 100%
+    flex: 0 0 auto
 
   .card-body &:first-child,
   .f-c-r-modal &:first-child
     margin-top: 0
-    padding-bottom: $spacer
 
   &__nav
     display: flex
     align-items: center
+    flex: 0 0 auto
+    margin: -5px 0 -5px auto
+    position: relative
+    top: -1px
 
   &__pages
     display: flex
@@ -21,54 +31,38 @@
 
   &__page,
   &__page a
-    color: #495057
+    color: $dark-gray
     text-decoration: none
 
   &__page--with-ico,
   &__page--with-ico a
-    color: #6C757E
+    color: $gray
 
   &__page--page,
   &__page--page a
     display: block
-    line-height: 35px
-    min-width: 35px
-    height: 35px
+    line-height: 24px
+    min-width: 24px
+    height: 24px
     border-radius: 100%
     text-align: center
 
   &__page--page a
     padding: 0 $spacer / 2
 
-  &__page--page,
-  &__page--prev,
-  &__page--next:not(&__page--disabled),
-  &__page--last
-    &:before
-      content: ''
-      height: 20px
-      border-left: 1px solid #CED4DA
-      width: 0
-      position: absolute
-      top: calc(50% - 10px)
-      left: 0
-      display: block
-
   &__page--current:before,
   &__page--current + &__page--page:before
     display: none
 
   &__page--current
-    background: #6C757E
+    background: $dark-gray
     color: $white
-    font-weight: $font-weight-bold
-    flex: 0 0 35px
+    flex: 0 0 24px
 
   &__ico
-    line-height: 35px
-    width: 28px
+    line-height: 24px
+    width: 24px
     text-align: center
-    font-size: 14px
 
   +media-breakpoint-down(sm)
     &__nav

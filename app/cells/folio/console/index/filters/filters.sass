@@ -1,7 +1,7 @@
 .f-c-index-filters
   background: $light-gray
-  margin-top: - $spacer
-  margin-bottom: $spacer
+  margin-top: $grid-gutter-width
+  margin-bottom: $grid-gutter-width
 
   .input-group
     margin-bottom: $spacer
@@ -103,14 +103,14 @@
     z-index: 3
 
   &__wrap
-    padding: $grid-gutter-width / 3 0
+    padding: $grid-gutter-width / 2 0
 
   .form-group,
   .input-group
     width: 100%
     margin: 0
 
-  +media-breakpoint-up(md)
+  +media-breakpoint-up(sm)
     &__wrap
       display: flex
       align-items: flex-start
@@ -127,7 +127,6 @@
       line-height: $input-height
       display: flex
       align-items: center
-      padding: 4px 0 0
       flex: 0 0 auto
 
     &__cancel-wrap,
@@ -143,18 +142,20 @@
       width: 235px
 
   +media-breakpoint-down(sm)
-    &__filters
-      padding-bottom: 3 * $grid-gutter-half / 4
-
     &__filter
-      margin-bottom: $grid-gutter-half / 2
       width: 100% !important
+
+      & + &
+        margin-top: $grid-gutter-half / 2
+
+    &__cancel-wrap,
+    &__toggle-wrap
+      margin-top: $grid-gutter-half / 2
 
     &__cancel-wrap
       flex: 0 0 100%
       width: 100% !important
       text-align: center
-      padding-bottom: $grid-gutter-half
 
       &--hidden
         display: none
@@ -163,10 +164,8 @@
     &__toggle-wrap + &__cancel-wrap
       flex: 0 0 50%
       width: 50% !important
-      margin-bottom: $grid-gutter-half / 2
       text-align: left
       display: inline-flex
-      padding-bottom: $grid-gutter-half
 
     &__toggle-wrap + &__cancel-wrap
       text-align: right

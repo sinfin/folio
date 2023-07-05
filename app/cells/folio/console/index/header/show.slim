@@ -52,6 +52,5 @@
           cancel_url: options[:filters_cancel_url])
 
 - if options[:pagy]
-  .f-c-index-header__pagy
-    == cell('folio/console/pagination', options[:pagy],
-                                        inside: options[:inside_pagination])
+  == cell('folio/console/pagination', options[:pagy],
+                                      inside: options[:inside_pagination])
