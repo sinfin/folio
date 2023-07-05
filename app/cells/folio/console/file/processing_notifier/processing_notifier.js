@@ -38,7 +38,7 @@ window.FolioConsole.File.ProcessingNotifier.handleFile = (notifier, data) => {
 
   if (data.attributes.aasm_state === 'ready') {
     const msg = window.Folio.i18n(window.FolioConsole.File.ProcessingNotifier.i18n, `${data.attributes.human_type}Done`)
-    window.FolioConsole.Flash.success(msg, false, { fileId: data.id, fileState: data.attributes.aasm_state })
+    window.FolioConsole.Flash.success(msg, { data: { fileId: data.id, fileState: data.attributes.aasm_state } })
   } else {
     let msg = window.Folio.i18n(window.FolioConsole.File.ProcessingNotifier.i18n, `${data.attributes.human_type}Processing`)
 
@@ -46,7 +46,7 @@ window.FolioConsole.File.ProcessingNotifier.handleFile = (notifier, data) => {
       msg += ` ${notifier.dataset.pendingAppend}`
     }
 
-    window.FolioConsole.Flash.pending(msg, false, { fileId: data.id, fileState: data.attributes.aasm_state })
+    window.FolioConsole.Flash.loader(msg, { data: { fileId: data.id, fileState: data.attributes.aasm_state } })
   }
 }
 

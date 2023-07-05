@@ -44,7 +44,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
       <div className='modal-header'>
         <h3 className='modal-title'>{file.attributes.file_name}</h3>
 
-        <button class='f-c-modal__close' type='button' onClick={closeFileModal}>
+        <button className='f-c-modal__close' type='button' onClick={closeFileModal}>
           <FolioUiIcon name='close' class='f-c-modal__close-icon' />
         </button>
       </div>

@@ -25,13 +25,13 @@ class Folio::Console::PagesControllerTest < Folio::Console::BaseControllerTest
     put url_for([:console, folio_page]), params: { page: { title: "" } }
 
     assert_select ".form-group.page_title.form-group-invalid"
-    assert_select ".alert-success", false
+    assert_select ".f-c-ui-alert--success", false
 
     put url_for([:console, folio_page]), params: { page: { title: "foo" } }
 
     assert_redirected_to url_for([:edit, :console, folio_page])
     follow_redirect!
-    assert_select ".alert-success"
+    assert_select ".f-c-ui-alert--success"
   end
 
   test "revision" do

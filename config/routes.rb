@@ -24,6 +24,10 @@ Folio::Engine.routes.draw do
     resources :dashboard, only: :index
 
     scope constraints: Rails.application.config.folio_console_default_routes_contstraints do
+      resource :ui, only: %i[show], controller: "ui" do
+        get :alerts
+      end
+
       resources :pages, except: %i[show] do
         collection do
           post :set_positions

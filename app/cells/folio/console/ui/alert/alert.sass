@@ -1,0 +1,47 @@
+.f-c-ui-alert
+  color: $white
+  background: $blue
+  margin: $grid-gutter-width 0
+
+  &--flash
+    margin: 0
+
+  &--success
+    background: $success
+
+  &--warning
+    background: $orange
+
+  &--danger
+    background: $danger
+
+  &__content
+    flex: 1 1 auto
+    padding-top: $grid-gutter-width / 2
+    padding-bottom: $grid-gutter-width / 2
+
+  &__icon
+    flex: 0 0 auto
+
+  &__close
+    +unbutton
+    flex: 0 0 auto
+    align-self: stretch
+    display: flex
+    align-items: center
+    justify-content: center
+    padding-left: $grid-gutter-width
+    padding-right: $grid-gutter-width
+
+  &__container
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: $grid-gutter-width / 2
+    min-height: 48px
+
+  &__loader-wrap
+    width: 24px
+    height: 24px
+    position: relative
+    flex: 0 0 auto

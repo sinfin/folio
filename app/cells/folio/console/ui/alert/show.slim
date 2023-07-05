@@ -1,0 +1,27 @@
+div[
+  class=class_name
+  class="f-c-ui-alert--#{variant}"
+  role="alert"
+  data-controller="f-c-ui-alert"
+]
+  .f-c-ui-alert__container.container-fluid
+    - if variant == :loader
+      .f-c-ui-alert__loader-wrap
+        .f-c-ui-alert__loader[
+          class="folio-loader"
+          class="folio-loader--tiny"
+          class="folio-loader--transparent"
+          class="folio-loader--white"
+        ]
+    - else
+      = folio_icon(icon_key, class: 'f-c-ui-alert__icon')
+
+    .f-c-ui-alert__content
+      == model
+
+    button.f-c-ui-alert__close[
+      class="f-c-anti-container-fluid f-c-anti-container-fluid--padding"
+      type="button"
+      data-action="f-c-ui-alert#close"
+    ]
+      = folio_icon(:close)

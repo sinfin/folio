@@ -1,0 +1,22 @@
+h1 Folio Console UI
+
+h2 Alerts
+
+h3 Flash
+
+== cell('folio/console/flash', flash)
+
+.mt-g
+  == cell('folio/console/ui/buttons',
+          @buttons_model)
+
+h3 Regular
+
+- %i[info success warning danger loader].each do |variant|
+  == cell('folio/console/ui/alert',
+          "#{variant.capitalize} #{@lorem_ipsum}",
+          variant:)
+
+  == cell('folio/console/ui/alert',
+          "#{variant.capitalize} #{@lorem_ipsum[0..30]}",
+          variant:)

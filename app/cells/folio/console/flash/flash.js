@@ -1,79 +1,43 @@
 window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.Flash = {}
 
-window.FolioConsole.Flash.flash = (msg, type = 'success', autohide = false, data = {}) => {
-  let className = 'alert alert-dismissible fade show'
-  let iconKey = 'alert'
-
-  if (type === 'success') {
-    className += ' alert-success'
-    iconKey = 'check_circle_outline'
-  } else if (type === 'info') {
-    className += ' alert-info'
-    iconKey = 'information_outline'
-  } else if (type === 'pending') {
-    className += ' alert-pending'
-  } else {
-    className += ' alert-danger'
-  }
-
-  const flash = document.createElement('div')
-  flash.className = className
-  flash.role = 'alert'
-
-  Object.keys(data).forEach((key) => {
-    flash.dataset[key] = data[key]
+window.FolioConsole.Flash.flash = (data) => {
+  const alert = window.FolioConsole.Ui.Alert.create({
+    ...data,
+    flash: true,
   })
-
-  if (type === 'pending') {
-    const loaderWrap = document.createElement('div')
-    loaderWrap.className = 'f-c-flash-wrap__loader-wrap'
-
-    const loader = document.createElement('div')
-    loader.className = 'folio-loader folio-loader--tiny folio-loader--transparent folio-loader--white f-c-flash-wrap__loader'
-
-    loaderWrap.appendChild(loader)
-    flash.appendChild(loaderWrap)
-  } else {
-    flash.appendChild(window.Folio.Ui.Icon.create(iconKey))
-  }
-
-  flash.appendChild(document.createTextNode(msg))
-
-  const closeBtn = document.createElement('button')
-  closeBtn.type = 'button'
-  closeBtn.className = 'close'
-  closeBtn.dataset.dismiss = 'alert'
-  closeBtn.appendChild(window.Folio.Ui.Icon.create('close'))
-
-  flash.appendChild(closeBtn)
 
   const modal = document.querySelector('.ReactModal--FileModal')
 
   if (modal) {
-    modal.querySelector('.modal-content').insertBefore(flash, modal.querySelector('.modal-body'))
+    modal.querySelector('.modal-content').insertBefore(alert, modal.querySelector('.modal-body'))
   } else {
-    document.querySelector('.f-c-flash-wrap').appendChild(flash)
-  }
-
-  if (autohide) {
-    const autohideDelay = typeof autohide === 'number' ? autohide : 5000
-    setTimeout(() => {
-      flash.querySelector('[data-bs-dismiss]').click()
-    }, autohideDelay)
+    document.querySelector('.f-c-flash-wrap').appendChild(alert)
   }
 }
 
-window.FolioConsole.Flash.success = (msg, autohide = false, data = {}) => {
-  return window.FolioConsole.Flash.flash(msg, 'success', autohide, data)
+window.FolioConsole.Flash.success = (content, data = {}) => {
+  return window.FolioConsole.Flash.flash({
+    ...data,
+    content,
+    variant: 'success',
+  })
 }
 
-window.FolioConsole.Flash.alert = (msg, autohide = false, data = {}) => {
-  return window.FolioConsole.Flash.flash(msg, 'alert', autohide, data)
+window.FolioConsole.Flash.alert = (content, data = {}) => {
+  return window.FolioConsole.Flash.flash({
+    ...data,
+    content,
+    variant: 'alert',
+  })
 }
 
-window.FolioConsole.Flash.pending = (msg, autohide = false, data = {}) => {
-  return window.FolioConsole.Flash.flash(msg, 'pending', autohide, data)
+window.FolioConsole.Flash.loader = (content, data = {}) => {
+  return window.FolioConsole.Flash.flash({
+    ...data,
+    content,
+    variant: 'loader',
+  })
 }
 
 window.FolioConsole.Flash.clearFlashes = () => {

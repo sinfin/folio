@@ -58,6 +58,7 @@
 //= require folio/console/_tabs
 //= require folio/console/danger-box-shadow-blink
 
+//= require folio/console/ui/alert/alert
 //= require folio/console/ui/button/button
 
 //= require folio/console/aasm/email_modal/email_modal

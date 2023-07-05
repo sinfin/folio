@@ -1,22 +1,7 @@
 .f-c-flash-wrap
   - if model.present?
     - model.each do |msg_type, message|
-      .alert.alert-dismissible.fade.show[
-        class=bootstrap_class_for(msg_type)
-        role="alert"
-      ]
-        - if msg_type.to_sym == :pending
-          .f-c-flash-wrap__loader-wrap
-            span.f-c-flash-wrap__loader[
-              class="folio-loader"
-              class="folio-loader--tiny"
-              class="folio-loader--transparent"
-              class="folio-loader--white"
-            ]
-        - else
-          = folio_icon(flash_icon_key(msg_type))
-
-        == message
-
-        button.close data-bs-dismiss="alert"
-          = folio_icon(:close)
+      == cell('folio/console/ui/alert',
+              message,
+              variant: VARIANTS[msg_type.to_sym],
+              flash: true)
