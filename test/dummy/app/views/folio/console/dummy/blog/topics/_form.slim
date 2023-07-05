@@ -4,11 +4,12 @@
 
 .tab-content
   = tab :content
+    = publishable_inputs(f)
+
     .row
       .col-md-auto
         = file_picker_for_cover(f)
       .col-md
-        = publishable_inputs(f)
         = f.input :title
         = f.input :slug
         = f.input :perex, character_counter: true, autosize: true

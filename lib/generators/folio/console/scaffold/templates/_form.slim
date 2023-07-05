@@ -5,13 +5,13 @@
 .tab-content
   = tab :content
     <%- if has_attachmentable? -%>
+    <%- if publishable? -%>
+    = publishable_inputs(f)
+    <%- end -%>
     .row
       .col-md-auto
         = file_picker_for_cover(f)
       .col-md
-        <%- if publishable? -%>
-        = publishable_inputs(f)
-        <%- end -%>
         <%= attribute_inputs %>
     <%- else -%>
     <%- if publishable? -%>
