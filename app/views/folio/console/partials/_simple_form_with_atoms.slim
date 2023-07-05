@@ -23,10 +23,12 @@
         .f-c-simple-form-with-atoms__form-toggle
           .container-fluid
             .position-relative.f-c-simple-form-with-atoms__form-toggle-inner
-              == cell('folio/console/ui/button',
-                      variant: :none,
-                      class: 'f-c-simple-form-with-atoms__form-toggle-button',
-                      icon: :menu_down)
+              button.f-c-simple-form-with-atoms__form-toggle-button[
+                type="button"
+              ]
+                = folio_icon(:menu_down,
+                             height: 16,
+                             class: "f-c-simple-form-with-atoms__form-toggle-icon")
 
       .f-c-simple-form-with-atoms__atoms
         .f-c-simple-form-with-atoms__previews
