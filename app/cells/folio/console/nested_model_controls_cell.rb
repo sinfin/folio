@@ -3,7 +3,7 @@
 class Folio::Console::NestedModelControlsCell < Folio::ConsoleCell
   include Cocoon::ViewHelpers
 
-  class_name "f-c-nested-model-controls", :vertical, :no_margin
+  class_name "f-c-nested-model-controls", :vertical, :no_margin?
 
   def f
     model
@@ -48,5 +48,9 @@ class Folio::Console::NestedModelControlsCell < Folio::ConsoleCell
     end
 
     ary
+  end
+
+  def no_margin?
+    options[:no_margin] || options[:vertical]
   end
 end
