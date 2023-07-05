@@ -2,6 +2,51 @@
   position: relative
   transition: $transition-base
 
+  &__label
+    position: relative
+    padding-left: px-to-rem(24px)
+    min-width: px-to-rem(24px)
+    min-height: px-to-rem(24px)
+    cursor: pointer
+    display: inline-flex
+    align-items: center
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      top: calc(50% - #{px-to-rem(8px / 2)})
+      left: 0
+      height: px-to-rem(8px)
+      width: px-to-rem(24px)
+      border-radius: $border-radius
+      background: $gray
+
+    &::after
+      content: ''
+      display: block
+      position: absolute
+      top: calc(50% - #{px-to-rem(16px / 2)})
+      left: 0
+      width: px-to-rem(16px)
+      height: px-to-rem(16px)
+      border-radius: 100%
+      transition: $transition-base
+      background: $gray-medium-dark
+
+  &__label-on,
+  &__label-off,
+  &__label-generic
+    padding-left: px-to-rem(6px)
+
+  &__input
+    display: none
+
+  &__input:checked ~ &__label
+    &::after
+      background: $blue
+      transform: translate(#{px-to-rem(24px - 16px)}, 0)
+
   &--loading
     cursor: wait
     opacity: 0.2
@@ -24,11 +69,6 @@
 
   &--show-label &__input:checked ~ &__label::after
     transform: translateX(-12px)
-
-  &__label-on,
-  &__label-off
-    position: relative
-    top: 1px
 
   &__input:not(:checked) ~ &__label &__label-on,
   &__input:checked ~ &__label &__label-off

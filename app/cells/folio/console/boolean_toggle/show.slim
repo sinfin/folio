@@ -3,8 +3,8 @@ div[
   data-controller="f-c-boolean-toggle"
   data-f-c-boolean-toggle-loading-class="f-c-boolean-toggle--loading"
 ]
-  .custom-control.custom-switch.f-c-boolean-toggle__switch
-    input.f-c-boolean-toggle__input.custom-control-input[
+  .f-c-boolean-toggle__switch
+    input.f-c-boolean-toggle__input[
       type="checkbox"
       class="f-c-dont-set-dirty-forms"
       id=id
@@ -12,7 +12,8 @@ div[
       name=name
       data=input_data
     ]
-    label.f-c-boolean-toggle__label.custom-control-label[
+
+    label.f-c-boolean-toggle__label[
       for=id
     ]
       - if options[:verbose]
