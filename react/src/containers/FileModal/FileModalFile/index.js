@@ -12,6 +12,7 @@ import AutocompleteInput from 'components/AutocompleteInput'
 import FolioPlayer from 'components/FolioPlayer'
 import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 
@@ -41,8 +42,11 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
   return (
     <div className='modal-content'>
       <div className='modal-header'>
-        <strong className='modal-title'>{file.attributes.file_name}</strong>
-        <button type='button' className='close' onClick={closeFileModal}>×</button>
+        <h3 className='modal-title'>{file.attributes.file_name}</h3>
+
+        <button class='f-c-modal__close' type='button' onClick={closeFileModal}>
+          <FolioUiIcon name='close' class='f-c-modal__close-icon' />
+        </button>
       </div>
 
       <div className='modal-body'>
@@ -61,7 +65,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             </div>
           )}
           <div className={isImage ? 'col-lg-5 mb-3' : undefined}>
-            <FolioConsoleUiButtons className='mb-2'>
+            <FolioConsoleUiButtons className='mb-3'>
               <FolioConsoleUiButton
                 href={file.attributes.source_url}
                 variant='secondary'

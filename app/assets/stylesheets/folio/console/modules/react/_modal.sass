@@ -1,6 +1,8 @@
 .ReactModalPortal
-  position: fixed
-  z-index: 1150
+  @extend .modal
+
+  .ReactModal__Body--open &
+    display: block
 
 .ReactModal__Overlay
   display: flex

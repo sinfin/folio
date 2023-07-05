@@ -10,7 +10,7 @@ class ModalTitleAndUpload extends React.PureComponent {
   render () {
     return (
       <div className='modal-header border-bottom-0 pr-5'>
-        <h3 className='mr-g modal-title'>
+        <h3 className='modal-title'>
           {this.props.fileTypeIsImage ? window.FolioConsole.translations.selectImage : window.FolioConsole.translations.selectDocument }
         </h3>
 
