@@ -4,6 +4,27 @@
   &.hidden
     display: none !important
 
+  &--with-flag
+    position: relative
+
+    .form-control
+      padding-left: 39px
+      position: relative
+      z-index: 1
+
+    .redactor-box.redactor-styles-on
+      padding-left: 27px
+
+  &__flag
+    position: absolute
+    top: 11px
+    left: 11px
+    z-index: 2
+    pointer-events: none
+
+    .redactor-box ~ &
+      top: 29px
+
 .form-control,
 .form-select,
 .form-check-input
