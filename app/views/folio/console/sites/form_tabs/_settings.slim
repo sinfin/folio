@@ -10,14 +10,6 @@
 - if Rails.application.config.folio_site_is_a_singleton
   = f.input :domain
 
-ruby:
-  flag_checkboxes = I18n.available_locales.map do |locale|
-    [cell('folio/console/ui/flag', locale).show.html_safe, locale]
-  end
-
-= f.input :locales, as: :check_boxes, collection: flag_checkboxes, \
-                                      checked: f.object.locales
-
 = file_picker_for_og_image(f)
 
 - if Module.const_defined?(:Boutique)

@@ -67,6 +67,7 @@ cs:
         google_analytics_tracking_code: Google analytics - trackovací kód
         google_analytics_tracking_code_v4: Google analytics - trackovací kód V4
         header_message: Oznámení v hlavičce webu
+        header_message_published: Zapnuto
         mailchimp_list_id: MailChimp - Audience ID
         locales: Jazyky
         system_email: Systémová e-mailová adresa
