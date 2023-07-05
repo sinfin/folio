@@ -10,20 +10,26 @@
   70%
     transform: scale(1)
 
+.f-c-form-footer-spacer,
 .f-c-form-footer
-  padding-top: 2 * $grid-gutter-width / 3
-  padding-bottom: 2 * $grid-gutter-width / 3
+  min-height: 60px
+
+  +mq-desktop-menu
+    min-height: 68px
+
+.f-c-form-footer
+  padding-top: $grid-gutter-width / 2
+  padding-bottom: $grid-gutter-width / 2
   background: $white
-  position: sticky
+  position: fixed
+  left: 0
+  right: 0
   bottom: 0
   z-index: 999
   box-shadow: $f-c-box-shadow-card
 
   .f-c-layout-html.slideout-open &
     display: none
-
-  &__btn
-    min-width: 100px
 
   &__ribbon
     overflow: hidden
@@ -77,3 +83,20 @@
 
   &--dirty &__ribbon
     display: flex
+
+  +mq-desktop-menu
+    padding-top: 2 * $grid-gutter-width / 3
+    padding-bottom: 2 * $grid-gutter-width / 3
+    left: 220px
+
+  +media-breakpoint-down(sm)
+    &__ribbon
+      padding-left: 20px
+      padding-right: 15px
+
+      .f-ui-icon
+        width: 24px !important
+        height: auto !important
+
+      .f-c-ui-with-icon__span
+        display: none

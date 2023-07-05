@@ -21,8 +21,12 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:class] += " #{model[:class]}"
     end
 
-    if model[:atoms_previews]
-      h[:class] += " f-c-ui-button--atoms-previews f-c-ui-button--atoms-previews-#{variant}"
+    if model[:label].present?
+      h[:class] += " f-c-ui-button--label"
+
+      if model[:hide_label_on_mobile] &&
+        h[:class] += " f-c-ui-button--hide-label-on-mobile"
+      end
     end
 
     h

@@ -16,3 +16,14 @@
     height: 16px
     flex: 0 0 16px
     position: relative
+
+  +media-breakpoint-up(md)
+    &--label
+      min-width: 100px
+
+  +media-breakpoint-down(sm)
+    &--hide-label-on-mobile &__label
+      display: none
+
+    &--hide-label-on-mobile &__icon
+      margin: 0 (( - 1 * px-to-rem(11px - 5) ))

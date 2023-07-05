@@ -1,3 +1,4 @@
+.f-c-form-footer-spacer
 .f-c-form-footer
   .container-fluid.f-c-form-footer__container
     - if back_path
@@ -6,14 +7,16 @@
               class: 'f-c-form-footer__btn',
               variant: :gray,
               label: t('folio.console.actions.back'),
+              hide_label_on_mobile: true,
               icon: :arrow_u_left_top)
 
     - if preview_path
       == cell('folio/console/ui/button',
               href: preview_path,
               class: 'f-c-form-footer__btn',
-              variant: :secondary,
+              variant: :gray,
               label: t('folio.console.actions.preview'),
+              hide_label_on_mobile: true,
               icon: :open_in_new,
               target: "_blank")
 
@@ -27,7 +30,7 @@
               label: submit_label,
               icon: :check)
 
-    .f-c-form-footer__ribbon.text-danger
+    .f-c-form-footer__ribbon.text-danger title=t('.dirty_forms')
       == cell('folio/console/ui/with_icon',
               t('.dirty_forms'),
               icon: :alert,
