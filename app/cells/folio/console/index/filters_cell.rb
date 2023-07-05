@@ -14,7 +14,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       method: :get,
       url: request.path,
       html: {
-        class: "f-c-index-filters #{form_expanded_class_name} f-c-anti-container-fluid",
+        class: "f-c-index-filters #{form_expanded_class_name} f-c-anti-container-fluid f-c-anti-container-fluid--padded",
         "data-auto-submit" => true,
       }
     }

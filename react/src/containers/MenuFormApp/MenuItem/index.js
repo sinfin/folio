@@ -63,7 +63,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
   const onChangeFn = makeOnChange(path, node, onChange)
 
   return (
-    <div className='form-inline f-c-menus-form__form'>
+    <div className='f-c-menus-form__form'>
       <div className='f-c-menus-form__form-item'>
         <FolioUiIcon name='format_align_left' />
 
