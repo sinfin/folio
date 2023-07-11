@@ -44,7 +44,7 @@
             = g.input :phone,
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
-                      required: required,
+                      required: required && required_phone?(g),
                       input_html: { id: nil }
 
   - if show_secondary_address_fields?

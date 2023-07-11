@@ -27,6 +27,12 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
     !all_blank
   end
 
+  def required_phone?(g)
+    g.object.class.validators_on(:phone).any? do |validator|
+      validator.kind_of?(ActiveRecord::Validations::PresenceValidator)
+    end
+  end
+
   def data_country_code(key)
     model.object.send(key).try(:country_code) || begin
       address_class = case key

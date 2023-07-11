@@ -50,13 +50,7 @@ class Folio::Users::InvitationsControllerTest < ActionDispatch::IntegrationTest
         invitation_token: user.raw_invitation_token,
         password: "New@Password.123",
         password_confirmation: "New@Password.123",
-        primary_address_attributes: {
-          address_line_1: "address_line_1",
-          address_line_2: "address_line_2",
-          city: "city",
-          zip: "zip",
-          country_code: "country_code",
-        }
+        primary_address_attributes: build(:folio_address_primary).attributes
       }
     }
 
