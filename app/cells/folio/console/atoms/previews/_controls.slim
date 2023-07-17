@@ -9,11 +9,12 @@
           class="f-c-atoms-previews__button--secondary"
           class="f-c-atoms-previews__button--edit"
         ]
-          = folio_icon(:pencil, height: 16)
+          = folio_icon(:edit, height: 16)
 
         button[
           type="button"
           class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--arrow"
           class="f-c-atoms-previews__button--arrow-up"
         ]
           = folio_icon(:arrow_up, height: 16)
@@ -21,12 +22,12 @@
         button[
           type="button"
           class="f-c-atoms-previews__button"
+          class="f-c-atoms-previews__button--arrow"
           class="f-c-atoms-previews__button--arrow-down"
         ]
           = folio_icon(:arrow_down, height: 16)
 
-        button[
-          type="button"
+        span[
           class="f-c-atoms-previews__button"
           class="f-c-atoms-previews__button--handle"
         ]

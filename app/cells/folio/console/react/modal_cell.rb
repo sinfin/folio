@@ -21,7 +21,11 @@ class Folio::Console::React::ModalCell < Folio::ConsoleCell
   end
 
   def data
-    url = url_for([:console, :api, klass])
+    url = if options[:url_name]
+      controller.main_app.send(options[:url_name])
+    else
+      url_for([:console, :api, klass])
+    end
 
     {
       "file-type" => model,
@@ -32,13 +36,3 @@ class Folio::Console::React::ModalCell < Folio::ConsoleCell
     }
   end
 end
-
-#   .modal.f-c-r-modal.f-c-r-modal--with-scroll-wrap.fade data-klass=class_name
-#     .modal-dialog.modal-lg.f-c-r-modal__modal-dialog
-#       .modal-content.f-c-r-modal__modal-content
-#         .modal-body.f-c-r-modal__modal-body
-#           = react_modal_for(class_name)
-
-#           button type="button" class="close" data-dismiss="modal" &times;
-
-# end

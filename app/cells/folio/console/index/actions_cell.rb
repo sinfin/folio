@@ -32,7 +32,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
       },
       edit: {
         name: :edit,
-        icon: :edit,
+        icon: :edit_box,
         url: -> (record) { through_aware_console_url_for(record, action: :edit, safe: true) },
       },
       show: {

@@ -105,6 +105,9 @@ drag_alternative:
 edit:
   width: 24
   height: 24
+edit_box:
+  width: 24
+  height: 24
 eye:
   width: 24
   height: 24
@@ -145,6 +148,9 @@ gift:
   width: 24
   height: 24
 home:
+  width: 24
+  height: 24
+info:
   width: 24
   height: 24
 information_outline:
@@ -202,9 +208,6 @@ open_in_new:
   width: 24
   height: 24
 pause:
-  width: 24
-  height: 24
-pencil:
   width: 24
   height: 24
 play:
