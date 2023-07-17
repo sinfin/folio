@@ -1,0 +1,39 @@
+.f-c-layout-body--devise
+  h1
+    @extend .h2
+    margin: 0 0 $spacer
+    text-align: center
+
+  form + .form-group
+    margin-bottom: 0
+    text-align: center
+
+  .btn-primary
+    display: flex
+    width: 100%
+
+  .new_account
+    .form-group.form-check
+      display: none
+
+.f-c-layout-devise
+  display: flex
+  flex-direction: column
+
+.f-c-layout-devise__inner
+  background: white
+  padding: $grid-gutter-width
+
++media-breakpoint-up(md)
+  .f-c-layout-html--devise,
+  .f-c-layout-body--devise
+    background: $dark
+
+  .f-c-layout-devise
+    flex: 1 1 auto
+    align-items: center
+    justify-content: center
+
+  .f-c-layout-devise__inner
+    min-width: 350px
+    border-radius: $border-radius
