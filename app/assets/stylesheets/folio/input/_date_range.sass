@@ -8,8 +8,12 @@ $gray-medium-dark: #6F7172 !default
 
 .f-input-date-range-icon
   position: absolute
-  top: calc(#{$input-height / 2} - 12px)
-  right: 6px
-  z-index: 2
+  margin-top: px-to-rem(-12px)
+  top: calc(#{$input-height / 2})
+  right: px-to-rem(6px)
+  z-index: 6
   pointer-events: none
   color: $gray-medium-dark
+
+  .input-group--filled &
+    margin-right: $input-height

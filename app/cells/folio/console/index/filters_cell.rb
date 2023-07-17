@@ -235,7 +235,7 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     end
   end
 
-  def filter_style(config)
+  def filter_style(config, filtered: false)
     width = if config[:width]
       if config[:width].is_a?(Numeric)
         "#{config[:width]}px"
@@ -244,6 +244,8 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
       end
     elsif config[:as] == :numeric_range
       "auto"
+    elsif filtered && config[:as] == :date_range
+      "250px"
     else
       "235px"
     end

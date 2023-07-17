@@ -5,9 +5,11 @@
         - if config[:as] == :hidden
           = hidden_input(f, key)
         - else
+          - filtered = filtered_by?(key)
+
           .f-c-index-filters__filter[
             class=collapsible_class_name(config)
-            style=filter_style(config)
+            style=filter_style(config, filtered:)
           ]
             - if config[:as] == :numeric_range
               .f-c-index-filters__numeric-range.input-group
@@ -18,7 +20,7 @@
 
                 = numeric_range_input(f, key, type: "to")
 
-                - if filtered_by?(key)
+                - if filtered
                   .input-group-append
                     = input_group_append
 
