@@ -3,7 +3,6 @@ import styled from 'styled-components'
 export default styled.div`
   position: sticky;
   top: 0;
-  background: #E8E8E8;
   padding: 1rem;
   z-index: 2;
   display: flex;

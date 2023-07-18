@@ -30,23 +30,34 @@
     box-shadow: 0 0 0 5px #c1e1f2
 
   &__file-btn
-    width: 24px !important
+    +unbutton
+    width: 24px
     height: 24px
-    line-height: 24px !important
+    background: rgba(255, 255, 255, 0.3)
     padding: 0
     align-items: center
     justify-content: center
     position: absolute
     right: 0
     z-index: 3
-    font-size: 0.75rem !important
     display: none
+
+    &:focus
+      outline: 0
+
+    .f-c-ui-button__icon
+      width: 18px !important
+      height: 18px !important
 
     &--destroy
       top: 0
+      color: $red
+      border-top-right-radius: $border-radius
 
     &--edit
       bottom: 0
+      color: $black
+      border-bottom-right-radius: $border-radius
 
   &__file:hover &__file-btn,
   .f-c-file-placement__img-wrap:hover &__file-btn,
@@ -62,6 +73,7 @@
     align-items: center
     justify-content: center
     position: relative
+    border-radius: $border-radius
 
     .f-image
       position: absolute

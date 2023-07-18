@@ -42,13 +42,15 @@ module Folio::Atom
         reflection = klass.reflections[key.to_s]
         plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
         file_type = reflection.source_reflection.options[:class_name]
-        files_url = Rails.application.config.folio_atom_files_url.call(file_type.constantize)
+        file_klass = file_type.constantize
+        files_url = Rails.application.config.folio_atom_files_url.call(file_klass)
 
         {
           file_type:,
           files_url:,
           key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
           label: klass.human_attribute_name(key),
+          human_type: file_klass.try(:human_type) || "document",
           plural:,
         }
       end

@@ -30,9 +30,6 @@ import { openFileModal } from 'ducks/fileModal'
 import AtomForm from 'components/AtomForm'
 import SerializedAtoms from 'components/SerializedAtoms'
 import SplittableJoinModal from 'components/SplittableJoinModal'
-import { confirm } from 'utils/confirmed'
-
-import { FILE_TRIGGER_EVENT } from './constants'
 
 ReactModal.setAppElement('body')
 
@@ -44,13 +41,6 @@ class Atoms extends React.PureComponent {
     const $ = window.jQuery
     if (!$) return
     $(window).on('message', this.receiveMessage)
-    $(document).on(FILE_TRIGGER_EVENT, (e, data) => { this.handleFileTrigger(data) })
-  }
-
-  componentWillUnmount () {
-    const $ = window.jQuery
-    if (!$) return
-    $(document).off(FILE_TRIGGER_EVENT)
   }
 
   receiveMessage = (jqueryEvent) => {
@@ -109,10 +99,12 @@ class Atoms extends React.PureComponent {
     this.props.dispatch(saveFormAtoms())
   }
 
+  updateFormAtomAttachment = (index, attachmentKey, file) => {
+    this.props.dispatch(updateFormAtomAttachments(index, attachmentKey, { file_id: file.id, file }))
+  }
+
   removeFormAtomAttachment = (index, attachmentKey) => {
-    if (confirm()) {
-      this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
-    }
+    this.props.dispatch(removeFormAtomAttachment(index, attachmentKey))
   }
 
   refreshPreview = () => {
@@ -151,10 +143,6 @@ class Atoms extends React.PureComponent {
     this.setState({ ...this.state, splittable: null })
   }
 
-  handleFileTrigger ({ attachmentKey, data, index }) {
-    this.props.dispatch(updateFormAtomAttachments(index, attachmentKey, data))
-  }
-
   render () {
     const { atoms, destroyedIds, form, namespace, structures } = this.props.atoms
 
@@ -181,6 +169,7 @@ class Atoms extends React.PureComponent {
             updateFormAtomType={(newType, values) => this.props.dispatch(updateFormAtomType(newType, values))}
             updateFormAtomValue={(index, key, value) => this.props.dispatch(updateFormAtomValue(index, key, value))}
             updateFormAtomAssociation={(index, key, record) => this.props.dispatch(updateFormAtomAssociation(index, key, record))}
+            updateFormAtomAttachment={this.updateFormAtomAttachment}
             removeFormAtomAttachment={this.removeFormAtomAttachment}
             atomTypes={this.props.atomTypes}
             structures={structures}

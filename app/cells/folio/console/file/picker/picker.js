@@ -13,7 +13,7 @@ window.FolioConsole.File.Picker.addControlsForStimulusController = (opts) => {
 
     if (key === 'modal') button.dataset.file = opts.element.dataset.file
 
-    const icon = window.Folio.Ui.Icon.create(key === 'modal' ? 'edit' : 'close')
+    const icon = window.Folio.Ui.Icon.create(key === 'modal' ? 'edit_box' : 'close')
     button.appendChild(icon)
 
     button.dataset.action = `f-c-file-picker#onFormControl${window.Folio.capitalize(key)}Click`
@@ -27,10 +27,16 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
   static values = {
     fileType: String,
-    hasFile: Boolean
+    hasFile: Boolean,
+    inReact: { type: Boolean, default: false },
+    reactFile: { type: Object, default: {} },
   }
 
   connect () {
+    if (this.reactFileValue && this.reactFileValue.attributes) {
+      this.createFile(this.reactFileValue)
+    }
+
     this.boundOnSelected = this.onSelected.bind(this)
     this.element.addEventListener(this.selectedEventName(), this.boundOnSelected)
   }
@@ -45,42 +51,60 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   clear () {
-    this.destroyInputTarget.value = '1'
-    this.destroyInputTarget.disabled = false
+    if (this.inReactValue) {
+      this.triggerReactFileUpdate(null)
+    } else {
+      this.destroyInputTarget.value = '1'
+      this.destroyInputTarget.disabled = false
 
-    this.fileIdInputTarget.value = ''
+      this.fileIdInputTarget.value = ''
 
-    this.hasFileValue = false
-    this.contentTarget.innerHTML = ''
+      this.hasFileValue = false
+      this.contentTarget.innerHTML = ''
 
-    this.triggerPreviewRefresh()
+      this.triggerPreviewRefresh()
+    }
   }
 
   onSelected (e) {
-    this.destroyInputTarget.value = '0'
-    this.destroyInputTarget.disabled = true
+    if (!this.inReactValue) {
+      this.destroyInputTarget.value = '0'
+      this.destroyInputTarget.disabled = true
 
-    this.fileIdInputTarget.value = e.detail.file.id
+      this.fileIdInputTarget.value = e.detail.file.id
+    }
 
     this.contentTarget.innerHTML = ''
     this.hasFileValue = true
 
-    switch (e.detail.file.attributes.human_type) {
+    this.createFile(e.detail.file)
+
+    if (this.inReactValue) {
+      this.triggerReactFileUpdate(e.detail.file)
+    } else {
+      this.triggerPreviewRefresh()
+    }
+  }
+
+  triggerReactFileUpdate (file) {
+    this.element.dispatchEvent(new window.CustomEvent(`folioConsoleFilePickerInReact/fileUpdate`, { bubbles: true, detail: { file } }))
+  }
+
+  createFile (serializedFile) {
+    switch (serializedFile.attributes.human_type) {
       case 'audio':
       case 'video':
-        this.createPlayer(e.detail.file)
+        this.createPlayer(serializedFile)
         break
       case 'image':
-        this.createThumbnail(e.detail.file)
+        this.createThumbnail(serializedFile)
         break
       case 'document':
-        this.createDocument(e.detail.file)
+        this.createDocument(serializedFile)
         break
       default:
-        throw new Error(`Unknown human_type ${e.detail.file.attributes.human_type}`)
+        throw new Error(`Unknown human_type ${serializedFile.attributes.human_type}`)
     }
-
-    this.triggerPreviewRefresh()
   }
 
   createThumbnail (serializedFile) {

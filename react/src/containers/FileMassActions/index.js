@@ -28,7 +28,7 @@ function FileMassActions ({ massSelectedIds, massSelectedIndestructibleIds, file
   }
 
   return (
-    <FileMassActionsWrap>
+    <FileMassActionsWrap className='my-g p-3 bg-medium-gray'>
       <div className='d-flex'>
         <strong className='d-block me-2'>{massSelectedIds.length}</strong>
         <FolioUiIcon name='content_copy' />

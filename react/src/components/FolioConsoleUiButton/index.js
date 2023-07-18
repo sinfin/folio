@@ -34,6 +34,7 @@ export default function FolioConsoleUiButton (props) {
         target={props.target}
         download={props.download}
         rel={props.rel}
+        data-action={props.dataAction}
       >
         <FolioConsoleUiButtonContents
           icon={props.icon}
@@ -50,6 +51,7 @@ export default function FolioConsoleUiButton (props) {
         type={props.type || 'button'}
         onClick={props.onClick}
         disabled={props.disabled}
+        data-action={props.dataAction}
       >
         <FolioConsoleUiButtonContents
           icon={props.icon}

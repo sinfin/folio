@@ -304,8 +304,8 @@ class AtomForm extends React.PureComponent {
                       attachments={atom.record.meta.attachments}
                       atom={atom.record}
                       index={index}
-                      remove={this.props.removeFormAtomAttachment}
-                      openFileModal={this.props.openFileModal}
+                      updateFormAtomAttachment={this.props.updateFormAtomAttachment}
+                      removeFormAtomAttachment={this.props.removeFormAtomAttachment}
                       style={makeStyle()}
                     />
                   )

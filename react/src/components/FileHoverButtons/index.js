@@ -1,28 +1,28 @@
 import React from 'react'
 
-import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 const FileHoverButtons = ({ destroy, edit, onDestroy, onEdit }) => {
   return (
     <React.Fragment>
       {destroy && (
-        <FolioConsoleUiButton
+        <button
           type='button'
-          class='f-c-file-list__file-btn f-c-file-list__file-btn--destroy'
-          variant='danger'
-          icon='close'
+          className='f-c-file-list__file-btn f-c-file-list__file-btn--destroy'
           onClick={(e) => { e.stopPropagation(); onDestroy() }}
-        />
+        >
+          <FolioUiIcon name='close' />
+        </button>
       )}
 
       {edit && (
-        <FolioConsoleUiButton
+        <button
           type='button'
-          class='f-c-file-list__file-btn f-c-file-list__file-btn--edit'
-          variant='secondary'
-          icon='edit'
+          className='f-c-file-list__file-btn f-c-file-list__file-btn--edit'
           onClick={(e) => { e.stopPropagation(); onEdit() }}
-        />
+        >
+          <FolioUiIcon name='edit_box' />
+        </button>
       )}
     </React.Fragment>
   )
