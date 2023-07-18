@@ -38,10 +38,11 @@ class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
     @new_dropdown_links ||= if model[:new_dropdown_links].present?
       model[:new_dropdown_links]
     elsif model[:types].present?
-      model[:types].map do |klass|
+      model[:types].map do |klass, icon|
         {
           title: klass.model_name.human,
           url: through_aware_console_url_for(model[:klass], action: :new, hash: { type: klass.to_s }, safe: true),
+          icon:
         }
       end
     end
