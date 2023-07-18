@@ -16,6 +16,8 @@ import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
 
+import Wrap from './styled/Wrap'
+
 const DEFAULT_STATE = {
   tags: [],
   author: null,
@@ -56,7 +58,7 @@ class UploadTagger extends React.PureComponent {
     if (!this.props.uploads.showTagger) return null
 
     return (
-      <div className='alert alert-primary mb-3 p-3'>
+      <Wrap className='my-g p-g'>
         <p>{window.FolioConsole.translations.newFilesAttributes}</p>
         <div className='row'>
           <FormGroup className={this.props.taggable ? 'col-md-6 pr-md-2' : 'col-12'}>
@@ -108,7 +110,7 @@ class UploadTagger extends React.PureComponent {
             label={window.FolioConsole.translations.close}
           />
         </FolioConsoleUiButtons>
-      </div>
+      </Wrap>
     )
   }
 }
