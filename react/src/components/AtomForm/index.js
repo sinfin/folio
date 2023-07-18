@@ -331,14 +331,14 @@ class AtomForm extends React.PureComponent {
             return (
               <AtomFormCardOuter
                 key={atom.record.id || atom.record.lodashId}
-                className={asMolecule ? 'card-outer' : undefined}
+                asMolecule={asMolecule}
                 focused={index === this.state.focusedIndex || atom.record.meta.molecule_singleton}
               >
                 <div className={asMolecule ? 'card' : undefined}>
                   <div className={asMolecule ? 'card-body mb-n3' : undefined}>
                     {atom.messages.length > 0 && (
-                      <div className='my-3 alert alert-danger'>
-                        <div className='font-weight-bold'>{window.FolioConsole.translations.errorNotification}</div>
+                      <div className={`${asMolecule ? 'mt-0 mb-g' : 'my-g'} alert alert-danger`}>
+                        <div className='fw-bold'>{window.FolioConsole.translations.errorNotification}</div>
 
                         <ul>
                           {atom.messages.map((message) => (

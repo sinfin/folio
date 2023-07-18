@@ -33,7 +33,7 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   connect () {
-    if (this.reactFileValue && this.reactFileValue.attributes) {
+    if (this.reactFileValue && this.reactFileValue.attributes && this.contentTarget.childNodes.length === 0) {
       this.createFile(this.reactFileValue)
     }
 

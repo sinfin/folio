@@ -94,6 +94,7 @@ window.Folio.Stimulus.register('f-input-character-counter', class extends window
     const wrap = formGroup.querySelector('.f-input-character-counter-wrap')
 
     if (!wrap) return
-    wrap.parentElement().removeChild(wrap)
+    if (!wrap.parentNode) return
+    wrap.parentNode.removeChild(wrap)
   }
 })
