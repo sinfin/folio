@@ -179,6 +179,8 @@ module Folio
         end
 
         if deprecations.present?
+          load Folio::Engine.root.join("app/lib/folio/deprecation.rb")
+
           puts "\nFolio deprecations:"
 
           deprecations.each do |msg|
