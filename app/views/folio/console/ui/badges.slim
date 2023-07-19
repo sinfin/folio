@@ -10,7 +10,10 @@ h2 Icons
 
 - %i[text microphone video].each do |icon|
   .mt-3
-    == cell('folio/console/ui/badge', icon, variant: 'medium-gray', icon:)
+    == cell('folio/console/ui/badge',
+            icon.to_s.capitalize,
+            variant: 'medium-gray',
+            icon:)
 
 h2 STI badge
 
