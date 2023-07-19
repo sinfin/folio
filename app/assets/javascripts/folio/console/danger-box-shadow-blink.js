@@ -3,6 +3,12 @@ window.Folio.Stimulus.register('f-c-danger-box-shadow-blink', class extends wind
     this.timeout = window.setTimeout(() => {
       this.element.classList.add('has-danger-blink')
 
+      const input = this.element.querySelector('.form-control.is-invalid')
+
+      if (input) {
+        input.focus()
+      }
+
       this.timeout = window.setTimeout(() => {
         this.element.classList.remove('has-danger-blink')
         delete this.element.dataset.controller

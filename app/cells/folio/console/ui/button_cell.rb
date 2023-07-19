@@ -21,6 +21,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:class] += " #{model[:class]}"
     end
 
+    if model[:size]
+      h[:class] += " btn-#{model[:size]}"
+    end
+
     if model[:label].present?
       h[:class] += " f-c-ui-button--label"
 
@@ -46,6 +50,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       variant
       confirm
       modal
+      size
     ]
   end
 
@@ -54,6 +59,15 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       "medium-dark"
     else
       model[:variant] || "primary"
+    end
+  end
+
+  def icon_height
+    case model[:size]
+    when :sm
+      16
+    else
+      24
     end
   end
 end

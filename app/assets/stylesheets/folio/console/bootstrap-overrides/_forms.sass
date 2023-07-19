@@ -25,6 +25,12 @@
     .redactor-box ~ &
       top: 29px
 
+  &.has-danger-blink
+    .form-control,
+    .folio-console-react-picker__button .btn,
+    .redactor-box
+      box-shadow: 0 0 10px 2px $red !important
+
 .form-control,
 .form-select,
 .form-check-input
@@ -35,3 +41,7 @@
 
 .form-text
   display: block
+
+.invalid-feedback + .form-text,
+.form-text + .form-text
+  margin-top: $form-text-margin-top / 2

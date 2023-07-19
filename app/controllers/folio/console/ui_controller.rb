@@ -6,6 +6,18 @@ class Folio::Console::UiController < Folio::Console::BaseController
   def show
   end
 
+  def buttons
+    @buttons_model = [
+      { variant: :primary, label: "Primary" },
+      { variant: :secondary, label: "Secondary" },
+      { variant: :success, label: "Success" },
+      { variant: :info, label: "Info" },
+      { variant: :warning, label: "Warning" },
+      { variant: :danger, label: "Danger" },
+      { variant: :info, loader: true, label: "Loader" },
+    ]
+  end
+
   def alerts
     @hide_flash_messages = true
 
