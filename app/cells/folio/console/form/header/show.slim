@@ -1,6 +1,10 @@
 .f-c-form-header
   .f-c-form-header__inner
-    = render(:_title)
+    .f-c-form-header__title-wrap
+      = render(:_title)
+
+      - if options[:sti_badge] && model.try(:object)
+        == cell('folio/console/ui/sti_badge', model.object)
 
     - if options[:right]
       .f-c-form-header__right

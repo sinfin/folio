@@ -26,6 +26,7 @@ Folio::Engine.routes.draw do
     scope constraints: Rails.application.config.folio_console_default_routes_contstraints do
       resource :ui, only: %i[show], controller: "ui" do
         get :alerts
+        get :badges
       end
 
       resources :pages, except: %i[show] do
