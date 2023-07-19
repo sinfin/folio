@@ -1,4 +1,6 @@
 .f-c-layout-sidebar
+  background: $dark-gray
+  color: $gray
   display: flex
   flex-direction: column
 
@@ -10,27 +12,16 @@
       overflow-y: auto
 
     & + &
-      border-top: 1px solid rgba(#979797, 0.42)
-
-  &__title
-    text-transform: uppercase
-    font-weight: $font-weight-bold
-    display: block
-    padding: $grid-gutter-half
-
-    &, &:hover, &:focus
-      color: $white
-      text-decoration: none
+      border-top: 1px solid rgba($gray, 0.4227)
 
   &__part-title
     text-transform: uppercase
     font-weight:
     display: block
-    color: #AAADAD
     font-weight: $font-weight-bold
     font-size: 11.5px
     line-height: 13px
-    padding: 13px 30px 12px 15px
+    padding: $grid-gutter-half $grid-gutter-width $grid-gutter-half $grid-gutter-half
     position: relative
     cursor: pointer
 
@@ -41,7 +32,7 @@
       height: 0
       border-style: solid
       border-width: 0 5px 5px 5px
-      border-color: transparent transparent $white transparent
+      border-color: transparent transparent $gray transparent
       position: absolute
       top: 50%
       right: 12px
@@ -58,22 +49,25 @@
 
   &__ul
     margin: 0
-    padding: 10px 0
+    padding: $grid-gutter-width / 4 0
+
+  &__li
+    list-style: none
 
   &__part-title + &__ul
     padding-top: 0
 
   &__ul + &__ul
-    border-top: 1px solid rgba(#979797, 0.42)
+    border-top: 1px solid rgba($gray, 0.4227)
 
   &__a
     display: flex
     align-items: center
     gap: $f-c-ui-with-icon-gap
-    padding: 9px 15px 8px
+    padding: 9px $grid-gutter-width / 2 8px
 
     &, &:hover, &:focus
-      color: $medium-gray
+      color: $gray
       text-decoration: none
 
     &--active
@@ -86,13 +80,13 @@
     text-decoration: underline
 
   &__group + &__group
-    border-top: 1px solid rgba(#979797, 0.42)
+    border-top: 1px solid rgba($gray, 0.4227)
 
   &__group--collapsed &__ul
     display: none
 
   &__group--expanded
-    background: #212529
+    background: $f-c-overlays-black
 
   +mq-mobile-menu
     &:not(.slideout-menu)
