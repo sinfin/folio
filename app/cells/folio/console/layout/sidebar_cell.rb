@@ -73,13 +73,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
 
       if link_source[:icon]
-        link(nil, path, active_start_with: link_source[:active_start_with]) do
+        link(nil, path, active_start_with: link_source[:active_start_with] != false) do
           concat(folio_icon(link_source[:icon], class: "f-c-layout-sidebar__icon", height: 16))
           concat(content_tag(:span, label, class: "f-c-layout-sidebar__span"))
         end
       else
         link(label, path, paths:,
-                          active_start_with: link_source[:active_start_with])
+                          active_start_with: link_source[:active_start_with] != false)
       end
     else
       klass = link_source.constantize
