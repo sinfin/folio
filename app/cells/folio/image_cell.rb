@@ -58,7 +58,7 @@ class Folio::ImageCell < Folio::ApplicationCell
       h = {
         normal:,
         src: normal.url,
-        alt: options[:alt] || file.try(:description) || "",
+        alt: options[:alt] || file.try(:alt) || file.try(:description) || "",
         title: options[:title],
         width: normal[:width],
         height: normal[:height],
