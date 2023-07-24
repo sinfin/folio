@@ -189,9 +189,11 @@ function * updatedFilePerform (action) {
 
     if (elements.length) {
       const fileData = JSON.stringify(action.response)
+      const event = new window.CustomEvent(window.FolioConsole.Events.FOLIO_CONSOLE_FILE_UPDATED, { bubbles: true, detail: { file: action.response } })
 
       for (let i = 0; i < elements.length; ++i) {
         elements[i].dataset.file = fileData
+        elements[i].dispatchEvent(event)
       }
     }
 

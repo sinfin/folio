@@ -24,8 +24,8 @@ const CHANGE_FILE_PLACEMENTS_PAGE = 'fileModal/CHANGE_FILE_PLACEMENTS_PAGE'
 
 // Actions
 
-export function openFileModal (fileType, filesUrl, file) {
-  return { type: OPEN_FILE_MODAL, fileType, filesUrl, file }
+export function openFileModal (fileType, filesUrl, file, autoFocusField) {
+  return { type: OPEN_FILE_MODAL, fileType, filesUrl, file, autoFocusField }
 }
 
 export function closeFileModal () {
@@ -239,6 +239,7 @@ function modalReducer (state = initialState, action) {
         file: action.file,
         fileType: action.fileType,
         filesUrl: action.filesUrl,
+        autoFocusField: action.autoFocusField,
         filePlacements: {
           ...initialState.filePlacements,
           loading: true

@@ -19,7 +19,8 @@ class Folio::Console::FileSerializer
              :sensitive_content,
              :default_gravity,
              :default_gravities_for_select,
-             :aasm_state
+             :aasm_state,
+             :alt
 
   attribute :human_type do |object|
     object.class.human_type

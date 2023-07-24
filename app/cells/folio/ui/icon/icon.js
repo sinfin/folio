@@ -31,10 +31,12 @@ window.Folio.Ui.Icon.data = (name, options = {}) => {
   data.classNames = ['f-ui-icon', `f-ui-icon--${name}`]
 
   if (options.class) {
-    options.class.split(" ").forEach((className) => data.classNames.push(className))
+    options.class.split(' ').forEach((className) => data.classNames.push(className))
   }
 
   data.href = `${window.Folio.Ui.Icon.svgSpritePath}#${name}`
+
+  data.data = options.data || {}
 
   return data
 }
@@ -51,6 +53,10 @@ window.Folio.Ui.Icon.create = (name, options = {}) => {
 
   data.classNames.forEach((className) => {
     svg.classList.add(className)
+  })
+
+  Object.keys(data.data).forEach((key) => {
+    svg.dataset[key] = data.data[key]
   })
 
   const use = document.createElementNS(window.Folio.Ui.Icon.SVG_NS, 'use')

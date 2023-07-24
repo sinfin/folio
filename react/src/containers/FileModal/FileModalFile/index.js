@@ -21,7 +21,7 @@ import MainImageOuter from './styled/MainImageOuter'
 import MainImageInner from './styled/MainImageInner'
 import FileEditInput from './styled/FileEditInput'
 
-export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable }) => {
+export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fileModal, onTagsChange, closeFileModal, saveModal, updateThumbnail, destroyThumbnail, readOnly, changeFilePlacementsPage, canDestroyFiles, taggable, autoFocusField }) => {
   const file = fileModal.file
   const isImage = file.attributes.human_type === 'image'
   const isAudio = file.attributes.human_type === 'audio'
@@ -114,7 +114,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             {(isAudio || isVideo) && <div className='form-group'><FolioPlayer file={file} /></div>}
 
             <FormGroup>
-              <Label>{window.FolioConsole.translations.fileAuthor}</Label>
+              <Label className='form-label'>{window.FolioConsole.translations.fileAuthor}</Label>
               {readOnly ? (
                 formState.author ? <p className='m-0'>{formState.author}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
               ) : (
@@ -127,9 +127,45 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               )}
             </FormGroup>
 
+            <FormGroup>
+              <Label className='form-label'>{window.FolioConsole.translations.fileDescription}</Label>
+              {readOnly ? (
+                formState.description ? <p className='m-0'>{formState.description}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+              ) : (
+                <TextareaAutosize
+                  name='description'
+                  value={formState.description || ''}
+                  onChange={(e) => onValueChange('description', e.currentTarget.value)}
+                  type='text'
+                  className='form-control'
+                  rows={3}
+                  async
+                />
+              )}
+            </FormGroup>
+
+            {
+              isImage && (
+                <FormGroup>
+                  <Label className='form-label'>Alt</Label>
+                  {readOnly ? (
+                    formState.alt ? <p className='m-0'>{formState.alt}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+                  ) : (
+                    <Input
+                      name='alt'
+                      value={formState.alt || ''}
+                      onChange={(e) => onValueChange('alt', e.currentTarget.value)}
+                      className='form-control'
+                      autoFocus={autoFocusField === 'alt'}
+                    />
+                  )}
+                </FormGroup>
+              )
+            }
+
             {taggable && (
               <div className='form-group string optional file_tag_list'>
-                <label className='control-label string optional'>
+                <label className='form-label string optional'>
                   {window.FolioConsole.translations.tagsLabel}
                 </label>
 
@@ -156,27 +192,10 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
               </div>
             )}
 
-            <FormGroup>
-              <Label>{window.FolioConsole.translations.fileDescription}</Label>
-              {readOnly ? (
-                formState.description ? <p className='m-0'>{formState.description}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
-              ) : (
-                <TextareaAutosize
-                  name='description'
-                  value={formState.description || ''}
-                  onChange={(e) => onValueChange('description', e.currentTarget.value)}
-                  type='text'
-                  className='form-control'
-                  rows={3}
-                  async
-                />
-              )}
-            </FormGroup>
-
             {
               isImage && (
                 <FormGroup>
-                  <Label>{window.FolioConsole.translations.fileDefaultGravity}</Label>
+                  <Label className='form-label'>{window.FolioConsole.translations.fileDefaultGravity}</Label>
                   {readOnly ? (
                     <p className='m-0'>{formState.default_gravity}</p>
                   ) : (
@@ -197,10 +216,11 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
                 </FormGroup>
               )
             }
+
             {
               typeof file.attributes.preview_duration === 'number' && (
                 <FormGroup>
-                  <Label>{window.FolioConsole.translations.filePreviewDuration}</Label>
+                  <Label className='form-label'>{window.FolioConsole.translations.filePreviewDuration}</Label>
                   {readOnly ? (
                     <p className='m-0'>{formState.preview_duration}</p>
                   ) : (
@@ -220,7 +240,7 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             ) : (
               <FormGroup>
                 <FormGroup check>
-                  <Label check>
+                  <Label className='form-label' check>
                     <Input
                       type='checkbox'
                       name='sensitive_content'

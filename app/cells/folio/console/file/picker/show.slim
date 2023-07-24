@@ -34,3 +34,17 @@
     - if hint = hint_for(fp)
       small.f-c-file-picker__hint.form-text.text-muted
         = hint
+
+    - if klass.human_type == "image"
+      small.f-c-file-picker__alt.form-text.text-muted
+        span.f-c-file-picker__alt-label<>
+          ' alt:
+
+        span.f-c-file-picker__alt-value<> data-f-c-file-picker-target="altValue"
+          - if file_placement && file_placement.file
+            = file_placement.file.alt
+
+        = folio_icon(:edit,
+                     height: 12,
+                     class: 'f-c-file-picker__alt-ico',
+                     data: { action: "click->f-c-file-picker#onAltClick" })

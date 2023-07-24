@@ -23,13 +23,13 @@ window.FolioConsole.File.Picker.addControlsForStimulusController = (opts) => {
 }
 
 window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.Controller {
-  static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput']
+  static targets = ['idInput', 'content', 'fileIdInput', 'destroyInput', 'altValue']
 
   static values = {
     fileType: String,
     hasFile: Boolean,
     inReact: { type: Boolean, default: false },
-    reactFile: { type: Object, default: {} },
+    reactFile: { type: Object, default: {} }
   }
 
   connect () {
@@ -39,11 +39,14 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
     this.boundOnSelected = this.onSelected.bind(this)
     this.element.addEventListener(this.selectedEventName(), this.boundOnSelected)
+
+    this.boundOnUpdated = this.onUpdated.bind(this)
+    this.element.addEventListener(window.FolioConsole.Events.FOLIO_CONSOLE_FILE_UPDATED, this.boundOnUpdated)
   }
 
   disconnect () {
     this.element.removeEventListener(this.selectedEventName(), this.boundOnSelected)
-    this.boundOnSelected = null
+    delete this.boundOnSelected
   }
 
   selectedEventName () {
@@ -51,6 +54,8 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
   }
 
   clear () {
+    this.updateAlt()
+
     if (this.inReactValue) {
       this.triggerReactFileUpdate(null)
     } else {
@@ -78,6 +83,7 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
     this.hasFileValue = true
 
     this.createFile(e.detail.file)
+    this.updateAlt(e.detail.file)
 
     if (this.inReactValue) {
       this.triggerReactFileUpdate(e.detail.file)
@@ -86,8 +92,20 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
     }
   }
 
+  onUpdated (e) {
+    if (e.detail.file) {
+      this.contentTarget.innerHTML = ""
+      this.createFile(e.detail.file)
+      this.updateAlt(e.detail.file)
+    }
+  }
+
+  updateAlt (file) {
+    this.altValueTarget.innerHTML = file ? (file.attributes.alt || '') : ''
+  }
+
   triggerReactFileUpdate (file) {
-    this.element.dispatchEvent(new window.CustomEvent(`folioConsoleFilePickerInReact/fileUpdate`, { bubbles: true, detail: { file } }))
+    this.element.dispatchEvent(new window.CustomEvent('folioConsoleFilePickerInReact/fileUpdate', { bubbles: true, detail: { file } }))
   }
 
   createFile (serializedFile) {
@@ -126,8 +144,12 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
   onFormControlModalClick (e) {
     e.preventDefault()
+    this.openModal({ trigger: e.currentTarget, file: JSON.parse(e.currentTarget.dataset.file) })
+  }
 
-    e.currentTarget.dispatchEvent(new window.CustomEvent(`folioConsoleModalSingleSelect/${this.fileTypeValue}/showFileModal`, { bubbles: true, detail: { file: JSON.parse(e.currentTarget.dataset.file) } }))
+  openModal ({ trigger, file, autoFocusField }) {
+    const eventName = `folioConsoleModalSingleSelect/${this.fileTypeValue}/showFileModal`
+    trigger.dispatchEvent(new window.CustomEvent(eventName, { bubbles: true, detail: { file, autoFocusField } }))
   }
 
   onFormControlDestroyClick (e) {
@@ -138,5 +160,9 @@ window.Folio.Stimulus.register('f-c-file-picker', class extends window.Stimulus.
 
   triggerPreviewRefresh () {
     this.element.dispatchEvent(new window.CustomEvent('folioConsoleCustomChange', { bubbles: true }))
+  }
+
+  onAltClick (e) {
+    this.openModal({ trigger: e.currentTarget, file: JSON.parse(this.element.querySelector('.f-c-file-picker-thumb').dataset.file), autoFocusField: 'alt' })
   }
 })

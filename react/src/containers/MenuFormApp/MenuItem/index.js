@@ -118,7 +118,7 @@ function MenuItem ({ node, path, onChange, linkOptions, styleOptions, remove }) 
 
       <div className='f-c-menus-form__form-item px-h'>
         <FormGroup check>
-          <Label check>
+          <Label className='form-label' check>
             <Input
               type='checkbox'
               checked={!!node.open_in_new}

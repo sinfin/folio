@@ -34,6 +34,7 @@ end
 #  aasm_state                        :string
 #  remote_services_data              :json
 #  preview_track_duration_in_seconds :integer
+#  alt                               :string
 #
 # Indexes
 #

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import FolioUiIcon from 'components/FolioUiIcon'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 const I18N = {
@@ -69,6 +70,16 @@ class FolioConsoleFilePicker extends React.PureComponent {
             dataAction='f-c-file-picker#onBtnClick'
           />
         </div>
+
+        <small className='f-c-file-picker__alt form-text text-muted'>
+          <span className='f-c-file-picker__alt-label'>alt:</span>
+          {' '}
+          <span className='f-c-file-picker__alt-value' data-f-c-file-picker-target='altValue'>
+            {this.props.file ? (this.props.file.attributes.alt || '') : ''}
+          </span>
+          {' '}
+          <FolioUiIcon name='edit' height={12} class='f-c-file-picker__alt-ico' data={{ action: 'click->f-c-file-picker#onAltClick' }} />
+        </small>
       </div>
     )
   }

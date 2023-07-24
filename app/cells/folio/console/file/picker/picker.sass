@@ -25,9 +25,22 @@ $medium-gray: #E8E8E8 !default
   &[data-f-c-file-picker-has-file-value="true"] &__btn-wrap
     display: none
 
-  &--as-image &__btn-wrap
+  &--as-image
     width: 168px
+
+  &--as-image &__btn-wrap
     height: 168px
     display: flex
     align-items: center
     justify-content: center
+
+  &__alt-ico
+    cursor: pointer
+    position: relative
+    top: -1px
+
+    &:hover
+      color: $black
+
+  &[data-f-c-file-picker-has-file-value="false"] &__alt
+    display: none

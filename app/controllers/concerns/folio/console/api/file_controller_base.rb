@@ -103,6 +103,7 @@ module Folio::Console::Api::FileControllerBase
         :description,
         :sensitive_content,
         :default_gravity,
+        :alt,
       ]
 
       if @klass.new.respond_to?("preview_duration=")

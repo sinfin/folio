@@ -16,6 +16,7 @@ export default function Field ({ atom, field, index, onChange, onValueChange, st
       check={isCheck}
     >
       <Label
+        className='form-label'
         check={isCheck}
       >
         {isCheck && (

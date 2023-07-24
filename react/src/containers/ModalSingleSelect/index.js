@@ -9,7 +9,7 @@ class ModalSingleSelect extends Component {
 
   componentWillMount () {
     window.addEventListener(`${EVENT_NAME_BASE}/${this.props.fileType}/showFileModal`, (e) => {
-      this.props.openFileModal(this.props.fileType, this.props.filesUrl, e.detail.file)
+      this.props.openFileModal(this.props.fileType, this.props.filesUrl, e.detail.file, e.detail.autoFocusField)
     })
 
     window.addEventListener(`${EVENT_NAME_BASE}/${this.props.fileType}/showModal`, (e) => {

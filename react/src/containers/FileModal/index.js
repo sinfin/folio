@@ -32,6 +32,7 @@ class FileModal extends Component {
       this.state = {
         author: props.fileModal.file.attributes.author,
         default_gravity: props.fileModal.file.attributes.default_gravity,
+        alt: props.fileModal.file.attributes.alt,
         description: props.fileModal.file.attributes.description,
         preview_duration: props.fileModal.file.attributes.preview_duration,
         sensitive_content: props.fileModal.file.attributes.sensitive_content,
@@ -41,6 +42,7 @@ class FileModal extends Component {
       this.state = {
         author: null,
         default_gravity: '',
+        alt: null,
         description: null,
         preview_duration: 30,
         sensitive_content: false,
@@ -63,6 +65,7 @@ class FileModal extends Component {
         this.setState({
           ...this.state,
           author: this.props.fileModal.file.attributes.author,
+          alt: this.props.fileModal.file.attributes.alt,
           default_gravity: this.props.fileModal.file.attributes.default_gravity,
           description: this.props.fileModal.file.attributes.description,
           preview_duration: this.props.fileModal.file.attributes.preview_duration,
@@ -178,6 +181,7 @@ class FileModal extends Component {
             formState={this.state}
             changeFilePlacementsPage={this.changeFilePlacementsPage}
             readOnly={readOnly}
+            autoFocusField={fileModal.autoFocusField}
           />
         )}
       </ReactModal>
