@@ -57,6 +57,7 @@
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
 //= require folio/console/danger-box-shadow-blink
+//= require folio/console/popover
 
 //= require folio/console/ui/alert/alert
 //= require folio/console/ui/button/button

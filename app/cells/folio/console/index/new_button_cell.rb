@@ -12,7 +12,14 @@ class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
       label:,
     }
 
-    if model[:react]
+    if model[:popover]
+      h["data-controller"] = "f-c-popover"
+      h["data-f-c-popover-content-value"] = model[:popover]
+      h["data-f-c-popover-placement-value"] = "bottom"
+      h["data-f-c-popover-trigger-value"] = "focus"
+
+      h
+    elsif model[:react]
       h["data-controller"] = "f-click-trigger"
       h["data-f-click-trigger-target-value"] = '.modal.show f-c-r-dropzone-trigger, .modal.show .f-c-file-list__dropzone-trigger, .folio-react-wrap[data-mode="index"] f-c-r-dropzone-trigger, .folio-react-wrap[data-mode="index"] .f-c-file-list__dropzone-trigger'
 
