@@ -38,6 +38,22 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h["data-bs-target"] = model[:modal]
     end
 
+    if model[:notification_modal].present?
+      if h["data-controller"]
+        h["data-controller"] += " f-c-ui-notification-modal-trigger"
+      else
+        h["data-controller"] =  "f-c-ui-notification-modal-trigger"
+      end
+
+      if h["data-action"]
+        h["data-action"] += " f-c-ui-notification-modal-trigger#onClick"
+      else
+        h["data-action"] =  "f-c-ui-notification-modal-trigger#onClick"
+      end
+
+      h["data-f-c-ui-notification-modal-trigger-data-value"] = model[:notification_modal].to_json
+    end
+
     h
   end
 
@@ -51,6 +67,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       confirm
       modal
       size
+      notification_modal
     ]
   end
 

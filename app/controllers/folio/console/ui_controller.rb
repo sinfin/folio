@@ -10,11 +10,42 @@ class Folio::Console::UiController < Folio::Console::BaseController
     @buttons_model = [
       { variant: :primary, label: "Primary" },
       { variant: :secondary, label: "Secondary" },
+      { variant: :tertiary, label: "Tertiary" },
       { variant: :success, label: "Success" },
       { variant: :info, label: "Info" },
       { variant: :warning, label: "Warning" },
       { variant: :danger, label: "Danger" },
       { variant: :info, loader: true, label: "Loader" },
+    ]
+  end
+
+  def modals
+    @button_model = {
+      variant: :info,
+      label: "Info modal",
+      notification_modal: {
+        title: "info title",
+        body: "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>",
+        cancel: true,
+      }
+    }
+
+    @form_button_models = [
+      {
+        variant: :info,
+        label: "Modal with submit",
+        notification_modal: {
+          title: "this modal",
+          body: "<p>can submit the form</p>",
+          cancel: true,
+          submit: true,
+        }
+      },
+      {
+        variant: :primary,
+        label: "Submit",
+        type: :submit,
+      }
     ]
   end
 

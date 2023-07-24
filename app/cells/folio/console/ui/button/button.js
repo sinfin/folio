@@ -23,6 +23,12 @@ window.FolioConsole.Ui.Button.create = (model) => {
     element.appendChild(window.Folio.Ui.Icon.create(model.icon, { class: "f-c-ui-button__icon" }))
   }
 
+  if (model.data) {
+    Object.keys(model.data).forEach((key) => {
+      element.dataset[key] = model.data[key]
+    })
+  }
+
   if (model.label) {
     const label = document.createElement('span')
     label.classList.add('f-c-ui-button__label')

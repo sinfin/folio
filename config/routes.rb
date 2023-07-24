@@ -28,6 +28,7 @@ Folio::Engine.routes.draw do
         get :alerts
         get :badges
         get :buttons
+        get :modals
       end
 
       resources :pages, except: %i[show] do

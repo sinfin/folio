@@ -62,6 +62,8 @@
 
 //= require folio/console/ui/alert/alert
 //= require folio/console/ui/button/button
+//= require folio/console/ui/buttons/buttons
+//= require folio/console/ui/notification_modal/notification_modal
 
 //= require folio/console/aasm/email_modal/email_modal
 //= require folio/console/accounts/invite_and_copy/invite_and_copy

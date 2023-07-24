@@ -4,6 +4,7 @@ handler = ($form) ->
   return if handled
   handled = true
   beforeunload = -> 'Changes you made may not be saved.'
+  $form.addClass('simple_form--dirty')
   $('.f-c-form-footer').addClass('f-c-form-footer--dirty')
   $(window).on 'beforeunload.folioDirtyForms', beforeunload
   $form.on 'submit', -> $(window).off('beforeunload.folioDirtyForms')
