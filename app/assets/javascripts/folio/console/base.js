@@ -56,9 +56,10 @@
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_modal-lazyload
 //= require folio/console/_tabs
-//= require folio/console/event_names
-//= require folio/console/danger-box-shadow-blink
-//= require folio/console/popover
+//= require folio/console/modules/event_names
+//= require folio/console/modules/danger-box-shadow-blink
+//= require folio/console/modules/popover
+//= require folio/console/modules/dirty-forms
 
 //= require folio/console/ui/alert/alert
 //= require folio/console/ui/button/button
@@ -90,7 +91,6 @@
 //= require folio/console/lazy_dom/lazy_dom
 //= require folio/console/merges/form/row/row
 //= require folio/console/merges/index/radios/radios
-//= require folio/console/modules/_dirty-forms
 //= require folio/console/modules/_multiselect
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
