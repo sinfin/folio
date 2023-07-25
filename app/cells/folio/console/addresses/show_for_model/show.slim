@@ -2,7 +2,7 @@
   .row
     - cols.each do |klass, address|
       div class=col_class
-        h2.mt-0 = klass.model_name.human
+        h2 = klass.model_name.human
 
         - if address.present?
           = show_for address do |s|
