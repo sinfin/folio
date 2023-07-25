@@ -94,8 +94,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs
 
-    only = except.include?(:index) ? %i[merge] : %i[index merge]
-    before_action(:filter_folio_console_collection, only:)
+    before_action(:filter_folio_console_collection)
 
     prepend_before_action do
       @klass = klass
@@ -433,6 +432,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def filter_folio_console_collection
+      return unless collection_action?
+
       name = folio_console_record_variable_name(plural: true)
 
       if folio_console_collection_includes.present?
@@ -481,5 +482,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def self.cancancan_accessible_by_action
       :update
+    end
+
+    def member_action?
+      return @member_action unless @member_action.nil?
+      @member_action = %w[new create].include?(action_name) || params[:id].present?
+    end
+
+    def collection_action?
+      return @collection_action unless @collection_action.nil?
+      @collection_action = !member_action?
     end
 end
