@@ -19,7 +19,7 @@
 
   - if options[:csv]
     == cell('folio/console/ui/button',
-            variant: :secondary,
+            variant: :tertiary,
             href: csv_path,
             icon: :download,
             label: options[:csv].try(:[], :label) || "CSV")
