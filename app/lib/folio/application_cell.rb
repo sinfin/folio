@@ -6,6 +6,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   include Folio::CstypoHelper
   include Folio::IconHelper
   include Folio::ImageHelper
+  include Folio::PriceHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 
@@ -93,9 +94,5 @@ class Folio::ApplicationCell < Cell::ViewModel
         nil
       end
     end
-  end
-
-  def folio_price(number, price_options = {})
-    cell("folio/price", number, price_options)
   end
 end

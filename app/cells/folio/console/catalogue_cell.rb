@@ -166,6 +166,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
+  def price(attr, price_opts = {})
+    attribute(attr) do
+      folio_price(record.send(attr), { nowrap: true }.merge(price_opts))
+    end
+  end
+
   def actions(*act)
     attribute(:actions, compact: true) do
       cell("folio/console/index/actions", record, actions: act)
