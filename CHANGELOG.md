@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-07-25
+### Changed
+- renamed `new_url` to `new_path_name` in index header and new_button
+
 ## 2023-05-02
 ### Changed
 - removed `react_picker` and added `file_picker_for_*`
