@@ -211,8 +211,14 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def boolean(name)
-    attribute(name, I18n.t("folio.console.boolean.#{record.send(name)}"))
+  def boolean(name, &block)
+    bool = if block_given?
+      yield(record)
+    else
+      record.send(name)
+    end
+
+    attribute(name, I18n.t("folio.console.boolean.#{bool}"))
   end
 
   def id
