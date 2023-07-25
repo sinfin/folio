@@ -258,9 +258,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
     @has_collapsible = index_filters_hash.any? { |_key, config| config[:collapsed] }
   end
 
-  def hidden_input(f, key)
-    if controller.params[key].present?
-      f.hidden_field key, value: controller.params[key]
+  def hidden_input(f, key, config)
+    if !config[:value].nil? || controller.params[key].present?
+      f.hidden_field key, value: config[:value].nil? ? controller.params[key] : config[:value]
     end
   end
 end

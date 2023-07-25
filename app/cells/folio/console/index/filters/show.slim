@@ -3,7 +3,7 @@
     .f-c-index-filters__filters
       - index_filters_hash.each do |key, config|
         - if config[:as] == :hidden
-          = hidden_input(f, key)
+          = hidden_input(f, key, config)
         - else
           - filtered = filtered_by?(key)
 
