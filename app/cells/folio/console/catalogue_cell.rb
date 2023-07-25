@@ -166,9 +166,15 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     end
   end
 
-  def price(attr, price_opts = {})
+  def price(attr, price_opts = {}, &block)
     attribute(attr) do
-      folio_price(record.send(attr), { nowrap: true }.merge(price_opts))
+      value = if block_given?
+        yield(record)
+      else
+        record.send(attr)
+      end
+
+      folio_price(value, { nowrap: true }.merge(price_opts))
     end
   end
 
