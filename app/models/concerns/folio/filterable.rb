@@ -50,5 +50,26 @@ module Folio::Filterable
         end
       end
     end
+
+    def folio_by_range_scope(attribute)
+      scope "by_#{attribute}_range".to_sym, -> (range_str) do
+        from, to = range_str.split(/ ?- ?/)
+
+        runner = self
+
+        if from.present?
+          from_date_time = DateTime.parse(from)
+          runner = runner.where(attribute => from_date_time..)
+        end
+
+        if to.present?
+          to = "#{to} 23:59" if to.exclude?(":")
+          to_date_time = DateTime.parse(to)
+          runner = runner.where(attribute => ..to_date_time)
+        end
+
+        runner
+      end
+    end
   end
 end
