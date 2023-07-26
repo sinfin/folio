@@ -7,6 +7,10 @@ class Folio::Console::Api::FilePlacementsController < Folio::Console::Api::BaseC
 
     pagination, records = pagy(file.file_placements, items: 20)
 
+    if file.file_placements_size != pagination.count
+      file.update_column(:file_placements_size, pagination.count)
+    end
+
     render_records(records,
                    Folio::Console::FilePlacementSerializer,
                    meta: meta_from_pagy(pagination))
