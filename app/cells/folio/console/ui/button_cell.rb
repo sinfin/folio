@@ -6,7 +6,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
 
     if h[:href]
       h[:tag] ||= :a
-    else
+    elsif h[:tag].nil?
       h[:tag] ||= :button
       h[:type] ||= :button
     end
