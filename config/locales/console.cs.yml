@@ -252,6 +252,7 @@ cs:
           from: od (nepovinné)
           to: do (nepovinné)
           at: k datu (nepovinné)
+          unpublished: Nezveřejněno
       react_ancestry:
         invalid: Některé záznamy nejsou validní. Pro změnu struktury je potřeba je opravit. Ve stromové stuktuře jsou označeny červeně.
       layout:

@@ -30,10 +30,8 @@
               label: submit_label,
               icon: :check)
 
-    .f-c-form-footer__ribbon.text-danger title=t('.dirty_forms')
-      == cell('folio/console/ui/with_icon',
-              t('.dirty_forms'),
-              icon: :alert,
-              icon_options: { width: 14 })
+    == cell('folio/console/ui/warning_ribbon',
+            t('.dirty_forms'),
+            class: "f-c-form-footer__ribbon")
 
     = options[:post_submit_content]

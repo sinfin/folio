@@ -4,6 +4,16 @@ class Folio::Console::UiController < Folio::Console::BaseController
   before_action :only_allow_superusers
 
   def show
+    @actions = %i[
+      alerts
+      badges
+      buttons
+      modals
+      warning_ribbons
+    ].sort
+  end
+
+  def warning_ribbons
   end
 
   def buttons

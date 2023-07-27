@@ -249,6 +249,7 @@ en:
           from: from (optional)
           to: to (optional)
           at: date (optional)
+          unpublished: Unpublished
       react_ancestry:
         invalid: Some of the records are invalid. It's required to fix these first in order to change structure. Invalid records are marked red.
       layout:

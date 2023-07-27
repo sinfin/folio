@@ -1,14 +1,18 @@
 .f-c-publishable-inputs-item
-  padding: 0 (( $grid-gutter-width / 2 )) 0 calc(#{3 * $grid-gutter-width / 4} + #{$form-check-input-width})
   display: flex
-  flex-wrap: wrap
-  gap: $grid-gutter-width / 2
-  justify-content: center
   align-items: center
-  position: relative
-  background: $medium-gray
-  min-height: $input-height
-  border-radius: 18px
+  gap: $grid-gutter-width / 3
+
+  &__inner
+    padding: 0 (( $grid-gutter-width / 2 )) 0 calc(#{3 * $grid-gutter-width / 4} + #{$form-check-input-width})
+    display: flex
+    flex-wrap: wrap
+    gap: 0 $grid-gutter-width / 2
+    align-items: center
+    position: relative
+    background: $medium-gray
+    min-height: $input-height
+    border-radius: 18px
 
   .form-check
     margin: 0
@@ -28,8 +32,11 @@
     left: $grid-gutter-width / 2
     transform: translate(0, -50%)
 
-  &--active
+  &--active &__inner
     background: $green-background
+
+  &--active &__warning-ribbon
+    display: none
 
   &__group
     margin-bottom: 0

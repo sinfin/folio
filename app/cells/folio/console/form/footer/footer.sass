@@ -31,43 +31,6 @@
   .f-c-layout-html.slideout-open &
     display: none
 
-  &__ribbon
-    overflow: hidden
-    padding-left: 15px
-    padding-right: 20px
-    position: relative
-    height: $input-height
-
-    &:before
-      content: ''
-      position: absolute
-      top: 0
-      left: 0
-      content: ''
-      display: block
-      z-index: 1
-      width: 0
-      height: 0
-      border-style: solid
-      border-width: 17.5px 10px 17.5px 0
-      border-color: transparent $medium-gray transparent transparent
-
-    &:after
-      background: $medium-gray
-      height: 100%
-      position: absolute
-      top: 0
-      left: 10px
-      right: 0
-      bottom: 0
-      content: ''
-      display: block
-      z-index: 1
-
-    span
-      position: relative
-      z-index: 2
-
   & &__ribbon
     display: none
 
@@ -88,15 +51,3 @@
     padding-top: 2 * $grid-gutter-width / 3
     padding-bottom: 2 * $grid-gutter-width / 3
     left: 220px
-
-  +media-breakpoint-down(sm)
-    &__ribbon
-      padding-left: 20px
-      padding-right: 15px
-
-      .f-ui-icon
-        width: 24px !important
-        height: auto !important
-
-      .f-c-ui-with-icon__span
-        display: none

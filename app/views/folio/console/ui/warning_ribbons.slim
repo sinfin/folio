@@ -1,0 +1,12 @@
+h1 Folio Console UI
+
+h2 Warning ribbon
+
+h3 Standalone
+
+== cell('folio/console/ui/warning_ribbon', 'Warning text')
+
+h3 Publishable inputs
+
+= simple_form_for Folio::Page.new(published: false), url: "#" do |f|
+  = publishable_inputs f

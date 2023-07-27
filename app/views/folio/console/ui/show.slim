@@ -1,14 +1,7 @@
 h1 Folio Console UI
 
 ul.lead.fw-bold
-  li.my-3
-    a href=alerts_console_ui_path Alerts
-
-  li.my-3
-    a href=badges_console_ui_path Badges
-
-  li.my-3
-    a href=buttons_console_ui_path Buttons
-
-  li.my-3
-    a href=modals_console_ui_path Modals
+  - @actions.each do |action|
+    li.my-3
+      a href=send("#{action}_console_ui_path")
+        = action.to_s.capitalize.gsub("_", " ")
