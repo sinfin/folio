@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-07-28
+### Changed
+- version 4.0!
+
 ## 2023-07-25
 ### Changed
 - renamed `new_url` to `new_path_name` in index header and new_button
