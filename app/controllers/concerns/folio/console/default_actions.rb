@@ -21,6 +21,7 @@ module Folio::Console::DefaultActions
           instance_variable_set("@pagy", pagy)
           instance_variable_set(folio_console_record_variable_name(plural: true),
                                 records)
+          render :index
         end
         format.csv do
           render_csv(records)
@@ -31,6 +32,7 @@ module Folio::Console::DefaultActions
       instance_variable_set("@pagy", pagy)
       instance_variable_set(folio_console_record_variable_name(plural: true),
                             records)
+      render :index
     end
   end
 
