@@ -75,7 +75,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
         end
       end
 
-      through_aware_console_url_for(model, hash: h)
+      url_for(h)
     else
       options[:csv].try(:[], :url) || options[:csv]
     end
