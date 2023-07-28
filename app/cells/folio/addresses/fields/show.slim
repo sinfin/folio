@@ -66,6 +66,7 @@
                       as: :phone,
                       default_country_code: data_country_code(:primary_address),
                       disabled: options[:disabled],
+                      required: options[:phone_required],
                       input_html: { id: nil }
 
   - if show_secondary_address_fields?

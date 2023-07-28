@@ -5,4 +5,5 @@ en:
 
       footer:
         sent_from: Sent from Folio CMS
+        sent_from_url: "https://sinfin.digital/"
         console: Go to administration console
