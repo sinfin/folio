@@ -25,7 +25,21 @@ const fallbackMessage = (response) => `${response.status}: ${response.statusText
 
 const jsonError = (json) => {
   if (!json) return null
-  return json.error || null
+
+  if (json.error) {
+    return json.error
+  } else if (json.errors) {
+    const parts = []
+
+    json.errors.forEach((err) => {
+      parts.push(err.title)
+      parts.push(err.detail)
+    })
+
+    return parts.join(' ')
+  }
+
+  return null
 }
 
 function checkResponse (response) {
@@ -67,12 +81,15 @@ function flashMessageFromMeta (response) {
   return response
 }
 
-window.Folio.Api.api = (method, url, body) => {
+window.Folio.Api.api = (method, url, body, signal) => {
   const data = {
     method,
     headers: window.Folio.Api.JSON_HEADERS,
     credentials: 'same-origin'
   }
+
+  // AbortController signal
+  if (signal) data.signal = signal
 
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
@@ -88,24 +105,32 @@ window.Folio.Api.apiPut = (url, body) => {
   return window.Folio.Api.api('PUT', url, body)
 }
 
-window.Folio.Api.apiGet = (url, body = null) => {
-  return window.Folio.Api.api('GET', url, body)
+window.Folio.Api.apiGet = (url, body = null, signal) => {
+  return window.Folio.Api.api('GET', url, body, signal)
 }
 
 window.Folio.Api.apiDelete = (url) => {
   return window.Folio.Api.api('DELETE', url, null)
 }
 
-window.Folio.Api.htmlApi = (method, url, body) => {
+window.Folio.Api.htmlApi = (method, url, body, signal) => {
   const data = {
     method,
     headers: window.Folio.Api.HTML_HEADERS,
     credentials: 'same-origin'
   }
+
+  // AbortController signal
+  if (signal) data.signal = signal
+
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
   return fetch(url, data).then(checkResponse).then(responseToHtml).then(flashMessageFromMeta)
+}
+
+window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
+  return window.Folio.Api.htmlApi('GET', url, body, signal)
 }
 
 window.Folio.Api.apiHtmlPost = (url, body) => {
@@ -122,18 +147,12 @@ window.Folio.Api.apiXhrFilePut = (url, file) => {
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(xhr.response)
       } else {
-        reject({
-          status: xhr.status,
-          statusText: xhr.statusText
-        })
+        reject(new Error(`${xhr.status} ${xhr.statusText}`))
       }
     }
 
     xhr.onerror = () => {
-      reject({
-        status: xhr.status,
-        statusText: xhr.statusText
-      })
+      reject(new Error(`${xhr.status} ${xhr.statusText}`))
     }
 
     xhr.send(file)

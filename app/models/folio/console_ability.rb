@@ -3,9 +3,19 @@
 class Folio::ConsoleAbility
   include CanCan::Ability
 
-  def initialize(account)
-    account ||= Folio::Account.new
+  def initialize(account, additional: {})
+    return if account.nil?
 
+    if account.is_a?(Folio::Account)
+      account_rules(account, additional:)
+    elsif Rails.application.config.folio_allow_users_to_console && account.is_a?(Folio::User)
+      user_rules(account, additional:)
+    end
+
+    Rails.application.config.folio_console_ability_lambda.call(self, account)
+  end
+
+  def account_rules(account, additional: {})
     if account.roles.include?("superuser")
       can :manage, :all
     elsif account.roles.include?("administrator")
@@ -27,7 +37,9 @@ class Folio::ConsoleAbility
         !account.has_any_roles?(%w[superuser administrator])
       end
     end
+  end
 
-    Rails.application.config.folio_console_ability_lambda.call(self, account)
+  def user_rules(user, additional: {})
+    fail "Override this in your app/overrides/models/folio/console_ability_override.rb"
   end
 end

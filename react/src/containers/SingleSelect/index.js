@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 
 import {
@@ -17,53 +17,37 @@ import Uploader from 'containers/Uploader'
 import UploadTagger from 'containers/UploadTagger'
 import Loader from 'components/Loader'
 import FileList from 'components/FileList'
-import ModalScroll from 'components/ModalScroll'
-import ModalTitleAndUpload from 'components/ModalTitleAndUpload'
 
 class SingleSelect extends LazyLoadCheckingComponent {
   selectFile = (file) => {
     if (this.props.selectFile) {
       this.props.selectFile(this.props.fileType, file)
-    } else if (window.folioConsoleInsertImage) {
-      window.folioConsoleInsertImage(file)
     }
-  }
-
-  renderHeader () {
-    return (
-      <Fragment>
-        {this.props.inModal && <ModalTitleAndUpload fileType={this.props.fileType} fileTypeIsImage={this.props.fileTypeIsImage} />}
-        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
-        <UploadTagger fileType={this.props.fileType} />
-      </Fragment>
-    )
   }
 
   render () {
     if (!this.props.filesStatus.loaded) return <Loader />
 
-    return (
-      <ModalScroll
-        header={this.renderHeader()}
-      >
-        {this.props.filesStatus.loading ? <Loader standalone /> : (
-          <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
-            <FileList
-              files={this.props.filesForList}
-              fileTypeIsImage={this.props.fileTypeIsImage}
-              displayAsThumbs={this.props.displayAsThumbs}
-              onClick={this.selectFile}
-              pagination={this.props.filesPagination}
-              changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, this.props.filesUrl, page))}
-              openFileModal={(file) => this.props.dispatch(openFileModal(this.props.fileType, this.props.filesUrl, file))}
-              fileType={this.props.fileType}
-              filesUrl={this.props.filesUrl}
-              selecting='single'
-              dropzoneTrigger
-            />
-          </Uploader>
-        )}
-      </ModalScroll>
+    return this.props.filesStatus.loading ? <Loader standalone /> : (
+      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl} reactType={this.props.reactType}>
+        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} taggable={this.props.taggable} />
+        <UploadTagger fileType={this.props.fileType} taggable={this.props.taggable} />
+
+        <FileList
+          files={this.props.filesForList}
+          fileTypeIsImage={this.props.fileTypeIsImage}
+          displayAsThumbs={this.props.displayAsThumbs}
+          onClick={this.selectFile}
+          pagination={this.props.filesPagination}
+          changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, this.props.filesUrl, page))}
+          openFileModal={(file) => this.props.dispatch(openFileModal(this.props.fileType, this.props.filesUrl, file))}
+          fileType={this.props.fileType}
+          filesUrl={this.props.filesUrl}
+          selecting='single'
+          taggable={this.props.taggable}
+          dropzoneTrigger
+        />
+      </Uploader>
     )
   }
 }

@@ -81,6 +81,12 @@ Dragonfly.app.configure do
     end
   end
 
+  processor :ffmpeg_screenshot_to_jpg do |content, screenshot_time_in_ffmpeg_format, *args|
+    content.shell_update ext: "jpg" do |old_path, new_path|
+      "ffmpeg -y -i #{old_path} -ss #{screenshot_time_in_ffmpeg_format} -frames:v 1 #{new_path}"
+    end
+  end
+
   processor :convert_to_webp do |content, *args|
     content.shell_update ext: "webp" do |old_path, new_path|
       "cwebp -q 85 #{old_path} -o #{new_path}"

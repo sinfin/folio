@@ -27,6 +27,14 @@ module Folio::HasAttachments
                       placement_key: :cover_placement,
                       placement: "Folio::FilePlacement::Cover")
 
+    has_one_placement(:audio_cover,
+                      placement_key: :audio_cover_placement,
+                      placement: "Folio::FilePlacement::AudioCover")
+
+    has_one_placement(:video_cover,
+                      placement_key: :video_cover_placement,
+                      placement: "Folio::FilePlacement::VideoCover")
+
     has_one_placement(:document,
                       placement_key: :document_placement,
                       placement: "Folio::FilePlacement::SingleDocument")
@@ -52,7 +60,15 @@ module Folio::HasAttachments
                source: :file,
                through: placements_key
 
-      accepts_nested_attributes_for placements_key, allow_destroy: true
+      accepts_nested_attributes_for placements_key, allow_destroy: true, reject_if: proc { |attributes|
+        if attributes["file_id"] || attributes["file"]
+          required_file_type = placement.constantize.reflections["file"].options[:class_name]
+          file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
+          !file || !file.is_a?(required_file_type.constantize)
+        else
+          attributes["id"].blank?
+        end
+      }
     end
 
     def has_one_placement(target, placement:, placement_key: nil)
@@ -69,7 +85,15 @@ module Folio::HasAttachments
               source: :file,
               through: placement_key
 
-      accepts_nested_attributes_for placement_key, allow_destroy: true
+      accepts_nested_attributes_for placement_key, allow_destroy: true, reject_if: proc { |attributes|
+        if attributes["file_id"] || attributes["file"]
+          required_file_type = placement.constantize.reflections["file"].options[:class_name]
+          file = attributes["file"] || Folio::File.find_by(id: attributes["file_id"])
+          !file || !file.is_a?(required_file_type.constantize)
+        else
+          attributes["id"].blank?
+        end
+      }
     end
 
     def folio_attachments_first_image_as_cover

@@ -1,20 +1,5 @@
-.d-lg-flex.align-items-center
-  .flex-shrink-0.mr-g
-    = f.input :header_message_published,
-              label: t('.header_message_published')
-
-  .row
-    .col-lg-6.d-lg-flex.align-items-center.mb-3
-      .mb-2.mb-lg-0.mr-2 = t('.header_message_published_from')
-      = f.input :header_message_published_from,
-                label: false,
-                wrapper_html: { class: 'm-0' }
-
-    .col-lg-6.d-lg-flex.align-items-center.mb-3
-      .mb-2.mb-lg-0.mr-2 = t('.header_message_published_until')
-      = f.input :header_message_published_until,
-                label: false,
-                wrapper_html: { class: 'm-0' }
+.d-lg-flex.align-items-center.mb-3.gap-g
+  = publishable_inputs f, %i[header_message_published]
 
 = f.input :header_message,
           as: :redactor,

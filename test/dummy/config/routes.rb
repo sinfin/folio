@@ -27,6 +27,13 @@ Rails.application.routes.draw do
   scope module: :folio do
     namespace :console do
       namespace :dummy do
+        resource :playground, only: %i[] do
+          get :players
+          get :pickers
+          get :report
+          get :modals
+        end
+
         namespace :blog do
           resources :articles, except: %i[show]
           resources :topics, except: %i[show]

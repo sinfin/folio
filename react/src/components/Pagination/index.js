@@ -2,8 +2,10 @@ import React from 'react'
 import { unescape } from 'lodash'
 
 import DisplayButtons from 'containers/DisplayButtons'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import PaginationWrap from './styled/PaginationWrap'
+import DisplayButtonsWrap from './styled/DisplayButtonsWrap'
 
 const makeOnClick = (number, changePage) => (e) => {
   e.preventDefault()
@@ -50,82 +52,60 @@ function PaginationComponent ({ changePage, pagination, setCardsDisplay, setThum
   const nextActive = next !== active
 
   return (
-    <PaginationWrap single={max === 1} className='d-sm-flex'>
-      <div className='f-c-pagination d-md-flex flex-wrap align-items-center pb-0 flex-grow-1'>
+    <PaginationWrap single={max === 1} className='my-g'>
+      <div className='f-c-pagination small'>
         <div
-          className='mr-md-auto my-2 pr-md-g small text-center text-md-left'
+          className='f-c-pagination__info'
           dangerouslySetInnerHTML={{ __html: paginationInfo(pagination) }}
         />
 
         {max !== 1 && (
-          <div className='my-2'>
-            <div className='f-c-pagination__nav'>
-              <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
-                {prevActive ? (
-                  <a href='#1' onClick={makeOnClick(1, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-fast-backward' />
-                  </a>
+          <div className='f-c-pagination__nav'>
+            <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
+              {prevActive ? (
+                <a href={`#${prev}`} onClick={makeOnClick(prev, changePage)}>
+                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_left' />
+                </a>
+              ) : (
+                <FolioUiIcon class='f-c-pagination__ico' name='chevron_left' />
+              )}
+            </div>
+
+            {numbers.map((number) => (
+              <div className={`f-c-pagination__page f-c-pagination__page--page ${number === active ? 'f-c-pagination__page--current' : ''} ${(number === 'a' || number === 'b') ? 'f-c-pagination__page--gap' : ''}`} key={number}>
+                {number === 'a' || number === 'b' ? (
+                  <span>&hellip;</span>
                 ) : (
-                  <span className='f-c-pagination__ico fa fa-fast-backward' />
+                  number === active ? number : (
+                    <a href={`#${number}`} onClick={makeOnClick(number, changePage)}>
+                      {number}
+                    </a>
+                  )
                 )}
               </div>
+            ))}
 
-              <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${prevActive ? 'f-c-pagination__page--disabled' : ''}`}>
-                {prevActive ? (
-                  <a href={`#${prev}`} onClick={makeOnClick(prev, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-step-backward' />
-                  </a>
-                ) : (
-                  <span className='f-c-pagination__ico fa fa-step-backward' />
-                )}
-              </div>
-
-              {numbers.map((number) => (
-                <div className={`f-c-pagination__page f-c-pagination__page--page ${number === active ? 'f-c-pagination__page--current' : ''} ${(number === 'a' || number === 'b') ? 'f-c-pagination__page--gap' : ''}`} key={number}>
-                  {number === 'a' || number === 'b' ? (
-                    <span>&hellip;</span>
-                  ) : (
-                    number === active ? number : (
-                      <a href={`#${number}`} onClick={makeOnClick(number, changePage)}>
-                        {number}
-                      </a>
-                    )
-                  )}
-                </div>
-              ))}
-
-              <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
-                {nextActive ? (
-                  <a href={`#${next}`} onClick={makeOnClick(next, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-step-forward' />
-                  </a>
-                ) : (
-                  <span className='f-c-pagination__ico fa fa-step-forward' />
-                )}
-              </div>
-
-              <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
-                {nextActive ? (
-                  <a href='#1' onClick={makeOnClick(max, changePage)}>
-                    <span className='f-c-pagination__ico fa fa-fast-forward' />
-                  </a>
-                ) : (
-                  <span className='f-c-pagination__ico fa fa-fast-forward' />
-                )}
-              </div>
+            <div className={`f-c-pagination__page f-c-pagination__page--with-ico ${nextActive ? 'f-c-pagination__page--disabled' : ''}`}>
+              {nextActive ? (
+                <a href={`#${next}`} onClick={makeOnClick(next, changePage)}>
+                  <FolioUiIcon class='f-c-pagination__ico' name='chevron_right' />
+                </a>
+              ) : (
+                <FolioUiIcon class='f-c-pagination__ico' name='chevron_right' />
+              )}
             </div>
           </div>
         )}
       </div>
 
       {fileTypeIsImage && (
-        <div className='ml-auto mr-auto ml-sm-g mr-sm-0 text-center my-2 my-sm-0'>
+        <DisplayButtonsWrap>
           <DisplayButtons
             display={display}
             setCardsDisplay={setCardsDisplay}
             setThumbsDisplay={setThumbsDisplay}
           />
-        </div>
+        </DisplayButtonsWrap>
       )}
     </PaginationWrap>
   )

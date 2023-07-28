@@ -1,6 +1,5 @@
 //= require folio/api
 //= require folio/s3-upload
-//= require dropzone/dist/dropzone
 
 window.Folio = window.Folio || {}
 window.Folio.Dropzone = window.Folio.Dropzone || {}
@@ -15,6 +14,7 @@ window.Folio.Dropzone.bind = (wrap) => {
   window.Folio.S3Upload.createDropzone({
     element: wrap,
     fileType: wrap.getAttribute('data-file-type'),
+    fileHumanType: wrap.getAttribute('data-file-human-type'),
     dontRemoveFileOnSuccess: true,
     dropzoneOptions: {
       clickable: wrap,

@@ -11,6 +11,6 @@ class Folio::ConsoleModalCellTest < Cell::TestCase
     html = cell("folio/console/modal", model).(:show)
     assert html.has_css?(".f-c-modal")
     assert html.has_css?(".foo")
-    assert_equal "barclose", html.text
+    assert_equal "bar", html.text
   end
 end

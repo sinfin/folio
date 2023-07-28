@@ -13,7 +13,7 @@ class Dummy::HomeController < ApplicationController
   end
 
   def gallery
-    images = Folio::Image.where("file_width > 100").limit(15)
+    images = Folio::File::Image.where("file_width > 100").limit(15)
 
     @atoms = {
       "REGULAR #{images.size}" => Dummy::Atom::Images.new(images:),

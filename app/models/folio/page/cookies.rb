@@ -16,7 +16,6 @@ end
 #  meta_description      :text
 #  ancestry              :string
 #  type                  :string
-#  featured              :boolean
 #  position              :integer
 #  published             :boolean
 #  published_at          :datetime
@@ -33,7 +32,6 @@ end
 #
 #  index_folio_pages_on_ancestry      (ancestry)
 #  index_folio_pages_on_by_query      ((((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::"char") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::"char")))) USING gin
-#  index_folio_pages_on_featured      (featured)
 #  index_folio_pages_on_locale        (locale)
 #  index_folio_pages_on_original_id   (original_id)
 #  index_folio_pages_on_position      (position)

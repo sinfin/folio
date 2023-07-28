@@ -67,6 +67,6 @@ ul
     +line-clamp($lines)
 
 .<%= classname_prefix %>-unlink
-  +plain-hover-focus
+  &, &:hover, &:focus
     text-decoration: none
     color: inherit

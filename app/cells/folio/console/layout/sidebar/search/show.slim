@@ -2,24 +2,24 @@
   = form do |f|
     = input(f)
 
-    button[
-      type="submit"
-      class="fa fa--small fa-search"
-      class="f-c-layout-sidebar-search__button"
-      class="f-c-layout-sidebar-search__button--submit"
-    ]
+    == cell('folio/console/ui/button',
+            type: :submit,
+            variant: :none,
+            icon: :magnify,
+            class: "f-c-layout-sidebar-search__button \
+                    f-c-layout-sidebar-search__button--submit")
 
-    button[
-      type="button"
-      class="fa fa-times"
-      class="f-c-layout-sidebar-search__button"
-      class="f-c-layout-sidebar-search__button--cancel"
-      class="js-f-c-layout-sidebar-search-cancel"
-    ]
+    == cell('folio/console/ui/button',
+            variant: :none,
+            icon: :close,
+            class: "f-c-layout-sidebar-search__button \
+                    f-c-layout-sidebar-search__button--cancel \
+                    js-f-c-layout-sidebar-search-cancel")
 
   .f-c-layout-sidebar-search__results
     .f-c-layout-sidebar-search__results-inner
     span.folio-loader.f-c-layout-sidebar-search__loader
     .f-c-layout-sidebar-search__error
-      span.js-f-c-layout-sidebar-search-cancel
-        ' &times;
+      = folio_icon(:close,
+                   class: "js-f-c-layout-sidebar-search-cancel",
+                   height: 36)

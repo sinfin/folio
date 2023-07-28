@@ -5,17 +5,17 @@ bower_components/jquery-ui/ui/widgets/*
 !bower_components/jquery-ui/ui/widgets/mouse.js
 !bower_components/jquery-ui/ui/widgets/sortable.js
 
-bower_components/folio-bootstrap/*
-!bower_components/folio-bootstrap/dist
-!bower_components/folio-bootstrap/js
-!bower_components/folio-bootstrap/scss
-bower_components/folio-bootstrap/dist/*
-!bower_components/folio-bootstrap/dist/js
-bower_components/folio-bootstrap/dist/js/*
-!bower_components/folio-bootstrap/dist/js/bootstrap.js
-bower_components/folio-bootstrap/js/*
-!bower_components/folio-bootstrap/js/dist
-bower_components/folio-bootstrap/js/dist/*.map
+bower_components/folio-bootstrap-4/*
+!bower_components/folio-bootstrap-4/dist
+!bower_components/folio-bootstrap-4/js
+!bower_components/folio-bootstrap-4/scss
+bower_components/folio-bootstrap-4/dist/*
+!bower_components/folio-bootstrap-4/dist/js
+bower_components/folio-bootstrap-4/dist/js/*
+!bower_components/folio-bootstrap-4/dist/js/bootstrap.js
+bower_components/folio-bootstrap-4/js/*
+!bower_components/folio-bootstrap-4/js/dist
+bower_components/folio-bootstrap-4/js/dist/*.map
 
 bower_components/vanilla-lazyload/*
 !bower_components/vanilla-lazyload/dist

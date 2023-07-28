@@ -47,12 +47,15 @@ Gem::Specification.new do |s|
   s.add_dependency "gibbon" # for mailchimp requests
   s.add_dependency "invisible_captcha"
   s.add_dependency "jquery-rails"
+  s.add_dependency "jwt"
   s.add_dependency "message_bus"
   s.add_dependency "multi_exiftool"
+  s.add_dependency "mux_ruby", "~> 3.9.0"
   s.add_dependency "nokogiri"
   s.add_dependency "omniauth-facebook"
   s.add_dependency "omniauth-google-oauth2"
   s.add_dependency "omniauth-twitter2"
+  s.add_dependency "omniauth-apple"
   s.add_dependency "omniauth-rails_csrf_protection"
   s.add_dependency "omniauth"
   s.add_dependency "pagy"
@@ -67,6 +70,7 @@ Gem::Specification.new do |s|
   s.add_dependency "rubyzip"
   s.add_dependency "sass-rails"
   s.add_dependency "show_for"
+  s.add_dependency "httpparty"
   s.add_dependency "sidekiq-cron", "1.8.0"
   s.add_dependency "sidekiq", "~> 6.5"
 
@@ -99,4 +103,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubocop-rails"
   s.add_development_dependency "rubocop-rake"
   s.add_development_dependency "rubocop"
+  s.add_development_dependency "vcr"
+  s.add_development_dependency "webmock"
 end

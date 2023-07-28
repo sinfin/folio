@@ -8,7 +8,7 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
   end
 
   def perform(image, size, quality, x: nil, y: nil, force: false)
-    return if /svg/.match?(image.file_mime_type)
+    return if image.file_mime_type.include?("svg")
 
     # need to reload here because of parallel jobs
     image.reload
@@ -40,6 +40,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
                            thumb: new_thumb,
                          }
                        }.to_json
+
+    broadcast_file_update(image)
 
     image
   end
@@ -146,8 +148,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
       end
 
       if opts = image.try(:thumbnail_store_options)
-        if opts[:path]
-          opts[:path] += "/#{size}/#{thumbnail.name}"
+        if path_base = opts.delete(:path_base)
+          opts[:path] = "#{path_base}/#{size_for_s3_path(size)}/#{thumbnail.name}"
         end
 
         uid = thumbnail.store(opts)
@@ -179,8 +181,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         webp.name = Pathname(webp.name).sub_ext(".webp").to_s
 
         if opts = image.try(:thumbnail_store_options)
-          if opts[:path]
-            opts[:path] += "/#{size}/#{webp.name}"
+          if path_base = opts.delete(:path_base)
+            opts[:path] = "#{path_base}/#{size_for_s3_path(size)}/#{webp.name}"
           end
 
           webp_uid = webp.store(opts)
@@ -205,8 +207,20 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail = image.file
       end
 
-      thumbnail.name = image.file_name
+      if image.class.human_type == "video"
+        thumbnail = thumbnail.ffmpeg_screenshot_to_jpg(image.screenshot_time_in_ffmpeg_format)
+        thumbnail.name = Pathname.new(image.file_name).sub_ext(".jpg")
+      else
+        thumbnail.name = image.file_name
+      end
 
       thumbnail
+    end
+
+    def size_for_s3_path(size)
+      size.tr("#", "H")
+          .gsub(">", "GT")
+          .gsub("<", "LT")
+          .gsub(/\W/, "")
     end
 end

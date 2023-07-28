@@ -167,6 +167,11 @@ class Folio::EmailTemplate < Folio::ApplicationRecord
       result = str
 
       data.each do |keyword, value|
+        # strip extra redactor js <p></p>
+        if keyword.ends_with?("_HTML")
+          result = result.gsub("<p>{#{keyword}}</p>", value.to_s)
+        end
+
         result = result.gsub("{#{keyword}}", value.to_s)
       end
 

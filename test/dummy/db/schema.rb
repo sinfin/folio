@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -250,6 +250,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
     t.string "default_gravity"
+    t.integer "file_track_duration"
+    t.string "aasm_state"
+    t.json "remote_services_data", default: {}
+    t.integer "preview_track_duration_in_seconds"
+    t.string "alt"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin
@@ -341,7 +346,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
     t.text "meta_description"
     t.string "ancestry"
     t.string "type"
-    t.boolean "featured"
     t.integer "position"
     t.boolean "published"
     t.datetime "published_at", precision: nil
@@ -355,7 +359,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
     t.string "preview_token"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
-    t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"
     t.index ["original_id"], name: "index_folio_pages_on_original_id"
     t.index ["position"], name: "index_folio_pages_on_position"

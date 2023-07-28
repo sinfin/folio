@@ -1,12 +1,16 @@
 .f-devise-resource-form
   = form do |f|
-    - if model[:use_password]
+    - if model[:title].present?
+      = title model[:title]
+    - elsif model[:use_password]
       = title t('.title_with_password')
     - else
       = title t('.title_without_password')
 
     p.f-devise__perex.font-weight-bold
-      - if f.object.try(:orders).try(:exists?)
+      - if model[:perex].present?
+        = model[:perex]
+      - elsif f.object.try(:orders).try(:exists?)
         = t('.perex_with_orders')
       - else
         = t('.perex')

@@ -1,7 +1,9 @@
-a.f-c-with-icon.f-c-new-record-modal__toggle[
-  href="#add"
-  data-target=".#{modal_class_name}"
-  data-class=model.to_s
-]
-  i.fa.fa-plus
-  = options[:label] || t('folio.console.actions.add')
+== cell('folio/console/ui/with_icon',
+        options[:label] || t('folio.console.actions.add'),
+        class: "f-c-new-record-modal__toggle",
+        href: "#add",
+        icon: :plus,
+        tag: { \
+          "data-target" => ".#{modal_class_name}", \
+          "data-class" => model.to_s \
+        })

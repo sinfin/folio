@@ -8,4 +8,6 @@ ActsAsTaggableOn::Tag.class_eval do
                   against: %i[name],
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
+
+  scope :ordered, -> { order(name: :asc) }
 end

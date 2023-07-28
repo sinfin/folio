@@ -2,8 +2,7 @@
 
 class Folio::Console::Form::FooterCell < Folio::ConsoleCell
   def back_path
-    options[:back_path] || url_for([:console, model.object.class])
-  rescue NoMethodError
+    options[:back_path] || through_aware_console_url_for(model.object.class, safe: true)
   end
 
   def preview_path
@@ -12,11 +11,7 @@ class Folio::Console::Form::FooterCell < Folio::ConsoleCell
     return nil if options[:preview_button] == false
     return options[:preview_path]  if options[:preview_path]
 
-    if model.object.respond_to?(:published?) && token = model.object.try(:preview_token)
-      url_for([model.object, Folio::Publishable::PREVIEW_PARAM_NAME => token])
-    else
-      url_for(model.object)
-    end
+    options[:preview_path] || preview_url_for(model.object)
   rescue NoMethodError
   end
 

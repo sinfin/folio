@@ -1,4 +1,12 @@
+#= require folio/i18n
+
 (($R) ->
+  i18n =
+    cs:
+      shortForCharacter: 'zn.'
+    en:
+      shortForCharacter: 'ch.'
+
   $R.add 'plugin', 'character_counter',
     init: (app) ->
       @app = app
@@ -35,9 +43,9 @@
       # statusbar
 
       if @app.opts.characterCounterMax
-        text = "#{data.characters} / #{@app.opts.characterCounterMax} #{window.FolioConsole.translations.shortForCharacter}"
+        text = "#{data.characters} / #{@app.opts.characterCounterMax} #{window.Folio.i18n(i18n, 'shortForCharacter')}"
       else
-        text = "#{data.characters} #{window.FolioConsole.translations.shortForCharacter}"
+        text = "#{data.characters} #{window.Folio.i18n(i18n, 'shortForCharacter')}"
 
       @statusbar.add 'chars', text
 

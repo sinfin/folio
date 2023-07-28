@@ -99,7 +99,6 @@ cs:
           file_hint: Pokud chcete ponechat původní soubor, tak nic nevyplňujte.
       documents_management: Správa dokumentů
       file_title_prompt: Název souboru
-      finalizing: Dokončuji
       footer:
         text: Administrace webu %{site_name}.
       gallery_management: Správa galerie
@@ -202,8 +201,6 @@ cs:
           confirm_de: Chcete přeložit stránku do němčiny?
           confirm_en: Chcete přeložit stránku do angličtiny?
       partials:
-        auth_links:
-          logout: Odhlásit
         tabs:
           analytics: Analytika
           contacts: Emaily a kontakty
@@ -216,8 +213,9 @@ cs:
         simple_form_with_atoms:
           editor: Editor
           settings: Nastavení
-      react_picker:
-        add: Přidat
+      file:
+        picker:
+          add_file: Přidat soubor
       really_delete: Jste si jist, že chcete smazat "%{title}"?
       remove_confirmation: Odebrat?
       sites:
@@ -228,9 +226,6 @@ cs:
         form_tabs:
           header_message:
             header_message: Text oznámení
-            header_message_published: Zapnuto
-            header_message_published_from: 'Od:'
-            header_message_published_until: 'Do:'
       users:
         send_reset_password_email:
           success: Instrukce pro reset hesla odeslány e-mailem
@@ -253,9 +248,11 @@ cs:
       lazy_dom:
         error: 'Nepodařilo se načíst data:'
       publishable_inputs:
-        from: od (nepovinné)
-        to: do (nepovinné)
-        at: k datu (nepovinné)
+        item:
+          from: od (nepovinné)
+          to: do (nepovinné)
+          at: k datu (nepovinné)
+          unpublished: Nezveřejněno
       react_ancestry:
         invalid: Některé záznamy nejsou validní. Pro změnu struktury je potřeba je opravit. Ve stromové stuktuře jsou označeny červeně.
       layout:
@@ -268,6 +265,8 @@ cs:
           show_current: Zobrazit současnou verzi
         sidebar:
           homepage: Úvodní stránka
+          audio: Audiobanka
+          video: Videobanka
       private_attachments:
         single_dropzone:
           download: Stáhnout
@@ -306,6 +305,9 @@ cs:
           destroy: Smazat
           discard: Archivovat
           undiscard: Obnovit
+        published_dates:
+          from: Od
+          until: Do
       aasm:
         email_modal:
           title: Opravdu si přejete změnit stav na „{STATE_NAME}“?
@@ -313,6 +315,13 @@ cs:
           placeholders:
             subject: Předmět e-mailu
             text: Obsah e-mailu
+
+      react:
+        modal:
+          title: Zvolte soubor
+          title/image: Zvolte obrázek
+          title/video: Zvolte video
+          title/audio: Zvolte audio
 
   date:
     formats:
@@ -322,7 +331,7 @@ cs:
 
   time:
     formats:
-      console_short: "%d. %m. %Y %H:%M"
+      console_short: "%d. %m. %Y, %H:%M"
       console_group_by_day: '%a %-d. %B. %Y'
       console_short_date: '%d. %m. %Y'
       console_short_time: '%H:%M'

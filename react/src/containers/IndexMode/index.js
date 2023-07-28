@@ -21,7 +21,6 @@ import FileMassActions from 'containers/FileMassActions'
 
 import FileList from 'components/FileList'
 import Loader from 'components/Loader'
-import Card from 'components/Card'
 
 class IndexMode extends LazyLoadCheckingComponent {
   openFileModal = (file) => {
@@ -32,35 +31,31 @@ class IndexMode extends LazyLoadCheckingComponent {
     if (!this.props.filesStatus.loaded) return <Loader />
 
     return (
-      <div className='mt-n3'>
-        <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
-          <Card
-            filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} />}
-          >
-            <UploadTagger fileType={this.props.fileType} />
+      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl} reactType={this.props.reactType}>
+        <FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} taggable={this.props.taggable} className='f-c-anti-container-fluid f-c-anti-container-fluid--padded' />
 
-            <FileMassActions fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
+        <UploadTagger fileType={this.props.fileType} taggable={this.props.taggable} />
 
-            {this.props.filesStatus.loading ? <Loader standalone /> : (
-              <FileList
-                files={this.props.filesForList}
-                fileTypeIsImage={this.props.fileTypeIsImage}
-                displayAsThumbs={this.props.displayAsThumbs}
-                pagination={this.props.filesPagination}
-                changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, this.props.filesUrl, page))}
-                massSelect={(file, select) => this.props.dispatch(massSelect(this.props.fileType, file, select))}
-                massSelectVisible={this.props.filesStatus.massSelecting}
-                fileType={this.props.fileType}
-                filesUrl={this.props.filesUrl}
-                readOnly={this.props.readOnly}
-                openFileModal={this.openFileModal}
-                openFileModalOnClick
-                dropzoneTrigger
-              />
-            )}
-          </Card>
-        </Uploader>
-      </div>
+        <FileMassActions fileType={this.props.fileType} filesUrl={this.props.filesUrl} />
+
+        {this.props.filesStatus.loading ? <Loader standalone /> : (
+          <FileList
+            files={this.props.filesForList}
+            fileTypeIsImage={this.props.fileTypeIsImage}
+            displayAsThumbs={this.props.displayAsThumbs}
+            pagination={this.props.filesPagination}
+            changeFilesPage={(page) => this.props.dispatch(changeFilesPage(this.props.fileType, this.props.filesUrl, page))}
+            massSelect={(file, select) => this.props.dispatch(massSelect(this.props.fileType, file, select))}
+            massSelectVisible={this.props.filesStatus.massSelecting}
+            fileType={this.props.fileType}
+            filesUrl={this.props.filesUrl}
+            readOnly={this.props.readOnly}
+            openFileModal={this.openFileModal}
+            openFileModalOnClick
+            dropzoneTrigger
+          />
+        )}
+      </Uploader>
     )
   }
 }

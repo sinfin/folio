@@ -1,0 +1,22 @@
+.f-c-report data=data
+  = form do |f|
+    h1.f-c-report__h1
+      a.f-c-report__h1-a href=url
+        = model[:title] || t('.title')
+
+    .f-c-report__header-controls
+      = group_by_input(f)
+      = date_range_input(f)
+
+  hr.f-c-report__hr
+
+  section.f-c-report__body
+    .f-c-report__content[
+      data-f-c-report-target="content"
+    ]
+      - if report.valid_date_range?
+        = report_html
+      - else
+        p = t('.invalid_date_range', max: report.class.max_date_spans_count)
+
+    span.folio-loader.f-c-report__loader

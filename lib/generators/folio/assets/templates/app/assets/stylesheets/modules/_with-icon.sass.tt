@@ -16,7 +16,7 @@ a.<%= classname_prefix %>-with-icon
   .<%= classname_prefix %>-ui-icon, span
     text-decoration: none
 
-  +hover-focus
+  &:hover, &:focus
     &, .<%= classname_prefix %>-ui-icon
       text-decoration: none
 
@@ -27,6 +27,6 @@ a.<%= classname_prefix %>-with-icon
     span:not(.<%= classname_prefix %>-ui-icon)
       text-decoration: underline
 
-    +hover-focus
+    &:hover, &:focus
       span:not(.<%= classname_prefix %>-ui-icon)
         text-decoration: none

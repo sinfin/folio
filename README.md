@@ -59,9 +59,9 @@ Ubuntu: `sudo apt install exiftool`
 MacOS: `brew install exiftool`
 
 Every uploaded file will be processed and all the metadata will be saved
-to the `Folio::Image.file_metadata` field.
+to the `Folio::File::Image.file_metadata` field.
 
-For a manual analysis of a file call `Dragonfly.app.fetch(Folio::Image.last.file_uid).metadata`
+For a manual analysis of a file call `Dragonfly.app.fetch(Folio::File::Image.last.file_uid).metadata`
 or `rake folio:file:metadata` for batch processing of already downloaded but not
  processed files.
 
@@ -98,6 +98,9 @@ Rails.application.config.folio_console_sidebar_link_class_names = [
 
 - If  class responds to `:console_sidebar_count` , such number is displayed in Folio console sidebar
 - If aasm event have option `confirm`, confirmation alert is displayed in change (in Foio console). You can pass `true` (defaults to `t("folio.console.confirmation")`) or string ` event :pay, confirm: "Do You really want to pay this" do ... end`
+
+- Some Oauth providers (eg. apple) requires HTTPS for callback. Set `dev.dummy.cz` to `127.0.0.1` (`/etc/hosts`) and start `test/dummy`app as in ssl mode by
+  `rails s -b 'ssl://dev.dummy.cz:3000?key=./certificates/dev.dummy.cz.key&cert=./certificates/dev.dummy.cz.crt'. And set callbacks to `https://dev.dummy.cz:3000/users/auth/apple/callback`
 
 ## Contributing
 

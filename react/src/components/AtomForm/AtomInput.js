@@ -30,7 +30,7 @@ function inputProps (type, defaultValue) {
   }
 }
 
-export default function AtomInput ({ field, atom, index, onChange, onValueChange }) {
+export default function AtomInput ({ field, atom, index, onChange, onValueChange, characterCounter }) {
   const { structure } = atom.record.meta
   const key = field
   const type = structure[key].type
@@ -110,6 +110,12 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
       classNames.push('is-invalid')
     }
 
+    if (characterCounter) {
+      classNames.push('text')
+      classNames.push('f-input')
+      classNames.push('f-input--character-counter')
+    }
+
     return (
       <TextareaAutosize
         name={key}
@@ -118,6 +124,8 @@ export default function AtomInput ({ field, atom, index, onChange, onValueChange
         type={type}
         className={classNames.join(' ')}
         rows={2}
+        data-controller={characterCounter ? 'f-input-character-counter' : undefined}
+        data-action={characterCounter ? 'f-input-character-counter#onInput' : undefined}
         async
       />
     )

@@ -26,6 +26,7 @@ module Folio
         gem "omniauth-facebook"
         gem "omniauth-google-oauth2"
         gem "omniauth-twitter2"
+        gem "omniauth-apple"
         gem "omniauth-rails_csrf_protection"
 
         gem "faker", require: false
@@ -58,6 +59,8 @@ module Folio
 
         gem_group :test do
           gem "factory_bot"
+          gem "vcr"
+          gem "webmock"
         end
       end
 

@@ -1,4 +1,3 @@
-.f-c-form-footer-spacer
 .f-c-merges-index-footer.f-c-merges-index-footer.f-c-form-footer
   .container-fluid.d-flex.align-items-center
     a.btn.btn-primary.f-c-form-footer__btn.mr-g[
@@ -20,7 +19,8 @@
             ]
               ' Hunter George
 
-            .fa.fa-times.fa--14.text-danger[
-              class="f-c-merges-index-footer__label-remove"
-              data-key=key
-            ]
+            = folio_icon(:close,
+                         height: 16,
+                         class: "text-danger \
+                                 f-c-merges-index-footer__label-remove",
+                         data: { key: })

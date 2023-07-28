@@ -8,8 +8,10 @@ module Folio::HasAtoms
       def atom_settings_from_params(params)
         settings = {}
 
-        settings = atom_settings_label_from_params(settings, params)
-        settings = atom_settings_perex_from_params(settings, params)
+        if params
+          settings = atom_settings_label_from_params(settings, params)
+          settings = atom_settings_perex_from_params(settings, params)
+        end
 
         settings
       end
@@ -46,13 +48,25 @@ module Folio::HasAtoms
 
       def atom_default_locale_from_params(params)
         # use the submitted locale for classes with a locale column
-        if column_names.include?("locale") && locale = params[:locale].try(:[], :null)
+        if params && column_names.include?("locale") && locale = params[:locale].try(:[], :null)
           locale
         else
           I18n.default_locale
         end
       end
+
+      def atom_class_names_whitelist
+        # set this to an array of class names to only enable these to be set
+      end
     end
+
+    private
+      def should_reject_atom_attributes?(atom_attributes)
+        return true if atom_attributes["type"].blank?
+        return false if self.class.atom_class_names_whitelist.blank?
+
+        self.class.atom_class_names_whitelist.exclude?(atom_attributes["type"])
+      end
   end
 
   module Basic
@@ -67,7 +81,7 @@ module Folio::HasAtoms
                        dependent: :destroy
 
       accepts_nested_attributes_for :atoms,
-                                    reject_if: :all_blank,
+                                    reject_if: :should_reject_atom_attributes?,
                                     allow_destroy: true
     end
 
@@ -103,7 +117,7 @@ module Folio::HasAtoms
                                            dependent: :destroy
 
         accepts_nested_attributes_for "#{locale}_atoms".to_sym,
-                                      reject_if: :all_blank,
+                                      reject_if: :should_reject_atom_attributes?,
                                       allow_destroy: true
       end
     end
@@ -120,9 +134,11 @@ module Folio::HasAtoms
 
     def all_atoms_in_array
       all = []
+
       self.class.atom_locales.each do |locale|
         all += atoms(locale).to_a
       end
+
       all
     end
 

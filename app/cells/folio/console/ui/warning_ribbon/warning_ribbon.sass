@@ -1,0 +1,51 @@
+.f-c-ui-warning-ribbon
+  overflow: hidden
+  padding: 0 px-to-rem(12px) 0 px-to-rem(16px)
+  position: relative
+  height: $input-height
+  display: inline-block
+  color: $danger
+  display: inline-flex
+  align-items: center
+  justify-content: center
+
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    content: ''
+    display: block
+    z-index: 1
+    width: 0
+    height: 0
+    border-style: solid
+    border-width: 17.5px 10px 17.5px 0
+    border-color: transparent $medium-gray transparent transparent
+
+  &:after
+    background: $medium-gray
+    height: 100%
+    position: absolute
+    top: 0
+    left: 10px
+    right: 0
+    bottom: 0
+    content: ''
+    display: block
+    z-index: 1
+
+  .f-c-ui-with-icon
+    position: relative
+    z-index: 2
+
+  +media-breakpoint-down(sm)
+    padding-left: 20px
+    padding-right: 15px
+
+    .f-ui-icon
+      width: 24px !important
+      height: auto !important
+
+    .f-c-ui-with-icon__span
+      display: none

@@ -41,8 +41,13 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
       @default_locale = @klass.atom_default_locale_from_params(params[:settings])
       @settings = {}
 
-      @klass.atom_settings_from_params(params[:settings])
-            .each do |locale, data|
+      hash = if @klass.method(:atom_settings_from_params).arity == 1
+        @klass.atom_settings_from_params(params[:settings])
+      else
+        @klass.atom_settings_from_params(params[:settings], { request:, current_account:, current_user: try(:current_user), current_site: })
+      end
+
+      hash.each do |locale, data|
         @settings[locale] ||= {}
         data.each do |h|
           html = cell(h[:cell_name], h[:model], h[:options] || {}).show

@@ -4,7 +4,7 @@ require "test_helper"
 
 class Dummy::Molecule::DocumentsCellTest < Cell::TestCase
   test "show" do
-    documents = create_list(:folio_document, 1)
+    documents = create_list(:folio_file_document, 1)
     placement = create(:folio_page)
 
     atoms = Array.new(2) do

@@ -1,10 +1,10 @@
-ul.nav.nav-tabs
+ul.nav.nav-tabs.f-c-anti-container-fluid.f-c-anti-container-fluid--padded
   - keys.each do |key|
     - @folio_active_tab ||= key
 
     li.nav-item
       a.nav-link[
-        data-toggle="tab"
+        data-bs-toggle="tab"
         href="#tab-#{key}"
         class=(@folio_active_tab == key ? 'active' : nil)
       ]

@@ -44,56 +44,6 @@ window.FolioConsole.Index.Filters.unbindAutocompletes = function ($input) {
   }
 }
 
-window.FolioConsole.Index.Filters.initDaterangepicker = ($input) => {
-  const opts = {
-    alwaysShowCalendars: true,
-    autoApply: true,
-    autoUpdateInput: false
-  }
-
-  if (document.documentElement.lang === 'cs') {
-    opts.locale = {
-      format: 'DD.MM.YYYY',
-      separator: ' - ',
-      applyLabel: 'Potvrdit',
-      cancelLabel: 'Zrušit',
-      fromLabel: 'Od',
-      toLabel: 'Do',
-      customRangeLabel: 'Vlastní',
-      weekLabel: 'W',
-      daysOfWeek: ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'],
-      monthNames: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'],
-      firstDay: 1
-    }
-    opts.showCustomRangeLabel = true
-    opts.ranges = {
-      Dnes: [window.moment(), window.moment()],
-      Včera: [window.moment().subtract(1, 'days'), window.moment().subtract(1, 'days')],
-      'Tento týden': [window.moment().startOf('week'), window.moment().endOf('week')],
-      'Minulý týden': [window.moment().subtract(1, 'week').startOf('week'), window.moment().subtract(1, 'week').endOf('week')],
-      'Posledních 30 dnů': [window.moment().subtract(29, 'days'), window.moment()],
-      'Tento měsíc': [window.moment().startOf('month'), window.moment().endOf('month')],
-      'Minulý měsíc': [window.moment().subtract(1, 'month').startOf('month'), window.moment().subtract(1, 'month').endOf('month')],
-      'Tento rok': [window.moment().startOf('year'), window.moment().endOf('year')],
-      'Minulý rok': [window.moment().subtract(1, 'year').startOf('year'), window.moment().subtract(1, 'year').endOf('year')]
-    }
-  } else {
-    opts.locale = {
-      format: 'DD.MM.YYYY',
-      separator: ' - '
-    }
-  }
-
-  $input.daterangepicker(opts)
-
-  $input.on('apply.daterangepicker', function (e, picker) {
-    const sd = picker.startDate
-    const ed = picker.endDate
-    $input.val(`${sd.format(opts.locale.format)} - ${ed.format(opts.locale.format)}`)
-    $input.closest('form').submit()
-  })
-}
-
 window.FolioConsole.Index.Filters.cleanSubmit = ($form) => {
   const params = new URLSearchParams()
 
@@ -117,10 +67,6 @@ window.FolioConsole.Index.Filters.cleanSubmit = ($form) => {
 window.FolioConsole.Index.Filters.bind = () => {
   $('.f-c-index-filters__autocomplete-input').each((i, el) => {
     window.FolioConsole.Index.Filters.bindAutocompletes($(el), 'f-c-index-filters__autocomplete-input')
-  })
-
-  $('.f-c-index-filters__date-range-input').each((i, el) => {
-    window.FolioConsole.Index.Filters.initDaterangepicker($(el))
   })
 
   $('.f-c-index-filters__toggle').on('click', (e) => {

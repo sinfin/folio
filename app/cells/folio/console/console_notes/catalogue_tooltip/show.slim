@@ -3,15 +3,15 @@ div[
   data-class-name-parent=Folio::Console::ReactHelper::REACT_NOTE_PARENT_CLASS_NAME
   data-class-name-form-parent=Folio::Console::ReactHelper::REACT_NOTE_FORM_PARENT_CLASS_NAME
 ]
-  span.fas.fa-comment.text-danger[
-    class="f-c-console-notes-catalogue-tooltip__icon"
-    class="f-c-console-notes-catalogue-tooltip__icon--some-open"
-  ]
+  = folio_icon(:message,
+               class: "text-danger \
+                       f-c-console-notes-catalogue-tooltip__icon \
+                       f-c-console-notes-catalogue-tooltip__icon--some-open")
 
-  span.fa.fa-comment[
-    class="f-c-console-notes-catalogue-tooltip__icon"
-    class="f-c-console-notes-catalogue-tooltip__icon--only-closed"
-  ]
+  = folio_icon(:message,
+               class: "text-danger \
+                       f-c-console-notes-catalogue-tooltip__icon \
+                       f-c-console-notes-catalogue-tooltip__icon--only-closed")
 
   .f-c-console-notes-catalogue-tooltip__tooltip
     .f-c-console-notes-catalogue-tooltip__tooltip-inner

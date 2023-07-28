@@ -10,89 +10,44 @@
   70%
     transform: scale(1)
 
+.f-c-form-footer-spacer,
 .f-c-form-footer
-  padding-top: $grid-gutter-half
-  padding-bottom: $grid-gutter-half
-  background: rgba(255, 255, 255, .84)
+  min-height: 60px
+
+  +mq-desktop-menu
+    min-height: 68px
+
+.f-c-form-footer
+  padding-top: $grid-gutter-width / 2
+  padding-bottom: $grid-gutter-width / 2
+  background: $white
   position: fixed
   left: 0
   right: 0
   bottom: 0
   z-index: 999
+  box-shadow: $f-c-box-shadow-card
 
   .f-c-layout-html.slideout-open &
     display: none
 
-  &__btn
-    min-width: 100px
-    text-align: center
-
-  &__ribbon
-    overflow: hidden
-    padding-left: 25px
-    padding-right: 20px
-    position: relative
-    height: $input-height
-
-    &:before
-      content: ''
-      position: absolute
-      top: 0
-      left: 0
-      content: ''
-      display: block
-      z-index: 1
-      width: 0
-      height: 0
-      border-style: solid
-      border-width: 17.5px 20px 17.5px 0
-      border-color: transparent #f2f2f2 transparent transparent
-
-    &:after
-      background: #f2f2f2
-      height: 100%
-      position: absolute
-      top: 0
-      left: 20px
-      right: 0
-      bottom: 0
-      content: ''
-      display: block
-      z-index: 1
-
-    span
-      position: relative
-      z-index: 2
-
-  &__ribbon-icon
-    font-size: 14px
-    position: relative
-    bottom: -1px
-
   & &__ribbon
     display: none
 
-  &--dirty &__btn--submit
+  &__container
+    display: flex
+    flex-wrap: wrap
+    gap: $f-c-ui-buttons-gap
+
+  .simple_form--dirty &__btn--submit
     animation: heartBeat 1.5s 1 linear
     position: relative
     z-index: 2
 
-  &--dirty &__ribbon
+  .simple_form--dirty &__ribbon
     display: flex
 
-  +media-breakpoint-up(xxl)
-    padding-top: $grid-gutter-width
-    padding-bottom: $grid-gutter-width
-
   +mq-desktop-menu
+    padding-top: 2 * $grid-gutter-width / 3
+    padding-bottom: 2 * $grid-gutter-width / 3
     left: 220px
-
-.f-c-form-footer-spacer
-  visibility: hidden
-  margin-top: map-get($spacers, 3)
-  height: $footer-height
-  margin-bottom: - $spacer
-  flex: 0 0 auto
-
-  +media-breakpoint-up(xxl)
-    height: $footer-height-xxl

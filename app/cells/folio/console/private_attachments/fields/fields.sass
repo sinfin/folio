@@ -34,20 +34,14 @@
     z-index: 2
 
   &__file-col
-    width: (( 40px + $grid-gutter-half ))
+    width: (( px-to-rem(40px) + $grid-gutter-half ))
     height: 40px
-    flex: 0 0 (( 40px + $grid-gutter-half ))
+    flex: 0 0 (( px-to-rem(40px) + $grid-gutter-half ))
     display: flex
     align-items: center
     justify-content: center
     padding-right: 0
     position: relative
-
-  &__file-ico
-    font-size: 18px
-
-    &, &:hover
-      color: inherit
 
   &__file-loader
     position: relative

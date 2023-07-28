@@ -4,6 +4,9 @@ class Folio::ApplicationCell < Cell::ViewModel
   include ::Cell::Translation
   include ActionView::Helpers::TranslationHelper
   include Folio::CstypoHelper
+  include Folio::IconHelper
+  include Folio::ImageHelper
+  include Folio::PriceHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 
@@ -34,7 +37,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def image(placement, size, opts = {})
-    cell("folio/image", placement, opts.merge(size:))
+    folio_image(placement, size, opts)
   end
 
   def menu_url_for(menu_item)
@@ -62,6 +65,34 @@ class Folio::ApplicationCell < Cell::ViewModel
       end
 
       concat(content_tag(:div, class: "f-togglable-fields__content", &block))
+    end
+  end
+
+  def current_user
+    get_from_options_or_controller(:current_user)
+  end
+
+  def user_signed_in?
+    get_from_options_or_controller(:user_signed_in?)
+  end
+
+  def current_account
+    get_from_options_or_controller(:current_account)
+  end
+
+  def account_signed_in?
+    get_from_options_or_controller(:account_signed_in?)
+  end
+
+  def get_from_options_or_controller(method_sym)
+    if options.has_key?(method_sym)
+      options[method_sym]
+    else
+      begin
+        controller.try(method_sym)
+      rescue Devise::MissingWarden
+        nil
+      end
     end
   end
 end

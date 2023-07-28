@@ -33,7 +33,7 @@ $(document)
       locale: $this.data('locale') or null
       value: $this.val()
 
-  .on 'change folioCustomChange', '.f-c-js-atoms-placement-setting', (e) ->
+  .on 'change folioConsoleCustomChange folioCustomChange', '.f-c-js-atoms-placement-setting', (e) ->
     window.postMessage({ type: 'refreshPreview' }, window.origin)
     # used to refresh react select async options
     window.setTimeout (-> $(document).trigger('folioAtomSettingChanged')), 0
@@ -59,7 +59,7 @@ editSetting = (locale, key) ->
 
   if $setting.length
     selectTab($setting)
-    $scroll = $setting.closest('.f-c-simple-form-with-atoms__scroll')
+    $scroll = $(document.documentElement)
 
     callback = ->
       setTimeout((-> $setting.addClass('f-c-js-atoms-placement-setting--highlighted')), 0)

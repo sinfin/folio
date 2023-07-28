@@ -2,36 +2,37 @@
   height: 100%
   min-height: 100%
   min-width: 320px
-  overflow: hidden
+  font-size: 100%
 
 .f-c-layout-body
   height: 100%
   min-height: 100%
   min-width: 320px
-  overflow: hidden
-
-.f-c-layout-sidebar
-  background: $gray-800
-  color: $white
 
 .f-c-layout-main
   display: flex
   flex-direction: column
   height: 100%
   width: 100%
-  flex: 0 0 100%
+  flex: 1 0 100%
   position: relative
   z-index: 1
   min-height: 100%
 
 .f-c-layout-main-container
-  padding-top: $spacer
-  padding-bottom: $spacer
+  padding: $grid-gutter-width
   position: relative
   z-index: 1
   flex: 1 1 auto
   overflow-y: scroll
-  -webkit-overflow-scrolling: touch
+
+.f-c-anti-container-fluid
+  margin-left: - $grid-gutter-width
+  margin-right: - $grid-gutter-width
+
+  &--padded
+    padding-left: $grid-gutter-width
+    padding-right: $grid-gutter-width
 
 +mq-desktop-menu
   .f-c-layout-body
@@ -70,6 +71,17 @@
       left: 0
 
 +mq-mobile-menu
+  .f-c-layout-main-container
+    padding: $grid-gutter-width / 2
+
+  .f-c-anti-container-fluid
+    margin-left: - $grid-gutter-width / 2
+    margin-right: - $grid-gutter-width / 2
+
+    &--padded
+      padding-left: $grid-gutter-width / 2
+      padding-right: $grid-gutter-width / 2
+
   .f-c-layout-sidebar
     display: none
 

@@ -4,17 +4,28 @@ require "rails/test_help"
 require "capybara/rails"
 require "capybara/minitest"
 require "factory_bot"
+require "vcr"
+require "webmock/minitest"
+
 require Folio::Engine.root.join("test/create_atom_helper")
 require Folio::Engine.root.join("test/create_and_host_site")
 require Folio::Engine.root.join("test/create_page_singleton")
 require Folio::Engine.root.join("test/omniauth_helper")
+require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
+VCR.configure do |config|
+  config.cassette_library_dir = "test/fixtures/vcr_cassettes"
+  config.hook_into :webmock
+end
+
 class ActiveSupport::TestCase
   parallelize
+  include FactoryBot::Syntax::Methods
+  include MethodInvokingMatchersHelper
 end
 
 class Cell::TestCase
@@ -29,6 +40,16 @@ class Cell::TestCase
     end
 
     request
+  end
+end
+
+class Folio::CapybaraTest < ActionDispatch::IntegrationTest
+  include Capybara::DSL
+  include Capybara::Minitest::Assertions
+
+  def teardown
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
   end
 end
 
@@ -56,5 +77,3 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
     create_and_host_site
   end
 end
-
-ActiveSupport::TestCase.include FactoryBot::Syntax::Methods

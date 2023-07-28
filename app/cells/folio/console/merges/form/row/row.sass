@@ -17,7 +17,7 @@
   &__col
     flex: 0 0 50%
     max-width: 50%
-    padding: $grid-gutter-half $grid-gutter-half $grid-gutter-half (( $grid-gutter-half + 23px ))
+    padding: $grid-gutter-half $grid-gutter-half $grid-gutter-half (( $grid-gutter-half + px-to-rem(23px) ))
     position: relative
     margin: 0
     display: block
@@ -31,7 +31,7 @@
       padding-right: $grid-gutter-width
 
     &--right
-      padding-left: $grid-gutter-width + 23px
+      padding-left: $grid-gutter-width + px-to-rem(23px)
 
   &--atoms &__col:hover
     background: $white

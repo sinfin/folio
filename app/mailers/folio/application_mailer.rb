@@ -5,7 +5,11 @@ class Folio::ApplicationMailer < ActionMailer::Base
   include Folio::MailerBase
   include Folio::MailerEmailTemplates
 
-  default from: -> { site.email_from.presence || site.email }
+  helper Folio::PriceHelper
+
+  default from: -> { site.email_from.presence || site.email },
+          bcc: Rails.application.config.folio_mailer_global_bcc
+
   layout "folio/mailer"
 
   def cell(name, model = nil, options = {}, constant = ::Cell::ViewModel, &block)

@@ -1,9 +1,0 @@
-@keyframes pulsing {
-  0%  { transform: scale(1) }
-  50%  { transform: scale(0.5) }
-  100% { transform: scale(1) }
-}
-
-.folio-console-animation-pulsing {
-  animation: pulsing 1s linear infinite;
-}

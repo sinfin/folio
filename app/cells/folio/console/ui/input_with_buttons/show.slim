@@ -1,0 +1,11 @@
+.f-c-ui-input-with-buttons[
+  class="f-c-ui-input-with-buttons--#{model[:buttons].size}"
+]
+  .f-c-ui-input-with-buttons__input
+    == model[:input]
+
+  - model[:buttons].reverse.each_with_index do |btn, index|
+    .f-c-ui-input-with-buttons__button[
+      class="f-c-ui-input-with-buttons__button--#{index}"
+    ]
+      == btn

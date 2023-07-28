@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 module Folio::Atom
-  def self.types
-    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true)
+  def self.klasses_for(klass:)
+    ary = if klass.atom_class_names_whitelist
+      klass.atom_class_names_whitelist.map(&:constantize)
+    else
+      Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true)
+    end
+
+    ary.select { |atom_klass| atom_klass.valid_for_placement_class?(klass) }
   end
 
-  def self.structures
+  def self.structures_for(klass:)
     str = {}
 
-    Folio::Atom::Base.recursive_subclasses(include_self: false, exclude_abstract: true).each do |klass|
+    klasses_for(klass:).each do |klass|
       structure = {}
 
       klass::STRUCTURE.each do |key, value|
@@ -36,20 +42,15 @@ module Folio::Atom
         reflection = klass.reflections[key.to_s]
         plural = reflection.through_reflection.is_a?(ActiveRecord::Reflection::HasManyReflection)
         file_type = reflection.source_reflection.options[:class_name]
-        files_url = nil
-        url_for_args = [:console, :api, file_type.constantize, only_path: true]
-
-        begin
-          files_url = Folio::Engine.app.url_helpers.url_for(url_for_args)
-        rescue StandardError
-          files_url = Rails.application.routes.url_helpers.url_for(url_for_args)
-        end
+        file_klass = file_type.constantize
+        files_url = Rails.application.config.folio_atom_files_url.call(file_klass)
 
         {
           file_type:,
           files_url:,
           key: "#{klass.reflections[key.to_s].options[:through]}_attributes",
           label: klass.human_attribute_name(key),
+          human_type: file_klass.try(:human_type) || "document",
           plural:,
         }
       end

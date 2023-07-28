@@ -7,13 +7,14 @@ div class=wrap_class_name
       .f-c-catalogue__collection-actions-bar hidden=true
         .f-c-catalogue__collection-actions-bar-count-wrap
           .f-c-catalogue__collection-actions-bar-count 0
-          span.f-c-catalogue__collection-actions-bar-count-ico.mi content_copy
+          = folio_icon(:content_copy,
+                       class: 'f-c-catalogue__collection-actions-bar-count-ico')
 
         - collection_actions.each do |action|
           = collection_action_for(action)
 
         span.f-c-catalogue__collection-actions-bar-close
-          span.mi close
+          = folio_icon(:close)
 
     .f-c-catalogue__table
       .f-c-catalogue__header
@@ -79,7 +80,9 @@ div class=wrap_class_name
           = after_lambda.call(rec, model[:records], i) if after_lambda
 
   - else
-    == cell('folio/console/index/no_records', klass)
+    == cell('folio/console/index/no_records',
+            klass:,
+            types: model[:types])
 
   span.folio-loader.f-c-catalogue__loader
 

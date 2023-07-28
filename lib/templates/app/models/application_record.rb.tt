@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationRecord < ActiveRecord::Base
+  include Folio::Console::IndexFiltersRangeScopes
   include Folio::Filterable
   include Folio::HasSanitizedFields
   include Folio::NillifyBlanks

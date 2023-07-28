@@ -13,12 +13,13 @@
               class="folio-loader--transparent"
             ]
           - else
+
             a[
               href=model.object.file.remote_url(expires: 1.hour.from_now)
               target="_blank"
-              class="fa fa-file"
-              class="f-c-private-attachments-fields__file-ico"
+              class="text-reset"
             ]
+              = folio_icon(:file_document)
 
         .col
           = model.input :title,

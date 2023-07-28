@@ -1,0 +1,19 @@
+.f-c-onboarding
+  - if options[:title]
+    h2.f-c-onboarding__title
+      = options[:title]
+
+  - if options[:text]
+    p.f-c-onboarding__text
+      = options[:text]
+
+  - steps.each do |step, data|
+    .f-c-onboarding__step.card
+      .card-body
+        h3.card-title
+          = title_icon(data)
+          = "#{data[:number]}. #{data[:title]}"
+
+        p.card-text = data[:text]
+
+        = button(data)

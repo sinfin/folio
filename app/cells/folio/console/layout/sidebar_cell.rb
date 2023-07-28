@@ -73,13 +73,13 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
 
       if link_source[:icon]
-        link(nil, path, active_start_with: link_source[:active_start_with]) do
-          concat(content_tag(:i, "", class: "#{link_source[:icon]} f-c-layout-sidebar__icon"))
+        link(nil, path, active_start_with: link_source[:active_start_with] != false) do
+          concat(folio_icon(link_source[:icon], class: "f-c-layout-sidebar__icon", height: 16))
           concat(content_tag(:span, label, class: "f-c-layout-sidebar__span"))
         end
       else
         link(label, path, paths:,
-                          active_start_with: link_source[:active_start_with])
+                          active_start_with: link_source[:active_start_with] != false)
       end
     else
       klass = link_source.constantize
@@ -126,8 +126,10 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           "Folio::Page",
           :homepage,
           "Folio::Menu",
-          "Folio::Image",
-          "Folio::Document",
+          "Folio::File::Image",
+          { klass: "Folio::File::Video", path: url_for([:console, Folio::File::Video]), label: t(".video") },
+          { klass: "Folio::File::Audio", path: url_for([:console, Folio::File::Audio]), label: t(".audio") },
+          "Folio::File::Document",
           "Folio::ContentTemplate",
         ]
       }]
@@ -135,8 +137,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       [
         {
           links: [
-            "Folio::Image",
-            "Folio::Document",
+            "Folio::File::Image",
+            "Folio::File::Document",
             "Folio::ContentTemplate",
           ]
         }
@@ -189,7 +191,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 controller.can?(:manage, site) ? (
                   {
                     klass: "Folio::Site",
-                    icon: "fa fa-cogs",
+                    icon: :cog,
                     path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
                     label: t(".settings"),
                   }
@@ -218,7 +220,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             "Folio::EmailTemplate",
             {
               klass: "Folio::Site",
-              icon: "fa fa-cogs",
+              icon: :cog,
               path: :edit_console_site_path,
               label: t(".settings")
             },
@@ -292,5 +294,9 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     ary << "f-c-layout-sidebar__group--expanded" if group[:expanded]
 
     ary
+  end
+
+  def show_search?
+    true
   end
 end

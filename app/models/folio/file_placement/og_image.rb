@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::FilePlacement::OgImage < Folio::FilePlacement::Base
-  folio_file_placement "Folio::Image", :og_image_placement
+  folio_file_placement "Folio::File::Image", :og_image_placement
 end
 
 # == Schema Information

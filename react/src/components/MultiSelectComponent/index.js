@@ -24,7 +24,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
     if (!this.props.filesStatus.loaded) return <Loader />
 
     return (
-      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl}>
+      <Uploader fileType={this.props.fileType} filesUrl={this.props.filesUrl} reactType={this.props.reactType}>
         <Card
           highlighted
           header={window.FolioConsole.translations[`selected${this.props.fileType}`]}
@@ -49,7 +49,7 @@ class MultiSelectComponent extends LazyLoadCheckingComponent {
           filters={<FileFilter fileType={this.props.fileType} filesUrl={this.props.filesUrl} fileTypeIsImage={this.props.fileTypeIsImage} />}
           className='f-c-multi-select-component__card f-c-multi-select-component__card--files'
         >
-          <UploadTagger fileType={this.props.fileType} nested={this.props.nested} />
+          <UploadTagger fileType={this.props.fileType} nested={this.props.nested} taggable={this.props.taggable} />
 
           {this.props.filesStatus.loading ? <Loader standalone /> : (
             <FileList

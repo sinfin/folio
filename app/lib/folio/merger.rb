@@ -145,7 +145,7 @@ class Folio::Merger
     end
 
     def update_atom_associations
-      Folio::Atom.types.each do |atom_klass|
+      Folio::Atom.klasses_for(klass: @klass).each do |atom_klass|
         atom_klass::ASSOCIATIONS.each do |key, class_names|
           if class_names.include?(@klass.to_s)
             atom_klass.where("folio_atoms.associations -> ? ->> 'type' = ?",

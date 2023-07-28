@@ -94,8 +94,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     before_action :add_collection_breadcrumbs
     before_action :add_record_breadcrumbs
 
-    only = except.include?(:index) ? %i[merge] : %i[index merge]
-    before_action(:filter_folio_console_collection, only:)
+    before_action(:filter_folio_console_collection)
 
     prepend_before_action do
       @klass = klass
@@ -111,6 +110,36 @@ class Folio::Console::BaseController < Folio::ApplicationController
   def filter_params
     params.permit(:by_query, *index_filters_keys)
   end
+
+  def safe_url_for(opts)
+    url_for(opts)
+  rescue StandardError
+  end
+
+  helper_method :through_aware_console_url_for
+
+  def through_aware_console_url_for(record, action: nil, hash: {}, safe: false)
+    through_record = if try(:folio_console_controller_for_through)
+      through_record_name = folio_console_controller_for_through.constantize.model_name.element
+      instance_variable_get("@#{through_record_name}")
+    end
+
+    hash ||= {}
+    hash[:action] = action
+
+    opts = [:console]
+    opts << through_record if through_record
+    opts << record
+    opts << hash
+
+    if safe
+      safe_url_for(opts)
+    else
+      url_for(opts)
+    end
+  end
+
+  helper_method :through_aware_console_url_for
 
   private
     def index_filters
@@ -135,11 +164,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def current_ability
-      @current_ability ||= Folio::ConsoleAbility.new(current_account)
+      @current_ability ||= if Rails.application.config.folio_allow_users_to_console
+        Folio::ConsoleAbility.new(current_account || current_user)
+      else
+        Folio::ConsoleAbility.new(current_account)
+      end
     end
 
     def add_root_breadcrumb
-      add_breadcrumb '<i class="fa fa-home" style="min-width: 16px; min-height: 14px;"></i>'.html_safe, console_root_path
+      add_breadcrumb cell("folio/ui/icon", :home, height: 16).show.html_safe, console_root_path
     end
 
     def additional_file_placements_strong_params_keys
@@ -314,21 +347,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def add_collection_breadcrumbs
-      if folio_console_controller_for_through
-        begin
-          through_klass = folio_console_controller_for_through.constantize
-          through_record = instance_variable_get("@#{through_klass.model_name.element}")
-
-          add_breadcrumb(@klass.model_name.human(count: 2),
-                         console_show_or_edit_path(through_record))
-        rescue NoMethodError
-          add_breadcrumb(@klass.model_name.human(count: 2))
-        end
-      else
-        add_breadcrumb(@klass.model_name.human(count: 2),
-                       url_for([:console, @klass]))
-      end
-    rescue NoMethodError
+      add_breadcrumb(@klass.model_name.human(count: 2),
+                     through_aware_console_url_for(@klass, safe: true))
     end
 
     def add_record_breadcrumbs
@@ -336,15 +356,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         if folio_console_record.new_record?
           add_breadcrumb I18n.t("folio.console.breadcrumbs.actions.new")
         else
-          if folio_console_controller_for_through
-            through_klass = folio_console_controller_for_through.constantize
-            through_record = instance_variable_get("@#{through_klass.model_name.element}")
-
-            record_url = console_show_or_edit_path(folio_console_record, through: through_record)
-          else
-            record_url = console_show_or_edit_path(folio_console_record)
-          end
-
+          record_url = console_show_or_edit_path(folio_console_record)
           add_breadcrumb(folio_console_record.to_label, record_url)
         end
       end
@@ -356,15 +368,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       authenticate_account!
     end
 
-    def console_show_or_edit_path(record, through: nil, other_params: {})
+    def console_show_or_edit_path(record, other_params: {})
       return nil if record.nil?
 
       begin
-        if through
-          url = url_for([:console, through, record, other_params])
-        else
-          url = url_for([:console, record, other_params])
-        end
+        url = through_aware_console_url_for(record, hash: other_params)
       rescue NoMethodError, ActionController::RoutingError
         return nil
       end
@@ -384,11 +392,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       return url if valid_routes_parent
 
       begin
-        if through
-          url_for([:edit, :console, through, record])
-        else
-          url_for([:edit, :console, record])
-        end
+        through_aware_console_url_for(record, action: :edit)
       rescue NoMethodError, ActionController::RoutingError
         nil
       end
@@ -428,6 +432,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def filter_folio_console_collection
+      return unless collection_action?
+
       name = folio_console_record_variable_name(plural: true)
 
       if folio_console_collection_includes.present?
@@ -462,6 +468,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def update_current_account_console_path
+      return unless current_account
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
       current_account.update_console_path!(request.path)
@@ -475,5 +482,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
     def self.cancancan_accessible_by_action
       :update
+    end
+
+    def member_action?
+      return @member_action unless @member_action.nil?
+      @member_action = %w[new create].include?(action_name) || params[:id].present?
+    end
+
+    def collection_action?
+      return @collection_action unless @collection_action.nil?
+      @collection_action = !member_action?
     end
 end

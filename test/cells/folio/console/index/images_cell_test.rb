@@ -5,7 +5,7 @@ require "test_helper"
 class Folio::Console::Index::ImagesCellTest < Folio::Console::CellTest
   test "show" do
     page = create(:folio_page)
-    image = create(:folio_image)
+    image = create(:folio_file_image)
     page.cover = image
     page.images << image
     page.images << image

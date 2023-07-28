@@ -9,5 +9,7 @@
                                             autosize: true, \
                                             input_html: { rows: 1 }
 
-        .col-auto.pb-3
-          == cell('folio/console/nested_model_controls', f, no_margin: true)
+        .col-auto
+          == cell('folio/console/nested_model_controls',
+                  f,
+                  vertical: true)

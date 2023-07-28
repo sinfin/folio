@@ -8,6 +8,10 @@ module Folio::FriendlyIdWithLocale
     include Folio::FriendlyId
 
     private
+      def should_generate_new_friendly_id?
+        send(friendly_id_config.slug_column).nil? && super
+      end
+
       def slug_candidates
         [
           slug.presence,

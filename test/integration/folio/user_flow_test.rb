@@ -2,15 +2,7 @@
 
 require "test_helper"
 
-class Folio::UserFlowTest < ActionDispatch::IntegrationTest
-  include Capybara::DSL
-  include Capybara::Minitest::Assertions
-
-  def teardown
-    Capybara.reset_sessions!
-    Capybara.use_default_driver
-  end
-
+class Folio::UserFlowTest < Folio::CapybaraTest
   test "standard via e-mail" do
     create_and_host_site
 

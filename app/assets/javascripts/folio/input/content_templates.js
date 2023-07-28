@@ -33,7 +33,7 @@ window.Folio.Input.ContentTemplates.bind = (input) => {
   if (url && title) {
     $menu.append($(`<a class="dropdown-header f-input-content-templates-dropdown__header" href="${url}">
       <span class="f-input-content-templates-dropdown__header-text">${title}</span>
-      <span class="f-input-content-templates-dropdown__header-ico mi ml-2">edit</span>
+      ${window.Folio.Ui.Icon.create('edit', { class: "f-input-content-templates-dropdown__header-ico ms-2" }).outerHTML}
     </a>`))
   }
 
@@ -45,7 +45,7 @@ window.Folio.Input.ContentTemplates.bind = (input) => {
   })
 
   const $flex = $(`<div class="f-input-content-templates-dropdown">
-    <span class="ml-3 small f-input-content-templates-dropdown__toggle dropdown-toggle" data-toggle="dropdown">${window.FolioConsole.translations.contentTemplates}
+    <span class="ml-3 small f-input-content-templates-dropdown__toggle dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">${window.FolioConsole.translations.contentTemplates}
     </span>
   </div>`)
 

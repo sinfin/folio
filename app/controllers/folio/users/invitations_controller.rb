@@ -3,6 +3,7 @@
 class Folio::Users::InvitationsController < Devise::InvitationsController
   include Folio::Users::DeviseControllerBase
 
+  prepend_before_action :require_no_authentication, only: %i[create new]
   before_action :disallow_public_invitations_if_needed, only: %i[create new]
 
   def show
@@ -102,10 +103,10 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
 
   private
     def update_resource_params
-      params.require(:user)
-            .permit(*Folio::User.controller_strong_params_for_create)
-            .to_h
-            .merge(super)
+      h = params.require(:user)
+                .permit(*Folio::User.controller_strong_params_for_create)
+                .to_h
+      super.merge(h)
     end
 
     def disallow_public_invitations_if_needed
@@ -119,5 +120,14 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
       end
 
       current_site
+    end
+
+    def require_no_authentication
+      super
+
+      if resource.nil? && current_user
+        set_flash_message(:alert, "already_authenticated", scope: "devise.failure")
+        redirect_to after_sign_in_path_for(resource)
+      end
     end
 end

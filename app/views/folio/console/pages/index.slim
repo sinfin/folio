@@ -1,14 +1,12 @@
 = index_header
 
-= catalogue(@catalogue_model, @catalogue_options)
+= catalogue(@catalogue_model || @pages, @catalogue_options || {})
   ruby:
     edit_link :title
 
     type
 
     locale_flag if Rails.application.config.folio_pages_locales
-
-    featured_toggle
 
     published_toggle
 

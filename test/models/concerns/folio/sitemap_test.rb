@@ -15,7 +15,7 @@ class Folio::SitemapTest < ActiveSupport::TestCase
     image_count = 0
     page = create(:folio_page)
 
-    page.cover = create(:folio_image)
+    page.cover = create(:folio_file_image)
     image_count += 1
 
     create_atom(CoverAtom, :cover, placement: page)
@@ -28,7 +28,7 @@ class Folio::SitemapTest < ActiveSupport::TestCase
     page.images << page.cover
     image_count += 0
 
-    Folio::Image.find_each do |img|
+    Folio::File::Image.find_each do |img|
       img.update!(thumbnail_sizes: {
         "100x100" => {
           uid: "foo",

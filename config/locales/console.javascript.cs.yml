@@ -31,7 +31,6 @@ cs:
         fileTableHeaderTags: Klíčová slova
         fileTableHeaderType: Typ
         fileTitleHint: Název zobrazovaný na webu (v případě nevyplnění se zobrazí název souboru).
-        finalizing: Dokončuji
         indestructibleFile: Soubor má aktivní použití. Použité soubory nelze mazat.
         indestructibleFiles: Některé z vybraných souborů jsou použité. Použité soubory nelze mazat.
         link: Odkaz
@@ -56,9 +55,9 @@ cs:
         selectedImages: Vybrané obrázky
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
-        shortForCharacter: zn.
         split: Rozdělit
         startSplittingAtom: Rozdělit na části
+        state: Stav
         thumbnailSizes: Vygenerované verze
         title: Název
         usage: Použití

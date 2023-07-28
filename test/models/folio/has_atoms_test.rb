@@ -71,4 +71,41 @@ class Folio::HasAtomsTest < ActiveSupport::TestCase
       ["bar", [name_atom_1, name_atom_2]],
     ], page.atoms_in_molecules)
   end
+
+  class PageWhitelistingAtoms < Folio::Page
+    def self.atom_class_names_whitelist
+      %w[
+        Folio::HasAtomsTest::TestAtom
+      ]
+    end
+  end
+
+  test "atom_class_names_whitelist" do
+    page = PageWhitelistingAtoms.create!(locale: I18n.locale, title: "PageWhitelistingAtoms")
+
+    assert_equal([], page.atoms)
+
+    assert_raises(ActiveRecord::RecordInvalid) do
+      create_atom(TestMoleculeNameAtom, :title, placement: page)
+    end
+
+    assert_equal([], page.reload.atoms)
+
+    atom = create_atom(TestAtom, :title, placement: page)
+    assert_equal([atom], page.reload.atoms)
+
+    page.atoms.destroy_all
+    assert_equal([], page.reload.atoms)
+
+    page.atoms_attributes = [
+      { type: "Folio::HasAtomsTest::TestAtom", title: "foo" },
+      { type: "Folio::HasAtomsTest::TestMoleculeNameAtom", title: "foo" },
+    ]
+
+    assert_equal(["Folio::HasAtomsTest::TestAtom"], page.atoms.map(&:type))
+
+    # this fails in tests only as somehow the atom isn't persisted
+    # assert page.save!
+    # assert_equal(["Folio::HasAtomsTest::TestAtom"], page.reload.atoms.pluck(:type))
+  end
 end

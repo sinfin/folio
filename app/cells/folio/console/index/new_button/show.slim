@@ -1,0 +1,10 @@
+.f-c-index-new-button
+  - if new_dropdown_links.present?
+    == cell('folio/console/dropdown',
+            title: label,
+            links: new_dropdown_links,
+            button_model:,
+            menu_align: model[:header] ? :right : :left)
+
+  - else
+    == cell('folio/console/ui/button', button_model)

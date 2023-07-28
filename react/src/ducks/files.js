@@ -13,7 +13,7 @@ import { makeSelectedFileIdsSelector } from 'ducks/filePlacements'
 const GET_FILES = 'files/GET_FILES'
 const GET_FILES_SUCCESS = 'files/GET_FILES_SUCCESS'
 const UPLOADED_FILE = 'files/UPLOADED_FILE'
-export const MESSAGE_BUS_THUMBNAIL_GENERATED = 'files/MESSAGE_BUS_THUMBNAIL_GENERATED'
+export const MESSAGE_BUS_FILE_UPDATED = 'files/MESSAGE_BUS_FILE_UPDATED'
 const DELETE_FILE = 'files/DELETE_FILE'
 const DELETE_FILE_FAILURE = 'files/DELETE_FILE_FAILURE'
 const UPDATE_FILE = 'files/UPDATE_FILE'
@@ -40,8 +40,8 @@ export function uploadedFile (fileType, file) {
   return { type: UPLOADED_FILE, fileType, file }
 }
 
-export function messageBusThumbnailGenerated (fileType, filesUrl, data) {
-  return { type: MESSAGE_BUS_THUMBNAIL_GENERATED, fileType, filesUrl, data }
+export function messageBusFileUpdated (fileType, filesUrl, file) {
+  return { type: MESSAGE_BUS_FILE_UPDATED, fileType, filesUrl, file }
 }
 
 export function updatedFiles (fileType, files) {
@@ -183,12 +183,36 @@ function * deleteFileSaga () {
   yield takeLatest(DELETE_FILE, deleteFilePerform)
 }
 
+function * updatedFilePerform (action) {
+  try {
+    const elements = document.querySelectorAll(`[data-file*='{"id":"${action.response.id}']`)
+
+    if (elements.length) {
+      const fileData = JSON.stringify(action.response)
+      const event = new window.CustomEvent(window.FolioConsole.Events.FOLIO_CONSOLE_FILE_UPDATED, { bubbles: true, detail: { file: action.response } })
+
+      for (let i = 0; i < elements.length; ++i) {
+        elements[i].dataset.file = fileData
+        elements[i].dispatchEvent(event)
+      }
+    }
+
+    yield true
+  } catch (e) {
+  }
+}
+
+function * updatedFileSaga () {
+  yield takeEvery(UPDATE_FILE_SUCCESS, updatedFilePerform)
+}
+
 export const filesSagas = [
   getFilesSaga,
   updateFileSaga,
   changeFilesPageSaga,
   massDeleteSaga,
-  deleteFileSaga
+  deleteFileSaga,
+  updatedFileSaga
 ]
 
 // Selectors
@@ -323,8 +347,8 @@ function filesReducer (rawState = initialState, action) {
           records: action.records,
           loading: false,
           loaded: true,
-          pagination: omit(action.meta, ['react_type']),
-          reactType: action.meta.react_type
+          pagination: omit(action.meta, ['human_type']),
+          reactType: action.meta.human_type
         }
       }
 
@@ -337,7 +361,7 @@ function filesReducer (rawState = initialState, action) {
         }
       }
 
-    case MESSAGE_BUS_THUMBNAIL_GENERATED: {
+    case MESSAGE_BUS_FILE_UPDATED: {
       const fileTypesHash = {}
       const fileTypes = action.fileType ? [action.fileType] : Object.keys(state)
 
@@ -345,20 +369,8 @@ function filesReducer (rawState = initialState, action) {
         fileTypesHash[fileType] = {
           ...state[fileType],
           records: state[fileType].records.map((record) => {
-            if (Number(record.id) !== Number(action.data.id)) return record
-
-            return {
-              ...record,
-              attributes: {
-                ...record.attributes,
-                thumb: action.data.thumb_key === '250x250' ? action.data.url : record.attributes.thumb,
-                webp_thumb: action.data.thumb_key === '250x250' ? action.data.webp_url : record.attributes.webp_thumb,
-                thumbnail_sizes: {
-                  ...record.attributes.thumbnail_sizes,
-                  [action.data.thumb_key]: action.data.thumb
-                }
-              }
-            }
+            if (Number(record.id) !== Number(action.file.id)) return record
+            return action.file
           })
         }
       })

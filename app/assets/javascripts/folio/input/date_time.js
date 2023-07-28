@@ -24,22 +24,22 @@ window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
     sideBySide: true,
     icons: {
       type: 'icons',
-      time: 'fa fa-clock f-input__ico f-input__ico--time',
-      date: 'fa fa-calendar f-input__ico f-input__ico--date',
-      up: 'fa fa-chevron-up f-input__ico f-input__ico--up',
-      down: 'fa fa-chevron-down f-input__ico f-input__ico--down',
-      previous: 'fa fa-chevron-left f-input__ico f-input__ico--previous',
-      next: 'fa fa-chevron-right f-input__ico f-input__ico--next',
-      today: 'fa fa-calendar-star f-input__ico f-input__ico--today',
-      clear: 'fa fa-trash-alt f-input__ico f-input__ico--clear',
-      close: 'fa fa-times f-input__ico f-input__ico--close'
+      time: 'f-input__ico f-input__ico--time',
+      date: 'f-input__ico f-input__ico--date',
+      up: 'f-input__ico f-input__ico--up',
+      down: 'f-input__ico f-input__ico--down',
+      previous: 'f-input__ico f-input__ico--previous',
+      next: 'f-input__ico f-input__ico--next',
+      today: 'f-input__ico f-input__ico--today',
+      clear: 'f-input__ico f-input__ico--clear',
+      close: 'f-input__ico f-input__ico--close'
     },
     theme: 'light'
   },
   localization: {
     locale: document.documentElement.lang,
-    format: 'dd. MM. yyyy HH:mm',
-    hourCycle: 'h23',
+    format: 'dd. MM. yyyy, HH:mm',
+    hourCycle: 'h23'
   },
   keepInvalid: false,
   useCurrent: false,
@@ -56,7 +56,7 @@ window.Folio.Input.DateTime.DATE_CONFIG = {
       clock: false,
       hours: false,
       minutes: false,
-      seconds: false,
+      seconds: false
     }
   },
   localization: {
@@ -94,15 +94,31 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
   }
 }
 
+window.Folio.Input.DateTime.makeOnShow = (input) => {
+  if (input.dataset.default) {
+    return () => {
+      if (input.folioInputTempusDominus && !input.folioInputDidSetDefault && input.value === "") {
+        input.folioInputDidSetDefault = true
+        input.folioInputTempusDominus.dates.setFromInput(input.dataset.default)
+      }
+    }
+  }
+}
+
+
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
-  if (input.value === "" || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
+  if (input.value === '' || (e.date && !e.oldDate) || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
     input.folioInputTempusDominus.hide()
   }
 
-  $(input).trigger('change')
+  if (e.date === e.oldDate) return
+
+  input.dispatchEvent(new window.Event('input', { bubbles: true }))
+  input.dispatchEvent(new window.Event('change', { bubbles: true }))
 }
 
 window.Folio.Input.DateTime.bind = (input, opts = {}) => {
+  window.Folio.Input.DateTime.unbind(input)
   window.Folio.Input.DateTime.updateIconsIfNeeded(input)
 
   let fullOpts
@@ -115,12 +131,23 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
 
   input.folioInputTempusDominus = new window.tempusDominus.TempusDominus(input, fullOpts)
   input.folioInputTempusDominusChangeSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.change, window.Folio.Input.DateTime.makeOnChange(input))
+
+  const onShow = window.Folio.Input.DateTime.makeOnShow(input)
+
+  if (onShow) {
+    input.folioInputTempusDominusShowSubscription = input.folioInputTempusDominus.subscribe(window.tempusDominus.Namespace.events.show, onShow)
+  }
 }
 
 window.Folio.Input.DateTime.unbind = (input) => {
   if (input.folioInputTempusDominusChangeSubscription) {
     input.folioInputTempusDominusChangeSubscription.unsubscribe()
     input.folioInputTempusDominusChangeSubscription = null
+  }
+
+  if (input.folioInputTempusDominusShowSubscription) {
+    input.folioInputTempusDominusShowSubscription.unsubscribe()
+    input.folioInputTempusDominusShowSubscription = null
   }
 
   if (input.folioInputTempusDominus) {

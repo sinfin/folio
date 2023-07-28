@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { forceCheck } from 'react-lazyload'
 import { uniqueId } from 'lodash'
 
-import { getFiles, messageBusThumbnailGenerated, makeFilesLoadedSelector } from 'ducks/files'
+import { getFiles, messageBusFileUpdated, makeFilesLoadedSelector } from 'ducks/files'
 import { openFileModal } from 'ducks/fileModal'
 
 import SingleSelect from 'containers/SingleSelect'
 import MultiSelect from 'containers/MultiSelect'
 import IndexMode from 'containers/IndexMode'
-import ModalSingleSelect from 'containers/ModalSelect/ModalSingleSelect'
+import ModalSingleSelect from 'containers/ModalSingleSelect'
 import FileModal from 'containers/FileModal'
 import Atoms from 'containers/Atoms'
 
@@ -33,12 +33,11 @@ class FilesApp extends Component {
   listenOnMessageBus () {
     if (!window.Folio.MessageBus.callbacks) return
 
-    this.messageBusCallbackKey = `Folio::GenerateThumbnailJob-react-files-app-${uniqueId()}`
+    this.messageBusCallbackKey = `Folio::ApplicationJob/file_update-react-files-app-${uniqueId()}`
 
     window.Folio.MessageBus.callbacks[this.messageBusCallbackKey] = (data) => {
-      if (!data || data.type !== 'Folio::GenerateThumbnailJob') return
-      if (!data.data.temporary_url || !data.data.url) return
-      this.props.dispatch(messageBusThumbnailGenerated(
+      if (!data || data.type !== 'Folio::ApplicationJob/file_update') return
+      this.props.dispatch(messageBusFileUpdated(
         this.props.app.fileType,
         this.props.app.filesUrl,
         data.data
@@ -50,23 +49,23 @@ class FilesApp extends Component {
     return this.props.app.mode !== 'modal-single-select' && this.props.app.mode !== 'atoms'
   }
 
-  openFileModal = (fileType, filesUrl, file) => {
-    this.props.dispatch(openFileModal(fileType, filesUrl, file))
+  openFileModal = (fileType, filesUrl, file, autoFocusField) => {
+    this.props.dispatch(openFileModal(fileType, filesUrl, file, autoFocusField))
   }
 
   renderMode () {
-    const { mode, fileType, filesUrl, readOnly, reactType } = this.props.app
+    const { mode, fileType, filesUrl, readOnly, reactType, taggable } = this.props.app
 
     if (mode === 'multi-select') {
-      return <MultiSelect fileType={fileType} filesUrl={filesUrl} />
+      return <MultiSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} reactType={reactType} />
     }
 
     if (mode === 'single-select') {
-      return <SingleSelect fileType={fileType} filesUrl={filesUrl} />
+      return <SingleSelect fileType={fileType} filesUrl={filesUrl} taggable={taggable} reactType={reactType} />
     }
 
     if (mode === 'index') {
-      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} />
+      return <IndexMode fileType={fileType} filesUrl={filesUrl} readOnly={readOnly} taggable={taggable} reactType={reactType} />
     }
 
     if (mode === 'modal-single-select') {
@@ -74,6 +73,7 @@ class FilesApp extends Component {
         <ModalSingleSelect
           fileType={fileType}
           filesUrl={filesUrl}
+          taggable={taggable}
           reactType={reactType}
           loadFiles={this.loadFiles}
           openFileModal={this.openFileModal}
@@ -101,6 +101,7 @@ class FilesApp extends Component {
 
         <FileModal
           readOnly={this.props.app.readOnly}
+          taggable={this.props.app.taggable}
           canDestroyFiles={this.props.app.canDestroyFiles}
         />
       </FilesAppWrap>

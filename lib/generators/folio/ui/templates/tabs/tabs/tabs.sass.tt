@@ -43,6 +43,6 @@
     &--active::after
       background: $black
 
-    +plain-hover-focus
+    &, &:hover, &:focus
       color: $black
       text-decoration: none

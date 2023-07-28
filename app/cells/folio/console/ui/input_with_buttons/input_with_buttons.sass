@@ -1,0 +1,21 @@
+.f-c-ui-input-with-buttons
+  position: relative
+
+  &__input
+    position: relative
+    z-index: 1
+
+  &__input .form-control
+    padding-right: add($input-height, $input-padding-x)
+
+  &--2 &__input .form-control
+    padding-right: add($input-height, $input-height, $input-padding-x)
+
+  &__button
+    position: absolute
+    top: 0
+    right: 0
+    z-index: 2
+
+    &--1
+      right: $input-height

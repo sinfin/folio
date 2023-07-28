@@ -2,18 +2,21 @@
 
 class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include Folio::Console::Cell::IndexFilters
 
   def title
     options[:title] || model.model_name.human(count: 2)
   end
 
   def query_url
-    if options[:query_url]
+    if options[:query_url].is_a?(String)
+      options[:query_url]
+    elsif options[:query_url].is_a?(Symbol)
       send(options[:query_url])
     elsif options[:folio_console_merge]
-      url_for([:merge, :console, model])
+      through_aware_console_url_for(model, action: :merge)
     else
-      url_for([:console, model])
+      through_aware_console_url_for(model)
     end
   end
 
@@ -44,7 +47,7 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   def query_reset_url
     h = {}
 
-    controller.send(:index_filters).keys.each do |key|
+    index_filters_hash.keys.each do |key|
       if controller.params[key].present?
         h[key] = controller.params[key]
       end
@@ -53,31 +56,9 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
     if options[:query_url]
       send(options[:query_url], h)
     elsif options[:folio_console_merge]
-      url_for([:merge, :console, model, h])
+      through_aware_console_url_for(model, action: :merge, hash: h)
     else
-      url_for([:console, model, h])
-    end
-  end
-
-  def new_button(&block)
-    url = options[:new_url] ? send(options[:new_url]) : url_for([:console, model, action: :new])
-    html_opts = { title: t(".add"),
-                  class: "btn btn-success "\
-                         "f-c-index-header__btn f-c-index-header__btn--new" }
-    link_to(url, html_opts, &block)
-  rescue NoMethodError
-  end
-
-  def new_dropdown_title
-    render(:_new_dropdown_title)
-  end
-
-  def new_dropdown_links
-    options[:new_dropdown_links] || options[:types].map do |klass|
-      {
-        title: klass.model_name.human,
-        url: url_for([:console, model, action: :new, type: klass.to_s]),
-      }
+      through_aware_console_url_for(model, hash: h)
     end
   end
 
@@ -88,20 +69,20 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
         by_query: controller.params[:by_query],
       }
 
-      controller.send(:index_filters).keys.each do |key|
+      index_filters_hash.keys.each do |key|
         if controller.params[key].present?
           h[key] = controller.params[key]
         end
       end
 
-      url_for([:console, model, h])
+      url_for(h)
     else
       options[:csv].try(:[], :url) || options[:csv]
     end
   end
 
   def title_url
-    options[:query_url] ? send(options[:query_url]) : url_for([:console, model])
+    options[:query_url] ? send(options[:query_url]) : through_aware_console_url_for(model)
   end
 
   def show_transportable_dropdown?
@@ -119,5 +100,24 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
               id: nil,
               placeholder: options[:by_query_placeholder]
             })
+  end
+
+  def query_buttons
+    submit = cell("folio/console/ui/button",
+                  variant: :icon,
+                  type: :submit,
+                  icon: :magnify)
+
+    if controller.params[:by_query].present?
+      [
+        cell("folio/console/ui/button",
+             variant: :icon,
+             href: query_reset_url,
+             icon: :close),
+        submit
+      ]
+    else
+      [submit]
+    end
   end
 end

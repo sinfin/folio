@@ -1,0 +1,10 @@
+*tag
+  - if options[:icon]
+    = folio_icon(options[:icon], options[:icon_options] || {})
+
+  span.f-c-ui-with-icon__span = model
+
+  - if options[:right_icon]
+    = folio_icon(options[:right_icon], options[:icon_options] || {})
+
+  == options[:html]

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import FolioUiIcon from 'components/FolioUiIcon'
+
 class DueDate extends React.Component {
   constructor (props) {
     super(props)
@@ -48,7 +50,7 @@ class DueDate extends React.Component {
     return (
       <div className={`${this.props.className} f-c-r-notes-fields-app-table-due-date`}>
         <div className='f-c-r-notes-fields-app-table-due-date__button'>
-          <span className='fa fa-clock' />
+          <FolioUiIcon name='calendar_range' />
 
           <input
             type='text'

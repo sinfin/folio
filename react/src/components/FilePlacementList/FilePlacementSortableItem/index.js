@@ -6,6 +6,7 @@ import TextareaAutosize from 'react-autosize-textarea'
 import NestedModelControls from 'components/NestedModelControls'
 import FileHoverButtons from 'components/FileHoverButtons'
 import Picture from 'components/Picture'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import preventLineBreaks from 'utils/preventLineBreaks'
 
@@ -120,7 +121,7 @@ class FilePlacement extends React.Component {
 
               <FormText>{window.FolioConsole.translations.fileTitleHint}</FormText>
 
-              <span className='fa fa-edit text-muted f-c-file-placement__edit-ico' />
+              <FolioUiIcon name='edit' class='text-muted f-c-file-placement__edit-ico' />
             </FormGroup>
           </div>
 
@@ -141,7 +142,7 @@ class FilePlacement extends React.Component {
 
                 <FormText>{window.FolioConsole.translations.altHint}</FormText>
 
-                <span className='fa fa-edit text-muted f-c-file-placement__edit-ico' />
+                <FolioUiIcon name='edit' class='text-muted f-c-file-placement__edit-ico' />
               </FormGroup>
             </div>
           )}
@@ -164,7 +165,7 @@ class FilePlacement extends React.Component {
         )}
 
         <div className='f-c-file-placement__handle'>
-          <i className='fa fa-arrows-alt' />
+          <FolioUiIcon name='arrow_up_down' class='text-muted f-c-file-placement__edit-ico' />
         </div>
       </div>
     )

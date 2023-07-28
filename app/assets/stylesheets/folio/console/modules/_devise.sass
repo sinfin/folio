@@ -9,11 +9,8 @@
     text-align: center
 
   .btn-primary
-    @extend .btn-block
-
-  .alert
-    .alert-heading
-      display: none
+    display: flex
+    width: 100%
 
   .new_account
     .form-group.form-check
@@ -28,6 +25,10 @@
   padding: $grid-gutter-width
 
 +media-breakpoint-up(md)
+  .f-c-layout-html--devise,
+  .f-c-layout-body--devise
+    background: $dark
+
   .f-c-layout-devise
     flex: 1 1 auto
     align-items: center

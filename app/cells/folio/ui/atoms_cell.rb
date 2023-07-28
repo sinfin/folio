@@ -19,13 +19,13 @@ class Folio::Ui::AtomsCell < Folio::UiCell
 
   def images
     @images ||= begin
-      ary = Folio::Image.tagged_with("folio-ui-atoms").to_a
+      ary = Folio::File::Image.tagged_with("folio-ui-atoms").to_a
 
       if ary.size < 5
-        ary = Folio::Image.tagged_with("unsplash").to_a
+        ary = Folio::File::Image.tagged_with("unsplash").to_a
 
         if ary.size < 5
-          ary += Folio::Image.first(5 - ary.size).to_a
+          ary += Folio::File::Image.first(5 - ary.size).to_a
         end
       end
 
@@ -35,10 +35,10 @@ class Folio::Ui::AtomsCell < Folio::UiCell
 
   def documents
     @documents ||= begin
-      ary = Folio::Document.tagged_with("folio-ui-atoms").to_a
+      ary = Folio::File::Document.tagged_with("folio-ui-atoms").to_a
 
       if ary.size < 5
-        ary += Folio::Document.first(5 - ary.size).to_a
+        ary += Folio::File::Document.first(5 - ary.size).to_a
       end
 
       ary

@@ -1,61 +1,60 @@
-.btn-unbutton
-  +unbutton
-
 .btn
+  --#{$prefix}btn-border-color: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-active-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-active-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-active-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-disabled-color: #{$gray-medium-dark}
+  --#{$prefix}btn-disabled-bg: #{$gray}
+  --#{$prefix}btn-disabled-border-color: #{$gray}
   display: inline-flex
   align-items: center
-  text-align: center
   justify-content: center
+  gap: $grid-gutter-width / 3
+  opacity: $f-c-btn-opacity
   min-height: $input-height
 
-  .fa
-    font-size: inherit
-    margin: 0 7px 0 0
-
-  .mi
-    font-size: inherit
-    margin: -5px 7px -5px 0
-
-  .mi--14
-    top: 1px
+  &:hover, &:focus
+    opacity: $f-c-btn-hover-opacity
 
 .btn-sm
   min-height: $input-height-sm
-  text-transform: uppercase
+  gap: $grid-gutter-width / 5
 
-.btn.fa
-  width: $input-height
-  font-size: 12px
-  line-height: $btn-fa-line-height
+.btn-primary,
+.btn-danger,
+.btn-success,
+.btn-dark,
+.btn-info
+  --#{$prefix}btn-color: #{$white}
+
+.btn-gray
+  --#{$prefix}btn-bg: #{$medium-gray}
+  --#{$prefix}btn-color: #{$black}
+
+.btn-medium-dark
+  --#{$prefix}btn-bg: #{$gray-medium-dark}
+  --#{$prefix}btn-color: #{$white}
+
+.btn-transparent
+  &, &:hover, &:focus
+    border-color: transparent
+    background: transparent
+    appearance: none
+    cursor: pointer
+    outline: 0
+    box-shadow: none
+
+.btn-none
+  --#{$prefix}btn-bg: transparent
+  --#{$prefix}btn-color: inherit
+  border: 0
   padding: 0
+  appearance: none
+  cursor: pointer
 
-.btn.mi
-  font-size: 20px
-
-.btn-light
-  +plain-hover-focus
-    color: $white
-
-.btn-mini
-  font-size: $font-size-sm
-  min-height: 24px
-  padding: 3px 7px
-
-  .mi
-    font-size: 16px
-    width: auto
-    margin: 0 7px 0 -3px
-
-.btn-outline
-  color: $dark
-  border-color: $dark
-  background: $white
-
-  +hover-focus
-    color: $dark
-    border-color: $dark
-    background: $gray-100
-
-.input-group-append
-  .btn
-    border-color: $input-border-color
+  &, &:hover, &:focus
+    outline: 0
+    box-shadow: none

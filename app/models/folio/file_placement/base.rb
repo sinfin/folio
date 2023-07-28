@@ -33,12 +33,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
 
   def self.folio_image_placement(name = nil)
     include Folio::PregenerateThumbnails
-    folio_file_placement("Folio::Image", name)
+    folio_file_placement("Folio::File::Image", name)
     self.class_eval { alias :image :file }
   end
 
   def self.folio_document_placement(name = nil)
-    folio_file_placement("Folio::Document", name)
+    folio_file_placement("Folio::File::Document", name)
   end
 
   def run_after_save_job!
@@ -46,7 +46,12 @@ class Folio::FilePlacement::Base < Folio::ApplicationRecord
   end
 
   def run_file_after_save_job!
-    file.run_after_save_job! if file
+    if file
+      file.run_after_save_job
+    elsif changed_attributes && changed_attributes["file_id"]
+      file_before_destroy = Folio::File.find_by(id: changed_attributes["file_id"])
+      file_before_destroy.run_after_save_job if file_before_destroy
+    end
   end
 end
 

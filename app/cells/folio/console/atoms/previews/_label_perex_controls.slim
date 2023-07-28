@@ -2,9 +2,10 @@
   .f-c-atoms-previews__controls
     .f-c-atoms-previews__controls-overlay
     .f-c-atoms-previews__buttons
-      button.mi[
+      button[
         type="button"
         class="f-c-atoms-previews__button"
+        class="f-c-atoms-previews__button--secondary"
         class="f-c-atoms-previews__button--settings"
       ]
-        ' settings
+        = folio_icon(:cog, height: 16)

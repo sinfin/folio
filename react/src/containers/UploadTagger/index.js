@@ -11,8 +11,12 @@ import {
 
 import AutocompleteInput from 'components/AutocompleteInput'
 import TagsInput from 'components/TagsInput'
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 import { AUTHOR_AUTOCOMPLETE_URL } from 'constants/urls'
+
+import Wrap from './styled/Wrap'
 
 const DEFAULT_STATE = {
   tags: [],
@@ -54,10 +58,10 @@ class UploadTagger extends React.PureComponent {
     if (!this.props.uploads.showTagger) return null
 
     return (
-      <div className='alert alert-primary mb-3 p-3'>
+      <Wrap className='my-g p-g'>
         <p>{window.FolioConsole.translations.newFilesAttributes}</p>
         <div className='row'>
-          <FormGroup className='col-md-6 pr-md-2'>
+          <FormGroup className={this.props.taggable ? 'col-md-6 pr-md-2' : 'col-12'}>
             <AutocompleteInput
               value={this.state.author}
               name='author'
@@ -68,15 +72,17 @@ class UploadTagger extends React.PureComponent {
             />
           </FormGroup>
 
-          <FormGroup className='col-md-6 pl-md-2'>
-            <TagsInput
-              value={this.state.tags}
-              onTagsChange={this.onTagsChange}
-              closeMenuOnSelect={false}
-              placeholder={window.FolioConsole.translations.tagsLabel}
-              noAutofocus
-            />
-          </FormGroup>
+          {this.props.taggable && (
+            <FormGroup className='col-md-6 pl-md-2'>
+              <TagsInput
+                value={this.state.tags}
+                onTagsChange={this.onTagsChange}
+                closeMenuOnSelect={false}
+                placeholder={window.FolioConsole.translations.tagsLabel}
+                noAutofocus
+              />
+            </FormGroup>
+          )}
         </div>
 
         <FormGroup>
@@ -91,24 +97,20 @@ class UploadTagger extends React.PureComponent {
           />
         </FormGroup>
 
-        <div className='d-flex'>
-          <button
-            className='btn btn-success mr-2'
-            type='button'
+        <FolioConsoleUiButtons>
+          <FolioConsoleUiButton
             onClick={this.setUploadAttributes}
-          >
-            {window.FolioConsole.translations.save}
-          </button>
+            variant='success'
+            label={window.FolioConsole.translations.save}
+          />
 
-          <button
-            className='btn btn-secondary'
-            type='button'
+          <FolioConsoleUiButton
             onClick={this.close}
-          >
-            {window.FolioConsole.translations.close}
-          </button>
-        </div>
-      </div>
+            vairant='secondary'
+            label={window.FolioConsole.translations.close}
+          />
+        </FolioConsoleUiButtons>
+      </Wrap>
     )
   }
 }

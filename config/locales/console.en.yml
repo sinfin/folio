@@ -99,7 +99,6 @@ en:
           file_hint: Do not input anything to keep the original file.
       documents_management: Documents management
       file_title_prompt: Displayed file name
-      finalizing: Finalizing
       footer:
         text: Administration console for %{site_name}.
       gallery_management: Gallery management
@@ -200,8 +199,6 @@ en:
           confirm_de: Do you want to translate the page to German?
           confirm_en: Do you want to translate the page to English?
       partials:
-        auth_links:
-          logout: Log out
         tabs:
           analytics: Analytics
           contacts: Emails and contacts
@@ -213,8 +210,9 @@ en:
         simple_form_with_atoms:
           editor: Editor
           settings: Settings
-      react_picker:
-        add: Add
+      file:
+        picker:
+          add_file: Add file
       really_delete: Are you sure you want to remove "%{title}"?
       remove_confirmation: Remove?
       sites:
@@ -225,9 +223,6 @@ en:
         form_tabs:
           header_message:
             header_message: Message text
-            header_message_published: Enabled
-            header_message_published_from: 'From:'
-            header_message_published_until: 'To:'
       users:
         send_reset_password_email:
           success: Email with instructions for password reset has been sent
@@ -250,9 +245,11 @@ en:
       lazy_dom:
         error: 'Failed to load data:'
       publishable_inputs:
-        from: from (optional)
-        to: to (optional)
-        at: date (optional)
+        item:
+          from: from (optional)
+          to: to (optional)
+          at: date (optional)
+          unpublished: Unpublished
       react_ancestry:
         invalid: Some of the records are invalid. It's required to fix these first in order to change structure. Invalid records are marked red.
       layout:
@@ -265,6 +262,8 @@ en:
           show_current: Show current version
         sidebar:
           homepage: Homepage
+          audio: Audios
+          video: Videos
       private_attachments:
         single_dropzone:
           download: Download
@@ -303,6 +302,9 @@ en:
           destroy: Destroy
           discard: Archive
           undiscard: Restore
+        published_dates:
+          from: From
+          until: To
       aasm:
         email_modal:
           title: Change the state to "{STATE_NAME}"?
@@ -310,6 +312,13 @@ en:
           placeholders:
             subject: E-mail subject
             text: E-mail content
+
+      react:
+        modal:
+          title: Pick a file
+          title/image: Pick an image
+          title/video: Pick a video
+          title/audio: Pick an audio
 
   date:
     formats:
@@ -319,7 +328,7 @@ en:
 
   time:
     formats:
-      console_short: "%d. %m. %Y %H:%M"
+      console_short: "%d. %m. %Y, %H:%M"
       console_group_by_day: '%a %-d. %B. %Y'
       console_short_date: '%d. %m. %Y'
       console_short_time: '%H:%M'

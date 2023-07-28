@@ -1,0 +1,22 @@
+h1 Folio Console UI
+
+h2 Buttons
+
+h3 Regular
+
+.my-g
+  == cell('folio/console/ui/buttons', @buttons_model)
+
+.my-g
+  == cell('folio/console/ui/buttons',
+          @buttons_model.map { |h| { icon: :alert }.merge(h) })
+
+h3 Small
+
+.my-g
+  == cell('folio/console/ui/buttons',
+          @buttons_model.map { |h| { size: :sm }.merge(h) })
+
+.my-g
+  == cell('folio/console/ui/buttons',
+          @buttons_model.map { |h| { size: :sm, icon: :alert }.merge(h) })

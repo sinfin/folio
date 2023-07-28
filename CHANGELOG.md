@@ -1,9 +1,33 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-07-28
+### Changed
+- version 4.0!
+
+## 2023-07-25
+### Changed
+- renamed `new_url` to `new_path_name` in index header and new_button
+
+## 2023-05-02
+### Changed
+- removed `react_picker` and added `file_picker_for_*`
+
 ## 2023-04-26
 ### Added
 - added `preview_token` functionality to `Folio::Publishable` concern, added `preview_token` param to pages - add `preview_token` column to your publishable models!
+
+## 2023-04-24
+### Changed
+- renamed `Folio::Image` to `Folio::File::Image` and `Folio::Document` to `Folio::File::Document`
+### Removed
+- removed legacy `Folio::ImageHelper`
+
+## 2023-04-21
+### Added
+- added `Rails.application.config.folio_users_after_impersonate_path_proc` which uses `folio_users_after_impersonate_path` by default
+### Removed
+- removed `folio/console/tagsinput` cell, use `as: :tags` simple form input instead
 
 ## 2023-03-15
 ### Added
@@ -502,7 +526,7 @@ folio/_message-bus       -> folio/message-bus
 
 ## 2019-01-14
 ### Changed
-- Changed `bootstrap/` to `folio-bootstrap/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`
+- Changed `bootstrap/` to `folio-bootstrap-4/scss/` in `app/assets/stylesheets/_custom_bootstrap.sass`
 - Changed `filter` in `Folio::Filterable` to `filter_by_params`
 
 ## 2019-01-09
@@ -554,8 +578,8 @@ folio/_message-bus       -> folio/message-bus
 - Changed console react helpers:
   - Changed `react_image_select(f)` -> `react_picker(f, :cover_placement)`
   - Changed `react_images_select(f)` -> `react_picker(f, :image_placements)`
-  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :document_placement, file_type: 'Folio::Document')`
-  - Changed `react_document_select(f, multi: true)` -> `react_picker(f, :document_placements, file_type: 'Folio::Document')`
+  - Changed `react_document_select(f, multi: false)` -> `react_picker(f, :document_placement, file_type: 'Folio::File::Document')`
+  - Changed `react_document_select(f, multi: true)` -> `react_picker(f, :document_placements, file_type: 'Folio::File::Document')`
 
 ## 2018-11-09
 ### Added

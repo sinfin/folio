@@ -13,25 +13,24 @@ div[
     role="group"
     class="f-c-index-position-buttons__button-group"
   ]
-    button.btn.btn-sm.btn-outline[
-      class="f-c-index-position-buttons__button"
-      class="fa fa-arrow-up"
-      type="button"
-      data-direction="up"
-    ]
+    == cell("folio/console/ui/button",
+            variant: :icon,
+            icon: :arrow_up,
+            class: "f-c-index-position-buttons__button",
+            "data-direction" => "up")
 
-    button.btn.btn-sm.btn-outline[
-      class="f-c-index-position-buttons__button"
-      class="fa fa-arrow-down"
-      type="button"
-      data-direction="down"
-    ]
+    == cell("folio/console/ui/button",
+            variant: :icon,
+            icon: :arrow_down,
+            class: "f-c-index-position-buttons__button",
+            "data-direction" => "down")
 
     - unless options[:ancestry]
-      span.btn.btn-sm.btn-outline[
-        class="f-c-index-position-buttons__button"
-        class="f-c-index-position-buttons__button--handle"
-        class="fa fa-grip-lines"
-      ]
+      == cell("folio/console/ui/button",
+              variant: :icon,
+              icon: :drag,
+              tag: :span,
+              class: "f-c-index-position-buttons__button \
+                      f-c-index-position-buttons__button--handle")
 
     span.folio-loader.folio-loader--small.folio-loader--transparent

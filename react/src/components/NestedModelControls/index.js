@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { makeConfirmed } from 'utils/confirmed'
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
   let btnGroupClassName = 'btn-group mr-1'
@@ -10,17 +11,18 @@ const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
   }
 
   const destroyButton = remove && (
-    <button
-      className='btn btn-danger fa fa-times'
-      type='button'
+    <FolioConsoleUiButton
+      variant='danger'
+      icon='close'
       onClick={makeConfirmed(remove)}
     />
   )
 
   const editButton = edit && (
-    <button
-      className={`btn btn-secondary f-c-nested-model-controls__edit fa fa-edit ${vertical ? '' : 'mr-1'}`}
-      type='button'
+    <FolioConsoleUiButton
+      variant='secondary'
+      class='f-c-nested-model-controls__edit'
+      icon='edit'
       onClick={edit}
     />
   )
@@ -29,17 +31,17 @@ const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
     <div className='f-c-nested-model-controls'>
       <div className={btnGroupClassName}>
         {moveUp && (
-          <button
-            className='btn btn-outline-secondary fa fa-arrow-up'
-            type='button'
+          <FolioConsoleUiButton
+            variant='secondary'
+            icon='arrow_up'
             onClick={moveUp}
           />
         )}
 
         {moveDown && (
-          <button
-            className='btn btn-outline-secondary fa fa-arrow-down'
-            type='button'
+          <FolioConsoleUiButton
+            variant='secondary'
+            icon='arrow_down'
             onClick={moveDown}
           />
         )}

@@ -8,7 +8,6 @@
                     "#{GRID_SIZE}x#{GRID_SIZE}#",
                     hover_zoom: true,
                     title: placement.title.presence,
-                    alt: placement.alt.presence,
                     lightbox: true,
                     class: '<%= classname_prefix %>-atom-images__col-image')
 
@@ -27,7 +26,6 @@
                     dynamic_geometry,
                     hover_zoom: true,
                     title: placement.title.presence,
-                    alt: placement.alt.presence,
                     lightbox: true,
                     class: '<%= classname_prefix %>-atom-images__dynamic-image',
                     cover: true)

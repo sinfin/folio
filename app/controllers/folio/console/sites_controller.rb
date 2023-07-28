@@ -44,7 +44,6 @@ class Folio::Console::SitesController < Folio::Console::BaseController
             .permit(*ary,
                     *@site.class.additional_params,
                     *file_placements_strong_params,
-                    locales: [],
                     social_links: Folio::Site.social_link_sites)
     end
 

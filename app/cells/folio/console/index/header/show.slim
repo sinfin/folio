@@ -1,58 +1,38 @@
 .f-c-index-header
   h1.f-c-index-header__h1
-    a.f-c-index-header__h1-a href=title_url
+    a.text-reset.text-decoration-none href=title_url
       = title
 
   - if model.respond_to?(:by_query) && options[:by_query] != false
     = query_form do |f|
-      .input-group
-        = by_query_input(f)
+      == cell('folio/console/ui/input_with_buttons',
+              input: by_query_input(f),
+              buttons: query_buttons)
 
-        .input-group-append
-          button[
-            class="btn"
-            class="fa fa-search"
-            type="submit"
-          ]
-          - if controller.params[:by_query].present?
-            a[
-              class="btn"
-              class="fa fa-times"
-              href=query_reset_url
-            ]
-
-        - if controller.send(:index_filters_keys).present?
-          - controller.send(:index_filters_keys).each do |key|
-            - if controller.params[key].present?
-              = f.hidden_field key, value: controller.params[key], id: nil
+      - if controller.send(:index_filters_keys).present?
+        - controller.send(:index_filters_keys).each do |key|
+          - if controller.params[key].present?
+            = f.hidden_field key, value: controller.params[key], id: nil
 
   - if options[:right]
     == options[:right]
 
   - if options[:csv]
-    a.btn.btn-secondary.f-c-index-header__btn href=csv_path
-      i.fa.fa-download<>
-      = options[:csv].try(:[], :label) || "CSV"
+    == cell('folio/console/ui/button',
+            variant: :tertiary,
+            href: csv_path,
+            icon: :download,
+            label: options[:csv].try(:[], :label) || "CSV")
 
-  - if options[:react_new]
-    button.btn.btn-success[
-      class="f-c-index-header__btn"
-      class="f-c-index-header__btn--new"
-      class="f-c-index-header__btn--react"
-      type="button"
-    ]
-      = render(:_new_button_label)
-
-  - elsif options[:new_button] != false
-    - if options[:types] || options[:new_dropdown_links]
-      .f-c-index-header__new-dropdown
-        == cell('folio/console/dropdown', title: render(:_new_button_label),  \
-                                          class_name: 'btn btn-success', \
-                                          links: new_dropdown_links)
-
-    - else
-      = new_button
-        = render(:_new_button_label)
+  - if options[:new_button] != false
+    == cell('folio/console/index/new_button',
+            klass: model,
+            react: options[:react_new],
+            types: options[:types],
+            new_path_name: options[:new_path_name],
+            popover: options[:new_button_popover],
+            new_dropdown_links: options[:new_dropdown_links],
+            header: true)
 
   - if show_transportable_dropdown?
     .f-c-index-header__transportable-dropdown
@@ -68,14 +48,11 @@
 - if options[:above_filters]
   == options[:above_filters]
 
-- if controller.send(:index_filters).present? && \
-     options[:index_filters] != false
-  == cell('folio/console/index/filters', \
-          klass: model, \
-          index_filters: controller.send(:index_filters),
+- if options[:index_filters] != false && index_filters.present?
+  == cell('folio/console/index/filters',
+          klass: model,
           cancel_url: options[:filters_cancel_url])
 
 - if options[:pagy]
-  .f-c-index-header__pagy
-    == cell('folio/console/pagination', options[:pagy],
-                                        inside: options[:inside_pagination])
+  == cell('folio/console/pagination', options[:pagy],
+                                      inside: options[:inside_pagination])

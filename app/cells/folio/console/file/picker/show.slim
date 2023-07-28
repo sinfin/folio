@@ -1,0 +1,50 @@
+.f-c-file-picker[
+  data=data
+  class="form-group"
+  class="f-c-file-picker--as-#{klass.human_type}"
+  class="f-c-js-atoms-placement-setting"
+]
+  = model[:f].label model[:placement_key]
+
+  = html_safe_fields_for model[:f], model[:placement_key], build: true do |fp|
+    = fp.hidden_field :id, "data-f-c-file-picker-target" => "idInput"
+
+    = fp.hidden_field :_destroy,
+                      value: fp.object.marked_for_destruction? ? "1" : "0",
+                      disabled: !fp.object.marked_for_destruction?,
+                      "data-f-c-file-picker-target" => "destroyInput"
+
+    = fp.hidden_field :file_id,
+                      "data-f-c-file-picker-target" => "fileIdInput"
+
+    .f-c-file-picker__content data-f-c-file-picker-target="content"
+      - if file_placement && file_placement.file
+        == cell(content_cell_name,
+                file_placement.file,
+                show_form_controls: true)
+
+    .f-c-file-picker__btn-wrap
+      == cell('folio/console/ui/button',
+              class: "f-c-file-picker__btn",
+              variant: :success,
+              label: btn_label,
+              icon: :plus,
+              "data-action" => "f-c-file-picker#onBtnClick")
+
+    - if hint = hint_for(fp)
+      small.f-c-file-picker__hint.form-text.text-muted
+        = hint
+
+    - if klass.human_type == "image"
+      small.f-c-file-picker__alt.form-text.text-muted
+        span.f-c-file-picker__alt-label<>
+          ' alt:
+
+        span.f-c-file-picker__alt-value<> data-f-c-file-picker-target="altValue"
+          - if file_placement && file_placement.file
+            = file_placement.file.alt
+
+        = folio_icon(:edit,
+                     height: 12,
+                     class: 'f-c-file-picker__alt-ico',
+                     data: { action: "click->f-c-file-picker#onAltClick" })

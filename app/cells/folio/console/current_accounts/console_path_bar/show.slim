@@ -4,7 +4,8 @@
 ]
   .container-fluid
     .f-c-current-accounts-console-path-bar__top
-      .f-c-current-accounts-console-path-bar__top-ico.fa.fa-exclamation-triangle
+      = folio_icon(:alert,
+                   class: 'f-c-current-accounts-console-path-bar__top-ico')
 
       .f-c-current-accounts-console-path-bar__top-label
         = t('.title')

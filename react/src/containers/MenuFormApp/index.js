@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import SortableTree, { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree'
-import { Button } from 'reactstrap'
 
 import 'react-sortable-tree/style.css'
 
@@ -12,6 +11,8 @@ import {
   removeItem,
   MENU_ITEM_URL
 } from 'ducks/menus'
+
+import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
 import MenuFormAppWrap from './styled/MenuFormAppWrap'
 import MenuItem from './MenuItem'
@@ -75,10 +76,12 @@ function MenuFormApp ({ menus, onChange, makeOnMenuItemChange, makeOnMenuItemRem
       />
 
       <div className='my-4'>
-        <Button color='success' type='button' onClick={add}>
-          <i className='fa fa-plus' />
-          {window.FolioConsole.translations.addMenuItem}
-        </Button>
+        <FolioConsoleUiButton
+          variant='success'
+          onClick={add}
+          icon='plus'
+          label={window.FolioConsole.translations.addMenuItem}
+        />
       </div>
 
       <SerializedMenu menus={menus} />

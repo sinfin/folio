@@ -3,7 +3,7 @@ div class=class_name class=(options[:small] ? 'small' : nil)
     - localizer = AASM::Localizer.new
 
     .dropdown
-      button.f-c-state__state.dropdown-toggle data-toggle="dropdown"
+      button.f-c-state__state.dropdown-toggle data-bs-toggle="dropdown"
         = state_square(state)
         = model.aasm.human_state
 

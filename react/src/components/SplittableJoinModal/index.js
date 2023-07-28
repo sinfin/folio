@@ -1,14 +1,18 @@
 import React from 'react'
 import { Button } from 'reactstrap'
 
+import FolioUiIcon from 'components/FolioUiIcon'
 import SplittableModalPartsWrap from '../AtomForm/styled/SplittableModalPartsWrap'
 
 function SplittableJoinModal ({ content, save, cancel }) {
   return (
     <div className='modal-content'>
       <div className='modal-header'>
-        <strong className='modal-title'>{window.FolioConsole.translations.atomSplittableJoinTitle}</strong>
-        <button type='button' className='close' onClick={cancel}>×</button>
+        <h3 className='modal-title'>{window.FolioConsole.translations.atomSplittableJoinTitle}</h3>
+
+        <button class='f-c-modal__close' type='button' onClick={cancel}>
+          <FolioUiIcon name='close' class='f-c-modal__close-icon' />
+        </button>
       </div>
 
       <div className='modal-body'>

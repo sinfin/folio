@@ -1,0 +1,14 @@
+---
+en:
+  folio:
+    console:
+      report:
+        title: Statistics
+        missing_data: No data available for the selected period.
+        group_by:
+          day: Day
+          week: Week
+          month: Month
+        box:
+          total: Total
+        invalid_date_range: Selected period is too long. Select a maximum of %{max} months.

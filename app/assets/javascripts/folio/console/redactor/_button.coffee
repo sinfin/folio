@@ -55,7 +55,8 @@
         title: @lang.get('button')
         api: 'plugin.button.open'
 
-      $button.setIcon('<i class="fa fa-hand-pointer"></i>')
+      icon = window.Folio.Ui.Icon.create("button_pointer", { height: 16 })
+      $button.setIcon(icon.outerHTML)
 
     open: ->
       @app.api 'module.modal.build',
