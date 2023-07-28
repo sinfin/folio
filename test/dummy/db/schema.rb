@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_24_071721) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -346,7 +346,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_071721) do
     t.text "meta_description"
     t.string "ancestry"
     t.string "type"
-    t.boolean "featured"
     t.integer "position"
     t.boolean "published"
     t.datetime "published_at", precision: nil
@@ -360,7 +359,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_24_071721) do
     t.string "preview_token"
     t.index "(((setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((title)::text, ''::text))), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(perex, ''::text))), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(atoms_data_for_search, ''::text))), 'C'::\"char\")))", name: "index_folio_pages_on_by_query", using: :gin
     t.index ["ancestry"], name: "index_folio_pages_on_ancestry"
-    t.index ["featured"], name: "index_folio_pages_on_featured"
     t.index ["locale"], name: "index_folio_pages_on_locale"
     t.index ["original_id"], name: "index_folio_pages_on_original_id"
     t.index ["position"], name: "index_folio_pages_on_position"
