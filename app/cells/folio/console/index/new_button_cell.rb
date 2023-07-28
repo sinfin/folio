@@ -21,7 +21,7 @@ class Folio::Console::Index::NewButtonCell < Folio::ConsoleCell
       h
     elsif model[:react]
       h["data-controller"] = "f-click-trigger"
-      h["data-f-click-trigger-target-value"] = '.modal.show f-c-r-dropzone-trigger, .modal.show .f-c-file-list__dropzone-trigger, .folio-react-wrap[data-mode="index"] f-c-r-dropzone-trigger, .folio-react-wrap[data-mode="index"] .f-c-file-list__dropzone-trigger'
+      h["data-f-click-trigger-target-value"] = '.modal.show .f-c-r-dropzone-trigger, .modal.show .f-c-file-list__dropzone-trigger, .folio-react-wrap[data-mode="index"] .f-c-r-dropzone-trigger, .folio-react-wrap[data-mode="index"] .f-c-file-list__dropzone-trigger'
 
       h
     elsif new_dropdown_links.present?
