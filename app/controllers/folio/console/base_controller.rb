@@ -114,6 +114,10 @@ class Folio::Console::BaseController < Folio::ApplicationController
   def safe_url_for(opts)
     url_for(opts)
   rescue StandardError
+    begin
+      main_app.url_for(opts)
+    rescue StandardError
+    end
   end
 
   helper_method :through_aware_console_url_for
