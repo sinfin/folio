@@ -684,6 +684,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   omniauth-twitter2
+  premailer-rails
   pry-byebug
   pry-rails
   puma (< 6)
