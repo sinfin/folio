@@ -11,7 +11,13 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
     register_atom_settings
 
 
-    type = @builder.object.class.respond_to?(:type_for_attribute) ? @builder.object.class.type_for_attribute(attribute_name).type : :date
+    type = if options[:as] == :date_time || options[:as] == :datetime
+      :datetime
+    elsif options[:as] == :date
+      :date
+    else
+      @builder.object.class.respond_to?(:type_for_attribute) ? @builder.object.class.type_for_attribute(attribute_name).type : :date
+    end
 
     register_stimulus("f-input-date-time", {
       calendar_on_top: options[:calendar_on_top],

@@ -118,8 +118,6 @@ window.Folio.Input.DateTime.bind = (input, opts = {}) => {
   window.Folio.Input.DateTime.unbind(input)
   window.Folio.Input.DateTime.updateIconsIfNeeded(input, opts)
 
-  console.log(opts)
-
   let fullOpts
 
   if (opts.type === 'date') {
@@ -172,7 +170,7 @@ window.Folio.Stimulus.register('f-input-date-time', class extends window.Stimulu
       spriteUrl: this.spriteUrlValue
     }
 
-    this.element.dataset.autocomplete = 'off'
+    this.element.autocomplete = 'off'
     this.element.dataset.toggle = 'datetimepicker'
     this.element.dataset.bsToggle = 'datetimepicker'
 
