@@ -6,4 +6,5 @@
       .card-body
         h3.card-text.mt-0 = t('.none')
 
-        == cell('folio/console/index/new_button', model)
+        - unless model[:new_button] == false
+          == cell('folio/console/index/new_button', model)

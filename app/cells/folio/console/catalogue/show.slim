@@ -81,8 +81,7 @@ div class=wrap_class_name
 
   - else
     == cell('folio/console/index/no_records',
-            klass:,
-            types: model[:types])
+            model.slice(:klass, :types, :new_button))
 
   span.folio-loader.f-c-catalogue__loader
 
