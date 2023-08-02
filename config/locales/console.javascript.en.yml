@@ -12,8 +12,6 @@ en:
         atomSplittingSubmit: Split
         atomSplittingText: Select where the text will be split
         atomSplittingTitle: Do you really wish to split the text into parts?
-        availableDocuments: Available documents
-        availableImages: Available images
         cancel: Cancel
         cancelChanges: Cancel changes?
         clearDate: Clear date
@@ -51,8 +49,6 @@ en:
         selectable: Selectable
         selectDocument: Select document
         selected: Selected
-        selectedDocuments: Selected documents
-        selectedImages: Selected images
         selectImage: Select image
         selectPlaceholder: Select...
         split: Split

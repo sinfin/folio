@@ -12,8 +12,6 @@ cs:
         atomSplittingSubmit: Rozdělit
         atomSplittingText: Vyberte, kde bude text rozdělen
         atomSplittingTitle: Opravdu si přejete rozdělit text na části?
-        availableDocuments: Dostupné dokumenty
-        availableImages: Dostupné obrázky
         cancel: Zrušit
         cancelChanges: Zahodit změny?
         clearDate: Vymazat datum
@@ -51,8 +49,6 @@ cs:
         selectable: Volitelné
         selectDocument: Zvolte dokument
         selected: Vybrané
-        selectedDocuments: Vybrané dokumenty
-        selectedImages: Vybrané obrázky
         selectImage: Zvolte obrázek
         selectPlaceholder: Vybrat...
         split: Rozdělit

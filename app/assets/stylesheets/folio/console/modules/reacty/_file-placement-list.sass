@@ -1,17 +1,11 @@
-.f-c-file-placement-list
-  margin: - $grid-gutter-half
-  padding: $grid-gutter-half 0
-
-.f-c-file-placement-list__empty
-  font-size: $font-size-sm
-  color: rgba(darken($success, 10%), 0.5)
-  text-align: center
-
 .f-c-file-placement
   display: flex
   align-items: center
-  padding: (( $grid-gutter-half / 2 )) 0 (( $grid-gutter-half / 2 )) $grid-gutter-half
+  gap: $grid-gutter-width
   transition: background .2s ease-in-out
+
+  & + &
+    margin-top: $grid-gutter-width / 2
 
   .f-c-nested-model-controls
     margin-left: auto
@@ -54,7 +48,6 @@
 .f-c-file-placement__img-wrap
   width: 75px
   height: 75px
-  margin-right: $grid-gutter-half
   position: relative
 
 .f-c-file-placement__img-a
@@ -65,7 +58,6 @@
   align-items: center
   justify-content: center
   cursor: zoom-in
-  background: rgba(darken($success, 10%), 0.2)
   position: relative
   z-index: 1
 
@@ -101,16 +93,9 @@ body > .f-c-file-placement
 
 .f-c-file-placement__inputs
   flex: 1 1 auto
-  display: flex
-  align-items: center
-
-.f-c-file-placement__title
-  .form-control
-    padding-left: 20px
 
 .f-c-file-placement__alt
-  .form-control
-    padding-right: 20px
+  margin-top: $grid-gutter-width / 4
 
 .f-c-file-placement__edit-ico
   position: absolute
