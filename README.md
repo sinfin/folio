@@ -102,6 +102,19 @@ Rails.application.config.folio_console_sidebar_link_class_names = [
 - Some Oauth providers (eg. apple) requires HTTPS for callback. Set `dev.dummy.cz` to `127.0.0.1` (`/etc/hosts`) and start `test/dummy`app as in ssl mode by
   `rails s -b 'ssl://dev.dummy.cz:3000?key=./certificates/dev.dummy.cz.key&cert=./certificates/dev.dummy.cz.crt'. And set callbacks to `https://dev.dummy.cz:3000/users/auth/apple/callback`
 
+- Including `Folio::Audited` in model requires also setting routes in console
+  ```
+    scope module: :folio do
+      namespace :console do
+        resources :x do
+          member do
+            get :revision, path: "revision/:version"
+            post :restore, path: "restore/:version"
+          end
+        end
+      end
+    end
+  ```
 ## Contributing
 
 Clone & setup
