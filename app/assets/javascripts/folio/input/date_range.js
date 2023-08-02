@@ -82,7 +82,7 @@ window.Folio.Input.DateRange.unbindDatepicker = (el) => {
 }
 
 window.Folio.Stimulus.register('f-input-date-range', class extends window.Stimulus.Controller {
-  static values = { maxDate: String }
+  static values = { maxDate: { type: String, default: '' }  }
 
   connect () {
     window.Folio.Input.DateRange.bindDatepicker(this.element, { maxDate: this.maxDateValue })

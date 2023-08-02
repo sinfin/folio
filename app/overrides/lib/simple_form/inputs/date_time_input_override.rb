@@ -8,30 +8,18 @@ SimpleForm::Inputs::DateTimeInput.class_eval do
       input_html_options[:value] = I18n.l(value, format: :console_short)
     end
 
-    if options[:atom_setting]
-      input_html_classes << "f-c-js-atoms-placement-setting"
-      input_html_options["data-atom-setting"] = options[:atom_setting]
-    end
+    register_atom_settings
 
-    input_html_options[:class] ||= []
-    input_html_options[:class] << "f-input"
 
     type = @builder.object.class.respond_to?(:type_for_attribute) ? @builder.object.class.type_for_attribute(attribute_name).type : :date
 
-    input_html_options[:class] << "f-input--date"
-
-    if options[:calendar_on_top]
-      input_html_options[:class] << "f-input--date-on-top"
-    end
-
-    if type != :date
-      input_html_options[:class] << "f-input--date-time"
-    end
-
-    input_html_options["autocomplete"] = "off"
-    input_html_options["data-toggle"] = "datetimepicker"
-    input_html_options["data-bs-toggle"] = "datetimepicker"
-    input_html_options["data-sprite-url"] = ActionController::Base.helpers.image_path("folio/input/date_time/svg-sprite.svg")
+    register_stimulus("f-input-date-time", {
+      calendar_on_top: options[:calendar_on_top],
+      type:,
+      min: options[:min] ? I18n.l(options[:min].to_datetime, format: :console_short) : nil,
+      max: options[:max] ? I18n.l(options[:max].to_datetime, format: :console_short) : nil,
+      sprite_url: ActionController::Base.helpers.image_path("folio/input/date_time/svg-sprite.svg"),
+    }.compact)
 
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 

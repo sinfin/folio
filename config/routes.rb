@@ -30,6 +30,8 @@ Folio::Engine.routes.draw do
         get :buttons
         get :modals
         get :warning_ribbons
+
+        get :input_date_time
       end
 
       resources :pages, except: %i[show] do

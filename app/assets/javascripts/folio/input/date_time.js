@@ -15,8 +15,6 @@ window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.DateTime = {}
 
-window.Folio.Input.DateTime.SELECTOR = '.f-input--date'
-
 window.Folio.Input.DateTime.changedIconsToSvg = false
 
 window.Folio.Input.DateTime.DATE_TIME_CONFIG = {
@@ -79,12 +77,12 @@ if (!window.Folio.Input.DateTime.i18n.clearDate) {
   }
 }
 
-window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
-  if (!window.Folio.Input.DateTime.changedIconsToSvg && input && input.dataset.spriteUrl) {
+window.Folio.Input.DateTime.updateIconsIfNeeded = (input, opts) => {
+  if (!window.Folio.Input.DateTime.changedIconsToSvg && input && opts.spriteUrl) {
     const newIcons = {}
 
     Object.keys(window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.icons).forEach((key) => {
-      newIcons[key] = key === 'type' ? 'sprites' : `${input.dataset.spriteUrl}#${key}`
+      newIcons[key] = key === 'type' ? 'sprites' : `${opts.spriteUrl}#${key}`
     })
 
     window.Folio.Input.DateTime.DATE_TIME_CONFIG.display.icons = newIcons
@@ -97,14 +95,13 @@ window.Folio.Input.DateTime.updateIconsIfNeeded = (input) => {
 window.Folio.Input.DateTime.makeOnShow = (input) => {
   if (input.dataset.default) {
     return () => {
-      if (input.folioInputTempusDominus && !input.folioInputDidSetDefault && input.value === "") {
+      if (input.folioInputTempusDominus && !input.folioInputDidSetDefault && input.value === '') {
         input.folioInputDidSetDefault = true
         input.folioInputTempusDominus.dates.setFromInput(input.dataset.default)
       }
     }
   }
 }
-
 
 window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
   if (input.value === '' || (e.date && !e.oldDate) || (e.date && e.oldDate && Math.abs(e.date - e.oldDate) > 60 * 60 * 1000 + 1)) {
@@ -119,14 +116,16 @@ window.Folio.Input.DateTime.makeOnChange = (input) => (e) => {
 
 window.Folio.Input.DateTime.bind = (input, opts = {}) => {
   window.Folio.Input.DateTime.unbind(input)
-  window.Folio.Input.DateTime.updateIconsIfNeeded(input)
+  window.Folio.Input.DateTime.updateIconsIfNeeded(input, opts)
+
+  console.log(opts)
 
   let fullOpts
 
-  if (input.classList.contains('f-input--date-time')) {
-    fullOpts = { ...window.Folio.Input.DateTime.DATE_TIME_CONFIG, ...opts }
+  if (opts.type === 'date') {
+    fullOpts = { ...window.Folio.Input.DateTime.DATE_CONFIG, ...opts.tempusDominusOptions }
   } else {
-    fullOpts = { ...window.Folio.Input.DateTime.DATE_CONFIG, ...opts }
+    fullOpts = { ...window.Folio.Input.DateTime.DATE_TIME_CONFIG, ...opts.tempusDominusOptions }
   }
 
   input.folioInputTempusDominus = new window.tempusDominus.TempusDominus(input, fullOpts)
@@ -156,4 +155,38 @@ window.Folio.Input.DateTime.unbind = (input) => {
   }
 }
 
-window.Folio.Input.framework(window.Folio.Input.DateTime)
+window.Folio.Stimulus.register('f-input-date-time', class extends window.Stimulus.Controller {
+  static values = {
+    max: { type: String, default: '' },
+    min: { type: String, default: '' },
+    type: { type: String, default: 'date' },
+    calendarOnTop: { type: Boolean, default: false },
+    spriteUrl: { type: String, default: '' }
+  }
+
+  connect () {
+    const opts = {
+      tempusDominusOptions: {},
+      type: this.typeValue,
+      calendarOnTop: this.calendarOnTopValue,
+      spriteUrl: this.spriteUrlValue
+    }
+
+    this.element.dataset.autocomplete = 'off'
+    this.element.dataset.toggle = 'datetimepicker'
+    this.element.dataset.bsToggle = 'datetimepicker'
+
+    if (this.minValue || this.maxValue) {
+      opts.tempusDominusOptions.restrictions = {}
+
+      if (this.minValue) opts.tempusDominusOptions.restrictions.minDate = this.minValue
+      if (this.maxValue) opts.tempusDominusOptions.restrictions.maxDate = this.maxValue
+    }
+
+    window.Folio.Input.DateTime.bind(this.element, opts)
+  }
+
+  disconnect () {
+    window.Folio.Input.DateTime.unbind(this.element)
+  }
+})

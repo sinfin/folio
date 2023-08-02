@@ -11,6 +11,10 @@ class Folio::Console::UiController < Folio::Console::BaseController
       modals
       warning_ribbons
     ].sort
+
+    @inputs = %i[
+      date_time
+    ].sort
   end
 
   def warning_ribbons
@@ -80,6 +84,9 @@ class Folio::Console::UiController < Folio::Console::BaseController
       { variant: :danger, label: "Add danger flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
       { variant: :info, loader: true, label: "Add loader flash", onclick: "window.FolioConsole.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]
+  end
+
+  def input_date_time
   end
 
   private
