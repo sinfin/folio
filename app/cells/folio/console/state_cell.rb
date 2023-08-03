@@ -107,8 +107,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
       "klass" => klass,
       "id" => model.id,
       "email" => model.try(:email),
-      "email-subject" => model.class.try(:aasm_email_default_subject, event),
-      "email-text" => model.class.try(:aasm_email_default_text, event),
+      "email-subject" => model.try(:aasm_email_default_subject, event) || model.class.try(:aasm_email_default_subject, event),
+      "email-text" => model.try(:aasm_email_default_text, event) || model.class.try(:aasm_email_default_text, event),
     }.compact
   end
 end
