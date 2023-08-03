@@ -123,8 +123,7 @@ function * uploadNewFileInsteadPerform (action) {
     yield call(apiXhrFilePut, result.s3_url, action.fileIo)
 
     yield call(window.Folio.S3Upload.finishedUpload, {
-      filesUrl: action.filesUrl,
-      s3_path: result.s3_path,
+      s3Path: result.s3_path,
       type: action.fileType,
       existingId: action.file.id
     })

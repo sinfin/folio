@@ -19,8 +19,8 @@ window.Folio.S3Upload.newUpload = ({ file }) => {
   return window.Folio.Api.apiPost('/folio/api/s3/before', { file_name: file.name })
 }
 
-window.Folio.S3Upload.finishedUpload = ({ file, type, existingId }) => {
-  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path: file.s3_path, type, existing_id: existingId })
+window.Folio.S3Upload.finishedUpload = ({ type, existingId, s3Path }) => {
+  return window.Folio.Api.apiPost('/folio/api/s3/after', { s3_path: s3Path, type, existing_id: existingId })
 }
 
 window.Folio.S3Upload.previousDropzoneId = 0
@@ -98,7 +98,7 @@ window.Folio.S3Upload.createDropzone = ({
 
     success: function (file) {
       window.Folio.S3Upload.finishedUpload({
-        file,
+        s3Path: file.s3_path,
         type: fileType
       }).catch((err) => {
         this.options.error(file, err.message)
