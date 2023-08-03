@@ -31,6 +31,8 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
   end
 
   def query_autocomplete
+    return nil if options[:query_autocomplete] == false
+
     if model.new.respond_to?(:to_label)
       opts = { klass: model.to_s }
 
@@ -98,7 +100,8 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
             input_html: {
               value: params[:by_query],
               id: nil,
-              placeholder: options[:by_query_placeholder]
+              placeholder: options[:by_query_placeholder],
+              autocomplete: query_autocomplete ? nil : "off",
             })
   end
 
