@@ -1,5 +1,4 @@
-inherit_gem:
-  rubocop-rails_config: config/rails.yml
+inherit_from: ./rubocop-rails_config-without-md.yml
 
 require:
   - rubocop-minitest

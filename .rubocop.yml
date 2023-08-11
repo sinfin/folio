@@ -1,11 +1,4 @@
-inherit_gem:
-  rubocop-rails_config: config/rails.yml
-
-require:
-  - rubocop-minitest
-  - rubocop-performance
-  - rubocop-rails
-  - rubocop-rake
+inherit_from: ./lib/rubocop_config.yml
 
 AllCops:
   TargetRubyVersion: 3.1.1
