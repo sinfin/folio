@@ -42,13 +42,13 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       if h["data-controller"]
         h["data-controller"] += " f-c-ui-notification-modal-trigger"
       else
-        h["data-controller"] =  "f-c-ui-notification-modal-trigger"
+        h["data-controller"] = "f-c-ui-notification-modal-trigger"
       end
 
       if h["data-action"]
         h["data-action"] += " f-c-ui-notification-modal-trigger#onClick"
       else
-        h["data-action"] =  "f-c-ui-notification-modal-trigger#onClick"
+        h["data-action"] = "f-c-ui-notification-modal-trigger#onClick"
       end
 
       h["data-f-c-ui-notification-modal-trigger-data-value"] = model[:notification_modal].to_json

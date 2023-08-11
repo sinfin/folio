@@ -98,7 +98,7 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   private
     def validate_type
       return errors.add(:type, :blank) if type.blank?
-      return errors.add(:type, :invalid) if type.start_with?("Folio::")
+      errors.add(:type, :invalid) if type.start_with?("Folio::")
     end
 
     def pregenerate_thumbnails
