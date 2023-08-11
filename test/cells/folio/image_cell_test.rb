@@ -37,11 +37,17 @@ class Folio::ImageCellTest < Cell::TestCase
     assert html.has_css?(".f-image__img[data-alt='foo-1']")
 
     placement.file.update(description: "foo-2")
-    html = cell("folio/image", placement, size:, alt: option_alt).(:show)
+    html = cell("folio/image", placement, size:).(:show)
     assert html.has_css?(".f-image__img[data-alt='foo-2']")
 
-    placement.update(alt: "foo-3")
     html = cell("folio/image", placement, size:, alt: option_alt).(:show)
+    assert html.has_css?(".f-image__img[data-alt='foo-1']")
+
+    placement.update(alt: "foo-3")
+    html = cell("folio/image", placement, size:).(:show)
     assert html.has_css?(".f-image__img[data-alt='foo-3']")
+
+    html = cell("folio/image", placement, size:, alt: option_alt).(:show)
+    assert html.has_css?(".f-image__img[data-alt='foo-1']")
   end
 end
