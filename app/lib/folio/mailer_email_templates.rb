@@ -64,9 +64,9 @@ module Folio::MailerEmailTemplates
 
   def email_template_bcc_string(bcc)
     ary = if bcc.present?
-      if system_email_copy.is_a?(String)
+      if bcc.is_a?(String)
         bcc.split(/,\s+/)
-      elsif system_email_copy.is_a?(Array)
+      elsif bcc.is_a?(Array)
         bcc
       else
         []
@@ -87,6 +87,6 @@ module Folio::MailerEmailTemplates
       ary << Rails.application.config.folio_mailer_global_bcc
     end
 
-    ary.join(", ")
+    ary.uniq.join(", ")
   end
 end
