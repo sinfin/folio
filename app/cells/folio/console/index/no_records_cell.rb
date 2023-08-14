@@ -4,7 +4,7 @@ class Folio::Console::Index::NoRecordsCell < Folio::ConsoleCell
   include Folio::Console::Cell::IndexFilters
 
   def new_link
-    url = options[:url].presence || through_aware_console_url_for(model, action: :new, safe: true)
+    url = model[:url].presence || through_aware_console_url_for(model, action: :new, safe: true)
 
     return if url.nil?
 
