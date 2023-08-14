@@ -6,6 +6,8 @@ html.f-c-layout-atoms__html[
   head
     = csrf_meta_tags
 
+    = render partial: 'layouts/folio/console/atoms_additional_head'
+
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
       = stylesheet_link_tag('folio/console/atoms/previews/base',
                             media: 'all')
