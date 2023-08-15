@@ -4,7 +4,7 @@ import { makeConfirmed } from 'utils/confirmed'
 import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 
-const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
+const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical, handleClassName }) => {
   const destroyButton = remove && (
     <FolioConsoleUiButton
       variant='danger'
@@ -42,6 +42,15 @@ const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical }) => {
 
       {editButton}
       {destroyButton}
+
+      {handleClassName && (
+        <FolioConsoleUiButton
+          className={handleClassName}
+          icon='arrow_up_down'
+          variant='tertiary'
+          tag='span'
+        />
+      )}
     </FolioConsoleUiButtons>
   )
 }

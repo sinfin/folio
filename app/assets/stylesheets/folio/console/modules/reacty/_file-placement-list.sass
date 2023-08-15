@@ -12,6 +12,7 @@
     opacity: 0.1
     transition: $transition-base
     white-space: nowrap
+    flex: 0 0 auto
 
   .form-group
     margin-bottom: 0
@@ -74,14 +75,7 @@
     text-align: right
 
 .f-c-file-placement__handle
-  opacity: 0.1
-  transition: $transition-base
-  padding: $grid-gutter-half
-  flex: 0 0 auto
   cursor: move
-
-  .f-c-file-placement:hover &
-    opacity: 1
 
 body > .f-c-file-placement
   background: rgba($white, .5)
@@ -144,9 +138,6 @@ body > .f-c-file-placement
 
     .f-c-nested-model-controls
       order: 2
-
-    .f-c-file-placement__handle
-      order: 3
 
     .f-c-file-placement__inputs
       order: 4

@@ -104,6 +104,7 @@ class FilePlacement extends React.Component {
           moveUp={this.moveUp}
           moveDown={this.moveDown}
           edit={onEdit}
+          handleClassName='f-c-file-placement__handle'
         />
 
         {!this.props.nested && (
@@ -114,10 +115,6 @@ class FilePlacement extends React.Component {
             position={position}
           />
         )}
-
-        <div className='f-c-file-placement__handle'>
-          <FolioUiIcon name='arrow_up_down' class='text-muted f-c-file-placement__edit-ico' />
-        </div>
       </div>
     )
   }

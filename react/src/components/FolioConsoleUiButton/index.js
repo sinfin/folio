@@ -43,6 +43,23 @@ export default function FolioConsoleUiButton (props) {
         />
       </a>
     )
+  } else if (props.tag === 'span') {
+    return (
+      <span
+        title={props.title}
+        className={className}
+        onClick={props.onClick}
+        disabled={props.disabled}
+        data-action={props.dataAction}
+      >
+        <FolioConsoleUiButtonContents
+          icon={props.icon}
+          label={props.label}
+          rightIcon={props.rightIcon}
+        />
+        {props.children}
+      </span>
+    )
   } else {
     return (
       <button
