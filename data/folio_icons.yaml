@@ -39,6 +39,9 @@ button_pointer:
 calendar_range:
   width: 24
   height: 24
+camera_alt:
+  width: 24
+  height: 24
 cart:
   width: 24
   height: 24
