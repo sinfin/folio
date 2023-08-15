@@ -28,9 +28,10 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
     @header_html
   end
 
-  def record_html(rec)
+  def record_html(rec, html_to_first_cell: nil)
     @header_html = nil
 
+    @html_to_first_cell = html_to_first_cell
     @record = rec
     @record_html = ""
     instance_eval(&model[:block])
@@ -78,6 +79,11 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
       if sanitize
         content = sanitize_string(content)
+      end
+
+      if @html_to_first_cell
+        content = "#{@html_to_first_cell} #{content}"
+        @html_to_first_cell = nil
       end
 
       value_div = content_tag(:div, content, class: "f-c-catalogue__cell-value")
@@ -445,8 +451,12 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
             class_name += " #{row_class_lambda.call(child)}"
           end
 
+          ancestry_icon = folio_icon(:subdirectory_arrow_right,
+                                     class: "f-c-catalogue__ancestry-icon",
+                                     height: 18)
+
           html += content_tag(:div,
-                              record_html(child),
+                              record_html(child, html_to_first_cell: ancestry_icon),
                               class: class_name,
                               "data-depth" => depth)
 

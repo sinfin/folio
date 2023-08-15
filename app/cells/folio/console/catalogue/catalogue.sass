@@ -106,6 +106,16 @@ $catalogue-green: $green !default
     justify-content: center
     cursor: pointer
 
+  &__cell-value
+    position: relative
+
+  &__ancestry-icon
+    position: absolute
+    top: 50%
+    margin-left: - 2 * $spacer
+    margin-top: -9px
+    color: $text-muted
+
   +mq-desktop-catalogue
     &__table
       display: table
@@ -211,18 +221,6 @@ $catalogue-green: $green !default
     &__row--ancestry-child &__cell:first-child &__cell-value
       position: relative
 
-      // TODO @mreq material ico
-      // &:before
-      //   +material-icon-style
-      //   position: absolute
-      //   top: 0
-      //   bottom: 0
-      //   content: 'subdirectory_arrow_right'
-      //   left: - 2 * $spacer
-      //   height: auto
-      //   color: $text-muted
-      //   font-size: 18px
-
   +mq-mobile-catalogue
     &--merge
       padding-left: 140px
@@ -302,17 +300,6 @@ $catalogue-green: $green !default
     &__header + &__row,
     &__row + &__row
       border-top: $table-border-width solid $table-border-color
-
-    // TODO @mreq material ico
-    // &__row--ancestry-child
-    //   &:before
-    //     +material-icon-style
-    //     position: absolute
-    //     top: 50%
-    //     margin-left: - 2 * $spacer
-    //     margin-top: -9px
-    //     content: 'subdirectory_arrow_right'
-    //     color: $text-muted
 
     &__row--ancestry-depth-1
       padding-left: $spacer + 1 * 2 * $spacer

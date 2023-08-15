@@ -240,6 +240,9 @@ send_lock:
 square_outline:
   width: 24
   height: 24
+subdirectory_arrow_right:
+  width: 24
+  height: 24
 swap_horizontal:
   width: 24
   height: 24
