@@ -126,11 +126,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           "Folio::Page",
           :homepage,
           "Folio::Menu",
-          "Folio::File::Image",
-          { klass: "Folio::File::Video", path: url_for([:console, Folio::File::Video]), label: t(".video") },
-          { klass: "Folio::File::Audio", path: url_for([:console, Folio::File::Audio]), label: t(".audio") },
-          "Folio::File::Document",
           "Folio::ContentTemplate",
+        ]
+      }, {
+        links: [
+          "Folio::File::Image",
+          "Folio::File::Video",
+          "Folio::File::Audio",
+          "Folio::File::Document",
         ]
       }]
     else
