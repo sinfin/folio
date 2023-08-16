@@ -19,6 +19,10 @@ module Folio::BelongsToSite
     def has_belongs_to_site?
       !Rails.application.config.folio_site_is_a_singleton
     end
+
+    def add_site_to_console_params?
+      has_belongs_to_site?
+    end
   end
 
   private

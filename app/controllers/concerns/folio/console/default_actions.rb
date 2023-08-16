@@ -243,7 +243,7 @@ module Folio::Console::DefaultActions
     end
 
     def folio_console_params_with_site
-      if !Rails.application.config.folio_site_is_a_singleton && @klass.try(:has_belongs_to_site?)
+      if !Rails.application.config.folio_site_is_a_singleton && @klass.try(:add_site_to_console_params?)
         folio_console_params.merge(site: current_site)
       else
         folio_console_params
