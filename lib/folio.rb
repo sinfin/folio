@@ -63,7 +63,7 @@ module Folio
     "folio_"
   end
 
-  def self.current_site(request: nil)
+  def self.current_site(request: nil, controller: nil)
     if Rails.application.config.folio_site_is_a_singleton
       Folio::Site.instance
     else
