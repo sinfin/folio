@@ -67,7 +67,7 @@ module Folio::PagesControllerBase
       base = Folio::Page
 
       unless Rails.application.config.folio_site_is_a_singleton
-        base = base.where(site: current_site)
+        base = base.by_site(current_site)
       end
 
       base = base.roots if Rails.application.config.folio_pages_ancestry

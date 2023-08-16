@@ -8,7 +8,7 @@ class Folio::Console::Api::LinksController < Folio::Console::Api::BaseController
       scope = klass
 
       if !Rails.application.config.folio_site_is_a_singleton && klass.try(:has_belongs_to_site?)
-        scope = scope.where(site: current_site)
+        scope = scope.by_site(current_site)
       end
 
       if params[:q].present? && scope.respond_to?(:by_query)
