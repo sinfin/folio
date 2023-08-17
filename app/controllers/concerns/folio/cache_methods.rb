@@ -28,8 +28,8 @@ module Folio::CacheMethods
       end
     end
 
-    def render_folio_cache(&block)
-      if params[:skip_global_cache] || !::Rails.application.config.action_controller.perform_caching
+    def render_folio_cache(publishable: nil, &block)
+      if params[:skip_global_cache] || !::Rails.application.config.action_controller.perform_caching || (publishable && !publishable.published?)
         yield block
         nil
       elsif @folio_cached_html

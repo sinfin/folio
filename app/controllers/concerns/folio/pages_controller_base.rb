@@ -4,7 +4,7 @@ module Folio::PagesControllerBase
   extend ActiveSupport::Concern
 
   included do
-    before_action :find_page, :add_meta
+    before_action :find_page
   end
 
   def show
@@ -18,41 +18,49 @@ module Folio::PagesControllerBase
   end
 
   private
-    def find_page
-      if Rails.application.config.folio_pages_ancestry
-        path_parts = params[:path].split("/")
-        pages = []
-
-        first_slug = path_parts.shift
-        pages << set_nested_page(pages_scope, first_slug, last: path_parts.size == 0)
-
-        path_parts.each_with_index do |slug, i|
-          pages << set_nested_page(filter_pages_by_locale(@page.children),
-                                   slug,
-                                   last: path_parts.size - 1 == i)
-        end
-
-        if !@preview_token_valid_for_last && pages.any? { |page| !page.published? }
-          fail ActiveRecord::RecordNotFound
-        end
+    def pages_show_cache_key
+      if respond_to?(:cache_key_base)
+        ["pages#show", params[:path]] + cache_key_base
       else
-        @page = pages_scope.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
-                           .friendly.find(params[:id])
-
-        add_breadcrumb @page.title, url_for(@page)
-      end
-
-      unless @page.class.public?
-        if @page.class.public_rails_path
-          redirect_to send(@page.class.public_rails_path)
-        else
-          fail ActiveRecord::RecordNotFound
-        end
+        ["pages#show", params[:path]]
       end
     end
 
-    def add_meta
-      set_meta_variables(@page)
+    def find_page
+      folio_run_unless_cached(pages_show_cache_key) do
+        if Rails.application.config.folio_pages_ancestry
+          path_parts = params[:path].split("/")
+          pages = []
+
+          first_slug = path_parts.shift
+          pages << set_nested_page(pages_scope, first_slug, last: path_parts.size == 0)
+
+          path_parts.each_with_index do |slug, i|
+            pages << set_nested_page(filter_pages_by_locale(@page.children),
+                                     slug,
+                                     last: path_parts.size - 1 == i)
+          end
+
+          if !@preview_token_valid_for_last && pages.any? { |page| !page.published? }
+            fail ActiveRecord::RecordNotFound
+          end
+        else
+          @page = pages_scope.published_or_preview_token(params[Folio::Publishable::PREVIEW_PARAM_NAME])
+                             .friendly.find(params[:id])
+
+          add_breadcrumb @page.title, url_for(@page)
+        end
+
+        unless @page.class.public?
+          if @page.class.public_rails_path
+            redirect_to send(@page.class.public_rails_path)
+          else
+            fail ActiveRecord::RecordNotFound
+          end
+        end
+
+        set_meta_variables(@page) if @page
+      end
     end
 
     def filter_pages_by_locale(pages)
