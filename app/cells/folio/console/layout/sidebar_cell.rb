@@ -37,7 +37,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         path = controller.url_for([:edit, :console, homepage_instance])
         link(t(".homepage"), path)
       end
-    elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && link_source[:path]
+    elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
         return if controller.cannot?(:index, link_source[:klass].constantize)
       end
@@ -50,15 +50,23 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         ""
       end
 
-      if link_source[:path].is_a?(String)
-        path = link_source[:path]
-      else
-        path_params = link_source[:params].presence || {}
-
+      if link_source[:url_name]
         begin
-          path = controller.send(link_source[:path], path_params)
+          path = controller.send(link_source[:url_name], only_path: false, host: link_source[:host])
         rescue NoMethodError
-          path = controller.main_app.send(link_source[:path], path_params)
+          path = controller.main_app.send(link_source[:url_name], only_path: false, host: link_source[:host])
+        end
+      else
+        if link_source[:path].is_a?(String)
+          path = link_source[:path]
+        else
+          path_params = link_source[:params].presence || {}
+
+          begin
+            path = controller.send(link_source[:path], path_params)
+          rescue NoMethodError
+            path = controller.main_app.send(link_source[:path], path_params)
+          end
         end
       end
 
@@ -160,17 +168,16 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             site_links = {
               console_sidebar_prepended_links: [],
               console_sidebar_before_menu_links: [],
+              console_sidebar_before_site_links: [],
             }
 
-            %i[
-              console_sidebar_before_menu_links
-              console_sidebar_prepended_links
-            ].each do |key|
+            site_links.keys.each do |key|
               values = site.class.try(key)
               if values.present?
                 values.each do |link_or_hash|
                   if link_or_hash.is_a?(Hash)
                     if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
+                      link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
                       site_links[key] << link_or_hash
                     end
                   else
@@ -193,6 +200,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 link_for_class.call(Folio::Lead),
                 link_for_class.call(Folio::NewsletterSubscription),
                 link_for_class.call(Folio::EmailTemplate),
+                *site_links[:console_sidebar_before_site_links],
                 controller.can?(:manage, site) ? (
                   {
                     klass: "Folio::Site",
