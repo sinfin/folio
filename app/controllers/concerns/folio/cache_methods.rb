@@ -11,7 +11,7 @@ module Folio::CacheMethods
     def folio_run_unless_cached(key, meta: true, &block)
       @folio_cache_key = key
 
-      unless params[:skip_global_cache]
+      if ::Rails.application.config.action_controller.perform_caching && !params[:skip_global_cache]
         @folio_cached_html = Rails.cache.read(@folio_cache_key)
 
         if meta
@@ -20,13 +20,16 @@ module Folio::CacheMethods
         end
       end
 
-      if params[:skip_global_cache] || !@folio_cached_html || !@folio_cached_meta_html
+      if !::Rails.application.config.action_controller.perform_caching ||
+         params[:skip_global_cache] ||
+         !@folio_cached_html ||
+         !@folio_cached_meta_html
         yield block
       end
     end
 
     def render_folio_cache(&block)
-      if params[:skip_global_cache]
+      if params[:skip_global_cache] || !::Rails.application.config.action_controller.perform_caching
         yield block
       elsif @folio_cached_html
         @folio_cached_html
