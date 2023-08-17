@@ -157,7 +157,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         }
       ] + Folio::Site.ordered.filter_map do |site|
         if controller.can?(:read, site)
-          I18n.with_locale(site.locale) do
+          I18n.with_locale(site.console_locale) do
             link_for_class = -> (klass) do
               {
                 klass: klass.to_s,

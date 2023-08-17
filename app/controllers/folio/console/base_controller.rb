@@ -145,6 +145,14 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   helper_method :through_aware_console_url_for
 
+  def set_i18n_locale
+    if params[:locale] && current_site.locales.include?(params[:locale])
+      I18n.locale = params[:locale]
+    else
+      I18n.locale = current_site.console_locale
+    end
+  end
+
   private
     def index_filters
       {}

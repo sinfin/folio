@@ -128,6 +128,10 @@ class Folio::Site < Folio::ApplicationRecord
     console_form_tabs_base
   end
 
+  def console_locale
+    locale
+  end
+
   def og_image_with_fallback
     Rails.cache.fetch(["site#og_image_with_fallback", id, updated_at, ENV["CURRENT_RELEASE_COMMIT_HASH"]]) do
       if og_image
