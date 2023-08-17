@@ -31,6 +31,7 @@ module Folio::CacheMethods
     def render_folio_cache(&block)
       if params[:skip_global_cache] || !::Rails.application.config.action_controller.perform_caching
         yield block
+        nil
       elsif @folio_cached_html
         @folio_cached_html
       else
