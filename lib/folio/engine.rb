@@ -78,6 +78,8 @@ module Folio
       {}
     }
 
+    config.folio_content_templates = false
+
     config.folio_users = false
     config.folio_users_require_phone = false
     config.folio_users_sign_out_everywhere = true

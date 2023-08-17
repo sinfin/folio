@@ -47,7 +47,7 @@ SimpleForm::Inputs::StringInput.class_eval do
       input_html_options["data-action"] = "f-input-character-counter#onInput"
     end
 
-    if options[:content_templates]
+    if ::Rails.application.config.folio_content_templates && options[:content_templates]
       ct_klass = options[:content_templates].constantize
       input_html_options["data-content-templates"] = ct_klass.to_data_attribute
       input_html_options["data-content-templates-url"] = Folio::Engine.app.url_helpers.edit_console_content_templates_path(type: options[:content_templates])

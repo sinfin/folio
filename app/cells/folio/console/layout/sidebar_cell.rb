@@ -126,8 +126,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
           "Folio::Page",
           :homepage,
           "Folio::Menu",
-          "Folio::ContentTemplate",
-        ]
+          ::Rails.application.config.folio_content_templates ? "Folio::ContentTemplate" : nil,
+        ].compact
       }, {
         links: [
           "Folio::File::Image",
@@ -141,9 +141,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         {
           links: [
             "Folio::File::Image",
+            "Folio::File::Video",
+            "Folio::File::Audio",
             "Folio::File::Document",
-            "Folio::ContentTemplate",
-          ]
+            ::Rails.application.config.folio_content_templates ? "Folio::ContentTemplate" : nil,
+          ].compact
         }
       ] + Folio::Site.ordered.filter_map do |site|
         if controller.can?(:read, site)

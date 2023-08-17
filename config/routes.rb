@@ -48,10 +48,12 @@ Folio::Engine.routes.draw do
         end
       end
 
-      resource :content_templates, only: [] do
-        get :index
-        get :edit, path: ":type/edit"
-        patch :update, path: ":type/update", as: :update
+      if ::Rails.application.config.folio_content_templates
+        resource :content_templates, only: [] do
+          get :index
+          get :edit, path: ":type/edit"
+          patch :update, path: ":type/update", as: :update
+        end
       end
 
       resources :menus, except: %i[show]
