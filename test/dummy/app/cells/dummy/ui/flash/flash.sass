@@ -9,7 +9,7 @@
     border-right: 0
 
   &__inner
-    padding: 0.945rem (( 60px + $grid-gutter-half )) 0.945rem 0
+    padding: 0.945rem (( px-to-rem(60px) + $grid-gutter-half )) 0.945rem 0
     position: relative
 
   &__ico
@@ -22,7 +22,7 @@
     justify-content: center
 
   &__ico + &__text
-    padding-left: 22px + $grid-gutter-half
+    padding-left: px-to-rem(22px) + $grid-gutter-half
 
   &__close
     +unbutton

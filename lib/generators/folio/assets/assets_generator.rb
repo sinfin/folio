@@ -58,7 +58,6 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     %w[
       lib/generators/folio/assets/templates/data/icons.yaml
       lib/generators/folio/assets/templates/data/icons/*.svg
-      lib/generators/folio/assets/templates/app/assets/fonts/*
       lib/generators/folio/assets/templates/public/*
     ].each do |key|
       Dir[::Folio::Engine.root.join(key)].each do |full_path|

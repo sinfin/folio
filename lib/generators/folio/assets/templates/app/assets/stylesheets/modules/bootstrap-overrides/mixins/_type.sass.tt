@@ -52,7 +52,7 @@
 = font-h4
   font-size: $h4-font-size
   line-height: $h4-line-height
-  font-weight: $font-weight-medium
+  font-weight: $font-weight-semibold
   text-transform: uppercase
   letter-spacing: 1px
 

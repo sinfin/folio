@@ -44,7 +44,7 @@ $spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-wi
 
 $body-color: $dark
 $font-weight-normal: 400
-$font-weight-medium: 500
+$font-weight-semibold: 500
 $font-weight-bold: 700
 
 $font-family-sans-serif-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"

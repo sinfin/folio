@@ -20,7 +20,7 @@
   font-family: 'IBM Plex Sans';
   src: font-url('IBMPlexSans-Medium.woff2') format('woff2'),
        font-url('IBMPlexSans-Medium.woff') format('woff');
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-semibold;
   font-style: normal;
   font-display: fallback;
 }
