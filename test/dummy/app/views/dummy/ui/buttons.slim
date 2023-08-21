@@ -1,0 +1,39 @@
+.container-fluid
+  h1 UI kit
+
+  h2 Buttons
+
+  .container-fluid
+
+  h3 Regular
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model)
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :alert) })
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :alert, label: nil) })
+
+  h3 Small
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm) })
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :alert) })
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :alert, label: nil) })
+
+  h3 Large
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg) })
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :alert) })
+
+  .my-g
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :alert, label: nil) })

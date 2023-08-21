@@ -49,6 +49,10 @@ Rails.application.routes.draw do
       get :gallery
     end
 
+    resource :ui, only: %i[show], controller: "ui" do
+      get :buttons
+    end
+
     resource :search, only: %i[show] do
       get :autocomplete
       get :pages
