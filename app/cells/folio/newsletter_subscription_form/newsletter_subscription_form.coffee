@@ -17,4 +17,9 @@ $ ->
         .val(token)
 
       $.post($form.attr('action'), $form.serialize())
-        .always((response) -> $wrap.replaceWith(response))
+        .always (response) ->
+          $response = $(response)
+          $wrap.replaceWith($response)
+
+          unless $response.find('.form-group-invalid').length
+            $response.trigger('folio:success')
