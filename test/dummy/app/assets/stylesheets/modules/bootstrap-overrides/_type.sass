@@ -10,3 +10,65 @@ body
 
   +media-breakpoint-down($font-size-media-breakpoint)
     font-size: $font-size-base-mobile
+
+h1, .h1
+  +font-h1
+  display: block
+  margin: $h1-margin-top 0 $h1-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $h1-margin-top-mobile 0 $h1-margin-bottom-mobile
+
+h2, .h2
+  +font-h2
+  display: block
+  margin: $h2-margin-top 0 $h2-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $h2-margin-top-mobile 0 $h2-margin-bottom-mobile
+
+h3, .h3
+  +font-h3
+  display: block
+  margin: $h3-margin-top 0 $h3-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $h3-margin-top-mobile 0 $h3-margin-bottom-mobile
+
+h4, .h4
+  +font-h4
+  display: block
+  margin: $headings-margin-top 0 $headings-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $headings-margin-top-mobile 0 $headings-margin-bottom-mobile
+
+h5, .h5,
+h6, .h6
+  +font-h5
+  display: block
+  margin: $headings-margin-top 0 $headings-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $headings-margin-top-mobile 0 $headings-margin-bottom-mobile
+
+small,
+.font-size-sm,
+.small
+  +font-size-sm
+
+.font-size-lg,
+.lead
+  +font-size-lg
+
+ul
+  +unlist
+
+@for $lines from 1 to 5
+  .text-line-clamp-#{$lines}
+    +line-clamp($lines)
+
+.d-unlink
+  &, &:hover, &:focus
+    text-decoration: none
+    color: inherit

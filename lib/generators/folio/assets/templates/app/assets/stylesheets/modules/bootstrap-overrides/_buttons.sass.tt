@@ -16,7 +16,7 @@
   min-height: $input-height-lg
 
 .btn-xs-block
-  +media-breakpoint-down(xs)
+  +media-breakpoint-down(sm)
     display: flex
     width: 100%
     flex: 0 0 100%

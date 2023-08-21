@@ -61,7 +61,7 @@ class UploadTagger extends React.PureComponent {
       <Wrap className='my-g p-g'>
         <p>{window.FolioConsole.translations.newFilesAttributes}</p>
         <div className='row'>
-          <FormGroup className={this.props.taggable ? 'col-md-6 pr-md-2' : 'col-12'}>
+          <FormGroup className={this.props.taggable ? 'col-md-6 pe-md-2' : 'col-12'}>
             <AutocompleteInput
               value={this.state.author}
               name='author'
@@ -73,7 +73,7 @@ class UploadTagger extends React.PureComponent {
           </FormGroup>
 
           {this.props.taggable && (
-            <FormGroup className='col-md-6 pl-md-2'>
+            <FormGroup className='col-md-6 ps-md-2'>
               <TagsInput
                 value={this.state.tags}
                 onTagsChange={this.onTagsChange}

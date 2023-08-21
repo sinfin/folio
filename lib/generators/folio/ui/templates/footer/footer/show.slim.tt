@@ -6,7 +6,8 @@
 
         == cell('folio/newsletter_subscriptions/form')
 
-        == cell('<%= application_namespace_path %>/ui/disclaimer')
+        .mt-n3
+          == cell('<%= application_namespace_path %>/ui/disclaimer')
 
       - if social_links.present?
         .<%= classname_prefix %>-ui-footer__right.mb-s
@@ -22,11 +23,11 @@
 
     .<%= classname_prefix %>-ui-footer__copyright
       .d-flex.flex-wrap.pt-g.pb-h
-        .mr-s.mb-h
+        .me-40.mb-h
           = current_site.copyright_info
 
         - if menu
           - menu.menu_items.includes(:page).each do |menu_item|
-            .mr-s.mb-h
+            .me-40.mb-h
               a href=menu_url_for(menu_item)
                 = menu_item.to_label

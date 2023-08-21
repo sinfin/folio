@@ -147,19 +147,19 @@
             p.small.mt-3.mb-0 btn btn-#{variant} #{size}
 
             .d-flex.flex-wrap
-              .mr-g.mt-3
+              .me-g.mt-3
                 p.small Normal
 
                 button.btn class="btn-#{variant} #{size}" type="button"
                   ' Button label
 
-              .mr-g.mt-3
+              .me-g.mt-3
                 p.small Hover / Pressed
 
                 button.btn.active class="btn-#{variant} #{size}" type="button"
                   ' Button active
 
-              .mr-g.mt-3
+              .me-g.mt-3
                 p.small Disabled
 
                 button.btn class="btn-#{variant} #{size}" type="button" disabled=true
@@ -169,19 +169,19 @@
         p.small.mt-3.mb-0 btn btn-tag
 
         .d-flex.flex-wrap
-          .mr-g.mt-3
+          .me-g.mt-3
             p.small Normal
 
             button.btn.btn-tag type="button"
               ' Button label
 
-          .mr-g.mt-3
+          .me-g.mt-3
             p.small Hover / Pressed
 
             button.btn.btn-tag.active type="button"
               ' Button active
 
-          .mr-g.mt-3
+          .me-g.mt-3
             p.small Disabled
 
             button.btn.btn-tag type="button" disabled=true
@@ -192,7 +192,7 @@
     .f-ui__icons.d-flex.flex-wrap
       - if icons.present?
         - icons.each do |key|
-          .mr-3.mb-3 title=key
+          .me-3.mb-3 title=key
             == cell("#{application_namespace_path}/ui/icon", key, height: 24)
       - else
         ' No icons found in app/assets/stylesheets/_icons.scss

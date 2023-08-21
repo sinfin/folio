@@ -8,12 +8,12 @@ div class=class_name
         = folio_icon(:file_document)
     - else
       .d-flex.align-items-center
-        a.mr-3.btn.btn-outline-secondary href=href target="_blank"
+        a.me-3.btn.btn-outline-secondary href=href target="_blank"
           == cell('folio/console/ui/with_icon',
                   t('.download'),
                   icon: :file_document)
 
-        .f-c-private-attachments-single-dropzone__upload.mr-3 data=upload_data
+        .f-c-private-attachments-single-dropzone__upload.me-3 data=upload_data
           = folio_icon(:edit,
                        class: "text-black f-c-private-attachments-single-dropzone__upload-ico")
 

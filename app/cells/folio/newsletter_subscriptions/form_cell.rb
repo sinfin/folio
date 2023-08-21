@@ -49,6 +49,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
     f.input :email,
             as: :email,
             label: false,
-            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil }
+            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
+            wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
 end

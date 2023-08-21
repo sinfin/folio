@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/logo:
+      application_namespace_path/atom/logo: 
     models:
       application_namespace_path/atom/logo: Logo společnosti
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/logo:
+      application_namespace_path/atom/logo: 
     models:
       application_namespace_path/atom/logo: Company logo

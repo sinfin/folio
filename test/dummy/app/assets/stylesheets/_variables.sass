@@ -1,4 +1,6 @@
 $enable-negative-margins: true
+$enable-rfs: false
+$enable-validation-icons: false
 
 $grid-gutter-base: px-to-rem(5px)
 $grid-gutter-width: 6 * $grid-gutter-base
@@ -42,7 +44,7 @@ $light: $gray-100 !default
 $dark: $gray-900 !default
 
 $container-fluid-max-width: 1440px
-$font-size-media-breakpoint: md
+$font-size-media-breakpoint: lg
 
 $font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
@@ -53,7 +55,16 @@ $font-weight-semibold: 600
 $font-weight-bold: 700
 $font-weight-bolder: bolder
 
+$link-color: inherit
+$link-decoration: underline
+$link-hover-color: inherit
+$link-hover-decoration: none
+
 $headings-font-weight: $font-weight-bold
+$headings-margin-top: $spacer / 2
+$headings-margin-bottom: $spacer
+$headings-margin-top-mobile: $headings-margin-top
+$headings-margin-bottom-mobile: $headings-margin-bottom
 
 $font-size-base: px-to-rem(18px)
 $line-height-base: 1.4
@@ -61,34 +72,34 @@ $font-size-base-mobile: px-to-rem(17px)
 $line-height-base-mobile: 1.4
 
 $font-size-sm: px-to-rem(14px)
-$line-height-sm: px-to-rem(18px)
+$line-height-sm: 18 / 14
 $font-size-sm-mobile: px-to-rem(14px)
-$line-height-sm-mobile: px-to-rem(16px)
+$line-height-sm-mobile: 16 / 14
 
 $font-size-mini: px-to-rem(11px)
-$line-height-mini: px-to-rem(12px)
+$line-height-mini: 12 / 11
 $font-size-mini-mobile: px-to-rem(11px)
-$line-height-mini-mobile: px-to-rem(12px)
+$line-height-mini-mobile: 12 / 11
 
 $font-size-lg: px-to-rem(20px)
-$line-height-lg: px-to-rem(28px)
+$line-height-lg: 28 / 20
 $font-size-lg-mobile: px-to-rem(20px)
-$line-height-lg-mobile: px-to-rem(28px)
+$line-height-lg-mobile: 28 / 20
 
 $h1-font-size: px-to-rem(44px)
 $h1-line-height: px-to-rem(50px)
 $h1-margin-top: $grid-gutter-width
 $h1-margin-bottom: $spacer
-$h1-font-size-mobile: mobile-px-to-rem(30px)
+$h1-font-size-mobile: px-to-rem(30px)
 $h1-line-height-mobile: px-to-rem(41px)
-$h1-margin-top-mobile: 0
-$h1-margin-bottom-mobile: $spacer
+$h1-margin-top-mobile: $h1-margin-top
+$h1-margin-bottom-mobile: $h1-margin-bottom
 
 $h2-font-size: px-to-rem(32px)
 $h2-line-height: px-to-rem(44px)
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$h2-font-size-mobile: mobile-px-to-rem(24px)
+$h2-font-size-mobile: px-to-rem(24px)
 $h2-line-height-mobile: px-to-rem(33px)
 $h2-margin-top-mobile: 2 * $spacer
 $h2-margin-bottom-mobile: $spacer
@@ -97,7 +108,7 @@ $h3-font-size: px-to-rem(20px)
 $h3-line-height: px-to-rem(30px)
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$h3-font-size-mobile: mobile-px-to-rem(19px)
+$h3-font-size-mobile: px-to-rem(19px)
 $h3-line-height-mobile: px-to-rem(26px)
 $h3-margin-top-mobile: 2 * $spacer
 $h3-margin-bottom-mobile: $spacer
@@ -106,7 +117,7 @@ $h4-font-size: px-to-rem(19px)
 $h4-line-height: px-to-rem(26px)
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$h4-font-size-mobile: mobile-px-to-rem(17px)
+$h4-font-size-mobile: px-to-rem(17px)
 $h4-line-height-mobile: px-to-rem(24px)
 $h4-margin-top-mobile: 2 * $spacer
 $h4-margin-bottom-mobile: $spacer
@@ -115,9 +126,22 @@ $h5-font-size: px-to-rem(18px)
 $h5-line-height: px-to-rem(22px)
 $h5-margin-top: 2 * $spacer
 $h5-margin-bottom: $spacer
-$h5-font-size-mobile: mobile-px-to-rem(16px)
+$h5-font-size-mobile: px-to-rem(16px)
 $h5-line-height-mobile: px-to-rem(19px)
 $h5-margin-top-mobile: 2 * $spacer
 $h5-margin-bottom-mobile: $spacer
 
+$theme-colors: ("primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "light-gray": $light-gray, "medium-gray": $medium-gray, "gray": $gray, "dark-gray": $dark-gray, "blue": $blue, "red": $red, "violet": $violet, "green": $green, "orange": $orange, "yellow": $yellow )
 $social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $violet, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
+
+$form-group-spacer: px-to-rem(20px)
+
+$border-color: rgba(0, 0, 0, 0.3)
+
+$border-radius: 0
+$border-radius-lg: 0
+$border-radius-sm: 0
+
+$modal-md: px-to-rem(640px)
+$modal-inner-padding: px-to-rem(30px)
+$modal-header-padding-y: px-to-rem(20px)

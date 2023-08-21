@@ -2,7 +2,7 @@
   background: $yellow
 
   &__inner
-    padding: 0.945rem (( 60px + $grid-gutter-half )) 0.945rem 0
+    padding: 0.945rem (( px-to-rem(60px) + $grid-gutter-half )) 0.945rem 0
     position: relative
 
   &__close

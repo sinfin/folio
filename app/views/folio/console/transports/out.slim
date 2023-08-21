@@ -3,7 +3,7 @@ h1 = t('.title', class_label: @record.model_name.human)
 h2 = @record.to_label
 
 .my-4.d-flex
-  .mr-g
+  .me-g
     == cell('folio/console/clipboard_copy', h(@yaml), as_button: true)
 
   == cell('folio/console/ui/button',

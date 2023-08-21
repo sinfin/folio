@@ -12,7 +12,6 @@
 @function is-px($value)
   @return is-number($value) and index('px', unit($value)) != null
 
-
 =media-screen-breakpoint-down($name, $breakpoints: $grid-breakpoints)
   @media screen and (max-width: breakpoint-max($name, $breakpoints))
     @content
@@ -22,7 +21,7 @@
     @content
 
 =mq-mobile-menu
-  +media-screen-breakpoint-down(md)
+  +media-screen-breakpoint-down(lg)
     @content
 
 =mq-desktop-menu

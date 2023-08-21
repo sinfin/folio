@@ -62,7 +62,7 @@ class DueDate extends React.Component {
         </div>
 
         {(this.props.dueAt && window.strftime) ? (
-          <div className='f-c-r-notes-fields-app-table-due-date__date small ml-2'>
+          <div className='f-c-r-notes-fields-app-table-due-date__date small ms-2'>
             {window.strftime('%d. %m.', this.props.dueAt)}
           </div>
         ) : null}

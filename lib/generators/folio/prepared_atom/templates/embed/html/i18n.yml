@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/embed/html:
+      application_namespace_path/atom/embed/html: 
     models:
       application_namespace_path/atom/embed/html: HTML (vložený kód)
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/embed/html:
+      application_namespace_path/atom/embed/html: 
     models:
       application_namespace_path/atom/embed/html: HTML (embed)

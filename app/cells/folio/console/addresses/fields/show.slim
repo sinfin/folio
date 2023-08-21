@@ -6,7 +6,7 @@
           class=(toggle ? "align-items-end" : nil)
         ]
           - if options[:title] != false
-            h2.mr-auto.pe-g = klass.model_name.human
+            h2.me-auto.pe-g = klass.model_name.human
 
           - if toggle
             = model.input toggle, wrapper_html: { class: 'pb-1' }

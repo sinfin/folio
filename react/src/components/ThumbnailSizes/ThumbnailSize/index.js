@@ -55,7 +55,7 @@ class ThumbnailSize extends React.Component {
             <div className='mt-2 pt-1 small d-flex align-items-center'>
               {thumbKey}
 
-              <div className='pl-3 ml-auto fa cursor-pointer' onClick={this.destroy}>
+              <div className='ps-3 ms-auto fa cursor-pointer' onClick={this.destroy}>
                 <FolioUiIcon name='delete' />
               </div>
             </div>

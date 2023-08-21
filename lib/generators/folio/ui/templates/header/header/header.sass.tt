@@ -100,7 +100,7 @@
     &__menu-input:checked + & &__menu
       display: block
 
-  +media-breakpoint-down(xs)
+  +media-breakpoint-down(sm)
     &__menu
       padding-left: 0
       padding-right: 0

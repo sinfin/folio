@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/image:
+      application_namespace_path/atom/image: 
     models:
       application_namespace_path/atom/image: Obrázek
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/image:
+      application_namespace_path/atom/image: 
     models:
       application_namespace_path/atom/image: Image

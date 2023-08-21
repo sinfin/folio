@@ -2,12 +2,12 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/card:
+      application_namespace_path/atom/card: 
     models:
-      application_namespace_path/atom/card:
+      application_namespace_path/atom/card: 
 en:
   activerecord:
     attributes:
-      application_namespace_path/atom/card:
+      application_namespace_path/atom/card: 
     models:
-      application_namespace_path/atom/card:
+      application_namespace_path/atom/card: 

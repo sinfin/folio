@@ -85,7 +85,7 @@ $ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
     &--size-medium &__title
       text-align: center
 
-  +media-breakpoint-down(xs)
+  +media-breakpoint-down(sm)
     &--size-large &__image
       margin-left: - $grid-gutter-half
       margin-right: - $grid-gutter-half

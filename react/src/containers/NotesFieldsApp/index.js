@@ -88,7 +88,7 @@ class NotesFields extends React.Component {
                 {notesFields.showChecked ? window.FolioConsole.translations.notesFieldsHide : window.FolioConsole.translations.notesFieldsShow}
               </button>
 
-              <button type='button' className='btn btn-sm btn-info ml-2' onClick={this.removeAll}>
+              <button type='button' className='btn btn-sm btn-info ms-2' onClick={this.removeAll}>
                 {window.FolioConsole.translations.notesFieldsDelete}
               </button>
             </div>

@@ -22,19 +22,19 @@ export default function Table ({
         >
           <input
             type='checkbox'
-            className='f-c-r-notes-fields-app-table__checkbox mr-3'
+            className='f-c-r-notes-fields-app-table__checkbox me-3'
             checked={note.attributes.closed_at !== null}
             onChange={() => toggleClosedAt(note)}
           />
 
           <div
-            className='f-c-r-notes-fields-app-table__content mr-3'
+            className='f-c-r-notes-fields-app-table__content me-3'
             dangerouslySetInnerHTML={{ __html: note.attributes.content.replace(/\n/g, '<br>') }}
             onClick={() => editNote(note)}
           />
 
           <DueDate
-            className='f-c-r-notes-fields-app-table__action mr-2'
+            className='f-c-r-notes-fields-app-table__action me-2'
             dueAt={note.attributes.due_at}
             onChange={(dueAt) => changeDueDate(note, dueAt)}
           />

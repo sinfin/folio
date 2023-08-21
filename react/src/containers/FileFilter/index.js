@@ -106,7 +106,7 @@ class FileFilter extends Component {
 
           {filters.active && (
             <div className='col-12 col-xl-1'>
-              <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ml-auto text-center text-xl-right'>
+              <FormGroup className='mb-0 mt-2 mt-sm-0 form-group--react-reset ms-auto text-center text-xl-right'>
                 <FolioConsoleUiButton onClick={this.onReset} variant='danger' icon='close' />
               </FormGroup>
             </div>

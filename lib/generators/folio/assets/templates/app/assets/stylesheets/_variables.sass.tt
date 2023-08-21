@@ -11,7 +11,7 @@ $mobile-font-size-base-px: 14px
 @function px-to-rem($px)
   @return 1rem * strip-unit($px) / strip-unit($font-size-base-px)
 
-@function mobile-px-to-rem($px)
+@function px-to-rem($px)
   @return 1rem * strip-unit($px) / strip-unit($mobile-font-size-base-px)
 
 $black: #000000
@@ -70,18 +70,18 @@ $link-hover-decoration: none
 $font-size-media-breakpoint: md
 
 $font-size-base: px-to-rem($font-size-base-px)
-$mobile-font-size-base: mobile-px-to-rem($mobile-font-size-base-px)
+$mobile-font-size-base: px-to-rem($mobile-font-size-base-px)
 $line-height-base: 22 / 16
 
 $font-size-lg-px: 19px
 $font-size-lg: px-to-rem($font-size-lg-px)
-$mobile-font-size-lg: mobile-px-to-rem(17px)
+$mobile-font-size-lg: px-to-rem(17px)
 $line-height-lg: 28 / 19
 $mobile-line-height-lg: 25 / 17
 
 $font-size-sm-px: 14px
 $font-size-sm: px-to-rem($font-size-sm-px)
-$mobile-font-size-sm: mobile-px-to-rem(13px)
+$mobile-font-size-sm: px-to-rem(13px)
 $line-height-sm: 18 / 14
 $mobile-line-height-sm: 17 / 13
 
@@ -89,7 +89,7 @@ $h1-font-size: px-to-rem(44px)
 $h1-line-height: 50 / 44
 $h1-margin-top: $grid-gutter-width
 $h1-margin-bottom: $spacer
-$mobile-h1-font-size: mobile-px-to-rem(30px)
+$mobile-h1-font-size: px-to-rem(30px)
 $mobile-h1-line-height: 41 / 30
 $mobile-h1-margin-top: 0
 $mobile-h1-margin-bottom: $spacer
@@ -98,7 +98,7 @@ $h2-font-size: px-to-rem(32px)
 $h2-line-height: 44 / 32
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$mobile-h2-font-size: mobile-px-to-rem(24px)
+$mobile-h2-font-size: px-to-rem(24px)
 $mobile-h2-line-height: 33 / 24
 $mobile-h2-margin-top: 2 * $spacer
 $mobile-h2-margin-bottom: $spacer
@@ -107,7 +107,7 @@ $h3-font-size: px-to-rem(20px)
 $h3-line-height: 30 / 20
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$mobile-h3-font-size: mobile-px-to-rem(19px)
+$mobile-h3-font-size: px-to-rem(19px)
 $mobile-h3-line-height: 26 / 19
 $mobile-h3-margin-top: 2 * $spacer
 $mobile-h3-margin-bottom: $spacer
@@ -116,7 +116,7 @@ $h4-font-size: px-to-rem(19px)
 $h4-line-height: 26 / 19
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$mobile-h4-font-size: mobile-px-to-rem(17px)
+$mobile-h4-font-size: px-to-rem(17px)
 $mobile-h4-line-height: 24 / 17
 $mobile-h4-margin-top: 2 * $spacer
 $mobile-h4-margin-bottom: $spacer
@@ -125,7 +125,7 @@ $h5-font-size: px-to-rem(18px)
 $h5-line-height: 22 / 18
 $h5-margin-top: 2 * $spacer
 $h5-margin-bottom: $spacer
-$mobile-h5-font-size: mobile-px-to-rem(16px)
+$mobile-h5-font-size: px-to-rem(16px)
 $mobile-h5-line-height: 19 / 16
 $mobile-h5-margin-top: 2 * $spacer
 $mobile-h5-margin-bottom: $spacer
