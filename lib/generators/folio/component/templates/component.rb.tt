@@ -1,0 +1,7 @@
+# frozen_string_literal: true
+
+class <%= component_class_name %> < ApplicationComponent
+  def initialize(model:)
+    @model = model
+  end
+end

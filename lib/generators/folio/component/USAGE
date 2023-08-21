@@ -1,0 +1,19 @@
+Description:
+    Explain the generator
+
+Example:
+    rails generate folio:component SomeThing
+
+    This will create:
+        app/models/project_namespace/some_thing.rb
+        app/components/project_namespace/some_thing_component.rb
+        app/components/project_namespace/some_thing/show.slim
+        test/components/project_namespace/some_thing_component_test.rb
+
+    rails generate folio:component /SomeThing
+
+    This will create:
+        app/models/some_thing.rb
+        app/components/some_thing_component.rb
+        app/components/some_thing/show.slim
+        test/components/some_thing_component_test.rb

@@ -2,11 +2,16 @@
 
 require "test_helper"
 
-class Dummy::Ui::ButtonComponentTest < ViewComponent::TestCase
-  def test_component_renders_something_useful
-    # assert_equal(
-    #   %(<span>Hello, components!</span>),
-    #   render_inline(Dummy::Ui::ButtonComponent.new(message: "Hello, components!")).css("span").to_html
-    # )
+class Dummy::Ui::ButtonsComponentTest < ViewComponent::TestCase
+  def test_render
+    buttons = [
+      { label: "hello" },
+      { label: "world" },
+    ]
+
+    render_inline(Dummy::Ui::ButtonsComponent.new(buttons:))
+
+    assert_selector(".d-ui-buttons")
+    assert_selector(".d-ui-button", count: 2)
   end
 end
