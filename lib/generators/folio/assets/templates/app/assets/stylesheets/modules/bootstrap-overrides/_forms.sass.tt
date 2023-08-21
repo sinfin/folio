@@ -1,11 +1,5 @@
-.form-control
-  font-size: $input-font-size
+legend
+  float: none
 
-.form-control-sm
-  font-size: $input-font-size-sm
-
-.form-control-lg
-  font-size: $input-font-size-lg
-
-.form-group abbr
-  text-decoration: none
+.form-group
+  margin-bottom: $form-group-spacer

@@ -1,13 +1,15 @@
 @import 'mixins/type'
 
-html, body
-  line-height: $line-height-base
+html
   font-family: $font-family-base
   -webkit-font-smoothing: antialiased
-  font-size: $font-size-base-px
+  font-size: 100%
+
+body
+  font-size: $font-size-base
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-font-size-base-px
+    font-size: $font-size-base-mobile
 
 h1, .h1
   +font-h1
@@ -15,7 +17,7 @@ h1, .h1
   margin: $h1-margin-top 0 $h1-margin-bottom
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    margin: $mobile-h1-margin-top 0 $mobile-h1-margin-bottom
+    margin: $h1-margin-top-mobile 0 $h1-margin-bottom-mobile
 
 h2, .h2
   +font-h2
@@ -23,7 +25,7 @@ h2, .h2
   margin: $h2-margin-top 0 $h2-margin-bottom
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    margin: $mobile-h2-margin-top 0 $mobile-h2-margin-bottom
+    margin: $h2-margin-top-mobile 0 $h2-margin-bottom-mobile
 
 h3, .h3
   +font-h3
@@ -31,7 +33,7 @@ h3, .h3
   margin: $h3-margin-top 0 $h3-margin-bottom
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    margin: $mobile-h3-margin-top 0 $mobile-h3-margin-bottom
+    margin: $h3-margin-top-mobile 0 $h3-margin-bottom-mobile
 
 h4, .h4
   +font-h4
@@ -39,7 +41,7 @@ h4, .h4
   margin: $headings-margin-top 0 $headings-margin-bottom
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    margin: $mobile-headings-margin-top 0 $mobile-headings-margin-bottom
+    margin: $headings-margin-top-mobile 0 $headings-margin-bottom-mobile
 
 h5, .h5,
 h6, .h6
@@ -48,7 +50,7 @@ h6, .h6
   margin: $headings-margin-top 0 $headings-margin-bottom
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    margin: $mobile-headings-margin-top 0 $mobile-headings-margin-bottom
+    margin: $headings-margin-top-mobile 0 $headings-margin-bottom-mobile
 
 small,
 .font-size-sm,

@@ -8,7 +8,7 @@ prefix_letter = File.basename(app_root)[0]
 svg_sprite = "#{app_root}/node_modules/.bin/svg-sprite"
 
 unless File.exist?(svg_sprite)
-  system("cd #{__dir__}; yarn install", exception: true)
+  `cd #{__dir__}; ./yarn install`
 end
 
 Dir.mktmpdir do |tmp|
@@ -42,7 +42,7 @@ Dir.mktmpdir do |tmp|
     MUSTACHE
   end
 
-  system("cd \"#{tmp}\" || exit 0; #{svg_sprite} -C svg_sprite.json \"#{app_root}/data/icons/*.svg\"", exception: true)
+  `cd "#{tmp}" || exit 0; #{svg_sprite} -C svg_sprite.json "#{app_root}/data/icons/*.svg"`
 
   File.open("#{tmp}/icons.yaml", "w") do |file|
     content = File.read("#{tmp}/defs/svg_sprite.yaml")
