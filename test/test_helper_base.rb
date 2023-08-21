@@ -79,3 +79,6 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
     create_and_host_site
   end
 end
+
+class Folio::ComponentTest < ViewComponent::TestCase
+end

@@ -11,10 +11,10 @@
     = dummy_ui_buttons(buttons: @buttons_model)
 
   .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :alert) })
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :warning) })
 
   .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :alert, label: nil) })
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :warning, label: nil) })
 
   h3 Small
 
@@ -22,10 +22,10 @@
     = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm) })
 
   .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :alert) })
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :warning) })
 
   .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :alert, label: nil) })
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :warning, label: nil) })
 
   h3 Large
 
@@ -33,7 +33,7 @@
     = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg) })
 
   .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :alert) })
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :warning) })
 
   .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :alert, label: nil) })
+    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :warning, label: nil) })
