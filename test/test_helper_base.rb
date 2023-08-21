@@ -22,6 +22,8 @@ VCR.configure do |config|
   config.hook_into :webmock
 end
 
+FactoryBot.definition_file_paths << Folio::Engine.root.join("test/factories")
+
 class ActiveSupport::TestCase
   parallelize
   include FactoryBot::Syntax::Methods
