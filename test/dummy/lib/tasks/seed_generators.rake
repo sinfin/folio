@@ -111,7 +111,7 @@ class Dummy::SeedGenerator
   def copy_file(from, to)
     text = File.read(from)
 
-    replaced = if to.to_s.include?('public/')
+    replaced = if to.to_s.include?("public/")
       text
     else
       replace_names(text)
@@ -201,7 +201,7 @@ namespace :dummy do
     end
 
     task assets: :environment do
-      require_relative '../../../../lib/generators/folio/assets/assets_generator'
+      require_relative "../../../../lib/generators/folio/assets/assets_generator"
 
       templates_path = Folio::Engine.root.join("lib/generators/folio/assets/templates")
       gen = Dummy::SeedGenerator.new(templates_path:)
@@ -213,7 +213,7 @@ namespace :dummy do
         paths.each do |path|
           Dir[Rails.root.join(path)].each do |glob_path|
             next if File.directory?(glob_path)
-            path = glob_path.to_s.gsub(/\A#{Folio::Engine.root.to_s}\/test\/dummy\//, "")
+            path = glob_path.to_s.gsub(/\A#{Folio::Engine.root}\/test\/dummy\//, "")
             gen.copy_file(glob_path, templates_path.join("#{path}#{affix}"))
           end
         end

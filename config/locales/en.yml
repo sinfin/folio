@@ -71,3 +71,4 @@ en:
       default: ''
       separator: "|"
   'true': "Yes"
+  confirmation: Are you sure?

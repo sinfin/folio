@@ -37,3 +37,4 @@ exclude:
   - app/views/layouts/folio/mailer.html.slim
   - lib/generators/folio/console/scaffold/templates/*
   - test/dummy/app/cells/dummy/ui/menu/show.slim
+  - test/dummy/app/views/dummy/ui/buttons.slim

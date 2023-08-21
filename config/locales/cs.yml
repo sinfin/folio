@@ -65,6 +65,7 @@ cs:
       content: Tato stránka obsahuje citlivý obsah, který je možné zobrazit až po ověření věku. Je Vám více než 18 let?
       accept: Ano
       cancel: Ne
+    confirmation: Určitě?
   head:
     description: ''
     title:
