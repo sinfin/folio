@@ -3,15 +3,23 @@
   line-height: $line-height-base
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-font-size-base
+    font-size: $font-size-base-mobile
+
+= font-size-mini
+  font-size: $font-size-mini
+  line-height: $line-height-mini
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    font-size: $font-size-mini-mobile
+    line-height: $line-height-mini-mobile
 
 = font-size-sm
   font-size: $font-size-sm
   line-height: $line-height-sm
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-font-size-sm
-    line-height: $mobile-line-height-sm
+    font-size: $font-size-sm-mobile
+    line-height: $line-height-sm-mobile
 
 = font-size-lg
   font-size: $font-size-lg
@@ -19,8 +27,8 @@
   color: $headings-color
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-font-size-lg
-    line-height: $mobile-line-height-lg
+    font-size: $font-size-lg-mobile
+    line-height: $line-height-lg-mobile
 
 = font-h1
   font-size: $h1-font-size
@@ -28,8 +36,8 @@
   font-weight: $headings-font-weight
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-h1-font-size
-    line-height: $mobile-h1-line-height
+    font-size: $h1-font-size-mobile
+    line-height: $h1-line-height-mobile
 
 = font-h2
   font-size: $h2-font-size
@@ -37,8 +45,8 @@
   font-weight: $headings-font-weight
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-h2-font-size
-    line-height: $mobile-h2-line-height
+    font-size: $h2-font-size-mobile
+    line-height: $h2-line-height-mobile
 
 = font-h3
   font-size: $h3-font-size
@@ -46,29 +54,26 @@
   font-weight: $headings-font-weight
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-h3-font-size
-    line-height: $mobile-h3-line-height
+    font-size: $h3-font-size-mobile
+    line-height: $h3-line-height-mobile
 
 = font-h4
   font-size: $h4-font-size
   line-height: $h4-line-height
-  font-weight: $font-weight-semibold
-  text-transform: uppercase
-  letter-spacing: 1px
+  font-weight: $headings-font-weight
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-h4-font-size
-    line-height: $mobile-h4-line-height
+    font-size: $h4-font-size-mobile
+    line-height: $h4-line-height-mobile
 
 = font-h5
   font-size: $h5-font-size
   line-height: $h5-line-height
-  font-weight: $font-weight-bold
-  letter-spacing: 1px
+  font-weight: $headings-font-weight
 
   +media-breakpoint-down($font-size-media-breakpoint)
-    font-size: $mobile-h5-font-size
-    line-height: $mobile-h5-line-height
+    font-size: $h5-font-size-mobile
+    line-height: $h5-line-height-mobile
 
 = line-clamp($lines)
   display: -webkit-box
@@ -76,12 +81,12 @@
   -webkit-line-clamp: $lines
   overflow: hidden
   text-overflow: ellipsis
-  max-height: $lines * $font-size-base-px * $line-height-base
+  max-height: $lines * $font-size-base * $line-height-base
 
   &.small,
   &.font-size-sm
-    max-height: $lines * $font-size-sm-px * $line-height-sm
+    max-height: $lines * $font-size-sm * $line-height-sm
 
   &.large,
   &.font-size-lg
-    max-height: $lines * $font-size-lg-px * $line-height-lg
+    max-height: $lines * $font-size-lg * $line-height-lg

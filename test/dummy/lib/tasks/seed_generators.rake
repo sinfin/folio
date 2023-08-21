@@ -3,6 +3,7 @@
 class Dummy::SeedGenerator
   def initialize(templates_path:)
     puts "I = identical, W = (over)write, M = missing\n"
+    FileUtils.mkdir_p templates_path.to_s
     @templates_path = templates_path
   end
 
@@ -107,6 +108,24 @@ class Dummy::SeedGenerator
     end
   end
 
+  def copy_file(from, to)
+    text = File.read(from)
+
+    replaced = if to.to_s.include?('public/')
+      text
+    else
+      replace_names(text)
+    end
+
+    if File.exist?(to) && File.read(to) == replaced
+      puts "I #{relative_path(to)}"
+    else
+      FileUtils.mkdir_p File.dirname(to)
+      File.write(to, replaced)
+      puts "W #{relative_path(to)}"
+    end
+  end
+
   private
     def root
       Folio::Engine.root.to_s
@@ -150,19 +169,6 @@ class Dummy::SeedGenerator
          .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
     end
 
-    def copy_file(from, to)
-      text = File.read(from)
-      replaced = replace_names(text)
-
-      if File.exist?(to) && File.read(to) == replaced
-        puts "I #{relative_path(to)}"
-      else
-        FileUtils.mkdir_p File.dirname(to)
-        File.write(to, replaced)
-        puts "W #{relative_path(to)}"
-      end
-    end
-
     def scaffold(key)
       Dir[Rails.root.join("app/cells/**/dummy/#{key}/**/*.*"),
           Rails.root.join("app/cells/**/dummy/*/#{key}/**/*.*"),
@@ -187,10 +193,31 @@ end
 namespace :dummy do
   namespace :seed_generators do
     task all: :environment do
+      Rake::Task["dummy:seed_generators:assets"].invoke
       Rake::Task["dummy:seed_generators:ui"].invoke
       Rake::Task["dummy:seed_generators:prepared_atom"].invoke
       Rake::Task["dummy:seed_generators:blog"].invoke
       Rake::Task["dummy:seed_generators:search"].invoke
+    end
+
+    task assets: :environment do
+      require_relative '../../../../lib/generators/folio/assets/assets_generator'
+
+      templates_path = Folio::Engine.root.join("lib/generators/folio/assets/templates")
+      gen = Dummy::SeedGenerator.new(templates_path:)
+
+      {
+        Folio::AssetsGenerator::TEMPLATES => ".tt",
+        Folio::AssetsGenerator::FILES => "",
+      }.each do |paths, affix|
+        paths.each do |path|
+          Dir[Rails.root.join(path)].each do |glob_path|
+            next if File.directory?(glob_path)
+            path = glob_path.to_s.gsub(/\A#{Folio::Engine.root.to_s}\/test\/dummy\//, "")
+            gen.copy_file(glob_path, templates_path.join("#{path}#{affix}"))
+          end
+        end
+      end
     end
 
     task ui: :environment do

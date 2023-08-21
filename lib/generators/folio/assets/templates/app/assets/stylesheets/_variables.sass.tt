@@ -1,139 +1,140 @@
-$enable-responsive-font-sizes: false
+$enable-negative-margins: true
+$enable-rfs: false
+$enable-validation-icons: false
 
-$font-size-base-px: 16px
-$mobile-font-size-base-px: 14px
-
-@function strip-unit($number)
-  @if type-of($number) == 'number' and not unitless($number)
-    @return $number / ($number * 0 + 1)
-  @return $number
-
-@function px-to-rem($px)
-  @return 1rem * strip-unit($px) / strip-unit($font-size-base-px)
-
-@function px-to-rem($px)
-  @return 1rem * strip-unit($px) / strip-unit($mobile-font-size-base-px)
-
-$black: #000000
-$white: #ffffff
-
-$blue: #4C84FD
-$red: #F0655D
-$purple: #5D2382
-$green: #589E92
-$orange: #FF9A52
-$yellow: #FAE52C
-
-$light-gray: #F3F6F6
-$medium-gray: #EBEEEE
-$gray: #C7CBCC
-$dark-gray: #3B4548
-
-$dark: #434343
-$primary: $black
-$info: $purple
-$warning: $orange
-$text-muted: $gray
-
-$theme-colors: ( blue: $blue, red: $red, purple: $purple, green: $green, orange: $orange, yellow: $yellow, light-gray: $light-gray, medium-gray: $medium-gray, gray: $gray, dark-gray: $dark-gray, black: $black, white: $white )
-
-$spacer: 1rem
-$grid-gutter-width: 30px
+$grid-gutter-base: px-to-rem(8px)
+$grid-gutter-width: 4 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
-$spacers: ( h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, s: 40px, a: $grid-gutter-width, ma: 20px )
 
-$body-color: $dark
+$spacer: $grid-gutter-half
+$spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 40: px-to-rem(40px) )
+
+$white: #FFFFFF
+$black: #000000
+$dark-gray: #3B4548
+$gray-medium-dark: #6F7172
+$gray: #C9CBCC
+$light-gray: #F5F5F5
+$medium-gray: #E8E8E8
+$blue: #4C84FD
+$orange: #FF9A52
+$green-bright: #31EB92
+$green: #00B594
+$yellow: #F1CA45
+$red: #F0655D
+$violet: #5D2382
+$copper: #C1852C
+$gold: #D3AF51
+$antracite: #212529
+
+$gray-100: #f8f9fa
+$gray-600: #6c757d
+$gray-900: $antracite
+
+$cyan: #0dcaf0 !default
+
+$primary: $black
+$secondary: $gray-600
+$tertiary: $medium-gray
+$success: $green !default
+$info: $blue !default
+$warning: $yellow !default
+$danger: $red !default
+$light: $gray-100 !default
+$dark: $gray-900 !default
+
+$container-fluid-max-width: 1440px
+$font-size-media-breakpoint: lg
+
+$font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+
+$font-weight-lighter: lighter
+$font-weight-light: 300
 $font-weight-normal: 400
-$font-weight-semibold: 500
+$font-weight-semibold: 600
 $font-weight-bold: 700
-
-$font-family-sans-serif-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
-$font-family-sans-serif: "Open Sans", $font-family-sans-serif-default
-
-$headings-color: $black
-$headings-font-weight: $font-weight-bold
-$headings-letter-spacing: normal
-$headings-line-height: normal
-$headings-margin-top: $spacer / 2
-$headings-margin-bottom: $spacer
-$mobile-headings-margin-top: $spacer / 2
-$mobile-headings-margin-bottom: $spacer
-$headings-font-family: "IBM Plex Sans", $font-family-sans-serif
-
-$paragraph-margin-bottom: $spacer
+$font-weight-bolder: bolder
 
 $link-color: inherit
 $link-decoration: underline
 $link-hover-color: inherit
 $link-hover-decoration: none
 
-$font-size-media-breakpoint: md
+$headings-font-weight: $font-weight-bold
+$headings-margin-top: $spacer / 2
+$headings-margin-bottom: $spacer
+$headings-margin-top-mobile: $headings-margin-top
+$headings-margin-bottom-mobile: $headings-margin-bottom
 
-$font-size-base: px-to-rem($font-size-base-px)
-$mobile-font-size-base: px-to-rem($mobile-font-size-base-px)
-$line-height-base: 22 / 16
+$font-size-base: px-to-rem(18px)
+$line-height-base: 1.4
+$font-size-base-mobile: px-to-rem(17px)
+$line-height-base-mobile: 1.4
 
-$font-size-lg-px: 19px
-$font-size-lg: px-to-rem($font-size-lg-px)
-$mobile-font-size-lg: px-to-rem(17px)
-$line-height-lg: 28 / 19
-$mobile-line-height-lg: 25 / 17
-
-$font-size-sm-px: 14px
-$font-size-sm: px-to-rem($font-size-sm-px)
-$mobile-font-size-sm: px-to-rem(13px)
+$font-size-sm: px-to-rem(14px)
 $line-height-sm: 18 / 14
-$mobile-line-height-sm: 17 / 13
+$font-size-sm-mobile: px-to-rem(14px)
+$line-height-sm-mobile: 16 / 14
+
+$font-size-mini: px-to-rem(11px)
+$line-height-mini: 12 / 11
+$font-size-mini-mobile: px-to-rem(11px)
+$line-height-mini-mobile: 12 / 11
+
+$font-size-lg: px-to-rem(20px)
+$line-height-lg: 28 / 20
+$font-size-lg-mobile: px-to-rem(20px)
+$line-height-lg-mobile: 28 / 20
 
 $h1-font-size: px-to-rem(44px)
-$h1-line-height: 50 / 44
+$h1-line-height: px-to-rem(50px)
 $h1-margin-top: $grid-gutter-width
 $h1-margin-bottom: $spacer
-$mobile-h1-font-size: px-to-rem(30px)
-$mobile-h1-line-height: 41 / 30
-$mobile-h1-margin-top: 0
-$mobile-h1-margin-bottom: $spacer
+$h1-font-size-mobile: px-to-rem(30px)
+$h1-line-height-mobile: px-to-rem(41px)
+$h1-margin-top-mobile: $h1-margin-top
+$h1-margin-bottom-mobile: $h1-margin-bottom
 
 $h2-font-size: px-to-rem(32px)
-$h2-line-height: 44 / 32
+$h2-line-height: px-to-rem(44px)
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$mobile-h2-font-size: px-to-rem(24px)
-$mobile-h2-line-height: 33 / 24
-$mobile-h2-margin-top: 2 * $spacer
-$mobile-h2-margin-bottom: $spacer
+$h2-font-size-mobile: px-to-rem(24px)
+$h2-line-height-mobile: px-to-rem(33px)
+$h2-margin-top-mobile: 2 * $spacer
+$h2-margin-bottom-mobile: $spacer
 
 $h3-font-size: px-to-rem(20px)
-$h3-line-height: 30 / 20
+$h3-line-height: px-to-rem(30px)
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$mobile-h3-font-size: px-to-rem(19px)
-$mobile-h3-line-height: 26 / 19
-$mobile-h3-margin-top: 2 * $spacer
-$mobile-h3-margin-bottom: $spacer
+$h3-font-size-mobile: px-to-rem(19px)
+$h3-line-height-mobile: px-to-rem(26px)
+$h3-margin-top-mobile: 2 * $spacer
+$h3-margin-bottom-mobile: $spacer
 
 $h4-font-size: px-to-rem(19px)
-$h4-line-height: 26 / 19
+$h4-line-height: px-to-rem(26px)
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$mobile-h4-font-size: px-to-rem(17px)
-$mobile-h4-line-height: 24 / 17
-$mobile-h4-margin-top: 2 * $spacer
-$mobile-h4-margin-bottom: $spacer
+$h4-font-size-mobile: px-to-rem(17px)
+$h4-line-height-mobile: px-to-rem(24px)
+$h4-margin-top-mobile: 2 * $spacer
+$h4-margin-bottom-mobile: $spacer
 
 $h5-font-size: px-to-rem(18px)
-$h5-line-height: 22 / 18
+$h5-line-height: px-to-rem(22px)
 $h5-margin-top: 2 * $spacer
 $h5-margin-bottom: $spacer
-$mobile-h5-font-size: px-to-rem(16px)
-$mobile-h5-line-height: 19 / 16
-$mobile-h5-margin-top: 2 * $spacer
-$mobile-h5-margin-bottom: $spacer
+$h5-font-size-mobile: px-to-rem(16px)
+$h5-line-height-mobile: px-to-rem(19px)
+$h5-margin-top-mobile: 2 * $spacer
+$h5-margin-bottom-mobile: $spacer
 
-$lead-font-size: $font-size-lg
-$lead-font-weight: $font-weight-normal
+$theme-colors: ("primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "light-gray": $light-gray, "medium-gray": $medium-gray, "gray": $gray, "dark-gray": $dark-gray, "blue": $blue, "red": $red, "violet": $violet, "green": $green, "orange": $orange, "yellow": $yellow )
+$social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $violet, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
 
-$enable-validation-icons: false
+$form-group-spacer: px-to-rem(20px)
 
 $border-color: rgba(0, 0, 0, 0.3)
 
@@ -141,77 +142,6 @@ $border-radius: 0
 $border-radius-lg: 0
 $border-radius-sm: 0
 
-$input-btn-focus-box-shadow: none
-$input-border-color: $gray
-$input-focus-border-color: $black
-
-$input-btn-padding-y: 10px
-$input-btn-padding-x: 40px
-$input-btn-font-size: 14px
-$input-btn-line-height: 1.29
-
-$input-btn-padding-y-sm: 3px
-$input-btn-padding-x-sm: 6px
-$input-btn-font-size-sm: 12px
-$input-btn-line-height-sm: 17 / 12
-
-$input-btn-padding-y-lg: 17px
-$input-btn-padding-x-lg: 55px
-$input-btn-font-size-lg: 18px
-$input-btn-line-height-lg: 23 / 18
-
-$btn-border-radius: $border-radius
-$btn-border-radius-lg: $border-radius-lg
-$btn-border-radius-sm: $border-radius-sm
-$btn-font-weight: $font-weight-bold
-
-$input-color: $body-color
-$input-placeholder-color: rgba($body-color, 0.5)
-$input-font-size: 16px
-
-$input-padding-x: 10px
-$input-padding-y: 5px
-
-$input-border-width: 1px
-$input-height-border: 2px
-
-$input-height-inner: 38px
-$input-height: $input-height-inner + $input-height-border
-
-$input-height-inner-sm: round($input-btn-font-size-sm * $input-btn-line-height-sm) + $input-btn-padding-y-sm * 2
-$input-height-sm: $input-height-inner-sm + $input-height-border
-
-$input-height-inner-lg: round($input-btn-font-size-lg * $input-btn-line-height) + $input-btn-padding-y-lg * 2
-$input-height-lg: $input-height-inner-lg + $input-height-border
-
-$btn-disabled-opacity: 0.15
-
-$custom-select-indicator-padding: 18px
-
-$transition-easing: ease-in-out
-$transition-duration: .15s
-$transition-base: all $transition-duration $transition-easing
-
-$btn-transition: none
-
-$container-max-widths: ( sm: 540px, md: 720px, lg: 960px, xl: 1105px, xxl: 1440px)
-$container-fluid-max-width: 1920px
-
-$hr-border-color: #EAEAEA
-
+$modal-md: px-to-rem(640px)
 $modal-inner-padding: px-to-rem(30px)
-
-$modal-footer-margin-between: .5rem
-$modal-content-border-width: 0
-$modal-content-border-radius: 0
-$modal-content-inner-border-radius: 0
-
-$modal-header-border-width: 0
-$modal-footer-border-width: 0
-$modal-header-padding: $modal-inner-padding $modal-inner-padding 0
-
-$alert-bg-level: 0
-$alert-border-level: 0
-$alert-color-level: 0
-
-$social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $purple, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
+$modal-header-padding-y: px-to-rem(20px)
