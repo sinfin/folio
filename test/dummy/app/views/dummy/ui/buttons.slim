@@ -1,39 +1,12 @@
 .container-fluid
-  h1 UI kit
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
 
   h2 Buttons
 
-  .container-fluid
+  - @buttons_model.each do |title, rows|
+    h3 = title
 
-  h3 Regular
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model)
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :warning) })
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(icon: :warning, label: nil) })
-
-  h3 Small
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm) })
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :warning) })
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :sm, icon: :warning, label: nil) })
-
-  h3 Large
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg) })
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :warning) })
-
-  .my-g
-    = dummy_ui_buttons(buttons: @buttons_model.map { |h| h.merge(size: :lg, icon: :warning, label: nil) })
+    - rows.each do |buttons|
+      .my-3
+        = dummy_ui_buttons(buttons:)

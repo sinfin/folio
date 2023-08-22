@@ -3,7 +3,7 @@
 class Dummy::Ui::IconComponent < ApplicationComponent
   ICONS = YAML.load_file(::Rails.root.join("data/icons.yaml")).deep_symbolize_keys
 
-  def initialize(name:, class_name: nil, width: nil, height: nil, top: nil, data: nil)
+  def initialize(name:, class_name: nil, width: nil, height: nil, top: nil, data: nil, title: nil)
     @name = name
     raise "Unknown icon - #{@name}" if @name.blank? || !default_size
 
@@ -12,6 +12,7 @@ class Dummy::Ui::IconComponent < ApplicationComponent
     @height = height
     @top = top
     @data = data
+    @title = title
   end
 
   def default_size

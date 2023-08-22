@@ -13,31 +13,41 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
                  loader: false,
                  data: {},
                  tag: :button,
-                 type: :button)
+                 type: :button,
+                 disabled: false,
+                 outline: false,
+                 href: nil)
     @variant = variant
     @size = size
     @confirm = confirm
     @class_name = class_name
     @label = label
+    @hide_label_on_mobile = hide_label_on_mobile
+    @modal = modal
     @icon = icon
     @data = data
     @tag = tag
+    @disabled = disabled
+    @outline = outline
     @type = type
+    @href = href
   end
 
   def tag
     h = {
       tag: @tag,
       data: @data,
+      disabled: @disabled,
     }
 
-    if h[:href]
-      h[:tag] ||= :a
+    if @href
+      h[:tag] = :a
+      h[:href] = @href
     else
       h[:type] = @type
     end
 
-    h[:class] = "d-ui-button btn btn-#{@variant}"
+    h[:class] = "d-ui-button btn btn-#{@outline ? "outline-" : ""}#{@variant}"
 
     if @confirm
       h[:data][:confirm] = @confirm == true ? t("folio.confirmation") : @confirm
@@ -60,8 +70,10 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     end
 
     if @modal.present?
-      h["data-bs-toggle"] = "modal"
-      h["data-bs-target"] = @modal
+      h[:data]["toggle"] = "modal"
+      h[:data]["target"] = @modal
+      h[:data]["bs-toggle"] = "modal"
+      h[:data]["bs-target"] = @modal
     end
 
     h
@@ -70,9 +82,11 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
   def icon_height
     case @size
     when :sm
-      16
+      15
+    when :lg
+      22
     else
-      24
+      20
     end
   end
 end
