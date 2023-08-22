@@ -1,32 +1,23 @@
 @font-face {
-  font-family: 'Open Sans';
-  src: ('/fonts/OpenSans-Bold.woff2') format('woff2');
-  font-weight: $font-weight-bold;
-  font-style: normal;
-  font-display: fallback;
-}
-
-@font-face {
-  font-family: 'Open Sans';
-  src: ('/fonts/OpenSans-Italic.woff2') format('woff2');
-  font-weight: $font-weight-normal;
-  font-style: italic;
-  font-display: fallback;
-}
-
-@font-face {
-  font-family: 'Open Sans';
-  src: ('/fonts/OpenSans-BoldItalic.woff2') format('woff2');
-  font-weight: $font-weight-bold;
-  font-style: italic;
-  font-display: fallback;
-}
-
-@font-face {
-  font-family: 'Open Sans';
-  src: ('/fonts/OpenSans-Regular.woff2') format('woff2');
+  font-family: 'IBMPlexSans';
+  src: ('/fonts/IBMPlexSans.woff2') format('woff2');
   font-weight: $font-weight-normal;
   font-style: normal;
   font-display: fallback;
 }
 
+@font-face {
+  font-family: 'IBMPlexSans';
+  src: ('/fonts/IBMPlexSans-Medium.woff2') format('woff2');
+  font-weight: $font-weight-semibold;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'IBMPlexSans';
+  src: ('/fonts/IBMPlexSans-Bold.woff2') format('woff2');
+  font-weight: $font-weight-bold;
+  font-style: normal;
+  font-display: fallback;
+}

@@ -1,0 +1,30 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  h2 Typo
+
+  table.table.align-middle
+    - %w[h0 h1 h2 h3 h4 h5].each do |heading|
+      tr
+        td.py-h.text-muted = heading.upcase
+        td.py-h
+          .m-0 class=heading Heading #{heading.upcase}
+
+    - %w[xl lg base sm mini].each do |size|
+      tr
+        td.py-h.text-muted = size
+        td.py-h
+          p.m-0 class="font-size-#{size}"
+            ' Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+            ' sed
+            a<> href="#" do eiusmod tempor
+            ' incididunt ut labore et dolore magna
+            ' aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+            ' ullamco laboris
+            a<> href="#" nisi ut aliquip
+            ' ex ea commodo consequat.
+            ' Duis aute irure dolor in reprehenderit in voluptate velit esse
+            ' cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+            ' cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            ' anim id est laborum.

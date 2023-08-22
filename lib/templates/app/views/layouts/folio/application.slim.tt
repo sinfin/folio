@@ -8,8 +8,8 @@ html[
     = render partial: 'layouts/folio/favicon'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
-      = preload_link_tag font_path('IBMPlexSans-Bold.woff2')
-      = preload_link_tag font_path('OpenSans-Regular.woff2')
+      = preload_link_tag '/fonts/IBMPlexSans.woff2'
+      = preload_link_tag '/fonts/IBMPlexSans-Bold.woff2'
 
   body
     .<%= project_classnames_prefix %>-layout-main

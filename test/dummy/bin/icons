@@ -58,8 +58,8 @@ Dir.mktmpdir do |tmp|
     file.write yaml
   end
 
-  FileUtils.cp "#{tmp}/defs/svg/sprite.css.svg", "#{app_root}/app/assets/images/svg_sprite.svg"
-  puts "Updated #{app_root}/app/assets/images/svg_sprite.svg"
+  FileUtils.cp "#{tmp}/defs/svg/sprite.css.svg", "#{app_root}/app/assets/images/ui_icons_sprite.svg"
+  puts "Updated #{app_root}/app/assets/images/ui_icons_sprite.svg"
   FileUtils.cp "#{tmp}/icons.yaml", "#{app_root}/data/icons.yaml"
   puts "Updated #{app_root}/data/icons.yaml"
 end

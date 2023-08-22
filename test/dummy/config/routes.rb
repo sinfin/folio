@@ -51,6 +51,8 @@ Rails.application.routes.draw do
 
     resource :ui, only: %i[show], controller: "ui" do
       get :buttons
+      get :typo
+      get :icons
     end
 
     resource :search, only: %i[show] do
