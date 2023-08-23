@@ -9,10 +9,11 @@ html[
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
       = preload_link_tag '/fonts/IBMPlexSans.woff2'
+      = preload_link_tag '/fonts/IBMPlexSans-Medium.woff2'
       = preload_link_tag '/fonts/IBMPlexSans-Bold.woff2'
 
   body
-    == cell('dummy/ui/header')
+    = render(Dummy::Ui::HeaderComponent.new)
 
     == cell('dummy/ui/header_message', current_site)
 

@@ -42,10 +42,13 @@
     min-height: 60px
     display: none
 
-  &--expanded &__form
+  &[data-d-ui-header-search-autocomplete-value="true"] &__autocomplete
+    display: block
+
+  &[data-d-ui-header-search-open-value="true"] &__form
     z-index: 1001
 
-  &--expanded &__a
+  &[data-d-ui-header-search-open-value="true"] &__a
     z-index: 1002
 
   &__overlay
@@ -57,10 +60,7 @@
     bottom: 0
     display: none
 
-  &--expanded &__overlay
-    display: block
-
-  &--autocomplete &__autocomplete
+  &[data-d-ui-header-search-open-value="true"] &__overlay
     display: block
 
   &__loader
@@ -74,16 +74,15 @@
     display: block
 
   +mq-desktop-menu
-    &--expanded &__a
+    &[data-d-ui-header-search-open-value="true"] &__a
       color: $black
       position: absolute
       top: 0
       right: 0
       bottom: 0
 
-    &--expanded &__form
+    &[data-d-ui-header-search-open-value="true"] &__form
       display: flex
 
-  +mq-mobile-menu
     &__mq
       display: none

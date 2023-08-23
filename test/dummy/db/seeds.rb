@@ -158,24 +158,26 @@ puts "Created Dummy::Menu::Stylable"
 puts "Creating Dummy::Menu::Header"
 menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header")
 
+position = 0
+
 Folio::MenuItem.create!(menu:,
                         title: "UI Kit",
-                        url: "/folio/ui",
-                        position: 1)
+                        url: "/ui",
+                        position: position += 1)
 
 Folio::MenuItem.create!(menu:,
                         title: "Atoms",
                         url: "/folio/ui/atoms",
-                        position: 2)
+                        position: position += 1)
 
 Folio::MenuItem.create!(menu:,
                         title: "Blog",
                         url: "/blog",
-                        position: 3)
+                        position: position += 1)
 
 mi = Folio::MenuItem.create!(menu:,
                              title: "Nestable non-link",
-                             position: 3)
+                             position: position += 1)
 
 3.times do |i|
   Folio::MenuItem.create!(menu:,
@@ -188,7 +190,7 @@ end
 mi = Folio::MenuItem.create!(menu:,
                              title: "Nestable link",
                              url: "/",
-                             position: 3)
+                             position: position += 1)
 
 3.times do |i|
   Folio::MenuItem.create!(menu:,
@@ -197,6 +199,31 @@ mi = Folio::MenuItem.create!(menu:,
                           position: i + 1,
                           parent: mi)
 end
+
+Folio::MenuItem.create!(menu:,
+                        title: "Another link",
+                        url: "#another-link",
+                        position: position += 1)
+
+Folio::MenuItem.create!(menu:,
+                        title: "Another link",
+                        url: "#another-link",
+                        position: position += 1)
+
+Folio::MenuItem.create!(menu:,
+                        title: "Another link",
+                        url: "#another-link",
+                        position: position += 1)
+
+Folio::MenuItem.create!(menu:,
+                        title: "Another link",
+                        url: "#another-link",
+                        position: position += 1)
+
+Folio::MenuItem.create!(menu:,
+                        title: "Another link",
+                        url: "#another-link",
+                        position: position + 1)
 
 puts "Created Dummy::Menu::Header"
 

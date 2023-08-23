@@ -1,5 +1,5 @@
 //= require select2/dist/js/select2.full
-//= require folio/add-params-to-url
+//= require folio/add_params_to_url
 
 window.Folio = window.Folio || {}
 window.Folio.Input = window.Folio.Input || {}

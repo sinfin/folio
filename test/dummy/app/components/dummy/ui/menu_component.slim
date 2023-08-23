@@ -1,0 +1,77 @@
+- if @menu
+  - cache [@menu.id, @menu.updated_at]
+    .d-ui-menu[
+      class="d-ui-menu--theme-#{@theme || 'light'}"
+      class="d-ui-menu--#{@menu.id}"
+    ]
+      ul.d-ui-menu__ul
+        - @menu.menu_items.includes(:page).arrange.each do |menu_item, children|
+          li.d-ui-menu__li
+            *link_tag(menu_item, children)
+              span.d-ui-menu__span
+                = cstypo menu_item.to_label
+
+                - if children.present?
+                  = dummy_ui_icon(:chevron_down,
+                                  class_name: "d-ui-menu__arrow",
+                                  height: 16)
+
+            - if children.present?
+              ul.d-ui-menu__children-ul
+                - children.each do |child, _children|
+                  li.d-ui-menu__li
+                    *link_tag(child)
+                      span.d-ui-menu__span = cstypo child.to_label
+
+        li.d-ui-menu__li.d-ui-menu__li--more[
+          hidden=true
+        ]
+          span.d-ui-menu__a
+            span.d-ui-menu__span
+              = t('.more', default: t('more'))
+
+              = dummy_ui_icon(:chevron_down,
+                              class_name: "d-ui-menu__arrow",
+                              height: 16)
+
+          ul.d-ui-menu__children-ul
+
+      span.d-ui-menu__mq.d-ui-menu__mq--mobile
+
+      / use javascript so that we can cache no matter the URL
+      javascript:
+        (() => {
+          const menuId = #{@menu.id || 0};
+          const menuUpdatedAt = #{@menu.updated_at.try(:to_i) || 0};
+
+          const markActiveLink = () => {
+            const selector = ".d-ui-menu--#{@menu.id}"
+            const links = document.querySelectorAll(".d-ui-menu--#{@menu.id} .d-ui-menu__a")
+            const href = window.location.href.replace(/\/$/, '')
+
+            let target = null
+
+            for (let i = 0; i < links.length; i++) {
+              const link = links[i]
+
+              if (link.href === href) {
+                target = link
+                break
+              }
+            }
+
+            if (target) {
+              target.classList.add('d-ui-menu__a--active')
+
+              if (target.closest) {
+                const ul = target.closest('.d-ui-menu__children-ul')
+
+                if (ul && ul.previousElementSibling && ul.previousElementSibling.classList.contains('d-ui-menu__a')) {
+                  ul.previousElementSibling.classList.add('d-ui-menu__a--active')
+                }
+              }
+            }
+          }
+
+          markActiveLink()
+        })()

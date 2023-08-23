@@ -15,5 +15,6 @@ cs:
         twitter: Sdílejte na Twitteru
         email: Sdílejte mailem
         clipboard: Kopírovat odkaz
-      header_search:
+      header_search_component:
         placeholder: Hledaný výraz
+        autocomplete_none: Žádné výsledky

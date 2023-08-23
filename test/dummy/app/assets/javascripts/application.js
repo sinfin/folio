@@ -19,6 +19,9 @@
 //= require folio/input/phone
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/stimulus
+//= require folio/is_visible
+//= require folio/add_params_to_url
 
 //= require folio/dropzone/dropzone
 //= require folio/image/image
@@ -30,7 +33,7 @@
 //= require dummy/ui/clipboard/clipboard
 //= require dummy/ui/flash/flash
 //= require dummy/ui/header_message/header_message
-//= require dummy/ui/header_search/header_search
+//= require dummy/ui/header_search_component
 //= require dummy/ui/menu/menu
 //= require dummy/ui/modal/modal
 //= require dummy/ui/navigation/navigation
