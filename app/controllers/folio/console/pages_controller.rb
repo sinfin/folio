@@ -8,7 +8,6 @@ class Folio::Console::PagesController < Folio::Console::BaseController
 
     if Rails.application.config.folio_pages_ancestry
       @pages = @pages.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
-      @pagy, @pages = pagy(@pages, items: 2)
 
       @catalogue_model = @pages.arrange(order: :position)
       @catalogue_options = { ancestry: true }
