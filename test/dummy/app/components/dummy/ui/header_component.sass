@@ -1,0 +1,65 @@
+.d-ui-header
+  background: $white
+  flex: 0 0 auto
+  z-index: 3
+  position: relative
+
+  &__text-logo
+    margin: 0 auto 0 0
+    flex: 0 0 auto
+    color: $black
+    text-decoration: none
+    background: $shade-200
+    padding: px-to-rem(8px) px-to-rem(16px)
+    align-self: center
+    border-radius: $border-radius
+
+  &__menu-input
+    display: none
+
+  &__menu-toggle
+    margin: 0 (( - $grid-gutter-half ))
+    padding: 0 $grid-gutter-half
+    transform: rotate(0deg)
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__search
+    flex: 0 0 auto
+
+  &__inner
+    display: flex
+    align-items: stretch
+    gap: $grid-gutter-half
+
+  +mq-desktop-menu
+    &__menu
+      display: flex
+      flex: 1 1 auto
+      min-width: 0
+      margin-left: 2 * $grid-gutter-width
+
+    &__menu-toggle
+      display: none
+
+  +mq-mobile-menu
+    &__inner
+      flex-wrap: wrap
+
+    &__menu
+      background: $dark-gray
+      margin-left: - $grid-gutter-half
+      margin-right: - $grid-gutter-half
+      display: none
+      order: 2
+      width: calc(100% + #{$grid-gutter-width})
+
+    &__menu-input:checked + & &__menu
+      display: block
+
+  +media-breakpoint-down(sm)
+    &__menu
+      padding-left: 0
+      padding-right: 0

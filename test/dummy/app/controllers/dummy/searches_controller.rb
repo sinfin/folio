@@ -54,7 +54,7 @@ class Dummy::SearchesController < ApplicationController
 
         klass_pagy, klass_records = pagy(scope, items: meta[:overview_limit] || DEFAULT_OVERVIEW_LIMIT)
         count = klass_pagy.count
-        label = I18n.t('dummy.searches.show.tabs.#{meta[:klass].to_s}', default: meta[:klass].model_name.human(count: 2))
+        label = I18n.t("dummy.searches.show.tabs.#{meta[:klass]}", default: meta[:klass].model_name.human(count: 2))
 
         tab_href = dummy_search_path(q: params[:q], tab: label)
 

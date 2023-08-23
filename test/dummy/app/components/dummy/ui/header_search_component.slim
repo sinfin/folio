@@ -1,0 +1,19 @@
+.d-ui-header-search data=data
+  a.d-ui-header-search__a[
+    href=controller.main_app.dummy_search_path
+    data=stimulus_action("aClick")
+  ]
+    = dummy_ui_icon(:search, height: 32)
+
+  = form do |f|
+    = query_input(f)
+
+    .d-ui-header-search__autocomplete
+      .d-ui-header-search__autocomplete-results[
+        data=stimulus_target("autocompleteResults")
+      ]
+      span.folio-loader.d-ui-header-search__loader
+
+  .d-ui-header-search__overlay data=stimulus_action(click: "overlayClick")
+
+  span.d-ui-header-search__mq data=stimulus_target("mq")
