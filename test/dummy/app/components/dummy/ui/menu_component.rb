@@ -15,6 +15,7 @@ class Dummy::Ui::MenuComponent < ApplicationComponent
 
     if children.present?
       tag[:class] = "#{tag[:class]} #{class_name}--expandable"
+      tag[:data] = stimulus_action(click: "onExpandableClick")
     end
 
     if path = menu_url_for(menu_item)
@@ -24,5 +25,13 @@ class Dummy::Ui::MenuComponent < ApplicationComponent
     end
 
     tag
+  end
+
+  def menu_javascript_key
+    if @menu
+      "[#{@menu.id}, #{@menu.updated_at.to_i}]"
+    else
+      "null"
+    end
   end
 end

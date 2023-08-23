@@ -24,6 +24,7 @@
     padding: px-to-rem(4px) $a-padding-x
     gap: px-to-rem(12px)
     position: relative
+    cursor: pointer
 
   &__arrow
     transition: $transition-base
@@ -33,9 +34,11 @@
 
   &__mq
     position: absolute
+    top: 0
+    right: 0
+    width: 0
+    height: 0
     pointer-events: none
-    z-index: 0
-    display: none
 
   +mq-desktop-menu
     display: flex
@@ -157,8 +160,8 @@
     background: $black
     color: $white
 
-    &__mq--mobile
-      display: block
+    &__mq--desktop
+      display: none
 
     &__arrow
       margin-left: auto

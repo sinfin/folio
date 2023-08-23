@@ -3,6 +3,10 @@
     .d-ui-menu[
       class="d-ui-menu--theme-#{@theme || 'light'}"
       class="d-ui-menu--#{@menu.id}"
+      data=stimulus_controller("d-ui-menu", values: { \
+        id: @menu.id || 0, \
+        updated_at: @menu.updated_at.try(:to_i) || 0, \
+      })
     ]
       ul.d-ui-menu__ul
         - @menu.menu_items.includes(:page).arrange.each do |menu_item, children|
@@ -25,6 +29,7 @@
 
         li.d-ui-menu__li.d-ui-menu__li--more[
           hidden=true
+          data=stimulus_target('moreLi')
         ]
           span.d-ui-menu__a
             span.d-ui-menu__span
@@ -34,19 +39,44 @@
                               class_name: "d-ui-menu__arrow",
                               height: 16)
 
-          ul.d-ui-menu__children-ul
+          ul.d-ui-menu__children-ul data=stimulus_target('moreUl')
 
-      span.d-ui-menu__mq.d-ui-menu__mq--mobile
+      span.d-ui-menu__mq.d-ui-menu__mq--desktop data=stimulus_target('mq')
 
       / use javascript so that we can cache no matter the URL
       javascript:
         (() => {
-          const menuId = #{@menu.id || 0};
-          const menuUpdatedAt = #{@menu.updated_at.try(:to_i) || 0};
+          const menu = document.querySelector(".d-ui-menu--#{@menu.id}")
+
+          const storedCollapsible = () => {
+            const item = window.localStorage.getItem("d-ui-menu--#{@menu.id || 0}")
+
+            if (item) {
+              const hash = JSON.parse(item)['#{@menu.updated_at.try(:to_i) || 0}']
+              const count = hash && hash[String(window.innerWidth)]
+
+              if (count) {
+                const ul = menu.querySelector('.d-ui-menu__ul')
+                const target = ul.children.length - 2
+
+                for (let i = 0; i < ul.children.length; i++) {
+                  if (i + count > target) {
+                    if (!ul.children[i].classList.contains('d-ui-menu__li--more')) {
+                      ul.children[i].classList.add('d-ui-menu__li--collapsed')
+                    }
+                  }
+                }
+
+                menu.querySelector('.d-ui-menu__li.d-ui-menu__li--more').hidden = false
+                menu.classList.add('d-ui-menu--bound')
+              }
+            }
+          }
+
+          storedCollapsible()
 
           const markActiveLink = () => {
-            const selector = ".d-ui-menu--#{@menu.id}"
-            const links = document.querySelectorAll(".d-ui-menu--#{@menu.id} .d-ui-menu__a")
+            const links = menu.querySelectorAll(".d-ui-menu__a")
             const href = window.location.href.replace(/\/$/, '')
 
             let target = null
