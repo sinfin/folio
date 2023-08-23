@@ -32,7 +32,7 @@
   &__inner
     display: flex
     align-items: stretch
-    gap: $grid-gutter-half
+    gap: px-to-rem(8px) $grid-gutter-half
 
   +mq-desktop-menu
     &__menu
@@ -45,8 +45,14 @@
       display: none
 
   +mq-mobile-menu
+    &__text-logo
+      font-size: $ui-typo-display-xs-font-size
+      line-height: $ui-typo-display-xs-line-height
+      padding: px-to-rem(8px) px-to-rem(16px)
+
     &__inner
       flex-wrap: wrap
+      padding: px-to-rem(8px) 0
 
     &__menu
       background: $dark-gray
@@ -55,6 +61,7 @@
       display: none
       order: 2
       width: calc(100% + #{$grid-gutter-width})
+      margin-bottom: px-to-rem(-8px)
 
     &__menu-input:checked + & &__menu
       display: block
