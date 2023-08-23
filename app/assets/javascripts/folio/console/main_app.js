@@ -1,1 +1,1 @@
-# Override in main app
+// Override in main app
