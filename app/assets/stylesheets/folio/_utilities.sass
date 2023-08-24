@@ -6,6 +6,9 @@
 @function px-to-rem($px)
   @return 1rem * strip-unit($px) / 16
 
+@function rem-to-px($rem)
+  @return 16px * strip-unit($rem)
+
 @function to-rem($num)
   @return 1rem * $num / 16
 
