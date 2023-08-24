@@ -1,0 +1,203 @@
+.<%= classname_prefix %>-ui-menu
+  $a-padding-x: px-to-rem(12px)
+  $a-padding-y: px-to-rem(24px)
+
+  flex: 1 1 auto
+  min-width: 0
+  background: $white
+  font-weight: $font-weight-medium
+
+  &--theme-dark
+    background: $black
+
+  &__a
+    display: block
+    padding: px-to-rem(20px) 0
+    text-decoration: none
+
+    &--active
+      font-weight: $font-weight-bold
+
+  &__span
+    display: flex
+    align-items: center
+    padding: px-to-rem(4px) $a-padding-x
+    gap: px-to-rem(12px)
+    position: relative
+    cursor: pointer
+
+  &__arrow
+    transition: $transition-base
+
+  &__li--expanded &__arrow
+    transform: rotate(180deg)
+
+  &__mq
+    position: absolute
+    top: 0
+    right: 0
+    width: 0
+    height: 0
+    pointer-events: none
+
+  +mq-desktop-menu
+    display: flex
+    align-items: stretch
+    overflow: hidden
+    position: relative
+
+    &:after
+      content: ""
+      display: block
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      width: 50px
+      background: linear-gradient(90deg, rgba($white, 0) 0%, rgba($white, 1) 85%)
+      z-index: 2
+
+    &--theme-dark:after
+      background: linear-gradient(90deg, rgba($black, 0) 0%, rgba($black, 1) 85%)
+
+    &--bound
+      overflow: visible
+
+      &:after
+        display: none
+
+    &__ul
+      display: flex
+      align-items: stretch
+
+    &__ul > &__li
+      position: relative
+      margin-right: map-get($spacers, 40) - 2 * $a-padding-x
+      display: flex
+      align-items: stretch
+
+      &--collapsed
+        display: none
+
+    &__ul > &__li > &__a
+      position: relative
+      white-space: nowrap
+      overflow: hidden
+
+    &__ul > &__li > &__a > &__span
+      &::after
+        content: ''
+        display: block
+        position: absolute
+        top: 100%
+        left: 0
+        width: 100%
+        height: 2px
+        background: $black
+        width: 0%
+        transition: $transition-base
+
+    &__ul > &__li:hover > &__a > &__span,
+    &__ul > &__li > &__a--active > &__span
+      &::after
+        width: 100%
+
+    &__ul > &__li > &__a--active
+      font-weight: $font-weight-bold
+
+    &__children-ul
+      position: absolute
+      top: 100%
+      margin-top: -10px
+      left: 0
+      z-index: 2
+      background: $black
+      color: $white
+      min-width: 290px
+      border-radius: $border-radius
+      display: none
+      overflow: hidden
+
+    &__li:nth-child(n + 5) &__children-ul
+      left: auto
+      right: 0
+
+    &__children-ul &__arrow
+      margin-left: auto
+      margin-right: - $grid-gutter-half
+
+    &__ul > &__li:hover > &__children-ul,
+    &__children-ul &__li--expanded &__children-ul
+      display: block
+
+    &__ul > &__li:hover > &__a &__arrow
+      transform: rotate(180deg)
+
+    &__children-ul &__li
+      border-top: 1px solid $shade-300
+      box-shadow: none
+      position: relative
+      top: auto
+      margin-top: 0
+
+    &__children-ul &__a
+      padding: px-to-rem(12px) $grid-gutter-half
+
+      &:hover
+        font-weight: $font-weight-bold
+
+    &__children-ul &__span
+      padding: 0
+
+    &__children-ul &__children-ul
+      padding-left: 10px
+      box-shadow: none
+      position: relative
+      top: auto
+      margin-top: 0
+
+  +mq-mobile-menu
+    background: $black
+    color: $white
+
+    &__mq--desktop
+      display: none
+
+    &__arrow
+      margin-left: auto
+      color: $shade-500
+
+    &__li--more
+      display: none
+
+    &__ul > &__li > &__a
+      border-top: 1px solid $shade-300
+      padding: 0
+
+    &__ul > &__li > &__a > &__span
+      padding: px-to-rem(12px) $grid-gutter-half
+      display: flex
+      align-items: center
+      gap: $grid-gutter-half
+
+    &__children-ul
+      color: $shade-500
+      font-size: $ui-typo-text-s-font-size
+      line-height: $ui-typo-text-s-line-height
+      padding-bottom: px-to-rem(8px)
+      display: none
+
+    &__children-ul &__children-ul
+      padding-bottom: 0
+
+    &__li--expanded &__children-ul
+      display: block
+
+    &__children-ul &__a
+      padding: 0
+
+    &__children-ul &__span
+      padding: px-to-rem(8px) px-to-rem(24px)
+
+    &__ul > &__li:first-child > &__a
+      border-top: 0

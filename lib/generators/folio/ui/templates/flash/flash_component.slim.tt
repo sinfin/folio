@@ -1,0 +1,6 @@
+.<%= classname_prefix %>-ui-flash
+  - if @flash.present?
+    - @flash.each do |type, message|
+      = render(<%= application_namespace %>::Ui::AlertComponent.new(variant: variant(type),
+                                             flash: true,
+                                             message:))

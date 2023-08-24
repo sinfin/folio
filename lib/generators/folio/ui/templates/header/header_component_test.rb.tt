@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::HeaderComponentTest < Folio::ComponentTest
+  def test_render
+    model = "hello"
+
+    render_inline(<%= application_namespace %>::Ui::HeaderComponent.new(model:))
+
+    assert_selector(".<%= classname_prefix %>-ui-header")
+  end
+end
