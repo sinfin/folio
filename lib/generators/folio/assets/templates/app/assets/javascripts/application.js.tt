@@ -1,39 +1,23 @@
 //= require jquery3
 //= require rails-ujs
 //= require turbolinks
-//= require justified-layout
-//= require slick-carousel/slick/slick.min
-//= require clipboard/dist/clipboard
-//= require js-cookie/src/js.cookie
-
-//= require folio-bootstrap-4/js/dist/util
-//= require folio-bootstrap-4/js/dist/modal
 
 //= require folio/message-bus
-//= require folio/addresses
-//= require folio/atoms
+//= require folio/stimulus
+
 //= require folio/cookie_consent/cookie_consent
-//= require folio/csrf
-//= require folio/debounce
 //= require folio/devise
-//= require folio/input/phone
 //= require folio/lazyload
 //= require folio/lightbox
 
-//= require folio/dropzone/dropzone
 //= require folio/image/image
-//= require folio/leads/form/form
 //= require folio/sensitive_content_modal/sensitive_content_modal
-//= require folio/newsletter_subscriptions/form/form
 //= require <%= application_namespace_path %>/searches/show/show
 
-//= require <%= application_namespace_path %>/ui/clipboard/clipboard
-//= require <%= application_namespace_path %>/ui/flash/flash
+//= require <%= application_namespace_path %>/ui/alert_component
+//= require <%= application_namespace_path %>/ui/flash_component
 //= require <%= application_namespace_path %>/ui/header_message/header_message
-//= require <%= application_namespace_path %>/ui/header_search/header_search
-//= require <%= application_namespace_path %>/ui/menu/menu
+//= require <%= application_namespace_path %>/ui/header_search_component
+//= require <%= application_namespace_path %>/ui/icon_component
+//= require <%= application_namespace_path %>/ui/menu_component
 //= require <%= application_namespace_path %>/ui/modal/modal
-
-//= require <%= atom_cell_name %>
-//= require <%= atom_cell_name %>
-//= require dummy/molecule/hero/hero

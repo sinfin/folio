@@ -1,3 +1,5 @@
+//= require folio/add_params_to_url
+
 window.Dummy = window.Dummy || {}
 window.Dummy.Ui = window.Dummy.Ui || {}
 

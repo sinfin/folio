@@ -1,3 +1,5 @@
+// TODO jQuery -> stimulus
+
 $(document).on('submit', '.f-newsletter-subscriptions-form__form', function (e) {
   e.preventDefault()
 

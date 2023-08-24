@@ -1,3 +1,5 @@
+# TODO jQuery -> stimulus
+
 unless Cookies?
   console.error("Missing Cookies dependency - add 'js-cookie' to application.js")
 

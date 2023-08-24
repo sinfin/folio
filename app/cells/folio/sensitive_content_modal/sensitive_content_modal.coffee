@@ -1,3 +1,5 @@
+# TODO jQuery -> stimulus
+
 if Cookies? and $.fn.modal?
   if Cookies.get('image_sensitive_content')
     document.documentElement.classList.add('f-html--show-sensitive-content')

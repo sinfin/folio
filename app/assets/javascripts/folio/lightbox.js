@@ -1,6 +1,7 @@
 //= require folio/webp
 //= require photoswipe.esm.folio
 //= require photoswipe-dynamic-caption-plugin.esm
+// TODO jQuery -> stimulus
 
 window.Folio = window.Folio || {}
 window.Folio.Lightbox = window.Folio.Lightbox || {}

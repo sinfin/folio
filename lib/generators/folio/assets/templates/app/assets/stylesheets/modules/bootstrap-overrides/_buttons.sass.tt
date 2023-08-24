@@ -1,3 +1,44 @@
+.btn
+  --#{$prefix}btn-border-color: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-active-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-active-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-active-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-disabled-color: #{$gray-medium-dark}
+  --#{$prefix}btn-disabled-bg: #{$gray}
+  --#{$prefix}btn-disabled-border-color: #{$gray}
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  gap: $input-btn-padding-y
+  opacity: 1
+  min-height: $btn-min-size
+  min-width: $btn-min-size
+  opacity: $btn-opacity
+  @if $btn-text-transform-uppercase
+    text-transform: uppercase
+
+  &:hover, &:focus
+    opacity: $btn-hover-opacity
+
+  @each $name, $color in $theme-colors
+    &-outline-#{$name}
+      --#{$prefix}btn-border-color: #{$color}
+
+      &:hover, &:focus
+        opacity: $btn-outline-hover-opacity
+        background-color: $btn-outline-hover-background-color
+
+.btn-sm
+  min-width: $btn-min-size-sm
+  min-height: $btn-min-size-sm
+
+.btn-lg
+  min-width: $btn-min-size-lg
+  min-height: $btn-min-size-lg
+
 .btn-xs-block
   +media-breakpoint-down(sm)
     display: flex
