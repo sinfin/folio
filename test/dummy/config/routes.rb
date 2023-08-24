@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     resource :ui, only: %i[show], controller: "ui" do
       get :alerts
       get :buttons
+      get :forms
       get :typo
       get :icons
     end

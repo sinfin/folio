@@ -7,6 +7,7 @@ class Dummy::UiController < ApplicationController
     @actions = %i[
       alerts
       buttons
+      forms
       icons
       typo
     ]

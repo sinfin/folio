@@ -1,0 +1,25 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  h2 Forms
+
+  - page = Folio::Page.new(slug: "slug")
+  - page.valid?
+
+  = simple_form_for page, url: "./", method: :get do |f|
+    .row
+      .col-lg-6
+        = f.input :title, hint: false
+      .col-lg-6
+        = f.input :slug, hint: false
+
+      = f.input :perex, hint: false
+
+      = f.input :type, collection: Array.new(3) { |i| "Option ##{i}" },
+                       include_blank: false
+
+      = dummy_ui_buttons(buttons: [ \
+        { type: :button, label: "cancel", outline: true }, \
+        { type: :submit, label: "submit" }, \
+      ])
