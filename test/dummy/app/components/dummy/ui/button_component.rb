@@ -16,6 +16,7 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
                  type: :button,
                  disabled: false,
                  outline: false,
+                 onclick: nil,
                  href: nil)
     @variant = variant
     @size = size
@@ -31,6 +32,7 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     @outline = outline
     @type = type
     @href = href
+    @onclick = onclick
   end
 
   def tag
@@ -67,6 +69,10 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
       if @hide_label_on_mobile &&
         h[:class] += " d-ui-button--hide-label-on-mobile"
       end
+    end
+
+    if @onclick
+      h[:onclick] = @onclick
     end
 
     if @modal.present?

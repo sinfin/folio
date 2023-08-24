@@ -8,6 +8,8 @@ html[
     = render partial: 'layouts/folio/favicon'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+      = render(Dummy::Ui::IconComponent.new(head_html: true))
+
       = preload_link_tag '/fonts/IBMPlexSans.woff2'
       = preload_link_tag '/fonts/IBMPlexSans-Medium.woff2'
       = preload_link_tag '/fonts/IBMPlexSans-Bold.woff2'
@@ -17,7 +19,8 @@ html[
 
     == cell('dummy/ui/header_message', current_site)
 
-    == cell('dummy/ui/flash', flash)
+    - unless @hide_flash_messages
+      = render(Dummy::Ui::FlashComponent.new(flash:))
 
     = yield :publishable_hint
 
