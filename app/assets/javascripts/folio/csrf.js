@@ -1,3 +1,5 @@
+// TODO jQuery -> stimulus
+
 $.ajaxSetup({
   beforeSend: (xhr) => { Rails.CSRFProtection(xhr) }
 })

@@ -52,6 +52,17 @@ h6, .h6
   +media-breakpoint-down($font-size-media-breakpoint)
     margin: $headings-margin-top-mobile 0 $headings-margin-bottom-mobile
 
+.h0
+  +font-h0
+  display: block
+  margin: $h0-margin-top 0 $h0-margin-bottom
+
+  +media-breakpoint-down($font-size-media-breakpoint)
+    margin: $h0-margin-top-mobile 0 $h0-margin-bottom-mobile
+
+.font-size-mini
+  +font-size-mini
+
 small,
 .font-size-sm,
 .small
@@ -60,6 +71,9 @@ small,
 .font-size-lg,
 .lead
   +font-size-lg
+
+.font-size-xl
+  +font-size-xl
 
 ul
   +unlist

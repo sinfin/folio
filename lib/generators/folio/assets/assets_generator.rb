@@ -11,8 +11,8 @@ class Folio::AssetsGenerator < Rails::Generators::Base
 
   TEMPLATES = %w[
     app/assets/javascripts/application.js
-    app/assets/javascripts/folio/console/atoms/previews/main_app.coffee
-    app/assets/javascripts/folio/console/main_app.coffee
+    app/assets/javascripts/folio/console/atoms/previews/main_app.js
+    app/assets/javascripts/folio/console/main_app.js
     app/assets/stylesheets/_custom_bootstrap.sass
     app/assets/stylesheets/_fonts.scss
     app/assets/stylesheets/_icons.scss

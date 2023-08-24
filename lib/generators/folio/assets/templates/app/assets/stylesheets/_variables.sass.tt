@@ -18,8 +18,7 @@ $light-gray: #F5F5F5
 $medium-gray: #E8E8E8
 $blue: #4C84FD
 $orange: #FF9A52
-$green-bright: #31EB92
-$green: #00B594
+$green: #219D61
 $yellow: #F1CA45
 $red: #F0655D
 $violet: #5D2382
@@ -43,17 +42,65 @@ $danger: $red !default
 $light: $gray-100 !default
 $dark: $gray-900 !default
 
+$shade-200: #E8E8E8
+$shade-300: #555555
+$shade-500: #8D8D8D
+
 $container-fluid-max-width: 1440px
 $font-size-media-breakpoint: lg
 
-$font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+$font-family-sans-serif: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
 $font-weight-lighter: lighter
 $font-weight-light: 300
 $font-weight-normal: 400
+$font-weight-medium: 500
 $font-weight-semibold: 600
 $font-weight-bold: 700
 $font-weight-bolder: bolder
+
+$ui-typo-display-line-height: 1.2
+
+$ui-typo-display-2xl-font-size: px-to-rem(64px)
+$ui-typo-display-2xl-line-height: $ui-typo-display-line-height
+$ui-typo-display-2xl-letter-spacing: -2px
+
+$ui-typo-display-xl-font-size: px-to-rem(56px)
+$ui-typo-display-xl-line-height: $ui-typo-display-line-height
+$ui-typo-display-xl-letter-spacing: -2px
+
+$ui-typo-display-l-font-size: px-to-rem(48px)
+$ui-typo-display-l-line-height: $ui-typo-display-line-height
+$ui-typo-display-l-letter-spacing: -2px
+
+$ui-typo-display-m-font-size: px-to-rem(36px)
+$ui-typo-display-m-line-height: $ui-typo-display-line-height
+$ui-typo-display-m-letter-spacing: -2px
+
+$ui-typo-display-s-font-size: px-to-rem(24px)
+$ui-typo-display-s-line-height: $ui-typo-display-line-height
+$ui-typo-display-s-letter-spacing: normal
+
+$ui-typo-display-xs-font-size: px-to-rem(18px)
+$ui-typo-display-xs-line-height: $ui-typo-display-line-height
+$ui-typo-display-xs-letter-spacing: normal
+
+$ui-typo-text-line-height: 1.5
+
+$ui-typo-text-xl-font-size: px-to-rem(20px)
+$ui-typo-text-xl-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-l-font-size: px-to-rem(18px)
+$ui-typo-text-l-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-m-font-size: px-to-rem(16px)
+$ui-typo-text-m-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-s-font-size: px-to-rem(14px)
+$ui-typo-text-s-line-height: 1.571429
+
+$ui-typo-text-xs-font-size: px-to-rem(12px)
+$ui-typo-text-xs-line-height: $ui-typo-text-line-height
 
 $link-color: inherit
 $link-decoration: underline
@@ -66,68 +113,88 @@ $headings-margin-bottom: $spacer
 $headings-margin-top-mobile: $headings-margin-top
 $headings-margin-bottom-mobile: $headings-margin-bottom
 
-$font-size-base: px-to-rem(18px)
-$line-height-base: 1.4
-$font-size-base-mobile: px-to-rem(17px)
-$line-height-base-mobile: 1.4
+$font-size-base: $ui-typo-text-m-font-size
+$line-height-base: $ui-typo-text-m-line-height
+$font-size-base-mobile: $font-size-base
+$line-height-base-mobile: $line-height-base
 
-$font-size-sm: px-to-rem(14px)
-$line-height-sm: 18 / 14
-$font-size-sm-mobile: px-to-rem(14px)
-$line-height-sm-mobile: 16 / 14
+$font-size-sm: $ui-typo-text-s-font-size
+$line-height-sm: $ui-typo-text-s-line-height
+$font-size-sm-mobile: $font-size-sm
+$line-height-sm-mobile: $line-height-sm
 
-$font-size-mini: px-to-rem(11px)
-$line-height-mini: 12 / 11
-$font-size-mini-mobile: px-to-rem(11px)
-$line-height-mini-mobile: 12 / 11
+$font-size-mini: $ui-typo-text-xs-font-size
+$line-height-mini: $ui-typo-text-xs-line-height
+$font-size-mini-mobile: $font-size-mini
+$line-height-mini-mobile: $line-height-mini
 
-$font-size-lg: px-to-rem(20px)
-$line-height-lg: 28 / 20
-$font-size-lg-mobile: px-to-rem(20px)
-$line-height-lg-mobile: 28 / 20
+$font-size-lg: $ui-typo-text-l-font-size
+$line-height-lg: $ui-typo-text-l-line-height
+$font-size-lg-mobile: $font-size-lg
+$line-height-lg-mobile: $line-height-lg
 
-$h1-font-size: px-to-rem(44px)
-$h1-line-height: px-to-rem(50px)
-$h1-margin-top: $grid-gutter-width
+$font-size-xl: $ui-typo-text-xl-font-size
+$line-height-xl: $ui-typo-text-xl-line-height
+$font-size-xl-mobile: $font-size-xl
+$line-height-xl-mobile: $line-height-xl
+
+$h0-font-size: $ui-typo-display-2xl-font-size
+$h0-line-height: $ui-typo-display-2xl-line-height
+$h0-letter-spacing: $ui-typo-display-2xl-letter-spacing
+$h0-margin-top: $grid-gutter-width
+$h0-margin-bottom: $spacer
+$h0-font-size-mobile: $h0-font-size
+$h0-line-height-mobile: $h0-line-height
+$h0-margin-top-mobile: $h0-margin-top
+$h0-margin-bottom-mobile: $h0-margin-bottom
+
+$h1-font-size: $ui-typo-display-xl-font-size
+$h1-line-height: $ui-typo-display-xl-line-height
+$h1-letter-spacing: $ui-typo-display-xl-letter-spacing
+$h1-margin-top: 0
 $h1-margin-bottom: $spacer
-$h1-font-size-mobile: px-to-rem(30px)
-$h1-line-height-mobile: px-to-rem(41px)
-$h1-margin-top-mobile: $h1-margin-top
+$h1-font-size-mobile: $h1-font-size
+$h1-line-height-mobile: $h1-line-height
+$h1-margin-top-mobile: 0
 $h1-margin-bottom-mobile: $h1-margin-bottom
 
-$h2-font-size: px-to-rem(32px)
-$h2-line-height: px-to-rem(44px)
+$h2-font-size: $ui-typo-display-l-font-size
+$h2-line-height: $ui-typo-display-l-line-height
+$h2-letter-spacing: $ui-typo-display-l-letter-spacing
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$h2-font-size-mobile: px-to-rem(24px)
-$h2-line-height-mobile: px-to-rem(33px)
+$h2-font-size-mobile: $h2-font-size
+$h2-line-height-mobile: $h2-line-height
 $h2-margin-top-mobile: 2 * $spacer
 $h2-margin-bottom-mobile: $spacer
 
-$h3-font-size: px-to-rem(20px)
-$h3-line-height: px-to-rem(30px)
+$h3-font-size: $ui-typo-display-m-font-size
+$h3-line-height: $ui-typo-display-m-line-height
+$h3-letter-spacing: $ui-typo-display-m-letter-spacing
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$h3-font-size-mobile: px-to-rem(19px)
-$h3-line-height-mobile: px-to-rem(26px)
+$h3-font-size-mobile: $h3-font-size
+$h3-line-height-mobile: $h3-line-height
 $h3-margin-top-mobile: 2 * $spacer
 $h3-margin-bottom-mobile: $spacer
 
-$h4-font-size: px-to-rem(19px)
-$h4-line-height: px-to-rem(26px)
+$h4-font-size: $ui-typo-display-s-font-size
+$h4-line-height: $ui-typo-display-s-line-height
+$h4-letter-spacing: $ui-typo-display-s-letter-spacing
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$h4-font-size-mobile: px-to-rem(17px)
-$h4-line-height-mobile: px-to-rem(24px)
+$h4-font-size-mobile: $h4-font-size
+$h4-line-height-mobile: $h4-line-height
 $h4-margin-top-mobile: 2 * $spacer
 $h4-margin-bottom-mobile: $spacer
 
-$h5-font-size: px-to-rem(18px)
-$h5-line-height: px-to-rem(22px)
+$h5-font-size: $ui-typo-display-xs-font-size
+$h5-line-height: $ui-typo-display-xs-line-height
+$h5-letter-spacing: $ui-typo-display-xs-letter-spacing
 $h5-margin-top: 2 * $spacer
 $h5-margin-bottom: $spacer
-$h5-font-size-mobile: px-to-rem(16px)
-$h5-line-height-mobile: px-to-rem(19px)
+$h5-font-size-mobile: $h5-font-size
+$h5-line-height-mobile: $h5-line-height
 $h5-margin-top-mobile: 2 * $spacer
 $h5-margin-bottom-mobile: $spacer
 
@@ -136,12 +203,46 @@ $social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED,
 
 $form-group-spacer: px-to-rem(20px)
 
-$border-color: rgba(0, 0, 0, 0.3)
+$border-color: rgba(0, 0, 0, 0.15)
 
-$border-radius: 0
-$border-radius-lg: 0
-$border-radius-sm: 0
+$border-radius: $grid-gutter-base
+$border-radius-lg: $grid-gutter-base
+$border-radius-sm: $grid-gutter-base
 
 $modal-md: px-to-rem(640px)
 $modal-inner-padding: px-to-rem(30px)
 $modal-header-padding-y: px-to-rem(20px)
+
+$input-btn-focus-width: 0
+
+$btn-opacity: 1
+$btn-hover-opacity: 0.85
+$btn-disabled-opacity: 0.5
+$btn-outline-hover-opacity: $btn-opacity
+$btn-outline-hover-background-color: $shade-200
+
+$input-btn-border-width: 1px
+$input-btn-padding-x: px-to-rem(10px)
+$input-btn-padding-y: px-to-rem(8px)
+$input-btn-font-size: $ui-typo-text-s-font-size
+$input-btn-line-height: $ui-typo-text-s-line-height
+
+$btn-border-width: 2px
+$btn-min-size: px-to-rem(37px)
+$btn-font-size: px-to-rem(14px)
+$btn-line-height: 21 / 14
+$btn-font-weight: $font-weight-bold
+$btn-text-transform-uppercase: true
+$btn-padding-y: px-to-rem(6px)
+
+$btn-min-size-sm: px-to-rem(34px)
+$btn-font-size-sm: px-to-rem(12px)
+$btn-line-height-sm: 18 / 12
+$btn-padding-x-sm: $input-btn-padding-x
+$btn-padding-y-sm: $input-btn-padding-y
+
+$btn-min-size-lg: px-to-rem(48px)
+$btn-font-size-lg: px-to-rem(16px)
+$btn-line-height-lg: 24 / 16
+$btn-padding-x-lg: px-to-rem(14px)
+$btn-padding-y-lg: px-to-rem(10px)

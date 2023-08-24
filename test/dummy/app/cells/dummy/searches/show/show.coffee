@@ -1,3 +1,5 @@
+# TODO jQuery -> stimulus
+
 resultsCache = []
 ajax = null
 aborted = false

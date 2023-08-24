@@ -1,3 +1,5 @@
+# TODO jQuery -> stimulus
+
 $(document)
   .on 'submit', '.f-leads-form__form', (e) ->
     e.preventDefault()
