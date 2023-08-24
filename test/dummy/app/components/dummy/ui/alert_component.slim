@@ -1,0 +1,28 @@
+div[
+  class=bem_class_name
+  class="d-ui-alert--#{@variant}"
+  role="alert"
+  data=(@closable ? stimulus_controller('d-ui-alert') : nil)
+]
+  .d-ui-alert__container.container-fluid
+    - if @variant == :loader
+      .d-ui-alert__loader-wrap
+        .d-ui-alert__loader[
+          class="folio-loader"
+          class="folio-loader--tiny"
+          class="folio-loader--transparent"
+          class="folio-loader--white"
+        ]
+
+    - else
+      = dummy_ui_icon(icon_key, class_name: 'd-ui-alert__icon')
+
+    .d-ui-alert__content
+      == @message
+
+    - if @closable
+      button.d-ui-alert__close[
+        type="button"
+        data=stimulus_action('close')
+      ]
+        = dummy_ui_icon(:x)

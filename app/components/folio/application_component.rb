@@ -19,7 +19,7 @@ class Folio::ApplicationComponent < ViewComponent::Base
       class_names = [base]
 
       keys.each do |key|
-        if try(key)
+        if instance_variable_get("@#{key}")
           safe_key = key.to_s.tr("_", "-").delete("?")
           class_names << "#{base}--#{safe_key}"
         end

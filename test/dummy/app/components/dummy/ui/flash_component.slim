@@ -1,0 +1,6 @@
+.d-ui-flash
+  - if @flash.present?
+    - @flash.each do |type, message|
+      = render(Dummy::Ui::AlertComponent.new(variant: variant(type),
+                                             flash: true,
+                                             message:))
