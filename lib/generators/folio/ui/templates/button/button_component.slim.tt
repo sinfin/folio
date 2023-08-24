@@ -1,0 +1,22 @@
+*tag
+  - if @icon
+    = <%= application_namespace_path %>_ui_icon(@icon,
+                    height: icon_height,
+                    class_name: "<%= classname_prefix %>-ui-button__icon")
+
+  - if @loader
+    span.<%= classname_prefix %>-ui-button__loader-wrap
+      span.<%= classname_prefix %>-ui-button__loader[
+        class="folio-loader"
+        class="folio-loader--transparent"
+        class="folio-loader--tiny"
+        class="folio-loader--white"
+      ]
+
+  - if @label
+    span.<%= classname_prefix %>-ui-button__label = @label
+
+  - if @right_icon
+    = <%= application_namespace_path %>_ui_icon(@icon,
+                    height: icon_height,
+                    class_name: "<%= classname_prefix %>-ui-button__right-icon")

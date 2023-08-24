@@ -1,0 +1,57 @@
+window.<%= application_namespace %> = window.<%= application_namespace %> || {}
+window.<%= application_namespace %>.Ui = window.<%= application_namespace %>.Ui || {}
+window.<%= application_namespace %>.Ui.Flash = {}
+
+window.<%= application_namespace %>.Ui.Flash.flash = (data) => {
+  const alert = window.<%= application_namespace %>.Ui.Alert.create({
+    ...data,
+    flash: true,
+  })
+
+  document.querySelector('.<%= classname_prefix %>-ui-flash').appendChild(alert)
+}
+
+window.<%= application_namespace %>.Ui.Flash.success = (content, data = {}) => {
+  return window.<%= application_namespace %>.Ui.Flash.flash({
+    ...data,
+    content,
+    variant: 'success',
+  })
+}
+
+window.<%= application_namespace %>.Ui.Flash.alert = (content, data = {}) => {
+  return window.<%= application_namespace %>.Ui.Flash.flash({
+    ...data,
+    content,
+    variant: 'danger',
+  })
+}
+
+window.<%= application_namespace %>.Ui.Flash.loader = (content, data = {}) => {
+  return window.<%= application_namespace %>.Ui.Flash.flash({
+    ...data,
+    content,
+    variant: 'loader',
+  })
+}
+
+window.<%= application_namespace %>.Ui.Flash.clearFlashes = () => {
+  document.querySelector('.<%= classname_prefix %>-ui-flash').innerHTML = ""
+}
+
+window.<%= application_namespace %>.Ui.Flash.flashMessageFromMeta = (response) => {
+  if (typeof response === 'object' && response.meta && response.meta.flash) {
+    if (response.meta.flash.success) {
+      window.<%= application_namespace %>.Ui.Flash.success(response.meta.flash.success)
+    } else if (response.meta.flash.alert) {
+      window.<%= application_namespace %>.Ui.Flash.alert(response.meta.flash.alert)
+    }
+  }
+}
+
+window.<%= application_namespace %>.Ui.Flash.flashMessageFromApiErrors = (response) => {
+  if (typeof response === 'object' && response.errors) {
+    const flash = response.errors.map((obj) => `${obj.title} ${obj.detail}`)
+    window.<%= application_namespace %>.Ui.Flash.alert(flash)
+  }
+}

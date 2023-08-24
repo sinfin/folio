@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::AlertComponentTest < Folio::ComponentTest
+  def test_render
+    message = "hello"
+
+    render_inline(<%= application_namespace %>::Ui::AlertComponent.new(message:))
+
+    assert_selector(".<%= classname_prefix %>-ui-alert")
+  end
+end

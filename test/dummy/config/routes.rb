@@ -45,18 +45,18 @@ Rails.application.routes.draw do
   end
 
   scope module: :dummy, as: :dummy do
-    scope module: :home do
-      get :dropzone
-      get :lead_form
-      get :gallery
-    end
-
     resource :ui, only: %i[show], controller: "ui" do
       get :alerts
       get :buttons
       get :forms
       get :typo
       get :icons
+    end
+
+    scope module: :home do
+      get :dropzone
+      get :lead_form
+      get :gallery
     end
 
     resource :search, only: %i[show] do

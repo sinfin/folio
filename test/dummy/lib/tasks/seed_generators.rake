@@ -29,6 +29,25 @@ class Dummy::SeedGenerator
     end
   end
 
+  def from_component_path(component_path)
+    component_basename = File.basename(component_path)
+    name = component_basename.gsub("_component.rb", "")
+
+    template_component_dir = @templates_path.join(name)
+    FileUtils.mkdir_p template_component_dir
+
+    Dir[Rails.root.join("app/components/dummy/ui/#{name}_component.*")].each do |path|
+      copy_file(path, template_component_dir.join("#{File.basename(path)}.tt"))
+    end
+
+    test_path = Rails.root.join("test/components/dummy/ui/#{name}_component_test.rb")
+    if File.exist?(test_path)
+      copy_file(test_path, template_component_dir.join("#{name}_component_test.rb.tt"))
+    else
+      puts "M #{relative_path(test_path)}"
+    end
+  end
+
   def from_atom_path(atom_path)
     name = atom_path.gsub(%r{.*app/models/dummy/atom/(.*).rb}, '\1')
 
@@ -108,6 +127,12 @@ class Dummy::SeedGenerator
     end
   end
 
+  def ui_controllers(path)
+    Dir[path].each do |ctrl_path|
+      copy_file(path, @templates_path.join("ui_controller.rb.tt"))
+    end
+  end
+
   def copy_file(from, to)
     text = File.read(from)
 
@@ -151,6 +176,7 @@ class Dummy::SeedGenerator
          .gsub("dummy_ui_", "<%= application_namespace_path %>_ui_")
          .gsub("dummy:", "<%= application_namespace_path %>:")
          .gsub("window.dummy", "window.<%= application_namespace_path %>")
+         .gsub("window.Dummy", "window.<%= application_namespace %>")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
          .gsub("d-unlink", "<%= classname_prefix %>-unlink")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
@@ -229,7 +255,13 @@ namespace :dummy do
         gen.from_cell_path(cell_path)
       end
 
+      Dir[Rails.root.join("app/components/dummy/ui/**/*_component.rb")].each do |component_path|
+        gen.from_component_path(component_path)
+      end
+
       gen.ui_i18n_yamls(Rails.root.join("config/locales/ui.*.yml"))
+
+      gen.ui_controllers(Rails.root.join("app/controllers/dummy/ui_controller.rb"))
     end
 
     task prepared_atom: :environment do

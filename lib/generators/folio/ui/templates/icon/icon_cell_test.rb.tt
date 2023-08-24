@@ -4,8 +4,8 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::IconCellTest < Cell::TestCase
   test "show" do
-    html = cell("<%= application_namespace_path %>/ui/icon", :fast_forward).(:show)
+    html = cell("<%= application_namespace_path %>/ui/icon", :alert_triangle).(:show)
     assert html.has_css?(".<%= classname_prefix %>-ui-icon")
-    assert html.has_css?(".<%= classname_prefix %>-ui-icon--fast_forward")
+    assert html.has_css?(".<%= classname_prefix %>-ui-icon--alert_triangle")
   end
 end

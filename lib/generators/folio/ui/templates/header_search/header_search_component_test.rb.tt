@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::HeaderSearchComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Ui::HeaderSearchComponent.new)
+
+    assert_selector(".<%= classname_prefix %>-ui-header-search")
+  end
+end

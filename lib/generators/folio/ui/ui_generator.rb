@@ -44,10 +44,43 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
         relative_path = path.to_s.delete_prefix(base)
         template relative_path, relative_path.delete_prefix("#{key}/models/").gsub("application_namespace_path", application_namespace_path).delete_suffix(".tt")
       end
+
+      Dir["#{base}#{key}/#{key}_component.*.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, "app/components/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+      end
+
+      Dir["#{base}#{key}/#{key}_component_test.rb.tt"].each do |path|
+        relative_path = path.to_s.delete_prefix(base)
+        template relative_path, "test/components/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+      end
     end
   end
 
-  def update_i18n_ymls(values = {})
+  def update_controller
+    template "ui_controller.rb.tt", "app/controllers/#{application_namespace_path}/ui_controller.rb"
+
+    routes_s = File.read(Rails.root.join("config/routes.rb"))
+
+    if routes_s.exclude?("resource :ui")
+      str = <<-RUBY
+
+    resource :ui, only: %i[show], controller: "ui" do
+      get :alerts
+      get :buttons
+      get :forms
+      get :typo
+      get :icons
+    end
+      RUBY
+
+      inject_into_file "config/routes.rb", after: /scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do/ do
+        str
+      end
+    end
+  end
+
+  def update_i18n_ymls
     I18n.available_locales.each do |locale|
       app_path = Rails.root.join("config/locales/ui.#{locale}.yml")
       template_path = Folio::Engine.root.join("lib/generators/folio/ui/templates/ui.#{locale}.yml")
@@ -65,10 +98,8 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
         if File.exist?(app_path)
           hash = new_hash.deep_merge(YAML.load_file(app_path))
-          puts "Updating #{app_path.to_s.delete_prefix(Folio::Engine.root.to_s)}"
         else
           hash = new_hash
-          puts "Creating #{app_path.to_s.delete_prefix(Folio::Engine.root.to_s)}"
         end
 
         File.write app_path, hash.to_yaml(line_width: -1)
@@ -81,7 +112,6 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
     Dir["#{base}**/*.yml.tt"].each do |path|
       relative_path = path.to_s.delete_prefix(base)
-      puts relative_path
       template "ymls/#{relative_path}", relative_path.delete_suffix(".tt")
     end
   end

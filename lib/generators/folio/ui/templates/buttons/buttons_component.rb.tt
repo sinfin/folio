@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Ui::ButtonsComponent < ApplicationComponent
+  bem_class_name :nowrap, :vertical
+
+  def initialize(buttons:, class_name: nil, nowrap: false, vertical: false)
+    @buttons = buttons
+    @class_name = class_name
+    @nowrap = nowrap
+    @vertical = vertical
+  end
+end
