@@ -33,7 +33,6 @@
 //= require <%= application_namespace_path %>/ui/header_search/header_search
 //= require <%= application_namespace_path %>/ui/menu/menu
 //= require <%= application_namespace_path %>/ui/modal/modal
-//= require <%= application_namespace_path %>/ui/navigation/navigation
 
 //= require <%= atom_cell_name %>
 //= require <%= atom_cell_name %>

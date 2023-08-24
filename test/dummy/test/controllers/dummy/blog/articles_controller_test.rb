@@ -27,8 +27,7 @@ class Dummy::Blog::ArticlesControllerTest < ActionDispatch::IntegrationTest
 
     assert_raises(ActiveRecord::RecordNotFound) { get url_for(article) }
 
-    sign_in create(:folio_account)
-    get url_for(article)
+    get url_for([article, Folio::Publishable::PREVIEW_PARAM_NAME => article.preview_token])
     assert_response(:ok)
   end
 end

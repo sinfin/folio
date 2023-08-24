@@ -38,7 +38,6 @@
 //= require dummy/ui/icon_component
 //= require dummy/ui/menu_component
 //= require dummy/ui/modal/modal
-//= require dummy/ui/navigation/navigation
 
 //= require dummy/atom/images/images
 //= require dummy/atom/map/map

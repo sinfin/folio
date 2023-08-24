@@ -10,16 +10,15 @@ class Dummy::Blog::TopicsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show" do
-    article = create(:dummy_blog_topic)
-    get url_for(article)
+    topic = create(:dummy_blog_topic)
+    get url_for(topic)
     assert_response :ok
 
-    article.update!(published: false)
+    topic.update!(published: false)
 
-    assert_raises(ActiveRecord::RecordNotFound) { get url_for(article) }
+    assert_raises(ActiveRecord::RecordNotFound) { get url_for(topic) }
 
-    sign_in create(:folio_account)
-    get url_for(article)
+    get url_for([topic, Folio::Publishable::PREVIEW_PARAM_NAME => topic.preview_token])
     assert_response(:ok)
   end
 end

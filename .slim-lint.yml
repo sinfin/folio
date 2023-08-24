@@ -12,6 +12,7 @@ exclude:
   - app/cells/folio/console/private_attachments/single_dropzone/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/cookie_consent/show.slim
+  - app/cells/folio/devise/flash/show.slim
   - app/cells/folio/devise/modal/_close.slim
   - app/cells/folio/devise/omniauth/icon/show.slim
   - app/cells/folio/devise/password_input/show.slim
