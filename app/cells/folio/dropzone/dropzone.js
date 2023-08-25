@@ -1,5 +1,5 @@
 //= require folio/api
-//= require folio/s3-upload
+//= require folio/s3_upload
 
 window.Folio = window.Folio || {}
 window.Folio.Dropzone = window.Folio.Dropzone || {}

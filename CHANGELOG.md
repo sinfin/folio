@@ -43,8 +43,8 @@ All notable changes to this project will be documented in this file.
 ```
 folio/console/_flash     -> folio/console/flash
 folio/console/_api       -> folio/api
-folio/console/_s3-upload -> folio/s3-upload
-folio/_message-bus       -> folio/message-bus
+folio/console/_s3-upload -> folio/s3_upload
+folio/_message-bus       -> folio/message_bus
 ```
 
 - started to refactor `Folio::DropzoneCell` to work with direct s3 uploads - needs some styling still

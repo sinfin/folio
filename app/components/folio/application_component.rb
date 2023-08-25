@@ -99,4 +99,8 @@ class Folio::ApplicationComponent < ViewComponent::Base
   def stimulus_target(target)
     stimulus_data(target:)
   end
+
+  def current_site
+    controller.current_site
+  end
 end

@@ -1,3 +1,4 @@
+#= require folio/debounce
 # TODO jQuery -> stimulus
 
 resultsCache = []
