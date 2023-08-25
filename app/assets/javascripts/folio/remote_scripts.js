@@ -71,14 +71,16 @@ window.Folio.RemoteScripts.run = (script, successCallback, errorCallback) => {
   if (typeof script === 'string') {
     key = script
   } else if (typeof script === 'object') {
-    if (script.url && script.key) {
+    if (script.key && (script.urls || script.url)) {
       key = script.key
 
-      window.Folio.RemoteScripts.Data[key] = {
-        urls: script.urls || [script.url],
-        status: null,
-        successCallbacks: [],
-        errorCallbacks: []
+      if (!window.Folio.RemoteScripts.Data[key]) {
+        window.Folio.RemoteScripts.Data[key] = {
+          urls: script.urls || [script.url],
+          status: null,
+          successCallbacks: [],
+          errorCallbacks: []
+        }
       }
     }
   }
