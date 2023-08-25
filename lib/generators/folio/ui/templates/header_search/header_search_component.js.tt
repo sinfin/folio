@@ -1,3 +1,5 @@
+//= require folio/add_params_to_url
+
 window.<%= application_namespace %> = window.<%= application_namespace %> || {}
 window.<%= application_namespace %>.Ui = window.<%= application_namespace %>.Ui || {}
 

@@ -19,7 +19,7 @@ window.Folio.Chart.innerBind = (el) => {
 window.Folio.Chart.bind = (el) => {
   el.dataset.waitingForJavascript = true
 
-  window.Folio.RemoteJs.runWhenLoaded(window.Folio.Chart.CDN_URL, () => {
+  window.Folio.RemoteScripts.run({ key: 'chart-js', url: window.Folio.Chart.CDN_URL }, () => {
     if (!el.dataset.waitingForJavascript) return
     delete el.dataset.waitingForJavascript
     window.Folio.Chart.innerBind(el)

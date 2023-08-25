@@ -29,9 +29,9 @@
 
 //= require folio/stimulus
 //= require folio/api
-//= require folio/s3-upload
-//= require folio/message-bus
-//= require folio/remote-js
+//= require folio/s3_upload
+//= require folio/message_bus
+//= require folio/remote_scripts
 
 //= require folio/lazyload
 //= require folio/lightbox
@@ -42,7 +42,7 @@
 //= require folio/image/image
 //= require folio/chart/chart
 //= require folio/ui/icon/icon
-//= require folio/click-trigger
+//= require folio/click_trigger
 
 // must be under folio/input
 //= require daterangepicker.min

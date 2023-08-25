@@ -2,8 +2,9 @@
 //= require rails-ujs
 //= require turbolinks
 
-//= require folio/message-bus
+//= require folio/message_bus
 //= require folio/stimulus
+//= require folio/remote_scripts
 
 //= require folio/cookie_consent/cookie_consent
 //= require folio/devise
@@ -16,7 +17,7 @@
 
 //= require <%= application_namespace_path %>/ui/alert_component
 //= require <%= application_namespace_path %>/ui/flash_component
-//= require <%= application_namespace_path %>/ui/header_message/header_message
+//= require <%= application_namespace_path %>/ui/header_message_component
 //= require <%= application_namespace_path %>/ui/header_search_component
 //= require <%= application_namespace_path %>/ui/icon_component
 //= require <%= application_namespace_path %>/ui/menu_component

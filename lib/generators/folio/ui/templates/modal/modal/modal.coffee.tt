@@ -1,3 +1,5 @@
+# TODO jQuery -> stimulus
+
 $(document)
   .on 'shown.bs.modal', ->
     document.documentElement.classList.add('modal-open')

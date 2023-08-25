@@ -1,3 +1,5 @@
+//= require folio/is_visible
+
 window.Folio.Stimulus.register('d-ui-menu', class extends window.Stimulus.Controller {
   static targets = ['mq', 'moreLi', 'moreUl']
 

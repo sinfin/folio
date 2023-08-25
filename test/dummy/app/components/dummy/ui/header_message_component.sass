@@ -1,4 +1,4 @@
-.<%= classname_prefix %>-ui-header-message
+.d-ui-header-message
   background: $yellow
 
   &__inner
@@ -13,6 +13,9 @@
     right: 0
     color: inherit
     width: 60px
-    display: flex
+    display: none
     justify-content: flex-end
     align-items: center
+
+  &[data-d-ui-header-message-loaded-value="true"] &__close
+    display: flex

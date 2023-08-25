@@ -1,0 +1,15 @@
+- if message
+  .d-ui-header-message[
+    role="alert"
+    data=stimulus_controller('d-ui-header-message', values: { cookie: })
+  ]
+    .container-fluid
+      .d-ui-header-message__inner
+        .d-rich-text.d-rich-text--chomp
+          == message
+
+        button.d-ui-header-message__close[
+          type="button"
+          data=stimulus_action('close')
+        ]
+          = dummy_ui_icon(:x, height: 22)

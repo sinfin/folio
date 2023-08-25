@@ -17,7 +17,7 @@ html[
   body
     = render(Dummy::Ui::HeaderComponent.new)
 
-    == cell('dummy/ui/header_message', current_site)
+    = render(Dummy::Ui::HeaderMessageComponent.new)
 
     - unless @hide_flash_messages
       = render(Dummy::Ui::FlashComponent.new(flash:))
