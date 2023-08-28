@@ -1,0 +1,6 @@
+.modal-title
+  margin: 0 !important
+  position: relative
+
+.modal-header
+  position: relative
