@@ -25,4 +25,10 @@ class Folio::Devise::Omniauth::Authentications::ListCell < Folio::Devise::Applic
   def unlink_url_for(provider)
     controller.folio.devise_omniauth_authentication_path(provider:)
   end
+
+  def button_data(provider)
+    stimulus_controller(Folio::Devise::Omniauth::FormsCell::STIMULUS_CONTROLLER_NAME,
+                        values: { provider: },
+                        action: "click")
+  end
 end

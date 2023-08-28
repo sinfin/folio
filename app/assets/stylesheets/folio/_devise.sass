@@ -45,5 +45,12 @@ $folio-devise-modal-registrations-max-width: $folio-devise-modal-max-width !defa
   &__danger
     color: $folio-devise-danger-color
 
+  &__errors
+    color: $folio-devise-danger-color
+    margin: 0 0 $spacer
+
+    &:empty
+      display: none
+
 @import '../../../cells/folio/addresses/**/*'
 @import '../../../cells/folio/devise/**/*'
