@@ -1,4 +1,7 @@
 .f-devise-modal
+  .f-devise__title
+    display: none
+
   &__dialog
     max-width: $folio-devise-modal-max-width
 
@@ -13,22 +16,27 @@
     margin-top: 0
     font-size: $h3-font-size
 
-  &__dialog:not(&__dialog--active)
+  &__dialog:not(.modal-dialog--active)
     display: none
 
   &__close
+    +unbutton
+    padding: 15px
     position: absolute
     top: 0
     right: 0
-    border: 0
-    background: transparent
-    padding: 10px
-    appearance: none
-    cursor: pointer
 
-    &, &:hover, &:focus
-      outline: 0
-      box-shadow: none
+    .modal-header &
+      height: 100%
+
+  .modal-header
+    padding-right: 60px
+
+  .f-devise-omniauth
+    margin-top: 0
+
+  .f-devise-omniauth__p:first-child
+    margin-top: 0
 
   &__close-svg
     width: 30px

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Devise::Omniauth::FormsCell < Folio::Devise::ApplicationCell
-  TRIGGER_CLASS_NAME = "f-js-devise-omniauth-forms-trigger"
+  STIMULUS_CONTROLLER_NAME = "f-devise-omniauth-forms-trigger"
 
   def show
     render if ::Rails.application.config.folio_users_omniauth_providers.present?

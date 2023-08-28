@@ -34,8 +34,6 @@ html[
 
     == cell('dummy/ui/footer')
 
-    == cell('folio/sensitive_content_modal')
-
     - if Rails.application.config.folio_users
       == cell('folio/devise/modal')
       == cell('folio/devise/omniauth/forms')

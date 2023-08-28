@@ -1,4 +1,6 @@
-.f-devise-sessions-new
+.f-devise-sessions-new[
+  data=(options[:modal] ? stimulus_controller('f-devise-modal-form') : nil)
+]
   = form do |f|
     = title
 
@@ -11,6 +13,8 @@
       == email_input(f)
 
       == password_input(f, :password, autocomplete: 'current-password')
+
+    .f-devise__errors
 
     = submit_button(f, t('.sign_in'))
 

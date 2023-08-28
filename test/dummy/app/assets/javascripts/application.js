@@ -2,17 +2,18 @@
 //= require rails-ujs
 //= require turbolinks
 
-//= require folio/message_bus
+//= require folio/api
 //= require folio/stimulus
+//= require folio/message_bus
 //= require folio/remote_scripts
 
 //= require folio/cookie_consent/cookie_consent
 //= require folio/devise
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/modal
 
 //= require folio/image/image
-//= require folio/sensitive_content_modal/sensitive_content_modal
 //= require dummy/searches/show/show
 
 //= require dummy/ui/alert_component

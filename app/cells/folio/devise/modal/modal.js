@@ -1,72 +1,49 @@
-$(document)
-  .on('click', '.f-devise-modal-aware-link', function (e) {
-    const $dialog = $(this).closest('.f-devise-modal__dialog--active')
+//= require folio/form_to_hash
 
-    if ($dialog.length) {
-      e.preventDefault()
-      $dialog.removeClass('f-devise-modal__dialog--active').siblings('.f-devise-modal__dialog').first().addClass('f-devise-modal__dialog--active')
+window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimulus.Controller {
+  connect () {
+    const form = this.element.querySelector('.f-devise-modal__form')
+
+    if (form) {
+      form.dataset.action = "f-devise-modal-form#onSubmit"
     }
-  })
+  }
 
-  .on('shown.bs.modal', '.f-devise-modal', function (e) {
-    $(this).find('[autofocus]:visible').first().focus()
-  })
+  onSubmit (e) {
+    e.preventDefault()
 
-  .on('show.bs.modal', '.f-devise-modal', function (e) {
-    const $btn = $(e.relatedTarget)
-    const $modal = $(this)
+    const form = e.target
+    form.classList.add('f-devise-modal__form--loading')
 
-    if ($btn.data('after-sign-in-path')) {
-      $modal.data('after-sign-in-path', $btn.data('after-sign-in-path'))
-    }
+    const errors = form.querySelector('.f-devise__errors')
+    errors.innerHTML = ""
 
-    if ($btn.data('action')) {
-      if ($btn.data('action') === 'sign_in') {
-        $modal.find('.f-devise-modal__dialog').removeClass('f-devise-modal__dialog--active').filter('.f-devise-modal__dialog--sessions').addClass('f-devise-modal__dialog--active')
-      } else if ($btn.data('action') === 'sign_up') {
-        $modal.find('.f-devise-modal__dialog').removeClass('f-devise-modal__dialog--active').filter('.f-devise-modal__dialog--registrations').addClass('f-devise-modal__dialog--active')
+    const data = window.Folio.formToHash(form)
+    const reenable = () => {
+      form.classList.remove('f-devise-modal__form--loading')
+      const submits = form.querySelectorAll('[type="submit"]')
+
+      for (const submit of submits) {
+        submit.disabled = false
       }
     }
-  })
 
-  .on('submit', '.f-devise-modal__form', function (e) {
-    e.preventDefault()
-    const $form = $(this)
-    $form.addClass('f-devise-modal__form--loading')
-
-    $.ajax({
-      method: this.method,
-      url: this.action,
-      data: $form.serialize(),
-      dataType: 'JSON',
-      success: (res) => {
-        const path = $form.closest('.f-devise-modal').data('after-sign-in-path')
-        if (path) {
-          window.location.href = path
-        } else if (res.data && res.data.url) {
-          window.location.href = res.data.url
+    window.Folio.Api.apiPost(form.action, data)
+      .then((res) => {
+        if (res.errors) {
+          errors.innerHTML = res.errors.map((h) => h.detail).join("<br>")
+          reenable()
         } else {
-          window.location.reload()
-        }
-      },
-      error: (jxHr) => {
-        const json = jxHr.responseJSON
-
-        if (json) {
-          if (json.error) {
-            window.alert(json.error)
-            return $form.removeClass('f-devise-modal__form--loading').find('[type="submit"]').prop('disabled', false)
-          } else if (json.data) {
-            $form.trigger('folioDeviseBeforeHtmlReplace')
-            const $wrap = $form.closest('.f-devise-sessions-new, .f-devise-invitations-new')
-            const $parent = $wrap.parent()
-            $wrap.replaceWith(jxHr.responseJSON.data)
-            return $parent.find('.f-devise-modal__form').trigger('folioDeviseAfterHtmlReplace')
+          if (res.data && res.data.url) {
+            window.location.href = res.data.url
+          } else {
+            window.location.reload()
           }
         }
-
-        window.alert($form.data('failure'))
-        return $form.removeClass('f-devise-modal__form--loading').find('[type="submit"]').prop('disabled', false)
-      }
-    })
-  })
+      })
+      .catch((err) => {
+        window.alert(form.dataset.failure)
+        reenable()
+      })
+  }
+})

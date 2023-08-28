@@ -4,27 +4,6 @@ class Dummy::HomeController < ApplicationController
   def index
     @page = Dummy::Page::Homepage.instance(fail_on_missing: false)
     set_meta_variables(@page) if @page
-
-    @buttons = [
-      {
-        href: new_user_session_path,
-        label: "Sign in",
-      },
-      {
-        href: new_user_invitation_path,
-        label: "Sign up",
-      },
-      {
-        modal: Folio::Devise::ModalCell::CLASS_NAME,
-        data: { action: "sign_in" },
-        label: "Sign in (modal)",
-      },
-      {
-        modal: Folio::Devise::ModalCell::CLASS_NAME,
-        data: { action: "sign_up" },
-        label: "Sign up (modal)",
-      }
-    ]
   end
 
   def dropzone

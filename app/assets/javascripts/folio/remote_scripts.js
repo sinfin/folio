@@ -6,6 +6,9 @@ window.Folio.RemoteScripts.Data = {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js'],
     successCallbacks: [],
     errorCallbacks: []
+  },
+  bootstrap: {
+    urls: ['https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.js']
   }
 }
 
@@ -76,16 +79,21 @@ window.Folio.RemoteScripts.run = (script, successCallback, errorCallback) => {
 
       if (!window.Folio.RemoteScripts.Data[key]) {
         window.Folio.RemoteScripts.Data[key] = {
-          urls: script.urls || [script.url],
-          status: null,
-          successCallbacks: [],
-          errorCallbacks: []
+          urls: script.urls || [script.url]
         }
       }
     }
   }
 
-  if (!window.Folio.RemoteScripts.Data[key]) throw new Error(`Missing script data for ${script}`)
+  if (!window.Folio.RemoteScripts.Data[key]) {
+    throw new Error(`Missing script data for ${script}`)
+  }
+
+  ['successCallbacks', 'errorCallbacks'].forEach((urlKey) => {
+    if (!window.Folio.RemoteScripts.Data[key][urlKey]) {
+      window.Folio.RemoteScripts.Data[key][urlKey] = []
+    }
+  })
 
   if (window.Folio.RemoteScripts.Data[key].loaded) {
     successCallback()

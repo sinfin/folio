@@ -1,4 +1,6 @@
-.f-devise-invitations-new
+.f-devise-invitations-new[
+  data=(options[:modal] ? stimulus_controller('f-devise-modal-form') : nil)
+]
   = form do |f|
     = title model[:title]
 
@@ -21,6 +23,8 @@
       == email_input(f, autofocus: false, label: t('.email_label'))
 
     = render(:_bottom)
+
+    .f-devise__errors
 
     = submit_button(f, t('.sign_up'))
 

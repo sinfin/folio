@@ -48,7 +48,12 @@ function checkResponse (response) {
   return response.json()
     .catch(() => Promise.reject(new Error(fallbackMessage(response))))
     .then((json) => {
+      if (json.data) {
+        return Promise.resolve(json)
+      }
+
       const err = jsonError(json)
+
       if (err) {
         return Promise.reject(new Error(err))
       } else {
@@ -59,7 +64,12 @@ function checkResponse (response) {
 
 function responseToJson (response) {
   if (response.status === 204) return Promise.resolve({})
-  return response.json()
+
+  if (!response.status && response.data) {
+    return response
+  } else {
+    return response.json()
+  }
 }
 
 function responseToHtml (response) {

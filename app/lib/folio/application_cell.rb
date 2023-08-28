@@ -7,6 +7,7 @@ class Folio::ApplicationCell < Cell::ViewModel
   include Folio::IconHelper
   include Folio::ImageHelper
   include Folio::PriceHelper
+  include Folio::StimulusHelper
 
   self.view_paths << "#{Folio::Engine.root}/app/cells"
 

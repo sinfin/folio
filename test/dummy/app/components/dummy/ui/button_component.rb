@@ -76,10 +76,12 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     end
 
     if @modal.present?
-      h[:data]["toggle"] = "modal"
-      h[:data]["target"] = @modal
-      h[:data]["bs-toggle"] = "modal"
-      h[:data]["bs-target"] = @modal
+      h[:data] = stimulus_modal_toggle(@modal).merge({
+        "toggle" => "modal",
+        "target" => @modal,
+        "bs-toggle" => "modal",
+        "bs-target" => @modal,
+      })
     end
 
     h

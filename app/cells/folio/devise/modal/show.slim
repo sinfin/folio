@@ -1,14 +1,21 @@
-.modal.f-devise-modal role="dialog" tabindex="-1"
+.modal.f-devise-modal[
+  role="dialog"
+  tabindex="-1"
+  data=stimulus_controller('f-modal')
+]
   .modal-dialog[
     role="document"
     class="f-devise-modal__dialog"
     class="f-devise-modal__dialog--sessions"
-    class="f-devise-modal__dialog--active"
+    class="modal-dialog--active"
   ]
     .modal-content
-      .modal-body
-        == cell('folio/devise/sessions/new', devise_model)
+      .modal-header
+        .h4.modal-title = t('folio.devise.sessions.new.title')
         = render(:_close)
+
+      .modal-body
+        == cell('folio/devise/sessions/new', devise_model, modal: true)
 
   .modal-dialog[
     role="document"
@@ -16,6 +23,9 @@
     class="f-devise-modal__dialog--registrations"
   ]
     .modal-content
-      .modal-body
-        == cell('folio/devise/invitations/new', devise_model)
+      .modal-header
+        .h4.modal-title = t('folio.devise.invitations.new.title')
         = render(:_close)
+
+      .modal-body
+        == cell('folio/devise/invitations/new', devise_model, modal: true)
