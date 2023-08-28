@@ -236,6 +236,7 @@ namespace :dummy do
 
       {
         Folio::AssetsGenerator::TEMPLATES => ".tt",
+        ["app/assets/stylesheets/modules/bootstrap-overrides/**/*.sass"] => ".tt",
         Folio::AssetsGenerator::FILES => "",
       }.each do |paths, affix|
         paths.each do |path|
