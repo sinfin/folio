@@ -20,17 +20,22 @@ module Folio::StimulusHelper
     h
   end
 
-  def stimulus_data(action: nil, target: nil)
-    fail "Missing @stimulus_controller_name" if @stimulus_controller_name.nil?
+  def stimulus_data(action: nil, target: nil, controller: nil)
+    controller ||= @stimulus_controller_name
+    fail "Missing @stimulus_controller_name" if controller.nil?
 
     h = {}
 
     if action
       if action.is_a?(String)
-        h["action"] = "#{@stimulus_controller_name}##{action}"
+        if action.include?("#")
+          h["action"] = action
+        else
+          h["action"] = "#{controller}##{action}"
+        end
       else
         action.each do |trigger, action_s|
-          str = "#{trigger}->#{@stimulus_controller_name}##{action_s}"
+          str = "#{trigger}->#{controller}##{action_s}"
 
           if h["action"]
             h["action"] += " #{str}"
@@ -42,7 +47,7 @@ module Folio::StimulusHelper
     end
 
     if target
-      h["#{@stimulus_controller_name}-target"] = target
+      h["#{controller}-target"] = target
     end
 
     h
