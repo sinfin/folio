@@ -46,4 +46,32 @@ window.Folio.Stimulus.register('f-devise-modal-form', class extends window.Stimu
         reenable()
       })
   }
+
+  inviteClick (e) {
+    e.preventDefault()
+    this.switchToDialog('f-devise-modal__dialog--registrations')
+  }
+
+  signInClick (e) {
+    e.preventDefault()
+    this.switchToDialog('f-devise-modal__dialog--sessions')
+  }
+
+  switchToDialog (dialogClassName) {
+    const modal = this.element.closest('.f-devise-modal')
+    const dialogs = modal.querySelectorAll('.f-devise-modal__dialog')
+
+    for (const dialog of dialogs) {
+      const isActive = dialog.classList.contains(dialogClassName)
+      dialog.classList.toggle('modal-dialog--active', isActive)
+
+      if (isActive) {
+        const autofocus = dialog.querySelector('[autofocus]')
+
+        if (autofocus) {
+          autofocus.focus()
+        }
+      }
+    }
+  }
 })
