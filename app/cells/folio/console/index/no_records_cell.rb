@@ -2,6 +2,8 @@
 
 class Folio::Console::Index::NoRecordsCell < Folio::ConsoleCell
   def new_link
+    return if options[:url] == false
+
     url = options[:url].presence || url_for([:console, model, action: :new])
     html_opts = { title: t(".new") }
     link_to(t(".new"), url, html_opts)
