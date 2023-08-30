@@ -1,4 +1,5 @@
 //= require message-bus
+//= require message-bus-ajax
 
 window.Folio = window.Folio || {}
 window.Folio.MessageBus = {}
