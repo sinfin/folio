@@ -52,8 +52,8 @@ class Folio::AssetsGenerator < Rails::Generators::Base
 
   def copy_bootstrap_overrides
     Dir.glob(Folio::Engine.root.join("lib/generators/folio/assets/templates/app/assets/stylesheets/modules/bootstrap-overrides/**/*.sass.tt")).each do |path|
-      clear_path = path.split('lib/generators/folio/assets/templates/', 2).last
-      template clear_path, clear_path.delete_suffix('.tt')
+      clear_path = path.split("lib/generators/folio/assets/templates/", 2).last
+      template clear_path, clear_path.delete_suffix(".tt")
     end
   end
 

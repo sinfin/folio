@@ -27,15 +27,16 @@ if (window.Folio.CookieConsent.configuration) {
 
     window.Folio.CookieConsent.onLoad = () => {
       if (window.Folio.CookieConsent.detached) {
-        $('body').append(window.Folio.CookieConsent.detached)
+        document.body.appendChild(window.Folio.CookieConsent.detached)
         window.Folio.CookieConsent.detached = null
       }
     }
 
     window.Folio.CookieConsent.onBeforeRender = () => {
-      const $main = $('#cc--main')
-      if (!$main.length) return
-      window.Folio.CookieConsent.detached = $main.detach()
+      const main = document.getElementById('cc--main')
+      if (!main) return
+      window.Folio.CookieConsent.detached = main
+      main.parentNode.removeChild(main)
     }
   }
 
@@ -45,9 +46,8 @@ if (window.Folio.CookieConsent.configuration) {
     if (window.Folio.CookieConsent.bindTurbolinks) {
       window.Folio.CookieConsent.bindTurbolinks = false
 
-      $(document)
-        .off('turbolinks:load', window.Folio.CookieConsent.onLoad)
-        .off('turbolinks:before-render', window.Folio.CookieConsent.onBeforeRender)
+      document.removeEventListener('turbolinks:load', window.Folio.CookieConsent.onLoad)
+      document.removeEventListener('turbolinks:before-render', window.Folio.CookieConsent.onBeforeRender)
     }
 
     if (window.dataLayer) {
@@ -74,13 +74,18 @@ if (window.Folio.CookieConsent.configuration) {
     { onAccept: window.Folio.CookieConsent.onAccept }))
 
   if (window.Folio.CookieConsent.bindTurbolinks) {
-    $(document)
-      .on('turbolinks:load', window.Folio.CookieConsent.onLoad)
-      .on('turbolinks:before-render', window.Folio.CookieConsent.onBeforeRender)
+    document.addEventListener('turbolinks:load', window.Folio.CookieConsent.onLoad)
+    document.addEventListener('turbolinks:before-render', window.Folio.CookieConsent.onBeforeRender)
   }
 
-  $(document).on('click', '.f-cookie-consent-link', (e) => {
-    e.preventDefault()
-    window.Folio.CookieConsent.cookieConsent.showSettings()
+  window.Folio.Stimulus.register('f-cookie-consent-link', class extends window.Stimulus.Controller {
+    connect () {
+      this.element.dataset.action = "f-cookie-consent-link#click"
+    }
+
+    click (e) {
+      e.preventDefault()
+      window.Folio.CookieConsent.cookieConsent.showSettings()
+    }
   })
 }
