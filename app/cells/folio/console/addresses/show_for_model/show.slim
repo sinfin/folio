@@ -1,12 +1,12 @@
 .f-c-addresses-show-for-model
   .row
-    - cols.each do |klass, address|
+    - cols.each do |klass, address, attributes|
       div class=col_class
         h2.mt-0 = klass.model_name.human
 
         - if address.present?
           = show_for address do |s|
-            - klass.show_for_attributes.each do |attr|
+            - (attributes || klass.show_for_attributes).each do |attr|
               = s.attribute attr
                 - value = s.object.send(attr)
                 = sanitize(value, tags: []) if value.present?
