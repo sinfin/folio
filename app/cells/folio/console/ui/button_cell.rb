@@ -14,7 +14,11 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
     h[:class] = "f-c-ui-button btn btn-#{variant}"
 
     if model[:confirm]
-      h["data-confirm"] = t("folio.console.confirmation")
+      if model[:confirm].is_a?(String)
+        h["data-confirm"] = model[:confirm]
+      else
+        h["data-confirm"] = t("folio.console.confirmation")
+      end
     end
 
     if model[:class]
