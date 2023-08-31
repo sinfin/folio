@@ -69,6 +69,10 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
     16
   end
 
+  def self.human_type
+    "document"
+  end
+
   def self.model_name
     @_model_name ||= begin
       base = ActiveModel::Name.new(Folio::SessionAttachment)

@@ -20,7 +20,7 @@ class Folio::DropzoneCell < Folio::ApplicationCell
       "max-files" => model[:max_files],
       "max-file-size" => model[:max_file_size],
       "dict" => dict.to_json,
-    }
+    }.compact
   end
 
   def records

@@ -7,7 +7,7 @@ class Folio::SessionAttachments::DropzoneCell < Folio::ApplicationCell
       destroy_url:,
       records: model.unpaired.where(web_session_id: session.id.try(:public_id)),
       param_name: "folio_session_attachment[file]",
-      create_thumbnails: model < Folio::SessionAttachment::Image,
+      create_thumbnails: model.try(:human_type) == "image",
       file_formats:,
       file_type: model.to_s,
       max_file_size: 20,
