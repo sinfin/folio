@@ -64,11 +64,16 @@ Folio::Engine.routes.draw do
         end
       end
 
-      resources :leads, only: %i[index show edit update destroy] do
-        collection { post :mass_handle }
-        member { post :event }
+      if ::Rails.application.config.folio_leads
+        resources :leads, only: %i[index show edit update destroy] do
+          collection { post :mass_handle }
+          member { post :event }
+        end
       end
-      resources :newsletter_subscriptions, only: %i[index destroy]
+
+      if ::Rails.application.config.folio_newsletter_subscriptions
+        resources :newsletter_subscriptions, only: %i[index destroy]
+      end
 
       resources :accounts, except: %i[show] do
         member { post :invite_and_copy }
@@ -178,8 +183,15 @@ Folio::Engine.routes.draw do
   end
 
   resource :csrf, only: %i[show], controller: :csrf
-  resources :leads, only: %i[create]
-  resources :newsletter_subscriptions, only: %i[create]
+
+  if ::Rails.application.config.folio_leads
+    resources :leads, only: %i[create]
+  end
+
+  if ::Rails.application.config.folio_newsletter_subscriptions
+    resources :newsletter_subscriptions, only: %i[create]
+  end
+
   resources :session_attachments, only: %i[create index destroy],
                                   as: :folio_session_attachments
 

@@ -17,6 +17,9 @@ module Dummy
     # -- all .rb files in that directory are automatically loaded.
 
     Rails.application.config.folio_users = true
+    Rails.application.config.folio_leads = true
+    Rails.application.config.folio_newsletter_subscriptions = true
+
 
     I18n.available_locales = [:cs, :en]
     I18n.default_locale = :cs

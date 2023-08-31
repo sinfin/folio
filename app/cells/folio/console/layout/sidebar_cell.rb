@@ -197,8 +197,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 homepage_for_site(site)
               ].compact + site_links[:console_sidebar_before_menu_links].compact + [
                 link_for_class.call(Folio::Menu),
-                link_for_class.call(Folio::Lead),
-                link_for_class.call(Folio::NewsletterSubscription),
+                (link_for_class.call(Folio::Lead) if ::Rails.application.config.folio_leads),
+                (link_for_class.call(Folio::NewsletterSubscription) if ::Rails.application.config.folio_newsletter_subscriptions),
                 link_for_class.call(Folio::EmailTemplate),
                 *site_links[:console_sidebar_before_site_links],
                 controller.can?(:manage, site) ? (
