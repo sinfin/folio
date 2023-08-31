@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class <%= component_class_name %>Test < Folio::ComponentTest
+class <%= component_class_name %>Test < <%= test_class_name %>
   def test_render
     model = "hello"
 

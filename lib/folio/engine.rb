@@ -107,6 +107,9 @@ module Folio
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
+    config.folio_component_generator_parent_component_class_name = "ApplicationComponent"
+    config.folio_component_generator_test_class_name = "Folio::ComponentTest"
+
     config.folio_cookie_consent_configuration = {
       enabled: true,
       cookies: {

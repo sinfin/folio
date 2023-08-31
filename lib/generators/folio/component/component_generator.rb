@@ -29,4 +29,12 @@ class Folio::ComponentGenerator < Rails::Generators::NamedBase
     def css_class_name
       "#{classname_prefix}-#{class_name.underscore.tr('/', '-').tr('_', '-')}"
     end
+
+    def parent_component_class_name
+      Rails.application.config.folio_component_generator_parent_component_class_name
+    end
+
+    def test_class_name
+      Rails.application.config.folio_component_generator_test_class_name
+    end
 end
