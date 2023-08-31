@@ -6,8 +6,12 @@ module Folio::GeneratorBase
       @atom_name || name
     end
 
+    def application_class
+      Rails.application.config.try(:folio_generators_engine_class) || Rails.application.class
+    end
+
     def classname_prefix
-      Rails.application.class.name[0].downcase
+      application_class.name[0].downcase
     end
 
     def plural_dashed_resource_name
@@ -39,7 +43,7 @@ module Folio::GeneratorBase
     end
 
     def application_namespace
-      Rails.application.class.name.deconstantize
+      application_class.name.deconstantize
     end
 
     def application_namespace_spacing
