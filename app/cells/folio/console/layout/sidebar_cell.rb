@@ -188,7 +188,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
             end
 
             {
-              locale: site.locale,
+              locale: site.console_locale,
               title: site.pretty_domain,
               collapsed: current_site != site,
               expanded: current_site == site,
