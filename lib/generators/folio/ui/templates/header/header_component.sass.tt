@@ -35,6 +35,9 @@
     gap: px-to-rem(8px) $grid-gutter-half
 
   +mq-desktop-menu
+    &__inner
+      min-height: 72px
+
     &__menu
       display: flex
       flex: 1 1 auto
