@@ -14,36 +14,54 @@ class Folio::Console::MenusController < Folio::Console::BaseController
   def update
     @klass.transaction do
       dict = {}
+      @errors = []
 
       if menu_params[:title]
         @menu.update!(title: menu_params[:title])
       end
 
       if menu_params[:menu_items_attributes]
+        menu_items_h = @menu.menu_items.index_by { |mi| mi.id.to_s }
+
         menu_params[:menu_items_attributes].each do |_i, mia|
           if mia[:id].blank?
-            menu_item = @menu.menu_items.create(mia)
+            menu_item = @menu.menu_items.build(mia)
+            unless menu_item.save
+              @errors += menu_item.errors.full_messages
+            end
           else
-            menu_item = @menu.menu_items.find(mia[:id])
+            menu_item = menu_items_h[mia[:id]]
             if mia[:_destroy]
               menu_item.destroy
               next
             else
-              menu_item.update(mia)
+              unless menu_item.update(mia)
+                @errors += menu_item.errors.full_messages
+              end
             end
           end
           dict[mia[:unique_id]] = menu_item
         end
 
-        menu_params[:menu_items_attributes].each do |_i, mia|
-          next if mia[:_destroy]
-          dict[mia[:unique_id]].update(parent: dict[mia[:parent_unique_id]])
+        if @errors.blank?
+          menu_params[:menu_items_attributes].each do |_i, mia|
+            next if mia[:_destroy]
+
+            unless dict[mia[:unique_id]].update(parent: dict[mia[:parent_unique_id]])
+              @errors += dict[mia[:unique_id]].errors.full_messages
+            end
+          end
         end
       end
     end
 
-    serialize_menu_items
-    respond_with @menu, location: url_for([:edit, :console, @menu])
+    if @errors.present?
+      serialize_menu_items
+      render :edit
+    else
+      serialize_menu_items
+      respond_with @menu, location: url_for([:edit, :console, @menu])
+    end
   end
 
   private

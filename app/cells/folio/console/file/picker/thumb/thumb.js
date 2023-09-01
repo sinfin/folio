@@ -25,7 +25,7 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     window.FolioConsole.File.Picker.addControlsForStimulusController({
       element: this.element,
       parent: this.element,
-      className: 'f-c-file-picker-thumb',
+      className: 'f-c-file-picker-thumb'
     })
   }
 
@@ -39,11 +39,12 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
     const picture = document.createElement('picture')
     picture.className = 'f-c-file-picker-thumb__picture'
 
-    const source = document.createElement('source')
-    source.srcset = fileAttributes.webp_thumb
-    source.type = 'image/webp'
-
-    picture.appendChild(source)
+    if (fileAttributes.webp_thumb) {
+      const source = document.createElement('source')
+      source.srcset = fileAttributes.webp_thumb
+      source.type = 'image/webp'
+      picture.appendChild(source)
+    }
 
     const img = document.createElement('img')
     img.className = 'f-c-file-picker-thumb__img'
@@ -57,13 +58,13 @@ window.Folio.Stimulus.register('f-c-file-picker-thumb', class extends window.Sti
   addChangeOverlay () {
     const overlay = document.createElement('div')
     overlay.className = 'f-c-file-picker-thumb__action'
-    overlay.dataset.action = "click->f-c-file-picker#onBtnClick"
+    overlay.dataset.action = 'click->f-c-file-picker#onBtnClick'
 
     if (window.FolioConsole && window.FolioConsole.Ui && window.FolioConsole.Ui.Button) {
       overlay.appendChild(window.FolioConsole.Ui.Button.create({
-        icon: "swap_horizontal",
-        variant: "gray-medium-dark",
-        class: "f-c-file-picker-thumb__action-btn",
+        icon: 'swap_horizontal',
+        variant: 'gray-medium-dark',
+        class: 'f-c-file-picker-thumb__action-btn'
       }))
     }
 

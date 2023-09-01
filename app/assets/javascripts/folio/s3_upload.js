@@ -161,6 +161,14 @@ window.Folio.S3Upload.createDropzone = ({
     },
 
     thumbnail: function (file, dataUrl) {
+      if (file.previewElement) {
+        const imgs = file.previewElement.querySelectorAll('[data-dz-thumbnail]')
+        for (const img of imgs) {
+          img.alt = file.name
+          img.src = dataUrl
+        }
+      }
+
       if (onThumbnail) {
         if (file.s3_path) {
           file.thumbnail_notified = true

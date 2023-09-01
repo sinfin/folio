@@ -6,6 +6,11 @@
             icon: :plus,
             label: t('folio.console.javascript.addMenuItem'))
 
+- if @errors.present?
+  == cell('folio/console/ui/alert',
+          @errors.join("<br>"),
+          variant: :danger)
+
 - if f.object.new_record?
   = f.input :title, hint: false
 
