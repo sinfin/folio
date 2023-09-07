@@ -21,6 +21,9 @@
         - if options[:use_primary_address_name]
           = g.input :name, required: required
 
+        - if options[:use_primary_address_company_name]
+          = g.input :company_name
+
         .row
           .col-lg-7.f-addresses-fields__address-line-1
             = address_line_input g, :address_line_1, required: required
