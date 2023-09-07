@@ -31,6 +31,7 @@ class Folio::Address::Base < Folio::ApplicationRecord
 
   validates :phone,
             phone: true,
+            allow_blank: true,
             if: :should_validate_phone?
 
   audited only: %i[address_line_1 address_line_2 city country_code name zip]
