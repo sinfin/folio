@@ -64,6 +64,12 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
     options[:message].presence || t(".message")
   end
 
+  def hidden_fields
+    @hidden_fields ||= if options[:hidden_fields].is_a?(String)
+      JSON.parse(options[:hidden_fields])
+    else
+      options[:hidden_fields]
+    end
   end
 
   def input_opts
@@ -136,6 +142,8 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
         val = layout_template.to_json
       elsif opt_name == :input_opts
         val = input_opts.to_json
+      elsif opt_name == :hidden_fields
+        val = hidden_fields.to_json
       elsif %i[above_form under_form].include?(opt_name)
         val = options[opt_name].gsub(/="([^"]+)"/, "='\\1'")
       else

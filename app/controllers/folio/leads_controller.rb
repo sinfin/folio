@@ -4,6 +4,7 @@ class Folio::LeadsController < Folio::ApplicationController
   REMEMBER_OPTION_KEYS = [
     :layout,
     :input_opts,
+    :hidden_fields,
     :message,
     :submit_button_label,
     :next_to_submit,

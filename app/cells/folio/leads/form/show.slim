@@ -11,6 +11,10 @@ div class=class_name data-failure=t('.failure')
 
     = additional_data_input(f)
 
+    - if hidden_fields
+      - hidden_fields.each do |name|
+        = f.hidden_field(name)
+
     - if cols_layout
       .row.f-leads-form__row
         - cols_layout.each_with_index do |col, i|
