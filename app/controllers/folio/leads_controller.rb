@@ -2,12 +2,10 @@
 
 class Folio::LeadsController < Folio::ApplicationController
   REMEMBER_OPTION_KEYS = [
-    :note,
-    :message,
-    :name,
-    :note_label,
-    :note_rows,
     :layout,
+    :input_opts,
+    :message,
+    :submit_button_label,
     :next_to_submit,
     :above_form,
     :under_form,
@@ -47,7 +45,7 @@ class Folio::LeadsController < Folio::ApplicationController
     def cell_options_params
       cell_options = params[:cell_options]
       if cell_options
-        cell_options.permit(*REMEMBER_OPTION_KEYS, *label_keys)
+        cell_options.permit(*REMEMBER_OPTION_KEYS)
       else
         {}
       end
@@ -60,9 +58,5 @@ class Folio::LeadsController < Folio::ApplicationController
       end
 
       lead
-    end
-
-    def label_keys
-      @lead.attributes.keys.map { |key| "#{key}_label" } || []
     end
 end

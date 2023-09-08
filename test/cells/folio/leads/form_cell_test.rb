@@ -17,8 +17,30 @@ class Folio::Leads::FormCellTest < Cell::TestCase
     assert html.has_css?(".f-leads-form--submitted")
   end
 
-  test "shows note from option" do
-    html = cell("folio/leads/form", nil, note: "foo").(:show)
+  test "test layouts" do
+    structure = [%i[email], %i[phone], %i[note]]
+
+    layout = { rows: structure }
+    html = cell("folio/leads/form", nil, layout:).(:show)
+    assert_equal 3, html.find_css(".f-leads-form__col").size
+
+    layout = { rows: structure, cols: structure }
+    html = cell("folio/leads/form", nil, layout:).(:show)
+    assert_equal 3, html.find_css(".f-leads-form__cell").size
+  end
+
+  test "test input options" do
+    opts = {
+      note: {
+        label: "bar",
+        input_html: { value: "foo" }
+      }
+    }
+
+    html = cell("folio/leads/form", nil, input_opts: opts).(:show)
+    assert_equal "foo", html.find("textarea").value
+
+    html = cell("folio/leads/form", nil, input_opts: opts.to_json).(:show)
     assert_equal "foo", html.find("textarea").value
   end
 end

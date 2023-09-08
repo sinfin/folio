@@ -33,14 +33,20 @@ class Folio::LeadsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, html.css(".f-leads-form--submitted").size
   end
 
-  test "label" do
+  test "params" do
+    input_opt_params = {
+      email: {
+        label: "foobar"
+      }
+    }
+
     post url_for(Folio::Lead), params: {
       lead: {
         email: "foo@bar.baz",
         note: "foo",
       },
       cell_options: {
-        email_label: "foobar"
+        input_opts: input_opt_params.to_json
       }
     }
 

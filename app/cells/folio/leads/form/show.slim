@@ -1,31 +1,30 @@
 div class=class_name data-failure=t('.failure')
   = form do |f|
-    - remember_option_keys.each do |opt|
-      - if options[opt]
-        input[
-          type="hidden"
-          name="cell_options[#{opt}]"
-          value=remember_option(opt)
-        ]
+    - remember_options.each do |name, value|
+      input[
+        type="hidden"
+        name="cell_options[#{name}]"
+        value=value
+      ]
 
     == options[:above_form]
 
     = additional_data_input(f)
 
-    - if layout[:cols]
+    - if cols_layout
       .row.f-leads-form__row
-        - layout[:cols].each_with_index do |col, i|
+        - cols_layout.each_with_index do |col, i|
           .col-md.f-leads-form__col
-            - col.each do |cell|
-              .f-leads-form__cell class="f-leads-form__cell--#{cell}"
-                = input_for(f, cell)
+            - col.each do |cell, input|
+              .f-leads-form__cell class="f-leads-form__cell--#{cell[:name]}"
+                = f.input(cell[:name], cell[:opts])
 
-    - elsif layout[:rows]
-      - layout[:rows].each do |row|
+    - elsif rows_layout
+      - rows_layout.each do |row|
         .row.f-leads-form__row
           - row.each do |col|
-            .col-sm.f-leads-form__col class="f-leads-form__col--#{col}"
-              = input_for(f, col)
+            .col-sm.f-leads-form__col class="f-leads-form__col--#{col[:name]}"
+              = f.input(col[:name], col[:opts])
 
     .f-leads-form__bottom
       - if ENV['RECAPTCHA_SITE_KEY'].present? && \
@@ -36,7 +35,7 @@ div class=class_name data-failure=t('.failure')
 
       .f-leads-form__submit-wrap
         button.btn.btn-primary.f-leads-form__submit type="submit"
-          = t('.submit')
+          = options[:submit_button_label] || t('.submit')
 
         == options[:next_to_submit]
 

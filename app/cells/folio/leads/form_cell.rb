@@ -7,7 +7,36 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
   class_name "f-leads-form", :flex?, :submitted?
 
   def show
-    render if layout
+    render if layout_template
+  end
+
+  def default_input_opts
+    {
+      note: {
+        label: model ? t(".note") : nil,
+        inner_html: {
+          rows: 3,
+          value: model.try(:note)
+        }
+      },
+    }
+  end
+
+  def default_layout_template
+    {
+      rows: [
+        %w[email phone],
+        %w[note],
+      ]
+    }
+  end
+
+  def submitted?
+    !lead.new_record?
+  end
+
+  def flex?
+    layout_template[:flex]
   end
 
   def form(&block)
@@ -31,102 +60,89 @@ class Folio::Leads::FormCell < Folio::ApplicationCell
     end
   end
 
-  def submitted?
-    !lead.new_record?
-  end
-
-  def flex?
-    layout[:flex]
-  end
-
-  def note_value
-    return options[:note] if options[:note]
-    model.note if model
-  end
-
-  def note_label
-    return options[:note_label] if options[:note_label]
-    t(".note") if model
-  end
-
   def message
-    return options[:message] if options[:message]
-    t(".message")
+    options[:message].presence || t(".message")
   end
 
-  def note_rows
-    return options[:note_rows] if options[:note_rows]
-    3
   end
 
-  def input_keys
-    input_keys = []
-    input_keys.push(*layout[:cols]) if layout[:cols].present?
-    input_keys.push(*layout[:rows].flatten) if layout[:rows].present?
-    input_keys
-  end
+  def input_opts
+    @input_opts ||= begin
+      opts = options[:input_opts] || {}
 
-  def label_options
-    ary = []
+      if opts.is_a?(String)
+        opts = JSON.parse(opts).deep_symbolize_keys!
+      end
 
-    input_keys.each do |key|
-      ary << :"#{key}_label" if options[:"#{key}_label"].present?
+      default_input_opts.deep_merge(opts)
     end
-
-    ary
   end
 
-  def remember_option_keys
-    [
-      *Folio::LeadsController::REMEMBER_OPTION_KEYS,
-      *label_options
-    ]
+  def layout_template
+    @layout_template ||= begin
+      layout_template = options[:layout] || default_layout_template
+
+      if layout_template.is_a?(String)
+        JSON.parse(layout_template).symbolize_keys
+      else
+        layout_template
+      end
+    end
+  end
+
+  def layout(structure_key)
+    return unless layout_template[structure_key]
+
+    layout_template[structure_key].map do |col|
+      col.map do |field|
+        opts = input_opts[field.to_sym] || {}
+
+        if opts[:label].present?
+          opts[:label] = opts[:label].html_safe
+        end
+
+        {
+          name: field,
+          opts:
+        }
+      end
+    end
+  end
+
+  def rows_layout
+    @rows_layout ||= layout(:rows)
+  end
+
+  def cols_layout
+    @cols_layout ||= layout(:cols)
   end
 
   def additional_data_input(f)
     f.hidden_field :additional_data, value: lead.additional_data.try(:to_json)
   end
 
-  def layout
-    @layout ||= if options[:layout]
-      if options[:layout].is_a?(String)
-        JSON.parse(options[:layout]).symbolize_keys
+  def remember_option_keys
+    [
+      *Folio::LeadsController::REMEMBER_OPTION_KEYS,
+      :input_opts
+    ]
+  end
+
+  def remember_options
+    @remember_options ||= remember_option_keys.filter_map do |opt_name|
+      next unless options[opt_name]
+
+      if opt_name == :layout
+        val = layout_template.to_json
+      elsif opt_name == :input_opts
+        val = input_opts.to_json
+      elsif %i[above_form under_form].include?(opt_name)
+        val = options[opt_name].gsub(/="([^"]+)"/, "='\\1'")
       else
-        options[:layout]
+        val = options[opt_name]
       end
-    else
-      default_layout
-    end
-  end
 
-  def default_layout
-    {
-      rows: [
-        %w[email phone],
-        %w[note],
-      ]
-    }
-  end
-
-  def input_for(f, col)
-    if col == :note || col == "note"
-      f.input(col, label: note_label,
-                   input_html: { rows: note_rows, value: note_value })
-    else
-      label = options[:"#{col}_label"].presence || t(".#{col}")
-      f.input(col, label: label.html_safe)
-    end
-  end
-
-  def remember_option(opt)
-    if opt == :layout
-      val = layout.to_json
-    elsif %i[above_form under_form].include?(opt)
-      val = options[opt].gsub(/="([^"]+)"/, "='\\1'")
-    else
-      val = options[opt]
-    end
-
-    ERB::Util.html_escape(val)
+      [opt_name, ERB::Util.html_escape(val)]
+    end || []
   end
 end
