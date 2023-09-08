@@ -81,6 +81,10 @@ class Folio::Lead < Folio::ApplicationRecord
     false
   end
 
+  def send_notification_mail?
+    true
+  end
+
   private
     def skip_note_validation?
       false

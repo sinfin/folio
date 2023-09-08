@@ -23,7 +23,9 @@ class Folio::LeadsController < Folio::ApplicationController
 
     success = @lead.save
 
-    Folio::LeadMailer.notification_email(@lead).deliver_later if success
+    if @lead.send_notification_mail?
+      Folio::LeadMailer.notification_email(@lead).deliver_later if success
+    end
 
     render html: cell("folio/leads/form", @lead, cell_options_params)
   end
