@@ -197,8 +197,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 homepage_for_site(site)
               ].compact + site_links[:console_sidebar_before_menu_links].compact + [
                 link_for_class.call(Folio::Menu),
-                (link_for_class.call(Folio::Lead) if ::Rails.application.config.folio_leads),
-                (link_for_class.call(Folio::NewsletterSubscription) if ::Rails.application.config.folio_newsletter_subscriptions),
+                (link_for_class.call(Folio::Lead) if show_leads?),
+                (link_for_class.call(Folio::NewsletterSubscription) if show_newsletter_subscriptions?),
                 link_for_class.call(Folio::EmailTemplate),
                 *site_links[:console_sidebar_before_site_links],
                 controller.can?(:manage, site) ? (
@@ -218,15 +218,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def secondary_class_names
+    lead_or_newsleter_subs_class_names = []
+    lead_or_newsleter_subs_class_names << "Folio::Lead" if show_leads?
+    lead_or_newsleter_subs_class_names << "Folio::NewsletterSubscription" if show_newsletter_subscriptions?
+
     if ::Rails.application.config.folio_site_is_a_singleton
       [
         show_users? ? { links: %w[Folio::User] } : nil,
-        {
-          links: %w[
-            Folio::Lead
-            Folio::NewsletterSubscription
-          ],
-        },
+        lead_or_newsleter_subs_class_names.blank? ? nil : { links: lead_or_newsleter_subs_class_names },
         {
           links: [
             "Folio::Account",
@@ -298,6 +297,14 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def show_users?
     ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
+  end
+
+  def show_leads?
+    ::Rails.application.config.folio_leads
+  end
+
+  def show_newsletter_subscriptions?
+    ::Rails.application.config.folio_newsletter_subscriptions
   end
 
   def group_class_name(group)
