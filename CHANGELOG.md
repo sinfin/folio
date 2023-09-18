@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-09-18
+### Changed
+- `folio/leads/form` cell options from explicit keywords (`note_label`, `note_value`) to a hash with `simple_form` options.
+
+```
+note_label: "foo" -> note: { input_html: { label: "foo" } }
+```
+
 ## 2023-04-26
 ### Added
 - added `preview_token` functionality to `Folio::Publishable` concern, added `preview_token` param to pages - add `preview_token` column to your publishable models!
