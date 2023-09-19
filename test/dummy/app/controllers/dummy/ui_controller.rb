@@ -66,7 +66,7 @@ class Dummy::UiController < ApplicationController
   end
 
   def pagination
-    @pagy, _records = pagy(Folio::File, items: 1)
+    @pagy, _records = pagy(Dummy::Blog::Article, items: 1)
   end
 
   private
