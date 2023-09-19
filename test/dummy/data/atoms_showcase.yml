@@ -36,9 +36,6 @@
   tag: H5
   _showcase: "tag: H5"
 
-- type: Dummy::Atom::Navigation
-  menu: true
-
 - type: Dummy::Atom::Perex
   text: true
 

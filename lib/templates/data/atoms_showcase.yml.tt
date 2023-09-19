@@ -36,9 +36,6 @@
   tag: H5
   _showcase: "tag: H5"
 
-- type: <%= application_namespace %>::Atom::Navigation
-  menu: true
-
 - type: <%= application_namespace %>::Atom::Perex
   text: true
 
