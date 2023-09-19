@@ -16,6 +16,8 @@ module Folio
     # can remove this once we get rid of "serialize" in app/models/concerns/folio/thumbnails.rb and app/models/folio/newsletter_subscription.rb
     config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
 
+    config.action_mailer.deliver_later_queue_name = "mailers"
+
     config.folio_crossdomain_devise = false
     config.folio_dragonfly_keep_png = true
     config.folio_public_page_title_reversed = false
