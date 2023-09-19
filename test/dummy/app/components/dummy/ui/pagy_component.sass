@@ -1,5 +1,6 @@
 .d-ui-pagy
-  font-weight: $font-weight-bold
+  +font-size-sm
+  color: $dark-gray
 
   &__page, a
     border-radius: 100%
@@ -7,17 +8,17 @@
     align-items: center
     justify-content: center
     text-align: center
-    min-width: 32px
-    min-height: 32px
-    line-height: 32px
-    flex: 0 0 32px
+    min-width: 24px
+    min-height: 24px
+    line-height: 24px
+    flex: 0 0 24px
 
   a
-    color: $black
+    color: $dark-gray
     text-decoration: none
 
     &:hover, &:focus
-      color: $black
+      color: $dark-gray
       background: $medium-gray
       text-decoration: none
 
@@ -26,12 +27,10 @@
     display: flex
     align-items: center
     justify-content: center
-
-  &__page
-    margin: 0 5px
+    gap: 10px
 
   &__page--current
-    background: $black
+    background: $dark-gray
     color: $white
 
   &__page--disabled
