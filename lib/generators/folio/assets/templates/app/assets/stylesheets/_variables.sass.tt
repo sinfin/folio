@@ -49,7 +49,7 @@ $shade-500: #8D8D8D
 $container-fluid-max-width: 1440px
 $font-size-media-breakpoint: lg
 
-$font-family-sans-serif: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+$font-family-sans-serif: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
 $font-weight-lighter: lighter
 $font-weight-light: 300
@@ -63,27 +63,27 @@ $ui-typo-display-line-height: 1.2
 
 $ui-typo-display-2xl-font-size: px-to-rem(64px)
 $ui-typo-display-2xl-line-height: $ui-typo-display-line-height
-$ui-typo-display-2xl-letter-spacing: -2px
+$ui-typo-display-2xl-letter-spacing: -0.5px
 
 $ui-typo-display-xl-font-size: px-to-rem(56px)
 $ui-typo-display-xl-line-height: $ui-typo-display-line-height
-$ui-typo-display-xl-letter-spacing: -2px
+$ui-typo-display-xl-letter-spacing: -0.5px
 
 $ui-typo-display-l-font-size: px-to-rem(48px)
 $ui-typo-display-l-line-height: $ui-typo-display-line-height
-$ui-typo-display-l-letter-spacing: -2px
+$ui-typo-display-l-letter-spacing: -0.5px
 
 $ui-typo-display-m-font-size: px-to-rem(36px)
 $ui-typo-display-m-line-height: $ui-typo-display-line-height
-$ui-typo-display-m-letter-spacing: -2px
+$ui-typo-display-m-letter-spacing: -0.5px
 
 $ui-typo-display-s-font-size: px-to-rem(24px)
 $ui-typo-display-s-line-height: $ui-typo-display-line-height
-$ui-typo-display-s-letter-spacing: normal
+$ui-typo-display-s-letter-spacing: -0.5px
 
 $ui-typo-display-xs-font-size: px-to-rem(18px)
 $ui-typo-display-xs-line-height: $ui-typo-display-line-height
-$ui-typo-display-xs-letter-spacing: normal
+$ui-typo-display-xs-letter-spacing: -0.5px
 
 $ui-typo-text-line-height: 1.5
 
@@ -107,6 +107,7 @@ $link-decoration: underline
 $link-hover-color: inherit
 $link-hover-decoration: none
 
+$headings-font-family: "Space Grotesk", #{$font-family-sans-serif}
 $headings-font-weight: $font-weight-bold
 $headings-margin-top: $spacer / 2
 $headings-margin-bottom: $spacer

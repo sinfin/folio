@@ -10,9 +10,10 @@ html[
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
       = render(Dummy::Ui::IconComponent.new(head_html: true))
 
-      = preload_link_tag '/fonts/IBMPlexSans.woff2'
-      = preload_link_tag '/fonts/IBMPlexSans-Medium.woff2'
-      = preload_link_tag '/fonts/IBMPlexSans-Bold.woff2'
+      = preload_link_tag '/fonts/Figtree-Regular.woff2'
+      = preload_link_tag '/fonts/Figtree-Medium.woff2'
+      = preload_link_tag '/fonts/Figtree-Bold.woff2'
+      = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
     = render(Dummy::Ui::HeaderComponent.new)
