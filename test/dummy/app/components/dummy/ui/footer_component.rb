@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class <%= application_namespace %>::Ui::FooterCell < ApplicationCell
+class Dummy::Ui::FooterComponent < ApplicationComponent
   def menu
     @menu ||= current_footer_menu
   end
 
   def social_links
     if current_site.social_links.present?
-      allowed = %w[facebook instagram linkedin pinterest tiktok twitter youtube]
+      allowed = %w[facebook instagram linkedin tiktok twitter youtube]
       current_site.social_links.slice(*allowed).select { |key, val| val.present? }
     end
   end

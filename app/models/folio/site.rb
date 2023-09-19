@@ -59,7 +59,6 @@ class Folio::Site < Folio::ApplicationRecord
        youtube
        appstore
        google_play
-       pinterest
        messenger]
   end
 

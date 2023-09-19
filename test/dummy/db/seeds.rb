@@ -76,7 +76,6 @@ Folio::Site.create!(title: "Sinfin.digital",
                       twitter: "https://www.twitter.com/",
                       linkedin: "https://www.linkedin.com/",
                       youtube: "https://www.youtube.com/",
-                      pinterest: "https://www.pinterest.com/",
                     })
 puts "Created Folio::Site"
 

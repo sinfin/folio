@@ -32,7 +32,7 @@ html[
     .d-layout-main
       = yield
 
-    == cell('dummy/ui/footer')
+    = render(Dummy::Ui::FooterComponent.new)
 
     - if Rails.application.config.folio_users
       == cell('folio/devise/modal')

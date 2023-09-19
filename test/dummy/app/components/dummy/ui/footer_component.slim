@@ -1,27 +1,28 @@
-.<%= classname_prefix %>-ui-footer
+.d-ui-footer
   .container-fluid
-    .<%= classname_prefix %>-ui-footer__row
-      .<%= classname_prefix %>-ui-footer__left.mb-s
+    .d-ui-footer__row
+      .d-ui-footer__left.mb-s
         .h4.mt-0 = t('.newsletter')
 
         == cell('folio/newsletter_subscriptions/form')
 
         .mt-n3
-          == cell('<%= application_namespace_path %>/ui/disclaimer')
+          == cell('dummy/ui/disclaimer')
 
       - if social_links.present?
-        .<%= classname_prefix %>-ui-footer__right.mb-s
+        .d-ui-footer__right.mb-s
           .h4.mt-0 = t('.follow_us')
 
           .mx-nh.d-flex.flex-wrap
             - social_links.each do |key, link|
-              a.<%= classname_prefix %>-ui-footer__social-link[
+              a.d-ui-footer__social-link[
                 href=link
-                class="<%= classname_prefix %>-ui-footer__social-link--#{key}"
+                class="d-ui-footer__social-link--#{key}"
               ]
-                = icon(key.to_sym, class: '<%= classname_prefix %>-ui-footer__social-ico')
+                = dummy_ui_icon(key.to_sym,
+                                class_name: 'd-ui-footer__social-ico')
 
-    .<%= classname_prefix %>-ui-footer__copyright
+    .d-ui-footer__copyright
       .d-flex.flex-wrap.pt-g.pb-h
         .me-40.mb-h
           = current_site.copyright_info

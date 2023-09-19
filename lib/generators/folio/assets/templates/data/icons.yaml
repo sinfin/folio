@@ -121,8 +121,8 @@ eye_off:
   width: 24
   height: 24
 facebook:
-  width: 24
-  height: 24
+  width: 32
+  height: 33
 file:
   width: 24
   height: 24
@@ -148,8 +148,8 @@ info:
   width: 24
   height: 24
 instagram:
-  width: 24
-  height: 24
+  width: 32
+  height: 33
 laptop_2:
   width: 24
   height: 24
@@ -160,8 +160,8 @@ link_2:
   width: 24
   height: 24
 linkedin:
-  width: 24
-  height: 24
+  width: 32
+  height: 33
 list:
   width: 24
   height: 24
@@ -295,8 +295,8 @@ tv:
   width: 24
   height: 24
 twitter:
-  width: 24
-  height: 24
+  width: 32
+  height: 33
 upload:
   width: 24
   height: 24
@@ -334,6 +334,6 @@ x_square:
   width: 24
   height: 24
 youtube:
-  width: 24
-  height: 24
+  width: 32
+  height: 33
 
