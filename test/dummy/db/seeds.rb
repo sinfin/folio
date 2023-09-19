@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "faker"
+require "resolv-replace"
 
 if Rails.env.development?
   ActiveJob::Base.queue_adapter = :inline
