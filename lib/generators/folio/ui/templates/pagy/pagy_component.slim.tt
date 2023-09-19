@@ -1,0 +1,80 @@
+- if @pagy && @pagy.try(:pages) && @pagy.pages > 1
+.<%= classname_prefix %>-ui-pagy
+  nav.<%= classname_prefix %>-ui-pagy__nav role="navigation" aria-label="pager"
+    - if @pagy.prev
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--prev"
+      ]
+        == link.call(1,
+                     <%= application_namespace_path %>_ui_icon(:arrow_left_from_line),
+                     'aria-label="first"')
+
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--prev"
+      ]
+        == link.call(@pagy.prev,
+                     <%= application_namespace_path %>_ui_icon(:arrow_left),
+                     'aria-label="previous"')
+    - else
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--last"
+        class="<%= classname_prefix %>-ui-pagy__page--disabled"
+      ]
+        = <%= application_namespace_path %>_ui_icon(:arrow_left_from_line)
+
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--prev"
+        class="<%= classname_prefix %>-ui-pagy__page--disabled"
+      ]
+        = <%= application_namespace_path %>_ui_icon(:arrow_left)
+
+    .<%= classname_prefix %>-ui-pagy__pages
+      / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
+      - @pagy.series.each_with_index do |item, index|
+        - if item.is_a?(Integer) # page link
+          span.<%= classname_prefix %>-ui-pagy__page
+            == link.call(item)
+
+        - elsif item.is_a?(String) # current page
+          span.<%= classname_prefix %>-ui-pagy__page.<%= classname_prefix %>-ui-pagy__page--current
+            = item
+
+        - elsif item == :gap # page gap
+          span.<%= classname_prefix %>-ui-pagy__page.<%= classname_prefix %>-ui-pagy__page--gap
+            ' &hellip;
+
+    - if @pagy.next
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--next"
+      ]
+        == link.call(@pagy.next,
+                     <%= application_namespace_path %>_ui_icon(:arrow_right),
+                     'aria-label="next"')
+
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--last"
+      ]
+        == link.call(@pagy.last,
+                     <%= application_namespace_path %>_ui_icon(:arrow_right_to_line),
+                     'aria-label="last"')
+
+    - else
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--next"
+        class="<%= classname_prefix %>-ui-pagy__page--disabled"
+      ]
+        = <%= application_namespace_path %>_ui_icon(:arrow_right)
+
+      span.<%= classname_prefix %>-ui-pagy__page[
+        class="<%= classname_prefix %>-ui-pagy__page--with-ico"
+        class="<%= classname_prefix %>-ui-pagy__page--last"
+        class="<%= classname_prefix %>-ui-pagy__page--disabled"
+      ]
+        = <%= application_namespace_path %>_ui_icon(:arrow_right_to_line)

@@ -35,7 +35,7 @@
                     model[:active_results][:records],
                     search_results: true)
 
-            == cell('dummy/ui/pagy', model[:active_results][:pagy])
+            / == cell('dummy/ui/pagy', model[:active_results][:pagy])
           - else
             - model[:klasses].each do |klass, data|
               - next if data[:count] == 0

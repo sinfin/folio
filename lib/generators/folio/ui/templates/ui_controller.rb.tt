@@ -9,6 +9,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       buttons
       forms
       icons
+      pagination
       typo
     ]
   end
@@ -62,6 +63,10 @@ class <%= application_namespace %>::UiController < ApplicationController
       { variant: :danger, label: "Add danger flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
       { variant: :info, loader: true, label: "Add loader flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]
+  end
+
+  def pagination
+    @pagy, _records = pagy(Folio::File, items: 1)
   end
 
   private

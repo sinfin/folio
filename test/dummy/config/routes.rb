@@ -49,8 +49,9 @@ Rails.application.routes.draw do
       get :alerts
       get :buttons
       get :forms
-      get :typo
       get :icons
+      get :pagination
+      get :typo
     end
 
     scope module: :home do

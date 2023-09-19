@@ -35,7 +35,7 @@
                     model[:active_results][:records],
                     search_results: true)
 
-            == cell('<%= application_namespace_path %>/ui/pagy', model[:active_results][:pagy])
+            / == cell('<%= application_namespace_path %>/ui/pagy', model[:active_results][:pagy])
           - else
             - model[:klasses].each do |klass, data|
               - next if data[:count] == 0
