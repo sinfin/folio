@@ -166,6 +166,8 @@ module Folio
         inject_into_file "config/application.rb", after: /config\.load_defaults.+\n/ do <<-'RUBY'
     config.exceptions_app = self.routes
 
+    config.action_mailer.deliver_later_queue_name = "mailers"
+
     config.time_zone = "Prague"
 
     config.generators do |g|

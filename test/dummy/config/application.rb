@@ -27,6 +27,8 @@ module Dummy
     # Custom error pages
     config.exceptions_app = self.routes
 
+    config.action_mailer.deliver_later_queue_name = "mailers"
+
     config.folio_console_locale = I18n.default_locale
     config.time_zone = "Prague"
 
