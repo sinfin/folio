@@ -69,6 +69,7 @@ end
 #  sensitive_content    :boolean          default(FALSE)
 #  file_mime_type       :string
 #  default_gravity      :string
+#  alt                  :string
 #
 # Indexes
 #

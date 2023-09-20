@@ -1,13 +1,15 @@
 $(document)
-  .on 'click', '.folio-console-thumbnail__alt', (e) ->
+  .on 'click', '.folio-console-thumbnail__description', (e) ->
     e.preventDefault()
+    e.stopPropagation()
+
     $this = $(this)
     $input = $this.prev('input')
-    alt = window.prompt($(['data-alt-prompt']).data('data-alt-prompt'), $input.val())
+    description = window.prompt($(['data-description-prompt']).data('data-description-prompt'), $input.val())
 
-    if alt isnt null
-      $input.val(alt)
-      $this.text("alt: #{alt}")
+    if description isnt null
+      $input.val(description)
+      $this.find('.folio-console-thumbnail__description-val').text(description)
 
   .on 'click', '.folio-console-thumbnail__title-edit', (e) ->
     e.preventDefault()

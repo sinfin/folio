@@ -55,10 +55,13 @@ class Folio::ImageCell < Folio::ApplicationCell
 
       normal = file.thumb(size)
 
+      alt = options[:alt] || model.try(:alt) || file.try(:alt)
+      description = model.try(:description) || file.try(:description)
+
       h = {
         normal:,
         src: normal.url,
-        alt: options[:alt] || model.try(:alt) || file.try(:description) || "",
+        alt: alt || description || "",
         width: normal[:width],
         height: normal[:height],
         title: options[:title] || model.try(:title),

@@ -154,6 +154,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       commons = [:id,
                  :title,
                  :alt,
+                 :description,
                  :tag_list,
                  :file_id,
                  :position,
@@ -176,7 +177,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def private_attachments_strong_params
-      commons = %i[id title alt file type position _destroy]
+      commons = %i[id title alt description file type position _destroy]
       hash = { private_attachments_attributes: commons }
 
       additional_private_attachments_strong_params_keys.each do |key|

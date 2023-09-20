@@ -31,23 +31,31 @@ class Folio::ImageCellTest < Cell::TestCase
 
   test "alt" do
     placement = create(:folio_image_placement)
-    option_alt = "foo-1"
+    option_alt = "option_alt"
 
     html = cell("folio/image", placement, size:, alt: option_alt).(:show)
-    assert html.has_css?(".f-image__img[data-alt='foo-1']")
+    assert html.has_css?(".f-image__img[data-alt='option_alt']")
 
-    placement.file.update(description: "foo-2")
+    placement.file.update(description: "file_description")
     html = cell("folio/image", placement, size:).(:show)
-    assert html.has_css?(".f-image__img[data-alt='foo-2']")
+    assert html.has_css?(".f-image__img[data-alt='file_description']")
 
-    html = cell("folio/image", placement, size:, alt: option_alt).(:show)
-    assert html.has_css?(".f-image__img[data-alt='foo-1']")
-
-    placement.update(alt: "foo-3")
+    placement.update(description: "file_placement_description")
     html = cell("folio/image", placement, size:).(:show)
-    assert html.has_css?(".f-image__img[data-alt='foo-3']")
+    assert html.has_css?(".f-image__img[data-alt='file_placement_description']")
 
     html = cell("folio/image", placement, size:, alt: option_alt).(:show)
-    assert html.has_css?(".f-image__img[data-alt='foo-1']")
+    assert html.has_css?(".f-image__img[data-alt='option_alt']")
+
+    placement.file.update(alt: "file_alt")
+    html = cell("folio/image", placement, size:).(:show)
+    assert html.has_css?(".f-image__img[data-alt='file_alt']")
+
+    placement.update(alt: "file_placement_alt")
+    html = cell("folio/image", placement, size:).(:show)
+    assert html.has_css?(".f-image__img[data-alt='file_placement_alt']")
+
+    html = cell("folio/image", placement, size:, alt: option_alt).(:show)
+    assert html.has_css?(".f-image__img[data-alt='option_alt']")
   end
 end

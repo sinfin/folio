@@ -135,6 +135,23 @@ export default ({ formState, uploadNewFileInstead, onValueChange, deleteFile, fi
             </div>
 
             <FormGroup>
+              <Label>{window.FolioConsole.translations.fileAlt}</Label>
+              {readOnly ? (
+                formState.alt ? <p className='m-0'>{formState.alt}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
+              ) : (
+                <TextareaAutosize
+                  name='alt'
+                  value={formState.alt || ''}
+                  onChange={(e) => onValueChange('alt', e.currentTarget.value)}
+                  type='text'
+                  className='form-control'
+                  rows={2}
+                  async
+                />
+              )}
+            </FormGroup>
+
+            <FormGroup>
               <Label>{window.FolioConsole.translations.fileDescription}</Label>
               {readOnly ? (
                 formState.description ? <p className='m-0'>{formState.description}</p> : <p className='m-0 text-muted'>{window.FolioConsole.translations.blank}</p>
