@@ -7,11 +7,17 @@ module Folio::ApiControllerBase
     respond_to :json
     rescue_from StandardError, with: :render_error
     skip_before_action :handle_crossdomain_devise
+    layout false
   end
 
   private
     def render_json(data)
       render json: { data: }, root: false
+    end
+
+    def render_component_json(component)
+      @component = component
+      render "folio/api_controller_base_json"
     end
 
     def render_error(e, status: nil)
