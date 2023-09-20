@@ -4,6 +4,12 @@ class Folio::ApplicationComponent < ViewComponent::Base
   include Folio::CstypoHelper
   include Folio::StimulusHelper
 
+  def initialize(**kwargs)
+    kwargs.each do |key, value|
+      instance_variable_set("@#{key}", value)
+    end
+  end
+
   def original_bem_class_name
     base = self.class.name.delete_suffix("Component")
 
