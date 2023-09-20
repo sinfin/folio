@@ -7,32 +7,36 @@
     align-items: center
     justify-content: center
     text-align: center
-    min-width: 32px
-    min-height: 32px
-    line-height: 32px
-    flex: 0 0 32px
+    min-width: 34px
+    min-height: 34px
+    line-height: 34px
+    flex: 0 0 34px
 
   a
-    color: $black
+    color: $shade-dark-contrast
     text-decoration: none
 
-    &:hover, &:focus
-      color: $black
-      background: $medium-gray
+    &:hover
+      color: $shade-dark-contrast
+      background: $shade-200
       text-decoration: none
+
+    &:focus
+      color: $shade-light-contrast
+      background: $shade-300
+      text-decoration: none
+      outline: none
 
   &__nav,
   &__pages
     display: flex
     align-items: center
     justify-content: center
-
-  &__page
-    margin: 0 5px
+    gap: 4px
 
   &__page--current
-    background: $black
-    color: $white
+    background: $shade-dark-contrast
+    color: $shade-light-contrast
 
   &__page--disabled
-    opacity: 0.4
+    color: $shade-400
