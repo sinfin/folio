@@ -82,3 +82,6 @@ end
 
 class Folio::ComponentTest < ViewComponent::TestCase
 end
+
+class Folio::Console::ComponentTest < Folio::ComponentTest
+end

@@ -110,8 +110,21 @@ module Folio
 
     config.folio_console_react_modal_types = config.folio_file_types_for_routes
 
-    config.folio_component_generator_parent_component_class_name = "ApplicationComponent"
-    config.folio_component_generator_test_class_name = "Folio::ComponentTest"
+    config.folio_component_generator_parent_component_class_name_proc = -> (class_name) do
+      if class_name.starts_with?("Folio::Console::")
+        "Folio::Console::ApplicationComponent"
+      else
+        "ApplicationComponent"
+      end
+    end
+
+    config.folio_component_generator_test_class_name_proc = -> (class_name) do
+      if class_name.starts_with?("Folio::Console::")
+        "Folio::Console::ComponentTest"
+      else
+        "Folio::ComponentTest"
+      end
+    end
 
     config.folio_cookie_consent_configuration = {
       enabled: true,
