@@ -6,10 +6,25 @@
           class="d-ui-pagy__page--with-ico"
           class="d-ui-pagy__page--prev"
         ]
+          == link.call(1,
+                       dummy_ui_icon(:arrow_left_from_line),
+                       'aria-label="first"')
+
+        span.d-ui-pagy__page[
+          class="d-ui-pagy__page--with-ico"
+          class="d-ui-pagy__page--prev"
+        ]
           == link.call(@pagy.prev,
                        dummy_ui_icon(:arrow_left),
                        'aria-label="previous"')
       - else
+        span.d-ui-pagy__page[
+          class="d-ui-pagy__page--with-ico"
+          class="d-ui-pagy__page--last"
+          class="d-ui-pagy__page--disabled"
+        ]
+          = dummy_ui_icon(:arrow_left_from_line)
+
         span.d-ui-pagy__page[
           class="d-ui-pagy__page--with-ico"
           class="d-ui-pagy__page--prev"
@@ -41,6 +56,14 @@
                        dummy_ui_icon(:arrow_right),
                        'aria-label="next"')
 
+        span.d-ui-pagy__page[
+          class="d-ui-pagy__page--with-ico"
+          class="d-ui-pagy__page--last"
+        ]
+          == link.call(@pagy.last,
+                       dummy_ui_icon(:arrow_right_to_line),
+                       'aria-label="last"')
+
       - else
         span.d-ui-pagy__page[
           class="d-ui-pagy__page--with-ico"
@@ -48,3 +71,10 @@
           class="d-ui-pagy__page--disabled"
         ]
           = dummy_ui_icon(:arrow_right)
+
+        span.d-ui-pagy__page[
+          class="d-ui-pagy__page--with-ico"
+          class="d-ui-pagy__page--last"
+          class="d-ui-pagy__page--disabled"
+        ]
+          = dummy_ui_icon(:arrow_right_to_line)
