@@ -23,18 +23,31 @@ class Folio::ComponentGenerator < Rails::Generators::NamedBase
     end
 
     def component_class_name
-      "#{application_namespace}::#{class_name}Component"
+      if name.start_with?("/")
+        "#{class_name}Component"
+      else
+        "#{application_namespace}::#{class_name}Component"
+      end
     end
 
     def css_class_name
-      "#{classname_prefix}-#{class_name.underscore.tr('/', '-').tr('_', '-')}"
+      str = class_name.delete_prefix("::")
+                      .underscore
+                      .tr("/", "-")
+                      .tr("_", "-")
+
+      if classname_prefix
+        str = "#{classname_prefix}-#{str}"
+      end
+
+      convert_known_class_name_parts_to_letters(str)
     end
 
     def parent_component_class_name
-      Rails.application.config.folio_component_generator_parent_component_class_name
+      Rails.application.config.folio_component_generator_parent_component_class_name_proc.call(class_name)
     end
 
     def test_class_name
-      Rails.application.config.folio_component_generator_test_class_name
+      Rails.application.config.folio_component_generator_test_class_name_proc.call(class_name)
     end
 end

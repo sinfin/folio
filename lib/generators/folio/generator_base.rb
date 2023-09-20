@@ -6,12 +6,20 @@ module Folio::GeneratorBase
       @atom_name || name
     end
 
+    def class_name
+      super.delete_prefix("::")
+    end
+
     def application_class
       Rails.application.config.try(:folio_generators_engine_class) || Rails.application.class
     end
 
     def classname_prefix
-      application_class.name[0].downcase
+      if name.start_with?("/")
+        nil
+      else
+        application_class.name[0].downcase
+      end
     end
 
     def plural_dashed_resource_name
@@ -104,5 +112,12 @@ module Folio::GeneratorBase
           f.write hash.to_yaml(line_width: -1)
         end
       end
+    end
+
+    def convert_known_class_name_parts_to_letters(str)
+      str.gsub("folio-console-", "f-c-")
+         .gsub("folio-", "f-")
+         .gsub("boutique-", "b-")
+         .gsub("auctify-", "a-")
     end
 end
