@@ -28,9 +28,9 @@ class Folio::ApplicationComponent < ViewComponent::Base
     original_bem_class_name
   end
 
-  def self.bem_class_name(*keys)
+  def self.bem_class_name(*keys, base: nil)
     define_method :bem_class_name do
-      base = original_bem_class_name
+      base ||= original_bem_class_name
 
       class_names = [base]
 
