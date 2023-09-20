@@ -15,6 +15,7 @@ class Folio::Console::FileSerializer
              :thumbnail_sizes,
              :author,
              :description,
+             :alt,
              :file_placements_size,
              :sensitive_content,
              :default_gravity,

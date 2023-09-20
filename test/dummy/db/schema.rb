@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_19_102320) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -223,6 +223,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
     t.string "alt"
     t.string "placement_title"
     t.string "placement_title_type"
+    t.text "description"
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
@@ -250,6 +251,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_26_055723) do
     t.boolean "sensitive_content", default: false
     t.string "file_mime_type"
     t.string "default_gravity"
+    t.string "alt"
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((author)::text, ''::text)))", name: "index_folio_files_on_by_author", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name)::text, ''::text)))", name: "index_folio_files_on_by_file_name", using: :gin
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE((file_name_for_search)::text, ''::text)))", name: "index_folio_files_on_by_file_name_for_search", using: :gin

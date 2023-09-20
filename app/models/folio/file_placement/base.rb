@@ -66,6 +66,7 @@ end
 #  alt                  :string
 #  placement_title      :string
 #  placement_title_type :string
+#  description          :text
 #
 # Indexes
 #

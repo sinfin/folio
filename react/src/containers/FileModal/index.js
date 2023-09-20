@@ -29,15 +29,20 @@ class FileModal extends Component {
     super(props)
 
     if (props.fileModal.file) {
-      this.state = {
-        author: props.fileModal.file.attributes.author,
-        description: props.fileModal.file.attributes.description,
-        sensitive_content: props.fileModal.file.attributes.sensitive_content,
-        tags: props.fileModal.file.attributes.tags,
-        default_gravity: props.fileModal.file.attributes.default_gravity
-      }
+      this.state = this.fileAttributesHash(props.fileModal.file)
     } else {
-      this.state = { author: null, description: null, sensitive_content: false, default_gravity: '', tags: [] }
+      this.state = { author: null, description: null, alt: null, sensitive_content: false, default_gravity: '', tags: [] }
+    }
+  }
+
+  fileAttributesHash (file) {
+    return {
+      author: file.attributes.author,
+      description: file.attributes.description,
+      alt: file.attributes.alt,
+      sensitive_content: file.attributes.sensitive_content,
+      tags: file.attributes.tags,
+      default_gravity: file.attributes.default_gravity
     }
   }
 
@@ -52,13 +57,11 @@ class FileModal extends Component {
   componentDidUpdate (prevProps) {
     if (this.props.fileModal.file) {
       if (!prevProps.fileModal.file || (prevProps.fileModal.updating && this.props.fileModal.updating === false)) {
+        const newState = this.fileAttributesHash(this.props.fileModal.file)
+
         this.setState({
           ...this.state,
-          author: this.props.fileModal.file.attributes.author,
-          description: this.props.fileModal.file.attributes.description,
-          sensitive_content: this.props.fileModal.file.attributes.sensitive_content,
-          tags: this.props.fileModal.file.attributes.tags,
-          default_gravity: this.props.fileModal.file.attributes.default_gravity
+          ...newState
         })
       }
     }
