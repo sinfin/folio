@@ -11,7 +11,7 @@
     "moment": "^2.24.0",
     "tempus-dominus-scss": "https://github.com/Eonasdan/tempus-dominus.git#v6.2.10",
     "multiselect": "^0.9.12",
-    "autosize": "^4.0.2",
+    "autosize": "^6.0.1",
     "js-cookie": "^2.2.0",
     "balloon.css": "^1.0.0",
     "jquery.kinetic": "https://raw.githubusercontent.com/davetayls/jquery.kinetic/master/jquery.kinetic.js",

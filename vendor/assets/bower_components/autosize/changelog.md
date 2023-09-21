@@ -1,5 +1,27 @@
 ## Changelog
 
+##### v.6.0.1 - 2023-02-13
+* Improved performance when appending text onto previous textarea value
+
+##### v.6.0.0 - 2023-02-10
+* Reworked to remove use of cached (potentially stale) style values. Fixes #404
+* Dropped support for Internet Explorer
+
+##### v.5.0.2 - 2022-11-20
+* Avoid issue caused by using 'smooth' scroll-behavior
+
+##### v.5.0.1 - 2021-06-30
+* Changed module field to point to new ESM bundle. Fixes #391, closes #393
+
+##### v.5.0.0 - 2021-05-17
+* Add module field to package.json so autosize can be imported as an ES Module
+
+##### v.4.0.4 - 2021-05-17
+* Revert module field to package.json, will release as major version bump
+
+##### v.4.0.3 - 2021-05-15
+* Add module field to package.json so autosize can be imported as an ES Module
+
 ##### v.4.0.2 - 2018-04-30
 * More specific detection of when to change overflow. Merges #361.
 
@@ -92,7 +114,7 @@
 
 ##### v.2.0.0 - 2015-02-25
 
-* Smaller, simplier code-base
+* Smaller, simpler code-base
 * New API.  Example usage: `autosize(document.querySelectorAll(textarea));`
 * Dropped jQuery dependency
 * Dropped IE7-IE8 support
