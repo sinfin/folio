@@ -1,0 +1,10 @@
+h1 Console notes
+
+h2 Fields
+
+= simple_form_for @page, url: main_app.update_console_notes_console_dummy_playground_path do |f|
+  = react_notes_fields(f)
+
+  == cell('folio/console/ui/button',
+          type: :submit,
+          label: "Submit")

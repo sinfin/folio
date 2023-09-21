@@ -36,10 +36,6 @@ en:
         menuItemUrl: Custom URL
         newFilesAttributes: 'Uploaded files settings (optional):'
         noResults: No results
-        notesFieldsAdd: Add note
-        notesFieldsDelete: Delete notes
-        notesFieldsHide: Hide checked
-        notesFieldsShow: Show checked
         paginationEmpty: No records
         paginationInfo: Showing records <b>%{from}-%{to}</b> of <b>%{count}</b> total
         placementsLabel: Usage

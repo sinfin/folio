@@ -7,7 +7,7 @@ export const EVENT_NAME_BASE = 'folioConsoleModalSingleSelect'
 class ModalSingleSelect extends Component {
   state = { el: null }
 
-  componentWillMount () {
+  componentDidMount () {
     window.addEventListener(`${EVENT_NAME_BASE}/${this.props.fileType}/showFileModal`, (e) => {
       this.props.openFileModal(this.props.fileType, this.props.filesUrl, e.detail.file, e.detail.autoFocusField)
     })

@@ -61,7 +61,8 @@
       display: flex
       align-items: center
       border-bottom: 1px solid $border-color
-      padding: 5px 0
+      gap: $grid-gutter-half
+      padding: $grid-gutter-width / 4 0
 
       &--being-editted
         opacity: 0.5
@@ -79,15 +80,23 @@
     &__action
       flex: 0 0 auto
 
+    &__actions
+      display: flex
+      align-items: center
+      gap: $grid-gutter-width / 4
+
     &__action
       cursor: pointer
       display: inline-block
-      padding: 3px 5px
 
     &-due-date
-      display: flex
-      align-items: center
       position: relative
+
+      &__button
+        height: 18px
+        display: flex
+        align-items: center
+        justify-content: center
 
       &__input
         position: absolute

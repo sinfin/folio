@@ -2,6 +2,7 @@ import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import I18N from '../i18n'
 
 class Form extends React.Component {
   state = { content: '', originalContent: '' }
@@ -27,7 +28,7 @@ class Form extends React.Component {
 
   close = () => {
     if (this.state.content !== this.state.originalContent) {
-      if (window.confirm(window.FolioConsole.translations.cancelChanges)) {
+      if (window.confirm(window.Folio.i18n(I18N, 'cancelChanges'))) {
         this.props.close()
       }
     } else {
@@ -45,7 +46,7 @@ class Form extends React.Component {
           type='text'
           className='form-control f-c-r-notes-fields-app-form__textarea'
           rows={1}
-          placeholder={window.FolioConsole.translations.notesFieldsAdd}
+          placeholder={window.Folio.i18n(I18N, 'notesFieldsAdd')}
           async
           autoFocus
         />
@@ -54,7 +55,7 @@ class Form extends React.Component {
           class='f-c-r-notes-fields-app-form__button'
           variant='primary'
           onClick={this.save}
-          label={window.FolioConsole.translations.save}
+          label={window.Folio.i18n(I18N, 'save')}
         />
 
         <FolioConsoleUiButton

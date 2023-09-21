@@ -22,34 +22,40 @@ export default function Table ({
         >
           <input
             type='checkbox'
-            className='f-c-r-notes-fields-app-table__checkbox me-3'
+            className='f-c-r-notes-fields-app-table__checkbox'
             checked={note.attributes.closed_at !== null}
             onChange={() => toggleClosedAt(note)}
           />
 
           <div
-            className='f-c-r-notes-fields-app-table__content me-3'
+            className='f-c-r-notes-fields-app-table__content'
             dangerouslySetInnerHTML={{ __html: note.attributes.content.replace(/\n/g, '<br>') }}
             onClick={() => editNote(note)}
           />
 
-          <DueDate
-            className='f-c-r-notes-fields-app-table__action me-2'
-            dueAt={note.attributes.due_at}
-            onChange={(dueAt) => changeDueDate(note, dueAt)}
-          />
+          <div
+            className='f-c-r-notes-fields-app-table__actions'
+          >
+            <DueDate
+              className='f-c-r-notes-fields-app-table__action'
+              dueAt={note.attributes.due_at}
+              onChange={(dueAt) => changeDueDate(note, dueAt)}
+            />
 
-          <FolioUiIcon
-            class='f-c-r-notes-fields-app-table__action'
-            name='edit'
-            onClick={() => editNote(note)}
-          />
+            <FolioUiIcon
+              class='f-c-r-notes-fields-app-table__action'
+              name='edit_box'
+              onClick={() => editNote(note)}
+              height={18}
+            />
 
-          <FolioUiIcon
-            class='f-c-r-notes-fields-app-table__action text-danger'
-            name='close'
-            onClick={() => removeNote(note)}
-          />
+            <FolioUiIcon
+              class='f-c-r-notes-fields-app-table__action text-danger'
+              name='close'
+              onClick={() => removeNote(note)}
+              height={18}
+            />
+          </div>
         </div>
       ))}
     </div>

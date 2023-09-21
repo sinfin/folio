@@ -61,6 +61,7 @@
 //= require folio/console/modules/popover
 //= require folio/console/modules/dirty-forms
 
+//= require folio/console/ui/ajax_input_component
 //= require folio/console/ui/alert/alert
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons

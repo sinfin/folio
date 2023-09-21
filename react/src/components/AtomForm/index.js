@@ -66,14 +66,12 @@ class AtomForm extends React.PureComponent {
   }
 
   componentDidMount () {
+    window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
+    window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
+
     if (this.autofocusRef.current) {
       setTimeout(() => { this.autofocusRef.current.focus() }, 0)
     }
-  }
-
-  componentWillMount () {
-    window.jQuery('.f-c-simple-form-with-atoms').on('submit', this.handleGlobalFormSubmission)
-    window.jQuery(document).on('keydown.fcAtomForm', this.onKeydown)
   }
 
   componentWillUnmount () {
