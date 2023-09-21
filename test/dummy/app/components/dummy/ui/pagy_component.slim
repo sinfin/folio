@@ -1,80 +1,87 @@
 - if @pagy && @pagy.try(:pages) && @pagy.pages > 1
   .d-ui-pagy
     nav.d-ui-pagy__nav role="navigation" aria-label="pager"
-      - if @pagy.prev
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--prev"
-        ]
-          == link.call(1,
-                       dummy_ui_icon(:arrow_left_from_line),
-                       'aria-label="first"')
+      ul.d-ui-pagy__pages
+        - if @pagy.prev
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--first"
+          ]
+            == link.call(1,
+                        dummy_ui_icon(:arrow_left_from_line),
+                        'aria-label="first" class="d-ui-pagy__page-link"')
 
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--prev"
-        ]
-          == link.call(@pagy.prev,
-                       dummy_ui_icon(:arrow_left),
-                       'aria-label="previous"')
-      - else
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--last"
-          class="d-ui-pagy__page--disabled"
-        ]
-          = dummy_ui_icon(:arrow_left_from_line)
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--prev"
+          ]
+            == link.call(@pagy.prev,
+                        dummy_ui_icon(:arrow_left),
+                      'aria-label="previous" class="d-ui-pagy__page-link"')
+        - else
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--first"
+            class="d-ui-pagy__page--disabled"
+          ]
+            span.d-ui-pagy__page-item
+              = dummy_ui_icon(:arrow_left_from_line)
 
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--prev"
-          class="d-ui-pagy__page--disabled"
-        ]
-          = dummy_ui_icon(:arrow_left)
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--prev"
+            class="d-ui-pagy__page--disabled"
+          ]
+            span.d-ui-pagy__page-item
+              = dummy_ui_icon(:arrow_left)
 
-      .d-ui-pagy__pages
-        / series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]
+        / list of page numbers
         - @pagy.series.each_with_index do |item, index|
           - if item.is_a?(Integer) # page link
-            span.d-ui-pagy__page
-              == link.call(item)
+            li.d-ui-pagy__page
+              == link.call(item, item,
+                          'class="d-ui-pagy__page-link"')
 
           - elsif item.is_a?(String) # current page
-            span.d-ui-pagy__page.d-ui-pagy__page--current
-              = item
+            li.d-ui-pagy__page.d-ui-pagy__page--current
+              span.d-ui-pagy__page-item
+                = item
 
           - elsif item == :gap # page gap
-            span.d-ui-pagy__page.d-ui-pagy__page--gap
-              ' &hellip;
+            li.d-ui-pagy__page.d-ui-pagy__page--gap
+              span.d-ui-pagy__page-item
+                ' &hellip;
 
-      - if @pagy.next
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--next"
-        ]
-          == link.call(@pagy.next,
-                       dummy_ui_icon(:arrow_right),
-                       'aria-label="next"')
+        - if @pagy.next
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--next"
+          ]
+            == link.call(@pagy.next,
+                        dummy_ui_icon(:arrow_right),
+                        'aria-label="next" class="d-ui-pagy__page-link"')
 
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--last"
-        ]
-          == link.call(@pagy.last,
-                       dummy_ui_icon(:arrow_right_to_line),
-                       'aria-label="last"')
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--last"
+          ]
+            == link.call(@pagy.last,
+                        dummy_ui_icon(:arrow_right_to_line),
+                        'aria-label="last" class="d-ui-pagy__page-link"')
 
-      - else
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--next"
-          class="d-ui-pagy__page--disabled"
-        ]
-          = dummy_ui_icon(:arrow_right)
+        - else
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--next"
+            class="d-ui-pagy__page--disabled"
+          ]
+            span.d-ui-pagy__page-item
+              = dummy_ui_icon(:arrow_right)
 
-        span.d-ui-pagy__page[
-          class="d-ui-pagy__page--with-ico"
-          class="d-ui-pagy__page--last"
-          class="d-ui-pagy__page--disabled"
-        ]
-          = dummy_ui_icon(:arrow_right_to_line)
+          li.d-ui-pagy__page[
+            class="d-ui-pagy__page--with-ico"
+            class="d-ui-pagy__page--last"
+            class="d-ui-pagy__page--disabled"
+          ]
+            span.d-ui-pagy__page-item
+              = dummy_ui_icon(:arrow_right_to_line)

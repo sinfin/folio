@@ -1,18 +1,18 @@
 .d-ui-pagy
-  font-weight: $font-weight-bold
-
-  &__page, a
-    border-radius: 100%
-    display: inline-flex
+  &__pages
+    display: flex
     align-items: center
     justify-content: center
-    text-align: center
-    min-width: 34px
-    min-height: 34px
-    line-height: 34px
-    flex: 0 0 34px
+    flex-wrap: wrap
+    gap: 4px
 
-  a
+  &__page-item, &__page-link
+    display: block
+    font-weight: $font-weight-bold
+    padding: map-get($spacers, 1) map-get($spacers, 3)
+    border-radius: $border-radius-lg
+
+  &__page-link
     color: $shade-dark-contrast
     text-decoration: none
 
@@ -27,16 +27,13 @@
       text-decoration: none
       outline: none
 
-  &__nav,
-  &__pages
-    display: flex
-    align-items: center
-    justify-content: center
-    gap: 4px
+  &__page--with-ico > &__page-item,
+  &__page--with-ico > &__page-link
+    padding: map-get($spacers, 1)
 
-  &__page--current
+  &__page--current > &__page-item
     background: $shade-dark-contrast
     color: $shade-light-contrast
 
-  &__page--disabled
+  &__page--disabled > &__page-item
     color: $shade-400
