@@ -110,7 +110,7 @@ class NotesFields extends React.Component {
             changeDueDate={this.changeDueDate}
           />
 
-          <div className='mt-2'>
+          <div className='mt-3'>
             {notesFields.form ? (
               <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
             ) : (

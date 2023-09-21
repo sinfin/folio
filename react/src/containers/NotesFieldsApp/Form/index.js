@@ -1,7 +1,7 @@
 import React from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
-import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import FolioUiIcon from 'components/FolioUiIcon'
 import I18N from '../i18n'
 
 class Form extends React.Component {
@@ -51,19 +51,23 @@ class Form extends React.Component {
           autoFocus
         />
 
-        <FolioConsoleUiButton
-          class='f-c-r-notes-fields-app-form__button'
-          variant='primary'
-          onClick={this.save}
-          label={window.Folio.i18n(I18N, 'save')}
-        />
+        <div className='f-c-r-notes-fields-app-form__buttons'>
+          <span
+            className='f-c-r-notes-fields-app-form__button f-c-r-notes-fields-app-form__button--save text-success'
+            onClick={this.save}
+            label={window.Folio.i18n(I18N, 'save')}
+          >
+            <FolioUiIcon name='checkbox_marked' height={24} />
+          </span>
 
-        <FolioConsoleUiButton
-          variant='danger'
-          className='f-c-r-notes-fields-app-form__close'
-          icon='close'
-          onClick={this.close}
-        />
+          <span
+            className='f-c-r-notes-fields-app-form__button f-c-r-notes-fields-app-form__button--close text-danger'
+            icon='close'
+            onClick={this.close}
+          >
+            <FolioUiIcon name='close' height={24} />
+          </span>
+        </div>
       </div>
     )
   }

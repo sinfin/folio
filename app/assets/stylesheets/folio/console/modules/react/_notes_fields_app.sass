@@ -32,27 +32,25 @@
     position: relative
 
     &__textarea
-      padding-right: 100px
-      min-height: 35px
-      padding-top: $input-padding-y + 1
-      padding-bottom: $input-padding-y + 1
+      padding-right: px-to-rem(2 * 28px + 2 * 4px)
+      min-height: $input-height
+
+    &__buttons
+      position: absolute
+      z-index: 2
+      top: 0
+      right: px-to-rem(4px)
+      height: 100%
+      display: flex
 
     &__button
-      position: absolute
-      top: 50%
-      right: 36px
-      transform: translate(0, -50%)
-
-    &__close
-      +unbutton
-      position: absolute
-      top: 0
-      right: 0
       height: 100%
-      padding: 0 13px
+      width: px-to-rem(28px)
+      flex: 0 0 auto
       display: flex
       align-items: center
       justify-content: center
+      cursor: pointer
 
   &-table
     margin-top: $spacer
