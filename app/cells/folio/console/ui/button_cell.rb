@@ -21,6 +21,11 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       end
     end
 
+    if model[:disabled]
+      h[:disabled] = true
+      h[:class] += " disabled f-c-ui-button--disabled"
+    end
+
     if model[:class]
       h[:class] += " #{model[:class]}"
     end
