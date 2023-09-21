@@ -21,6 +21,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       end
     end
 
+    if model[:method]
+      h["data-method"] = model[:method]
+    end
+
     if model[:disabled]
       h[:disabled] = true
       h[:class] += " disabled f-c-ui-button--disabled"
@@ -74,6 +78,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       class
       variant
       confirm
+      method
       modal
       size
       notification_modal
