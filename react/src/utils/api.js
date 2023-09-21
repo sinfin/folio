@@ -2,6 +2,8 @@ export const CSRF = window.Folio.Api.CSRF_TOKEN
 
 export const apiPost = window.Folio.Api.apiPost
 
+export const apiPatch = window.Folio.Api.apiPatch
+
 export const apiPut = window.Folio.Api.apiPut
 
 export const apiGet = window.Folio.Api.apiGet

@@ -146,6 +146,7 @@ module Folio
 
     initializer :append_folio_assets_paths do |app|
       app.config.assets.paths << self.root.join("app/cells")
+      app.config.assets.paths << self.root.join("app/components")
       app.config.assets.paths << self.root.join("node_modules")
       app.config.assets.paths << self.root.join("vendor/assets/javascripts")
       app.config.assets.paths << self.root.join("vendor/assets/bower_components")

@@ -13,16 +13,18 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
 
     h[:class] = "f-c-ui-button btn btn-#{variant}"
 
+    h[:data] = model[:data] || {}
+
     if model[:confirm]
       if model[:confirm].is_a?(String)
-        h["data-confirm"] = model[:confirm]
+        h[:data]["confirm"] = model[:confirm]
       else
-        h["data-confirm"] = t("folio.console.confirmation")
+        h[:data]["confirm"] = t("folio.console.confirmation")
       end
     end
 
     if model[:method]
-      h["data-method"] = model[:method]
+      h[:data]["method"] = model[:method]
     end
 
     if model[:disabled]
@@ -47,24 +49,24 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
     end
 
     if model[:modal].present?
-      h["data-bs-toggle"] = "modal"
-      h["data-bs-target"] = model[:modal]
+      h[:data]["bs-toggle"] = "modal"
+      h[:data]["bs-target"] = model[:modal]
     end
 
     if model[:notification_modal].present?
-      if h["data-controller"]
-        h["data-controller"] += " f-c-ui-notification-modal-trigger"
+      if h[:data]["controller"]
+        h[:data]["controller"] += " f-c-ui-notification-modal-trigger"
       else
-        h["data-controller"] = "f-c-ui-notification-modal-trigger"
+        h[:data]["controller"] = "f-c-ui-notification-modal-trigger"
       end
 
-      if h["data-action"]
-        h["data-action"] += " f-c-ui-notification-modal-trigger#onClick"
+      if h[:data]["action"]
+        h[:data]["action"] += " f-c-ui-notification-modal-trigger#onClick"
       else
-        h["data-action"] = "f-c-ui-notification-modal-trigger#onClick"
+        h[:data]["action"] = "f-c-ui-notification-modal-trigger#onClick"
       end
 
-      h["data-f-c-ui-notification-modal-trigger-data-value"] = model[:notification_modal].to_json
+      h[:data]["f-c-ui-notification-modal-trigger-data-value"] = model[:notification_modal].to_json
     end
 
     h

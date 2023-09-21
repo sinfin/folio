@@ -111,6 +111,10 @@ window.Folio.Api.apiPost = (url, body) => {
   return window.Folio.Api.api('POST', url, body)
 }
 
+window.Folio.Api.apiPatch = (url, body) => {
+  return window.Folio.Api.api('PATCH', url, body)
+}
+
 window.Folio.Api.apiPut = (url, body) => {
   return window.Folio.Api.api('PUT', url, body)
 }

@@ -25,6 +25,9 @@ Folio::Engine.routes.draw do
 
     scope constraints: Rails.application.config.folio_console_default_routes_contstraints do
       resource :ui, only: %i[show], controller: "ui" do
+        get :ajax_inputs
+        patch :update_ajax_inputs
+
         get :alerts
         get :badges
         get :buttons
