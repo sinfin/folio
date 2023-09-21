@@ -1,15 +1,14 @@
 {
   "name": "autosize",
   "homepage": "https://github.com/jackmoore/autosize",
-  "version": "4.0.2",
-  "_release": "4.0.2",
+  "version": "6.0.1",
+  "_release": "6.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "4.0.2",
-    "commit": "e394a257cc1e059eadc4198f56c301702289dd88"
+    "tag": "6.0.1",
+    "commit": "1e0229b9bb9f51c2b6a2756d901a023b475fa950"
   },
   "_source": "https://github.com/jackmoore/autosize.git",
-  "_target": "^4.0.2",
-  "_originalSource": "autosize",
-  "_direct": true
+  "_target": "^6.0.1",
+  "_originalSource": "autosize"
 }

@@ -50,7 +50,7 @@ class DueDate extends React.Component {
     return (
       <div className={`${this.props.className} f-c-r-notes-fields-app-table-due-date`}>
         <div className='f-c-r-notes-fields-app-table-due-date__button'>
-          <FolioUiIcon name='calendar_range' />
+          <FolioUiIcon name='calendar_range' height={18} />
 
           <input
             type='text'

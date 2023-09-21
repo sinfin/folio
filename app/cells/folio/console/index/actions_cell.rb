@@ -60,7 +60,7 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     acts = []
     with_default = (options[:actions].presence || %i[edit destroy])
 
-    sort_array_hashes_first(with_default).each do |sym_or_hash|
+    with_default.each do |sym_or_hash|
       if sym_or_hash.is_a?(Symbol)
         next if sym_or_hash == :destroy && model.class.try(:indestructible?)
         next unless controller.can?(sym_or_hash, model)
@@ -80,14 +80,16 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
     end
 
     acts.filter_map do |action|
+      data = action[:data] || {}
+
       if action[:confirm]
         if action[:confirm].is_a?(String)
-          confirmation = action[:confirm]
+          data[:confirm] = action[:confirm]
         else
-          confirmation = t("folio.console.confirmation")
+          data[:confirm] = t("folio.console.confirmation")
         end
       else
-        confirmation = nil
+        data[:confirm] = nil
       end
 
       link_to(folio_icon(action[:icon]),
@@ -95,20 +97,8 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
               title: t("folio.console.actions.#{action[:name]}"),
               method: action[:method],
               target: action[:target],
-              class: "f-c-index-actions__link text-#{action[:variant] || "reset"}",
-              'data-confirm': confirmation)
-    end
-  end
-
-  def sort_array_hashes_first(ary)
-    ary.sort do |a, b|
-      if a.is_a?(Hash) && default_actions.exclude?(a.keys.first)
-        -1
-      elsif b.is_a?(Hash) && default_actions.exclude?(b.keys.first)
-        1
-      else
-        0
-      end
+              class: "f-c-index-actions__link text-#{action[:variant] || "reset"}#{action[:class_name] ? " #{action[:class_name]}" : ""}",
+              data:)
     end
   end
 end

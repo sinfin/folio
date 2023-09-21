@@ -33,7 +33,7 @@ const I18N = {
 }
 
 class MultiSelectComponent extends LazyLoadCheckingComponent {
-  componentWillMount () {
+  componentDidMount () {
     if (this.props.shouldLoadFiles &&
         !this.props.filesStatus.loaded &&
         !this.props.filesStatus.loading &&

@@ -23,6 +23,7 @@ function FolioConsoleUiButtonContents (props) {
 export default function FolioConsoleUiButton (props) {
   let className = `f-c-ui-button btn btn-${props.variant || 'primary'}`
   if (props.class) className += ` ${props.class}`
+  if (props.size) className += ` btn-${props.size}`
 
   if (props.href) {
     return (

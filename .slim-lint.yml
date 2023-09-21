@@ -41,3 +41,4 @@ exclude:
   - test/dummy/app/components/dummy/ui/menu_component.slim
   - test/dummy/app/views/dummy/home/index.slim
   - test/dummy/app/views/dummy/ui/buttons.slim
+  - test/dummy/app/views/folio/console/dummy/playgrounds/console_notes.slim

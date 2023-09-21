@@ -5,6 +5,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
 
   def show
     @actions = %i[
+      ajax_inputs
       alerts
       badges
       buttons
@@ -15,6 +16,29 @@ class Folio::Console::UiController < Folio::Console::BaseController
     @inputs = %i[
       date_time
     ].sort
+  end
+
+  def ajax_inputs
+    @page = Folio::Page.last
+  end
+
+  def update_ajax_inputs
+    unless Rails.env.development?
+      raise ActionController::BadRequest.new("Can only do this in development")
+    end
+
+    name = params.require(:name)
+
+    if %w[title meta_title meta_description].exclude?(name)
+      raise ActionController::BadRequest.new("Invalid name #{name}")
+    end
+
+    value = params.require(:value)
+
+    @page = Folio::Page.last
+    @page.update!(name => value)
+
+    render json: { data: { value: } }
   end
 
   def warning_ribbons

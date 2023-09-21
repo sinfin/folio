@@ -1,0 +1,40 @@
+h1 Folio Console UI
+
+h2 Ajax inputs
+
+h3 Regular text input
+
+= render(Folio::Console::Ui::AjaxInputComponent.new(name: :title,
+                                                    url: update_ajax_inputs_console_ui_path(format: :json),
+                                                    value: @page.title))
+
+h3 Cleave numeric input
+
+= render(Folio::Console::Ui::AjaxInputComponent.new(name: :meta_title,
+                                                    url: update_ajax_inputs_console_ui_path(format: :json),
+                                                    value: @page.meta_title,
+                                                    cleave: true))
+
+h3 Cleave numeric input with affix
+
+= render(Folio::Console::Ui::AjaxInputComponent.new(name: :meta_title,
+                                                    url: update_ajax_inputs_console_ui_path(format: :json),
+                                                    value: @page.meta_title,
+                                                    cleave: true,
+                                                    affix: " Kč"))
+
+h3 Cleave numeric input with small affix
+
+= render(Folio::Console::Ui::AjaxInputComponent.new(name: :meta_title,
+                                                    url: update_ajax_inputs_console_ui_path(format: :json),
+                                                    value: @page.meta_title,
+                                                    cleave: true,
+                                                    small_affix: " Kč"))
+
+h3 Textarea
+
+= render(Folio::Console::Ui::AjaxInputComponent.new(name: :meta_description,
+                                                    url: update_ajax_inputs_console_ui_path(format: :json),
+                                                    value: @page.meta_description,
+                                                    textarea: true,
+                                                    rows: 3))

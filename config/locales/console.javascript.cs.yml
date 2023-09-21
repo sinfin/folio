@@ -36,10 +36,6 @@ cs:
         menuItemUrl: Volný odkaz
         newFilesAttributes: 'Nastavení nahraných souborů (nepovinné):'
         noResults: Žádné výsledky
-        notesFieldsAdd: Přidat položku
-        notesFieldsDelete: Smazat poznámky
-        notesFieldsHide: Skrýt zaškrtnuté
-        notesFieldsShow: Zobrazit zaškrtnuté
         paginationEmpty: Žádné záznamy
         paginationInfo: Zobrazuji záznamy <b>%{from}-%{to}</b> z <b>%{count}</b> celkem
         placementsLabel: Použití

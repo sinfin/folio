@@ -32,6 +32,8 @@ Rails.application.routes.draw do
           get :pickers
           get :report
           get :modals
+          get :console_notes
+          patch :update_console_notes
         end
 
         namespace :blog do

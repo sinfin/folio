@@ -16,7 +16,7 @@ import Atoms from 'containers/Atoms'
 import FilesAppWrap from './styled/FilesAppWrap'
 
 class FilesApp extends Component {
-  componentWillMount () {
+  componentDidMount () {
     if (this.shouldAutoLoadFiles()) {
       this.loadFiles(this.props.app.fileType, this.props.app.filesUrl)
     }

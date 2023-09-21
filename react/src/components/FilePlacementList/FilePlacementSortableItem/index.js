@@ -4,7 +4,6 @@ import { SortableElement } from 'react-sortable-hoc'
 import NestedModelControls from 'components/NestedModelControls'
 import FileHoverButtons from 'components/FileHoverButtons'
 import Picture from 'components/Picture'
-import FolioUiIcon from 'components/FolioUiIcon'
 
 import HiddenInputs from './HiddenInputs'
 

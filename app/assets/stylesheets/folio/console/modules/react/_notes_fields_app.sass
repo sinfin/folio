@@ -32,27 +32,25 @@
     position: relative
 
     &__textarea
-      padding-right: 100px
-      min-height: 35px
-      padding-top: $input-padding-y + 1
-      padding-bottom: $input-padding-y + 1
+      padding-right: px-to-rem(2 * 28px + 2 * 4px)
+      min-height: $input-height
+
+    &__buttons
+      position: absolute
+      z-index: 2
+      top: 0
+      right: px-to-rem(4px)
+      height: 100%
+      display: flex
 
     &__button
-      position: absolute
-      top: 50%
-      right: 36px
-      transform: translate(0, -50%)
-
-    &__close
-      +unbutton
-      position: absolute
-      top: 0
-      right: 0
       height: 100%
-      padding: 0 13px
+      width: px-to-rem(28px)
+      flex: 0 0 auto
       display: flex
       align-items: center
       justify-content: center
+      cursor: pointer
 
   &-table
     margin-top: $spacer
@@ -61,7 +59,8 @@
       display: flex
       align-items: center
       border-bottom: 1px solid $border-color
-      padding: 5px 0
+      gap: $grid-gutter-half
+      padding: $grid-gutter-width / 4 0
 
       &--being-editted
         opacity: 0.5
@@ -79,15 +78,23 @@
     &__action
       flex: 0 0 auto
 
+    &__actions
+      display: flex
+      align-items: center
+      gap: $grid-gutter-width / 4
+
     &__action
       cursor: pointer
       display: inline-block
-      padding: 3px 5px
 
     &-due-date
-      display: flex
-      align-items: center
       position: relative
+
+      &__button
+        height: 18px
+        display: flex
+        align-items: center
+        justify-content: center
 
       &__input
         position: absolute

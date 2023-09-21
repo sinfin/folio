@@ -1,4 +1,3 @@
-//= require folio/input/_framework
 //= require autosize/dist/autosize
 
 window.Folio = window.Folio || {}
@@ -6,14 +5,20 @@ window.Folio.Input = window.Folio.Input || {}
 
 window.Folio.Input.Autosize = {}
 
-window.Folio.Input.Autosize.SELECTOR = '.f-input--autosize'
-
 window.Folio.Input.Autosize.bind = (input) => {
-  window.autosize($(input))
+  window.autosize(input)
 }
 
 window.Folio.Input.Autosize.unbind = (input) => {
-  $(input).trigger('autosize.destroy')
+  window.autosize.destroy(input)
 }
 
-window.Folio.Input.framework(window.Folio.Input.Autosize)
+window.Folio.Stimulus.register('f-input-autosize', class extends window.Stimulus.Controller {
+  connect () {
+    window.Folio.Input.Autosize.bind(this.element)
+  }
+
+  disconnect () {
+    window.Folio.Input.Autosize.unbind(this.element)
+  }
+})

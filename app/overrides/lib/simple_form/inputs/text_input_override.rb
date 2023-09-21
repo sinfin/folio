@@ -3,8 +3,7 @@
 SimpleForm::Inputs::TextInput.class_eval do
   def input(wrapper_options = nil)
     if options[:autosize]
-      input_html_classes << "f-input"
-      input_html_classes << "f-input--autosize"
+      register_stimulus("f-input-autosize")
     end
 
     if options[:locale]
