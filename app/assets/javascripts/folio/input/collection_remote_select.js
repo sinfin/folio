@@ -56,11 +56,13 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input) => {
 
       return data.text
     }
+  }).on('change.select2', (e) => {
+    e.target.dispatchEvent(new Event("folio_select2_change"))
   })
 }
 
 window.Folio.Input.CollectionRemoteSelect.unbind = (input) => {
-  $(input).select2('destroy')
+  $(input).select2('destroy').off('change.select2')
 }
 
 window.Folio.Input.framework(window.Folio.Input.CollectionRemoteSelect)
