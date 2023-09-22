@@ -15,11 +15,20 @@ module Folio::ApiControllerBase
       render json: { data: }, root: false
     end
 
-    def render_component_json(component, pagy: nil)
+    def render_component_json(component, pagy: nil, flash: nil)
       @component = component
+      meta = {}
 
-      @meta = if pagy
-        ", \"meta\": #{{ pagy: meta_from_pagy(pagy) }.to_json}"
+      if pagy
+        meta[:pagy] = meta_from_pagy(pagy)
+      end
+
+      if flash
+        meta[:flash] = flash
+      end
+
+      @meta = if meta.present?
+        ", \"meta\": #{meta.to_json}"
       end
 
       render "folio/api_controller_base_json"
