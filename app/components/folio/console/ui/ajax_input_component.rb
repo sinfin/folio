@@ -36,7 +36,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
   end
 
   def data
-    stimulus_controller('f-c-ui-ajax-input', values: {
+    stimulus_controller("f-c-ui-ajax-input", values: {
       url: @url,
       cleave: @cleave,
       original_value: @value,
