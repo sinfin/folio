@@ -8,16 +8,22 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
       options[:collection] = autocomplete_collection(options[:force_collection] ? options[:collection] : nil)
       input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
 
-      iho[:class] = [iho[:class], "f-input f-input--collection-remote-select"].flatten
-      iho[:id] = nil unless iho[:id].present?
+      stimulus_opts = {}
+
+      if options[:include_blank].is_a?(String)
+        stimulus_opts[:include_blank] = options[:include_blank]
+      end
 
       if options[:remote] == true
-        iho["data-url"] = autocomplete_url
+        stimulus_opts[:url] = autocomplete_url
       elsif options[:remote].is_a?(Hash)
-        iho["data-url"] = autocomplete_url(options[:remote])
+        stimulus_opts[:url] = autocomplete_url(options[:remote])
       else
-        iho["data-url"] = options[:remote]
+        stimulus_opts[:url] = options[:remote]
       end
+
+      register_stimulus("f-input-collection-remote-select", stimulus_opts)
+      iho[:id] = nil unless iho[:id].present?
     end
 
     if options[:atom_setting]
