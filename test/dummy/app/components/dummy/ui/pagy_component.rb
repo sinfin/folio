@@ -18,18 +18,18 @@ class Dummy::Ui::PagyComponent < ApplicationComponent
       if item.is_a?(Integer) # page link
         h[:link] = link.call(item, item, 'class="d-ui-pagy__page-link"')
         if item != 1 && item != @pagy.last && @pagy.page != item
-          h[:class_name] = 'd-ui-pagy__page--hide-on-mobile'
+          h[:class_name] = "d-ui-pagy__page--hide-on-mobile"
 
           if (@pagy.page - item).abs > 1
-            h[:class_name] += ' d-ui-pagy__page--hide-on-tablet'
+            h[:class_name] += " d-ui-pagy__page--hide-on-tablet"
           end
         end
       elsif item.is_a?(String) # current page
-        h[:class_name] = 'd-ui-pagy__page--current'
+        h[:class_name] = "d-ui-pagy__page--current"
         h[:label] = item
       elsif item == :gap # page gap
-        h[:class_name] = 'd-ui-pagy__page--gap'
-        h[:label] = '&hellip;'
+        h[:class_name] = "d-ui-pagy__page--gap"
+        h[:label] = "&hellip;"
       end
 
       h
