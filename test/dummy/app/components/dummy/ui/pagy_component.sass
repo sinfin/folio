@@ -37,3 +37,11 @@
 
   &__page--disabled > &__page-item
     color: $shade-400
+
+  +media-breakpoint-down(md)
+    &__page--hide-on-tablet
+      display: none
+
+  +media-breakpoint-down(sm)
+    &__page--hide-on-mobile
+      display: none
