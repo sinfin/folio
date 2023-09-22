@@ -1,38 +1,47 @@
 .d-ui-pagy
-  font-weight: $font-weight-bold
-
-  &__page, a
-    border-radius: 100%
-    display: inline-flex
-    align-items: center
-    justify-content: center
-    text-align: center
-    min-width: 32px
-    min-height: 32px
-    line-height: 32px
-    flex: 0 0 32px
-
-  a
-    color: $black
-    text-decoration: none
-
-    &:hover, &:focus
-      color: $black
-      background: $medium-gray
-      text-decoration: none
-
-  &__nav,
   &__pages
     display: flex
     align-items: center
     justify-content: center
+    flex-wrap: wrap
+    gap: map-get($spacers, 1)
 
-  &__page
-    margin: 0 5px
+  &__page-item, &__page-link
+    display: block
+    font-weight: $font-weight-bold
+    padding: map-get($spacers, 1) map-get($spacers, 12)
+    border-radius: $border-radius-lg
 
-  &__page--current
-    background: $black
-    color: $white
+  &__page-link
+    color: $shade-dark-contrast
+    text-decoration: none
 
-  &__page--disabled
-    opacity: 0.4
+    &:hover
+      color: $shade-dark-contrast
+      background: $shade-200
+      text-decoration: none
+
+    &:focus
+      color: $shade-light-contrast
+      background: $shade-300
+      text-decoration: none
+      outline: none
+
+  &__page--with-ico > &__page-item,
+  &__page--with-ico > &__page-link
+    padding: map-get($spacers, 1)
+
+  &__page--current > &__page-item
+    background: $shade-dark-contrast
+    color: $shade-light-contrast
+
+  &__page--disabled > &__page-item
+    color: $shade-400
+
+  +media-breakpoint-down(md)
+    &__page--hide-on-tablet
+      display: none
+
+  +media-breakpoint-down(sm)
+    &__page--hide-on-mobile
+      display: none
