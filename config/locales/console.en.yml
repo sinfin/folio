@@ -320,6 +320,9 @@ en:
           title/video: Pick a video
           title/audio: Pick an audio
 
+      with_aside:
+        hide: Hide
+
   date:
     formats:
       console_short: "%d. %m. %Y"

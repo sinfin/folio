@@ -323,6 +323,9 @@ cs:
           title/video: Zvolte video
           title/audio: Zvolte audio
 
+      with_aside:
+        hide: Skrýt
+
   date:
     formats:
       console_short: "%d. %m. %Y"

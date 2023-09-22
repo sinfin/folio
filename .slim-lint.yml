@@ -30,6 +30,7 @@ exclude:
   - app/views/folio/console/partials/_react_modals.slim
   - app/views/folio/console/partials/_simple_form_with_atoms.slim
   - app/views/folio/console/partials/_translations.slim
+  - app/views/folio/console/ui/*.slim
   - app/views/folio/console/users/_form.slim
   - app/views/layouts/folio/_analytics.slim
   - app/views/layouts/folio/_cookieconsent.slim
