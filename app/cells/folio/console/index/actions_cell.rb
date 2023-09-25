@@ -92,13 +92,22 @@ class Folio::Console::Index::ActionsCell < Folio::ConsoleCell
         data[:confirm] = nil
       end
 
-      link_to(folio_icon(action[:icon]),
-              action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url],
-              title: t("folio.console.actions.#{action[:name]}"),
-              method: action[:method],
-              target: action[:target],
-              class: "f-c-index-actions__link text-#{action[:variant] || "reset"}#{action[:class_name] ? " #{action[:class_name]}" : ""}",
-              data:)
+      opts = {
+        title: t("folio.console.actions.#{action[:name]}"),
+        method: action[:method],
+        target: action[:target],
+        class: "f-c-index-actions__link text-#{action[:variant] || "reset"}#{action[:class_name] ? " #{action[:class_name]}" : ""}#{action[:cursor] ? " f-c-index-actions__link--cursor-#{action[:cursor]}" : ""}",
+        data:
+      }
+
+      ico = folio_icon(action[:icon], height: action[:icon_height])
+
+      if action[:url]
+        url = action[:url].is_a?(Proc) ? action[:url].call(model) : action[:url]
+        link_to(ico, url, opts)
+      else
+        content_tag(:span, ico, opts)
+      end
     end
   end
 end
