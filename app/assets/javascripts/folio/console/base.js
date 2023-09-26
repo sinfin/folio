@@ -35,6 +35,7 @@
 
 //= require folio/lazyload
 //= require folio/lightbox
+//= require folio/confirm
 //= require folio/debounce
 //= require folio/throttle
 //= require folio/input
