@@ -35,7 +35,7 @@ module Folio::ApiControllerBase
     end
 
     def render_error(e, status: nil)
-      if Rails.env.development? && ENV["FOLIO_API_DONT_RESCUE_ERRORS"]
+      if ENV["FOLIO_API_DONT_RESCUE_ERRORS"] && (Rails.env.development? || Rails.env.test?)
         raise e
       end
 
