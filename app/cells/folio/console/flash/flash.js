@@ -4,7 +4,7 @@ window.FolioConsole.Flash = {}
 window.FolioConsole.Flash.flash = (data) => {
   const alert = window.FolioConsole.Ui.Alert.create({
     ...data,
-    flash: true,
+    flash: true
   })
 
   const modal = document.querySelector('.ReactModal--FileModal')
@@ -20,7 +20,7 @@ window.FolioConsole.Flash.success = (content, data = {}) => {
   return window.FolioConsole.Flash.flash({
     ...data,
     content,
-    variant: 'success',
+    variant: 'success'
   })
 }
 
@@ -28,7 +28,7 @@ window.FolioConsole.Flash.alert = (content, data = {}) => {
   return window.FolioConsole.Flash.flash({
     ...data,
     content,
-    variant: 'danger',
+    variant: 'danger'
   })
 }
 
@@ -36,7 +36,7 @@ window.FolioConsole.Flash.loader = (content, data = {}) => {
   return window.FolioConsole.Flash.flash({
     ...data,
     content,
-    variant: 'loader',
+    variant: 'loader'
   })
 }
 

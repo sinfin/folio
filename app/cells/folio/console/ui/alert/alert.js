@@ -18,7 +18,7 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   const variant = data.variant || 'info'
 
   const container = document.createElement('div')
-  container.className = "f-c-ui-alert__container container-fluid"
+  container.className = 'f-c-ui-alert__container container-fluid'
 
   if (variant === 'loader') {
     const loaderWrap = document.createElement('div')
@@ -35,7 +35,7 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   }
 
   const content = document.createElement('div')
-  content.className = "f-c-ui-alert__content"
+  content.className = 'f-c-ui-alert__content'
   content.innerHTML = data.content
   container.appendChild(content)
 
@@ -53,14 +53,16 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   const alert = document.createElement('div')
   alert.className = className
   alert.role = 'alert'
-  alert.dataset.controller = "f-c-ui-alert"
+  alert.dataset.controller = 'f-c-ui-alert'
 
-  // if (autohide) {
-  //   const autohideDelay = typeof autohide === 'number' ? autohide : 5000
-  //   setTimeout(() => {
-  //     alert.querySelector('[data-bs-dismiss]').click()
-  //   }, autohideDelay)
-  // }
+  if (data.autohide !== false) {
+    const autohideDelay = typeof data.autohide === 'number' ? data.autohide : 5000
+
+    setTimeout(() => {
+      const close = alert.querySelector('.f-c-ui-alert__close')
+      if (close) close.click()
+    }, autohideDelay)
+  }
 
   if (data.data) {
     Object.keys(data.data).forEach((key) => {
