@@ -13,6 +13,13 @@ h3 Label
                                                         attribute: :published,
                                                         label: true))
 
+h3 Small label
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        label: true,
+                                                        small_label: true))
+
 h3 Custom label
 
 = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,

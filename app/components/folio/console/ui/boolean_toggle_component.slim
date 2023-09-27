@@ -6,7 +6,9 @@ label.f-c-ui-boolean-toggle data=data class=@class_name
     data=stimulus_action('onInput')
   ]
 
-  .f-c-ui-boolean-toggle__label
+  .f-c-ui-boolean-toggle__label[
+    class=(@small_label ? "small" : nil)
+  ]
     - if @label
       - if @verbose
         span[
