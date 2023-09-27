@@ -20,9 +20,6 @@
   @if $btn-text-transform-uppercase
     text-transform: uppercase
 
-  &:hover, &:focus
-    opacity: $btn-hover-opacity
-
   @each $name, $color in $theme-colors
     &-outline-#{$name}
       --#{$prefix}btn-border-color: #{$color}
@@ -44,3 +41,17 @@
     display: flex
     width: 100%
     flex: 0 0 100%
+
+.btn-primary
+  --#{$prefix}btn-bg: #{$shade-black-contrast}
+  --#{$prefix}btn-color: #{$shade-light-contrast}
+
+  &:hover, &:focus
+    --#{$prefix}btn-bg: #{$shade-500}
+
+.btn-primary-reverse
+  --#{$prefix}btn-bg: #{$shade-light-contrast}
+  --#{$prefix}btn-color: #{$shade-black-contrast}
+
+  &:hover, &:focus
+    --#{$prefix}btn-bg: #{$shade-400}
