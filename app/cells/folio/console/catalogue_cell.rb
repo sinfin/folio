@@ -168,7 +168,8 @@ class Folio::Console::CatalogueCell < Folio::ConsoleCell
 
   def toggle(attr, opts = {})
     attribute(attr, class_name: "toggle") do
-      cell("folio/console/boolean_toggle", record, opts.merge(attribute: attr))
+      render_view_component(Folio::Console::Ui::BooleanToggleComponent.new(record:,
+                                                                           attribute: attr))
     end
   end
 

@@ -65,6 +65,7 @@
 
 //= require folio/console/ui/ajax_input_component
 //= require folio/console/ui/alert/alert
+//= require folio/console/ui/boolean_toggle_component
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/notification_modal/notification_modal
@@ -73,7 +74,6 @@
 //= require folio/console/accounts/invite_and_copy/invite_and_copy
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
-//= require folio/console/boolean_toggle/boolean_toggle
 //= require folio/console/catalogue/catalogue
 //= require folio/console/clipboard_copy/clipboard_copy
 //= require folio/console/console_notes/catalogue_tooltip/catalogue_tooltip

@@ -8,6 +8,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       ajax_inputs
       alerts
       badges
+      boolean_toggles
       buttons
       modals
       tabs

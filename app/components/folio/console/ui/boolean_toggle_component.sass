@@ -1,9 +1,8 @@
-.f-c-boolean-toggle
+.f-c-ui-boolean-toggle
   position: relative
   transition: $transition-base
-  display: flex
-  align-items: center
-  justify-content: center
+  display: block
+  margin: 0
 
   &__label
     position: relative
@@ -37,9 +36,7 @@
       transition: $transition-base
       background: $gray-medium-dark
 
-  &__label-on,
-  &__label-off,
-  &__label-generic
+  &__label-text
     padding-left: px-to-rem(6px)
 
   &__input
@@ -54,25 +51,7 @@
     cursor: wait
     opacity: 0.2
 
-  &:not(&--show-label):not(&--verbose)
-    width: 2.25rem
-
-  &--show-label
-    padding-left: 2.5rem
-
-  &--show-label &__switch
-    padding-left: 0
-
-  &--show-label &__label
-    &:before
-      left: -2.25rem
-
-    &:after
-      left: calc(-2.25rem + 14px)
-
-  &--show-label &__input:checked ~ &__label::after
-    transform: translateX(-12px)
-
-  &__input:not(:checked) ~ &__label &__label-on,
-  &__input:checked ~ &__label &__label-off
+  &__input:not(:checked) ~ &__label &__label-text--on,
+  &__input:checked ~ &__label &__label-text--off
     display: none
+

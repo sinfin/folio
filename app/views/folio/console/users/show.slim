@@ -27,9 +27,8 @@
           == cell('folio/console/authentications/list', s.object)
 
         = s.attribute :subscribed_to_newsletter
-          == cell("folio/console/boolean_toggle",
-                  s.object,
-                  attribute: :subscribed_to_newsletter)
+          = render(Folio::Console::Ui::BooleanToggleComponent.new(record: s.object,
+                                                                  attribute: :subscribed_to_newsletter))
 
   - if @user.admin_note.present?
     .col-lg-4

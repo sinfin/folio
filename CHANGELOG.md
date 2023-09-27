@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-09-27
+### Added
+- added `render_view_component` to `Folio::ApplicationCell`
+- added `Folio::Console::Ui::BooleanToggleComponent`
+### Removed
+- removed `Folio::Console::BooleanToggleCell` - replace your `folio/console/boolean_toggle` cell calls with `Folio::Console::Ui::BooleanToggleComponent`
+
 ## 2023-07-28
 ### Changed
 - version 4.0!
