@@ -16,6 +16,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
                  affix: nil,
                  small_affix: nil,
                  textarea: false,
+                 disabled: false,
                  rows: nil)
     @name = name
     @url = url
@@ -32,6 +33,7 @@ class Folio::Console::Ui::AjaxInputComponent < Folio::Console::ApplicationCompon
     @affix = affix
     @small_affix = small_affix
     @textarea = textarea
+    @disabled = disabled
     @rows = rows
   end
 
