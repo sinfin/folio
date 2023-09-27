@@ -21,23 +21,14 @@
     z-index: 1
 
   &__input
-    padding-right: add($input-padding-x, $input-height)
+    padding-right: calc(#{$input-padding-x} + 110px + #{map-get($spacers, 12)})
 
   &__btn
-    padding: 0
+    padding: 0 map-get($spacers, 2)
     position: absolute
-    top: 0
-    right: 0
-    width: $input-height
-    height: $input-height
-    display: flex
-    align-items: center
-    justify-content: center
-
-  &__svg
-    width: 30px
-    height: 30px
-    flex: 0 0 30px
+    bottom: calc(#{map-get($spacers, 2)} + #{px-to-rem(1px)})
+    right: map-get($spacers, 12)
+    min-height: 25px
 
   &--submitted &__form
     visibility: hidden

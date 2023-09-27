@@ -32,7 +32,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
 
   def button_class
     return options[:button_class] unless options[:button_class].nil?
-    "btn btn-primary"
+    "btn btn-primary-reverse"
   end
 
   def wrap_class
@@ -48,8 +48,8 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
   def input(f)
     f.input :email,
             as: :email,
-            label: false,
-            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
+            label: t(".label"),
+            input_html: { class: "f-newsletter-subscriptions-form__input form-control--reverse", id: nil },
             wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
 end
