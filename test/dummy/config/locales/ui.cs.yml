@@ -5,9 +5,10 @@ cs:
       disclaimer:
         text: Odesláním souhlasíte se %{link}.
         link: zásadami ochrany osobních údajů
-      footer:
+      footer_component:
+        newsletter: Přihlášení k newsletteru
+        contact: Kontakt
         follow_us: Sledujte nás
-        newsletter: Newsletter
       share:
         title: 'Sdílejte:'
         facebook: Sdílejte na Facebooku

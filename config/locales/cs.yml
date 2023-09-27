@@ -47,8 +47,9 @@ cs:
         es: španělština
     newsletter_subscriptions:
       form:
-        message: Odesláno!
-        submit: Odeslat
+        message: Přihlášeno!
+        submit: Přihlásit se
+        label: Váš e-mail
     photoswipe:
       error: <div class="pswp__error-msg"><a href="%url%" target="_blank">Obrázek</a> se nepodařilo načíst.</div>
     site:
