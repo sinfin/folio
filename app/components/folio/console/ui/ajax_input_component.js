@@ -51,7 +51,12 @@ window.Folio.Stimulus.register('f-c-ui-ajax-input', class extends window.Stimulu
     if (e) e.preventDefault()
     if (this.element.classList.contains('f-c-ui-ajax-input--loading')) return false
 
-    this.inputTarget.value = this.originalValueValue
+    if (this.cleave) {
+      this.cleave.setRawValue(this.originalValueValue)
+    } else {
+      this.inputTarget.value = this.originalValueValue
+    }
+
     this.element.classList.remove('f-c-ui-ajax-input--dirty')
     this.element.classList.remove('f-c-ui-ajax-input--success')
     this.element.classList.remove('f-c-ui-ajax-input--failure')
