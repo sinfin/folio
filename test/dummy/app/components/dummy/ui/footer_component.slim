@@ -1,34 +1,62 @@
-.d-ui-footer
+footer.d-ui-footer
   .container-fluid
     .d-ui-footer__row
-      .d-ui-footer__left.mb-s
-        .h4.mt-0 = t('.newsletter')
+      .d-ui-footer__left
+        .d-ui-footer__col
+          .h5.mt-0 = t('.newsletter')
 
-        == cell('folio/newsletter_subscriptions/form')
+          == cell('folio/newsletter_subscriptions/form')
 
-        .mt-n3
           == cell('dummy/ui/disclaimer')
 
-      - if social_links.present?
-        .d-ui-footer__right.mb-s
-          .h4.mt-0 = t('.follow_us')
+        - if contact_details.present?
+          .d-ui-footer__col
+            .h5.mt-0 = t('.contact')
 
-          .mx-nh.d-flex.flex-wrap
+            .d-flex.flex-column.gap-1
+              - contact_details.each do |key, value|
+                span.d-ui-footer__contact-item
+                  = value
+
+      - if social_links.present?
+        .d-ui-footer__social-links
+          .h5.mt-0 = t('.follow_us')
+
+          .mx-n2.mt-n2.mb-n2.d-flex.flex-wrap.gap-2
             - social_links.each do |key, link|
               a.d-ui-footer__social-link[
                 href=link
+                title=key
                 class="d-ui-footer__social-link--#{key}"
               ]
                 = dummy_ui_icon(key.to_sym,
                                 class_name: 'd-ui-footer__social-ico')
 
-    .d-ui-footer__copyright
-      .d-flex.flex-wrap.pt-g.pb-h
-        .me-40.mb-h
-          = current_site.copyright_info
-
-        - if menu
+    .d-ui-footer__row
+      - if menu
+        .d-ui-footer__menu
           - menu.menu_items.includes(:page).each do |menu_item|
-            .me-40.mb-h
-              a href=menu_url_for(menu_item)
-                = menu_item.to_label
+            a.d-ui-footer__menu-link[
+              href=menu_url_for(menu_item)
+              title=menu_item.to_label
+            ]
+              = menu_item.to_label
+
+      .d-ui-footer__copyright
+        = current_site.copyright_info
+
+      .d-ui-footer__author
+        a.d-ui-footer__author-link[
+          href='https://sinfin.digital/'
+          target='_blank'
+          title=author_link_title
+        ]
+          .d-ui-footer__author-signature
+            span.d-ui-footer__slash-symbol
+              | /
+
+            span.d-ui-footer__author-name
+              | * sinfin.digital *
+
+            span.d-ui-footer__slash-symbol
+              | /

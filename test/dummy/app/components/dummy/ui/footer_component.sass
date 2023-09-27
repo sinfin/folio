@@ -1,37 +1,121 @@
 .d-ui-footer
-  flex: 0 0 auto
-  background: $light-gray
-  margin-top: map-get($spacers, gg)
-  padding-top: map-get($spacers, gg)
-  z-index: 1
   position: relative
-
-  .f-newsletter-subscriptions-form__message
-    align-items: flex-start
-
-  &__copyright
-    border-top: 1px solid #EAEAEA
+  z-index: 1
+  flex: 0 0 auto
+  background: $shade-light-contrast-dark
+  color: $shade-black-contrast-dark
+  margin-top: map-get($spacers, gg)
+  padding: map-get($spacers, 56) 0
 
   &__row
+    position: relative
     display: flex
     justify-content: space-between
     flex-wrap: wrap
+    gap: map-get($spacers, 40) map-get($spacers, gg)
+
+  &__row:not(:first-child)
+    border-top: 1px solid $shade-200-dark
+    padding-top: map-get($spacers, g)
+
+  &__row:not(:last-child)
+    padding-bottom: map-get($spacers, g)
+
+  &__row:last-child
+    justify-content: flex-start
+    gap: map-get($spacers, 3)
+    align-items: center
 
   &__left
-    width: 100%
-    max-width: 560px
-    flex: 0 0 auto
+    flex: 1 0 600px
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    gap: map-get($spacers, 40) map-get($spacers, gg)
 
-  &__right
-    max-width: 100%
-    flex: 0 0 auto
+  &__social-links
+    flex: 0 0 256px
+
+  &__col
+    flex: 1 0 calc(50% - #{map-get($spacers, g)})
+    max-width: 385px
+    min-width: 268px
 
   &__social-link
+    color: $shade-black-contrast-dark
     +social-sites-hover-color
+    text-decoration: none
 
   &__social-ico
-    margin: $grid-gutter-half
+    margin: map-get($spacers, 2)
 
-  +media-breakpoint-up(lg)
+  &__menu
+    display: flex
+    flex-wrap: wrap
+    gap: map-get($spacers, 4)
+    min-width: 475px
+
+  &__menu-link
+    text-decoration: none
+    +font-size-sm
+    color: $shade-600-dark
+
+    &:hover
+      color: $shade-600-dark
+      text-decoration: underline
+
+  &__copyright
+    +font-size-sm
+    color: $shade-400-dark
+    padding-right: calc(108px + #{map-get($spacers, 3)})
+
+  &__author
+    position: absolute
+    right: 0
+    min-width: 108px
+    bottom: 0
+    display: flex
+    justify-content: flex-end
+
+  &__author-signature
+    display: inline-flex
+    justify-content: flex-end
+    align-items: center
+    +font-size-sm
+    font-weight: $font-weight-medium
+    color: $shade-600-dark
+
+  &__author-name, &__slash-symbol
+    display: inline-flex
+
+  &__slash-symbol:first-child
+    padding-right: 3px
+
+  &__author-name
+    width: 0
+    transition: width 0.15s ease-in-out
+    overflow: hidden
+    white-space: nowrap
+
+  &__author-link:hover > &__author-signature > &__author-name
+    width: 100%
+
+  +media-breakpoint-down(md)
+    padding: map-get($spacers, g) 0
+
+    &__row:not(:first-child)
+      padding-top: map-get($spacers, 40)
+
+    &__row:not(:last-child)
+      padding-bottom: map-get($spacers, 40)
+
     &__left
-      margin-right: $grid-gutter-width
+      flex: 0 0 100%
+
+    &__menu
+      min-width: 0
+      width: 100%
+      gap: map-get($spacers, 12)
+
+    &__copyright
+      +font-size-base
