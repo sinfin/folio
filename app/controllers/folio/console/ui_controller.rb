@@ -10,6 +10,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       badges
       buttons
       modals
+      tabs
       warning_ribbons
     ].sort
 
@@ -39,6 +40,20 @@ class Folio::Console::UiController < Folio::Console::BaseController
     @page.update!(name => value)
 
     render json: { data: { value: } }
+  end
+
+  def tabs
+    @links_tabs = [
+      { label: "First tab", href: tabs_console_ui_path(tab: 1), active: %w[2 3].exclude?(params[:tab]) },
+      { label: "Second tab", href: tabs_console_ui_path(tab: 2), active: params[:tab] == "2" },
+      { label: "Third tab", href: tabs_console_ui_path(tab: 3), active: params[:tab] == "3" },
+    ]
+
+    @javascript_tabs = [
+      { label: "First tab", key: "first-tab", active: true },
+      { label: "Second tab", key: "second-tab" },
+      { label: "Third tab", key: "third-tab" },
+    ]
   end
 
   def warning_ribbons
