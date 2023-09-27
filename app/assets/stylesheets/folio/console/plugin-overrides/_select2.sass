@@ -1,6 +1,13 @@
 .select2-container--default
   outline: 0
 
+  .select2-selection
+    background-color: $form-select-bg
+    background-image: escape-svg($form-select-indicator)
+    background-repeat: no-repeat
+    background-position: $form-select-bg-position
+    background-size: $form-select-bg-size
+
   .select2-selection--single
     border-radius: $border-radius
     border-color: $input-border-color
@@ -12,7 +19,7 @@
       padding: 0 $input-padding-x
 
     .select2-selection__arrow
-      height: $input-height
+      display: none
 
     .select2-selection__clear
       width: 20px
