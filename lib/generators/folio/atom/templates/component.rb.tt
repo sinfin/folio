@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class <%= atom_component_name %> < ApplicationComponent
-  def initialize(atom:, atom_options:)
+  def initialize(atom:, atom_options: {})
     @atom = atom
     @atom_options = atom_options
   end
