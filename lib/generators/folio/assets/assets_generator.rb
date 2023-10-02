@@ -41,7 +41,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     [
       "app/assets/stylesheets/application.css",
     ].each do |path|
-      full_path = Rails.root.join(path)
+      full_path = folio_generators_root.join(path)
       ::File.delete(full_path) if ::File.exist?(full_path)
     end
   end
@@ -73,7 +73,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
       "bin/icons",
     ].each do |file|
       [
-        Rails.root.join(file),
+        folio_generators_root.join(file),
         file,
       ].each do |path|
         if File.exist?(path)

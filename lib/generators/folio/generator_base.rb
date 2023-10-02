@@ -58,9 +58,13 @@ module Folio::GeneratorBase
       @application_namespace_spacing ||= application_namespace.to_s.gsub(/\w/, " ")
     end
 
+    def folio_generators_root
+      Rails.application.config.try(:folio_generators_root) || Rails.root
+    end
+
     def add_atom_to_i18n_ymls(values = {})
       I18n.available_locales.each do |locale|
-        path = Rails.root.join("config/locales/atom.#{locale}.yml")
+        path = folio_generators_root.join("config/locales/atom.#{locale}.yml")
         i18n_key = "#{application_namespace_path}/atom/#{atom_name}"
         i18n_value = values[locale] || values[locale.to_s] || values[:en]
 

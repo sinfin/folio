@@ -53,6 +53,7 @@ cs:
       dummy/atom/map: Mapa
       dummy/atom/margin: Odsazení
       dummy/atom/navigation: Menu
+      dummy/atom/optstester: Optstester
       dummy/atom/perex: Perex
       dummy/atom/person: Osoba (karta střední)
       dummy/atom/quotation: Zvýrazněná citace

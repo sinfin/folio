@@ -57,6 +57,12 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     nil
   end
 
+  def self.component_class
+    if cell_name.nil?
+      "#{self.class}Component".constantize
+    end
+  end
+
   def self.splittable_by_attribute
     nil
   end

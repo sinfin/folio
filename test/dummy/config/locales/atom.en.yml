@@ -53,6 +53,7 @@ en:
       dummy/atom/map: Map
       dummy/atom/margin: Margin
       dummy/atom/navigation: Navigation
+      dummy/atom/optstester: Optstester
       dummy/atom/perex: Perex
       dummy/atom/person: Person
       dummy/atom/quotation: Quotation

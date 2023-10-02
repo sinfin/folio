@@ -58,7 +58,7 @@ class Folio::DeviseGenerator < Rails::Generators::Base
   end
 
   def add_assets
-    application_js = Rails.root.join("app/assets/javascripts/application.js")
+    application_js = folio_generators_root.join("app/assets/javascripts/application.js")
 
     if File.exist?(application_js)
       if File.read(application_js).include?("require folio/devise")
@@ -73,7 +73,7 @@ class Folio::DeviseGenerator < Rails::Generators::Base
       puts "Skipping JS - no application.js"
     end
 
-    application_sass = Rails.root.join("app/assets/stylesheets/application.sass")
+    application_sass = folio_generators_root.join("app/assets/stylesheets/application.sass")
 
     if File.exist?(application_sass)
       if File.read(application_sass).include?("@import 'folio/devise'")

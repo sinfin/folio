@@ -48,6 +48,7 @@ module Folio
     config.folio_site_cache_current_site = true
     config.folio_site_validate_belongs_to_namespace = false
     config.folio_site_default_test_factory = nil
+    config.folio_generators_root = Rails.root
     config.folio_cell_generator_class_name_prefixes = {}
     config.folio_file_types_for_routes = %w[
       Folio::File::Image
