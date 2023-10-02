@@ -98,10 +98,10 @@ class Folio::ApplicationCell < Cell::ViewModel
   end
 
   def render_view_component(component)
-    if context[:view]
-      context[:view].render(component)
+    if view = context[:view] || context[:controller].try(:view_context)
+      view.render(component)
     else
-      fail "Missing context[:view] - cannot render_view_component"
+      fail "Missing both context[:view] and context[:controller] - cannot render_view_component"
     end
   end
 end
