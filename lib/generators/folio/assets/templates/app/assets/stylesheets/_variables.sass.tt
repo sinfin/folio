@@ -7,7 +7,7 @@ $grid-gutter-width: 4 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
 
 $spacer: $grid-gutter-half
-$spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 40: px-to-rem(40px) )
+$spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 40: px-to-rem(40px), 12: px-to-rem(12px) )
 
 $white: #FFFFFF
 $black: #000000
@@ -42,9 +42,12 @@ $danger: $red !default
 $light: $gray-100 !default
 $dark: $gray-900 !default
 
+$shade-light-contrast: $white
+$shade-dark-contrast: $black
+
 $shade-200: #E8E8E8
-$shade-300: #555555
-$shade-500: #8D8D8D
+$shade-300: #CBCBCB
+$shade-400: #8D8D8D
 
 $container-fluid-max-width: 1440px
 $font-size-media-breakpoint: lg
@@ -207,7 +210,7 @@ $form-group-spacer: px-to-rem(20px)
 $border-color: rgba(0, 0, 0, 0.15)
 
 $border-radius: $grid-gutter-base
-$border-radius-lg: $grid-gutter-base
+$border-radius-lg: $grid-gutter-half
 $border-radius-sm: $grid-gutter-base
 
 $modal-md: px-to-rem(640px)

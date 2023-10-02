@@ -30,8 +30,10 @@ Folio::Engine.routes.draw do
 
         get :alerts
         get :badges
+        get :boolean_toggles
         get :buttons
         get :modals
+        get :tabs
         get :warning_ribbons
 
         get :input_date_time

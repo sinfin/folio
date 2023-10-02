@@ -21,7 +21,7 @@ class Folio::SearchGenerator < Rails::Generators::Base
   end
 
   def add_routes
-    return if File.read(Rails.root.join("config/routes.rb")).include?("resource :search")
+    return if File.read(folio_generators_root.join("config/routes.rb")).include?("resource :search")
 
     inject_into_file "config/routes.rb", after: "scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do\n" do <<~'RUBY'
       resource :search, only: %i[show] do

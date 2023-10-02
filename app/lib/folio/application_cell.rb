@@ -96,4 +96,12 @@ class Folio::ApplicationCell < Cell::ViewModel
       end
     end
   end
+
+  def render_view_component(component)
+    if context[:view]
+      context[:view].render(component)
+    else
+      fail "Missing context[:view] - cannot render_view_component"
+    end
+  end
 end

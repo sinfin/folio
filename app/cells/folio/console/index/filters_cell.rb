@@ -203,9 +203,9 @@ class Folio::Console::Index::FiltersCell < Folio::ConsoleCell
                  force_collection: true,
                  label: false,
                  remote: url,
+                 include_blank: "#{label_for_key(key)}...",
                  input_html: {
                    class: "f-c-index-filters__select2-input",
-                   "data-placeholder" => "#{label_for_key(key)}...",
                  },
                  wrapper_html: { class: "f-c-index-filters__select2-wrap input-group--#{controller.params[key].present? ? "filled" : "empty"}" },
                  wrapper: :input_group,

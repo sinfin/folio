@@ -15,12 +15,30 @@ module Folio::ApiControllerBase
       render json: { data: }, root: false
     end
 
-    def render_component_json(component)
+    def render_component_json(component, pagy: nil, flash: nil)
       @component = component
+      meta = {}
+
+      if pagy
+        meta[:pagy] = meta_from_pagy(pagy)
+      end
+
+      if flash
+        meta[:flash] = flash
+      end
+
+      @meta = if meta.present?
+        ", \"meta\": #{meta.to_json}"
+      end
+
       render "folio/api_controller_base_json"
     end
 
     def render_error(e, status: nil)
+      if ENV["FOLIO_API_DONT_RESCUE_ERRORS"] && (Rails.env.development? || Rails.env.test?)
+        raise e
+      end
+
       Raven.capture_exception(e) if defined?(Raven)
 
       responses = Rails.configuration.action_dispatch.rescue_responses
@@ -124,6 +142,7 @@ module Folio::ApiControllerBase
         from: pagy_data.from,
         to: pagy_data.to,
         count: pagy_data.count,
+        next: pagy_data.next,
       }
     end
 end

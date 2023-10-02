@@ -60,7 +60,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
   def update_controller
     template "ui_controller.rb.tt", "app/controllers/#{application_namespace_path}/ui_controller.rb"
 
-    routes_s = File.read(Rails.root.join("config/routes.rb"))
+    routes_s = File.read(folio_generators_root.join("config/routes.rb"))
 
     if routes_s.exclude?("resource :ui")
       str = <<-RUBY
@@ -82,7 +82,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
   def update_i18n_ymls
     I18n.available_locales.each do |locale|
-      app_path = Rails.root.join("config/locales/ui.#{locale}.yml")
+      app_path = folio_generators_root.join("config/locales/ui.#{locale}.yml")
       template_path = Folio::Engine.root.join("lib/generators/folio/ui/templates/ui.#{locale}.yml")
 
       unless File.exist?(template_path)

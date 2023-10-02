@@ -204,6 +204,9 @@ message:
 microphone:
   width: 24
   height: 24
+minus_circle:
+  width: 24
+  height: 24
 more_vert:
   width: 24
   height: 24

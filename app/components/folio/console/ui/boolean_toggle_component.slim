@@ -1,0 +1,28 @@
+label.f-c-ui-boolean-toggle data=data class=@class_name
+  input.f-c-ui-boolean-toggle__input[
+    type="checkbox"
+    checked=checked
+    name=name
+    data=stimulus_action('onInput')
+  ]
+
+  .f-c-ui-boolean-toggle__label[
+    class=(@small_label ? "small" : nil)
+  ]
+    - if @label
+      - if @verbose
+        span[
+          class="f-c-ui-boolean-toggle__label-text"
+          class="f-c-ui-boolean-toggle__label-text--on"
+        ]
+          = verbose_label(true)
+        span[
+          class="f-c-ui-boolean-toggle__label-text"
+          class="f-c-ui-boolean-toggle__label-text--off"
+        ]
+          = verbose_label(false)
+      - else
+        span[
+          class="f-c-ui-boolean-toggle__label-text"
+        ]
+          = label_string

@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= atom_component_name %>Test < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::<%= class_name %>)
+
+    render_inline(<%= atom_component_name %>.new(atom:))
+
+    assert_selector(".<%= atom_css_class_name %>")
+  end
+end

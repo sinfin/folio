@@ -165,7 +165,7 @@
 
     &__arrow
       margin-left: auto
-      color: $shade-500
+      color: $shade-400
 
     &__li--more
       display: none
@@ -181,7 +181,7 @@
       gap: $grid-gutter-half
 
     &__children-ul
-      color: $shade-500
+      color: $shade-400
       font-size: $ui-typo-text-s-font-size
       line-height: $ui-typo-text-s-line-height
       padding-bottom: px-to-rem(8px)

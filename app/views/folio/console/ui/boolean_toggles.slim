@@ -1,0 +1,47 @@
+h1 Folio Console UI
+
+h2 Boolean toggles
+
+h3 No label
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published))
+
+h3 Label
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        label: true))
+
+h3 Small label
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        label: true,
+                                                        small_label: true))
+
+h3 Custom label
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        label: "Foo"))
+
+h3 Verbose labels
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        verbose: true))
+
+h3 Confirmation
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        label: "Needs confirmation",
+                                                        confirm: true))
+
+h3 Custom confirmation
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        label: "Needs custom confirmation",
+                                                        confirm: "Custom confirmation msg?"))
