@@ -1,0 +1,17 @@
+div class=bem_class_name data=data
+  = form do |f|
+    - remember_option_keys.each do |opt|
+      - if @view_options[opt]
+        input[
+          type="hidden"
+          name="view_options[#{opt}]"
+          value=ERB::Util.html_escape(@view_options[opt])
+        ]
+
+    = input(f)
+
+  span.folio-loader.f-newsletter-subscriptions-form__loader
+
+  - if @persisted
+    .f-newsletter-subscriptions-form__message
+      ' message TODO

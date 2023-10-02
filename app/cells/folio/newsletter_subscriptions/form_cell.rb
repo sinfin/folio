@@ -9,7 +9,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
 
   def form(&block)
     opts = {
-      url: controller.folio.newsletter_subscriptions_path,
+      url: controller.folio.folio_api_newsletter_subscriptions_path,
       html: { class: "f-newsletter-subscriptions-form__form", id: nil },
     }
 
