@@ -114,7 +114,8 @@ module Folio::Atom
     molecules = []
 
     atoms.each_with_index do |atom, index|
-      molecule = atom.class.molecule.presence ||
+      molecule = atom.class.molecule_component_class ||
+                 atom.class.molecule.presence ||
                  atom.class.molecule_cell_name.presence
 
       if index != 0 && molecule == molecules.last.first

@@ -54,7 +54,6 @@ class Folio::Atom::Base < Folio::ApplicationRecord
   validate :validate_placement
 
   def self.cell_name
-    nil
   end
 
   def self.component_class
@@ -63,12 +62,13 @@ class Folio::Atom::Base < Folio::ApplicationRecord
     end
   end
 
+  def self.molecule_component_class
+  end
+
   def self.splittable_by_attribute
-    nil
   end
 
   def cell_options
-    nil
   end
 
   def partial_name

@@ -6,7 +6,13 @@ module Folio::AtomsHelper
       next if only.present? && !only.include?(atom.class)
       next if except.present? && except.include?(atom.class)
 
-      if atom.class.cell_name
+      if atom.class.component_class
+        if self.is_a?(Folio::ApplicationCell)
+          capture { render_view_component(atom.class.component_class.new(atoms:, atom_options:)) }
+        else
+          capture { render(atom.class.component_class.new(atoms:, atom_options:)) }
+        end
+      elsif atom.class.cell_name
         cell(atom.class.cell_name,
              atom,
              atom.cell_options.present? ? atom.cell_options.merge(atom_options) : atom_options)
@@ -30,7 +36,13 @@ module Folio::AtomsHelper
 
       if molecule.present?
         if atoms.present?
-          if molecule.is_a?(String)
+          if molecule < ViewComponent::Base
+            if self.is_a?(Folio::ApplicationCell)
+              capture { render_view_component(molecule.new(atoms:, atom_options:)) }
+            else
+              capture { render(molecule.new(atoms:, atom_options:)) }
+            end
+          elsif molecule.is_a?(String)
             cell(molecule,
                  atoms,
                  atom_options)
