@@ -13,11 +13,11 @@
     border-radius: $border-radius-lg
 
   &__page-link
-    color: $shade-dark-contrast
+    color: $shade-black-contrast
     text-decoration: none
 
     &:hover
-      color: $shade-dark-contrast
+      color: $shade-black-contrast
       background: $shade-200
       text-decoration: none
 
@@ -32,7 +32,7 @@
     padding: map-get($spacers, 1)
 
   &__page--current > &__page-item
-    background: $shade-dark-contrast
+    background: $shade-black-contrast
     color: $shade-light-contrast
 
   &__page--disabled > &__page-item

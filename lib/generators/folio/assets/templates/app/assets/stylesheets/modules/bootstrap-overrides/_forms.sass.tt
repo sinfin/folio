@@ -9,3 +9,11 @@ abbr[title]
 
 .form-control.select
   @extend .form-select
+
+.form-control.form-control--reverse
+  color: $shade-light-contrast
+  background-color: $shade-light-contrast-dark
+  border: 1px solid $shade-400-dark
+
+  &:focus
+    border: 1px solid $shade-light-contrast

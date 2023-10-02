@@ -1,1 +1,1 @@
-.<%= classname_prefix %>-ui-disclaimer.small.text-muted = text
+.<%= classname_prefix %>-ui-disclaimer.text-shade-500 = text

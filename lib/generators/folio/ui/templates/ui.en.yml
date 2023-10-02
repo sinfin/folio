@@ -2,9 +2,10 @@
 disclaimer:
   text: By submitting you agree to our %{link}.
   link: privacy policy
-footer:
-  follow_us: Follow us
+footer_component:
   newsletter: Newsletter signup
+  contact: Contact
+  follow_us: Follow us
 share:
   title: 'Share:'
   facebook: Share on Facebook

@@ -7,7 +7,9 @@ $grid-gutter-width: 4 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
 
 $spacer: $grid-gutter-half
-$spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 40: px-to-rem(40px), 12: px-to-rem(12px) )
+
+//0: 0, 1: 4px, 2: 8px, 3: 16px, 4: 24px, 5: 48px, h: 16px, g: 32px, gg: 64px
+$spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 12: px-to-rem(12px), 40: px-to-rem(40px), 56: px-to-rem(56px))
 
 $white: #FFFFFF
 $black: #000000
@@ -43,13 +45,28 @@ $light: $gray-100 !default
 $dark: $gray-900 !default
 
 $shade-light-contrast: $white
-$shade-dark-contrast: $black
+$shade-black-contrast: $black
 
+$shade-light-contrast-dark: #191919
+$shade-black-contrast-dark: $white
+
+$shade-100: #F5F5F5
 $shade-200: #E8E8E8
 $shade-300: #CBCBCB
 $shade-400: #8D8D8D
+$shade-500: #696969
+$shade-600: #555555
+$shade-700: #3E3E3E
+$shade-800: #2B2B2B
 
-$container-fluid-max-width: 1440px
+$shade-100-dark: $shade-800
+$shade-200-dark: $shade-700
+$shade-300-dark: $shade-600
+$shade-400-dark: $shade-500
+$shade-500-dark: $shade-400
+$shade-600-dark: $shade-300
+
+$container-fluid-max-width: 1280px
 $font-size-media-breakpoint: lg
 
 $font-family-sans-serif: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
@@ -202,10 +219,10 @@ $h5-line-height-mobile: $h5-line-height
 $h5-margin-top-mobile: 2 * $spacer
 $h5-margin-bottom-mobile: $spacer
 
-$theme-colors: ("primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "light-gray": $light-gray, "medium-gray": $medium-gray, "gray": $gray, "dark-gray": $dark-gray, "blue": $blue, "red": $red, "violet": $violet, "green": $green, "orange": $orange, "yellow": $yellow )
+$theme-colors: ("primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "light-gray": $light-gray, "medium-gray": $medium-gray, "gray": $gray, "dark-gray": $dark-gray, "blue": $blue, "red": $red, "violet": $violet, "green": $green, "orange": $orange, "yellow": $yellow, "shade-500": $shade-500 )
 $social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $violet, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
 
-$form-group-spacer: px-to-rem(20px)
+$form-group-spacer: $grid-gutter-half
 
 $border-color: rgba(0, 0, 0, 0.15)
 
@@ -232,21 +249,39 @@ $input-btn-font-size: $ui-typo-text-s-font-size
 $input-btn-line-height: $ui-typo-text-s-line-height
 
 $btn-border-width: 2px
-$btn-min-size: px-to-rem(37px)
+$btn-border-radius: map-get($spacers, 4)
+$btn-border-radius-lg: px-to-rem(32px)
+$btn-border-radius-sm: map-get($spacers, 4)
+$btn-min-size: px-to-rem(40px)
 $btn-font-size: px-to-rem(14px)
 $btn-line-height: 21 / 14
-$btn-font-weight: $font-weight-bold
+$btn-font-weight: $font-weight-semibold
 $btn-text-transform-uppercase: true
-$btn-padding-y: px-to-rem(6px)
+$btn-padding-x: map-get($spacers, 3)
+$btn-padding-y: px-to-rem(7px)
 
 $btn-min-size-sm: px-to-rem(34px)
 $btn-font-size-sm: px-to-rem(12px)
 $btn-line-height-sm: 18 / 12
-$btn-padding-x-sm: $input-btn-padding-x
-$btn-padding-y-sm: $input-btn-padding-y
+$btn-padding-x-sm: $btn-padding-x
+$btn-padding-y-sm: px-to-rem(6px)
 
 $btn-min-size-lg: px-to-rem(48px)
 $btn-font-size-lg: px-to-rem(16px)
 $btn-line-height-lg: 24 / 16
+$btn-border-radius-lg: map-get($spacers, g)
 $btn-padding-x-lg: px-to-rem(14px)
 $btn-padding-y-lg: px-to-rem(10px)
+
+$input-padding-y: map-get($spacers, 2)
+$input-padding-x: map-get($spacers, 3)
+$input-border-radius: map-get($spacers, 4)
+$input-bg: $shade-light-contrast
+$input-color: $shade-black-contrast
+$input-border-color: $shade-400
+$input-focus-border-color: $shade-black-contrast
+$input-font-size: $ui-typo-text-m-font-size
+
+$form-label-margin-bottom: map-get($spacers, 1)
+$form-label-font-size: $ui-typo-text-s-font-size
+$form-label-font-weight: $font-weight-medium
