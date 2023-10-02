@@ -354,7 +354,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
       through_record = instance_variable_get("@#{through_klass.model_name.element}")
 
       if through_record
-        add_breadcrumb(through_record.to_label, console_show_or_edit_path(through_record))
+        add_breadcrumb(through_record.to_label, console_show_or_edit_path(through_record, include_through_record: false))
       end
     end
 
@@ -380,11 +380,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
       authenticate_account!
     end
 
-    def console_show_or_edit_path(record, other_params: {})
+    def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
       return nil if record.nil?
 
       begin
-        url = through_aware_console_url_for(record, hash: other_params)
+        url = if include_through_record
+          through_aware_console_url_for(record, hash: other_params)
+        else
+          url_for([:console, record, other_params])
+        end
       rescue NoMethodError, ActionController::RoutingError
         return nil
       end
