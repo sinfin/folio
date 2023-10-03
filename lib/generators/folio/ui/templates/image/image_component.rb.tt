@@ -118,7 +118,7 @@ class <%= application_namespace %>::Ui::ImageComponent < ApplicationComponent
 
     if max_width.present?
       unless max_width.to_s.match?(/%|none/)
-        file = @data[:file]
+        file = @data && @data[:file]
 
         if @cap_width && file.respond_to?(:file_width)
           max_width_i = max_width.to_i
@@ -156,7 +156,7 @@ class <%= application_namespace %>::Ui::ImageComponent < ApplicationComponent
       elsif @spacer_background == false
         s += "background-color: transparent;"
       elsif @spacer_background == true
-        img = @data[:file]
+        img = @data && @data[:file]
 
         if img && img.try(:additional_data)
           s += "background-color: #{img.additional_data['dominant_color']};"
@@ -231,7 +231,7 @@ class <%= application_namespace %>::Ui::ImageComponent < ApplicationComponent
 
   def thumbnail_size
     if @thumbnail_size.nil?
-      if file = @data[:file]
+      if file = @data && @data[:file]
         t = file.thumb(@size)
 
         @thumbnail_size = {

@@ -20,5 +20,10 @@
         p dummy_ui_image(@image, "#{variant[:size]}")
         = dummy_ui_image(@image, variant[:size])
 
+    hr
+
+    p dummy_ui_image(nil, "100x100")
+    = dummy_ui_image(nil, "100x100")
+
   - else
     p Missing a Folio::File::Image tagged with "unsplash"
