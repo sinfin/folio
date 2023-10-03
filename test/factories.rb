@@ -138,6 +138,12 @@ FactoryBot.define do
     association(:primary_address, factory: :folio_address_primary)
   end
 
+  factory :folio_site_user_link, class: "Folio::SiteUserLink" do
+    site { Folio::Site.first || create(:folio_site) }
+    user { create(:folio_user) }
+    roles { [] }
+  end
+
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
     sequence(:email) { |i| "email-#{i}@email.email" }
   end

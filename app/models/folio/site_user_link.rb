@@ -9,7 +9,7 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   validate :validate_roles_from_site
 
   def validate_roles_from_site
-    forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles)
+    forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles.to_a)
     if forbidden_roles.present?
       errors.add(:roles, :not_available_for_site, site: site.domain, roles: forbidden_roles.to_s)
     else
