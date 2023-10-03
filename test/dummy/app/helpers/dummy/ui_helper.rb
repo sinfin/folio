@@ -12,4 +12,8 @@ module Dummy::UiHelper
   def dummy_ui_icon(name, **kwargs)
     render(Dummy::Ui::IconComponent.new(name:, **kwargs))
   end
+
+  def dummy_ui_image(placement, size, **kwargs)
+    render(Dummy::Ui::ImageComponent.new(placement:, size:, **kwargs))
+  end
 end

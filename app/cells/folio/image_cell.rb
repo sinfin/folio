@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Folio::ImageCell < Folio::ApplicationCell
+  # this cell is obsolete - generate a ui image component and use one per-project
+
   include Folio::CellLightbox
 
   class_name "f-image", :centered,

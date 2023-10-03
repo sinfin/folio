@@ -1,0 +1,24 @@
+*tag
+  - if @data
+    picture.d-ui-image__picture
+      - if @data[:webp_srcset]
+        source[
+          srcset=@data[:webp_srcset]
+          type="image/webp"
+        ]
+
+      img.d-ui-image__img[
+        src=@data[:src]
+        srcset=@data[:srcset]
+        title=@data[:title]
+        alt=@data[:alt]
+        loading=(@lazy ? "lazy" : nil)
+      ]
+
+  - else
+    span.d-ui-image__fallback
+      = render(:_fallback_svg)
+
+  span.d-ui-image__spacer style=spacer_style
+
+  == @additional_html
