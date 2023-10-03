@@ -65,11 +65,6 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
     options[:default_locale].try(:to_sym) || I18n.default_locale
   end
 
-  def atom_cell(atom)
-    opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
-    cell(atom.class.cell_name, atom, opts)
-  end
-
   def atom_additional_options
     { console_preview: true, console_preview_settings_param: options[:settings_param] }
   end
@@ -79,6 +74,29 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
 
     if field && atoms[atom_index + 1] && atoms[atom_index + 1].class.splittable_by_attribute == field
       "f-c-atoms-previews__preview--splittable-can-be-joined"
+    end
+  end
+
+  def render_molecule(atoms)
+    atom_class = atoms.first.class
+
+    if atom_class.molecule_component_class
+      capture { render_view_component(atom_class.molecule_component_class.new(atoms:, atom_options: atom_additional_options)) }
+    else
+      cell(atom_class.molecule_cell_name,
+           atoms,
+           atom_additional_options)
+    end
+  end
+
+  def render_atom(atom)
+    atom_class = atom.class
+
+    if atom_class.component_class
+      capture { render_view_component(atom_class.component_class.new(atom:, atom_options: atom_additional_options)) }
+    else
+      opts = (atom.cell_options.presence || {}).merge(atom_additional_options)
+      cell(atom_class.cell_name, atom, opts)
     end
   end
 end

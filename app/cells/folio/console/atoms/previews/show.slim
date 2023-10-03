@@ -32,9 +32,7 @@ div class=class_name data-klass=options[:klass]
               data-atom-klass=atoms.first.class.to_s
             ]
               .f-c-atoms-previews__preview-inner
-                == cell(atoms.first.class.molecule_cell_name, \
-                        atoms, \
-                        atom_additional_options)
+                = render_molecule(atoms)
 
               = controls
 
@@ -54,7 +52,7 @@ div class=class_name data-klass=options[:klass]
                 class=splittable_class_name(atoms, atom, atom_index)
               ]
                 .f-c-atoms-previews__preview-inner
-                  = atom_cell(atom)
+                  = render_atom(atom)
                 = controls
 
               - index += 1

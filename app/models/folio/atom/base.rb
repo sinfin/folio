@@ -58,7 +58,7 @@ class Folio::Atom::Base < Folio::ApplicationRecord
 
   def self.component_class
     if cell_name.nil?
-      "#{self.class}Component".constantize
+      "#{self}Component".constantize
     end
   end
 

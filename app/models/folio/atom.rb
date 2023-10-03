@@ -24,7 +24,7 @@ module Folio::Atom
           type: value,
           character_counter: value == :text,
           default_values: klass.default_atom_values[key],
-          splittable: klass.molecule_cell_name ? nil : klass.splittable_by_attribute == key,
+          splittable: (klass.molecule_component_class || klass.molecule_cell_name) ? nil : klass.splittable_by_attribute == key,
         }
 
         if value.is_a?(Array)
@@ -92,7 +92,7 @@ module Folio::Atom
         structure:,
         form_layout: klass::FORM_LAYOUT,
         title: klass.model_name.human,
-        molecule: klass.molecule_cell_name,
+        molecule: klass.molecule_component_class || klass.molecule_cell_name,
         molecule_singleton: klass.molecule_singleton,
         molecule_secondary: klass.molecule_secondary,
       }
@@ -116,6 +116,7 @@ module Folio::Atom
     atoms.each_with_index do |atom, index|
       molecule = atom.class.molecule_component_class ||
                  atom.class.molecule.presence ||
+                 atom.class.molecule_component_class.presence ||
                  atom.class.molecule_cell_name.presence
 
       if index != 0 && molecule == molecules.last.first
