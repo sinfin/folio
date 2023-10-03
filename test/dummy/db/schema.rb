@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_02_143451) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -128,7 +128,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.index ["invitation_token"], name: "index_folio_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_folio_accounts_on_invitations_count"
     t.index ["invited_by_id"], name: "index_folio_accounts_on_invited_by_id"
-    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by_type_and_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_folio_accounts_on_invited_by"
     t.index ["reset_password_token"], name: "index_folio_accounts_on_reset_password_token", unique: true
   end
 
@@ -226,7 +226,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -412,6 +412,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.index ["web_session_id"], name: "index_folio_session_attachments_on_web_session_id"
   end
 
+  create_table "folio_site_user_links", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "site_id", null: false
+    t.json "roles", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["site_id"], name: "index_folio_site_user_links_on_site_id"
+    t.index ["user_id"], name: "index_folio_site_user_links_on_user_id"
+  end
+
   create_table "folio_sites", force: :cascade do |t|
     t.string "title"
     t.string "domain"
@@ -438,6 +448,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.string "slug"
     t.integer "position"
     t.string "copyright_info_source"
+    t.json "available_user_roles", default: []
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
@@ -514,7 +525,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -543,4 +554,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_28_065712) do
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
+  add_foreign_key "folio_site_user_links", "folio_sites", column: "site_id"
+  add_foreign_key "folio_site_user_links", "folio_users", column: "user_id"
 end

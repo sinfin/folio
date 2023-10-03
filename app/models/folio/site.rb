@@ -30,6 +30,13 @@ class Folio::Site < Folio::ApplicationRecord
                           foreign_key: :source_site_id,
                           inverse_of: :source_site,
                           dependent: :nullify
+  has_many :site_user_links, class_name: "Folio::SiteUserLink",
+                             foreign_key: :site_id,
+                             inverse_of: :site,
+                             dependent: :destroy
+  has_many :users, through: :site_user_links,
+                          source: :user
+
 
   # Validations
   validates :title, :email, :locale, :locales,
@@ -202,6 +209,7 @@ end
 #  slug                              :string
 #  position                          :integer
 #  copyright_info_source             :string
+#  available_user_roles              :json
 #
 # Indexes
 #

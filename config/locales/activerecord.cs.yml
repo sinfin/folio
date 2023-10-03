@@ -150,6 +150,10 @@ cs:
               invalid: nemá správný formát. Zadejte prosím celé číslo včetně předvolby. Např. +420604123456
             password:
               weak_password: je příliš slabé. Zkuste alespoň 8 znaků namíchaných z velkých a malých písmen, číslic a symbolů.
+        folio/site_user_link:
+          attributes:
+            roles:
+              not_available_for_site: "Role %{roles} nejsou dostupné pro web '%{site}'."
     models:
       folio/account:
         few: Administrátoři

@@ -5,6 +5,7 @@ class Folio::User < Folio::ApplicationRecord
   include Folio::Filterable
   include Folio::HasAddresses
   include Folio::HasNewsletterSubscriptions
+  include Folio::HasSiteRoles
 
   has_sanitized_fields :email, :first_name, :last_name, :nickname
 
