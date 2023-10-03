@@ -9,6 +9,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       buttons
       forms
       icons
+      images
       pagination
       typo
     ]
@@ -67,6 +68,20 @@ class <%= application_namespace %>::UiController < ApplicationController
 
   def pagination
     @pagy, _records = pagy(<%= application_namespace %>::Blog::Article, items: 1)
+  end
+
+  def images
+    @image = Folio::File::Image.tagged_with("unsplash").first
+
+    @variants = [
+      { size: "100x100#" },
+      { size: "100x100" },
+      { size: "100x100", kwargs: { cover: true } },
+      { size: "100x100", kwargs: { contain: true } },
+      { size: "100x100#", kwargs: { lazy: false } },
+      { size: "100x100#", kwargs: { round: true } },
+      { size: "100x100#", kwargs: { hover_zoom: true } },
+    ]
   end
 
   private
