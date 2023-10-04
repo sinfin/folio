@@ -62,25 +62,17 @@ window.Folio.MessageBus.callbacks['Folio::GenerateThumbnailJob'] = (data) => {
   if (!data || data.type !== 'Folio::GenerateThumbnailJob') return
   if (!data.data.temporary_url || !data.data.url) return
 
-  $(`img[src='${data.data.temporary_url}']`).attr('src', data.data.url)
+  for (const img of document.querySelectorAll(`img[src='${data.data.temporary_url}']`)) {
+    img.src = data.data.url
+  }
 
-  $(`img[srcset*='${data.data.temporary_url}']`).each((i, el) => {
-    const $img = $(el)
-    $img.attr('srcset', $img.attr('srcset').replace(data.data.temporary_url, data.data.url))
-  })
+  for (const img of document.querySelectorAll(`img[srcset*='${data.data.temporary_url}']`)) {
+    img.srcset = img.srcset.replace(data.data.temporary_url, data.data.url)
+  }
 
-  $('.folio-thumbnail-background').each((i, el) => {
-    const $el = $(el)
-    const bg = $el.css('background-image')
-
-    if (bg.indexOf(data.data.temporary_url) !== -1) {
-      $el.css('background-image', `url('${data.data.url}')`)
-      $el.removeClass('folio-thumbnail-background')
-    }
-  })
-
-  $(`[data-lightbox-src='${data.data.temporary_url}']`)
-    .attr('data-lightbox-src', data.data.url)
-    .attr('data-lightbox-width', data.width)
-    .attr('data-lightbox-height', data.height)
+  for (const img of document.querySelectorAll(`[data-lightbox-src='${data.data.temporary_url}']`)) {
+    img.dataset.lightboxSrc = data.data.url
+    img.dataset.lightboxWidth = data.width
+    img.dataset.lightboxHeight = data.height
+  }
 }
