@@ -1,0 +1,2 @@
+<%- data = @collection.map { |key, component| [key, capture { render(component) }] } -%>
+{ "data": <%= raw Hash[data].to_json %><%= raw @meta %> }

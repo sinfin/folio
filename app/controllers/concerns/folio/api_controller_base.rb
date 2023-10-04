@@ -15,8 +15,7 @@ module Folio::ApiControllerBase
       render json: { data: }, root: false
     end
 
-    def render_component_json(component, pagy: nil, flash: nil)
-      @component = component
+    def render_component_json(component, pagy: nil, flash: nil, collection_attribute: nil)
       meta = {}
 
       if pagy
@@ -31,7 +30,21 @@ module Folio::ApiControllerBase
         ", \"meta\": #{meta.to_json}"
       end
 
-      render "folio/api_controller_base_json"
+      if collection_attribute
+        @collection = component.to_a.map do |component|
+          key = component.instance_variable_get("@#{component.class.collection_parameter}")
+          [key.send(collection_attribute), component]
+        end
+
+        render "folio/api_controller_base_collection_json"
+      else
+        @component = component
+        render "folio/api_controller_base_json"
+      end
+    end
+
+    def render_component_collection_json(component, pagy: nil, flash: nil, attribute: :id)
+      render_component_json(component, pagy:, flash:, collection_attribute: attribute)
     end
 
     def render_error(e, status: nil)
