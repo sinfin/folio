@@ -18,7 +18,7 @@
           = image(fp)
 
           - edit_data = { file: serialized_file(fp), \
-                          'file-type' => options[:file_type] }
+                          file_type: options[:file_type] }
 
           button[
             type='button'
@@ -32,6 +32,7 @@
             type='button'
             class='btn btn-danger fa fa-times'
             class='f-c-file-list__file-btn f-c-file-list__file-btn--destroy'
+            data-destroy-association=true
           ]
 
       = fp.hidden_field :description
