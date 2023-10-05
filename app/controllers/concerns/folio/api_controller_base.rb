@@ -15,7 +15,7 @@ module Folio::ApiControllerBase
       render json: { data: }, root: false
     end
 
-    def render_component_json(component, pagy: nil, flash: nil, collection_attribute: nil)
+    def render_component_json(component, pagy: nil, flash: nil, collection_attribute: nil, status: 200)
       meta = {}
 
       if pagy
@@ -36,15 +36,15 @@ module Folio::ApiControllerBase
           [key.send(collection_attribute), component]
         end
 
-        render "folio/api_controller_base_collection_json"
+        render "folio/api_controller_base_collection_json", status:
       else
         @component = component
-        render "folio/api_controller_base_json"
+        render "folio/api_controller_base_json", status:
       end
     end
 
-    def render_component_collection_json(component, pagy: nil, flash: nil, attribute: :id)
-      render_component_json(component, pagy:, flash:, collection_attribute: attribute)
+    def render_component_collection_json(component, pagy: nil, flash: nil, attribute: :id, status: 200)
+      render_component_json(component, pagy:, flash:, collection_attribute: attribute, status:)
     end
 
     def render_error(e, status: nil)
