@@ -43,7 +43,7 @@ window.Dummy.Ui.Alert.create = (data) => {
   closeBtn.type = 'button'
   closeBtn.className = 'd-ui-alert__close d-anti-container-fluid d-anti-container-fluid--padding'
   closeBtn.dataset.action = 'd-ui-alert#close'
-  closeBtn.appendChild(window.Dummy.Ui.Icon.create('x'))
+  closeBtn.appendChild(window.Dummy.Ui.Icon.create('close'))
 
   container.appendChild(closeBtn)
 

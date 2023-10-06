@@ -43,7 +43,7 @@ window.<%= application_namespace %>.Ui.Alert.create = (data) => {
   closeBtn.type = 'button'
   closeBtn.className = '<%= classname_prefix %>-ui-alert__close d-anti-container-fluid d-anti-container-fluid--padding'
   closeBtn.dataset.action = '<%= classname_prefix %>-ui-alert#close'
-  closeBtn.appendChild(window.<%= application_namespace %>.Ui.Icon.create('x'))
+  closeBtn.appendChild(window.<%= application_namespace %>.Ui.Icon.create('close'))
 
   container.appendChild(closeBtn)
 
