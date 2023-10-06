@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 module Folio::StimulusHelper
-  def stimulus_controller(*controller_names, values: {}, action: nil, classes: [], outlets: [])
-    @stimulus_controller_name = controller_names.first
+  def stimulus_controller(*controller_names, values: {}, action: nil, classes: [], outlets: [], inline: false)
+    controller = controller_names.first
+
+    unless inline
+      @stimulus_controller_name = controller
+    end
 
     h = {
       "controller" => controller_names.join(" "),
@@ -10,22 +14,10 @@ module Folio::StimulusHelper
 
     values.each do |key, value|
       value = value.to_s if value.is_a?(TrueClass) || value.is_a?(FalseClass)
-      h["#{@stimulus_controller_name}-#{key}-value"] = value
+      h["#{controller}-#{key}-value"] = value
     end
 
-    if action
-      h = h.merge(stimulus_action(action))
-    end
-
-    if outlets.present?
-      h = h.merge(stimulus_outlets(outlets))
-    end
-
-    if classes.present?
-      h = h.merge(stimulus_classes(classes))
-    end
-
-    h
+    h.merge(stimulus_data(controller:, action:, outlets:, classes:))
   end
 
   def stimulus_data(action: nil, target: nil, controller: nil, classes: [], outlets: [])
@@ -92,12 +84,14 @@ module Folio::StimulusHelper
   def stimulus_modal_toggle(target, dialog: nil)
     stimulus_controller("f-modal-toggle",
                         values: { target:, dialog: },
-                        action: { click: "click" })
+                        action: { click: "click" },
+                        inline: true)
   end
 
   def stimulus_modal_close
     stimulus_controller("f-modal-close",
-                        action: { click: "click" })
+                        action: { click: "click" },
+                        inline: true)
   end
 
   def stimulus_merge_data(*hashes)
