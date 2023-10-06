@@ -1,14 +1,14 @@
 window.Folio = window.Folio || {}
 
 window.Folio.formToHash = (form) => {
-  const inputs = form.querySelectorAll('input')
+  const formData = new window.FormData(form)
   const hash = {}
 
-  for (const input of inputs) {
-    const parts = input.name.split('[')
+  formData.forEach((value, key) => {
+    const parts = key.split('[')
 
     if (parts.length === 1) {
-      hash[input.name] = input.value
+      hash[key] = value
     } else {
       const cleanParts = parts.map((part) => part.replace(']', ''))
       let sanity = 100
@@ -17,7 +17,7 @@ window.Folio.formToHash = (form) => {
 
       while (i <= cleanParts.length - 1 && sanity > 0) {
         if (i === cleanParts.length - 1) {
-          runner[cleanParts[i]] = input.value
+          runner[cleanParts[i]] = value
         } else {
           runner[cleanParts[i]] = runner[cleanParts[i]] || {}
         }
@@ -28,7 +28,7 @@ window.Folio.formToHash = (form) => {
         sanity -= 1
       }
     }
-  }
+  })
 
   return hash
 }
