@@ -108,7 +108,7 @@ window.Folio.Stimulus.register('f-modal-toggle', class extends window.Stimulus.C
 window.Folio.Stimulus.register('f-modal-close', class extends window.Stimulus.Controller {
   click (e) {
     e.preventDefault()
-    const modals = $('[data-f-modal-open-value="true"]')
+    const modals = document.querySelectorAll('[data-f-modal-open-value="true"]')
 
     for (const modal of modals) {
       modal.dataset.fModalOpenValue = 'false'
