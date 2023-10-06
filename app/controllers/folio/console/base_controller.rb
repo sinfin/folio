@@ -80,7 +80,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
                                       parent: (false if as.present?))
     end
 
-    if klass.method_defined?(:revisions)
+    if klass.respond_to?(:audited_view_name)
       before_action :load_revisions, only: [klass.audited_view_name, :revision]
       before_action :find_revision, only: [:revision, :restore]
     end
