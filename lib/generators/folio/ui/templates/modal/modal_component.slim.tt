@@ -1,0 +1,30 @@
+.modal.<%= classname_prefix %>-ui-modal[
+  role="dialog"
+  tabindex="-1"
+  class=@class_name
+  data=stimulus_controller('f-modal')
+]
+  .modal-dialog[
+    role="document"
+    class="<%= classname_prefix %>-ui-modal__dialog"
+  ]
+    .modal-content.<%= classname_prefix %>-ui-modal__content
+      - if header?
+        .modal-header.<%= classname_prefix %>-ui-modal__header
+          = header
+          = close_button
+      - elsif @title.present?
+        .modal-header.<%= classname_prefix %>-ui-modal__header
+          .modal-title.<%= classname_prefix %>-ui-modal__title = @title
+          = close_button
+
+      .modal-body.<%= classname_prefix %>-ui-modal__body
+        = content
+        = close_button if !header? && @title.blank?
+
+      - if footer?
+        .modal-footer.<%= classname_prefix %>-ui-modal__footer
+          = footer
+      - elsif @buttons_model
+        .modal-footer.<%= classname_prefix %>-ui-modal__footer
+          = <%= application_namespace_path %>_ui_buttons(buttons: @buttons_model)

@@ -23,4 +23,3 @@
 //= require <%= application_namespace_path %>/ui/header_search_component
 //= require <%= application_namespace_path %>/ui/icon_component
 //= require <%= application_namespace_path %>/ui/menu_component
-//= require <%= application_namespace_path %>/ui/modal/modal

@@ -25,4 +25,4 @@ div[
         type="button"
         data=stimulus_action('close')
       ]
-        = <%= application_namespace_path %>_ui_icon(:x)
+        = <%= application_namespace_path %>_ui_icon(:close)

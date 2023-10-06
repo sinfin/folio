@@ -90,6 +90,9 @@ circle:
 clock_3:
   width: 24
   height: 24
+close:
+  width: 24
+  height: 24
 cookie:
   width: 24
   height: 24
@@ -325,9 +328,6 @@ volume_2:
   width: 24
   height: 24
 wallet_2:
-  width: 24
-  height: 24
-x:
   width: 24
   height: 24
 x_square:

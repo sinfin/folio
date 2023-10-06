@@ -1,6 +1,50 @@
 .modal-title
+  font-size: $ui-typo-display-s-font-size
+  line-height: $ui-typo-display-s-line-height
+  letter-spacing: $ui-typo-display-s-letter-spacing
+  font-weight: $font-weight-bold
   margin: 0 !important
   position: relative
 
+  +media-breakpoint-down($font-size-media-breakpoint)
+    font-size: $ui-typo-display-xs-font-size
+    line-height: $ui-typo-display-xs-line-height
+    letter-spacing: $ui-typo-display-xs-letter-spacing
+
 .modal-header
   position: relative
+  padding-bottom: 0
+
+.modal-body
+  .modal-header + &
+    padding-top: $modal-inner-padding / 2
+
+  &:not(:last-child)
+    padding-bottom: $modal-inner-padding / 2
+
+  &:first-child
+    padding-right: $modal-inner-padding + px-to-rem(24px) + $grid-gutter-half
+
+.modal-content
+  box-shadow: $modal-content-box-shadow-xs
+  border: 1px solid var(--Transparent-100, rgba(0, 0, 0, 0.10));
+
+.modal-footer
+  display: block
+  padding: 0 $modal-inner-padding $modal-inner-padding
+
++media-breakpoint-down(md)
+  .modal-header,
+  .modal-body,
+  .modal-footer
+    padding: $modal-inner-padding-mobile
+
+  .modal-header
+    padding-bottom: 0
+
+  .modal-footer
+    padding-top: 0
+
+  .modal-body
+    &:first-child
+      padding-right: $modal-inner-padding-mobile + px-to-rem(24px) + $grid-gutter-half

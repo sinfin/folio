@@ -12,4 +12,4 @@
           type="button"
           data=stimulus_action('close')
         ]
-          = <%= application_namespace_path %>_ui_icon(:x, height: 22)
+          = <%= application_namespace_path %>_ui_icon(:close, height: 22)

@@ -10,6 +10,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       forms
       icons
       images
+      modals
       pagination
       typo
     ]

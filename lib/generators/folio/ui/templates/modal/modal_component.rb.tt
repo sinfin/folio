@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Ui::ModalComponent < ApplicationComponent
+  renders_one :header
+  renders_one :footer
+
+  def initialize(class_name:, buttons_model: nil, title: nil)
+    @class_name = class_name
+    @buttons_model = buttons_model
+    @title = title
+  end
+
+  def close_button
+    data = stimulus_controller("f-modal-close", action: { click: :click }).merge("bs-dismiss" => "modal")
+
+    button_tag(<%= application_namespace_path %>_ui_icon(:close),
+               class: "<%= classname_prefix %>-ui-modal__close",
+               type: "button",
+               data:)
+  end
+end
