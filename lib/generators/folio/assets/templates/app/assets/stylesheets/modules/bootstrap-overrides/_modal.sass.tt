@@ -1,4 +1,5 @@
 .modal-title
+  font-family: $headings-font-family
   font-size: $ui-typo-display-s-font-size
   line-height: $ui-typo-display-s-line-height
   letter-spacing: $ui-typo-display-s-letter-spacing
