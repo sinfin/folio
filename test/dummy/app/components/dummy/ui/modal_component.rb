@@ -4,11 +4,12 @@ class Dummy::Ui::ModalComponent < ApplicationComponent
   renders_one :header
   renders_one :footer
 
-  def initialize(class_name:, buttons_model: nil, title: nil, data: nil)
+  def initialize(class_name:, buttons_model: nil, title: nil, data: nil, size: nil)
     @class_name = class_name
     @buttons_model = buttons_model
     @title = title
     @data = data
+    @size = size
   end
 
   def close_button

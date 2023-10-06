@@ -7,6 +7,7 @@
   .modal-dialog[
     role="document"
     class="<%= classname_prefix %>-ui-modal__dialog"
+    class=(@size ? "modal-#{@size}" : nil)
   ]
     .modal-content.<%= classname_prefix %>-ui-modal__content
       - if header?
