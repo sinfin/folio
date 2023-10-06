@@ -4,7 +4,7 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::IconComponentTest < Folio::ComponentTest
   def test_render
-    render_inline(<%= application_namespace %>::Ui::IconComponent.new(name: :x))
+    render_inline(<%= application_namespace %>::Ui::IconComponent.new(name: :close))
 
     assert_selector(".<%= classname_prefix %>-ui-icon")
   end
