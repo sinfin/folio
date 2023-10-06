@@ -94,4 +94,9 @@ module Folio::StimulusHelper
                         values: { target:, dialog: },
                         action: { click: "click" })
   end
+
+  def stimulus_modal_close
+    stimulus_controller("f-modal-close",
+                        action: { click: "click" })
+  end
 end

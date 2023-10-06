@@ -71,6 +71,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
       get :forms
       get :icons
       get :images
+      get :modals
       get :pagination
       get :typo
     end

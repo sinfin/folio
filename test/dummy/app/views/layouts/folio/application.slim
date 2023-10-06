@@ -36,5 +36,6 @@ html[
     = render(Dummy::Ui::FooterComponent.new)
 
     - if Rails.application.config.folio_users
+      = yield :modals
       == cell('folio/devise/modal')
       == cell('folio/devise/omniauth/forms')

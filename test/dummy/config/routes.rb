@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       get :forms
       get :icons
       get :images
+      get :modals
       get :pagination
       get :typo
     end

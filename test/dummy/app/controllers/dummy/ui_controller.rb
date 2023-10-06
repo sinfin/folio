@@ -10,6 +10,7 @@ class Dummy::UiController < ApplicationController
       forms
       icons
       images
+      modals
       pagination
       typo
     ]
