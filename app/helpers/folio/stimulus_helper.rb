@@ -99,4 +99,27 @@ module Folio::StimulusHelper
     stimulus_controller("f-modal-close",
                         action: { click: "click" })
   end
+
+  def stimulus_merge_data(*hashes)
+    result = {}
+    keys = %w[controller action]
+
+    hashes.each do |hash|
+      next if hash.blank?
+
+      result = result.merge(hash.without(*keys))
+
+      keys.each do |key|
+        if result[key].present?
+          if hash[key].present?
+            result[key] += " #{hash[key]}"
+          end
+        elsif hash[key].present?
+          result[key] = hash[key]
+        end
+      end
+    end
+
+    result
+  end
 end

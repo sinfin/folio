@@ -2,7 +2,7 @@
   role="dialog"
   tabindex="-1"
   class=@class_name
-  data=stimulus_controller('f-modal')
+  data=stimulus_merge_data(stimulus_controller('f-modal'), @data)
 ]
   .modal-dialog[
     role="document"
