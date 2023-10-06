@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio::StimulusHelper
-  def stimulus_controller(*controller_names, values: {}, action: nil, classes: [], outlets: {})
+  def stimulus_controller(*controller_names, values: {}, action: nil, classes: [], outlets: [])
     @stimulus_controller_name = controller_names.first
 
     h = {
@@ -28,7 +28,7 @@ module Folio::StimulusHelper
     h
   end
 
-  def stimulus_data(action: nil, target: nil, controller: nil, classes: [], outlets: {})
+  def stimulus_data(action: nil, target: nil, controller: nil, classes: [], outlets: [])
     controller ||= @stimulus_controller_name
     fail "Missing @stimulus_controller_name" if controller.nil?
 
@@ -65,8 +65,8 @@ module Folio::StimulusHelper
     end
 
     if outlets.present?
-      outlets.each do |key, value|
-        h["#{controller}-#{key.to_s.tr("_", "-")}-outlet"] = value
+      outlets.each do |class_name_same_as_controller_name|
+        h["#{controller}-#{class_name_same_as_controller_name}-outlet"] = ".#{class_name_same_as_controller_name}"
       end
     end
 
