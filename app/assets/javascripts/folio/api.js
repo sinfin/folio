@@ -107,16 +107,16 @@ window.Folio.Api.api = (method, url, body, signal) => {
   return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
 }
 
-window.Folio.Api.apiPost = (url, body) => {
-  return window.Folio.Api.api('POST', url, body)
+window.Folio.Api.apiPost = (url, body, signal) => {
+  return window.Folio.Api.api('POST', url, body, signal)
 }
 
-window.Folio.Api.apiPatch = (url, body) => {
-  return window.Folio.Api.api('PATCH', url, body)
+window.Folio.Api.apiPatch = (url, body, signal) => {
+  return window.Folio.Api.api('PATCH', url, body, signal)
 }
 
-window.Folio.Api.apiPut = (url, body) => {
-  return window.Folio.Api.api('PUT', url, body)
+window.Folio.Api.apiPut = (url, body, signal) => {
+  return window.Folio.Api.api('PUT', url, body, signal)
 }
 
 window.Folio.Api.apiGet = (url, body = null, signal) => {
