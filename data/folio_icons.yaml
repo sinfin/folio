@@ -147,7 +147,13 @@ format_strikethrough_variant:
 fullscreen:
   width: 24
   height: 24
+gavel:
+  width: 24
+  height: 24
 gift:
+  width: 24
+  height: 24
+globe:
   width: 24
   height: 24
 home:
@@ -268,6 +274,9 @@ th-list:
   width: 24
   height: 24
 tune_vertical_variant:
+  width: 24
+  height: 24
+user:
   width: 24
   height: 24
 video:
