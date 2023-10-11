@@ -63,7 +63,7 @@ PATH
       sass-rails
       show_for
       sidekiq (~> 6.5)
-      sidekiq-cron (= 1.8.0)
+      sidekiq-cron (~> 1.10.1)
       simple_form
       sitemap_generator
       slim
@@ -586,13 +586,14 @@ GEM
     show_for (0.8.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
-    sidekiq (6.5.9)
+    sidekiq (6.5.12)
       connection_pool (>= 2.2.5, < 3)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
-    sidekiq-cron (1.8.0)
-      fugit (~> 1)
-      sidekiq (>= 4.2.1)
+    sidekiq-cron (1.10.1)
+      fugit (~> 1.8)
+      globalid (>= 1.0.1)
+      sidekiq (>= 6)
     simple_form (5.2.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
