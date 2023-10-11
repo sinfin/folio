@@ -32,7 +32,10 @@ const jsonError = (json) => {
     const parts = []
 
     json.errors.forEach((err) => {
-      parts.push(err.title)
+      if (err.title && err.title.indexOf('::') === -1) {
+        parts.push(err.title)
+      }
+
       parts.push(err.detail)
     })
 
