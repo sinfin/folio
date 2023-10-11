@@ -12,10 +12,12 @@ Folio uses [Trailblazer cells](https://github.com/trailblazer/cells) with [Slim]
 Run `bundle exec rails app:folio:prepare_dummy_app`.
 
 ## Installation
-Add this line to your application's Gemfile:
+Add this lines to your application's Gemfile:
 
 ```ruby
 gem 'folio', github: 'sinfin/folio'
+gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry"
+gem "view_component"
 ```
 
 And then execute:
@@ -27,7 +29,8 @@ Run:
 ```bash
 $ rails generate folio:install
 ```
-which will copy bunch of things into your, hopefully clean, app
+which will copy bunch of things into your, hopefully clean, app.
+Make some cleaning in `Gemfile` as generator will add  gems there.
 
 Then run migrations
 ```bash
