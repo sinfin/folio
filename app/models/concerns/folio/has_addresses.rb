@@ -48,7 +48,7 @@ module Folio::HasAddresses
 
     def reject_address_attributes?(attributes)
       attributes.with_indifferent_access
-                .except(:country_code)
+                .except(*Folio::Address::Base.attributes_ignored_for_reject_if)
                 .values
                 .all?(&:blank?)
     end

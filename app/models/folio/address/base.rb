@@ -106,6 +106,10 @@ class Folio::Address::Base < Folio::ApplicationRecord
     %w[CZ SK]
   end
 
+  def self.attributes_ignored_for_reject_if
+    [:country_code]
+  end
+
   private
     def should_validate_country_code?
       true
