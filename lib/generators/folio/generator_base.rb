@@ -15,7 +15,7 @@ module Folio::GeneratorBase
     end
 
     def classname_prefix
-      if name.start_with?("/")
+      if respond_to?(:name) && name.start_with?("/")
         nil
       else
         application_class.name[0].downcase
