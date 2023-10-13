@@ -58,6 +58,8 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       if (autofocus) {
         autofocus.focus()
       }
+
+      this.dispatch('opened')
     } else {
       this.unbindOutsideClick()
 
@@ -68,6 +70,8 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
       this.element.style.display = 'none'
 
       this.removeBackdrops()
+
+      this.dispatch('closed')
     }
   }
 })
@@ -75,7 +79,7 @@ window.Folio.Stimulus.register('f-modal', class extends window.Stimulus.Controll
 window.Folio.Stimulus.register('f-modal-toggle', class extends window.Stimulus.Controller {
   static values = {
     target: String,
-    dialog: String,
+    dialog: String
   }
 
   click (e) {
