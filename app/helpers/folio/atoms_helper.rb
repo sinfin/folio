@@ -36,16 +36,16 @@ module Folio::AtomsHelper
 
       if molecule.present?
         if atoms.present?
-          if molecule < ViewComponent::Base
+          if molecule.is_a?(String)
+            cell(molecule,
+                 atoms,
+                 atom_options)
+          elsif molecule < ViewComponent::Base
             if self.is_a?(Folio::ApplicationCell)
               capture { render_view_component(molecule.new(atoms:, atom_options:)) }
             else
               capture { render(molecule.new(atoms:, atom_options:)) }
             end
-          elsif molecule.is_a?(String)
-            cell(molecule,
-                 atoms,
-                 atom_options)
           else
             cell(molecule.cell_name,
                  atoms,
