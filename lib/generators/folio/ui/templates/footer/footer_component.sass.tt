@@ -115,7 +115,7 @@
     &__menu
       min-width: 0
       width: 100%
-      gap: map-get($spacers, 12)
+      gap: px-to-rem(12px)
 
     &__copyright
       +font-size-base

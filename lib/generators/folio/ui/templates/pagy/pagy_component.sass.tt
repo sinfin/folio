@@ -9,7 +9,7 @@
   &__page-item, &__page-link
     display: block
     font-weight: $font-weight-bold
-    padding: map-get($spacers, 1) map-get($spacers, 12)
+    padding: map-get($spacers, 1) px-to-rem(12px)
     border-radius: $border-radius-lg
 
   &__page-link
