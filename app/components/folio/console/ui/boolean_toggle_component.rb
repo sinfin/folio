@@ -3,7 +3,16 @@
 class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationComponent
   bem_class_name :label, :verbose
 
-  def initialize(record:, attribute:, url: nil, disabled: false, label: nil, verbose: false, as: nil, confirm: false, class_name: nil, small_label: false)
+  def initialize(record:,
+                 attribute:,
+                 url: nil,
+                 disabled: false,
+                 label: nil,
+                 verbose: false,
+                 as: nil,
+                 confirm: false,
+                 class_name: nil,
+                 small_label: false)
     @record = record
     @attribute = attribute
     @disabled = disabled

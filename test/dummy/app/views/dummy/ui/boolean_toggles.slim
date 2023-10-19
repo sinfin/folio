@@ -63,3 +63,13 @@
                                                  url: controller.folio.url_for([:console, page]),
                                                  attribute: :published,
                                                  disabled: true))
+
+  h3 Without url and record
+
+  = render(Dummy::Ui::BooleanToggleComponent.new(attribute: :published,
+                                                 checked: false))
+
+  h3 Without url and record - checked
+
+  = render(Dummy::Ui::BooleanToggleComponent.new(attribute: :published,
+                                                 checked: true))

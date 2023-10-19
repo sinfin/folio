@@ -3,9 +3,10 @@
 class <%= application_namespace %>::Ui::BooleanToggleComponent < Folio::Console::ApplicationComponent
   bem_class_name :label, :verbose
 
-  def initialize(record:,
+  def initialize(record: nil,
                  attribute:,
-                 url:,
+                 url: nil,
+                 checked: nil,
                  disabled: false,
                  label: nil,
                  verbose: false,
@@ -23,14 +24,19 @@ class <%= application_namespace %>::Ui::BooleanToggleComponent < Folio::Console:
     @url = url
     @class_name = class_name
     @small_label = small_label
+    @checked = checked
   end
 
   def checked
-    !!@record.try(@attribute)
+    @checked.nil? ? !!@record.try(@attribute) : @checked
   end
 
   def name
-    "#{as}[#{@attribute}]"
+    if @as || @record
+      "#{as}[#{@attribute}]"
+    else
+      @attribute
+    end
   end
 
   def as
@@ -61,6 +67,7 @@ class <%= application_namespace %>::Ui::BooleanToggleComponent < Folio::Console:
     stimulus_controller("<%= classname_prefix %>-ui-boolean-toggle", values: {
       url: @url,
       confirmation:,
+      attribute: @attribute,
     }, classes: %w[loading])
   end
 end
