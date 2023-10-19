@@ -6,6 +6,7 @@ class <%= application_namespace %>::UiController < ApplicationController
   def show
     @actions = %i[
       alerts
+      boolean_toggles
       buttons
       forms
       icons

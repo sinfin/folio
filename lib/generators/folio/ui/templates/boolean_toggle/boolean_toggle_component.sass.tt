@@ -1,0 +1,63 @@
+.<%= classname_prefix %>-ui-boolean-toggle
+  position: relative
+  transition: $transition-base
+  display: block
+  margin: 0
+
+  &__label
+    position: relative
+    padding-left: px-to-rem(28px)
+    min-width: px-to-rem(28px)
+    min-height: px-to-rem(28px)
+    cursor: pointer
+    display: inline-flex
+    align-items: center
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      top: calc(50% - #{px-to-rem(16px / 2)})
+      left: 0
+      height: px-to-rem(16px)
+      width: px-to-rem(28px)
+      border-radius: $border-radius
+      background: $shade-300
+
+    &::after
+      content: ''
+      display: block
+      position: absolute
+      top: calc(50% - #{px-to-rem(16px / 2)})
+      left: 0
+      width: px-to-rem(16px)
+      height: px-to-rem(16px)
+      border-radius: 100%
+      transition: $transition-base
+      background: $shade-400
+
+  &__label-text
+    padding-left: px-to-rem(6px)
+
+  &__input
+    display: none
+
+  &__input:checked ~ &__label
+    &::after
+      background: $shade-black-contrast
+      transform: translate(#{px-to-rem(28px - 16px)}, 0)
+
+  &__input:disabled ~ &__label
+    cursor: not-allowed
+
+    &::after
+      display: none
+
+  &--loading
+    cursor: wait
+    opacity: 0.2
+
+  &__input:not(:checked) ~ &__label &__label-text--on,
+  &__input:checked ~ &__label &__label-text--off
+    display: none
+
