@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   scope module: :dummy, as: :dummy do
     resource :ui, only: %i[show], controller: "ui" do
       get :alerts
+      get :boolean_toggles
       get :buttons
       get :forms
       get :icons

@@ -45,3 +45,9 @@ h3 Custom confirmation
                                                         attribute: :published,
                                                         label: "Needs custom confirmation",
                                                         confirm: "Custom confirmation msg?"))
+
+h3 Disabled
+
+= render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                        attribute: :published,
+                                                        disabled: true))

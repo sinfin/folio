@@ -6,6 +6,7 @@ class Dummy::UiController < ApplicationController
   def show
     @actions = %i[
       alerts
+      boolean_toggles
       buttons
       forms
       icons
