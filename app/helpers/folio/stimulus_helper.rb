@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Folio::StimulusHelper
-  def stimulus_controller(*controller_names, values: {}, action: nil, classes: [], outlets: [], inline: false)
+  def stimulus_controller(*controller_names, values: {}, action: nil, params: nil, classes: [], outlets: [], inline: false)
     controller = controller_names.first
 
     unless inline
@@ -17,10 +17,10 @@ module Folio::StimulusHelper
       h["#{controller}-#{key}-value"] = value
     end
 
-    h.merge(stimulus_data(controller:, action:, outlets:, classes:))
+    h.merge(stimulus_data(controller:, action:, outlets:, classes:, params:))
   end
 
-  def stimulus_data(action: nil, target: nil, controller: nil, classes: [], outlets: [])
+  def stimulus_data(action: nil, target: nil, controller: nil, classes: [], outlets: [], params: nil)
     controller ||= @stimulus_controller_name
     fail "Missing @stimulus_controller_name" if controller.nil?
 
@@ -48,6 +48,13 @@ module Folio::StimulusHelper
 
     if target
       h["#{controller}-target"] = target
+    end
+
+    if params.present?
+      params.each do |param, value|
+        value = value.to_s if value.is_a?(TrueClass) || value.is_a?(FalseClass)
+        h["#{controller}-#{param}-param"] = value
+      end
     end
 
     if classes.present?
