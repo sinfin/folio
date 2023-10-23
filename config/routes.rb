@@ -144,6 +144,10 @@ Folio::Engine.routes.draw do
           post :change_file
         end
       end
+
+      resource :ai_assistant, only: [], controller: :ai_assistant do
+        post :generate_response
+      end
     end
 
     resource :merge, only: [:new, :create],

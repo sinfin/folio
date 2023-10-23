@@ -36,6 +36,10 @@ SimpleForm::Inputs::TextInput.class_eval do
       input_html_classes << "f-input--content-templates"
     end
 
+    if options[:wrapper] == :with_ai_assistant
+      input_html_classes << "f-input--ai-assistant"
+    end
+
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
     @builder.text_area(attribute_name, merged_input_options)

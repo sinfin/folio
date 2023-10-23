@@ -88,6 +88,7 @@
 //= require folio/console/single_file_select/single_file_select
 //= require folio/console/state/state
 //= require folio/console/tagsinput/tagsinput
+//= require folio/console/ai_assistant/modal/modal
 
 //= require ./pages_table
 

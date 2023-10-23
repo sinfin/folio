@@ -35,6 +35,9 @@ en:
           invalid_event_detail: Such a change cannot be done
           invalid_record_title: Invalid record
           invalid_record_detail: Record cannot be saved. Correct it before changing state.
+        ai_assistant:
+          exceeded_max_length: Length of this prompt exceeded allowed character count
+          excluded_by_content_filter: Chat GPT content safety filter disallowed this response
       atoms:
         form_header:
           settings: Settings
@@ -310,6 +313,15 @@ en:
           placeholders:
             subject: E-mail subject
             text: E-mail content
+
+      ai_assistant:
+        modal:
+          title: AI Assistant
+          prompt_label: Chat GPT prompt
+          edit_prompt: Edit template
+          submit: Send a message
+          alert: Chat GPT is unavailable at the moment, try again later
+          progress: Chat GPT is generating a response..
 
   date:
     formats:

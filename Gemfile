@@ -28,6 +28,8 @@ gem "omniauth-twitter2"
 gem "omniauth-rails_csrf_protection"
 gem "omniauth"
 
+gem "openai"
+
 group :development do
   gem "puma", "< 6"
   gem "i18n-tasks"

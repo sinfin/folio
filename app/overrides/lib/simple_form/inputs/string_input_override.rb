@@ -70,6 +70,10 @@ SimpleForm::Inputs::StringInput.class_eval do
       input_html_options["data-atom-setting"] = options[:atom_setting]
     end
 
+    if options[:wrapper] == :with_ai_assistant
+      input_html_classes << "f-input--ai-assistant"
+    end
+
     merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
     @builder.text_field(attribute_name, merged_input_options)
