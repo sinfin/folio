@@ -10,6 +10,7 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
 
     unless prompt
       render json: {}, status: 204
+      return
     end
 
     prompt = substitute_patterns(prompt, record_id, record_klass)
