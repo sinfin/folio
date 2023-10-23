@@ -24,7 +24,7 @@ cs:
         email: Adresa, která bude zobrazena na webu.
         email_from: Adresa, ze které budou odesílány informační a jiné zpravy..
         system_email: Adresa(y), na které budou odesílány systémové zprávy. Vícero adres oddělte čárkou.
-        system_email_copy:  Adresa(y), na které budou odesílány kopie systémových zpráv. Vícero adres oddělte čárkou.
+        system_email_copy: Adresa(y), na které budou odesílány kopie systémových zpráv. Vícero adres oddělte čárkou.
         google_analytics_tracking_code: V případě zadání V4 kódu bude ignorováno
     'no': Ne
     placeholders:
@@ -39,6 +39,6 @@ cs:
         title: 'Např.: Nabídka našich služeb'
         q: Hledat...
     required:
-      mark: "*"
+      mark: '*'
       text: povinný údaj
     'yes': Ano

@@ -64,12 +64,12 @@ en:
         collection_undiscard:
           success: Selected records were restored.
           error: Failed to restore some of the records.
-      blank: "Not specified"
+      blank: 'Not specified'
       boolean:
-        "yes": "Yes"
-        "no": "No"
-        "true": "Yes"
-        "false": "No"
+        'yes': 'Yes'
+        'no': 'No'
+        'true': 'Yes'
+        'false': 'No'
       breadcrumbs:
         actions:
           add: Add
@@ -120,7 +120,7 @@ en:
         mass_handle:
           success: Lead forms handled
         show:
-          blank: "-- blank --"
+          blank: '-- blank --'
           handle: Handle
           unhandle: Set as not handled
       menus:
@@ -313,13 +313,13 @@ en:
 
   date:
     formats:
-      console_short: "%d. %m. %Y"
+      console_short: '%d. %m. %Y'
       console_group_by_day: '%a %-d. %B. %Y'
       console_short_date: '%d. %m. %Y'
 
   time:
     formats:
-      console_short: "%d. %m. %Y %H:%M"
+      console_short: '%d. %m. %Y %H:%M'
       console_group_by_day: '%a %-d. %B. %Y'
       console_short_date: '%d. %m. %Y'
       console_short_time: '%H:%M'

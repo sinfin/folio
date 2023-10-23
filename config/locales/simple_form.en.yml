@@ -30,6 +30,6 @@ en:
         title: 'e.g.: Our team'
         q: Search...
     required:
-      mark: "*"
+      mark: '*'
       text: required
     'yes': 'Yes'

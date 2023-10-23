@@ -5,7 +5,8 @@ Dir["#{Folio::Engine.root}/app/lib/folio/simple_form_components/*.rb"].each do |
 end
 
 SimpleForm.setup do |config|
-  config.wrappers :with_flag, tag: "div", class: "form-group form-group--with-flag", error_class: "text-danger has-danger" do |b|
+  config.wrappers :with_flag, tag: "div", class: "form-group form-group--with-flag",
+                              error_class: "text-danger has-danger" do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
@@ -22,7 +23,8 @@ SimpleForm.setup do |config|
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
   end
 
-  config.wrappers :with_custom_html, tag: "div", class: "form-group form-group--with-custom-html", error_class: "text-danger has-danger" do |b|
+  config.wrappers :with_custom_html, tag: "div", class: "form-group form-group--with-custom-html",
+                                     error_class: "text-danger has-danger" do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
