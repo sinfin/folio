@@ -44,7 +44,7 @@ window.Folio.Stimulus.register('d-ui-boolean-toggle', class extends window.Stimu
 
       data._trigger = 'd-ui-boolean-toggle'
 
-      window.Folio.Api.apiPut(this.urlValue, data).then((res) => {
+      window.Folio.Api.apiPatch(this.urlValue, data).then((res) => {
         this.element.classList.remove(this.loadingClass)
 
         if (res && res.data && res.data.f_c_catalogue_published_dates) {
