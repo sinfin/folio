@@ -321,7 +321,7 @@ cs:
 
       ai_assistant:
         modal:
-          title: AI Asistent
+          title: AI asistent
           prompt_label: Chat GPT zpráva
           edit_prompt: Upravit vzor
           submit: Poslat zprávu

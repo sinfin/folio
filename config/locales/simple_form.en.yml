@@ -34,4 +34,4 @@ en:
       text: required
     'yes': 'Yes'
     ai_assistant:
-      model_toggle_label: AI Assistant
+      model_toggle_label: AI assistant

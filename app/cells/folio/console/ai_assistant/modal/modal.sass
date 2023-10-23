@@ -1,7 +1,3 @@
-.f-c-ai-assistant-modal-trigger
-  +unbutton
-  color: $gray-700
-
 .f-c-ai-assistant-modal
   color: $gray-700
 
@@ -30,6 +26,14 @@
     color: inherit
     display: flex
     align-items: center
+
+    &::before
+      content: ''
+      width: 16px
+      height: 16px
+      display: inline-block
+      background-image: image-url("folio/ai_assistant/edit.svg")
+      margin-right: 5px
 
   &__prompt
     color: inherit
@@ -68,7 +72,7 @@
     &::before
       content: ""
       display: block
-      background: image-url("folio/ai_assistant/chat-gpt-ico.svg")
+      background-image: image-url("folio/ai_assistant/chat-gpt-ico.svg")
       width: 32px
       height: 32px
       flex: 0 0 32px
