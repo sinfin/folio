@@ -1,0 +1,96 @@
+.f-c-ai-assistant-modal-trigger
+  +unbutton
+  color: $gray-700
+
+.f-c-ai-assistant-modal
+  color: $gray-700
+
+  .modal-dialog
+    max-width: 640px
+
+  .modal-body
+    padding: 0
+
+  &__title
+    margin: 0
+    padding: 16px 24px
+    border-bottom: 1px solid $gray-200
+    font-size: 18px
+
+  &__form-wrap
+    padding: 16px 24px 24px
+
+  &__form
+    position: relative
+
+  &__prompt-edit
+    position: absolute
+    top: 0
+    right: 0
+    color: inherit
+    display: flex
+    align-items: center
+
+  &__prompt
+    color: inherit
+
+  &__status-error
+    margin-top: 10px
+    color: $red
+
+  &:not(&--error) &__status-error
+    display: none
+
+  &__response
+    position: relative
+    border-top: 1px solid $gray-200
+    padding: 0 24px 24px
+    display: none
+    max-height: 400px
+    overflow-x: hidden
+    overflow-y: auto
+
+  &--loading &__response,
+  &--show-responses &__response
+    display: block
+
+  &--loading &__response
+    min-height: 100px
+
+  &__response-item,
+  &__response-loader
+    display: flex
+    align-items: flex-start
+
+    &:first-child
+      padding-top: 16px
+
+    &::before
+      content: ""
+      display: block
+      background: image-url("folio/ai_assistant/chat-gpt-ico.svg")
+      width: 32px
+      height: 32px
+      flex: 0 0 32px
+      margin-top: 5px
+      margin-right: 10px
+
+  &__response-item + &__response-item,
+  &__response-item + &__response-loader
+      margin-top: 12px
+      padding-top: 12px
+      border-top: 1px solid $gray-200
+
+  &__response-loader
+    position: relative
+    align-items: center
+    min-height: 60px
+
+    &::before
+      margin-top: 0
+
+    .folio-loader
+      top: 12px
+
+  &:not(&--loading) &__response-loader
+    display: none

@@ -35,6 +35,9 @@ cs:
           invalid_event_detail: Změnu záznamu nelze provést.
           invalid_record_title: Neplatný záznam
           invalid_record_detail: Záznam nelze uložit. Před změnou stavu jej opravte.
+        ai_assistant:
+          exceeded_max_length: Délka této zprávy překročila povolený počet znaků
+          excluded_by_content_filter: Bezpečnostní filtr obsahu chatu GPT tuto odpověď nepovolil
       atoms:
         form_header:
           settings: Nastavení
@@ -315,6 +318,15 @@ cs:
           placeholders:
             subject: Předmět e-mailu
             text: Obsah e-mailu
+
+      ai_assistant:
+        modal:
+          title: AI Asistent
+          prompt_label: Chat GPT zpráva
+          edit_prompt: Upravit vzor
+          submit: Poslat zprávu
+          alert: Chat GPT je nyní nedostupný, zkuste to znovu později
+          progress: Chat GPT generuje odpověď...
 
   date:
     formats:

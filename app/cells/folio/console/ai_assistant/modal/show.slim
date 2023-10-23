@@ -1,0 +1,29 @@
+.f-c-ai-assistant-modal__inner
+  h3.f-c-ai-assistant-modal__title
+    = t('.title')
+
+  .f-c-ai-assistant-modal__form-wrap
+    = form do |f|
+      a.f-c-ai-assistant-modal__prompt-edit href=edit_prompt_action
+        span.mr-1
+          = render :_icon_edit
+        span = t('.edit_prompt')
+
+      = f.input :prompt,
+                as: :text,
+                input_html: { rows: 5, class: 'f-c-ai-assistant-modal__prompt' },
+                label: t('.prompt_label')
+
+      button.f-c-ai-assistant-modal__submit [
+        class='btn btn-primary'
+        type='submit'
+      ]
+        = t('.submit')
+
+    .f-c-ai-assistant-modal__status-error
+      = t('.alert')
+
+  .f-c-ai-assistant-modal__response
+    .f-c-ai-assistant-modal__response-loader
+      .folio-loader
+      span = t('.progress')
