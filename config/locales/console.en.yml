@@ -316,7 +316,7 @@ en:
 
       ai_assistant:
         modal:
-          title: AI Assistant
+          title: AI assistant
           prompt_label: Chat GPT prompt
           edit_prompt: Edit template
           submit: Send a message

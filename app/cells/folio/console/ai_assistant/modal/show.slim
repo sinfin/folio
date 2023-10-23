@@ -5,8 +5,6 @@
   .f-c-ai-assistant-modal__form-wrap
     = form do |f|
       a.f-c-ai-assistant-modal__prompt-edit href=edit_prompt_action
-        span.mr-1
-          = render :_icon_edit
         span = t('.edit_prompt')
 
       = f.input :prompt,

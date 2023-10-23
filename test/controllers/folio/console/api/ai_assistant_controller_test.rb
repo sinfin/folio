@@ -17,7 +17,7 @@ class Folio::Console::Api::AiAssistantControllerTest < Folio::Console::BaseContr
 
     post generate_response_console_api_ai_assistant_path
 
-    assert_response 204
+    assert_response 400
 
     post generate_response_console_api_ai_assistant_path, params: {
       prompt: "foo",

@@ -9,13 +9,18 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
     record_klass = params[:record_klass].presence
 
     unless prompt
-      render json: {}, status: 204
+      render json: {}, status: 400
       return
     end
 
     prompt = substitute_patterns(prompt, record_id, record_klass)
 
-    response_data = gpt_client.generate_completion(prompt, 1000)
+    response_data = gpt_client.generate_response(prompt, 2000)
+
+    unless response_data["choices"]
+      render json: response_data, status: 404
+      return
+    end
 
     choices = response_data["choices"].map do |choice|
       status = case choice["finish_reason"]
@@ -26,7 +31,7 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
       end
 
       {
-        text: choice["text"],
+        text: choice.dig("message", "content"),
         index: choice["index"],
         status:
       }

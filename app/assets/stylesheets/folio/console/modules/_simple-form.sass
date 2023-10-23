@@ -90,3 +90,16 @@
 
   .redactor-box ~ &
     top: 23px
+
+.form-ai-assistant-button
+  +unbutton
+  color: $gray-700
+
+  &::before
+    content: ''
+    width: 16px
+    height: 16px
+    display: inline-block
+    background-image: image-url("folio/ai_assistant/robot.svg")
+    margin-right: 5px
+    margin-bottom: -1px

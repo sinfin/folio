@@ -44,4 +44,4 @@ cs:
     'yes': Ano
 
     ai_assistant:
-      model_toggle_label: AI Asistent
+      model_toggle_label: AI asistent
