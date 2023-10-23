@@ -83,6 +83,8 @@ Gem::Specification.new do |s|
   s.add_dependency "redis"
   s.add_dependency "terser"
 
+  s.add_dependency "openai"
+
   s.add_development_dependency "better_errors"
   s.add_development_dependency "binding_of_caller" # used by BetterErrors
   s.add_development_dependency "capybara"

@@ -45,6 +45,7 @@ PATH
       omniauth-google-oauth2
       omniauth-rails_csrf_protection
       omniauth-twitter2
+      openai
       pagy
       pg
       pg_search (= 2.3.2)
@@ -645,7 +646,6 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   omniauth-twitter2
-  openai
   pry-byebug
   pry-rails
   puma (< 6)
