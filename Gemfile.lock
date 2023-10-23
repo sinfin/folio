@@ -45,7 +45,6 @@ PATH
       omniauth-google-oauth2
       omniauth-rails_csrf_protection
       omniauth-twitter2
-      openai
       pagy
       pg
       pg_search (= 2.3.2)
@@ -56,6 +55,7 @@ PATH
       recaptcha (= 4.13.1)
       redis
       responders
+      ruby-openai
       rubyzip
       sass-rails
       show_for
@@ -277,6 +277,8 @@ GEM
     faraday (2.7.4)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (3.0.2)
     fast_jsonapi (1.5)
       activesupport (>= 4.2)
@@ -379,6 +381,7 @@ GEM
     multi_exiftool (0.17.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
+    multipart-post (2.3.0)
     nenv (0.3.0)
     net-imap (0.3.4)
       date
@@ -422,7 +425,6 @@ GEM
     omniauth-twitter2 (0.1.0)
       omniauth
       omniauth-oauth2 (~> 1.0)
-    openai (0.3.0)
     orm_adapter (0.5.0)
     pagy (6.0.1)
     parallel (1.22.1)
@@ -539,6 +541,9 @@ GEM
       rubocop-rails (~> 2.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
+    ruby-openai (5.1.0)
+      faraday (>= 1)
+      faraday-multipart (>= 1)
     ruby-progressbar (1.11.0)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
