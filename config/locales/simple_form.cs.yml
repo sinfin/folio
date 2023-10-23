@@ -42,3 +42,6 @@ cs:
       mark: '*'
       text: povinný údaj
     'yes': Ano
+
+    ai_assistant:
+      model_toggle_label: AI Asistent
