@@ -46,8 +46,8 @@ body
   margin-right: 0
 
 @import '../../cells/folio/**/*'
-@import '../../cells/dummy/**/*'
-@import '../../components/dummy/**/*'
+@import '../../cells/<%= application_namespace_path %>/**/*'
+@import '../../components/<%= application_namespace_path %>/**/*'
 
 @media print
   @import 'print'
