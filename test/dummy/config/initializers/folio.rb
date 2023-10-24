@@ -8,3 +8,5 @@ Rails.application.config.folio_console_sidebar_runner_up_link_class_names = [{ l
   Dummy::Blog::Article
   Dummy::Blog::Topic
 ] }]
+
+Rails.application.config.folio_ai_assistant_openai_model = "gpt-3.5-turbo-16k"
