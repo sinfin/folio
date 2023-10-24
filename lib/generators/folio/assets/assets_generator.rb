@@ -61,7 +61,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     base = ::Folio::Engine.root.join("lib/generators/folio/assets/templates/").to_s
 
     FILES.each do |key|
-      Dir[::Folio::Engine.root.join(key)].each do |full_path|
+      Dir["#{base}#{key}"].each do |full_path|
         path = full_path.to_s.gsub(base, "")
         copy_file path, path
       end
