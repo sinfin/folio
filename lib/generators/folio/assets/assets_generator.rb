@@ -37,6 +37,13 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     public/fonts/*
   ]
 
+  KEEP_FILES = %w[
+    app/cells/application_namespace_path/.keep
+    app/cells/folio/.keep
+    app/cells/folio/console/.keep
+    app/components/application_namespace_path/.keep
+  ]
+
   def rm_rails_new_stuff
     [
       "app/assets/stylesheets/application.css",
@@ -62,9 +69,18 @@ class Folio::AssetsGenerator < Rails::Generators::Base
 
     FILES.each do |key|
       Dir["#{base}#{key}"].each do |full_path|
+        next if File.directory?(full_path)
         path = full_path.to_s.gsub(base, "")
         copy_file path, path
       end
+    end
+  end
+
+  def add_keep_files
+    KEEP_FILES.each do |key|
+      full_path = Rails.root.join(key.gsub('application_namespace_path', application_namespace_path)).to_s
+      FileUtils.mkdir_p(File.dirname(full_path))
+      FileUtils.touch(full_path)
     end
   end
 
