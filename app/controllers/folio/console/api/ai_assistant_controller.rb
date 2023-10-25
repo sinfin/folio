@@ -14,7 +14,6 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
     end
 
     prompt = substitute_patterns(prompt, record_id, record_klass)
-
     response_data = gpt_client.generate_response(prompt, 2000)
 
     unless response_data["choices"]
@@ -40,20 +39,21 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
     render json: { prompt: prompt, response: { choices: choices } }
   end
 
-  def gpt_client
-    @gpt_client ||= Folio::ChatGptClient.new
-  end
-
-  def substitute_patterns(prompt, record_id, record_klass)
-    return prompt unless record_id && record_klass
-
-    record = record_klass.constantize.find(record_id)
-    patterns = record.try(:ai_assistant_substitute_patterns) || []
-
-    patterns.each do |pattern_data|
-      prompt = prompt.gsub(pattern_data[:pattern], pattern_data[:content])
+  private
+    def gpt_client
+      @gpt_client ||= Folio::ChatGptClient.new
     end
 
-    prompt
-  end
+    def substitute_patterns(prompt, record_id, record_klass)
+      return prompt unless record_id && record_klass
+
+      record = record_klass.constantize.find(record_id)
+      patterns = record.try(:ai_assistant_substitute_patterns) || []
+
+      patterns.each do |pattern_data|
+        prompt = prompt.gsub(pattern_data[:pattern], pattern_data[:content])
+      end
+
+      prompt
+    end
 end
