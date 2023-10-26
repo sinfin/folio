@@ -146,6 +146,7 @@ Folio::Engine.routes.draw do
       end
 
       resource :ai_assistant, only: [], controller: :ai_assistant do
+        post :count_prompt_tokens
         post :generate_response
       end
     end

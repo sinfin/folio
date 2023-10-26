@@ -324,9 +324,16 @@ cs:
           title: AI asistent
           prompt_label: Chat GPT zpráva
           edit_prompt: Upravit vzor
-          submit: Poslat zprávu
+          submit: Odeslat
           alert: Chat GPT je nyní nedostupný, zkuste to znovu později
           progress: Chat GPT generuje odpověď...
+          hint_content_character_count: (%{count} zn.)
+          gpt_model/gpt-3-5-turbo-0613: GPT 3.5 (06/2023) - 4097 tokenů
+          gpt_model/gpt-3-5-turbo-0301: GPT 3.5 (03/2023) - 4097 tokenů
+          gpt_model/gpt-3-5-turbo-16k-0613: GPT 3.5 (06/2023) - 16385 tokenů
+          gpt_model/gpt-4-0613: GPT 4 (06/2023) - 8001 tokenů
+          gpt_model/gpt-4-0314: GPT 4 (03/2023) - 8001 tokenů
+          token_counter: Použité tokeny
 
   date:
     formats:

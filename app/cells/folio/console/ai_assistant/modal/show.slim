@@ -7,16 +7,33 @@
       a.f-c-ai-assistant-modal__prompt-edit href=edit_prompt_action
         span = t('.edit_prompt')
 
+      - prompt_input_class = 'f-c-ai-assistant-modal__prompt'
       = f.input :prompt,
                 as: :text,
-                input_html: { rows: 5, class: 'f-c-ai-assistant-modal__prompt' },
-                label: t('.prompt_label')
+                character_counter: :text,
+                input_html: { rows: 5, class: prompt_input_class },
+                label: t('.prompt_label'),
+                hint: prompt_substitute_patterns_hints.join(', ')
 
-      button.f-c-ai-assistant-modal__submit [
-        class='btn btn-primary'
-        type='submit'
-      ]
-        = t('.submit')
+      .f-c-ai-assistant-modal__form-controls
+        button.f-c-ai-assistant-modal__submit [
+          class='btn btn-primary'
+          type='submit'
+        ]
+          = t('.submit')
+
+        = f.input :gpt_model,
+                  collection: gpt_models,
+                  label: false,
+                  character_counter: true,
+                  include_blank: false,
+                  wrapper_html: { class: 'mb-0 ml-h', \
+                                  hidden: gpt_models.size <= 1 }
+
+        .f-c-ai-assistant-modal__token-counter[
+          data-text=t('.token_counter')
+          hidden=true
+        ]
 
     .f-c-ai-assistant-modal__status-error
       = t('.alert')

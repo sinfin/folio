@@ -319,9 +319,16 @@ en:
           title: AI assistant
           prompt_label: Chat GPT prompt
           edit_prompt: Edit template
-          submit: Send a message
+          submit: Submit
           alert: Chat GPT is unavailable at the moment, try again later
           progress: Chat GPT is generating a response..
+          hint_content_character_count: (%{count} char.)
+          gpt_model/gpt-3-5-turbo-0613: GPT 3.5 (06/2023) - 4097 tokens
+          gpt_model/gpt-3-5-turbo-0301: GPT 3.5 (03/2023) - 4097 tokens
+          gpt_model/gpt-3-5-turbo-16k-0613: GPT 3.5 (06/2023) - 16385 tokens
+          gpt_model/gpt-4-0613: GPT 4 (06/2023) - 8001 tokens
+          gpt_model/gpt-4-0314: GPT 4 (03/2023) - 8001 tokens
+          token_counter: Used tokens
 
   date:
     formats:
