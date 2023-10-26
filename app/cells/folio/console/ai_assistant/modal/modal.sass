@@ -26,6 +26,7 @@
     color: inherit
     display: flex
     align-items: center
+    z-index: 2
 
     &::before
       content: ''
@@ -37,6 +38,16 @@
 
   &__prompt
     color: inherit
+
+  &__hints
+    margin-bottom: $grid-gutter-half
+
+  &__form-controls
+    display: flex
+    align-items: center
+
+  &__token-counter
+    margin-left: $grid-gutter-half
 
   &__status-error
     margin-top: 10px
@@ -76,7 +87,7 @@
       width: 32px
       height: 32px
       flex: 0 0 32px
-      margin-top: 5px
+      margin-top: 3px
       margin-right: 10px
 
   &__response-item + &__response-item,

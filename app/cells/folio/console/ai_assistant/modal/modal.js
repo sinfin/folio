@@ -1,30 +1,111 @@
 const MESSAGE_BUS_EVENT = 'Folio::AiAssistant::GenerateResponseJob'
 
+class AIAssistantForm {
+  constructor($form, onFormSubmit) {
+    this.$form = $form
+
+    this.$promptField = $form.find('.f-c-ai-assistant-modal__prompt')
+    this.$tokenCounter = $form.find('.f-c-ai-assistant-modal__token-counter')
+    this.$submitButton = $form.find('.f-c-ai-assistant-modal__submit')
+
+    this.prompt = ''
+
+    this.tokenCountText = this.$tokenCounter.data('text')
+    this.tokenCount = 0
+    this.tokenCountRequest = null
+
+    this.formDisabled = false
+    this.onFormSubmit = onFormSubmit
+
+    $(document).on('submit', '.f-c-ai-assistant-modal__form', this.onSubmit)
+    $(document).on('keyup', '.f-c-ai-assistant-modal__prompt', this.onPromptKeyUp)
+    $(document).on('change', '.f-c-ai-assistant-modal__prompt', this.onPromptChange)
+  }
+
+  updateSubmitButtonState() {
+    this.$submitButton.attr('disabled', this.formDisabled)
+  }
+
+  setPrompt(prompt) {
+    this.prompt = prompt
+    this.formDisabled = this.prompt.length === 0
+    this.updateSubmitButtonState()
+  }
+
+  updatePromptField() {
+    this.$promptField.val(this.prompt)
+    this.$promptField.trigger('change')
+  }
+
+  requestTokenCount() {
+    if (this.tokenCountRequest) {
+      this.tokenCountRequest.abort()
+    }
+
+    this.tokenCountRequest = $.ajax({
+      url: this.$form.data('count-tokens-url'),
+      data: this.$form.serialize(),
+      method: 'POST',
+      dataType: 'JSON',
+      success: (data) => {
+        if (!data) return
+        this.$tokenCounter.attr('hidden', data.count <= 0)
+        this.$tokenCounter.html(`${this.tokenCountText}: ${data.count}`)
+      }
+    })
+  }
+
+  onPromptKeyUp = () => {
+    this.setPrompt(this.$promptField.val())
+  }
+
+  onPromptChange = () => {
+    this.requestTokenCount()
+  }
+
+  onSubmit = (e) => {
+    e.preventDefault()
+    if (this.formDisabled) return
+    this.onFormSubmit(this.$form)
+  }
+}
+
 class AIAssistantModal {
   constructor() {
     this.$modal = $('.f-c-ai-assistant-modal')
-    this.$promptField = this.$modal.find('.f-c-ai-assistant-modal__prompt')
     this.$responseField = this.$modal.find('.f-c-ai-assistant-modal__response')
-    this.$submitButton = this.$modal.find('.f-c-ai-assistant-modal__submit')
-
     this.$trigger = null
-    this.prompt = ''
-    this.responses = []
 
-    this.apiRequest = null
-    this.formDisabled = false
+    this.responses = []
+    this.generateResponseRequest = null
 
     $(document).on('click', '.f-c-ai-assistant-modal-trigger', this.onTriggerClick)
-    $(document).on('submit', '.f-c-ai-assistant-modal__form', this.onPromptSubmit)
-    $(document).on('keyup', '.f-c-ai-assistant-modal__prompt', this.onPromptKeyUp)
+
+    const $form = this.$modal.find('.f-c-ai-assistant-modal__form')
+    this.form = new AIAssistantForm($form, this.onFormSubmit)
   }
 
   open() {
-    this.$promptField.val(this.prompt)
-
+    this.form.updatePromptField()
     this.appendResponses()
 
     this.$modal.modal('show')
+  }
+
+  formatResponse (responseData) {
+    const $responseItemBody = $('<div class="f-c-ai-assistant-modal__response-item-body"></div>')
+
+    const response = responseData.choices[0]
+    const responseText = document.createTextNode(response.text)
+
+    const $responseMsg = $(`<p class='mb-0'></p>`).html(responseText)
+    $responseItemBody.append($responseMsg)
+
+    if (response.status && response.status.length) {
+      $responseItemBody.append($(`<p class='mb-0 mt-1 small'>${response.status}</p>`))
+    }
+
+    return $('<div class="f-c-ai-assistant-modal__response-item"></div>').html($responseItemBody)
   }
 
   appendResponses() {
@@ -43,24 +124,6 @@ class AIAssistantModal {
     setTimeout(() => this.scrollToLastResponse(), 0)
   }
 
-  formatResponse(responseData) {
-    const $responseItem = $('<div class="f-c-ai-assistant-modal__response-item"></div>')
-    const $responseItemBody = $('<div class="f-c-ai-assistant-modal__response-item-body"></div>')
-
-    const response = responseData.choices[0]
-    const $responseMsg = $(`<p class='mb-0'></p>`).html(document.createTextNode(response.text))
-
-    $responseItemBody.append($responseMsg)
-
-    if (response.status && response.status.length) {
-      $responseItemBody.append($(`<p class='mb-0 mt-1 small'>${response.status}</p>`))
-    }
-
-    $responseItem.html($responseItemBody)
-
-    return $responseItem
-  }
-
   scrollToLastResponse () {
     const $items = this.$responseField.find('.f-c-ai-assistant-modal__response-item')
 
@@ -77,51 +140,29 @@ class AIAssistantModal {
     }
   }
 
-  updateSubmitButtonState() {
-    if (this.formDisabled) {
-      this.$submitButton.attr('disabled', true)
-    } else {
-      this.$submitButton.attr('disabled', false)
-    }
-  }
-
-  setPrompt(prompt) {
-    this.prompt = prompt
-    this.formDisabled = this.prompt.length === 0
-    this.updateSubmitButtonState()
-  }
-
   onTriggerClick = (e) => {
     e.preventDefault()
 
     this.$trigger = $(e.currentTarget)
 
+    const prompt = this.$trigger.data('prompt')
+    this.form.setPrompt(prompt)
+
+    this.responses = this.$trigger.data('responses') || []
     this.$modal.removeClass('f-c-ai-assistant-modal--show-responses')
     this.$modal.removeClass('f-c-ai-assistant-modal--error')
-
-    this.setPrompt(this.$trigger.data('prompt') || "")
-    this.responses = this.$trigger.data('responses') || []
 
     this.open()
   }
 
-  onPromptKeyUp = () => {
-    this.setPrompt(this.$promptField.val())
-  }
-
-  onPromptSubmit = (e) => {
-    e.preventDefault()
-
-    if (this.formDisabled) return
-    if (this.apiRequest) this.apiRequest.abort()
+  onFormSubmit = ($form) => {
+    if (this.generateResponseRequest) this.generateResponseRequest.abort()
 
     this.$modal.removeClass('f-c-ai-assistant-modal--error')
     this.$modal.addClass('f-c-ai-assistant-modal--loading')
     this.scrollToLoader()
 
-    const $form = this.$modal.find('.f-c-ai-assistant-modal__form')
-
-    this.apiRequest = $.ajax({
+    this.generateResponseRequest = $.ajax({
       url: $form.attr('action'),
       data: $form.serialize(),
       method: 'POST',
@@ -145,7 +186,7 @@ class AIAssistantModal {
     this.appendResponses()
   }
 
-  onAPIError = (jxHr) => {
+  onAPIError = (_jxHr) => {
     this.$modal.addClass('f-c-ai-assistant-modal--error')
   }
 }

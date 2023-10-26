@@ -2,6 +2,7 @@
 
 class Folio::Console::AiAssistant::ModalCell < Folio::ConsoleCell
   include SimpleForm::ActionViewExtensions::FormHelper
+  include ActionView::Helpers::FormOptionsHelper
 
   CLASS_NAME_BASE = "f-c-ai-assistant-modal"
   CLASS_NAME = ".#{CLASS_NAME_BASE}"
@@ -18,6 +19,7 @@ class Folio::Console::AiAssistant::ModalCell < Folio::ConsoleCell
       url: form_action,
       html: {
         class: "f-c-ai-assistant-modal__form",
+        data: { count_tokens_url: }
       },
     }
 
@@ -29,7 +31,29 @@ class Folio::Console::AiAssistant::ModalCell < Folio::ConsoleCell
                                                                      record_klass: model.class)
   end
 
+  def count_tokens_url
+    controller.folio.count_prompt_tokens_console_api_ai_assistant_path(record_id: model.id,
+                                                                       record_klass: model.class)
+  end
+
   def edit_prompt_action
     options[:edit_prompt_action]
+  end
+
+  def gpt_models
+    Folio::ChatGptClient.allowed_models.map do |model|
+      name = model.tr(".", "-")
+      [t(".gpt_model/#{name}"), model]
+    end
+  end
+
+  def ai_assistant_substitute_patterns
+    model.class.try(:ai_assistant_substitute_patterns) || []
+  end
+
+  def prompt_substitute_patterns_hints
+    @prompt_substitute_patterns ||= ai_assistant_substitute_patterns.map do |pattern_data|
+      [pattern_data[:pattern], pattern_data[:hint]].join(" ")
+    end
   end
 end
