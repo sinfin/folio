@@ -9,6 +9,9 @@ window.Folio.RemoteScripts.Data = {
   },
   bootstrap: {
     urls: ['https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/js/bootstrap.bundle.js']
+  },
+  'cleave-js': {
+    urls: ['https://cdnjs.cloudflare.com/ajax/libs/cleave.js/1.0.2/cleave.min.js']
   }
 }
 
