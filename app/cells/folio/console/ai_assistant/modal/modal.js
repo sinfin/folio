@@ -73,7 +73,7 @@ class AIAssistantForm {
 class AIAssistantModal {
   constructor() {
     this.$modal = $('.f-c-ai-assistant-modal')
-    this.$responseField = this.$modal.find('.f-c-ai-assistant-modal__response')
+    this.$responseContainer = this.$modal.find('.f-c-ai-assistant-modal__response')
     this.$trigger = null
 
     this.responses = []
@@ -87,45 +87,105 @@ class AIAssistantModal {
 
   open() {
     this.form.updatePromptField()
-    this.appendResponses()
+    this.appendAllResponses()
 
     this.$modal.modal('show')
   }
 
-  formatResponse (responseData) {
+  buildResponseActionButton = (value, large = false) => {
+    const $button = $('<button type="button"></button>')
+
+    if (large) {
+      $button
+        .addClass('f-c-ai-assistant-modal__response-action-button')
+        .addClass('f-c-ai-assistant-modal__response-action-button--large')
+        .html(this.useResponseText)
+    } else {
+      $button
+        .addClass('f-c-ai-assistant-modal__response-action-button')
+        .addClass('f-c-ai-assistant-modal__response-action-button--small')
+        .attr('title', this.useResponseText)
+        .html(value)
+    }
+
+    $button[0].dataset['value'] = value
+
+    return $button[0].outerHTML
+  }
+
+  insertActionButtons = (json_obj) => {
+    const formattedJson = JSON.stringify(json_obj, null, 2)
+    const jsonValueRegex = /(?<=: "|\[\n\s*"|,\n\s*")(.*)(?="[,|\]|\n])/g
+
+    return formattedJson.replace(jsonValueRegex, (_, capturedGroup) => {
+      return this.buildResponseActionButton(capturedGroup)
+    })
+  }
+
+  formatResponseHTML(contentParts) {
+    let html = ''
+
+    contentParts.forEach((part) => {
+      if (part.type === 'json') {
+        const jsonWithActionButtons = this.insertActionButtons(part.val)
+        html += $(`<pre></pre>`).html(jsonWithActionButtons)[0].outerHTML
+      } else {
+        let value = document.createTextNode(part.val)
+
+        if (contentParts.length > 1) {
+          value = this.buildResponseActionButton(value.wholeText)
+        }
+
+        html += $(`<p class='mb-0'></p>`).html(value)[0].outerHTML
+      }
+    })
+
+    return html
+  }
+
+  buildResponseItemEl = (responseData) => {
+    const choice = responseData.choices[0]
+
+    const contentParts = choice.content_parts
+    const responseHTML = this.formatResponseHTML(contentParts)
+
     const $responseItemBody = $('<div class="f-c-ai-assistant-modal__response-item-body"></div>')
+    $responseItemBody.append(responseHTML)
 
-    const response = responseData.choices[0]
-    const responseText = document.createTextNode(response.text)
+    if (choice.status && choice.status.length) {
+      $responseItemBody.append($(`<p class='mb-0 mt-1 small'>${choice.status}</p>`))
+    }
 
-    const $responseMsg = $(`<p class='mb-0'></p>`).html(responseText)
-    $responseItemBody.append($responseMsg)
-
-    if (response.status && response.status.length) {
-      $responseItemBody.append($(`<p class='mb-0 mt-1 small'>${response.status}</p>`))
+    if (contentParts.length <= 1 && contentParts[0].type === 'text') {
+      const content = contentParts[0].val
+      const $button = this.buildResponseActionButton(content, true)
+      $responseItemBody.append($button)
     }
 
     return $('<div class="f-c-ai-assistant-modal__response-item"></div>').html($responseItemBody)
   }
 
-  appendResponses() {
-    this.$responseField.children('.f-c-ai-assistant-modal__response-item').remove()
+  appendResponse = (responseData) => {
+    this.$modal.addClass('f-c-ai-assistant-modal--show-responses')
+
+    const $response = this.buildResponseItemEl(responseData)
+    const $loader = this.$modal.find('.f-c-ai-assistant-modal__response-loader')
+
+    // Place responses before loader
+    $loader.before($response)
+
+  }
+
+  appendAllResponses() {
+    this.$responseContainer.children('.f-c-ai-assistant-modal__response-item').remove()
 
     if (this.responses.length) {
-      this.$modal.addClass('f-c-ai-assistant-modal--show-responses')
-
-      const responses = this.responses.map(this.formatResponse)
-      const $loader = this.$modal.find('.f-c-ai-assistant-modal__response-loader')
-
-      // Place responses before loader
-      $loader.before(responses)
+      this.responses.forEach(this.appendResponse)
     }
-
-    setTimeout(() => this.scrollToLastResponse(), 0)
   }
 
   scrollToLastResponse () {
-    const $items = this.$responseField.find('.f-c-ai-assistant-modal__response-item')
+    const $items = this.$responseContainer.find('.f-c-ai-assistant-modal__response-item')
 
     if ($items.length) {
       $items[$items.length-1].scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -133,7 +193,7 @@ class AIAssistantModal {
   }
 
   scrollToLoader () {
-    const $loader = this.$responseField.find('.f-c-ai-assistant-modal__response-loader')
+    const $loader = this.$responseContainer.find('.f-c-ai-assistant-modal__response-loader')
 
     if ($loader.length) {
       $loader[0].scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -176,14 +236,14 @@ class AIAssistantModal {
   }
 
   onAPISuccess = (data) => {
-    if (!data) {
-      return
-    }
+    if (!data || !data.response) return
 
-    this.responses.push(data.response)
+    const responseData = data.response
+    this.responses.push(responseData)
     this.$trigger.data('responses', this.responses)
 
-    this.appendResponses()
+    this.appendResponse(responseData)
+    setTimeout(() => this.scrollToLastResponse(), 0)
   }
 
   onAPIError = (_jxHr) => {
