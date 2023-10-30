@@ -334,6 +334,7 @@ cs:
           gpt_model/gpt-4-0613: GPT 4 (06/2023) - 8001 tokenů
           gpt_model/gpt-4-0314: GPT 4 (03/2023) - 8001 tokenů
           token_counter: Použité tokeny
+          use_response_text: Použít tuto odpověď
 
   date:
     formats:

@@ -26,6 +26,12 @@ class Folio::Console::AiAssistant::ModalCell < Folio::ConsoleCell
     simple_form_for("", opts, &block)
   end
 
+  def response_data
+    {
+      use_response_text: t(".use_response_text"),
+    }
+  end
+
   def form_action
     controller.folio.generate_response_console_api_ai_assistant_path(record_id: model.id,
                                                                      record_klass: model.class)

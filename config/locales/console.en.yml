@@ -329,6 +329,7 @@ en:
           gpt_model/gpt-4-0613: GPT 4 (06/2023) - 8001 tokens
           gpt_model/gpt-4-0314: GPT 4 (03/2023) - 8001 tokens
           token_counter: Used tokens
+          use_response_text: Use this response
 
   date:
     formats:
