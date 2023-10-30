@@ -325,7 +325,7 @@ cs:
           prompt_label: Chat GPT zpráva
           edit_prompt: Upravit vzor
           submit: Odeslat
-          alert: Chat GPT je nyní nedostupný, zkuste to znovu později
+          alert: 'Chat GPT je nyní nedostupný. Chybová hláška:'
           progress: Chat GPT generuje odpověď...
           hint_content_character_count: (%{count} zn.)
           gpt_model/gpt-3-5-turbo-0613: GPT 3.5 (06/2023) - 4097 tokenů
