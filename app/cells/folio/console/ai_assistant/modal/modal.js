@@ -75,11 +75,16 @@ class AIAssistantModal {
     this.$modal = $('.f-c-ai-assistant-modal')
     this.$responseContainer = this.$modal.find('.f-c-ai-assistant-modal__response')
     this.$trigger = null
+    this.$mainFormInput = null
 
     this.responses = []
     this.generateResponseRequest = null
 
-    $(document).on('click', '.f-c-ai-assistant-modal-trigger', this.onTriggerClick)
+    this.useResponseText = this.$responseContainer.data('use-response-text')
+
+    $(document)
+      .on('click', '.f-c-ai-assistant-modal-trigger', this.onTriggerClick)
+      .on('click', '.f-c-ai-assistant-modal__response-action-button', this.onResponseActionButtonClick)
 
     const $form = this.$modal.find('.f-c-ai-assistant-modal__form')
     this.form = new AIAssistantForm($form, this.onFormSubmit)
@@ -204,6 +209,7 @@ class AIAssistantModal {
     e.preventDefault()
 
     this.$trigger = $(e.currentTarget)
+    this.$mainFormInput = this.$trigger.closest('.form-group').find('.f-input--ai-assistant')
 
     const prompt = this.$trigger.data('prompt')
     this.form.setPrompt(prompt)
@@ -248,6 +254,17 @@ class AIAssistantModal {
 
   onAPIError = (_jxHr) => {
     this.$modal.addClass('f-c-ai-assistant-modal--error')
+
+  onResponseActionButtonClick = (e) => {
+    const $btns = $('.f-c-ai-assistant-modal__response-action-button')
+    const $btn = $(e.currentTarget)
+
+    const responseText = $btn.data('value')
+    this.$mainFormInput.val(responseText)
+    this.$mainFormInput.trigger('change')
+
+    $btns.removeClass('f-c-ai-assistant-modal__response-action-button--selected')
+    $btn.addClass('f-c-ai-assistant-modal__response-action-button--selected')
   }
 }
 

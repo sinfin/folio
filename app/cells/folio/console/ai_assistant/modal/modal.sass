@@ -65,6 +65,28 @@
     overflow-x: hidden
     overflow-y: auto
 
+  &__response-action-button
+    +unbutton
+    background: $gray-200
+    color: $black
+
+    &:hover
+      background: $gray-400
+
+    &--small
+      padding: 0 8px
+      margin: 2px 0
+      border-radius: 3px
+
+    &--large
+      padding: 4px 12px
+      margin-top: 12px
+      border-radius: 6px
+      background: $gray-100
+
+    &--selected
+      background: #d4edda
+
   &--loading &__response,
   &--show-responses &__response
     display: block
@@ -95,6 +117,9 @@
       margin-top: 12px
       padding-top: 12px
       border-top: 1px solid $gray-200
+
+  &__response-loader
+    overflow-x: auto
 
   &__response-loader
     position: relative
