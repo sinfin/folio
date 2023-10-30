@@ -252,8 +252,13 @@ class AIAssistantModal {
     setTimeout(() => this.scrollToLastResponse(), 0)
   }
 
-  onAPIError = (_jxHr) => {
-    this.$modal.addClass('f-c-ai-assistant-modal--error')
+  onAPIError = (jxHr) => {
+    const errorMessage = jxHr.responseJSON.error.message
+    this.$modal
+      .addClass('f-c-ai-assistant-modal--error')
+      .find('.f-c-ai-assistant-modal__status-error-detail')
+      .html(errorMessage)
+  }
 
   onResponseActionButtonClick = (e) => {
     const $btns = $('.f-c-ai-assistant-modal__response-action-button')

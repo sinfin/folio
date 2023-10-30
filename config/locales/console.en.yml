@@ -320,7 +320,7 @@ en:
           prompt_label: Chat GPT prompt
           edit_prompt: Edit template
           submit: Submit
-          alert: Chat GPT is unavailable at the moment, try again later
+          alert: 'Chat GPT is unavailable at the moment. Error message:'
           progress: Chat GPT is generating a response..
           hint_content_character_count: (%{count} char.)
           gpt_model/gpt-3-5-turbo-0613: GPT 3.5 (06/2023) - 4097 tokens
