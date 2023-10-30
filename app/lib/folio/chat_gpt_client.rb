@@ -46,7 +46,7 @@ class Folio::ChatGptClient
 
   private
     def client
-      @client ||= OpenAI::Client.new(access_token: ENV["OPENAI_API_KEY"])
+      @client ||= OpenAI::Client.new(access_token: @api_key)
     end
 
     def log_response(prompt, response, duration)
