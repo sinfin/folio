@@ -14,17 +14,7 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
     end
 
     prompt = substitute_patterns(prompt)
-    # response_data = gpt_client.generate_response(prompt, 2000)
-    response_data = {
-      choices: [{
-        "finish_reason": "stop",
-        "index": 0,
-        "message": {
-          "content": prompt + " " + params[:gpt_model],
-          "role": "assistant"
-        }
-      }],
-    }.deep_symbolize_keys!
+    response_data = gpt_client.generate_response(prompt, 1000)
 
     if response_data[:choices]
       choices = parse_response_choices(response_data[:choices])
@@ -44,6 +34,7 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
   private
     def parse_response_choices(choices)
       choices.map do |choice|
+        text = choice.dig(:message, :content)
         status = case choice[:finish_reason]
                  when "length"
                    t(".exceeded_max_length")
@@ -52,11 +43,33 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
         end
 
         {
-          text: choice.dig(:message, :content),
+          content_parts: parse_message_content(text),
           index: choice[:index],
           status:
         }
       end
+    end
+
+    def parse_message_content(text)
+      if text.match?(/{.*}/m)
+        json_start = text.index("{")
+        json_end = text.rindex("}")
+        json_string = text[json_start..json_end]
+
+        begin
+          before_json = { val: text[0..json_start - 1], type: :text } if json_start > 0
+          after_json = { val: text[json_end + 1..-1], type: :text } if json_end < text.length - 1
+
+          return [
+            before_json,
+            { val: JSON.parse(json_string), type: :json },
+            after_json,
+          ].compact
+        rescue JSON::ParserError => _e
+        end
+      end
+
+      [{ val: text, type: :text }]
     end
 
     def gpt_client

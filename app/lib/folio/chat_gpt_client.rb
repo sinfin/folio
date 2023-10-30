@@ -33,7 +33,7 @@ class Folio::ChatGptClient
     duration = Time.now - start_time
     log_response(prompt, response, duration)
 
-    response
+    response.try(:deep_symbolize_keys!) || {}
   end
 
   def count_tokens(prompt)
