@@ -47,10 +47,7 @@ class Folio::Console::AiAssistant::ModalCell < Folio::ConsoleCell
   end
 
   def gpt_models
-    Folio::ChatGptClient.allowed_models.map do |model|
-      name = model.tr(".", "-")
-      [t(".gpt_model/#{name}"), model]
-    end
+    Folio::ChatGptClient.allowed_models_for_select
   end
 
   def ai_assistant_substitute_patterns

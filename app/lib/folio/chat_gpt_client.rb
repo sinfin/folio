@@ -2,10 +2,13 @@
 
 require "openai"
 
-DEFAULT_GPT_MODELS = %w(gpt-3.5-turbo-0613 gpt-3.5-turbo-0301 gpt-3.5-turbo-16k-0613 gpt-4-0613 gpt-4-0314).freeze
+AVAILABLE_MODELS = {
+  chat: %w(gpt-3.5-turbo gpt-3.5-turbo-16k gpt-4),
+  completion: %w(gpt-3.5-turbo-instruct babbage-002 davinci-002)
+}.freeze
 
 class Folio::ChatGptClient
-  def initialize(model)
+  def initialize(model = nil, max_tokens: 1000, number_of_choices: 1)
     @api_key = ENV["OPENAI_API_KEY"]
 
     if @api_key.blank?
@@ -17,23 +20,24 @@ class Folio::ChatGptClient
     else
       self.class.allowed_models.first
     end
+
+    @type =
+      @max_tokens = max_tokens
+    @number_of_choices = number_of_choices
   end
 
-  def generate_response(prompt, length)
+  def generate_response(prompt)
+    response = send_completion_request(request_params)
+    response.try(:deep_symbolize_keys!) || {}
+  end
+
+  def send_completion_request(params)
     start_time = Time.now
-    response = client.chat(
-      parameters: {
-        model: @model,
-        messages: [{ role: "user", content: prompt }],
-        n: 1,
-        max_tokens: length,
-      }
-    )
+
+    client.send(completion_type, completion_params)
 
     duration = Time.now - start_time
     log_response(prompt, response, duration)
-
-    response.try(:deep_symbolize_keys!) || {}
   end
 
   def count_tokens(prompt)
@@ -41,12 +45,29 @@ class Folio::ChatGptClient
   end
 
   def self.allowed_models
-    DEFAULT_GPT_MODELS
+    AVAILABLE_MODELS.values.flatten
+  end
+
+  def self.allowed_models_for_select
+    AVAILABLE_MODELS.map do |model_type, models_keys|
+      models_keys.map do |key|
+        name = key.tr(".", "-")
+        [t(".chat_gpt_client.model.#{model_type}/#{name}"), key]
+      end
+    end
   end
 
   private
     def client
       @client ||= OpenAI::Client.new(access_token: @api_key)
+    end
+
+    def client_params
+      {
+        model: @model,
+        n: @number_of_choices,
+        max_tokens: @max_tokens,
+      }
     end
 
     def log_response(prompt, response, duration)

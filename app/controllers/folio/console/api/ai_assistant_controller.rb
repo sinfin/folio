@@ -14,7 +14,7 @@ class Folio::Console::Api::AiAssistantController < Folio::Console::Api::BaseCont
     end
 
     prompt = substitute_patterns(prompt)
-    response_data = gpt_client.generate_response(prompt, 1000)
+    response_data = gpt_client.generate_response(prompt)
 
     if response_data[:choices]
       choices = parse_response_choices(response_data[:choices])
