@@ -27,16 +27,11 @@ class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
   end
 
   def input(f)
-    render(Dummy::Ui::InputWithButtonComponent.new(f:,
-                                                   attribute: :email,
-                                                   input_options: {
-                                                     input_html: { class: "foo" }
-                                                   },
-                                                   button_model: {
-                                                     type: :submit,
-                                                     label: "foo",
-                                                     size: :input,
-                                                   }))
+    f.input :email,
+            as: :email,
+            label: "Newsletter signup",
+            input_html: { class: "f-newsletter-subscriptions-form__input form-control--reverse", id: nil },
+            wrapper_html: { class: "f-newsletter-subscriptions-form__group f-newsletter-subscriptions-form__group--with-label" }
   end
 
   def data

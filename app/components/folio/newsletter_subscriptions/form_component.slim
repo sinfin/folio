@@ -8,9 +8,16 @@ div class=bem_class_name data=data
           value=ERB::Util.html_escape(@view_options[opt])
         ]
 
-    = input(f)
+    .position-relative
+      = input(f)
 
-  span.folio-loader.f-newsletter-subscriptions-form__loader
+      button.f-newsletter-subscriptions-form__btn[
+        type="submit"
+        class="btn btn-primary btn-input"
+      ]
+        ' Sign up
+
+    span.folio-loader.f-newsletter-subscriptions-form__loader
 
   - if @persisted
     .f-newsletter-subscriptions-form__message
