@@ -22,14 +22,20 @@
     padding-right: calc(#{$input-padding-x} + 110px + #{map-get($spacers, 12)})
 
 	&__btn
-		padding: 0 map-get($spacers, 2)
 		position: absolute
-		bottom: calc(#{map-get($spacers, 2)} + #{px-to-rem(1px)})
-		right: map-get($spacers, 12)
-		min-height: 25px
+		top: 9px
+		right: 17px
+
+	&__group--with-label + &__btn
+		top: 36px
 
   &--submitted &__form
     visibility: hidden
 
   &--submitted &__message
     display: flex
+
+.btn-input
+	padding: 0 8px
+	line-height: 21px
+	min-height: 24px
