@@ -128,127 +128,27 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def main_class_names
-    if ::Rails.application.config.folio_site_is_a_singleton
-      [{
-        links: [
-          "Folio::Page",
-          :homepage,
-          "Folio::Menu",
-          ::Rails.application.config.folio_content_templates ? "Folio::ContentTemplate" : nil,
-        ].compact
-      }, {
-        links: [
-          "Folio::File::Image",
-          "Folio::File::Video",
-          "Folio::File::Audio",
-          "Folio::File::Document",
-        ]
-      }]
+    sites = if current_site == Folio.main_site
+      Folio::Site.ordered
     else
-      [
-        {
-          links: [
-            "Folio::File::Image",
-            "Folio::File::Video",
-            "Folio::File::Audio",
-            "Folio::File::Document",
-            ::Rails.application.config.folio_content_templates ? "Folio::ContentTemplate" : nil,
-          ].compact
-        }
-      ] + Folio::Site.ordered.filter_map do |site|
-        if controller.can?(:read, site)
-          I18n.with_locale(site.console_locale) do
-            link_for_class = -> (klass) do
-              {
-                klass: klass.to_s,
-                path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
-              }
-            end
+      [current_site]
+    end
 
-            site_links = {
-              console_sidebar_prepended_links: [],
-              console_sidebar_before_menu_links: [],
-              console_sidebar_before_site_links: [],
-            }
-
-            site_links.keys.each do |key|
-              values = site.class.try(key)
-              if values.present?
-                values.each do |link_or_hash|
-                  if link_or_hash.is_a?(Hash)
-                    if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
-                      link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
-                      site_links[key] << link_or_hash
-                    end
-                  else
-                    site_links[key] << link_for_class.call(link_or_hash.constantize)
-                  end
-                end
-              end
-            end
-
-            {
-              locale: site.console_locale,
-              title: site.pretty_domain,
-              collapsed: current_site != site,
-              expanded: current_site == site,
-              links: site_links[:console_sidebar_prepended_links].compact + [
-                link_for_class.call(Folio::Page),
-                homepage_for_site(site)
-              ].compact + site_links[:console_sidebar_before_menu_links].compact + [
-                link_for_class.call(Folio::Menu),
-                (link_for_class.call(Folio::Lead) if show_leads?),
-                (link_for_class.call(Folio::NewsletterSubscription) if show_newsletter_subscriptions?),
-                link_for_class.call(Folio::EmailTemplate),
-                *site_links[:console_sidebar_before_site_links],
-                controller.can?(:manage, site) ? (
-                  {
-                    klass: "Folio::Site",
-                    icon: :cog,
-                    path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-                    label: t(".settings"),
-                  }
-                ) : nil,
-              ].compact
-            }
-          end
-        end
-      end
+    sites.filter_map do |site|
+      site_main_links(site)
     end
   end
 
   def secondary_class_names
-    lead_or_newsleter_subs_class_names = []
-    lead_or_newsleter_subs_class_names << "Folio::Lead" if show_leads?
-    lead_or_newsleter_subs_class_names << "Folio::NewsletterSubscription" if show_newsletter_subscriptions?
-
-    if ::Rails.application.config.folio_site_is_a_singleton
-      [
-        show_users? ? { links: %w[Folio::User] } : nil,
-        lead_or_newsleter_subs_class_names.blank? ? nil : { links: lead_or_newsleter_subs_class_names },
-        {
-          links: [
-            "Folio::Account",
-            "Folio::EmailTemplate",
-            {
-              klass: "Folio::Site",
-              icon: :cog,
-              path: :edit_console_site_path,
-              label: t(".settings")
-            },
-          ]
-        }
-      ].compact
-    else
-      [
-        {
-          links: [
-            ::Rails.application.config.folio_users ? "Folio::User" : nil,
-            "Folio::Account",
-          ].compact
-        }
-      ]
-    end
+    return [] unless current_site == Folio.main_site
+    [
+      {
+        links: [
+          ::Rails.application.config.folio_users ? "Folio::User" : nil,
+          "Folio::Account",
+        ].compact
+      }
+    ]
   end
 
   def prepended_link_class_names
@@ -319,4 +219,90 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def show_search?
     true
   end
+
+  private
+    def site_main_links(site)
+      return nil unless controller.can?(:read, site)
+
+      build_site_links_collapsible_block(site)
+    end
+
+    def build_site_links_collapsible_block(site)
+      I18n.with_locale(site.console_locale) do
+        links = []
+        links << link_for_site_class(site, Folio::File::Image)
+        links << link_for_site_class(site, Folio::File::Video)
+        links << link_for_site_class(site, Folio::File::Audio)
+        links << link_for_site_class(site, Folio::File::Document)
+        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates
+
+        site_links = site_specific_links(site)
+
+        links = site_links[:console_sidebar_prepended_links]
+        links << link_for_site_class(site, Folio::Page)
+        links << homepage_for_site(site)
+        links += site_links[:console_sidebar_before_menu_links]
+        links << link_for_site_class(site, Folio::Menu)
+        links << link_for_site_class(site, Folio::Lead) if show_leads?
+        links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
+        links << link_for_site_class(site, Folio::EmailTemplate)
+        links += site_links[:console_sidebar_before_site_links]
+        if controller.can?(:manage, site)
+          links << {
+                      klass: "Folio::Site",
+                      icon: :cog,
+                      path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+                      label: t(".settings"),
+                    }
+        end
+        links << link_for_site_class(site, Folio::User) if ::Rails.application.config.folio_users
+
+
+        {
+          locale: site.console_locale,
+          title: site.pretty_domain,
+          collapsed: current_site != site,
+          expanded: current_site == site,
+          links: links.compact
+        }
+      end
+    end
+
+    def site_specific_links(site)
+      site_links = {
+        console_sidebar_prepended_links: [],
+        console_sidebar_before_menu_links: [],
+        console_sidebar_before_site_links: [],
+      }
+
+      I18n.with_locale(site.console_locale) do
+        site_links.keys.each do |links_group_key|
+          next if (group_links_defs = site.class.try(links_group_key)).blank?
+
+          group_links_defs.each do |link_or_hash|
+            site_links[links_group_key] << link_from_definitions(site, link_or_hash)
+          end
+        end
+      end
+      site_links
+    end
+
+
+    def link_from_definitions(site, link_or_hash)
+      if link_or_hash.is_a?(Hash)
+        if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
+          link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
+          link_or_hash
+        end
+      else
+        link_for_site_class(site, link_or_hash.constantize)
+      end
+    end
+
+    def link_for_site_class(site, klass)
+      {
+        klass: klass.to_s,
+        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+      }
+    end
 end

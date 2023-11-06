@@ -7,9 +7,6 @@
 = render partial: 'folio/console/sites/additional_form_fields', \
          locals: { f: f }
 
-- if Rails.application.config.folio_site_is_a_singleton
-  = f.input :domain
-
 = file_picker_for_og_image(f)
 
 - if Module.const_defined?(:Boutique)

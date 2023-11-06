@@ -1,3 +1,4 @@
+
 # Change Log
 All notable changes to this project will be documented in this file.
 
@@ -5,6 +6,13 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - updated `folio-bootstrap-5` to 5.3 - make sure to update your `_custom_bootstrap.sass` based on the one in folio dummy app
 - make sure to check your e-mail templates / mailer previews, styles may break
+
+## 2023-11-04
+### Changed
+- ignored `Rails.application.config.folio_site_is_a_singleton` and handle one site application as multisite with one (and main) site
+- added configuration `Rails.application.config.folio_main_site_domain` (which must be defined)
+### Removed
+- Folio::Subscribable concern
 
 ## 2023-10-02
 ### Changed

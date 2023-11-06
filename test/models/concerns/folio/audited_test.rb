@@ -14,8 +14,9 @@ class Folio::AuditedTest < ActiveSupport::TestCase
   end
 
   test "audited model & atoms" do
+    site = get_any_site
     # version 1
-    @page = AuditedPage.create(title: "v1")
+    @page = AuditedPage.create(title: "v1", site:)
     @page.atoms << Dummy::Atom::Text.new(content: "atom 1 v2")
 
     # version 2

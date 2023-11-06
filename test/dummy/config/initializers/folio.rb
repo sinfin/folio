@@ -7,3 +7,4 @@ Rails.application.config.folio_console_sidebar_runner_up_link_class_names = [{ l
   Dummy::Blog::Article
   Dummy::Blog::Topic
 ] }]
+Rails.application.config.folio_main_site_domain = "sinfin.localhost"

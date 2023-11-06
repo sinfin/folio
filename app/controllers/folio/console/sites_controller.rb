@@ -38,7 +38,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         copyright_info_source
       ]
 
-      ary << :domain if Rails.application.config.folio_site_is_a_singleton
+      ary << :domain if @site != Folio.main_site
 
       params.require(:site)
             .permit(*ary,

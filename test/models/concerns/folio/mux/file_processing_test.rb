@@ -11,7 +11,7 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
   end
 
   setup do
-    @tv_file = TestMediaFile.new
+    @tv_file = TestMediaFile.new(site: get_any_site)
     @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/test_7secs.mp3")
 
     assert tv_file.unprocessed?

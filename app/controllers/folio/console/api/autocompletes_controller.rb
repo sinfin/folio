@@ -13,10 +13,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
 
       scope = klass.all
 
-      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
-        scope = scope.by_site(current_site)
-      end
-
+      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       params.each do |key, val|
@@ -56,10 +53,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass && klass.column_names.include?(field)
       scope = klass.unscope(:order).where.not(field => nil)
 
-      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
-        scope = scope.by_site(current_site)
-      end
-
+      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       if p_without.present?
@@ -110,10 +104,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
 
-      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
-        scope = scope.by_site(current_site)
-      end
-
+      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       if p_without.present?
@@ -143,10 +134,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
     if klass && klass < ActiveRecord::Base && klass.respond_to?(:by_query)
       scope = klass.all
 
-      if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
-        scope = scope.by_site(current_site)
-      end
-
+      scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
       scope = apply_param_scope(scope)
 
       if p_without.present?
@@ -187,10 +175,7 @@ class Folio::Console::Api::AutocompletesController < Folio::Console::Api::BaseCo
         if klass && klass < ActiveRecord::Base
           scope = klass.all
 
-          if !Rails.application.config.folio_site_is_a_singleton && scope.respond_to?(:by_site)
-            scope = scope.by_site(current_site)
-          end
-
+          scope = scope.by_site(current_site) if scope.respond_to?(:by_site)
           scope = apply_param_scope(scope)
 
           if p_without.present?

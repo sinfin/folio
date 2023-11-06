@@ -55,11 +55,15 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
     }
 
     sign_in @admin
-    post transport_console_transport_path, params: {
-      yaml_string: hash.to_yaml(line_width: -1),
-    }
+
+    assert_difference("Folio::Page.count", 1) do
+      post transport_console_transport_path, params: {
+                                               yaml_string: hash.to_yaml(line_width: -1),
+                                             }
+    end
+
     page = Folio::Page.last
-    assert(Folio::Page.last)
+    assert page
     assert_redirected_to url_for([:edit, :console, page])
 
     assert_equal(hash[:attributes][:slug], page.slug)

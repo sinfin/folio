@@ -7,6 +7,7 @@ class Folio::HasSanitizedFieldsTest < ActiveSupport::TestCase
     assert Folio::Lead.fields_to_sanitize.include?(:email)
 
     lead = Folio::Lead.new(email: "<p>email@email.email</p>",
+                           site: get_any_site,
                            note: "note with <script>alert('alert')</script>")
 
     assert lead.save

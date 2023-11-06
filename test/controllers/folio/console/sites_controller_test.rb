@@ -9,12 +9,12 @@ class Folio::Console::SitesControllerTest < Folio::Console::BaseControllerTest
   end
 
   test "update" do
-    assert_not_equal "foo", Folio::Site.instance.title
+    assert_not_equal "foo", Folio.main_site.title
     put console_site_path, params: {
       site: {
         title: "foo",
       }
     }
-    assert_equal "foo", Folio::Site.instance.title
+    assert_equal "foo", Folio.main_site.title
   end
 end

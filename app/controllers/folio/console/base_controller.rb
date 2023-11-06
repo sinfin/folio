@@ -443,7 +443,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       # setting i.e. @page makes cancancan skip the load
       if params[:id].present?
         name = folio_console_record_variable_name(plural: false)
-        instance_variable_set(name, @klass.by_site(current_site).find(params[:id]))
+        if @klass.respond_to?(:friendly)
+          instance_variable_set(name, @klass.by_site(current_site).friendly.find(params[:id]))
+        else
+          instance_variable_set(name, @klass.by_site(current_site).find(params[:id]))
+        end
       end
     end
 

@@ -17,7 +17,7 @@ class Folio::Mux::CreateFullMediaJobTest < ActiveJob::TestCase
   #   @id="fsdfsdk3980736",
 
   test "calls api and updates remote_services_data" do
-    tv_file = TestVideoFile.new
+    tv_file = TestVideoFile.new(site: get_any_site)
     tv_file.file = Folio::Engine.root.join("test/fixtures/folio/blank.mp4")
     assert_enqueued_jobs 1, only: Folio::Mux::CreateFullMediaJob do
       tv_file.save!

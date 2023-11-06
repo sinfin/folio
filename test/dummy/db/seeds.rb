@@ -13,7 +13,7 @@ def destroy_all(klass)
   puts "Destroyed #{klass}"
 end
 
-def force_destroy(klass)
+def force_destroy_all(klass)
   puts "Destroying #{klass}"
   klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
   puts "Destroyed #{klass}"
@@ -21,11 +21,11 @@ end
 
 destroy_all Folio::Atom::Base
 destroy_all Folio::Account
-destroy_all Folio::Lead
-destroy_all Folio::File
-force_destroy Folio::Menu
-force_destroy Folio::Page
-force_destroy Folio::Site
+force_destroy_all Folio::Lead
+force_destroy_all Folio::File
+force_destroy_all Folio::Menu
+force_destroy_all Folio::Page
+force_destroy_all Folio::Site
 
 destroy_all Dummy::Blog::Article
 destroy_all Dummy::Blog::Topic
@@ -33,7 +33,7 @@ destroy_all Dummy::Blog::Topic
 def unsplash_pic(square = false)
   puts "Creating unsplash pic"
 
-  image = Folio::File::Image.new
+  image = Folio::File::Image.new(site: ::Folio.main_site)
   scale = 0.5 + rand / 2
   w = (scale * 2560).to_i
   h = (square ? scale * 2560 : scale * 1440).to_i
@@ -52,7 +52,7 @@ end
 def file_pic(file_instance)
   puts "Creating file pic"
 
-  image = Folio::File::Image.new
+  image = Folio::File::Image.new(site: ::Folio.main_site)
   image.file = file_instance
   image.save!
 
@@ -61,13 +61,12 @@ def file_pic(file_instance)
   image
 end
 
-2.times { unsplash_pic }
-
 puts "Creating Folio::Site"
 Folio::Site.create!(title: "Sinfin.digital",
-                    domain: "sinfin.localhost",
+                    domain: Rails.application.config.folio_main_site_domain,
                     locale: "cs",
                     locales: ["cs", "en", "de"],
+                    type: "Folio::Site",
                     email: "info@sinfin.cz",
                     phone: "+420 123 456 789",
                     address: "Ulice 100, 14000 Praha 4",
@@ -81,10 +80,13 @@ Folio::Site.create!(title: "Sinfin.digital",
                     })
 puts "Created Folio::Site"
 
+2.times { unsplash_pic }
+
 puts "Creating about page"
 about = Folio::Page.create!(title: "O nás",
                             published: true,
-                            published_at: 1.month.ago)
+                            published_at: 1.month.ago,
+                            site: ::Folio.main_site)
 about.cover = Folio::File::Image.first
 about.image_placements.each { |ip|
   name = "Lorem Ipsum"
@@ -93,25 +95,36 @@ about.image_placements.each { |ip|
 puts "Created about page"
 
 puts "Creating more pages"
-night_sky = Folio::Page.create!(title: "Noční obloha", published: true, published_at: 1.month.ago, locale: :cs)
+night_sky = Folio::Page.create!(title: "Noční obloha",
+                                published: true,
+                                published_at: 1.month.ago,
+                                locale: :cs,
+                                site: ::Folio.main_site)
 night_photo = File.new(Folio::Engine.root.join("test/fixtures/folio/photos/night.jpg"))
 night_sky.cover = file_pic(night_photo)
 1.times { night_sky.images << file_pic(night_photo) }
 
 reference = Folio::Page.create!(title: "Reference",
                                 published: true,
-                                published_at: 1.day.ago)
-Folio::Page.create!(title: "Smart Cities", published: true, published_at: 1.month.ago)
-vyvolejto = Folio::Page.create!(title: "Vyvolej.to", published: true, published_at: 1.month.ago)
+                                published_at: 1.day.ago,
+                                site: ::Folio.main_site)
+Folio::Page.create!(title: "Smart Cities",
+                    published: true,
+                    published_at: 1.month.ago,
+                    site: ::Folio.main_site)
+vyvolejto = Folio::Page.create!(title: "Vyvolej.to",
+                                published: true,
+                                published_at: 1.month.ago,
+                                site: ::Folio.main_site)
 iptc_test = File.new(Folio::Engine.root.join("test/fixtures/folio/photos/downsized-exif-samples/jpg/tests/46_UnicodeEncodeError.jpg"))
 vyvolejto.cover = file_pic(iptc_test)
 
-Folio::Page.create!(title: "Hidden", published: false)
-Folio::Page.create!(title: "DAM", published: true)
+Folio::Page.create!(title: "Hidden", published: false, site: ::Folio.main_site)
+Folio::Page.create!(title: "DAM", published: true, site: ::Folio.main_site)
 puts "Created more pages"
 
 puts "Creating Dummy::Menu::Nestable"
-menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable")
+menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable", site: ::Folio.main_site)
 
 root = Folio::MenuItem.create!(menu:,
                                title: "Reference",
@@ -137,7 +150,7 @@ Folio::MenuItem.create!(menu:,
 puts "Created Dummy::Menu::Nestable"
 
 puts "Creating Dummy::Menu::Stylable"
-menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable")
+menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable", site: ::Folio.main_site)
 
 Folio::MenuItem.create!(menu:,
                         title: "Reference",
@@ -157,7 +170,7 @@ Folio::MenuItem.create!(menu:,
 puts "Created Dummy::Menu::Stylable"
 
 puts "Creating Dummy::Menu::Header"
-menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header")
+menu = Dummy::Menu::Header.create!(locale: :cs, title: "Header", site: ::Folio.main_site)
 
 position = 0
 
@@ -230,7 +243,7 @@ puts "Created Dummy::Menu::Header"
 
 puts "Creating Dummy::Menu::Footer"
 
-menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer")
+menu = Dummy::Menu::Footer.create!(locale: :cs, title: "Footer", site: ::Folio.main_site)
 
 3.times do |i|
   Folio::MenuItem.create!(menu:,
@@ -241,7 +254,7 @@ end
 
 puts "Created Dummy::Menu::Footer"
 
-images = Folio::File::Image.tagged_with("unsplash").to_a
+images = Folio::File::Image.by_site(::Folio.main_site).tagged_with("unsplash").to_a
 
 puts "Creating Dummy::Blog::Topic"
 

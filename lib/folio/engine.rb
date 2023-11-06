@@ -44,7 +44,7 @@ module Folio
     config.folio_use_og_image = true
     config.folio_mailer_global_bcc = nil
     config.folio_aasm_mailer_config = {}
-    config.folio_site_is_a_singleton = true
+    config.folio_main_site_domain = nil
     config.folio_site_cache_current_site = true
     config.folio_site_validate_belongs_to_namespace = false
     config.folio_site_default_test_factory = nil
@@ -76,7 +76,7 @@ module Folio
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
-      {}
+      { site_id: controller.current_site.id }
     }
 
     config.folio_content_templates = false

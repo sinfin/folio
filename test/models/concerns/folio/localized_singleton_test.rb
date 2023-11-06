@@ -9,10 +9,11 @@ class Folio::LocalizedSingletonTest < ActiveSupport::TestCase
 
   test "allows only one record" do
     singletoned_class = TestLocalizedSingleton
+    site = get_any_site
 
-    _allowed_cz = singletoned_class.create!(locale: :cz, title: "Povolený")
-    _allowed_en = singletoned_class.create!(locale: :en, title: "Allowed")
-    not_allowed = singletoned_class.new(locale: :en, title: "Allowed2")
+    _allowed_cz = singletoned_class.create!(locale: :cz, title: "Povolený", site:)
+    _allowed_en = singletoned_class.create!(locale: :en, title: "Allowed", site:)
+    not_allowed = singletoned_class.new(locale: :en, title: "Allowed2", site:)
 
     assert_not not_allowed.valid?
     assert_includes(not_allowed.errors[:type],

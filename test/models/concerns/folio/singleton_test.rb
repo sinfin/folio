@@ -5,9 +5,10 @@ require "test_helper"
 class Folio::SingletonTest < ActiveSupport::TestCase
   test "allows only one record" do
     singletoned_class = Dummy::Menu::Header
+    site = get_any_site
 
-    _allowed = singletoned_class.create!(locale: :cz, title: "Povolený")
-    not_allowed = singletoned_class.new(locale: :en, title: "Allowed")
+    _allowed = singletoned_class.create!(locale: :cz, title: "Povolený", site:)
+    not_allowed = singletoned_class.new(locale: :en, title: "Allowed", site:)
 
     assert_not not_allowed.valid?
     assert_includes(not_allowed.errors[:type],
