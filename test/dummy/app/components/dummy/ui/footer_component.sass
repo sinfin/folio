@@ -2,8 +2,7 @@
   position: relative
   z-index: 1
   flex: 0 0 auto
-  background: $shade-light-contrast-dark
-  color: $shade-black-contrast-dark
+  background: $shade-100
   margin-top: map-get($spacers, gg)
   padding: map-get($spacers, 56) 0
 
@@ -15,7 +14,7 @@
     gap: map-get($spacers, 40) map-get($spacers, gg)
 
   &__row:not(:first-child)
-    border-top: 1px solid $shade-200-dark
+    border-top: 1px solid $transparent-300
     padding-top: map-get($spacers, g)
 
   &__row:not(:last-child)
@@ -42,7 +41,6 @@
     min-width: 268px
 
   &__social-link
-    color: $shade-black-contrast-dark
     +social-sites-hover-color
     text-decoration: none
 
@@ -58,15 +56,15 @@
   &__menu-link
     text-decoration: none
     +font-size-sm
-    color: $shade-600-dark
+    color: $shade-600
 
     &:hover
-      color: $shade-600-dark
+      color: $shade-600
       text-decoration: underline
 
   &__copyright
     +font-size-sm
-    color: $shade-400-dark
+    color: $shade-400
     padding-right: calc(108px + #{map-get($spacers, 3)})
 
   &__author
@@ -83,7 +81,7 @@
     align-items: center
     +font-size-sm
     font-weight: $font-weight-medium
-    color: $shade-600-dark
+    color: $shade-600
 
   &__author-name, &__slash-symbol
     display: inline-flex
