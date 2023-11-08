@@ -26,12 +26,22 @@ class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
     simple_form_for(@newsletter_subscription, opts, &block)
   end
 
+  def submit_text
+    return @view_options[:submit_text] unless @view_options[:submit_text].nil?
+    "Sign up"
+  end
+
+  def message
+    return @view_options[:message] unless @view_options[:message].nil?
+    "TODO: message"
+  end
+
   def input(f)
     f.input :email,
             as: :email,
-            label: "Newsletter signup",
-            input_html: { class: "f-newsletter-subscriptions-form__input form-control--reverse", id: nil },
-            wrapper_html: { class: "f-newsletter-subscriptions-form__group f-newsletter-subscriptions-form__group--with-label" }
+            label: false,
+            input_html: { class: "f-newsletter-subscriptions-form__input", id: nil },
+            wrapper_html: { class: "f-newsletter-subscriptions-form__group" }
   end
 
   def data

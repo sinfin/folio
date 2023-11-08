@@ -8,17 +8,22 @@ div class=bem_class_name data=data
           value=ERB::Util.html_escape(@view_options[opt])
         ]
 
+    - if @view_options[:input_label]
+      .form-group.m-0
+        label.form-label for="newsletter_subscription[email]"
+          = @view_options[:input_label]
+
     .position-relative
       = input(f)
 
       button.f-newsletter-subscriptions-form__btn[
         type="submit"
-        class="btn btn-primary btn-input"
+        class="btn btn-primary"
       ]
-        ' Sign up
+        = submit_text
 
     span.folio-loader.f-newsletter-subscriptions-form__loader
 
   - if @persisted
     .f-newsletter-subscriptions-form__message
-      ' message TODO
+      = message
