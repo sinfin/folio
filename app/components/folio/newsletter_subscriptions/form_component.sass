@@ -1,3 +1,12 @@
+$newsletter-subscriptions-form-input-border-color: rgba(0, 0, 0, 0.15) !default
+$newsletter-subscriptions-form-input-padding: 8px 12px 8px 16px !default
+$newsletter-subscriptions-form-input-placeholder-color: #8D8D8D !default
+$newsletter-subscriptions-form-border-radius: 24px !default
+$newsletter-subscriptions-form-btn-padding: 0 8px !default
+$newsletter-subscriptions-form-btn-bg-color: #000 !default
+$newsletter-subscriptions-form-btn-bg-color-hover: #696969 !default
+$newsletter-subscriptions-form-btn-text-transform: none !default
+	
 .f-newsletter-subscriptions-form
 	&:not(&--loading) &__loader
 		display: none
@@ -18,24 +27,30 @@
 		position: relative
 		z-index: 1
 
-  &__input
-    padding-right: calc(#{$input-padding-x} + 110px + #{map-get($spacers, 12)})
+	&__input
+		border: 1px solid $newsletter-subscriptions-form-input-border-color
+		border-radius: $newsletter-subscriptions-form-border-radius
+		padding: $newsletter-subscriptions-form-input-padding
+
+	&__group input::placeholder
+		color: $newsletter-subscriptions-form-input-placeholder-color
 
 	&__btn
 		position: absolute
 		top: 9px
-		right: 17px
+		right: 13px
+		line-height: 21px
+		min-height: 24px
+		text-transform: $newsletter-subscriptions-form-btn-text-transform
+		padding: $newsletter-subscriptions-form-btn-padding
+		background-color: $newsletter-subscriptions-form-btn-bg-color
+		border-radius: $newsletter-subscriptions-form-border-radius
 
-	&__group--with-label + &__btn
-		top: 36px
+		&:hover, &:focus
+			background-color: $newsletter-subscriptions-form-btn-bg-color-hover
 
-  &--submitted &__form
+  &--persisted &__form
     visibility: hidden
 
-  &--submitted &__message
+  &--persisted &__message
     display: flex
-
-.btn-input
-	padding: 0 8px
-	line-height: 21px
-	min-height: 24px
