@@ -17,7 +17,6 @@ window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends 
     this.element.classList.add(this.submittingClass)
 
     const data = window.Folio.formToHash(e.target)
-    console.log(data)
 
     window.Folio.Api.apiPost(e.target.action, data).then((res) => {
       this.element.outerHTML = res.data
