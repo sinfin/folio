@@ -25,7 +25,7 @@ window.<%= application_namespace %>.Ui.Alert.create = (data) => {
     loaderWrap.className = '<%= classname_prefix %>-ui-alert__loader-wrap'
 
     const loader = document.createElement('div')
-    loader.className = 'folio-loader folio-loader--tiny folio-loader--transparent folio-loader--white <%= classname_prefix %>-ui-alert__loader'
+    loader.className = 'folio-loader folio-loader--tiny folio-loader--transparent <%= classname_prefix %>-ui-alert__loader'
 
     loaderWrap.appendChild(loader)
     container.appendChild(loaderWrap)

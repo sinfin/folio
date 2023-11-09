@@ -4,7 +4,7 @@
 
   &__atom--color-light,
   &__atom--color-light &__title
-    color: $white
+    color: $shade-light-contrast
 
   &__slider--loading &__atom:nth-child(n + 2)
     display: none
@@ -80,7 +80,7 @@
     align-items: center
     justify-content: center
     z-index: 2
-    color: $white
+    color: $shade-light-contrast
     cursor: pointer
     display: none !important
 
@@ -115,12 +115,12 @@
       height: 16px
       flex: 0 0 auto
       border-radius: 100%
-      background: rgba($white, 0.3)
+      background: rgba($shade-light-contrast, 0.3)
       cursor: pointer
       margin: 8px
 
     .slick-active
-      background: rgba($white, 1)
+      background: rgba($shade-light-contrast, 1)
 
     button
       display: none

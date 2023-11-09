@@ -128,9 +128,11 @@ class Dummy::SeedGenerator
   end
 
   def ui_controllers(path)
-    Dir[path].each do |ctrl_path|
-      copy_file(path, @templates_path.join("ui_controller.rb.tt"))
-    end
+    copy_file(path, @templates_path.join("ui_controller.rb.tt"))
+  end
+
+  def ui_routes(path)
+    copy_file(path, @templates_path.join("config/routes/application_namespace_path/ui.rb.tt"))
   end
 
   def copy_file(from, to)
@@ -175,6 +177,7 @@ class Dummy::SeedGenerator
          .gsub("dummy_search", "<%= application_namespace_path %>_search")
          .gsub("dummy_ui_", "<%= application_namespace_path %>_ui_")
          .gsub("dummy:", "<%= application_namespace_path %>:")
+         .gsub(":dummy", ":<%= application_namespace_path %>")
          .gsub("--dummy-", "--<%= application_namespace_path %>-")
          .gsub("window.dummy", "window.<%= application_namespace_path %>")
          .gsub("window.Dummy", "window.<%= application_namespace %>")
@@ -266,6 +269,8 @@ namespace :dummy do
       gen.ui_i18n_yamls(Rails.root.join("config/locales/ui.*.yml"))
 
       gen.ui_controllers(Rails.root.join("app/controllers/dummy/ui_controller.rb"))
+
+      gen.ui_routes(Rails.root.join("config/routes/dummy/ui.rb"))
     end
 
     task prepared_atom: :environment do

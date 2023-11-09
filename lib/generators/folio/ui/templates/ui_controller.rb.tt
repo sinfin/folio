@@ -21,6 +21,7 @@ class <%= application_namespace %>::UiController < ApplicationController
     ary = [
       { variant: :primary, label: "Primary" },
       { variant: :secondary, label: "Secondary" },
+      { variant: :tertiary, label: "Tertiary" },
       { variant: :success, label: "Success" },
       { variant: :info, label: "Info" },
       { variant: :warning, label: "Warning" },
@@ -38,8 +39,8 @@ class <%= application_namespace %>::UiController < ApplicationController
     }.each do |title, h|
       @buttons_model[title] = [
         ary.map { |b| b.merge(h) },
-        ary.map { |b| b.merge(h).merge(outline: true) },
         ary.map { |b| b.merge(h).merge(icon: :alert_triangle) },
+        ary.map { |b| b.merge(h).merge(icon: :alert_triangle, right_icon: :alert_triangle) },
         ary.map { |b| b.merge(h).merge(icon: :alert_triangle, label: nil) },
       ]
     end
@@ -49,20 +50,21 @@ class <%= application_namespace %>::UiController < ApplicationController
     @hide_flash_messages = true
 
     %i[
-      success
+      dark
       notice
       warning
+      success
       alert
-      error
       loader
     ].each do |variant|
       flash.now[variant] = "#{variant.to_s.capitalize} #{@lorem_ipsum[0..44]}."
     end
 
     @buttons_model = [
-      { variant: :success, label: "Add success flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New success message!', variant: 'success' })" },
+      { variant: :dark, label: "Add dark flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New dark message!', variant: 'dark' })" },
       { variant: :info, label: "Add info flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New info message!', variant: 'info' })" },
       { variant: :warning, label: "Add warning flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New warning message!', variant: 'warning' })" },
+      { variant: :success, label: "Add success flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New success message!', variant: 'success' })" },
       { variant: :danger, label: "Add danger flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New danger message!', variant: 'danger' })" },
       { variant: :info, loader: true, label: "Add loader flash", onclick: "window.<%= application_namespace %>.Ui.Flash.flash({ content: 'New loader message!', variant: 'loader' })" },
     ]

@@ -1,9 +1,11 @@
 $enable-negative-margins: true
 $enable-rfs: false
 $enable-validation-icons: false
+$enable-dark-mode: false
+$color-mode-type: media-query
 
 $grid-gutter-base: px-to-rem(8px)
-$grid-gutter-width: 4 * $grid-gutter-base
+$grid-gutter-width: 3 * $grid-gutter-base
 $grid-gutter-half: $grid-gutter-width / 2
 
 $spacer: $grid-gutter-half
@@ -11,7 +13,9 @@ $spacer: $grid-gutter-half
 //0: 0, 1: 4px, 2: 8px, 3: 16px, 4: 24px, 5: 48px, h: 16px, g: 32px, gg: 64px
 $spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 40: px-to-rem(40px), 56: px-to-rem(56px))
 
-$white: #FFFFFF
+@import './variables-colors'
+
+$white: $primary-white
 $black: #000000
 $dark-gray: #3B4548
 $gray-medium-dark: #6F7172
@@ -34,40 +38,18 @@ $gray-900: $antracite
 
 $cyan: #0dcaf0 !default
 
+$body-bg: $shade-light-contrast
+$body-color: $shade-black-contrast
+
 $primary: $black
-$secondary: $gray-600
-$tertiary: $medium-gray
-$success: $green !default
-$info: $blue !default
-$warning: $yellow !default
-$danger: $red !default
-$light: $gray-100 !default
-$dark: $gray-900 !default
-
-$shade-light-contrast: $white
-$shade-black-contrast: $black
-
-$shade-light-contrast-dark: #191919
-$shade-black-contrast-dark: $white
-
-$shade-100: #F5F5F5
-$shade-200: #E8E8E8
-$shade-300: #CBCBCB
-$shade-400: #8D8D8D
-$shade-500: #696969
-$shade-600: #555555
-$shade-700: #3E3E3E
-$shade-800: #2B2B2B
-
-$shade-100-dark: $shade-800
-$shade-200-dark: $shade-700
-$shade-300-dark: $shade-600
-$shade-400-dark: $shade-500
-$shade-500-dark: $shade-400
-$shade-600-dark: $shade-300
+$success: $status-success
+$info: $shade-200
+$warning: $status-caution
+$danger: $status-error
 
 $container-fluid-max-width: 1280px
-$font-size-media-breakpoint: lg
+$font-size-media-breakpoint-s: sm
+$font-size-media-breakpoint-m: lg
 
 $font-family-sans-serif: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
@@ -105,7 +87,21 @@ $ui-typo-display-xs-font-size: px-to-rem(18px)
 $ui-typo-display-xs-line-height: $ui-typo-display-line-height
 $ui-typo-display-xs-letter-spacing: -0.5px
 
+$ui-typo-display-2xs-font-size: px-to-rem(16px)
+$ui-typo-display-2xs-line-height: $ui-typo-display-line-height
+$ui-typo-display-2xs-letter-spacing: -0.5px
+
+$ui-typo-display-3xs-font-size: px-to-rem(14px)
+$ui-typo-display-3xs-line-height: $ui-typo-display-line-height
+$ui-typo-display-3xs-letter-spacing: -0.5px
+
 $ui-typo-text-line-height: 1.5
+
+$ui-typo-text-3xl-font-size: px-to-rem(32px)
+$ui-typo-text-3xl-line-height: $ui-typo-text-line-height
+
+$ui-typo-text-2xl-font-size: px-to-rem(24px)
+$ui-typo-text-2xl-line-height: $ui-typo-text-line-height
 
 $ui-typo-text-xl-font-size: px-to-rem(20px)
 $ui-typo-text-xl-line-height: $ui-typo-text-line-height
@@ -127,102 +123,70 @@ $link-decoration: underline
 $link-hover-color: inherit
 $link-hover-decoration: none
 
-$headings-font-family: "Space Grotesk", #{$font-family-sans-serif}
+$btn-link-focus-shadow-rgb: none
+
+$headings-font-family: "Space Grotesk", $font-family-sans-serif
 $headings-font-weight: $font-weight-bold
 $headings-margin-top: $spacer / 2
 $headings-margin-bottom: $spacer
-$headings-margin-top-mobile: $headings-margin-top
-$headings-margin-bottom-mobile: $headings-margin-bottom
+$headings-margin-top-s: $headings-margin-top
+$headings-margin-bottom-s: $headings-margin-bottom
 
 $font-size-base: $ui-typo-text-m-font-size
 $line-height-base: $ui-typo-text-m-line-height
-$font-size-base-mobile: $font-size-base
-$line-height-base-mobile: $line-height-base
+$font-size-base-s: $font-size-base
+$line-height-base-s: $line-height-base
 
 $font-size-sm: $ui-typo-text-s-font-size
 $line-height-sm: $ui-typo-text-s-line-height
-$font-size-sm-mobile: $font-size-sm
-$line-height-sm-mobile: $line-height-sm
-
-$font-size-mini: $ui-typo-text-xs-font-size
-$line-height-mini: $ui-typo-text-xs-line-height
-$font-size-mini-mobile: $font-size-mini
-$line-height-mini-mobile: $line-height-mini
 
 $font-size-lg: $ui-typo-text-l-font-size
 $line-height-lg: $ui-typo-text-l-line-height
-$font-size-lg-mobile: $font-size-lg
-$line-height-lg-mobile: $line-height-lg
-
-$font-size-xl: $ui-typo-text-xl-font-size
-$line-height-xl: $ui-typo-text-xl-line-height
-$font-size-xl-mobile: $font-size-xl
-$line-height-xl-mobile: $line-height-xl
 
 $h0-font-size: $ui-typo-display-2xl-font-size
 $h0-line-height: $ui-typo-display-2xl-line-height
 $h0-letter-spacing: $ui-typo-display-2xl-letter-spacing
 $h0-margin-top: $grid-gutter-width
 $h0-margin-bottom: $spacer
-$h0-font-size-mobile: $h0-font-size
-$h0-line-height-mobile: $h0-line-height
-$h0-margin-top-mobile: $h0-margin-top
-$h0-margin-bottom-mobile: $h0-margin-bottom
+$h0-font-size-s: $h0-font-size
+$h0-line-height-s: $h0-line-height
+$h0-margin-top-s: $h0-margin-top
+$h0-margin-bottom-s: $h0-margin-bottom
 
-$h1-font-size: $ui-typo-display-xl-font-size
-$h1-line-height: $ui-typo-display-xl-line-height
-$h1-letter-spacing: $ui-typo-display-xl-letter-spacing
 $h1-margin-top: 0
 $h1-margin-bottom: $spacer
-$h1-font-size-mobile: $h1-font-size
-$h1-line-height-mobile: $h1-line-height
-$h1-margin-top-mobile: 0
-$h1-margin-bottom-mobile: $h1-margin-bottom
+$h1-margin-top-s: 0
+$h1-margin-bottom-s: $h1-margin-bottom
 
-$h2-font-size: $ui-typo-display-l-font-size
-$h2-line-height: $ui-typo-display-l-line-height
-$h2-letter-spacing: $ui-typo-display-l-letter-spacing
 $h2-margin-top: 2 * $spacer
 $h2-margin-bottom: $spacer
-$h2-font-size-mobile: $h2-font-size
-$h2-line-height-mobile: $h2-line-height
-$h2-margin-top-mobile: 2 * $spacer
-$h2-margin-bottom-mobile: $spacer
+$h2-margin-top-s: 2 * $spacer
+$h2-margin-bottom-s: $spacer
 
-$h3-font-size: $ui-typo-display-m-font-size
-$h3-line-height: $ui-typo-display-m-line-height
-$h3-letter-spacing: $ui-typo-display-m-letter-spacing
 $h3-margin-top: 2 * $spacer
 $h3-margin-bottom: $spacer
-$h3-font-size-mobile: $h3-font-size
-$h3-line-height-mobile: $h3-line-height
-$h3-margin-top-mobile: 2 * $spacer
-$h3-margin-bottom-mobile: $spacer
+$h3-margin-top-s: 2 * $spacer
+$h3-margin-bottom-s: $spacer
 
-$h4-font-size: $ui-typo-display-s-font-size
-$h4-line-height: $ui-typo-display-s-line-height
-$h4-letter-spacing: $ui-typo-display-s-letter-spacing
 $h4-margin-top: 2 * $spacer
 $h4-margin-bottom: $spacer
-$h4-font-size-mobile: $h4-font-size
-$h4-line-height-mobile: $h4-line-height
-$h4-margin-top-mobile: 2 * $spacer
-$h4-margin-bottom-mobile: $spacer
+$h4-margin-top-s: 2 * $spacer
+$h4-margin-bottom-s: $spacer
 
-$h5-font-size: $ui-typo-display-xs-font-size
-$h5-line-height: $ui-typo-display-xs-line-height
-$h5-letter-spacing: $ui-typo-display-xs-letter-spacing
 $h5-margin-top: 2 * $spacer
 $h5-margin-bottom: $spacer
-$h5-font-size-mobile: $h5-font-size
-$h5-line-height-mobile: $h5-line-height
-$h5-margin-top-mobile: 2 * $spacer
-$h5-margin-bottom-mobile: $spacer
+$h5-margin-top-s: 2 * $spacer
+$h5-margin-bottom-s: $spacer
 
-$theme-colors: ("primary": $primary, "secondary": $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark, "light-gray": $light-gray, "medium-gray": $medium-gray, "gray": $gray, "dark-gray": $dark-gray, "blue": $blue, "red": $red, "violet": $violet, "green": $green, "orange": $orange, "yellow": $yellow, "shade-500": $shade-500 )
+$theme-colors: ( "black": #000000 )
 $social-sites-colors: ( facebook: #3B5998, messenger: #0078FF, twitter: #00ACED, pinterest: #CB2027, mail: $violet, linkedin: #007BB6, youtube: #FF0000, instagram: #C13584 )
 
 $form-group-spacer: $grid-gutter-half
+$form-text-font-size: $ui-typo-text-xs-font-size
+$form-text-color: $shade-400
+$input-placeholder-color: $shade-400
+
+$transition-base: all .2s ease-in-out
 
 $border-color: rgba(0, 0, 0, 0.15)
 
@@ -236,19 +200,20 @@ $modal-inner-padding: px-to-rem(32px)
 $modal-inner-padding-mobile: px-to-rem(16px)
 $modal-header-padding-y: $modal-inner-padding
 $modal-header-border-width: 0
-$modal-backdrop-bg: $black
+$modal-backdrop-bg: $shade-black-contrast
 $modal-backdrop-opacity: .15
-$modal-content-box-shadow-xs: 2px 2px 40px 0px rgba(0, 0, 0, 0.20), 0px 1px 4px 0px rgba(0, 0, 0, 0.10)
+$modal-content-box-shadow-xs: var(--<%= application_namespace_path %>-box-shadow-overlay)
 $modal-content-box-shadow-sm-up: $modal-content-box-shadow-xs
 $modal-content-border-width: 0
 $modal-content-border-radius: 12px
 $modal-footer-margin-between: 0
+$modal-content-bg: $shade-100
 
 $input-btn-focus-width: 0
 
 $btn-opacity: 1
-$btn-hover-opacity: 0.85
-$btn-disabled-opacity: 0.5
+$btn-hover-opacity: 0.59
+$btn-disabled-opacity: 0.2
 $btn-outline-hover-opacity: $btn-opacity
 $btn-outline-hover-background-color: $shade-200
 
@@ -267,8 +232,9 @@ $btn-font-size: px-to-rem(14px)
 $btn-line-height: 21 / 14
 $btn-font-weight: $font-weight-semibold
 $btn-text-transform-uppercase: true
-$btn-padding-x: map-get($spacers, 3)
-$btn-padding-y: px-to-rem(7px)
+$btn-padding-x: px-to-rem(16px)
+$btn-padding-y: px-to-rem(6px)
+$btn-transition: $transition-base
 
 $btn-min-size-sm: px-to-rem(34px)
 $btn-font-size-sm: px-to-rem(12px)
@@ -288,10 +254,14 @@ $input-padding-x: map-get($spacers, 3)
 $input-border-radius: map-get($spacers, 4)
 $input-bg: $shade-light-contrast
 $input-color: $shade-black-contrast
-$input-border-color: $shade-400
+$input-border-color: $transparent-300
 $input-focus-border-color: $shade-black-contrast
 $input-font-size: $ui-typo-text-m-font-size
+$input-box-shadow: none
+$input-focus-box-shadow: none
 
 $form-label-margin-bottom: map-get($spacers, 1)
 $form-label-font-size: $ui-typo-text-s-font-size
 $form-label-font-weight: $font-weight-medium
+
+$table-variants: ( )

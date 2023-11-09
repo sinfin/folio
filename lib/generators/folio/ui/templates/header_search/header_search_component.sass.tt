@@ -68,7 +68,7 @@
     display: none
 
   &__autocomplete-results
-    color: $black
+    color: $shade-black-contrast
 
   &__autocomplete-results:empty + &__loader
     display: block

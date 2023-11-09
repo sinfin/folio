@@ -1,0 +1,5 @@
+.<%= classname_prefix %>-ui-flash
+  margin-bottom: $grid-gutter-width
+
+  &:empty
+    display: none

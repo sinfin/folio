@@ -1,4 +1,4 @@
-footer.<%= classname_prefix %>-ui-footer
+footer.<%= classname_prefix %>-ui-footer data-bs-theme="dark"
   .container-fluid
     .<%= classname_prefix %>-ui-footer__row
       .<%= classname_prefix %>-ui-footer__left

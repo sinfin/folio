@@ -18,6 +18,6 @@ $my-atom-lg-mobile: 50px
   margin-top: $my-atom-lg
   margin-bottom: $my-atom-lg
 
-  +media-breakpoint-down($font-size-media-breakpoint)
+  +media-breakpoint-down($font-size-media-breakpoint-s)
     margin-top: $my-atom-lg-mobile
     margin-bottom: $my-atom-lg-mobile

@@ -46,6 +46,8 @@ Rails.application.routes.draw do
     end
   end
 
+  draw "dummy/ui"
+
   scope module: :dummy, as: :dummy do
     resource :ui, only: %i[show], controller: "ui" do
       get :alerts

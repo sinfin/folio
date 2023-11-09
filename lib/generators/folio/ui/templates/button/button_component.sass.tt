@@ -1,10 +1,7 @@
 .<%= classname_prefix %>-ui-button
   &__icon
     &:only-child
-      margin: 0 (( - 1 * px-to-rem(4px) ))
-
-  &__right-icon
-    margin-right: - 1 * px-to-rem(11px - 7)
+      margin: 0 (( - $btn-padding-x ))
 
   &__loader-wrap
     width: 16px

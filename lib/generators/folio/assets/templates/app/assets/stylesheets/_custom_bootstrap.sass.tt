@@ -1,4 +1,4 @@
-@import 'variables'
+@import './variables'
 
 @import "folio-bootstrap-5/scss/mixins/banner"
 @include bsBanner("")
@@ -6,6 +6,9 @@
 // scss-docs-start import-stack
 // Configuration
 @import "folio-bootstrap-5/scss/functions"
+
+@import "folio/bootstrap-5-mixin-fixes"
+
 @import "folio-bootstrap-5/scss/variables"
 @import "folio-bootstrap-5/scss/maps"
 @import "folio-bootstrap-5/scss/mixins"
@@ -14,13 +17,13 @@
 // Layout & components
 @import "folio-bootstrap-5/scss/root"
 @import "folio-bootstrap-5/scss/reboot"
-@import "folio-bootstrap-5/scss/type"
+// @import "folio-bootstrap-5/scss/type"
 // @import "folio-bootstrap-5/scss/images"
 @import "folio-bootstrap-5/scss/containers"
 @import "folio-bootstrap-5/scss/grid"
 @import "folio-bootstrap-5/scss/tables"
 @import "folio-bootstrap-5/scss/forms"
-@import "folio-bootstrap-5/scss/buttons"
+// @import "folio-bootstrap-5/scss/buttons"
 // @import "folio-bootstrap-5/scss/transitions"
 // @import "folio-bootstrap-5/scss/dropdown"
 // @import "folio-bootstrap-5/scss/button-group"
@@ -43,6 +46,8 @@
 // @import "folio-bootstrap-5/scss/spinners"
 // @import "folio-bootstrap-5/scss/offcanvas"
 // @import "folio-bootstrap-5/scss/placeholders"
+
+@import './root'
 
 // Helpers
 @import "folio-bootstrap-5/scss/helpers"

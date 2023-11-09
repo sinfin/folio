@@ -18,6 +18,8 @@ class Folio::AssetsGenerator < Rails::Generators::Base
     app/assets/stylesheets/_icons.scss
     app/assets/stylesheets/_print.sass
     app/assets/stylesheets/_variables.sass
+    app/assets/stylesheets/_variables-colors.sass
+    app/assets/stylesheets/_root.sass
     app/assets/stylesheets/application.sass
     app/assets/stylesheets/folio/console/_main_app.sass
     app/assets/stylesheets/modules/_atoms.sass

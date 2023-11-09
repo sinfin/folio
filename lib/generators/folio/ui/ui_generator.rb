@@ -62,23 +62,10 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
     routes_s = File.read(folio_generators_root.join("config/routes.rb"))
 
-    if routes_s.exclude?("resource :ui")
-      str = <<-RUBY
+    if routes_s.exclude?("draw \"#{application_namespace_path}/ui\"i")
+      str = "draw \"#{application_namespace_path}/ui\"\n\n"
 
-    resource :ui, only: %i[show], controller: "ui" do
-      get :alerts
-      get :boolean_toggles
-      get :buttons
-      get :forms
-      get :icons
-      get :images
-      get :modals
-      get :pagination
-      get :typo
-    end
-      RUBY
-
-      inject_into_file "config/routes.rb", after: /scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do/ do
+      inject_into_file "config/routes.rb", before: /scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do/ do
         str
       end
     end
@@ -108,6 +95,15 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
         File.write app_path, hash.to_yaml(line_width: -1)
       end
+    end
+  end
+
+  def copy_routes
+    base = ::Folio::Engine.root.join("lib/generators/folio/ui/templates/ymls/").to_s
+
+    Dir["#{base}**/*.yml.tt"].each do |path|
+      relative_path = path.to_s.delete_prefix(base)
+      template "ymls/#{relative_path}", relative_path.delete_suffix(".tt")
     end
   end
 

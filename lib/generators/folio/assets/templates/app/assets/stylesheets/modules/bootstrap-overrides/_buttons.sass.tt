@@ -1,40 +1,71 @@
 .btn
-  --#{$prefix}btn-border-color: var(--#{$prefix}btn-bg)
-  --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color)
-  --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg)
-  --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-border-color)
-  --#{$prefix}btn-active-color: var(--#{$prefix}btn-color)
   --#{$prefix}btn-active-bg: var(--#{$prefix}btn-bg)
   --#{$prefix}btn-active-border-color: var(--#{$prefix}btn-border-color)
-  --#{$prefix}btn-disabled-color: #{$gray-medium-dark}
-  --#{$prefix}btn-disabled-bg: #{$gray}
-  --#{$prefix}btn-disabled-border-color: #{$gray}
-  display: inline-flex
+  --#{$prefix}btn-active-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-bg: transparent
+  --#{$prefix}btn-border-color: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-border-radius: #{$btn-border-radius}
+  --#{$prefix}btn-border-width: #{$btn-border-width}
+  --#{$prefix}btn-color: #{$btn-color}
+  --#{$prefix}btn-font-weight: #{$btn-font-weight}
+  --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg)
+  --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-border-color)
+  --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-min-size: #{$btn-min-size}
+  --#{$prefix}btn-padding-x: #{$btn-padding-x}
+  --#{$prefix}btn-padding-y: #{$btn-padding-y}
+  --#{$prefix}btn-hover-opacity: #{$btn-hover-opacity}
+
   align-items: center
+  background: var(--#{$prefix}btn-bg)
+  border-radius: var(--#{$prefix}btn-border-radius)
+  border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color)
+  color: var(--#{$prefix}btn-color)
+  display: inline-flex
+  font-family: var(--#{$prefix}btn-font-family)
+  font-size: var(--#{$prefix}btn-font-size)
+  font-weight: var(--#{$prefix}btn-font-weight)
+  gap: var(--#{$prefix}btn-padding-y)
   justify-content: center
-  gap: $input-btn-padding-y
-  opacity: 1
-  min-height: $btn-min-size
-  min-width: $btn-min-size
+  line-height: var(--#{$prefix}btn-line-height)
+  min-height: var(--#{$prefix}btn-min-size)
+  min-width: var(--#{$prefix}btn-min-size)
   opacity: $btn-opacity
+  opacity: 1
+  padding: var(--#{$prefix}btn-padding-y) var(--#{$prefix}btn-padding-x)
+  text-align: center
+  text-decoration: none
+  transition: $btn-transition
+  user-select: none
+  vertical-align: middle
+  white-space: $btn-white-space
+  opacity: 1
+
   @if $btn-text-transform-uppercase
     text-transform: uppercase
 
-  @each $name, $color in $theme-colors
-    &-outline-#{$name}
-      --#{$prefix}btn-border-color: #{$color}
+  &:hover, &.hover, &:active, &.active
+    background: var(--#{$prefix}btn-hover-bg)
+    border-color: var(--#{$prefix}btn-hover-border-color)
+    color: var(--#{$prefix}btn-hover-color)
+    opacity: var(--#{$prefix}btn-hover-opacity)
 
-      &:hover, &:focus
-        opacity: $btn-outline-hover-opacity
-        background-color: $btn-outline-hover-background-color
+  &:disabled, &.disabled
+    opacity: $btn-disabled-opacity
 
 .btn-sm
-  min-width: $btn-min-size-sm
-  min-height: $btn-min-size-sm
+  --#{$prefix}btn-font-size: #{$btn-font-size-sm}
+  --#{$prefix}btn-line-height: #{$btn-line-height-sm}
+  --#{$prefix}btn-min-size: #{$btn-min-size-sm}
+  --#{$prefix}btn-padding-x: #{$btn-padding-x-sm}
+  --#{$prefix}btn-padding-y: #{$btn-padding-y-sm}
 
 .btn-lg
-  min-width: $btn-min-size-lg
-  min-height: $btn-min-size-lg
+  --#{$prefix}btn-font-size: #{$btn-font-size-lg}
+  --#{$prefix}btn-line-height: #{$btn-line-height-lg}
+  --#{$prefix}btn-min-size: #{$btn-min-size-lg}
+  --#{$prefix}btn-padding-x: #{$btn-padding-x-lg}
+  --#{$prefix}btn-padding-y: #{$btn-padding-y-lg}
 
 .btn-xs-block
   +media-breakpoint-down(sm)
@@ -46,12 +77,31 @@
   --#{$prefix}btn-bg: #{$shade-black-contrast}
   --#{$prefix}btn-color: #{$shade-light-contrast}
 
-  &:hover, &:focus
-    --#{$prefix}btn-bg: #{$shade-500}
+.btn-dark
+  --#{$prefix}btn-bg: #{$dark}
+  --#{$prefix}btn-color: #{$shade-light-contrast}
 
-.btn-primary-reverse
+.btn-secondary
+  --#{$prefix}btn-bg: #{$shade-light-contrast}
+  --#{$prefix}btn-color: #{$shade-black-contrast}
+  --#{$prefix}btn-border-color: #{$shade-black-contrast}
+
+.btn-tertiary
   --#{$prefix}btn-bg: #{$shade-light-contrast}
   --#{$prefix}btn-color: #{$shade-black-contrast}
 
-  &:hover, &:focus
-    --#{$prefix}btn-bg: #{$shade-400}
+.btn-success
+  --#{$prefix}btn-bg: var(--<%= application_namespace_path %>-status-success)
+  --#{$prefix}btn-color: #{$shade-black-contrast}
+
+.btn-danger
+  --#{$prefix}btn-bg: var(--<%= application_namespace_path %>-status-error)
+  --#{$prefix}btn-color: #{$shade-black-contrast}
+
+.btn-warning
+  --#{$prefix}btn-bg: var(--<%= application_namespace_path %>-status-caution)
+  --#{$prefix}btn-color: #{$shade-black-contrast}
+
+.btn-info
+  --#{$prefix}btn-bg: #{$info}
+  --#{$prefix}btn-color: #{$shade-black-contrast}

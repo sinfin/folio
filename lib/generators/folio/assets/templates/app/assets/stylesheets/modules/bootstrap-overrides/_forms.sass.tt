@@ -12,8 +12,8 @@ abbr[title]
 
 .form-control.form-control--reverse
   color: $shade-light-contrast
-  background-color: $shade-light-contrast-dark
-  border: 1px solid $shade-400-dark
+  background-color: $shade-light-contrast
+  border: 1px solid $shade-400
 
   &:focus
     border: 1px solid $shade-light-contrast

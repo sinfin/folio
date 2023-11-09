@@ -4,7 +4,7 @@ $ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
   margin: $grid-gutter-width 0
 
   &__inner
-    background-color: $white
+    background-color: $shade-light-contrast
     position: relative
 
   &--size-medium &__inner
@@ -56,7 +56,7 @@ $ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
     align-self: stretch
 
   &--size-small &__title
-    color: $black
+    color: $shade-black-contrast
     text-decoration: underline
     margin-bottom: map-get($spacers, 2)
 
