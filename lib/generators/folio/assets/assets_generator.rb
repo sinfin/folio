@@ -78,7 +78,7 @@ class Folio::AssetsGenerator < Rails::Generators::Base
 
   def add_keep_files
     KEEP_FILES.each do |key|
-      full_path = Rails.root.join(key.gsub('application_namespace_path', application_namespace_path)).to_s
+      full_path = Rails.root.join(key.gsub("application_namespace_path", application_namespace_path)).to_s
       FileUtils.mkdir_p(File.dirname(full_path))
       FileUtils.touch(full_path)
     end

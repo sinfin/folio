@@ -1,119 +1,175 @@
-= font-size-base
-  font-size: $font-size-base
-  line-height: $line-height-base
+= font-size-display-2xl
+  font-size: $ui-typo-display-2xl-font-size
+  line-height: $ui-typo-display-2xl-line-height
+  letter-spacing: $ui-typo-display-2xl-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-xl
+  font-size: $ui-typo-display-xl-font-size
+  line-height: $ui-typo-display-xl-line-height
+  letter-spacing: $ui-typo-display-xl-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-l
+  font-size: $ui-typo-display-l-font-size
+  line-height: $ui-typo-display-l-line-height
+  letter-spacing: $ui-typo-display-l-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-m
+  font-size: $ui-typo-display-m-font-size
+  line-height: $ui-typo-display-m-line-height
+  letter-spacing: $ui-typo-display-m-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-s
+  font-size: $ui-typo-display-s-font-size
+  line-height: $ui-typo-display-s-line-height
+  letter-spacing: $ui-typo-display-s-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-xs
+  font-size: $ui-typo-display-xs-font-size
+  line-height: $ui-typo-display-xs-line-height
+  letter-spacing: $ui-typo-display-xs-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-2xs
+  font-size: $ui-typo-display-2xs-font-size
+  line-height: $ui-typo-display-2xs-line-height
+  letter-spacing: $ui-typo-display-2xs-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-display-3xs
+  font-size: $ui-typo-display-3xs-font-size
+  line-height: $ui-typo-display-3xs-line-height
+  letter-spacing: $ui-typo-display-3xs-letter-spacing
+  font-family: $headings-font-family
+
+= font-size-text-3xl
+  font-size: $ui-typo-text-3xl-font-size
+  line-height: $ui-typo-text-3xl-line-height
   letter-spacing: normal
+  font-family: $font-family-base
 
-  @if $font-size-base != $font-size-base-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $font-size-base-mobile
-
-= font-size-mini
-  font-size: $font-size-mini
-  line-height: $line-height-mini
+= font-size-text-2xl
+  font-size: $ui-typo-text-2xl-font-size
+  line-height: $ui-typo-text-2xl-line-height
   letter-spacing: normal
+  font-family: $font-family-base
 
-  @if $font-size-mini != $font-size-mini-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $font-size-mini-mobile
-      line-height: $line-height-mini-mobile
-
-= font-size-sm
-  font-size: $font-size-sm
-  line-height: $line-height-sm
+= font-size-text-xl
+  font-size: $ui-typo-text-xl-font-size
+  line-height: $ui-typo-text-xl-line-height
   letter-spacing: normal
+  font-family: $font-family-base
 
-  @if $font-size-sm != $font-size-sm-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $font-size-sm-mobile
-      line-height: $line-height-sm-mobile
-
-= font-size-lg
-  font-size: $font-size-lg
-  line-height: $line-height-lg
-  color: $headings-color
+= font-size-text-l
+  font-size: $ui-typo-text-l-font-size
+  line-height: $ui-typo-text-l-line-height
   letter-spacing: normal
+  font-family: $font-family-base
 
-  @if $font-size-lg != $font-size-lg-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $font-size-lg-mobile
-      line-height: $line-height-lg-mobile
-
-= font-size-xl
-  font-size: $font-size-xl
-  line-height: $line-height-xl
-  color: $headings-color
+= font-size-text-m
+  font-size: $ui-typo-text-m-font-size
+  line-height: $ui-typo-text-m-line-height
   letter-spacing: normal
+  font-family: $font-family-base
 
-  @if $font-size-xl != $font-size-xl-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $font-size-xl-mobile
-      line-height: $line-height-xl-mobile
+= font-size-text-s
+  font-size: $ui-typo-text-s-font-size
+  line-height: $ui-typo-text-s-line-height
+  letter-spacing: normal
+  font-family: $font-family-base
 
-= font-h0
-  font-size: $h0-font-size
-  line-height: $h0-line-height
-  font-weight: $headings-font-weight
-  letter-spacing: $h0-letter-spacing
-
-  @if $h0-font-size != $h0-font-size-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $h0-font-size-mobile
-      line-height: $h0-line-height-mobile
+= font-size-text-xs
+  font-size: $ui-typo-text-xs-font-size
+  line-height: $ui-typo-text-xs-line-height
+  letter-spacing: normal
+  font-family: $font-family-base
 
 = font-h1
-  font-size: $h1-font-size
-  line-height: $h1-line-height
-  font-weight: $headings-font-weight
-  letter-spacing: $h1-letter-spacing
+  +font-size-display-xl
+  font-weight: $font-weight-bold
 
-  @if $h1-font-size != $h1-font-size-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $h1-font-size-mobile
-      line-height: $h1-line-height-mobile
+  +media-breakpoint-down($font-size-media-breakpoint-m)
+    +font-size-display-m
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-display-s
 
 = font-h2
-  font-size: $h2-font-size
-  line-height: $h2-line-height
-  font-weight: $headings-font-weight
-  letter-spacing: $h2-letter-spacing
+  +font-size-display-m
+  font-weight: $font-weight-bold
 
-  @if $h2-font-size != $h2-font-size-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $h2-font-size-mobile
-      line-height: $h2-line-height-mobile
+  +media-breakpoint-down($font-size-media-breakpoint-m)
+    +font-size-display-s
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-display-xs
 
 = font-h3
-  font-size: $h3-font-size
-  line-height: $h3-line-height
-  font-weight: $headings-font-weight
-  letter-spacing: $h3-letter-spacing
+  +font-size-display-s
+  font-weight: $font-weight-bold
 
-  @if $h3-font-size != $h3-font-size-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $h3-font-size-mobile
-      line-height: $h3-line-height-mobile
+  +media-breakpoint-down($font-size-media-breakpoint-m)
+    +font-size-display-xs
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-display-2xs
 
 = font-h4
-  font-size: $h4-font-size
-  line-height: $h4-line-height
-  font-weight: $headings-font-weight
-  letter-spacing: $h4-letter-spacing
+  +font-size-display-xs
+  font-weight: $font-weight-bold
 
-  @if $h4-font-size != $h4-font-size-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $h4-font-size-mobile
-      line-height: $h4-line-height-mobile
+  +media-breakpoint-down($font-size-media-breakpoint-m)
+    +font-size-display-2xs
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-display-3xs
 
 = font-h5
-  font-size: $h5-font-size
-  line-height: $h5-line-height
-  font-weight: $headings-font-weight
-  letter-spacing: $h5-letter-spacing
+  +font-h4
 
-  @if $h5-font-size != $h5-font-size-mobile
-    +media-breakpoint-down($font-size-media-breakpoint)
-      font-size: $h5-font-size-mobile
-      line-height: $h5-line-height-mobile
+= font-size-base
+  +font-size-text-m
+  letter-spacing: normal
+
+  // +media-breakpoint-down($font-size-media-breakpoint-m)
+  //   +font-size-text-m
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-text-s
+
+= font-size-mini
+  +font-size-text-xs
+  letter-spacing: normal
+
+  // +media-breakpoint-down($font-size-media-breakpoint-m)
+  //   +font-size-text-xs
+
+  // +media-breakpoint-down($font-size-media-breakpoint-s)
+  //   +font-size-text-xs
+
+= font-size-sm
+  +font-size-text-s
+  letter-spacing: normal
+
+  // +media-breakpoint-down($font-size-media-breakpoint-m)
+  //   +font-size-text-s
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-text-xs
+
+= font-size-lg
+  +font-size-text-l
+  letter-spacing: normal
+
+  // +media-breakpoint-down($font-size-media-breakpoint-m)
+  //   +font-size-text-l
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    +font-size-text-m
 
 = line-clamp($lines)
   display: -webkit-box

@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-11-06
+### Changed
+- updated `folio-bootstrap-5` to 5.3 - make sure to update your `_custom_bootstrap.sass` based on the one in folio dummy app
+- make sure to check your e-mail templates / mailer previews, styles may break
+
 ## 2023-10-02
 ### Changed
 - atom and molecule generator now generates components by default - to use cells, pass the `-cell` option

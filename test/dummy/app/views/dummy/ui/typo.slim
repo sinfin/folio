@@ -11,11 +11,11 @@
         td.py-h
           .m-0 class=heading Heading #{heading.upcase}
 
-    - %w[xl lg base sm mini].each do |size|
+    - %w[lg base sm mini].each do |size|
       tr
         td.py-h.text-muted = size
         td.py-h
-          p.m-0 class="font-size-#{size}"
+          p.m-0 class="fs-#{size}"
             ' Lorem ipsum dolor sit amet, consectetur adipisicing elit,
             ' sed
             a<> href="#" do eiusmod tempor
@@ -28,3 +28,42 @@
             ' cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
             ' cupidatat non proident, sunt in culpa qui officia deserunt mollit
             ' anim id est laborum.
+
+  ruby:
+    font_weights = {
+      "Light" => 'fw-light',
+      "Regular" => nil,
+      "Medium" => 'fw-medium',
+      "Bold" => 'fw-bold',
+    }
+
+    style = {
+      "Display 2XL" => 'fs-display-2xl',
+      "Display XL" => 'fs-display-xl',
+      "Display L" => 'fs-display-l',
+      "Display M" => 'fs-display-m',
+      "Display S" => 'fs-display-s',
+      "Display XS" => 'fs-display-xs',
+      "Text 3XL" => 'fs-text-3xl',
+      "Text 2XL" => 'fs-text-2xl',
+      "Text XL" => 'fs-text-xl',
+      "Text L" => 'fs-text-l',
+      "Text M" => 'fs-text-m',
+      "Text S" => 'fs-text-s',
+      "Text XS" => 'fs-text-xs',
+    }
+
+  - font_weights.each do |fw_name, fw_class|
+    table.table.align-middle.mt-5
+      - style.each do |style_name, style_class|
+        tr
+          td[
+            class=fw_class
+            class=style_class
+          ]
+            = "#{fw_name} #{style_name} "
+
+            - if style_name.starts_with?('Text')
+              ' Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+              ' do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+

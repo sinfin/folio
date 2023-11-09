@@ -32,7 +32,7 @@ class Folio::NewsletterSubscriptions::FormCell < Folio::ApplicationCell
 
   def button_class
     return options[:button_class] unless options[:button_class].nil?
-    "btn btn-primary-reverse"
+    "btn btn-primary"
   end
 
   def wrap_class

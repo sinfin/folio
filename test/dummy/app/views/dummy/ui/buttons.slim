@@ -2,11 +2,13 @@
   h1
     a.d-unlink href=dummy_ui_path UI kit
 
-  h2 Buttons
+  - %w[light dark].each do |theme|
+    .bg-body.p-4.mt-4.border.rounded data-bs-theme=theme
+      h2.mt-0 Buttons - #{theme}
 
-  - @buttons_model.each do |title, rows|
-    h3 = title
+      - @buttons_model.each do |title, rows|
+        h3 = title
 
-    - rows.each do |buttons|
-      .my-3
-        = dummy_ui_buttons(buttons:)
+        - rows.each do |buttons|
+          .my-3
+            = dummy_ui_buttons(buttons:)

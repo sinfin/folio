@@ -1,5 +1,5 @@
 .d-ui-tabs
-  border-bottom: 1px solid rgba($black, 0.15)
+  border-bottom: 1px solid rgba($shade-black-contrast, 0.15)
 
   &__inner
     position: relative
@@ -27,7 +27,7 @@
       left: 0
       right: 0
       height: 3px
-      background: rgba($black, 0.15)
+      background: rgba($shade-black-contrast, 0.15)
       transform: translate(0, 5px)
       transition: all .1s ease-in-out
       z-index: 3
@@ -37,12 +37,12 @@
         transform: translate(0, 0)
 
     &--active
-      color: $black
+      color: $shade-black-contrast
       font-weight: $font-weight-bold
 
     &--active::after
-      background: $black
+      background: $shade-black-contrast
 
     &, &:hover, &:focus
-      color: $black
+      color: $shade-black-contrast
       text-decoration: none

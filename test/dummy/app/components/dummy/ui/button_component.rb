@@ -15,7 +15,6 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
                  tag: :button,
                  type: :button,
                  disabled: false,
-                 outline: false,
                  onclick: nil,
                  href: nil)
     @variant = variant
@@ -29,10 +28,10 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
     @data = data
     @tag = tag
     @disabled = disabled
-    @outline = outline
     @type = type
     @href = href
     @onclick = onclick
+    @right_icon = right_icon
   end
 
   def tag
@@ -49,7 +48,7 @@ class Dummy::Ui::ButtonComponent < ApplicationComponent
       h[:type] = @type
     end
 
-    h[:class] = "d-ui-button btn btn-#{@outline ? "outline-" : ""}#{@variant}"
+    h[:class] = "d-ui-button btn btn-#{@variant}"
 
     if @confirm
       h[:data][:confirm] = @confirm == true ? t("folio.confirmation") : @confirm

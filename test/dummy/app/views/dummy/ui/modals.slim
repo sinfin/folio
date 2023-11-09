@@ -28,5 +28,5 @@
   = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-buttons-modal", buttons_model: [{ label: "foo", href: "#foo" }])) do |c|
     ' with buttons
 
-  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-title-and-buttons-modal", title: "title", buttons_model: [{ label: "foo", href: "#foo" }, { label: "close", data: stimulus_modal_close, outline: true }])) do |c|
+  = render(Dummy::Ui::ModalComponent.new(class_name: "d-ui-demo-with-title-and-buttons-modal", title: "title", buttons_model: [{ label: "foo", href: "#foo" }, { label: "close", data: stimulus_modal_close, variant: :secondary }])) do |c|
     ' with buttons

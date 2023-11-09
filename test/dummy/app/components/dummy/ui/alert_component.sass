@@ -1,8 +1,8 @@
 .d-ui-alert
   +font-size-sm
   font-weight: $font-weight-medium
-  color: $white
-  background: $blue
+  color: $shade-black-contrast
+  background: $info
   margin: $grid-gutter-width 0
 
   & + &
@@ -12,6 +12,14 @@
     &,
     & + &
       margin: 0
+
+  &--dark,
+  &--success,
+  &--danger
+    color: $shade-light-contrast
+
+  &--dark
+    background: $shade-700
 
   &--success
     background: $success
@@ -58,3 +66,9 @@
     height: 24px
     position: relative
     flex: 0 0 auto
+
+  +in-dark-mode
+    .folio-loader
+      &:before
+        border-color: rgba(#ffffff, 0.2)
+        border-left-color: #ffffff

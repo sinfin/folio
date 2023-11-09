@@ -2,24 +2,26 @@
   h1
     a.d-unlink href=dummy_ui_path UI kit
 
-  h2 Forms
-
   - page = Folio::Page.new(slug: "slug")
   - page.valid?
 
-  = simple_form_for page, url: "./", method: :get do |f|
-    .row
-      .col-lg-6
-        = f.input :title, hint: false
-      .col-lg-6
-        = f.input :slug, hint: false
+  - %w[light dark].each do |theme|
+    .bg-body.p-4.mt-4.border.rounded data-bs-theme=theme
+      h2.mt-0 Forms - #{theme}
 
-      = f.input :perex, hint: false
+      = simple_form_for page, url: "./", method: :get do |f|
+        .row
+          .col-lg-6
+            = f.input :title, hint: false
+          .col-lg-6
+            = f.input :slug, hint: 'hint text'
 
-      = f.input :type, collection: Array.new(3) { |i| "Option ##{i}" },
-                       include_blank: false
+          = f.input :perex, hint: false
 
-      = dummy_ui_buttons(buttons: [ \
-        { type: :button, label: "cancel", outline: true }, \
-        { type: :submit, label: "submit" }, \
-      ])
+          = f.input :type, collection: Array.new(3) { |i| "Option ##{i}" },
+                           include_blank: false
+
+          = dummy_ui_buttons(buttons: [ \
+            { type: :button, label: "cancel", variant: :secondary }, \
+            { type: :submit, label: "submit" }, \
+          ])

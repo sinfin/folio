@@ -1,6 +1,8 @@
 @import 'photoswipe'
 @import 'photoswipe-dynamic-caption-plugin'
 
+$font-size-media-breakpoint-s: lg !default
+
 $folio-lightbox-caption-font-size: 13px !default
 $folio-lightbox-caption-line-height: 18px !default
 $folio-lightbox-caption-mobile-font-size: $folio-lightbox-caption-font-size !default
@@ -15,7 +17,7 @@ $folio-lightbox-caption-font-family: $font-family-sans-serif !default
   font-family: $folio-lightbox-caption-font-family
 
   @if variable-exists(font-size-media-breakpoint)
-    +media-breakpoint-down($font-size-media-breakpoint)
+    +media-breakpoint-down($font-size-media-breakpoint-s)
       font-size: $folio-lightbox-caption-mobile-font-size
       line-height: $folio-lightbox-caption-mobile-line-height
 

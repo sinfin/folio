@@ -29,7 +29,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def invite_button_class_name
-    "btn btn-outline-primary"
+    "btn btn-secondary"
   end
 
   def invite_button
@@ -82,7 +82,7 @@ class Folio::Devise::ApplicationCell < Folio::ApplicationCell
   end
 
   def omniauth_button_class_name
-    "btn btn-outline-primary btn-xs-block"
+    "btn btn-secondary btn-xs-block"
   end
 
   def invitations_perex

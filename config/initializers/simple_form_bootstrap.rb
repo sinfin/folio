@@ -70,7 +70,7 @@ SimpleForm.setup do |config|
     b.use :label
     b.use :input, class: "form-control", error_class: "is-invalid", valid_class: input_valid_class
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
-    b.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
+    b.use :hint, wrap_with: { tag: "small", class: "form-text" }
     b.use :custom_html, wrap_with: { tag: "div", class: "form-group__custom-html" }
     b.use :flag, wrap_with: { tag: "div", class: "form-group__flag" }
   end
@@ -83,7 +83,7 @@ SimpleForm.setup do |config|
       bb.use :input, class: "form-check-input", error_class: "is-invalid", valid_class: input_valid_class
       bb.use :label, class: "form-check-label"
       bb.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
-      bb.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
+      bb.use :hint, wrap_with: { tag: "small", class: "form-text" }
     end
   end
 
@@ -96,7 +96,7 @@ SimpleForm.setup do |config|
     end
     b.use :input, class: "form-check-input", error_class: "is-invalid", valid_class: input_valid_class
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback d-block" }
-    b.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
+    b.use :hint, wrap_with: { tag: "small", class: "form-text" }
   end
 
   # vertical file input
@@ -109,7 +109,7 @@ SimpleForm.setup do |config|
     b.use :label
     b.use :input, class: "form-control-file", error_class: "is-invalid", valid_class: input_valid_class
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
-    b.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
+    b.use :hint, wrap_with: { tag: "small", class: "form-text" }
   end
 
   # vertical multi select
@@ -121,7 +121,7 @@ SimpleForm.setup do |config|
       ba.use :input, class: "form-control", error_class: "is-invalid", valid_class: input_valid_class
     end
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback d-block" }
-    b.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
+    b.use :hint, wrap_with: { tag: "small", class: "form-text" }
   end
 
   # vertical range input
@@ -133,7 +133,7 @@ SimpleForm.setup do |config|
     b.use :label
     b.use :input, class: "form-control-range", error_class: "is-invalid", valid_class: input_valid_class
     b.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback d-block" }
-    b.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }
+    b.use :hint, wrap_with: { tag: "small", class: "form-text" }
   end
 
   # The default wrapper to be used by the FormBuilder.

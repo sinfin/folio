@@ -175,6 +175,7 @@ class Dummy::SeedGenerator
          .gsub("dummy_search", "<%= application_namespace_path %>_search")
          .gsub("dummy_ui_", "<%= application_namespace_path %>_ui_")
          .gsub("dummy:", "<%= application_namespace_path %>:")
+         .gsub("--dummy-", "--<%= application_namespace_path %>-")
          .gsub("window.dummy", "window.<%= application_namespace_path %>")
          .gsub("window.Dummy", "window.<%= application_namespace %>")
          .gsub("d-ui", "<%= classname_prefix %>-ui")

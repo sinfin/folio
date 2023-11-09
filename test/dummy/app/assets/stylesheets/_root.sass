@@ -1,0 +1,87 @@
+= light-mode
+  --dummy-accent-200: #{$blue-300}
+  --dummy-accent-300: #{$mint-400}
+  --dummy-brand-100: #{$blue-500}
+  --dummy-brand-200: #{$purple-300}
+  --dummy-link-default: #{$blue-400}
+  --dummy-shade-100: #{$cloud-100}
+  --dummy-shade-200: #{$cloud-200}
+  --dummy-shade-300: #{$cloud-300}
+  --dummy-shade-400: #{$cloud-400}
+  --dummy-shade-500: #{$cloud-500}
+  --dummy-shade-600: #{$cloud-600}
+  --dummy-shade-700: #{$cloud-700}
+  --dummy-shade-800: #{$cloud-800}
+  --dummy-shade-black-contrast: #{$primary-black}
+  --dummy-shade-light-contrast: #{$primary-white}
+  --dummy-status-caution: #{$orange-400}
+  --dummy-status-disabled-100: #{$cloud-300}
+  --dummy-status-error: #{$red-400}
+  --dummy-status-success: #{$emerald-500}
+  --dummy-transparent-100: #0000000d
+  --dummy-transparent-200: #0000001a
+  --dummy-transparent-300: #00000026
+  --dummy-transparent-400: #00000033
+  --dummy-transparent-500: #00000040
+  --dummy-transparent-600: #0000004d
+  --dummy-box-shadow-overlay: 2px 2px 40px 0px rgba(0, 0, 0, 0.20), 0px 1px 4px 0px rgba(0, 0, 0, 0.10)
+  --#{$prefix}body-color: #{$primary-black}
+  --#{$prefix}body-color-rgb: #{to-rgb($primary-black)}
+  --#{$prefix}body-bg: #{$primary-white}
+  --#{$prefix}body-bg-rgb: #{to-rgb($primary-white)}
+  color-scheme: light
+  background: var(--#{$prefix}body-bg)
+  color: var(--#{$prefix}body-color)
+
+= dark-mode
+  --dummy-accent-200: #{$blue-300}
+  --dummy-accent-300: #{$mint-500}
+  --dummy-brand-100: #{$blue-500}
+  --dummy-brand-200: #{$purple-300}
+  --dummy-link-default: #{$blue-300}
+  --dummy-shade-100: #{$cloud-800}
+  --dummy-shade-200: #{$cloud-700}
+  --dummy-shade-300: #{$cloud-600}
+  --dummy-shade-400: #{$cloud-500}
+  --dummy-shade-500: #{$cloud-400}
+  --dummy-shade-600: #{$cloud-300}
+  --dummy-shade-700: #{$cloud-200}
+  --dummy-shade-800: #{$cloud-100}
+  --dummy-shade-black-contrast: #{$primary-white}
+  --dummy-shade-light-contrast: #{$cloud-900}
+  --dummy-status-caution: #{$orange-400}
+  --dummy-status-disabled-100: #{$cloud-500}
+  --dummy-status-error: #{$red-300}
+  --dummy-status-success: #{$emerald-400}
+  --dummy-transparent-100: #ffffff0d
+  --dummy-transparent-200: #ffffff1a
+  --dummy-transparent-300: #ffffff26
+  --dummy-transparent-400: #ffffff33
+  --dummy-transparent-500: #ffffff40
+  --dummy-transparent-600: #ffffff4d
+  --dummy-box-shadow-overlay: 2px 2px 40px 0px rgba(255, 255, 255, 0.25), 0px 1px 2px 0px rgba(255, 255, 255, 0.20)
+  --#{$prefix}body-color: #{$primary-white}
+  --#{$prefix}body-color-rgb: #{to-rgb($primary-white)}
+  --#{$prefix}body-bg: #{$cloud-900}
+  --#{$prefix}body-bg-rgb: #{to-rgb($cloud-900)}
+  color-scheme: dark
+  background: var(--#{$prefix}body-bg)
+  color: var(--#{$prefix}body-color)
+
+= in-dark-mode
+  [data-bs-theme="dark"] &
+    @content
+
+  @media (prefers-color-scheme: dark)
+    @content
+
+#{":root"},
+[data-bs-theme="light"]
+  +light-mode
+
+[data-bs-theme="dark"]
+  +dark-mode
+
+@media (prefers-color-scheme: dark)
+  #{":root"}
+    +dark-mode

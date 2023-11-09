@@ -25,7 +25,7 @@ window.Dummy.Ui.Alert.create = (data) => {
     loaderWrap.className = 'd-ui-alert__loader-wrap'
 
     const loader = document.createElement('div')
-    loader.className = 'folio-loader folio-loader--tiny folio-loader--transparent folio-loader--white d-ui-alert__loader'
+    loader.className = 'folio-loader folio-loader--tiny folio-loader--transparent d-ui-alert__loader'
 
     loaderWrap.appendChild(loader)
     container.appendChild(loaderWrap)

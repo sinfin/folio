@@ -4,10 +4,11 @@ class Dummy::Ui::FlashComponent < ApplicationComponent
   VARIANTS = {
     alert: :danger,
     error: :danger,
-    warning: :warning,
-    notice: :info,
-    success: :success,
     loader: :loader,
+    notice: :info,
+    dark: :dark,
+    success: :success,
+    warning: :warning,
   }
 
   def initialize(flash:)
