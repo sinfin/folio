@@ -8,6 +8,8 @@ $newsletter-subscriptions-form-btn-bg-color-hover: #696969 !default
 $newsletter-subscriptions-form-btn-text-transform: none !default
 	
 .f-newsletter-subscriptions-form
+  position: relative
+
   &:not(&--loading) &__loader
     display: none
 
@@ -18,7 +20,6 @@ $newsletter-subscriptions-form-btn-text-transform: none !default
     width: 100%
     height: 100%
     display: none
-    align-items: center
     justify-content: center
     flex-direction: column
     z-index: 2

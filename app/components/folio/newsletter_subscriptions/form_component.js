@@ -15,18 +15,17 @@ window.Folio.Stimulus.register('f-newsletter-subscriptions-form', class extends 
     if (this.element.classList.contains(this.submittingClass)) return
 
     this.element.classList.add(this.submittingClass)
-
     const data = window.Folio.formToHash(e.target)
-    console.log(data)
 
     window.Folio.Api.apiPost(e.target.action, data).then((res) => {
-      this.element.outerHTML = res.data
+      const responseData = res.data
+      this.element.outerHTML = responseData
 
-      // if ($response.find('.f-newsletter-subscriptions-form__message').length) {
-      //   $response.trigger('folio:success')
-      // } else {
-      //   $response.trigger('folio:failure')
-      // }
+      if (responseData.includes('f-newsletter-subscriptions-form__message')) {
+        this.element.dispatchEvent(new window.CustomEvent('folio:success', { bubbles: true }))
+      } else {
+        this.element.dispatchEvent(new window.CustomEvent('folio:failure', { bubbles: true }))
+      }
     }).catch((err) => {
       console.error(err)
       this.element.classList.remove(this.submittingClass)
