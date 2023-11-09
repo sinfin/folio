@@ -99,12 +99,7 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
   end
 
   def copy_routes
-    base = ::Folio::Engine.root.join("lib/generators/folio/ui/templates/ymls/").to_s
-
-    Dir["#{base}**/*.yml.tt"].each do |path|
-      relative_path = path.to_s.delete_prefix(base)
-      template "ymls/#{relative_path}", relative_path.delete_suffix(".tt")
-    end
+    template "ui-routes.rb", "config/routes/#{application_namespace_path}/ui.rb"
   end
 
   def copy_seed_ymls

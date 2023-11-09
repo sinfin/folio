@@ -132,7 +132,7 @@ class Dummy::SeedGenerator
   end
 
   def ui_routes(path)
-    copy_file(path, @templates_path.join("config/routes/application_namespace_path/ui.rb.tt"))
+    copy_file(path, @templates_path.join("ui-routes.rb.tt"))
   end
 
   def copy_file(from, to)
