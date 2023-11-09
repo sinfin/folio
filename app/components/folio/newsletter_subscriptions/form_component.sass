@@ -8,46 +8,46 @@ $newsletter-subscriptions-form-btn-bg-color-hover: #696969 !default
 $newsletter-subscriptions-form-btn-text-transform: none !default
 	
 .f-newsletter-subscriptions-form
-	&:not(&--loading) &__loader
-		display: none
+  &:not(&--loading) &__loader
+    display: none
 
-	&__message
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-		display: none
-		align-items: center
-		justify-content: center
-		flex-direction: column
-		z-index: 2
-	
-	&__form
-		position: relative
-		z-index: 1
+  &__message
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    display: none
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    z-index: 2
 
-	&__input
-		border: 1px solid $newsletter-subscriptions-form-input-border-color
-		border-radius: $newsletter-subscriptions-form-border-radius
-		padding: $newsletter-subscriptions-form-input-padding
+  &__form
+    position: relative
+    z-index: 1
 
-	&__group input::placeholder
-		color: $newsletter-subscriptions-form-input-placeholder-color
+  &__input
+    border: 1px solid $newsletter-subscriptions-form-input-border-color
+    border-radius: $newsletter-subscriptions-form-border-radius
+    padding: $newsletter-subscriptions-form-input-padding
 
-	&__btn
-		position: absolute
-		top: 9px
-		right: 13px
-		line-height: 21px
-		min-height: 24px
-		text-transform: $newsletter-subscriptions-form-btn-text-transform
-		padding: $newsletter-subscriptions-form-btn-padding
-		background-color: $newsletter-subscriptions-form-btn-bg-color
-		border-radius: $newsletter-subscriptions-form-border-radius
+  &__group input::placeholder
+    color: $newsletter-subscriptions-form-input-placeholder-color
 
-		&:hover, &:focus
-			background-color: $newsletter-subscriptions-form-btn-bg-color-hover
+  &__btn
+    position: absolute
+    top: 9px
+    right: 13px
+    line-height: 21px
+    min-height: 24px
+    text-transform: $newsletter-subscriptions-form-btn-text-transform
+    padding: $newsletter-subscriptions-form-btn-padding
+    background-color: $newsletter-subscriptions-form-btn-bg-color
+    border-radius: $newsletter-subscriptions-form-border-radius
+
+    &:hover, &:focus
+      background-color: $newsletter-subscriptions-form-btn-bg-color-hover
 
   &--persisted &__form
     visibility: hidden
