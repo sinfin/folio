@@ -28,12 +28,12 @@ class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
 
   def submit_text
     return @view_options[:submit_text] unless @view_options[:submit_text].nil?
-    "Sign up"
+    t(".submit")
   end
 
   def message
     return @view_options[:message] unless @view_options[:message].nil?
-    "TODO: message"
+    t(".message")
   end
 
   def input(f)

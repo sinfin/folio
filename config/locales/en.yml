@@ -46,7 +46,7 @@ en:
         en: english
         es: spanish
     newsletter_subscriptions:
-      form:
+      form_component:
         message: Signed up!
         submit: Sign up
         label: Your e-mail
