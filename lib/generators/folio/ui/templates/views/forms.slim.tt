@@ -1,0 +1,27 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  - page = Folio::Page.new(slug: "slug")
+  - page.valid?
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-4.mt-4.border.rounded data-bs-theme=theme
+      h2.mt-0 Forms - #{theme}
+
+      = simple_form_for page, url: "./", method: :get do |f|
+        .row
+          .col-lg-6
+            = f.input :title, hint: false
+          .col-lg-6
+            = f.input :slug, hint: 'hint text'
+
+          = f.input :perex, hint: false
+
+          = f.input :type, collection: Array.new(3) { |i| "Option ##{i}" },
+                           include_blank: false
+
+          = <%= application_namespace_path %>_ui_buttons(buttons: [ \
+            { type: :button, label: "cancel", variant: :secondary }, \
+            { type: :submit, label: "submit" }, \
+          ])

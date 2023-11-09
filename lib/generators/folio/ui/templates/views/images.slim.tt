@@ -1,0 +1,29 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  - if @image
+    h2 Images
+
+    - @variants.each_with_index do |variant, i|
+      - unless i.zero?
+        hr
+
+      - if variant[:kwargs]
+        p <%= application_namespace_path %>_ui_image(@image, "#{variant[:size]}", #{variant[:kwargs]})
+        - if variant[:kwargs][:cover] || variant[:kwargs][:contain]
+          .bg-danger style="width: 100px; height: 100px; position: relative;"
+            = <%= application_namespace_path %>_ui_image(@image, variant[:size], **variant[:kwargs])
+        - else
+          = <%= application_namespace_path %>_ui_image(@image, variant[:size], **variant[:kwargs])
+      - else
+        p <%= application_namespace_path %>_ui_image(@image, "#{variant[:size]}")
+        = <%= application_namespace_path %>_ui_image(@image, variant[:size])
+
+    hr
+
+    p <%= application_namespace_path %>_ui_image(nil, "100x100")
+    = <%= application_namespace_path %>_ui_image(nil, "100x100")
+
+  - else
+    p Missing a Folio::File::Image tagged with "unsplash"

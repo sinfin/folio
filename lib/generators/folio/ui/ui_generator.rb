@@ -12,7 +12,9 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
   class UnknownCell < StandardError; end
 
   def create
-    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates")).reject { |name| name.starts_with?(".") }
+    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates")).reject do |name|
+      name.starts_with?(".") || name == "views"
+    end
 
     if name == "all"
       keys = allowed_keys
@@ -68,6 +70,14 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
       inject_into_file "config/routes.rb", before: /scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do/ do
         str
       end
+    end
+
+    views_base = ::Folio::Engine.root.join("lib/generators/folio/ui/templates/").to_s
+
+    Dir["#{views_base}views/*.slim.tt"].each do |path|
+      relative_path = path.to_s.delete_prefix(views_base)
+
+      template relative_path, "app/views/#{application_namespace_path}/ui/#{File.basename(path).delete_suffix('.tt')}"
     end
   end
 

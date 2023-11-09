@@ -1,6 +1,6 @@
 .container-fluid
   h1
-    a.d-unlink href=dummy_ui_path UI kit
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
 
   h2 Typo
 

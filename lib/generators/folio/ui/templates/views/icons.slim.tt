@@ -1,0 +1,12 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  h2 Icons
+
+  .d-flex.flex-wrap.gap-3[
+    onmouseenter="this.style.color = 'red'"
+    onmouseleave="this.style.color = 'inherit'"
+  ]
+    - <%= application_namespace %>::Ui::IconComponent::ICONS.each do |name, _h|
+      = <%= application_namespace_path %>_ui_icon(name, title: name)

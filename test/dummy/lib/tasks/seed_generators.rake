@@ -129,6 +129,11 @@ class Dummy::SeedGenerator
 
   def ui_controllers(path)
     copy_file(path, @templates_path.join("ui_controller.rb.tt"))
+
+    Dir[Rails.root.join("app/views/dummy/ui/*.slim")].each do |path|
+      name = File.basename(path)
+      copy_file(path, @templates_path.join("views/#{name}.tt"))
+    end
   end
 
   def ui_routes(path)

@@ -1,0 +1,14 @@
+.container-fluid
+  h1
+    a.<%= classname_prefix %>-unlink href=<%= application_namespace_path %>_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-4.mt-4.border.rounded data-bs-theme=theme
+      h2.mt-0 Buttons - #{theme}
+
+      - @buttons_model.each do |title, rows|
+        h3 = title
+
+        - rows.each do |buttons|
+          .my-3
+            = <%= application_namespace_path %>_ui_buttons(buttons:)
