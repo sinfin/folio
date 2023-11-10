@@ -58,3 +58,10 @@
   @each $key, $color in $social-sites-colors
     &--#{$key}:hover
       color: $color
+
+=in-dark-mode
+  [data-bs-theme="dark"] &
+    @content
+
+  @media (prefers-color-scheme: dark)
+    @content

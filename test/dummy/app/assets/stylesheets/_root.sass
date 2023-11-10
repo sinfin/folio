@@ -68,13 +68,6 @@
   background: var(--#{$prefix}body-bg)
   color: var(--#{$prefix}body-color)
 
-= in-dark-mode
-  [data-bs-theme="dark"] &
-    @content
-
-  @media (prefers-color-scheme: dark)
-    @content
-
 #{":root"},
 [data-bs-theme="light"]
   +light-mode
