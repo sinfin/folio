@@ -193,15 +193,15 @@ Folio::Engine.routes.draw do
     resources :leads, only: %i[create]
   end
 
-  if ::Rails.application.config.folio_newsletter_subscriptions
-    resources :newsletter_subscriptions, only: %i[create]
-  end
-
   resources :session_attachments, only: %i[create index destroy],
                                   as: :folio_session_attachments
 
   scope :folio, as: :folio do
     namespace :api do
+      if ::Rails.application.config.folio_newsletter_subscriptions
+        resources :newsletter_subscriptions, only: %i[create]
+      end
+
       resource :s3, only: [], controller: "s3" do
         post :before
         post :after

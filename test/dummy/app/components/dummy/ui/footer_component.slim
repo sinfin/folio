@@ -1,11 +1,11 @@
-footer.d-ui-footer data-bs-theme="dark"
+footer.d-ui-footer
   .container-fluid
     .d-ui-footer__row
       .d-ui-footer__left
         .d-ui-footer__col
           .h5.mt-0 = t('.newsletter')
 
-          == cell('folio/newsletter_subscriptions/form')
+          = render(Folio::NewsletterSubscriptions::FormComponent.new(view_options: { input_label: "E-mail" }))
 
           == cell('dummy/ui/disclaimer')
 

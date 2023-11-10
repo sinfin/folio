@@ -11,11 +11,12 @@
 //= require folio/cookie_consent/cookie_consent
 //= require folio/devise
 //= require folio/i18n
+//= require folio/form_to_hash
 //= require folio/lazyload
 //= require folio/lightbox
 //= require folio/modal
+//= require folio/newsletter_subscriptions/form_component
 
-//= require folio/newsletter_subscriptions/form/form
 //= require folio/image/image
 //= require dummy/searches/show/show
 

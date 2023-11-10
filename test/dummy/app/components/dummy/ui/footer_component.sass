@@ -2,6 +2,7 @@
   position: relative
   z-index: 1
   flex: 0 0 auto
+  background: $shade-100
   margin-top: map-get($spacers, gg)
   padding: map-get($spacers, 56) 0
 
@@ -13,7 +14,7 @@
     gap: map-get($spacers, 40) map-get($spacers, gg)
 
   &__row:not(:first-child)
-    border-top: 1px solid $shade-200
+    border-top: 1px solid $transparent-300
     padding-top: map-get($spacers, g)
 
   &__row:not(:last-child)
@@ -40,7 +41,6 @@
     min-width: 268px
 
   &__social-link
-    color: $shade-black-contrast
     +social-sites-hover-color
     text-decoration: none
 
@@ -76,12 +76,12 @@
     justify-content: flex-end
 
   &__author-signature
-    display: inline-flex
-    justify-content: flex-end
-    align-items: center
     +font-size-sm
-    font-weight: $font-weight-medium
+    align-items: center
     color: $shade-600
+    display: inline-flex
+    font-weight: $font-weight-medium
+    justify-content: flex-end
 
   &__author-name, &__slash-symbol
     display: inline-flex

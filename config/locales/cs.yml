@@ -46,7 +46,7 @@ cs:
         en: angličtina
         es: španělština
     newsletter_subscriptions:
-      form:
+      form_component:
         message: Přihlášeno!
         submit: Přihlásit se
         label: Váš e-mail
