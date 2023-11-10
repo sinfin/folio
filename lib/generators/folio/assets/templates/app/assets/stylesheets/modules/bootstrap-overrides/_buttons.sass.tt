@@ -7,14 +7,15 @@
   --#{$prefix}btn-border-radius: #{$btn-border-radius}
   --#{$prefix}btn-border-width: #{$btn-border-width}
   --#{$prefix}btn-color: #{$btn-color}
+  --#{$prefix}btn-font-size: #{$btn-font-size}
   --#{$prefix}btn-font-weight: #{$btn-font-weight}
   --#{$prefix}btn-hover-bg: var(--#{$prefix}btn-bg)
   --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-border-color)
   --#{$prefix}btn-hover-color: var(--#{$prefix}btn-color)
+  --#{$prefix}btn-hover-opacity: #{$btn-hover-opacity}
   --#{$prefix}btn-min-size: #{$btn-min-size}
   --#{$prefix}btn-padding-x: #{$btn-padding-x}
   --#{$prefix}btn-padding-y: #{$btn-padding-y}
-  --#{$prefix}btn-hover-opacity: #{$btn-hover-opacity}
 
   align-items: center
   background: var(--#{$prefix}btn-bg)
