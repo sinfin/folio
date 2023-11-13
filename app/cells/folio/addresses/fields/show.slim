@@ -40,7 +40,7 @@
 
         .row
           .col-lg-7
-            = country_code_input(g)
+            = country_code_input(g, countries_whitelist: options[:countries_whitelist])
 
         .row
           .col-lg-7
@@ -89,4 +89,4 @@
 
               .row
                 .col-lg-7
-                  = country_code_input(g)
+                  = country_code_input(g, countries_whitelist: options[:countries_whitelist])
