@@ -13,6 +13,13 @@ FactoryBot.define do
     type { "Folio::Site" }
   end
 
+  factory :sinfin_local_site, parent: :folio_site do
+    title { "Sinfin local" }
+    domain { "sinfin.localhost" }
+    email { "dummy@sinfin.localhost" }
+    social_links { { "facebook" => "http://www.facebook.com/sinfin" } }
+  end
+
   factory :folio_page, class: "Folio::Page" do
     locale { :cs }
     if Rails.application.config.folio_using_traco
