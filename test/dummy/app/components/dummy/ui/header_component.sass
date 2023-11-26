@@ -5,7 +5,7 @@
   position: relative
 
   &__text-logo
-    margin: 0 auto 0 0
+    margin: 0
     flex: 0 0 auto
     color: $shade-black-contrast
     text-decoration: none
@@ -33,6 +33,7 @@
     display: flex
     align-items: stretch
     gap: px-to-rem(8px) $grid-gutter-half
+    justify-content: space-between
 
   +mq-desktop-menu
     &__inner
@@ -44,8 +45,18 @@
       min-width: 0
       margin-left: 2 * $grid-gutter-width
 
+      &--hidden
+        display: none
+
     &__menu-toggle
       display: none
+
+    &__toolbar
+      display: flex
+      flex: 0 0 auto
+
+      &--expanded
+        flex: 1 1 auto
 
   +mq-mobile-menu
     &__text-logo

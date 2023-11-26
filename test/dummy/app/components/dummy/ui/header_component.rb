@@ -6,4 +6,8 @@ class Dummy::Ui::HeaderComponent < ApplicationComponent
   def menu
     @menu ||= current_header_menu
   end
+
+  def data
+    stimulus_controller("d-ui-header")
+  end
 end

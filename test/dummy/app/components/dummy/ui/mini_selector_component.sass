@@ -1,0 +1,73 @@
+.d-ui-mini-selector
+  position: relative
+
+  &__selected-value
+    display: flex
+    justify-content: space-between
+    align-items: center
+    gap: 0 map-get($spacers, 1)
+    padding: map-get($spacers, s) map-get($spacers, b)
+    background-color: $shade-200
+    border-radius: map-get($spacers, g)
+
+  &--toggle &__selected-value
+    justify-content: center
+
+  &__selected-value-text, &__option
+    font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-medium
+
+  &__selected-value, &__option
+    cursor: pointer
+
+    &:hover, &:focus
+      background-color: $shade-300
+
+  &__options
+    display: none
+    position: absolute
+    top: 29px
+    left: 0
+    width: 100%
+    background-color: $shade-200
+    border-radius: 0 0 map-get($spacers, 3) map-get($spacers, 3)
+
+  &__option
+    padding: 0 map-get($spacers, b)
+
+    &:last-child
+      border-radius: 0 0 map-get($spacers, 3) map-get($spacers, 3)
+      padding-bottom: map-get($spacers, s)
+
+  &--expanded &__selected-value
+    border-radius: map-get($spacers, 3) map-get($spacers, 3) 0 0
+
+  &--expanded &__options
+    display: block
+
+  &--expanded &__chevron
+    transform: rotate(180deg)
+
+  &--language
+    min-width: 59px
+
+    &.d-ui-mini-selector--verbose
+      min-width: 87px
+
+    &.d-ui-mini-selector--toggle
+      min-width: 36px
+
+      &.d-ui-mini-selector--verbose
+        min-width: 67px
+
+  &--currency
+    min-width: 53px
+
+    &.d-ui-mini-selector--verbose
+      min-width: 70px
+
+    &.d-ui-mini-selector--toggle
+      min-width: 26px
+
+      &.d-ui-mini-selector--verbose
+        min-width: 50px

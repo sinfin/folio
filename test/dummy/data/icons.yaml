@@ -306,6 +306,9 @@ upload:
 user:
   width: 24
   height: 24
+user_avatar_sign_in:
+  width: 32
+  height: 33
 user_circle_2:
   width: 24
   height: 24

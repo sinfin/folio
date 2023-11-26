@@ -53,12 +53,14 @@ window.Folio.Stimulus.register('d-ui-header-search', class extends window.Stimul
   open () {
     this.openValue = true
     this.inputTarget.focus()
+    this.element.dispatchEvent(new window.CustomEvent('search:open', { bubbles: true }))
   }
 
   close () {
     if (this.openValue) {
       this.openValue = false
     }
+    this.element.dispatchEvent(new window.CustomEvent('search:close', { bubbles: true }))
   }
 
   onInput (e) {

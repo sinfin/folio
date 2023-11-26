@@ -5,17 +5,23 @@ input[
   type="checkbox"
 ]
 
-.d-ui-header
+.d-ui-header data=data
   .container-fluid
     .d-ui-header__inner
       a.d-ui-header__text-logo.h4 href="/"
           = ::Rails.application.class.to_s.deconstantize
 
       - if menu
-        .d-ui-header__menu
+        .d-ui-header__menu[
+          data=stimulus_target("menu")
+        ]
           = render(Dummy::Ui::MenuComponent.new(menu:))
 
-      = render(Dummy::Ui::HeaderSearchComponent.new)
+      
+      .d-ui-header__toolbar[
+        data=stimulus_target("toolbar")
+      ]
+        = render(Dummy::Ui::MenuToolbarComponent.new)
 
       - if menu
         label.d-ui-header__menu-toggle for=MENU_INPUT_ID

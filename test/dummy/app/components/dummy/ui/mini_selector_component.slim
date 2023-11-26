@@ -1,0 +1,40 @@
+div[
+  class=bem_class_name
+  data=data
+  data-type="#{@type}"
+  data-options=(options ? options.map(&:to_s).join(",") : nil)
+  class="d-ui-mini-selector--#{@type}"
+  class=(toggle_selector? ? "d-ui-mini-selector--toggle": nil)
+]
+  .d-ui-mini-selector__selected-value[
+    data=stimulus_action(click: "selectedValueClick", "keydown.enter": "selectedValueClick")
+    tabindex="0"
+  ]
+    - if @icon
+      = dummy_ui_icon(@icon, height: 16)
+
+    - if selected_value
+      span.d-ui-mini-selector__selected-value-text[
+        data=stimulus_target("selectedValueText")
+      ]
+        = selected_value
+
+    - if !toggle_selector?
+      = dummy_ui_icon(:chevron_down,
+                  class_name: "d-ui-mini-selector__chevron",
+                  height: 16)
+
+    // TODO: add tooltip
+
+  - if !options.nil? && !toggle_selector?
+    ul.d-ui-mini-selector__options[
+      data=stimulus_target("options")
+    ]
+      - options.each do |option|
+        - if option != selected_value
+          li.d-ui-mini-selector__option[
+            data=stimulus_action(click: "optionClick", "keydown.enter": "optionClick")
+            data=stimulus_target("option")
+            tabindex="0"
+          ]
+            = option

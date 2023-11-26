@@ -26,4 +26,6 @@
 //= require dummy/ui/header_message_component
 //= require dummy/ui/header_search_component
 //= require dummy/ui/icon_component
+//= require dummy/ui/header_component
 //= require dummy/ui/menu_component
+//= require dummy/ui/mini_selector_component
