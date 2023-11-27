@@ -214,6 +214,8 @@ class Folio::GenerateThumbnailJob < Folio::ApplicationJob
         thumbnail.name = image.file_name
       end
 
+      thumbnail.meta["mime_type"] = image.file_mime_type
+
       thumbnail
     end
 
