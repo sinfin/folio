@@ -6,7 +6,7 @@
   - page.valid?
 
   - %w[light dark].each do |theme|
-    .bg-body.p-4.mt-4.border.rounded data-bs-theme=theme
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Forms - #{theme}
 
       = simple_form_for page, url: "./", method: :get do |f|
