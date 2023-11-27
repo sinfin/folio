@@ -71,7 +71,8 @@ window.Folio.Input.ContentTemplates.bind = (input) => {
         if (data[i]) {
           $(el).val(data[i]).trigger('change')
           if (el.dispatchEvent) {
-            el.dispatchEvent(new Event('autosize:update'))
+            el.dispatchEvent(new window.Event('change', { bubbles: true }))
+            el.dispatchEvent(new window.Event('autosize:update'))
           }
         }
       })

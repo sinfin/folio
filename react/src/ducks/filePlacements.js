@@ -87,6 +87,12 @@ export const makeFilePlacementsSelector = (fileType) => (state) => {
 function * triggerWrapChangeEvent (action) {
   // used to update atom previews via the data-atom-setting functionality
   yield window.jQuery('.f-c-js-atoms-placement-setting.folio-react-wrap').trigger('folioCustomChange')
+
+  const placementsWrap = document.querySelector('.folio-react-wrap[data-mode="multi-select"]')
+
+  if (placementsWrap) {
+    placementsWrap.dispatchEvent(new window.Event('change', { bubbles: true }))
+  }
 }
 
 function * triggerWrapChangeEventSaga () {

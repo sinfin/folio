@@ -27,7 +27,7 @@ window.FolioConsole.NestedModelControls.onPositionClick = (e) => {
     $target.after($fields)
   }
   return $fields.parent().find('.f-c-nested-model-controls__position-input').each(function (i) {
-    return $(this).val(i + 1).trigger('change')
+    return $(this).val(i + 1).trigger('change')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
   })
 }
 
@@ -43,7 +43,7 @@ window.FolioConsole.NestedModelControls.onDestroyClick = (e) => {
       $nestedFieldsParent.trigger('cocoon:after-remove', [$nestedFields, e])
     } else {
       $nestedFields.prop('hidden', true)
-      $button.closest('.f-c-nested-model-controls').find('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')
+      $button.closest('.f-c-nested-model-controls').find('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
       $nestedFields.find('.f-c-nested-model-controls__position-input').remove()
       window.FolioConsole.NestedModelControls.setPositionsIn($nestedFields.parent())
     }
