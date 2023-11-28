@@ -71,7 +71,7 @@ module Folio
     if Rails.env.development?
       domain = domain.gsub("dev-", "").gsub(/\Adev\./, "www.")
     end
-    Folio::Site.find_by(domain:)
+    Folio::Site.find_by(domain:) || Folio.main_site
   end
 
   def self.site_instance_for_mailers
