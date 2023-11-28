@@ -1,11 +1,11 @@
-footer.<%= classname_prefix %>-ui-footer data-bs-theme="dark"
+footer.<%= classname_prefix %>-ui-footer
   .container-fluid
     .<%= classname_prefix %>-ui-footer__row
       .<%= classname_prefix %>-ui-footer__left
         .<%= classname_prefix %>-ui-footer__col
           .h5.mt-0 = t('.newsletter')
 
-          == cell('folio/newsletter_subscriptions/form')
+          = render(Folio::NewsletterSubscriptions::FormComponent.new(view_options: { input_label: "E-mail" }))
 
           == cell('<%= application_namespace_path %>/ui/disclaimer')
 
