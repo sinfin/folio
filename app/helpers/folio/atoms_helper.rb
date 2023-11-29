@@ -8,9 +8,9 @@ module Folio::AtomsHelper
 
       if atom.class.component_class
         if self.is_a?(Folio::ApplicationCell)
-          capture { render_view_component(atom.class.component_class.new(atoms:, atom_options:)) }
+          capture { render_view_component(atom.class.component_class.new(atom:, atom_options:)) }
         else
-          capture { render(atom.class.component_class.new(atoms:, atom_options:)) }
+          capture { render(atom.class.component_class.new(atom:, atom_options:)) }
         end
       elsif atom.class.cell_name
         cell(atom.class.cell_name,
