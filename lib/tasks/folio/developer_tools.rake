@@ -14,7 +14,7 @@ namespace :folio do
           ::Folio::NewsletterSubscription,
           ::Folio::Menu
         ].each do |klass|
-          if klass.new.attributes.keys.include?(:site_id)
+          if klass.new.attributes.keys.include?("site_id")
             klass.where(site_id: nil).update_all(site_id: ::Folio.main_site.id)
             klass.where(site_id: 0).update_all(site_id: ::Folio.main_site.id)
           end
