@@ -8,6 +8,25 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
 
   validate :validate_roles_from_site
 
+  scope :without_role, -> (role_to_check) {
+    where.not("roles ? :role", role: role_to_check)
+  }
+
+  scope :without_roles, -> (roles_to_check) {
+    where.not("roles ?| array[:roles]", roles: roles_to_check)
+  }
+
+  scope :by_role, -> (role_to_check) {
+    where("roles ? :role", role: role_to_check)
+  }
+
+  scope :by_roles, -> (roles_to_check) {
+    where("roles ?| array[:roles]", roles: roles_to_check)
+  }
+
+  scope :by_site, -> (site) { where(site:) }
+  scope :by_user, -> (site) { where(user:) }
+
   def validate_roles_from_site
     forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles.to_a)
     if forbidden_roles.present?
@@ -24,7 +43,7 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
     else
       site.available_user_roles.select { |role_to_check| roles.include?(role_to_check.to_s) }
     end
- end
+  end
 end
 
 # == Schema Information

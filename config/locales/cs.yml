@@ -56,6 +56,12 @@ cs:
       settings:
         title: Nastavení
         title_long: Nastavení stránky %{site}
+      roles:
+        superuser: Superuser
+        admin: Administrátor
+        manager: Manažer
+        user: Uživatel
+
     publishable_hint:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.
       preview_token_hint: Stránka je až do publikování viditelná jen na této adrese.

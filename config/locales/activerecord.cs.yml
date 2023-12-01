@@ -72,6 +72,8 @@ cs:
         locales: Jazyky
         system_email: Systémová e-mailová adresa
         system_email_copy: Systémová e-mailová adresa (kopie)
+        roles: Uživatelské role
+
       folio/email_template:
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
         subject: Předmět
