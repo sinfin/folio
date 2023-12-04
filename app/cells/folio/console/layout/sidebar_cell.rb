@@ -238,7 +238,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
         site_links = site_specific_links(site)
 
-        links = site_links[:console_sidebar_prepended_links]
+        links += site_links[:console_sidebar_prepended_links]
         links << link_for_site_class(site, Folio::Page)
         links << homepage_for_site(site)
         links += site_links[:console_sidebar_before_menu_links]
