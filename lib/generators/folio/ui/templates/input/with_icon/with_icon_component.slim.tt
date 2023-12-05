@@ -1,0 +1,2 @@
+.<%= classname_prefix %>-ui-input-with-icon
+  = @f.input @name, @input_options.merge(custom_html:)

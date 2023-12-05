@@ -30,8 +30,9 @@ class Dummy::SeedGenerator
   end
 
   def from_component_path(component_path)
-    component_basename = File.basename(component_path)
-    name = component_basename.gsub("_component.rb", "")
+    name = component_path.split("app/components/dummy/ui/", 2)
+                         .last
+                         .gsub("_component.rb", "")
 
     template_component_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_component_dir
