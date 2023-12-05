@@ -431,20 +431,16 @@ class Folio::Console::BaseController < Folio::ApplicationController
         records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
 
         instance_variable_set(folio_console_record_variable_name(plural: true),
-                              records.by_site(allowed_record_sites_for(records.first.class)))
+                              records.by_site(allowed_record_sites))
       elsif record = folio_console_record
-        if record.persisted? && !allowed_record_sites_for(record.class).include?(record.site)
+        if record.persisted? && !allowed_record_sites.include?(record.site)
           fail ActiveRecord::RecordNotFound
         end
       end
     end
 
-    def allowed_record_sites_for(klass)
-      if Rails.application.config.folio_shared_files_between_sites && (klass < Folio::File) # descendants of File
-        [Folio.main_site, current_site]
-      else
-        [current_site]
-      end
+    def allowed_record_sites
+      [current_site]
     end
 
     def load_belongs_to_site_resource
@@ -452,9 +448,9 @@ class Folio::Console::BaseController < Folio::ApplicationController
       if params[:id].present?
         name = folio_console_record_variable_name(plural: false)
         if @klass.respond_to?(:friendly)
-          instance_variable_set(name, @klass.by_site(allowed_record_sites_for(@klass)).friendly.find(params[:id]))
+          instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
         else
-          instance_variable_set(name, @klass.by_site(allowed_record_sites_for(@klass)).find(params[:id]))
+          instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
         end
       end
     end
