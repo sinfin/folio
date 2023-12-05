@@ -17,6 +17,7 @@ module Folio
     config.active_record.yaml_column_permitted_classes = [Symbol, ActiveSupport::TimeWithZone, Time, ActiveSupport::TimeZone]
 
     config.folio_crossdomain_devise = false
+    config.folio_shared_files_between_sites = true
     config.folio_dragonfly_keep_png = true
     config.folio_public_page_title_reversed = false
     config.folio_using_traco = false
@@ -24,6 +25,7 @@ module Folio
     config.folio_pages_ancestry = false
     config.folio_pages_perex_richtext = false
     config.folio_pages_locales = false
+
     config.folio_console_locale = :cs
     config.folio_console_report_redirect = :console_pages_path
     config.folio_console_sidebar_link_class_names = nil
@@ -36,6 +38,7 @@ module Folio
     config.folio_console_sidebar_title_new_item = -> (sidebar_cell) { nil }
     config.folio_console_sidebar_title_image_path = nil
     config.folio_console_default_routes_contstraints = {}
+
     config.folio_newsletter_subscription_service = :mailchimp
     config.folio_server_names = []
     config.folio_image_spacer_background_fallback = nil
@@ -76,7 +79,7 @@ module Folio
     config.folio_direct_s3_upload_allow_for_users = false
     config.folio_direct_s3_upload_allow_public = false
     config.folio_direct_s3_upload_attributes_for_job_proc = -> (controller) {
-      { site_id: controller.current_site.id }
+      { site_id: controller.site_for_new_files.id }
     }
 
     config.folio_content_templates = false

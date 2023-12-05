@@ -440,7 +440,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def allowed_record_sites
-      if Rails.application.config.folio_shared_resources_between_sites
+      if Rails.application.config.folio_shared_files_between_sites
         [Folio.main_site, current_site]
       else
         [current_site]
