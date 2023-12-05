@@ -1,0 +1,21 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  h2 Inputs
+
+  h3 Input with icon - submit with label
+
+  = simple_form_for "", method: :get, url: inputs_dummy_ui_path do |f|
+    - input_options = { id: false }
+    = render(Dummy::Ui::Input::WithIconComponent.new(f:,
+                                                     name: :q,
+                                                     input_options:))
+
+  h3 Input with icon - submit without label
+
+  = simple_form_for "", method: :get, url: inputs_dummy_ui_path do |f|
+    - input_options = { id: false, label: false }
+    = render(Dummy::Ui::Input::WithIconComponent.new(f:,
+                                                     name: :q,
+                                                     input_options:))

@@ -8,6 +8,7 @@ scope module: :dummy, as: :dummy do
     get :forms
     get :icons
     get :images
+    get :inputs
     get :modals
     get :pagination
     get :typo

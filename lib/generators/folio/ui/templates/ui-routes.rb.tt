@@ -8,6 +8,7 @@ scope module: :<%= application_namespace_path %>, as: :<%= application_namespace
     get :forms
     get :icons
     get :images
+    get :inputs
     get :modals
     get :pagination
     get :typo

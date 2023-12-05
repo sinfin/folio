@@ -11,6 +11,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       forms
       icons
       images
+      inputs
       modals
       pagination
       typo

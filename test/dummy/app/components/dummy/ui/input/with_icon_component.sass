@@ -1,0 +1,24 @@
+.d-ui-input-with-icon
+  .form-control
+    padding-right: add($input-height, 2 * $grid-gutter-base)
+
+  .form-group
+    position: relative
+
+  .form-group__custom-html
+    position: absolute
+    top: 0
+    right: $grid-gutter-base
+    z-index: 2
+
+  .form-label ~ .form-group__custom-html
+    top: $form-label-font-size * $line-height-base + $form-label-margin-bottom
+    margin-top: $input-border-width
+
+  &__btn
+    +unbutton
+    height: $input-height
+    width: $input-height
+    display: flex
+    align-items: center
+    justify-content: center
