@@ -72,7 +72,7 @@
 
     &__ul > &__li
       position: relative
-      margin-right: map-get($spacers, 40) - 2 * $a-padding-x
+      margin-right: px-to-rem(40px) - 2 * $a-padding-x
       display: flex
       align-items: stretch
 
