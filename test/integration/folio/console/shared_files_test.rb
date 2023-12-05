@@ -7,7 +7,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
 
   def setup
     @main_site = create(:folio_site, domain: Rails.application.config.folio_main_site_domain)
-    @site_lvh = create(:folio_site, domain: "lvh.me")
+    @site_lvh = create(:folio_site, domain: "lvh.me", locale: "en")
     @admin = create(:folio_account)
 
     @lvh_image = create(:folio_file_image, site: site_lvh)
@@ -39,8 +39,33 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     end
   end
 
-  test "`config.folio_shared_files_between_sites` is true: console resource menu is outside sites block" do
+  test "`config.folio_shared_files_between_sites` is true: console files menu is outside the sites block" do
     Rails.application.config.stub(:folio_shared_files_between_sites, true) do
+      [main_site, site_lvh].each do |site|
+        host_site(site)
+        sign_in admin
+
+        # it is redirected to pages: get console_root_url(host: main_site.domain, only_path: false)
+        get console_pages_url(host: site.domain, only_path: false)
+
+        assert_response :success, response.body
+
+        top_group = Nokogiri::HTML(response.body).css(".f-c-layout-sidebar__group").first # always expanded
+        site_group = Nokogiri::HTML(response.body).css(".f-c-layout-sidebar__group--expanded").first
+
+        assert top_group.css(".f-c-layout-sidebar__li:contains(\"Obrázky\")").present?
+        assert site_group.css(".f-c-layout-sidebar__li:contains(\"Obrázky\")").blank?
+        assert site_group.css(".f-c-layout-sidebar__li:contains(\"Images\")").blank?
+
+        assert top_group.css(".f-c-layout-sidebar__part-title").blank?
+        assert_equal site.domain, site_group.css(".f-c-layout-sidebar__part-title").text
+
+        assert top_group.css(".f-c-layout-sidebar__li:contains(\"Obrázky\")")
+                        .css("a")
+                        .attribute("href")
+                        .value
+                        .include?(main_site.domain)
+      end
     end
   end
 
@@ -98,8 +123,30 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     end
   end
 
-  test "`config.folio_shared_files_between_sites` is false: console resource menu is inside sites block" do
+  test "`config.folio_shared_files_between_sites` is false: console files menu is inside sites block" do
     Rails.application.config.stub(:folio_shared_files_between_sites, false) do
+      [main_site, site_lvh].each do |site|
+          host_site(site)
+          sign_in admin
+
+          # it is redirected to pages: get console_root_url(host: main_site.domain, only_path: false)
+          get console_pages_url(host: site.domain, only_path: false)
+
+          assert_response :success, response.body
+
+          site_group = Nokogiri::HTML(response.body).css(".f-c-layout-sidebar__group--expanded").first
+
+          assert_equal site.domain, site_group.css(".f-c-layout-sidebar__part-title").text
+
+          images_link_text = site == main_site ? "Obrázky" : "Images"
+          images_node = site_group.css(".f-c-layout-sidebar__li:contains(\"#{images_link_text}\")")
+          assert images_node.present?
+
+          assert images_node.css("a")
+                            .attribute("href")
+                            .value
+                            .include?(site.domain)
+        end
     end
   end
 
@@ -127,35 +174,9 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     end
   end
 
-
-  # test "index" do
-  #   get url_for([:console, Folio::EmailTemplate])
-  #   assert_response :success
-  #   create(:folio_email_template)
-  #   get url_for([:console, Folio::EmailTemplate])
-  #   assert_response :success
-  # end
-
-  # test "edit" do
-  #   model = create(:folio_email_template)
-  #   get url_for([:edit, :console, model])
-  #   assert_response :success
-  # end
-
-  # test "update" do
-  #   model = create(:folio_email_template)
-  #   assert_not_equal("foo", model.title)
-  #   put url_for([:console, model]), params: {
-  #     email_template: {
-  #       title: "foo",
-  #     },
-  #   }
-  #   assert_redirected_to url_for([:edit, :console, model])
-  #   assert_equal("foo", model.reload.title)
-  # end
-
-  def file_data_in_json(json_body, file)
-    json_data = JSON.parse(response.body)["data"]
-    json_data.detect { |f_data| f_data["attributes"]["file_name"] == file.file_name }
-  end
+  private
+    def file_data_in_json(json_body, file)
+      json_data = JSON.parse(response.body)["data"]
+      json_data.detect { |f_data| f_data["attributes"]["file_name"] == file.file_name }
+    end
 end

@@ -128,15 +128,23 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def main_class_names
-    sites = if current_site == Folio.main_site
-      Folio::Site.ordered
-    else
-      [current_site]
+    shared_links = []
+    sites = (current_site == Folio.main_site) ? Folio::Site.ordered : [current_site]
+    if ::Rails.application.config.folio_shared_files_between_sites
+      shared_links = [{
+        locale: Folio.main_site.console_locale,
+        title: nil,
+        collapsed: nil,
+        expanded: nil,
+        links: file_links(Folio.main_site).compact
+      }]
+      sites = Folio::Site.ordered
     end
 
-    sites.filter_map do |site|
-      site_main_links(site)
-    end
+
+    sites_links = sites.filter_map { |site| site_main_links(site) }
+
+    shared_links + sites_links
   end
 
   def secondary_class_names
@@ -227,13 +235,16 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       build_site_links_collapsible_block(site)
     end
 
+    def file_links(site)
+      [ link_for_site_class(site, Folio::File::Image),
+        link_for_site_class(site, Folio::File::Video),
+        link_for_site_class(site, Folio::File::Audio),
+        link_for_site_class(site, Folio::File::Document)]
+    end
+
     def build_site_links_collapsible_block(site)
       I18n.with_locale(site.console_locale) do
-        links = []
-        links << link_for_site_class(site, Folio::File::Image)
-        links << link_for_site_class(site, Folio::File::Video)
-        links << link_for_site_class(site, Folio::File::Audio)
-        links << link_for_site_class(site, Folio::File::Document)
+        links = ::Rails.application.config.folio_shared_files_between_sites ? [] : file_links(site)
         links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates
 
         site_links = site_specific_links(site)
