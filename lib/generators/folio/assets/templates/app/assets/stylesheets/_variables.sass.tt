@@ -220,12 +220,12 @@ $input-btn-border-width: 1px
 $input-btn-padding-x: px-to-rem(10px)
 $input-btn-padding-y: px-to-rem(8px)
 $input-btn-font-size: $ui-typo-text-s-font-size
-$input-btn-line-height: $ui-typo-text-s-line-height
+$input-btn-line-height: 1.5
 
 $btn-border-width: 2px
-$btn-border-radius: map-get($spacers, 4)
+$btn-border-radius: px-to-rem(24px)
 $btn-border-radius-lg: px-to-rem(32px)
-$btn-border-radius-sm: map-get($spacers, 4)
+$btn-border-radius-sm: px-to-rem(24px)
 $btn-min-size: px-to-rem(40px)
 $btn-font-size: px-to-rem(14px)
 $btn-line-height: 21 / 14
@@ -244,13 +244,13 @@ $btn-padding-y-sm: px-to-rem(6px)
 $btn-min-size-lg: px-to-rem(48px)
 $btn-font-size-lg: px-to-rem(16px)
 $btn-line-height-lg: 24 / 16
-$btn-border-radius-lg: map-get($spacers, g)
+$btn-border-radius-lg: px-to-rem(32px)
 $btn-padding-x-lg: px-to-rem(14px)
 $btn-padding-y-lg: px-to-rem(10px)
 
-$input-padding-y: map-get($spacers, 2)
-$input-padding-x: map-get($spacers, 3)
-$input-border-radius: map-get($spacers, 4)
+$input-padding-y: px-to-rem(7px)
+$input-padding-x: px-to-rem(12px)
+$input-border-radius: px-to-rem(24px)
 $input-bg: $shade-light-contrast
 $input-color: $shade-black-contrast
 $input-border-color: $transparent-300
