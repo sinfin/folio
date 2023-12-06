@@ -30,7 +30,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     @user = @klass.new(create_params)
 
     if @user.valid?
-      @user = @klass.invite!(create_params)
+      @user = @klass.invite!(create_params, current_account)
     end
 
     respond_with @user, location: respond_with_location
