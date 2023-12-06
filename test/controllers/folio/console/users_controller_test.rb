@@ -25,13 +25,15 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
   end
 
   test "create" do
-    params = build(:folio_user).serializable_hash
+    params = build(:folio_user, email: "foo@bar.com").serializable_hash
 
     assert_difference("Folio::User.count", 1) do
       post url_for([:console, Folio::User]), params: {
         user: params,
       }
     end
+
+    assert_equal @admin, Folio::User.find_by_email("foo@bar.com").invited_by
   end
 
   test "update" do
