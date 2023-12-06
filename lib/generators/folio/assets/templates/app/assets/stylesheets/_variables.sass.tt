@@ -189,9 +189,9 @@ $transition-base: all .2s ease-in-out
 
 $border-color: rgba(0, 0, 0, 0.15)
 
-$border-radius: $grid-gutter-base
-$border-radius-lg: $grid-gutter-half
-$border-radius-sm: $grid-gutter-base
+$border-radius: px-to-rem(12px)
+$border-radius-lg: px-to-rem(24px)
+$border-radius-sm: $border-radius
 
 $modal-sm: px-to-rem(500px)
 $modal-md: px-to-rem(640px)
