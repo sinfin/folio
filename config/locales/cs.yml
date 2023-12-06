@@ -58,7 +58,7 @@ cs:
         title_long: Nastavení stránky %{site}
       roles:
         superuser: Superuser
-        admin: Administrátor
+        administrator: Administrátor
         manager: Manažer
         user: Uživatel
 

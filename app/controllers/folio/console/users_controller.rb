@@ -45,6 +45,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     def user_params
       params.require(:user)
             .permit(*(@klass.column_names - user_params_blacklist),
+                    *site_user_links_params,
                     *addresses_strong_params,
                     *file_placements_strong_params,
                     *private_attachments_strong_params,
@@ -86,6 +87,10 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
     def folio_console_record_includes
       []
+    end
+
+    def site_user_links_params
+      [ site_user_links_attributes: [:site_id, roles: []] ]
     end
 
     def additional_user_params

@@ -21,6 +21,7 @@
         = f.input :admin_note,
                   autosize: true,
                   input_html: { class: "bg-postit-note", rows: 4 }
+        == cell('folio/console/users/roles_form', f)
 
     - if ::Rails.application.config.folio_users_use_address
       .row

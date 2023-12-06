@@ -12,6 +12,8 @@ module Folio::HasSiteRoles
                                dependent: :destroy
     has_many :sites, through: :site_user_links,
                      source: :site
+
+    accepts_nested_attributes_for :site_user_links
   end
 
   class_methods do
