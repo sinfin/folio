@@ -113,6 +113,10 @@ class Folio::Account < Folio::ApplicationRecord
     update_columns(console_path:,
                    console_path_updated_at: Time.current)
   end
+
+  def create_site_links_for(sites)
+    # do nothing, Account will be deleted
+  end
 end
 
 # == Schema Information

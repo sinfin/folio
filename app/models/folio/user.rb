@@ -234,6 +234,13 @@ class Folio::User < Folio::ApplicationRecord
   def acquire_orphan_records!(old_session_id:)
   end
 
+  def create_site_links_for(sites)
+    sites.compact.uniq.each do |site|
+      su_links = site_user_links.by_site(site)
+      su_links.create!(roles: []) if su_links.blank?
+    end
+  end
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?
