@@ -5,7 +5,10 @@ input[
   type="checkbox"
 ]
 
-.d-ui-header data=data
+.d-ui-header[
+  data=data
+  data=stimulus_action("d-ui-menu-toolbar-header-search:opened": "toggleClass")
+]
   .container-fluid
     .d-ui-header__inner
       a.d-ui-header__text-logo.h4 href="/"
@@ -21,7 +24,7 @@ input[
       .d-ui-header__toolbar[
         data=stimulus_target("toolbar")
       ]
-        = render(Dummy::Ui::MenuToolbarComponent.new)
+        = render(Dummy::Ui::MenuToolbar::ToolbarComponent.new)
 
       - if menu
         label.d-ui-header__menu-toggle for=MENU_INPUT_ID

@@ -45,9 +45,6 @@
       min-width: 0
       margin-left: 2 * $grid-gutter-width
 
-      &--hidden
-        display: none
-
     &__menu-toggle
       display: none
 
@@ -55,8 +52,11 @@
       display: flex
       flex: 0 0 auto
 
-      &--expanded
-        flex: 1 1 auto
+    &--toolbar-expanded &__toolbar
+      flex: 1 1 auto
+
+    &--toolbar-expanded &__menu
+      display: none
 
   +mq-mobile-menu
     &__text-logo

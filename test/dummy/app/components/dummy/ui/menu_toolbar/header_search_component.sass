@@ -1,4 +1,4 @@
-.d-ui-header-search
+.d-ui-menu-toolbar-header-search
   display: flex
   align-items: center
   position: relative
@@ -45,13 +45,13 @@
     min-height: 60px
     display: none
 
-  &[data-d-ui-header-search-autocomplete-value="true"] &__autocomplete
+  &[data-d-ui-menu-toolbar-header-search-autocomplete-value="true"] &__autocomplete
     display: block
 
-  &[data-d-ui-header-search-open-value="true"] &__form
+  &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__form
     z-index: 1001
 
-  &[data-d-ui-header-search-open-value="true"] &__a
+  &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__a
     z-index: 1002
 
   &__overlay
@@ -63,7 +63,7 @@
     bottom: 0
     display: none
 
-  &[data-d-ui-header-search-open-value="true"] &__overlay
+  &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__overlay
     display: block
 
   &__loader
@@ -77,14 +77,14 @@
     display: block
 
   +mq-desktop-menu
-    &[data-d-ui-header-search-open-value="true"] &__a
+    &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__a
       color: $black
       position: absolute
       top: 0
       right: 0
       bottom: 0
 
-    &[data-d-ui-header-search-open-value="true"] &__form
+    &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__form
       display: flex
 
     &__mq

@@ -16,6 +16,7 @@ en:
         twitter: Share on Twitter
         email: Share via e-mail
         clipboard: Copy link
-      header_search_component:
-        placeholder: Search term
-        autocomplete_none: No results
+      menu_toolbar:
+        header_search_component:
+          placeholder: Search term
+          autocomplete_none: No results

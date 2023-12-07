@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Ui::MiniSelectorComponent < ApplicationComponent
+class Dummy::Ui::MiniSelectComponent < ApplicationComponent
   bem_class_name :verbose
 
   def initialize(type: :language, options: nil, selected_value: nil, verbose: false, icon: nil)
@@ -27,11 +27,15 @@ class Dummy::Ui::MiniSelectorComponent < ApplicationComponent
     @selected_value.nil? ? options.first.to_s : @selected_value
   end
 
-  def toggle_selector?
-    options.count > 2 ? false : true
+  def toggle_select
+    options.count <= 2
   end
 
   def data
-    stimulus_controller("d-ui-mini-selector")
+    stimulus_controller("d-ui-mini-select", values: {
+      type: @type,
+      options:,
+      toggle_select:
+    })
   end
 end

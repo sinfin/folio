@@ -1,4 +1,4 @@
-.d-ui-mini-selector
+.d-ui-mini-select
   position: relative
 
   &__selected-value
@@ -35,7 +35,10 @@
   &__option
     padding: 0 map-get($spacers, b)
 
-    &:last-child
+    &--selected
+      display: none
+
+    &--last-visible
       border-radius: 0 0 map-get($spacers, 3) map-get($spacers, 3)
       padding-bottom: map-get($spacers, s)
 
@@ -51,23 +54,23 @@
   &--language
     min-width: 59px
 
-    &.d-ui-mini-selector--verbose
+    &.d-ui-mini-select--verbose
       min-width: 87px
 
-    &.d-ui-mini-selector--toggle
+    &.d-ui-mini-select--toggle
       min-width: 36px
 
-      &.d-ui-mini-selector--verbose
+      &.d-ui-mini-select--verbose
         min-width: 67px
 
   &--currency
     min-width: 53px
 
-    &.d-ui-mini-selector--verbose
+    &.d-ui-mini-select--verbose
       min-width: 70px
 
-    &.d-ui-mini-selector--toggle
+    &.d-ui-mini-select--toggle
       min-width: 26px
 
-      &.d-ui-mini-selector--verbose
+      &.d-ui-mini-select--verbose
         min-width: 50px

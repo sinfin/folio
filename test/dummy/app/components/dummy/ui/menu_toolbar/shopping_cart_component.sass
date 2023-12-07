@@ -1,6 +1,4 @@
-.d-ui-shopping-cart
-  padding-right: map-get($spacers, b)
-
+.d-ui-menu-toolbar-shopping-cart
   &__a
     height: 100%
     display: block
@@ -8,10 +6,10 @@
 
   &__count
     position: absolute
-    top: map-get($spacers, 1) * -1
-    right: map-get($spacers, b) * -1
-    padding: map-get($spacers, 1) map-get($spacers, b)
-    background-color: $cloud-800
+    top: px-to-rem(7px) * -1
+    right: px-to-rem(7px) * -1
+    padding: px-to-rem(3px) map-get($spacers, b)
+    background-color: $shade-800
     color: $shade-light-contrast
     border-radius: $btn-border-radius
     font-size: $ui-typo-text-xs-font-size

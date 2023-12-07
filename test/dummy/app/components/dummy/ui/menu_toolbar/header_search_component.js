@@ -2,10 +2,11 @@
 
 window.Dummy = window.Dummy || {}
 window.Dummy.Ui = window.Dummy.Ui || {}
+window.Dummy.Ui.MenuToolbar = window.Dummy.Ui.MenuToolbar || {}
 
-window.Dummy.Ui.HeaderSearch = {}
+window.Dummy.Ui.MenuToolbar.HeaderSearch = {}
 
-window.Dummy.Ui.HeaderSearch.i18n = {
+window.Dummy.Ui.MenuToolbar.HeaderSearch.i18n = {
   cs: {
     error: 'Výsledky se nepodařilo načíst.'
   },
@@ -14,7 +15,7 @@ window.Dummy.Ui.HeaderSearch.i18n = {
   }
 }
 
-window.Folio.Stimulus.register('d-ui-header-search', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends window.Stimulus.Controller {
   static targets = ['mq', 'input', 'form', 'autocompleteResults']
 
   static values = {
@@ -53,14 +54,14 @@ window.Folio.Stimulus.register('d-ui-header-search', class extends window.Stimul
   open () {
     this.openValue = true
     this.inputTarget.focus()
-    this.element.dispatchEvent(new window.CustomEvent('search:open', { bubbles: true }))
+    this.dispatch("opened", { detail: { value: true }})
   }
 
   close () {
     if (this.openValue) {
       this.openValue = false
     }
-    this.element.dispatchEvent(new window.CustomEvent('search:close', { bubbles: true }))
+    this.dispatch("opened", { detail: { value: false }})
   }
 
   onInput (e) {
@@ -90,7 +91,7 @@ window.Folio.Stimulus.register('d-ui-header-search', class extends window.Stimul
           if (error.name === 'AbortError') {
             this.autocompleteResultsTarget.innerHTML = ''
           } else {
-            this.autocompleteResultsTarget.innerHTML = `<div class="d-searches-autocomplete small"><div class="d-searches-autocomplete__no-results">${Folio.i18n(window.Dummy.Ui.HeaderSearch.i18n, 'error')}</div></div>`
+            this.autocompleteResultsTarget.innerHTML = `<div class="d-searches-autocomplete small"><div class="d-searches-autocomplete__no-results">${Folio.i18n(window.Dummy.Ui.MenuToolbar.HeaderSearch.i18n, 'error')}</div></div>`
           }
         })
     } else {
