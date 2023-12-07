@@ -6,9 +6,9 @@
     justify-content: space-between
     align-items: center
     gap: 0 map-get($spacers, 1)
-    padding: map-get($spacers, s) map-get($spacers, b)
+    padding: map-get($spacers, 1) map-get($spacers, 2)
     background-color: $shade-200
-    border-radius: map-get($spacers, g)
+    border-radius: $border-radius-lg
 
   &--toggle &__selected-value
     justify-content: center
@@ -30,20 +30,20 @@
     left: 0
     width: 100%
     background-color: $shade-200
-    border-radius: 0 0 map-get($spacers, 3) map-get($spacers, 3)
+    border-radius: 0 0 $border-radius $border-radius
 
   &__option
-    padding: 0 map-get($spacers, b)
+    padding: 0 map-get($spacers, 2)
 
     &--selected
       display: none
 
     &--last-visible
-      border-radius: 0 0 map-get($spacers, 3) map-get($spacers, 3)
-      padding-bottom: map-get($spacers, s)
+      border-radius: 0 0 $border-radius $border-radius
+      padding-bottom: map-get($spacers, 1)
 
   &--expanded &__selected-value
-    border-radius: map-get($spacers, 3) map-get($spacers, 3) 0 0
+    border-radius: $border-radius $border-radius 0 0
 
   &--expanded &__options
     display: block
