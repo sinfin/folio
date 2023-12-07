@@ -5,6 +5,7 @@ module Folio::ApplicationControllerBase
   include Folio::SetMetaVariables
   include Folio::HasCurrentSite
   include Folio::Devise::CrossdomainController
+  include Folio::RenderComponentJson
 
   included do
     include Pagy::Backend

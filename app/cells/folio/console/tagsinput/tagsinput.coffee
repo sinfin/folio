@@ -35,7 +35,7 @@ init = ->
       maxOptions: 50000
       preload: 'focus'
       onChange: (_value) ->
-        $selectize.trigger('change')
+        $selectize.trigger('change')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
       load: (q, callback) ->
         $.ajax
           url: '/console/api/tags/react_select'

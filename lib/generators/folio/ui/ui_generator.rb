@@ -13,7 +13,11 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
   def create
     allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates")).reject do |name|
-      name.starts_with?(".") || name == "views"
+      name.starts_with?(".") || name == "views" || name == "input"
+    end + Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates/input")).filter_map do |name|
+      unless name.starts_with?(".")
+        "input/#{name}"
+      end
     end
 
     if name == "all"
@@ -26,7 +30,9 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
 
     base = ::Folio::Engine.root.join("lib/generators/folio/ui/templates/").to_s
 
-    keys.each do |key|
+    keys.each do |key_sym|
+      key = key_sym.to_s
+
       Dir["#{base}#{key}/#{key}_cell.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
         template relative_path, "app/cells/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
@@ -47,14 +53,29 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
         template relative_path, relative_path.delete_prefix("#{key}/models/").gsub("application_namespace_path", application_namespace_path).delete_suffix(".tt")
       end
 
-      Dir["#{base}#{key}/#{key}_component.*.tt"].each do |path|
+      Dir["#{base}#{key}/#{File.basename(key)}_component.*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/components/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+
+        target = if key.include?("/")
+          subpath = key.split("/", 2).last
+          relative_path.delete_suffix(".tt").gsub("#{subpath}/#{subpath}", subpath)
+        else
+          relative_path.delete_suffix(".tt").delete_prefix("#{File.basename(key)}/")
+        end
+
+        template relative_path, "app/components/#{application_namespace_path}/ui/#{target}"
       end
 
-      Dir["#{base}#{key}/#{key}_component_test.rb.tt"].each do |path|
+      Dir["#{base}#{key}/#{File.basename(key)}_component_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/components/#{application_namespace_path}/ui/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        target = if key.include?("/")
+          subpath = key.split("/", 2).last
+          relative_path.delete_suffix(".tt").gsub("#{subpath}/#{subpath}", subpath)
+        else
+          relative_path.delete_suffix(".tt").delete_prefix("#{File.basename(key)}/")
+        end
+
+        template relative_path, "test/components/#{application_namespace_path}/ui/#{target}"
       end
     end
   end

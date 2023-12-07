@@ -3,6 +3,8 @@
 module Folio::ApiControllerBase
   extend ActiveSupport::Concern
 
+  include Folio::RenderComponentJson
+
   included do
     respond_to :json
     rescue_from StandardError, with: :render_error
@@ -13,38 +15,6 @@ module Folio::ApiControllerBase
   private
     def render_json(data)
       render json: { data: }, root: false
-    end
-
-    def render_component_json(component, pagy: nil, flash: nil, collection_attribute: nil, status: 200)
-      meta = {}
-
-      if pagy
-        meta[:pagy] = meta_from_pagy(pagy)
-      end
-
-      if flash
-        meta[:flash] = flash
-      end
-
-      @meta = if meta.present?
-        ", \"meta\": #{meta.to_json}"
-      end
-
-      if collection_attribute
-        @collection = component.to_a.map do |component|
-          key = component.instance_variable_get("@#{component.class.collection_parameter}")
-          [key.send(collection_attribute), component]
-        end
-
-        render "folio/api_controller_base_collection_json", status:
-      else
-        @component = component
-        render "folio/api_controller_base_json", status:
-      end
-    end
-
-    def render_component_collection_json(component, pagy: nil, flash: nil, attribute: :id, status: 200)
-      render_component_json(component, pagy:, flash:, collection_attribute: attribute, status:)
     end
 
     def render_error(e, status: nil)

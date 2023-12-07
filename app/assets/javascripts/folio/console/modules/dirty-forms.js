@@ -21,7 +21,11 @@ window.FolioConsole.DirtyForms.onChange = (e) => {
   }
 }
 
-window.FolioConsole.DirtyForms.onBeforeUnload = () => 'Changes you made may not be saved.'
+window.FolioConsole.DirtyForms.onBeforeUnload = (e) => {
+  e.preventDefault()
+  e.returnValue = 'Changes you made may not be saved.'
+  return 'Changes you made may not be saved.'
+}
 
 window.FolioConsole.DirtyForms.unbind = () => {
   if (!window.FolioConsole.DirtyForms.handled) return

@@ -135,7 +135,16 @@ file_text:
 folder:
   width: 24
   height: 24
-grip:
+grid_horizontal:
+  width: 24
+  height: 24
+grid_vertical_2:
+  width: 24
+  height: 24
+grid_vertical_3:
+  width: 24
+  height: 24
+grid_vertical_4:
   width: 24
   height: 24
 hamburger_menu:

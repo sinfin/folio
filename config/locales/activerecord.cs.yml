@@ -101,7 +101,7 @@ cs:
       folio/user:
         address_identification_number: IČO
         addresses: Adresa
-        admin_note: Poznámka (viditelná jen adminstrátory)
+        admin_note: Poznámka (viditelná jen administrátory)
         authentications: Propojení
         confirmed_at: Potvrzen
         created_at: Vytvořen

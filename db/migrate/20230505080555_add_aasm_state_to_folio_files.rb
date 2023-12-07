@@ -7,6 +7,6 @@ class AddAasmStateToFolioFiles < ActiveRecord::Migration[7.0]
   end
 
   def down
-    drop_column :folio_files, :aasm_state
+    remove_column :folio_files, :aasm_state
   end
 end

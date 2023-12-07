@@ -1,7 +1,7 @@
 window.Folio = window.Folio || {}
 
 window.Folio.addParamsToUrl = (url, paramsHash) => {
-  const parts = url.split("?", 2)
+  const parts = url.split('?', 2)
 
   const params = new URLSearchParams()
   Object.keys(paramsHash).forEach((key) => {
@@ -14,5 +14,5 @@ window.Folio.addParamsToUrl = (url, paramsHash) => {
     parts[1] = params.toString()
   }
 
-  return `${url}?${parts[1]}`
+  return `${parts[0]}?${parts[1]}`
 }

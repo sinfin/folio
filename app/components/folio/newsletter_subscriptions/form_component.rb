@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::NewsletterSubscriptions::FormComponent < ApplicationComponent
+class Folio::NewsletterSubscriptions::FormComponent < Folio::ApplicationComponent
   include SimpleForm::ActionViewExtensions::FormHelper
   include ActionView::Helpers::FormOptionsHelper
 

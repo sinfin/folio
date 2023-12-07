@@ -52,7 +52,7 @@ window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
         .find('.f-c-private-attachments-fields__dropzone-progress-bar')
         .hide(0)
 
-      $fields.closest('form').trigger('change.folioDirtyForms')
+      $fields.closest('form')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
     },
     onFailure: (s3Path) => {
       const $fields = $el.find(`.f-c-private-attachments-fields[data-s3-path="${s3Path}"]`)

@@ -33,6 +33,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     @additional_html = additional_html
     @class_name = class_name
     @round = round
+    @lazy = lazy
     @data = set_data(placement)
   end
 

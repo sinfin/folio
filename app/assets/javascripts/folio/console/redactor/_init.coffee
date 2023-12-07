@@ -1,5 +1,5 @@
 changedCallback = ->
-  $(@rootElement).trigger('change')
+  @rootElement.dispatchEvent(new window.Event('change', bubbles: true))
 
 ADVANCED_OPTIONS =
   plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel']

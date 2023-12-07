@@ -10,8 +10,7 @@ $grid-gutter-half: $grid-gutter-width / 2
 
 $spacer: $grid-gutter-half
 
-//0: 0, 1: 4px, 2: 8px, 3: 16px, 4: 24px, 5: 48px, h: 16px, g: 32px, gg: 64px
-$spacers: ( 0: 0, 1: $spacer * .25, 2: $spacer * .5, 3: $spacer, 4: $spacer * 1.5, 5: $spacer * 3, h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width, 40: px-to-rem(40px), 56: px-to-rem(56px))
+$spacers: ( 0: 0, 1: $grid-gutter-base / 2, 2: $grid-gutter-base, 3: $grid-gutter-half, 4: $grid-gutter-width, 5: 2 * $grid-gutter-width, b: $grid-gutter-base, bb: 2 * $grid-gutter-base,  h: $grid-gutter-half, g: $grid-gutter-width, gg: 2 * $grid-gutter-width )
 
 @import './variables-colors'
 
@@ -190,9 +189,9 @@ $transition-base: all .2s ease-in-out
 
 $border-color: rgba(0, 0, 0, 0.15)
 
-$border-radius: $grid-gutter-base
-$border-radius-lg: $grid-gutter-half
-$border-radius-sm: $grid-gutter-base
+$border-radius: px-to-rem(12px)
+$border-radius-lg: px-to-rem(24px)
+$border-radius-sm: $border-radius
 
 $modal-sm: px-to-rem(500px)
 $modal-md: px-to-rem(640px)
@@ -221,12 +220,12 @@ $input-btn-border-width: 1px
 $input-btn-padding-x: px-to-rem(10px)
 $input-btn-padding-y: px-to-rem(8px)
 $input-btn-font-size: $ui-typo-text-s-font-size
-$input-btn-line-height: $ui-typo-text-s-line-height
+$input-btn-line-height: 1.5
 
 $btn-border-width: 2px
-$btn-border-radius: map-get($spacers, 4)
+$btn-border-radius: px-to-rem(24px)
 $btn-border-radius-lg: px-to-rem(32px)
-$btn-border-radius-sm: map-get($spacers, 4)
+$btn-border-radius-sm: px-to-rem(24px)
 $btn-min-size: px-to-rem(40px)
 $btn-font-size: px-to-rem(14px)
 $btn-line-height: 21 / 14
@@ -245,13 +244,13 @@ $btn-padding-y-sm: px-to-rem(6px)
 $btn-min-size-lg: px-to-rem(48px)
 $btn-font-size-lg: px-to-rem(16px)
 $btn-line-height-lg: 24 / 16
-$btn-border-radius-lg: map-get($spacers, g)
+$btn-border-radius-lg: px-to-rem(32px)
 $btn-padding-x-lg: px-to-rem(14px)
 $btn-padding-y-lg: px-to-rem(10px)
 
-$input-padding-y: map-get($spacers, 2)
-$input-padding-x: map-get($spacers, 3)
-$input-border-radius: map-get($spacers, 4)
+$input-padding-y: px-to-rem(7px)
+$input-padding-x: px-to-rem(12px)
+$input-border-radius: px-to-rem(24px)
 $input-bg: $shade-light-contrast
 $input-color: $shade-black-contrast
 $input-border-color: $transparent-300
