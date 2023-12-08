@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_04_081210) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_153957) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -450,7 +450,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_04_081210) do
     t.string "slug"
     t.integer "position"
     t.string "copyright_info_source"
-    t.json "available_user_roles", default: ["superuser", "administrator", "manager"]
+    t.json "available_user_roles", default: ["administrator", "manager"]
     t.index ["domain"], name: "index_folio_sites_on_domain"
     t.index ["position"], name: "index_folio_sites_on_position"
     t.index ["slug"], name: "index_folio_sites_on_slug"
@@ -496,6 +496,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_04_081210) do
     t.datetime "crossdomain_devise_set_at"
     t.string "sign_out_salt_part"
     t.bigint "source_site_id"
+    t.boolean "superadmin", default: false, null: false
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"

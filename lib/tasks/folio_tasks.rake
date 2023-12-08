@@ -31,18 +31,24 @@ namespace :folio do
     sites = Folio::Site.all.to_a
 
     Folio::Account.find_each do |account|
+      roles_to_pass = account.roles
+      superadmin = roles_to_pass.delete("superuser").present?
+
       user = Folio::User.find_by(email: account.email)
+
       if user.blank?
         except_attributes = %w[id roles console_path console_path_updated_at is_active]
         new_attrs = account.attributes.except(*except_attributes)
         new_attrs[:password] = Devise.friendly_token.first(8)
+        new_attrs[:superadmin] = superadmin
         user = Folio::User.create!(new_attrs)
         user.reload
         user.update(encrypted_password: account.encrypted_password)
       end
 
+
       sites.each do |site|
-        user.set_roles_for(site:, roles: account.roles)
+        user.set_roles_for(site:, roles: roles_to_pass)
         raise "errors on user ##{user.id}[#{user.email}; #{account.roles}; #{site.domain}]: #{user.errors.full_messages}" unless user.save
       end
     end

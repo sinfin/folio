@@ -325,6 +325,7 @@ end
 #  crossdomain_devise_set_at :datetime
 #  sign_out_salt_part        :string
 #  source_site_id            :bigint(8)
+#  superadmin                :boolean          default(FALSE), not null
 #
 # Indexes
 #

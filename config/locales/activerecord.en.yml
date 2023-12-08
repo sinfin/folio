@@ -5,7 +5,6 @@ en:
       folio/account:
         full_name: Name
         roles: Role
-        roles/superuser: Superuser
         roles/administrator: Administrator
         roles/manager: Manager
       folio/atom/base:

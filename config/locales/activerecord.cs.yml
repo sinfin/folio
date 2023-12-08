@@ -5,7 +5,6 @@ cs:
       folio/account:
         full_name: Jméno
         roles: Uživatelská role
-        roles/superuser: Superuser
         roles/administrator: Administrátor
         roles/manager: Manažer
       folio/atom/base:

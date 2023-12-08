@@ -8,7 +8,7 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
   def setup
     super
 
-    @site = create(:folio_site, available_user_roles: ["superuser", "administrator", "manager"])
+    @site = create(:folio_site, available_user_roles: ["administrator", "manager"])
     @user = create(:folio_user) # includes Folio::HasSiteRoles
   end
 
@@ -34,7 +34,7 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
   end
 
   test "validates roles againts site.availables_roles" do
-    assert_equal ["superuser", "administrator", "manager"], site.available_user_roles
+    assert_equal ["administrator", "manager"], site.available_user_roles
 
     user.set_roles_for(site:, roles: ["administrator", "manager"])
 
@@ -63,18 +63,17 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
   test "can use agregate checks" do
     user.set_roles_for(site:, roles: ["administrator", "manager"])
 
-    assert user.has_any_roles?(site:, roles: ["administrator", "superuser"])
-    assert_not user.has_any_roles?(site:, roles: ["superuser"])
+    assert user.has_any_roles?(site:, roles: ["administrator", "superman"])
+    assert_not user.has_any_roles?(site:, roles: ["superman"])
 
     assert user.has_all_roles?(site:, roles: ["administrator", "manager"])
-    assert_not user.has_all_roles?(site:, roles: ["administrator", "superuser"])
+    assert_not user.has_all_roles?(site:, roles: ["administrator", "superman"])
 
     assert_equal ["Administrátor", "Manažer"], user.human_role_names(site:)
   end
 
   test ".roles_for_select" do
     expected_roles = [
-      ["Superuser", "superuser"],
       ["Administrátor", "administrator"],
       ["Manažer", "manager"],
     ]
@@ -82,8 +81,8 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
     assert_equal expected_roles, Folio::User.roles_for_select(site:, selectable_roles: nil)
     assert_equal expected_roles, Folio::User.roles_for_select(site:, selectable_roles: [])
 
-    assert_equal [["Superuser", "superuser"], ["Manažer", "manager"]],
+    assert_equal [["Manažer", "manager"]],
                 Folio::User.roles_for_select(site:,
-                                             selectable_roles: ["superuser", "manager", "spy"])
+                                             selectable_roles: ["manager", "spy"])
   end
 end
