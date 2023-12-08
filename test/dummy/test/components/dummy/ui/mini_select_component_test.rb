@@ -4,9 +4,7 @@ require "test_helper"
 
 class Dummy::Ui::MiniSelectComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
-
-    render_inline(Dummy::Ui::MiniSelectComponent.new(model:))
+    render_inline(Dummy::Ui::MiniSelectComponent.new(type: :currency))
 
     assert_select(".d-ui-mini-select")
   end
