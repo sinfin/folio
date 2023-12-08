@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## 2023-11-24
 ### Changed
-- ignored `Rails.application.config.folio_site_is_a_singleton` and handle one site application as multisite with one (and main) site
+- ignore `Rails.application.config.folio_site_is_a_singleton` and handle one site application as multisite with one (and main) site
 ### Removed
 - Folio::Subscribable concern
 
