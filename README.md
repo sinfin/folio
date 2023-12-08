@@ -51,6 +51,8 @@ $ rails g
 
 Due usage of `dragonfly_libvips` gem from on-fly processing images, You need to have installed `libvips`, `jpegtran`, `jpgicc`,`exiftool`, `cwebp` and `gifsicle` on your system.
 
+To run tests successfully, you need to have installed `ffmpeg` on your system.
+
 ## Attachments
 
 ### Image metadata module
