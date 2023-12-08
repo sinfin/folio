@@ -13,10 +13,6 @@ module Folio::BelongsToSite
     scope :by_site, -> (site) { site ? where(site:) : none }
 
     scope :by_atom_setting_site_id, -> (site_id) { by_site_id(site_id) }
-
-    def site_domain=(value)
-      self.site = Folio::Site.find_by(domain: value)
-    end
   end
 
   class_methods do

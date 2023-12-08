@@ -83,12 +83,9 @@ module Folio
     nil
   end
 
+  # override me at project level
   def self.main_site
-    @main_site = if Rails.application.config.folio_main_site_domain
-      Folio::Site.find_by(domain: Rails.application.config.folio_main_site_domain)
-    else
-      Folio::Site.ordered.first
-    end
+    @main_site ||= Folio::Site.ordered.first
   end
 
   def self.atoms_previews_stylesheet_path(site:, class_name:)

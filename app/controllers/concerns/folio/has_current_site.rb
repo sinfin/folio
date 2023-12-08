@@ -18,8 +18,4 @@ module Folio::HasCurrentSite
       Folio.current_site(request:, controller: self)
     end
   end
-
-  def site_for_new_files
-    Rails.application.config.folio_shared_files_between_sites ? Folio.main_site : current_site
-  end
 end

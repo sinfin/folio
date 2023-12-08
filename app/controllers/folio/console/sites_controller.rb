@@ -8,6 +8,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
   def update
     @site.update(site_params)
+    Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
     respond_with @site, location: edit_console_site_path
   end
 

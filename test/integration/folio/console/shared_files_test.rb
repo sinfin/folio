@@ -6,8 +6,9 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
   attr_reader :admin, :main_site, :site_lvh, :lvh_image, :shared_image
 
   def setup
-    @main_site = create(:folio_site, domain: Rails.application.config.folio_main_site_domain)
+    @main_site = create(:folio_site, domain: "sinfin.localhost")
     @site_lvh = create(:folio_site, domain: "lvh.me", locale: "en")
+    Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
     @admin = create(:folio_account)
 
     @lvh_image = create(:folio_file_image, site: site_lvh)

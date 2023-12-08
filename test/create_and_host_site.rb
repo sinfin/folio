@@ -18,5 +18,6 @@ def host_site(site)
   if self.respond_to?(:host!)
     host!(site.domain)
   end
+  Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
   @site = site
 end

@@ -63,7 +63,7 @@ end
 
 puts "Creating Folio::Site"
 Folio::Site.create!(title: "Sinfin.digital",
-                    domain: Rails.application.config.folio_main_site_domain,
+                    domain: "sinfin.localhost",
                     locale: "cs",
                     locales: ["cs", "en", "de"],
                     type: "Folio::Site",
