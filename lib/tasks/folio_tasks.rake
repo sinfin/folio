@@ -25,4 +25,26 @@ namespace :folio do
     FileUtils.mkdir_p to_folder
     FileUtils.cp_r(from_folder, to_folder)
   end
+
+  desc "Create/Merge Folio::Acount records to Folio::User records (with correct roles)"
+  task idp_merge_accounts_to_users: :environment  do
+    sites = Folio::Site.all.to_a
+
+    Folio::Account.find_each do |account|
+      user = Folio::User.find_by(email: account.email)
+      if user.blank?
+        except_attributes = %w[id roles console_path console_path_updated_at is_active]
+        new_attrs = account.attributes.except(*except_attributes)
+        new_attrs[:password] = Devise.friendly_token.first(8)
+        user = Folio::User.create!(new_attrs)
+        user.reload
+        user.update(encrypted_password: account.encrypted_password)
+      end
+
+      sites.each do |site|
+        user.set_roles_for(site:, roles: account.roles)
+        raise "errors on user ##{user.id}[#{user.email}; #{account.roles}; #{site.domain}]: #{user.errors.full_messages}" unless user.save
+      end
+    end
+  end
 end

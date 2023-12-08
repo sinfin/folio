@@ -5,6 +5,7 @@ module Folio::HasSiteRoles
 
   included do
     validate :validate_site_roles
+    validate :validate_site_link_uniqueness
 
     has_many :site_user_links, class_name: "Folio::SiteUserLink",
                                foreign_key: :user_id,
@@ -32,7 +33,7 @@ module Folio::HasSiteRoles
   end
 
   def set_roles_for(site:, roles:)
-    ulf = user_link_for(site:) || create_site_link(site:)
+    ulf = user_link_for(site:) || build_site_link(site:)
     ulf.roles = roles.collect(&:to_s)
 
     ulf.valid?
@@ -74,8 +75,16 @@ module Folio::HasSiteRoles
       end
     end
 
-    def create_site_link(site:)
-      site_user_links.create(site:)
+    def validate_site_link_uniqueness
+      counts = site_user_links.group(:site_id).count
+      counts.each do |site_id, count|
+        if count > 1
+          errors.add :site_roles, "Duplicitní přiřazení webu '#{Folio::Site.find(site_id).domain}'."
+        end
+      end
+    end
+
+    def build_site_link(site:)
       @site_links ||= {}
       ulf = site_user_links.build(site:)
       @site_links[site.domain] = ulf
