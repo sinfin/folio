@@ -3,7 +3,11 @@
 require "test_helper"
 
 class Folio::UserTest < ActiveSupport::TestCase
-  test "newsletter subscriptions / singleton site" do
+  test "newsletter subscriptions / single site" do
+    create_list(:folio_site, 2)
+    subscribable_sites = Folio::NewsletterSubscription.subscribable_sites # Folio::Site.all by default
+    assert_equal 2, subscribable_sites.count
+
     [true, false].each_with_index do |subscribed_to_newsletter, i|
       user = Folio::User.invite!(email: "email-#{i}@email.email",
                                  first_name: "John",
@@ -11,20 +15,29 @@ class Folio::UserTest < ActiveSupport::TestCase
                                  subscribed_to_newsletter:) do |u|
         u.skip_invitation = true
       end
-      assert_empty user.newsletter_subscriptions
+      assert_empty user.newsletter_subscriptions.reload
 
-      user.accept_invitation!
-      assert_equal subscribed_to_newsletter, user.newsletter_subscriptions.present?
+      assert_difference("Folio::NewsletterSubscription.count",
+                         subscribable_sites.size) do
+        assert_difference("Folio::NewsletterSubscription.active.count",
+                          subscribed_to_newsletter ? subscribable_sites.size : 0) do
+          user.accept_invitation!
+        end
+      end
 
-      expected_count = subscribed_to_newsletter ? 1 : 0
-      assert_equal expected_count, Folio::NewsletterSubscription.count
+      assert_equal subscribed_to_newsletter, user.newsletter_subscriptions.active.present?
+
+      if subscribed_to_newsletter
+        subscribable_sites.each do |site|
+          assert_equal 1, Folio::NewsletterSubscription.by_site(site).active.count
+        end
+      else
+        assert_equal 0, Folio::NewsletterSubscription.active.count
+      end
+
       user.destroy!
       assert_equal 0, Folio::NewsletterSubscription.count
     end
-  end
-
-  test "newsletter subscriptions / multiple sites" do
-    skip "TODO: site.newsletter_subscriptions is not available in tests"
   end
 
   test "do not store second address if it is not in use" do

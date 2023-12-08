@@ -14,6 +14,7 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
 
   [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
     test "#{klass} - before" do
+      # #before returns settings for S3 file upload
       post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }
       assert_response :success
 
@@ -24,6 +25,9 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
     end
 
     test "#{klass} - after" do
+      # #after => load back file from S3 and process it
+
+      # nonexisting file
       assert_enqueued_jobs(0) do
         post after_folio_api_s3_path, params: { s3_path: "foo", type: klass.to_s, existing_id: nil }
         assert_response 422
@@ -33,6 +37,7 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
 
+      # file exists
       assert_difference("#{klass}.count", 1) do
         perform_enqueued_jobs do
           post after_folio_api_s3_path, params: { s3_path: "test-#{klass.model_name.singular}.gif", type: klass.to_s, existing_id: nil }

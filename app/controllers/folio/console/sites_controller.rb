@@ -8,6 +8,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
 
   def update
     @site.update(site_params)
+    Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
     respond_with @site, location: edit_console_site_path
   end
 
@@ -38,7 +39,7 @@ class Folio::Console::SitesController < Folio::Console::BaseController
         copyright_info_source
       ]
 
-      ary << :domain if Rails.application.config.folio_site_is_a_singleton
+      ary << :domain if @site != Folio.main_site
 
       params.require(:site)
             .permit(*ary,

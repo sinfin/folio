@@ -52,7 +52,7 @@ module Folio::Devise::CrossdomainController
                     flash: { notice: t("devise.sessions.signed_in") }
 
       else
-        # noop
+        # noop - aka proceed with original action
       end
 
       @devise_crossdomain_result = result

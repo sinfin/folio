@@ -81,7 +81,9 @@ class Folio::HasAtomsTest < ActiveSupport::TestCase
   end
 
   test "atom_class_names_whitelist" do
-    page = PageWhitelistingAtoms.create!(locale: I18n.locale, title: "PageWhitelistingAtoms")
+    page = PageWhitelistingAtoms.create!(locale: I18n.locale,
+                                         title: "PageWhitelistingAtoms",
+                                         site: get_any_site)
 
     assert_equal([], page.atoms)
 

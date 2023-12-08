@@ -431,19 +431,27 @@ class Folio::Console::BaseController < Folio::ApplicationController
         records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
 
         instance_variable_set(folio_console_record_variable_name(plural: true),
-                              records.by_site(current_site))
+                              records.by_site(allowed_record_sites))
       elsif record = folio_console_record
-        if record.persisted? && record.site != current_site
+        if record.persisted? && !allowed_record_sites.include?(record.site)
           fail ActiveRecord::RecordNotFound
         end
       end
+    end
+
+    def allowed_record_sites
+      [current_site]
     end
 
     def load_belongs_to_site_resource
       # setting i.e. @page makes cancancan skip the load
       if params[:id].present?
         name = folio_console_record_variable_name(plural: false)
-        instance_variable_set(name, @klass.by_site(current_site).find(params[:id]))
+        if @klass.respond_to?(:friendly)
+          instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
+        else
+          instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
+        end
       end
     end
 

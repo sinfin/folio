@@ -22,13 +22,7 @@ module Folio::Translatable
               if: :original_id
 
     before_validation do
-      if locale.nil?
-        if Rails.application.config.folio_site_is_a_singleton && Folio::Site.exists?
-          self.locale = Folio::Site.instance.locale
-        else
-          self.locale = I18n.locale
-        end
-      end
+      self.locale ||= I18n.locale
     end
 
     scope :original, -> { where(original_id: nil) }

@@ -17,10 +17,7 @@ class Folio::LeadsController < Folio::ApplicationController
     lead = Folio::Lead.new(lead_params.merge(url: request.referrer))
 
     @lead = check_recaptcha_if_needed(lead)
-
-    if !Rails.application.config.folio_site_is_a_singleton
-      @lead.site = current_site
-    end
+    @lead.site = current_site
 
     success = @lead.save
 

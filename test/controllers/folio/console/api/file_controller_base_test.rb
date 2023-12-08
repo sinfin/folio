@@ -3,6 +3,12 @@
 require "test_helper"
 
 class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControllerTest
+  attr_reader :site
+
+  setup do
+    @site = build(:folio_file_document).site # (Folio::Site.first || create(:folio_site))
+  end
+
   [
     Folio::File::Document,
     Folio::File::Image,
@@ -20,6 +26,7 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
         file: {
           attributes: {
             tags: ["foo"],
+            site_id: site.id,
           }
         }
       }
@@ -30,7 +37,9 @@ class Folio::Console::Api::FileControllerBaseTest < Folio::Console::BaseControll
     test "#{klass} - destroy" do
       file = create(klass.model_name.singular)
       assert klass.exists?(file.id)
+
       delete url_for([:console, :api, file])
+
       assert_response(:success)
       assert_not klass.exists?(file.id)
     end

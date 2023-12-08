@@ -3,6 +3,10 @@
 require "test_helper"
 
 class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
+  setup do
+    create(:sinfin_local_site) # as it it Folio.main_site
+  end
+
   test "always noop with nil master_site" do
     result = new_result(master_site: nil)
     assert_equal :noop, result.action

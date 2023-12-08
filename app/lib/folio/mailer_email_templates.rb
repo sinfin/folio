@@ -5,11 +5,7 @@ module Folio::MailerEmailTemplates
     action ||= action_name
     mailer ||= self.class.to_s
 
-    find_by = { mailer:, action: }
-
-    unless Rails.application.config.folio_site_is_a_singleton
-      find_by[:site] = site
-    end
+    find_by = { mailer:, action:, site: }
 
     if bang
       Folio::EmailTemplate.find_by!(find_by)

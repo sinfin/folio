@@ -6,7 +6,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
   test "standard via e-mail" do
     create_and_host_site
 
-    visit main_app.new_user_invitation_path
+    visit main_app.new_user_invitation_url
 
     assert_difference("Folio::User.count", 1) do
       page.find(".f-devise--invitations-new .form-control").set "test@test.test"
@@ -24,7 +24,7 @@ class Folio::UserFlowTest < Folio::CapybaraTest
 
     # clicks the e-mail with the accept link
     user = Folio::User.invite!(email: "test@test.test")
-    visit main_app.accept_user_invitation_path(invitation_token: user.raw_invitation_token)
+    visit main_app.accept_user_invitation_url(invitation_token: user.raw_invitation_token)
 
     page.find('.f-devise--invitations-edit input[name="user[password]"]').set "Complex@Password.123"
     page.find('.f-devise--invitations-edit input[name="user[first_name]"]').set "First"

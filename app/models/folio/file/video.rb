@@ -41,6 +41,7 @@ end
 #  remote_services_data              :json
 #  preview_track_duration_in_seconds :integer
 #  alt                               :string
+#  site_id                           :bigint(8)        not null
 #
 # Indexes
 #
@@ -50,6 +51,11 @@ end
 #  index_folio_files_on_created_at               (created_at)
 #  index_folio_files_on_file_name                (file_name)
 #  index_folio_files_on_hash_id                  (hash_id)
+#  index_folio_files_on_site_id                  (site_id)
 #  index_folio_files_on_type                     (type)
 #  index_folio_files_on_updated_at               (updated_at)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (site_id => folio_sites.id)
 #

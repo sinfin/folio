@@ -12,6 +12,7 @@ require Folio::Engine.root.join("test/create_and_host_site")
 require Folio::Engine.root.join("test/create_page_singleton")
 require Folio::Engine.root.join("test/omniauth_helper")
 require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
+require Folio::Engine.root.join("test/support/sites_helper")
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
@@ -28,11 +29,18 @@ class ActiveSupport::TestCase
   parallelize
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
+  include SitesHelper
 end
 
 class Cell::TestCase
   controller ApplicationController
   include FactoryBot::Syntax::Methods
+  include SitesHelper
+
+  def setup
+    super
+    @site = get_any_site
+  end
 
   def action_controller_test_request(controller_class)
     request = ::ActionController::TestRequest.create(controller_class)
@@ -45,18 +53,19 @@ class Cell::TestCase
   end
 end
 
+class Folio::Console::CellTest < Cell::TestCase
+  controller Folio::Console::BaseController
+end
+
 class Folio::CapybaraTest < ActionDispatch::IntegrationTest
   include Capybara::DSL
   include Capybara::Minitest::Assertions
+  include SitesHelper
 
   def teardown
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end
-end
-
-class Folio::Console::CellTest < Cell::TestCase
-  controller Folio::Console::BaseController
 end
 
 class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
@@ -81,6 +90,7 @@ class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
 end
 
 class Folio::ComponentTest < ViewComponent::TestCase
+  include SitesHelper
 end
 
 class Folio::Console::ComponentTest < Folio::ComponentTest
