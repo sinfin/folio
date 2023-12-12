@@ -20,9 +20,9 @@ module Folio::PagesControllerBase
   private
     def pages_show_cache_key
       if respond_to?(:cache_key_base)
-        ["pages#show", params[:path]] + cache_key_base
+        ["pages#show", params[:path], params[:id]] + cache_key_base
       else
-        ["pages#show", params[:path]]
+        ["pages#show", params[:path], params[:id]]
       end
     end
 
