@@ -13,9 +13,6 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
   def create
     allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.starts_with?(".") }
-    allowed_keys += %w[card/small card/medium card/large]
-    allowed_keys += %w[embed/html embed/video embed/podcast]
-    allowed_keys -= %w[embed]
 
     if name == "all"
       keys = allowed_keys
@@ -36,21 +33,16 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
       end
 
       is_molecule = File.read("#{base}#{key}/#{key}.rb.tt").match?("self.molecule")
-      cell_directory = is_molecule ? "molecule" : "atom"
+      component_directory = is_molecule ? "molecule" : "atom"
 
-      Dir["#{base}#{key}/cell/#{key}_cell.rb.tt"].each do |path|
+      Dir["#{base}#{key}/component/#{key}_component.*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{application_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/component/")}"
       end
 
-      Dir["#{base}#{key}/cell/#{key}_cell_test.rb.tt"].each do |path|
+      Dir["#{base}#{key}/component/#{key}_component_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/cells/#{application_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
-      end
-
-      Dir["#{base}#{key}/cell/#{key}/**/*.tt"].each do |path|
-        relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/cells/#{application_namespace_path}/#{cell_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/cell/")}"
+        template relative_path, "test/components/#{application_namespace_path}/#{component_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/component/")}"
       end
 
       i18n_path = "#{base}#{key}/i18n.yml"
