@@ -2,32 +2,6 @@
 cs:
   activerecord:
     attributes:
-      dummy/atom/card/large:
-        button_label: Text tlačítka
-        href: Odkaz
-      dummy/atom/card/medium:
-        button_label: Text tlačítka
-        href: Odkaz
-      dummy/atom/card/small:
-        href: Odkaz
-      dummy/atom/hero:
-        color/dark: Tmavá
-        color/light: Světlá
-        color: Barva textu
-        primary_button_label: Text hlavního tlačítka
-        primary_button_url: Odkaz hlavního tlačítka
-        secondary_button_label: Text vedlejšího tlačítka
-        secondary_button_url: Odkaz vedlejšího tlačítka
-      dummy/atom/images:
-        same_width: Zarovnat do mřížky
-        title: Popisek pod galerií
-      dummy/atom/map:
-        latlng: GPS souřadnice ve formátu 50.091254894762635, 14.401627227698018
-      dummy/atom/text:
-        highlight: Zvýraznění
-        highlight/nil: Žádné
-        highlight/red: Červené
-        highlight/gray: Šedé
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -36,28 +10,4 @@ cs:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/card: 
-      dummy/atom/card/large: Karta s odkazem (velká)
-      dummy/atom/card/medium: Karta s odkazem (střední)
-      dummy/atom/card/small: Karta s odkazem (malá)
-      dummy/atom/contact_form: Formulář (kontakt)
-      dummy/atom/documents: Soubory (výpis)
-      dummy/atom/embed/html: HTML (vložený kód)
-      dummy/atom/embed/podcast: Podcast (vložený kód)
-      dummy/atom/embed/video: Video (vložený kód)
-      dummy/atom/hero: Karta s odkazem (velký cover, karusel)
-      dummy/atom/hr: Linka (vodorovná)
-      dummy/atom/image: Obrázek
-      dummy/atom/images: Obrázky (galerie)
-      dummy/atom/logo: Logo společnosti
-      dummy/atom/map: Mapa
-      dummy/atom/margin: Odsazení
-      dummy/atom/navigation: Menu
-      dummy/atom/optstester: Optstester
-      dummy/atom/perex: Perex
-      dummy/atom/person: Osoba (karta střední)
-      dummy/atom/quotation: Zvýrazněná citace
-      dummy/atom/share: Sdílení
-      dummy/atom/text: Text (odstavce, tabulky, apod.)
-      dummy/atom/text_with_image: Text s obrázkem
       dummy/atom/title: Nadpis

@@ -1,18 +1,29 @@
 # frozen_string_literal: true
 
-class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
+class Dummy::Atom::Title < Folio::Atom::Base
+  ALLOWED_TAGS = %w[H1 H2 H3 H4 H5]
+
   ATTACHMENTS = %i[]
 
-  STRUCTURE = {}
+  STRUCTURE = {
+    title: :string,
+    tag: ALLOWED_TAGS,
+  }
 
   ASSOCIATIONS = {}
 
-  <%- if options[:cell] -%>
-  def self.cell_name
-    "<%= atom_cell_name %>"
+  after_initialize { self.tag ||= "H2" }
+
+  validates :title,
+            presence: true
+
+  def tag_with_fallback
+    tag.presence || "H2"
   end
 
-  <%- end -%>
+  def self.default_atom_values
+    { tag: "H2" }
+  end
 end
 
 # == Schema Information
