@@ -125,6 +125,15 @@ class Dummy::SeedGenerator
     end
   end
 
+  def atoms_controllers(path)
+    copy_file(path, @templates_path.join("atoms_controller.rb.tt"))
+
+    Dir[Rails.root.join("app/views/dummy/atoms/show.slim")].each do |path|
+      name = File.basename(path)
+      copy_file(path, @templates_path.join("#{name}.tt"))
+    end
+  end
+
   def ui_controllers(path)
     copy_file(path, @templates_path.join("ui_controller.rb.tt"))
 
@@ -285,6 +294,8 @@ namespace :dummy do
         next if atom_path.include?("/blog/")
         gen.from_atom_path(atom_path)
       end
+
+      gen.atoms_controllers(Rails.root.join("app/controllers/dummy/atoms_controller.rb"))
     end
 
     task blog: :environment do

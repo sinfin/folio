@@ -12,7 +12,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
   class UnknownAtomKey < StandardError; end
 
   def create
-    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.starts_with?(".") }
+    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.include?(".") }
 
     if name == "all"
       keys = allowed_keys
@@ -50,6 +50,28 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
         raw_yaml = File.read(i18n_path).gsub("application_namespace_path", application_namespace_path)
         add_atom_to_i18n_ymls(YAML.load(raw_yaml))
       end
+    end
+  end
+
+  def update_controller
+    template "atoms_controller.rb.tt", "app/controllers/#{application_namespace_path}/atoms_controller.rb"
+
+    routes_s = File.read(folio_generators_root.join("config/routes.rb"))
+
+    str = "    resource :atoms, only: %i[show]"
+
+    if routes_s.exclude?(str)
+      inject_into_file "config/routes.rb", before: /scope module: :#{application_namespace_path}, as: :#{application_namespace_path} do/ do
+        str
+      end
+    end
+
+    views_base = ::Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates/").to_s
+
+    Dir["#{views_base}*.slim.tt"].each do |path|
+      relative_path = path.to_s.delete_prefix(views_base)
+
+      template relative_path, "app/views/#{application_namespace_path}/atoms/#{File.basename(path).delete_suffix('.tt')}"
     end
   end
 
