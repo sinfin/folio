@@ -10,7 +10,4 @@ class Folio::UiController < Folio::BaseController
     @mobile_typo = true
     render :ui
   end
-
-  def atoms
-  end
 end
