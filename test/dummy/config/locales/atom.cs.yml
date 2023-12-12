@@ -10,4 +10,5 @@ cs:
         tag/H4: H4
         tag/H5: H5
     models:
+      dummy/atom/text: Text
       dummy/atom/title: Nadpis

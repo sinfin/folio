@@ -1,29 +1,16 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Title < Folio::Atom::Base
-  ALLOWED_TAGS = %w[H1 H2 H3 H4 H5]
-
+class Dummy::Atom::Text < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {
-    title: :string,
-    tag: ALLOWED_TAGS,
+    content: :richtext,
   }
 
   ASSOCIATIONS = {}
 
-  after_initialize { self.tag ||= "H2" }
-
-  validates :title,
+  validates :content,
             presence: true
-
-  def tag_with_fallback
-    tag.presence || "H2"
-  end
-
-  def self.default_atom_values
-    { tag: "H2" }
-  end
 
   def self.console_insert_row
     0
