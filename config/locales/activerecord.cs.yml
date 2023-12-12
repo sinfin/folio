@@ -310,6 +310,7 @@ cs:
     social_links/twitter: Twitter
     social_links/youtube: Youtube
     state: Stav
+    subtitle: Podtitulek
     tag_list: Klíčová slova
     title: Název
     to_label: Název

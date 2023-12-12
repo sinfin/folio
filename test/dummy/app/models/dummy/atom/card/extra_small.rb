@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
-class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
-  ATTACHMENTS = %i[]
+class Dummy::Atom::Card::ExtraSmall < Folio::Atom::Base
+  ATTACHMENTS = %i[cover]
 
-  STRUCTURE = {}
+  STRUCTURE = {
+    title: :string,
+    subtitle: :string,
+    url: :url,
+  }
 
   ASSOCIATIONS = {}
 
-  <%- if options[:cell] -%>
-  def self.molecule_cell_name
-    "<%= molecule_cell_name %>"
-  end
-  <%- else -%>
+  FORM_LAYOUT = :aside_attachments
+
+  validates :url,
+            :title,
+            presence: true
+
   def self.molecule_component_class
-    <%= molecule_component_name %>
+    Dummy::Molecule::Card::ExtraSmallComponent
   end
-  <%- end -%>
 end
 
 # == Schema Information

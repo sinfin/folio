@@ -221,6 +221,7 @@ en:
     social_links/twitter: Twitter
     social_links/youtube: Youtube
     state: State
+    subtitle: Subtitle
     tag_list: Keywords
     title: Title
     to_label: Label

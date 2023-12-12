@@ -2,6 +2,10 @@
 en:
   activerecord:
     attributes:
+      dummy/atom/image_and_content:
+        image_side: Image
+        image_side/left: On the left
+        image_side/right: On the right
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -9,11 +13,8 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
-      dummy/atom/image_and_content:
-        image_side: Image
-        image_side/left: On the left
-        image_side/right: On the right
     models:
+      dummy/atom/card/extra_small: Card - extra small
       dummy/atom/image_and_content: Image & content
       dummy/atom/text: Text
       dummy/atom/title: Title
