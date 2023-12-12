@@ -1,4 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-text class=(highlight? ? "my-atom-lg" : nil)
-  .container-fluid
-    .<%= classname_prefix %>-rich-text class=highlight_class_name
-      = cstypo content

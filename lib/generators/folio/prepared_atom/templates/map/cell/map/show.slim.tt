@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-map.my-atom-lg
-  .container-fluid
-    .<%= classname_prefix %>-atom-map__map data-latlng=model.latlng
