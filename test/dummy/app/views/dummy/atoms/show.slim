@@ -1,0 +1,23 @@
+.d-atoms
+  .container-fluid
+    h1
+      a.d-unlink href=dummy_atoms_path Atoms
+
+  - if @atom_classes_data
+    .container-fluid
+      ul.lead.fw-bold
+        - @atom_classes_data.each do |hash|
+          li.my-3
+            a href=dummy_atoms_path(atom: hash[:klass])
+              = hash[:label]
+
+  - else
+    .container-fluid
+      h2 = @atom_klass.model_name.human
+
+      h3 = @atom_klass
+
+    .d-atoms__atoms
+      - @atom_data.each do |attrs, atom|
+        .d-atoms__atom title=attrs.to_json
+          = render_atoms([atom])

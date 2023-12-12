@@ -94,9 +94,8 @@ class Dummy::UiController < ApplicationController
       authenticate_account!
 
       if current_account.has_role?(:superuser)
-        add_breadcrumb "UI", dummy_ui_path
-
         if action_name != "show"
+          add_breadcrumb "UI", dummy_ui_path
           add_breadcrumb action_name.capitalize, send("#{action_name}_dummy_ui_path")
         end
 
