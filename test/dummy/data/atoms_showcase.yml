@@ -14,6 +14,33 @@ atoms:
     - tag: H5
       title: H5 Mixtape gastropub pitchfork wayfarers.
 
+  Dummy::Atom::ImageAndContent:
+    - title: Goth squid xoxo
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      cover: true
+    - title: Goth squid xoxo
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      cover: true
+      image_side: right
+    - title: Goth squid xoxo
+      cover: true
+    - title: Goth squid xoxo
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      cover: true
+    - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      cover: true
+    - button_label: Button label
+      url: "#url"
+      cover: true
+    - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      cover: true
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

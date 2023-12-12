@@ -38,8 +38,16 @@ class Dummy::AtomsController < ApplicationController
       end
     end
 
+    def images_for_attrs
+      @images_for_attrs ||= (Folio::File::Image.tagged_with("unsplash").limit(10).presence || Folio::File::Image.limit(10)).to_a
+    end
+
     def attrs_from_hash(hash)
       attrs = hash.deep_symbolize_keys
+
+      if attrs[:cover] == true
+        attrs[:cover] = images_for_attrs.sample
+      end
 
       @root_data["values_for_true"].symbolize_keys.each do |key, value|
         if attrs[key] == true

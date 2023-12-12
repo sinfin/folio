@@ -9,6 +9,11 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+      dummy/atom/image_and_content:
+        image_side: Obrázek
+        image_side/left: Nalevo
+        image_side/right: Napravo
     models:
+      dummy/atom/image_and_content: Obrázek a obsah
       dummy/atom/text: Text
       dummy/atom/title: Nadpis
