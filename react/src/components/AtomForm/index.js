@@ -269,7 +269,25 @@ class AtomForm extends React.PureComponent {
               } else {
                 zIndex -= 1
 
-                if (input === 'ASSOCIATIONS') {
+                if (input === 'aside_attachments') {
+                  return (
+                    <AtomFormCardColumns data-debug='columns' style={makeStyle()}>
+                      <AtomFormCardColumn data-debug='column' dontGrow>
+                        {fillOutput('ATTACHMENTS')}
+                      </AtomFormCardColumn>
+                      <AtomFormCardColumn data-debug='column'>
+                        <AtomFormCardRows data-debug='rows' style={makeStyle()}>
+                          <AtomFormCardRow data-debug='row' style={makeStyle()}>
+                            {fillOutput('ASSOCIATIONS')}
+                          </AtomFormCardRow>
+                          <AtomFormCardRow data-debug='row' style={makeStyle()}>
+                            {fillOutput('STRUCTURE')}
+                          </AtomFormCardRow>
+                        </AtomFormCardRows>
+                      </AtomFormCardColumn>
+                    </AtomFormCardColumns>
+                  )
+                } else if (input === 'ASSOCIATIONS') {
                   return (
                     <Associations
                       atom={atom}
