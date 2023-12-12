@@ -1,0 +1,17 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/text: 
+    models:
+      application_namespace_path/atom/text: Text
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/red: Red
+        highlight/gray: Gray
+    models:
+      application_namespace_path/atom/text: Text (paragraphs, tables, etc.)

@@ -57,22 +57,19 @@ class Dummy::SeedGenerator
 
     copy_file(atom_path, template_atom_dir.join("#{name}.rb.tt"))
 
-    template_atom_cell_dir = template_atom_dir.join("cell")
+    template_atom_component_dir = template_atom_dir.join("component")
 
-    FileUtils.mkdir_p template_atom_cell_dir
+    FileUtils.mkdir_p template_atom_component_dir
 
     unless File.read(atom_path).include?("self.abstract_class = true")
       %w[atom molecule].each do |key|
-        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
-          copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+        Dir[Rails.root.join("app/components/dummy/#{key}/#{name}_component.*")].each do |path|
+          file_name = File.basename(path)
+          copy_file(path, template_atom_dir.join("component/#{file_name}.tt"))
         end
 
-        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}/*")].each do |path|
-          copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
-        end
-
-        Dir[Rails.root.join("test/cells/dummy/#{key}/#{name}_cell_test.rb")].each do |path|
-          copy_file(path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+        Dir[Rails.root.join("test/components/dummy/#{key}/#{name}_component_test.rb")].each do |path|
+          copy_file(path, template_atom_dir.join("component/#{name}_component_test.rb.tt"))
         end
       end
     end
