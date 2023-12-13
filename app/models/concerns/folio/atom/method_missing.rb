@@ -4,19 +4,33 @@ module Folio::Atom::MethodMissing
   extend ActiveSupport::Concern
 
   def method_missing(method_name, *arguments, &block)
-    name_without_operator = method_name.to_s
-                                       .delete("=")
-                                       .to_sym
+    base_method_name = method_name.to_s
+                                  .delete("=")
+
+    question_mark = false
+
+    if base_method_name.ends_with?("?")
+      question_mark = true
+      base_method_name = base_method_name.delete_suffix("?")
+    end
+
+    name_without_operator = base_method_name.to_sym
 
     name_for_association = name_without_operator.to_s
                                                 .gsub(/_(id|type)$/, "")
                                                 .to_sym
 
     if respond_to_missing?(name_without_operator)
-      if klass::ASSOCIATIONS.key?(name_for_association)
+      result = if klass::ASSOCIATIONS.key?(name_for_association)
         method_missing_association(method_name, arguments)
       else
         method_missing_data(method_name, arguments[0])
+      end
+
+      if question_mark
+        result.present?
+      else
+        result
       end
     else
       super
