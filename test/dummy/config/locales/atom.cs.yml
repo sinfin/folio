@@ -15,6 +15,7 @@ cs:
         tag/H5: H5
     models:
       dummy/atom/card/extra_small: Karta - extra malá
+      dummy/atom/card/full_width: Karta - na celou šířku
       dummy/atom/card/large: Karta - velká
       dummy/atom/card/medium: Karta - střední
       dummy/atom/card/small: Karta - malá

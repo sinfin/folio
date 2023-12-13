@@ -211,6 +211,8 @@ en:
     published: Published
     published_at: Published at
     published_dates: Date
+    secondary_button_label: Secondary button label
+    secondary_button_url: Secondary button URL
     sensitive_content: Contains sensitive content
     sign_in_count: Sign in count
     slug: Slug

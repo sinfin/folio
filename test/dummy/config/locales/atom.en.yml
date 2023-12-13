@@ -15,6 +15,7 @@ en:
         tag/H5: H5
     models:
       dummy/atom/card/extra_small: Card - extra small
+      dummy/atom/card/full_width: Card - full width
       dummy/atom/card/large: Card - large
       dummy/atom/card/medium: Card - medium
       dummy/atom/card/small: Card - small

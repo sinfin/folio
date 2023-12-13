@@ -300,6 +300,8 @@ cs:
     published_at: Zveřejněno k datu
     published_dates: Datum
     secondary_address: Adresa - doplňková
+    secondary_button_label: Text druhého tlačítka
+    secondary_button_url: Odkaz druhého tlačítka
     sensitive_content: Obsahuje citlivý obsah
     sign_in_count: Počet přihlášení
     slug: Varianta názvu pro odkazy

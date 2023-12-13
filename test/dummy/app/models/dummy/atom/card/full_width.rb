@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Card::Large < Folio::Atom::Base
+class Dummy::Atom::Card::FullWidth < Folio::Atom::Base
   ATTACHMENTS = %i[cover]
 
   STRUCTURE = {
@@ -8,8 +8,8 @@ class Dummy::Atom::Card::Large < Folio::Atom::Base
     content: :richtext,
     button_label: :string,
     button_url: :url,
-    link_label: :string,
-    link_url: :url,
+    secondary_button_label: :string,
+    secondary_button_url: :url,
   }
 
   ASSOCIATIONS = {}
@@ -18,22 +18,9 @@ class Dummy::Atom::Card::Large < Folio::Atom::Base
 
   FORM_LAYOUT = :aside_attachments
 
-  validates :button_url,
-            presence: true,
-            if: -> { button_label.present? }
-
-  validates :link_url,
-            presence: true,
-            if: -> { link_label.present? }
-
-  validate :validate_one_of_contents
-
-  private
-    def validate_one_of_contents
-      if title.blank? && content.blank?
-        errors.add(:content, :blank)
-      end
-    end
+  validates :cover_placement,
+            :title,
+            presence: true
 end
 
 # == Schema Information
