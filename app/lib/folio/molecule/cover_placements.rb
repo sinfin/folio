@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+module Folio::Molecule::CoverPlacements
+  def molecule_cover_placements
+    @molecule_cover_placements ||= Folio::FilePlacement::Cover.where(placement: @atoms)
+                                                              .includes(:file)
+                                                              .index_by(&:placement_id)
+  end
+
+  def molecule_cover_placement(atom)
+    if @atom_options && @atom_options[:console_preview]
+      atom.cover_placement
+    else
+      molecule_cover_placements[atom.id]
+    end
+  end
+end

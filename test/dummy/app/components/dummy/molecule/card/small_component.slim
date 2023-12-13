@@ -3,4 +3,7 @@
     .d-molecule-card-small__flex
       - @atoms.each do |atom|
         .d-molecule-card-small__card
+          = dummy_ui_image molecule_cover_placement(atom),
+                           Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+
           = atom.title
