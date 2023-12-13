@@ -54,24 +54,24 @@ menu = Dummy::Menu::Nestable.create!(locale: :cs, title: "Nestable", site: ::Fol
 
 root = Folio::MenuItem.create!(menu:,
                                title: "Reference",
-                               url: './',
+                               url: "./",
                                position: 0)
 
 child = Folio::MenuItem.create!(menu:,
                                 title: "Podreference",
-                                url: './',
+                                url: "./",
                                 position: 1,
                                 parent: root)
 
 Folio::MenuItem.create!(menu:,
                         title: "Podreference",
-                        url: './',
+                        url: "./",
                         position: 2,
                         parent: child)
 
 Folio::MenuItem.create!(menu:,
                         title: "About",
-                        url: './',
+                        url: "./",
                         position: 3)
 puts "Created Dummy::Menu::Nestable"
 
@@ -80,18 +80,18 @@ menu = Dummy::Menu::Stylable.create!(locale: :cs, title: "Stylable", site: ::Fol
 
 Folio::MenuItem.create!(menu:,
                         title: "Reference",
-                        url: './',
+                        url: "./",
                         position: 0)
 
 Folio::MenuItem.create!(menu:,
                         title: "About red",
-                        url: './',
+                        url: "./",
                         position: 1,
                         style: "red")
 
 Folio::MenuItem.create!(menu:,
                         title: "About",
-                        url: './',
+                        url: "./",
                         position: 1)
 puts "Created Dummy::Menu::Stylable"
 
