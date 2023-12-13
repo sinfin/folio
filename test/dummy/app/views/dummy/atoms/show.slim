@@ -18,6 +18,7 @@
       h3 = @atom_klass
 
     .d-atoms__atoms
-      - @atom_data.each do |attrs, atom|
+      - @atom_data.each do |attrs, atoms|
         .d-atoms__atom title=attrs.to_json
-          = render_atoms([atom])
+          - aim = Folio::Atom.atoms_in_molecules(atoms)
+          = render_atoms_in_molecules(aim)

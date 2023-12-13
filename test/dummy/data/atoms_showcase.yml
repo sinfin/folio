@@ -46,6 +46,15 @@ atoms:
       subtitle: Subtitle
       images: true
 
+  Dummy::Atom::Cards::ExtraSmall:
+    - title: Title
+      url: url
+      cover: true
+      _count: 3
+
+    - title: Title
+      url: url
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

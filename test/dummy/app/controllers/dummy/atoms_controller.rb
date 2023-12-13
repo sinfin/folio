@@ -12,7 +12,13 @@ class Dummy::AtomsController < ApplicationController
       if @atom_klass && @atom_klass < Folio::Atom::Base && atom_data = @root_data["atoms"][@atom_klass.to_s]
         @atom_data = atom_data.map do |hash|
           attrs = attrs_from_hash(hash)
-          [attrs, @atom_klass.new(attrs)]
+
+          if @atom_klass.molecule?
+            count = attrs.delete(:_count) || 1
+            [attrs, Array.new(count) { @atom_klass.new(attrs) }]
+          else
+            [attrs, [@atom_klass.new(attrs)]]
+          end
         end
 
         add_breadcrumb "Atoms", dummy_atoms_path
