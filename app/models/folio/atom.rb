@@ -24,7 +24,7 @@ module Folio::Atom
           type: value,
           character_counter: value == :text,
           default_values: klass.default_atom_values[key],
-          splittable: (klass.molecule_component_class || klass.molecule_cell_name) ? nil : klass.splittable_by_attribute == key,
+          splittable: klass.molecule? ? nil : klass.splittable_by_attribute == key,
         }
 
         if value.is_a?(Array)
