@@ -1,0 +1,45 @@
+.d-atom-image-and-content
+  &__row
+    align-items: center
+
+  &__image
+    border-radius: $grid-gutter-half
+    overflow: hidden
+
+  &__content
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    gap: map-get($spacers, bb) 0
+
+  &__title
+    margin-top: 0
+
+  +media-breakpoint-down(lg)
+    &__title
+      +font-size-display-m
+
+  +media-breakpoint-down(md)
+    &__title
+      +font-size-display-s
+
+  +media-breakpoint-down(xs)
+    &__content
+      padding-top: $grid-gutter-width
+
+  +media-breakpoint-up(sm)
+    &:not(&--image-right) &__content
+      padding-left: $grid-gutter-width
+
+    &--image-right &__row
+      flex-direction: row-reverse
+
+    &--image-right &__content
+      padding-right: $grid-gutter-width
+
+  +media-breakpoint-up(md)
+    &:not(&--image-right) &__content
+      padding-left: $grid-gutter-base * 4
+
+    &--image-right &__content
+      padding-right: $grid-gutter-base * 4
