@@ -27,5 +27,6 @@ cs:
       dummy/atom/cards/person: Karta - osoba
       dummy/atom/cards/small: Karta - malá
       dummy/atom/image_and_content: Obrázek a obsah
+      dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/text: Text
       dummy/atom/title: Nadpis

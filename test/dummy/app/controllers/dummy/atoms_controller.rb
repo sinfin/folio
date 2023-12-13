@@ -49,6 +49,10 @@ class Dummy::AtomsController < ApplicationController
         attrs[:cover] = images_for_attrs.sample
       end
 
+      if attrs[:images] == true
+        attrs[:images] = images_for_attrs
+      end
+
       @root_data["values_for_true"].symbolize_keys.each do |key, value|
         if attrs[key] == true
           attrs[key] = value

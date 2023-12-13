@@ -1,0 +1,17 @@
+.d-atom.d-atom-images-gallery data=data
+  .container-fluid
+    .d-atom-images-gallery__wrap data=stimulus_target('wrap')
+      - image_placements.each do |image_placement|
+        - data = dynamic_item_data(image_placement)
+        .d-atom-images-gallery__item[
+          style="width: #{data[:width]}px"
+          data=stimulus_target('item').merge(ratio: data[:ratio])
+        ]
+          = dummy_ui_image(image_placement,
+                           THUMB_SIZE,
+                           class_name: "d-atom-images-gallery__image",
+                           lightbox: true,
+                           border_radius: true)
+
+    .d-atom-images-gallery__loader-wrap data=stimulus_target("loaderWrap")
+      span.folio-loader.d-atom-images-gallery__loader

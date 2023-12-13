@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::ImageComponent < ApplicationComponent
-  bem_class_name :lightbox, :contain, :cover, :hover_zoom, :round
+  bem_class_name :lightbox, :contain, :cover, :hover_zoom, :round, :border_radius
 
   RETINA_MULTIPLIER = 2
 
@@ -18,6 +18,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
                  style: nil,
                  spacer_background: true,
                  round: false,
+                 border_radius: false,
                  additional_html: nil,
                  class_name: nil)
     @size = size
@@ -33,6 +34,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     @additional_html = additional_html
     @class_name = class_name
     @round = round
+    @border_radius = border_radius
     @lazy = lazy
     @data = set_data(placement)
   end

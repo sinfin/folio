@@ -41,6 +41,11 @@ atoms:
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       cover: true
 
+  Dummy::Atom::Images::Gallery:
+    - title: Gallery title
+      subtitle: Subtitle
+      images: true
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

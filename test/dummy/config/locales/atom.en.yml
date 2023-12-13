@@ -26,5 +26,6 @@ en:
       dummy/atom/cards/person: Card - person
       dummy/atom/cards/small: Card - small
       dummy/atom/image_and_content: Image & content
+      dummy/atom/images/gallery: Images/gallery
       dummy/atom/text: Text
       dummy/atom/title: Title
