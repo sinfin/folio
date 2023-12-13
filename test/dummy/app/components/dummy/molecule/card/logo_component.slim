@@ -1,0 +1,9 @@
+.d-molecule.d-molecule-card-logo
+  .container-fluid
+    .d-molecule-card-logo__flex
+      - @atoms.each do |atom|
+        *card_tag(atom)
+          = dummy_ui_image molecule_cover_placement(atom),
+                           Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+
+          = atom.title

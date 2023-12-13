@@ -21,6 +21,7 @@ cs:
       dummy/atom/card/full_width: Karta - na celou šířku
       dummy/atom/card/image: Karta - obrázek
       dummy/atom/card/large: Karta - velká
+      dummy/atom/card/logo: Karta - logo
       dummy/atom/card/medium: Karta - střední
       dummy/atom/card/padded_image: Karta - obrázek s odsazením
       dummy/atom/card/person: Karta - osoba
