@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Card::ExtraSmall < Folio::Atom::Base
+class Dummy::Atom::Card::Small < Folio::Atom::Base
   ATTACHMENTS = %i[cover]
 
   STRUCTURE = {
     title: :string,
-    subtitle: :string,
-    url: :url,
+    content: :richtext,
+    button_label: :string,
+    button_url: :url,
+    link_label: :string,
+    link_url: :url,
   }
 
   ASSOCIATIONS = {}
@@ -14,10 +17,6 @@ class Dummy::Atom::Card::ExtraSmall < Folio::Atom::Base
   FORM_LAYOUT = :aside_attachments
 
   MOLECULE = true
-
-  validates :url,
-            :title,
-            presence: true
 end
 
 # == Schema Information

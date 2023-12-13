@@ -182,6 +182,7 @@ en:
     article: Article
     audio_cover_placement: Audio
     button_label: Button label
+    button_url: Button URL
     console_notes: Notes (internal)
     content: Content
     count: Count
@@ -195,6 +196,8 @@ en:
     is_active: Active
     last_name: Last name
     last_sign_in_at: Last sign in
+    link_label: Link label
+    link_url: Link URL
     locale: Locale
     meta_description: SEO - Meta Description
     meta_title: SEO - Meta Title

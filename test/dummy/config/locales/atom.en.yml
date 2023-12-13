@@ -15,6 +15,7 @@ en:
         tag/H5: H5
     models:
       dummy/atom/card/extra_small: Card - extra small
+      dummy/atom/card/small: Card - small
       dummy/atom/image_and_content: Image & content
       dummy/atom/text: Text
       dummy/atom/title: Title
