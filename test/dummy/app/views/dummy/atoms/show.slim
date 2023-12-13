@@ -15,10 +15,12 @@
     .container-fluid
       h2 = @atom_klass.model_name.human
 
-      h3 = @atom_klass
+      h3.mb-gg = @atom_klass
 
-    .d-atoms__atoms
-      - @atom_data.each do |attrs, atoms|
-        .d-atoms__atom title=attrs.to_json
-          - aim = Folio::Atom.atoms_in_molecules(atoms)
-          = render_atoms_in_molecules(aim)
+    - %w[light dark].each do |theme|
+      .bg-body.border-top.border-bottom.py-gg data-bs-theme=theme
+        .d-atoms__atoms
+          - @atom_data.each do |attrs, atoms|
+            .d-atoms__atom title=attrs.to_json
+              - aim = Folio::Atom.atoms_in_molecules(atoms)
+              = render_atoms_in_molecules(aim)
