@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, Input } from 'reactstrap'
+import { Input } from 'reactstrap'
 import { isEqual } from 'lodash'
 import ReactModal from 'react-modal'
 
 import NestedModelControls from 'components/NestedModelControls'
+import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
 import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
 import FolioUiIcon from 'components/FolioUiIcon'
 
@@ -390,12 +391,17 @@ class AtomForm extends React.PureComponent {
             )
           })}
 
-          {addButtons.map((type) => (
-            <Button color='success' type='button' className='mr-2' onClick={() => { this.props.addAtom(type.type) }} key={type.type}>
-              <FolioUiIcon name='plus' />
-              {type.title}
-            </Button>
-          ))}
+          <FolioConsoleUiButtons>
+            {addButtons.map((type) => (
+              <FolioConsoleUiButton
+                variant='success'
+                onClick={() => { this.props.addAtom(type.type) }}
+                key={type.type}
+                label={type.title}
+                icon='plus'
+              />
+            ))}
+          </FolioConsoleUiButtons>
         </div>
 
         <ReactModal
