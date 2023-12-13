@@ -1,6 +1,8 @@
 .d-atom.d-atom-image-and-content.my-atom-lg
   .container-fluid
-    p = @atom.cover_placement
+    = dummy_ui_image(atom_cover_placement,
+                     Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
+
     p = @atom.title
     p = @atom.content
     p = @atom.button_label

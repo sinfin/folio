@@ -10,6 +10,8 @@ module Folio::Molecule::CoverPlacements
   def molecule_cover_placement(atom)
     if @atom_options && @atom_options[:console_preview]
       atom.cover_placement
+    elsif @atom_options && @atom_options[:cover_placements]
+      @atom_options[:cover_placements][atom.id]
     else
       molecule_cover_placements[atom.id]
     end

@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 module Folio::AtomsHelper
-  def render_atoms(atoms, only: [], except: [], atom_options: {})
+  def render_atoms(atoms, only: [], except: [], atom_options: {}, cover_placements: true)
+    if cover_placements && !atom_options[:cover_placements]
+      atom_options = atom_options.merge(cover_placements: cover_placements_for_atoms(atoms))
+    end
+
     atoms.filter_map do |atom|
       next if only.present? && !only.include?(atom.class)
       next if except.present? && except.include?(atom.class)
@@ -22,7 +26,13 @@ module Folio::AtomsHelper
     end.join("").html_safe
   end
 
-  def render_atoms_in_molecules(atoms_in_molecules, only: [], except: [], atom_options: {})
+  def render_atoms_in_molecules(atoms_in_molecules, only: [], except: [], atom_options: {}, cover_placements: true)
+    if cover_placements
+      atoms = []
+      atoms_in_molecules.each { |_molecule, molecule_atoms| atoms += molecule_atoms }
+      atom_options = atom_options.merge(cover_placements: cover_placements_for_atoms(atoms))
+    end
+
     atoms_in_molecules.filter_map do |molecule, atoms|
       if only.present?
         atoms = atoms.select { |a| only.include?(a.class) }
@@ -56,5 +66,23 @@ module Folio::AtomsHelper
         render_atoms(atoms, atom_options:)
       end
     end.join("").html_safe
+  end
+
+  def cover_placements_for_atoms(atoms)
+    placement = []
+
+    atoms.each do |atom|
+      if atom.class::ATTACHMENTS.include?(:cover)
+        placement << atom
+      end
+    end
+
+    if placement.present?
+      Folio::FilePlacement::Cover.where(placement:)
+                                 .includes(:file)
+                                 .index_by(&:placement_id)
+    else
+      {}
+    end
   end
 end
