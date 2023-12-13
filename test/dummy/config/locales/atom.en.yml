@@ -2,6 +2,8 @@
 en:
   activerecord:
     attributes:
+      dummy/atom/card/person:
+        large: Big image
       dummy/atom/image_and_content:
         image_side: Image
         image_side/left: On the left
@@ -20,6 +22,7 @@ en:
       dummy/atom/card/large: Card - large
       dummy/atom/card/medium: Card - medium
       dummy/atom/card/padded_image: Card - image with padding
+      dummy/atom/card/person: Card - person
       dummy/atom/card/small: Card - small
       dummy/atom/image_and_content: Image & content
       dummy/atom/text: Text

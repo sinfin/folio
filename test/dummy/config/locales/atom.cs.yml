@@ -2,6 +2,9 @@
 cs:
   activerecord:
     attributes:
+      dummy/atom/card/person:
+        large: Velký obrázek
+        job: Pozice
       dummy/atom/image_and_content:
         image_side: Obrázek
         image_side/left: Nalevo
@@ -20,6 +23,7 @@ cs:
       dummy/atom/card/large: Karta - velká
       dummy/atom/card/medium: Karta - střední
       dummy/atom/card/padded_image: Karta - obrázek s odsazením
+      dummy/atom/card/person: Karta - osoba
       dummy/atom/card/small: Karta - malá
       dummy/atom/image_and_content: Obrázek a obsah
       dummy/atom/text: Text
