@@ -21,4 +21,8 @@ class ApplicationController < ActionController::Base
     def add_homepage_breadcrumb
       add_breadcrumb_on_rails(t("homepage"), "/")
     end
+
+    def current_ability
+      @current_ability ||= Folio::Ability.new(current_user).merge(<%= application_namespace %>::Ability.new(current_user))
+    end
 end

@@ -6,4 +6,9 @@ class ApplicationController < ActionController::Base
 
   include Dummy::CurrentMethods
   include Folio::CacheMethods
+
+  private
+    def current_ability
+      @current_ability ||= Folio::Ability.new(current_user).merge(Dummy::Ability.new(current_user))
+    end
 end

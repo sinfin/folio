@@ -89,6 +89,7 @@ module Folio
           "app/models/application_namespace_path.rb",
           "app/models/application_namespace_path/page/homepage.rb",
           "app/models/application_record.rb",
+          "app/models/application_namespace_path/ability.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
           "app/overrides/cells/folio/ui/atoms_cell_override.rb",
           "app/overrides/cells/folio/ui_cell_override.rb",

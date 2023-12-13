@@ -151,6 +151,7 @@ FactoryBot.define do
     first_name { "first_name" }
     last_name { "last_name" }
     phone { "+420604123123" }
+    superadmin { false }
     association(:primary_address, factory: :folio_address_primary)
   end
 
