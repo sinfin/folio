@@ -8,7 +8,7 @@ module Folio::Molecule::CoverPlacements
   end
 
   def molecule_cover_placement(atom)
-    if @atom_options && @atom_options[:console_preview]
+    if atom.new_record? || (@atom_options && @atom_options[:console_preview])
       atom.cover_placement
     elsif @atom_options && @atom_options[:cover_placements]
       @atom_options[:cover_placements][atom.id]
