@@ -1,0 +1,9 @@
+div.d-molecule class=bem_class_name
+  .container-fluid
+    - @atoms.each do |atom|
+      .d-molecule-card-full-width__card data-bs-theme="dark"
+        = dummy_ui_image molecule_cover_placement(atom),
+                         Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+
+        p = atom.title
+        p = atom.description

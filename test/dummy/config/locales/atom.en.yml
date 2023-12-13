@@ -16,8 +16,10 @@ en:
     models:
       dummy/atom/card/extra_small: Card - extra small
       dummy/atom/card/full_width: Card - full width
+      dummy/atom/card/image: Card - image
       dummy/atom/card/large: Card - large
       dummy/atom/card/medium: Card - medium
+      dummy/atom/card/padded_image: Card - image with padding
       dummy/atom/card/small: Card - small
       dummy/atom/image_and_content: Image & content
       dummy/atom/text: Text
