@@ -1,3 +1,6 @@
 .d-molecule.d-molecule-card-small
   .container-fluid
-    = @atoms
+    .d-molecule-card-small__flex
+      - @atoms.each do |atom|
+        .d-molecule-card-small__card
+          = atom.title
