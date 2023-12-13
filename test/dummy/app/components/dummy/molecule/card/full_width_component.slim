@@ -1,8 +1,0 @@
-.d-molecule.d-molecule-card-full-width data-bs-theme="dark"
-  .container-fluid
-    - @atoms.each do |atom|
-      .d-molecule-card-full-width__card
-        = dummy_ui_image molecule_cover_placement(atom),
-                         Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
-
-        p = atom.title

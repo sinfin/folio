@@ -2,7 +2,7 @@
 en:
   activerecord:
     attributes:
-      dummy/atom/card/person:
+      dummy/atom/cards/person:
         large: Big image
       dummy/atom/image_and_content:
         image_side: Image
@@ -16,15 +16,15 @@ en:
         tag/H4: H4
         tag/H5: H5
     models:
-      dummy/atom/card/extra_small: Card - extra small
-      dummy/atom/card/full_width: Card - full width
-      dummy/atom/card/image: Card - image
-      dummy/atom/card/large: Card - large
-      dummy/atom/card/logo: Card - logo
-      dummy/atom/card/medium: Card - medium
-      dummy/atom/card/padded_image: Card - image with padding
-      dummy/atom/card/person: Card - person
-      dummy/atom/card/small: Card - small
+      dummy/atom/cards/extra_small: Card - extra small
+      dummy/atom/cards/full_width: Card - full width
+      dummy/atom/cards/image: Card - image
+      dummy/atom/cards/large: Card - large
+      dummy/atom/cards/logo: Card - logo
+      dummy/atom/cards/medium: Card - medium
+      dummy/atom/cards/padded_image: Card - image with padding
+      dummy/atom/cards/person: Card - person
+      dummy/atom/cards/small: Card - small
       dummy/atom/image_and_content: Image & content
       dummy/atom/text: Text
       dummy/atom/title: Title

@@ -1,0 +1,9 @@
+.d-molecule.d-molecule-cards-large
+  .container-fluid
+    - @atoms.each do |atom|
+      .d-molecule-cards-large__card
+        = dummy_ui_image molecule_cover_placement(atom),
+                         Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+
+        p = atom.title
+        p == cstypo atom.content
