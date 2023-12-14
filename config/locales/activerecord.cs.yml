@@ -326,6 +326,7 @@ cs:
   errors:
     messages:
       at_least_one: Vyplňte alespoň jedno políčko.
+      invalid_count: musí být přesně %{count}
 
     attributes:
       verified_captcha:

@@ -57,6 +57,8 @@ class Dummy::AtomsController < ApplicationController
 
       if attrs[:images] == true
         attrs[:images] = images_for_attrs
+      elsif attrs[:images].is_a?(Numeric)
+        attrs[:images] = images_for_attrs.first(attrs[:images])
       end
 
       @root_data["values_for_true"].symbolize_keys.each do |key, value|

@@ -236,6 +236,7 @@ en:
   errors:
     messages:
       at_least_one: Fill at least one of the fields.
+      invalid_count: must be exactly %{count}
 
     attributes:
       verified_captcha:

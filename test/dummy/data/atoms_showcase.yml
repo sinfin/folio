@@ -56,6 +56,11 @@ atoms:
       subtitle: Subtitle
       images: true
 
+  Dummy::Atom::Images::OneAndTwo:
+    - title: One and two gallery title
+      subtitle: Subtitle
+      images: 3
+
   Dummy::Atom::Cards::ExtraSmall:
     - title: Title
       url: url

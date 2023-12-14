@@ -1,0 +1,23 @@
+.d-atom.d-atom-images-one-and-two data=stimulus_lightbox
+  .container-fluid
+    .d-atom-images-one-and-two__wrap
+      - image_placements.each_with_index do |image_placement, i|
+        .d-atom-images-one-and-two__item[
+          class="d-atom-images-one-and-two__item--#{i + 1}"
+        ]
+          = dummy_ui_image(image_placement,
+                           thumb_size(i),
+                           class_name: "d-atom-images-one-and-two__image",
+                           lightbox: true,
+                           hover_zoom: true,
+                           cover: true,
+                           border_radius: true)
+
+    - if @atom.title.present?
+      .d-atom-images-one-and-two__caption.fs-text-s
+        span.d-atom-images-one-and-two__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.d-atom-images-one-and-two__subtitle
+            = cstypo @atom.subtitle
