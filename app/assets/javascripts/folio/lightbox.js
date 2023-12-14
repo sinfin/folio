@@ -1,4 +1,3 @@
-//= require folio/webp
 //= require photoswipe.esm.folio
 //= require photoswipe-dynamic-caption-plugin.esm
 // TODO jQuery -> stimulus
@@ -179,7 +178,7 @@ window.Folio.Lightbox.Lightbox = class FolioLightbox {
       h: parseInt($el.data('lightbox-height')),
       caption: $el.data('lightbox-caption') || $el.next('figcaption').text(),
       author: $el.data('lightbox-author'),
-      src: window.Folio.Webp.supported ? $el.data('lightbox-webp-src') : $el.data('lightbox-src'),
+      src: $el.data('lightbox-webp-src'),
       el
     }
   }
