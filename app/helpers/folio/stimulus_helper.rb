@@ -88,6 +88,32 @@ module Folio::StimulusHelper
     stimulus_data(outlets:)
   end
 
+  def stimulus_lightbox
+    stimulus_controller("f-lightbox", inline: true)
+  end
+
+  def stimulus_lightbox_item(placement_or_file, title: nil)
+    file = if placement_or_file.is_a?(Folio::FilePlacement::Base)
+      placement_or_file.file
+    else
+      placement_or_file
+    end
+
+    thumb = file.thumb(Folio::LIGHTBOX_IMAGE_SIZE)
+
+    {
+      "action" => "click->f-lightbox#onItemClick",
+      "f-lightbox-target" => "item",
+      "photoswipe" => {
+        "src" => thumb.webp_url || thumb.url,
+        "w" => thumb.width,
+        "h" => thumb.height,
+        "author" => file.try(:author).presence || "",
+        "caption" => title || file.try(:description).presence || "",
+      }.to_json
+    }
+  end
+
   def stimulus_modal_toggle(target, dialog: nil)
     stimulus_controller("f-modal-toggle",
                         values: { target:, dialog: },

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::ImageComponent < ApplicationComponent
+  include Folio::CellLightbox
+
   bem_class_name :lightbox, :contain, :cover, :hover_zoom, :round, :border_radius
 
   RETINA_MULTIPLIER = 2
@@ -21,6 +23,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
                  border_radius: false,
                  additional_html: nil,
                  class_name: nil)
+    @placement = placement
     @size = size
     @lightbox = lightbox
     @contain = contain
@@ -202,34 +205,20 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
       tag: :div,
       class: class_names,
       style: wrap_style,
-      "data-width" => thumbnail_width,
-      "data-height" => thumbnail_height,
+      data: {
+        width: thumbnail_width,
+        height: thumbnail_height,
+      }
     }
 
     if @href
       h[:tag] = :a
       h[:href] = @href
-      # TODO lightbox
-      # elsif model && lightboxable?
-      #   if @lightbox.is_a?(Hash)
-      #     h = h.merge(@lightbox)
-      #   elsif model.is_a?(Folio::FilePlacement::Base)
-      #     h = h.merge(lightbox(model))
-      #     h["data-lightbox-caption"] = @title if @title
-      #   else
-      #     h = h.merge(lightbox_from_image(model))
-      #   end
+    elsif @lightbox
+      h[:data].merge!(stimulus_lightbox_item(@placement, title: @title))
     end
 
     h
-  end
-
-  def self.fixed_height_mobile_ratio
-    0.862
-  end
-
-  def self.fixed_height_default_width
-    160
   end
 
   def thumbnail_size
