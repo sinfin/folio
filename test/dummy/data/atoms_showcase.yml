@@ -61,6 +61,16 @@ atoms:
       subtitle: Subtitle
       images: 3
 
+  Dummy::Atom::Images::Single:
+    - cover: true
+      title: One and two gallery title
+      subtitle: Subtitle
+
+    - cover: true
+      title: One and two gallery title
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+
   Dummy::Atom::Cards::ExtraSmall:
     - title: Title
       url: url

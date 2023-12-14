@@ -1,0 +1,18 @@
+.d-atom-images-single
+  &__image:not(:last-child)
+    margin-bottom: $grid-gutter-width
+
+  &__title:not(:last-child)
+    display: inline-block
+    margin-right: $grid-gutter-half
+
+  &__subtitle,
+  &__content
+    color: $shade-400
+
+  &__content
+    max-width: 660px
+
+  +media-breakpoint-down(sm)
+    &__image:not(:last-child)
+      margin-bottom: 2 * $grid-gutter-base
