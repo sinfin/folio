@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Atom::Images::Gallery < Folio::Atom::Base
+class Dummy::Atom::Images::GridGallery < Folio::Atom::Base
   ATTACHMENTS = %i[images]
 
   STRUCTURE = {

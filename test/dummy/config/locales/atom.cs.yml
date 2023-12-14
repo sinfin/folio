@@ -28,5 +28,6 @@ cs:
       dummy/atom/cards/small: Karta - malá
       dummy/atom/image_and_content: Obrázek a obsah
       dummy/atom/images/gallery: Obrázky - galerie
+      dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce
       dummy/atom/text: Text
       dummy/atom/title: Nadpis

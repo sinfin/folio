@@ -1,0 +1,8 @@
+.d-atom-images-grid-gallery
+  &__row
+    row-gap: $grid-gutter-width
+
+  +media-breakpoint-down(sm)
+    &__row
+      --bs-gutter-x: #{2 * $grid-gutter-base}
+      row-gap: 2 * $grid-gutter-base

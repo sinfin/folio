@@ -1,0 +1,10 @@
+.d-atom.d-atom-images-grid-gallery data=stimulus_lightbox
+  .container-fluid
+    .row.d-atom-images-grid-gallery__row
+      - image_placements.each do |image_placement|
+        .col-6.col-sm-4.col-md-3.col-lg-2.d-atom-images-grid-gallery__col
+          = dummy_ui_image(image_placement,
+                           THUMB_SIZE,
+                           class_name: "d-atom-images-grid-gallery__image",
+                           lightbox: true,
+                           border_radius: true)
