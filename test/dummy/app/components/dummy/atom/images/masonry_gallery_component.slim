@@ -1,0 +1,18 @@
+.d-atom.d-atom-images-masonry-gallery data=stimulus_lightbox
+  .container-fluid
+    - if @atom.title.present?
+      .d-atom-images-masonry-gallery__caption.fs-text-s
+        span.d-atom-images-masonry-gallery__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.d-atom-images-masonry-gallery__subtitle
+            = cstypo @atom.subtitle
+
+    .d-atom-images-masonry-gallery__wrap
+      - image_placements.each do |image_placement|
+        = dummy_ui_image(image_placement,
+                         THUMB_SIZE,
+                         class_name: "d-atom-images-masonry-gallery__image",
+                         lightbox: true,
+                         border_radius: true)

@@ -51,6 +51,11 @@ atoms:
       subtitle: Subtitle
       images: true
 
+  Dummy::Atom::Images::MasonryGallery:
+    - title: Masonry gallery title
+      subtitle: Subtitle
+      images: true
+
   Dummy::Atom::Cards::ExtraSmall:
     - title: Title
       url: url

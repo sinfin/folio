@@ -1,0 +1,34 @@
+.d-atom-images-masonry-gallery
+  --d-atom-images-masonry-gallery-spacer: #{$grid-gutter-width}
+
+  &__caption
+    margin-bottom: var(--d-atom-images-masonry-gallery-spacer)
+
+  &__title:not(:last-child)
+    display: inline-block
+    margin-right: $grid-gutter-half
+
+  &__subtitle
+    color: $shade-400
+
+  &__image
+    margin-bottom: var(--d-atom-images-masonry-gallery-spacer)
+
+  &__wrap
+    column-count: 2
+    column-gap: var(--d-atom-images-masonry-gallery-spacer)
+
+    +media-breakpoint-up(sm)
+      column-count: 3
+
+    +media-breakpoint-up(md)
+      column-count: 4
+
+    +media-breakpoint-up(lg)
+      column-count: 6
+
+  +media-breakpoint-down(sm)
+    --d-atom-images-masonry-gallery-spacer: #{2 * $grid-gutter-base}
+
+
+
