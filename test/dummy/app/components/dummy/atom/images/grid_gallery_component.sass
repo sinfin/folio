@@ -1,8 +1,19 @@
 .d-atom-images-grid-gallery
+  --d-atom-images-grid-gallery-spacer: #{$grid-gutter-width}
+
   &__row
-    row-gap: $grid-gutter-width
+    --bs-gutter-x: var(--d-atom-images-grid-gallery-spacer)
+    row-gap: var(--d-atom-images-grid-gallery-spacer)
+
+  &__caption
+    margin-top: var(--d-atom-images-grid-gallery-spacer)
+
+  &__title:not(:last-child)
+    display: inline-block
+    margin-right: $grid-gutter-half
+
+  &__subtitle
+    color: $shade-400
 
   +media-breakpoint-down(sm)
-    &__row
-      --bs-gutter-x: #{2 * $grid-gutter-base}
-      row-gap: 2 * $grid-gutter-base
+    --d-atom-images-grid-gallery-spacer: #{2 * $grid-gutter-base}

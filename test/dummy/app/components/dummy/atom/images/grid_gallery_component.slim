@@ -8,3 +8,12 @@
                            class_name: "d-atom-images-grid-gallery__image",
                            lightbox: true,
                            border_radius: true)
+
+    - if @atom.title.present?
+      .d-atom-images-grid-gallery__caption.fs-text-s
+        span.d-atom-images-grid-gallery__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.d-atom-images-grid-gallery__subtitle
+            = cstypo @atom.subtitle

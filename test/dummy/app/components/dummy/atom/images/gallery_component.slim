@@ -17,3 +17,12 @@
 
     .d-atom-images-gallery__loader-wrap data=stimulus_target("loaderWrap")
       span.folio-loader.d-atom-images-gallery__loader
+
+    - if @atom.title.present?
+      .d-atom-images-gallery__caption.fs-text-s
+        span.d-atom-images-gallery__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.d-atom-images-gallery__subtitle
+            = cstypo @atom.subtitle

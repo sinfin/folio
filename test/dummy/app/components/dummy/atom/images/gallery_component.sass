@@ -30,3 +30,17 @@
 
   &__loader
     max-height: 150px
+
+  &__caption
+    margin-top: $grid-gutter-width
+
+  &__title:not(:last-child)
+    display: inline-block
+    margin-right: $grid-gutter-half
+
+  &__subtitle
+    color: $shade-400
+
+  +media-breakpoint-down(sm)
+    &__caption
+      margin-top: 2 * $grid-gutter-base
