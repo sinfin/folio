@@ -1,9 +1,15 @@
 .d-molecule.d-molecule-cards-extra-small
   .container-fluid
-    .d-molecule-cards-extra-small__flex
+    .row.mb-ng
       - @atoms.each do |atom|
-        .d-molecule-cards-extra-small__card
-          = dummy_ui_image molecule_cover_placement(atom),
-                           Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+        .col-12.col-sm-6.mb-g
+          .d-molecule-cards-extra-small__card
+            .d-molecule-cards-extra-small__cover
+              = dummy_ui_image(molecule_cover_placement(atom), THUMB_SIZE)
 
-          = atom.title
+            .d-molecule-cards-extra-small__text
+              h4.fs-display-xs.m-0
+                = atom.title
+
+              p.fs-text-xs.m-0
+                = atom.subtitle

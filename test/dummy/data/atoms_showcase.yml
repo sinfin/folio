@@ -94,12 +94,17 @@ atoms:
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
 
   Dummy::Atom::Cards::ExtraSmall:
-    - title: Title
+    - title: Card headline lorem ipsum dolor sit amet
+      subtitle: Lorem ipsum dolor sit amet
       url: url
       cover: true
       _count: 3
 
-    - title: Title
+    - title: Card headline lorem ipsum dolor sit amet
+      subtitle: Lorem ipsum dolor sit amet
+      url: url
+
+    - title: Card headline lorem ipsum dolor sit amet
       url: url
 
 values_for_true:
