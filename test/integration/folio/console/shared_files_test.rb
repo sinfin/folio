@@ -82,7 +82,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     Rails.application.config.stub(:folio_shared_files_between_sites, true) do
       # klasses Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment
       klass = Folio::File::Image
-      s3_name = "test-#{klass.model_name.singular}.gif"
+      s3_name = "#{SecureRandom.hex}_test-#{klass.model_name.singular}.gif" # to avoid cross deletions in parallel tests
       test_path = "#{Folio::S3::Client::TEST_PATH}/#{s3_name}"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
@@ -158,7 +158,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     Rails.application.config.stub(:folio_shared_files_between_sites, false) do
       # klasses Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment
       klass = Folio::File::Image
-      s3_name = "test-#{klass.model_name.singular}.gif"
+      s3_name = "#{SecureRandom.hex}_test-#{klass.model_name.singular}.gif" # to avoid cross deletions in parallel tests
       test_path = "#{Folio::S3::Client::TEST_PATH}/#{s3_name}"
       FileUtils.mkdir_p(File.dirname(test_path))
       FileUtils.cp(Folio::Engine.root.join("test/fixtures/folio/test.gif"), test_path)
