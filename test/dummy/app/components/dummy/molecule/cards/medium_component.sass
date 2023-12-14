@@ -1,0 +1,53 @@
+.d-molecule-cards-medium
+  &__grid
+    display: grid
+    grid-template-columns: repeat(2, 1fr)
+    gap: $grid-gutter-width
+
+  &__card
+    background-color: $shade-100
+    border-radius: $grid-gutter-half
+    overflow: hidden
+
+  &__card-body
+    padding: $grid-gutter-base * 4
+
+  &__card-image-wrap
+    overflow: hidden
+
+  +media-breakpoint-up(lg)
+    &__card
+      display: flex
+
+    &__card-body
+      flex: 1 1 auto
+
+    &__card-image-wrap
+      overflow: hidden
+      flex: 0 0 240px
+
+  +media-breakpoint-up(sm)
+    &__card-image-wrap--mobile
+      display: none
+
+  +media-breakpoint-only(lg)
+    &__card-image-wrap
+      flex-basis: 180px
+
+  +media-breakpoint-down(lg)
+    &__card-image-wrap
+      display: none
+      max-height: 280px
+
+    &__card-image-wrap--mobile
+      display: block
+
+  +media-breakpoint-down(sm)
+    &__grid
+      grid-template-columns: 1fr
+
+    &__card
+      max-width: 424px
+
+    &__card-image-wrap
+      max-height: 240px

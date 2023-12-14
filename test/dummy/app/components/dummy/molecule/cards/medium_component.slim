@@ -1,9 +1,25 @@
 .d-molecule.d-molecule-cards-medium
   .container-fluid
-    .d-molecule-cards-medium__flex
+    .d-molecule-cards-medium__grid
       - @atoms.each do |atom|
         .d-molecule-cards-medium__card
-          = dummy_ui_image molecule_cover_placement(atom),
-                           Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+          - if molecule_cover_placement(atom)
+            .d-molecule-cards-medium__card-image-wrap
+              = dummy_ui_image molecule_cover_placement(atom),
+                               THUMB_SIZE,
+                               class_name: 'd-molecule-cards-medium__card-image'
 
-          = atom.title
+          - if molecule_cover_placement(atom)
+            .d-molecule-cards-medium__card-image-wrap [
+              class="d-molecule-cards-medium__card-image-wrap--mobile"
+            ]
+              = dummy_ui_image molecule_cover_placement(atom),
+                               MOBILE_THUMB_SIZE,
+                               class_name: 'd-molecule-cards-medium__card-image'
+
+          .d-molecule-cards-medium__card-body
+            h4.fs-display-s.mt-0.mb-2
+              = atom.title
+
+            .d-rich-text.fs-text-s.text-muted
+              == cstypo atom.content
