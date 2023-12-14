@@ -107,6 +107,23 @@ atoms:
     - title: Card headline lorem ipsum dolor sit amet
       url: url
 
+  Dummy::Atom::Cards::Small:
+    - title: Card headline
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      button_label: Button label
+      button_url: url
+      link_label: Link label
+      link_url: url
+      cover: true
+      _count: 5
+
+    - title: Card headline
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      button_label: Button label
+      button_url: url
+      link_label: Link label
+      link_url: url
+      _count: 3
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |
