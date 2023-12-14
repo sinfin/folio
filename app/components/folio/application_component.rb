@@ -83,7 +83,7 @@ class Folio::ApplicationComponent < ViewComponent::Base
 
     if atom
       if @atom_options
-        if !@atom_options[:console_preview] && @atom_options[:cover_placements]
+        if !@atom_options[:console_preview] && @atom_options[:cover_placements].present?
           return @atom_options[:cover_placements][atom.id]
         end
       end
