@@ -1,7 +1,7 @@
 .d-atom.d-atom-images-gallery data=data
   .container-fluid
     .d-atom-images-gallery__wrap[
-      data=stimulus_target('wrap').merge(stimulus_lightbox)
+      data=stimulus_target('wrap')
     ]
       - image_placements.each do |image_placement|
         - data = dynamic_item_data(image_placement)

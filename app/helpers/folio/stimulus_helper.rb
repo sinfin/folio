@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Folio::StimulusHelper
+  LIGHTBOX_CONTROLLER = "f-lightbox"
+
   def stimulus_controller(*controller_names, values: {}, action: nil, params: nil, classes: [], outlets: [], inline: false)
     controller = controller_names.first
 
@@ -89,7 +91,7 @@ module Folio::StimulusHelper
   end
 
   def stimulus_lightbox
-    stimulus_controller("f-lightbox", inline: true)
+    stimulus_controller(LIGHTBOX_CONTROLLER, inline: true)
   end
 
   def stimulus_lightbox_item(placement_or_file, title: nil)

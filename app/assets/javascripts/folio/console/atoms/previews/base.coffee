@@ -1,15 +1,16 @@
 # see app/cells/folio/console/atoms/previews/previews.coffee
 # code is here as it would get included by a wildcard import
 
+#= require folio/stimulus
+
 #= require jquery
 #= require jquery-ui/jquery-ui
 #= require justified-layout
 #= require folio/atoms
 #= require folio/message_bus
 #= require folio/lazyload
-#= require folio/lightbox
 #= require folio/debounce
-#= require folio/stimulus
+#= require folio/lightbox
 #= require folio/console/atoms/previews/main_app
 #= require folio/console/file/preview_reloader/preview_reloader
 

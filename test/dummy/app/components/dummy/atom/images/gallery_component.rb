@@ -32,7 +32,7 @@ class Dummy::Atom::Images::GalleryComponent < ApplicationComponent
   end
 
   def data
-    stimulus_controller("d-atom-images-gallery",
+    stimulus_controller("d-atom-images-gallery", Folio::StimulusHelper::LIGHTBOX_CONTROLLER,
                         values: {
                           target_height_desktop: TARGET_HEIGHT_DESKTOP,
                         })
