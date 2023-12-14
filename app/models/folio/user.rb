@@ -326,6 +326,8 @@ end
 #  sign_out_salt_part        :string
 #  source_site_id            :bigint(8)
 #  superadmin                :boolean          default(FALSE), not null
+#  console_path              :string
+#  console_path_updated_at   :datetime
 #
 # Indexes
 #

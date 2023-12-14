@@ -37,7 +37,7 @@ namespace :folio do
       user = Folio::User.find_by(email: account.email)
 
       if user.blank?
-        except_attributes = %w[id roles console_path console_path_updated_at is_active]
+        except_attributes = %w[id roles is_active]
         new_attrs = account.attributes.except(*except_attributes)
         new_attrs[:password] = Devise.friendly_token.first(8)
         new_attrs[:superadmin] = superadmin
