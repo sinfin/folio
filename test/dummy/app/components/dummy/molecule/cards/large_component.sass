@@ -1,21 +1,19 @@
-.d-molecule-cards-small
-  &__grid
-    display: grid
-    grid-template-columns: repeat(3, 1fr)
-    gap: $grid-gutter-width
-
+.d-molecule-cards-large
   &__card
     background-color: $shade-100
     border-radius: $grid-gutter-half
     overflow: hidden
     min-height: 100%
-    max-width: 424px
+    width: 100%
     position: relative
     display: flex
-    flex-direction: column
+    align-items: center
+
+  &__card + &__card
+    margin-top: $grid-gutter-width
 
   &__card-image-wrap
-    flex-shrink: 0
+    flex: 1 0 400px
     overflow: hidden
 
   &__card-image
@@ -31,10 +29,16 @@
     align-items: flex-start
     flex: 1 1 auto
 
+  &__card-content
+    color: $shade-700
+
+  &__card-title
+    margin-top: 0
+    margin-bottom: $grid-gutter-half
+
   &__card-btns
     display: flex
     align-items: center
-    margin-top: auto
     gap: $grid-gutter-half
 
   &__card-button
@@ -56,9 +60,34 @@
       text-decoration: underline
 
   +media-breakpoint-down(lg)
-    &__grid
-      grid-template-columns: repeat(2, 1fr)
+    &__card-image-wrap
+      flex-basis: 250px
+
+    &__card-title
+      +font-size-display-s
+
+  // md - lg
+  @media screen and (max-width: 992px) and (min-width: 552px)
+    &__card
+      align-items: stretch
+
+    &__card-image-wrap,
+    &__card-image
+      min-height: 100%
+
+      .d-ui-image__img
+        height: 100%
+        width: auto
+        left: 50%
+        transform: translateX(-50%)
 
   +media-breakpoint-down(sm)
-    &__grid
-      grid-template-columns: repeat(1, 1fr)
+    &__card
+      max-width: 424px
+      flex-direction: column
+
+    &__card-body
+      padding: $grid-gutter-width map-get($spacers, bb)
+
+    &__card-image-wrap
+      width: 100%
