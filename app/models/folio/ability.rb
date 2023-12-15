@@ -17,11 +17,14 @@ class Folio::Ability
   def folio_console_rules
     if user.superadmin?
       can :manage, :all
+      can :access_console, Folio::Site
       cannot [:create, :new, :destroy], Folio::Site
       return
     end
 
     if user.has_any_roles?(site:, roles: [:administrator, :manager])
+      can :access_console, site
+
       if user.has_role?(site:, role: :administrator)
         can :manage, Folio::User, site_user_links: { site: }
       elsif user.has_role?(site:, role: :manager)

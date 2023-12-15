@@ -100,4 +100,12 @@ module Folio::ApplicationControllerBase
     def authenticate_inviter!
       # allow anonymous invites
     end
+
+    def current_ability
+      @current_ability ||= Folio::Ability.new(current_user, current_site)
+    end
+
+    def can_now?(action, object = nil)
+      (current_user || Folio::User.new).can_now_by_ability(current_ability, action, object)
+    end
 end

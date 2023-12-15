@@ -16,6 +16,6 @@ class Folio::Console::Api::BaseController < Folio::Console::BaseController
     end
 
     def api_authenticate_account!
-      fail CanCan::AccessDenied if current_account.blank?
+      fail CanCan::AccessDenied unless can_now?(:access_console)
     end
 end

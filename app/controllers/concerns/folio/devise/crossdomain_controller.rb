@@ -18,7 +18,7 @@ module Folio::Devise::CrossdomainController
                                                                           session:,
                                                                           params:,
                                                                           current_site:,
-                                                                          current_resource: safe_resource_name == :account ? current_account : current_user,
+                                                                          current_resource: current_user,
                                                                           controller_name:,
                                                                           resource_name: safe_resource_name,
                                                                           action_name:,

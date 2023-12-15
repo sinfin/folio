@@ -5,10 +5,6 @@ Folio::Engine.routes.draw do
 
   get "errors/internal_server_error"
 
-  unless Rails.application.config.folio_users
-    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
-  end
-
   namespace :devise do
     namespace :omniauth do
       resource :authentication, only: %i[destroy]
@@ -228,7 +224,7 @@ Folio::Engine.routes.draw do
   require "sidekiq/web"
   require "sidekiq/cron/web"
 
-  authenticate :account, lambda { |account| account.can_manage_sidekiq? } do
+  authenticate :user, lambda { |user| user.can_manage_sidekiq? } do
     mount Sidekiq::Web => "/sidekiq"
   end
 end

@@ -12,8 +12,9 @@ module Folio
 
       @admin.forget_me!
       sign_out @admin
+
       get console_root_url
-      assert_redirected_to new_account_session_path
+      assert_redirected_to new_user_session_path
     end
   end
 end

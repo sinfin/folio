@@ -21,6 +21,8 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     can_do_with_managers([:manage], site:)
     can_do_with_managers([:manage], site: site2)
 
+    assert ability.can?(:access_console, site:)
+    assert ability.can?(:access_console, site: site2)
     can_do_with_base_models_in_console([:manage], site:)
     can_do_with_base_models_in_console([:manage], site: site2)
 
@@ -39,6 +41,8 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     can_do_with_managers([:manage], site:)
     can_do_with_managers([], site: site2)
 
+    assert ability.can?(:access_console, site:)
+    assert_not ability.can?(:access_console, site: site2)
     can_do_with_base_models_in_console([:manage], site:)
     can_do_with_base_models_in_console([], site: site2)
 
@@ -56,6 +60,8 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     can_do_with_admins([], site:)
     can_do_with_managers([:manage], site:)
 
+    assert ability.can?(:access_console, site:)
+    assert_not ability.can?(:access_console, site: site2)
     can_do_with_base_models_in_console([:manage], site:)
     can_do_with_base_models_in_console([], site: site2)
 
@@ -64,19 +70,21 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   end
 
   test "so called user" do
-    # user = create(:folio_user)
-    # user.set_roles_for(site:, roles: [])
+    user = create_user(roles: { site => [] })
 
-    # @ability = Folio::Ability.new(user)
+    @ability = Folio::Ability.new(user, site)
 
-    # can_do_with_superadmins([])
-    # can_do_with_admins([], site:)
-    # can_do_with_managers([], site:)
-    # can_access_in_console([])
+    can_do_with_superadmins([])
+    can_do_with_admins([], site:)
+    can_do_with_managers([], site:)
+    assert_not ability.can?(:access_console, site:)
+    assert_not ability.can?(:access_console, site: site2)
   end
 
   test "no user of any kind" do
     # view homepage, sign_in, sign_up
+    @ability = Folio::Ability.new(nil, site)
+    assert_not ability.can?(:access_console, site:)
   end
 
   private

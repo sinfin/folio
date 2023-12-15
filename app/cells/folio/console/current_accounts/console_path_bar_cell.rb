@@ -2,13 +2,13 @@
 
 class Folio::Console::CurrentAccounts::ConsolePathBarCell < Folio::ConsoleCell
   def show
-    render if model && current_account
+    render if model && current_user.can_now?(:access_console)
   end
 
   def other_account_at_path
-    return false unless current_account
+    return false unless current_user.can_now?(:access_console)
     return @other_account_at_path unless @other_account_at_path.nil?
-    @other_account_at_path = Folio::Account.currently_editing_path(request.path).where.not(id: current_account.id).first || false
+    @other_account_at_path = Folio::User.currently_editing_path(request.path).where.not(id: current_user.id).first || false
   end
 
   def hidden?

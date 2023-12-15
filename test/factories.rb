@@ -93,16 +93,6 @@ FactoryBot.define do
     site { Folio::Site.first || create(:folio_site) }
   end
 
-  factory :folio_account, class: "Folio::Account" do
-    sequence(:email) { |i| "test-#{i}@test.com" }
-    password { "Complex@Password.123" }
-    roles { %w[superuser] }
-    first_name { "Test" }
-    last_name { "Dummy" }
-  end
-
-  factory :folio_admin_account, parent: :folio_account
-
   factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
     sequence(:title) { |i| "Menu #{i}" }
@@ -153,6 +143,10 @@ FactoryBot.define do
     phone { "+420604123123" }
     superadmin { false }
     association(:primary_address, factory: :folio_address_primary)
+
+    trait :superadmin do
+      superadmin { true }
+    end
   end
 
   factory :folio_site_user_link, class: "Folio::SiteUserLink" do

@@ -12,7 +12,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
 
   before_action :add_root_breadcrumb
 
-  before_action :update_current_account_console_path
+  before_action :update_current_user_console_path
   before_action :set_show_current_account_console_path_bar
 
   before_action do
@@ -172,14 +172,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
         end
 
         ary
-      end
-    end
-
-    def current_ability
-      @current_ability ||= if Rails.application.config.folio_allow_users_to_console
-        Folio::ConsoleAbility.new(current_account || current_user)
-      else
-        Folio::ConsoleAbility.new(current_account)
       end
     end
 
@@ -377,7 +369,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
     end
 
     def custom_authenticate_account!
-      authenticate_account!
+      custom_authenticate_user!
+    end
+
+    def custom_authenticate_user!
+      authenticate_user!
     end
 
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
@@ -491,11 +487,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    def update_current_account_console_path
-      return unless current_account
+    def update_current_user_console_path
+      return unless can_now?(:access_console)
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
-      current_account.update_console_path!(request.path)
+      current_user.update_console_path!(request.path)
     end
 
     def set_show_current_account_console_path_bar

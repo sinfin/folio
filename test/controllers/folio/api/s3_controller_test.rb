@@ -8,7 +8,7 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
 
   def setup
     create_and_host_site
-    @admin = create(:folio_account)
+    @admin = create(:folio_user, :superadmin)
     sign_in @admin
   end
 

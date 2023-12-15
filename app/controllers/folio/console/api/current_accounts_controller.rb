@@ -2,7 +2,7 @@
 
 class Folio::Console::Api::CurrentAccountsController < Folio::Console::Api::BaseController
   def console_path_ping
-    current_account.update_console_path!(params.require(:path))
+    current_user.update_console_path!(params.require(:path))
     head 200
   end
 end

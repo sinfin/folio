@@ -152,7 +152,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     [
       {
         links: [
-          ::Rails.application.config.folio_users ? "Folio::User" : nil,
+          "Folio::User",
           "Folio::Account",
         ].compact
       }
@@ -204,7 +204,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_users?
-    ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
+    !::Rails.application.config.folio_console_sidebar_force_hide_users
   end
 
   def show_leads?
@@ -266,8 +266,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                       label: t(".settings"),
                     }
         end
-        links << link_for_site_class(site, Folio::User) if ::Rails.application.config.folio_users
-
+        links << link_for_site_class(site, Folio::User)
 
         {
           locale: site.console_locale,

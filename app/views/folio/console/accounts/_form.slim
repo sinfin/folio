@@ -19,7 +19,7 @@
       = f.input :password, label: t('simple_form.labels.account.edit_password'),
                            hint: t('simple_form.hints.account.edit_password')
 
-= f.input :roles, collection: @klass.roles_for_select(current_account.account_roles_for_select),
+= f.input :roles, collection: @klass.roles_for_select(current_user.account_roles_for_select),
                   include_blank: false,
                   input_html: { multiple: true }
 

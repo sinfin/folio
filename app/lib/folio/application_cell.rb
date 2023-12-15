@@ -77,14 +77,6 @@ class Folio::ApplicationCell < Cell::ViewModel
     get_from_options_or_controller(:user_signed_in?)
   end
 
-  def current_account
-    get_from_options_or_controller(:current_account)
-  end
-
-  def account_signed_in?
-    get_from_options_or_controller(:account_signed_in?)
-  end
-
   def get_from_options_or_controller(method_sym)
     if options.has_key?(method_sym)
       options[method_sym]

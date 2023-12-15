@@ -7,11 +7,11 @@ class Folio::ConsoleNote < Folio::ApplicationRecord
 
   belongs_to :target, polymorphic: true
 
-  belongs_to :created_by, class_name: "Folio::Account",
+  belongs_to :created_by, class_name: "Folio::User",
                           inverse_of: :created_console_notes,
                           required: false
 
-  belongs_to :closed_by, class_name: "Folio::Account",
+  belongs_to :closed_by, class_name: "Folio::User",
                          inverse_of: :closed_console_notes,
                          required: false
 

@@ -30,6 +30,8 @@ namespace :folio do
   task idp_merge_accounts_to_users: :environment  do
     sites = Folio::Site.all.to_a
 
+    raise "Handle Folio::ConsoleNote binding switch"
+
     Folio::Account.find_each do |account|
       roles_to_pass = account.roles
       superadmin = roles_to_pass.delete("superuser").present?
