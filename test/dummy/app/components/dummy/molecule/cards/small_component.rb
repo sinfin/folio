@@ -9,4 +9,8 @@ class Dummy::Molecule::Cards::SmallComponent < ApplicationComponent
     @atoms = atoms
     @atom_options = atom_options
   end
+
+  def image_class_name
+    "d-molecule-cards-small__card-image"
+  end
 end
