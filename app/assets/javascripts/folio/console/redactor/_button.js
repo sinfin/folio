@@ -4,7 +4,7 @@
       button: `<form action="">
                  <div class="form-item">
                    <label for="redactor-button-link">## button-link ##</label>
-                   <input type="text" id="redactor-button-link" name="link">
+                   <input type="text" id="redactor-button-link" name="link" data-controller="f-c-input-url">
                  </div>
 
                  <div class="form-item">

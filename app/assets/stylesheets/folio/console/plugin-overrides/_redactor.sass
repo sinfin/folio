@@ -22,6 +22,10 @@
 
   input
     @extend .form-control
+    font-size: $input-font-size
+    line-height: $input-line-height
+    height: auto
+    padding: $input-padding-y $input-padding-x
 
     &[type="checkbox"]
       @extend .form-check-input
@@ -33,6 +37,7 @@
       height: 1em !important
       display: inline-block
       margin-right: 0
+      padding: 0
       margin-top: ($line-height-base - $form-check-input-width) * .5
 
       &:hover:checked,
@@ -76,6 +81,12 @@
 .redactor-styles .folio-redactor-button,
 .redactor-blur.redactor-styles-on .folio-redactor-button.redactor-component-active
   outline: 0 !important
+
+.redactor-styles .folio-redactor-button
+  display: inline-block
+
+  + .folio-redactor-button
+    display: block
 
 .form-group.redactor
   position: relative
