@@ -2,6 +2,21 @@ atoms:
   Dummy::Atom::Text:
     - content: true
 
+    - content: true
+      highlight: gray
+
+    - content: true
+      highlight: success
+
+    - content: true
+      highlight: neutral
+
+    - content: true
+      highlight: caution
+
+    - content: true
+      highlight: error
+
   Dummy::Atom::Title:
     - tag: H1
       title: H1 Goth squid xoxo sustainable fashion axe
@@ -83,4 +98,4 @@ atoms:
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |
-    <p>Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>

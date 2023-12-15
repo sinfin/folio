@@ -1,4 +1,14 @@
 .d-atom.d-atom-text
   .container-fluid
-    .d-rich-text.d-atom-text__content
-      == cstypo @atom.content
+    - if @atom.highlight.present?
+      .d-rich-text.d-rich-text--chomp[
+        class="my-atom-lg"
+        class="d-atom-text__highlight"
+        class="d-atom-text__highlight--#{@atom.highlight}"
+      ]
+        == cstypo @atom.content
+    - else
+      .d-rich-text[
+        class="d-atom-text__content"
+      ]
+        == cstypo @atom.content

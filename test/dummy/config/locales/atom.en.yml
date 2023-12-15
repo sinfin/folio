@@ -8,6 +8,14 @@ en:
         image_side: Image
         image_side/left: On the left
         image_side/right: On the right
+      dummy/atom/text:
+        highlight: Highlight
+        highlight/nil: None
+        highlight/error: Red
+        highlight/caution: Orange
+        highlight/success: Green
+        highlight/neutral: Blue
+        highlight/gray: Gray
       dummy/atom/title:
         tag: Tag
         tag/H1: H1

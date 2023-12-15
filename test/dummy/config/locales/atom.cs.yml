@@ -9,6 +9,14 @@ cs:
         image_side: Obrázek
         image_side/left: Nalevo
         image_side/right: Napravo
+      dummy/atom/text:
+        highlight: Zvýraznění
+        highlight/nil: Žádné
+        highlight/error: Červené
+        highlight/caution: Oranžové
+        highlight/success: Zelené
+        highlight/neutral: Modré
+        highlight/gray: Šedé
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
