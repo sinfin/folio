@@ -27,7 +27,10 @@ class Folio::Ability
 
       if user.has_role?(site:, role: :administrator)
         can :manage, Folio::User, site_user_links: { site: }
+        can :read_administrators, Folio::User
+        can :read_managers, Folio::User
       elsif user.has_role?(site:, role: :manager)
+        can :read_managers, Folio::User
         # next do not work, beacouse in the end it tries to do `[x,y,z].include?([x,y]) => false`
         # non_admin_roles = site.available_user_roles - ["administrator"]
         # can :manage, Folio::User, site_user_links: { site: , roles: non_admin_roles } do |user|

@@ -85,6 +85,7 @@ class Folio::User < Folio::ApplicationRecord
 
   scope :ordered, -> { order(id: :desc) }
   scope :superadmins, -> { where(superadmin: true) }
+  scope :by_role, -> (role) { role == "superadmin" ? superadmins : joins(:site_user_links).merge(Folio::SiteUserLink.by_roles([role])) }
 
   scope :by_address_identification_number_query, -> (q) {
     subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
@@ -269,10 +270,10 @@ class Folio::User < Folio::ApplicationRecord
 
   def can_now?(action, subject = nil)
     ability = Folio::Ability.new(self, subject&.try(:site))
-    can_now_by_ability(ability, action, subject)
+    can_now_by_ability?(ability, action, subject)
   end
 
-  def can_now_by_ability(ability, action, subject)
+  def can_now_by_ability?(ability, action, subject)
     return false if self.new_record?
     return false unless ability.can?(action, subject)
     return true unless subject.respond_to?(:currently_allowed_actions)

@@ -78,7 +78,19 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def index_filters
-      default_index_filters
+      default_index_filters.merge(role_filters)
+    end
+
+    def role_filters
+      allowed_roles = current_site.available_user_roles.select do |role|
+        can_now?("read_#{role}s", nil)
+      end
+
+      roles = @klass.roles_for_select(site: current_site,
+                                      selectable_roles: allowed_roles)
+      roles.unshift(["Superadmin", "superadmin"]) if can_now?(:manage, :all)
+
+      roles.size > 1 ? { by_role: roles } : {}
     end
 
     def folio_console_collection_includes

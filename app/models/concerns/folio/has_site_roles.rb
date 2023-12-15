@@ -16,6 +16,7 @@ module Folio::HasSiteRoles
 
     accepts_nested_attributes_for :site_user_links
 
+    scope :with_unscoped_roles, -> (role) { joins(:site_user_links).merge(Folio::SiteUserLink..by_roles(roles)) }
     scope :with_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).by_roles(roles)) }
     scope :without_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).without_roles(roles)) }
   end

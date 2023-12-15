@@ -205,7 +205,7 @@ end
 #  slug                              :string
 #  position                          :integer
 #  copyright_info_source             :string
-#  available_user_roles              :json
+#  available_user_roles              :jsonb
 #
 # Indexes
 #

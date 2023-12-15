@@ -40,4 +40,8 @@ module Folio::ApplicationHelper
   def public_page_site_description
     current_site.description
   end
+
+  def can_now?(action, object = nil)
+    controller.can_now?(action, object)
+  end
 end

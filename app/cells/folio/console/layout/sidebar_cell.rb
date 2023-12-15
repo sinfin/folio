@@ -39,7 +39,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
-        return if controller.cannot?(:index, link_source[:klass].constantize)
+        return unless controller.can_now?(:index, link_source[:klass].constantize)
       end
 
       label = if link_source[:label]
@@ -148,12 +148,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def secondary_class_names
-    return [] unless current_site == Folio.main_site
+    return [] if current_site != Folio.main_site
     [
       {
         links: [
-          "Folio::User",
-          "Folio::Account",
+          link_for_site_class(Folio.main_site, Folio::User),
+
         ].compact
       }
     ]
@@ -195,7 +195,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def homepage_for_site(site)
     instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
 
-    if instance && controller.can?(:index, Folio::Page)
+    if instance && controller.can_now?(:index, Folio::Page)
       {
         label: t(".homepage"),
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
@@ -230,7 +230,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   private
     def site_main_links(site)
-      return nil unless controller.can?(:read, site)
+      return nil unless controller.can_now?(:read, site)
 
       build_site_links_collapsible_block(site)
     end
@@ -258,7 +258,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
         links << link_for_site_class(site, Folio::EmailTemplate)
         links += site_links[:console_sidebar_before_site_links]
-        if controller.can?(:manage, site)
+        if controller.can_now?(:manage, site)
           links << {
                       klass: "Folio::Site",
                       icon: :cog,
@@ -300,7 +300,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     def link_from_definitions(site, link_or_hash)
       if link_or_hash.is_a?(Hash)
-        if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
+        if !link_or_hash[:required_ability] || controller.can_now?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
           link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
           link_or_hash
         end
@@ -309,10 +309,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     end
 
-    def link_for_site_class(site, klass)
+    def link_for_site_class(site, klass, params: {}, label: nil)
       {
         klass: klass.to_s,
-        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+        label:,
+        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
       }
     end
 end

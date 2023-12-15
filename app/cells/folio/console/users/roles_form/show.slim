@@ -1,4 +1,7 @@
 .f-c-users-roles-form
+- if controller.can_now?(:manage, :all)
+  = user_form.check_box(:superadmin)
+  = user_form.label(:superadmin)
 - user_form.fields_for(:site_user_links, all_sites_links) do |link_fields|
   - link = link_fields.object
   - site = link.site

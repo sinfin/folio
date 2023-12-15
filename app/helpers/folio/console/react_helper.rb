@@ -163,7 +163,7 @@ module Folio::Console::ReactHelper
       "data-attachmentable" => attachmentable,
       "data-placement-type" => type,
       "data-atom-setting" => atom_setting,
-      "data-can-destroy-files" => can?(:destroy, Folio::File) ? "1" : nil,
+      "data-can-destroy-files" => can_now?(:destroy, Folio::File) ? "1" : nil,
     )
   end
 
