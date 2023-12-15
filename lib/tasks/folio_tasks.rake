@@ -30,8 +30,6 @@ namespace :folio do
   task idp_merge_accounts_to_users: :environment  do
     sites = Folio::Site.all.to_a
 
-    raise "Handle Folio::ConsoleNote binding switch"
-
     Folio::Account.find_each do |account|
       roles_to_pass = account.roles
       superadmin = roles_to_pass.delete("superuser").present?
@@ -43,15 +41,22 @@ namespace :folio do
         new_attrs = account.attributes.except(*except_attributes)
         new_attrs[:password] = Devise.friendly_token.first(8)
         new_attrs[:superadmin] = superadmin
+        new_attrs[:id] = account.id unless Folio::User.exists?(id: account.id)
         user = Folio::User.create!(new_attrs)
         user.reload
         user.update(encrypted_password: account.encrypted_password)
       end
 
-
       sites.each do |site|
         user.set_roles_for(site:, roles: roles_to_pass)
         raise "errors on user ##{user.id}[#{user.email}; #{account.roles}; #{site.domain}]: #{user.errors.full_messages}" unless user.save
+      end
+
+      account.created_console_notes.each do |note|
+        note.update!(created_by_id: user.id)
+      end
+      account.closed_console_notes.each do |note|
+        note.update!(closed_by_id: user.id)
       end
     end
   end
