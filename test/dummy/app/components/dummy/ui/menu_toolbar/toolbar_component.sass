@@ -9,6 +9,7 @@
     display: flex
     align-items: center
     gap: map-get($spacers, 2)
+    z-index: 3
 
   &__user-avatar-link
     text-decoration: none
@@ -24,3 +25,13 @@
     display: flex
     justify-content: center
     align-items: center
+
+  +mq-mobile-menu
+    &__selects-container
+      display: none
+      position: absolute
+      bottom: map-get($spacers, bb)
+      left: map-get($spacers, 1)
+
+    .d-ui-header__menu-input:checked + .d-ui-header &__selects-container
+      display: flex

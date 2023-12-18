@@ -1,0 +1,80 @@
+.d-ui-menu-toolbar-dropdown
+  display: none
+  position: absolute
+  width: 200px
+  top: map-get($spacers, 3) * -1
+  left: 0
+  background: $shade-light-contrast
+  color: $shade-800
+  border-radius: $border-radius
+
+  &--open
+    display: block
+
+  &__title-wrapper, &__a
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: map-get($spacers, 3) map-get($spacers, bb)
+
+  &__title-inner, &__span-wrapper
+    display: flex
+    align-items: center
+    gap: map-get($spacers, 2)
+
+  &__chevron
+    display: none
+    color: $shade-600
+
+  &__ul
+    display: flex
+    flex-direction: column
+
+  &__a
+    padding: map-get($spacers, 2) map-get($spacers, 4)
+    font-size: $ui-typo-text-s-font-size
+    text-decoration: none
+    cursor: pointer
+    color: $shade-600
+
+    &:hover, &:focus
+      color: $shade-800
+
+    &--disabled
+      color: $shade-300
+      cursor: default
+      
+      &:hover, &:focus
+        color: $shade-300
+
+    &--logout
+      color: $shade-400
+
+      &:hover, &:focus
+        color: $shade-600
+
+  &__a--logout &__icon
+    transform: rotate(90deg)
+
+  &__li:last-child &__a
+    border-radius: 0 0 $border-radius $border-radius
+    padding-bottom: map-get($spacers, bb)
+
+  +media-breakpoint-down(lg)
+    display: block
+    position: unset
+    width: 100%
+    border-radius: 0
+    border-bottom: 1px solid $shade-300
+
+    &__ul
+      display: none
+
+    &__chevron
+      display: block
+
+    &--expanded &__ul
+      display: block
+
+    &--expanded &__chevron
+      transform: rotate(180deg) 

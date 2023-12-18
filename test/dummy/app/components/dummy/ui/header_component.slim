@@ -15,15 +15,15 @@ input[
           = ::Rails.application.class.to_s.deconstantize
 
       - if menu
-        .d-ui-header__menu[
-          data=stimulus_target("menu")
-        ]
+        .d-ui-header__menu
           = render(Dummy::Ui::MenuComponent.new(menu:))
 
-      .d-ui-header__toolbar[
-        data=stimulus_target("toolbar")
-      ]
+      .d-ui-header__toolbar
         = render(Dummy::Ui::MenuToolbar::ToolbarComponent.new)
+
+      .d-ui-header__toolbar-dropdowns
+        = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu, signed_in: user_signed_in?))
+        = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :eshop_menu))
 
       - if menu
         label.d-ui-header__menu-toggle for=MENU_INPUT_ID

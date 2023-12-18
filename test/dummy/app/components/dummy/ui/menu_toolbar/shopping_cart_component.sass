@@ -3,14 +3,14 @@
     height: 100%
     display: block
     position: relative
+    text-decoration: none
 
-  &__count
-    position: absolute
-    top: px-to-rem(7px) * -1
-    right: px-to-rem(7px) * -1
-    padding: px-to-rem(3px) map-get($spacers, 2)
-    background-color: $shade-800
-    color: $shade-light-contrast
-    border-radius: $btn-border-radius
-    font-size: $ui-typo-text-xs-font-size
-    font-weight: $font-weight-medium
+    &:hover, &:focus
+      .d-ui-menu-toolbar-shopping-cart__icon
+        color: $shade-400
+
+  &__icon
+    color: $shade-black-contrast
+
+  &--active &__icon
+    color: $shade-400

@@ -30,6 +30,7 @@
     flex: 0 0 auto
 
   &__inner
+    position: relative
     display: flex
     align-items: stretch
     gap: px-to-rem(8px) $grid-gutter-half
@@ -58,6 +59,12 @@
     &--toolbar-expanded &__menu
       display: none
 
+    &__toolbar-dropdowns
+      position: absolute
+      right: 0
+      top: 72px
+      width: 100%
+
   +mq-mobile-menu
     &__text-logo
       font-size: $ui-typo-display-xs-font-size
@@ -67,17 +74,34 @@
     &__inner
       flex-wrap: wrap
       padding: px-to-rem(8px) 0
+      justify-content: flex-start
 
     &__menu
-      background: $dark-gray
+      background: $cloud-900
       margin-left: - $grid-gutter-half
       margin-right: - $grid-gutter-half
       display: none
       order: 2
       width: calc(100% + #{$grid-gutter-width})
       margin-bottom: px-to-rem(-8px)
+      padding-bottom: 105px
+      margin-top: map-get($spacers, 2) * -1
 
     &__menu-input:checked + & &__menu
+      display: block
+
+    &__toolbar
+      flex: 1 1 auto
+
+    &__toolbar-dropdowns
+      position: unset
+      margin-left: - $grid-gutter-half
+      margin-right: - $grid-gutter-half
+      display: none
+      order: 1
+      width: calc(100% + #{$grid-gutter-width})
+
+    &__menu-input:checked + & &__toolbar-dropdowns
       display: block
 
   +media-breakpoint-down(sm)

@@ -1,0 +1,31 @@
+.d-ui-user-avatar
+  cursor: pointer
+
+  &__avatar
+    width: 32px
+    height: 32px
+    background: $shade-black-contrast
+    color: $shade-light-contrast
+    font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-bold
+    border-radius: 50%
+    display: flex
+    justify-content: center
+    align-items: center
+
+    &:hover, &:focus
+      background: $shade-400
+
+  &__icon
+    &:hover, &:focus
+      color: $shade-400
+
+  &--active &__avatar
+    background: $shade-400
+
+  &--active &__icon
+    color: $shade-400
+
+  +media-breakpoint-down(lg)
+    &__icon
+      display: none

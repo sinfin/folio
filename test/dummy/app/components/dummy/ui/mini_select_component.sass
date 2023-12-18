@@ -74,3 +74,14 @@
 
       &.d-ui-mini-select--verbose
         min-width: 50px
+
+  +mq-mobile-menu
+    .d-ui-menu-toolbar-toolbar &__selected-value, .d-ui-menu-toolbar-toolbar &__option
+      background: $cloud-700
+      color: $primary-white
+
+      &:hover, &:focus
+        background-color: $cloud-500
+
+    .d-ui-menu-toolbar-toolbar &__options
+      background: $cloud-700

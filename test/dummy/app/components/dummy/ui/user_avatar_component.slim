@@ -1,0 +1,12 @@
+.d-ui-user-avatar[
+  data=data
+  data=stimulus_action(click: :clicked)
+]
+  - if user_signed_in?
+    .d-ui-user-avatar__avatar
+      ' LO
+
+  - else
+    = dummy_ui_icon(:user_circle_2,
+                    height: 32,
+                    class_name: 'd-ui-user-avatar__icon')
