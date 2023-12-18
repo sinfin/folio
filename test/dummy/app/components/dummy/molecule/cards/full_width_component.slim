@@ -1,8 +1,49 @@
-.d-molecule.d-molecule-cards-full-width data-bs-theme="dark"
-  .container-fluid
-    - @atoms.each do |atom|
-      .d-molecule-cards-full-width__card
+.d-molecule.d-molecule-cards-full-width [
+  data=stimulus_controller('d-molecule-cards-full-width')
+  data-bs-theme="dark"
+]
+  - @atoms.each do |atom|
+    .d-molecule-cards-full-width__slide [
+      data=stimulus_target(:slide)
+    ]
+      .d-molecule-cards-full-width__background
         = dummy_ui_image molecule_cover_placement(atom),
-                         Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+                         THUMB_SIZE,
+                         class_name: 'd-molecule-cards-full-width__image',
+                         cover: true
 
-        p = atom.title
+      .container-fluid.d-molecule-cards-full-width__container
+        .d-molecule-cards-full-width__inner
+          .d-molecule-cards-full-width__content
+            h4.d-molecule-cards-full-width__card-title.fs-display-m
+              = atom.title
+
+            - if atom.content.present?
+              .d-molecule-cards-full-width__card-content.d-rich-text.fs-text-l
+                = cstypo atom.content
+
+            - if atom.button_url.present? || atom.secondary_button_url.present?
+              .d-molecule-cards-full-width__card-btns.mt-g
+                - if atom.button_url.present?
+                  a.d-molecule-cards-full-width__card-button [
+                    class="btn btn-secondary"
+                    href=atom.button_url
+                  ]
+                    = atom.button_label
+
+                - if atom.secondary_button_url.present?
+                  a.d-molecule-cards-full-width__card-button [
+                    class="btn btn-primary"
+                    href=atom.secondary_button_url
+                  ]
+                    = atom.secondary_button_label
+
+              - if @atoms.count > 1
+                .d-molecule-cards-full-width__controls
+                  - @atoms.each_with_index do |_, i|
+                    button.d-molecule-cards-full-width__controls-dot [
+                      data=stimulus_target(:controlDot)
+                      data=stimulus_action(click: :onControlDotClick)
+                      data-index=i
+                      type="button"
+                    ]

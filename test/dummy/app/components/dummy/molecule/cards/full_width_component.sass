@@ -1,0 +1,81 @@
+.d-molecule-cards-full-width
+  height: 620px
+  width: 100%
+  position: relative
+
+  &__slide
+    position: absolute
+    inset: 0
+    opacity: 0
+    transition: opacity 300ms ease-in-out
+    pointer-events: none
+
+  &__slide--active
+    pointer-events: auto
+    opacity: 1
+    z-index: 2
+
+  &__background
+    position: absolute
+    inset: 0
+    z-index: 0
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      inset: 0
+      background: $gradient-100
+      z-index: 3
+
+  &__container
+    min-height: 100%
+    display: flex
+    
+  &__inner
+    padding: $grid-gutter-base * 4 0
+    position: relative
+    z-index: 1
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    min-height: 100%
+
+  &__content
+    padding: $grid-gutter-base * 8
+    margin-top: auto
+
+  &__card-title
+    margin-top: 0
+    margin-bottom: $grid-gutter-half
+
+  &__card-content
+    color: $shade-600
+
+  &__card-btns
+    display: flex
+    align-items: center
+    flex-wrap: wrap
+    gap: $grid-gutter-half
+
+  &__controls
+    display: flex
+    gap: $grid-gutter-base
+    margin-top: $grid-gutter-width
+
+  &__controls-dot
+    +unbutton
+    width: 21px
+    height: 10px
+    background: $shade-600
+    border-radius: $grid-gutter-base
+
+    &--active
+      background: $shade-black-contrast
+
+  +media-breakpoint-down(md)
+    &__content
+      padding: map-get($spacers, bb) $grid-gutter-width
+
+    &__card-title
+      +font-size-display-s
