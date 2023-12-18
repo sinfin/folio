@@ -1,0 +1,34 @@
+.d-molecule-cards-person
+  &__card
+    display: flex
+
+  &__card-image
+    border-radius: $grid-gutter-base
+    overflow: hidden
+    flex: 0 0 120px
+
+  &__card-body
+    padding-left: $grid-gutter-width
+    flex: 1 1 auto
+
+  &__card-content
+    color: $shade-700
+
+  &__card-link
+    color: $shade-400
+    text-decoration: none
+    font-weight: $font-weight-semibold
+
+    &:hover
+      text-decoration: underline
+
+  +media-breakpoint-up(lg)
+    &__card--large &__card-image
+      flex: 0 0 200px
+
+    &__card--large &__card-body
+      padding: map-get($spacers, gg) $grid-gutter-base*4
+
+  +media-breakpoint-down(lg)
+    &__card--large &__card-image
+      max-height: 120px !important
