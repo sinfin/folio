@@ -21,11 +21,14 @@ end
 
 destroy_all Folio::Atom::Base
 destroy_all Folio::Account
-force_destroy_all Folio::Lead
-force_destroy_all Folio::File
+destroy_all Folio::FilePlacement::Base
+destroy_all Folio::File
+destroy_all Folio::Lead
+destroy_all Folio::User
+
 force_destroy_all Folio::Menu
-force_destroy_all Folio::Page
-force_destroy_all Folio::Site
+destroy_all Folio::Page
+destroy_all Folio::Site
 
 destroy_all Dummy::Blog::Article
 destroy_all Dummy::Blog::Topic
@@ -287,13 +290,14 @@ end
 puts "\nCreated Dummy::Blog::Article"
 
 if Rails.env.development?
-  puts "Creating test@test.test account"
+  puts "Creating test@test.test superadmin user"
 
-  Folio::Account.create!(email: "test@test.test",
-                         password: "test@test.test",
-                         roles: %w[superuser],
-                         first_name: "Test",
-                         last_name: "Dummy")
+  Folio::User.create!(email: "test@test.test",
+                      password: "test@test.test",
+                      superadmin: true,
+                      first_name: "Test",
+                      last_name: "Dummy",
+                      confirmed_at: Time.current)
 
-  puts "Created test@test.test account"
+  puts "Created test@test.test superadmin user"
 end

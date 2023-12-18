@@ -9,6 +9,6 @@ class ApplicationController < ActionController::Base
 
   private
     def current_ability
-      @current_ability ||= Folio::Ability.new(current_user).merge(Dummy::Ability.new(current_user))
+      @current_ability ||= Folio::Ability.new(current_user, current_site).merge(Dummy::Ability.new(current_user))
     end
 end

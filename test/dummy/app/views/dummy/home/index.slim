@@ -13,6 +13,11 @@
             == cell('folio/devise/omniauth/authentications/list',
                     current_user)
 
+        - if can_now?(:access_console)
+          .mt-4.row
+            .col-auto
+              = "You are allowed to use the #{ link_to "Console", folio.console_root_path}".html_safe
+
         .mt-4.row
           / .col-auto
           /   a.btn.btn-secondary href=edit_user_registration_path
