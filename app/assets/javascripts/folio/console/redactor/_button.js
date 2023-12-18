@@ -23,14 +23,14 @@
         button: 'Tlačítko',
         'button-link': 'Odkaz',
         'button-text': 'Text',
-        'button-fill': 'Výplň tlačítka',
+        'button-fill': 'Zvýraznit',
         change: 'Upravit'
       },
       en: {
         button: 'Button',
         'button-link': 'Link',
         'button-text': 'Text',
-        'button-fill': 'Filled button',
+        'button-fill': 'Emphasize',
         change: 'Change'
       }
     },
