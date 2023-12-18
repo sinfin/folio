@@ -102,6 +102,11 @@ atoms:
     - title: Title
       url: url
 
+  Dummy::Atom::Cards::Logo:
+    - title: Item title lorem ipsum damus
+      cover: true
+      _count: 10
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |
