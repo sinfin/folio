@@ -11,18 +11,18 @@ class Folio::DeviseMailerTest < ActionMailer::TestCase
   end
 
   test "reset_password_instructions" do
-    account = create(:folio_user, :superadmin)
+    superadmin = create(:folio_user, :superadmin)
 
-    mail = Folio::DeviseMailer.reset_password_instructions(account, "TOKEN")
-    assert_equal [account.email], mail.to
+    mail = Folio::DeviseMailer.reset_password_instructions(superadmin, "TOKEN")
+    assert_equal [superadmin.email], mail.to
     assert_match "TOKEN", mail.body.encoded
   end
 
   test "invitation_instructions" do
-    account = create(:folio_user, :superadmin)
+    superadmin = create(:folio_user, :superadmin)
 
-    mail = Folio::DeviseMailer.invitation_instructions(account, "TOKEN")
-    assert_equal [account.email], mail.to
+    mail = Folio::DeviseMailer.invitation_instructions(superadmin, "TOKEN")
+    assert_equal [superadmin.email], mail.to
     assert_match "TOKEN", mail.body.encoded
   end
 end

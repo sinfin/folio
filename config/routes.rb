@@ -76,10 +76,6 @@ Folio::Engine.routes.draw do
         resources :newsletter_subscriptions, only: %i[index destroy]
       end
 
-      resources :accounts, except: %i[show] do
-        member { post :invite_and_copy }
-      end
-
       resources :email_templates, only: %i[index edit update]
       resource :search, only: %i[show]
       resource :site, only: %i[edit update] do
@@ -90,6 +86,7 @@ Folio::Engine.routes.draw do
         member do
           get :send_reset_password_email
           get :impersonate
+          post :invite_and_copy
         end
 
         collection do
@@ -111,7 +108,7 @@ Folio::Engine.routes.draw do
 
         resources :links, only: %i[index]
 
-        resource :current_account, only: [] do
+        resource :current_user, only: [] do
           post :console_path_ping
         end
 

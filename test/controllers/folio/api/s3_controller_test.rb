@@ -70,7 +70,7 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
       assert_equal("test-#{klass.model_name.singular}-#{file.id}.gif", file.reload.file_name)
     end
 
-    test "#{klass} - unauthorized for no account" do
+    test "#{klass} - unauthorized for no admin" do
       sign_out @admin
 
       post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }

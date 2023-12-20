@@ -12,8 +12,8 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
               audited_revisions: @audited_revisions,
               audited_revision: @audited_revision)
 
-      == cell('folio/console/current_accounts/console_path_bar',
-              @show_current_account_console_path_bar)
+      == cell('folio/console/current_users/console_path_bar',
+              @show_current_user_console_path_bar)
 
       - unless @hide_flash_messages
         == cell('folio/console/flash', flash)

@@ -50,6 +50,11 @@ module Folio::ApplicationControllerBase
   end
 
   private
+    def authenticate_account! # backward compatibility method, do not use
+      authenticate_user!
+      can_now?(:access_console) || raise(CanCan::AccessDenied)
+    end
+
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)
       main_app.page_path(path: page.ancestry_url)

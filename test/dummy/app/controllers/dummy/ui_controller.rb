@@ -91,9 +91,9 @@ class Dummy::UiController < ApplicationController
 
   private
     def only_allow_superadmins
-      authenticate_account!
+      authenticate_user!
 
-      if current_user.superadmin?
+      if can_now?(:display_ui)
         add_breadcrumb "UI", dummy_ui_path
 
         if action_name != "show"

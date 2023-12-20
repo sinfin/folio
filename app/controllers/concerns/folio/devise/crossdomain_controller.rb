@@ -24,7 +24,7 @@ module Folio::Devise::CrossdomainController
                                                                           action_name:,
                                                                           devise_controller: try(:devise_controller?),
                                                                           master_site: Folio.site_for_crossdomain_devise,
-                                                                          resource_class: safe_resource_name == :account ? Folio::Account : Folio::User)
+                                                                          resource_class: Folio::User)
 
       result = @devise_crossdomain_handler.handle_before_action!
 

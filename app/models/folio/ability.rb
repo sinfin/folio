@@ -24,6 +24,8 @@ class Folio::Ability
 
     if user.has_any_roles?(site:, roles: [:administrator, :manager])
       can :access_console, site
+      can :display_ui, site
+      # can :display_miniprofiler, site
 
       if user.has_role?(site:, role: :administrator)
         can :manage, Folio::User, site_user_links: { site: }

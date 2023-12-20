@@ -63,11 +63,7 @@ class Folio::DeviseMailer < Devise::Mailer
 
   private
     def scoped_url_method(record, method, *args)
-      if record.is_a?(Folio::Account)
-        scoped = "account"
-      else
-        scoped = "user"
-      end
+      scoped = "user"
 
       method_name = if method.to_s.include?("confirmation")
         "#{scoped}_#{method}"

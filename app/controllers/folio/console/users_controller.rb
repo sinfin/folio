@@ -37,6 +37,15 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     respond_with @user, location: respond_with_location
   end
 
+  def invite_and_copy
+    if @user.invitation_created_at && !@user.invitation_accepted_at
+      @user.invite!
+      render json: { data: cell("folio/console/users/invite_and_copy", @user).show }
+    else
+      head 422
+    end
+  end
+
   private
     def after_impersonate_path
       Rails.application.config.folio_users_after_impersonate_path_proc.call(self, @user)

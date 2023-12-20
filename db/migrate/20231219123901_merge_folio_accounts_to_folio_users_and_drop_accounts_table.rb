@@ -19,11 +19,12 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
           new_attrs = account.except(*except_attributes)
           new_attrs["encrypted_password"] = account["encrypted_password"]
           new_attrs["superadmin"] = superadmin
+          new_attrs["confirmed_at"] = Time.current
           new_attrs["id"] = account["id"] unless Folio::User.exists?(id: account["id"])
 
           # `user = Folio::User.create!(new_attrs)` will somehow stuck db:schema:dump AFTER migration is completed
           insert_sql = "INSERT INTO folio_users (#{new_attrs.keys.join(", ")}) " \
-                       " VALUES (#{new_attrs.values.map{ |v| (v.nil? ? "NULL" : "'#{v}'") }.join(", ")}) " \
+                       " VALUES (#{new_attrs.values.map { |v| (v.nil? ? "NULL" : "'#{v}'") }.join(", ")}) " \
                        " RETURNING id"
           user_id = connection.execute(insert_sql).first["id"]
 
@@ -31,6 +32,7 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
           raise "errors on user ##{user.id}[#{user.email}; #{user.errors.full_messages}" unless user.valid?
         else
           puts("User with email #{account["email"]} already exists")
+          user.update!(superadmin:)
         end
 
         sites.each do |site|

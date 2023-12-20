@@ -121,4 +121,14 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     # get url_for([:impersonate, :console, user])
     # assert_redirected_to "/"
   end
+
+  test "invite_and_copy" do
+    model = create(:folio_user, :superadmin)
+    post url_for([:invite_and_copy, :console, model])
+    assert_response(422)
+
+    model.update!(invitation_created_at: 1.day.ago)
+    post url_for([:invite_and_copy, :console, model])
+    assert_response(:success)
+  end
 end

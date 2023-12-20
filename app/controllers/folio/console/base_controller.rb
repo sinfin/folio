@@ -8,15 +8,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::HasCurrentSite
   include Pagy::Backend
 
-  before_action :custom_authenticate_account!
+  before_action :custom_authorize_user!
 
   before_action :add_root_breadcrumb
 
   before_action :update_current_user_console_path
-  before_action :set_show_current_account_console_path_bar
+  before_action :set_show_current_user_console_path_bar
 
   before_action do
-    if (params[:rmp] && account_signed_in?) || ENV["FORCE_MINI_PROFILER"]
+    if (params[:rmp] && can_now?(:display_miniprofiler)) || ENV["FORCE_MINI_PROFILER"]
       Rack::MiniProfiler.authorize_request
     end
   end
@@ -368,12 +368,17 @@ class Folio::Console::BaseController < Folio::ApplicationController
       add_breadcrumb(folio_console_record.to_label)
     end
 
-    def custom_authenticate_account!
-      custom_authenticate_user!
-    end
-
-    def custom_authenticate_user!
-      authenticate_user!
+    def custom_authorize_user!
+      if self.respond_to?(:custom_authenticate_account!)
+        custom_authenticate_account! # includes authorization
+      else
+        if self.respond_to?(:custom_authenticate_user!)
+          custom_authenticate_user!
+        else
+          authenticate_user!
+        end
+        current_user.can_now?(:access_console) || raise(CanCan::AccessDenied)
+      end
     end
 
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
@@ -494,10 +499,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
       current_user.update_console_path!(request.path)
     end
 
-    def set_show_current_account_console_path_bar
-      if action_name == "edit" || action_name == "update"
-        @show_current_account_console_path_bar = true
-      end
+    def set_show_current_user_console_path_bar
+      @show_current_user_console_path_bar = ["edit", "update"].include?(action_name)
     end
 
     def self.cancancan_accessible_by_action

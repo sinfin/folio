@@ -15,7 +15,7 @@ class Folio::Console::Layout::HeaderCell < Folio::ConsoleCell
         router = router.main_app unless router.respond_to?(:destroy_user_session_url)
         router.destroy_user_session_url(opts)
       else
-        controller.try(:destroy_account_session_path) || controller.main_app.try(:destroy_account_session_path)
+        controller.try(:destroy_user_session_path) || controller.main_app.try(:destroy_user_session_path)
       end
     end
   end

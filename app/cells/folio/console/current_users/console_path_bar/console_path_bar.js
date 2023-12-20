@@ -1,5 +1,5 @@
 $(() => {
-  const $bar = $('.f-c-current-accounts-console-path-bar')
+  const $bar = $('.f-c-current-users-console-path-bar')
   if ($bar.length !== 1) return
 
   const url = $bar.data('url')

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Folio::Console::Accounts::InviteAndCopyCell < Folio::ConsoleCell
+class Folio::Console::Users::InviteAndCopyCell < Folio::ConsoleCell
   def url
     args = {
       invitation_token: model.raw_invitation_token,
