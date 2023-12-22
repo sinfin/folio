@@ -55,6 +55,11 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       else
         path_params = link_source[:params].presence || {}
 
+        if link_source[:site].present?
+          path_params[:host] = link_source[:site].env_aware_domain
+          path_params[:only_path] = false
+        end
+
         begin
           path = controller.send(link_source[:path], path_params)
         rescue NoMethodError
@@ -164,6 +169,8 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                 values.each do |link_or_hash|
                   if link_or_hash.is_a?(Hash)
                     if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
+                      link_or_hash[:site] = site unless site == current_site
+
                       site_links[key] << link_or_hash
                     end
                   else

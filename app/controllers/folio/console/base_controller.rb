@@ -359,6 +359,11 @@ class Folio::Console::BaseController < Folio::ApplicationController
     def console_show_or_edit_path(record, through: nil, other_params: {})
       return nil if record.nil?
 
+      unless Rails.application.config.folio_site_is_a_singleton
+        other_params[:host] = current_site.env_aware_domain
+        other_params[:only_path] = false
+      end
+
       begin
         if through
           url = url_for([:console, through, record, other_params])
