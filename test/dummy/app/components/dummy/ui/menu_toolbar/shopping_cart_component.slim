@@ -5,5 +5,10 @@
     href="#"
     data=stimulus_action(click: :clicked)
   ]
-    = dummy_ui_icon(:shopping_cart, height: 32, class_name: "d-ui-menu-toolbar-shopping-cart__icon")
+    = dummy_ui_icon(:shopping_cart,
+                    height: 32,
+                    class_name: "d-ui-menu-toolbar-shopping-cart__icon")
+
     = render(Dummy::Ui::MenuToolbar::ShoppedItemsCountComponent.new(class_name: "d-ui-menu-toolbar-shopped-items-count--shopping-cart"))
+
+  span.d-ui-menu-toolbar-shopping-cart__mq.d-ui-menu-toolbar-shopping-cart__mq--desktop data=stimulus_target('mq')

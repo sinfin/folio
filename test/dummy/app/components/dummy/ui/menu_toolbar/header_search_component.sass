@@ -33,15 +33,18 @@
     position: relative
 
   &__input
-    padding-right: 45px
+    padding: px-to-rem(11px) 60px px-to-rem(11px) map-get($spacers, 3)
+    border-radius: $btn-border-radius-lg
+    border: 1px solid $shade-300
 
   &__autocomplete
     position: absolute
-    top: 100%
-    left: 1px
-    right: 1px
-    background: $light-gray
-    box-shadow: $ui-card-box-shadow
+    top: calc(100% + 5px)
+    left: 0
+    right: 0
+    background: $shade-light-contrast
+    border: 1px solid $transparent-300
+    border-radius: $border-radius
     min-height: 60px
     display: none
 
@@ -76,16 +79,23 @@
   &__autocomplete-results:empty + &__loader
     display: block
 
-  +mq-desktop-menu
-    &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__a
-      color: $black
-      position: absolute
-      top: 0
-      right: 0
-      bottom: 0
+  &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__a
+    color: $shade-black-contrast
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
 
-    &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__form
-      display: flex
+  &[data-d-ui-menu-toolbar-header-search-open-value="true"] &__form
+    display: flex
 
-    &__mq
-      display: none
+  &__mq
+    display: none
+
+  +mq-mobile-menu
+    &__input
+      padding: px-to-rem(7px) 60px px-to-rem(7px) map-get($spacers, 3)
+      margin: px-to-rem(1px) * -1 0
+
+    &__autocomplete
+      top: calc(100% + 18px)

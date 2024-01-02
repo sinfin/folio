@@ -1,5 +1,11 @@
 window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends window.Stimulus.Controller {
+  static targets = ['mq']
+
   clicked (e) {
+    const isDesktop = window.Folio.isVisible(this.mqTarget)
+
+    if (!isDesktop) return
+    
     e.preventDefault()
     this.dispatch("clicked")
     this.toggleClassModifier("active")

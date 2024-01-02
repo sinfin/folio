@@ -38,8 +38,8 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-header-search', class extends 
   }
 
   aClick (e) {
-    const isMobile = window.Folio.isVisible(this.mqTarget)
-    if (isMobile) return
+    //const isMobile = window.Folio.isVisible(this.mqTarget)
+    //if (isMobile) return
 
     e.preventDefault()
 

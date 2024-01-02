@@ -14,3 +14,15 @@
 
   &--active &__icon
     color: $shade-400
+
+  &__mq
+    position: absolute
+    top: 0
+    right: 0
+    width: 0
+    height: 0
+    pointer-events: none
+    
+  +mq-mobile-menu
+    &__mq--desktop
+      display: none
