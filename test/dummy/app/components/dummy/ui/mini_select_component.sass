@@ -85,3 +85,17 @@
 
     .d-ui-menu-toolbar-toolbar &__options
       background: $cloud-700
+      top: unset
+      bottom: 100%
+      border-radius: $border-radius $border-radius 0 0
+
+    .d-ui-menu-toolbar-toolbar &--expanded &__selected-value
+      border-radius: 0 0 $border-radius $border-radius
+
+    .d-ui-menu-toolbar-toolbar &__option--last-visible
+      border-radius: 0
+      padding-bottom: 0
+
+    .d-ui-menu-toolbar-toolbar &__option--first-visible
+      border-radius: $border-radius $border-radius 0 0
+      padding-top: map-get($spacers, 1)

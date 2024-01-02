@@ -7,11 +7,10 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
     toggleSelect: Boolean
   }
 
-  // TODO: pridat zavreni expanded options po kliku mimo komponentu
-  // Zvazit/zjistit pouziti 'stimulus-use'
+  // TODO: pridat zavreni expanded options po kliku mimo komponentu - zvazit/zjistit pouziti 'stimulus-use'
 
   connect () {
-    this.updateLastVisibleOption()
+    this.updateLastAndFirstVisibleOption()
   }
 
   selectedValueClick () {
@@ -56,23 +55,32 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
       }
     })
 
-    this.updateLastVisibleOption()
+    this.updateLastAndFirstVisibleOption()
   }
 
-  updateLastVisibleOption () {
+  updateLastAndFirstVisibleOption () {
     if (this.toggleSelectValue) return
 
     const lastElement = this.optionTargets[this.optionTargets.length - 1]
     const secondLastElement = this.optionTargets[this.optionTargets.length - 2]
+    const firstElement = this.optionTargets[0]
+    const secondElement = this.optionTargets[1]
 
     this.optionTargets.forEach((option) => {
       option.classList.remove("d-ui-mini-select__option--last-visible")
+      option.classList.remove("d-ui-mini-select__option--first-visible")
     })
 
     if (!lastElement.classList.contains('d-ui-mini-select__option--selected')) {
       lastElement.classList.add('d-ui-mini-select__option--last-visible')
     } else {
       secondLastElement.classList.add('d-ui-mini-select__option--last-visible')
+    }
+
+    if (!firstElement.classList.contains('d-ui-mini-select__option--selected')) {
+      firstElement.classList.add('d-ui-mini-select__option--first-visible')
+    } else {
+      secondElement.classList.add('d-ui-mini-select__option--first-visible')
     }
   }
 })
