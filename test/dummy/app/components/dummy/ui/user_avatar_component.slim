@@ -1,6 +1,7 @@
 .d-ui-user-avatar[
   data=data
   data=stimulus_action(click: :clicked)
+  class=(user_signed_in? ? nil : 'd-ui-user-avatar--signed-out')
 ]
   - if user_signed_in?
     .d-ui-user-avatar__avatar
