@@ -72,7 +72,6 @@
 
     &__ul > &__li
       position: relative
-      margin-right: px-to-rem(40px) - 2 * $a-padding-x
       display: flex
       align-items: stretch
 
@@ -108,13 +107,14 @@
     &__children-ul
       position: absolute
       top: 100%
-      margin-top: -10px
+      margin-top: map-get($spacers, 3) * -1
       left: 0
       z-index: 2
-      background: $shade-black-contrast
-      color: $shade-light-contrast
-      min-width: 290px
+      background: $shade-light-contrast
+      color: $shade-black-contrast
+      min-width: 159px
       border-radius: $border-radius
+      border: 1px solid $transparent-200
       display: none
       overflow: hidden
 
@@ -134,20 +134,31 @@
       transform: rotate(180deg)
 
     &__children-ul &__li
-      border-top: 1px solid $shade-300
+      border-top: 1px solid $transparent-200
       box-shadow: none
       position: relative
       top: auto
       margin-top: 0
 
-    &__children-ul &__a
-      padding: px-to-rem(12px) $grid-gutter-half
+    &__children-ul &__li:first-child
+      border-top: 0
 
-      &:hover
-        font-weight: $font-weight-bold
+    &__children-ul &__li:first-child &__a
+      padding-top: map-get($spacers, 3)
+
+    &__children-ul &__li:last-child &__a
+      padding-bottom: map-get($spacers, 3)
+
+    &__children-ul &__a
+      padding: map-get($spacers, 2) map-get($spacers, bb)
+
+      &:hover,
+      &:focus
+        background: $shade-100
 
     &__children-ul &__span
       padding: 0
+      font-size: $ui-typo-text-s-font-size
 
     &__children-ul &__children-ul
       padding-left: 10px
@@ -158,33 +169,32 @@
 
   +mq-mobile-menu
     background: $cloud-900
-    color: $shade-light-contrast
+    color: $cloud-100
 
     &__mq--desktop
       display: none
 
     &__arrow
       margin-left: auto
-      color: $shade-300
+      color: $cloud-300
 
     &__li--more
       display: none
 
     &__ul > &__li > &__a
-      border-top: 1px solid $shade-200
+      border-top: 1px solid $cloud-600
       padding: 0
 
     &__ul > &__li > &__a > &__span
-      padding: px-to-rem(12px) $grid-gutter-half
+      padding: map-get($spacers, 3) map-get($spacers, bb)
       display: flex
       align-items: center
       gap: $grid-gutter-half
 
     &__children-ul
-      color: $shade-300
+      color: $cloud-300
       font-size: $ui-typo-text-s-font-size
       line-height: $ui-typo-text-s-line-height
-      padding-bottom: px-to-rem(8px)
       display: none
 
     &__children-ul &__children-ul
