@@ -11,6 +11,8 @@ class Dummy::Ui::HeaderComponent < ApplicationComponent
   end
 
   def data
-    stimulus_controller("d-ui-header")
+    stimulus_controller("d-ui-header", action: {
+      "d-ui-menu-toolbar-header-search:opened": "toggleDropdownExpandedClass",
+    })
   end
 end
