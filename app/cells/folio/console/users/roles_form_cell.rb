@@ -10,7 +10,9 @@ class Folio::Console::Users::RolesFormCell < Folio::ConsoleCell
   end
 
   def all_sites_links
-    @all_sites_links ||= Folio::Site.all.order(domain: :asc).map do |site|
+    @all_sites_links ||= Folio::Site.all.order(domain: :asc).collect do |site|
+      next unless current_user.can_now?(:manage, Folio::User, site:)
+
       link = user.site_user_links.joins(:site).detect { |l| l.site == site }
       link ||= user.site_user_links.build(site:, roles: nil)
       link

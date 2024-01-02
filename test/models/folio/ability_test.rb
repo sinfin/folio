@@ -3,281 +3,199 @@
 require "test_helper"
 
 class Folio::AbilityTest < ActiveSupport::TestCase
-  attr_reader :ability, :site, :site2
+  attr_reader :ability, :site1, :site2, :tested_site
+
+  MAXIMUM_ACTIONS = { general: [:access_console],
+                      superadmins: [:manage],
+                      administrators: [:manage],
+                      managers: [:manage],
+                      users: [:manage],
+                      images: [:manage],
+                      videos: [:manage],
+                      audios: [:manage],
+                      documents: [:manage],
+                      # blog_articles: [:manage],
+                      # blog_topics: [:manage],
+                      pages: [:manage],
+                      menus: [:manage],
+                      leads: [:manage],
+                      newsletter_subscriptions: [:manage],
+                      email_templates: [:manage],
+                      sites: [:read, :modify] }.freeze # C+U are done by rails console (?)
 
   setup do
-    @site = Folio::Site.first || create(:folio_site, domain: "first.com")
+    @site1 = Folio::Site.first || create(:folio_site, domain: "first.com")
     @site2 = Folio::Site.second || create(:folio_site, domain: "second.com")
   end
 
-  test "superadmin" do
+  test "superadmin on site1" do
     user = create_user(superadmin: true)
+    @tested_site = site1
+    allowed_actions = MAXIMUM_ACTIONS
 
-    @ability = Folio::Ability.new(user, site)
-
-    can_do_with_superadmins([:manage])
-    can_do_with_admins([:manage], site:)
-    can_do_with_admins([:manage], site: site2)
-    can_do_with_managers([:manage], site:)
-    can_do_with_managers([:manage], site: site2)
-
-    assert ability.can?(:access_console, site:)
-    assert ability.can?(:access_console, site: site2)
-    can_do_with_base_models_in_console([:manage], site:)
-    can_do_with_base_models_in_console([:manage], site: site2)
-
-    can_do_with_sites([:read, :modify], site:)
-    can_do_with_sites([:read, :modify], site: site2)
+    check_abilities(user, allowed_actions)
   end
 
-  test "administrator" do
-    user = create_user(roles: { site => [:administrator] })
+  test "superadmin on site2" do
+    user = create_user(superadmin: true)
+    @tested_site = site2
+    allowed_actions = MAXIMUM_ACTIONS
 
-    @ability = Folio::Ability.new(user, site)
-
-    can_do_with_superadmins([])
-    can_do_with_admins([:manage], site:)
-    can_do_with_admins([], site: site2)
-    can_do_with_managers([:manage], site:)
-    can_do_with_managers([], site: site2)
-
-    assert ability.can?(:access_console, site:)
-    assert_not ability.can?(:access_console, site: site2)
-    can_do_with_base_models_in_console([:manage], site:)
-    can_do_with_base_models_in_console([], site: site2)
-
-    can_do_with_sites([:read, :modify], site:)
-    can_do_with_sites([], site: site2)
+    check_abilities(user, allowed_actions)
   end
 
+  test "administrator on his site" do
+    user = create_user(roles: { site1 => [:administrator] })
+    @tested_site = site1
+    allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new], sites: [:read, :modify] })
 
-  test "manager" do
-    user = create_user(roles: { site => [:manager] })
-
-    @ability = Folio::Ability.new(user, site)
-
-    can_do_with_superadmins([])
-    can_do_with_admins([], site:)
-    can_do_with_managers([:manage], site:)
-
-    assert ability.can?(:access_console, site:)
-    assert_not ability.can?(:access_console, site: site2)
-    can_do_with_base_models_in_console([:manage], site:)
-    can_do_with_base_models_in_console([], site: site2)
-
-    can_do_with_sites([:read, :modify], site:)
-    can_do_with_sites([], site: site2)
+    check_abilities(user, allowed_actions)
   end
 
-  test "so called user" do
-    user = create_user(roles: { site => [] })
+  test "administrator on other site" do
+    user = create_user(roles: { site1 => [:administrator] })
+    @tested_site = site2
+    allowed_actions = {}
 
-    @ability = Folio::Ability.new(user, site)
+    check_abilities(user, allowed_actions)
+  end
 
-    can_do_with_superadmins([])
-    can_do_with_admins([], site:)
-    can_do_with_managers([], site:)
-    assert_not ability.can?(:access_console, site:)
-    assert_not ability.can?(:access_console, site: site2)
+  test "manager on his site" do
+    user = create_user(roles: { site1 => [:manager] })
+    @tested_site = site1
+    allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new],
+                                              administrators: [:new],
+                                              sites: [:read, :modify] })
+
+    check_abilities(user, allowed_actions)
+  end
+
+  test "manager on other site" do
+    user = create_user(roles: { site1 => [:manager] })
+    @tested_site = site2
+    allowed_actions = {}
+
+    check_abilities(user, allowed_actions)
+  end
+
+  test "so called user on his site" do
+    user = create_user(roles: { site1 => [] })
+    @tested_site = site1
+    allowed_actions = {}
+
+    check_abilities(user, allowed_actions)
+  end
+
+  test "not yet user on his site" do
+    user = create_user(email: "notyetuser@#{site1.domain}")
+    @tested_site = site1
+    allowed_actions = {}
+
+    check_abilities(user, allowed_actions)
   end
 
   test "no user of any kind" do
     # view homepage, sign_in, sign_up
-    @ability = Folio::Ability.new(nil, site)
-    assert_not ability.can?(:access_console, site:)
+    user = nil
+    @tested_site = site1
+    allowed_actions = {}
+
+    check_abilities(user, allowed_actions)
   end
 
   private
-    READ_ACTIONS = [ :index, :show ]
-    CREATE_ACTIONS = [ :new, :create ]
-    UPDATE_ACTIONS = [ :edit, :update ]
-    DESTROY_ACTIONS = [ :destroy ]
-    CRUD_ACTIONS = CREATE_ACTIONS + READ_ACTIONS + UPDATE_ACTIONS + DESTROY_ACTIONS
+    def check_abilities(user, allowed_actions)
+      @ability = Folio::Ability.new(user, tested_site)
 
-    ALL_KNOWN_ACTIONS_ON = {
-      superadmins: CRUD_ACTIONS, # + [:index_superadmins, :create_superadmins],
-      admins: CRUD_ACTIONS, # + [:index_admins, :create_admins],
-      managers: CRUD_ACTIONS, # + [:index_managers, :create_managers],
-      images: CRUD_ACTIONS,
-      videos: CRUD_ACTIONS,
-      audios: CRUD_ACTIONS,
-      documents: CRUD_ACTIONS,
-      blog_articles: CRUD_ACTIONS,
-      blog_topics: CRUD_ACTIONS,
-      pages: CRUD_ACTIONS,
-      menus: CRUD_ACTIONS,
-      leads: CRUD_ACTIONS,
-      newsletter_subscriptions: CRUD_ACTIONS,
-      email_templates: CRUD_ACTIONS,
-      sites: READ_ACTIONS + UPDATE_ACTIONS,  # C+U are done by rails console (?)
-    }
+      MAXIMUM_ACTIONS.each_pair do |object_group, all_actions|
+        # puts("checking #{object_group} on #{tested_site.domain} => #{MAXIMUM_ACTIONS}")
 
-    def can_do_with_superadmins(actions)
-      allowed_actions = expand_actions(actions)
-      # allowed_actions << :index_superadmins if allowed_actions.include?(:index)
-      # allowed_actions << :create_superadmins if allowed_actions.include?(:new)
-      # allowed_actions << :create_superadmins if allowed_actions.include?(:create)
+        checklist = build_checklist(allowed_actions[object_group], all_actions)
+        tested_object = get_tested_object(object_group)
 
-      superadmin = create_user(superadmin: true, email: "superadmin@folio.com")
-
-      assert_user_is_restricted_to(build_checklist(allowed_actions, ALL_KNOWN_ACTIONS_ON[:superadmins]),
-                                   object: superadmin)
+        assert_user_is_restricted_to(checklist, object: tested_object, site: tested_site)
+      end
     end
 
-    def can_do_with_admins(actions, site:)
-      allowed_actions = expand_actions(actions)
-      # allowed_actions << :index_admins if allowed_actions.include?(:index)
-      # allowed_actions << :create_admins if allowed_actions.include?(:new)
-      # allowed_actions << :create_admins if allowed_actions.include?(:create)
-
-      admin = create_user(email: "administrator@#{site.domain}", roles: { site => [:administrator] })
-
-      assert_user_is_restricted_to(build_checklist(allowed_actions, ALL_KNOWN_ACTIONS_ON[:admins]),
-                                   object: admin,
-                                   site:)
+    def get_tested_object(object_group)
+      case object_group
+      when :general
+        tested_site
+      when :superadmins
+        create_user(superadmin: true, email: "superadmin@folio.com")
+      when :administrators
+        create_user(email: "administrator@#{tested_site.domain}", roles: { tested_site => [:administrator] })
+      when :managers
+        create_user(email: "manager@#{tested_site.domain}", roles: { tested_site => [:manager] })
+      when :users
+        create_user(email: "user@#{tested_site.domain}", roles: { tested_site => [] })
+      when :images
+        create(:folio_file_image, site: tested_site)
+      when :videos
+        create(:folio_file_video, site: tested_site)
+      when :audios
+        create(:folio_file_audio, site: tested_site)
+      when :documents
+        create(:folio_file_document, site: tested_site)
+      when :blog_articles
+        create(:dummy_blog_article, site: tested_site)
+      when :blog_topics
+        create(:dummy_blog_topic, site: tested_site)
+      when :pages
+        create(:folio_page, site: tested_site)
+      when :menus
+        create(:folio_menu, type: Dummy::Menu::Header, site: tested_site)
+      when :leads
+        create(:folio_lead, site: tested_site)
+      when :newsletter_subscriptions
+        create(:folio_newsletter_subscription, site: tested_site)
+      when :email_templates
+        create(:folio_email_template, site: tested_site)
+      when :sites
+        tested_site
+      else
+        raise "unknown object for object_group `#{object_group}`"
+      end
     end
-
-    def can_do_with_managers(actions, site:)
-      allowed_actions = expand_actions(actions)
-      # allowed_actions << :index_managers if allowed_actions.include?(:index)
-      # allowed_actions << :create_managers if allowed_actions.include?(:new)
-      # allowed_actions << :create_managers if allowed_actions.include?(:create)
-
-      manager = create_user(email: "manager@#{site.domain}", roles: { site => [:manager] })
-
-      assert_user_is_restricted_to(build_checklist(allowed_actions, ALL_KNOWN_ACTIONS_ON[:managers]),
-                                   object: manager,
-                                   site:)
-    end
-
-    def can_do_with_base_models_in_console(actions, site:)
-      allowed_actions = expand_actions(actions)
-      can_do_with_images(allowed_actions, site:)
-      can_do_with_videos(allowed_actions, site:)
-      can_do_with_audios(allowed_actions, site:)
-      can_do_with_documents(allowed_actions, site:)
-
-      can_do_with_pages(allowed_actions, site:)
-      can_do_with_menus(allowed_actions, site:)
-      can_do_with_leads(allowed_actions, site:)
-      can_do_with_newsletter_subscriptions(allowed_actions, site:)
-      can_do_with_email_templates(allowed_actions, site:)
-    end
-
-    def can_do_with_images(actions, site:)
-      image = create(:folio_file_image, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:images]),
-                                   object: image,
-                                   site:)
-    end
-
-    def can_do_with_videos(actions, site:)
-      video = create(:folio_file_video, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:videos]),
-                                   object: video,
-                                   site:)
-    end
-
-    def can_do_with_audios(actions, site:)
-      audio = create(:folio_file_audio, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:audios]),
-                                   object: audio,
-                                   site:)
-    end
-
-    def can_do_with_documents(actions, site:)
-      document = create(:folio_file_document, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:documents]),
-                                   object: document,
-                                   site:)
-    end
-
-    # def can_do_with_blog_articles(actions, site:)
-    #   audio = create(:folio_file_audio, site:)
-    #   assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:audios]),
-    #                                        object: audio,
-    #                                                site:)
-    # end
-
-    # def can_do_with_sxs(actions, site:)
-    #   sx = create(:folio_sx, site:)
-    #   assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:sxs]),
-    #                                object: sx,
-    #                                site:)
-    # end
-
-    def can_do_with_pages(actions, site:)
-      page = create(:folio_page, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:pages]),
-                                   object: page,
-                                   site:)
-    end
-
-    def can_do_with_menus(actions, site:)
-      menu = create(:folio_menu, type: Dummy::Menu::Header, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:menus]),
-                                   object: menu,
-                                   site:)
-    end
-
-    def can_do_with_leads(actions, site:)
-      lead = create(:folio_lead, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:leads]),
-                                   object: lead,
-                                   site:)
-    end
-
-    def can_do_with_newsletter_subscriptions(actions, site:)
-      newsletter_subscription = create(:folio_newsletter_subscription, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:newsletter_subscriptions]),
-                                   object: newsletter_subscription,
-                                   site:)
-    end
-
-    def can_do_with_email_templates(actions, site:)
-      email_template = create(:folio_email_template, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:email_templates]),
-                                   object: email_template,
-                                   site:)
-    end
-
-    def can_do_with_sites(actions, site:)
-      assert_user_is_restricted_to(build_checklist(expand_actions(actions), ALL_KNOWN_ACTIONS_ON[:sites]),
-                                   object: site,
-                                   site:)
-    end
-
 
     def build_checklist(allowed_actions, all_known_actions)
-      if (diff = allowed_actions - all_known_actions).present?
+      expanded_allowed_actions = expand_actions(allowed_actions)
+      expanded_all_known_actions = expand_actions(all_known_actions)
+
+      if (diff = expanded_allowed_actions - expanded_all_known_actions).present?
         raise "allowed_actions includes actions `#{diff}` which is not covered in all_known_actions"
       end
 
-      all_known_actions.index_with do |action|
-        allowed_actions.include?(action)
+      expanded_all_known_actions.index_with do |action|
+        expanded_allowed_actions.include?(action)
       end
     end
 
     def expand_actions(actions)
-      actions += [:show, :edit, :update] if actions.delete(:modify)
-      actions += [:index, :show] if actions.delete(:read)
-      actions += [:index, :show, :new, :create, :edit, :update, :destroy] if actions.delete(:manage)
+      expanded_actions = actions.blank? ? [] : actions.dup
+      expanded_actions += [:show, :edit, :update] if expanded_actions.delete(:modify)
+      expanded_actions += [:index, :show] if expanded_actions.delete(:read)
+      expanded_actions += [:index, :show, :new, :create, :edit, :update, :destroy] if expanded_actions.delete(:manage)
 
-      actions.uniq.sort
+      expanded_actions.uniq.sort
     end
 
     def assert_user_is_restricted_to(checklist, object: nil, site: nil)
       checklist.each do |action, allowed|
+        obj = action == :new ? object.class : object
+
         if allowed
-          assert ability.can?(action, object), "(#{user_to_str(site)})\n should be able on site `#{site&.domain}` to do :#{action}\n on <#{object.class.name}> #{object.to_json}"
+          assert ability.can?(action, obj), "(#{user_to_str(site)})\n should be able on site `#{site&.domain}` to do :#{action}\n on <#{object.class.name}> #{object.to_json}"
         else
-          assert_not ability.can?(action, object), "(#{user_to_str(site)})\n should NOT be able on site `#{site&.domain}` to do :#{action}\n on <#{object.class.name}> #{object.to_json}"
+          assert_not ability.can?(action, obj), "(#{user_to_str(site)})\n should NOT be able on site `#{site&.domain}` to do :#{action}\n on <#{object.class.name}> #{object.to_json}"
         end
       end
     end
 
     def user_to_str(site)
       user = ability.user
+      return "no user" if user.nil?
+
       roles = site.present? ? user.roles_for(site:) : []
       "superadmin: #{user.superadmin?}, roles: #{roles}"
     end

@@ -33,9 +33,6 @@ class Folio::ApplicationCell < Cell::ViewModel
     controller.main_app.url_for(options)
   end
 
-  def current_site
-    options[:current_site] || controller.current_site
-  end
 
   def image(placement, size, opts = {})
     folio_image(placement, size, opts)
@@ -67,6 +64,12 @@ class Folio::ApplicationCell < Cell::ViewModel
 
       concat(content_tag(:div, class: "f-togglable-fields__content", &block))
     end
+  end
+
+  delegate :can_now?, to: :controller
+
+  def current_site
+    get_from_options_or_controller(:current_site)
   end
 
   def current_user

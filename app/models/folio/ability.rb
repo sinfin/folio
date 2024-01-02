@@ -25,6 +25,7 @@ class Folio::Ability
     if user.has_any_roles?(site:, roles: [:administrator, :manager])
       can :access_console, site
       can :display_ui, site
+      can :new, Folio::User # new user do not belong to site yet
       # can :display_miniprofiler, site
 
       if user.has_role?(site:, role: :administrator)
@@ -33,7 +34,7 @@ class Folio::Ability
         can :read_managers, Folio::User
       elsif user.has_role?(site:, role: :manager)
         can :read_managers, Folio::User
-        # next do not work, beacouse in the end it tries to do `[x,y,z].include?([x,y]) => false`
+        # next do not work, because in the end it tries to do `[x,y,z].include?([x,y]) => false`
         # non_admin_roles = site.available_user_roles - ["administrator"]
         # can :manage, Folio::User, site_user_links: { site: , roles: non_admin_roles } do |user|
 

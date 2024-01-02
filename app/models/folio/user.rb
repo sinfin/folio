@@ -268,8 +268,10 @@ class Folio::User < Folio::ApplicationRecord
     can_now?(:manage, :sidekiq)
   end
 
-  def can_now?(action, subject = nil)
-    ability = Folio::Ability.new(self, subject&.try(:site))
+  def can_now?(action, subject = nil, site: nil)
+    site ||= subject&.try(:site)
+    subject = site if subject.blank?
+    ability = Folio::Ability.new(self, site)
     can_now_by_ability?(ability, action, subject)
   end
 

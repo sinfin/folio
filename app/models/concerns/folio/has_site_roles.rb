@@ -14,8 +14,6 @@ module Folio::HasSiteRoles
     has_many :sites, through: :site_user_links,
                      source: :site
 
-    accepts_nested_attributes_for :site_user_links
-
     scope :with_unscoped_roles, -> (role) { joins(:site_user_links).merge(Folio::SiteUserLink..by_roles(roles)) }
     scope :with_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).by_roles(roles)) }
     scope :without_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).without_roles(roles)) }
@@ -36,11 +34,20 @@ module Folio::HasSiteRoles
     end
   end
 
+  def site_user_links_attributes=(attributes)
+    attributes.each_value do |link_attributes|
+      next if (site = Folio::Site.find(link_attributes["site_id"])).nil?
+      next if link_attributes["roles"].blank? && user_link_for(site:).blank?
+
+      set_roles_for(site:, roles: link_attributes["roles"] || [])
+    end
+  end
+
   def set_roles_for(site:, roles:)
     ulf = user_link_for(site:) || build_site_link(site:)
     ulf.roles = roles.collect(&:to_s)
 
-    ulf.valid?
+    ulf.save
   end
 
   def roles_for(site:)

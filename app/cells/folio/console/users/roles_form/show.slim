@@ -1,20 +1,22 @@
 .f-c-users-roles-form
+
 - if controller.can_now?(:manage, :all)
   = user_form.check_box(:superadmin)
   = user_form.label(:superadmin)
-- user_form.fields_for(:site_user_links, all_sites_links) do |link_fields|
-  - link = link_fields.object
-  - site = link.site
 
-  .f-c-users-roles-form__site-link
-    .f-c-users-roles-form__site-link__title
-      = site.domain
-      = link_fields.hidden_field(:site_id)
-    .f-c-users-roles-form__site-link__roles
-      - if link.roles.nil? # differs from `[]`
-        = t('.no_access') + "[Add access]"
-      - else
-        - user.class.roles_for_select(site:).each do |role_label, role_key|
-          .f-c-users__site-link__role
-            = link_fields.check_box(:roles, { multiple: true }, role_key, nil)
-            = link_fields.label(:roles, role_label)
+  - user_form.simple_fields_for(:site_user_links, all_sites_links) do |link_form_builder|
+    - site_link = link_form_builder.object
+
+    .f-c-users-roles-form__site-link
+      .f-c-users-roles-form__site-link__title
+        = site_link.site.domain
+        = link_form_builder.hidden_field(:site_id)
+
+      .f-c-users-roles-form__site-link__roles
+        - if site_link.roles.nil? # differs from `[]`
+          = t('.no_access') + "[Add access]"
+        - else
+          - user.class.roles_for_select(site: site_link.site).each do |role_label, role_key|
+            .f-c-users__site-link__role
+              = link_form_builder.check_box(:roles, { multiple: true }, role_key, nil)
+              = link_form_builder.label(:roles, role_label)

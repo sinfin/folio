@@ -377,7 +377,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
         else
           authenticate_user!
         end
-        current_user.can_now?(:access_console) || raise(CanCan::AccessDenied)
+        can_now?(:access_console) || raise(CanCan::AccessDenied)
       end
     end
 

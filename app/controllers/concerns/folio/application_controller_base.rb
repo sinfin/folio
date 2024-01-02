@@ -46,6 +46,7 @@ module Folio::ApplicationControllerBase
   end
 
   def can_now?(action, object = nil)
+    object ||= current_site
     (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
   end
 

@@ -27,7 +27,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   def create
     create_params = user_params.merge(skip_password_validation: 1,
                                       creating_in_console: 1,
-                                      site_user_links_attributes: [{ site: current_site, roles: [] }])
+                                      site_user_links_attributes: { "a" => { "site_id" => current_site.id, "roles" => [] } })
 
     @user = @klass.new(create_params)
 
