@@ -6,17 +6,19 @@
           .d-molecule-cards-large__card-image-wrap
             = dummy_ui_image molecule_cover_placement(atom),
                              THUMB_SIZE,
-                             class_name: 'd-molecule-cards-large__card-image'
+                             class_name: 'd-molecule-cards-large__card-image',
+                             cover: true
 
         .d-molecule-cards-large__card-body
           h4.d-molecule-cards-large__card-title.fs-display-m
             = atom.title
 
-          .d-molecule-cards-large__card-content.d-rich-text.fs-text-l
-            = cstypo atom.content
+          - if atom.content.present?
+            .d-molecule-cards-large__card-text.d-rich-text.fs-text-l
+              = cstypo atom.content
 
           - if atom.button_url.present? || atom.link_url.present?
-            .d-molecule-cards-large__card-btns.mt-g
+            .d-molecule-cards-large__card-btns
               - if atom.button_url.present?
                 a.d-molecule-cards-large__card-button [
                   class="btn btn-primary"
