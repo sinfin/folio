@@ -42,10 +42,7 @@
     margin-top: px-to-rem(20px)
 
   &__link-overlay:hover ~ &__row &__btn
-    background: var(--#{$prefix}btn-hover-bg)
-    border-color: var(--#{$prefix}btn-hover-border-color)
-    color: var(--#{$prefix}btn-hover-color)
-    opacity: var(--#{$prefix}btn-hover-opacity)
+    +btn-hover
 
   +media-breakpoint-down(lg)
     &__title
