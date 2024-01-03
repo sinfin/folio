@@ -92,4 +92,33 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     }
     assert_response(:success)
   end
+
+  test "impersonate" do
+    _user_author = create(:folio_user)
+    user = create(:folio_user)
+
+    get "/"
+
+    assert_nil controller.current_user
+    assert_equal @admin, controller.current_account
+
+    get url_for([:impersonate, :console, user])
+
+    assert_redirected_to "/"
+    follow_redirect!
+
+    assert_equal "Přihlášen jako uživatel \"#{user.to_label}\"", flash[:success]
+    assert_equal user, controller.current_user
+    assert_equal @admin, controller.current_account
+
+    # still can get to console
+    get url_for([:console, Folio::User])
+
+    assert_response :success
+
+    # IT WORKS FOR USER TOO!
+    # sign_in user_author
+    # get url_for([:impersonate, :console, user])
+    # assert_redirected_to "/"
+  end
 end
