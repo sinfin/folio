@@ -10,8 +10,8 @@ module Folio
       get console_root_url
       assert_redirected_to console_pages_path
 
-      @admin.forget_me!
-      sign_out @admin
+      superadmin.forget_me!
+      sign_out superadmin
 
       get console_root_url
       assert_redirected_to new_user_session_path

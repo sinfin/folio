@@ -8,8 +8,8 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
 
   def setup
     create_and_host_site
-    @admin = create(:folio_user, :superadmin)
-    sign_in @admin
+    @superadmin = create(:folio_user, :superadmin)
+    sign_in @superadmin
   end
 
   [Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment].each do |klass|
@@ -71,7 +71,7 @@ class Folio::Api::S3ControllerTest < ActionDispatch::IntegrationTest
     end
 
     test "#{klass} - unauthorized for no admin" do
-      sign_out @admin
+      sign_out @superadmin
 
       post before_folio_api_s3_path, params: { file_name: "Intricate fílě name.jpg" }
       assert_response :unauthorized

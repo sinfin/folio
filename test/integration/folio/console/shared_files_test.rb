@@ -3,13 +3,14 @@
 require "test_helper"
 
 class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
-  attr_reader :admin, :main_site, :site_lvh, :lvh_image, :shared_image
+  attr_reader :main_site, :site_lvh, :lvh_image, :shared_image
 
   def setup
+    # not calling `super` for reason
     @main_site = create(:folio_site, domain: "sinfin.localhost")
     @site_lvh = create(:folio_site, domain: "lvh.me", locale: "en")
     Folio.instance_variable_set(:@main_site, nil) # to clear the cached version from other tests
-    @admin = create(:folio_user, :superadmin)
+    @superadmin = create(:folio_user, :superadmin)
 
     @lvh_image = create(:folio_file_image, site: site_lvh)
     @shared_image = create(:folio_file_image, :black, site: main_site)
@@ -20,7 +21,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     Rails.application.config.stub(:folio_shared_files_between_sites, true) do
       [main_site, site_lvh].each do |site|
         host_site(site)
-        sign_in admin
+        sign_in superadmin
 
         get console_api_file_images_url(host: site.domain,
                                         only_path: false,
@@ -44,7 +45,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     Rails.application.config.stub(:folio_shared_files_between_sites, true) do
       [main_site, site_lvh].each do |site|
         host_site(site)
-        sign_in admin
+        sign_in superadmin
 
         # it is redirected to pages: get console_root_url(host: main_site.domain, only_path: false)
         get console_pages_url(host: site.domain, only_path: false)
@@ -77,7 +78,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     # 3) run after_folio_api_s3_path to process file
     # so I will test only 3)
     host_site(site_lvh)
-    sign_in admin
+    sign_in superadmin
 
     Rails.application.config.stub(:folio_shared_files_between_sites, true) do
       # klasses Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment
@@ -103,7 +104,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     Rails.application.config.stub(:folio_shared_files_between_sites, false) do
       [main_site, site_lvh].each do |site|
         host_site(site)
-        sign_in admin
+        sign_in superadmin
 
         get console_api_file_images_url(host: site.domain,
                                         only_path: false,
@@ -128,7 +129,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
     Rails.application.config.stub(:folio_shared_files_between_sites, false) do
       [main_site, site_lvh].each do |site|
           host_site(site)
-          sign_in admin
+          sign_in superadmin
 
           # it is redirected to pages: get console_root_url(host: main_site.domain, only_path: false)
           get console_pages_url(host: site.domain, only_path: false)
@@ -153,7 +154,7 @@ class Folio::SharedFilesTest < Folio::Console::BaseControllerTest
 
   test "`config.folio_shared_files_between_sites` is false: files are stored under current_site" do
     host_site(site_lvh)
-    sign_in admin
+    sign_in superadmin
 
     Rails.application.config.stub(:folio_shared_files_between_sites, false) do
       # klasses Folio::File::Document, Folio::File::Image, Folio::PrivateAttachment

@@ -71,11 +71,12 @@ end
 class Folio::Console::BaseControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
   include Folio::Engine.routes.url_helpers
+  attr_reader :superadmin, :site
 
   def setup
     create_site
-    @admin = create(:folio_user, :superadmin)
-    sign_in @admin
+    @superadmin = create(:folio_user, :superadmin)
+    sign_in @superadmin
   end
 
   def url_for(options = nil)

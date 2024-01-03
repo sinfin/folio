@@ -377,8 +377,8 @@ class Folio::Console::BaseController < Folio::ApplicationController
         else
           authenticate_user!
         end
-        can_now?(:access_console) || raise(CanCan::AccessDenied)
       end
+      can_now?(:access_console) || raise(CanCan::AccessDenied)
     end
 
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
