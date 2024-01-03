@@ -1,4 +1,12 @@
 .d-atom-image-and-content
+  &__inner
+    position: relative
+
+  &__link-overlay
+    position: absolute
+    inset: 0
+    z-index: 10
+
   &__row
     align-items: center
 
@@ -6,14 +14,37 @@
     border-radius: $grid-gutter-half
     overflow: hidden
 
+    img
+      transition: transform 100ms ease
+      z-index: 0
+
+  &__link-overlay:hover ~ &__row &__image img
+    transform: scale(1.05)
+
   &__content
     display: flex
     flex-direction: column
     align-items: flex-start
-    gap: map-get($spacers, bb) 0
 
   &__title
     margin-top: 0
+    margin-bottom: $grid-gutter-base
+
+  &__text
+    position: relative
+    z-index: 11
+
+    p:last-child
+      margin-bottom: 0
+
+  &__btn
+    margin-top: px-to-rem(20px)
+
+  &__link-overlay:hover ~ &__row &__btn
+    background: var(--#{$prefix}btn-hover-bg)
+    border-color: var(--#{$prefix}btn-hover-border-color)
+    color: var(--#{$prefix}btn-hover-color)
+    opacity: var(--#{$prefix}btn-hover-opacity)
 
   +media-breakpoint-down(lg)
     &__title
