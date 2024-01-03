@@ -101,6 +101,11 @@ atoms:
       _count: 3
 
     - title: Card headline lorem ipsum dolor sit amet
+      subtitle: Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet
+      cover: true
+      _count: 3
+
+    - title: Card headline lorem ipsum dolor sit amet
       subtitle: Lorem ipsum dolor sit amet
       url: url
 
@@ -121,8 +126,27 @@ atoms:
       content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
       button_label: Button label
       button_url: url
-      link_label: Link label
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       link_url: url
+      _count: 3
+
+    - title: Card headline
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      _count: 3
+
+    - title: Card headline
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      _count: 3
+
+    - title: Card headline
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      _count: 3
+
+    - title: Card headline
       _count: 3
 
   Dummy::Atom::Cards::Medium:
@@ -149,12 +173,23 @@ atoms:
       content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla pLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
       button_label: Button label
       button_url: url
-      link_label: Link label
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       link_url: url
       cover: true
 
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      cover: true
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla pLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
 
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
