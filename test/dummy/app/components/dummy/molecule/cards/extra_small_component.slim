@@ -5,9 +5,11 @@
         .col-12.col-sm-6.mb-g
           .d-molecule-cards-extra-small__card
             .d-molecule-cards-extra-small__cover
-              = dummy_ui_image(molecule_cover_placement(atom), THUMB_SIZE)
+              = dummy_ui_image(molecule_cover_placement(atom),
+                               THUMB_SIZE,
+                               class_name: image_class)
 
-            .d-molecule-cards-extra-small__text
+            .d-molecule-cards-extra-small__content
               h4.fs-display-xs.m-0
                 = atom.title
 

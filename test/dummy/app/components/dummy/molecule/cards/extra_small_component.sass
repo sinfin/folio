@@ -2,11 +2,13 @@
   &__card
     display: flex
 
-  &__text
-    padding-left: map-get($spacers, bb)
-
   &__cover
     max-width: 80px
-    flex-basis: 80px
+    flex: 0 0 80px
+
+  &__image
     border-radius: $grid-gutter-base
     overflow: hidden
+
+  &__content
+    padding-left: map-get($spacers, bb)
