@@ -11,23 +11,27 @@
                                  class_name: image_class_name
 
             .d-molecule-cards-small__card-body
-              h4.fs-display-xs.mt-0.mb-2
+              h4.fs-display-xs.m-0
                 = atom.title
 
-              .d-rich-text.fs-text-s.mb-3
-                = cstypo atom.content
+              - if atom.content.present?
+                .d-molecule-cards-small__card-text [
+                  class="d-rich-text fs-text-s mt-2"
+                ]
+                  = cstypo atom.content
 
-              .d-molecule-cards-small__card-btns
-                - if atom.button_url.present?
-                  a.d-molecule-cards-small__card-button [
-                    class="btn btn-secondary bg-transparent"
-                    href=atom.button_url
-                  ]
-                    = atom.button_label
+              - if atom.button_url.present? || atom.link_url.present?
+                .d-molecule-cards-small__card-btns
+                  - if atom.button_url.present?
+                    a.d-molecule-cards-small__card-button [
+                      class="btn btn-secondary bg-transparent"
+                      href=atom.button_url
+                    ]
+                      = atom.button_label
 
-                - if atom.link_url.present?
-                  a.d-molecule-cards-small__card-link [
-                    class="fs-text-xs"
-                    href=atom.link_url
-                  ]
-                    = atom.link_label
+                  - if atom.link_url.present?
+                    a.d-molecule-cards-small__card-link [
+                      class="fs-text-xs"
+                      href=atom.link_url
+                    ]
+                      = atom.link_label
