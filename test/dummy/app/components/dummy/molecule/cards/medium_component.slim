@@ -7,7 +7,8 @@
             .d-molecule-cards-medium__card-image-wrap
               = dummy_ui_image molecule_cover_placement(atom),
                                THUMB_SIZE,
-                               class_name: 'd-molecule-cards-medium__card-image'
+                               class_name: 'd-molecule-cards-medium__card-image',
+                               cover: true
 
           - if molecule_cover_placement(atom)
             .d-molecule-cards-medium__card-image-wrap [
@@ -21,5 +22,5 @@
             h4.fs-display-s.mt-0.mb-2
               = atom.title
 
-            .d-rich-text.fs-text-s.text-muted
+            .d-molecule-cards-medium__card-text.d-rich-text.fs-text-s
               == cstypo atom.content

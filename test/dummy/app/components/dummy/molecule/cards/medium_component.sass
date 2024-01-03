@@ -8,14 +8,20 @@
     background-color: $shade-100
     border-radius: $grid-gutter-half
     overflow: hidden
+    min-height: 200px
 
   &__card-body
     padding: $grid-gutter-base * 4
+    align-self: center
+
+  &__card-text
+    color: $shade-700
 
   &__card-image-wrap
+    position: relative
     overflow: hidden
 
-  +media-breakpoint-up(lg)
+  +media-breakpoint-up(sm)
     &__card
       display: flex
 
@@ -24,17 +30,21 @@
 
     &__card-image-wrap
       overflow: hidden
-      flex: 0 0 240px
+      flex: 0 0 percentage(240/648)
 
-  +media-breakpoint-up(sm)
     &__card-image-wrap--mobile
       display: none
 
-  +media-breakpoint-only(lg)
+  +media-breakpoint-up(lg)
     &__card-image-wrap
-      flex-basis: 180px
+      overflow: hidden
+      flex-basis: 240px
 
   +media-breakpoint-down(lg)
+    &__grid
+      grid-template-columns: 1fr
+
+  +media-breakpoint-down(sm)
     &__card-image-wrap
       display: none
       max-height: 280px
@@ -42,12 +52,15 @@
     &__card-image-wrap--mobile
       display: block
 
-  +media-breakpoint-down(sm)
     &__grid
-      grid-template-columns: 1fr
+      gap: map-get($spacers, bb)
 
     &__card
       max-width: 424px
 
     &__card-image-wrap
       max-height: 240px
+
+  +media-breakpoint-only(lg)
+    &__card-image-wrap
+      flex-basis: 180px
