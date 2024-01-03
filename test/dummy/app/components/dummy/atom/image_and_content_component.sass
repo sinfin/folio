@@ -10,15 +10,16 @@
   &__row
     align-items: center
 
-  &__image
+  &__image-wrap
     border-radius: $grid-gutter-half
     overflow: hidden
+    width: 100%
 
-    img
-      transition: transform 100ms ease
-      z-index: 0
+  &__image
+    transition: transform 100ms ease
+    width: 100%
 
-  &__link-overlay:hover ~ &__row &__image img
+  &__link-overlay:hover ~ &__row &__image
     transform: scale(1.05)
 
   &__content

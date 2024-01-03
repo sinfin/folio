@@ -6,9 +6,10 @@
 
       .row.d-atom-image-and-content__row
         .col-12.col-sm-6
-          = dummy_ui_image(atom_cover_placement,
-                           THUMB_SIZE,
-                           class_name: 'd-atom-image-and-content__image')
+          .d-atom-image-and-content__image-wrap
+            = dummy_ui_image(atom_cover_placement,
+                             THUMB_SIZE,
+                             class_name: 'd-atom-image-and-content__image')
 
         .d-atom-image-and-content__content.col-12.col-sm-6
           - if @atom.title.present?
