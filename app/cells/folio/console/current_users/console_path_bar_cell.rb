@@ -2,11 +2,11 @@
 
 class Folio::Console::CurrentUsers::ConsolePathBarCell < Folio::ConsoleCell
   def show
-    render if model && current_user.can_now?(:access_console)
+    render if model && can_now?(:access_console)
   end
 
   def other_user_at_path
-    return false unless current_user.can_now?(:access_console)
+    return false unless can_now?(:access_console)
     return @other_user_at_path unless @other_user_at_path.nil?
     @other_user_at_path = Folio::User.currently_editing_path(request.path).where.not(id: current_user.id).first || false
   end

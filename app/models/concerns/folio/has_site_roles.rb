@@ -36,10 +36,13 @@ module Folio::HasSiteRoles
 
   def site_user_links_attributes=(attributes)
     attributes.each_value do |link_attributes|
-      next if (site = Folio::Site.find(link_attributes["site_id"])).nil?
-      next if link_attributes["roles"].blank? && user_link_for(site:).blank?
+      next if (site = Folio::Site.find(link_attributes["site_id"].to_i.abs)).nil?
 
-      set_roles_for(site:, roles: link_attributes["roles"] || [])
+      if link_attributes["site_id"].to_i < 0
+        destroy_site_link(site:)
+      else
+        set_roles_for(site:, roles: link_attributes["roles"] || [])
+      end
     end
   end
 
@@ -47,7 +50,21 @@ module Folio::HasSiteRoles
     ulf = user_link_for(site:) || build_site_link(site:)
     ulf.roles = roles.collect(&:to_s)
 
-    ulf.save
+    if ulf.valid?
+      ulf.save if ulf.persisted?
+      true
+    else
+      self.errors.add(:site_roles, ulf.errors.full_messages)
+      false
+    end
+  end
+
+  def destroy_site_link(site:)
+    ulf = user_link_for(site:)
+    if ulf
+      ulf.roles = []
+      ulf.destroy
+    end
   end
 
   def roles_for(site:)

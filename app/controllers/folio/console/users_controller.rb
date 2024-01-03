@@ -14,6 +14,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   end
 
   def impersonate
+    # TODO fix it by storing admins user.id in session
     @user.sign_out_everywhere! if @user == current_user
     bypass_sign_in @user.reload, scope: :user
     redirect_to after_impersonate_path,
@@ -26,9 +27,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   def create
     create_params = user_params.merge(skip_password_validation: 1,
-                                      creating_in_console: 1,
-                                      site_user_links_attributes: { "a" => { "site_id" => current_site.id, "roles" => [] } })
-
+                                      creating_in_console: 1)
     @user = @klass.new(create_params)
 
     if @user.valid?

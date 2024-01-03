@@ -27,6 +27,10 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
   scope :by_site, -> (site) { where(site:) }
   scope :by_user, -> (site) { where(user:) }
 
+  def self.non_nillifiable_fields
+    %w[roles]
+  end
+
   def validate_roles_from_site
     forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles.to_a)
     if forbidden_roles.present?
@@ -38,11 +42,17 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
 
   # keep defined order and allow only known roles
   def normalize_site_roles
+    return if roles == []
+
     self.roles = if self.roles.blank?
       []
     else
       site.available_user_roles.select { |role_to_check| roles.include?(role_to_check.to_s) }
     end
+  end
+
+  def to_s
+    "#{user.email} - #{site.domain} - #{roles}"
   end
 end
 

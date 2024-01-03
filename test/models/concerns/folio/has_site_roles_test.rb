@@ -85,4 +85,68 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
                 Folio::User.roles_for_select(site:,
                                              selectable_roles: ["manager", "spy"])
   end
+
+  test "creating user with roles" do
+    params = {
+      "email" => "test@test.com",
+      "password" => "test1234",
+      "site_user_links_attributes" => { "0" => { "site_id" => site.id, "roles" => [] } }
+    }
+    user = Folio::User.new(params)
+    assert user.save
+    assert user.site_user_links.by_site(site).exists?
+    assert_equal [], user.roles_for(site:)
+  end
+
+  test "updating user with roles" do
+    # update existing, create new
+    user = create(:folio_user)
+    user.set_roles_for(site:, roles: ["administrator", "manager"])
+    user.save
+    assert_equal 1, user.site_user_links.count
+
+    site2 = create(:folio_site, available_user_roles: ["aaa", "bbb"])
+
+    params = {
+      "site_user_links_attributes" => {
+        "0" => { "site_id" => site.id, "roles" => ["manager"] },
+        "1" => { "site_id" => site2.id, "roles" => [] }
+      }
+    }
+    assert user.update(params)
+    assert_equal 2, user.site_user_links.count
+    assert_equal ["manager"], user.roles_for(site:)
+    assert_equal [], user.roles_for(site: site2)
+
+    params = {
+      "site_user_links_attributes" => {
+        "a" => { "site_id" => site.id, "roles" => [] },
+        "b" => { "site_id" => site2.id, "roles" => ["aaa", "bbb"] }
+      }
+    }
+    assert user.update(params)
+    assert_equal 2, user.site_user_links.count
+    assert_equal [], user.roles_for(site:)
+    assert_equal ["aaa", "bbb"], user.roles_for(site: site2)
+  end
+
+  test "destroying user link" do
+    user = create(:folio_user)
+    user.set_roles_for(site:, roles: ["administrator", "manager"])
+    user.save
+    assert_equal 1, user.site_user_links.count
+
+    # negative site_id will destroy link for that site
+    params = {
+      "site_user_links_attributes" => {
+        "a" => { "site_id" => -1 * site.id, "roles" => ["administrator", "manager"] },
+      }
+    }
+    assert user.update(params)
+
+    user = Folio::User.find(user.id)
+    assert_equal 0, user.site_user_links.count
+    assert_equal [], user.roles_for(site:)
+    assert_nil user.user_link_for(site:)
+  end
 end
