@@ -1,5 +1,5 @@
 .d-molecule-cards-full-width
-  height: 620px
+  min-height: 620px
   width: 100%
   position: relative
 
@@ -46,10 +46,10 @@
     margin-top: auto
 
   &__card-title
-    margin-top: 0
-    margin-bottom: $grid-gutter-half
+    margin: 0
 
-  &__card-content
+  &__card-text
+    margin-top: $grid-gutter-base
     color: $shade-600
 
   &__card-btns
@@ -57,21 +57,37 @@
     align-items: center
     flex-wrap: wrap
     gap: $grid-gutter-half
+    margin-top: $grid-gutter-base * 4
 
   &__controls
     display: flex
     gap: $grid-gutter-base
-    margin-top: $grid-gutter-width
+    margin-top: $grid-gutter-base * 4
 
   &__controls-dot
     +unbutton
     width: 21px
     height: 10px
-    background: $shade-600
+    background: $shade-300
     border-radius: $grid-gutter-base
 
     &--active
       background: $shade-black-contrast
+
+  +media-breakpoint-down(lg)
+    min-height: 500px
+
+    &__content
+      padding: map-get($spacers, gg) 0
+
+    &__card-btns
+      margin-top: $grid-gutter-width
+
+    &__card-text
+      display: none
+
+    &__controls
+      margin-top: $grid-gutter-width
 
   +media-breakpoint-down(md)
     &__content

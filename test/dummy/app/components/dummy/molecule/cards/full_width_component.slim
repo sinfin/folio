@@ -15,15 +15,16 @@
       .container-fluid.d-molecule-cards-full-width__container
         .d-molecule-cards-full-width__inner
           .d-molecule-cards-full-width__content
-            h4.d-molecule-cards-full-width__card-title.fs-display-m
+            h4.d-molecule-cards-full-width__card-title.fs-display-l
               = atom.title
 
             - if atom.content.present?
-              .d-molecule-cards-full-width__card-content.d-rich-text.fs-text-l
-                = cstypo atom.content
+              .d-molecule-cards-full-width__card-text.fs-text-l
+                .d-rich-text
+                  = cstypo atom.content
 
             - if atom.button_url.present? || atom.secondary_button_url.present?
-              .d-molecule-cards-full-width__card-btns.mt-g
+              .d-molecule-cards-full-width__card-btns
                 - if atom.button_url.present?
                   a.d-molecule-cards-full-width__card-button [
                     class="btn btn-secondary"
