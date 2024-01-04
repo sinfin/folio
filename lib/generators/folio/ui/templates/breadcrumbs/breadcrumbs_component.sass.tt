@@ -4,13 +4,17 @@
   z-index: 3
   flex: 0 0 auto
 
-  &__icon
-    transform: rotate(180deg)
-    margin-top: -1px
-    margin-left: -6px
-
-  &--share &__flex
+  &__container
     display: flex
+    align-items: center
+    gap: map-get($spacers, 3)
+
+  &__link
+    display: inline-flex
+    align-items: center
+
+  &__icon
+    margin-left: -6px
 
   &--share &__link
     margin-right: $grid-gutter-width

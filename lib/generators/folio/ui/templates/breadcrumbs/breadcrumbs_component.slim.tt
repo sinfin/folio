@@ -1,14 +1,18 @@
-div class=class_name
+div[
+  class=bem_class_name
+]
   .container-fluid
-    .<%= classname_prefix %>-ui-breadcrumbs__flex
+    .<%= classname_prefix %>-ui-breadcrumbs__container
       a.<%= classname_prefix %>-ui-breadcrumbs__link[
         href=breadcrumb.path
         class="<%= classname_prefix %>-with-icon"
-        class=(pagy_page? ? '<%= classname_prefix %>-ui-breadcrumbs__link--pagy-page' : nil)
       ]
-        = icon(:chevron_right, height: 24, class: '<%= classname_prefix %>-ui-breadcrumbs__icon')
+        = <%= application_namespace_path %>_ui_icon(:chevron_left,
+                        height: 14,
+                        class_name: "<%= classname_prefix %>-ui-breadcrumbs__icon")
+
         span = cstypo breadcrumb.name
 
-      - if options[:share]
+      - if @share
         .<%= classname_prefix %>-ui-breadcrumbs__share
           == cell('<%= application_namespace_path %>/ui/share', nil, mobile_collapsible: true)

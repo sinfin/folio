@@ -8,6 +8,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       alerts
       boolean_toggles
       buttons
+      breadcrumbs
       forms
       icons
       images
