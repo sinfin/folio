@@ -26,9 +26,8 @@ html[
     = yield :publishable_hint
 
     - unless @hide_breadcrumbs
-      == cell('dummy/ui/breadcrumbs',
-              @breadcrumbs_on_rails,
-              share: @breadcrumbs_share_bar)
+      == render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails,
+                                                    share: @breadcrumbs_share_bar))
 
     .d-layout-main
       = yield
