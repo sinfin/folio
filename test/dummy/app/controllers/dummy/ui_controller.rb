@@ -8,6 +8,7 @@ class Dummy::UiController < ApplicationController
       alerts
       boolean_toggles
       buttons
+      breadcrumbs
       forms
       icons
       images
