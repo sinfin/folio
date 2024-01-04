@@ -11,6 +11,7 @@ exclude:
   - app/cells/folio/console/private_attachments/fields/show.slim
   - app/cells/folio/console/private_attachments/single_dropzone/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
+  - app/cells/folio/console/users/roles_form/show.slim
   - app/cells/folio/cookie_consent/show.slim
   - app/cells/folio/devise/flash/show.slim
   - app/cells/folio/devise/modal/_close.slim

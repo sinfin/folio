@@ -96,20 +96,22 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
   test "impersonate" do
     site.update(available_user_roles: [:administrator, :author])
 
-    site_admin = create(:folio_user, email: "admin@#{site.domain}")
+    site_admin = create(:folio_user, first_name: "Admin", email: "admin@#{site.domain}")
     site_admin.set_roles_for(site:, roles: [:administrator])
     site_admin.save!
 
-    user_author = create(:folio_user, email: "author@#{site.domain}")
+    user_author = create(:folio_user, first_name: "Author",  email: "author@#{site.domain}")
     user_author.set_roles_for(site:, roles: [:author])
     user_author.save!
 
-    user = create(:folio_user, email: "user@#{site.domain}")
+    user = create(:folio_user, first_name: "User",  email: "user@#{site.domain}")
     user.set_roles_for(site:, roles: [])
     user.save!
 
     assert site_admin.can_now?(:impersonate, user, site:)
+    assert site_admin.can_now?(:stop_impersonating, Folio::User, site:)
     assert_not user_author.can_now?(:impersonate, user, site:)
+    assert user_author.can_now?(:stop_impersonating, Folio::User, site:)
 
     # user tries to impersonate
     sign_in user_author
@@ -140,8 +142,16 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
 
     # cannot get to console now, as it is not signed in as admin
     assert_raises(CanCan::AccessDenied) do
-      get url_for([:console, Folio::User])
+      get url_for([:console, user])
     end
+
+    # stop impersonation
+    get url_for([:stop_impersonating, :console, Folio::User])
+
+    assert_redirected_to url_for([:console, user])
+    follow_redirect!
+    assert_response :success
+    assert_equal site_admin, controller.current_user
   end
 
   test "invite_and_copy" do

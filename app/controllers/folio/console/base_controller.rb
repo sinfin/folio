@@ -378,7 +378,12 @@ class Folio::Console::BaseController < Folio::ApplicationController
           authenticate_user!
         end
       end
-      can_now?(:access_console) || raise(CanCan::AccessDenied)
+
+      if params[:action].to_sym == :stop_impersonating
+        authorize!(:stop_impersonating, Folio::User)
+      else
+        authorize!(:access_console, current_site)
+      end
     end
 
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)

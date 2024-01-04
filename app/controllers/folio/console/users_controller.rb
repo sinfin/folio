@@ -14,11 +14,18 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   end
 
   def impersonate
-    # TODO fix it by storing admins user.id in session
     @user.sign_out_everywhere! if @user == current_user
-    bypass_sign_in @user.reload, scope: :user
+    session[:true_user_id] = current_user.id
+    bypass_sign_in @user, scope: :user
     redirect_to after_impersonate_path,
                 flash: { success: t(".success", label: @user.to_label) }
+  end
+
+  def stop_impersonating
+    user = current_user
+    bypass_sign_in true_user, scope: :user
+    session[:true_user_id] = nil
+    redirect_to url_for([:console, user])
   end
 
   def new

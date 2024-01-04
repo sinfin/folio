@@ -22,10 +22,12 @@ class Folio::Ability
       return
     end
 
+    can [:stop_impersonating], Folio::User # anyone must be able to stop impersonating
+
     if user.has_any_roles?(site:, roles: [:administrator, :manager])
       can :access_console, site
       can :display_ui, site
-      can :new, Folio::User # new user do not belong to site yet
+      can [:new], Folio::User # new user do not belong to site yet
       # can :display_miniprofiler, site
 
       if user.has_role?(site:, role: :administrator)

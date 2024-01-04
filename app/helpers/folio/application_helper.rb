@@ -44,4 +44,8 @@ module Folio::ApplicationHelper
   def can_now?(action, object = nil)
     controller.can_now?(action, object)
   end
+
+  def true_user
+    controller.true_user
+  end
 end

@@ -4,6 +4,7 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
     = render partial: 'layouts/folio/console/head'
 
   body.f-c-layout-body
+    == cell('folio/impersonating_header')
     == cell('folio/console/layout/sidebar')
 
     .f-c-layout-main#f-c-layout-main

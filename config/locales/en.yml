@@ -66,6 +66,10 @@ en:
       content: This image contains sensitive content. To see it, verify your age. Are you over 18?
       accept: Yes
       cancel: No
+    impersonating_header:
+        label: You (%{true_user}), are signed in as %{impersonated_user}.
+        stop_impersonation: Stop impersonation
+
   head:
     description: ''
     title:

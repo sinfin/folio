@@ -1,0 +1,7 @@
+.f-impersonating-header
+  = t(".label",
+      true_user: true_user.to_label,
+      impersonated_user: current_user.to_label)
+  = link_to(t(".stop_impersonation"),
+            url_for([:stop_impersonating, :console, Folio::User]),
+            data: {turbo: false})

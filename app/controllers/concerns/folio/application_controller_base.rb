@@ -50,6 +50,15 @@ module Folio::ApplicationControllerBase
     (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
   end
 
+  def true_user
+    if session[:true_user_id].present?
+      Folio::User.find_by(id: session[:true_user_id])
+    else
+      current_user
+    end
+  end
+
+
   private
     def authenticate_account! # backward compatibility method, do not use
       authenticate_user!

@@ -83,6 +83,10 @@ Folio::Engine.routes.draw do
       end
 
       resources :users do
+        collection do
+          get :stop_impersonating
+        end
+
         member do
           get :send_reset_password_email
           get :impersonate
