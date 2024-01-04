@@ -20,7 +20,6 @@ class MergeFolioAccountsToFolioUsersAndDropAccountsTable < ActiveRecord::Migrati
           new_attrs["encrypted_password"] = account["encrypted_password"]
           new_attrs["superadmin"] = superadmin
           new_attrs["confirmed_at"] = Time.current
-          new_attrs["id"] = account["id"] unless Folio::User.exists?(id: account["id"])
 
           # `user = Folio::User.create!(new_attrs)` will somehow stuck db:schema:dump AFTER migration is completed
           insert_sql = "INSERT INTO folio_users (#{new_attrs.keys.join(", ")}) " \

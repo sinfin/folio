@@ -14,7 +14,7 @@ module Folio::HasSiteRoles
     has_many :sites, through: :site_user_links,
                      source: :site
 
-    scope :with_unscoped_roles, -> (role) { joins(:site_user_links).merge(Folio::SiteUserLink..by_roles(roles)) }
+    scope :with_unscoped_roles, -> (roles) { where(id: Folio::SiteUserLink.by_roles(roles).pluck(:user_id)) }
     scope :with_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).by_roles(roles)) }
     scope :without_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).without_roles(roles)) }
   end
@@ -104,9 +104,10 @@ module Folio::HasSiteRoles
     end
 
     def validate_site_link_uniqueness
-      counts = site_user_links.group(:site_id).count
-      counts.each do |site_id, count|
-        if count > 1
+      sets = site_user_links.group_by(&:site_id)
+
+      sets.each_pair do |site_id, links|
+        if links.size > 1
           errors.add :site_roles, "Duplicitní přiřazení webu '#{Folio::Site.find(site_id).domain}'."
         end
       end

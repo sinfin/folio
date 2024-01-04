@@ -10,9 +10,13 @@ class Folio::Ability
     @user = user
     @site = site
 
-    folio_console_rules
+    ability_rules
   end
 
+  # override to extend
+  def ability_rules
+    folio_console_rules
+  end
 
   def folio_console_rules
     if user.superadmin?

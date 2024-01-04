@@ -1,9 +1,0 @@
-# frozen_string_literal: true
-
-class <%= application_namespace %>::Ability
-  include CanCan::Ability
-
-  # rules here will override or extend rules from Folio::Ability
-  def initialize(user, additional: {})
-  end
-end
