@@ -9,11 +9,10 @@
           a.d-ui-breadcrumbs__link[
             href=breadcrumb.path
             class="d-with-icon"
-            data=(@pagy_page ? stimulus_target('pagyPageLink') : nil)
           ]
             = dummy_ui_icon(:chevron_right,
-                height: 24,
-                class_name: "d-ui-breadcrumbs__icon")
+                            height: 24,
+                            class_name: "d-ui-breadcrumbs__icon")
 
             span = cstypo breadcrumb.name
 

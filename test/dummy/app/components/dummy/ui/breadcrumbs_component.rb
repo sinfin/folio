@@ -3,9 +3,8 @@
 class Dummy::Ui::BreadcrumbsComponent < ApplicationComponent
   bem_class_name :share
 
-  def initialize(breadcrumbs:, pagy_page: false, share: nil)
+  def initialize(breadcrumbs:, share: nil)
     @breadcrumbs = breadcrumbs
-    @pagy_page = pagy_page
     @share = share
   end
 
