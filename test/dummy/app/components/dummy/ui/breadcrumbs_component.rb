@@ -8,11 +8,13 @@ class Dummy::Ui::BreadcrumbsComponent < ApplicationComponent
     @share = share
   end
 
-  def breadcrumbs
-    @breadcrumbs.present? && @breadcrumbs.length > 0 && (@breadcrumbs[-2] || @breadcrumbs[0])
+  def breadcrumb
+    @breadcrumb ||= if @breadcrumbs.present? && @breadcrumbs.length > 0
+      @breadcrumbs[-2] || @breadcrumbs[0]
+    end
   end
 
-  def data
-    stimulus_controller("d-ui-breadcrumbs")
+  def render?
+    breadcrumb
   end
 end
