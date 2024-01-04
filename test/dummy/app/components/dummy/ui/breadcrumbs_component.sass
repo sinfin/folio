@@ -1,5 +1,5 @@
 .d-ui-breadcrumbs
-  margin: $grid-gutter-half 0
+  margin: map-get($spacers, 4) 0
   position: relative
   z-index: 3
   flex: 0 0 auto
@@ -7,14 +7,21 @@
   &__container
     display: flex
     align-items: center
-    gap: map-get($spacers, 3)
+    flex-wrap: wrap
+    gap: map-get($spacers, 1)
 
   &__link
     display: inline-flex
     align-items: center
+    gap: 4px
+    font-size: $ui-typo-text-xs-font-size
+    color: $shade-500
 
   &__icon
-    margin-left: -6px
+    color: $shade-300
+
+  .d-with-icon &__icon
+    margin-right: 0
 
   &--share &__link
     margin-right: $grid-gutter-width
@@ -25,6 +32,3 @@
   .d-ui-share__items
     padding-left: 0 !important
     padding-right: 0 !important
-
-  +mq-desktop-menu
-    margin: $grid-gutter-width 0
