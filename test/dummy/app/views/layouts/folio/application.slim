@@ -16,7 +16,8 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
-    /== cell('folio/impersonating_header')
+    = render(Folio::Users::ImpersonatingBarComponent.new)
+
     = render(Dummy::Ui::HeaderComponent.new)
 
     = render(Dummy::Ui::HeaderMessageComponent.new)

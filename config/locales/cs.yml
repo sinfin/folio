@@ -72,9 +72,6 @@ cs:
       accept: Ano
       cancel: Ne
     confirmation: Určitě?
-    impersonating_header:
-        label: Vy (%{true_user}), jste nyní přihlášeni jako %{impersonated_user}.
-        stop_impersonation: Ukončit impersonaci
 
   head:
     description: ''
