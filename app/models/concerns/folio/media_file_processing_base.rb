@@ -86,8 +86,12 @@ module Folio::MediaFileProcessingBase
   end
 
   def create_preview_media
-    preview_media_job_class.perform_later(self)
-    self.update(remote_services_data: self.remote_services_data.merge!({ "processing_step_started_at" => Time.current }))
+    if preview_duration.zero?
+      preview_media_processed!
+    else
+      preview_media_job_class.perform_later(self)
+      self.update(remote_services_data: self.remote_services_data.merge!({ "processing_step_started_at" => Time.current }))
+    end
   end
 
   def check_media_processing(preview: false)
