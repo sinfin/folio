@@ -322,6 +322,10 @@ en:
       with_aside:
         hide: Hide
 
+      site_user_links:
+        fields_component:
+          title: Roles
+
   date:
     formats:
       console_short: "%d. %m. %Y"

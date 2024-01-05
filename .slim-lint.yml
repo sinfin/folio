@@ -22,6 +22,7 @@ exclude:
   - app/cells/folio/modal/_close.slim
   - app/cells/folio/ui/_typo.slim
   - app/cells/folio/ui/show.slim
+  - app/components/folio/console/site_user_links/fields_component.slim
   - app/views/folio/console/accounts/_form.slim
   - app/views/folio/console/base/_private_attachments.slim
   - app/views/folio/console/menus/_form.slim
@@ -41,9 +42,9 @@ exclude:
   - app/views/layouts/folio/mailer.html.slim
   - lib/generators/folio/console/scaffold/templates/*
   - test/dummy/app/cells/dummy/ui/menu/show.slim
+  - test/dummy/app/components/dummy/ui/footer_component.slim
   - test/dummy/app/components/dummy/ui/image_component.slim
   - test/dummy/app/components/dummy/ui/menu_component.slim
-  - test/dummy/app/components/dummy/ui/footer_component.slim
   - test/dummy/app/views/dummy/home/index.slim
   - test/dummy/app/views/dummy/ui/*.slim
   - test/dummy/app/views/folio/console/dummy/playgrounds/console_notes.slim

@@ -325,6 +325,10 @@ cs:
       with_aside:
         hide: Skrýt
 
+      site_user_links:
+        fields_component:
+          title: Role
+
   date:
     formats:
       console_short: "%d. %m. %Y"
