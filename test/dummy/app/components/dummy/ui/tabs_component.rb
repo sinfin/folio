@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::TabsComponent < ApplicationComponent
-
-  def initialize(tabs: nil)
+  def initialize(tabs:)
     @tabs = tabs
   end
 

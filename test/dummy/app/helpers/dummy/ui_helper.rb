@@ -20,5 +20,4 @@ module Dummy::UiHelper
   def dummy_ui_tabs(**kwargs)
     render(Dummy::Ui::TabsComponent.new(**kwargs))
   end
-
 end
