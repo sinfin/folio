@@ -50,6 +50,7 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
     this.unbindOutsideClick()
     this.openValue = false
     this.element.classList.remove("d-ui-menu-toolbar-dropdown--open")
+    this.dispatch("closed", { detail: { target: this.dropdownTriggerValue}})
   }
 
   setPosition () {

@@ -68,6 +68,10 @@ class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
     stimulus_controller("d-ui-menu-toolbar-dropdown", values: {
       width: @width,
       dropdown_trigger:,
+    }, action: {
+      "#{dropdown_trigger}:clicked@window": "triggerClicked",
+      "resize@window": "setPosition",
+      "orientationchange@window": "setPosition"
     })
   end
 end

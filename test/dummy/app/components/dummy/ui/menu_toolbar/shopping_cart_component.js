@@ -14,4 +14,12 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends 
   toggleClassModifier (modifier) {
     this.element.classList.toggle(`d-ui-menu-toolbar-shopping-cart--${modifier}`)
   }
+
+  dropdownClosed ({ detail: { target } }) {
+    const $target = document.querySelector(`.${target}`)
+
+    if ($target !== this.element) return
+
+    this.toggleClassModifier("active")
+  }
 })

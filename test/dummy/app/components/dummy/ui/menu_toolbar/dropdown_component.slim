@@ -1,9 +1,6 @@
 .d-ui-menu-toolbar-dropdown[
   data=data
   data-bs-theme="dark"
-  data=stimulus_action("#{dropdown_trigger}:clicked@window": "triggerClicked",
-                      "resize@window": "setPosition",
-                      "orientationchange@window": "setPosition")
 ]
   - if dropdown_title
     .d-ui-menu-toolbar-dropdown__title-wrapper[
