@@ -161,11 +161,22 @@
       font-size: $ui-typo-text-s-font-size
 
     &__children-ul &__children-ul
-      padding-left: 10px
       box-shadow: none
       position: relative
       top: auto
       margin-top: 0
+      border-radius: 0
+      border: 0
+
+    &__children-ul &__span
+      align-items: flex-start
+
+    &__children-ul &__children-ul &__li
+      border: 0
+  
+    &__children-ul &__children-ul &__li &__a
+      padding: map-get($spacers, 2) map-get($spacers, 4)
+      color: $shade-500
 
   +mq-mobile-menu
     background: $cloud-900

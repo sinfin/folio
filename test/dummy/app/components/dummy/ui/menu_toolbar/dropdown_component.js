@@ -5,10 +5,30 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
     dropdownTrigger: String,
   }
 
-  // TODO: pridat zavreni po kliku mimo komponentu - zvazit/zjistit pouziti 'stimulus-use'
+  disconnect () {
+    this.unbindOutsideClick()
+  }
 
-  connect () {
-    this.setPosition()
+  onAnyClick (e) {
+    const $dropdownTrigger = document.querySelector(`.${this.dropdownTriggerValue}`)
+
+    if (!this.element.contains(e.target) && !$dropdownTrigger.contains(e.target)) {
+      this.close()
+    }
+  }
+
+  bindOutsideClick () {
+    this.unbindOutsideClick()
+
+    this.boundOnAnyClick = this.onAnyClick.bind(this)
+    document.addEventListener('click', this.boundOnAnyClick)
+  }
+
+  unbindOutsideClick () {
+    if (this.boundOnAnyClick) {
+      document.removeEventListener('click', this.boundOnAnyClick)
+      delete this.boundOnAnyClick
+    }
   }
 
   triggerClicked () {
@@ -20,11 +40,14 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
   }
 
   open () {
+    this.setPosition()
     this.openValue = true
     this.element.classList.add("d-ui-menu-toolbar-dropdown--open")
+    this.bindOutsideClick()
   }
 
   close () {
+    this.unbindOutsideClick()
     this.openValue = false
     this.element.classList.remove("d-ui-menu-toolbar-dropdown--open")
   }
