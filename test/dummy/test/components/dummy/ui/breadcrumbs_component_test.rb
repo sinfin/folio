@@ -14,5 +14,8 @@ class Dummy::Ui::BreadcrumbsComponentTest < Folio::ComponentTest
 
     render_inline(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: crumbs))
     assert_selector(".d-ui-breadcrumbs")
+
+    render_inline(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: crumbs, single: true))
+    assert_selector(".d-ui-breadcrumbs")
   end
 end
