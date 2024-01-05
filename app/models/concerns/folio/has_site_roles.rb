@@ -14,7 +14,7 @@ module Folio::HasSiteRoles
     has_many :sites, through: :site_user_links,
                      source: :site
 
-    scope :with_unscoped_roles, -> (roles) { where(id: Folio::SiteUserLink.by_roles(roles).pluck(:user_id)) }
+    scope :with_unscoped_roles, -> (roles) { where(id: Folio::SiteUserLink.by_roles(roles).select(:user_id)) }
     scope :with_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).by_roles(roles)) }
     scope :without_site_roles, -> (site:, roles:) { joins(:site_user_links).merge(Folio::SiteUserLink.by_site(site).without_roles(roles)) }
   end
