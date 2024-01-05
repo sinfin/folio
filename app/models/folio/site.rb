@@ -162,6 +162,10 @@ class Folio::Site < Folio::ApplicationRecord
     ::Rails.application.config.folio_console_sidebar_title_image_path
   end
 
+  def available_user_roles_ary
+    available_user_roles.presence || []
+  end
+
   private
     def system_emails_should_be_valid
       %i[system_email system_email_copy].each do |attr|
@@ -205,7 +209,7 @@ end
 #  slug                              :string
 #  position                          :integer
 #  copyright_info_source             :string
-#  available_user_roles              :json
+#  available_user_roles              :jsonb
 #
 # Indexes
 #

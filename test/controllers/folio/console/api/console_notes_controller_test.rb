@@ -22,7 +22,7 @@ class Folio::Console::Api::ConsoleNotesControllerTest < Folio::Console::BaseCont
       closed: true,
     }
 
-    assert_response :bad_request
+    assert_response :bad_request, response.body
     assert_equal "ActiveRecord::RecordInvalid", response.parsed_body["errors"][0]["title"]
   end
 

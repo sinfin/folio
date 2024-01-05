@@ -8,5 +8,5 @@
   data-file-for-modal=@file_for_modal
   data-mode='index'
   data-taggable='1'
-  data-can-destroy-files=(can?(:destroy, @klass) ? "1" : nil)
+  data-can-destroy-files=(can_now?(:destroy, @klass) ? "1" : nil)
 ]

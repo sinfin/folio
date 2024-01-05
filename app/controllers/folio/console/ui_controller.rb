@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::UiController < Folio::Console::BaseController
-  before_action :only_allow_superusers
+  before_action :only_allow_superadmins
 
   def show
     @actions = %i[
@@ -130,8 +130,8 @@ class Folio::Console::UiController < Folio::Console::BaseController
   end
 
   private
-    def only_allow_superusers
-      if current_account.has_role?(:superuser)
+    def only_allow_superadmins
+      if current_user.superadmin?
         add_breadcrumb "UI", console_ui_path
 
         if action_name != "show"

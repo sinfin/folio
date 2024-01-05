@@ -1,0 +1,17 @@
+.f-c-current-users-console-path-bar[
+  hidden=hidden?
+  data-url=controller.folio.console_path_ping_console_api_current_user_path
+]
+  .container-fluid
+    .f-c-current-users-console-path-bar__top
+      = folio_icon(:alert,
+                   class: 'f-c-current-users-console-path-bar__top-ico')
+
+      .f-c-current-users-console-path-bar__top-label
+        = t('.title')
+
+        span.f-c-current-users-console-path-bar__top-label-name<>
+          = name
+
+    .f-c-current-users-console-path-bar__bottom
+      = t('.text')

@@ -1,0 +1,12 @@
+.f-users-impersonating-bar.bg-warning
+  .container-fluid.py-2.text-center.fw-bold.fs-text-s
+    = folio_icon(:user)
+
+    span<>
+      = t(".label",
+          true_user: true_user_with_test_fallback.to_label,
+          impersonated_user: current_user_with_test_fallback.to_label)
+
+    = link_to(t(".stop_impersonation"),
+              href,
+              data: {turbo: false})

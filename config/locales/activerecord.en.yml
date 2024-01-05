@@ -2,10 +2,8 @@
 en:
   activerecord:
     attributes:
-      folio/account:
-        full_name: Name
+      folio/site_user_link:
         roles: Role
-        roles/superuser: Superuser
         roles/administrator: Administrator
         roles/manager: Manager
       folio/atom/base:
@@ -112,9 +110,6 @@ en:
             password:
               weak_password: is weak.Try at least 8 characters from lowercase and uppercase letters, numbers and symbols.
     models:
-      folio/account:
-        one: Account
-        other: Accounts
       folio/atom:
         one: Atom
         other: Atoms

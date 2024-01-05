@@ -255,15 +255,6 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
     assert_equal :redirect_to_master_sessions_new, result.action
   end
 
-  test "slave_site - devise controller - sessions for accounts" do
-    result = new_result(master_site: master_site_mock,
-                        devise_controller: true,
-                        resource_name: :account,
-                        controller_name: "sessions")
-
-    assert_equal :redirect_to_master_sessions_new, result.action
-  end
-
   test "slave_site - devise controller - registrations/invitations" do
     %w[registrations invitations].each do |controller_name|
       result = new_result(master_site: master_site_mock,

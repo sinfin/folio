@@ -18,7 +18,11 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
-    resource.update_column(:source_site_id, source_site_for_user.id) if resource_invited
+    if source_site_for_user.present? && resource_invited
+      resource.update_column(:source_site_id, source_site_for_user.id)
+      resource.create_site_links_for([current_site, source_site_for_user])
+    end
+
 
     respond_to do |format|
       # need to override devise invitable here with devise default
@@ -115,7 +119,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     end
 
     def source_site_for_user
-      if session && session[Folio::Devise::CrossdomainHandler::SESSION_KEY] && site_slug = session[Folio::Devise::CrossdomainHandler::SESSION_KEY][:target_site_slug]
+      if session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
         return Folio::Site.find(site_slug)
       end
 

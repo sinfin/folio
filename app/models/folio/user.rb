@@ -50,6 +50,18 @@ class Folio::User < Folio::ApplicationRecord
                              inverse_of: :user,
                              dependent: :destroy
 
+
+  has_many :created_console_notes, class_name: "Folio::ConsoleNote",
+                                   inverse_of: :created_by,
+                                   foreign_key: :created_by_id,
+                                   dependent: :nullify
+
+  has_many :closed_console_notes, class_name: "Folio::ConsoleNote",
+                                  inverse_of: :closed_by,
+                                  foreign_key: :closed_by_id,
+                                  dependent: :nullify
+
+
   validates :first_name, :last_name,
             presence: true,
             if: :validate_first_name_and_last_name?
@@ -72,11 +84,17 @@ class Folio::User < Folio::ApplicationRecord
                   using: { tsearch: { prefix: true } }
 
   scope :ordered, -> { order(id: :desc) }
+  scope :superadmins, -> { where(superadmin: true) }
+  scope :by_role, -> (role) { role == "superadmin" ? superadmins : where(id: Folio::SiteUserLink.by_roles([role]).pluck(:user_id)) }
 
   scope :by_address_identification_number_query, -> (q) {
     subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
     where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
   }
+
+  scope :currently_editing_path, -> (path) do
+    where(console_path: path).where("console_path_updated_at > ?", 5.minutes.ago)
+  end
 
   pg_search_scope :by_full_name_query,
                   against: %i[last_name first_name],
@@ -234,6 +252,46 @@ class Folio::User < Folio::ApplicationRecord
   def acquire_orphan_records!(old_session_id:)
   end
 
+  def create_site_links_for(sites)
+    sites.compact.uniq.each do |site|
+      su_links = site_user_links.by_site(site)
+      su_links.create!(roles: []) if su_links.blank?
+    end
+  end
+
+  def update_console_path!(console_path)
+    update_columns(console_path:,
+                   console_path_updated_at: Time.current)
+  end
+
+  def can_manage_sidekiq?
+    can_now?(:manage, :sidekiq)
+  end
+
+  def can_now?(action, subject = nil, site: nil)
+    site ||= subject&.try(:site)
+    subject = site if subject.blank?
+    ability = Folio::Ability.new(self, site)
+    can_now_by_ability?(ability, action, subject)
+  end
+
+  def can_now_by_ability?(ability, action, subject)
+    return false if self.new_record?
+    return false unless ability.can?(action, subject)
+    return true unless subject.respond_to?(:currently_allowed_actions)
+
+    subject.currently_allowed_actions(self).include?(action)
+    # example:
+    # def self.currently_allowed_actions(*args)
+    #   [:create, :index]
+    # end
+
+    # def currently_allowed_actions(*args)
+    #   [:read, :update, :destroy] + permitted_event_names(*args)
+    # end
+  end
+
+
   private
     def validate_first_name_and_last_name?
       invitation_accepted_at?
@@ -318,6 +376,9 @@ end
 #  crossdomain_devise_set_at :datetime
 #  sign_out_salt_part        :string
 #  source_site_id            :bigint(8)
+#  superadmin                :boolean          default(FALSE), not null
+#  console_path              :string
+#  console_path_updated_at   :datetime
 #
 # Indexes
 #

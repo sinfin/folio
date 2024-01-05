@@ -88,7 +88,7 @@ cs:
         update:
           success: Šablony upraveny.
       create: Vytvořit
-      current_accounts:
+      current_users:
         console_path_bar:
           title: Tuto stránku nyní upravuje
           text: Vyčkejte, až dokončí úpravy. Při současné úpravě by mohlo dojít ke ztrátě rozpracovaného obsahu.
@@ -234,6 +234,12 @@ cs:
         header_actions:
           impersonate: Přihlásit se jako uživatel
           send_reset_password_email: Poslat odkaz na reset hesla
+        edit:
+          invitation_not_accepted_1: Uživatel byl pozván <strong>%{created_at}</strong>, ale pozvánku zatím nepřijal.
+          invitation_not_accepted_2: Můžete mu poslat novou pozvánku (a případně zkopírovat adresu pozvánky a zaslat mu ji jinou cestou).
+        invite_and_copy:
+          button: Pozvat znovu a zkopírovat adresu
+          failure: Pozvánka se nezdařila. Chyba byla reportována.
       email_templates:
         form:
           keywords:
@@ -289,13 +295,6 @@ cs:
           in_new: Vytvořit nový z YAML
       clipboard_copy:
         copy: Kopírovat
-      accounts:
-        edit:
-          invitation_not_accepted_1: Uživatel byl pozván <strong>%{created_at}</strong>, ale pozvánku zatím nepřijal.
-          invitation_not_accepted_2: Můžete mu nastavit heslo pomocí políčka níže, nebo udělat novou pozvánku a zkopírovat adresu.
-        invite_and_copy:
-          button: Pozvat znovu a zkopírovat adresu
-          failure: Pozvánka se nezdařila. Chyba byla reportována.
       catalogue_sort_arrows:
         sort_asc: Řadit vzestupně
         sort_desc: Řadit sestupně
@@ -325,6 +324,10 @@ cs:
 
       with_aside:
         hide: Skrýt
+
+      site_user_links:
+        fields_component:
+          title: Role
 
   date:
     formats:
