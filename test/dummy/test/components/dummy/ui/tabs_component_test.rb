@@ -13,7 +13,7 @@ class Dummy::Ui::TabsComponentTest < Folio::ComponentTest
       { href: "#", label: "Another tab" },
     ]
 
-    render_inline(Dummy::Ui::TabsComponent.new(tabs: tabs))
+    render_inline(Dummy::Ui::TabsComponent.new(tabs:))
     assert_selector(".d-ui-tabs")
   end
 end
