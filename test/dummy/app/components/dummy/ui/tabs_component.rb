@@ -6,7 +6,7 @@ class Dummy::Ui::TabsComponent < ApplicationComponent
     @tabs = tabs
   end
 
-  def show
-    render if tabs.present?
+  def render?
+    @tabs.present?
   end
 end
