@@ -98,7 +98,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def role_filters
-      allowed_roles = current_site.available_user_roles.select do |role|
+      allowed_roles = current_site.available_user_roles_ary.select do |role|
         can_now?("read_#{role}s", nil)
       end
 

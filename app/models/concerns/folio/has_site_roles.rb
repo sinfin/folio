@@ -21,7 +21,7 @@ module Folio::HasSiteRoles
 
   class_methods do
     def roles_for_select(site:, selectable_roles: nil)
-      roles = site.available_user_roles
+      roles = site.available_user_roles_ary
       roles = roles & selectable_roles if selectable_roles.present?
 
       roles.map do |role|
