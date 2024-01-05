@@ -1,2 +1,14 @@
 = simple_form_for([:console, @user]) do |f|
+
+  - if @user.invitation_created_at && !@user.invitation_accepted_at
+    .alert.alert-warning.mt-n3.mb-4
+      p == t('.invitation_not_accepted_1',
+             created_at: l(@user.invitation_created_at, format: :short))
+
+      p == t('.invitation_not_accepted_2',
+             created_at: l(@user.invitation_created_at, format: :short))
+
+      == cell('folio/console/users/invite_and_copy',
+              @user)
+
   = render 'form', f: f

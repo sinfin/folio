@@ -6,7 +6,7 @@ class Folio::Console::Api::ConsoleNotesController < Folio::Console::Api::BaseCon
   def toggle_closed_at
     if [true, "true"].include?(params[:closed]) && !@console_note.closed_at?
       @console_note.update(closed_at: Time.current,
-                           closed_by: current_account)
+                           closed_by: current_user)
     elsif [false, "false"].include?(params[:closed]) && @console_note.closed_at
       @console_note.update(closed_at: nil,
                            closed_by: nil)

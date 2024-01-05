@@ -77,4 +77,46 @@ class Folio::ApplicationComponent < ViewComponent::Base
   def current_site
     controller.current_site
   end
+
+  def current_user
+    controller.try(:current_user)
+  end
+
+  def user_signed_in?
+    controller.try(:user_signed_in?)
+  end
+
+  def current_user_with_test_fallback
+    if Rails.env.test?
+      if @current_user_for_test
+        @current_user_for_test
+      else
+        begin
+          current_user
+        rescue StandardError
+        end
+      end
+    else
+      current_user
+    end
+  end
+
+  def true_user_with_test_fallback
+    if Rails.env.test?
+      if @true_user_for_test
+        @true_user_for_test
+      else
+        begin
+          controller.try(:true_user)
+        rescue StandardError
+        end
+      end
+    else
+      controller.try(:true_user)
+    end
+  end
+
+  def can_now?(action, object = nil)
+    controller.can_now?(action, object)
+  end
 end

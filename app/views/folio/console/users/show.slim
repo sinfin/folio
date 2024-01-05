@@ -37,6 +37,7 @@
           .mb-n3
             = simple_format @user.admin_note
 
+= render partial: "folio/console/users/site_roles"
 = render partial: "folio/console/users/show_middle"
 
 - if ::Rails.application.config.folio_users_use_address

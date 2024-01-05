@@ -45,7 +45,26 @@ module Folio::ApplicationControllerBase
     end
   end
 
+  def can_now?(action, object = nil)
+    object ||= current_site
+    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
+  end
+
+  def true_user
+    if session[:true_user_id].present?
+      Folio::User.find_by(id: session[:true_user_id])
+    else
+      current_user
+    end
+  end
+
+
   private
+    def authenticate_account! # backward compatibility method, do not use
+      authenticate_user!
+      can_now?(:access_console) || raise(CanCan::AccessDenied)
+    end
+
     def nested_page_path(page)
       return nil unless main_app.respond_to?(:page_path)
       main_app.page_path(path: page.ancestry_url)
@@ -99,5 +118,9 @@ module Folio::ApplicationControllerBase
 
     def authenticate_inviter!
       # allow anonymous invites
+    end
+
+    def current_ability
+      @current_ability ||= Folio::Ability.new(current_user, current_site)
     end
 end

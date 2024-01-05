@@ -2,10 +2,8 @@
 cs:
   activerecord:
     attributes:
-      folio/account:
-        full_name: Jméno
+      folio/site_user_link:
         roles: Uživatelská role
-        roles/superuser: Superuser
         roles/administrator: Administrátor
         roles/manager: Manažer
       folio/atom/base:
@@ -72,6 +70,8 @@ cs:
         locales: Jazyky
         system_email: Systémová e-mailová adresa
         system_email_copy: Systémová e-mailová adresa (kopie)
+        roles: Uživatelské role
+
       folio/email_template:
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
         subject: Předmět
@@ -155,10 +155,6 @@ cs:
             roles:
               not_available_for_site: "Role %{roles} nejsou dostupné pro web '%{site}'."
     models:
-      folio/account:
-        few: Administrátoři
-        one: Administrátor
-        other: Administrátorů
       folio/atom:
         few: Kapitoly
         one: Kapitola

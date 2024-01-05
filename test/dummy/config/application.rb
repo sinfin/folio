@@ -16,7 +16,6 @@ module Dummy
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    Rails.application.config.folio_users = true
     Rails.application.config.folio_leads = true
     Rails.application.config.folio_newsletter_subscriptions = true
 

@@ -15,9 +15,9 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
 
   test "create" do
     attachmentable = PageWithAttachments.create!(title: "PageWithAttachments", site: Folio.main_site)
-    account = Folio::Account.last
+    user = Folio::User.superadmins.last
 
-    sign_out account
+    sign_out user
 
     assert_difference("Folio::PrivateAttachment.count", 0) do
       post url_for([:console, :api, Folio::PrivateAttachment]), params: {
@@ -30,10 +30,10 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
         type: "Folio::PrivateAttachment",
       }
       json = response.parsed_body
-      assert_equal(401, json["errors"][0]["status"])
+      assert_equal(401, json["errors"][0]["status"], json)
     end
 
-    sign_in account
+    sign_in user
 
     assert_difference("Folio::PrivateAttachment.count", 1) do
       post url_for([:console, :api, Folio::PrivateAttachment]), params: {
@@ -55,9 +55,9 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
       attachmentable:,
       file: Folio::Engine.root.join("test/fixtures/folio/test.gif")
     )
-    account = Folio::Account.last
+    user = Folio::User.superadmins.last
 
-    sign_out account
+    sign_out user
 
     assert_difference("Folio::PrivateAttachment.count", 0) do
       delete url_for([:console, :api, private_attachment]), params: {
@@ -66,10 +66,10 @@ class Folio::Console::Api::PrivateAttachmentsControllerTest < Folio::Console::Ba
         minimal: "1",
       }
       json = response.parsed_body
-      assert_equal(401, json["errors"][0]["status"])
+      assert_equal(401, json["errors"][0]["status"], json)
     end
 
-    sign_in account
+    sign_in user
 
     assert_difference("Folio::PrivateAttachment.count", -1) do
       delete url_for([:console, :api, private_attachment]), params: {

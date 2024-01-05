@@ -16,6 +16,8 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
+    = render(Folio::Users::ImpersonatingBarComponent.new)
+
     = render(Dummy::Ui::HeaderComponent.new)
 
     = render(Dummy::Ui::HeaderMessageComponent.new)
@@ -35,7 +37,6 @@ html[
 
     = render(Dummy::Ui::FooterComponent.new)
 
-    - if Rails.application.config.folio_users
-      = yield :modals
-      == cell('folio/devise/modal')
-      == cell('folio/devise/omniauth/forms')
+    = yield :modals
+    == cell('folio/devise/modal')
+    == cell('folio/devise/omniauth/forms')

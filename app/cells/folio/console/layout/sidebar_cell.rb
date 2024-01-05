@@ -39,7 +39,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
-        return if controller.cannot?(:index, link_source[:klass].constantize)
+        return unless can_now?(:index, link_source[:klass].constantize)
       end
 
       label = if link_source[:label]
@@ -148,13 +148,12 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def secondary_class_names
-    return [] unless current_site == Folio.main_site
+    links = []
+    links << link_for_site_class(Folio.main_site, Folio::User) if show_users? && current_user.superadmin?
+
     [
       {
-        links: [
-          ::Rails.application.config.folio_users ? "Folio::User" : nil,
-          "Folio::Account",
-        ].compact
+        links: links.compact
       }
     ]
   end
@@ -195,7 +194,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def homepage_for_site(site)
     instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
 
-    if instance && controller.can?(:index, Folio::Page)
+    if instance && controller.can_now?(:index, Folio::Page)
       {
         label: t(".homepage"),
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
@@ -204,7 +203,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_users?
-    ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
+    !::Rails.application.config.folio_console_sidebar_force_hide_users
   end
 
   def show_leads?
@@ -230,7 +229,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   private
     def site_main_links(site)
-      return nil unless controller.can?(:read, site)
+      return nil unless controller.can_now?(:read, site)
 
       build_site_links_collapsible_block(site)
     end
@@ -258,7 +257,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
         links << link_for_site_class(site, Folio::EmailTemplate)
         links += site_links[:console_sidebar_before_site_links]
-        if controller.can?(:manage, site)
+        if can_now?(:manage, site)
           links << {
                       klass: "Folio::Site",
                       icon: :cog,
@@ -266,8 +265,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
                       label: t(".settings"),
                     }
         end
-        links << link_for_site_class(site, Folio::User) if ::Rails.application.config.folio_users
-
+        links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
 
         {
           locale: site.console_locale,
@@ -301,7 +299,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
     def link_from_definitions(site, link_or_hash)
       if link_or_hash.is_a?(Hash)
-        if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
+        if !link_or_hash[:required_ability] || can_now?(link_or_hash[:required_ability], link_or_hash[:klass].constantize, site:)
           link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
           link_or_hash
         end
@@ -310,10 +308,21 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     end
 
-    def link_for_site_class(site, klass)
+    def link_for_site_class(site, klass, params: {}, label: nil)
+      return nil unless can_now?(:index, klass, site:)
       {
         klass: klass.to_s,
-        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
+        label:,
+        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
       }
+    end
+
+    def can_now?(action, object, site: current_site)
+      (current_user || Folio::User.new).can_now_by_ability?(site_ability(site), action, object)
+    end
+
+    def site_ability(site)
+      @site_abilities ||= {}
+      @site_abilities[site] ||= Folio::Ability.new(current_user, site)
     end
 end

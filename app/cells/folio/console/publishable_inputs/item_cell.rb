@@ -30,7 +30,7 @@ class Folio::Console::PublishableInputs::ItemCell < Folio::ConsoleCell
   end
 
   def can_field?
-    field != :published || controller.can?(:publish, f.object)
+    field != :published || controller.can_now?(:publish, f.object)
   end
 
   def input_html(class_name_element = nil, placeholder: nil, checkbox: false)
