@@ -367,8 +367,6 @@ end
 #  invitations_count         :integer          default(0)
 #  nickname                  :string
 #  use_secondary_address     :boolean          default(FALSE)
-#  primary_address_id        :bigint(8)
-#  secondary_address_id      :bigint(8)
 #  subscribed_to_newsletter  :boolean          default(FALSE)
 #  has_generated_password    :boolean          default(FALSE)
 #  phone                     :string
@@ -388,8 +386,6 @@ end
 #  index_folio_users_on_invitation_token                   (invitation_token) UNIQUE
 #  index_folio_users_on_invited_by_id                      (invited_by_id)
 #  index_folio_users_on_invited_by_type_and_invited_by_id  (invited_by_type,invited_by_id)
-#  index_folio_users_on_primary_address_id                 (primary_address_id)
 #  index_folio_users_on_reset_password_token               (reset_password_token) UNIQUE
-#  index_folio_users_on_secondary_address_id               (secondary_address_id)
 #  index_folio_users_on_source_site_id                     (source_site_id)
 #

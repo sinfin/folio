@@ -4,13 +4,10 @@ module Folio::HasAddresses
   extend ActiveSupport::Concern
 
   included do
-    belongs_to :primary_address, class_name: "Folio::Address::Primary",
-                                  foreign_key: :primary_address_id,
-                                  optional: true
-
-    belongs_to :secondary_address, class_name: "Folio::Address::Secondary",
-                                   foreign_key: :secondary_address_id,
-                                   optional: true
+    has_one :primary_address, class_name: "Folio::Address::Primary",
+                              as: :owner
+    has_one :secondary_address, class_name: "Folio::Address::Secondary",
+                                as: :owner
 
     %i[primary_address secondary_address].each do |key|
       accepts_nested_attributes_for key,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_121004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -109,6 +109,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
     t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "owner_type"
+    t.bigint "owner_id"
+    t.index ["owner_type", "owner_id"], name: "index_folio_addresses_on_owner"
     t.index ["type"], name: "index_folio_addresses_on_type"
   end
 
@@ -187,7 +190,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
     t.index ["file_id"], name: "index_folio_file_placements_on_file_id"
     t.index ["placement_title"], name: "index_folio_file_placements_on_placement_title"
     t.index ["placement_title_type"], name: "index_folio_file_placements_on_placement_title_type"
-    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement"
+    t.index ["placement_type", "placement_id"], name: "index_folio_file_placements_on_placement_type_and_placement_id"
     t.index ["type"], name: "index_folio_file_placements_on_type"
   end
 
@@ -448,8 +451,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
     t.integer "invitations_count", default: 0
     t.string "nickname"
     t.boolean "use_secondary_address", default: false
-    t.bigint "primary_address_id"
-    t.bigint "secondary_address_id"
     t.boolean "subscribed_to_newsletter", default: false
     t.boolean "has_generated_password", default: false
     t.string "phone"
@@ -466,9 +467,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
     t.index ["invitation_token"], name: "index_folio_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_folio_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_folio_users_on_invited_by_type_and_invited_by_id"
-    t.index ["primary_address_id"], name: "index_folio_users_on_primary_address_id"
     t.index ["reset_password_token"], name: "index_folio_users_on_reset_password_token", unique: true
-    t.index ["secondary_address_id"], name: "index_folio_users_on_secondary_address_id"
     t.index ["source_site_id"], name: "index_folio_users_on_source_site_id"
   end
 
@@ -491,7 +490,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index "to_tsvector('simple'::regconfig, folio_unaccent(COALESCE(content, ''::text)))", name: "index_pg_search_documents_on_public_search", using: :gin
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

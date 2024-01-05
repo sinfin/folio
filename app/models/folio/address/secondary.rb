@@ -23,8 +23,11 @@ end
 #  type                      :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
+#  owner_type                :string
+#  owner_id                  :bigint(8)
 #
 # Indexes
 #
-#  index_folio_addresses_on_type  (type)
+#  index_folio_addresses_on_owner  (owner_type,owner_id)
+#  index_folio_addresses_on_type   (type)
 #
