@@ -1,7 +1,7 @@
 .d-ui-tabs
   .d-ui-tabs__inner
     ul.d-ui-tabs__ul
-      - model.each do |link|
+      - @tabs.each do |link|
         li.d-ui-tabs__li
           a.d-ui-tabs__a[
             href=link[:href]

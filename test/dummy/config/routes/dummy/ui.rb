@@ -12,6 +12,7 @@ scope module: :dummy, as: :dummy do
     get :inputs
     get :modals
     get :pagination
+    get :tabs
     get :typo
   end
 end
