@@ -26,6 +26,12 @@ class Dummy::Ui::BreadcrumbsComponent < ApplicationComponent
   end
 
   def render?
-    breadcrumb || breadcrumbs_ary
+    return false if @breadcrumbs.blank?
+
+    if single?
+      breadcrumb
+    else
+      breadcrumbs_ary
+    end
   end
 end
