@@ -7,15 +7,51 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
     toggleSelect: Boolean
   }
 
-  // TODO: pridat zavreni expanded options po kliku mimo komponentu - zvazit/zjistit pouziti 'stimulus-use'
-
   connect () {
     this.updateLastAndFirstVisibleOption()
   }
 
+  disconnect () {
+    this.unbindOutsideClick()
+  }
+
+  onAnyClick (e) {
+    if (!this.element.contains(e.target)) {
+      this.close()
+    }
+  }
+
+  bindOutsideClick () {
+    this.unbindOutsideClick()
+
+    this.boundOnAnyClick = this.onAnyClick.bind(this)
+    document.addEventListener('click', this.boundOnAnyClick)
+  }
+
+  unbindOutsideClick () {
+    if (this.boundOnAnyClick) {
+      document.removeEventListener('click', this.boundOnAnyClick)
+      delete this.boundOnAnyClick
+    }
+  }
+
+  close () {
+    this.element.classList.remove("d-ui-mini-select--expanded")
+    this.unbindOutsideClick()
+  }
+
+  open () {
+    this.element.classList.add("d-ui-mini-select--expanded")
+    this.bindOutsideClick()
+  }
+
   selectedValueClick () {
     if (!this.toggleSelectValue) {
-      this.element.classList.toggle("d-ui-mini-select--expanded")
+      if (this.element.classList.contains("d-ui-mini-select--expanded")) {
+        this.close()
+      } else {
+        this.open()
+      }
     } else {
       this.setOptionAsSelectedValue("toggle")
     }
@@ -37,10 +73,10 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
       const nextSelected = options[nextIndex]
 
       this.selectedValueTextTarget.innerText = nextSelected
-    } else if (functionality === "select") {  
+    } else if (functionality === "select") {
       this.selectedValueTextTarget.innerText = option
+      this.close()
       this.refreshOptions(option)
-      this.element.classList.remove("d-ui-mini-select--expanded")
     }
 
     console.log("In " + this.typeValue + " select was selected: " + this.selectedValueTextTarget.innerText)
