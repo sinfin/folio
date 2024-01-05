@@ -49,7 +49,7 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
         update_mailchimp_subscription(email_before_last_save)
       end
 
-      update_mailchimp_subscription
+      update_mailchimp_subscription(email)
     end
   end
 
@@ -78,19 +78,17 @@ class Folio::NewsletterSubscription < Folio::ApplicationRecord
   end
 
   private
-    def update_mailchimp_subscription(email_for_subscription = nil)
+    def update_mailchimp_subscription(email_for_subscription)
       return unless Rails.application.config.folio_newsletter_subscription_service == :mailchimp
       return unless Rails.env.production? || ENV["DEV_MAILCHIMP"]
 
       # TODO: multiple mailchimp lists not implemented yet
-      return unless Rails.application.config.folio_site_is_a_singleton
-
-      Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription || email)
+      if Folio::Site.count == 1
+        Folio::Mailchimp::CreateOrUpdateSubscriptionJob.perform_later(email_for_subscription)
+      end
     end
 
     def validate_belongs_to_subscribable_site
-      return if Rails.application.config.folio_site_is_a_singleton
-
       errors.add(:site, :invalid) unless site.in?(self.class.subscribable_sites)
     end
 end

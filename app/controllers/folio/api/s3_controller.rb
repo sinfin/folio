@@ -22,6 +22,10 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
     handle_after(Folio::S3::CreateFileJob)
   end
 
+  def site_for_new_files
+    Rails.application.config.folio_shared_files_between_sites ? Folio.main_site : current_site
+  end
+
   private
     def allowed_klass?(file_klass)
       Rails.application.config.folio_direct_s3_upload_class_names.any? do |class_name|
@@ -31,7 +35,7 @@ class Folio::Api::S3Controller < Folio::Api::BaseController
 
     def authenticate_s3!
       return if Rails.application.config.folio_direct_s3_upload_allow_public
-      return if current_account
+      return if can_now?(:create, Folio::File.new(site: current_site))
       return if Rails.application.config.folio_direct_s3_upload_allow_for_users && user_signed_in?
       return if Rails.application.config.folio_allow_users_to_console && user_signed_in?
       fail CanCan::AccessDenied

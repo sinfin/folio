@@ -335,9 +335,6 @@ Devise.setup do |config|
   #     mount MyEngine, at: '/my_engine'
   #
   # The router that invoked `devise_for`, in the example above, would be:
-  unless Rails.application.config.folio_users
-    config.router_name = :folio
-  end
 
   Devise::Mapping.send :prepend, Folio::DeviseMapping
 

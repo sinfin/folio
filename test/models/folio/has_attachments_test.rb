@@ -17,6 +17,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
     document = create(:folio_file_document)
 
     my_page = MyPage.create!(title: "MyPage",
+                             site: get_any_site,
                              my_file_placement_attributes: { file: document })
 
     assert_equal(1, MyFilePlacement.count)
@@ -28,7 +29,7 @@ class Folio::HasAttachmentsTest < ActiveSupport::TestCase
       folio_attachments_first_image_as_cover
     end
 
-    page = FirstAsCover.create!(title: "FirstAsCover")
+    page = FirstAsCover.create!(title: "FirstAsCover", site: get_any_site)
 
     one = create(:folio_file_image)
     two = create(:folio_file_image)

@@ -8,15 +8,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::HasCurrentSite
   include Pagy::Backend
 
-  before_action :custom_authenticate_account!
+  before_action :custom_authorize_user!
 
   before_action :add_root_breadcrumb
 
-  before_action :update_current_account_console_path
-  before_action :set_show_current_account_console_path_bar
+  before_action :update_current_user_console_path
+  before_action :set_show_current_user_console_path_bar
 
   before_action do
-    if (params[:rmp] && account_signed_in?) || ENV["FORCE_MINI_PROFILER"]
+    if (params[:rmp] && can_now?(:display_miniprofiler)) || ENV["FORCE_MINI_PROFILER"]
       Rack::MiniProfiler.authorize_request
     end
   end
@@ -172,14 +172,6 @@ class Folio::Console::BaseController < Folio::ApplicationController
         end
 
         ary
-      end
-    end
-
-    def current_ability
-      @current_ability ||= if Rails.application.config.folio_allow_users_to_console
-        Folio::ConsoleAbility.new(current_account || current_user)
-      else
-        Folio::ConsoleAbility.new(current_account)
       end
     end
 
@@ -376,8 +368,22 @@ class Folio::Console::BaseController < Folio::ApplicationController
       add_breadcrumb(folio_console_record.to_label)
     end
 
-    def custom_authenticate_account!
-      authenticate_account!
+    def custom_authorize_user!
+      if self.respond_to?(:custom_authenticate_account!)
+        custom_authenticate_account! # includes authorization
+      else
+        if self.respond_to?(:custom_authenticate_user!)
+          custom_authenticate_user!
+        else
+          authenticate_user!
+        end
+      end
+
+      if params[:action].to_sym == :stop_impersonating
+        authorize!(:stop_impersonating, Folio::User)
+      else
+        authorize!(:access_console, current_site)
+      end
     end
 
     def console_show_or_edit_path(record, other_params: {}, include_through_record: true)
@@ -431,19 +437,27 @@ class Folio::Console::BaseController < Folio::ApplicationController
         records = folio_console_records.accessible_by(current_ability, self.class.cancancan_accessible_by_action)
 
         instance_variable_set(folio_console_record_variable_name(plural: true),
-                              records.by_site(current_site))
+                              records.by_site(allowed_record_sites))
       elsif record = folio_console_record
-        if record.persisted? && record.site != current_site
+        if record.persisted? && !allowed_record_sites.include?(record.site)
           fail ActiveRecord::RecordNotFound
         end
       end
+    end
+
+    def allowed_record_sites
+      [current_site]
     end
 
     def load_belongs_to_site_resource
       # setting i.e. @page makes cancancan skip the load
       if params[:id].present?
         name = folio_console_record_variable_name(plural: false)
-        instance_variable_set(name, @klass.by_site(current_site).find(params[:id]))
+        if @klass.respond_to?(:friendly)
+          instance_variable_set(name, @klass.by_site(allowed_record_sites).friendly.find(params[:id]))
+        else
+          instance_variable_set(name, @klass.by_site(allowed_record_sites).find(params[:id]))
+        end
       end
     end
 
@@ -483,17 +497,15 @@ class Folio::Console::BaseController < Folio::ApplicationController
       end
     end
 
-    def update_current_account_console_path
-      return unless current_account
+    def update_current_user_console_path
+      return unless can_now?(:access_console)
       return if request.path.start_with?("/console/api")
       return if request.path.start_with?("/console/atoms")
-      current_account.update_console_path!(request.path)
+      current_user.update_console_path!(request.path)
     end
 
-    def set_show_current_account_console_path_bar
-      if action_name == "edit" || action_name == "update"
-        @show_current_account_console_path_bar = true
-      end
+    def set_show_current_user_console_path_bar
+      @show_current_user_console_path_bar = ["edit", "update"].include?(action_name)
     end
 
     def self.cancancan_accessible_by_action

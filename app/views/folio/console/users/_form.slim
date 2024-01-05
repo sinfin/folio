@@ -22,6 +22,8 @@
                   autosize: true,
                   input_html: { class: "bg-postit-note", rows: 4 }
 
+    = render(Folio::Console::SiteUserLinks::FieldsComponent.new(f:))
+
     - if ::Rails.application.config.folio_users_use_address
       .row
         .col-lg-8

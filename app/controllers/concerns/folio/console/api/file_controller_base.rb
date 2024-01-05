@@ -137,4 +137,12 @@ module Folio::Console::Api::FileControllerBase
     def index_cache_key
       "folio/console/api/file/#{@klass.model_name.plural}/index/#{@klass.count}/#{@klass.maximum(:updated_at)}"
     end
+
+    def allowed_record_sites
+      if Rails.application.config.folio_shared_files_between_sites
+        [Folio.main_site, current_site]
+      else
+        [current_site]
+      end
+    end
 end

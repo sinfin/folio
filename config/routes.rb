@@ -5,10 +5,6 @@ Folio::Engine.routes.draw do
 
   get "errors/internal_server_error"
 
-  unless Rails.application.config.folio_users
-    devise_for :accounts, class_name: "Folio::Account", module: "folio/accounts"
-  end
-
   namespace :devise do
     namespace :omniauth do
       resource :authentication, only: %i[destroy]
@@ -80,10 +76,6 @@ Folio::Engine.routes.draw do
         resources :newsletter_subscriptions, only: %i[index destroy]
       end
 
-      resources :accounts, except: %i[show] do
-        member { post :invite_and_copy }
-      end
-
       resources :email_templates, only: %i[index edit update]
       resource :search, only: %i[show]
       resource :site, only: %i[edit update] do
@@ -91,9 +83,14 @@ Folio::Engine.routes.draw do
       end
 
       resources :users do
+        collection do
+          get :stop_impersonating
+        end
+
         member do
           get :send_reset_password_email
           get :impersonate
+          post :invite_and_copy
         end
 
         collection do
@@ -115,7 +112,7 @@ Folio::Engine.routes.draw do
 
         resources :links, only: %i[index]
 
-        resource :current_account, only: [] do
+        resource :current_user, only: [] do
           post :console_path_ping
         end
 
@@ -221,16 +218,14 @@ Folio::Engine.routes.draw do
                                     as: :download,
                                     constraints: { name: /.*/ }
 
-  unless Rails.application.config.folio_site_is_a_singleton
-    get "/robots.txt" => "robots#index"
-  end
+  get "/robots.txt" => "robots#index"
 
   get "/sitemaps/:id.:format(.:compression)", to: "sitemaps#show"
 
   require "sidekiq/web"
   require "sidekiq/cron/web"
 
-  authenticate :account, lambda { |account| account.can_manage_sidekiq? } do
+  authenticate :user, lambda { |user| user.can_manage_sidekiq? } do
     mount Sidekiq::Web => "/sidekiq"
   end
 end

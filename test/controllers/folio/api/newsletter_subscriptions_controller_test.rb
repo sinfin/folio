@@ -10,12 +10,14 @@ class Folio::Api::NewsletterSubscriptionsControllerTest < ActionDispatch::Integr
   end
 
   test "invalid" do
-    post folio_api_newsletter_subscriptions_path(format: :json), params: {
-      newsletter_subscription: {
-        email: "",
+    assert_no_difference("Folio::NewsletterSubscription.count") do
+      post folio_api_newsletter_subscriptions_path(format: :json), params: {
+        newsletter_subscription: {
+          email: "",
+        }
       }
-    }
-    assert_response(:success)
+      assert_response(:success)
+    end
 
     data = response.parsed_body["data"]
 
@@ -24,12 +26,14 @@ class Folio::Api::NewsletterSubscriptionsControllerTest < ActionDispatch::Integr
   end
 
   test "valid" do
-    post folio_api_newsletter_subscriptions_path(format: :json), params: {
-      newsletter_subscription: {
-        email: "foo@bar.baz",
+    assert_difference("Folio::NewsletterSubscription.count", 1) do
+      post folio_api_newsletter_subscriptions_path(format: :json), params: {
+        newsletter_subscription: {
+          email: "foo@bar.baz",
+        }
       }
-    }
-    assert_response(:success)
+      assert_response(:success)
+    end
 
     data = response.parsed_body["data"]
 

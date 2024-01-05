@@ -97,10 +97,7 @@ class Folio::Devise::CrossdomainHandler
 
           clear_session!
 
-          target_site = Folio::Site.find_by_slug(target_site_slug)
-
-          # be able to test in folio dummy app with singleton sites
-          target_site ||= Folio::Site.instance if Rails.env.test?
+          target_site = Folio::Site.find_by_slug(target_site_slug) || Folio.main_site
 
           Result.new(action: :sign_in_on_target_site,
                      resource_name:,

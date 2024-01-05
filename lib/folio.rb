@@ -63,25 +63,29 @@ module Folio
     "folio_"
   end
 
+  # overide if needed
   def self.current_site(request: nil, controller: nil)
-    if Rails.application.config.folio_site_is_a_singleton
-      Folio::Site.instance
-    else
-      fail "You must implement :current_site yourself"
+    return Folio.main_site if request.nil?
+
+    domain = request.host.to_s.downcase
+    if Rails.env.development?
+      domain = domain.gsub("dev-", "").gsub(/\Adev\./, "www.")
     end
+    Folio::Site.find_by(domain:) || Folio.main_site
   end
 
   def self.site_instance_for_mailers
-    if Rails.application.config.folio_site_is_a_singleton
-      Folio::Site.instance
-    else
-      Folio::Site.ordered.first
-    end
+    Folio.main_site
   end
 
   # set to force authentication via a site
   def self.site_for_crossdomain_devise
     nil
+  end
+
+  # override me at project level
+  def self.main_site
+    @main_site ||= Folio::Site.ordered.first
   end
 
   def self.atoms_previews_stylesheet_path(site:, class_name:)

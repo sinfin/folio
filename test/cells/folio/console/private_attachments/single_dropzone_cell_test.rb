@@ -14,7 +14,7 @@ class Folio::Console::PrivateAttachments::SingleDropzoneCellTest < Folio::Consol
   end
 
   test "show" do
-    attachmentable = PageWithAttachments.create!(title: "PageWithAttachments")
+    attachmentable = PageWithAttachments.create!(title: "PageWithAttachments", site: get_any_site)
 
     html = cell("folio/console/private_attachments/single_dropzone",
                 attachmentable,

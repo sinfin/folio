@@ -47,6 +47,7 @@ class Folio::FileTest < ActiveSupport::TestCase
     assert image.destroy
 
     image = create(:folio_file_image)
+    @site = image.site
     create_atom(CoverAtom, cover: image)
     assert_not image.destroy
   end

@@ -2,12 +2,7 @@
 
 class Folio::Api::NewsletterSubscriptionsController < Folio::Api::BaseController
   def create
-    newsletter_subscription = Folio::NewsletterSubscription.new(newsletter_subscription_params)
-
-    if !Rails.application.config.folio_site_is_a_singleton
-      newsletter_subscription.site = current_site
-    end
-
+    newsletter_subscription = Folio::NewsletterSubscription.new(newsletter_subscription_params.merge(site: current_site))
     newsletter_subscription.save
 
     render_component_json(Folio::NewsletterSubscriptions::FormComponent.new(newsletter_subscription:, view_options: view_options_params))

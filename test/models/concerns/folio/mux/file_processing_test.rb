@@ -11,7 +11,7 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
   end
 
   setup do
-    @tv_file = TestMediaFile.new
+    @tv_file = TestMediaFile.new(site: get_any_site)
     @tv_file.file = Folio::Engine.root.join("test/fixtures/folio/test_7secs.mp3")
 
     assert tv_file.unprocessed?
@@ -63,6 +63,23 @@ class Folio::Mux::FileProcessingTest < ActiveSupport::TestCase
 
     assert tv_file.processing?
     assert tv_file.full_media_processed?
+  end
+
+  test "#create_preview_media on 0 preview length" do
+    tv_file.remote_services_data = {
+      "service" => "mux",
+      "processing_state" => "full_media_processed", # set by `full_media_processed` method
+      "remote_key" => "bflmpsvz" # set by Folio::Mux::CreateFullMediaJob
+    }
+    tv_file.preview_track_duration_in_seconds = 0
+
+    assert_no_enqueued_jobs only: Folio::Mux::CreatePreviewMediaJob do
+      tv_file.create_preview_media
+    end
+
+    assert_not tv_file.processing?
+    assert tv_file.full_media_processed?
+    assert tv_file.preview_media_processed?
   end
 
   # called from preriodic check job or webhook

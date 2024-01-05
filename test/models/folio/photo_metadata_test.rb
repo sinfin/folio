@@ -5,7 +5,7 @@ require "test_helper"
 module Folio
   class PhotoMetadataTest < ActiveSupport::TestCase
     test "load exif and iptc metadata" do
-      image = ::Folio::File::Image.new
+      image = ::Folio::File::Image.new(site: get_any_site)
       image.file = Rails.root.join("..", "fixtures", "folio", "photos", "night.jpg")
       image.save!
 
@@ -16,7 +16,7 @@ module Folio
     test "load metadata from different file types" do
       photo_dir = Rails.root.join("..", "fixtures", "folio", "photos")
       Dir.glob("#{photo_dir}/**/*").grep(/\.[jpg|JPG|tiff|TIFF]/).each do |photo|
-        image = ::Folio::File::Image.new
+        image = ::Folio::File::Image.new(site: get_any_site)
         image.file = ::File.new(photo)
         image.save!
 

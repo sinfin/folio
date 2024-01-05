@@ -39,7 +39,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
       end
     elsif link_source.is_a?(Hash) && (link_source[:klass] || link_source[:label]) && (link_source[:path] || link_source[:url_name])
       if link_source[:klass]
-        return if controller.cannot?(:index, link_source[:klass].constantize)
+        return unless can_now?(:index, link_source[:klass].constantize)
       end
 
       label = if link_source[:label]
@@ -128,127 +128,34 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def main_class_names
-    if ::Rails.application.config.folio_site_is_a_singleton
-      [{
-        links: [
-          "Folio::Page",
-          :homepage,
-          "Folio::Menu",
-          ::Rails.application.config.folio_content_templates ? "Folio::ContentTemplate" : nil,
-        ].compact
-      }, {
-        links: [
-          "Folio::File::Image",
-          "Folio::File::Video",
-          "Folio::File::Audio",
-          "Folio::File::Document",
-        ]
+    shared_links = []
+    sites = (current_site == Folio.main_site) ? Folio::Site.ordered : [current_site]
+    if ::Rails.application.config.folio_shared_files_between_sites
+      shared_links = [{
+        locale: Folio.main_site.console_locale,
+        title: nil,
+        collapsed: nil,
+        expanded: nil,
+        links: file_links(Folio.main_site).compact
       }]
-    else
-      [
-        {
-          links: [
-            "Folio::File::Image",
-            "Folio::File::Video",
-            "Folio::File::Audio",
-            "Folio::File::Document",
-            ::Rails.application.config.folio_content_templates ? "Folio::ContentTemplate" : nil,
-          ].compact
-        }
-      ] + Folio::Site.ordered.filter_map do |site|
-        if controller.can?(:read, site)
-          I18n.with_locale(site.console_locale) do
-            link_for_class = -> (klass) do
-              {
-                klass: klass.to_s,
-                path: url_for([:console, klass, only_path: false, host: site.env_aware_domain])
-              }
-            end
-
-            site_links = {
-              console_sidebar_prepended_links: [],
-              console_sidebar_before_menu_links: [],
-              console_sidebar_before_site_links: [],
-            }
-
-            site_links.keys.each do |key|
-              values = site.class.try(key)
-              if values.present?
-                values.each do |link_or_hash|
-                  if link_or_hash.is_a?(Hash)
-                    if !link_or_hash[:required_ability] || controller.can?(link_or_hash[:required_ability], link_or_hash[:klass].constantize)
-                      link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
-                      site_links[key] << link_or_hash
-                    end
-                  else
-                    site_links[key] << link_for_class.call(link_or_hash.constantize)
-                  end
-                end
-              end
-            end
-
-            {
-              locale: site.console_locale,
-              title: site.pretty_domain,
-              collapsed: current_site != site,
-              expanded: current_site == site,
-              links: site_links[:console_sidebar_prepended_links].compact + [
-                link_for_class.call(Folio::Page),
-                homepage_for_site(site)
-              ].compact + site_links[:console_sidebar_before_menu_links].compact + [
-                link_for_class.call(Folio::Menu),
-                (link_for_class.call(Folio::Lead) if show_leads?),
-                (link_for_class.call(Folio::NewsletterSubscription) if show_newsletter_subscriptions?),
-                link_for_class.call(Folio::EmailTemplate),
-                *site_links[:console_sidebar_before_site_links],
-                controller.can?(:manage, site) ? (
-                  {
-                    klass: "Folio::Site",
-                    icon: :cog,
-                    path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
-                    label: t(".settings"),
-                  }
-                ) : nil,
-              ].compact
-            }
-          end
-        end
-      end
+      sites = Folio::Site.ordered
     end
+
+
+    sites_links = sites.filter_map { |site| site_main_links(site) }
+
+    shared_links + sites_links
   end
 
   def secondary_class_names
-    lead_or_newsleter_subs_class_names = []
-    lead_or_newsleter_subs_class_names << "Folio::Lead" if show_leads?
-    lead_or_newsleter_subs_class_names << "Folio::NewsletterSubscription" if show_newsletter_subscriptions?
+    links = []
+    links << link_for_site_class(Folio.main_site, Folio::User) if show_users? && current_user.superadmin?
 
-    if ::Rails.application.config.folio_site_is_a_singleton
-      [
-        show_users? ? { links: %w[Folio::User] } : nil,
-        lead_or_newsleter_subs_class_names.blank? ? nil : { links: lead_or_newsleter_subs_class_names },
-        {
-          links: [
-            "Folio::Account",
-            "Folio::EmailTemplate",
-            {
-              klass: "Folio::Site",
-              icon: :cog,
-              path: :edit_console_site_path,
-              label: t(".settings")
-            },
-          ]
-        }
-      ].compact
-    else
-      [
-        {
-          links: [
-            ::Rails.application.config.folio_users ? "Folio::User" : nil,
-            "Folio::Account",
-          ].compact
-        }
-      ]
-    end
+    [
+      {
+        links: links.compact
+      }
+    ]
   end
 
   def prepended_link_class_names
@@ -287,7 +194,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def homepage_for_site(site)
     instance = "#{site.class.name.deconstantize}::Page::Homepage".safe_constantize.try(:instance, fail_on_missing: false, site: current_site)
 
-    if instance && controller.can?(:index, Folio::Page)
+    if instance && controller.can_now?(:index, Folio::Page)
       {
         label: t(".homepage"),
         path: controller.url_for([:edit, :console, instance, only_path: false, host: site.env_aware_domain]),
@@ -296,7 +203,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   end
 
   def show_users?
-    ::Rails.application.config.folio_users && !::Rails.application.config.folio_console_sidebar_force_hide_users
+    !::Rails.application.config.folio_console_sidebar_force_hide_users
   end
 
   def show_leads?
@@ -319,4 +226,103 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
   def show_search?
     true
   end
+
+  private
+    def site_main_links(site)
+      return nil unless controller.can_now?(:read, site)
+
+      build_site_links_collapsible_block(site)
+    end
+
+    def file_links(site)
+      [ link_for_site_class(site, Folio::File::Image),
+        link_for_site_class(site, Folio::File::Video),
+        link_for_site_class(site, Folio::File::Audio),
+        link_for_site_class(site, Folio::File::Document)]
+    end
+
+    def build_site_links_collapsible_block(site)
+      I18n.with_locale(site.console_locale) do
+        links = ::Rails.application.config.folio_shared_files_between_sites ? [] : file_links(site)
+        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates
+
+        site_links = site_specific_links(site)
+
+        links += site_links[:console_sidebar_prepended_links]
+        links << link_for_site_class(site, Folio::Page)
+        links << homepage_for_site(site)
+        links += site_links[:console_sidebar_before_menu_links]
+        links << link_for_site_class(site, Folio::Menu)
+        links << link_for_site_class(site, Folio::Lead) if show_leads?
+        links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
+        links << link_for_site_class(site, Folio::EmailTemplate)
+        links += site_links[:console_sidebar_before_site_links]
+        if can_now?(:manage, site)
+          links << {
+                      klass: "Folio::Site",
+                      icon: :cog,
+                      path: controller.folio.edit_console_site_url(only_path: false, host: site.env_aware_domain),
+                      label: t(".settings"),
+                    }
+        end
+        links << link_for_site_class(site, Folio::User) if show_users? && !current_user.superadmin?
+
+        {
+          locale: site.console_locale,
+          title: site.pretty_domain,
+          collapsed: current_site != site,
+          expanded: current_site == site,
+          links: links.compact
+        }
+      end
+    end
+
+    def site_specific_links(site)
+      site_links = {
+        console_sidebar_prepended_links: [],
+        console_sidebar_before_menu_links: [],
+        console_sidebar_before_site_links: [],
+      }
+
+      I18n.with_locale(site.console_locale) do
+        site_links.keys.each do |links_group_key|
+          next if (group_links_defs = site.class.try(links_group_key)).blank?
+
+          group_links_defs.each do |link_or_hash|
+            site_links[links_group_key] << link_from_definitions(site, link_or_hash)
+          end
+        end
+      end
+      site_links
+    end
+
+
+    def link_from_definitions(site, link_or_hash)
+      if link_or_hash.is_a?(Hash)
+        if !link_or_hash[:required_ability] || can_now?(link_or_hash[:required_ability], link_or_hash[:klass].constantize, site:)
+          link_or_hash[:host] = site.env_aware_domain if link_or_hash[:url_name]
+          link_or_hash
+        end
+      else
+        link_for_site_class(site, link_or_hash.constantize)
+      end
+    end
+
+    def link_for_site_class(site, klass, params: {}, label: nil)
+      return nil unless can_now?(:index, klass, site:)
+      {
+        klass: klass.to_s,
+        label:,
+        path: url_for([:console, klass, only_path: false, host: site.env_aware_domain, params:])
+      }
+    end
+
+    def can_now?(action, object, site: current_site)
+      (current_user || Folio::User.new).can_now_by_ability?(site_ability(site), action, object)
+    end
+
+    def site_ability(site)
+      @site_abilities ||= {}
+      @site_abilities[site] ||= Folio::Ability.new(current_user, site)
+    end
 end

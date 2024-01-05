@@ -20,37 +20,33 @@ module Folio::HasNewsletterSubscriptions
 
   private
     def create_newsletter_subscriptions
-      if Rails.application.config.folio_site_is_a_singleton
-        update_newsletter_subscriptions
-      else
-        return unless newsletter_subscriptions_enabled?
+      return unless newsletter_subscriptions_enabled?
 
-        subscribable_sites = Folio::NewsletterSubscription.subscribable_sites
+      subscribable_sites = Folio::NewsletterSubscription.subscribable_sites
 
-        if respond_to?(:source_site) && source_site.present? && source_site.in?(subscribable_sites)
-          subscribable_source_site = source_site
+      if respond_to?(:source_site) && source_site.present? && source_site.in?(subscribable_sites)
+        subscribable_source_site = source_site
+      end
+
+      present_site_ids = newsletter_subscriptions.map(&:site_id)
+      to_create = subscribable_sites.reject { |site| site.id.in?(present_site_ids) }
+      to_create.each do |site|
+        ns = site.newsletter_subscriptions.find_by_email(subscription_email) || site.newsletter_subscriptions.build(email: subscription_email)
+
+        if subscribable_source_site.present?
+          active = subscribable_source_site == site
+        else
+          active = should_subscribe_to_newsletter?
         end
 
-        present_site_ids = newsletter_subscriptions.map(&:site_id)
-        to_create = subscribable_sites.reject { |site| site.id.in?(present_site_ids) }
-        to_create.each do |site|
-          ns = site.newsletter_subscriptions.find_by_email(subscription_email) || site.newsletter_subscriptions.build(email: subscription_email)
+        did_create = ns.update(email: subscription_email,
+                                merge_vars: subscription_merge_vars,
+                                tags: subscription_tags,
+                                active:,
+                                subscribable: self)
 
-          if subscribable_source_site.present?
-            active = subscribable_source_site == site
-          else
-            active = should_subscribe_to_newsletter?
-          end
-
-          did_create = ns.update(email: subscription_email,
-                                 merge_vars: subscription_merge_vars,
-                                 tags: subscription_tags,
-                                 active:,
-                                 subscribable: self)
-
-          unless did_create
-            Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\", site \"#{site.domain}\" - failed to create.") if defined?(Raven)
-          end
+        unless did_create
+          Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\", site \"#{site.domain}\" - failed to create.") if defined?(Raven)
         end
       end
 
@@ -60,26 +56,25 @@ module Folio::HasNewsletterSubscriptions
     def update_newsletter_subscriptions
       return unless newsletter_subscriptions_enabled?
 
-      # manual update is required for multiple newsletter subscriptions
-      return unless Rails.application.config.folio_site_is_a_singleton
+      Folio::NewsletterSubscription.subscribable_sites.each do |site|
+        ns = newsletter_subscriptions.by_site(site).first
 
-      ns = newsletter_subscriptions.first
+        if ns.nil? && should_subscribe_to_newsletter?
+          ns = Folio::NewsletterSubscription.find_or_initialize_by(email: subscription_email, site:)
+          ns.subscribable = self
+        else
+          # no need for NS record - user isn't subscribed
+          return
+        end
 
-      if ns.nil? && should_subscribe_to_newsletter?
-        ns = Folio::NewsletterSubscription.find_or_initialize_by(email: subscription_email)
-        ns.subscribable = self
-      else
-        # no need for NS record - user isn't subscribed
-        return
-      end
+        did_update = ns.update(email: subscription_email,
+                                merge_vars: subscription_merge_vars,
+                                tags: subscription_tags,
+                                active: should_subscribe_to_newsletter?)
 
-      did_update = ns.update(email: subscription_email,
-                             merge_vars: subscription_merge_vars,
-                             tags: subscription_tags,
-                             active: should_subscribe_to_newsletter?)
-
-      unless did_update
-        Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\" - failed to update.") if defined?(Raven)
+        unless did_update
+          Raven.capture_message("NewsletterSubscription for #{self.class.model_name.human} ##{id} - email \"#{subscription_email}\"; site `#{site.domain}`- failed to update.") if defined?(Raven)
+        end
       end
     end
 

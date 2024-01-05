@@ -18,7 +18,7 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
   end
 
   test "requires target/rails_path" do
-    menu = MenuWithRailsPaths.create!(locale: :cs)
+    menu = MenuWithRailsPaths.create!(locale: :cs, site: get_any_site)
     assert menu
 
     item = build(:folio_menu_item, menu:)
@@ -27,7 +27,7 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
   end
 
   test "respects menu available targets and rails_paths" do
-    menu = MenuWithRailsPaths.create!(locale: :cs)
+    menu = MenuWithRailsPaths.create!(locale: :cs, site: get_any_site)
 
     assert create(:folio_menu_item, menu:, rails_path: "root_path")
 
@@ -49,7 +49,7 @@ class Folio::MenuItemTest < ActiveSupport::TestCase
   end
 
   test "validate_style" do
-    menu = StylableMenu.create!(locale: :cs)
+    menu = StylableMenu.create!(locale: :cs, site: get_any_site)
     page = create(:folio_page)
 
     assert build(:folio_menu_item, menu:, target: page, style: nil).valid?

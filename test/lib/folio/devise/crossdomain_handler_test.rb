@@ -3,6 +3,10 @@
 require "test_helper"
 
 class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
+  setup do
+    create(:sinfin_local_site) # as it it Folio.main_site
+  end
+
   test "always noop with nil master_site" do
     result = new_result(master_site: nil)
     assert_equal :noop, result.action
@@ -246,15 +250,6 @@ class Folio::Devise::CrossdomainHandlerTest < ActiveSupport::TestCase
   test "slave_site - devise controller - sessions for users" do
     result = new_result(master_site: master_site_mock,
                         devise_controller: true,
-                        controller_name: "sessions")
-
-    assert_equal :redirect_to_master_sessions_new, result.action
-  end
-
-  test "slave_site - devise controller - sessions for accounts" do
-    result = new_result(master_site: master_site_mock,
-                        devise_controller: true,
-                        resource_name: :account,
                         controller_name: "sessions")
 
     assert_equal :redirect_to_master_sessions_new, result.action

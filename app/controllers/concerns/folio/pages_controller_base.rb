@@ -20,9 +20,9 @@ module Folio::PagesControllerBase
   private
     def pages_show_cache_key
       if respond_to?(:cache_key_base)
-        ["pages#show", params[:path]] + cache_key_base
+        ["pages#show", params[:path], params[:id]] + cache_key_base
       else
-        ["pages#show", params[:path]]
+        ["pages#show", params[:path], params[:id]]
       end
     end
 
@@ -72,11 +72,7 @@ module Folio::PagesControllerBase
     end
 
     def pages_scope
-      base = Folio::Page
-
-      unless Rails.application.config.folio_site_is_a_singleton
-        base = base.by_site(current_site)
-      end
+      base = Folio::Page.by_site(current_site)
 
       base = base.roots if Rails.application.config.folio_pages_ancestry
       filter_pages_by_locale(base)

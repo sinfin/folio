@@ -10,6 +10,14 @@ FactoryBot.define do
     phone { "+420 123456789" }
     locale { I18n.default_locale }
     locales { [I18n.default_locale] }
+    type { "Folio::Site" }
+  end
+
+  factory :sinfin_local_site, parent: :folio_site do
+    title { "Sinfin local" }
+    domain { "sinfin.localhost" }
+    email { "dummy@sinfin.localhost" }
+    social_links { { "facebook" => "http://www.facebook.com/sinfin" } }
   end
 
   factory :folio_page, class: "Folio::Page" do
@@ -25,6 +33,7 @@ FactoryBot.define do
     end
     published { true }
     published_at { 1.day.ago }
+    site { Folio::Site.first || create(:folio_site) }
 
     trait :unpublished do
       published { false }
@@ -51,6 +60,7 @@ FactoryBot.define do
 
   factory :folio_file_image, class: "Folio::File::Image" do
     file { Folio::Engine.root.join("test/fixtures/folio/test.gif") }
+    site { Folio::Site.first || create(:folio_site) }
 
     trait :black do
       file { Folio::Engine.root.join("test/fixtures/folio/test-black.gif") }
@@ -59,14 +69,17 @@ FactoryBot.define do
 
   factory :folio_file_document, class: "Folio::File::Document" do
     file { Folio::Engine.root.join("test/fixtures/folio/empty.pdf") }
+    site { Folio::Site.first || create(:folio_site) }
   end
 
   factory :folio_file_audio, class: "Folio::File::Audio" do
     file { Folio::Engine.root.join("test/fixtures/folio/blank.mp3") }
+    site { Folio::Site.first || create(:folio_site) }
   end
 
   factory :folio_file_video, class: "Folio::File::Video" do
     file { Folio::Engine.root.join("test/fixtures/folio/blank.mp4") }
+    site { Folio::Site.first || create(:folio_site) }
   end
 
   factory :folio_private_attachment, class: "Folio::PrivateAttachment" do
@@ -77,21 +90,13 @@ FactoryBot.define do
     email { "folio@folio.folio" }
     phone { "+420 123456789" }
     note { "Officiis perferendis commodi." }
+    site { Folio::Site.first || create(:folio_site) }
   end
-
-  factory :folio_account, class: "Folio::Account" do
-    sequence(:email) { |i| "test-#{i}@test.com" }
-    password { "Complex@Password.123" }
-    roles { %w[superuser] }
-    first_name { "Test" }
-    last_name { "Dummy" }
-  end
-
-  factory :folio_admin_account, parent: :folio_account
 
   factory :folio_menu, class: "Folio::Menu" do
     locale { :cs }
     sequence(:title) { |i| "Menu #{i}" }
+    site { Folio::Site.first || create(:folio_site) }
   end
 
   factory :folio_menu_page, class: "Folio::Menu::Page", parent: :folio_menu
@@ -126,6 +131,7 @@ FactoryBot.define do
     body_text_en { "body_text_en" }
     optional_keywords { [] }
     required_keywords { [] }
+    site { Folio::Site.first || create(:folio_site) }
   end
 
   factory :folio_user, class: "Folio::User" do
@@ -135,7 +141,12 @@ FactoryBot.define do
     first_name { "first_name" }
     last_name { "last_name" }
     phone { "+420604123123" }
+    superadmin { false }
     association(:primary_address, factory: :folio_address_primary)
+
+    trait :superadmin do
+      superadmin { true }
+    end
   end
 
   factory :folio_site_user_link, class: "Folio::SiteUserLink" do
@@ -146,6 +157,7 @@ FactoryBot.define do
 
   factory :folio_newsletter_subscription, class: "Folio::NewsletterSubscription" do
     sequence(:email) { |i| "email-#{i}@email.email" }
+    site { Folio::Site.first || create(:folio_site) }
   end
 
   factory :folio_console_note, class: "Folio::ConsoleNote" do
@@ -175,19 +187,17 @@ FactoryBot.define do
   end
 end
 
-unless Rails.application.config.folio_site_is_a_singleton
-  if Rails.application.config.folio_site_default_test_factory
-    FactoryBot.modify do
-      %i[
-        folio_email_template
-        folio_lead
-        folio_menu
-        folio_newsletter_subscription
-        folio_page
-      ].each do |key|
-        factory key do
-          after(:build) { |model| model.site ||= Folio::Site.first || create(Rails.application.config.folio_site_default_test_factory) }
-        end
+if Rails.application.config.folio_site_default_test_factory
+  FactoryBot.modify do
+    %i[
+      folio_email_template
+      folio_lead
+      folio_menu
+      folio_newsletter_subscription
+      folio_page
+    ].each do |key|
+      factory key do
+        after(:build) { |model| model.site ||= Folio.main_site || create(Rails.application.config.folio_site_default_test_factory) }
       end
     end
   end

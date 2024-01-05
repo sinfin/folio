@@ -15,9 +15,17 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
   def impersonate
     @user.sign_out_everywhere! if @user == current_user
-    bypass_sign_in @user.reload, scope: :user
+    session[:true_user_id] = current_user.id
+    bypass_sign_in @user, scope: :user
     redirect_to after_impersonate_path,
                 flash: { success: t(".success", label: @user.to_label) }
+  end
+
+  def stop_impersonating
+    user = current_user
+    bypass_sign_in true_user, scope: :user
+    session[:true_user_id] = nil
+    redirect_to url_for([:console, user])
   end
 
   def new
@@ -27,14 +35,22 @@ class Folio::Console::UsersController < Folio::Console::BaseController
   def create
     create_params = user_params.merge(skip_password_validation: 1,
                                       creating_in_console: 1)
-
     @user = @klass.new(create_params)
 
     if @user.valid?
-      @user = @klass.invite!(create_params, current_account)
+      @user = @klass.invite!(create_params, current_user)
     end
 
     respond_with @user, location: respond_with_location
+  end
+
+  def invite_and_copy
+    if @user.invitation_created_at && !@user.invitation_accepted_at
+      @user.invite!
+      render json: { data: cell("folio/console/users/invite_and_copy", @user).show }
+    else
+      head 422
+    end
   end
 
   private
@@ -45,6 +61,7 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     def user_params
       params.require(:user)
             .permit(*(@klass.column_names - user_params_blacklist),
+                    *site_user_links_params,
                     *addresses_strong_params,
                     *file_placements_strong_params,
                     *private_attachments_strong_params,
@@ -77,7 +94,19 @@ class Folio::Console::UsersController < Folio::Console::BaseController
     end
 
     def index_filters
-      default_index_filters
+      default_index_filters.merge(role_filters)
+    end
+
+    def role_filters
+      allowed_roles = current_site.available_user_roles_ary.select do |role|
+        can_now?("read_#{role}s", nil)
+      end
+
+      roles = @klass.roles_for_select(site: current_site,
+                                      selectable_roles: allowed_roles)
+      roles.unshift(["Superadmin", "superadmin"]) if can_now?(:manage, :all)
+
+      roles.size > 1 ? { by_role: roles } : {}
     end
 
     def folio_console_collection_includes
@@ -86,6 +115,10 @@ class Folio::Console::UsersController < Folio::Console::BaseController
 
     def folio_console_record_includes
       []
+    end
+
+    def site_user_links_params
+      [ site_user_links_attributes: [:site_id, roles: []] ]
     end
 
     def additional_user_params

@@ -17,32 +17,43 @@ class Folio::DeviseMailer < Devise::Mailer
   end
 
   def reset_password_instructions(record, token, opts = {})
+    @site = Folio.site_instance_for_mailers
+    opts = { site: @site }.merge(opts)
+
     @data ||= {}
     @data[:USER_CHANGE_PASSWORD_URL] = scoped_url_method(record,
                                                          :edit_password_url,
-                                                         reset_password_token: token)
+                                                         reset_password_token: token,
+                                                         host: @site.domain)
 
-    super
+    super(record, token, opts)
   end
 
   def invitation_instructions(record, token, opts = {})
+    @site = (record.site_user_links.order(id: :asc).last&.site || Folio.main_site)
+    opts = { site: @site }.merge(opts)
+
+
     @data ||= {}
     @data[:USER_ACCEPT_INVITATION_URL] = scoped_url_method(record,
                                                            :accept_invitation_url,
-                                                           invitation_token: token)
-
-    super
+                                                           invitation_token: token,
+                                                           host: @site.domain)
+    super(record, token, opts)
   end
 
   def confirmation_instructions(record, token, opts = {})
     @token = token
+    @site = (record.site_user_links.order(id: :asc).last&.site || Folio.main_site)
+    opts = { site: @site }.merge(opts)
 
     @data ||= {}
     @data[:USER_CONFIRMATION_URL] = scoped_url_method(record,
                                                       :confirmation_url,
-                                                      confirmation_token: @token)
+                                                      confirmation_token: @token,
+                                                      host: @site.domain)
 
-    super
+    super(record, token, opts)
   end
 
   def omniauth_conflict(authentication, opts = {})
@@ -63,11 +74,7 @@ class Folio::DeviseMailer < Devise::Mailer
 
   private
     def scoped_url_method(record, method, *args)
-      if record.is_a?(Folio::Account)
-        scoped = "account"
-      else
-        scoped = "user"
-      end
+      scoped = "user"
 
       method_name = if method.to_s.include?("confirmation")
         "#{scoped}_#{method}"

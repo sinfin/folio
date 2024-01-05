@@ -1,5 +1,18 @@
+
 # Change Log
 All notable changes to this project will be documented in this file.
+
+## 2023-12-X
+### Changed
+- authorization to console is done through user login, not account.
+### Removed
+- Folio::Account after merging into Folio::User (done in migration)
+
+## 2023-11-24
+### Changed
+- ignore `Rails.application.config.folio_site_is_a_singleton` and handle one site application as multisite with one (and main) site
+### Removed
+- Folio::Subscribable concern
 
 ## 2023-11-06
 ### Changed

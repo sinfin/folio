@@ -48,3 +48,4 @@ node_modules/@popperjs/core/dist/*
 !node_modules/@popperjs/core/dist/umd
 node_modules/@popperjs/core/dist/umd/*
 !node_modules/@popperjs/core/dist/umd/popper.min.js
+log

@@ -3,10 +3,11 @@
 class Folio::Transportable::Importer
   attr_accessor :record
 
-  def initialize(yaml_string, record = nil)
+  def initialize(yaml_string, site_domain, record = nil)
     @hash = YAML.load(yaml_string).deep_symbolize_keys
     @klass = @hash[:class_name].safe_constantize
     @record = record
+    @current_site = Folio::Site.find_by(domain: site_domain)
 
     unless @klass && @klass < ActiveRecord::Base && @klass.try(:transportable?)
       raise ActionController::ParameterMissing, "Non-transportable record"
@@ -30,6 +31,7 @@ class Folio::Transportable::Importer
       attachments_data = build_attachments(@hash)
       @record.assign_attributes(@hash[:attributes].without(:id))
       @record.assign_attributes(attachments_data) if attachments_data.present?
+      @record.site = find_site if @record.respond_to?(:site=)
       update_atoms
       @record.save
     end
@@ -109,5 +111,17 @@ class Folio::Transportable::Importer
                           description: file_data[:description],
                           file_url: file_data[:file_url],
                           additional_data: { file_uid: file_data[:file_uid] })
+    end
+
+    def find_site
+      if @hash[:attributes][:site_id].present?
+        Folio::Site.find(@hash[:attributes][:site_id])
+      elsif @hash[:attributes][:site_domain].present?
+        Folio::Site.find_by(domain: @hash[:attributes][:site_domain])
+      elsif @record.site.present?
+        @record.site
+      else
+        @record.site = @current_site
+      end
     end
 end

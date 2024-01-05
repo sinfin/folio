@@ -10,14 +10,14 @@ module Folio::BelongsToSite
     validate :validate_belongs_to_site
 
     scope :by_site_id, -> (site_id) { where(site_id:) }
-    scope :by_site, -> (site) { site ? by_site_id(site.id) : none }
+    scope :by_site, -> (site) { site ? where(site:) : none }
 
     scope :by_atom_setting_site_id, -> (site_id) { by_site_id(site_id) }
   end
 
   class_methods do
     def has_belongs_to_site?
-      !Rails.application.config.folio_site_is_a_singleton
+      true
     end
 
     def add_site_to_console_params?
@@ -27,8 +27,6 @@ module Folio::BelongsToSite
 
   private
     def validate_belongs_to_site
-      return if Rails.application.config.folio_site_is_a_singleton
-
       return errors.add(:site, :blank) if site.nil?
 
       if Rails.application.config.folio_site_validate_belongs_to_namespace

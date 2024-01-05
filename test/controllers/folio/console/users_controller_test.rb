@@ -33,7 +33,7 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
       }
     end
 
-    assert_equal @admin, Folio::User.find_by_email("foo@bar.com").invited_by
+    assert_equal superadmin, Folio::User.find_by_email("foo@bar.com").invited_by
   end
 
   test "update" do
@@ -90,6 +90,77 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     get url_for([:collection_csv, :console, Folio::User]), params: {
       ids: "#{models[0].id},#{models[1].id}"
     }
+    assert_response(:success)
+  end
+
+  test "impersonate" do
+    site.update(available_user_roles: [:administrator, :author])
+
+    site_admin = create(:folio_user, first_name: "Admin", email: "admin@#{site.domain}")
+    site_admin.set_roles_for(site:, roles: [:administrator])
+    site_admin.save!
+
+    user_author = create(:folio_user, first_name: "Author",  email: "author@#{site.domain}")
+    user_author.set_roles_for(site:, roles: [:author])
+    user_author.save!
+
+    user = create(:folio_user, first_name: "User",  email: "user@#{site.domain}")
+    user.set_roles_for(site:, roles: [])
+    user.save!
+
+    assert site_admin.can_now?(:impersonate, user, site:)
+    assert site_admin.can_now?(:stop_impersonating, Folio::User, site:)
+    assert_not user_author.can_now?(:impersonate, user, site:)
+    assert user_author.can_now?(:stop_impersonating, Folio::User, site:)
+
+    # user tries to impersonate
+    sign_in user_author
+
+    get "/"
+
+    assert_response :success
+    assert_equal user_author, controller.current_user
+
+    assert_raises(CanCan::AccessDenied) do
+      get url_for([:impersonate, :console, user])
+    end
+
+    # admin do the impersonation
+    sign_in site_admin
+
+    get url_for([:console, Folio::User])
+
+    assert_response :success
+    assert_equal site_admin, controller.current_user
+
+    get url_for([:impersonate, :console, user])
+
+    assert_redirected_to "/"
+    follow_redirect!
+    assert_equal "Přihlášen jako uživatel \"#{user.to_label}\"", flash[:success]
+    assert_equal user, controller.current_user
+
+    # cannot get to console now, as it is not signed in as admin
+    assert_raises(CanCan::AccessDenied) do
+      get url_for([:console, user])
+    end
+
+    # stop impersonation
+    get url_for([:stop_impersonating, :console, Folio::User])
+
+    assert_redirected_to url_for([:console, user])
+    follow_redirect!
+    assert_response :success
+    assert_equal site_admin, controller.current_user
+  end
+
+  test "invite_and_copy" do
+    model = create(:folio_user, :superadmin)
+    post url_for([:invite_and_copy, :console, model])
+    assert_response(422)
+
+    model.update!(invitation_created_at: 1.day.ago)
+    post url_for([:invite_and_copy, :console, model])
     assert_response(:success)
   end
 end

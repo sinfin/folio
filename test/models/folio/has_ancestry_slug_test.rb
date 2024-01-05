@@ -9,14 +9,16 @@ class Folio::HasAncestrySlugTest < ActiveSupport::TestCase
   end
 
   test "ancestry_url" do
-    root = NestablePage.create!(title: "root", slug: "root")
+    site = get_any_site
+
+    root = NestablePage.create!(title: "root", slug: "root", site:)
     assert_equal "", root.ancestry_slug
 
-    child = NestablePage.create!(title: "child", slug: "child", parent: root)
+    child = NestablePage.create!(title: "child", slug: "child", parent: root, site:)
     assert_equal "root", child.ancestry_slug
     assert_equal "root/child", child.ancestry_url
 
-    deep_child = NestablePage.create!(title: "deep_child", slug: "deep_child", parent: child)
+    deep_child = NestablePage.create!(title: "deep_child", slug: "deep_child", parent: child, site:)
     assert_equal "root/child", deep_child.ancestry_slug
     assert_equal "root/child/deep_child", deep_child.ancestry_url
 
