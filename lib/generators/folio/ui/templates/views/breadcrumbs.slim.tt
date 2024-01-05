@@ -6,4 +6,5 @@
     .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Breadcrumbs - #{theme}
 
+      = render(<%= application_namespace %>::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails, single: true))
       = render(<%= application_namespace %>::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails))

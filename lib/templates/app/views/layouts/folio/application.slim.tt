@@ -19,7 +19,7 @@ html[
 
     == cell('folio/sensitive_content_modal')
 
-    - if Rails.application.config.folio_users
-      = yield :modals
-      == cell('folio/devise/modal')
-      == cell('folio/devise/omniauth/forms')
+
+    = yield :modals
+    == cell('folio/devise/modal')
+    == cell('folio/devise/omniauth/forms')

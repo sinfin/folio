@@ -27,7 +27,7 @@ class <%= application_namespace %>::HomeControllerTest < ActionDispatch::Integra
         get url_for(page)
       end
 
-      sign_in create(:folio_account)
+      sign_in create(:folio_user, :superadmin)
 
       get url_for(page)
       assert_response(:ok)

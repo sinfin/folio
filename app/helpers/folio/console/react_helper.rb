@@ -163,7 +163,7 @@ module Folio::Console::ReactHelper
       "data-attachmentable" => attachmentable,
       "data-placement-type" => type,
       "data-atom-setting" => atom_setting,
-      "data-can-destroy-files" => can?(:destroy, Folio::File) ? "1" : nil,
+      "data-can-destroy-files" => can_now?(:destroy, Folio::File) ? "1" : nil,
     )
   end
 
@@ -260,7 +260,7 @@ module Folio::Console::ReactHelper
       hash = {
         "class" => class_name,
         "data-notes" => data.to_json,
-        "data-account-id" => current_account.id,
+        "data-account-id" => current_user.id,
         "data-param-base" => param_base,
         "data-label" => Folio::ConsoleNote.model_name.human(count: 2),
       }

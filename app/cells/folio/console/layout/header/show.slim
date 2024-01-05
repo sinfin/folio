@@ -41,7 +41,7 @@
               audited_revision: model[:audited_revision])
 
       == cell('folio/console/ui/with_icon',
-              t('.sign_out'),
+              t('.sign_out', user: current_user.email),
               href: log_out_path,
               icon: :logout_variant,
               icon_options: { height: 14 },

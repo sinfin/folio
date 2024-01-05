@@ -4,38 +4,39 @@ require "test_helper"
 
 class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerTest
   test "out" do
-    sign_in @admin
     assert_nil Folio::Page.find_by(id: 1)
+
     assert_raises(ActiveRecord::RecordNotFound) do
       get out_console_transport_path(class_name: "Folio::Page", id: 1)
     end
 
     menu = create(:folio_menu_page)
-    sign_in @admin
-    assert_raises(ActionController::ParameterMissing) do
-      get out_console_transport_path(class_name: "Folio::Menu", id: menu)
+    sign_in superadmin # needs to be done each time (?)
+
+    ex = assert_raises(ActionController::ParameterMissing) do
+      get out_console_transport_path(class_name: "Folio::Menu", id: menu.id)
     end
 
-    page = create(:folio_page)
+    assert_equal "param is missing or the value is empty: Non-transportable record", ex.message
 
-    sign_in @admin
+    page = create(:folio_page)
+    sign_in superadmin
+
     get out_console_transport_path(class_name: "Folio::Page", id: page.id)
+
     assert_response :success
   end
 
   test "in" do
-    sign_in @admin
     get in_console_transport_path
     assert_response :success
 
-    sign_in @admin
     assert_raises(ActiveRecord::RecordNotFound) do
       get in_console_transport_path(class_name: "Folio::Page", id: 1)
     end
 
     page = create(:folio_page)
 
-    sign_in @admin
     get in_console_transport_path(class_name: "Folio::Page", id: page.id)
     assert_response :success
   end
@@ -53,8 +54,6 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
         title: "My custom title",
       }
     }
-
-    sign_in @admin
 
     assert_difference("Folio::Page.count", 1) do
       post transport_console_transport_path, params: {
@@ -87,7 +86,6 @@ class Folio::Console::TransportsControllerTest < Folio::Console::BaseControllerT
       },
     }
 
-    sign_in @admin
     post transport_console_transport_path(class_name: "Folio::Page", id:), params: {
       yaml_string: hash.to_yaml(line_width: -1),
     }

@@ -14,5 +14,8 @@ class <%= application_namespace %>::Ui::BreadcrumbsComponentTest < Folio::Compon
 
     render_inline(<%= application_namespace %>::Ui::BreadcrumbsComponent.new(breadcrumbs: crumbs))
     assert_selector(".<%= classname_prefix %>-ui-breadcrumbs")
+
+    render_inline(<%= application_namespace %>::Ui::BreadcrumbsComponent.new(breadcrumbs: crumbs, single: true))
+    assert_selector(".<%= classname_prefix %>-ui-breadcrumbs")
   end
 end

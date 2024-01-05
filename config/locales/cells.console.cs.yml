@@ -34,7 +34,7 @@ cs:
             placeholder: Hledat
 
         header:
-          sign_out: Odhlásit
+          sign_out: Odhlásit %{user}
 
       searches:
         results:

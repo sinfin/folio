@@ -17,8 +17,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     json = JSON.parse(response.body)
     assert_equal(["Foo bar baz"], json["data"])
 
-    @admin.forget_me!
-    sign_out @admin
+    superadmin.forget_me!
+    sign_out superadmin
     get console_api_autocomplete_path(klass: "Folio::Page", q: "a")
     json = JSON.parse(response.body)
     assert_equal(401, json["errors"][0]["status"])
@@ -35,8 +35,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal(1, json["data"].size)
     assert_equal("Foo bar baz", json["data"][0]["text"])
 
-    @admin.forget_me!
-    sign_out @admin
+    superadmin.forget_me!
+    sign_out superadmin
     get selectize_console_api_autocomplete_path(klass: "Folio::Page", q: "a")
     json = JSON.parse(response.body)
     assert_equal(401, json["errors"][0]["status"])
@@ -53,8 +53,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal(1, json["results"].size)
     assert_equal("Foo bar baz", json["results"][0]["text"])
 
-    @admin.forget_me!
-    sign_out @admin
+    superadmin.forget_me!
+    sign_out superadmin
     get select2_console_api_autocomplete_path(klass: "Folio::Page", q: "a")
     json = JSON.parse(response.body)
     assert_equal(401, json["errors"][0]["status"])
@@ -72,8 +72,8 @@ class Folio::Console::Api::AutocompletesControllerTest < Folio::Console::BaseCon
     assert_equal("Foo bar baz", json["data"][0]["text"])
     assert_equal("Folio::Page", json["data"][0]["type"])
 
-    @admin.forget_me!
-    sign_out @admin
+    superadmin.forget_me!
+    sign_out superadmin
     get react_select_console_api_autocomplete_path(class_names: "Folio::Page", q: "a")
     json = JSON.parse(response.body)
     assert_equal(401, json["errors"][0]["status"])

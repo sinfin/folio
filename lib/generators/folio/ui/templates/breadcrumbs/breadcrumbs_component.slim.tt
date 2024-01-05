@@ -1,17 +1,31 @@
 div[
   class=bem_class_name
+  class="fs-text-xs"
 ]
   .container-fluid
     .<%= classname_prefix %>-ui-breadcrumbs__container
-      a.<%= classname_prefix %>-ui-breadcrumbs__link[
-        href=breadcrumb.path
-        class="<%= classname_prefix %>-with-icon"
-      ]
-        = <%= application_namespace_path %>_ui_icon(:chevron_left,
-                        height: 14,
-                        class_name: "<%= classname_prefix %>-ui-breadcrumbs__icon")
+      - if single?
+        a.<%= classname_prefix %>-ui-breadcrumbs__link[
+          href=breadcrumb.path
+          class="<%= classname_prefix %>-with-icon"
+        ]
+          = <%= application_namespace_path %>_ui_icon(:chevron_left,
+                          height: 16,
+                          class_name: "<%= classname_prefix %>-ui-breadcrumbs__icon")
 
-        span = cstypo breadcrumb.name
+          span = cstypo breadcrumb.name
+
+      - else
+        - breadcrumbs_ary.each do |breadcrumb|
+          a.<%= classname_prefix %>-ui-breadcrumbs__link[
+            href=breadcrumb.path
+            class="<%= classname_prefix %>-with-icon"
+          ]
+            = <%= application_namespace_path %>_ui_icon(:chevron_right,
+                            height: 16,
+                            class_name: "<%= classname_prefix %>-ui-breadcrumbs__icon")
+
+            span = cstypo breadcrumb.name
 
       - if @share
         .<%= classname_prefix %>-ui-breadcrumbs__share
