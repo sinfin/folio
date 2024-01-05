@@ -88,8 +88,7 @@ class Folio::User < Folio::ApplicationRecord
   scope :by_role, -> (role) { role == "superadmin" ? superadmins : where(id: Folio::SiteUserLink.by_roles([role]).select(:user_id)) }
 
   scope :by_address_identification_number_query, -> (q) {
-    subselect = Folio::Address::Base.where("identification_number LIKE ?", "%#{q}%").select(:id)
-    where(primary_address_id: subselect).or(where(secondary_address_id: subselect))
+    left_joins(:primary_address, :secondary_address).where("folio_addresses.identification_number LIKE ?", "%#{q}%")
   }
 
   scope :currently_editing_path, -> (path) do

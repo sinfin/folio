@@ -83,7 +83,7 @@ class Folio::UserTest < ActiveSupport::TestCase
   end
 
   test "scope by_address_identification_number_query" do
-    primary_address = create(:folio_address_primary, identification_number: "123456789")
+    primary_address = build(:folio_address_primary, identification_number: "123456789")
     user = create(:folio_user, primary_address:)
 
     assert Folio::User.by_address_identification_number_query("1234").exists?(id: user.id)
@@ -92,11 +92,10 @@ class Folio::UserTest < ActiveSupport::TestCase
   end
 
   test "scope by_addresses_query" do
-    primary_address = create(:folio_address_primary,
-                             name: "Lorem Ipsum",
-                             address_line_1: "Downing Street 10",
-                             city: "London",
-                             zip: "12345")
+    primary_address = build(:folio_address_primary, name: "Lorem Ipsum",
+                                                    address_line_1: "Downing Street 10",
+                                                    city: "London",
+                                                    zip: "12345")
     user = create(:folio_user, primary_address:)
 
     assert Folio::User.by_addresses_query("Downing Street 10").exists?(id: user.id)
