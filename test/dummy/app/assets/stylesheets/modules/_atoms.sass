@@ -2,24 +2,13 @@ $my-atom-lg: 2 * $grid-gutter-width
 $my-atom-lg-mobile: 50px
 
 .d-atoms
-  &__atom
-    margin-top: $grid-gutter-width
-    margin-bottom: $grid-gutter-width
-
-  &__atoms > &__atom:first-child,
   > .d-atom:first-child,
   > .d-molecule:first-child
     margin-top: 0 !important
 
-  &__atoms > &__atom:last-child,
   > .d-atom:last-child,
   > .d-molecule:last-child
     margin-bottom: 0 !important
-
-  +media-breakpoint-down($font-size-media-breakpoint-s)
-    &__atom
-      margin-top: map-get($spacers, bb)
-      margin-bottom: map-get($spacers, bb)
 
 .my-atom-lg
   margin-top: $my-atom-lg
