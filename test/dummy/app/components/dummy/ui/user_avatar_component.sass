@@ -13,10 +13,10 @@
     justify-content: center
     align-items: center
 
-  &:hover &__avatar
+  &:not(&--not-link):hover &__avatar
     background: $shade-400
 
-  &:hover &__icon
+  &:not(&--not-link):hover &__icon
     color: $shade-400
 
   &--active &__avatar
@@ -27,12 +27,6 @@
 
   &--not-link
     cursor: default
-
-  &--not-link:hover &__avatar
-    background: $shade-black-contrast
-
-  &--not-link:hover &__icon
-    color: $shade-light-contrast
 
   &__mq
     position: absolute

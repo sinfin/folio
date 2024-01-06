@@ -110,9 +110,9 @@
       margin-top: map-get($spacers, 3) * -1
       left: 0
       z-index: 2
-      background: $shade-light-contrast
-      color: $shade-black-contrast
-      min-width: 159px
+      background: $brand-400
+      color: $shade-800
+      min-width: 200px
       border-radius: $border-radius
       border: 1px solid $transparent-200
       display: none
@@ -124,7 +124,6 @@
 
     &__children-ul &__arrow
       margin-left: auto
-      margin-right: - $grid-gutter-half
 
     &__ul > &__li:hover > &__children-ul,
     &__children-ul &__li--expanded &__children-ul
@@ -134,14 +133,23 @@
       transform: rotate(180deg)
 
     &__children-ul &__li
-      border-top: 1px solid $transparent-200
       box-shadow: none
       position: relative
       top: auto
       margin-top: 0
 
-    &__children-ul &__li:first-child
-      border-top: 0
+      &::before
+        content: ''
+        display: block
+        position: absolute
+        top: 0
+        left: map-get($spacers, bb)
+        width: calc(100% - #{map-get($spacers, bb)} * 2)
+        height: 1px
+        background: $transparent-200
+
+    &__children-ul &__li:first-child::before
+      display: none
 
     &__children-ul &__li:first-child &__a
       padding-top: map-get($spacers, 3)
@@ -154,7 +162,7 @@
 
       &:hover,
       &:focus
-        background: $shade-100
+        background: $transparent-100
 
     &__children-ul &__span
       padding: 0
@@ -171,29 +179,42 @@
     &__children-ul &__span
       align-items: flex-start
 
-    &__children-ul &__children-ul &__li
-      border: 0
+    &__children-ul &__children-ul &__li::before
+      display: none
   
     &__children-ul &__children-ul &__li &__a
       padding: map-get($spacers, 2) map-get($spacers, 4)
       color: $shade-500
 
   +mq-mobile-menu
-    background: $cloud-900
-    color: $cloud-100
+    background: $brand-300
+    color: $cloud-200
+    font-size: $ui-typo-text-s-font-size
 
     &__mq--desktop
       display: none
 
     &__arrow
       margin-left: auto
-      color: $cloud-300
+      color: $cloud-200
 
     &__li--more
       display: none
 
+    &__ul > &__li
+      position: relative
+
+    &__ul > &__li::before
+      content: ''
+      display: block
+      position: absolute
+      top: 0
+      left: map-get($spacers, bb)
+      width: calc(100% - #{map-get($spacers, bb)} * 2)
+      height: 1px
+      background: $transparent-white-W300
+
     &__ul > &__li > &__a
-      border-top: 1px solid $cloud-600
       padding: 0
 
     &__ul > &__li > &__a > &__span
@@ -203,8 +224,9 @@
       gap: $grid-gutter-half
 
     &__children-ul
-      color: $cloud-300
+      color: $cloud-200
       font-size: $ui-typo-text-s-font-size
+      font-weight: $font-weight-medium
       line-height: $ui-typo-text-s-line-height
       display: none
 

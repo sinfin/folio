@@ -4,9 +4,11 @@
   width: 200px
   top: map-get($spacers, 3) * -1
   left: 0
-  background: $shade-light-contrast
-  color: $shade-800
+  background: $brand-300
+  color: $primary-white
   border-radius: $border-radius
+  border: 1px solid $transparent-200
+  z-index: 1
 
   &--open
     display: block
@@ -22,9 +24,13 @@
     align-items: center
     gap: map-get($spacers, 2)
 
+  &__title-inner .d-ui-user-avatar__avatar
+    background: $shade-200
+    color: $shade-800
+
   &__chevron
     display: none
-    color: $shade-600
+    color: $primary-white
 
   &__ul
     display: flex
@@ -33,25 +39,26 @@
   &__a
     padding: map-get($spacers, 2) map-get($spacers, 4)
     font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-medium
     text-decoration: none
     cursor: pointer
-    color: $shade-600
+    color: $cloud-200
 
     &:hover, &:focus
-      color: $shade-800
+      background: $transparent-white-W200
 
     &--disabled
-      color: $shade-300
+      color: $cloud-600
       cursor: default
       
       &:hover, &:focus
-        color: $shade-300
+        background: none
 
     &--logout
       color: $shade-400
 
       &:hover, &:focus
-        color: $shade-600
+        color: $cloud-200
 
   &__a--logout &__icon
     transform: rotate(90deg)
@@ -65,7 +72,23 @@
     position: unset
     width: 100%
     border-radius: 0
-    border-bottom: 1px solid $shade-300
+    border: 0
+
+    &__title-wrapper
+      position: relative
+
+      &::before
+        content: ''
+        display: block
+        position: absolute
+        top: 0
+        left: map-get($spacers, bb)
+        width: calc(100% - #{map-get($spacers, bb)} * 2)
+        height: 1px
+        background: $transparent-white-W300
+
+    .d-ui-header__toolbar-dropdowns &:first-child &__title-wrapper::before
+      display: none
 
     &__ul
       display: none

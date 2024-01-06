@@ -31,7 +31,11 @@
       display: none
       position: absolute
       bottom: map-get($spacers, bb)
-      left: map-get($spacers, 1)
+      left: px-to-rem(-32)
 
     .d-ui-header__menu-input:checked + .d-ui-header &__selects-container
       display: flex
+
+  +media-breakpoint-down(md)
+    &__selects-container
+      left: map-get($spacers, 1)

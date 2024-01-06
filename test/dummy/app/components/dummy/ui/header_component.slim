@@ -28,5 +28,9 @@ input[
           data=stimulus_action(click: "toggleMenuOpenedClass")
         ]
           = dummy_ui_icon(:hamburger_menu,
-                          class_name: "d-ui-header__menu-toggle-icon",
+                          class_name: "d-ui-header__menu-toggle-icon d-ui-header__menu-toggle-icon--hamburger",
+                          height: 32)
+
+          = dummy_ui_icon(:close,
+                          class_name: "d-ui-header__menu-toggle-icon d-ui-header__menu-toggle-icon--close",
                           height: 32)

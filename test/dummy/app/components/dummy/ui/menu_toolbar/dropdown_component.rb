@@ -41,7 +41,8 @@ class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
       elsif @type == :eshop_menu
         [
           { label: "Shoping cart", shopped_items_count: true },
-          { label: "Wishlist", disabled: true },
+          { label: "Disabled item", disabled: true },
+          { label: "Wishlist", wish_items_count: true },
           { label: "Help" },
         ]
       end

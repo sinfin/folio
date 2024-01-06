@@ -40,3 +40,6 @@
 
             - if item[:shopped_items_count]
               = render(Dummy::Ui::MenuToolbar::ShoppedItemsCountComponent.new)
+
+            - if item[:wish_items_count]
+              = render(Dummy::Ui::MenuToolbar::ShoppedItemsCountComponent.new(wishlist: true))

@@ -81,11 +81,21 @@
   +mq-mobile-menu
     &--menu-opened
       position: fixed
+      z-index: 4
       top: 0
       left: 0
       width: 100%
       height: 100vh
       overflow: auto
+
+    &__menu-toggle &__menu-toggle-icon--close
+      display: none
+
+    &--menu-opened &__menu-toggle &__menu-toggle-icon--close
+      display: inline-block
+
+    &--menu-opened &__menu-toggle &__menu-toggle-icon--hamburger
+      display: none
 
     &__text-logo
       font-size: $ui-typo-display-xs-font-size
