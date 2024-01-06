@@ -11,8 +11,10 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
 
   onAnyClick (e) {
     const $dropdownTrigger = document.querySelector(`.${this.dropdownTriggerValue}`)
-
+    
     if (!this.element.contains(e.target) && !$dropdownTrigger.contains(e.target)) {
+      if (e.type === "keyup" && e.key !== "Enter") return
+
       this.close()
     }
   }
@@ -22,11 +24,13 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
 
     this.boundOnAnyClick = this.onAnyClick.bind(this)
     document.addEventListener('click', this.boundOnAnyClick)
+    document.addEventListener('keyup', this.boundOnAnyClick)
   }
 
   unbindOutsideClick () {
     if (this.boundOnAnyClick) {
       document.removeEventListener('click', this.boundOnAnyClick)
+      document.removeEventListener('keyup', this.boundOnAnyClick)
       delete this.boundOnAnyClick
     }
   }

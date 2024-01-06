@@ -1,7 +1,4 @@
-.d-ui-menu-toolbar-dropdown[
-  data=data
-  data-bs-theme="dark"
-]
+.d-ui-menu-toolbar-dropdown data=data
   - if dropdown_title
     .d-ui-menu-toolbar-dropdown__title-wrapper[
       data=stimulus_action(click: "titleClick")
@@ -13,7 +10,7 @@
                           height: dropdown_title[:icon_height] || 24)
 
         - if dropdown_title[:user_name]
-          = render(Dummy::Ui::UserAvatarComponent.new)
+          = render(Dummy::Ui::UserAvatarComponent.new(not_link: true))
 
         span.d-ui-menu-toolbar-dropdown__title
           = dropdown_title[:title]
@@ -27,9 +24,10 @@
       - items.each do |item|
         li.d-ui-menu-toolbar-dropdown__li
           a.d-ui-menu-toolbar-dropdown__a[
-            href=item[:href]
+            href=(item[:href] || "#")
             class=(item[:disabled] ? "d-ui-menu-toolbar-dropdown__a--disabled" : nil)
             class=(item[:class_modifier] ? "d-ui-menu-toolbar-dropdown__a--#{item[:class_modifier]}" : nil)
+            tabindex=(item[:disabled] ? "-1" : "0")
           ]
             .d-ui-menu-toolbar-dropdown__span-wrapper
               - if item[:icon]

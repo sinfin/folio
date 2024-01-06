@@ -1,18 +1,39 @@
 window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends window.Stimulus.Controller {
   static targets = ['mq']
 
-  clicked (e) {
-    const isDesktop = window.Folio.isVisible(this.mqTarget)
-
-    if (!isDesktop) return
-    
-    e.preventDefault()
-    this.dispatch("clicked")
-    this.toggleClassModifier("active")
+  static values = {
+    active: { type: Boolean, default: false }
   }
 
-  toggleClassModifier (modifier) {
-    this.element.classList.toggle(`d-ui-menu-toolbar-shopping-cart--${modifier}`)
+  clicked (e) {
+    const isDesktop = window.Folio.isVisible(this.mqTarget)
+    if (!isDesktop) return
+
+    e.preventDefault()
+
+    if (e.type === "keydown" && e.key === "Escape" && !this.activeValue) return
+
+    if (!this.activeValue) {
+      this.activate()
+    } else {
+      this.deactivate()
+    }
+
+    this.dispatch("clicked")
+  }
+
+  activate () {
+    if (this.activeValue) return
+
+    this.element.classList.add('d-ui-menu-toolbar-shopping-cart--active')
+    this.activeValue = true
+  }
+
+  deactivate () {
+    if (!this.activeValue) return
+
+    this.element.classList.remove('d-ui-menu-toolbar-shopping-cart--active')
+    this.activeValue = false
   }
 
   dropdownClosed ({ detail: { target } }) {
@@ -20,6 +41,6 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends 
 
     if ($target !== this.element) return
 
-    this.toggleClassModifier("active")
+    this.deactivate()
   }
 })

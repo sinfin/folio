@@ -71,7 +71,8 @@ class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
     }, action: {
       "#{dropdown_trigger}:clicked@window": "triggerClicked",
       "resize@window": "setPosition",
-      "orientationchange@window": "setPosition"
+      "orientationchange@window": "setPosition",
+      "keydown.esc": "close",
     })
   end
 end

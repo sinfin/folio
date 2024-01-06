@@ -1,7 +1,7 @@
 .d-ui-menu-toolbar-shopping-cart data=data
   a.d-ui-menu-toolbar-shopping-cart__a[
     href="#"
-    data=stimulus_action(click: :clicked)
+    data=stimulus_action(click: :clicked, "keydown.enter": :clicked, "keydown.esc": :clicked)
   ]
     = dummy_ui_icon(:shopping_cart,
                     height: 32,

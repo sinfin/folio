@@ -1,11 +1,40 @@
 window.Folio.Stimulus.register('d-ui-user-avatar', class extends window.Stimulus.Controller {
-  clicked () {
-    this.dispatch("clicked")
-    this.toggleClassModifier("active")
+  static targets = ['mq']
+
+  static values = {
+    active: { type: Boolean, default: false }
   }
 
-  toggleClassModifier (modifier) {
-    this.element.classList.toggle(`d-ui-user-avatar--${modifier}`)
+  clicked (e) {
+    const isDesktop = window.Folio.isVisible(this.mqTarget)
+    
+    if (isDesktop) {
+      if (e.type === "keydown" && e.key === "Escape" && !this.activeValue) return
+
+      if (!this.activeValue) {
+        this.activate()
+      } else {
+        this.deactivate()
+      }
+  
+      this.dispatch("clicked")
+    }else {
+      window.location.href = "/"
+    }
+  }
+
+  activate () {
+    if (this.activeValue) return
+
+    this.element.classList.add('d-ui-user-avatar--active')
+    this.activeValue = true
+  }
+
+  deactivate () {
+    if (!this.activeValue) return
+
+    this.element.classList.remove('d-ui-user-avatar--active')
+    this.activeValue = false
   }
 
   dropdownClosed ({ detail: { target } }) {
@@ -13,6 +42,6 @@ window.Folio.Stimulus.register('d-ui-user-avatar', class extends window.Stimulus
 
     if ($target !== this.element) return
 
-    this.toggleClassModifier("active")
+    this.deactivate()
   }
 })

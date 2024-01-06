@@ -1,6 +1,8 @@
 .d-ui-user-avatar[
-  data=data
+  data=(@not_link ? nil : data)
   class=(user_signed_in? ? nil : 'd-ui-user-avatar--signed-out')
+  class=(@not_link ? 'd-ui-user-avatar--not-link' : nil)
+  tabindex=(@not_link ? nil: "0")
 ]
   - if user_signed_in?
     .d-ui-user-avatar__avatar
@@ -10,3 +12,7 @@
     = dummy_ui_icon(:user_circle_2,
                     height: 32,
                     class_name: 'd-ui-user-avatar__icon')
+
+  span.d-ui-user-avatar__mq.d-ui-user-avatar__mq--desktop[
+    data=(@not_link ? nil : stimulus_target('mq'))
+  ]
