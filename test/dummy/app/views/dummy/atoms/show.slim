@@ -1,26 +1,53 @@
-.d-atoms
-  .container-fluid
-    h1
-      a.d-unlink href=dummy_atoms_path Atoms
+.d-atoms-show
+  - if @screenshot
+    - content_for :modals
+      css:
+        .d-atoms-show__screenshot {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 3rem 0;
+        }
 
-  - if @atom_classes_data
-    .container-fluid
-      ul.lead.fw-bold
-        - @atom_classes_data.each do |hash|
-          li.my-3
-            a href=dummy_atoms_path(atom: hash[:klass])
-              = hash[:label]
+        .d-atoms-show__screenshot .d-atoms__atom {
+          flex: 1 1 auto;
+        }
+
+      .d-atoms-show__screenshot.bg-body
+        - @atom_data.each do |attrs, atoms|
+          .d-atoms__atom
+            - aim = Folio::Atom.atoms_in_molecules(atoms)
+            = render_atoms_in_molecules(aim)
 
   - else
     .container-fluid
-      h2 = @atom_klass.model_name.human
+      h1
+        a.d-unlink href=dummy_atoms_path Atoms
 
-      h3.mb-gg = @atom_klass
+    - if @atom_classes_data
+      .container-fluid
+        ul.lead.fw-bold
+          - @atom_classes_data.each do |hash|
+            li.my-3
+              a href=dummy_atoms_path(atom: hash[:klass])
+                = hash[:label]
 
-    - %w[light dark].each do |theme|
-      .bg-body.border-top.border-bottom.py-gg data-bs-theme=theme
-        .d-atoms__atoms
-          - @atom_data.each do |attrs, atoms|
-            .d-atoms__atom title=attrs.to_json
-              - aim = Folio::Atom.atoms_in_molecules(atoms)
-              = render_atoms_in_molecules(aim)
+    - else
+      .container-fluid
+        h2 = @atom_klass.model_name.human
+
+        h3.mb-gg = @atom_klass
+
+      - %w[light dark].each do |theme|
+        .bg-body.border-top.border-bottom.py-gg data-bs-theme=theme
+          .d-atoms__atoms
+            - @atom_data.each do |attrs, atoms|
+              .d-atoms__atom title=attrs.to_json
+                - aim = Folio::Atom.atoms_in_molecules(atoms)
+                = render_atoms_in_molecules(aim)

@@ -10,7 +10,16 @@ class Dummy::AtomsController < ApplicationController
       @atom_klass = params[:atom].safe_constantize
 
       if @atom_klass && @atom_klass < Folio::Atom::Base && atom_data = @root_data["atoms"][@atom_klass.to_s]
-        @atom_data = atom_data.map do |hash|
+        atom_data_src = atom_data
+
+        if params[:screenshot]
+          @screenshot = true
+
+          hash_for_screenshot = atom_data.find { |hash| hash["_screenshot"] }
+          atom_data_src = [hash_for_screenshot || atom_data.first]
+        end
+
+        @atom_data ||= atom_data_src.map do |hash|
           attrs = attrs_from_hash(hash)
 
           if @atom_klass.molecule?
@@ -21,8 +30,8 @@ class Dummy::AtomsController < ApplicationController
           end
         end
 
-        add_breadcrumb "Atoms", dummy_atoms_path
-        add_breadcrumb dummy_atoms_path(atom: @atom_klass)
+        add_breadcrumb t("activerecord.models.folio/atom", count: 2), dummy_atoms_path
+        add_breadcrumb @atom_klass.model_name.human, dummy_atoms_path(atom: @atom_klass)
       else
         redirect_to dummy_atoms_path
         nil
@@ -49,7 +58,7 @@ class Dummy::AtomsController < ApplicationController
     end
 
     def attrs_from_hash(hash)
-      attrs = hash.deep_symbolize_keys
+      attrs = hash.deep_symbolize_keys.without(:_screenshot)
 
       if attrs[:cover] == true
         attrs[:cover] = images_for_attrs.sample
