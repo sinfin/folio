@@ -136,7 +136,9 @@ class Folio::Console::UsersControllerTest < Folio::Console::BaseControllerTest
     get url_for([:impersonate, :console, user])
 
     assert_redirected_to "/"
-    follow_redirect!
+
+    follow_redirect! if %w[302 301].include?(response.code)
+
     assert_equal "Přihlášen jako uživatel \"#{user.to_label}\"", flash[:success]
     assert_equal user, controller.current_user
 
