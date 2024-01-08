@@ -22,6 +22,13 @@
     &:hover
       text-decoration: underline
 
+  +media-breakpoint-up(sm)
+    &__row
+      margin-bottom: -$grid-gutter-width
+
+    &__col
+      padding-bottom: $grid-gutter-width
+
   +media-breakpoint-up(lg)
     &__card--large &__card-image
       flex: 0 0 200px
@@ -32,3 +39,10 @@
   +media-breakpoint-down(lg)
     &__card--large &__card-image
       max-height: 120px !important
+
+  +media-breakpoint-down(sm)
+    &__col
+      padding-bottom: map-get($spacers, bb)
+
+      &:last-child
+        padding-bottom: 0

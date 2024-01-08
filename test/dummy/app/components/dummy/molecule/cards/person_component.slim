@@ -1,8 +1,11 @@
-.d-molecule.d-molecule-cards-person
+.d-molecule.d-molecule-cards-person.my-atom
   .container-fluid
-    .row.mb-ng
+    .row.d-molecule-cards-person__row
       - @atoms.each do |atom|
-        .col.col-12.col-sm-6.mb-g class=(atom.large ? "col-lg-6" : "col-lg-4")
+        .d-molecule-cards-person__col [
+          class='col col-12 col-sm-6'
+          class=(atom.large ? "col-lg-6" : "col-lg-4")
+        ]
           .d-molecule-cards-person__card[
             class=(atom.large ? "d-molecule-cards-person__card--large" : nil)
           ]
