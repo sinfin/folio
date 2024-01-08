@@ -33,9 +33,6 @@ class Folio::ApplicationCell < Cell::ViewModel
     controller.main_app.url_for(options)
   end
 
-  def current_site
-    options[:current_site] || controller.current_site
-  end
 
   def image(placement, size, opts = {})
     folio_image(placement, size, opts)
@@ -69,20 +66,18 @@ class Folio::ApplicationCell < Cell::ViewModel
     end
   end
 
+  delegate :can_now?, to: :controller
+
+  def current_site
+    get_from_options_or_controller(:current_site)
+  end
+
   def current_user
     get_from_options_or_controller(:current_user)
   end
 
   def user_signed_in?
     get_from_options_or_controller(:user_signed_in?)
-  end
-
-  def current_account
-    get_from_options_or_controller(:current_account)
-  end
-
-  def account_signed_in?
-    get_from_options_or_controller(:account_signed_in?)
   end
 
   def get_from_options_or_controller(method_sym)

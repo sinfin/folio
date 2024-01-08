@@ -143,10 +143,6 @@ class Folio::Users::RegistrationsController < Devise::RegistrationsController
       params.require(:user).permit(*additional_user_params).to_h.merge(super)
     end
 
-    def account_update_params
-      params.require(:user).permit(*additional_user_params).to_h.merge(super)
-    end
-
     def additional_user_params
       %i[first_name last_name nickname phone]
     end

@@ -34,7 +34,7 @@ en:
             placeholder: Search
 
         header:
-          sign_out: Sign out
+          sign_out: Sign out %{user}
 
       searches:
         results:

@@ -2,6 +2,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2023-12-X
+### Changed
+- authorization to console is done through user login, not account.
+### Removed
+- Folio::Account after merging into Folio::User (done in migration)
+
 ## 2023-12-14
 ### Changed
 - changed `folio/lightbox` - now works via stimulus, using `stimulus_lightbox` and `stimulus_lightbox_item` helpers

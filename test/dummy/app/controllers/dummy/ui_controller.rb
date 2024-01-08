@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class Dummy::UiController < ApplicationController
-  before_action :only_allow_superusers
+  before_action :only_allow_superadmins
 
   def show
     @actions = %i[
       alerts
       boolean_toggles
       buttons
+      breadcrumbs
       forms
       icons
       images
@@ -90,10 +91,12 @@ class Dummy::UiController < ApplicationController
   end
 
   private
-    def only_allow_superusers
-      authenticate_account!
+    def only_allow_superadmins
+      authenticate_user!
 
-      if current_account.has_role?(:superuser)
+      if can_now?(:display_ui)
+        add_breadcrumb "UI", dummy_ui_path
+
         if action_name != "show"
           add_breadcrumb "UI", dummy_ui_path
           add_breadcrumb action_name.capitalize, send("#{action_name}_dummy_ui_path")

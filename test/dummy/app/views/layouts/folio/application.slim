@@ -16,6 +16,8 @@ html[
       = preload_link_tag '/fonts/SpaceGrotesk-Bold.woff2'
 
   body
+    = render(Folio::Users::ImpersonatingBarComponent.new)
+
     = render(Dummy::Ui::HeaderComponent.new)
 
     = render(Dummy::Ui::HeaderMessageComponent.new)
@@ -26,16 +28,14 @@ html[
     = yield :publishable_hint
 
     - unless @hide_breadcrumbs
-      == cell('dummy/ui/breadcrumbs',
-              @breadcrumbs_on_rails,
-              share: @breadcrumbs_share_bar)
+      == render(Dummy::Ui::BreadcrumbsComponent.new(breadcrumbs: @breadcrumbs_on_rails,
+                                                    share: @breadcrumbs_share_bar))
 
     .d-layout-main
       = yield
 
     = render(Dummy::Ui::FooterComponent.new)
 
-    - if Rails.application.config.folio_users
-      = yield :modals
-      == cell('folio/devise/modal')
-      == cell('folio/devise/omniauth/forms')
+    = yield :modals
+    == cell('folio/devise/modal')
+    == cell('folio/devise/omniauth/forms')

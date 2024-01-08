@@ -1,0 +1,7 @@
+---
+cs:
+  folio:
+    users:
+      impersonating_bar_component:
+        label: Vy (%{true_user}), jste nyní přihlášeni jako jiný uživatel (%{impersonated_user}).
+        stop_impersonation: Ukončit impersonaci

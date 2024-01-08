@@ -20,12 +20,15 @@ def force_destroy_all(klass)
 end
 
 destroy_all Folio::Atom::Base
-destroy_all Folio::Account
-force_destroy_all Folio::Lead
-force_destroy_all Folio::File
+# destroy_all Folio::Account
+destroy_all Folio::FilePlacement::Base
+destroy_all Folio::File
+destroy_all Folio::Lead
+destroy_all Folio::User
+
 force_destroy_all Folio::Menu
-force_destroy_all Folio::Page
-force_destroy_all Folio::Site
+destroy_all Folio::Page
+destroy_all Folio::Site
 
 destroy_all Dummy::Blog::Article
 destroy_all Dummy::Blog::Topic
@@ -40,6 +43,7 @@ Folio::Site.create!(title: "Sinfin.digital",
                     phone: "+420 123 456 789",
                     address: "Ulice 100, 14000 Praha 4",
                     copyright_info_source: "© Sinfin.digital {YEAR}",
+                    available_user_roles: %w[administrator manager],
                     social_links: {
                       facebook: "https://www.facebook.com/",
                       instagram: "https://www.instagram.com/",

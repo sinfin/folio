@@ -8,8 +8,31 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
 
   validate :validate_roles_from_site
 
+  scope :without_role, -> (role_to_check) {
+    where.not("roles ? :role", role: role_to_check)
+  }
+
+  scope :without_roles, -> (roles_to_check) {
+    where.not("roles ?| array[:roles]", roles: roles_to_check)
+  }
+
+  scope :by_role, -> (role_to_check) {
+    where("roles ? :role", role: role_to_check)
+  }
+
+  scope :by_roles, -> (roles_to_check) {
+    where("roles ?| array[:roles]", roles: roles_to_check)
+  }
+
+  scope :by_site, -> (site) { where(site:) }
+  scope :by_user, -> (site) { where(user:) }
+
+  def self.non_nillifiable_fields
+    %w[roles]
+  end
+
   def validate_roles_from_site
-    forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles.to_a)
+    forbidden_roles = (roles.to_a.collect(&:to_s) - site.available_user_roles_ary.to_a)
     if forbidden_roles.present?
       errors.add(:roles, :not_available_for_site, site: site.domain, roles: forbidden_roles.to_s)
     else
@@ -19,12 +42,18 @@ class Folio::SiteUserLink < Folio::ApplicationRecord
 
   # keep defined order and allow only known roles
   def normalize_site_roles
+    return if roles == []
+
     self.roles = if self.roles.blank?
       []
     else
-      site.available_user_roles.select { |role_to_check| roles.include?(role_to_check.to_s) }
+      site.available_user_roles_ary.select { |role_to_check| roles.include?(role_to_check.to_s) }
     end
- end
+  end
+
+  def to_s
+    "#{user.email} - #{site.domain} - #{roles}"
+  end
 end
 
 # == Schema Information
@@ -34,7 +63,7 @@ end
 #  id         :bigint(8)        not null, primary key
 #  user_id    :bigint(8)        not null
 #  site_id    :bigint(8)        not null
-#  roles      :json
+#  roles      :jsonb
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
