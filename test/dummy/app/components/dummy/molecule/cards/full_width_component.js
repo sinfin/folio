@@ -1,36 +1,41 @@
-const SLIDE_ACTIVE_CLASS = 'd-molecule-cards-full-width__slide--active'
-const DOT_ACTIVE_CLASS = 'd-molecule-cards-full-width__controls-dot--active'
-
 window.Folio.Stimulus.register('d-molecule-cards-full-width', class extends window.Stimulus.Controller {
   static targets = ['slide', 'controlDot']
-
-  connect () {
-    this.currentSlideIndex = 0
-    this.updateSlider()
+  static values = {
+    initialSlideIndex: Number,
+    slideActiveClass: String,
+    slideDotActiveClass: String
   }
 
-  updateSlider () {
+  connect () {
+    this.currentSlideIndex = this.initialSlideIndexValue
+  }
+
+  setCurrentSlide () {
     this.slideTargets.forEach((slide, index) => {
       if (index === this.currentSlideIndex) {
-        slide.classList.add(SLIDE_ACTIVE_CLASS)
+        slide.classList.add(this.slideActiveClassValue)
       } else {
-        slide.classList.remove(SLIDE_ACTIVE_CLASS)
+        slide.classList.remove(this.slideActiveClassValue)
       }
     })
+  }
 
+  setCurrentSlideDot () {
     this.controlDotTargets.forEach((dot) => {
       const index = parseInt(dot.dataset.index)
 
       if (index === this.currentSlideIndex) {
-        dot.classList.add(DOT_ACTIVE_CLASS)
+        dot.classList.add(this.slideDotActiveClassValue)
       } else {
-        dot.classList.remove(DOT_ACTIVE_CLASS)
+        dot.classList.remove(this.slideDotActiveClassValue)
       }
     })
   }
 
   onControlDotClick = (event) => {
     this.currentSlideIndex = parseInt(event.currentTarget.dataset.index)
-    this.updateSlider()
+
+    this.setCurrentSlide()
+    this.setCurrentSlideDot()
   }
 })

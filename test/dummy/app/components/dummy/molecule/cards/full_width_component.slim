@@ -1,10 +1,14 @@
 .d-molecule.d-molecule-cards-full-width.my-atom-lg [
-  data=stimulus_controller('d-molecule-cards-full-width')
+  data=controller_data
   data-bs-theme="dark"
 ]
-  - @atoms.each do |atom|
+  - @atoms.each_with_index do |atom, slide_i|
+    - active_slide = slide_i == initial_slide_index
+    - buttons_ary = buttons_ary(atom)
+
     .d-molecule-cards-full-width__slide [
       data=stimulus_target(:slide)
+      class=(active_slide ? slide_active_class : nil)
     ]
       .d-molecule-cards-full-width__background
         = dummy_ui_image molecule_cover_placement(atom),
@@ -23,28 +27,18 @@
                 .d-rich-text
                   = cstypo atom.content
 
-            - if atom.button_url.present? || atom.secondary_button_url.present?
+            - if buttons_ary.present?
               .d-molecule-cards-full-width__card-btns
-                - if atom.button_url.present?
-                  a.d-molecule-cards-full-width__card-button [
-                    class="btn btn-secondary"
-                    href=atom.button_url
-                  ]
-                    = atom.button_label
+                = dummy_ui_buttons(buttons: buttons_ary)
 
-                - if atom.secondary_button_url.present?
-                  a.d-molecule-cards-full-width__card-button [
-                    class="btn btn-primary"
-                    href=atom.secondary_button_url
-                  ]
-                    = atom.secondary_button_label
+            - if @atoms.count > 1
+              .d-molecule-cards-full-width__controls
+                - @atoms.each_with_index do |_, dot_index|
+                  - active_dot = dot_index == initial_slide_index
 
-              - if @atoms.count > 1
-                .d-molecule-cards-full-width__controls
-                  - @atoms.each_with_index do |_, i|
-                    button.d-molecule-cards-full-width__controls-dot [
-                      data=stimulus_target(:controlDot)
-                      data=stimulus_action(click: :onControlDotClick)
-                      data-index=i
-                      type="button"
-                    ]
+                  button.d-molecule-cards-full-width__controls-dot [
+                    class=(active_dot ? slide_dot_active_class : nil)
+                    data=dot_target_data
+                    data-index=dot_index
+                    type="button"
+                  ]

@@ -53,10 +53,6 @@
     color: $shade-600
 
   &__card-btns
-    display: flex
-    align-items: center
-    flex-wrap: wrap
-    gap: $grid-gutter-half
     margin-top: $grid-gutter-base * 4
 
   &__controls
@@ -80,18 +76,18 @@
     &__content
       padding: map-get($spacers, gg) 0
 
-    &__card-btns
-      margin-top: $grid-gutter-width
+    &__card-title
+      +font-size-display-s
 
     &__card-text
       display: none
+
+    &__card-btns
+      margin-top: $grid-gutter-width
 
     &__controls
       margin-top: $grid-gutter-width
 
   +media-breakpoint-down(md)
     &__content
-      padding: map-get($spacers, bb) $grid-gutter-width
-
-    &__card-title
-      +font-size-display-s
+      padding: map-get($spacers, bb) px-to-rem(28px)
