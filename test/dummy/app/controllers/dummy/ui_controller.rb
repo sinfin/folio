@@ -19,6 +19,7 @@ class Dummy::UiController < ApplicationController
       modals
       pagination
       tabs
+      share
       typo
     ]
   end

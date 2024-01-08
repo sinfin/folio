@@ -1,0 +1,10 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Share - #{theme}
+
+      = render(Dummy::Ui::ShareComponent.new(mobile_collapsible: false))
+      = render(Dummy::Ui::ShareComponent.new(mobile_collapsible: true))

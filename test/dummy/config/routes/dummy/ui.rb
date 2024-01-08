@@ -16,6 +16,7 @@ scope module: :dummy, as: :dummy do
     get :modals
     get :pagination
     get :tabs
+    get :share
     get :typo
   end
 end
