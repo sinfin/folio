@@ -20,3 +20,9 @@ cs:
         header_search_component:
           placeholder: Hledaný výraz
           autocomplete_none: Žádné výsledky
+        dropdown_component:
+          user_menu/sign_up: Registrovat
+          user_menu/sign_in: Přihlásit
+          user_menu/sign_out: Odhlásit
+          user_menu/title: Přihlášení
+          eshop_menu/title: Obchod

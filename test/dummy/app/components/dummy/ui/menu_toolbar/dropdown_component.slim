@@ -9,22 +9,23 @@
                           class_name: "d-ui-menu-toolbar-dropdown__title-icon",
                           height: dropdown_title[:icon_height] || 24)
 
-        - if dropdown_title[:user_name]
-          = render(Dummy::Ui::UserAvatarComponent.new(not_link: true))
+        - if dropdown_title[:username]
+          = render(Dummy::Ui::UserAvatarComponent.new(link: false))
 
         span.d-ui-menu-toolbar-dropdown__title
-          = dropdown_title[:title]
+          = dropdown_title[:username] || dropdown_title[:title]
 
       = dummy_ui_icon(:chevron_down,
                 class_name: "d-ui-menu-toolbar-dropdown__chevron",
                 height: 16)
 
-  - if items
+  - if items.present?
     ul.d-ui-menu-toolbar-dropdown__ul
       - items.each do |item|
         li.d-ui-menu-toolbar-dropdown__li
           a.d-ui-menu-toolbar-dropdown__a[
-            href=(item[:href] || "#")
+            href=item[:href]
+            data=item[:data]
             class=(item[:disabled] ? "d-ui-menu-toolbar-dropdown__a--disabled" : nil)
             class=(item[:class_modifier] ? "d-ui-menu-toolbar-dropdown__a--#{item[:class_modifier]}" : nil)
             tabindex=(item[:disabled] ? "-1" : "0")

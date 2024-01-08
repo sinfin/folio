@@ -28,4 +28,16 @@ class Dummy::Ui::UserAvatarComponent < ApplicationComponent
       "d-ui-user-avatar--not-link"
     end
   end
+
+  def letters
+    if current_user_with_test_fallback
+      if current_user_with_test_fallback.full_name.present?
+        return current_user_with_test_fallback.full_name.split(/\s+/).map(&:first).first(2).join("").upcase
+      elsif current_user_with_test_fallback.email.present?
+        return current_user_with_test_fallback.email.split("@").map(&:first).first(2).join("").upcase
+      end
+    end
+
+    "XX"
+  end
 end

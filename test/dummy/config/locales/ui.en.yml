@@ -20,3 +20,9 @@ en:
         header_search_component:
           placeholder: Search term
           autocomplete_none: No results
+        dropdown_component:
+          user_menu/sign_up: Sign up
+          user_menu/sign_in: Sign in
+          user_menu/sign_out: Sign out
+          user_menu/title: Login
+          eshop_menu/title: Shop

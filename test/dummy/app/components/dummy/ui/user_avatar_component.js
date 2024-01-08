@@ -6,6 +6,8 @@ window.Folio.Stimulus.register('d-ui-user-avatar', class extends window.Stimulus
   }
 
   clicked (e) {
+    e.target.blur()
+
     const isDesktop = window.Folio.isVisible(this.mqTarget)
     
     if (isDesktop) {
