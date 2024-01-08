@@ -35,7 +35,7 @@ class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
         [
           {
             label: t(".user_menu/sign_out"),
-            icon: :upload,
+            icon: :log_out,
             icon_height: 16,
             class_modifier: "logout",
             href: controller.main_app.try(:destroy_user_session_path),
