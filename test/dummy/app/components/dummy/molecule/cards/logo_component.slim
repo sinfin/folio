@@ -1,7 +1,7 @@
 .d-molecule.d-molecule-cards-logo.my-atom
   .container-fluid
     .d-molecule-cards-logo__flex
-      - @atoms[0..-3].each do |atom|
+      - inline_logos.each do |atom|
         *{ tag: nil }
           *card_tag(atom)
             = dummy_ui_image molecule_cover_placement(atom),
@@ -11,12 +11,13 @@
             .d-molecule-cards-logo__label.fs-text-xs
               = atom.title
 
-      .d-molecule-cards-logo__orphans
-        - @atoms[-2..-1].each do |atom|
-            *card_tag(atom)
-              = dummy_ui_image molecule_cover_placement(atom),
-                               THUMB_SIZE,
-                               class_name: "d-molecule-cards-logo__image"
+      - if orphan_logos
+        .d-molecule-cards-logo__orphans
+          - orphan_logos.each do |atom|
+              *card_tag(atom)
+                = dummy_ui_image molecule_cover_placement(atom),
+                                 THUMB_SIZE,
+                                 class_name: "d-molecule-cards-logo__image"
 
-              .d-molecule-cards-logo__label.fs-text-xs
-                = atom.title
+                .d-molecule-cards-logo__label.fs-text-xs
+                  = atom.title

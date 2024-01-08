@@ -19,4 +19,16 @@ class Dummy::Molecule::Cards::LogoComponent < ApplicationComponent
       tag
     end
   end
+
+  def inline_logos
+    @atoms.filter do |atom|
+      !orphan_logos || orphan_logos.exclude?(atom)
+    end
+  end
+
+  def orphan_logos
+    if @atoms.size > 3
+      @atoms[-2..-1]
+    end
+  end
 end
