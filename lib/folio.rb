@@ -67,11 +67,15 @@ module Folio
   def self.current_site(request: nil, controller: nil)
     return Folio.main_site if request.nil?
 
-    domain = request.host.to_s.downcase
+    Folio::Site.find_by(domain: normalize_request_host(request.host)) || Folio.main_site
+  end
+
+  def self.normalize_request_host(host)
     if Rails.env.development?
-      domain = domain.gsub("dev-", "").gsub(/\Adev\./, "www.")
+      host.to_s.downcase.gsub("dev-", "").gsub(/\Adev\./, "www.")
+    else
+      host.to_s.downcase
     end
-    Folio::Site.find_by(domain:) || Folio.main_site
   end
 
   def self.site_instance_for_mailers

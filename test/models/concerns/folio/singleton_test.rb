@@ -11,8 +11,10 @@ class Folio::SingletonTest < ActiveSupport::TestCase
     not_allowed = singletoned_class.new(locale: :en, title: "Allowed", site:)
 
     assert_not not_allowed.valid?
-    assert_includes(not_allowed.errors[:type],
-                    "Je povolen jen jeden záznam '#{singletoned_class}'.",
-                    not_allowed.errors.to_json)
+    I18n.with_locale(site.locale) do
+      assert_includes(not_allowed.errors[:type],
+                      I18n.t("errors.attributes.type.already_exists", class: singletoned_class),
+                      not_allowed.errors.to_json)
+    end
   end
 end
