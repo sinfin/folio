@@ -39,7 +39,7 @@ class Dummy::AtomsController < ApplicationController
     def only_allow_superusers
       authenticate_account!
 
-      unless current_account.has_role?(:superuser)
+      unless current_user.can_now?(:display_ui)
         redirect_to root_path
       end
     end
