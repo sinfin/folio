@@ -2,6 +2,10 @@
   - if @screenshot
     - content_for :modals
       css:
+        html, body {
+          overflow: hidden;
+        }
+
         .d-atoms-show__screenshot {
           position: fixed;
           top: 0;
@@ -19,11 +23,20 @@
           flex: 1 1 auto;
         }
 
+        #cc--main {
+          display: none;
+        }
+
       .d-atoms-show__screenshot.bg-body
         - @atom_data.each do |attrs, atoms|
           .d-atoms__atom
             - aim = Folio::Atom.atoms_in_molecules(atoms)
             = render_atoms_in_molecules(aim)
+
+      javascript:
+        for (const img of document.querySelectorAll('img[loading]')) {
+          img.removeAttribute('loading')
+        }
 
   - else
     .container-fluid

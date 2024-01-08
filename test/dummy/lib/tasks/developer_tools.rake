@@ -140,4 +140,41 @@ namespace :developer_tools do
       end
     end
   end
+
+  namespace :atoms do
+    desc "Screenshot atoms from atoms_showcase"
+    task screenshot: :environment do
+      require 'selenium-webdriver'
+
+      root_data = YAML.load_file(Rails.root.join("data/atoms_showcase.yml"))
+
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_argument('--headless')
+      options.add_argument('--window-size=1200,800')
+
+      driver = Selenium::WebDriver.for(:chrome, options:)
+
+      FileUtils.mkdir_p(Rails.root.join("public/images/atoms"))
+
+      root_data["atoms"].keys.each do |class_name|
+        driver.navigate.to "http://localhost:3000/atoms/?atom=#{class_name}&screenshot=1"
+
+        file_name = "#{class_name.underscore.gsub('/', '-')}.webp"
+        webp_file_path = Rails.root.join("public/images/atoms/#{file_name}")
+
+        Dir.mktmpdir do |dir|
+          tmp_png_path = "#{dir}/screenshot.png"
+          tmp_webp_path = "#{dir}/screenshot.webp"
+
+          driver.save_screenshot(tmp_png_path)
+
+          system "cwebp -q 85 #{tmp_png_path} -o #{tmp_webp_path}"
+
+          FileUtils.cp tmp_webp_path, webp_file_path
+        end
+      end
+
+      driver.quit
+    end
+  end
 end

@@ -46,7 +46,9 @@ class Dummy::AtomsController < ApplicationController
 
   private
     def only_allow_superusers
-      authenticate_account!
+      return if params[:atom] && params[:screenshot]
+
+      authenticate_user!
 
       unless current_user.can_now?(:display_ui)
         redirect_to root_path
