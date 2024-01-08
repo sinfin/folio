@@ -1,8 +1,8 @@
 .d-ui-user-avatar[
-  data=(@not_link ? nil : data)
-  class=(user_signed_in? ? nil : 'd-ui-user-avatar--signed-out')
-  class=(@not_link ? 'd-ui-user-avatar--not-link' : nil)
-  tabindex=(@not_link ? nil: "0")
+  data=data
+  class=user_class_name
+  class=link_class_name
+  tabindex=(@link ? "0" : nil)
 ]
   - if user_signed_in?
     .d-ui-user-avatar__avatar
@@ -14,5 +14,5 @@
                     class_name: 'd-ui-user-avatar__icon')
 
   span.d-ui-user-avatar__mq.d-ui-user-avatar__mq--desktop[
-    data=(@not_link ? nil : stimulus_target('mq'))
+    data=(@link ? stimulus_target('mq') : nil)
   ]
