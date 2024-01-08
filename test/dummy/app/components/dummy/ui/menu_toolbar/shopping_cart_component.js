@@ -36,10 +36,10 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-shopping-cart', class extends 
     this.activeValue = false
   }
 
-  dropdownClosed ({ detail: { target } }) {
-    const $target = document.querySelector(`.${target}`)
+  dropdownClosed ({ detail: { targetTrigger } }) {
+    const $targetTrigger = document.querySelector(`.${targetTrigger}`)
 
-    if ($target !== this.element) return
+    if ($targetTrigger !== this.element) return
 
     this.deactivate()
   }

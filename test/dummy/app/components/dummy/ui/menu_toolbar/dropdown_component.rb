@@ -88,6 +88,7 @@ class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
       "resize@window": "setPosition",
       "orientationchange@window": "setPosition",
       "keydown.esc": "close",
+      "d-ui-menu-toolbar-dropdown:opened@window": "closeOtherDropdowns",
     })
   end
 end

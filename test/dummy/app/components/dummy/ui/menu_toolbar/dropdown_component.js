@@ -13,8 +13,6 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
     const $dropdownTrigger = document.querySelector(`.${this.dropdownTriggerValue}`)
     
     if (!this.element.contains(e.target) && !$dropdownTrigger.contains(e.target)) {
-      if (e.type === "keyup" && e.key !== "Enter") return
-
       this.close()
     }
   }
@@ -24,13 +22,11 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
 
     this.boundOnAnyClick = this.onAnyClick.bind(this)
     document.addEventListener('click', this.boundOnAnyClick)
-    document.addEventListener('keyup', this.boundOnAnyClick)
   }
 
   unbindOutsideClick () {
     if (this.boundOnAnyClick) {
       document.removeEventListener('click', this.boundOnAnyClick)
-      document.removeEventListener('keyup', this.boundOnAnyClick)
       delete this.boundOnAnyClick
     }
   }
@@ -48,13 +44,20 @@ window.Folio.Stimulus.register('d-ui-menu-toolbar-dropdown', class extends windo
     this.openValue = true
     this.element.classList.add("d-ui-menu-toolbar-dropdown--open")
     this.bindOutsideClick()
+    this.dispatch("opened")
   }
 
   close () {
     this.unbindOutsideClick()
     this.openValue = false
     this.element.classList.remove("d-ui-menu-toolbar-dropdown--open")
-    this.dispatch("closed", { detail: { target: this.dropdownTriggerValue}})
+    this.dispatch("closed", { detail: { targetTrigger: this.dropdownTriggerValue}})
+  }
+
+  closeOtherDropdowns (e) {
+    if (e.target === this.element) return
+
+    this.close()
   }
 
   setPosition () {
