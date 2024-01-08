@@ -1,3 +1,5 @@
+$my-atom: $grid-gutter-width
+$my-atom-mobile: $grid-gutter-width
 $my-atom-lg: 2 * $grid-gutter-width
 $my-atom-lg-mobile: 50px
 
@@ -9,6 +11,14 @@ $my-atom-lg-mobile: 50px
   > .d-atom:last-child,
   > .d-molecule:last-child
     margin-bottom: 0 !important
+
+.d-atom
+  margin-top: $my-atom
+  margin-bottom: $my-atom
+
+  +media-breakpoint-down($font-size-media-breakpoint-s)
+    margin-top: $my-atom-mobile
+    margin-bottom: $my-atom-mobile
 
 .my-atom-lg
   margin-top: $my-atom-lg
