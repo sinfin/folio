@@ -1,8 +1,8 @@
-.d-molecule.d-molecule-cards-extra-small
+.d-molecule.d-molecule-cards-extra-small.my-atom
   .container-fluid
-    .row.mb-ng
+    .row.d-molecule-cards-extra-small__row
       - @atoms.each do |atom|
-        .col-12.col-sm-6.mb-g
+        .col-12.col-sm-6.d-molecule-cards-extra-small__col
           .d-molecule-cards-extra-small__card
             .d-molecule-cards-extra-small__cover
               = dummy_ui_image(molecule_cover_placement(atom),

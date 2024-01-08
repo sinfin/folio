@@ -12,3 +12,18 @@
 
   &__content
     padding-left: map-get($spacers, bb)
+
+  +media-breakpoint-up(sm)
+    &__row
+      margin-bottom: -$grid-gutter-width
+
+    &__col
+      padding-bottom: $grid-gutter-width
+
+  +media-breakpoint-down(sm)
+    &__col
+      padding-bottom: $grid-gutter-base
+      margin-bottom: map-get($spacers, bb)
+
+      &:last-child
+        margin-bottom: 0
