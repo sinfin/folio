@@ -19,7 +19,7 @@
   &__card-image
     transition: transform 100ms ease-in-out
 
-  &__card:hover &__card-image
+  &__card--link:hover &__card-image
     transform: scale(1.05)
 
   &__card-body
@@ -36,6 +36,9 @@
   &__card-text
     color: $shade-700
     margin-top: $grid-gutter-base
+
+    &:first-child
+      margin-top: 0
 
   &__card-btns
     display: flex

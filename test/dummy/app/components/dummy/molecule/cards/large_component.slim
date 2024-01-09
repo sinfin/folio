@@ -1,7 +1,7 @@
 .d-molecule.d-molecule-cards-large.my-atom data=stimulus_lightbox
   .container-fluid
     - @atoms.each do |atom|
-      .d-molecule-cards-large__card
+      *card_tag(atom)
         - if molecule_cover_placement(atom)
           .d-molecule-cards-large__card-image-wrap
             = dummy_ui_image molecule_cover_placement(atom),
@@ -11,8 +11,9 @@
                              lightbox: atom.button_url.blank?
 
         .d-molecule-cards-large__card-body
-          h4.d-molecule-cards-large__card-title.fs-display-m
-            = atom.title
+          - if atom.title.present?
+            h4.d-molecule-cards-large__card-title.fs-display-m
+              = atom.title
 
           - if atom.content.present?
             .d-molecule-cards-large__card-text[
