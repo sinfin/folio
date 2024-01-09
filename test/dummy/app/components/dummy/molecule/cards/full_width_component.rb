@@ -26,26 +26,12 @@ class Dummy::Molecule::Cards::FullWidthComponent < ApplicationComponent
     ary
   end
 
-  def initial_slide_index
-    @atom_options[:initial_slide_index] || 0
+  def current_slide_index
+    0
   end
 
-  def slide_active_class
-    "d-molecule-cards-full-width__slide--active"
-  end
-
-  def slide_dot_active_class
-    "d-molecule-cards-full-width__controls-dot--active"
-  end
-
-  def controller_data
-    values = {
-      initial_slide_index:,
-      slide_active_class:,
-      slide_dot_active_class:,
-    }
-
-    stimulus_controller("d-molecule-cards-full-width", values:)
+  def data
+    stimulus_controller("d-molecule-cards-full-width", values: { current_slide_index: })
   end
 
   def dot_target_data

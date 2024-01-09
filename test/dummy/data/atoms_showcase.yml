@@ -70,7 +70,7 @@ atoms:
 
   Dummy::Atom::Cards::FullWidth:
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      content: true
       button_label: Button label
       button_url: url
       secondary_button_label: Secondary Button label
@@ -79,21 +79,29 @@ atoms:
       _count: 3
 
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      content: true
       button_label: Button label
       button_url: url
       cover: true
       _count: 3
 
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      content: true
       secondary_button_label: Secondary Button label
       secondary_button_url: url
       cover: true
       _count: 3
 
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      cover: true
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      button_label: Button label
+      button_url: url
+      cover: true
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: true
       cover: true
 
 values_for_true:
