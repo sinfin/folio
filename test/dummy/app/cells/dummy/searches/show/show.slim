@@ -13,7 +13,7 @@
 
     .d-searches-show__tabs.mb-g
       - if model[:tabs].present? && model[:count] > 0
-        == render(Dummy::Ui::TabsComponent.new(model[:tabs]))
+        == render_view_component(::Dummy::Ui::TabsComponent.new(tabs: model[:tabs]))
 
     .d-searches-show__results-wrap
       - if model[:count] == 0
