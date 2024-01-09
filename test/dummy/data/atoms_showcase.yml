@@ -22,20 +22,20 @@ atoms:
       title: H5 Mixtape gastropub pitchfork wayfarers.
 
   Dummy::Atom::ImageAndContent:
-    - title: Goth squid xoxo
+    - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       button_label: Button label
       url: "#url"
       cover: true
-    - title: Goth squid xoxo
+    - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       button_label: Button label
       url: "#url"
       cover: true
       image_side: right
-    - title: Goth squid xoxo
+    - title: Headline dolor amet consectetur
       cover: true
-    - title: Goth squid xoxo
+    - title: Headline dolor amet consectetur
       content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
       cover: true
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>

@@ -1,0 +1,85 @@
+.d-atom-image-and-content
+  &__inner
+    position: relative
+
+  &__image-wrap
+    border-radius: $grid-gutter-half
+    overflow: hidden
+    max-height: 450px
+    width: 100%
+    display: flex
+    align-items: center
+
+  &__image
+    transition: transform 100ms ease
+    width: 100%
+
+  &--with-link &__inner:hover &__image
+    transform: scale(1.05)
+
+  &__content
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    padding-top: $grid-gutter-base * 7
+    padding-bottom: $grid-gutter-width
+
+  &__title
+    margin: 0
+
+  &__text
+    position: relative
+    z-index: 11
+
+    p:last-child
+      margin-bottom: 0
+
+    &:not(:first-child)
+      margin-top: $grid-gutter-base
+
+  &__btn
+    &:not(:first-child)
+      margin-top: px-to-rem(20px)
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      inset: 0
+      z-index: 10
+
+  +media-breakpoint-down(xl)
+    &__image-wrap
+      max-height: 580px
+
+    &__title
+      +font-size-display-m
+
+  +media-breakpoint-down(lg)
+    &__content
+      padding-top: $grid-gutter-width
+
+    &__title
+      +font-size-display-s
+
+  +media-breakpoint-down(sm)
+    &__content
+      padding-top: px-to-rem(20px)
+      padding-bottom: 0
+
+  +media-breakpoint-up(sm)
+    &:not(&--image-right) &__content
+      padding-left: $grid-gutter-width
+
+    &--image-right &__row
+      flex-direction: row-reverse
+
+    &--image-right &__content
+      padding-right: $grid-gutter-width
+
+  +media-breakpoint-up(md)
+    &:not(&--image-right) &__content
+      padding-left: $grid-gutter-base * 4
+
+    &--image-right &__content
+      padding-right: $grid-gutter-base * 4

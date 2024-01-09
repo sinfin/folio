@@ -1,10 +1,28 @@
-.d-atom.d-atom-image-and-content.my-atom-lg
+.d-atom.my-atom-lg class=bem_class_name data=data
   .container-fluid
-    = dummy_ui_image(atom_cover_placement,
-                     Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE)
+    .d-atom-image-and-content__inner
+      .row.d-atom-image-and-content__row
+        .col-12.col-sm-6
+          .d-atom-image-and-content__image-wrap
+            = dummy_ui_image(atom_cover_placement,
+                             THUMB_SIZE,
+                             class_name: 'd-atom-image-and-content__image',
+                             lightbox: true)
 
-    p = @atom.title
-    p = @atom.content
-    p = @atom.button_label
-    p = @atom.url
-    p = @atom.image_side_with_fallback
+        .d-atom-image-and-content__content.col-12.col-sm-6
+          - if @atom.title.present?
+            h2.d-atom-image-and-content__title.fs-display-l
+              = @atom.title
+
+          - if @atom.content.present?
+            .d-atom-image-and-content__text [
+              class='d-rich-text fs-text-l'
+            ]
+              = cstypo @atom.content
+
+          - if @atom.url.present?
+            a.d-atom-image-and-content__btn [
+              class='btn btn-secondary'
+              href=@atom.url
+            ]
+              = @atom.button_label
