@@ -22,5 +22,7 @@
             h4.fs-display-s.mt-0.mb-2
               = atom.title
 
-            .d-molecule-cards-medium__card-text.d-rich-text.fs-text-s
+            .d-molecule-cards-medium__card-text[
+              class="d-rich-text d-rich-text--chomp fs-text-s"
+            ]
               == cstypo atom.content
