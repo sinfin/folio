@@ -144,13 +144,13 @@ namespace :developer_tools do
   namespace :atoms do
     desc "Screenshot atoms from atoms_showcase"
     task screenshot: :environment do
-      require 'selenium-webdriver'
+      require "selenium-webdriver"
 
       root_data = YAML.load_file(Rails.root.join("data/atoms_showcase.yml"))
 
       options = Selenium::WebDriver::Chrome::Options.new
-      options.add_argument('--headless')
-      options.add_argument('--window-size=1200,800')
+      options.add_argument("--headless")
+      options.add_argument("--window-size=1200,800")
 
       driver = Selenium::WebDriver.for(:chrome, options:)
 

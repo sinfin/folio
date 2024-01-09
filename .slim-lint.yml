@@ -42,6 +42,7 @@ exclude:
   - app/views/layouts/folio/mailer.html.slim
   - lib/generators/folio/console/scaffold/templates/*
   - test/dummy/app/cells/dummy/ui/menu/show.slim
+  - test/dummy/app/components/dummy/molecule/cards/medium_component.slim
   - test/dummy/app/components/dummy/molecule/cards/padded_image_component.slim
   - test/dummy/app/components/dummy/ui/footer_component.slim
   - test/dummy/app/components/dummy/ui/image_component.slim
