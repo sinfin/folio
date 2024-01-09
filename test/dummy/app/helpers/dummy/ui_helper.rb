@@ -16,4 +16,8 @@ module Dummy::UiHelper
   def dummy_ui_image(placement, size, **kwargs)
     render(Dummy::Ui::ImageComponent.new(placement:, size:, **kwargs))
   end
+
+  def dummy_ui_tabs(**kwargs)
+    render(Dummy::Ui::TabsComponent.new(**kwargs))
+  end
 end
