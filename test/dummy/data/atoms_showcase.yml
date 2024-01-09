@@ -192,8 +192,7 @@ atoms:
       link_url: url
       cover: true
 
-    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
-      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla pLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+    - content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla pLorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
       button_label: Button label
       button_url: url
       link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
