@@ -24,6 +24,11 @@
 //= require <%= application_namespace_path %>/ui/boolean_toggle_component
 //= require <%= application_namespace_path %>/ui/flash_component
 //= require <%= application_namespace_path %>/ui/header_message_component
-//= require <%= application_namespace_path %>/ui/header_search_component
 //= require <%= application_namespace_path %>/ui/icon_component
+//= require <%= application_namespace_path %>/ui/header_component
 //= require <%= application_namespace_path %>/ui/menu_component
+//= require <%= application_namespace_path %>/ui/mini_select_component
+//= require <%= application_namespace_path %>/ui/user_avatar_component
+//= require <%= application_namespace_path %>/ui/menu_toolbar/header_search_component
+//= require <%= application_namespace_path %>/ui/menu_toolbar/dropdown_component
+//= require <%= application_namespace_path %>/ui/menu_toolbar/shopping_cart_component

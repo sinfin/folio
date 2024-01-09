@@ -1,0 +1,12 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Ui::MenuToolbar::ShoppingCartComponent < ApplicationComponent
+  def initialize
+  end
+
+  def data
+    stimulus_controller("<%= classname_prefix %>-ui-menu-toolbar-shopping-cart", action: {
+      "<%= classname_prefix %>-ui-menu-toolbar-dropdown:closed@window": "dropdownClosed",
+    })
+  end
+end

@@ -5,7 +5,7 @@ input[
   type="checkbox"
 ]
 
-.<%= classname_prefix %>-ui-header
+.<%= classname_prefix %>-ui-header data=data
   .container-fluid
     .<%= classname_prefix %>-ui-header__inner
       a.<%= classname_prefix %>-ui-header__text-logo.h4 href="/"
@@ -15,10 +15,22 @@ input[
         .<%= classname_prefix %>-ui-header__menu
           = render(<%= application_namespace %>::Ui::MenuComponent.new(menu:))
 
-      = render(<%= application_namespace %>::Ui::HeaderSearchComponent.new)
+      .<%= classname_prefix %>-ui-header__toolbar
+        = render(<%= application_namespace %>::Ui::MenuToolbar::ToolbarComponent.new)
+
+      .<%= classname_prefix %>-ui-header__toolbar-dropdowns
+        = render(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu, signed_in: user_signed_in?))
+        = render(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :eshop_menu))
 
       - if menu
-        label.<%= classname_prefix %>-ui-header__menu-toggle for=MENU_INPUT_ID
+        label.<%= classname_prefix %>-ui-header__menu-toggle[
+          for=MENU_INPUT_ID
+          data=stimulus_action(click: "toggleMenuOpenedClass")
+        ]
           = <%= application_namespace_path %>_ui_icon(:hamburger_menu,
-                          class_name: "<%= classname_prefix %>-ui-header__menu-toggle-icon",
+                          class_name: "<%= classname_prefix %>-ui-header__menu-toggle-icon <%= classname_prefix %>-ui-header__menu-toggle-icon--hamburger",
+                          height: 32)
+
+          = <%= application_namespace_path %>_ui_icon(:close,
+                          class_name: "<%= classname_prefix %>-ui-header__menu-toggle-icon <%= classname_prefix %>-ui-header__menu-toggle-icon--close",
                           height: 32)

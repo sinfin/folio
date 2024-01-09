@@ -5,14 +5,16 @@
   position: relative
 
   &__text-logo
-    margin: 0 auto 0 0
+    margin: 0
     flex: 0 0 auto
     color: $shade-black-contrast
     text-decoration: none
     background: $shade-200
-    padding: px-to-rem(8px) px-to-rem(16px)
+    padding: map-get($spacers, b) map-get($spacers, bb)
     align-self: center
-    border-radius: $border-radius
+    border-radius: $btn-border-radius-lg
+    font-size: $ui-typo-display-s-font-size
+    line-height: $ui-typo-display-line-height
 
   &__menu-input
     display: none
@@ -29,10 +31,24 @@
   &__search
     flex: 0 0 auto
 
+  &__toolbar
+    display: flex
+
   &__inner
+    position: relative
     display: flex
     align-items: stretch
-    gap: px-to-rem(8px) $grid-gutter-half
+    gap: map-get($spacers, 2) map-get($spacers, 4)
+    justify-content: space-between
+
+    &::after
+      content: ''
+      position: absolute
+      bottom: 0
+      left: 0
+      height: 1px
+      width: 100%
+      background: $transparent-200
 
   +mq-desktop-menu
     &__inner
@@ -42,34 +58,104 @@
       display: flex
       flex: 1 1 auto
       min-width: 0
-      margin-left: 2 * $grid-gutter-width
+      margin-left: px-to-rem(92px)
 
     &__menu-toggle
       display: none
 
+    &__toolbar
+      flex: 0 0 auto
+
+    &--toolbar-expanded &__toolbar
+      flex: 1 1 auto
+
+    &--toolbar-expanded &__menu
+      display: none
+
+    &__toolbar-dropdowns
+      position: absolute
+      right: 0
+      top: 72px
+      width: 100%
+
   +mq-mobile-menu
+    &--menu-opened
+      position: fixed
+      z-index: 4
+      top: 0
+      left: 0
+      width: 100%
+      height: 100vh
+      overflow: auto
+
+    &__menu-toggle &__menu-toggle-icon--close
+      display: none
+
+    &--menu-opened &__menu-toggle &__menu-toggle-icon--close
+      display: inline-block
+
+    &--menu-opened &__menu-toggle &__menu-toggle-icon--hamburger
+      display: none
+
     &__text-logo
       font-size: $ui-typo-display-xs-font-size
       line-height: $ui-typo-display-xs-line-height
-      padding: px-to-rem(8px) px-to-rem(16px)
+      padding: map-get($spacers, b) map-get($spacers, bb)
+      min-height: 38px
 
     &__inner
       flex-wrap: wrap
+      gap: map-get($spacers, 2) map-get($spacers, bb)
       padding: px-to-rem(8px) 0
+      justify-content: flex-start
+
+      &::after
+        top: 53px
+        bottom: unset
+        left: $grid-gutter-half * -1
+        width: calc(100% + #{$grid-gutter-width})
 
     &__menu
-      background: $dark-gray
-      margin-left: - $grid-gutter-half
-      margin-right: - $grid-gutter-half
+      background: $cloud-900
       display: none
       order: 2
-      width: calc(100% + #{$grid-gutter-width})
       margin-bottom: px-to-rem(-8px)
+      padding-bottom: 105px
+      margin-top: map-get($spacers, 2) * -1
+      margin-left: map-get($spacers, 5) * -1
+      margin-right: map-get($spacers, 5) * -1
+      width: calc(100% + #{map-get($spacers, 5)} * 2)
 
     &__menu-input:checked + & &__menu
       display: block
 
-  +media-breakpoint-down(sm)
+    &__toolbar
+      flex: 1 1 auto
+
+    &--toolbar-expanded &__text-logo
+      display: none
+
+    &__toolbar-dropdowns
+      position: unset
+      display: none
+      order: 1
+      margin-left: map-get($spacers, 5) * -1
+      margin-right: map-get($spacers, 5) * -1
+      width: calc(100% + #{map-get($spacers, 5)} * 2)
+
+    &__menu-input:checked + & &__toolbar-dropdowns
+      display: block
+
+  +media-breakpoint-down(md)
     &__menu
-      padding-left: 0
-      padding-right: 0
+      margin-left: - $grid-gutter-half
+      margin-right: - $grid-gutter-half
+      width: calc(100% + #{$grid-gutter-width})
+
+    &__toolbar
+      max-width: calc(100% - (#{map-get($spacers, bb)} + 32px))
+
+    &__toolbar-dropdowns
+      margin-left: - $grid-gutter-half
+      margin-right: - $grid-gutter-half
+      width: calc(100% + #{$grid-gutter-width})

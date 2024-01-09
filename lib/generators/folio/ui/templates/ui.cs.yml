@@ -13,6 +13,24 @@ share:
   twitter: Sdílejte na Twitteru
   email: Sdílejte mailem
   clipboard: Kopírovat odkaz
-header_search_component:
-  placeholder: Hledaný výraz
-  autocomplete_none: Žádné výsledky
+menu_toolbar:
+  header_search_component:
+    placeholder: Hledaný výraz
+    autocomplete_none: Žádné výsledky
+  dropdown_component:
+    user_menu/sign_up: Registrovat
+    user_menu/sign_in: Přihlásit
+    user_menu/sign_out: Odhlásit
+    user_menu/title: Přihlášení
+    eshop_menu/title: Obchod
+mini_select_component:
+  language/verbose/cs: Čeština
+  language/verbose/en: English
+  language/default/cs: CZ
+  language/default/en: EN
+  currency/verbose/czk: Kč
+  currency/verbose/eur: EUR
+  currency/verbose/usd: USD
+  currency/default/czk: Kč
+  currency/default/eur: "€"
+  currency/default/usd: "$"

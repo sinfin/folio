@@ -1,0 +1,40 @@
+div[
+  class=bem_class_name
+  data=data
+  class="<%= classname_prefix %>-ui-mini-select--#{@type}"
+  class=(@toggle_select ? "<%= classname_prefix %>-ui-mini-select--toggle": nil)
+]
+  .<%= classname_prefix %>-ui-mini-select__selected-value[
+    data=stimulus_action(click: "selectedValueClick",
+                         "keydown.enter": "selectedValueClick")
+    tabindex="0"
+  ]
+    - if @icon
+      = <%= application_namespace_path %>_ui_icon(@icon, height: 16)
+
+    - if selected_value_with_fallback
+      span.<%= classname_prefix %>-ui-mini-select__selected-value-text[
+        data=stimulus_target("selectedValueText")
+      ]
+        = selected_value_with_fallback[:label]
+
+    - if !@toggle_select
+      = <%= application_namespace_path %>_ui_icon(:chevron_down,
+                      class_name: "<%= classname_prefix %>-ui-mini-select__chevron",
+                      height: 16)
+
+    // TODO: add tooltip
+
+  - if !options.nil? && !@toggle_select
+    ul.<%= classname_prefix %>-ui-mini-select__options
+      - options.each do |option|
+        li.<%= classname_prefix %>-ui-mini-select__option[
+          class=(option[:selected] ? "<%= classname_prefix %>-ui-mini-select__option--selected" : nil)
+          class=(option[:href] ? "<%= classname_prefix %>-ui-mini-select__option--href" : nil)
+          tabindex="0"
+        ]
+          a.<%= classname_prefix %>-ui-mini-select__option-a[
+            href=option[:href]
+            data=stimulus_option_a_data
+          ]
+            = option[:label]

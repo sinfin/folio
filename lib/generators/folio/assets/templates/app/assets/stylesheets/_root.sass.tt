@@ -3,6 +3,8 @@
   --<%= application_namespace_path %>-accent-300: #{$mint-400}
   --<%= application_namespace_path %>-brand-100: #{$blue-500}
   --<%= application_namespace_path %>-brand-200: #{$purple-300}
+  --<%= application_namespace_path %>-brand-300: #{$cloud-900}
+  --<%= application_namespace_path %>-brand-400: #{$cloud-100}
   --<%= application_namespace_path %>-link-default: #{$blue-400}
   --<%= application_namespace_path %>-shade-100: #{$cloud-100}
   --<%= application_namespace_path %>-shade-200: #{$cloud-200}
@@ -38,6 +40,8 @@
   --<%= application_namespace_path %>-accent-300: #{$mint-500}
   --<%= application_namespace_path %>-brand-100: #{$blue-500}
   --<%= application_namespace_path %>-brand-200: #{$purple-300}
+  --<%= application_namespace_path %>-brand-300: #{$cloud-900}
+  --<%= application_namespace_path %>-brand-400: #{$cloud-900}
   --<%= application_namespace_path %>-link-default: #{$blue-300}
   --<%= application_namespace_path %>-shade-100: #{$cloud-800}
   --<%= application_namespace_path %>-shade-200: #{$cloud-700}

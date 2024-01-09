@@ -62,11 +62,15 @@ $yellow-300: #fcee72
 $yellow-400: #fae52c
 $yellow-500: #a7991d
 $yellow-600: #544c0f
+$transparent-white-W200: rgba(255, 255, 255, 0.10)
+$transparent-white-W300: rgba(255, 255, 255, 0.15)
 
 $accent-200: var(--<%= application_namespace_path %>-accent-200)
 $accent-300: var(--<%= application_namespace_path %>-accent-300)
 $brand-100: var(--<%= application_namespace_path %>-brand-100)
 $brand-200: var(--<%= application_namespace_path %>-brand-200)
+$brand-300: var(--<%= application_namespace_path %>-brand-300)
+$brand-400: var(--<%= application_namespace_path %>-brand-400)
 $link-default: var(--<%= application_namespace_path %>-link-default)
 $note: var(--<%= application_namespace_path %>-note)
 $shade-100: var(--<%= application_namespace_path %>-shade-100)

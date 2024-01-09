@@ -1,0 +1,101 @@
+.<%= classname_prefix %>-ui-menu-toolbar-header-search
+  display: flex
+  align-items: center
+  position: relative
+  z-index: 2
+  margin-right: map-get($spacers, 3) * -1
+  flex: 1 1 auto
+  justify-content: flex-end
+
+  &__a
+    text-decoration: none
+    height: 100%
+    min-height: 32px
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+    z-index: 2
+    padding-right: map-get($spacers, 3)
+
+  &__mq
+    position: absolute
+    top: 0
+    right: 0
+    width: 0
+    height: 0
+
+  &__form
+    width: 100%
+    display: none
+    align-items: center
+    z-index: 1
+    position: relative
+
+  &__input
+    padding: px-to-rem(11px) 60px px-to-rem(11px) map-get($spacers, 3)
+    border-radius: $btn-border-radius-lg
+    border: 1px solid $shade-300
+
+  &__autocomplete
+    position: absolute
+    top: calc(100% + 5px)
+    left: 0
+    right: 0
+    background: $shade-light-contrast
+    border: 1px solid $transparent-300
+    border-radius: $border-radius
+    min-height: 60px
+    display: none
+
+  &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-autocomplete-value="true"] &__autocomplete
+    display: block
+
+  &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-open-value="true"] &__form
+    z-index: 1001
+
+  &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-open-value="true"] &__a
+    z-index: 1002
+
+  &__overlay
+    position: fixed
+    z-index: 1000
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    display: none
+
+  &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-open-value="true"] &__overlay
+    display: block
+
+  &__loader
+    background: $light-gray
+    display: none
+
+  &__autocomplete-results
+    color: $shade-black-contrast
+
+  &__autocomplete-results:empty + &__loader
+    display: block
+
+  &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-open-value="true"] &__a
+    color: $shade-black-contrast
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+
+  &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-open-value="true"] &__form
+    display: flex
+
+  &__mq
+    display: none
+
+  +mq-mobile-menu
+    &__input
+      padding: px-to-rem(7px) 60px px-to-rem(7px) map-get($spacers, 3)
+      margin: px-to-rem(1px) * -1 0
+
+    &__autocomplete
+      top: calc(100% + 18px)

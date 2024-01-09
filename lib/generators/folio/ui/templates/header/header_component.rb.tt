@@ -3,7 +3,16 @@
 class <%= application_namespace %>::Ui::HeaderComponent < ApplicationComponent
   MENU_INPUT_ID = "<%= classname_prefix %>-ui-header__menu-input"
 
+  def initialize
+  end
+
   def menu
     @menu ||= current_header_menu
+  end
+
+  def data
+    stimulus_controller("<%= classname_prefix %>-ui-header", action: {
+      "<%= classname_prefix %>-ui-menu-toolbar-header-search:opened": "toggleDropdownExpandedClass",
+    })
   end
 end
