@@ -15,6 +15,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       inputs
       modals
       pagination
+      tabs
       typo
     ]
   end

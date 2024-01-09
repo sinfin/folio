@@ -13,7 +13,7 @@
 
     .<%= classname_prefix %>-searches-show__tabs.mb-g
       - if model[:tabs].present? && model[:count] > 0
-        == cell('<%= application_namespace_path %>/ui/tabs', model[:tabs])
+        == render(<%= application_namespace %>::Ui::TabsComponent.new(model[:tabs]))
 
     .<%= classname_prefix %>-searches-show__results-wrap
       - if model[:count] == 0

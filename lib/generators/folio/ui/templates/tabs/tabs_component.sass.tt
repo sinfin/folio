@@ -1,0 +1,111 @@
+@keyframes swipeHint
+  0%, 100%
+    transform: translateX(0)
+  50%
+    transform: translateX(-50px)
+
+.<%= classname_prefix %>-ui-tabs
+  position: relative
+
+  &:before,
+  &:after
+    content: ''
+    display: block
+    width: $grid-gutter-width
+    position: absolute
+    top: 0
+    bottom: 6px
+    z-index: 3
+    pointer-events: none
+
+    @media (hover: none) and (pointer: coarse)
+      bottom: 0
+
+  &:before
+    left: -$grid-gutter-width
+    background: linear-gradient(270deg, transparent 0%, $shade-light-contrast 100%)
+
+  &:after
+    right: -$grid-gutter-width
+    background: linear-gradient(90deg, transparent 0%, $shade-light-contrast 100%)
+
+  &__inner
+    position: relative
+    display: flex
+    padding-top: 3px
+    overflow-x: auto
+    -webkit-overflow-scrolling: touch
+    margin-left: -$grid-gutter-width
+    margin-right: -$grid-gutter-width
+
+    &:before,
+    &:after
+      content: ''
+      display: block
+      flex: 0 0 $grid-gutter-width
+
+    &::-webkit-scrollbar
+      height: 6px
+      width: 6px
+
+    &::-webkit-scrollbar-track
+      background: $shade-200
+
+    &::-webkit-scrollbar-thumb
+      background: $shade-300
+
+    @media (hover: none) and (pointer: coarse)
+      -ms-overflow-style: none
+      scrollbar-width: none
+
+      &::-webkit-scrollbar
+        display: none
+
+      &__ul
+        animation: swipeHint .5s 1s both
+
+  &__ul
+    margin: -1px 0 0
+    display: flex
+    border-bottom: 1px solid $shade-200
+    gap: $grid-gutter-width
+
+  &__li
+    margin: 0
+
+  &__a
+    color: $shade-black-contrast
+    margin: 0
+    padding: $grid-gutter-base 0
+    position: relative
+    overflow: hidden
+    display: block
+    z-index: 2
+    white-space: nowrap
+
+    &:after
+      content: ''
+      position: absolute
+      bottom: 0
+      left: 0
+      right: 0
+      height: 3px
+      background: $shade-200
+      transform: translate(0, 5px)
+      transition: all .1s ease-in-out
+      z-index: 3
+
+    &--active, &:hover
+      &:after
+        transform: translate(0, 0)
+
+    &--active
+      color: $shade-black-contrast
+      font-weight: $font-weight-bold
+
+    &--active::after
+      background: $shade-black-contrast
+
+    &, &:hover, &:focus
+      color: $shade-black-contrast
+      text-decoration: none
