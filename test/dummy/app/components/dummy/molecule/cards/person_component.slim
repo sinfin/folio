@@ -1,8 +1,8 @@
-.d-molecule.d-molecule-cards-person.my-atom
+.d-molecule.d-molecule-cards-person.my-atom data=stimulus_lightbox
   .container-fluid
     .row.d-molecule-cards-person__row
       - @atoms.each do |atom|
-        .d-molecule-cards-person__col [
+        .d-molecule-cards-person__col[
           class='col col-12 col-sm-6'
           class=(atom.large ? "col-lg-6" : "col-lg-4")
         ]
@@ -11,7 +11,8 @@
           ]
             = dummy_ui_image molecule_cover_placement(atom),
                              image_thumb_size(atom),
-                             class_name: 'd-molecule-cards-person__card-image'
+                             class_name: 'd-molecule-cards-person__card-image',
+                             lightbox: atom.link_url.blank?
 
             .d-molecule-cards-person__card-body
               strong.fs-display-xs
@@ -22,11 +23,11 @@
 
               - if atom.content.present?
                 .d-molecule-cards-person__card-text.mt-2
-                  .fs-text-s.d-rich-text
+                  .fs-text-s.d-rich-text.d-rich-text--chomp
                     = cstypo atom.content
 
               - if atom.link_url.present?
-                a.d-molecule-cards-person__card-link [
+                a.d-molecule-cards-person__card-link[
                   class="fs-text-xs mt-3"
                   href=atom.link_url
                 ]
