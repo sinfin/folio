@@ -109,9 +109,6 @@ atoms:
       subtitle: Lorem ipsum dolor sit amet
       url: url
 
-    - title: true
-      url: url
-
   Dummy::Atom::Cards::Small:
     - title: true
       content: true
@@ -158,10 +155,24 @@ atoms:
     - title: true
       content: true
       url: "#url"
+      cover: true
+      _count: 2
+
+    - title: true
+      cover: true
       _count: 2
 
     - title: true
       content: true
+      url: "#url"
+      _count: 2
+
+    - title: true
+      content: true
+      _count: 2
+
+    - title: true
+      url: "#url"
       _count: 2
 
     - content: true
@@ -211,11 +222,11 @@ atoms:
       link_label: Link label
       link_url: url
       cover: true
-      _count: 2
+      _count: 1
 
     - title: true
       cover: true
-      _count: 2
+      _count: 1
 
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
