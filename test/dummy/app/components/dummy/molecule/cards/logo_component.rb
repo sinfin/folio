@@ -11,9 +11,11 @@ class Dummy::Molecule::Cards::LogoComponent < ApplicationComponent
   end
 
   def card_tag(atom)
-    tag = { tag: :div, class: "d-molecule-cards-logo__card" }
+    base_class = "d-molecule-cards-logo__card"
+    tag = { tag: :div, class: base_class }
 
     if atom.url.present?
+      tag[:class] += " #{base_class}--link"
       tag.merge(tag: :a, href: atom.url)
     else
       tag
@@ -27,8 +29,8 @@ class Dummy::Molecule::Cards::LogoComponent < ApplicationComponent
   end
 
   def orphan_logos
-    if @atoms.size > 3
-      @atoms[-2..-1]
-    end
+    return unless @atoms.size > 3
+
+    @atoms[-2..-1]
   end
 end
