@@ -35,5 +35,5 @@ en:
         currency/verbose/eur: EUR
         currency/verbose/usd: USD
         currency/default/czk: Kč
-        currency/default/eur: €
-        currency/default/usd: $
+        currency/default/eur: "€"
+        currency/default/usd: "$"
