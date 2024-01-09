@@ -1,4 +1,4 @@
-.d-molecule.d-molecule-cards-large.my-atom
+.d-molecule.d-molecule-cards-large.my-atom data=stimulus_lightbox
   .container-fluid
     - @atoms.each do |atom|
       .d-molecule-cards-large__card
@@ -7,7 +7,8 @@
             = dummy_ui_image molecule_cover_placement(atom),
                              THUMB_SIZE,
                              class_name: 'd-molecule-cards-large__card-image',
-                             cover: true
+                             cover: true,
+                             lightbox: atom.button_url.blank?
 
         .d-molecule-cards-large__card-body
           h4.d-molecule-cards-large__card-title.fs-display-m

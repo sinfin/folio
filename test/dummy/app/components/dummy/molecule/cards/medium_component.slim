@@ -1,4 +1,4 @@
-.d-molecule.d-molecule-cards-medium.my-atom
+.d-molecule.d-molecule-cards-medium.my-atom data=stimulus_lightbox
   .container-fluid
     .d-molecule-cards-medium__grid
       - @atoms.each do |atom|
@@ -8,10 +8,11 @@
               = dummy_ui_image molecule_cover_placement(atom),
                                THUMB_SIZE,
                                class_name: 'd-molecule-cards-medium__card-image',
-                               cover: true
+                               cover: true,
+                               lightbox: atom.url.blank?
 
           - if molecule_cover_placement(atom)
-            .d-molecule-cards-medium__card-image-wrap [
+            .d-molecule-cards-medium__card-image-wrap[
               class="d-molecule-cards-medium__card-image-wrap--mobile"
             ]
               = dummy_ui_image molecule_cover_placement(atom),
