@@ -11,4 +11,8 @@ class Dummy::Atom::ImageAndContentComponent < ApplicationComponent
     @image_right = @atom.image_side_with_fallback == "right"
     @with_link = @atom.url.present?
   end
+
+  def data
+    stimulus_lightbox if @atom.url.blank?
+  end
 end
