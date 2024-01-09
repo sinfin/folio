@@ -5,7 +5,7 @@ input[
   type="checkbox"
 ]
 
-.d-ui-header
+.d-ui-header data=data
   .container-fluid
     .d-ui-header__inner
       a.d-ui-header__text-logo.h4 href="/"
@@ -15,10 +15,22 @@ input[
         .d-ui-header__menu
           = render(Dummy::Ui::MenuComponent.new(menu:))
 
-      = render(Dummy::Ui::HeaderSearchComponent.new)
+      .d-ui-header__toolbar
+        = render(Dummy::Ui::MenuToolbar::ToolbarComponent.new)
+
+      .d-ui-header__toolbar-dropdowns
+        = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu, signed_in: user_signed_in?))
+        = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :eshop_menu))
 
       - if menu
-        label.d-ui-header__menu-toggle for=MENU_INPUT_ID
+        label.d-ui-header__menu-toggle[
+          for=MENU_INPUT_ID
+          data=stimulus_action(click: "toggleMenuOpenedClass")
+        ]
           = dummy_ui_icon(:hamburger_menu,
-                          class_name: "d-ui-header__menu-toggle-icon",
+                          class_name: "d-ui-header__menu-toggle-icon d-ui-header__menu-toggle-icon--hamburger",
+                          height: 32)
+
+          = dummy_ui_icon(:close,
+                          class_name: "d-ui-header__menu-toggle-icon d-ui-header__menu-toggle-icon--close",
                           height: 32)

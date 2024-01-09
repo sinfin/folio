@@ -4,9 +4,9 @@ require "test_helper"
 
 class Dummy::Ui::HeaderComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
+    create_and_host_site
 
-    render_inline(Dummy::Ui::HeaderComponent.new(model:))
+    render_inline(Dummy::Ui::HeaderComponent.new)
 
     assert_selector(".d-ui-header")
   end

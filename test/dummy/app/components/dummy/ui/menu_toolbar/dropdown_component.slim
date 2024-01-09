@@ -1,0 +1,46 @@
+.d-ui-menu-toolbar-dropdown data=data
+  - if dropdown_title
+    .d-ui-menu-toolbar-dropdown__title-wrapper[
+      data=stimulus_action(click: "titleClick")
+    ]
+      .d-ui-menu-toolbar-dropdown__title-inner
+        - if dropdown_title[:icon]
+          = dummy_ui_icon(dropdown_title[:icon],
+                          class_name: "d-ui-menu-toolbar-dropdown__title-icon",
+                          height: dropdown_title[:icon_height] || 24)
+
+        - if dropdown_title[:username]
+          = render(Dummy::Ui::UserAvatarComponent.new(link: false))
+
+        span.d-ui-menu-toolbar-dropdown__title
+          = dropdown_title[:username] || dropdown_title[:title]
+
+      = dummy_ui_icon(:chevron_down,
+                class_name: "d-ui-menu-toolbar-dropdown__chevron",
+                height: 16)
+
+  - if items.present?
+    ul.d-ui-menu-toolbar-dropdown__ul
+      - items.each do |item|
+        li.d-ui-menu-toolbar-dropdown__li
+          a.d-ui-menu-toolbar-dropdown__a[
+            href=item[:href]
+            data=item[:data]
+            class=(item[:disabled] ? "d-ui-menu-toolbar-dropdown__a--disabled" : nil)
+            class=(item[:class_modifier] ? "d-ui-menu-toolbar-dropdown__a--#{item[:class_modifier]}" : nil)
+            tabindex=(item[:disabled] ? "-1" : "0")
+          ]
+            .d-ui-menu-toolbar-dropdown__span-wrapper
+              - if item[:icon]
+                = dummy_ui_icon(item[:icon],
+                                class_name: "d-ui-menu-toolbar-dropdown__icon",
+                                height: item[:icon_height] || 24)
+
+              span.d-ui-menu-toolbar-dropdown__span
+                = item[:label]
+
+            - if item[:shopped_items_count]
+              = render(Dummy::Ui::MenuToolbar::ShoppedItemsCountComponent.new)
+
+            - if item[:wish_items_count]
+              = render(Dummy::Ui::MenuToolbar::ShoppedItemsCountComponent.new(wishlist: true))

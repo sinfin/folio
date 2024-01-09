@@ -24,6 +24,11 @@
 //= require dummy/ui/boolean_toggle_component
 //= require dummy/ui/flash_component
 //= require dummy/ui/header_message_component
-//= require dummy/ui/header_search_component
 //= require dummy/ui/icon_component
+//= require dummy/ui/header_component
 //= require dummy/ui/menu_component
+//= require dummy/ui/mini_select_component
+//= require dummy/ui/user_avatar_component
+//= require dummy/ui/menu_toolbar/header_search_component
+//= require dummy/ui/menu_toolbar/dropdown_component
+//= require dummy/ui/menu_toolbar/shopping_cart_component

@@ -1,0 +1,41 @@
+.d-ui-menu-toolbar-toolbar
+  display: flex
+  align-items: center
+  gap: map-get($spacers, bb)
+  flex: 1 1 auto
+  justify-content: flex-end
+
+  &__selects-container
+    display: flex
+    align-items: center
+    gap: map-get($spacers, 2)
+    z-index: 3
+
+  &__user-avatar-link
+    text-decoration: none
+
+  &__user-avatar
+    width: 32px
+    height: 32px
+    background: $shade-black-contrast
+    color: $shade-light-contrast
+    font-size: $ui-typo-text-s-font-size
+    font-weight: $font-weight-bold
+    border-radius: 50%
+    display: flex
+    justify-content: center
+    align-items: center
+
+  +mq-mobile-menu
+    &__selects-container
+      display: none
+      position: absolute
+      bottom: map-get($spacers, bb)
+      left: px-to-rem(-32)
+
+    .d-ui-header__menu-input:checked + .d-ui-header &__selects-container
+      display: flex
+
+  +media-breakpoint-down(md)
+    &__selects-container
+      left: map-get($spacers, 1)
