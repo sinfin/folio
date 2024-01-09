@@ -3,39 +3,48 @@
 class Dummy::Ui::MiniSelectComponent < ApplicationComponent
   bem_class_name :verbose
 
-  def initialize(type: :language, options: nil, selected_value: nil, verbose: false, icon: nil)
+  def initialize(type: :language, options: nil, verbose: false, icon: nil, toggle_select: false)
     @type = type
     @options = options
-    @selected_value = selected_value
     @verbose = verbose
     @icon = icon
+    @toggle_select = toggle_select
   end
 
   def options
     if @options.nil?
-      if @type == :language
-        @verbose ? ["Czech", "English", "German"] : ["CS", "EN", "DE"]
+      @options = if @type == :language
+        I18n.available_locales.map do |locale|
+          label = t(".language/#{@verbose ? "verbose" : "default"}/#{locale}")
+          { href: controller.main_app.root_path(locale:), label:, selected: locale == I18n.locale }
+        end
       elsif @type == :currency
-        @verbose ? ["Kč", "Euro", "USD"] : ["$", "€"]
+        %w[czk usd eur].each_with_index.map do |currency, i|
+          label = t(".currency/#{@verbose ? "verbose" : "default"}/#{currency}")
+          { href: controller.main_app.root_path(currency:), label:, selected: i.zero? }
+        end
       end
     else
       @options
     end
   end
 
-  def selected_value
-    @selected_value.nil? ? options.first.to_s : @selected_value
-  end
-
-  def toggle_select
-    options.count <= 2
+  def selected_value_with_fallback
+    @options.find { |o| o[:selected] } || @options.first
   end
 
   def data
     stimulus_controller("d-ui-mini-select", values: {
       type: @type,
       options:,
-      toggle_select:
+      toggle_select: @toggle_select
     })
+  end
+
+  def stimulus_option_a_data
+    @stimulus_option_a_data ||= stimulus_data(action: {
+      "click" => "optionClick",
+      "keydown.enter" => "optionClick",
+    }, target: "option")
   end
 end

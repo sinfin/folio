@@ -26,3 +26,14 @@ en:
           user_menu/sign_out: Sign out
           user_menu/title: Login
           eshop_menu/title: Shop
+      mini_select_component:
+        language/verbose/cs: Čeština
+        language/verbose/en: English
+        language/default/cs: CZ
+        language/default/en: EN
+        currency/verbose/czk: Kč
+        currency/verbose/eur: EUR
+        currency/verbose/usd: USD
+        currency/default/czk: Kč
+        currency/default/eur: €
+        currency/default/usd: $

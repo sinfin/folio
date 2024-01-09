@@ -2,35 +2,39 @@ div[
   class=bem_class_name
   data=data
   class="d-ui-mini-select--#{@type}"
-  class=(toggle_select ? "d-ui-mini-select--toggle": nil)
+  class=(@toggle_select ? "d-ui-mini-select--toggle": nil)
 ]
   .d-ui-mini-select__selected-value[
-    data=stimulus_action(click: "selectedValueClick", "keydown.enter": "selectedValueClick")
+    data=stimulus_action(click: "selectedValueClick",
+                         "keydown.enter": "selectedValueClick")
     tabindex="0"
   ]
     - if @icon
       = dummy_ui_icon(@icon, height: 16)
 
-    - if selected_value
+    - if selected_value_with_fallback
       span.d-ui-mini-select__selected-value-text[
         data=stimulus_target("selectedValueText")
       ]
-        = selected_value
+        = selected_value_with_fallback[:label]
 
-    - if !toggle_select
+    - if !@toggle_select
       = dummy_ui_icon(:chevron_down,
-                  class_name: "d-ui-mini-select__chevron",
-                  height: 16)
+                      class_name: "d-ui-mini-select__chevron",
+                      height: 16)
 
     // TODO: add tooltip
 
-  - if !options.nil? && !toggle_select
+  - if !options.nil? && !@toggle_select
     ul.d-ui-mini-select__options
       - options.each do |option|
         li.d-ui-mini-select__option[
-          data=stimulus_action(click: "optionClick", "keydown.enter": "optionClick")
-          data=stimulus_target("option")
-          class=(option == selected_value ? "d-ui-mini-select__option--selected" : nil)
+          class=(option[:selected] ? "d-ui-mini-select__option--selected" : nil)
+          class=(option[:href] ? "d-ui-mini-select__option--href" : nil)
           tabindex="0"
         ]
-          = option
+          a.d-ui-mini-select__option-a[
+            href=option[:href]
+            data=stimulus_option_a_data
+          ]
+            = option[:label]

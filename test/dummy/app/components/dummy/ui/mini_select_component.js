@@ -57,16 +57,18 @@ window.Folio.Stimulus.register('d-ui-mini-select', class extends window.Stimulus
     }
   }
 
-  optionClick (option) {
-    const $option = option.target.closest('.d-ui-mini-select__option')
-    const optionValue = $option.innerText
+  optionClick (e) {
+    const option = e.target.closest('.d-ui-mini-select__option')
+    if (option.classList.contains('.d-ui-mini-select__option--href')) return
+
+    const optionValue = option.innerText
     this.setOptionAsSelectedValue("select", optionValue)
   }
 
   setOptionAsSelectedValue (functionality, option) {
-    const options = this.optionsValue
-
     if (functionality === "toggle") {
+      const options = this.optionsValue
+
       const currentSelected = this.selectedValueTextTarget.innerText
       const index = options.indexOf(currentSelected)
       const nextIndex = index == 0 ? 1 : 0

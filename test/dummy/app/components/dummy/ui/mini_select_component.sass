@@ -31,16 +31,19 @@
     width: 100%
     background-color: $shade-200
     border-radius: 0 0 $border-radius $border-radius
+    overflow: hidden
 
   &__option
-    padding: 0 map-get($spacers, 2)
-
     &--selected
       display: none
 
-    &--last-visible
-      border-radius: 0 0 $border-radius $border-radius
-      padding-bottom: map-get($spacers, 1)
+  &__option--last-visible &__option-a
+    padding-bottom: map-get($spacers, 1)
+
+  &__option-a
+    display: block
+    text-decoration: none !important
+    padding: 0 map-get($spacers, 2)
 
   &--expanded &__selected-value
     border-radius: $border-radius $border-radius 0 0
@@ -76,7 +79,8 @@
         min-width: 50px
 
   +mq-mobile-menu
-    .d-ui-menu-toolbar-toolbar &__selected-value, .d-ui-menu-toolbar-toolbar &__option
+    .d-ui-menu-toolbar-toolbar &__selected-value,
+    .d-ui-menu-toolbar-toolbar &__option-a
       background: $shade-200
       color: $shade-black-contrast
 
@@ -92,10 +96,8 @@
     .d-ui-menu-toolbar-toolbar &--expanded &__selected-value
       border-radius: 0 0 $border-radius $border-radius
 
-    .d-ui-menu-toolbar-toolbar &__option--last-visible
-      border-radius: 0
+    .d-ui-menu-toolbar-toolbar &__option--last-visible &__option-a
       padding-bottom: 0
 
-    .d-ui-menu-toolbar-toolbar &__option--first-visible
-      border-radius: $border-radius $border-radius 0 0
+    .d-ui-menu-toolbar-toolbar &__option--first-visible &__option-a
       padding-top: map-get($spacers, 1)
