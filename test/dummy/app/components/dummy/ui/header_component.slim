@@ -19,7 +19,7 @@ input[
         = render(Dummy::Ui::MenuToolbar::ToolbarComponent.new)
 
       .d-ui-header__toolbar-dropdowns
-        = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu, signed_in: user_signed_in?))
+        = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu))
         = render(Dummy::Ui::MenuToolbar::DropdownComponent.new(type: :eshop_menu))
 
       - if menu
