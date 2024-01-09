@@ -104,6 +104,38 @@ atoms:
       content: true
       cover: true
 
+  Dummy::Atom::Cards::Person:
+    - name: Name Surname
+      job: Position
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      link_label: Link label
+      link_url: "#link_url"
+      cover: true
+      large: true
+      _count: 2
+
+    - name: Name Surname
+      job: Position
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      link_label: Link label
+      link_url: "#link_url"
+      cover: true
+      _count: 3
+
+    - name: Name Surname
+      job: Position
+      link_label: Link label
+      link_url: "#link_url"
+      cover: true
+      large: true
+      _count: 2
+
+    - name: Name Surname
+      job: Position
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      cover: true
+      _count: 3
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

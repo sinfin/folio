@@ -1,11 +1,34 @@
-.d-molecule.d-molecule-cards-person
+.d-molecule.d-molecule-cards-person.my-atom data=stimulus_lightbox
   .container-fluid
-    - @atoms.each do |atom|
-      .d-molecule-cards-person__card[
-        class=(atom.large? ? "d-molecule-cards-person__card--large" : nil)
-      ]
-        = dummy_ui_image molecule_cover_placement(atom),
-                         Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+    .row.d-molecule-cards-person__row
+      - @atoms.each do |atom|
+        .d-molecule-cards-person__col[
+          class='col col-12 col-sm-6'
+          class=(atom.large ? "col-lg-6" : "col-lg-4")
+        ]
+          .d-molecule-cards-person__card[
+            class=(atom.large ? "d-molecule-cards-person__card--large" : nil)
+          ]
+            = dummy_ui_image molecule_cover_placement(atom),
+                             image_thumb_size(atom),
+                             class_name: 'd-molecule-cards-person__card-image',
+                             lightbox: atom.link_url.blank?
 
-        p = atom.name
-        p = atom.job
+            .d-molecule-cards-person__card-body
+              strong.fs-display-xs
+                = atom.name
+
+              p.fs-text-xs.mb-0
+                = atom.job
+
+              - if atom.content.present?
+                .d-molecule-cards-person__card-text.mt-2
+                  .fs-text-s.d-rich-text.d-rich-text--chomp
+                    = cstypo atom.content
+
+              - if atom.link_url.present?
+                a.d-molecule-cards-person__card-link[
+                  class="fs-text-xs mt-3"
+                  href=atom.link_url
+                ]
+                  = atom.link_label
