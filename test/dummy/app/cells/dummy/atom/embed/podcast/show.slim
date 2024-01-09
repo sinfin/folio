@@ -4,6 +4,5 @@
       .p-5.text-center.font-weight-bold.bg-gray
         = model.class.model_name.human
     - else
-      == cell('dummy/ui/embed',
-              model.embed_code,
-              caption: model.caption)
+      == render(Dummy::Ui::EmbedComponent.new(model.embed_code,
+              caption: model.caption))
