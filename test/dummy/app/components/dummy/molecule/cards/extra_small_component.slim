@@ -3,16 +3,20 @@
     .row.d-molecule-cards-extra-small__row
       - @atoms.each do |atom|
         .col-12.col-sm-6.d-molecule-cards-extra-small__col
-          .d-molecule-cards-extra-small__card
+          *card_tag(atom)
             .d-molecule-cards-extra-small__cover
-              = dummy_ui_image(molecule_cover_placement(atom),
-                               THUMB_SIZE,
-                               class_name: image_class,
-                               lightbox: atom.url.blank?)
+              - if atom.cover_placement.present?
+                = dummy_ui_image(molecule_cover_placement(atom),
+                                 THUMB_SIZE,
+                                 class_name: image_class,
+                                 lightbox: atom.url.blank?)
 
             .d-molecule-cards-extra-small__content
-              h4.fs-display-xs.m-0
+              h4.d-molecule-cards-extra-small__title [
+                class='fs-display-xs m-0'
+              ]
                 = atom.title
 
-              p.fs-text-xs.m-0
-                = atom.subtitle
+              .d-molecule-cards-extra-small__text
+                p.fs-text-xs.m-0
+                  = atom.subtitle

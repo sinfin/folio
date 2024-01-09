@@ -13,4 +13,18 @@ class Dummy::Molecule::Cards::ExtraSmallComponent < ApplicationComponent
   def image_class
     "d-molecule-cards-extra-small__image"
   end
+
+  def card_tag(atom)
+    base_class = "d-molecule-cards-extra-small__card"
+
+    if atom.url
+      {
+        tag: :a,
+        href: atom.url,
+        class: "#{base_class} #{base_class}--link"
+      }
+    else
+      { tag: :div, class: base_class }
+    end
+  end
 end
