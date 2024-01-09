@@ -70,11 +70,11 @@
     &--active
       background: $shade-black-contrast
 
-  +media-breakpoint-down(lg)
+  +media-breakpoint-down(xl)
     min-height: 500px
 
     &__content
-      padding: map-get($spacers, gg) 0
+      padding: map-get($spacers, bb) px-to-rem(28px)
 
     &__card-title
       +font-size-display-s
@@ -87,7 +87,3 @@
 
     &__controls
       margin-top: $grid-gutter-width
-
-  +media-breakpoint-down(md)
-    &__content
-      padding: map-get($spacers, bb) px-to-rem(28px)
