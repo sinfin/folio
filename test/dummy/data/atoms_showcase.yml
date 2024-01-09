@@ -157,6 +157,14 @@ atoms:
 
     - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
       content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      url: "#url"
+      _count: 2
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
+      _count: 2
+
+    - content: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id orci ornare lectus tincidunt porttitor. Phasellus nibh elit, varius et diam eu, bibendum posuere nulla
       _count: 2
 
   Dummy::Atom::Cards::Large:
