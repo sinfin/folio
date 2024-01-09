@@ -2,7 +2,7 @@
   .container-fluid
     .d-molecule-cards-medium__grid
       - @atoms.each do |atom|
-        .d-molecule-cards-medium__card
+        *card_tag(atom)
           - if molecule_cover_placement(atom)
             .d-molecule-cards-medium__card-image-wrap
               = dummy_ui_image molecule_cover_placement(atom),
@@ -20,8 +20,10 @@
                                class_name: 'd-molecule-cards-medium__card-image'
 
           .d-molecule-cards-medium__card-body
-            h4.fs-display-s.mt-0.mb-2
-              = atom.title
+            *link_with_fallback_tag(atom)
+              - if atom.title.present?
+                h4.fs-display-s.mt-0.mb-2
+                  = atom.title
 
             .d-molecule-cards-medium__card-text[
               class="d-rich-text d-rich-text--chomp fs-text-s"

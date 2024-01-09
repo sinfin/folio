@@ -7,15 +7,36 @@
   &__card
     background-color: $shade-100
     border-radius: $grid-gutter-half
+    position: relative
+
+  &__card--cover
     overflow: hidden
     min-height: 200px
+
+  &__card-image
+    transition: transform 100ms ease-in-out
+
+  &__card--link:hover &__card-image
+    transform: scale(1.05)
 
   &__card-body
     padding: $grid-gutter-base * 4
     align-self: center
 
+  &__card-link
+    text-decoration: none
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      inset: 0
+      z-index: 1
+
   &__card-text
     color: $shade-700
+    position: relative
+    z-index: 5
 
   &__card-image-wrap
     position: relative
