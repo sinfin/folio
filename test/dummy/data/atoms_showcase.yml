@@ -105,18 +105,18 @@ atoms:
   Dummy::Atom::Cards::Logo:
     - title: Item title lorem ipsum damus
       cover: true
+      url: "#url"
       _count: 16
 
     - title: Item title lorem ipsum damus
       cover: true
       _count: 10
 
-    - title: Item title lorem ipsum damus
-      cover: true
+    - cover: true
+      url: "#url"
       _count: 4
 
-    - title: Item title lorem ipsum damus
-      cover: true
+    - cover: true
       _count: 3
 
 values_for_true:
