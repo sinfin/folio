@@ -8,6 +8,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::HasCurrentSite
   include Pagy::Backend
 
+  before_action :authenticate_user!
   before_action :custom_authorize_user!
 
   before_action :add_root_breadcrumb

@@ -119,7 +119,7 @@ class Folio::Users::InvitationsController < Devise::InvitationsController
     end
 
     def source_site_for_user
-      if session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
+      if site_slug = session&.dig(Folio::Devise::CrossdomainHandler::SESSION_KEY, :target_site_slug)
         return Folio::Site.find(site_slug)
       end
 
