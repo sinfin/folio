@@ -1,0 +1,120 @@
+.d-molecule-cards-large
+  &__card
+    background-color: $shade-100
+    border-radius: $grid-gutter-half
+    overflow: hidden
+    min-height: 100%
+    width: 100%
+    position: relative
+    display: flex
+
+  &__card + &__card
+    margin-top: $grid-gutter-width
+
+  &__card-image-wrap
+    position: relative
+    flex: 1 0 400px
+    overflow: hidden
+
+  &__card-image
+    transition: transform 100ms ease-in-out
+
+  &__card--link:hover &__card-image
+    transform: scale(1.05)
+
+  &__card-body
+    padding: $grid-gutter-base * 4
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    flex: 1 1 auto
+    align-self: center
+
+  &__card-title
+    margin: 0
+
+  &__card-text
+    color: $shade-700
+    margin-top: $grid-gutter-base
+
+    &:first-child
+      margin-top: 0
+
+  &__card-btns
+    display: flex
+    align-items: center
+    gap: $grid-gutter-half
+    margin-top: $grid-gutter-width
+
+  &__card-button
+    flex-shrink: 0
+
+    &::before
+      content: ''
+      display: block
+      position: absolute
+      inset: 0
+      z-index: 1
+
+  &__card-link
+    color: $shade-600
+    text-decoration: none
+    font-weight: $font-weight-semibold
+    position: relative
+    z-index: 2
+
+    &:hover
+      text-decoration: underline
+
+  +media-breakpoint-up(lg)
+    &__card
+      min-height: 160px
+
+    &__card-image-wrap
+      min-height: 320px
+
+  +media-breakpoint-down(lg)
+    &__card-image-wrap
+      flex-basis: 250px
+
+    &__card-title
+      +font-size-display-s
+
+    &__card-text
+      +font-size-text-s
+  
+  +media-breakpoint-down(md)
+    &__card + &__card
+      margin-top: $grid-gutter-base * 4
+
+  +media-breakpoint-down(sm)
+    &__card
+      max-width: 424px
+      flex-direction: column
+
+    &__card + &__card
+      margin-top: map-get($spacers, bb)
+
+    &__card-body
+      padding: $grid-gutter-width map-get($spacers, bb)
+
+    &__card-image-wrap
+      width: 100%
+
+  +media-breakpoint-up(md)
+    +media-breakpoint-down(lg)
+      &__card
+        align-items: stretch
+
+      &__card-image-wrap,
+      &__card-image
+        min-height: 100%
+
+        .d-ui-image__img
+          height: 100%
+          width: auto
+          left: 50%
+          transform: translateX(-50%)
+
+      &__card-btns
+        margin-top: px-to-rem(20px)

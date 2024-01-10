@@ -1,0 +1,40 @@
+.d-molecule-cards-extra-small
+  &__card
+    display: flex
+    text-decoration: none
+
+  &__card--link:hover &__image
+    transform: scale(1.05)
+
+  &__card--link:hover &__title
+    text-decoration: underline
+
+  &__cover
+    border-radius: $grid-gutter-base
+    overflow: hidden
+    max-width: 80px
+    flex: 0 0 80px
+
+  &__image
+    transition: transform 100ms ease-in-out
+
+  &__content
+    padding-left: map-get($spacers, bb)
+
+  +media-breakpoint-up(sm)
+    &__row
+      margin-bottom: -$grid-gutter-width
+
+    &__col
+      padding-bottom: $grid-gutter-width
+
+  +media-breakpoint-down(sm)
+    &__col
+      padding-bottom: $grid-gutter-base
+      margin-bottom: map-get($spacers, bb)
+
+      &:last-child
+        margin-bottom: 0
+
+    &__text
+      display: none

@@ -6,7 +6,7 @@ class Dummy::Atom::Cards::ExtraSmall < Folio::Atom::Base
   STRUCTURE = {
     title: :string,
     subtitle: :string,
-    url: :url,
+    url: :url
   }
 
   ASSOCIATIONS = {}

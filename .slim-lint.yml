@@ -29,7 +29,6 @@ exclude:
   - app/views/folio/console/pages/edit.slim
   - app/views/folio/console/pages/index.slim
   - app/views/folio/console/partials/_react_modals.slim
-  - app/views/folio/console/partials/_react_modals.slim
   - app/views/folio/console/partials/_simple_form_with_atoms.slim
   - app/views/folio/console/partials/_translations.slim
   - app/views/folio/console/ui/*.slim
@@ -43,6 +42,7 @@ exclude:
   - lib/generators/folio/console/scaffold/templates/*
   - test/dummy/app/cells/dummy/ui/menu/show.slim
   - test/dummy/app/components/dummy/molecule/cards/full_width_component.slim
+  - test/dummy/app/components/dummy/molecule/cards/medium_component.slim
   - test/dummy/app/components/dummy/molecule/cards/padded_image_component.slim
   - test/dummy/app/components/dummy/ui/footer_component.slim
   - test/dummy/app/components/dummy/ui/image_component.slim
