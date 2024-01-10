@@ -1,7 +1,7 @@
 .d-ui-embed.d-rich-text.d-rich-text--chomp
   figure
-    = @model
+    = @embed
 
-    - if options[:caption].present?
+    - if @caption.present?
       figcaption.d-ui-embed__caption.mt-g
-        = options[:caption]
+        = @caption

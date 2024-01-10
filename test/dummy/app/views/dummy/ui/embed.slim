@@ -6,5 +6,4 @@
     .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Embed - #{theme}
 
-      == render(Dummy::Ui::EmbedComponent.new(model.embed_code,
-                    caption: model.caption))
+      == render(Dummy::Ui::EmbedComponent.new(embed: "hello", caption: "Embed caption"))

@@ -4,9 +4,7 @@ require "test_helper"
 
 class Dummy::Ui::EmbedComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
-
-    render_inline(Dummy::Ui::EmbedComponent.new(model:))
+    render_inline(Dummy::Ui::EmbedComponent.new(embed: "hello", caption: "Embed caption"))
 
     assert_selector(".d-ui-embed")
   end
