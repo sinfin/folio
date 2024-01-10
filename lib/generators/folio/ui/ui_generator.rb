@@ -14,9 +14,13 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
   def create
     allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates")).reject do |name|
       name.starts_with?(".") || name == "views" || name == "input"
-    end + Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates/input")).filter_map do |name|
-      unless name.starts_with?(".")
-        "input/#{name}"
+    end
+
+    %w[input menu_toolbar].each do |key|
+      allowed_keys += Dir.entries(Folio::Engine.root.join("lib/generators/folio/ui/templates/#{key}")).filter_map do |name|
+        unless name.starts_with?(".")
+          "#{key}/#{name}"
+        end
       end
     end
 

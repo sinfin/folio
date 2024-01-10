@@ -19,7 +19,7 @@ input[
         = render(<%= application_namespace %>::Ui::MenuToolbar::ToolbarComponent.new)
 
       .<%= classname_prefix %>-ui-header__toolbar-dropdowns
-        = render(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu, signed_in: user_signed_in?))
+        = render(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu))
         = render(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :eshop_menu))
 
       - if menu

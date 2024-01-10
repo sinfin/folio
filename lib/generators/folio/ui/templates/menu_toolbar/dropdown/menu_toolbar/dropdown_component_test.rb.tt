@@ -4,7 +4,7 @@ require "test_helper"
 
 class <%= application_namespace %>::Ui::MenuToolbar::DropdownComponentTest < Folio::ComponentTest
   def test_render
-    render_inline(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu, signed_in: user_signed_in?))
+    render_inline(<%= application_namespace %>::Ui::MenuToolbar::DropdownComponent.new(type: :user_menu))
 
     assert_selector(".<%= classname_prefix %>-ui-menu-toolbar-dropdown")
   end

@@ -4,7 +4,7 @@
   class=link_class_name
   tabindex=(@link ? "0" : nil)
 ]
-  - if user_signed_in?
+  - if current_user_with_test_fallback
     .<%= classname_prefix %>-ui-user-avatar__avatar
       = letters
 

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::MenuToolbar::DropdownComponent < ApplicationComponent
-  def initialize(type: nil, title: nil, items: nil, signed_in: nil, trigger: nil, width: 200, current_user_for_test: nil)
+  def initialize(type: nil, title: nil, items: nil, trigger: nil, width: 200, current_user_for_test: nil)
     @type = type
     @title = title
     @items = items
-    @signed_in = signed_in
     @trigger = trigger
     @width = width
     @current_user_for_test = current_user_for_test
