@@ -298,6 +298,12 @@ atoms:
     - cover: true
       _count: 3
 
+  Dummy::Atom::Divider:
+    - variant: default
+    - variant: thin
+    - variant: thick
+    - variant: invisible
+
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |

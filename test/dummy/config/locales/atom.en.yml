@@ -16,6 +16,12 @@ en:
         highlight/success: Green
         highlight/neutral: Blue
         highlight/gray: Gray
+      dummy/atom/divider:
+        variant: Variant
+        variant/default: Default
+        variant/thin: Thin line
+        variant/thick: Thick line
+        variant/invisible: Space only
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -33,6 +39,7 @@ en:
       dummy/atom/cards/padded_image: Card - image with padding
       dummy/atom/cards/person: Card - person
       dummy/atom/cards/small: Card - small
+      dummy/atom/divider: Divider
       dummy/atom/image_and_content: Image & content
       dummy/atom/images/gallery: Images - gallery
       dummy/atom/images/grid_gallery: Images - gallery (grid)

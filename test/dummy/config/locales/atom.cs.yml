@@ -17,6 +17,12 @@ cs:
         highlight/success: Zelené
         highlight/neutral: Modré
         highlight/gray: Šedé
+      dummy/atom/divider:
+        variant: Varianta
+        variant/default: Výchozí
+        variant/thin: Tenká linka
+        variant/thick: Tlustá linka
+        variant/invisible: Pouze mezera
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -34,6 +40,7 @@ cs:
       dummy/atom/cards/padded_image: Karta - obrázek s odsazením
       dummy/atom/cards/person: Karta - osoba
       dummy/atom/cards/small: Karta - malá
+      dummy/atom/divider: Oddělovač
       dummy/atom/image_and_content: Obrázek a obsah
       dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce
