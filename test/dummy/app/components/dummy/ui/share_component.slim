@@ -5,8 +5,8 @@ div[
   .d-ui-share__inner
     - if @mobile_collapsible
       = dummy_ui_icon(:share_2,
-             height: 22,
-             class_name: 'dropdown-toggle d-ui-share__toggle')
+                      height: 22,
+                      class_name: 'dropdown-toggle d-ui-share__toggle')
 
     .d-ui-share__items
       span.d-ui-share__title.small.font-weight-bold = t('.title')
@@ -19,7 +19,9 @@ div[
           class="d-ui-share__item--#{link[:icon]}"
         ]
 
-          = dummy_ui_icon(link[:icon], height: 22, class_name: 'd-ui-share__icon')
+          = dummy_ui_icon(link[:icon],
+                          height: 22,
+                          class_name: 'd-ui-share__icon')
       .d-ui-share__item
         //TODO: change to new component
         == cell('dummy/ui/clipboard', @url, height: 22)
