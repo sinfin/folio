@@ -126,6 +126,9 @@ eye_off:
 facebook:
   width: 32
   height: 33
+facebook__messenger:
+  width: 32
+  height: 33
 file:
   width: 24
   height: 24
@@ -348,4 +351,3 @@ x_square:
 youtube:
   width: 32
   height: 33
-

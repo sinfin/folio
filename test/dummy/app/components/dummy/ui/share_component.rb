@@ -22,7 +22,7 @@ class Dummy::Ui::ShareComponent < ApplicationComponent
         target: "_blank",
       },
       {
-        icon: :messenger,
+        icon: :facebook_messenger,
         title: t(".messenger"),
         url: messenger_url,
         target: "_blank",
