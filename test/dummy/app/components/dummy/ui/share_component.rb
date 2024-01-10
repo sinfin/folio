@@ -3,8 +3,14 @@
 class Dummy::Ui::ShareComponent < ApplicationComponent
   bem_class_name :mobile_collapsible
 
-  def initialize(mobile_collapsible: false)
+  def initialize(
+    url: nil,
+    icon: nil,
+    mobile_collapsible: false
+  )
     @mobile_collapsible = mobile_collapsible
+    @url = url
+    @icon = icon
   end
 
   def share_links
@@ -35,27 +41,23 @@ class Dummy::Ui::ShareComponent < ApplicationComponent
     ]
   end
 
-  def url
-    @url ||= model.presence || request.url
-  end
-
   def facebook_url
-    h = { u: url, src: "sdkpreparse" }
+    h = { u: @url, src: "sdkpreparse" }
     "https://www.facebook.com/sharer/sharer.php?#{h.to_query}"
   end
 
   def messenger_url
-    h = { u: url }
+    h = { u: @url }
     "messenger://share/?#{h.to_query}"
   end
 
   def twitter_url
-    h = { url: }
+    h = { u: @url }
     "https://twitter.com/share?#{h.to_query}"
   end
 
   def mail_url
-    h = { body: url }
+    h = { body: @url }
     "mailto:?#{h.to_query}"
   end
 end

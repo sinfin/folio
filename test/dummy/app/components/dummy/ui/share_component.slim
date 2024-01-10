@@ -18,7 +18,7 @@ div[
           target=link[:target]
           class="d-ui-share__item--#{link[:icon]}"
         ]
-          = icon link[:icon], class: 'd-ui-share__icon', height: 22
+          = icon(link[:icon], height: 22, class: 'd-ui-share__icon')
 
       .d-ui-share__item
-        == cell('dummy/ui/clipboard', url, height: 22)
+        == cell('dummy/ui/clipboard', @url, height: 22)
