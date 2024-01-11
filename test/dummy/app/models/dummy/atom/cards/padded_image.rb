@@ -5,7 +5,7 @@ class Dummy::Atom::Cards::PaddedImage < Folio::Atom::Base
 
   STRUCTURE = {
     title: :string,
-    description: :richtext,
+    description: :text,
     url: :url,
   }
 

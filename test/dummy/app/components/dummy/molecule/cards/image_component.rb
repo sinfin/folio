@@ -5,6 +5,8 @@ class Dummy::Molecule::Cards::ImageComponent < ApplicationComponent
 
   bem_class_name :padded
 
+  THUMB_SIZE = "554x400#"
+
   def initialize(atoms:, atom_options: {}, padded: false)
     @atoms = atoms
     @atom_options = atom_options

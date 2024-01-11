@@ -325,6 +325,128 @@ atoms:
     - cover: true
       _count: 3
 
+  Dummy::Atom::Cards::Image:
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 10
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 9
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 8
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 7
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 6
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 5
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 4
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      description: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      url: "#url"
+      cover: true
+      _count: 2
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 1
+    - title: Item title lorem ipsum damus Item title lorem ipsum damus
+      description: Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      url: "#url"
+      cover: true
+      _count: 3
+
+  Dummy::Atom::Cards::PaddedImage:
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 10
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 9
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 8
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 7
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 6
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 5
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 4
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      description: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      url: "#url"
+      cover: true
+      _count: 2
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 1
+    - title: Item title lorem ipsum damus Item title lorem ipsum damus
+      description: Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      url: "#url"
+      cover: true
+      _count: 3
+
   Dummy::Atom::Divider:
     - variant: default
     - variant: thin
