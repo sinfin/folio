@@ -74,7 +74,10 @@
 
   +media-breakpoint-up(lg)
     &__cell
-      &:last-child:nth-child(5n)
+      &:last-child:nth-child(3n+1)
+        grid-column: span 3
+
+      &:last-child:nth-child(3n+2)
         grid-column: span 2
 
   +media-breakpoint-down(lg)
