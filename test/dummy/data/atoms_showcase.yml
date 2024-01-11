@@ -21,9 +21,32 @@ atoms:
     - tag: H5
       title: H5 Mixtape gastropub pitchfork wayfarers.
 
+
   Dummy::Atom::Perex:
     - content: true
     - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+  Dummy::Atom::Quotation:
+    - content: true
+      title: Title
+      subtitle: Subtitle
+
+    - content: true
+      title: Title
+      subtitle: Subtitle
+      large: true
+
+    - content: true
+      title: Lorem ipsum dolor sit amet
+      subtitle: Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor
+
+    - content: true
+      title: Title
+
+    - content: true
+      subtitle: Subtitle
+
+    - content: true
 
   Dummy::Atom::ImageAndContent:
     - title: Headline dolor amet consectetur
