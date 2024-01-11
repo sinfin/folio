@@ -30,6 +30,8 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
+      dummy/atom/quotation:
+        large: Velké písmo
     models:
       dummy/atom/cards/extra_small: Karta - extra malá
       dummy/atom/cards/full_width: Karta - na celou šířku

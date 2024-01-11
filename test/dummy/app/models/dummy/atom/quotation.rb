@@ -14,10 +14,6 @@ class Dummy::Atom::Quotation < Folio::Atom::Base
 
   validates :content,
             presence: true
-
-  def self.console_insert_row
-    0
-  end
 end
 
 # == Schema Information
