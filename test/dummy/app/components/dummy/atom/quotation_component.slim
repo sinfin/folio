@@ -7,15 +7,15 @@
                         class_name: 'd-atom-quotation__symbol-icon')
 
       .d-atom-quotation__body.fs-text-m
-        .d-atom-quotation__text.d-rich-text
-          = @atom.content
+        .d-atom-quotation__text.d-rich-text.d-rich-text--chomp
+          == @atom.content
 
         - if @atom.title.present? || @atom.subtitle.present?
           .d-atom-quotation__meta
             - if @atom.title.present?
-                .d-atom-quotation__title
-                  = @atom.title
+              .d-atom-quotation__title
+                = @atom.title
 
             - if @atom.subtitle.present?
-                .d-atom-quotation__subtitle
-                  = @atom.subtitle
+              .d-atom-quotation__subtitle
+                = @atom.subtitle
