@@ -6,6 +6,7 @@ scope module: :dummy, as: :dummy do
     get :boolean_toggles
     get :breadcrumbs
     get :buttons
+    get :chips
     get :forms
     get :icons
     get :images

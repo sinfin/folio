@@ -6,6 +6,7 @@ scope module: :<%= application_namespace_path %>, as: :<%= application_namespace
     get :boolean_toggles
     get :breadcrumbs
     get :buttons
+    get :chips
     get :forms
     get :icons
     get :images
