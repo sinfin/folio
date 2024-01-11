@@ -1,5 +1,15 @@
+#= require folio/i18n
+
 changedCallback = ->
   @rootElement.dispatchEvent(new window.Event('change', bubbles: true))
+
+FOLIO_REDACTOR_I18N =
+  cs:
+    large: "Velký"
+    small: "Malý"
+  en:
+    large: "Large"
+    small: "Small"
 
 ADVANCED_OPTIONS =
   plugins: ['video', 'table', 'button', 'character_counter', 'definedlinks', 'linksrel']
@@ -17,6 +27,22 @@ OPTIONS =
   definedlinks: '/console/api/links.json'
   lang: document.documentElement.lang
   formatting: ['p', 'h2', 'h3', 'h4']
+  formattingAdd:
+    "large-p":
+      title: window.Folio.i18n(FOLIO_REDACTOR_I18N, "large")
+      api: 'module.block.format'
+      args:
+        'tag': 'p',
+        'class': 'font-size-lg'
+        'type': 'toggle'
+    "small-p":
+      title: window.Folio.i18n(FOLIO_REDACTOR_I18N, "small")
+      api: 'module.block.format'
+      args:
+        'tag': 'p',
+        'class': 'font-size-sm'
+        'type': 'toggle'
+
   linkNewTab: true
   callbacks:
     changed: changedCallback
