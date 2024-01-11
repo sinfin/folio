@@ -13,15 +13,13 @@
     overflow: hidden
     min-height: 200px
 
-  &__card-image
-    transition: transform 100ms ease-in-out
-
-  &__card--link:hover &__card-image
-    transform: scale(1.05)
-
   &__card-body
     padding: $grid-gutter-base * 4
     align-self: center
+
+  &__card-image
+    position: relative
+    z-index: 1
 
   &__card-link
     text-decoration: none
@@ -31,7 +29,7 @@
       display: block
       position: absolute
       inset: 0
-      z-index: 1
+      z-index: 2
 
   &__card-text
     color: $shade-700

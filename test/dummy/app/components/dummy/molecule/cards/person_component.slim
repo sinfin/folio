@@ -8,11 +8,13 @@
         ]
           .d-molecule-cards-person__card[
             class=(atom.large ? "d-molecule-cards-person__card--large" : nil)
+            class=(atom.link_url.present? ? "d-ui-image-hover-zoom-wrap" : nil)
           ]
-            = dummy_ui_image molecule_cover_placement(atom),
+            = dummy_ui_image(molecule_cover_placement(atom),
                              image_thumb_size(atom),
                              class_name: 'd-molecule-cards-person__card-image',
-                             lightbox: atom.link_url.blank?
+                             lightbox: atom.link_url.blank?,
+                             hover_zoom: true)
 
             .d-molecule-cards-person__card-body
               strong.fs-display-xs

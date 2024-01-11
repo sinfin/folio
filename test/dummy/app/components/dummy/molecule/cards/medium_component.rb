@@ -16,7 +16,7 @@ class Dummy::Molecule::Cards::MediumComponent < ApplicationComponent
     tag = { tag: :div, class: base_class }
 
     if atom.url.present?
-      tag[:class] += " #{base_class}--link"
+      tag[:class] += " #{base_class}--link d-ui-image-hover-zoom-wrap"
     end
 
     if atom.cover_placement.present?

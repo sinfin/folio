@@ -3,13 +3,16 @@
     .d-molecule-cards-small__flex
       .d-molecule-cards-small__grid
         - @atoms.each do |atom|
-          .d-molecule-cards-small__card
+          .d-molecule-cards-small__card[
+            class=(atom.button_url.present? ? "d-ui-image-hover-zoom-wrap" : nil)
+          ]
             - if molecule_cover_placement(atom)
               .d-molecule-cards-small__card-image-wrap
-                = dummy_ui_image molecule_cover_placement(atom),
+                = dummy_ui_image(molecule_cover_placement(atom),
                                  THUMB_SIZE,
                                  class_name: image_class_name,
-                                 lightbox: atom.button_url.blank?
+                                 lightbox: atom.button_url.blank?,
+                                 hover_zoom: true)
 
             .d-molecule-cards-small__card-body
               h4.fs-display-xs.m-0

@@ -15,7 +15,7 @@ class Dummy::Molecule::Cards::LargeComponent < ApplicationComponent
     tag = { tag: :div, class: base_class }
 
     if atom.button_url.present?
-      tag[:class] += " #{base_class}--link"
+      tag[:class] += " #{base_class}--link d-ui-image-hover-zoom-wrap"
     end
 
     tag

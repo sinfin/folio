@@ -5,11 +5,12 @@
         *card_tag(atom)
           - if molecule_cover_placement(atom)
             .d-molecule-cards-medium__card-image-wrap
-              = dummy_ui_image molecule_cover_placement(atom),
+              = dummy_ui_image(molecule_cover_placement(atom),
                                THUMB_SIZE,
                                class_name: 'd-molecule-cards-medium__card-image',
                                cover: true,
-                               lightbox: atom.url.blank?
+                               lightbox: atom.url.blank?,
+                               hover_zoom: true)
 
           - if molecule_cover_placement(atom)
             .d-molecule-cards-medium__card-image-wrap[

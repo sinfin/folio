@@ -1,13 +1,16 @@
 .d-atom.my-atom-lg class=bem_class_name data=data
   .container-fluid
-    .d-atom-image-and-content__inner
+    .d-atom-image-and-content__inner[
+      class="d-ui-image-hover-zoom-wrap"
+    ]
       .row.d-atom-image-and-content__row
         .col-12.col-sm-6
           .d-atom-image-and-content__image-wrap
             = dummy_ui_image(atom_cover_placement,
                              THUMB_SIZE,
                              class_name: 'd-atom-image-and-content__image',
-                             lightbox: true)
+                             lightbox: true,
+                             hover_zoom: @atom.url.present?)
 
         .d-atom-image-and-content__content.col-12.col-sm-6
           - if @atom.title.present?

@@ -21,7 +21,7 @@ class Dummy::Molecule::Cards::ExtraSmallComponent < ApplicationComponent
       {
         tag: :a,
         href: atom.url,
-        class: "#{base_class} #{base_class}--link"
+        class: "#{base_class} #{base_class}--link d-ui-image-hover-zoom-wrap"
       }
     else
       { tag: :div, class: base_class }

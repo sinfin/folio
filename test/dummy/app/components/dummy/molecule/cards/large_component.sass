@@ -15,12 +15,10 @@
     position: relative
     flex: 1 0 400px
     overflow: hidden
+    z-index: 2
 
   &__card-image
-    transition: transform 100ms ease-in-out
-
-  &__card--link:hover &__card-image
-    transform: scale(1.05)
+    z-index: 2
 
   &__card-body
     padding: $grid-gutter-base * 4
@@ -29,6 +27,8 @@
     align-items: flex-start
     flex: 1 1 auto
     align-self: center
+    position: relative
+    z-index: 3
 
   &__card-title
     margin: 0
@@ -53,15 +53,18 @@
       content: ''
       display: block
       position: absolute
-      inset: 0
-      z-index: 1
+      top: 0
+      left: -400px
+      right: 0
+      bottom: 0
+      z-index: 3
 
   &__card-link
     color: $shade-600
     text-decoration: none
     font-weight: $font-weight-semibold
     position: relative
-    z-index: 2
+    z-index: 4
 
     &:hover
       text-decoration: underline
