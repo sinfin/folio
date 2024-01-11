@@ -44,6 +44,7 @@ exclude:
   - test/dummy/app/components/dummy/molecule/cards/full_width_component.slim
   - test/dummy/app/components/dummy/molecule/cards/medium_component.slim
   - test/dummy/app/components/dummy/molecule/cards/padded_image_component.slim
+  - test/dummy/app/components/dummy/molecule/cards/small_component.slim
   - test/dummy/app/components/dummy/ui/footer_component.slim
   - test/dummy/app/components/dummy/ui/image_component.slim
   - test/dummy/app/components/dummy/ui/menu_component.slim
