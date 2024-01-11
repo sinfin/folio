@@ -1,9 +1,22 @@
-.d-molecule class=bem_class_name
+.d-molecule.my-atom-lg class=bem_class_name
   .container-fluid
-    - @atoms.each do |atom|
-      .d-molecule-cards-full-width__card data-bs-theme="dark"
-        = dummy_ui_image molecule_cover_placement(atom),
-                         Folio::Console::FileSerializer::ADMIN_THUMBNAIL_SIZE
+    .d-molecule-cards-image__grid
+      - @atoms.each do |atom|
+        .d-molecule-cards-image__cell
+          .d-molecule-cards-image__card
+            .d-molecule-cards-image__image-wrap
+              = dummy_ui_image molecule_cover_placement(atom),
+                               THUMB_SIZE,
+                               class_name: 'd-molecule-cards-image__image',
+                               cover: true
 
-        p = atom.title
-        p = atom.description
+            .d-molecule-cards-image__content
+              .d-molecule-cards-image__content-wrap
+                a.d-molecule-cards-image__link href=atom.url
+                  .d-molecule-cards-image__title.fs-display-xs
+                    = atom.title
+
+                - if atom.description.present?
+                  .d-molecule-cards-image__description.fs-text-xs
+                    .d-rich-text
+                      = cstypo atom.description

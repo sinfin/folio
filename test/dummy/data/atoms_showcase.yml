@@ -298,6 +298,48 @@ atoms:
     - cover: true
       _count: 3
 
+  Dummy::Atom::Cards::Image:
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 6
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 5
+    - title: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis
+      description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. Proin et dui at augue condimentum ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      url: "#url"
+      cover: true
+      _count: 3
+
+  Dummy::Atom::Cards::PaddedImage:
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 6
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 5
+    - title: Item title lorem ipsum damus Item title lorem ipsum damus
+      description: Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      url: "#url"
+      cover: true
+      _count: 3
+
   Dummy::Atom::Divider:
     - variant: default
     - variant: thin
@@ -307,4 +349,4 @@ atoms:
 values_for_true:
   title: Polaroid cray austin muggle magic humblebrag aesthetic
   content: |
-    <p>Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.</p>
+    <p>Polaroid cray austin muggle magic humblebrag aesthetic Polaroid cray austin muggle magic humblebrag aesthetic/p>
