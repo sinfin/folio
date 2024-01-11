@@ -3,12 +3,15 @@
     .d-molecule-cards-image__grid
       - @atoms.each do |atom|
         .d-molecule-cards-image__cell
-          .d-molecule-cards-image__card
+          .d-molecule-cards-image__card[
+            class="d-ui-image-hover-zoom-wrap"
+          ]
             .d-molecule-cards-image__image-wrap
-              = dummy_ui_image molecule_cover_placement(atom),
+              = dummy_ui_image(molecule_cover_placement(atom),
                                THUMB_SIZE,
                                class_name: 'd-molecule-cards-image__image',
-                               cover: true
+                               cover: true,
+                               hover_zoom: true)
 
             .d-molecule-cards-image__content
               .d-molecule-cards-image__content-wrap

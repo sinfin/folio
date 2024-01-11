@@ -23,8 +23,6 @@
     z-index: 1
 
   &__image
-    transition: transform 150ms ease-in-out
-
     &::before
       content: ''
       display: block
@@ -32,9 +30,6 @@
       inset: 0
       z-index: 5
       background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 30%, rgba(0, 0, 0, 0.5) 100%)
-
-  &__card:hover &__image
-    transform: scale(1.1)
 
   &__content
     min-height: 100%
