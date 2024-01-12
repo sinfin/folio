@@ -99,6 +99,9 @@ cookie:
 copy:
   width: 24
   height: 24
+content_copy:
+  width: 24
+  height: 24
 credit_card:
   width: 24
   height: 24

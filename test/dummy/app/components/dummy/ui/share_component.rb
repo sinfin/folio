@@ -3,11 +3,9 @@
 class Dummy::Ui::ShareComponent < ApplicationComponent
   bem_class_name :mobile_collapsible
 
-  def initialize(
-    url: nil,
-    icon: nil,
-    mobile_collapsible: false
-  )
+  def initialize(url: nil,
+                 icon: nil,
+                 mobile_collapsible: false)
     @mobile_collapsible = mobile_collapsible
     @url = url
     @icon = icon
