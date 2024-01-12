@@ -2,13 +2,9 @@
 cs:
   activerecord:
     attributes:
-      application_namespace_path/atom/text:
-        highlight: Zvýraznění
-        highlight/nil: Žádné
-        highlight/red: Červené
-        highlight/gray: Šedé
+      application_namespace_path/atom/text: 
     models:
-      application_namespace_path/atom/text: Text (odstavce, tabulky, apod.)
+      application_namespace_path/atom/text: Text
 en:
   activerecord:
     attributes:

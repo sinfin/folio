@@ -78,6 +78,20 @@ class Folio::ApplicationComponent < ViewComponent::Base
     controller.current_site
   end
 
+  def atom_cover_placement(atom = nil)
+    atom ||= @atom
+
+    if atom
+      if @atom_options
+        if !@atom_options[:console_preview] && @atom_options[:cover_placements].present?
+          return @atom_options[:cover_placements][atom.id]
+        end
+      end
+
+      atom.cover_placement
+    end
+  end
+
   def current_user
     controller.try(:current_user)
   end

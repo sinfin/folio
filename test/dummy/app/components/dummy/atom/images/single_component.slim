@@ -1,0 +1,22 @@
+.d-atom.d-atom-images-single.my-g data=stimulus_lightbox
+  .container-fluid
+    = dummy_ui_image(atom_cover_placement,
+                     THUMB_SIZE,
+                     lightbox: true,
+                     hover_zoom: true,
+                     border_radius: true,
+                     title: @atom.title,
+                     class_name: "d-atom-images-single__image")
+
+    - if @atom.title.present?
+      .d-atom-images-single__caption.fs-text-s
+        span.d-atom-images-single__title.fw-bold
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.d-atom-images-single__subtitle
+            = cstypo @atom.subtitle
+
+    - if @atom.content.present?
+      .d-atom-images-single__content.fs-text-xs.d-rich-text
+        == cstypo @atom.content

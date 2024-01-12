@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::TitleComponentTest < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::Title, :title)
+
+    render_inline(<%= application_namespace %>::Atom::TitleComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-title")
+  end
+end

@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - Folio::Account after merging into Folio::User (done in migration)
 
+## 2023-12-14
+### Changed
+- changed `folio/lightbox` - now works via stimulus, using `stimulus_lightbox` and `stimulus_lightbox_item` helpers
+
 ## 2023-11-24
 ### Changed
 - ignore `Rails.application.config.folio_site_is_a_singleton` and handle one site application as multisite with one (and main) site

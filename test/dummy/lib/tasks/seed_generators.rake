@@ -57,22 +57,19 @@ class Dummy::SeedGenerator
 
     copy_file(atom_path, template_atom_dir.join("#{name}.rb.tt"))
 
-    template_atom_cell_dir = template_atom_dir.join("cell")
+    template_atom_component_dir = template_atom_dir.join("component")
 
-    FileUtils.mkdir_p template_atom_cell_dir
+    FileUtils.mkdir_p template_atom_component_dir
 
     unless File.read(atom_path).include?("self.abstract_class = true")
       %w[atom molecule].each do |key|
-        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}_cell.rb")].each do |path|
-          copy_file(path, template_atom_dir.join("cell/#{name}_cell.rb.tt"))
+        Dir[Rails.root.join("app/components/dummy/#{key}/#{name}_component.*")].each do |path|
+          file_name = File.basename(path)
+          copy_file(path, template_atom_dir.join("component/#{file_name}.tt"))
         end
 
-        Dir[Rails.root.join("app/cells/dummy/#{key}/#{name}/*")].each do |path|
-          copy_file(path, template_atom_cell_dir.join(name, "#{File.basename(path)}.tt"))
-        end
-
-        Dir[Rails.root.join("test/cells/dummy/#{key}/#{name}_cell_test.rb")].each do |path|
-          copy_file(path, template_atom_dir.join("cell/#{name}_cell_test.rb.tt"))
+        Dir[Rails.root.join("test/components/dummy/#{key}/#{name}_component_test.rb")].each do |path|
+          copy_file(path, template_atom_dir.join("component/#{name}_component_test.rb.tt"))
         end
       end
     end
@@ -125,6 +122,15 @@ class Dummy::SeedGenerator
         File.write(yaml_to, replaced)
         puts "W #{relative_path(yaml_to)}"
       end
+    end
+  end
+
+  def atoms_controllers(path)
+    copy_file(path, @templates_path.join("atoms_controller.rb.tt"))
+
+    Dir[Rails.root.join("app/views/dummy/atoms/show.slim")].each do |path|
+      name = File.basename(path)
+      copy_file(path, @templates_path.join("#{name}.tt"))
     end
   end
 
@@ -182,12 +188,14 @@ class Dummy::SeedGenerator
          .gsub("dummy.search", "<%= application_namespace_path %>.search")
          .gsub("dummy_search", "<%= application_namespace_path %>_search")
          .gsub("dummy_ui_", "<%= application_namespace_path %>_ui_")
+         .gsub("dummy_atoms_", "<%= application_namespace_path %>_atoms_")
          .gsub("dummy:", "<%= application_namespace_path %>:")
          .gsub(":dummy", ":<%= application_namespace_path %>")
          .gsub("--dummy-", "--<%= application_namespace_path %>-")
          .gsub("window.dummy", "window.<%= application_namespace_path %>")
          .gsub("window.Dummy", "window.<%= application_namespace %>")
          .gsub("d-ui", "<%= classname_prefix %>-ui")
+         .gsub("d-atoms", "<%= classname_prefix %>-atoms")
          .gsub("d-unlink", "<%= classname_prefix %>-unlink")
          .gsub("d-atom", "<%= classname_prefix %>-atom")
          .gsub("d-blog", "<%= classname_prefix %>-blog")
@@ -286,6 +294,8 @@ namespace :dummy do
         next if atom_path.include?("/blog/")
         gen.from_atom_path(atom_path)
       end
+
+      gen.atoms_controllers(Rails.root.join("app/controllers/dummy/atoms_controller.rb"))
     end
 
     task blog: :environment do

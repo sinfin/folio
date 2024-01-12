@@ -1,3 +1,0 @@
-.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-hr
-  .container-fluid.<%= classname_prefix %>-rich-text
-    hr

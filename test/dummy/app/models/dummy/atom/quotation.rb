@@ -4,21 +4,16 @@ class Dummy::Atom::Quotation < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
   STRUCTURE = {
-    text: :text,
+    content: :richtext,
+    title: :string,
+    subtitle: :string,
+    large: :boolean
   }
 
   ASSOCIATIONS = {}
 
-  validates :text,
+  validates :content,
             presence: true
-
-  def self.cell_name
-    "dummy/atom/quotation"
-  end
-
-  def self.console_icon
-    :format_quote
-  end
 end
 
 # == Schema Information

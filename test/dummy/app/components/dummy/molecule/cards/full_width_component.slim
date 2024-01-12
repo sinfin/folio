@@ -1,0 +1,43 @@
+.d-molecule.d-molecule-cards-full-width.my-atom-lg[
+  data=data.merge('bs-theme' => 'dark')
+]
+  - @atoms.each_with_index do |atom, slide_i|
+    - active_slide = slide_i == current_slide_index
+    - buttons_ary = buttons_ary(atom)
+
+    .d-molecule-cards-full-width__slide[
+      data=stimulus_target(:slide)
+      class=(active_slide ? 'd-molecule-cards-full-width__slide--active' : nil)
+    ]
+      .d-molecule-cards-full-width__background
+        = dummy_ui_image molecule_cover_placement(atom),
+                         THUMB_SIZE,
+                         class_name: 'd-molecule-cards-full-width__image',
+                         cover: true
+
+      .container-fluid.d-molecule-cards-full-width__container
+        .d-molecule-cards-full-width__inner
+          .d-molecule-cards-full-width__content
+            h4.d-molecule-cards-full-width__card-title.fs-display-l
+              = atom.title
+
+            - if atom.content.present?
+              .d-molecule-cards-full-width__card-text.fs-text-l
+                .d-rich-text.d-rich-text--chomp
+                  = cstypo atom.content
+
+            - if buttons_ary.present?
+              .d-molecule-cards-full-width__card-btns
+                = dummy_ui_buttons(buttons: buttons_ary)
+
+            - if @atoms.count > 1
+              .d-molecule-cards-full-width__controls
+                - @atoms.each_with_index do |_, dot_index|
+                  - active_dot = dot_index == current_slide_index
+
+                  button.d-molecule-cards-full-width__controls-dot[
+                    class=(active_dot ? 'd-molecule-cards-full-width__controls-dot--active' : nil)
+                    data=dot_target_data
+                    data-index=dot_index
+                    type="button"
+                  ]

@@ -1,0 +1,4 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-title
+  .container-fluid.<%= classname_prefix %>-rich-text
+    *{ tag: @atom.tag_with_fallback }
+      = cstypo @atom.title

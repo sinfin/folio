@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dummy::Atom::Title < Folio::Atom::Base
-  ALLOWED_TAGS = %w[H1 H2 H3 H4]
+  ALLOWED_TAGS = %w[H1 H2 H3 H4 H5]
 
   ATTACHMENTS = %i[]
 
@@ -21,12 +21,8 @@ class Dummy::Atom::Title < Folio::Atom::Base
     tag.presence || "H2"
   end
 
-  def self.cell_name
-    "dummy/atom/title"
-  end
-
-  def self.console_icon
-    :text_fields
+  def self.default_atom_values
+    { tag: "H2" }
   end
 
   def self.console_insert_row

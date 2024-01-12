@@ -22,8 +22,12 @@ const NestedModelControls = ({ moveUp, moveDown, remove, edit, vertical, handleC
     />
   )
 
+  let className = 'f-c-nested-model-controls'
+
+  if (vertical) className += ` ${className}--vertical`
+
   return (
-    <FolioConsoleUiButtons className='f-c-nested-model-controls'>
+    <FolioConsoleUiButtons className={className}>
       {moveUp && (
         <FolioConsoleUiButton
           variant='secondary'

@@ -58,3 +58,14 @@
   &, &:hover, &:focus
     outline: 0
     box-shadow: none
+
+.btn-redactor
+  --#{$prefix}btn-bg: #{$primary}
+  --#{$prefix}btn-color: #{$white}
+  --#{$prefix}btn-border-width: 2px
+  color: var(--bs-btn-color) !important
+
+  &--outline
+    --#{$prefix}btn-bg: #{$white}
+    --#{$prefix}btn-color: #{$primary}
+    --#{$prefix}btn-border-color: #{$primary}

@@ -1,0 +1,59 @@
+.d-molecule-cards-person
+  &__card
+    display: flex
+    position: relative
+
+  &__card-image
+    border-radius: $grid-gutter-base
+    overflow: hidden
+    flex: 0 0 120px
+
+  &__card-body
+    padding-left: $grid-gutter-width
+    flex: 1 1 auto
+
+  &__card-text
+    color: $shade-700
+
+  &__card-link
+    color: $shade-400
+    text-decoration: none
+    font-weight: $font-weight-semibold
+    display: block
+
+    &::after
+      content: ''
+      position: absolute
+      top: 0
+      right: 0
+      bottom: 0
+      left: 0
+      z-index: 2
+
+    &:hover
+      text-decoration: underline
+
+  +media-breakpoint-up(sm)
+    &__row
+      margin-bottom: -$grid-gutter-width
+
+    &__col
+      padding-bottom: $grid-gutter-width
+
+  +media-breakpoint-up(lg)
+    &__card--large &__card-image
+      flex: 0 0 200px
+
+    &__card--large &__card-body
+      padding: map-get($spacers, gg) $grid-gutter-base*4
+
+  +media-breakpoint-down(lg)
+    &__card--large &__card-image
+      max-height: 120px !important
+
+  +media-breakpoint-down(sm)
+    &__col
+      padding-bottom: map-get($spacers, bb)
+
+      &:last-child
+        padding-bottom: 0

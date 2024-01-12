@@ -114,6 +114,7 @@ class <%= application_namespace %>::UiController < ApplicationController
         add_breadcrumb "UI", <%= application_namespace_path %>_ui_path
 
         if action_name != "show"
+          add_breadcrumb "UI", <%= application_namespace_path %>_ui_path
           add_breadcrumb action_name.capitalize, send("#{action_name}_<%= application_namespace_path %>_ui_path")
         end
 

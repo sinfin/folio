@@ -32,12 +32,16 @@ legend
     .form-control,
     .folio-console-react-picker__button .btn,
     .redactor-box
-      box-shadow: 0 0 10px 2px $red !important
+      box-shadow: 0 0 12px 2px $red !important
 
 .form-control,
 .form-select,
 .form-check-input
+.redactor-modal .form-item input
   box-shadow: none !important
+
+  &.form-control--hinted
+    box-shadow: 0 0 12px 2px $blue !important
 
 .form-control.select
   @extend .form-select

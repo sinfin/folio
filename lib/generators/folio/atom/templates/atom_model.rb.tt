@@ -13,8 +13,6 @@ class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
   end
 
   <%- end -%>
-  def self.console_icon
-  end
 end
 
 # == Schema Information

@@ -202,6 +202,29 @@ module Folio
           deprecations << "The main_app js/coffee file has moved from app/cells/folio/console/atoms/previews to app/assets/javascripts/folio/console/atoms/previews"
         end
 
+        unless Rails.env.production?
+          atom_data_path_base = "data/atoms_showcase.yml"
+          atom_data_path = Rails.root.join(atom_data_path_base)
+
+          if File.exist?(atom_data_path)
+            atom_data = YAML.load_file(atom_data_path)
+
+            Dir[Rails.root.join("app/models/*/atom/**/*.rb")].each do |atom_file_path|
+              matches = File.read(atom_file_path).match(/class (?<atom_name>[\w:]+) < Folio::Atom::Base/)
+
+              if matches && matches[:atom_name]
+                if atom_data["atoms"][matches[:atom_name]].blank?
+                  deprecations << "Missing atoms_showcase.yml data for atom - #{matches[:atom_name]}"
+                end
+              else
+                deprecations << "Invalid atom model code - #{atom_file_path}"
+              end
+            end
+          else
+            deprecations << "Missing #{atom_data_path_base}"
+          end
+        end
+
         if deprecations.present?
           load Folio::Engine.root.join("app/lib/folio/deprecation.rb")
 

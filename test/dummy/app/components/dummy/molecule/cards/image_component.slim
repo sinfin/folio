@@ -1,0 +1,25 @@
+.d-molecule.my-atom-lg class=bem_class_name
+  .container-fluid
+    .d-molecule-cards-image__grid
+      - @atoms.each do |atom|
+        .d-molecule-cards-image__cell
+          .d-molecule-cards-image__card[
+            class="d-ui-image-hover-zoom-wrap"
+          ]
+            .d-molecule-cards-image__image-wrap
+              = dummy_ui_image(molecule_cover_placement(atom),
+                               THUMB_SIZE,
+                               class_name: 'd-molecule-cards-image__image',
+                               cover: true,
+                               hover_zoom: true)
+
+            .d-molecule-cards-image__content
+              .d-molecule-cards-image__content-wrap
+                a.d-molecule-cards-image__link href=atom.url
+                  .d-molecule-cards-image__title.fs-display-xs
+                    = atom.title
+
+                - if atom.description.present?
+                  .d-molecule-cards-image__description.fs-text-xs
+                    .d-rich-text.d-rich-text--chomp
+                      = cstypo atom.description

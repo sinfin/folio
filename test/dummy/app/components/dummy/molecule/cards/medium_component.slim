@@ -1,0 +1,32 @@
+.d-molecule.d-molecule-cards-medium.my-atom data=stimulus_lightbox
+  .container-fluid
+    .d-molecule-cards-medium__grid
+      - @atoms.each do |atom|
+        *card_tag(atom)
+          - if molecule_cover_placement(atom)
+            .d-molecule-cards-medium__card-image-wrap
+              = dummy_ui_image(molecule_cover_placement(atom),
+                               THUMB_SIZE,
+                               class_name: 'd-molecule-cards-medium__card-image',
+                               cover: true,
+                               lightbox: atom.url.blank?,
+                               hover_zoom: true)
+
+          - if molecule_cover_placement(atom)
+            .d-molecule-cards-medium__card-image-wrap[
+              class="d-molecule-cards-medium__card-image-wrap--mobile"
+            ]
+              = dummy_ui_image molecule_cover_placement(atom),
+                               MOBILE_THUMB_SIZE,
+                               class_name: 'd-molecule-cards-medium__card-image'
+
+          .d-molecule-cards-medium__card-body
+            *link_with_fallback_tag(atom)
+              - if atom.title.present?
+                h4.fs-display-s.mt-0.mb-2
+                  = atom.title
+
+            .d-molecule-cards-medium__card-text[
+              class="d-rich-text d-rich-text--chomp fs-text-s"
+            ]
+              == cstypo atom.content

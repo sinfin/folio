@@ -1,0 +1,21 @@
+.d-atom-text
+  &__highlight
+    border: 2px solid $transparent-300
+    border-radius: $border-radius
+    padding: 2 * $grid-gutter-width
+
+    &--success
+      border-color: $status-success
+
+    &--neutral
+      border-color: $status-neutral
+
+    &--caution
+      border-color: $status-caution
+
+    &--error
+      border-color: $status-error
+
+  +media-breakpoint-down(sm)
+    &__highlight
+      padding: 4 * $grid-gutter-base

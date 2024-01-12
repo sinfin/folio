@@ -106,4 +106,75 @@ namespace :developer_tools do
       end
     end
   end
+
+  desc "Seed dummy unplash images"
+  task idp_seed_dummy_images: :environment do
+    Folio::Site.find_each do |site|
+      %w[
+        adrianna-geo-1rBg5YSi00c-unsplash.jpg
+        birmingham-museums-trust-KfRUve5NtO8-unsplash.jpg
+        boston-public-library-_f9cP4_unmg-unsplash.jpg
+        british-library-gUDNK8NqYHk-unsplash.jpg
+        europeana--kUYkiWWM6E-unsplash.jpg
+        europeana-3bg0fd2uIds-unsplash.jpg
+        europeana-4juaKkjUzqQ-unsplash.jpg
+        europeana-6c43FgRt0Dw-unsplash.jpg
+        europeana-H-4WME4eoOo-unsplash.jpg
+        europeana-L9au-ZOs8WU-unsplash.jpg
+        europeana-SMWPYQhVRuY-unsplash.jpg
+        europeana-TjegK_z-0j8-unsplash.jpg
+        europeana-tONMTB7h1TY-unsplash.jpg
+        europeana-uS5LXujNOq4-unsplash.jpg
+      ].each do |file_name|
+        if Folio::File::Image.tagged_with("unsplash").exists?(site:, file_name: file_name.split(".").map(&:parameterize).join("."))
+          print("s")
+          next
+        end
+
+        src = "https://s3.eu-west-1.amazonaws.com/sinfin-staging/_unsplash/artwork/#{file_name}"
+
+        Folio::File::Image.create!(file_url: src,
+                                   tag_list: "unsplash, seed, artwork",
+                                   site:)
+        print(".")
+      end
+    end
+  end
+
+  namespace :atoms do
+    desc "Screenshot atoms from atoms_showcase"
+    task screenshot: :environment do
+      require "selenium-webdriver"
+
+      root_data = YAML.load_file(Rails.root.join("data/atoms_showcase.yml"))
+
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_argument("--headless")
+      options.add_argument("--window-size=1200,800")
+
+      driver = Selenium::WebDriver.for(:chrome, options:)
+
+      FileUtils.mkdir_p(Rails.root.join("public/images/atoms"))
+
+      root_data["atoms"].keys.each do |class_name|
+        driver.navigate.to "http://localhost:3000/atoms/?atom=#{class_name}&screenshot=1"
+
+        file_name = "#{class_name.underscore.gsub('/', '-')}.webp"
+        webp_file_path = Rails.root.join("public/images/atoms/#{file_name}")
+
+        Dir.mktmpdir do |dir|
+          tmp_png_path = "#{dir}/screenshot.png"
+          tmp_webp_path = "#{dir}/screenshot.webp"
+
+          driver.save_screenshot(tmp_png_path)
+
+          system "cwebp -q 85 #{tmp_png_path} -o #{tmp_webp_path}"
+
+          FileUtils.cp tmp_webp_path, webp_file_path
+        end
+      end
+
+      driver.quit
+    end
+  end
 end

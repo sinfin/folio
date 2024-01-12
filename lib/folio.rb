@@ -59,6 +59,8 @@ module Folio
   # respect app/assets/javascripts/folio/message_bus.js
   MESSAGE_BUS_CHANNEL = "folio_messagebus_channel"
 
+  LIGHTBOX_IMAGE_SIZE = "2560x2048>"
+
   def self.table_name_prefix
     "folio_"
   end

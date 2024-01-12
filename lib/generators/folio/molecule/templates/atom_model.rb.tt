@@ -12,13 +12,8 @@ class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
     "<%= molecule_cell_name %>"
   end
   <%- else -%>
-  def self.molecule_component_class
-    <%= molecule_component_name %>
-  end
+  MOLECULE = true
   <%- end -%>
-
-  def self.console_icon
-  end
 end
 
 # == Schema Information

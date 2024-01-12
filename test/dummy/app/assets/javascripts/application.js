@@ -32,3 +32,7 @@
 //= require dummy/ui/menu_toolbar/header_search_component
 //= require dummy/ui/menu_toolbar/dropdown_component
 //= require dummy/ui/menu_toolbar/shopping_cart_component
+
+
+//= require dummy/atom/images/gallery_component
+//= require dummy/molecule/cards/full_width_component

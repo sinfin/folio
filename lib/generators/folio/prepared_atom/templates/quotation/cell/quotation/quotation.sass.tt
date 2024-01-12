@@ -1,9 +1,0 @@
-.<%= classname_prefix %>-atom-quotation
-  &__text
-    font-style: italic
-
-    &:before
-      content: '„'
-
-    &:after
-      content: "“"
