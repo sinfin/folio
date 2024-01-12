@@ -10,7 +10,7 @@ class Dummy::Atom::Divider < Folio::Atom::Base
   ASSOCIATIONS = {}
 
   def variant_with_default
-    variant || STRUCTURE[:variants].first
+    variant || STRUCTURE[:variant].first
   end
 end
 

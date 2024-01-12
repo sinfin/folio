@@ -17,6 +17,15 @@ class Dummy::Atom::Cards::Small < Folio::Atom::Base
   FORM_LAYOUT = :aside_attachments
 
   MOLECULE = true
+
+  validate :validate_one_of_contents
+
+  private
+    def validate_one_of_contents
+      if title.blank? && content.blank?
+        errors.add(:content, :blank)
+      end
+    end
 end
 
 # == Schema Information
