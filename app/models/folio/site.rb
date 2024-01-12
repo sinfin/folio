@@ -79,7 +79,10 @@ class Folio::Site < Folio::ApplicationRecord
 
   def env_aware_domain
     if Rails.env.development?
-      domain == "lvh.me" ? "lvh.me:3000" : "dev-#{domain}:3000"
+      return "lvh.me:3000" if domain == "lvh.me"
+      return "#{domain}:3000" if domain.end_with?("localhost")
+
+      "dev-#{domain}:3000"
     else
       domain
     end

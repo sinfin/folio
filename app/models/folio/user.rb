@@ -278,17 +278,13 @@ class Folio::User < Folio::ApplicationRecord
   def can_now_by_ability?(ability, action, subject)
     return false if self.new_record?
     return false unless ability.can?(action, subject)
-    return true unless subject.respond_to?(:currently_allowed_actions)
 
-    subject.currently_allowed_actions(self).include?(action)
-    # example:
-    # def self.currently_allowed_actions(*args)
-    #   [:create, :index]
-    # end
-
-    # def currently_allowed_actions(*args)
-    #   [:read, :update, :destroy] + permitted_event_names(*args)
-    # end
+    # user is able to do action, but can it be triggered now?
+    if subject.respond_to?(:currently_available_actions)
+      subject.currently_available_actions.include?(action)
+    else
+      true
+    end
   end
 
 
