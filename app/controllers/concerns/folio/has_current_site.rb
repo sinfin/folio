@@ -18,4 +18,10 @@ module Folio::HasCurrentSite
       Folio.current_site(request:, controller: self)
     end
   end
+
+  def current_site_user_link
+    @current_site_user_link ||= if current_site && try(:current_user)
+      current_user.site_user_links.find_by(site: current_site)
+    end
+  end
 end
