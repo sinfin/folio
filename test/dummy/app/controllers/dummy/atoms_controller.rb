@@ -6,6 +6,8 @@ class Dummy::AtomsController < ApplicationController
   def show
     @root_data = YAML.load_file(Rails.root.join("data/atoms_showcase.yml"))
 
+    add_breadcrumb t("activerecord.models.folio/atom", count: 2), dummy_atoms_path
+
     if params[:atom]
       @atom_klass = params[:atom].safe_constantize
 
@@ -30,7 +32,6 @@ class Dummy::AtomsController < ApplicationController
           end
         end
 
-        add_breadcrumb t("activerecord.models.folio/atom", count: 2), dummy_atoms_path
         add_breadcrumb @atom_klass.model_name.human, dummy_atoms_path(atom: @atom_klass)
       else
         redirect_to dummy_atoms_path

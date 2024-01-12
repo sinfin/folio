@@ -7,6 +7,7 @@ cs:
     invalid_format: Nepodporovaný formát
   'false': Ne
   folio:
+    root_breadcrumb: Úvodní stránka
     chart:
       js_load_error: Nepodařilo se načíst javascript pro tvorbu grafů.
     price:

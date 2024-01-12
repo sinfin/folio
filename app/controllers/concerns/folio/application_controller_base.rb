@@ -18,6 +18,8 @@ module Folio::ApplicationControllerBase
 
     before_action :set_cookies_for_log
 
+    before_action :add_root_breadcrumb
+
     helper_method :current_site
 
     add_flash_types :success, :warning, :info
@@ -122,5 +124,9 @@ module Folio::ApplicationControllerBase
 
     def current_ability
       @current_ability ||= Folio::Ability.new(current_user, current_site)
+    end
+
+    def add_root_breadcrumb
+      add_breadcrumb_on_rails(t("folio.root_breadcrumb"), "/")
     end
 end

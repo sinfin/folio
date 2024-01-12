@@ -7,6 +7,7 @@ en:
     invalid_format: Invalid format
   'false': "No"
   folio:
+    root_breadcrumb: Homepage
     chart:
       js_load_error: Failed to load javascript needed for charts.
     price:

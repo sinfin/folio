@@ -111,14 +111,8 @@ Folio::MenuItem.create!(menu:,
 
 Folio::MenuItem.create!(menu:,
                         title: "Atoms",
-                        url: "/folio/ui/atoms",
+                        url: "/atoms",
                         position: position += 1)
-
-Folio::MenuItem.create!(menu:,
-                        title: "Blog",
-                        url: "/blog",
-                        position: position += 1)
-
 mi = Folio::MenuItem.create!(menu:,
                              title: "Nestable non-link",
                              position: position += 1)

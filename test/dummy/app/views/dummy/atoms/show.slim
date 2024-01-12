@@ -41,7 +41,8 @@
   - else
     .container-fluid
       h1
-        a.d-unlink href=dummy_atoms_path Atoms
+        a.d-unlink href=dummy_atoms_path
+          = t("activerecord.models.folio/atom", count: 2)
 
     - if @atom_classes_data
       .container-fluid
