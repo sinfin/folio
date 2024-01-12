@@ -7,9 +7,10 @@ class Dummy::UiController < ApplicationController
     @actions = %i[
       alerts
       boolean_toggles
-      buttons
       breadcrumbs
+      buttons
       chips
+      embed
       forms
       icons
       images

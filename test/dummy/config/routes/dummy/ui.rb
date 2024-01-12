@@ -7,6 +7,7 @@ scope module: :dummy, as: :dummy do
     get :breadcrumbs
     get :buttons
     get :chips
+    get :embed
     get :forms
     get :icons
     get :images
