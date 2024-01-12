@@ -214,7 +214,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
     if @href
       h[:tag] = :a
       h[:href] = @href
-    elsif @lightbox
+    elsif @lightbox && @data
       h[:data].merge!(stimulus_lightbox_item(@placement, title: @title))
     end
 
@@ -223,7 +223,7 @@ class Dummy::Ui::ImageComponent < ApplicationComponent
 
   def thumbnail_size
     if @thumbnail_size.nil?
-      if file = @data && @data[:file]
+      if file = (@data && @data[:file])
         t = file.thumb(@size)
 
         @thumbnail_size = {
