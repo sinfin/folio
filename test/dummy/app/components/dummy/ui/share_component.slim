@@ -17,10 +17,10 @@ div[
           target=link[:target]
           class="d-ui-share__item--#{link[:icon]}"
         ]
-
           = dummy_ui_icon(link[:icon],
                           height: 22,
                           class_name: 'd-ui-share__icon')
+
       .d-ui-share__item
         //TODO: change to new component
         == cell('dummy/ui/clipboard', @url, height: 22)
