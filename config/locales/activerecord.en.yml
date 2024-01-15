@@ -60,6 +60,10 @@ en:
         header_message: Header message
         header_message_published: Enabled
         locales: Languages
+        roles: Roles
+        roles/administrator: Administrator
+        roles/manager: Manage
+        roles/user: User
       folio/email_template:
         missing_keyword: does not contain the {%{keyword}} keyword
         subject: Subject

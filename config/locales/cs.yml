@@ -57,10 +57,6 @@ cs:
       settings:
         title: Nastavení
         title_long: Nastavení stránky %{site}
-      roles:
-        administrator: Administrátor
-        manager: Manažer
-        user: Uživatel
 
     publishable_hint:
       hint: Stránka je až do publikování viditelná jen pro přihlášené administrátory.

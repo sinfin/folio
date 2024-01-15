@@ -30,7 +30,7 @@ module Folio::HasSiteRoles
     end
 
     def human_role_name(role)
-      I18n.t("folio.site.roles.#{role}")
+      Folio::Site.human_attribute_name("roles/#{role}")
     end
   end
 

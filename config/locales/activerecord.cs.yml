@@ -71,6 +71,9 @@ cs:
         system_email: Systémová e-mailová adresa
         system_email_copy: Systémová e-mailová adresa (kopie)
         roles: Uživatelské role
+        roles/administrator: Administrátor
+        roles/manager: Manažer
+        roles/user: Uživatel
 
       folio/email_template:
         missing_keyword: neobsahuje povinné klíčové slovo {%{keyword}}
