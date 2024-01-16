@@ -49,10 +49,14 @@ class Folio::Addresses::FieldsCell < Folio::ApplicationCell
   end
 
   def country_code_input(g, disabled: false, countries_whitelist: nil)
+    only = countries_whitelist || g.object.class.countries_whitelist
+    priority = g.object.class.priority_countries(locale: I18n.locale)
+    priority = nil if only.try(:any?) && (only - priority).empty?
+
     g.input :country_code,
             disabled:,
-            only: countries_whitelist || g.object.class.countries_whitelist,
-            priority: g.object.class.priority_countries(locale: I18n.locale),
+            only:,
+            priority:,
             input_html: { class: "f-addresses-fields__country-code-input", id: nil },
             include_blank: false
   end
