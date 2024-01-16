@@ -265,7 +265,7 @@ class Folio::User < Folio::ApplicationRecord
   end
 
   def can_manage_sidekiq?
-    can_now?(:manage, :sidekiq)
+    can_now?(:manage, :sidekiq, site: Folio.main_site)
   end
 
   def can_now?(action, subject = nil, site: nil)
