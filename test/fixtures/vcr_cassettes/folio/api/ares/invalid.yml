@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?ico=x27074358x&ver=1.0.3
+    uri: https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/x27074358x
     body:
       encoding: US-ASCII
       string: ''
@@ -15,24 +15,45 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 200
-      message: OK
+      code: 400
+      message: ''
     headers:
       Date:
-      - Thu, 15 Jun 2023 10:50:22 GMT
-      Server:
-      - Apache
-      Cache-Control:
-      - public, no-cache
-      Expires:
-      - Thu, 15 Jun 2023 22:50:22 GMT
-      Content-Length:
-      - '1144'
+      - Wed, 17 Jan 2024 13:05:29 GMT
       Content-Type:
-      - text/xml
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Access-Control-Request-Headers
+      - Access-Control-Request-Method
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - microphone=(), payment=(), sync-xhr=(self), geolocation=(self)
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Security-Policy:
+      - default-src 'self'; font-src 'self' data:; style-src 'self'; script-src 'self';img-src
+        'self' data:;
+      X-Azure-Ref:
+      - 20240117T130529Z-tqewde3vbx1x9dhaqd8hz5envc0000000470000000019gm4
+      X-Cache:
+      - CONFIG_NOCACHE
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGFyZTpBcmVzX29kcG92ZWRpIHhtbG5zOmFyZT0iaHR0cDovL3d3d2luZm8ubWZjci5jei9hcmVzL3htbF9kb2Mvc2NoZW1hcy9hcmVzL2FyZXNfYW5zd2VyX2Jhc2ljL3ZfMS4wLjMiIHhtbG5zOkQ9Imh0dHA6Ly93d3dpbmZvLm1mY3IuY3ovYXJlcy94bWxfZG9jL3NjaGVtYXMvYXJlcy9hcmVzX2RhdGF0eXBlcy92XzEuMC4zIiB4bWxuczpVPSJodHRwOi8vd3d3aW5mby5tZmNyLmN6L2FyZXMveG1sX2RvYy9zY2hlbWFzL3V2aXNfZGF0YXR5cGVzL3ZfMS4wLjMiIG9kcG92ZWRfZGF0dW1fY2FzPSIyMDIzLTA2LTE1VDEyOjUwOjIyIiBvZHBvdmVkX3BvY2V0PSIxIiBvZHBvdmVkX3R5cD0iQmFzaWMiIHZ5c3R1cF9mb3JtYXQ9IlhNTCIgeHNsdD0ia2xpZW50IiB2YWxpZGF0aW9uX1hTTFQ9Imh0dHA6Ly93d3dpbmZvLm1mY3IuY3ovYXJlcy94bWxfZG9jL3NjaGVtYXMvYXJlcy9hcmVzX29kcG92ZWRpLnhzbCIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIgeHNpOnNjaGVtYUxvY2F0aW9uPSJodHRwOi8vd3d3aW5mby5tZmNyLmN6L2FyZXMveG1sX2RvYy9zY2hlbWFzL2FyZXMvYXJlc19hbnN3ZXJfYmFzaWMvdl8xLjAuMyBodHRwOi8vd3d3aW5mby5tZmNyLmN6L2FyZXMveG1sX2RvYy9zY2hlbWFzL2FyZXMvYXJlc19hbnN3ZXJfYmFzaWMvdl8xLjAuMy9hcmVzX2Fuc3dlcl9iYXNpY192XzEuMC4zLnhzZCIgSWQ9ImFyZXMiPgo8YXJlOk9kcG92ZWQ+CjxEOlBJRD4wPC9EOlBJRD4KPEQ6RT4KPEQ6RUs+MTwvRDpFSz4KPEQ6RVQ+CkNoeWJhIDIzIC0gY2h5YmEgaWMKPC9EOkVUPgo8L0Q6RT4KPEQ6Vkg+CjxEOks+MjwvRDpLPgo8L0Q6Vkg+CjxEOlBaQT4wPC9EOlBaQT4KPEQ6VVZPRD4KPEQ6TkQ+VsO9cGlzIHogZGF0IFJlZ2lzdHJ1IEFSRVMgLSBha3R1w6FsbsOtIHN0YXYga2UgZG5pIDE4OTktMTItMzE8L0Q6TkQ+CjxEOkFEQj4xODk5LTEyLTMxPC9EOkFEQj4KPEQ6RFZZPjIwMjMtMDYtMTU8L0Q6RFZZPgo8RDpDQVM+MTI6NTA6MjI8L0Q6Q0FTPgo8RDpUeXBfb2RrYXp1PjA8L0Q6VHlwX29ka2F6dT4KPC9EOlVWT0Q+CjwvYXJlOk9kcG92ZWQ+CjwvYXJlOkFyZXNfb2Rwb3ZlZGk+Cg==
-  recorded_at: Thu, 15 Jun 2023 10:50:21 GMT
-recorded_with: VCR 6.1.0
+        eyJrb2QiOiJDSFlCQV9WU1RVUFUiLCJwb3BpcyI6IlBvbG/FvmthICdpY28nIDogbmVzcGzFiHVqZSByZWd1bMOhcm7DrSB2w71yYXogWzAtOV17OH18TmVuw60gdnlwbG7Em24gc3Byw6F2bsO9IGZvcm3DoXQgScSMTy4gVXByYXZ0ZSBwYXJhbWV0cnkgdnlobGVkw6F2w6Fuw60ufENoeWJhIHZzdHVwdSIsInN1YktvZCI6IlZTVFVQX05FVkFMSUROSV9GT1JNQVRfSUNPIn0=
+  recorded_at: Wed, 17 Jan 2024 13:05:29 GMT
+recorded_with: VCR 6.2.0
