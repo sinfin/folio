@@ -29,41 +29,36 @@ module Folio
     end
 
     def self.get!(identification_number)
-      query = {
-        ver: "1.0.3",
-        ico: identification_number,
-      }.to_query
-
-      response = HTTParty.get("http://wwwinfo.mfcr.cz/cgi-bin/ares/darv_bas.cgi?#{query}")
+      response = HTTParty.get("https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/#{identification_number}")
 
       if response.code != 200
-        raise ConnectionError, "#{response.code} #{response.message}"
+        if response["kod"]
+          msg = [response["kod"], response["subKod"], response["popis"]].compact.join(" / ")
+
+          if ["NENALEZENO", "CHYBA_VSTUPU"].include?(response["kod"])
+            raise InvalidIdentificationNumberError, msg
+          else
+            raise ParseError, msg
+          end
+        else
+          raise ConnectionError, "#{response.code} #{response.message}"
+        end
       end
 
-      xml = begin
-        Nokogiri::XML(response.body)
+      hash = begin
+        JSON.parse(response.body)
       rescue StandardError => e
         raise ParseError, e.message
       end
 
-      if error_text = xml.xpath("//D:ET")[0]&.text
-        msg = error_text.strip
-
-        if msg == "Chyba 23 - chyba ic" || msg.include?("nenalezeno")
-          raise InvalidIdentificationNumberError, msg
-        else
-          raise ARESError, msg
-        end
-      end
-
-      Subject.new(identification_number: xml.xpath("//D:ICO")[0]&.text,
-                  vat_identification_number: xml.xpath("//D:DIC")[0]&.text,
-                  company_name: xml.xpath("//D:OF")[0]&.text,
-                  city: xml.xpath("//D:N")[0]&.text,
-                  address_line_1: xml.xpath("//D:NU")[0]&.text,
-                  address_line_2: xml.xpath("//D:CD")[0]&.text,
-                  zip: xml.xpath("//D:PSC")[0]&.text,
-                  country_code: "CZ")
+      Subject.new(identification_number: hash["ico"],
+                  vat_identification_number: hash["dic"],
+                  company_name: hash["obchodniJmeno"],
+                  city: hash.dig("sidlo", "nazevObce"),
+                  address_line_1: hash.dig("sidlo", "nazevUlice"),
+                  address_line_2: hash.dig("sidlo", "cisloDomovni").try(:to_s),
+                  zip: hash.dig("sidlo", "psc").try(:to_s),
+                  country_code: hash.dig("sidlo", "kodStatu") || "CZ")
     end
   end
 end
