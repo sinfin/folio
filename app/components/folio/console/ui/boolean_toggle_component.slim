@@ -1,11 +1,17 @@
-label.f-c-ui-boolean-toggle data=data class=@class_name
-  input.f-c-ui-boolean-toggle__input[
-    type="checkbox"
-    checked=checked
-    name=name
-    data=stimulus_action('onInput')
-    disabled=@disabled
-  ]
+label data=data class=@class_name class=bem_class_name
+  - if @f
+    = @f.check_box @attribute,
+                   class: "f-c-ui-boolean-toggle__input",
+                   data: stimulus_action('onInput'),
+                   disabled: @disabled
+  - else
+    input.f-c-ui-boolean-toggle__input[
+      type="checkbox"
+      checked=checked
+      name=name
+      data=stimulus_action('onInput')
+      disabled=@disabled
+    ]
 
   .f-c-ui-boolean-toggle__label[
     class=(@small_label ? "small" : nil)

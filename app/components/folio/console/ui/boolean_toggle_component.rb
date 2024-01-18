@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationComponent
-  bem_class_name :label, :verbose
+  bem_class_name :label, :verbose, :disabled
 
   def initialize(record:,
                  attribute:,
+                 f: nil,
                  url: nil,
                  disabled: false,
                  label: nil,
@@ -21,6 +22,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @as = as
     @confirm = confirm
     @url = url
+    @f = f
     @class_name = class_name
     @small_label = small_label
   end
@@ -61,10 +63,13 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-ui-boolean-toggle", values: {
       url: url_with_default,
       confirmation:,
+      static: @f.present?,
     }, classes: %w[loading])
   end
 
   def url_with_default
-    @url || url_for([:console, @record, format: :json])
+    if @f.blank?
+      @url || url_for([:console, @record, format: :json])
+    end
   end
 end

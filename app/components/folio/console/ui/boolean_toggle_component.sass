@@ -36,6 +36,14 @@
       transition: $transition-base
       background: $gray-medium-dark
 
+  &--disabled,
+  &--disabled &__label
+    cursor: not-allowed
+
+  &--disabled &__label
+    &::before, &::after
+      opacity: 0.5
+
   &__label-text
     padding-left: px-to-rem(6px)
 
@@ -54,4 +62,3 @@
   &__input:not(:checked) ~ &__label &__label-text--on,
   &__input:checked ~ &__label &__label-text--off
     display: none
-

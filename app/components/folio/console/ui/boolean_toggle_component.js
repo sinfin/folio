@@ -1,7 +1,8 @@
 window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Stimulus.Controller {
   static values = {
-    url: String,
-    confirmation: { type: String, default: "" },
+    url: { type: String, default: '' },
+    confirmation: { type: String, default: '' },
+    static: { type: Boolean, default: false }
   }
 
   static classes = ['loading']
@@ -10,7 +11,7 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
     const input = e.target
 
     if (this.confirmationValue) {
-      if (this.confirmationValue === "true") {
+      if (this.confirmationValue === 'true') {
         if (window.Folio.Confirm.confirm(() => { this.onInputInner(input) })) {
           return
         }
@@ -28,6 +29,7 @@ window.Folio.Stimulus.register('f-c-ui-boolean-toggle', class extends window.Sti
   }
 
   onInputInner (input) {
+    if (this.staticValue) return
     if (this.element.classList.contains(this.loadingClass)) return
 
     this.element.classList.add(this.loadingClass)

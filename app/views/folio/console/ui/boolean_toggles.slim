@@ -51,3 +51,20 @@ h3 Disabled
 = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
                                                         attribute: :published,
                                                         disabled: true))
+
+h3 Form
+
+= simple_form_for Folio::Page.last, url: "#foo", method: :get do |f|
+  = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                          attribute: :published,
+                                                          f: f,
+                                                          label: "form"))
+
+h3 Form - disabled
+
+= simple_form_for Folio::Page.last, url: "#foo", method: :get do |f|
+  = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                          attribute: :published,
+                                                          f: f,
+                                                          label: "disabled form",
+                                                          disabled: true))
