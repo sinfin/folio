@@ -16,6 +16,19 @@ label data=data class=@class_name class=bem_class_name
   .f-c-ui-boolean-toggle__label[
     class=(@small_label ? "small" : nil)
   ]
+    - if @off_label
+      span[
+        class="f-c-ui-boolean-toggle__label-text"
+        class="f-c-ui-boolean-toggle__label-text--off"
+      ]
+        span.f-c-ui-boolean-toggle__label-text-spacer
+          = @off_label
+
+        span.f-c-ui-boolean-toggle__label-text-content
+          = @off_label
+
+    .f-c-ui-boolean-toggle__label-visual
+
     - if @label
       - if @verbose
         span[
@@ -31,5 +44,10 @@ label data=data class=@class_name class=bem_class_name
       - else
         span[
           class="f-c-ui-boolean-toggle__label-text"
+          class="f-c-ui-boolean-toggle__label-text--on"
         ]
-          = label_string
+          span.f-c-ui-boolean-toggle__label-text-spacer
+            = label_string
+
+          span.f-c-ui-boolean-toggle__label-text-content
+            = label_string

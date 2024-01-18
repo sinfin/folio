@@ -68,3 +68,22 @@ h3 Form - disabled
                                                           f: f,
                                                           label: "disabled form",
                                                           disabled: true))
+
+h3 Form - off_label
+
+= simple_form_for Folio::Page.last, url: "#foo", method: :get do |f|
+  = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                          attribute: :published,
+                                                          f: f,
+                                                          label: "on label",
+                                                          off_label: "off label"))
+
+h3 Form - off_label disabled
+
+= simple_form_for Folio::Page.last, url: "#foo", method: :get do |f|
+  = render(Folio::Console::Ui::BooleanToggleComponent.new(record: Folio::Page.last,
+                                                          attribute: :published,
+                                                          f: f,
+                                                          label: "on label",
+                                                          off_label: "off label",
+                                                          disabled: true))

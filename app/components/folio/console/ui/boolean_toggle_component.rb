@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationComponent
-  bem_class_name :label, :verbose, :disabled
+  bem_class_name :label, :verbose, :disabled, :off_label
 
   def initialize(record:,
                  attribute:,
@@ -10,6 +10,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
                  disabled: false,
                  label: nil,
                  verbose: false,
+                 off_label: nil,
                  as: nil,
                  confirm: false,
                  class_name: nil,
@@ -18,6 +19,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @attribute = attribute
     @disabled = disabled
     @label = label || small_label || verbose
+    @off_label = off_label
     @verbose = verbose
     @as = as
     @confirm = confirm
