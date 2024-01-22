@@ -14,6 +14,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
                  as: nil,
                  confirm: false,
                  class_name: nil,
+                 static: false,
                  small_label: false)
     @record = record
     @attribute = attribute
@@ -27,6 +28,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @f = f
     @class_name = class_name
     @small_label = small_label
+    @static = static || @f.blank?
   end
 
   def checked
@@ -65,7 +67,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-ui-boolean-toggle", values: {
       url: url_with_default,
       confirmation:,
-      static: f.blank?
+      static: @static
     }, classes: %w[loading])
   end
 
