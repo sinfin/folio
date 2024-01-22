@@ -65,7 +65,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     stimulus_controller("f-c-ui-boolean-toggle", values: {
       url: url_with_default,
       confirmation:,
-      static: @f.present?,
+      static: f.blank?
     }, classes: %w[loading])
   end
 
