@@ -13,6 +13,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
                  off_label: nil,
                  as: nil,
                  confirm: false,
+                 checked: false,
                  class_name: nil,
                  static: false,
                  small_label: false)
@@ -29,9 +30,10 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @class_name = class_name
     @small_label = small_label
     @static = static || @f.blank?
+    @checked = checked || attribute_checked
   end
 
-  def checked
+  def attribute_checked
     !!@record.try(@attribute)
   end
 
