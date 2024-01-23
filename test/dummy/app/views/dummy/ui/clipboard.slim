@@ -1,0 +1,11 @@
+.container-fluid
+  h1
+    a.d-unlink href=dummy_ui_path UI kit
+
+  - %w[light dark].each do |theme|
+    .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
+      h2.mt-0 Clipboard - #{theme}
+
+      = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world', height: 22))
+
+      //== cell("dummy/ui/clipboard", 'Hello world', height: 22)

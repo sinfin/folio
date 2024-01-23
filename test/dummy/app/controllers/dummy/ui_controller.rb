@@ -10,6 +10,7 @@ class Dummy::UiController < ApplicationController
       breadcrumbs
       buttons
       chips
+      clipboard
       embed
       forms
       icons
