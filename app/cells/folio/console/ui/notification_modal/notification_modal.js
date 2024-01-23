@@ -42,7 +42,8 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
 
   submit (e) {
     e.preventDefault()
-    this.trigger.closest('form').submit()
+    const form = this.trigger.closest('form')
+    form.requestSubmit()
   }
 
   onTrigger (e) {
