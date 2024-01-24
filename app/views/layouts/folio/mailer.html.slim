@@ -1,5 +1,9 @@
+ruby:
+  app_namespace = ::Rails.application.class.name.deconstantize
+  component = "#{app_namespace}::Mailer::LayoutComponent".constantize
+
 doctype html
-html[
+html.d-mailer-html[
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:o="urn:schemas-microsoft-com:office:office"
   xmlns:v="urn:schemas-microsoft-com:vml"
@@ -8,7 +12,23 @@ html[
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
     meta content="width=device-width, initial-scale=1.0" name="viewport" /
 
-    = stylesheet_link_tag('folio/mailer/base', media: 'all')
+    link[
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    ]
+
+    link[
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin=true
+    ]
+
+    link[
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700"
+      rel="stylesheet"
+    ]
+
+    = stylesheet_link_tag('mailer', media: 'all')
 
     /![if gte mso 9]
       xml
@@ -16,35 +36,6 @@ html[
           o:AllowPNG
             o:PixelsPerInch 96
 
-  body bgcolor="#eeeeee"
-    table.f-mailer__wrap[
-      border="0"
-      cellpadding="0"
-      cellspacing="0"
-    ]
-      tbody
-        tr
-          td.f-mailer__wrap-td align="center" valign="top"
-            table
-              tbody
-                tr
-                  td align="left" valign="top"
-                    .f-mailer__logo-wrap
-                      a.f-mailer__logo[
-                        href=site.env_aware_root_url
-                        target="_blank"
-                      ]
-                        = render 'folio/mailer/logo'
-
-            table
-              tbody
-                tr
-                  td align="left" valign="top"
-                    = yield
-
-            - unless @hide_footer
-              table.f-mailer__footer
-                tbody
-                  tr
-                    td.f-mailer__footer-td.small align="left" valign="top"
-                      = render 'folio/mailer/footer'
+  body.d-mailer-body bgcolor="#ffffff"
+    = render(component.new(site:))
+       = yield

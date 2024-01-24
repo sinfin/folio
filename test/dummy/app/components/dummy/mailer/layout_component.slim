@@ -1,0 +1,7 @@
+.d-mailer-layout
+  .d-mailer-layout__main
+    = render(Dummy::Mailer::HeaderComponent.new(site: @site))
+
+    = content
+
+  = render(Dummy::Mailer::FooterComponent.new(site: @site))
