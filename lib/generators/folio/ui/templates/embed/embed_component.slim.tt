@@ -1,0 +1,7 @@
+.<%= classname_prefix %>-ui-embed.<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+  figure
+    == @html
+
+    - if @caption.present?
+      figcaption.<%= classname_prefix %>-ui-embed__caption.mt-bb
+        = cstypo @caption

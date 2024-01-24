@@ -1,0 +1,32 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-medium.my-atom data=stimulus_lightbox
+  .container-fluid
+    .<%= classname_prefix %>-molecule-cards-medium__grid
+      - @atoms.each do |atom|
+        *card_tag(atom)
+          - if molecule_cover_placement(atom)
+            .<%= classname_prefix %>-molecule-cards-medium__card-image-wrap
+              = <%= application_namespace_path %>_ui_image(molecule_cover_placement(atom),
+                               THUMB_SIZE,
+                               class_name: '<%= classname_prefix %>-molecule-cards-medium__card-image',
+                               cover: true,
+                               lightbox: atom.url.blank?,
+                               hover_zoom: true)
+
+          - if molecule_cover_placement(atom)
+            .<%= classname_prefix %>-molecule-cards-medium__card-image-wrap[
+              class="<%= classname_prefix %>-molecule-cards-medium__card-image-wrap--mobile"
+            ]
+              = <%= application_namespace_path %>_ui_image molecule_cover_placement(atom),
+                               MOBILE_THUMB_SIZE,
+                               class_name: '<%= classname_prefix %>-molecule-cards-medium__card-image'
+
+          .<%= classname_prefix %>-molecule-cards-medium__card-body
+            *link_with_fallback_tag(atom)
+              - if atom.title.present?
+                h4.fs-display-s.mt-0.mb-2
+                  = atom.title
+
+            .<%= classname_prefix %>-molecule-cards-medium__card-text[
+              class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp fs-text-s"
+            ]
+              == cstypo atom.content

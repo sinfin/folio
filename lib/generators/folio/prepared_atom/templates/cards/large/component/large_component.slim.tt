@@ -1,0 +1,39 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-large.my-atom data=stimulus_lightbox
+  .container-fluid
+    - @atoms.each do |atom|
+      *card_tag(atom)
+        - if molecule_cover_placement(atom)
+          .<%= classname_prefix %>-molecule-cards-large__card-image-wrap
+            = <%= application_namespace_path %>_ui_image(molecule_cover_placement(atom),
+                             THUMB_SIZE,
+                             class_name: '<%= classname_prefix %>-molecule-cards-large__card-image',
+                             cover: true,
+                             lightbox: atom.button_url.blank?,
+                             hover_zoom: true)
+
+        .<%= classname_prefix %>-molecule-cards-large__card-body
+          - if atom.title.present?
+            h4.<%= classname_prefix %>-molecule-cards-large__card-title.fs-display-m
+              = atom.title
+
+          - if atom.content.present?
+            .<%= classname_prefix %>-molecule-cards-large__card-text[
+              class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp fs-text-l"
+            ]
+              = cstypo atom.content
+
+          - if atom.button_url.present? || atom.link_url.present?
+            .<%= classname_prefix %>-molecule-cards-large__card-btns
+              - if atom.button_url.present?
+                a.<%= classname_prefix %>-molecule-cards-large__card-button [
+                  class="btn btn-primary"
+                  href=atom.button_url
+                ]
+                  = atom.button_label
+
+              - if atom.link_url.present?
+                a.<%= classname_prefix %>-molecule-cards-large__card-link [
+                  class="fs-text-xs"
+                  href=atom.link_url
+                ]
+                  = atom.link_label

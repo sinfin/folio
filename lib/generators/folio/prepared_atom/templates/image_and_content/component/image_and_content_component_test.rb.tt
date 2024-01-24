@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::ImageAndContentComponentTest < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::ImageAndContent, :cover, :title)
+
+    render_inline(<%= application_namespace %>::Atom::ImageAndContentComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-image-and-content")
+  end
+end

@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Molecule::Cards::LargeComponentTest < Folio::ComponentTest
+  def test_render
+    atoms = [create_atom(<%= application_namespace %>::Atom::Cards::Large, :content)]
+
+    render_inline(<%= application_namespace %>::Molecule::Cards::LargeComponent.new(atoms:))
+
+    assert_selector(".<%= classname_prefix %>-molecule-cards-large")
+  end
+end

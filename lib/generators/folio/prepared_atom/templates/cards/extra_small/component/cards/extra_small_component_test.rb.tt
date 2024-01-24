@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Molecule::Cards::ExtraSmallComponentTest < Folio::ComponentTest
+  def test_render
+    atoms = [create_atom(<%= application_namespace %>::Atom::Cards::ExtraSmall, :url, :title)]
+
+    render_inline(<%= application_namespace %>::Molecule::Cards::ExtraSmallComponent.new(atoms:))
+
+    assert_selector(".<%= classname_prefix %>-molecule-cards-extra-small")
+  end
+end

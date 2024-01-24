@@ -1,0 +1,31 @@
+.<%= classname_prefix %>-atom.my-atom-lg class=bem_class_name data=data
+  .container-fluid
+    .<%= classname_prefix %>-atom-image-and-content__inner[
+      class="<%= classname_prefix %>-ui-image-hover-zoom-wrap"
+    ]
+      .row.<%= classname_prefix %>-atom-image-and-content__row
+        .col-12.col-sm-6
+          .<%= classname_prefix %>-atom-image-and-content__image-wrap
+            = <%= application_namespace_path %>_ui_image(atom_cover_placement,
+                             THUMB_SIZE,
+                             class_name: '<%= classname_prefix %>-atom-image-and-content__image',
+                             lightbox: true,
+                             hover_zoom: @atom.url.present?)
+
+        .<%= classname_prefix %>-atom-image-and-content__content.col-12.col-sm-6
+          - if @atom.title.present?
+            h2.<%= classname_prefix %>-atom-image-and-content__title.fs-display-l
+              = @atom.title
+
+          - if @atom.content.present?
+            .<%= classname_prefix %>-atom-image-and-content__text [
+              class='<%= classname_prefix %>-rich-text fs-text-l'
+            ]
+              = cstypo @atom.content
+
+          - if @atom.url.present?
+            a.<%= classname_prefix %>-atom-image-and-content__btn [
+              class='btn btn-secondary'
+              href=@atom.url
+            ]
+              = @atom.button_label

@@ -3,24 +3,24 @@
 class <%= application_namespace %>::Ui::BreadcrumbsComponent < ApplicationComponent
   bem_class_name :share
 
-  def initialize(breadcrumbs:, share: nil, single: false)
+  def initialize(breadcrumbs:, share: nil, single: true)
     @breadcrumbs = breadcrumbs
     @share = share
     @single = single
   end
 
   def single?
-    @single || @breadcrumbs.length == 1
+    @single
   end
 
   def breadcrumb
-    if @breadcrumbs.present? && @breadcrumbs.length > 0
+    if @breadcrumbs.present? && @breadcrumbs.length > 1
       @breadcrumbs[-2] || @breadcrumbs[0]
     end
   end
 
   def breadcrumbs_ary
-    if @breadcrumbs.present? && @breadcrumbs.length > 1
+    if @breadcrumbs.present?
       @breadcrumbs
     end
   end

@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Molecule::Cards::MediumComponentTest < Folio::ComponentTest
+  def test_render
+    atoms = [create_atom(<%= application_namespace %>::Atom::Cards::Medium, :content)]
+
+    render_inline(<%= application_namespace %>::Molecule::Cards::MediumComponent.new(atoms:))
+
+    assert_selector(".<%= classname_prefix %>-molecule-cards-medium")
+  end
+end

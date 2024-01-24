@@ -1,0 +1,23 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-extra-small.my-atom data=stimulus_lightbox
+  .container-fluid
+    .row.<%= classname_prefix %>-molecule-cards-extra-small__row
+      - @atoms.each do |atom|
+        .col-12.col-sm-6.<%= classname_prefix %>-molecule-cards-extra-small__col
+          *card_tag(atom)
+            .<%= classname_prefix %>-molecule-cards-extra-small__cover
+              - if atom.cover_placement.present?
+                = <%= application_namespace_path %>_ui_image(molecule_cover_placement(atom),
+                                 THUMB_SIZE,
+                                 class_name: image_class,
+                                 lightbox: atom.url.blank?,
+                                 hover_zoom: true)
+
+            .<%= classname_prefix %>-molecule-cards-extra-small__content
+              h4.<%= classname_prefix %>-molecule-cards-extra-small__title [
+                class='fs-display-xs m-0'
+              ]
+                = atom.title
+
+              .<%= classname_prefix %>-molecule-cards-extra-small__text
+                p.fs-text-xs.m-0
+                  = atom.subtitle
