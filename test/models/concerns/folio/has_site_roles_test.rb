@@ -8,6 +8,8 @@ class Folio::HasSiteRolesTest < ActiveSupport::TestCase
   def setup
     super
 
+    I18n.locale = :cs
+
     @site = create(:folio_site, available_user_roles: ["administrator", "manager"])
     @user = create(:folio_user) # includes Folio::HasSiteRoles
   end
