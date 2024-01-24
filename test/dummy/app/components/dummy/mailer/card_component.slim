@@ -1,0 +1,16 @@
+.d-mailer-card
+  - if @folio_image
+    .d-mailer-card__image-wrap
+      img.d-mailer-card__image[
+        src=@folio_image.thumb(THUMB_SIZE, immediate: true).url
+      ]
+
+  .d-mailer-card__content
+    - if @title.present?
+      h2.d-mailer-card__content = @title
+
+    = content
+
+    - if @button_label && @button_href
+      a.btn.btn-primary.d-mailer-card__btn href=@button_href
+        = @button_label
