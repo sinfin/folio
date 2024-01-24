@@ -29,11 +29,11 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
     @f = f
     @class_name = class_name
     @small_label = small_label
-    @static = static || @f.blank?
-    @checked = checked || attribute_checked
+    @static = static || @f.present?
+    @checked = checked || attribute_checked?
   end
 
-  def attribute_checked
+  def attribute_checked?
     !!@record.try(@attribute)
   end
 
@@ -74,7 +74,7 @@ class Folio::Console::Ui::BooleanToggleComponent < Folio::Console::ApplicationCo
   end
 
   def url_with_default
-    if @f.blank?
+    unless @static
       @url || url_for([:console, @record, format: :json])
     end
   end

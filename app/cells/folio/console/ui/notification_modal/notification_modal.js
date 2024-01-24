@@ -32,8 +32,6 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
   connect () {
     this.originalInnerHTML = this.element.innerHTML
     this.bsModal = new window.bootstrap.Modal(this.element)
-
-    this.closeOnSubmit = false
   }
 
   disconnect () {
