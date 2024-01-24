@@ -210,11 +210,9 @@ class Dummy::SeedGenerator
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
-         .gsub("dummy/atom/blog", "<%= application_namespace_path %>/atom/blog")
-         .gsub("dummy/molecule/blog", "<%= application_namespace_path %>/molecule/blog")
+         .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
+         .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
-         .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")
-         .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
     end
 
     def scaffold(key)
