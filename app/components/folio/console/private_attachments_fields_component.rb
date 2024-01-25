@@ -54,4 +54,10 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
 
     stimulus_target("loader").merge(attachments: attachments_json)
   end
+
+  def input_data(key)
+    if key == :position
+      stimulus_target("positionInput")
+    end
+  end
 end

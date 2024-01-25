@@ -1,5 +1,14 @@
 window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends window.Stimulus.Controller {
-  static targets = ['loader', 'addWrap', 'template', 'attachment', 'attachmentsWrap', 'addButton']
+  static targets = [
+    'loader',
+    'addWrap',
+    'template',
+    'attachment',
+    'attachmentsWrap',
+    'addButton',
+    'destroyed',
+    'positionInput'
+  ]
 
   static values = {
     fileType: String,
@@ -28,7 +37,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
 
     const hashes = JSON.parse(this.loaderTarget.dataset.attachments)
 
-    this.loaderTarget.parentNode.removeChild(this.loaderTarget)
+    this.loaderTarget.remove()
 
     hashes.forEach((hash) => { this.addAttachment(hash) })
 
@@ -36,8 +45,8 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
   }
 
   setPositions () {
-    this.attachmentTargets.forEach((attachmentTarget, i) => {
-      attachmentTarget.querySelector('.f-c-private-attachments-fields__input--position').value = i + 1
+    this.positionInputTargets.forEach((positionInput, i) => {
+      positionInput.value = i + 1
     })
   }
 
@@ -52,7 +61,8 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
   }
 
   updateAttachment (attachment, hash) {
-    const keys = ['id', '_destroy', 'title']
+    const keys = ['id', '_destroy', 'title', 'position']
+
     keys.forEach((key) => {
       this.updateAttachmentInput(attachment, hash, key)
     })
@@ -117,14 +127,14 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
           }
         })
 
-        this.element.dispatchEvent(new window.Event('change', { bubbles: true }))
+        this.triggerChange()
       },
       onFailure: (s3Path) => {
         if (!s3Path) return
 
         this.attachmentTargets.forEach((attachmentTarget) => {
           if (attachmentTarget.dataset.s3Path === s3Path) {
-            attachmentTarget.parentNode.removeChild(attachmentTarget)
+            attachmentTarget.remove()
           }
         })
 
@@ -144,7 +154,10 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
   }
 
   destroyAttachment (attachment) {
-    attachment.hidden = true
+    this.destroyedTarget.appendChild(attachment)
+
+    attachment.querySelector('.f-c-private-attachments-fields__input--position').remove()
+
     attachment
       .querySelector('.f-c-private-attachments-fields__input--_destroy')
       .value = "1"
@@ -158,5 +171,38 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
     window.Folio.Confirm.confirm(() => {
       this.destroyAttachment(e.target.closest('.f-c-private-attachments-fields__attachment'))
     })
+  }
+
+  onArrowDownClick (e) {
+    this.onArrowClick(e, false)
+  }
+
+  onArrowUpClick (e) {
+    this.onArrowClick(e, true)
+  }
+
+  triggerChange () {
+    this.element.dispatchEvent(new window.Event('change', { bubbles: true }))
+  }
+
+  onArrowClick (e, up) {
+    e.preventDefault()
+
+    const attachment = e.target.closest('.f-c-private-attachments-fields__attachment')
+    let target, position
+
+    if (up) {
+      target = attachment.previousElementSibling
+      position = 'beforebegin'
+    } else {
+      target = attachment.nextElementSibling
+      position = 'afterend'
+    }
+
+    if (target) {
+      target.insertAdjacentElement(position, attachment)
+      this.setPositions()
+      this.triggerChange()
+    }
   }
 })

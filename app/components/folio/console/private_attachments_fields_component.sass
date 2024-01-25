@@ -1,8 +1,9 @@
 .f-c-private-attachments-fields
   &__fields-loader
     width: 100px
-    height: 50px
+    height: 60px
     position: relative
+    margin: 0 0 map-get($spacers, 3)
 
   &__attachment
     margin: 0 0 map-get($spacers, 3)
@@ -54,3 +55,8 @@
   &__attachment[data-s3-path] &__attachment-link,
   &__attachment:not([data-s3-path]) &__attachment-loader
     display: none
+
+  &__attachment:first-child &__action--move-up,
+  &__attachment:last-child &__action--move-down
+    opacity: 0.15
+    pointer-events: none

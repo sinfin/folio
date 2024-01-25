@@ -11,6 +11,11 @@
       ]
         .folio-loader
 
+  .f-c-private-attachments-fields__destroyed[
+    data=stimulus_target('destroyed')
+    hidden=true
+  ]
+
   .f-c-private-attachments-fields__add-wrap[
     data=stimulus_target('addWrap')
   ]
@@ -30,6 +35,7 @@
               name=key
               class="f-c-private-attachments-fields__input"
               class="f-c-private-attachments-fields__input--#{key}"
+              data=input_data(key)
             ]
 
         .f-c-private-attachments-fields__attachment-loader
@@ -53,6 +59,7 @@
           class="f-c-private-attachments-fields__action"
           class="f-c-private-attachments-fields__action--move"
           class="f-c-private-attachments-fields__action--move-up"
+          data=stimulus_action('onArrowUpClick')
         ]
           = folio_icon(:arrow_up)
 
@@ -60,6 +67,7 @@
           class="f-c-private-attachments-fields__action"
           class="f-c-private-attachments-fields__action--move"
           class="f-c-private-attachments-fields__action--move-down"
+          data=stimulus_action('onArrowDownClick')
         ]
           = folio_icon(:arrow_down)
 
