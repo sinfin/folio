@@ -18,14 +18,31 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
   end
 
   def data
-    stimulus_controller("f-c-private-attachments-fields")
+    stimulus_controller("f-c-private-attachments-fields",
+                        values: {
+                          file_type: @file_type,
+                          file_human_type: @file_klass.human_type,
+                          base_key:,
+                        })
+  end
+
+  def base_key
+    str = @f.lookup_model_names[0]
+
+    @f.lookup_model_names[1..].each do |lookup_key|
+      str += "[#{lookup_key}]"
+    end
+
+    "#{str}[#{@key}_attributes]"
   end
 
   def add_button
     cell("folio/console/ui/button",
          variant: :success,
          icon: :plus,
-         label: t("folio.console.actions.add"))
+         label: t("folio.console.actions.add"),
+         data: stimulus_target("addButton"),
+         dropzone: true)
   end
 
   def loader_data

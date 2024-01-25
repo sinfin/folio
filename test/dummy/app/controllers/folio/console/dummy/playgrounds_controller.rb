@@ -30,6 +30,18 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
     @page = Dummy::Page::WithPrivateAttachments.last || Dummy::Page::WithPrivateAttachments.create!(site: current_site, title: "Page with private attachments")
   end
 
+  def update_private_attachments
+    @page = Dummy::Page::WithPrivateAttachments.last || Dummy::Page::WithPrivateAttachments.create!(site: current_site, title: "Page with private attachments")
+
+    permitted = params.require(:page)
+                      .permit(:title,
+                              *private_attachments_strong_params)
+
+    @page.update!(permitted)
+
+    redirect_to main_app.private_attachments_console_dummy_playground_path
+  end
+
   def force_use_react_modals?
     true
   end
