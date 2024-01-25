@@ -98,7 +98,6 @@
 //= require folio/console/modules/simple-form-with-atoms
 //= require folio/console/nested_model_controls/nested_model_controls
 //= require folio/console/new_record_modal/new_record_modal
-//= require folio/console/private_attachments/fields/fields
 //= require folio/console/private_attachments/single_dropzone/single_dropzone
 //= require folio/console/private_attachments_fields_component
 //= require folio/console/publishable_inputs/item/item
