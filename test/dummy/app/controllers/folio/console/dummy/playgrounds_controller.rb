@@ -27,11 +27,11 @@ class Folio::Console::Dummy::PlaygroundsController < Folio::Console::BaseControl
   end
 
   def private_attachments
-    @page = Dummy::Page::WithPrivateAttachments.last || Dummy::Page::WithPrivateAttachments.create!(site: current_site, title: "Page with private attachments")
+    @page = Dummy::Page::WithPrivateAttachments.last || Dummy::Page::WithPrivateAttachments.new(site: current_site, title: "Page with private attachments")
   end
 
   def update_private_attachments
-    @page = Dummy::Page::WithPrivateAttachments.last || Dummy::Page::WithPrivateAttachments.create!(site: current_site, title: "Page with private attachments")
+    @page = Dummy::Page::WithPrivateAttachments.last || Dummy::Page::WithPrivateAttachments.new(site: current_site, title: "Page with private attachments")
 
     permitted = params.require(:page)
                       .permit(:title,

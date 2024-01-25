@@ -23,6 +23,7 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
                           file_type: @file_type,
                           file_human_type: @file_klass.human_type,
                           base_key:,
+                          single: @single,
                         })
   end
 

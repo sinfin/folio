@@ -14,6 +14,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
     fileType: String,
     fileHumanType: String,
     baseKey: String,
+    single: { type: Boolean, default: false },
   }
 
   connect () {
@@ -41,10 +42,15 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
 
     hashes.forEach((hash) => { this.addAttachment(hash) })
 
-    this.setPositions()
+    this.afterCountUpdate()
   }
 
-  setPositions () {
+  afterCountUpdate () {
+    if (this.singleValue) {
+      this.keptAttachmentsCount = this.attachmentsWrapTarget.children.length
+      this.addWrapTarget.hidden = this.keptAttachmentsCount > 0
+    }
+
     this.positionInputTargets.forEach((positionInput, i) => {
       positionInput.value = i + 1
     })
@@ -100,6 +106,8 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
       fileHumanType: this.fileHumanTypeValue,
       dropzoneOptions: { disablePreviews: true },
       onStart: (s3Path, fileAttributes) => {
+        if (this.singleValue && this.keptAttachmentsCount && this.keptAttachmentsCount > 0) return
+
         const hash = {
           s3Path,
           id: null,
@@ -115,7 +123,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
         }
 
         this.addAttachment(hash)
-        this.setPositions()
+        this.afterCountUpdate()
       },
       onSuccess: (s3Path, fileFromApi) => {
         this.attachmentTargets.forEach((attachmentTarget) => {
@@ -138,7 +146,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
           }
         })
 
-        this.setPositions()
+        this.afterCountUpdate()
       },
       onProgress: (s3Path, roundedProgress, text) => {
         this.attachmentTargets.forEach((attachmentTarget) => {
@@ -162,7 +170,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
       .querySelector('.f-c-private-attachments-fields__input--_destroy')
       .value = "1"
 
-    this.setPositions()
+    this.afterCountUpdate()
   }
 
   onDestroyClick (e) {
@@ -201,7 +209,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
 
     if (target) {
       target.insertAdjacentElement(position, attachment)
-      this.setPositions()
+      this.afterCountUpdate()
       this.triggerChange()
     }
   }

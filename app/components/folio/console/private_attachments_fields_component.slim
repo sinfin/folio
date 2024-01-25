@@ -18,6 +18,7 @@
 
   .f-c-private-attachments-fields__add-wrap[
     data=stimulus_target('addWrap')
+    hidden=(@single ? @attachments.present? : false)
   ]
     == add_button
 
