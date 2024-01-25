@@ -38,11 +38,16 @@ window.FolioConsole.PrivateAttachments.Fields.init = (el, opts) => {
 
       const a = document.createElement('a')
       a.href = fileFromApi.attributes.expiring_url
-      a.appendChild(window.Folio.Icon.create("file_document", { class: "f-c-private-attachments-fields__file-ico" }))
+      a.target = "_blank"
+      a.appendChild(window.Folio.Ui.Icon.create("file_document", { class: "f-c-private-attachments-fields__file-ico" }))
 
       $fields
         .find('.f-c-private-attachments-fields__file-col')[0]
         .appendChild(a)
+
+      $fields
+        .find('.f-c-private-attachments-fields__file-loader')
+        .remove()
 
       $fields
         .find('.f-c-private-attachments-fields__id-input')
