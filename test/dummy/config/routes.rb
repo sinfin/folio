@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     namespace :console do
       namespace :dummy do
         resource :playground, only: %i[] do
+          get :private_attachments
+          post :update_private_attachments
           get :players
           get :pickers
           get :report

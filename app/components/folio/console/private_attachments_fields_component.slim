@@ -1,0 +1,69 @@
+.f-c-private-attachments-fields data=data
+  h2.f-c-private-attachments-fields__title
+    = @file_klass.model_name.human(count: @single ? 1 : 2)
+
+  .f-c-private-attachments-fields__attachments[
+    data=stimulus_target("attachmentsWrap")
+  ]
+    - if @attachments.present?
+      .f-c-private-attachments-fields__fields-loader[
+        data=loader_data
+      ]
+        .folio-loader
+
+  .f-c-private-attachments-fields__add-wrap[
+    data=stimulus_target('addWrap')
+  ]
+    == add_button
+
+  .f-c-private-attachments-fields__attachment-template[
+    data=stimulus_target("template")
+    hidden=true
+  ]
+    .f-c-private-attachments-fields__attachment
+      .f-c-private-attachments-fields__inputs hidden=true
+        - %i[id _destroy].each do |key|
+          input[
+            type="hidden"
+            name=key
+            class="f-c-private-attachments-fields__input"
+            class="f-c-private-attachments-fields__input--#{key}"
+          ]
+
+      .f-c-private-attachments-fields__attachment-loader
+        span.folio-loader.folio-loader--small.folio-loader--transparent
+
+      a.f-c-private-attachments-fields__attachment-link[
+        href="#"
+        target="_blank"
+      ]
+        = folio_icon(:file_document)
+
+      input.form-control[
+        class="f-c-private-attachments-fields__input"
+        class="f-c-private-attachments-fields__input--title"
+        type="text"
+        name="title"
+        placeholder=@file_klass.human_attribute_name(:title)
+      ]
+
+      button[
+        class="f-c-private-attachments-fields__action"
+        class="f-c-private-attachments-fields__action--move"
+        class="f-c-private-attachments-fields__action--move-up"
+      ]
+        = folio_icon(:arrow_up)
+
+      button[
+        class="f-c-private-attachments-fields__action"
+        class="f-c-private-attachments-fields__action--move"
+        class="f-c-private-attachments-fields__action--move-down"
+      ]
+        = folio_icon(:arrow_down)
+
+      button[
+        class="f-c-private-attachments-fields__action"
+        class="f-c-private-attachments-fields__action--destroy"
+        class="text-danger"
+      ]
+        = folio_icon(:delete)

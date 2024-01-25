@@ -1,0 +1,8 @@
+h1 Private attachments
+
+h2 Regular
+
+= simple_form_for @page, url: main_app.update_private_attachments_console_dummy_playground_path(@page) do |f|
+  = f.input :title
+
+  = render(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:))

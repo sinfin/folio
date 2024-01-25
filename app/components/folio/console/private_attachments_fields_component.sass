@@ -1,0 +1,27 @@
+.f-c-private-attachments-fields
+  &__fields-loader
+    width: 100px
+    height: 50px
+    position: relative
+
+  &__attachment
+    margin: 0 0 map-get($spacers, 3)
+    border: 1px solid $border-color
+    border-radius: $border-radius
+    padding: map-get($spacers, 3)
+    display: flex
+    align-items: center
+    gap: map-get($spacers, 3)
+
+  &__attachment-loader
+    width: 32px
+    height: 32px
+    position: relative
+    flex: 0 0 auto
+
+  &__action
+    +unbutton
+    flex: 0 0 auto
+
+  &__input--title
+    flex: 1 1 auto

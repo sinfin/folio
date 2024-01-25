@@ -56,4 +56,5 @@ exclude:
   - test/dummy/app/views/dummy/home/index.slim
   - test/dummy/app/views/dummy/ui/*.slim
   - test/dummy/app/views/folio/console/dummy/playgrounds/console_notes.slim
+  - test/dummy/app/views/folio/console/dummy/playgrounds/private_attachments.slim
   - test/dummy/app/views/layouts/folio/application.slim
