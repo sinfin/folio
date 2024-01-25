@@ -14,7 +14,16 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
 
     @file_klass = @file_type.constantize
 
-    @attachments = @f.object.send(@key)
+    @attachments = []
+    @marked_for_destruction = []
+
+    @f.object.send(@key).each do |attachment|
+      if attachment.marked_for_destruction?
+        @marked_for_destruction << attachment
+      else
+        @attachments << attachment
+      end
+    end
   end
 
   def data
@@ -28,13 +37,15 @@ class Folio::Console::PrivateAttachmentsFieldsComponent < Folio::Console::Applic
   end
 
   def base_key
-    str = @f.lookup_model_names[0]
+    @base_key ||= begin
+      str = @f.lookup_model_names[0]
 
-    @f.lookup_model_names[1..].each do |lookup_key|
-      str += "[#{lookup_key}]"
+      @f.lookup_model_names[1..].each do |lookup_key|
+        str += "[#{lookup_key}]"
+      end
+
+      "#{str}[#{@key}_attributes]"
     end
-
-    "#{str}[#{@key}_attributes]"
   end
 
   def add_button

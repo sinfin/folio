@@ -15,6 +15,19 @@
     data=stimulus_target('destroyed')
     hidden=true
   ]
+    - @marked_for_destruction.each do |attachment|
+      .f-c-private-attachments-fields__attachment
+        .f-c-private-attachments-fields__attachment-inner
+          .f-c-private-attachments-fields__inputs hidden=true
+            - %i[id _destroy].each do |key|
+              input[
+                type="hidden"
+                name="#{base_key}[#{attachment.id}][#{key}]"
+                class="f-c-private-attachments-fields__input"
+                class="f-c-private-attachments-fields__input--#{key}"
+                value=(key == :_destroy ? 1 : attachment.send(key))
+                data=input_data(key)
+              ]
 
   .f-c-private-attachments-fields__add-wrap[
     data=stimulus_target('addWrap')
