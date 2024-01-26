@@ -86,6 +86,8 @@ module Folio
           "app/lib/application_namespace_path/cache_keys.rb",
           "app/lib/application_namespace_path/current_methods.rb",
           "app/models/application_namespace_path.rb",
+          "app/models/application_namespace_path/menu/footer.rb",
+          "app/models/application_namespace_path/menu/header.rb",
           "app/models/application_namespace_path/page/homepage.rb",
           "app/models/application_record.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
