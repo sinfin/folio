@@ -128,6 +128,8 @@ class Dummy::SeedGenerator
   def atoms_controllers(path)
     copy_file(path, @templates_path.join("atoms_controller.rb.tt"))
 
+    copy_file(Rails.root.join('data/atoms_showcase.yml'), @templates_path.join("data/atoms_showcase.yml.tt"))
+
     Dir[Rails.root.join("app/views/dummy/atoms/show.slim")].each do |path|
       name = File.basename(path)
       copy_file(path, @templates_path.join("#{name}.tt"))

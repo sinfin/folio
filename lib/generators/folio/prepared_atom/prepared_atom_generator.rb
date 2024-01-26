@@ -12,7 +12,19 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
   class UnknownAtomKey < StandardError; end
 
   def create
-    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject { |name| name.include?(".") }
+    dirs = %w[images cards]
+
+    allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject do |name|
+      name.include?(".") || dirs.include?(name)
+    end
+
+    dirs.each do |key|
+      allowed_keys += Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates/#{key}")).filter_map do |name|
+        unless name.starts_with?(".")
+          "#{key}/#{name}"
+        end
+      end
+    end
 
     if name == "all"
       keys = allowed_keys
