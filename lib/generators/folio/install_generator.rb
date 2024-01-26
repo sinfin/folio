@@ -20,7 +20,6 @@ module Folio
         gem "rack-mini-profiler"
         gem "show_for"
         gem "sprockets", "~> 4.0"
-        gem "sprockets-rails" # remove if twice in Gemfile
         gem "sentry-raven"
         gem "omniauth"
         gem "omniauth-facebook"
@@ -31,8 +30,7 @@ module Folio
 
         gem "faker", require: false
 
-        gem "dragonfly_libvips", github: "sinfin/dragonfly_libvips", branch: "more_geometry" # could not be in gemspec, because of GITHUB
-
+        gem "view_component"
         gem "cells-rails", "~> 0.1.5"
         gem "cells-slim", "~> 0.0.6" # version 0.1.0 drops Rails support and I was not able to make it work
 
@@ -90,8 +88,6 @@ module Folio
           "app/models/application_namespace_path/page/homepage.rb",
           "app/models/application_record.rb",
           "app/models/concerns/application_namespace_path/menu/base.rb",
-          "app/overrides/cells/folio/ui/atoms_cell_override.rb",
-          "app/overrides/cells/folio/ui_cell_override.rb",
           "app/overrides/controllers/folio/console/api/links_controller_override.rb",
           "app/views/application_namespace_path/home/index.slim",
           "app/views/application_namespace_path/pages/show.slim",
