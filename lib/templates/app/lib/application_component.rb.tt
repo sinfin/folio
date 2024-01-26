@@ -6,6 +6,8 @@ class ApplicationComponent < Folio::ApplicationComponent
     current_user
     user_signed_in?
     current_menus
+    current_header_menu
+    current_footer_menu
     current_page_singleton
   ].each do |name|
     define_method(name) do |*args, **kwargs|

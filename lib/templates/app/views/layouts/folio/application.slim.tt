@@ -19,7 +19,6 @@ html[
 
     == cell('folio/sensitive_content_modal')
 
-
     = yield :modals
     == cell('folio/devise/modal')
     == cell('folio/devise/omniauth/forms')
