@@ -38,7 +38,5 @@ Rails.application.routes.draw do
     end
   end
 
-  scope "/:locale", locale: /#{I18n.available_locales.join("|")}/ do
-    resources :pages, controller: "<%= application_namespace_path %>/pages", only: [:show], path: ""
-  end
+  resources :pages, controller: "<%= application_namespace_path %>/pages", only: [:show], path: ""
 end
