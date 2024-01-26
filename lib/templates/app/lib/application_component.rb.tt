@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+class ApplicationComponent < Folio::ApplicationComponent
+  %i[
+    cache_key_base
+    current_user
+    user_signed_in?
+    current_menus
+    current_page_singleton
+  ].each do |name|
+    define_method(name) do |*args, **kwargs|
+      controller.try(name, *args, **kwargs)
+    end
+  end
+end
