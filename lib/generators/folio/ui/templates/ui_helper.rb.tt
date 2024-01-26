@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+module <%= application_namespace %>::UiHelper
+  def <%= application_namespace_path %>_ui_button(**kwargs)
+    render(<%= application_namespace %>::Ui::ButtonComponent.new(**kwargs))
+  end
+
+  def <%= application_namespace_path %>_ui_buttons(**kwargs)
+    render(<%= application_namespace %>::Ui::ButtonsComponent.new(**kwargs))
+  end
+
+  def <%= application_namespace_path %>_ui_icon(name, **kwargs)
+    render(<%= application_namespace %>::Ui::IconComponent.new(name:, **kwargs))
+  end
+
+  def <%= application_namespace_path %>_ui_image(placement, size, **kwargs)
+    render(<%= application_namespace %>::Ui::ImageComponent.new(placement:, size:, **kwargs))
+  end
+
+  def <%= application_namespace_path %>_ui_tabs(**kwargs)
+    render(<%= application_namespace %>::Ui::TabsComponent.new(**kwargs))
+  end
+end

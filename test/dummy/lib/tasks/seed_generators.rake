@@ -143,6 +143,10 @@ class Dummy::SeedGenerator
     end
   end
 
+  def ui_helper(path)
+    copy_file(path, @templates_path.join("ui_helper.rb.tt"))
+  end
+
   def ui_routes(path)
     copy_file(path, @templates_path.join("ui-routes.rb.tt"))
   end
@@ -281,6 +285,8 @@ namespace :dummy do
       gen.ui_i18n_yamls(Rails.root.join("config/locales/ui.*.yml"))
 
       gen.ui_controllers(Rails.root.join("app/controllers/dummy/ui_controller.rb"))
+
+      gen.ui_helper(Rails.root.join("app/helpers/dummy/ui_helper.rb"))
 
       gen.ui_routes(Rails.root.join("config/routes/dummy/ui.rb"))
     end
