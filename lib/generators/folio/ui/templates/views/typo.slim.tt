@@ -65,4 +65,3 @@
 
             - if style_name.starts_with?('Text')
               = @lorem_ipsum[0..225]
-
