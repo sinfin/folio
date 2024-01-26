@@ -207,18 +207,22 @@ module Folio
           atom_data_path = Rails.root.join(atom_data_path_base)
 
           if File.exist?(atom_data_path)
-            atom_data = YAML.load_file(atom_data_path)
+            begin
+              atom_data = YAML.load_file(atom_data_path)
 
-            Dir[Rails.root.join("app/models/*/atom/**/*.rb")].each do |atom_file_path|
-              matches = File.read(atom_file_path).match(/class (?<atom_name>[\w:]+) < Folio::Atom::Base/)
+              Dir[Rails.root.join("app/models/*/atom/**/*.rb")].each do |atom_file_path|
+                matches = File.read(atom_file_path).match(/class (?<atom_name>[\w:]+) < Folio::Atom::Base/)
 
-              if matches && matches[:atom_name]
-                if atom_data["atoms"][matches[:atom_name]].blank?
-                  deprecations << "Missing atoms_showcase.yml data for atom - #{matches[:atom_name]}"
+                if matches && matches[:atom_name]
+                  if atom_data["atoms"][matches[:atom_name]].blank?
+                    deprecations << "Missing atoms_showcase.yml data for atom - #{matches[:atom_name]}"
+                  end
+                else
+                  deprecations << "Invalid atom model code - #{atom_file_path}"
                 end
-              else
-                deprecations << "Invalid atom model code - #{atom_file_path}"
               end
+            rescue StandardError => e
+              deprecations << "Failed reading atoms_showcase - #{e}"
             end
           else
             deprecations << "Missing #{atom_data_path_base}"

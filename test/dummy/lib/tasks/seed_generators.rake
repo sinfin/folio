@@ -55,7 +55,7 @@ class Dummy::SeedGenerator
     template_atom_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_atom_dir
 
-    copy_file(atom_path, template_atom_dir.join("#{name}.rb.tt"))
+    copy_file(atom_path, template_atom_dir.join("#{File.basename(name)}.rb.tt"))
 
     template_atom_component_dir = template_atom_dir.join("component")
 

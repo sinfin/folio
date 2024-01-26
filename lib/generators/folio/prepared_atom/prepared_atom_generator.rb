@@ -15,7 +15,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     dirs = %w[images cards]
 
     allowed_keys = Dir.entries(Folio::Engine.root.join("lib/generators/folio/prepared_atom/templates")).reject do |name|
-      name.include?(".") || dirs.include?(name)
+      name.include?(".") || dirs.include?(name) || name == "data"
     end
 
     dirs.each do |key|
@@ -39,22 +39,24 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     keys.each do |key|
       @atom_name = key
 
-      Dir["#{base}#{key}/#{key}.rb.tt"].each do |path|
+      Dir["#{base}#{key}/#{File.basename(key)}.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/models/#{application_namespace_path}/atom/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/")}"
+        template relative_path, "app/models/#{application_namespace_path}/atom/#{File.dirname(relative_path.delete_suffix('.tt'))}.rb"
       end
 
-      is_molecule = File.read("#{base}#{key}/#{key}.rb.tt").match?("self.molecule")
+      content = File.read("#{base}#{key}/#{File.basename(key)}.rb.tt")
+      is_molecule = content.match?("self.molecule") || content.match?(/MOLECULE\s*=\s*true/)
       component_directory = is_molecule ? "molecule" : "atom"
 
-      Dir["#{base}#{key}/component/#{key}_component.*.tt"].each do |path|
+      Dir["#{base}#{key}/component/#{File.basename(key)}_component.*.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/component/")}"
+
+        template relative_path, "app/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component#{File.extname(relative_path.delete_suffix('.tt'))}")}"
       end
 
-      Dir["#{base}#{key}/component/#{key}_component_test.rb.tt"].each do |path|
+      Dir["#{base}#{key}/component/#{File.basename(key)}_component_test.rb.tt"].each do |path|
         relative_path = path.to_s.delete_prefix(base)
-        template relative_path, "test/components/#{application_namespace_path}/#{component_directory}/#{relative_path.delete_suffix('.tt').delete_prefix("#{key}/component/")}"
+        template relative_path, "test/components/#{application_namespace_path}/#{component_directory}/#{relative_path.gsub(/\/component\/.+/, "_component_test#{File.extname(relative_path.delete_suffix('.tt'))}")}"
       end
 
       i18n_path = "#{base}#{key}/i18n.yml"
@@ -67,6 +69,8 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
 
   def update_controller
     template "atoms_controller.rb.tt", "app/controllers/#{application_namespace_path}/atoms_controller.rb"
+
+    template "data/atoms_showcase.yml.tt", "data/atoms_showcase.yml"
 
     routes_s = File.read(folio_generators_root.join("config/routes.rb"))
 

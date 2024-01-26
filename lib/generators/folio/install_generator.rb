@@ -105,7 +105,6 @@ module Folio
           "config/locales/application_namespace_path/menu.en.yml",
           "config/routes.rb",
           "config/sitemap.rb",
-          "data/atoms_showcase.yml",
           "data/seed/pages/homepage.yml",
           "data/seed/sites.yml",
           "db/migrate/20220120132205_rm_files_mime_type_column.rb",
