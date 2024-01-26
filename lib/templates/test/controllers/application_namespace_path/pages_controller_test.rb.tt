@@ -2,12 +2,11 @@
 
 require "test_helper"
 
-class <%= application_namespace %>::HomeControllerTest < ActionDispatch::IntegrationTest
+class <%= application_namespace %>::PagesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   setup do
     create_and_host_site
-    Rails.application.routes.default_url_options[:locale] = @site.locale
   end
 
   test "show" do
@@ -27,9 +26,7 @@ class <%= application_namespace %>::HomeControllerTest < ActionDispatch::Integra
         get url_for(page)
       end
 
-      sign_in create(:folio_user, :superadmin)
-
-      get url_for(page)
+      get url_for([page, Folio::Publishable::PREVIEW_PARAM_NAME => page.preview_token])
       assert_response(:ok)
       assert_select("h1", "test page")
     end
