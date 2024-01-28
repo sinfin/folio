@@ -23,6 +23,10 @@ module Folio::DragonflyFormatValidation
         end
       end
 
+      define_singleton_method :formats do
+        formats
+      end
+
       define_singleton_method :valid_mime_types do
         mime_types
       end
