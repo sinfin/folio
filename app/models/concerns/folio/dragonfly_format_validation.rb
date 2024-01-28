@@ -12,6 +12,10 @@ module Folio::DragonflyFormatValidation
           mime_types << "image/svg+xml"
         elsif f == "pdf"
           mime_types << "application/pdf"
+        elsif f == "doc"
+          mime_types << "application/msword"
+        elsif f == "docx"
+          mime_types << "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         elsif f.include?("/")
           mime_types << f
         else
