@@ -23,7 +23,7 @@ module Folio::DragonflyFormatValidation
         end
       end
 
-      define_singleton_method :formats do
+      define_singleton_method :valid_formats do
         formats
       end
 
