@@ -1,0 +1,94 @@
+.f-c-private-attachments-fields data=data
+  h2.f-c-private-attachments-fields__title
+    = @file_klass.model_name.human(count: @single ? 1 : 2)
+
+  .f-c-private-attachments-fields__attachments[
+    data=stimulus_target("attachmentsWrap")
+  ]
+    - if @attachments.present?
+      .f-c-private-attachments-fields__fields-loader[
+        data=loader_data
+      ]
+        .folio-loader
+
+  .f-c-private-attachments-fields__destroyed[
+    data=stimulus_target('destroyed')
+    hidden=true
+  ]
+    - @marked_for_destruction.each do |attachment|
+      .f-c-private-attachments-fields__attachment
+        .f-c-private-attachments-fields__attachment-inner
+          .f-c-private-attachments-fields__inputs hidden=true
+            - %i[id _destroy].each do |key|
+              input[
+                type="hidden"
+                name="#{base_key}[#{attachment.id}][#{key}]"
+                class="f-c-private-attachments-fields__input"
+                class="f-c-private-attachments-fields__input--#{key}"
+                value=(key == :_destroy ? 1 : attachment.send(key))
+                data=input_data(key)
+              ]
+
+  .f-c-private-attachments-fields__add-wrap[
+    data=stimulus_target('addWrap')
+    hidden=(@single ? @attachments.present? : false)
+  ]
+    == add_button
+
+  .f-c-private-attachments-fields__attachment-template[
+    data=stimulus_target("template")
+    hidden=true
+  ]
+    .f-c-private-attachments-fields__attachment
+      .f-c-private-attachments-fields__attachment-progress
+      .f-c-private-attachments-fields__attachment-inner
+        .f-c-private-attachments-fields__inputs hidden=true
+          - %i[id position _destroy].each do |key|
+            input[
+              type="hidden"
+              name=key
+              class="f-c-private-attachments-fields__input"
+              class="f-c-private-attachments-fields__input--#{key}"
+              data=input_data(key)
+            ]
+
+        .f-c-private-attachments-fields__attachment-loader
+          span.folio-loader.folio-loader--small.folio-loader--transparent
+
+        a.f-c-private-attachments-fields__attachment-link[
+          href="#"
+          target="_blank"
+        ]
+          = folio_icon(:file_document, height: 24)
+
+        input.form-control[
+          class="f-c-private-attachments-fields__input"
+          class="f-c-private-attachments-fields__input--title"
+          type="text"
+          name="title"
+          placeholder=@file_klass.human_attribute_name(:title)
+        ]
+
+        button[
+          class="f-c-private-attachments-fields__action"
+          class="f-c-private-attachments-fields__action--move"
+          class="f-c-private-attachments-fields__action--move-up"
+          data=stimulus_action('onArrowUpClick')
+        ]
+          = folio_icon(:arrow_up)
+
+        button[
+          class="f-c-private-attachments-fields__action"
+          class="f-c-private-attachments-fields__action--move"
+          class="f-c-private-attachments-fields__action--move-down"
+          data=stimulus_action('onArrowDownClick')
+        ]
+          = folio_icon(:arrow_down)
+
+        button[
+          class="f-c-private-attachments-fields__action"
+          class="f-c-private-attachments-fields__action--destroy"
+          class="text-danger"
+          data=stimulus_action('onDestroyClick')
+        ]
+          = folio_icon(:delete)

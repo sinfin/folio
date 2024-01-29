@@ -135,7 +135,7 @@ module Folio::Console::Api::FileControllerBase
     end
 
     def index_cache_key
-      "folio/console/api/file/#{@klass.model_name.plural}/index/#{@klass.count}/#{@klass.maximum(:updated_at)}"
+      "folio/console/api/site/#{current_site.id}/file/#{@klass.model_name.plural}/index/#{@klass.count}/#{@klass.maximum(:updated_at)}"
     end
 
     def allowed_record_sites

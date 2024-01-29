@@ -46,6 +46,8 @@ $info: $shade-200
 $warning: $status-caution
 $danger: $status-error
 
+$gradient-100: linear-gradient(180deg, rgba($black, 0) 0%, $black 100%)
+
 $container-fluid-max-width: 1280px
 $font-size-media-breakpoint-s: sm
 $font-size-media-breakpoint-m: lg
@@ -187,7 +189,7 @@ $input-placeholder-color: $shade-400
 
 $transition-base: all .2s ease-in-out
 
-$border-color: rgba(0, 0, 0, 0.15)
+$border-color: $shade-300
 
 $border-radius: px-to-rem(12px)
 $border-radius-lg: px-to-rem(24px)
@@ -264,3 +266,6 @@ $form-label-font-size: $ui-typo-text-s-font-size
 $form-label-font-weight: $font-weight-medium
 
 $table-variants: ( )
+
+$hr-border-color: $shade-300
+$hr-opacity: 1

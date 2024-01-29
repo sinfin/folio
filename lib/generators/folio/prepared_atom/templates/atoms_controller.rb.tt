@@ -6,17 +6,33 @@ class <%= application_namespace %>::AtomsController < ApplicationController
   def show
     @root_data = YAML.load_file(Rails.root.join("data/atoms_showcase.yml"))
 
+    add_breadcrumb t("activerecord.models.folio/atom", count: 2), <%= application_namespace_path %>_atoms_path
+
     if params[:atom]
       @atom_klass = params[:atom].safe_constantize
 
       if @atom_klass && @atom_klass < Folio::Atom::Base && atom_data = @root_data["atoms"][@atom_klass.to_s]
-        @atom_data = atom_data.map do |hash|
-          attrs = attrs_from_hash(hash)
-          [attrs, @atom_klass.new(attrs)]
+        atom_data_src = atom_data
+
+        if params[:screenshot]
+          @screenshot = true
+
+          hash_for_screenshot = atom_data.find { |hash| hash["_screenshot"] }
+          atom_data_src = [hash_for_screenshot || atom_data.first]
         end
 
-        add_breadcrumb "Atoms", <%= application_namespace_path %>_atoms_path
-        add_breadcrumb <%= application_namespace_path %>_atoms_path(atom: @atom_klass)
+        @atom_data ||= atom_data_src.map do |hash|
+          attrs = attrs_from_hash(hash)
+
+          if @atom_klass.molecule?
+            count = attrs.delete(:_count) || 1
+            [attrs, Array.new(count) { @atom_klass.new(attrs) }]
+          else
+            [attrs, [@atom_klass.new(attrs)]]
+          end
+        end
+
+        add_breadcrumb @atom_klass.model_name.human, <%= application_namespace_path %>_atoms_path(atom: @atom_klass)
       else
         redirect_to <%= application_namespace_path %>_atoms_path
         nil
@@ -31,15 +47,31 @@ class <%= application_namespace %>::AtomsController < ApplicationController
 
   private
     def only_allow_superusers
-      authenticate_account!
+      return if params[:atom] && params[:screenshot]
 
-      unless current_account.has_role?(:superuser)
+      authenticate_user!
+
+      unless current_user.can_now?(:display_ui)
         redirect_to root_path
       end
     end
 
+    def images_for_attrs
+      @images_for_attrs ||= (Folio::File::Image.tagged_with("unsplash").limit(10).presence || Folio::File::Image.limit(10)).to_a
+    end
+
     def attrs_from_hash(hash)
-      attrs = hash.deep_symbolize_keys
+      attrs = hash.deep_symbolize_keys.without(:_screenshot)
+
+      if attrs[:cover] == true
+        attrs[:cover] = images_for_attrs.sample
+      end
+
+      if attrs[:images] == true
+        attrs[:images] = images_for_attrs
+      elsif attrs[:images].is_a?(Numeric)
+        attrs[:images] = images_for_attrs.first(attrs[:images])
+      end
 
       @root_data["values_for_true"].symbolize_keys.each do |key, value|
         if attrs[key] == true

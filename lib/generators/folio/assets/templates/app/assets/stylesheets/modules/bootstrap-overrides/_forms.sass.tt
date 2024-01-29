@@ -17,3 +17,9 @@ abbr[title]
 
   &:focus
     border: 1px solid $shade-light-contrast
+
+.form-control,
+.form-select,
+.form-check-input
+  &--hinted
+    box-shadow: 0 0 12px 2px $brand-100 !important

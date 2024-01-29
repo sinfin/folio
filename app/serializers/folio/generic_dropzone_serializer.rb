@@ -8,7 +8,8 @@ class Folio::GenericDropzoneSerializer
              :file_name,
              :file_width,
              :file_height,
-             :type
+             :type,
+             :title
 
   attribute :source_url do |object|
     object.file.remote_url

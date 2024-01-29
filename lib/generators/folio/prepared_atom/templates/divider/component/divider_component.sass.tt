@@ -1,0 +1,13 @@
+.<%= classname_prefix %>-atom-divider
+  &__hr
+    margin-top: 0
+    margin-bottom: 0
+
+  &--thin &__hr
+    border-color: $transparent-100
+
+  &--thick &__hr
+    --bs-border-width: 2px
+
+  &--invisible &__hr
+    visibility: hidden

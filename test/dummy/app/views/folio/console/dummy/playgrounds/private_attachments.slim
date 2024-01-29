@@ -1,0 +1,29 @@
+h1 Private attachments
+
+h2 Regular
+
+= simple_form_for @page, url: main_app.update_private_attachments_console_dummy_playground_path(@page), method: :patch do |f|
+  = f.input :title
+
+  = render(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:))
+
+  .mt-5
+    == cell('folio/console/ui/button',
+            type: :submit,
+            label: "Save",
+            icon: :check)
+
+hr.my-5
+
+h2 Single
+
+= simple_form_for @page, url: main_app.update_private_attachments_console_dummy_playground_path(@page), method: :patch do |f|
+  = f.input :title
+
+  = render(Folio::Console::PrivateAttachmentsFieldsComponent.new(f:, single: true))
+
+  .mt-5
+    == cell('folio/console/ui/button',
+            type: :submit,
+            label: "Save",
+            icon: :check)

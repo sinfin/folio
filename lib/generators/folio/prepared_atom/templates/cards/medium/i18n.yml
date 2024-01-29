@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/medium: 
+    models:
+      application_namespace_path/atom/cards/medium: Karta - střední
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/medium: 
+    models:
+      application_namespace_path/atom/cards/medium: Card - medium

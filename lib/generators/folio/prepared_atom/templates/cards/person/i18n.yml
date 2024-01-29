@@ -1,0 +1,16 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/person:
+        large: Velký obrázek
+        job: Pozice
+    models:
+      application_namespace_path/atom/cards/person: Karta - osoba
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/person:
+        large: Big image
+    models:
+      application_namespace_path/atom/cards/person: Card - person

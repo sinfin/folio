@@ -17,6 +17,11 @@
     flex: 0 0 16px
     position: relative
 
+  &--dropzone &__icon,
+  &--dropzone &__right-icon,
+  &--dropzone &__label
+    pointer-events: none
+
   +media-breakpoint-down(sm)
     &--hide-label-on-mobile &__label
       display: none

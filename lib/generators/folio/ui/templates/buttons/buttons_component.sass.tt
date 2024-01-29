@@ -1,4 +1,4 @@
-$<%= classname_prefix %>-ui-buttons-gap: $grid-gutter-width / 4 !default
+$<%= classname_prefix %>-ui-buttons-gap: $grid-gutter-half !default
 
 .<%= classname_prefix %>-ui-buttons
   display: flex

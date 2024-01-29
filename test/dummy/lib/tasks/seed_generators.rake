@@ -55,7 +55,7 @@ class Dummy::SeedGenerator
     template_atom_dir = @templates_path.join(name)
     FileUtils.mkdir_p template_atom_dir
 
-    copy_file(atom_path, template_atom_dir.join("#{name}.rb.tt"))
+    copy_file(atom_path, template_atom_dir.join("#{File.basename(name)}.rb.tt"))
 
     template_atom_component_dir = template_atom_dir.join("component")
 
@@ -128,6 +128,8 @@ class Dummy::SeedGenerator
   def atoms_controllers(path)
     copy_file(path, @templates_path.join("atoms_controller.rb.tt"))
 
+    copy_file(Rails.root.join("data/atoms_showcase.yml"), @templates_path.join("data/atoms_showcase.yml.tt"))
+
     Dir[Rails.root.join("app/views/dummy/atoms/show.slim")].each do |path|
       name = File.basename(path)
       copy_file(path, @templates_path.join("#{name}.tt"))
@@ -141,6 +143,10 @@ class Dummy::SeedGenerator
       name = File.basename(path)
       copy_file(path, @templates_path.join("views/#{name}.tt"))
     end
+  end
+
+  def ui_helper(path)
+    copy_file(path, @templates_path.join("ui_helper.rb.tt"))
   end
 
   def ui_routes(path)
@@ -210,11 +216,9 @@ class Dummy::SeedGenerator
          .gsub("dummy/ui", "<%= application_namespace_path %>/ui")
          .gsub("dummy/blog", "<%= application_namespace_path %>/blog")
          .gsub("dummy/search", "<%= application_namespace_path %>/search")
-         .gsub("dummy/atom/blog", "<%= application_namespace_path %>/atom/blog")
-         .gsub("dummy/molecule/blog", "<%= application_namespace_path %>/molecule/blog")
+         .gsub("dummy/atom", "<%= application_namespace_path %>/atom")
+         .gsub("dummy/molecule", "<%= application_namespace_path %>/molecule")
          .gsub("dummy_menu", "<%= application_namespace_path %>_menu")
-         .gsub(%r{dummy/atom/[\w/]+}, "<%= atom_cell_name %>")
-         .gsub(%r{"dummy/molecule/.*"}, '"<%= molecule_cell_name %>"')
     end
 
     def scaffold(key)
@@ -283,6 +287,8 @@ namespace :dummy do
       gen.ui_i18n_yamls(Rails.root.join("config/locales/ui.*.yml"))
 
       gen.ui_controllers(Rails.root.join("app/controllers/dummy/ui_controller.rb"))
+
+      gen.ui_helper(Rails.root.join("app/helpers/dummy/ui_helper.rb"))
 
       gen.ui_routes(Rails.root.join("config/routes/dummy/ui.rb"))
     end

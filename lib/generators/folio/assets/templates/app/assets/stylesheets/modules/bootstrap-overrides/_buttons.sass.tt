@@ -106,3 +106,12 @@
 .btn-info
   --#{$prefix}btn-bg: #{$info}
   --#{$prefix}btn-color: #{$shade-black-contrast}
+
+.btn-redactor
+  --#{$prefix}btn-bg: #{$brand-100}
+  --#{$prefix}btn-color: #{$color-over-brand-100}
+
+.btn-redactor--outline
+  --#{$prefix}btn-bg: #{$shade-light-contrast}
+  --#{$prefix}btn-color: #{$brand-100}
+  --#{$prefix}btn-border-color: #{$brand-100}

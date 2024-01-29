@@ -1,8 +1,11 @@
 .<%= classname_prefix %>-ui-breadcrumbs
-  margin: map-get($spacers, 4) 0
+  margin: 0 0 2 * $grid-gutter-base
   position: relative
   z-index: 3
   flex: 0 0 auto
+
+  // .<%= classname_prefix %>-ui-header ~ &
+  //   margin-top: - $grid-gutter-half
 
   &__container
     display: flex

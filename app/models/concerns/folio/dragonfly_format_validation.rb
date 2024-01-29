@@ -12,11 +12,19 @@ module Folio::DragonflyFormatValidation
           mime_types << "image/svg+xml"
         elsif f == "pdf"
           mime_types << "application/pdf"
+        elsif f == "doc"
+          mime_types << "application/msword"
+        elsif f == "docx"
+          mime_types << "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         elsif f.include?("/")
           mime_types << f
         else
           mime_types << "image/#{f}"
         end
+      end
+
+      define_singleton_method :valid_formats do
+        formats
       end
 
       define_singleton_method :valid_mime_types do

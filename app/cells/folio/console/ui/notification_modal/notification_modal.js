@@ -42,7 +42,13 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
 
   submit (e) {
     e.preventDefault()
-    this.trigger.closest('form').submit()
+    const form = this.trigger.closest('form')
+
+    form.requestSubmit()
+
+    if (this.closeOnSubmit) {
+      this.bsModal.hide()
+    }
   }
 
   onTrigger (e) {
@@ -85,6 +91,10 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
           label: window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
           data: { action: 'f-c-ui-notification-modal#submit' }
         })
+
+        if (e.detail.modal.closeOnSubmit) {
+          this.closeOnSubmit = e.detail.modal.closeOnSubmit
+        }
       }
 
       footer.innerHTML = ''

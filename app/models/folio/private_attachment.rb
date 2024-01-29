@@ -18,6 +18,10 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   validates :file,
             presence: true
 
+  def self.human_type
+    "document"
+  end
+
   def title
     super.presence || file_name
   end

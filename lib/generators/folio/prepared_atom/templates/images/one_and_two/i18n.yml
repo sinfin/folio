@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/one_and_two: 
+    models:
+      application_namespace_path/atom/images/one_and_two: Obrázky - 1 & 2
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/images/one_and_two: 
+    models:
+      application_namespace_path/atom/images/one_and_two: Images - 1 & 2

@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Molecule::Cards::LogoComponentTest < Folio::ComponentTest
+  def test_render
+    atoms = [create_atom(<%= application_namespace %>::Atom::Cards::Logo, :cover)]
+
+    render_inline(<%= application_namespace %>::Molecule::Cards::LogoComponent.new(atoms:))
+
+    assert_selector(".<%= classname_prefix %>-molecule-cards-logo")
+  end
+end

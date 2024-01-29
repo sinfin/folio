@@ -1,0 +1,21 @@
+.<%= classname_prefix %>-atom.my-atom-lg class=bem_class_name
+  .container-fluid
+    .<%= classname_prefix %>-atom-quotation__inner
+      .<%= classname_prefix %>-atom-quotation__symbol
+        = <%= application_namespace_path %>_ui_icon(:quote,
+                        height: 48,
+                        class_name: '<%= classname_prefix %>-atom-quotation__symbol-icon')
+
+      .<%= classname_prefix %>-atom-quotation__body.fs-text-m
+        .<%= classname_prefix %>-atom-quotation__text.<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+          == @atom.content
+
+        - if @atom.title.present? || @atom.subtitle.present?
+          .<%= classname_prefix %>-atom-quotation__meta
+            - if @atom.title.present?
+              .<%= classname_prefix %>-atom-quotation__title
+                = @atom.title
+
+            - if @atom.subtitle.present?
+              .<%= classname_prefix %>-atom-quotation__subtitle
+                = @atom.subtitle

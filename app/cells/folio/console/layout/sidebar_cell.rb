@@ -129,7 +129,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
 
   def main_class_names
     shared_links = []
-    sites = (current_site == Folio.main_site) ? Folio::Site.ordered : [current_site]
+    sites = (current_site == Folio.main_site || current_user.superadmin?) ? Folio::Site.ordered : [current_site]
     if ::Rails.application.config.folio_shared_files_between_sites
       shared_links = [{
         locale: Folio.main_site.console_locale,

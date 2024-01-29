@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Ui::EmbedComponentTest < Folio::ComponentTest
+  def test_render
+    render_inline(<%= application_namespace %>::Ui::EmbedComponent.new(html: "hello", caption: "Embed caption"))
+
+    assert_selector(".<%= classname_prefix %>-ui-embed")
+  end
+end

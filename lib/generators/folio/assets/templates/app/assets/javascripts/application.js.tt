@@ -32,3 +32,6 @@
 //= require <%= application_namespace_path %>/ui/menu_toolbar/header_search_component
 //= require <%= application_namespace_path %>/ui/menu_toolbar/dropdown_component
 //= require <%= application_namespace_path %>/ui/menu_toolbar/shopping_cart_component
+
+//= require <%= application_namespace_path %>/atom/images/gallery_component
+//= require <%= application_namespace_path %>/molecule/cards/full_width_component

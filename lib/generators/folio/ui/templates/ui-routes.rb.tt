@@ -7,6 +7,7 @@ scope module: :<%= application_namespace_path %>, as: :<%= application_namespace
     get :breadcrumbs
     get :buttons
     get :chips
+    get :embed
     get :forms
     get :icons
     get :images

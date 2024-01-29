@@ -5,6 +5,8 @@
   --<%= application_namespace_path %>-brand-200: #{$purple-300}
   --<%= application_namespace_path %>-brand-300: #{$cloud-900}
   --<%= application_namespace_path %>-brand-400: #{$cloud-100}
+  --<%= application_namespace_path %>-color-over-brand-100: #{$white}
+  --<%= application_namespace_path %>-color-over-brand-200: #{$white}
   --<%= application_namespace_path %>-link-default: #{$blue-400}
   --<%= application_namespace_path %>-shade-100: #{$cloud-100}
   --<%= application_namespace_path %>-shade-200: #{$cloud-200}
@@ -19,6 +21,7 @@
   --<%= application_namespace_path %>-status-caution: #{$orange-400}
   --<%= application_namespace_path %>-status-disabled-100: #{$cloud-300}
   --<%= application_namespace_path %>-status-error: #{$red-400}
+  --<%= application_namespace_path %>-status-neutral: #{$blue-500}
   --<%= application_namespace_path %>-status-success: #{$emerald-500}
   --<%= application_namespace_path %>-transparent-100: #0000000d
   --<%= application_namespace_path %>-transparent-200: #0000001a
@@ -42,6 +45,8 @@
   --<%= application_namespace_path %>-brand-200: #{$purple-300}
   --<%= application_namespace_path %>-brand-300: #{$cloud-900}
   --<%= application_namespace_path %>-brand-400: #{$cloud-900}
+  --<%= application_namespace_path %>-color-over-brand-100: #{$white}
+  --<%= application_namespace_path %>-color-over-brand-200: #{$white}
   --<%= application_namespace_path %>-link-default: #{$blue-300}
   --<%= application_namespace_path %>-shade-100: #{$cloud-800}
   --<%= application_namespace_path %>-shade-200: #{$cloud-700}
@@ -56,6 +61,7 @@
   --<%= application_namespace_path %>-status-caution: #{$orange-400}
   --<%= application_namespace_path %>-status-disabled-100: #{$cloud-500}
   --<%= application_namespace_path %>-status-error: #{$red-300}
+  --<%= application_namespace_path %>-status-neutral: #{$blue-300}
   --<%= application_namespace_path %>-status-success: #{$emerald-400}
   --<%= application_namespace_path %>-transparent-100: #ffffff0d
   --<%= application_namespace_path %>-transparent-200: #ffffff1a
