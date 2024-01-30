@@ -5,16 +5,16 @@ window.Folio.Stimulus.register('d-ui-clipboard', class extends window.Stimulus.C
     clipboard: Object
   }
 
-  connect() {
+  connect () {
     this.bindClipboardsIn(document.body)
     this.onClipboardsIn.bind(this)
   }
 
-  disconnect() {
+  disconnect () {
     this.unbindClipboardsIn(document.body)
   }
 
-  bindClipboardsIn(wrap) {
+  bindClipboardsIn (wrap) {
     this.unbindClipboardsIn(wrap)
 
     const clipboardElements = wrap.querySelectorAll('.d-ui-clipboard')
@@ -26,7 +26,7 @@ window.Folio.Stimulus.register('d-ui-clipboard', class extends window.Stimulus.C
     })
   }
 
-  unbindClipboardsIn(wrap) {
+  unbindClipboardsIn (wrap) {
     const clipboardElements = wrap.querySelectorAll('.d-ui-clipboard')
 
     clipboardElements.forEach((element) => {
@@ -44,7 +44,7 @@ window.Folio.Stimulus.register('d-ui-clipboard', class extends window.Stimulus.C
     })
   }
 
-  onClipboardsIn(e) {
+  onClipboardsIn (e) {
     const trigger = e.trigger
     trigger.classList.add('d-ui-clipboard--copied')
     setTimeout(() => trigger.classList.remove('d-ui-clipboard--copied'), 1000)
