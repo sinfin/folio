@@ -10,6 +10,11 @@
 
       = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world default'))
 
+      h3 Colored - text-danger
+
+      .text-danger
+        = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world danger'))
+
       h3 With height: 24
 
       = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world 24',
