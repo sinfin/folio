@@ -13,6 +13,6 @@ class Folio::Console::Ui::NotificationModalCell < Folio::ConsoleCell
   end
 
   def data
-    stimulus_controller('f-c-ui-notification-modal')
+    stimulus_controller("f-c-ui-notification-modal")
   end
 end
