@@ -9,6 +9,7 @@ class Dummy::UiController < ApplicationController
       boolean_toggles
       breadcrumbs
       buttons
+      documents
       chips
       clipboard
       embed
