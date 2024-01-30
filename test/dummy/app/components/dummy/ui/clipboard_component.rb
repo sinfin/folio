@@ -7,6 +7,7 @@ class Dummy::Ui::ClipboardComponent < ApplicationComponent
   end
 
   def data
-    stimulus_controller("d-ui-clipboard")
+    stimulus_controller("d-ui-clipboard",
+                        classes: %w[copied])
   end
 end
