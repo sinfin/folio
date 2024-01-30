@@ -1,7 +1,7 @@
 .f-c-ui-ajax-input[
   class=(@width ? "f-c-ui-ajax-input--#{@width}" : nil)
   class=(@disabled ? "f-c-ui-ajax-input--disabled" : nil)
-  title=@disabled
+  title=(@disabled.is_a?(String) ? @disabled : nil)
   data=data
 ]
   - if @label

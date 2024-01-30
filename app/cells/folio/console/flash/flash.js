@@ -2,6 +2,19 @@ window.FolioConsole = window.FolioConsole || {}
 window.FolioConsole.Flash = {}
 
 window.FolioConsole.Flash.flash = (data) => {
+  const contents = document.querySelectorAll('.f-c-ui-alert__content')
+  let targetContent
+
+  for (const content of contents) {
+    if (content.dataset.content === data.content) {
+      const counter = parseInt(content.dataset.counter) + 1
+      content.innerHTML = `${content.dataset.content} (${counter})`
+      content.dataset.counter = counter
+
+      return
+    }
+  }
+
   const alert = window.FolioConsole.Ui.Alert.create({
     ...data,
     flash: true

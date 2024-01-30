@@ -37,6 +37,8 @@ window.FolioConsole.Ui.Alert.create = (data) => {
   const content = document.createElement('div')
   content.className = 'f-c-ui-alert__content'
   content.innerHTML = data.content
+  content.dataset.content = data.content
+  content.dataset.counter = 1
   container.appendChild(content)
 
   const closeBtn = document.createElement('button')
