@@ -80,7 +80,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
       if (e.detail.modal.cancel) {
         buttonsData.push({
           variant: 'tertiary',
-          label: window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
+          label: typeof e.detail.modal.cancel === "string" ? e.detail.modal.cancel : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
           data: { bsDismiss: 'modal' }
         })
       }
@@ -88,7 +88,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
       if (e.detail.modal.submit) {
         buttonsData.push({
           variant: 'primary',
-          label: window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
+          label: typeof e.detail.modal.submit === "string" ? e.detail.modal.submit : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
           data: { action: 'f-c-ui-notification-modal#submit' }
         })
 
