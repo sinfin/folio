@@ -6,6 +6,5 @@
     .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Documents - #{theme}
 
-      model = "hello"
-
-      = render(Dummy::Ui::DocumentsComponent.new(model:))
+      = render(Dummy::Ui::DocumentsComponent.new(@documents))
+      = render(Dummy::Ui::DocumentsComponent.new(@documents, title: "Titled filelist"))

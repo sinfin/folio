@@ -132,6 +132,14 @@ class Dummy::UiController < ApplicationController
     ]
   end
 
+  def documents
+    @documents = Folio::File::Document.last(3)
+
+    @documents.map do |doc|
+      Folio::FilePlacement::Document.new(file: doc)
+    end
+  end
+
   private
     def only_allow_superadmins
       authenticate_user!

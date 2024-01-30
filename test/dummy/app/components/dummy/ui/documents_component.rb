@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 class Dummy::Ui::DocumentsComponent < ApplicationComponent
- include ActionView::Helpers::NumberHelper
+
+  def initialize(placement, title: nil)
+    @placement = placement
+    @title = title
+   end
+
+  include ActionView::Helpers::NumberHelper
 
   def label(placement)
     ext = placement.file.file_extension.presence.try(:upcase)
