@@ -1,0 +1,43 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-full-width.my-atom-lg[
+  data=data.merge('bs-theme' => 'dark')
+]
+  - @atoms.each_with_index do |atom, slide_i|
+    - active_slide = slide_i == current_slide_index
+    - buttons_ary = buttons_ary(atom)
+
+    .<%= classname_prefix %>-molecule-cards-full-width__slide[
+      data=stimulus_target(:slide)
+      class=(active_slide ? '<%= classname_prefix %>-molecule-cards-full-width__slide--active' : nil)
+    ]
+      .<%= classname_prefix %>-molecule-cards-full-width__background
+        = <%= application_namespace_path %>_ui_image molecule_cover_placement(atom),
+                         THUMB_SIZE,
+                         class_name: '<%= classname_prefix %>-molecule-cards-full-width__image',
+                         cover: true
+
+      .container-fluid.<%= classname_prefix %>-molecule-cards-full-width__container
+        .<%= classname_prefix %>-molecule-cards-full-width__inner
+          .<%= classname_prefix %>-molecule-cards-full-width__content
+            h4.<%= classname_prefix %>-molecule-cards-full-width__card-title.fs-display-l
+              = atom.title
+
+            - if atom.content.present?
+              .<%= classname_prefix %>-molecule-cards-full-width__card-text.fs-text-l
+                .<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp
+                  = cstypo atom.content
+
+            - if buttons_ary.present?
+              .<%= classname_prefix %>-molecule-cards-full-width__card-btns
+                = <%= application_namespace_path %>_ui_buttons(buttons: buttons_ary)
+
+            - if @atoms.count > 1
+              .<%= classname_prefix %>-molecule-cards-full-width__controls
+                - @atoms.each_with_index do |_, dot_index|
+                  - active_dot = dot_index == current_slide_index
+
+                  button.<%= classname_prefix %>-molecule-cards-full-width__controls-dot[
+                    class=(active_dot ? '<%= classname_prefix %>-molecule-cards-full-width__controls-dot--active' : nil)
+                    data=dot_target_data
+                    data-index=dot_index
+                    type="button"
+                  ]

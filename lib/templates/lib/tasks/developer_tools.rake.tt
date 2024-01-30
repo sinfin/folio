@@ -35,17 +35,20 @@ namespace :developer_tools do
         data = YAML.load_file(yaml_path)
         klass = data["type"].constantize
 
-        if !klass.exists? || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
-          klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+        Folio::Site.find_each do |site|
+          if !klass.exists?(site:) || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
+            klass.where(site:).find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 
-          klass.create!(title: data["title"],
-                        perex: data["perex"],
-                        published: true,
-                        published_at: 1.minute.ago)
+            klass.create!(title: data["title"],
+                          perex: data["perex"],
+                          published: true,
+                          published_at: 1.minute.ago,
+                          site:)
 
-          puts "Created #{klass}"
-        else
-          puts "Skipping existing #{klass}"
+            puts "Created #{klass}"
+          else
+            puts "Skipping existing #{klass}"
+          end
         end
       end
     end
@@ -57,22 +60,25 @@ namespace :developer_tools do
         data = YAML.load_file(Rails.root.join("data/seed/page_titles.yml"))
 
         data.each do |attrs|
-          if Folio::Page.exists?(title: attrs["title"])
-            puts "Skipping existing #{attrs["title"]}"
-            next
-          else
-            record = Folio::Page.create!(title: attrs["title"],
-                                         perex: attrs["perex"],
-                                         published: true,
-                                         published_at: 1.minute.ago)
+          Folio::Site.find_each do |site|
+            if Folio::Page.exists?(title: attrs["title"], site:)
+              puts "Skipping existing #{attrs["title"]}"
+              next
+            else
+              record = Folio::Page.create!(title: attrs["title"],
+                                           perex: attrs["perex"],
+                                           published: true,
+                                           published_at: 1.minute.ago,
+                                           site:)
 
-            if attrs["atoms"].present?
-              attrs["atoms"].each do |attrs|
-                record.atoms.create!(attrs)
+              if attrs["atoms"].present?
+                attrs["atoms"].each do |attrs|
+                  record.atoms.create!(attrs)
+                end
               end
-            end
 
-            puts "Created #{attrs["title"]}"
+              puts "Created #{attrs["title"]}"
+            end
           end
         end
       end
@@ -108,28 +114,30 @@ namespace :developer_tools do
         data = YAML.load_file(yaml_path)
         klass = data["type"].constantize
 
-        if !klass.exists? || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
-          klass.find_each { |o| o.try(:force_destroy=, true); o.destroy! }
+        Folio::Site.find_each do |site|
+          if !klass.exists?(site:) || ENV["FORCE"] || ENV["FORCE_SINGLETON"] == klass.to_s
+            klass.where(site:).find_each { |o| o.try(:force_destroy=, true); o.destroy! }
 
-          menu = klass.create!(title: data["title"], locale: "en")
+            menu = klass.create!(title: data["title"], locale: "en", site:)
 
-          if data["links"].present?
-            count = 0
+            if data["links"].present?
+              count = 0
 
-            data["links"].each do |link|
-              mi = create_menu_item.call(menu, link, nil, count += 1)
+              data["links"].each do |link|
+                mi = create_menu_item.call(menu, link, nil, count += 1)
 
-              if link["children"]
-                link["children"].each do |child_link|
-                  create_menu_item.call(menu, child_link, mi, count += 1)
+                if link["children"]
+                  link["children"].each do |child_link|
+                    create_menu_item.call(menu, child_link, mi, count += 1)
+                  end
                 end
               end
             end
-          end
 
-          puts "Created #{klass}"
-        else
-          puts "Skipping existing #{klass}"
+            puts "Created #{klass}"
+          else
+            puts "Skipping existing #{klass}"
+          end
         end
       end
     end

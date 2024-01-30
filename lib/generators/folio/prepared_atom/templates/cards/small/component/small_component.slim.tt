@@ -1,0 +1,41 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-small.my-atom data=stimulus_lightbox
+  .container-fluid
+    .<%= classname_prefix %>-molecule-cards-small__flex
+      .<%= classname_prefix %>-molecule-cards-small__grid
+        - @atoms.each do |atom|
+          .<%= classname_prefix %>-molecule-cards-small__card[
+            class=(atom.button_url.present? ? "<%= classname_prefix %>-ui-image-hover-zoom-wrap" : nil)
+          ]
+            - if molecule_cover_placement(atom)
+              .<%= classname_prefix %>-molecule-cards-small__card-image-wrap
+                = <%= application_namespace_path %>_ui_image(molecule_cover_placement(atom),
+                                 THUMB_SIZE,
+                                 class_name: image_class_name,
+                                 lightbox: atom.button_url.blank?,
+                                 hover_zoom: true)
+
+            .<%= classname_prefix %>-molecule-cards-small__card-body
+              h4.fs-display-xs.m-0
+                = atom.title
+
+              - if atom.content.present?
+                .<%= classname_prefix %>-molecule-cards-small__card-text[
+                  class="<%= classname_prefix %>-rich-text <%= classname_prefix %>-rich-text--chomp fs-text-s mt-2"
+                ]
+                  = cstypo atom.content
+
+              - if atom.button_url.present? || atom.link_url.present?
+                .<%= classname_prefix %>-molecule-cards-small__card-btns
+                  - if atom.button_url.present?
+                    a.<%= classname_prefix %>-molecule-cards-small__card-button[
+                      class="btn btn-secondary bg-transparent"
+                      href=atom.button_url
+                    ]
+                      = atom.button_label
+
+                  - if atom.link_url.present?
+                    a.<%= classname_prefix %>-molecule-cards-small__card-link[
+                      class="fs-text-xs"
+                      href=atom.link_url
+                    ]
+                      = atom.link_label

@@ -5,6 +5,20 @@ Rails.application.routes.draw do
 
   mount Folio::Engine => "/"
 
+  devise_for :users, class_name: "Folio::User",
+                     module: "<%= application_namespace_path %>/folio/users",
+                     omniauth_providers: Rails.application.config.folio_users_omniauth_providers
+
+  devise_scope :user do
+    get "/users/registrations/edit_password", to: "<%= application_namespace_path %>/folio/users/registrations#edit_password"
+    patch "/users/registrations/update_password", to: "<%= application_namespace_path %>/folio/users/registrations#update_password"
+    get "/users/invitation", to: "<%= application_namespace_path %>/folio/users/invitations#show", as: nil
+    get "/users/auth/conflict", to: "<%= application_namespace_path %>/folio/users/omniauth_callbacks#conflict"
+    get "/users/auth/resolve_conflict", to: "<%= application_namespace_path %>/folio/users/omniauth_callbacks#resolve_conflict"
+    get "/users/auth/new_user", to: "<%= application_namespace_path %>/folio/users/omniauth_callbacks#new_user"
+    post "/users/auth/create_user", to: "<%= application_namespace_path %>/folio/users/omniauth_callbacks#create_user"
+  end
+
   get "/400", to: "errors#page400", via: :all
   get "/404", to: "errors#page404", via: :all
   get "/422", to: "errors#page422", via: :all
@@ -24,7 +38,5 @@ Rails.application.routes.draw do
     end
   end
 
-  scope "/:locale", locale: /#{I18n.available_locales.join("|")}/ do
-    resources :pages, controller: "<%= application_namespace_path %>/pages", only: [:show], path: ""
-  end
+  resources :pages, controller: "<%= application_namespace_path %>/pages", only: [:show], path: ""
 end

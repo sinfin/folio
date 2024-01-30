@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/logo: 
+    models:
+      application_namespace_path/atom/cards/logo: Karta - logo
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/logo: 
+    models:
+      application_namespace_path/atom/cards/logo: Card - logo

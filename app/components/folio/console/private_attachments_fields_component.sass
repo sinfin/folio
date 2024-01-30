@@ -1,0 +1,62 @@
+.f-c-private-attachments-fields
+  &__fields-loader
+    width: 100px
+    height: 60px
+    position: relative
+    margin: 0 0 map-get($spacers, 3)
+
+  &__attachment
+    margin: 0 0 map-get($spacers, 3)
+    border: 1px solid $border-color
+    border-radius: $border-radius
+    overflow: hidden
+    position: relative
+
+  &__attachment-progress
+    position: absolute
+    top: 0
+    left: 0
+    width: 0
+    height: 100%
+    background: #ccf0ea
+    z-index: 1
+    pointer-events: none
+    transition: $transition-base
+
+    &--fresh
+      background: #d3eaf6
+      opacity: 1
+
+  &__attachment-inner
+    position: relative
+    z-index: 2
+    padding: map-get($spacers, 3)
+    display: flex
+    align-items: center
+    gap: map-get($spacers, 3)
+
+  &__attachment-link,
+  &__attachment-loader
+    width: 24px
+    height: 24px
+    position: relative
+    flex: 0 0 auto
+
+  &__action
+    +unbutton
+    flex: 0 0 auto
+
+  &__input--title
+    flex: 1 1 auto
+
+  &__add-button > *
+    pointer-events: none
+
+  &__attachment[data-s3-path] &__attachment-link,
+  &__attachment:not([data-s3-path]) &__attachment-loader
+    display: none
+
+  &__attachment:first-child &__action--move-up,
+  &__attachment:last-child &__action--move-down
+    opacity: 0.15
+    pointer-events: none

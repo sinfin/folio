@@ -106,6 +106,10 @@ class Folio::UiGenerator < Rails::Generators::NamedBase
     end
   end
 
+  def update_helper
+    template "ui_helper.rb.tt", "app/helpers/#{application_namespace_path}/ui_helper.rb"
+  end
+
   def update_i18n_ymls
     I18n.available_locales.each do |locale|
       app_path = folio_generators_root.join("config/locales/ui.#{locale}.yml")

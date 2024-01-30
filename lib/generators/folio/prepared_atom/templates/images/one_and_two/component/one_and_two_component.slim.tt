@@ -1,0 +1,23 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-images-one-and-two.my-g data=stimulus_lightbox
+  .container-fluid
+    .<%= classname_prefix %>-atom-images-one-and-two__wrap
+      - image_placements.each_with_index do |image_placement, i|
+        .<%= classname_prefix %>-atom-images-one-and-two__item[
+          class="<%= classname_prefix %>-atom-images-one-and-two__item--#{i + 1}"
+        ]
+          = <%= application_namespace_path %>_ui_image(image_placement,
+                           thumb_size(i),
+                           class_name: "<%= classname_prefix %>-atom-images-one-and-two__image",
+                           lightbox: true,
+                           hover_zoom: true,
+                           cover: true,
+                           border_radius: true)
+
+    - if @atom.title.present?
+      .<%= classname_prefix %>-atom-images-one-and-two__caption.fs-text-s
+        span.<%= classname_prefix %>-atom-images-one-and-two__title
+          = cstypo @atom.title
+
+        - if @atom.subtitle.present?
+          span.<%= classname_prefix %>-atom-images-one-and-two__subtitle
+            = cstypo @atom.subtitle

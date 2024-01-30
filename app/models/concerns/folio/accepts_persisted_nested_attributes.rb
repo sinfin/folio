@@ -18,7 +18,7 @@ module Folio::AcceptsPersistedNestedAttributes
 
       attributes_collection.each do |key, attrs|
         if pa = reflection_klass.where(reflection.options[:as] => nil).find_by(id: attrs["id"])
-          self.private_attachments << pa
+          send(association_name_s) << pa
         end
       end
 

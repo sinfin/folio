@@ -1,0 +1,19 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/image_and_content:
+        image_side: Obrázek
+        image_side/left: Nalevo
+        image_side/right: Napravo
+    models:
+      application_namespace_path/atom/image_and_content: Obrázek a obsah
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/image_and_content:
+        image_side: Image
+        image_side/left: On the left
+        image_side/right: On the right
+    models:
+      application_namespace_path/atom/image_and_content: Image & content

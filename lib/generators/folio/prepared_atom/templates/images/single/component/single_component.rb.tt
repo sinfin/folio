@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Atom::Images::SingleComponent < ApplicationComponent
+  THUMB_SIZE = "1184x850"
+
+  def initialize(atom:, atom_options: {})
+    @atom = atom
+    @atom_options = atom_options
+  end
+end

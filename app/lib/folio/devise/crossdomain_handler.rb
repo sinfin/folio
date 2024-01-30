@@ -46,7 +46,7 @@ class Folio::Devise::CrossdomainHandler
   def handle_before_action!
     return Result.new(action: :noop) unless supports_crossdomain_devise?
 
-    if current_site == master_site
+    if current_site.id == master_site.id # can be different instances of same site
       handle_on_master_site!
     else
       handle_on_slave_site!

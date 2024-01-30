@@ -3,6 +3,7 @@
   flex: 0 0 auto
   z-index: 3
   position: relative
+  margin: 0 0 2 * $grid-gutter-base
 
   &__text-logo
     margin: 0

@@ -1,0 +1,470 @@
+atoms:
+  <%= application_namespace %>::Atom::Text:
+    - content: |
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        <h2>Lorem ipsum dolor</h2>
+        <p>Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        <p class="redactor-component folio-redactor-button" data-redactor-type="button"><a class="btn btn-redactor btn-redactor--fill" href="asf">asf</a></p>
+        <p>Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        <h3>Lorem ipsum dolor</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+
+  <%= application_namespace %>::Atom::Title:
+    - tag: H1
+      title: H1 Goth squid xoxo sustainable fashion axe
+    - tag: H2
+      title: H2 Polaroid cray austin muggle magic humblebrag aesthetic
+    - tag: H3
+      title: H3 Small batch swag mustache etsy vinyl organic.
+    - tag: H4
+      title: H4 Pug lumbersexual wayfarers brunch butcher biodiesel skateboard fashion axe.
+    - tag: H5
+      title: H5 Mixtape gastropub pitchfork wayfarers.
+
+
+  <%= application_namespace %>::Atom::Perex:
+    - content: true
+    - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
+  <%= application_namespace %>::Atom::Quotation:
+    - content: true
+      title: Title
+      subtitle: Subtitle
+
+    - content: true
+      title: Title
+      subtitle: Subtitle
+      large: true
+
+    - content: true
+      title: Lorem ipsum dolor sit amet
+      subtitle: Integer tortor sapien, congue a suscipit quis, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor
+
+    - content: true
+      title: Title
+
+    - content: true
+      subtitle: Subtitle
+
+    - content: true
+
+  <%= application_namespace %>::Atom::ImageAndContent:
+    - title: Headline dolor amet consectetur
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      cover: true
+    - title: Headline dolor amet consectetur
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      cover: true
+      image_side: right
+    - title: Headline dolor amet consectetur
+      cover: true
+    - title: Headline dolor amet consectetur
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      cover: true
+    - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      button_label: Button label
+      url: "#url"
+      cover: true
+    - button_label: Button label
+      url: "#url"
+      cover: true
+    - content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      cover: true
+
+  <%= application_namespace %>::Atom::Images::Gallery:
+    - title: Gallery title
+      subtitle: Subtitle
+      images: true
+
+  <%= application_namespace %>::Atom::Images::GridGallery:
+    - title: Grid gallery title
+      subtitle: Subtitle
+      images: true
+
+  <%= application_namespace %>::Atom::Images::MasonryGallery:
+    - title: Masonry gallery title
+      subtitle: Subtitle
+      images: true
+
+  <%= application_namespace %>::Atom::Images::OneAndTwo:
+    - title: One and two gallery title
+      subtitle: Subtitle
+      images: 3
+
+  <%= application_namespace %>::Atom::Cards::FullWidth:
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: true
+      button_label: Button label
+      button_url: url
+      secondary_button_label: Secondary Button label
+      secondary_button_url: url
+      cover: true
+      _count: 3
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: true
+      button_label: Button label
+      button_url: url
+      cover: true
+      _count: 3
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: true
+      secondary_button_label: Secondary Button label
+      secondary_button_url: url
+      cover: true
+      _count: 3
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      cover: true
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      button_label: Button label
+      button_url: url
+      cover: true
+
+    - title: Card headline lorem ipsum dolor sit amet, consectetur adipiscing
+      content: true
+      cover: true
+
+  <%= application_namespace %>::Atom::Cards::Person:
+    - name: Name Surname
+      job: Position
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      link_label: Link label
+      link_url: "#link_url"
+      cover: true
+      large: true
+      _count: 2
+
+    - name: Name Surname
+      job: Position
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      link_label: Link label
+      link_url: "#link_url"
+      cover: true
+      _count: 3
+
+    - name: Name Surname
+      job: Position
+      link_label: Link label
+      link_url: "#link_url"
+      cover: true
+      large: true
+      _count: 2
+
+    - name: Name Surname
+      job: Position
+      cover: true
+      large: true
+      _count: 2
+
+    - name: Name Surname
+      job: Position
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+      cover: true
+      _count: 3
+
+  <%= application_namespace %>::Atom::Images::Single:
+    - cover: true
+      title: One and two gallery title
+      subtitle: Subtitle
+
+    - cover: true
+      title: One and two gallery title
+      subtitle: Subtitle
+      content: <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, congue a suscipit quis</p>
+
+  <%= application_namespace %>::Atom::Cards::ExtraSmall:
+    - title: true
+      subtitle: Lorem ipsum dolor sit amet
+      url: url
+      cover: true
+      _count: 3
+
+    - title: true
+      subtitle: Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet
+      cover: true
+      _count: 3
+
+    - title: true
+      subtitle: Lorem ipsum dolor sit amet
+      url: url
+
+  <%= application_namespace %>::Atom::Cards::Small:
+    - title: true
+      content: true
+      button_label: Button label
+      button_url: url
+      link_label: Link label
+      link_url: url
+      cover: true
+      _count: 5
+
+    - title: true
+      content: true
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      _count: 3
+
+    - title: true
+      content: true
+      cover: true
+      _count: 3
+
+    - title: true
+      content: true
+      _count: 3
+
+    - title: true
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      _count: 3
+
+    - title: true
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      _count: 3
+
+    - title: true
+      _count: 3
+
+  <%= application_namespace %>::Atom::Cards::Medium:
+    - title: true
+      content: true
+      cover: true
+      _count: 3
+
+    - title: true
+      content: true
+      url: "#url"
+      cover: true
+      _count: 2
+
+    - title: true
+      cover: true
+      _count: 2
+
+    - title: true
+      content: true
+      url: "#url"
+      _count: 2
+
+    - title: true
+      content: true
+      _count: 2
+
+    - title: true
+      url: "#url"
+      _count: 2
+
+    - content: true
+      _count: 2
+
+  <%= application_namespace %>::Atom::Cards::Large:
+    - title: true
+      content: true
+      button_label: Button label
+      button_url: url
+      link_label: Link label
+      link_url: url
+      cover: true
+      _count: 2
+
+    - title: true
+      content: true
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      cover: true
+
+    - title: true
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+      cover: true
+
+    - content: true
+      button_label: Button label
+      button_url: url
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+
+    - title: true
+      content: true
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+
+    - content: true
+      link_label: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      link_url: url
+
+    - content: true
+      link_label: Link label
+      link_url: url
+      cover: true
+      _count: 1
+
+    - title: true
+      cover: true
+      _count: 1
+
+  <%= application_namespace %>::Atom::Cards::Logo:
+    - title: Item title lorem ipsum damus
+      cover: true
+      url: "#url"
+      _count: 16
+
+    - title: Item title lorem ipsum damus
+      cover: true
+      _count: 10
+
+    - cover: true
+      url: "#url"
+      _count: 4
+
+    - cover: true
+      _count: 3
+
+  <%= application_namespace %>::Atom::Cards::Image:
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 10
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 9
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 8
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 7
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 6
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 5
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 4
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      description: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      url: "#url"
+      cover: true
+      _count: 2
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 1
+    - title: Item title lorem ipsum damus Item title lorem ipsum damus
+      description: Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      url: "#url"
+      cover: true
+      _count: 3
+
+  <%= application_namespace %>::Atom::Cards::PaddedImage:
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 10
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 9
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 8
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 7
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 6
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 5
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 4
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      description: Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      url: "#url"
+      cover: true
+      _count: 2
+    - title: Item title lorem ipsum damus
+      description: Polaroid cray austin muggle magic humblebrag aesthetic
+      url: "#url"
+      cover: true
+      _count: 1
+    - title: Item title lorem ipsum damus Item title lorem ipsum damus
+      description: Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.
+      url: "#url"
+      cover: true
+      _count: 3
+    - title: Item title lorem ipsum damus
+      url: "#url"
+      cover: true
+      _count: 3
+
+  <%= application_namespace %>::Atom::Divider:
+    - variant: default
+    - variant: thin
+    - variant: thick
+    - variant: invisible
+
+values_for_true:
+  title: Polaroid cray austin muggle magic humblebrag aesthetic
+  content: |
+    <p>Dreamcatcher waistcoat lomo banh mi tousled austin. Paleo chambray food truck small batch before they sold out. Fashion axe church-key vinegar roof try-hard fanny pack polaroid. Intelligentsia <a href="#slow-carb">slow-carb</a>. <strong>Portland tilde austin etsy church-key thundercats.</strong> Yuccie cleanse trust fund park.</p>

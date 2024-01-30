@@ -13,6 +13,14 @@ window.FolioConsole.Ui.NotificationModal.i18n = {
   }
 }
 
+window.FolioConsole.Ui.NotificationModal.open = ({ data, trigger, onCancel }) => {
+  const name = 'f-c-ui-notification-modal'
+  const modal = document.querySelector(`.${name}`)
+  const ctrl = window.Folio.Stimulus.APPLICATION.getControllerForElementAndIdentifier(modal, name)
+
+  ctrl.open({ data, trigger, onCancel })
+}
+
 window.Folio.Stimulus.register('f-c-ui-notification-modal-trigger', class extends window.Stimulus.Controller {
   static values = {
     data: Object
@@ -21,10 +29,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal-trigger', class extend
   onClick (e) {
     e.preventDefault()
 
-    this.dispatch('trigger', {
-      detail: { modal: this.dataValue, trigger: this.element },
-      target: document.querySelector('.f-c-ui-notification-modal')
-    })
+    window.FolioConsole.Ui.NotificationModal.open({ data: this.dataValue, trigger: this.element })
   }
 })
 
@@ -32,23 +37,35 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
   connect () {
     this.originalInnerHTML = this.element.innerHTML
     this.bsModal = new window.bootstrap.Modal(this.element)
+    this.submitted = null
+
+    this.element.addEventListener('hide.bs.modal', this.onBsModalHide)
   }
 
   disconnect () {
+    this.element.removeEventListener('hide.bs.modal', this.onBsModalHide)
     this.bsModal.dispose()
     delete this.bsModal
     delete this.trigger
+    delete this.onCancel
   }
 
   submit (e) {
     e.preventDefault()
-    this.trigger.closest('form').submit()
+    const form = this.trigger.closest('form')
+
+    form.requestSubmit()
+    this.submitted = true
+
+    if (this.closeOnSubmit) {
+      this.bsModal.hide()
+    }
   }
 
-  onTrigger (e) {
+  open ({ data, trigger, onCancel }) {
     const html = this.originalInnerHTML
 
-    this.trigger = e.detail.trigger
+    this.trigger = trigger
 
     this.element.innerHTML = html
 
@@ -56,35 +73,41 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
     const body = this.element.querySelector('.modal-body')
     const footer = this.element.querySelector('.modal-footer')
 
-    if (e.detail.modal.title) {
-      title.innerHTML = e.detail.modal.title
+    if (data.title) {
+      title.innerHTML = data.title
     } else {
       title.parentNode.removeChild(title)
     }
 
-    if (e.detail.modal.body) {
-      body.innerHTML = e.detail.modal.body
+    if (data.body) {
+      body.innerHTML = data.body
     } else {
       body.parentNode.removeChild(body)
     }
 
-    if (e.detail.modal.cancel || e.detail.modal.submit) {
+    this.onCancel = onCancel
+
+    if (data.cancel || data.submit) {
       const buttonsData = []
 
-      if (e.detail.modal.cancel) {
+      if (data.cancel) {
         buttonsData.push({
           variant: 'tertiary',
-          label: window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
+          label: typeof data.cancel === "string" ? data.cancel : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
           data: { bsDismiss: 'modal' }
         })
       }
 
-      if (e.detail.modal.submit) {
+      if (data.submit) {
         buttonsData.push({
           variant: 'primary',
-          label: window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
+          label: typeof data.submit === "string" ? data.submit : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'submit'),
           data: { action: 'f-c-ui-notification-modal#submit' }
         })
+
+        if (data.closeOnSubmit) {
+          this.closeOnSubmit = data.closeOnSubmit
+        }
       }
 
       footer.innerHTML = ''
@@ -94,5 +117,12 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
     }
 
     this.bsModal.show()
+  }
+
+  onBsModalHide = () => {
+    if (!this.submitted && this.onCancel) {
+      this.onCancel()
+      delete this.onCancel
+    }
   }
 })

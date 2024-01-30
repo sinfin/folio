@@ -1,0 +1,15 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/quotation:
+        large: Velké písmo
+    models:
+      application_namespace_path/atom/quotation: Citace
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/quotation:
+        large: Bigger font
+    models:
+      application_namespace_path/atom/quotation: Quotation

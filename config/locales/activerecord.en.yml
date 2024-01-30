@@ -62,7 +62,7 @@ en:
         locales: Languages
         roles: Roles
         roles/administrator: Administrator
-        roles/manager: Manage
+        roles/manager: Manager
         roles/user: User
       folio/email_template:
         missing_keyword: does not contain the {%{keyword}} keyword

@@ -8,7 +8,6 @@ exclude:
   - app/cells/folio/console/console_notes/catalogue_tooltip/show.slim
   - app/cells/folio/console/layout/header/show.slim
   - app/cells/folio/console/layout/sidebar/title/show.slim
-  - app/cells/folio/console/private_attachments/fields/show.slim
   - app/cells/folio/console/private_attachments/single_dropzone/show.slim
   - app/cells/folio/console/publishable_inputs/show.slim
   - app/cells/folio/console/users/roles_form/show.slim
@@ -56,4 +55,5 @@ exclude:
   - test/dummy/app/views/dummy/home/index.slim
   - test/dummy/app/views/dummy/ui/*.slim
   - test/dummy/app/views/folio/console/dummy/playgrounds/console_notes.slim
+  - test/dummy/app/views/folio/console/dummy/playgrounds/private_attachments.slim
   - test/dummy/app/views/layouts/folio/application.slim

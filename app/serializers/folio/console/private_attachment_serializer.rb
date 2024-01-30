@@ -6,7 +6,8 @@ class Folio::Console::PrivateAttachmentSerializer
   attributes :id,
              :file_size,
              :file_name,
-             :type
+             :type,
+             :title
 
   attribute :expiring_url do |object|
     object.file.remote_url(expires_in: 1.hour.from_now)

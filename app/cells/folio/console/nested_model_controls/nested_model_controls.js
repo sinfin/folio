@@ -43,7 +43,12 @@ window.FolioConsole.NestedModelControls.onDestroyClick = (e) => {
       $nestedFieldsParent.trigger('cocoon:after-remove', [$nestedFields, e])
     } else {
       $nestedFields.prop('hidden', true)
-      $button.closest('.f-c-nested-model-controls').find('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')[0].dispatchEvent(new window.Event('change', { bubbles: true }))
+      const $input = $button.closest('.f-c-nested-model-controls').find('.f-c-nested-model-controls__destroy-input').val(1).trigger('change')
+
+      if ($input[0]) {
+        $input[0].dispatchEvent(new window.Event('change', { bubbles: true }))
+      }
+
       $nestedFields.find('.f-c-nested-model-controls__position-input').remove()
       window.FolioConsole.NestedModelControls.setPositionsIn($nestedFields.parent())
     }

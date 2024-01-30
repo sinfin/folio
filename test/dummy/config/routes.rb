@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   mount Folio::Engine => "/"
 
   devise_for :users, class_name: "Folio::User",
-                      module: "dummy/folio/users",
-                      omniauth_providers: Rails.application.config.folio_users_omniauth_providers
+                     module: "dummy/folio/users",
+                     omniauth_providers: Rails.application.config.folio_users_omniauth_providers
 
   devise_scope :user do
     get "/users/registrations/edit_password", to: "dummy/folio/users/registrations#edit_password"
@@ -25,6 +25,8 @@ Rails.application.routes.draw do
     namespace :console do
       namespace :dummy do
         resource :playground, only: %i[] do
+          get :private_attachments
+          patch :update_private_attachments
           get :players
           get :pickers
           get :report

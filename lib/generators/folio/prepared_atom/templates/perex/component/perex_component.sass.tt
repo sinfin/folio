@@ -1,0 +1,10 @@
+.<%= classname_prefix %>-atom-perex
+  &__inner
+    &::after
+      content: ''
+      display: block
+      width: 100px 
+      height: 5px
+      border-radius: 5px
+      background: $transparent-300
+      margin-top: px-to-rem(20px)

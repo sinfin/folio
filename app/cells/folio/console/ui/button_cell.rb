@@ -32,6 +32,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:class] += " disabled f-c-ui-button--disabled"
     end
 
+    if model[:dropzone]
+      h[:class] += " f-c-ui-button--dropzone"
+    end
+
     if model[:class]
       h[:class] += " #{model[:class]}"
     end

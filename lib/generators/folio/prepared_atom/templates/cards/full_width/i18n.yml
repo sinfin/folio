@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/full_width: 
+    models:
+      application_namespace_path/atom/cards/full_width: Karta - na celou šířku
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/full_width: 
+    models:
+      application_namespace_path/atom/cards/full_width: Card - full width

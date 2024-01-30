@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2024-01-25
+### Changed
+- removed `private_attachments` and `private_attachments_fields` partials, use `Folio::Console::PrivateAttachmentsFieldsComponent` instead!
+
 ## 2023-12-X
 ### Changed
 - authorization to console is done through user login, not account.

@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/extra_small: 
+    models:
+      application_namespace_path/atom/cards/extra_small: Karta - extra malá
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/cards/extra_small: 
+    models:
+      application_namespace_path/atom/cards/extra_small: Card - extra small

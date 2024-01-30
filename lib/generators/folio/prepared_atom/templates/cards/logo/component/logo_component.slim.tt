@@ -1,0 +1,25 @@
+.<%= classname_prefix %>-molecule.<%= classname_prefix %>-molecule-cards-logo.my-atom
+  .container-fluid
+    .<%= classname_prefix %>-molecule-cards-logo__flex
+      - inline_logos.each do |atom|
+        *{ tag: nil }
+          *card_tag(atom)
+            = <%= application_namespace_path %>_ui_image molecule_cover_placement(atom),
+                             THUMB_SIZE,
+                             class_name: "<%= classname_prefix %>-molecule-cards-logo__image"
+
+            - if atom.title.present?
+              .<%= classname_prefix %>-molecule-cards-logo__label.fs-text-xs
+                = atom.title
+
+      - if orphan_logos
+        .<%= classname_prefix %>-molecule-cards-logo__orphans
+          - orphan_logos.each do |atom|
+              *card_tag(atom)
+                = <%= application_namespace_path %>_ui_image molecule_cover_placement(atom),
+                                 THUMB_SIZE,
+                                 class_name: "<%= classname_prefix %>-molecule-cards-logo__image"
+
+                - if atom.title.present?
+                  .<%= classname_prefix %>-molecule-cards-logo__label.fs-text-xs
+                    = atom.title

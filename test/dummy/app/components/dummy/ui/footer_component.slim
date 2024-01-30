@@ -2,12 +2,13 @@ footer.d-ui-footer
   .container-fluid
     .d-ui-footer__row
       .d-ui-footer__left
-        .d-ui-footer__col
-          .h5.mt-0 = t('.newsletter')
+        - if ::Rails.application.config.folio_newsletter_subscriptions
+          .d-ui-footer__col
+            .h5.mt-0 = t('.newsletter')
 
-          = render(Folio::NewsletterSubscriptions::FormComponent.new(view_options: { input_label: "E-mail" }))
+            = render(Folio::NewsletterSubscriptions::FormComponent.new(view_options: { input_label: "E-mail" }))
 
-          == cell('dummy/ui/disclaimer')
+            == cell('dummy/ui/disclaimer')
 
         - if contact_details.present?
           .d-ui-footer__col

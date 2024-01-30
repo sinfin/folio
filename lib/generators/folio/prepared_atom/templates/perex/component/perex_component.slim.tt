@@ -1,0 +1,5 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-perex.my-atom-lg
+  .container-fluid
+    .<%= classname_prefix %>-atom-perex__inner
+      .<%= classname_prefix %>-rich-text.<%= classname_prefix %>-rich-text--chomp.font-size-lg
+        == @atom.content

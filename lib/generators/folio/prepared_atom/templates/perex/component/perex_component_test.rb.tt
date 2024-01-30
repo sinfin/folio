@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Atom::PerexComponentTest < Folio::ComponentTest
+  def test_render
+    atom = create_atom(<%= application_namespace %>::Atom::Perex, :content)
+
+    render_inline(<%= application_namespace %>::Atom::PerexComponent.new(atom:))
+
+    assert_selector(".<%= classname_prefix %>-atom-perex")
+  end
+end
