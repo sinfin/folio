@@ -22,6 +22,7 @@
 
 //= require <%= application_namespace_path %>/ui/alert_component
 //= require <%= application_namespace_path %>/ui/boolean_toggle_component
+//= require <%= application_namespace_path %>/ui/clipboard_component
 //= require <%= application_namespace_path %>/ui/flash_component
 //= require <%= application_namespace_path %>/ui/header_message_component
 //= require <%= application_namespace_path %>/ui/icon_component

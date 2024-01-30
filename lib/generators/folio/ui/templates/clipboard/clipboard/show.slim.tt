@@ -1,6 +1,0 @@
-.<%= classname_prefix %>-ui-clipboard data-clipboard-text=model
-  = icon :content_copy, class: '<%= classname_prefix %>-ui-clipboard__copy',
-                        height: options[:height] || 22
-
-  = icon :check, class: '<%= classname_prefix %>-ui-clipboard__check',
-                 height: options[:height] || 22

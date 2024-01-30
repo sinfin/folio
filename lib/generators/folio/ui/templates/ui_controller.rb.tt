@@ -10,6 +10,7 @@ class <%= application_namespace %>::UiController < ApplicationController
       breadcrumbs
       buttons
       chips
+      clipboard
       embed
       forms
       icons

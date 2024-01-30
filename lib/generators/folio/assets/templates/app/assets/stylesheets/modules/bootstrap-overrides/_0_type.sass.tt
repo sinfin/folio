@@ -126,3 +126,6 @@ ul
   &, &:hover, &:focus
     text-decoration: none
     color: inherit
+
+.text-danger
+  color: $danger !important
