@@ -6,4 +6,11 @@
     .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Clipboard - #{theme}
 
-      = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world', height: 22))
+      h3 Default
+
+      = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world default'))
+
+      h3 With height: 24
+
+      = render(Dummy::Ui::ClipboardComponent.new(text: 'Hello world 24',
+                                                 height: 24))
