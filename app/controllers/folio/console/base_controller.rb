@@ -6,6 +6,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
   include Folio::Console::DefaultActions
   include Folio::Console::Includes
   include Folio::HasCurrentSite
+  include Folio::ErrorsControllerBase
   include Pagy::Backend
 
   before_action :authenticate_user!

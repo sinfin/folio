@@ -20,6 +20,10 @@ cs:
           text_line_1: Chybný požadavek
           text_line_2: Špatně formulovaný požadavek. Ověřte parametry v adrese.
           title: '400'
+        error_403:
+          text_line_1: Přístup odepřen
+          text_line_2: Omlouváme se, ale nemáte oprávnění k přístupu na tuto stránku. Pokud si myslíte, že jde o chybu, kontaktujte prosím správce webu.
+          title: '403'
         error_404:
           text_line_1: Stránka, kterou hledáte, neexistuje.
           text_line_2: Buďto máte špatný odkaz, nebo byla přesunuta.

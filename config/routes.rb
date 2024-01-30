@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 Folio::Engine.routes.draw do
-  get "errors/not_found"
-
-  get "errors/internal_server_error"
+  get "/400", to: "errors#page400", via: :all
+  get "/403", to: "errors#page403", via: :all
+  get "/404", to: "errors#page404", via: :all
+  get "/422", to: "errors#page422", via: :all
+  get "/500", to: "errors#page500", via: :all
 
   namespace :devise do
     namespace :omniauth do

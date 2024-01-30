@@ -23,6 +23,8 @@ module Folio::ApplicationControllerBase
     helper_method :current_site
 
     add_flash_types :success, :warning, :info
+
+    rescue_from CanCan::AccessDenied, with: :handle_can_can_access_denied
   end
 
   def set_i18n_locale
@@ -128,5 +130,20 @@ module Folio::ApplicationControllerBase
 
     def add_root_breadcrumb
       add_breadcrumb_on_rails(t("folio.root_breadcrumb"), "/")
+    end
+
+    def handle_can_can_access_denied(e)
+      if Rails.application.config.consider_all_requests_local
+        raise e
+      end
+
+      Raven.capture_exception(e) if defined?(Raven)
+
+      if request.path.starts_with?("/console") && !can_now?(:access_console)
+        redirect_to "/403"
+      else
+        @error_code = 403
+        render "folio/errors/show", status: @error_code
+      end
     end
 end

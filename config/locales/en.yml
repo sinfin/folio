@@ -20,6 +20,10 @@ en:
           text_line_1: Bad Request.
           text_line_2: Request cannot be fulfilled due to bad syntax.
           title: '400'
+        error_403:
+          text_line_1: Access Denied
+          text_line_2: We're sorry, but you don't have permission to access this page. If you think this is a mistake, please contact the website administrator.
+          title: '403'
         error_404:
           text_line_1: The page you are looking for does not exist.
           text_line_2: You entered a wrong URL or the page was moved.
