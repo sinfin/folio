@@ -13,9 +13,6 @@ class Folio::Console::Ui::NotificationModalCell < Folio::ConsoleCell
   end
 
   def data
-    {
-      controller: "f-c-ui-notification-modal",
-      action: "f-c-ui-notification-modal-trigger:trigger->f-c-ui-notification-modal#onTrigger"
-    }
+    stimulus_controller('f-c-ui-notification-modal')
   end
 end
