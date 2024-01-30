@@ -22,6 +22,7 @@
 
 //= require dummy/ui/alert_component
 //= require dummy/ui/boolean_toggle_component
+//= require dummy/ui/clipboard_component
 //= require dummy/ui/flash_component
 //= require dummy/ui/header_message_component
 //= require dummy/ui/icon_component

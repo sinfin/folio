@@ -7,6 +7,6 @@ class Dummy::Ui::ClipboardComponent < ApplicationComponent
   end
 
   def data
-    stimulus_controller("d-ui-clipboard", values: { text: @text })
+    stimulus_controller("d-ui-clipboard")
   end
 end
