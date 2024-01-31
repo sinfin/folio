@@ -17,6 +17,14 @@ module Folio::S3::Client
     @s3_bucket ||= ENV.fetch("S3_BUCKET_NAME")
   end
 
+  def s3_ls(prefix, max_keys: 1000)
+    s3_client.list_objects_v2(
+      bucket: s3_bucket,
+      prefix:,
+      max_keys:,
+    )
+  end
+
   def test_aware_presign_url(s3_path)
     if Rails.env.test?
       "https://dummy-s3-bucket.com/#{s3_path}"
