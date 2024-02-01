@@ -11,6 +11,7 @@ function Item ({ path, node, remove }) {
       <FolioUiIcon
         class='text-danger f-c-r-ordered-multiselect-app__item-destroy'
         name='delete'
+        height={16}
         onClick={makeConfirmed(() => remove(node))}
       />
     </div>
