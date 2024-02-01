@@ -2,7 +2,17 @@
 
 class Folio::Console::Atoms::LocaleSwitchCell < Folio::ConsoleCell
   def locales
-    model.class.try(:atom_locales) || [I18n.default_locale]
+    if model.class.try(:atom_locales)
+      filtered = model.class.atom_locales & current_site.locales_as_sym
+
+      if filtered.present?
+        filtered
+      else
+        [I18n.default_locale]
+      end
+    else
+      [I18n.default_locale]
+    end
   end
 
   def default_locale

@@ -32,7 +32,19 @@
 
       .f-c-simple-form-with-atoms__atoms
         .f-c-simple-form-with-atoms__previews
-          - keys = f.object.class.try(:atom_locales) || [nil]
+          ruby:
+            keys = if f.object.class.try(:atom_locales)
+              filtered = f.object.class.atom_locales & current_site.locales_as_sym
+
+              if filtered.present?
+                filtered
+              else
+                [nil]
+              end
+            else
+              [nil]
+            end
+
           - keys.first(2).each_with_index do |key, index|
             .f-c-simple-form-with-atoms__preview[
               class="f-c-simple-form-with-atoms__preview--initializing"

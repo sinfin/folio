@@ -145,6 +145,10 @@ class Folio::Site < Folio::ApplicationRecord
     locale
   end
 
+  def locales_as_sym
+    locales.map(&:to_sym)
+  end
+
   def og_image_with_fallback
     Rails.cache.fetch(["site#og_image_with_fallback", id, updated_at, ENV["CURRENT_RELEASE_COMMIT_HASH"]]) do
       if og_image
