@@ -25,7 +25,7 @@
       .row
         - if Rails.application.config.folio_pages_locales
           - locales = Rails.application.config.folio_pages_locales
-          - locales = I18n.available_locales unless locales.is_a?(Array)
+          - locales = current_site.locales unless locales.is_a?(Array)
 
           .col
             = f.input :locale,

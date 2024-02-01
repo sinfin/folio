@@ -17,7 +17,7 @@ class Folio::Console::TranslatedInputsCell < Folio::ConsoleCell
     @translations ||= if options[:locales]
       options[:locales]
     elsif ::Rails.application.config.folio_using_traco
-      I18n.available_locales
+      current_site.locales
     else
       []
     end

@@ -56,7 +56,7 @@ class Folio::Console::ContentTemplatesController < Folio::Console::BaseControlle
             .permit(content_templates_attributes: [
               :content,
               :title,
-              *I18n.available_locales.map { |l| "content_#{l}".to_sym },
+              *current_site.locales.map { |l| "content_#{l}".to_sym },
               :position,
               :_destroy,
               :id

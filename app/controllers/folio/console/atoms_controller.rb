@@ -13,7 +13,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   def preview
     @atoms = {}
 
-    (I18n.available_locales + [nil]).each do |locale|
+    (current_site.locales + [nil]).each do |locale|
       key = locale ? "#{locale}_atoms_attributes" : "atoms_attributes"
       atoms = atom_params[key]
       next if atoms.nil?
@@ -95,7 +95,7 @@ class Folio::Console::AtomsController < Folio::Console::BaseController
   end
 
   def default_url_options
-    if I18n.available_locales.size > 1
+    if current_site.locales.size > 1
       { locale: I18n.locale }
     else
       {}

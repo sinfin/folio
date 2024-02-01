@@ -233,7 +233,7 @@ class Folio::Console::BaseController < Folio::ApplicationController
               :_destroy,
               *file_placements_strong_params] + Folio::Atom.strong_params
 
-      [{ atoms_attributes: base }] + I18n.available_locales.map do |locale|
+      [{ atoms_attributes: base }] + current_site.locales.map do |locale|
         {
           "#{locale}_atoms_attributes": base
         }

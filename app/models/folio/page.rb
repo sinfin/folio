@@ -52,10 +52,7 @@ class Folio::Page < Folio::ApplicationRecord
 
     translates :title, :perex, :slug, :meta_title, :meta_description
 
-    I18n.available_locales.each do |locale|
-      validates "title_#{locale}".to_sym,
-                presence: true
-    end
+    validate :validate_title_for_site_locales
   else
     include Folio::HasAtoms::Basic
 
@@ -153,6 +150,19 @@ class Folio::Page < Folio::ApplicationRecord
   private
     def set_atoms_data_for_search
       self.atoms_data_for_search = all_atoms_in_array.filter_map { |a| a.data_for_search }.join(" ").presence
+    end
+
+    def validate_title_for_site_locales
+      if site.blank?
+        errors.add(:site, :missing)
+      else
+        site.locales.each do |locale|
+          title_attr = "title_#{locale}"
+          if send(title_attr).blank?
+            errors.add(title_attr, :missing)
+          end
+        end
+      end
     end
 end
 

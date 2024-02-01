@@ -14,7 +14,7 @@ class <%= application_namespace %>::Ui::MiniSelectComponent < ApplicationCompone
   def options
     if @options.nil?
       @options = if @type == :language
-        I18n.available_locales.map do |locale|
+        current_site.locales.map do |locale|
           label = t(".language/#{@verbose ? "verbose" : "default"}/#{locale}")
           { href: controller.main_app.root_path(locale:), label:, selected: locale == I18n.locale }
         end
