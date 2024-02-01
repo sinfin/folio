@@ -6,9 +6,14 @@ div class=class_name data-klass=options[:klass]
         data-root-key=(locale ? "#{locale}_atoms" : 'atoms')
         hidden=locale_hidden(locale)
       ]
-        - if options[:settings] && options[:settings][locale || 'null']
+        ruby:
+          settings = if options[:settings]
+            options[:settings][locale] || options[:settings]['null']
+          end
+
+        - if settings
           .f-c-atoms-previews__settings
-            - options[:settings][locale || 'null'].each do |key, value|
+            - settings.each do |key, value|
               .f-c-atoms-previews__setting data-setting-key=key
                 == value
                 = label_perex_controls
