@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Folio::Console::SiteUserLinks::FieldsComponent < Folio::Console::ApplicationComponent
-  def initialize(f:)
+  def initialize(f: nil, user: nil)
     @f = f
-    @user = @f.object
+    @user = user || @f.object
   end
 
   def allowed_sites_links
@@ -30,7 +30,14 @@ class Folio::Console::SiteUserLinks::FieldsComponent < Folio::Console::Applicati
   end
 
   def data
-    stimulus_controller("f-c-site-user-links-fields",
-                        action: { change: "onAnyChange" })
+    if @f
+      stimulus_controller("f-c-site-user-links-fields",
+                          action: { change: "onAnyChange" })
+    end
+  end
+
+  def status_icon(bool)
+    icon = folio_icon(bool ? :check : :close, height: 12)
+    content_tag(:div, icon, class: "f-c-site-user-links-fields__status-circle f-c-site-user-links-fields__status-circle--#{bool}")
   end
 end

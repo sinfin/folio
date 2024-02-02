@@ -18,3 +18,21 @@
 
   &__link-roles
     padding: $grid-gutter-half
+
+  &__status
+    display: flex
+    align-items: center
+    gap: $grid-gutter-base
+
+  &__status-circle
+    width: 16px
+    height: 16px
+    border-radius: 100%
+    background: $gray
+    display: flex
+    align-items: center
+    justify-content: center
+    color: $white
+
+    &--true
+      background: $success

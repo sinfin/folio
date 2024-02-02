@@ -1,40 +1,61 @@
 .f-c-site-user-links-fields data=data
   h2 = t('.title')
 
-  - if can_now?(:manage, :all)
-    = @f.input :superadmin
+  - if @f
+    - if can_now?(:manage, :all)
+      = @f.input :superadmin
 
-  .f-c-site-user-links-fields__links
-    = @f.simple_fields_for(:site_user_links, allowed_sites_links) do |g|
-      - site_link = g.object
-      - checked = !site_link.roles.nil?
+    .f-c-site-user-links-fields__links
+      = @f.simple_fields_for(:site_user_links, allowed_sites_links) do |g|
+        - site_link = g.object
+        - checked = !site_link.roles.nil?
 
-      .f-c-site-user-links-fields__link[
-        data=stimulus_target("link")
-      ]
-        .f-c-site-user-links-fields__link-head
-          .form-check
-            / negative site_id means destroy that site link
-            = g.check_box(:site_id,
-                          { checked:, class: 'form-check-input' },
-                          site_link.site.id,
-                          -1 * site_link.site.id)
+        .f-c-site-user-links-fields__link[
+          data=stimulus_target("link")
+        ]
+          .f-c-site-user-links-fields__link-head
+            .form-check
+              / negative site_id means destroy that site link
+              = g.check_box(:site_id,
+                            { checked:, class: 'form-check-input' },
+                            site_link.site.id,
+                            -1 * site_link.site.id)
 
-            = g.label(:site_id,
-                      site_link.site.domain,
-                      class: "form-check-label form-label m-0")
+              = g.label(:site_id,
+                        site_link.site.domain,
+                        class: "form-check-label form-label m-0")
 
-        .f-c-site-user-links-fields__link-roles
-          - roles_for(site_link).each do |role_label, role_key|
-            - id = id_for(site_link, role_key)
-            .f-c-users__site-link__role
-              .form-check
-                = g.check_box(:roles,
-                              { multiple: true, class: 'form-check-input', id:, disabled: !checked },
-                              role_key,
-                              nil)
+          .f-c-site-user-links-fields__link-roles
+            - roles_for(site_link).each do |role_label, role_key|
+              - id = id_for(site_link, role_key)
+              .f-c-users__site-link__role
+                .form-check
+                  = g.check_box(:roles,
+                                { multiple: true, class: 'form-check-input', id:, disabled: !checked },
+                                role_key,
+                                nil)
 
-                = g.label(:roles,
-                          role_label,
-                          for: id,
-                          class: "form-check-label form-label m-0")
+                  = g.label(:roles,
+                            role_label,
+                            for: id,
+                            class: "form-check-label form-label m-0")
+  - elsif @user
+    - if can_now?(:manage, :all)
+      strong.f-c-site-user-links-fields__status.mb-g
+        = status_icon(@user.superadmin)
+        = @user.class.human_attribute_name(:superadmin)
+
+    .f-c-site-user-links-fields__links
+      - allowed_sites_links.each do |site_link|
+        .f-c-site-user-links-fields__link
+          .f-c-site-user-links-fields__link-head
+            .f-c-site-user-links-fields__status
+              = status_icon(site_link.persisted?)
+              = site_link.site.domain
+
+          .f-c-site-user-links-fields__link-roles
+            - roles_for(site_link).each do |role_label, role_key|
+              .f-c-users__site-link__role
+                .f-c-site-user-links-fields__status
+                  = status_icon(site_link.roles.include?(role_key))
+                  = role_label
