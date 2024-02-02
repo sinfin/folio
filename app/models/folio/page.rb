@@ -154,12 +154,12 @@ class Folio::Page < Folio::ApplicationRecord
 
     def validate_title_for_site_locales
       if site.blank?
-        errors.add(:site, :missing)
+        errors.add(:site, :blank)
       else
         site.locales.each do |locale|
           title_attr = "title_#{locale}"
           if send(title_attr).blank?
-            errors.add(title_attr, :missing)
+            errors.add(title_attr, :blank)
           end
         end
       end

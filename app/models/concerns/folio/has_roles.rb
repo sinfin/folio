@@ -66,7 +66,7 @@ module Folio::HasRoles
   private
     def validate_roles
       if roles.blank?
-        errors.add :roles, :missing if self.class.roles_mandatory?
+        errors.add :roles, :blank if self.class.roles_mandatory?
       elsif roles.any? { |role| self.class.roles.exclude?(role) }
         errors.add :roles, :invalid
       end
