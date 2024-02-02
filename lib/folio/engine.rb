@@ -81,7 +81,7 @@ module Folio
       { site_id: controller.site_for_new_files.id }
     }
 
-    config.folio_content_templates = false
+    config.folio_content_templates_editable = false
 
     config.folio_leads = false
     config.folio_newsletter_subscriptions = false

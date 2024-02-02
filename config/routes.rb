@@ -51,7 +51,7 @@ Folio::Engine.routes.draw do
         end
       end
 
-      if ::Rails.application.config.folio_content_templates
+      if ::Rails.application.config.folio_content_templates_editable
         resource :content_templates, only: [] do
           get :index
           get :edit, path: ":type/edit"

@@ -244,7 +244,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
     def build_site_links_collapsible_block(site)
       I18n.with_locale(site.console_locale) do
         links = ::Rails.application.config.folio_shared_files_between_sites ? [] : file_links(site)
-        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates
+        links << link_for_site_class(site, Folio::ContentTemplate) if ::Rails.application.config.folio_content_templates_editable
 
         site_links = site_specific_links(site)
 
