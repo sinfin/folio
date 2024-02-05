@@ -57,5 +57,5 @@
             - roles_for(site_link).each do |role_label, role_key|
               .f-c-users__site-link__role
                 .f-c-site-user-links-fields__status
-                  = status_icon(site_link.roles.include?(role_key))
+                  = status_icon(site_link.roles.present? && site_link.roles.include?(role_key))
                   = role_label
