@@ -211,11 +211,14 @@ module Folio
               atom_data = YAML.load_file(atom_data_path)
 
               Dir[Rails.root.join("app/models/*/atom/**/*.rb")].each do |atom_file_path|
-                matches = File.read(atom_file_path).match(/class (?<atom_name>[\w:]+) < Folio::Atom::Base/)
+                contents = File.read(atom_file_path)
+                matches = contents.match(/class (?<atom_name>[\w:]+) < Folio::Atom::Base/)
 
                 if matches && matches[:atom_name]
                   if atom_data["atoms"][matches[:atom_name]].blank?
-                    deprecations << "Missing atoms_showcase.yml data for atom - #{matches[:atom_name]}"
+                    if contents.exclude?("self.molecule_secondary") && contents.exclude?("self.molecule_singleton")
+                      deprecations << "Missing atoms_showcase.yml data for atom - #{matches[:atom_name]}"
+                    end
                   end
                 else
                   deprecations << "Invalid atom model code - #{atom_file_path}"
