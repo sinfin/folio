@@ -52,6 +52,9 @@ $container-fluid-max-width: 1280px
 $font-size-media-breakpoint-s: sm
 $font-size-media-breakpoint-m: lg
 
+$grid-breakpoints-md-for-ipad-mini: 744px !default
+$grid-breakpoints: ( xs: 0, sm: 576px, md: $grid-breakpoints-md-for-ipad-mini, lg: 992px, xl: 1200px, xxl: 1400px ) !default
+
 $font-family-sans-serif: "Figtree", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
 
 $font-weight-lighter: lighter
