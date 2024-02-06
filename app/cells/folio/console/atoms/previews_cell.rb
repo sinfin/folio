@@ -62,7 +62,7 @@ class Folio::Console::Atoms::PreviewsCell < Folio::ConsoleCell
   end
 
   def default_locale
-    options[:default_locale].try(:to_sym) || I18n.default_locale
+    options[:default_locale].try(:to_sym) || current_site.locale || ::Rails.application.config.folio_console_locale
   end
 
   def atom_additional_options
