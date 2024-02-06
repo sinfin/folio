@@ -26,7 +26,12 @@ class <%= application_namespace %>::AtomsController < ApplicationController
 
           if @atom_klass.molecule?
             count = attrs.delete(:_count) || 1
-            [attrs, Array.new(count) { @atom_klass.new(attrs) }]
+
+            secondary = (attrs.delete(:_atoms) || []).map do |hash|
+              Folio::Atom::Base.new(hash)
+            end
+
+            [attrs, Array.new(count) { @atom_klass.new(attrs) } + secondary]
           else
             [attrs, [@atom_klass.new(attrs)]]
           end
