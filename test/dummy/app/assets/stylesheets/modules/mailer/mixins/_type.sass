@@ -1,0 +1,102 @@
+= mailer-font-size-display-m
+  font-size: $ui-typo-display-m-font-size
+  line-height: $ui-typo-display-m-line-height
+  letter-spacing: $ui-typo-display-m-letter-spacing
+  font-family: $headings-font-family
+
+= mailer-font-size-display-s
+  font-size: $ui-typo-display-s-font-size
+  line-height: $ui-typo-display-s-line-height
+  letter-spacing: $ui-typo-display-s-letter-spacing
+  font-family: $headings-font-family
+
+= mailer-font-size-display-xs
+  font-size: $ui-typo-display-xs-font-size
+  line-height: $ui-typo-display-xs-line-height
+  letter-spacing: $ui-typo-display-xs-letter-spacing
+  font-family: $headings-font-family
+
+= mailer-font-size-display-2xs
+  font-size: $ui-typo-display-2xs-font-size
+  line-height: $ui-typo-display-2xs-line-height
+  letter-spacing: $ui-typo-display-2xs-letter-spacing
+  font-family: $headings-font-family
+
+= mailer-font-size-display-3xs
+  font-size: $ui-typo-display-3xs-font-size
+  line-height: $ui-typo-display-3xs-line-height
+  letter-spacing: $ui-typo-display-3xs-letter-spacing
+  font-family: $headings-font-family
+
+= mailer-font-size-text-l
+  font-size: $ui-typo-text-l-font-size
+  line-height: $ui-typo-text-l-line-height
+  letter-spacing: normal
+  font-family: $mailer-font-family-base
+
+= mailer-font-size-text-m
+  font-size: $ui-typo-text-m-font-size
+  line-height: $ui-typo-text-m-line-height
+  letter-spacing: normal
+  font-family: $mailer-font-family-base
+
+= mailer-font-size-text-s
+  font-size: $ui-typo-text-s-font-size
+  line-height: $ui-typo-text-s-line-height
+  letter-spacing: normal
+  font-family: $mailer-font-family-base
+
+= mailer-font-size-text-xs
+  font-size: $ui-typo-text-xs-font-size
+  line-height: $ui-typo-text-xs-line-height
+  letter-spacing: normal
+  font-family: $mailer-font-family-base
+
+= mailer-font-h1
+  +mailer-font-size-display-m
+  font-weight: $font-weight-bold
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    +mailer-font-size-display-s
+
+= mailer-font-h2
+  +mailer-font-size-display-s
+  font-weight: $font-weight-bold
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    +mailer-font-size-display-xs
+
+= mailer-font-h3
+  +mailer-font-size-display-xs
+  font-weight: $font-weight-bold
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    +mailer-font-size-display-2xs
+
+= mailer-font-h4
+  +mailer-font-size-display-2xs
+  font-weight: $font-weight-bold
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    +mailer-font-size-display-3xs
+
+= mailer-font-h5
+  +mailer-font-h4
+
+= mailer-font-size-base
+  +mailer-font-size-text-m
+  letter-spacing: normal
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    +mailer-font-size-text-s
+
+= mailer-font-size-mini
+  +mailer-font-size-text-xs
+  letter-spacing: normal
+
+= mailer-font-size-sm
+  +mailer-font-size-text-s
+  letter-spacing: normal
+
+  +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+    +mailer-font-size-text-xs

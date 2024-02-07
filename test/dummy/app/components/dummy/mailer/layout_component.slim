@@ -1,7 +1,29 @@
-.d-mailer-layout
-  .d-mailer-layout__main
-    = render(Dummy::Mailer::HeaderComponent.new(site: @site))
+.d-mailer-layout[
+  aria-roledescription="email"
+]
+  table.d-mailer-layout__table[
+    role="presentation"
+  ]
+    tr
+      td.d-mailer-layout__main-wrapper[
+        align="center"
+      ]
+        table.d-mailer-layout__container[
+          role="presentation"
+        ]
+          tr
+            td.d-mailer-layout__wrapper
+              = render(Dummy::Mailer::HeaderComponent.new(site: @site))
 
-    = content
+          tr
+            td.d-mailer-layout__wrapper
+              table.d-mailer-layout__content[
+                role="presentation"
+              ]
+                tr
+                  td.d-mailer-layout__content-inner
+                    = content
 
-  = render(Dummy::Mailer::FooterComponent.new(site: @site))
+          tr
+            td.d-mailer-layout__wrapper
+              = render(Dummy::Mailer::FooterComponent.new(site: @site))

@@ -1,0 +1,24 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-cards-medium
+    width: 100%
+
+    &__wrapper
+      padding: 32px 0 0 0
+
+    &__inner
+      width: 100%
+      background-color: $cloud-100
+      border-radius: map-get($spacers, 3)
+
+    &__image-wrapper
+      padding: 0
+      border-radius: map-get($spacers, 3) 0 0 map-get($spacers, 3)
+
+    &__content-wrapper
+      width: 408px
+      padding: 32px 32px 32px 32px
+
+    &__content-wrapper p
+      +mailer-font-size-text-s

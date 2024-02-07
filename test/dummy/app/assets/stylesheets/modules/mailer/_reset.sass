@@ -1,0 +1,30 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  body
+    margin: 0
+    padding: 0
+    word-spacing: normal
+
+  table, td, div, h1, p
+    font-family: $mailer-font-family-base
+
+  table
+    border-collapse: collapse
+    border-spacing: 0
+    border: 0
+
+  img
+    display: block
+    height: auto
+
+  p
+    color: $cloud-700
+
+  a
+    color: $blue
+    text-decoration: none
+    font-weight: 600
+
+  ul
+    +unlist
