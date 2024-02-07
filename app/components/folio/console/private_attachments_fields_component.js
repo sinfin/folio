@@ -171,6 +171,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
       .value = "1"
 
     this.afterCountUpdate()
+    this.triggerChange()
   }
 
   onDestroyClick (e) {
@@ -191,6 +192,7 @@ window.Folio.Stimulus.register('f-c-private-attachments-fields', class extends w
 
   triggerChange () {
     this.element.dispatchEvent(new window.Event('change', { bubbles: true }))
+    this.dispatch('change')
   }
 
   onArrowClick (e, up) {
