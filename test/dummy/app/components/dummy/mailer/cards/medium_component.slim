@@ -1,0 +1,35 @@
+table.d-mailer-cards-medium[
+  role="presentation"
+]
+  tr
+    td.d-mailer-cards-medium__wrapper
+      table.d-mailer-cards-medium__inner[
+        role="presentation"
+      ]
+        tr
+          - if @folio_image
+            td.d-mailer-cards-medium__image-wrapper[
+              style="background: #f5f5f5 url('#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}') no-repeat center / cover;"
+              width="240"
+              valign="top"
+            ]
+              /[if gte mso 9]
+                <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:240px;">
+                  <v:fill type="tile" src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}" color="#f5f5f5" />
+                  <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
+
+              div
+
+              /[if gte mso 9]
+                </v:textbox>
+                </v:rect>
+
+          td.d-mailer-cards-medium__content-wrapper
+            - if @title.present?
+              h2.d-mailer-cards-medium__title = @title
+
+            = content
+
+            - if @button_label && @button_href
+              a.btn.btn-primary.d-mailer-cards-medium__btn href=@button_href
+                = @button_label

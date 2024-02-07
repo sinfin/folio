@@ -1,0 +1,14 @@
+table.d-mailer-socials[
+  role="presentation"
+]
+  tr
+    - if social_links.present?
+      - social_links.each do |key, link|
+        td.d-mailer-socials__social-link-wrapper
+          a.d-mailer-socials__social-link[
+            href=link
+            title=key
+            class="d-mailer-socials__social-link--#{key}"
+          ]
+            = dummy_ui_icon(key.to_sym,
+                            class_name: 'd-mailer-socials__social-ico')

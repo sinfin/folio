@@ -1,0 +1,17 @@
+table.d-mailer-footer-menu[
+  role="presentation"
+]
+  tr
+    - if menu
+      td.d-mailer-footer-menu__menu-wrapper
+        table.d-mailer-footer-menu__menu[
+          role="presentation"
+        ]
+          tr
+            - menu.menu_items.includes(:page).each do |menu_item|
+              td.d-mailer-footer-menu__menu-link-wrapper
+                a.d-mailer-footer-menu__menu-link[
+                  href=menu_url_for(menu_item)
+                  title=menu_item.to_label
+                ]
+                  = menu_item.to_label

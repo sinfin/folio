@@ -11,6 +11,7 @@ html.d-mailer-html[
   head
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
     meta content="width=device-width, initial-scale=1.0" name="viewport" /
+    meta name="x-apple-disable-message-reformatting" /
 
     link[
       rel="preconnect"
@@ -24,11 +25,26 @@ html.d-mailer-html[
     ]
 
     link[
-      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700"
+      href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Space+Grotesk:wght@300..700&display=swap"
       rel="stylesheet"
+      data-premailer="ignore"
     ]
 
     = stylesheet_link_tag('mailer', media: 'all')
+
+    style[
+      type="text/css"
+      data-premailer="ignore"
+    ]
+      = Rails.application.assets.find_asset('mailer_utilities.css').to_s.html_safe
+
+    /[if mso]
+      style[
+        type="text/css"
+      ]
+        | table {border-collapse:collapse;border-spacing:0;border:none;margin:0;}
+        | div, td {padding:0;}
+        | div {margin:0 !important;}
 
     /![if gte mso 9]
       xml

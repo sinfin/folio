@@ -1,2 +1,35 @@
-.d-mailer-footer
-  p footer
+table.d-mailer-footer[
+  role="presentation"
+]
+  tr
+    td.d-mailer-footer__logo-wrapper
+      ' footer logo
+
+  - if contact_details.present?
+    tr
+      td.d-mailer-footer__contact-wrapper
+        span.d-mailer-footer__contact-title.fw-bold
+          = t('.contact')
+
+        - contact_details.each do |key, value|
+          span.d-mailer-footer__contact-detail
+            = value
+
+  - if @site.social_links.present?
+    tr
+      td.d-mailer-footer__socials-title-wrapper
+        span.d-mailer-footer__socials-title.fw-bold
+          = t('.follow_us')
+
+    tr
+      td.d-mailer-footer__socials-table-wrapper
+        = render(Dummy::Mailer::SocialsComponent.new(site: @site))
+
+  - if menu
+    tr
+      td.d-mailer-footer__menu-wrapper
+        = render(Dummy::Mailer::FooterMenuComponent.new(site: @site))
+
+  tr
+    td.d-mailer-footer__legal-wrapper
+      = @site.copyright_info

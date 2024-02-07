@@ -1,0 +1,9 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-footer-menu__menu-link:hover,
+  .d-mailer-footer-menu__menu-link:focus
+    text-decoration: underline !important
+
+  .d-mailer-socials__social-link
+    +mailer-social-sites-hover-color

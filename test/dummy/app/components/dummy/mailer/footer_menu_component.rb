@@ -1,20 +1,8 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::FooterComponent < ApplicationComponent
+class Dummy::Mailer::FooterMenuComponent < ApplicationComponent
   def initialize(site:)
     @site = site
-  end
-
-  def contact_details
-    h = {}
-
-    %i[address phone email].each do |key|
-      if @site.send(key).present?
-        h[key] = @site.send(key)
-      end
-    end
-
-    h
   end
 
   def current_footer_menu

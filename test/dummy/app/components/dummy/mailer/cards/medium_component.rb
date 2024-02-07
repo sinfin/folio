@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Dummy::Mailer::CardComponent < ApplicationComponent
+class Dummy::Mailer::Cards::MediumComponent < ApplicationComponent
   THUMB_SIZE = "250x300"
 
   def initialize(folio_image: nil, title: nil, button_label: nil, button_href: nil)
