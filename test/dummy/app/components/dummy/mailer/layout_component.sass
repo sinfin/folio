@@ -2,15 +2,20 @@ $dummy-mailer-styles: false !default
 
 @if $dummy-mailer-styles
   .d-mailer-layout
+    text-size-adjust: 100%
+    -webkit-text-size-adjust: 100%
+    -ms-text-size-adjust: 100%
+    background-color: $primary-white
+
     &__table
       width: 100%
-      background: $primary-white
 
     &__main-wrapper
       padding: 0
 
     &__container
-      width: 744px
+      width: 94%
+      max-width: 744px
       text-align: left
 
     &__wrapper
@@ -18,7 +23,6 @@ $dummy-mailer-styles: false !default
 
     &__content
       width: 100%
-      background: $primary-white
 
     &__content-inner
       padding: 0 0 80px 0

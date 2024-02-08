@@ -1,5 +1,6 @@
 .d-mailer-layout[
   aria-roledescription="email"
+  lang=I18n.locale
 ]
   table.d-mailer-layout__table[
     role="presentation"
@@ -8,6 +9,11 @@
       td.d-mailer-layout__main-wrapper[
         align="center"
       ]
+        /[if mso]
+          <table role="presentation" align="center" style="width:744px;"> 
+          <tr>
+          <td>
+
         table.d-mailer-layout__container[
           role="presentation"
         ]
