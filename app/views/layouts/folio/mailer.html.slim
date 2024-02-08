@@ -7,6 +7,7 @@ html.d-mailer-html[
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:o="urn:schemas-microsoft-com:office:office"
   xmlns:v="urn:schemas-microsoft-com:vml"
+  lang=I18n.locale
 ]
   head
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type" /
@@ -39,19 +40,16 @@ html.d-mailer-html[
       = Rails.application.assets.find_asset('mailer_utilities.css').to_s.html_safe
 
     /[if mso]
-      style[
-        type="text/css"
-      ]
-        | table {border-collapse:collapse;border-spacing:0;border:none;margin:0;}
+      style type="text/css"
+        | table {border-collapse:collapse;border-spacing:0;border:0;margin:0;}
         | div, td {padding:0;}
         | div {margin:0 !important;}
+      noscript
+        xml
+          o:OfficeDocumentSettings
+              o:PixelsPerInch
+                ' 96
 
-    /![if gte mso 9]
-      xml
-        o:OfficeDocumentSettings
-          o:AllowPNG
-            o:PixelsPerInch 96
-
-  body.d-mailer-body bgcolor="#ffffff"
+  body.d-mailer-body
     = render(component.new(site:))
        = yield

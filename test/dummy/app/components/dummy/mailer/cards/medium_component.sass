@@ -12,13 +12,35 @@ $dummy-mailer-styles: false !default
       background-color: $cloud-100
       border-radius: map-get($spacers, 3)
 
+    &__inner-wrapper
+      font-size: 0
+      padding: 0
+
+    &__image-wrapper, &__content-wrapper
+      display: inline-block
+      vertical-align: top
+
     &__image-wrapper
       padding: 0
-      border-radius: map-get($spacers, 3) 0 0 map-get($spacers, 3)
+      width: 100%
+      max-width: 240px
+      vertical-align: top
+      text-align: left
 
-    &__content-wrapper
-      width: 408px
+    &__image-inner
       padding: 32px 32px 32px 32px
 
-    &__content-wrapper p
+    &__image
+      border-radius: map-get($spacers, 3)
+
+    &__content-wrapper
+      width: 100%
+      max-width: 408px
+      vertical-align: top
+
+    &__content-inner
+      padding: 32px 32px 32px 32px
+      text-align: left
+
+    &__content-inner p
       +mailer-font-size-text-s
