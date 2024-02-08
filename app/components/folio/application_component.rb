@@ -2,6 +2,7 @@
 
 class Folio::ApplicationComponent < ViewComponent::Base
   include Folio::CstypoHelper
+  include Folio::FormsHelper
   include Folio::IconHelper
   include Folio::StimulusHelper
 

@@ -15,6 +15,7 @@
 //= require folio/lazyload
 //= require folio/lightbox
 //= require folio/modal
+//= require folio/nested_fields_component
 //= require folio/newsletter_subscriptions/form_component
 
 //= require folio/image/image

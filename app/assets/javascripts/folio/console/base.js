@@ -44,6 +44,7 @@
 //= require folio/chart/chart
 //= require folio/ui/icon/icon
 //= require folio/click_trigger
+//= require folio/nested_fields_component
 
 // must be under folio/input
 //= require daterangepicker.min

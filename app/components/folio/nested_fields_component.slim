@@ -1,0 +1,53 @@
+.f-nested-fields data=data
+  .f-nested-fields__fields-wrap data=stimulus_target('fieldsWrap')
+    = @f.simple_fields_for @key do |ff|
+      .f-nested-fields__fields data=stimulus_target('fields')
+        - @g = ff
+        == content
+        = @g.hidden_field :id
+
+        - if @destroy
+          = @g.hidden_field :_destroy
+
+          .f-nested-fields__destroy[
+            data=stimulus_action(click: 'onDestroyClick')
+          ]
+            - if @destroy == true
+              = folio_icon(:close, class: "f-nested-fields__destroy-ico")
+            - else
+              == @destroy
+
+        - remove_instance_variable(:@__vc_content)
+
+  - if @add
+    .f-nested-fields__add data=stimulus_action(click: 'onAddClick')
+      - if @add == true
+        button.btn.btn-success type="button"
+          = t('.add')
+      - else
+        == @add
+
+      .f-nested-fields__template[
+        hidden=true
+        data=stimulus_target('template')
+      ]
+        .f-nested-fields__fields[
+          class="f-nested-fields__fields--dynamic"
+          data=stimulus_target('fields')
+        ]
+          = @f.simple_fields_for @key,
+                                 new_object,
+                                 child_index: "f-nested-fields-template-#{@key}" do |ff|
+            - @g = ff
+            == content
+
+            - if @destroy
+              .f-nested-fields__destroy[
+                data=stimulus_action(click: 'onDestroyClick')
+              ]
+                - if @destroy == true
+                  = folio_icon(:close, class: "f-nested-fields__destroy-ico")
+                - else
+                  == @destroy
+
+            - remove_instance_variable(:@__vc_content)

@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2024-02-08
+### Added
+- added `folio_nested_fields` using `Folio::NestedFieldsComponent` - use it instead of `cocoon`
+
 ## 2024-01-25
 ### Changed
 - removed `private_attachments` and `private_attachments_fields` partials, use `Folio::Console::PrivateAttachmentsFieldsComponent` instead!
