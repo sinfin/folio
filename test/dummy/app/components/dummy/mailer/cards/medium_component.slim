@@ -31,11 +31,15 @@ table.d-mailer-cards-medium[
               /[if mso]
                 </td>
 
-            /[if mso]
-              <td style="width:408px;padding:32px 32px 32px 32px;" valign="top">
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:408px;padding:32px 32px 32px 32px;" valign="top">
+            - else
+              /[if mso]
+                <td style="padding:32px 32px 32px 32px;" valign="top">
 
             .d-mailer-cards-medium__content-wrapper[
-              class="col-lg"
+              class=(@folio_image.present? ? "col-lg" : "col-full")
             ]
               .d-mailer-cards-medium__content-inner
                 - if @title.present?

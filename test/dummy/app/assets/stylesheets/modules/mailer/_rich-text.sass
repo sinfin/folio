@@ -1,0 +1,24 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-layout__content
+    p
+      +mailer-font-size-text-m
+      margin: 0 0 map-get($spacers, 3) 0
+      color: $cloud-700
+
+    p.font-size-lg
+      +mailer-font-size-text-l
+
+    p.font-size-sm
+      +mailer-font-size-text-s
+
+    a
+      color: $blue
+      text-decoration: none
+      font-weight: 600
+
+    hr
+      border-top: 1px solid $cloud-300
+      margin: 32px 0 32px 0
+      padding: 0
