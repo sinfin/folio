@@ -1,9 +1,19 @@
 table.d-mailer-footer[
   role="presentation"
 ]
-  tr
-    td.d-mailer-footer__logo-wrapper
-      ' footer logo
+  - if @logo
+    tr
+      td.d-mailer-footer__logo-wrapper
+        a[
+          href="#"
+          class="d-unlink"
+          class="d-mailer-footer__logo-link"
+        ]
+          img[
+            src="https://auctea-com.s3.amazonaws.com/auctea/mailer/auctify_logo.svg"
+            alt="logo"
+            width="100"
+          ]
 
   - if contact_details.present?
     tr

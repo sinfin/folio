@@ -7,25 +7,18 @@ $dummy-mailer-styles: false !default
     padding: 0
     word-spacing: normal
 
-  table, td, div
-    font-family: $mailer-font-family-base
-
   table
     border-collapse: collapse
     border-spacing: 0
     border: 0
 
   img
+    max-width: 100%
     display: block
     height: auto
 
-  p
-    color: $cloud-700
-
-  a
-    color: $blue
-    text-decoration: none
-    font-weight: 600
-
   ul
     +unlist
+
+  table, td, div
+    font-family: $mailer-font-family-base

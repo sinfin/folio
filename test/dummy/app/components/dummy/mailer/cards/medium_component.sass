@@ -38,9 +38,18 @@ $dummy-mailer-styles: false !default
       max-width: 408px
       vertical-align: top
 
+    &__content-wrapper.col-full
+      max-width: 100%
+
     &__content-inner
       padding: 32px 32px 32px 32px
       text-align: left
 
     &__content-inner p
       +mailer-font-size-text-s
+      margin-bottom: 20px !important
+
+    &__btn
+      +mailer-font-size-text-xs
+      height: 34px !important
+      line-height: 34px !important

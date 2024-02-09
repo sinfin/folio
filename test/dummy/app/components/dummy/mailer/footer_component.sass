@@ -3,24 +3,27 @@ $dummy-mailer-styles: false !default
 @if $dummy-mailer-styles
   .d-mailer-footer
     width: 100%
-    background: $cloud-100
+    max-width: 648px
 
     &__logo-wrapper, &__contact-wrapper
-      padding: 32px 48px 0 48px
+      padding: 32px 0 0 0
 
     &__socials-title-wrapper
-      padding: 40px 48px 0 48px
+      padding: 40px 0 0 0
 
     &__socials-table-wrapper
-      padding: 0 48px 32px 48px
+      padding: 0 0 32px 0
 
     &__menu-wrapper
-      padding: 0 48px 0 48px
+      padding: 0
 
     &__legal-wrapper
       +mailer-font-size-text-m
-      padding: 16px 48px 32px 48px
+      padding: 16px 0 32px 0
       color: $cloud-400
+
+    &__logo-link
+      display: inline-block
 
     &__contact-title, &__socials-title
       +mailer-font-size-display-xs
@@ -34,5 +37,3 @@ $dummy-mailer-styles: false !default
 
       &:last-child
         margin: 0
-
-    

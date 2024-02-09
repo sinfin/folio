@@ -2,7 +2,7 @@
   $max: map-get($breakpoints, $name)
   @return if($max and $max > 0, $max - .02, null)
 
-@mixin mailer-media-breakpoint-down($name, $breakpoints: $mailer-breakpoints)
+=mailer-media-breakpoint-down($name, $breakpoints: $mailer-breakpoints)
   $max: breakpoint-max($name, $breakpoints)
   @if $max
     @media (max-width: $max)

@@ -18,11 +18,15 @@
           role="presentation"
         ]
           tr
-            td.d-mailer-layout__wrapper
+            td.d-mailer-layout__wrapper[
+              align="center"
+            ]
               = render(Dummy::Mailer::HeaderComponent.new(site: @site))
 
           tr
-            td.d-mailer-layout__wrapper
+            td.d-mailer-layout__wrapper[
+              align="center"
+            ]
               table.d-mailer-layout__content[
                 role="presentation"
               ]
@@ -31,5 +35,8 @@
                     = content
 
           tr
-            td.d-mailer-layout__wrapper
-              = render(Dummy::Mailer::FooterComponent.new(site: @site))
+            td.d-mailer-layout__wrapper[
+              class="d-mailer-layout__footer"
+              align="center"
+            ]
+              = render(Dummy::Mailer::FooterComponent.new(site: @site, logo: true))
