@@ -33,8 +33,7 @@ SimpleForm::Inputs::StringInput.class_eval do
         end
       end
     elsif options[:numeral]
-      input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
-      input_html_classes << "f-input--numeral"
+      register_stimulus("f-input-numeral")
       input_html_options[:autocomplete] = "off"
     else
       input_html_classes.unshift("string")
