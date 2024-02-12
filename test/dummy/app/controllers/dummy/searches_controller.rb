@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Dummy::SearchesController < ApplicationController
+  include Folio::RenderComponentJson
+
   before_action :set_search
 
   DEFAULT_OVERVIEW_LIMIT = 4
   DEFAULT_LIMIT = 40
-  DEFAULT_RESULTS_CELL = "dummy/searches/results_list"
+  DEFAULT_RESULTS_COMPONENT = Dummy::Searches::ResultsListComponent
 
   SEARCH_MODELS = [
     {
@@ -13,7 +15,7 @@ class Dummy::SearchesController < ApplicationController
       limit: DEFAULT_LIMIT,
       overview_limit: DEFAULT_OVERVIEW_LIMIT,
       includes: [cover_placement: :file],
-      results_cell: DEFAULT_RESULTS_CELL,
+      results_component: DEFAULT_RESULTS_COMPONENT,
     },
   ]
 
@@ -22,7 +24,7 @@ class Dummy::SearchesController < ApplicationController
   end
 
   def autocomplete
-    render json: { data: cell("dummy/searches/autocomplete", @search).show }
+    render_component_json(Dummy::Searches::AutocompleteComponent.new(search: @search))
   end
 
   private
@@ -64,7 +66,7 @@ class Dummy::SearchesController < ApplicationController
           count:,
           label: "#{label} (#{count})",
           href: tab_href,
-          results_cell: meta[:results_cell] || DEFAULT_RESULTS_CELL,
+          results_component: meta[:results_component] || DEFAULT_RESULTS_COMPONENT,
         }
 
         @search[:count] += count
@@ -85,7 +87,7 @@ class Dummy::SearchesController < ApplicationController
             @search[:active_results] = {
               pagy: results_pagy,
               records: results_records,
-              results_cell: meta[:results_cell] || DEFAULT_RESULTS_CELL,
+              results_component: meta[:results_component] || DEFAULT_RESULTS_COMPONENT,
             }
           end
         end
