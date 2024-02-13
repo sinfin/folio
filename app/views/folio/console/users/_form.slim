@@ -8,10 +8,12 @@
       .col-xxl-8
         = f.input :email, required: f.object.new_record?
 
-        - if ::Rails.application.config.folio_users_require_phone
-          = f.input :phone
-
-          = f.input :phone_secondary
+        - if ::Rails.application.config.folio_users_use_phone
+          .row
+            .col-md-6
+              = f.input :phone
+            .col-md-6
+              = f.input :phone_secondary
 
         .row
           .col-md-2
