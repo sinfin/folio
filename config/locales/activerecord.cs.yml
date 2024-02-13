@@ -106,8 +106,12 @@ cs:
         addresses: Adresa
         admin_note: Poznámka (viditelná jen administrátory)
         authentications: Propojení
+        bank_account_number: Číslo bankovního účtu
+        born_at: Datum narození
         confirmed_at: Potvrzen
         created_at: Vytvořen
+        degree_post: Titul za
+        degree_pre: Titul před
         full_name: Jméno
         nickname: Přezdívka
         subscribed_to_newsletter: Přihlášení do newsletteru

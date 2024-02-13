@@ -13,8 +13,12 @@
 
         - if ::Rails.application.config.folio_users_require_phone
           = s.attribute :phone
+          = s.attribute :phone_secondary
+
+        = s.attribute :degree_pre
         = s.attribute :first_name
         = s.attribute :last_name
+        = s.attribute :degree_post
         = s.attribute :nickname
         = s.attribute :sign_in_count
         = s.attribute :last_sign_in_at
@@ -22,6 +26,9 @@
 
         - if Rails.application.config.folio_users_confirmable
           = s.attribute :confirmed_at
+
+        = s.attribute :bank_account_number
+        = s.attribute :born_at
 
         = s.attribute :authentications
           == cell('folio/console/authentications/list', s.object)

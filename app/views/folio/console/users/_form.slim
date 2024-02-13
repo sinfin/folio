@@ -5,19 +5,29 @@
 .tab-content
   = tab :content
     .row
-      .col-lg-8
+      .col-xxl-8
         = f.input :email, required: f.object.new_record?
 
         - if ::Rails.application.config.folio_users_require_phone
           = f.input :phone
 
-        .row
-          .col-md-6
-            = f.input :first_name
-          .col-md-6
-            = f.input :last_name
+          = f.input :phone_secondary
 
-      .col-lg-4
+        .row
+          .col-md-2
+            = f.input :degree_pre
+          .col-md-4
+            = f.input :first_name
+          .col-md-4
+            = f.input :last_name
+          .col-md-2
+            = f.input :degree_post
+
+        = f.input :bank_account_number
+
+        = f.input :born_at
+
+      .col-xxl-4
         = f.input :admin_note,
                   autosize: true,
                   input_html: { class: "bg-postit-note", rows: 4 }

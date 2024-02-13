@@ -92,7 +92,11 @@ en:
         keyword/USER_EMAIL: User e-mail
       folio/user:
         address_identification_number: Indentification number
+        bank_account_number: Bank account number
+        born_at: Birth date
         confirmed_at: Confirmed at
+        degree_post: Degree after
+        degree_pre: Degree before
     errors:
       messages:
         indestructible: The record cannot be removed.
