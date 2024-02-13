@@ -74,8 +74,8 @@ class Folio::JwPlayer::Api
       if preview
         start_duration = ActiveSupport::Duration.build(media_file.preview_starts_at_second).parts
         end_duration = ActiveSupport::Duration.build(media_file.preview_ends_at_second).parts
-        upload_data[:trim_in_point] = %i[hours, minutes, seconds].collect { |k| "%02d" % (start_duration[k] || 0) }.join(":")
-        upload_data[:trim_out_point] = %i[hours, minutes, seconds].collect { |k| "%02d" % (end_duration[k] || 0)  }.join(":")
+        upload_data[:trim_in_point] = %i[hours minutes seconds].collect { |k| "%02d" % (start_duration[k] || 0) }.join(":")
+        upload_data[:trim_out_point] = %i[hours minutes seconds].collect { |k| "%02d" % (end_duration[k] || 0) }.join(":")
       end
 
       { metadata:, upload: upload_data }
