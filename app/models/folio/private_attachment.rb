@@ -18,6 +18,8 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
   validates :file,
             presence: true
 
+  scope :ordered, -> { order(id: :asc) }
+
   def self.human_type
     "document"
   end
@@ -36,6 +38,15 @@ class Folio::PrivateAttachment < Folio::ApplicationRecord
 
   def self.hash_id_additional_classes
     [Folio::File]
+  end
+
+  def to_h
+    {
+      file_size:,
+      file_name:,
+      type:,
+      id:,
+    }
   end
 end
 

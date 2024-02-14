@@ -1,0 +1,57 @@
+@import "dropzone-6-0-0-beta-2"
+
+$shade-200: $gray-200 !default
+
+.f-dropzone
+  &.dropzone
+    min-height: unset
+    border: 0
+    padding: 0
+
+    .dz-preview
+      flex: 0 0 auto
+      width: 120px
+      height: 120px
+      border-radius: $border-radius
+      margin: 0
+
+      .dz-image
+        background: $shade-200
+        border-radius: $border-radius
+
+      .dz-details
+        width: 120px
+        height: 120px
+        padding: 2 * $grid-gutter-width $grid-gutter-half $grid-gutter-half
+
+      &.dz-image-preview .dz-details
+        padding-top: $grid-gutter-half
+
+  &__previews
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-half
+    margin: $grid-gutter-half 0
+
+    &:empty
+      display: none
+
+  &__trigger
+    cursor: pointer
+
+  &__preview-file-ico
+    position: absolute
+    top: $grid-gutter-half
+    left: 50%
+    transform: translate(-50%, 0)
+
+    .dz-image-preview &
+      display: none
+
+  &__preview-remove
+    position: absolute
+    top: 0
+    right: 0
+    cursor: pointer
+    z-index: 21
+    padding: $grid-gutter-width / 4
