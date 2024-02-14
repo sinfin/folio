@@ -1,9 +1,9 @@
 ---
 cs:
   folio:
-    dropzone:
+    dropzone_component:
       dictDefaultMessage: "Vybrat soubory"
-      dictFallbackMessage: "Prohlížec nepodporuje drag'n'drop nahrávání souborů.does not support drag'n'drop file uploads."
+      dictFallbackMessage: "Prohlížeč nepodporuje drag'n'drop nahrávání souborů."
       dictFallbackText: "Pro nahrání souborů použijte formulář níže."
       dictFileTooBig: "Soubor je příliš veliký ({{filesize}}MiB). Maximální velikost: {{maxFilesize}}MiB."
       dictInvalidFileType: "Tento druh souboru není povolen."
@@ -11,4 +11,4 @@ cs:
       dictUploadCanceled: "Nahrávání zrušeno"
       dictCancelUploadConfirmation: "Zrušit nahrávání?"
       dictMaxFilesExceeded: "Nelze nahrát více souborů."
-      destroy_failure: Soubor se nepodařilo odstranit.
+      destroy_failure: "Soubor se nepodařilo odstranit."

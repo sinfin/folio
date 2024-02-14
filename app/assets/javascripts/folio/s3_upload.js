@@ -38,6 +38,7 @@ window.Folio.S3Upload.consolePreviewTemplate = () => `
 window.Folio.S3Upload.createDropzone = ({
   dropzoneOptions,
   element,
+  maxFilesize,
   fileType,
   fileHumanType,
   filterMessageBusMessages,
@@ -67,7 +68,7 @@ window.Folio.S3Upload.createDropzone = ({
     timeout: 0,
     parallelUploads: 1,
     autoProcessQueue: false,
-    maxFilesize: (fileHumanType === 'image' ? 512 : 5120), // mb
+    maxFilesize: maxFilesize || (fileHumanType === 'image' ? 512 : 5120), // mb
 
     accept: function (file, done) {
       const dropzone = this
