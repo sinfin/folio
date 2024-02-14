@@ -1,8 +1,27 @@
 @import "dropzone-6-0-0-beta-2"
 
 $shade-200: $gray-200 !default
+$shade-300: $gray-300 !default
+$shade-700: $gray-700 !default
 
 .f-dropzone
+  position: relative
+
+  &::after
+    content: ''
+    display: block
+    position: absolute
+    inset: - $grid-gutter-half
+    border-radius: $border-radius
+    background: $success
+    transition: $transition-base
+    pointer-events: none
+    z-index: 2
+    opacity: 0
+
+    .dz-drag-hover &
+      opacity: 0.15
+
   &.dropzone
     min-height: unset
     border: 0
@@ -26,6 +45,13 @@ $shade-200: $gray-200 !default
 
       &.dz-image-preview .dz-details
         padding-top: $grid-gutter-half
+
+      .dz-progress
+        background: $shade-300
+        border: 0
+
+        .dz-upload
+          background: $shade-700
 
   &__previews
     display: flex

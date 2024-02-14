@@ -132,35 +132,6 @@ window.Folio.S3Upload.createDropzone = ({
       xhr.send = () => { _send.call(xhr, file) }
     },
 
-    uploadprogress: function (file, progress, _bytesSent) {
-      const rounded = Math.round(progress)
-      let text
-
-      if (rounded === 100) {
-        if (fileHumanType !== 'image' && file.size && file.size > (25 * 1000 * 1024)) {
-          text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'processing')
-        } else {
-          text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing')
-        }
-      } else {
-        text = `${rounded}%`
-      }
-
-      if (onProgress) onProgress(file.s3_path, rounded, text)
-
-      if (folioConsole && file.previewElement) {
-        file
-          .previewElement
-          .querySelector('.f-c-r-file-upload-progress__slider, .f-c-r-dropzone__preview-progress-inner')
-          .style.width = `${rounded}%`
-
-        file
-          .previewElement
-          .querySelector('.f-c-r-file-upload-progress__inner, .f-c-r-dropzone__preview-progress-text')
-          .innerText = text
-      }
-    },
-
     thumbnail: function (file, dataUrl) {
       if (file.previewElement) {
         const imgs = file.previewElement.querySelectorAll('[data-dz-thumbnail]')
@@ -188,6 +159,35 @@ window.Folio.S3Upload.createDropzone = ({
 
   const dropzone = new window.Dropzone(element, options)
   dropzone.dropzoneId = dropzoneId
+
+  dropzone.on('uploadprogress', (file, progress, _bytesSent) => {
+    const rounded = Math.round(progress)
+    let text
+
+    if (rounded === 100) {
+      if (fileHumanType !== 'image' && file.size && file.size > (25 * 1000 * 1024)) {
+        text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'processing')
+      } else {
+        text = window.Folio.i18n(window.Folio.S3Upload.i18n, 'finalizing')
+      }
+    } else {
+      text = `${rounded}%`
+    }
+
+    if (onProgress) onProgress(file.s3_path, rounded, text)
+
+    if (folioConsole && file.previewElement) {
+      file
+        .previewElement
+        .querySelector('.f-c-r-file-upload-progress__slider, .f-c-r-dropzone__preview-progress-inner')
+        .style.width = `${rounded}%`
+
+      file
+        .previewElement
+        .querySelector('.f-c-r-file-upload-progress__inner, .f-c-r-dropzone__preview-progress-text')
+        .innerText = text
+    }
+  })
 
   filterMessageBusMessages = filterMessageBusMessages || ((msg) => {
     const s3Path = msg && msg.data && msg.data.s3_path
