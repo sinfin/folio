@@ -7,16 +7,14 @@ table.d-mailer-cards-medium[
         role="presentation"
       ]
         tr
-          td.d-mailer-cards-medium__inner-wrapper[
-            align="center"
-          ]
+          td.d-mailer-cards-medium__inner-wrapper
             /[if mso]
               <table role="presentation" width="100%">
               <tr>
 
             - if @folio_image.present?
               /[if mso]
-                <td style="width:240px;padding:32px 32px 32px 32px;" align="center" valign="top">
+                <td style="width:232px;padding:0 0 32px 32px;" align="left" valign="top">
 
               .d-mailer-cards-medium__image-wrapper[
                 class="col-sm"
@@ -25,7 +23,7 @@ table.d-mailer-cards-medium[
                   img.d-mailer-cards-medium__image[
                     src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
                     alt=""
-                    width="176"
+                    width="200"
                   ]
 
               /[if mso]
@@ -33,10 +31,10 @@ table.d-mailer-cards-medium[
 
             - if @folio_image.present?
               /[if mso]
-                <td style="width:408px;padding:32px 32px 32px 32px;" valign="top">
+                <td style="width:416px;padding:0 32px 32px 32px;" valign="top">
             - else
               /[if mso]
-                <td style="padding:32px 32px 32px 32px;" valign="top">
+                <td style="padding:0 32px 32px 32px;" valign="top">
 
             .d-mailer-cards-medium__content-wrapper[
               class=(@folio_image.present? ? "col-lg" : "col-full")
