@@ -1,0 +1,31 @@
+- if @cards.present?
+  table.d-mailer-cards-extra-small-container[
+    role="presentation"
+  ]
+    tr
+      td.d-mailer-cards-extra-small-container__wrapper
+        /[if mso]
+          <table role="presentation" width="100%">
+
+        - @cards.each_with_index do |card, index|
+          - if index.even?
+            /[if mso]
+              <tr>
+              <td style="width:336px;padding:0 24px 24px 0;" align="left" valign="top">
+
+          - else
+            /[if mso]
+              <tr>
+              <td style="width:312px;padding:0 0 24px 0;" align="left" valign="top">
+
+          .d-mailer-cards-extra-small-container__card-wrapper[
+            class=(index.even? ? "d-mailer-cards-extra-small-container__card-wrapper--even" : "d-mailer-cards-extra-small-container__card-wrapper--odd")
+          ]
+            = render(Dummy::Mailer::Cards::ExtraSmallComponent.new(card: card, even: index.even?))
+
+          /[if mso]
+            </td>
+          
+          - if index.even?
+            /[if mso]
+              </tr>

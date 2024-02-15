@@ -1,0 +1,21 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-cards-extra-small-container
+    width: 100%
+
+    &__wrapper
+      padding: 32px 0 0 0
+      font-size: 0
+
+    &__card-wrapper
+      width: 100%
+      padding: 0
+      display: inline-block
+      vertical-align: top
+
+      &--even
+        max-width: 336px
+
+      &--odd
+        max-width: 312px
