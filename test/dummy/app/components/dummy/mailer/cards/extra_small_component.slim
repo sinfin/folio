@@ -1,0 +1,31 @@
+table.d-mailer-cards-extra-small[
+  role="presentation"
+  class=(@even ? "d-mailer-cards-extra-small--even" : "d-mailer-cards-extra-small--odd")
+]
+  tr
+    td.d-mailer-cards-extra-small__wrapper
+      table
+        tr
+          - if @card[:image].present?
+            td.d-mailer-cards-extra-small__image-wrapper[
+              align="left"
+              valign="top"
+            ]
+              .d-mailer-cards-extra-small__image-inner
+                img.d-mailer-cards-extra-small__image[
+                  src="#{@card[:image].thumb(THUMB_SIZE, immediate: true).url}"
+                  alt=""
+                  width="80"
+                ]
+
+          td.d-mailer-cards-extra-small__content-wrapper[
+            class=(@card[:image].present? ? "d-mailer-cards-extra-small__content-wrapper--with-image" : "d-mailer-cards-extra-small__content-wrapper--full")
+            align="left"
+            valign="top"
+          ]
+            .d-mailer-cards-extra-small__content-inner
+              - if @card[:title].present?
+                .d-mailer-cards-extra-small__title = @card[:title]
+
+              .d-mailer-cards-extra-small__text
+                = @card[:text]
