@@ -1,5 +1,13 @@
+.d-mailer-layout__hidden-preview-text
+  | Insert hidden preheader text here.
+
+/ Insert &#847;&zwnj;&nbsp; hack after hidden preview text
+.d-mailer-layout__hidden-preview-hack
+  == "&#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy; &#847; &zwnj; &nbsp; &#8199; &shy;"
+
 .d-mailer-layout[
   aria-roledescription="email"
+  role="presentation"
   lang=I18n.locale
 ]
   table.d-mailer-layout__table[
@@ -21,7 +29,7 @@
             td.d-mailer-layout__wrapper[
               align="center"
             ]
-              = render(Dummy::Mailer::HeaderComponent.new(site: @site))
+              = render(Dummy::Mailer::HeaderComponent.new(site: @site, logo: true))
 
           tr
             td.d-mailer-layout__wrapper[
@@ -34,9 +42,31 @@
                   td.d-mailer-layout__content-inner
                     = content
 
+        /[if mso]
+          </td>
+          </tr>
+          </table>
+
+    tr
+      td.d-mailer-layout__footer-wrapper[
+        class="d-mailer-layout__footer"
+        align="center"
+      ]
+        /[if mso]
+          <table role="presentation" align="center" style="width:744px;">
+          <tr>
+          <td>
+
+        table.d-mailer-layout__container[
+          role="presentation"
+        ]
           tr
             td.d-mailer-layout__wrapper[
-              class="d-mailer-layout__footer"
               align="center"
             ]
               = render(Dummy::Mailer::FooterComponent.new(site: @site, logo: true))
+
+        /[if mso]
+          </td>
+          </tr>
+          </table>
