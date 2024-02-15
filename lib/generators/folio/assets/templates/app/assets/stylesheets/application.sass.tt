@@ -14,7 +14,7 @@
 @import 'folio/loader'
 @import 'folio/lazyload'
 @import 'folio/lightbox'
-@import 'folio/togglable-fields'
+@import 'folio/togglable_fields_component'
 @import 'folio/dropzone_component'
 @import 'folio/image/image'
 @import 'folio/input/phone'

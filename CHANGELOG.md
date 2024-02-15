@@ -2,6 +2,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 2024-02-15
+### Added
+- added `Folio::TogglableFieldsComponent`
+
 ## 2024-02-08
 ### Added
 - added `folio_nested_fields` using `Folio::NestedFieldsComponent` - use it instead of `cocoon`
