@@ -5,11 +5,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
     iho = input_html_options || {}
 
     if options[:remote]
-      reflection_class_name = if options[:reflection_class_name]
-        options[:reflection_class_name].constantize
-      else
-        reflection.class_name
-      end
+      reflection_class_name = options[:reflection_class_name] || reflection.try(:class_name)
 
       options[:collection] = autocomplete_collection(options[:force_collection] ? options[:collection] : nil, reflection_class_name: options[:reflection_class_name])
       input_html_classes << "f-input" if input_html_classes.exclude?("f-input")
@@ -62,7 +58,7 @@ SimpleForm::Inputs::CollectionSelectInput.class_eval do
   def autocomplete_collection(default_collection, reflection_class_name:)
     value = object.try(attribute_name)
 
-    if value.present?
+    if value.present? && reflection_class_name
       if value.is_a?(Array)
         value.map do |val|
           obj = reflection_class_name.constantize.find(val)
