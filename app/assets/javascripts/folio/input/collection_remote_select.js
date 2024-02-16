@@ -50,7 +50,7 @@ window.Folio.Input.CollectionRemoteSelect.bind = (input, { includeBlank, url }) 
       return data.text
     }
   }).on('change.select2', (e) => {
-    e.target.dispatchEvent(new Event("folio_select2_change"))
+    e.target.dispatchEvent(new window.CustomEvent('folio_select2_change', { bubbles: true }))
   })
 }
 
@@ -60,8 +60,8 @@ window.Folio.Input.CollectionRemoteSelect.unbind = (input) => {
 
 window.Folio.Stimulus.register('f-input-collection-remote-select', class extends window.Stimulus.Controller {
   static values = {
-    includeBlank: { type: String, default: "" },
-    url: { type: String, default: "" }
+    includeBlank: { type: String, default: '' },
+    url: { type: String, default: '' }
   }
 
   connect () {
