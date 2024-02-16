@@ -32,3 +32,10 @@ hr
 p.font-size-sm Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies nulla nisl, nec semper enim varius a. Integer tortor sapien, <a href="#congue">congue a suscipit quis</a>, ultrices non diam. Aenean bibendum sollicitudin tortor quis hendrerit. Donec vel porttitor ipsum, a laoreet nulla. Mauris orci tortor, imperdiet et purus sed, bibendum porta lectus. <strong>Proin et dui at augue condimentum</strong> ultrices imperdiet malesuada arcu. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per <i>inceptos himenaeos</i>.
 
 hr
+
+= render(Dummy::Mailer::OrderSummaryComponent.new(title: "Vážený dražiteli, děkujeme, přijali jsme Vaši objednávku.",
+                                          items: [{title: "Beulah Erickson", subtitle: "Pacific Railroad Survey - Hot Spring Mound, in the 'Deer Lodge' Prairie", total_price: "00 000 000", unit_price: "15,700", count: 2, folio_image: Folio::File::Image.first},
+                                                  {title: "František Kupka", subtitle: "Hot Spring Mound", total_price: "00 000 000", unit_price: "15,000", count: 2, folio_image: Folio::File::Image.first},
+                                                  {title: "Josef Velčovský", subtitle: "Pacific Railroad Survey", total_price: "00 000 000", unit_price: "15,000", count: 2, folio_image: Folio::File::Image.first}],
+                                          total: "00 000 000",
+                                          status: :unpaid))

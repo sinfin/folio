@@ -1,0 +1,9 @@
+---
+cs:
+  dummy:
+    mailer:
+      order_summary:
+        total: Celková cena (vč. provize)
+        payment_regulation: Instrukce pro uhrazení objednávky jsou součástí
+        payment_regulation_link: předpisů k úhradě
+        unpaid_instruction: Vydražené položky prosím uhraďte a vyzvedněte nejdéle do 14 dnů od ukončení aukce.

@@ -1,0 +1,61 @@
+table.d-mailer-order-summary[
+  role="presentation"
+]
+  tr
+    td.d-mailer-order-summary__wrapper
+      table
+        tr
+          td.d-mailer-order-summary__title-wrapper[
+            align="left"
+            valign="top"
+          ]
+            .d-mailer-order-summary__title = @title
+
+        tr
+          td.d-mailer-order-summary__order-wrapper[
+            align="left"
+            valign="top"
+          ]
+            table.d-mailer-order-summary__order[
+              role="presentation"
+            ]
+              - @items.each do |item|
+                tr.d-mailer-order-summary__order-item
+                  td.d-mailer-order-summary__order-image-wrapper
+                    img.d-mailer-order-summary__order-image[
+                      src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
+                      alt=""
+                      width="70"
+                    ]
+
+
+                  td.d-mailer-order-summary__order-title-wrapper
+                    .d-mailer-order-summary__order-title = item[:title]
+                    .d-mailer-order-summary__order-subtitle = item[:subtitle]
+
+                  td.d-mailer-order-summary__order-price
+                    .d-mailer-order-summary__total-price = item[:total_price]
+                    .d-mailer-order-summary__unit-price = item[:unit_price]
+                    .d-mailer-order-summary__count = item[:count]
+
+              tr
+                td.d-mailer-order-summary__order-total-title = t(".total")
+                td.d-mailer-order-summary__order-total-price = @total
+
+        tr
+          td.d-mailer-order-summary__info-wrapper[
+            align="left"
+            valign="top"
+          ]
+            - if @status == :unpaid
+              p.d-mailer-order-summary__payment-regulation
+                = t(".payment_regulation")
+                
+                a.d-mailer-order-summary__payment-regulation-link[
+                  href="#"
+                ]
+                  = t(".payment_regulation_link")
+
+                ' .
+
+              p.d-mailer-order-summary__instruction = t(".unpaid_instruction")
