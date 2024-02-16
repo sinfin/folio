@@ -1,0 +1,9 @@
+---
+en:
+  dummy:
+    mailer:
+      order_summary:
+        total: Total price (incl. commission)
+        payment_regulation: Instructions for payment of the order are included in the
+        payment_regulation_link: regulation for payment
+        unpaid_instruction: Please pay and collect the auctioned items no later than 14 days after the end of the auction.
