@@ -3,7 +3,7 @@ table.d-mailer-order-summary[
 ]
   tr
     td.d-mailer-order-summary__wrapper
-      table
+      table.d-mailer-order-summary__wrapper-inner
         tr
           td.d-mailer-order-summary__title-wrapper[
             align="left"
@@ -21,22 +21,43 @@ table.d-mailer-order-summary[
             ]
               - @items.each do |item|
                 tr.d-mailer-order-summary__order-item
-                  td.d-mailer-order-summary__order-image-wrapper
-                    img.d-mailer-order-summary__order-image[
-                      src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
-                      alt=""
-                      width="70"
-                    ]
+                  td.d-mailer-order-summary__order-item-wrapper[
+                    align="left"
+                    valign="top"
+                  ]
+                    /[if mso]
+                      <table>
+                      <tr>
+                      <td style="width:70px;padding:0;" align="left" valign="top">
 
+                    .d-mailer-order-summary__order-image-wrapper
+                      img.d-mailer-order-summary__order-image[
+                        src="#{item[:folio_image].thumb(THUMB_SIZE, immediate: true).url}"
+                        alt=""
+                        width="70"
+                      ]
 
-                  td.d-mailer-order-summary__order-title-wrapper
-                    .d-mailer-order-summary__order-title = item[:title]
-                    .d-mailer-order-summary__order-subtitle = item[:subtitle]
+                    /[if mso]
+                      </td>
+                      <td style="width:430px;padding:0;" align="left" valign="top">
+                    
+                    .d-mailer-order-summary__order-title-wrapper
+                      .d-mailer-order-summary__order-title = item[:title]
+                      .d-mailer-order-summary__order-subtitle = item[:subtitle]
 
-                  td.d-mailer-order-summary__order-price
-                    .d-mailer-order-summary__total-price = item[:total_price]
-                    .d-mailer-order-summary__unit-price = item[:unit_price]
-                    .d-mailer-order-summary__count = item[:count]
+                    /[if mso]
+                      </td>
+                      <td style="width:100px;padding:0;" align="left" valign="top">
+
+                    .d-mailer-order-summary__order-price-wrapper
+                      .d-mailer-order-summary__total-price = item[:total_price]
+                      .d-mailer-order-summary__unit-price = item[:unit_price]
+                      .d-mailer-order-summary__count = item[:count]
+
+                    /[if mso]
+                      </td>
+                      </tr>
+                      </table>
 
               tr
                 td.d-mailer-order-summary__order-total-title = t(".total")

@@ -1,0 +1,72 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-order-summary
+    width: 100%
+
+    &__wrapper, &__title-wrapper, &__order-wrapper, &__info-wrapper
+      padding: 0
+      font-size: 0
+
+    &__wrapper-inner, &__order
+      width: 100%
+
+    &__order
+      table-layout: fixed
+
+    &__title-wrapper
+      padding: 0 0 32px 0
+
+    &__order-item-wrapper
+      overflow: hidden
+      text-overflow: ellipsis
+      width: 100%
+      font-size: 0
+      padding: 16px 0
+      border-bottom: 1px solid $cloud-200
+
+    &__title
+      +mailer-font-size-display-s
+      font-weight: $font-weight-bold
+      margin: 0 0 8px 0
+
+    &__order-wrapper
+      padding: 8px 24px 24px 24px
+      background: $cloud-100
+      border-radius: 12px
+
+    &__info-wrapper
+      padding: 32px 0 0 0
+
+    &__order-image-wrapper, &__order-title-wrapper, &__order-price-wrapper
+      display: inline-block
+      vertical-align: top
+      text-align: left
+
+    &__order-image-wrapper
+      width: 100%
+      max-width: 70px
+      padding: 0 16px 0 0
+
+    &__order-title-wrapper
+      width: 100%
+      max-width: 411px
+      padding: 4px 0 0 0
+
+    &__order-price-wrapper
+      width: 100%
+      max-width: 95px
+      padding: 4px 0 0 8px
+      height: 62px
+
+    &__order-title
+      +mailer-font-size-text-s
+      font-weight: $font-weight-bold
+      margin: 0 0 4px 0
+
+    &__order-subtitle
+      +mailer-font-size-text-s
+      margin: 0
+
+    &__total-price, &__unit-price, &__count
+      +mailer-font-size-text-xs
