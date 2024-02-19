@@ -9,10 +9,7 @@ $dummy-mailer-styles: false !default
     font-size: 100%
 
   body
-    font-size: $font-size-base
-
-    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
-      font-size: $font-size-base-s
+    font-size: $mailer-font-size-base
 
   h1, .h1
     +mailer-font-h1
