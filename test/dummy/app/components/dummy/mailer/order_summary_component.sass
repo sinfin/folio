@@ -36,7 +36,8 @@ $dummy-mailer-styles: false !default
       border-radius: 12px
 
     &__info-wrapper
-      padding: 32px 0 0 0
+      padding: 32px 0 8px 0
+      font-size: 0
 
     &__order-image-wrapper, &__order-title-wrapper, &__order-price-wrapper
       display: inline-block
@@ -50,13 +51,13 @@ $dummy-mailer-styles: false !default
 
     &__order-title-wrapper
       width: 100%
-      max-width: 411px
-      padding: 4px 0 0 0
+      max-width: 372px
+      padding: 4px 32px 0 0
 
     &__order-price-wrapper
       width: 100%
-      max-width: 95px
-      padding: 4px 0 0 8px
+      max-width: 110px
+      padding: 4px 0 0 0
       height: 62px
 
     &__order-title
@@ -67,6 +68,55 @@ $dummy-mailer-styles: false !default
     &__order-subtitle
       +mailer-font-size-text-s
       margin: 0
+      color: $cloud-700
+      font-weight: $font-weight-medium
 
     &__total-price, &__unit-price, &__count
       +mailer-font-size-text-xs
+  
+    &__total-price
+      color: $cloud-700
+      font-weight: $font-weight-semibold
+
+    &__total-price, &__unit-price
+      margin: 0 0 4px 0
+
+    &__unit-price, &__count
+      color: $cloud-400
+
+    &__order-total-price-title-wrapper
+      overflow: hidden
+      text-overflow: ellipsis
+      width: 100%
+      font-size: 0
+      padding: 16px 0 0 0
+
+    &__order-total-price-title,
+    &__order-total-price
+      +mailer-font-size-text-s
+      font-weight: $font-weight-bold
+      display: inline-block
+      vertical-align: top
+      text-align: left
+
+    &__order-total-price-title
+      width: 100%
+      max-width: 458px
+      padding: 0 32px 0 0
+
+    &__order-total-price
+      width: 100%
+      max-width: 110px
+      padding: 0
+
+    &__payment-regulation,
+    &__instruction
+      +mailer-font-size-text-s
+      margin: 0
+      color: $cloud-700
+
+    &__instruction
+      font-weight: $font-weight-bold
+
+    &__payment-regulation-link
+      font-weight: $font-weight-normal !important
