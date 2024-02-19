@@ -26,9 +26,9 @@ table.d-mailer-order-summary[
                     valign="top"
                   ]
                     /[if mso]
-                      <table>
+                      <table role="presentation" width="100%">
                       <tr>
-                      <td style="width:70px;padding:0;" align="left" valign="top">
+                      <td style="width:86px;padding:0 16px 0 0;" align="left" valign="top">
 
                     .d-mailer-order-summary__order-image-wrapper
                       img.d-mailer-order-summary__order-image[
@@ -39,7 +39,7 @@ table.d-mailer-order-summary[
 
                     /[if mso]
                       </td>
-                      <td style="width:430px;padding:0;" align="left" valign="top">
+                      <td style="width:404px;padding:4px 32px 0 0;" align="left" valign="top">
                     
                     .d-mailer-order-summary__order-title-wrapper
                       .d-mailer-order-summary__order-title = item[:title]
@@ -47,12 +47,22 @@ table.d-mailer-order-summary[
 
                     /[if mso]
                       </td>
-                      <td style="width:100px;padding:0;" align="left" valign="top">
+                      <td style="width:110px;padding:4px 0 0 0;" align="left" valign="top">
 
                     .d-mailer-order-summary__order-price-wrapper
-                      .d-mailer-order-summary__total-price = item[:total_price]
-                      .d-mailer-order-summary__unit-price = item[:unit_price]
-                      .d-mailer-order-summary__count = item[:count]
+                      .d-mailer-order-summary__total-price
+                        = item[:total_price]
+                        | &nbsp;
+                        | Kč
+                      
+                      .d-mailer-order-summary__unit-price
+                        = item[:unit_price]
+                        | &nbsp;
+                        | Kč
+
+                      .d-mailer-order-summary__count
+                        ' x
+                        = item[:count]
 
                     /[if mso]
                       </td>
@@ -60,8 +70,30 @@ table.d-mailer-order-summary[
                       </table>
 
               tr
-                td.d-mailer-order-summary__order-total-title = t(".total")
-                td.d-mailer-order-summary__order-total-price = @total
+                td.d-mailer-order-summary__order-total-price-title-wrapper[
+                  align="left"
+                  valign="top"
+                ]
+                  /[if mso]
+                    <table role="presentation" width="100%">
+                    <tr>
+                    <td style="width:490px;padding:0 32px 0 0;" align="left" valign="top">
+
+                  .d-mailer-order-summary__order-total-price-title = t(".total")
+
+                  /[if mso]
+                    </td>
+                    <td style="width:110px;padding:0;" align="left" valign="top">
+
+                  .d-mailer-order-summary__order-total-price
+                    = @total
+                    | &nbsp;
+                    | Kč
+
+                  /[if mso]
+                    </td>
+                    </tr>
+                    </table>
 
         tr
           td.d-mailer-order-summary__info-wrapper[
@@ -69,8 +101,9 @@ table.d-mailer-order-summary[
             valign="top"
           ]
             - if @status == :unpaid
-              p.d-mailer-order-summary__payment-regulation
+              .d-mailer-order-summary__payment-regulation
                 = t(".payment_regulation")
+                | &nbsp;
                 
                 a.d-mailer-order-summary__payment-regulation-link[
                   href="#"
@@ -79,4 +112,4 @@ table.d-mailer-order-summary[
 
                 ' .
 
-              p.d-mailer-order-summary__instruction = t(".unpaid_instruction")
+              .d-mailer-order-summary__instruction = t(".unpaid_instruction")
