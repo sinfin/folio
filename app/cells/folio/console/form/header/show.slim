@@ -1,7 +1,12 @@
 .f-c-form-header
   .f-c-form-header__inner
     .f-c-form-header__title-wrap
-      = render(:_title)
+      div
+        = render(:_title)
+
+        - if options[:subtitle].present?
+          h2.f-c-form-header__h2
+            = sanitize_string(options[:subtitle])
 
       - if options[:sti_badge] && model.try(:object)
         == cell('folio/console/ui/sti_badge', model.object)
