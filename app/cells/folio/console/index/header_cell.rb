@@ -123,4 +123,10 @@ class Folio::Console::Index::HeaderCell < Folio::ConsoleCell
       [submit]
     end
   end
+
+  def has_visible_index_filters?
+    index_filters.present? && index_filters.any? do |key, hash|
+      !hash.is_a?(Hash) || (hash.try(:[], :as) != :hidden)
+    end
+  end
 end
