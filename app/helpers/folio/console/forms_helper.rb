@@ -37,8 +37,8 @@ module Folio::Console::FormsHelper
 
   def togglable_fields(f, key, parent: false, &block)
     content_tag(:div, class: "f-c-togglable-fields") do
-      concat(f.check_box(key, class: "f-c-togglable-fields__input"))
-      concat(f.label(key, class: "f-c-togglable-fields__label"))
+      concat(f.check_box(key, class: "form-check-input f-c-togglable-fields__input"))
+      concat(f.label(key, class: "form-check-label f-c-togglable-fields__label"))
       concat(content_tag(:div, class: parent ? "f-c-togglable-fields__parent" : "f-c-togglable-fields__content", &block))
     end
   end
