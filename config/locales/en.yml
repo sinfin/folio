@@ -7,6 +7,9 @@ en:
     invalid_format: Invalid format
   'false': "No"
   folio:
+    nested_fields_component:
+      add: Add
+
     root_breadcrumb: Homepage
     chart:
       js_load_error: Failed to load javascript needed for charts.
@@ -79,6 +82,3 @@ en:
       separator: "|"
   'true': "Yes"
   confirmation: Are you sure?
-
-  nested_fields_component:
-    add: Add

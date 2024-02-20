@@ -7,6 +7,9 @@ cs:
     invalid_format: Nepodporovaný formát
   'false': Ne
   folio:
+    nested_fields_component:
+      add: Přidat
+
     root_breadcrumb: Úvodní stránka
     chart:
       js_load_error: Nepodařilo se načíst javascript pro tvorbu grafů.
@@ -80,6 +83,3 @@ cs:
       default: ''
       separator: "|"
   'true': Ano
-
-  nested_fields_component:
-    add: Přidat
