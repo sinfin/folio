@@ -288,6 +288,9 @@ video:
 view_dashboard_variant_outline:
   width: 24
   height: 24
+visibility_off:
+  width: 24
+  height: 24
 volume_medium:
   width: 24
   height: 24

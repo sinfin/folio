@@ -6,7 +6,7 @@ function FolioConsoleUiButtonContents (props) {
   return (
     <React.Fragment>
       {props.icon && (
-        <FolioUiIcon name={props.icon} class='f-c-ui-button__icon' />
+        <FolioUiIcon name={props.icon} class='f-c-ui-button__icon' height={props.iconHeight} />
       )}
 
       {props.label && (
@@ -14,7 +14,7 @@ function FolioConsoleUiButtonContents (props) {
       )}
 
       {props.rightIcon && (
-        <FolioUiIcon name={props.rightIcon} class='f-c-ui-button__right-icon' />
+        <FolioUiIcon name={props.rightIcon} class='f-c-ui-button__right-icon' height={props.iconHeight} />
       )}
     </React.Fragment>
   )
@@ -41,6 +41,7 @@ export default function FolioConsoleUiButton (props) {
           icon={props.icon}
           label={props.label}
           rightIcon={props.rightIcon}
+          iconHeight={props.iconHeight}
         />
       </a>
     )
@@ -57,8 +58,9 @@ export default function FolioConsoleUiButton (props) {
           icon={props.icon}
           label={props.label}
           rightIcon={props.rightIcon}
+          iconHeight={props.iconHeight}
         />
-        {props.children}
+        {props.children ? <span className='f-c-ui-button__label'>{props.children}</span> : null}
       </span>
     )
   } else {
@@ -75,8 +77,9 @@ export default function FolioConsoleUiButton (props) {
           icon={props.icon}
           label={props.label}
           rightIcon={props.rightIcon}
+          iconHeight={props.iconHeight}
         />
-        {props.children}
+        {props.children ? <span className='f-c-ui-button__label'>{props.children}</span> : null}
       </button>
     )
   }

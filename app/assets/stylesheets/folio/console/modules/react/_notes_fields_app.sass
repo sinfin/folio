@@ -1,12 +1,14 @@
 .folio-react-wrap--notes-fields
   min-height: 50px
   position: relative
-
-  .f-c-simple-form-with-atoms & .folio-loader
-    background: $light-gray
+  margin: $grid-gutter-width 0
+  max-width: 745px
 
 .f-c-r-notes-fields-app
   position: relative
+  min-height: 50px
+  background: $medium-gray
+  padding: 16px 24px
 
   &__header
     display: flex
@@ -16,9 +18,39 @@
 
   &__header-label
     margin: 0 $grid-gutter-half 0 0
+    font-weight: $font-weight-bold
 
   &__header-buttons
     margin-left: auto
+    display: flex
+    align-items: center
+    gap: $f-c-ui-buttons-gap
+
+  &__button
+    +unbutton
+    display: flex
+    align-items: center
+    gap: px-to-rem(4px)
+    cursor: pointer
+
+    &:hover
+      text-decoration: underline
+
+    .f-ui-icon
+      margin-top: -2px
+
+    &--show
+      font-size: $font-size-sm
+
+    &--delete
+      font-size: $font-size-sm
+
+      &, &:hover
+        color: $danger
+
+    &--add
+      &, &:hover
+        color: $success
 
   &__loader
     transition: $transition-base
@@ -54,20 +86,18 @@
 
   &-table
     margin-top: $spacer
+    border-top: 1px solid $gray
 
     &__row
       display: flex
       align-items: center
-      border-bottom: 1px solid $border-color
+      border-bottom: 1px solid $gray
       gap: $grid-gutter-half
       padding: $grid-gutter-width / 4 0
 
       &--being-editted
         opacity: 0.5
         pointer-events: none
-
-      .f-c-simple-form-with-atoms &
-        border-bottom-color: #CACBCB
 
     &__content
       flex: 1 1 auto
