@@ -184,7 +184,7 @@ module Folio::Console::ReactHelper
 
     through_klass = reflection.class_name.constantize
 
-    param_base = "#{klass.model_name.param_key}[#{through}_attributes]"
+    param_base = "#{f.object_name}[#{through}_attributes]"
     items = f.object.send(through).map do |record|
       through_record = through_klass.find(record.send(reflection.foreign_key))
 
