@@ -9,24 +9,18 @@ class DueDate extends React.Component {
   }
 
   componentDidMount () {
-    if (window.folioConsoleInitDatePicker) {
-      window.folioConsoleInitDatePicker(this.inputRef.current, {
-        widgetPositioning: {
-          horizontal: 'right',
-          vertical: 'bottom'
-        }
-      })
+    if (this.unbindInput) this.unbindInput()
 
-      window.jQuery(this.inputRef.current).on('folioCustomChange.DueDate', this.onChange)
+    this.inputRef.current.addEventListener('change', this.onChange)
+
+    this.unbindInput = () => {
+      this.inputRef.current.removeEventListener('change', this.onChange)
+      delete this.unbindInput
     }
   }
 
   componentWillUnmount () {
-    if (window.folioConsoleUnbindDatePicker) {
-      window.folioConsoleUnbindDatePicker(this.inputRef.current)
-
-      window.jQuery(this.inputRef.current).off('folioCustomChange.DueDate', this.onChange)
-    }
+    if (this.unbindInput) this.unbindInput()
   }
 
   defaultValue () {
@@ -36,14 +30,11 @@ class DueDate extends React.Component {
   }
 
   onChange = (e) => {
-    const strOrNull = this.inputRef.current.dataset.date
-    let dueAt = null
-
-    if (strOrNull && strOrNull !== 'null') {
-      dueAt = new Date(Date.parse(strOrNull))
+    try {
+      this.props.onChange(e.target.folioInputTempusDominus.dates.picked[0])
+    } catch (_e) {
+      this.props.onChange(null)
     }
-
-    this.props.onChange(dueAt)
   }
 
   render () {
@@ -55,17 +46,20 @@ class DueDate extends React.Component {
           <input
             type='text'
             ref={this.inputRef}
-            defaultValue={''}
+            defaultValue=''
             data-date={this.defaultValue()}
-            className='f-c-r-notes-fields-app-table-due-date__input form-control'
+            className='f-c-r-notes-fields-app-table-due-date__input form-control f-input f-input--date-time'
+            data-controller='f-input-date-time'
           />
         </div>
 
-        {(this.props.dueAt && window.strftime) ? (
-          <div className='f-c-r-notes-fields-app-table-due-date__date small ms-2'>
-            {window.strftime('%d. %m.', this.props.dueAt)}
-          </div>
-        ) : null}
+        {(this.props.dueAt && window.strftime)
+          ? (
+            <div className='f-c-r-notes-fields-app-table-due-date__date small ms-2 me-1'>
+              {window.strftime('%d. %m.', this.props.dueAt)}
+            </div>
+          )
+          : null}
       </div>
     )
   }
