@@ -6,21 +6,34 @@ $dummy-mailer-styles: false !default
     display: inline-block
     border-radius: $btn-border-radius
     cursor: pointer
+    margin: 0
     background-color: $primary-black
     color: $primary-white !important
     font-weight: $font-weight-semibold
-    padding: 0 16px
     text-align: center
     text-decoration: none
     text-underline-color: $primary-black
     box-sizing: border-box
     text-transform: uppercase
-    margin: 0
     height: 40px
     line-height: 40px
+    mso-line-height-rule: exactly
+
+  .custom-btn
+    padding: 0 16px
+    border: 0
+
+  .btn-redactor
+    padding: 0 8px
+    border-left-style: solid
+    border-right-style: solid
+    border-left-width: 8px
+    border-right-width: 8px
+    border-left-color: $primary-black
+    border-right-color: $primary-black
 
   .folio-redactor-button
-    margin: 8px 0 8px 0 !important
+    margin: 8px 0 8px 0
 
   p + .folio-redactor-button
     margin-top: 20px !important
