@@ -38,6 +38,15 @@ $shade-700: $gray-700 !default
         background: $shade-200
         border-radius: $border-radius
 
+        img
+          width: 100%
+          height: 100%
+          object-fit: contain
+          visibility: hidden
+
+          &[src]
+            visibility: visible
+
       .dz-details
         width: 120px
         height: 120px

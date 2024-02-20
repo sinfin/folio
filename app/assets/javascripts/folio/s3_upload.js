@@ -132,23 +132,6 @@ window.Folio.S3Upload.createDropzone = ({
       xhr.send = () => { _send.call(xhr, file) }
     },
 
-    thumbnail: function (file, dataUrl) {
-      if (file.previewElement) {
-        const imgs = file.previewElement.querySelectorAll('[data-dz-thumbnail]')
-        for (const img of imgs) {
-          img.alt = file.name
-          img.src = dataUrl
-        }
-      }
-
-      if (onThumbnail) {
-        if (file.s3_path) {
-          file.thumbnail_notified = true
-          onThumbnail(file.s3_path, dataUrl)
-        }
-      }
-    },
-
     ...(dropzoneOptions || {})
   }
 
@@ -188,6 +171,15 @@ window.Folio.S3Upload.createDropzone = ({
         .innerText = text
     }
   })
+
+  if (onThumbnail) {
+    dropzone.on('thumbnail', (file, dataUrl) => {
+      if (file.s3_path) {
+        file.thumbnail_notified = true
+        onThumbnail(file.s3_path, dataUrl)
+      }
+    })
+  }
 
   filterMessageBusMessages = filterMessageBusMessages || ((msg) => {
     const s3Path = msg && msg.data && msg.data.s3_path
