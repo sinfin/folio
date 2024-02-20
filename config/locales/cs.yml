@@ -80,3 +80,6 @@ cs:
       default: ''
       separator: "|"
   'true': Ano
+
+  nested_fields_component:
+    add: Přidat

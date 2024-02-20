@@ -79,3 +79,6 @@ en:
       separator: "|"
   'true': "Yes"
   confirmation: Are you sure?
+
+  nested_fields_component:
+    add: Add
