@@ -57,12 +57,17 @@ table.d-mailer-cards-lot[
                       span.d-mailer-cards-lot__event-name
                         = @event[:name]
 
-                hr.d-mailer-cards-lot__hr
+                hr.d-mailer-cards-lot__hr[
+                  style="border-top:1px solid #e8e8e8;margin:20px 0 20px 0;"
+                ]
 
                 .d-mailer-cards-lot__description-block
                   - if description
                     - description.each_with_index do |value, index|
-                      .d-mailer-cards-lot__description-row = value
+                      .d-mailer-cards-lot__description-row[
+                        style="line-height: 1.5;"
+                      ]
+                        = value
 
                   - if @id.present?
                     .d-mailer-cards-lot__id-wrapper
@@ -71,7 +76,9 @@ table.d-mailer-cards-lot[
 
                       span.d-mailer-cards-lot__id = @id
 
-                hr.d-mailer-cards-lot__hr
+                hr.d-mailer-cards-lot__hr[
+                  style="border-top:1px solid #e8e8e8;margin:20px 0 20px 0;"
+                ]
 
                 .d-mailer-cards-lot__auction-data-block
                   - if auction_status
@@ -108,6 +115,7 @@ table.d-mailer-cards-lot[
                     .d-mailer-cards-lot__btn-wrapper
                       a.btn.custom-btn.custom-btn--secondary.btn-primary.d-mailer-cards-lot__btn[
                         href=@button_href
+                        style="color: #000000;padding: 0 14.5px 0 14.5px;"
                       ]
                         = @button_label
 

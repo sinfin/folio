@@ -46,7 +46,10 @@ table.d-mailer-cards-medium[
                 = content
 
                 - if @button_label && @button_href
-                  a.btn.custom-btn.btn-primary.d-mailer-cards-medium__btn href=@button_href
+                  a.btn.custom-btn.btn-primary.d-mailer-cards-medium__btn[
+                    href=@button_href
+                    style="color:#ffffff;margin:20px 0 0 0;height:36px;line-height:36px;"
+                  ]
                     = @button_label
 
             /[if mso]
