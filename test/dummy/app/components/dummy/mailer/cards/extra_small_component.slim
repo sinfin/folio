@@ -25,7 +25,12 @@ table.d-mailer-cards-extra-small[
           ]
             .d-mailer-cards-extra-small__content-inner
               - if @card[:title].present?
-                .d-mailer-cards-extra-small__title = @card[:title]
+                .d-mailer-cards-extra-small__title[
+                  style="margin:0;"
+                ]
+                  = @card[:title]
 
-              .d-mailer-cards-extra-small__text
+              .d-mailer-cards-extra-small__text[
+                style="margin:0;"
+              ]
                 = @card[:text]
