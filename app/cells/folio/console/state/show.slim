@@ -1,11 +1,11 @@
-div class=class_name class=(options[:small] ? 'small' : nil)
+div class=class_name
   - if events.present? && active?
     - localizer = AASM::Localizer.new
 
     .dropdown
       button.f-c-state__state.dropdown-toggle data-bs-toggle="dropdown"
         = state_square(state)
-        = model.aasm.human_state
+        = options[:state_label] || model.aasm.human_state
 
       .dropdown-menu
         - if options[:remote] == false
@@ -32,4 +32,4 @@ div class=class_name class=(options[:small] ? 'small' : nil)
   - else
     .f-c-state__state
       = state_square(state)
-      = model.aasm.human_state
+      = options[:state_label] || model.aasm.human_state
