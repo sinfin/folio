@@ -1,0 +1,130 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-cards-lot
+    width: 100%
+
+    &__wrapper
+      padding: 32px 0 0 0
+
+    &__inner
+      width: 100%
+      background-color: $cloud-100
+      border-radius: 12px
+
+    &__inner-wrapper
+      font-size: 0
+      padding: 24px 0 0 0
+
+    &__image-wrapper, &__content-wrapper
+      display: inline-block
+      vertical-align: top
+
+    &__image-wrapper
+      padding: 0
+      width: 100%
+      max-width: 256px
+      vertical-align: top
+      text-align: left
+
+    &__image-inner
+      padding: 0 0 24px 24px
+
+    &__content-wrapper
+      width: 100%
+      max-width: 392px
+      vertical-align: top
+
+    &__content-wrapper.col-full
+      max-width: 100%
+
+    &__content-inner
+      padding: 16px 24px 32px 32px
+      text-align: left
+
+    &__content-inner p
+      +mailer-font-size-text-s
+      margin-bottom: 20px !important
+
+    &__btn-wrapper
+      margin: 20px 0 0 0
+
+    &__btn
+      +mailer-font-size-text-s
+      padding: 0 14.5px !important
+      text-transform: none
+
+    &__hr
+      border-top: 1px solid $cloud-200 !important
+      margin: 20px 0 20px 0 !important
+
+    &__author
+      +mailer-font-size-display-s
+      font-weight: $font-weight-bold
+
+    &__name
+      +mailer-font-size-text-xl
+
+    &__event
+      margin: 4px 0 0 0
+
+    &__event-type, &__event-name
+      +mailer-font-size-text-s
+
+    &__event-type
+      color: $cloud-700
+
+    &__event-name
+      color: $cloud-500
+
+    &__description-row
+      +mailer-font-size-text-s
+      line-height: 1.5 !important
+      color: $cloud-700
+
+    &__id-wrapper
+      margin: 8px 0 0 0
+
+    &__id, &__id-prefix
+      +mailer-font-size-text-xs
+      color: $cloud-400
+
+    &__auction-status
+      +mailer-font-size-text-m
+      font-weight: $font-weight-medium
+      margin: 0 0 4px 0
+
+    &__current-price
+      margin: 0 0 8px 0
+
+    &__price-label, &__price, &__currency
+      +mailer-font-size-text-m
+
+    &__price-label
+      font-weight: $font-weight-medium
+
+    &__price, &__currency
+      font-weight: $font-weight-bold
+      color: $mailer-brand-200
+
+    &__limiting-end-wrapper
+      margin: 4px 0 0 0
+
+    &__auction-date-label, &__auction-date,
+    &__limiting-end-label, &__limiting-end
+      +mailer-font-size-text-xs
+
+    &__auction-date-label,
+    &__limiting-end-label
+      font-weight: $font-weight-medium
+      color: $cloud-500
+
+    &__auction-date,
+    &__limiting-end
+      color: $cloud-400
+
+    &__whitespace-s
+      +mailer-font-size-text-s
+
+    &__whitespace-m
+      +mailer-font-size-text-m
