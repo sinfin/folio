@@ -39,3 +39,16 @@ hr
                                                   {title: "Josef Velčovský", subtitle: "Pacific Railroad Survey", total_price: "00 000 000", unit_price: "15,000", count: 2, folio_image: Folio::File::Image.first}],
                                           total: "00 000 000",
                                           status: :unpaid))
+
+= render(Dummy::Mailer::Cards::LotComponent.new(folio_image: Folio::File::Image.first,
+                                          author: "Karel Malich",
+                                          name: "Název díla lorem ipsum",
+                                          event: {type: :auction, name: "Day Sale 2025"},
+                                          description: {date: "40. léta 20. stol. lorem ipsum text", technique: "Olej, plátno", size: "š 70 ✕ v 77 cm"},
+                                          id: "12345",
+                                          auction_status: :not,
+                                          price: "1 100 000",
+                                          auction_date: "Út 9. října 2024, 17:50:00 CET",
+                                          limiting_end: "Út 9. října 2024, 17:50:00 CET",
+                                          button_label: "Zobrazit dílo",
+                                          button_href: "#foo"))
