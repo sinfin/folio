@@ -1,2 +1,117 @@
-.d-mailer-cards-lot
-  = @model
+table.d-mailer-cards-lot[
+  role="presentation"
+]
+  tr
+    td.d-mailer-cards-lot__wrapper
+      table.d-mailer-cards-lot__inner[
+        role="presentation"
+      ]
+        tr
+          td.d-mailer-cards-lot__inner-wrapper
+            /[if mso]
+              <table role="presentation" width="100%">
+              <tr>
+
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:256px;padding:0 0 24px 24px;" align="left" valign="top">
+
+              .d-mailer-cards-lot__image-wrapper[
+                class="lot-col-sm"
+              ]
+                .d-mailer-cards-lot__image-inner
+                  img.d-mailer-cards-lot__image[
+                    src="#{@folio_image.thumb(THUMB_SIZE, immediate: true).url}"
+                    alt=""
+                    width="232"
+                  ]
+
+              /[if mso]
+                </td>
+
+            - if @folio_image.present?
+              /[if mso]
+                <td style="width:392px;padding:16px 24px 32px 32px;" valign="top">
+            - else
+              /[if mso]
+                <td style="padding:16px 24px 32px 32px;" valign="top">
+
+            .d-mailer-cards-lot__content-wrapper[
+              class=(@folio_image.present? ? "lot-col-lg" : "col-full")
+            ]
+              .d-mailer-cards-lot__content-inner
+                .d-mailer-cards-lot__title-block
+                  .d-mailer-cards-lot__author = @author
+                  
+                  .d-mailer-cards-lot__name = @name
+                  
+                  .d-mailer-cards-lot__event
+                    - if @event[:type].present?
+                      span.d-mailer-cards-lot__event-type
+                        = event_type
+                    
+                      span.d-mailer-cards-lot__whitespace-s
+                        | &nbsp;
+
+                    - if @event[:name].present?
+                      span.d-mailer-cards-lot__event-name
+                        = @event[:name]
+
+                hr.d-mailer-cards-lot__hr
+
+                .d-mailer-cards-lot__description-block
+                  - if description
+                    - description.each_with_index do |value, index|
+                      .d-mailer-cards-lot__description-row = value
+
+                  - if @id.present?
+                    .d-mailer-cards-lot__id-wrapper
+                      span.d-mailer-cards-lot__id-prefix
+                        ' #
+
+                      span.d-mailer-cards-lot__id = @id
+
+                hr.d-mailer-cards-lot__hr
+
+                .d-mailer-cards-lot__auction-data-block
+                  - if auction_status
+                    .d-mailer-cards-lot__auction-status = auction_status
+
+                  - if @price.present?
+                    .d-mailer-cards-lot__current-price
+                      span.d-mailer-cards-lot__price-label
+                        ' Aktuální cena:
+
+                      span.d-mailer-cards-lot__price = @price
+
+                      span.d-mailer-cards-lot__whitespace-m
+                        | &nbsp;
+
+                      span.d-mailer-cards-lot__currency
+                        | Kč
+
+                  - if @auction_date.present?
+                    .d-mailer-cards-lot__auction-date-wrapper
+                      span.d-mailer-cards-lot__auction-date-label
+                        ' Živá aukce začíná
+
+                      span.d-mailer-cards-lot__auction-date = @auction_date
+
+                  - if @limiting_end.present?
+                    .d-mailer-cards-lot__limiting-end-wrapper
+                      span.d-mailer-cards-lot__limiting-end-label
+                        ' Konec limitování
+
+                      span.d-mailer-cards-lot__limiting-end = @limiting_end
+
+                  - if @button_label && @button_href
+                    .d-mailer-cards-lot__btn-wrapper
+                      a.btn.custom-btn.custom-btn--secondary.btn-primary.d-mailer-cards-lot__btn[
+                        href=@button_href
+                      ]
+                        = @button_label
+
+            /[if mso]
+              </td>
+              </tr>
+              </table>
