@@ -10,8 +10,10 @@ table.d-mailer-footer-menu[
           tr
             - menu.menu_items.includes(:page).each do |menu_item|
               td.d-mailer-footer-menu__menu-link-wrapper
+                / href placeholder is for development purpose 
+                / will be replaced by href=menu_url_for(menu_item)
                 a.d-mailer-footer-menu__menu-link[
-                  href=menu_url_for(menu_item)
+                  href="https://www.auctea.com/"
                   title=menu_item.to_label
                 ]
                   = menu_item.to_label
