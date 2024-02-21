@@ -3,6 +3,8 @@ window.Folio.Stimulus.register('f-c-form-errors', class extends window.Stimulus.
 
   connect () {
     const form = this.element.closest('form')
+    if (!form) return
+
     const formGroups = form.querySelectorAll('.form-group-invalid, .form-group.has-danger')
 
     if (!formGroups.length) return
