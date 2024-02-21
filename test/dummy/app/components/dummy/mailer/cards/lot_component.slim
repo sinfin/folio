@@ -57,9 +57,7 @@ table.d-mailer-cards-lot[
                       span.d-mailer-cards-lot__event-name
                         = @event[:name]
 
-                hr.d-mailer-cards-lot__hr[
-                  style="border-top:1px solid #e8e8e8;margin:20px 0 20px 0;"
-                ]
+                .d-mailer-cards-lot__hr
 
                 .d-mailer-cards-lot__description-block
                   - if description
@@ -76,9 +74,7 @@ table.d-mailer-cards-lot[
 
                       span.d-mailer-cards-lot__id = @id
 
-                hr.d-mailer-cards-lot__hr[
-                  style="border-top:1px solid #e8e8e8;margin:20px 0 20px 0;"
-                ]
+                .d-mailer-cards-lot__hr
 
                 .d-mailer-cards-lot__auction-data-block
                   - if auction_status
