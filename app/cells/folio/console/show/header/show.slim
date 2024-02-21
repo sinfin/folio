@@ -9,7 +9,7 @@ div class=class_name
 
     .f-c-show-header__right
       - if model.respond_to?(:aasm)
-        .flex-shrink-0
+        .flex-shrink-0.mx-h
           == cell('folio/console/state', model)
 
       - if options[:add]
@@ -18,7 +18,7 @@ div class=class_name
                 href: options[:add][:href],
                 icon: :plus,
                 label: options[:add][:label],
-                class: "ms-lg-h flex-shrink-0")
+                class: "flex-shrink-0")
 
       - if options[:right]
         == options[:right]

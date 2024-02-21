@@ -15,8 +15,7 @@ import {
   updateNote
 } from 'ducks/notesFields'
 
-import FolioConsoleUiButtons from 'components/FolioConsoleUiButtons'
-import FolioConsoleUiButton from 'components/FolioConsoleUiButton'
+import FolioUiIcon from 'components/FolioUiIcon'
 
 import I18N from './i18n'
 import Form from './Form'
@@ -87,15 +86,17 @@ class NotesFields extends React.Component {
           <label className='f-c-r-notes-fields-app__header-label'>{notesFields.label}</label>
 
           {notesFields.notes.length ? (
-            <FolioConsoleUiButtons className='f-c-r-notes-fields-app__header-buttons'>
-              <FolioConsoleUiButton onClick={this.toggleShowChecked} variant='info' size='sm'>
+            <div className='f-c-r-notes-fields-app__header-buttons'>
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--show' onClick={this.toggleShowChecked}>
+                <FolioUiIcon name={notesFields.showChecked ? 'visibility_off' : 'eye'} height={16} />
                 {window.Folio.i18n(I18N, notesFields.showChecked ? 'notesFieldsHide' : 'notesFieldsShow')}
-              </FolioConsoleUiButton>
+              </button>
 
-              <FolioConsoleUiButton onClick={this.removeAll} variant='info' size='sm'>
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--delete' onClick={this.removeAll}>
+                <FolioUiIcon name='delete' height={16} />
                 {window.Folio.i18n(I18N, 'notesFieldsDelete')}
-              </FolioConsoleUiButton>
-            </FolioConsoleUiButtons>
+              </button>
+            </div>
           ) : null}
         </div>
 
@@ -114,9 +115,10 @@ class NotesFields extends React.Component {
             {notesFields.form ? (
               <Form content={notesFields.form.content} save={this.saveForm} close={this.closeForm} />
             ) : (
-              <FolioConsoleUiButton onClick={this.initNewNote} variant='secondary' size='sm'>
+              <button type='button' className='f-c-r-notes-fields-app__button f-c-r-notes-fields-app__button--add' onClick={this.initNewNote}>
+                <FolioUiIcon name='plus' />
                 {window.Folio.i18n(I18N, 'notesFieldsAdd')}
-              </FolioConsoleUiButton>
+              </button>
             )}
           </div>
 

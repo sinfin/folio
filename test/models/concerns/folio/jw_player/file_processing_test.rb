@@ -108,5 +108,11 @@ class Folio::JwPlayer::FileProcessingTest < ActiveSupport::TestCase
     assert_equal 4, tv_file.preview_duration_in_seconds
     assert_equal 4, tv_file.preview_duration
     assert_equal({ "start_at" => 0, "end_at" => 4 }, tv_file.remote_services_data["preview_interval"])
+
+    tv_file.preview_duration = 1000
+    # file have 7 secs not 1000
+    assert_equal 7, tv_file.preview_duration_in_seconds
+    assert_equal 7, tv_file.preview_duration
+    assert_equal({ "start_at" => 0, "end_at" => 7 }, tv_file.remote_services_data["preview_interval"])
   end
 end
