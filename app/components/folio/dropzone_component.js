@@ -5,7 +5,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     fileType: String,
     fileHumanType: String,
     destroyUrl: { type: String, default: '' },
-    maxFileSize: { type: Number, default: 0 }
+    maxFileSize: { type: Number, default: 0 },
+    persistedFileCount: Number,
   }
 
   static targets = ['trigger', 'previews', 'previewTemplate']
@@ -19,6 +20,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
       fileHumanType: this.fileHumanTypeValue,
       dontRemoveFileOnSuccess: true,
       maxFileSize: this.maxFileSizeValue,
+      onSuccess: () => { this.onCountChange() },
       dropzoneOptions: {
         ...this.dictValue,
         clickable: this.triggerTarget,
@@ -58,11 +60,25 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   }
 
   removedFile (file) {
+    this.onCountChange()
     if (!this.destroyUrlValue) return
 
     if (file.status !== 'error' && file.id) {
       const url = this.destroyUrlValue.replace('ID', file.id)
       window.Folio.Api.apiDelete(url)
     }
+  }
+
+  onCountChange () {
+    let count = 0
+
+    if (this.dropzone && this.dropzone.files) {
+      this.dropzone.files.forEach((file) => {
+        if (file.id) { count += 1 }
+      })
+    }
+
+    this.persistedFileCountValue = count
+    this.dispatch('persistedFileCountChange', { detail: { count }})
   }
 })
