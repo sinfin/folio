@@ -32,7 +32,7 @@ module Folio::FriendlyIdForTraco
 
   private
     def slug_candidates
-      to_label
+      %i[slug to_label]
     end
 
     def strip_and_downcase_slugs
