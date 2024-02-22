@@ -43,7 +43,11 @@ table.d-mailer-order-summary[
                     
                     .d-mailer-order-summary__order-title-wrapper
                       .d-mailer-order-summary__order-title = item[:title]
-                      .d-mailer-order-summary__order-subtitle = item[:subtitle]
+                      
+                      .d-mailer-order-summary__order-subtitle[
+                        style="line-height:1.5;"
+                      ]
+                        = item[:subtitle]
 
                     /[if mso]
                       </td>
