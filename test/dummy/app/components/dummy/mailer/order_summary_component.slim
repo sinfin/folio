@@ -79,7 +79,8 @@ table.d-mailer-order-summary[
                     <tr>
                     <td style="width:490px;padding:0 32px 0 0;" align="left" valign="top">
 
-                  .d-mailer-order-summary__order-total-price-title = t(".total")
+                  .d-mailer-order-summary__order-total-price-title
+                    | Celková cena (vč. provize)
 
                   /[if mso]
                     </td>
@@ -102,15 +103,15 @@ table.d-mailer-order-summary[
           ]
             - if @status == :unpaid
               .d-mailer-order-summary__payment-regulation
-                = t(".payment_regulation")
-                | &nbsp;
+                ' Instrukce pro uhrazení objednávky jsou součástí
                 
                 a.d-mailer-order-summary__payment-regulation-link[
                   href="https://www.auctea.com/"
                   style="font-weight: 400;"
                 ]
-                  = t(".payment_regulation_link")
+                  | předpisů k úhradě
 
                 ' .
 
-              .d-mailer-order-summary__instruction = t(".unpaid_instruction")
+              .d-mailer-order-summary__instruction
+                ' Vydražené položky prosím uhraďte a vyzvedněte nejdéle do 14 dnů od ukončení aukce.
