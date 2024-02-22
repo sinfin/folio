@@ -30,14 +30,24 @@ class Folio::Users::ImpersonatingBarComponent < Folio::ApplicationComponent
             data: { turbo: false })
   end
 
-  def alert_component
-    klass = "#{::Rails.application.class.name.deconstantize}::Ui::AlertComponent".safe_constantize
+  def alert_component_klass
+    "#{::Rails.application.class.name.deconstantize}::Ui::AlertComponent".safe_constantize
+  end
 
-    if klass
-      klass.new(icon: :user,
-                variant: :danger,
-                closable: false,
-                margin: false)
+  def button_component_klass
+    alert_component_klass.to_s.gsub("Alert", "Button").safe_constantize
+  end
+
+  def alert_component
+    if alert_component_klass
+      button = render(button_component_klass.new(label: t(".stop_impersonation"), href:, data: { turbo: false }, size: :sm))
+
+      alert_component_klass.new(icon: :user,
+                                variant: :danger,
+                                closable: false,
+                                margin: false,
+                                message: label,
+                                button:)
     end
   end
 end

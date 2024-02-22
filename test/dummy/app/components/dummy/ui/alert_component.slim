@@ -28,3 +28,7 @@ div[
         data=stimulus_action('close')
       ]
         = dummy_ui_icon(:close)
+
+    - if @button
+      .a-ui-alert__button-wrap
+        = @button

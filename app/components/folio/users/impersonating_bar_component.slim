@@ -1,9 +1,7 @@
 .f-users-impersonating-bar
   - if alert_component
     = render(alert_component)
-      .d-flex.gap-g
-        .flex-grow-1 = label
-        .flex-shrink-0 = stop_link
+
   - else
     .bg-warning
       .container-fluid.py-2.text-center.fw-bold.fs-text-s

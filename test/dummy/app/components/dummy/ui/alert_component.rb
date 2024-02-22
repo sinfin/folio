@@ -3,13 +3,14 @@
 class Dummy::Ui::AlertComponent < ApplicationComponent
   bem_class_name :flash, :closable, :margin
 
-  def initialize(message: nil, variant: :info, flash: false, margin: true, closable: true, icon: nil)
+  def initialize(message: nil, variant: :info, flash: false, margin: true, closable: true, icon: nil, button: nil)
     @message = message
     @variant = variant
     @flash = flash
     @closable = closable
     @margin = margin
     @icon = icon
+    @button = button
   end
 
   def render?
