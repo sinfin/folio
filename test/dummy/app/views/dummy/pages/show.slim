@@ -1,6 +1,9 @@
 == cell('folio/publishable_hint', @ancestry_any_unpublished || @page)
 
 .container-fluid
-  h1 = @page.title
+  h1 = cstypo @page.title
+
+  - if @page.perex.present?
+    p.lead.mb-atom = cstypo @page.perex
 
 = render_atoms_in_molecules @page.atoms_in_molecules
