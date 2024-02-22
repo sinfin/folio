@@ -1,2 +1,5 @@
 .bg-warning
   background: $warning
+
+.bg-danger
+  background: $danger

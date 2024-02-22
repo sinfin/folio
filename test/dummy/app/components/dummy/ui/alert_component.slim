@@ -17,7 +17,10 @@ div[
       = dummy_ui_icon(icon_key, class_name: 'd-ui-alert__icon')
 
     .d-ui-alert__content
-      == @message
+      - if content?
+        = content
+      - else
+        == @message
 
     - if @closable
       button.d-ui-alert__close[

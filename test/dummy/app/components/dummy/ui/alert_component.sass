@@ -3,9 +3,11 @@
   font-weight: $font-weight-medium
   color: $shade-black-contrast
   background: $info
-  margin: $grid-gutter-width 0
 
-  & + &
+  &--margin
+    margin: $grid-gutter-width 0
+
+  & + &--margin
     margin-top: $grid-gutter-base - $grid-gutter-width
 
   &--flash
