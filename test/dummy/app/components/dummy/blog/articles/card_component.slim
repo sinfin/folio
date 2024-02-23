@@ -1,0 +1,8 @@
+.d-blog-articles-card
+  .container-fluid
+    .my-3
+      h2
+        a href=url_for(@article)
+          = @article.title
+
+      = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))

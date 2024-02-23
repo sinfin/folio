@@ -1,4 +1,3 @@
-== cell('dummy/blog/articles/index',
-        @articles,
-        pagy: @pagy,
-        topics: @topics)
+= render(Dummy::Blog::Articles::IndexComponent.new(articles: @articles,
+                                                   pagy: @pagy,
+                                                   topics: @topics))

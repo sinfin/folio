@@ -1,0 +1,6 @@
+.d-blog-articles-show-header
+  / test/dummy/app/cells/dummy/blog/articles/show_header/show.slim
+  .container-fluid
+    h1 = @article.title
+
+    = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))
