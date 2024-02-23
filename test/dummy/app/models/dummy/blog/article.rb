@@ -91,10 +91,7 @@ class Dummy::Blog::Article < ApplicationRecord
       ],
     }
 
-    [
-      Dummy::Blog::Articles::ShowHeaderCell::THUMB_SIZE,
-      Dummy::Ui::ArticleCardCell::THUMB_SIZE,
-    ].uniq.each do |size|
+    [].uniq.each do |size|
       h["Folio::FilePlacement::Cover"] << size
       h["Folio::FilePlacement::Cover"] << size.gsub(/\d+/) { |n| n.to_i * 2 }
     end
@@ -102,53 +99,6 @@ class Dummy::Blog::Article < ApplicationRecord
     h["Folio::FilePlacement::Cover"] = h["Folio::FilePlacement::Cover"].uniq
 
     h
-  end
-
-  def self.atom_settings_from_params(params)
-    settings = {}
-
-    if params[:title].present?
-      params[:title].each do |locale, title|
-        settings[locale] ||= []
-
-        begin
-          safe_published_at = Date.parse(params[:published_at][locale])
-        rescue StandardError
-          safe_published_at = nil
-        end
-
-        if params[:topics][locale].present?
-          topics = Dummy::Blog::Topic.where(id: params[:topics][locale]).to_a
-
-          # reorder
-          tag_records = params[:topics][locale].map do |id|
-            topics.find { |topic| topic.id == id }
-          end.compact
-        else
-          tag_records = []
-        end
-
-        hash = {
-          title:,
-          perex: params[:perex] && params[:perex][locale],
-          cover_placement: params[:cover_placement] && Folio::FilePlacement::Cover.new(params[:cover_placement][locale].permit(:file_id, :alt)),
-          to_ui_article_meta: {
-            tag_records:,
-            published_at: safe_published_at,
-          }
-        }
-
-        # rubocop:disable OpenStruct
-        settings[locale] << {
-          cell_name: "dummy/blog/articles/show_header",
-          model: OpenStruct.new(hash),
-          key: :title,
-        }
-        # rubocop:enable OpenStruct
-      end
-    end
-
-    settings
   end
 
   private

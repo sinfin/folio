@@ -1,0 +1,17 @@
+.d-blog-articles-index
+  - if @topics.present? && !active_pagy?
+    = render(Dummy::Blog::Topics::TagsListComponent.new(topics: @topics))
+
+  - if @main_article.present?
+    = render(Dummy::Blog::Articles::CardsComponent.new(size: :lg,
+                                                       articles: [@main_article]))
+
+  - if @secondary_articles.present?
+    = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                       articles: @secondary_articles))
+
+  - if @small_articles.present?
+    = render(Dummy::Blog::Articles::CardsComponent.new(size: :sm,
+                                                       articles: @small_articles))
+
+  = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))

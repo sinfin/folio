@@ -166,7 +166,8 @@ namespace :developer_tools do
           topic_count.times do
             Dummy::Blog::Topic.create!(title: Faker::Hipster.sentence(word_count: rand(1..3)),
                                        locale:,
-                                       cover: images.sample)
+                                       cover: images.sample,
+                                       published: true)
             print "."
           end
 
@@ -181,7 +182,9 @@ namespace :developer_tools do
                                                    perex: Faker::Hipster.paragraph,
                                                    locale:,
                                                    topics: topics.sample(rand(1..3)),
-                                                   cover: images.sample)
+                                                   cover: images.sample,
+                                                   published: true,
+                                                   published_at: 1.day.ago)
 
             article.atoms.create(type: "Dummy::Atom::Text",
                                  content: "<p>#{Faker::Hipster.paragraph}</p>",

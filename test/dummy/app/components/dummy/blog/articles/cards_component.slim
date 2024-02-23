@@ -1,0 +1,3 @@
+.d-blog-articles-cards
+  - @articles.each do |article|
+    = render(Dummy::Blog::Articles::CardComponent.new(article:, size: @size))

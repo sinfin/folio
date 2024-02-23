@@ -5,20 +5,20 @@
   - if topics.present? && !active_pagy?
     == cell('dummy/blog/topics/tag_list', topics)
 
-  - if @main_article.present?
-    == cell('dummy/ui/article_card',
-            @main_article.to_ui_article_card_model,
-            large: true)
+  / - if @main_article.present?
+  /   == cell('dummy/ui/article_card',
+  /           @main_article.to_ui_article_card_model,
+  /           large: true)
 
-  - if @secondary_articles.present?
-    == cell('dummy/ui/article_card_list',
-            @secondary_articles,
-            medium: true)
+  / - if @secondary_articles.present?
+  /   == cell('dummy/ui/article_card_list',
+  /           @secondary_articles,
+  /           medium: true)
 
-  - if @small_articles.present?
-    == cell('dummy/ui/article_card_list',
-            @small_articles,
-            small: true)
+  / - if @small_articles.present?
+  /   == cell('dummy/ui/article_card_list',
+  /           @small_articles,
+  /           small: true)
 
 / - if options[:pagy] && options[:pagy].pages > 1
 /   .mt-4

@@ -1,5 +1,5 @@
 == cell('folio/publishable_hint', @article)
 
-== cell('dummy/blog/articles/show_header', @article)
+= render(Dummy::Blog::Articles::ShowHeaderComponent.new(article: @article))
 
 = render_atoms_in_molecules(@article.atoms_in_molecules)
