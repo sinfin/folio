@@ -34,7 +34,7 @@ class ActiveSupport::TestCase
 end
 
 module ActiveJob::TestHelper
-  extend ActionMailerTestHelper
+  include ActionMailerTestHelper
 end
 
 class Cell::TestCase
