@@ -18,6 +18,7 @@ class Dummy::UiController < ApplicationController
       inputs
       modals
       pagination
+      searches
       tabs
       typo
     ]

@@ -1,2 +1,10 @@
 .d-searches-results-list
-  = @model
+  - model.each do |record|
+    a href=url_for(record)
+      = record.try(:cover_placement)
+      br
+      = url_for(record)
+      br
+      = record.to_label
+      br
+      = record.try(:perex) || record.try(:description)
