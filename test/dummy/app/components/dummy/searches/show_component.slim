@@ -1,7 +1,6 @@
-/.d-searches-show
+.d-searches-show
   == @search.to_json
 
-.d-searches-show
   .container-fluid
     = form do |f|
       h1.d-searches-show__title
@@ -14,12 +13,12 @@
         button.d-searches-show__submit type="submit"
           = dummy_ui_icon(:search, class_name: 'd-searches-show__submit-ico', height: 32)
 
-    /.d-searches-show__tabs.mb-g
-      - if model[:tabs].present? && model[:count] > 0
-        == render_view_component(::Dummy::Ui::TabsComponent.new(tabs: model[:tabs]))
+    .d-searches-show__tabs.mb-g
+      - if @search[:tabs].present? && @search[:count] > 0
+        == render_view_component(::Dummy::Ui::TabsComponent.new(tabs: @search[:tabs]))
 
-    /.d-searches-show__results-wrap
-      - if model[:count] == 0
+    .d-searches-show__results-wrap
+      - if @search[:count] == 0
         .d-searches-show__no-results.mt-g
           p
             - if params[:q].present?
@@ -28,30 +27,30 @@
               = cstypo t('.no_query')
       - else
         .d-searches-show__results
-          - if model[:active_results]
-            - if model[:active_results][:pagy]
-              - if model[:active_results][:pagy].pages > 1
+          - if @search[:active_results]
+            - if @search[:active_results][:pagy]
+              - if @search[:active_results][:pagy].pages > 1
                 .small.mb-3
-                  = pagy_info model[:active_results][:pagy]
+                  = pagy_info @search[:active_results][:pagy]
 
-            /== cell(model[:active_results][:results_cell],
-                    model[:active_results][:records],
+            == cell(@search[:active_results][:results_cell],
+                    @search[:active_results][:records],
                     search_results: true)
 
-            / == cell('dummy/ui/pagy', model[:active_results][:pagy])
-          /- else
-            - model[:klasses].each do |klass, data|
+            == cell('dummy/ui/pagy', @search[:active_results][:pagy])
+          - else
+            - @search[:klasses].each do |klass, data|
               - next if data[:count] == 0
 
-              /h2.d-searches-show__results-title
+              h2.d-searches-show__results-title
                 a.d-unlink href=data[:href]
                   = data[:label]
 
-              /== cell(data[:results_cell],
+              == cell(data[:results_cell],
                       data[:records],
                       search_results: false)
 
-              /- if data[:pagy] && data[:pagy].pages > 1
+              - if data[:pagy] && data[:pagy].pages > 1
                 a.btn.btn-primary href=data[:href]
                   = t('.more_results')
 
