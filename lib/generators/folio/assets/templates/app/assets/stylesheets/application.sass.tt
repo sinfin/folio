@@ -22,6 +22,7 @@
 @import 'folio/newsletter_subscriptions/form_component'
 @import 'folio/publishable_hint/publishable_hint'
 @import 'folio/ui/ui'
+@import 'folio/nested_fields_component'
 
 html
   height: 100%

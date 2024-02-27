@@ -191,21 +191,27 @@ class AtomForm extends React.PureComponent {
     const typeForValue = this.props.atomTypes.find(({ key }) => usedTypes.indexOf(key) !== -1)
     const typeValue = typeForValue ? typeForValue.key : undefined
 
+    if (addButtons.length) {
+      addButtons.sort((a, b) => a.title.localeCompare(b.title))
+    }
+
     return (
       <AtomFormWrap>
         <div className='f-c-r-atoms-settings-header'>
           <div className='f-c-r-atoms-settings-header__title'>
-            <Input
-              type='select'
-              value={typeValue}
-              name={`${prefix}[type]`}
-              onChange={this.onTypeChange}
-              className='folio-console-atom-type-select select'
-            >
-              {this.props.atomTypes.map(({ key, title }) => (
-                <option key={key} value={key}>{title}</option>
-              ))}
-            </Input>
+            {molecule ? null : (
+              <Input
+                type='select'
+                value={typeValue}
+                name={`${prefix}[type]`}
+                onChange={this.onTypeChange}
+                className='folio-console-atom-type-select select'
+              >
+                {this.props.atomTypes.map(({ key, title }) => (
+                  <option key={key} value={key}>{title}</option>
+                ))}
+              </Input>
+            )}
           </div>
 
           <div className='f-c-r-atoms-settings-header__controls'>
@@ -351,8 +357,11 @@ class AtomForm extends React.PureComponent {
                 asMolecule={asMolecule}
                 focused={index === this.state.focusedIndex || atom.record.meta.molecule_singleton}
               >
-                <div className={asMolecule ? 'card' : undefined}>
+                <div className={asMolecule ? 'card' : undefined} style={asMolecule ? { minHeight: '124px' } : null}>
                   <div className={asMolecule ? 'card-body mb-n3' : undefined}>
+                    {asMolecule && typeForValue ? (
+                      <p className='fw-bold'>{typeForValue.title}</p>
+                    ) : null}
                     {atom.messages.length > 0 && (
                       <div className={`${asMolecule ? 'mt-0 mb-g' : 'my-g'} alert alert-danger`}>
                         <div className='fw-bold'>{window.FolioConsole.translations.errorNotification}</div>

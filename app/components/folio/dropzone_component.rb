@@ -50,6 +50,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                           max_file_size: @max_file_size,
                           dict: dict.to_json,
                           destroy_url: @destroy_url,
+                          persisted_file_count:,
                         })
   end
 
@@ -68,5 +69,9 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                   class: "btn btn-secondary f-dropzone__trigger",
                   data: stimulus_target("trigger"))
     end
+  end
+
+  def persisted_file_count
+    @records.present? ? @records.size : 0
   end
 end

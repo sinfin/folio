@@ -205,7 +205,13 @@ window.Folio.S3Upload.createDropzone = ({
 
     switch (msg.data.type) {
       case 'success': {
-        if (!dontRemoveFileOnSuccess) {
+        if (dontRemoveFileOnSuccess) {
+          dropzone.files.forEach((file) => {
+            if (file.s3_path === msg.data.s3_path) {
+              file.id = msg.data.file.attributes.id
+            }
+          })
+        } else {
           dropzone.files.forEach((file) => {
             if (file.s3_path === msg.data.s3_path) {
               setTimeout(() => { dropzone.removeFile(file) }, 0)
