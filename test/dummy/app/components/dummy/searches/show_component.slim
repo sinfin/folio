@@ -1,5 +1,6 @@
-.d-searches-show
-  == @search.to_json
+.d-searches-show data=data
+  p.small
+    == @search.to_json
 
   .container-fluid
     = form do |f|

@@ -2,6 +2,6 @@
 
 class Dummy::Searches::ResultsListComponent < ApplicationComponent
   def show
-    render if model.present?
+    render if @search.present?
   end
 end

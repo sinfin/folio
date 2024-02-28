@@ -1,5 +1,5 @@
 .d-searches-results-list
-  - model.each do |record|
+  - @search.each do |record|
     a href=url_for(record)
       = record.try(:cover_placement)
       br

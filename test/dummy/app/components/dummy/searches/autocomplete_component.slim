@@ -1,12 +1,12 @@
 .d-searches-autocomplete.small
-  = @search.to_json
+  /= @search.to_json
 
-  - if model[:count] == 0
+  - if @search[:count] == 0
     .d-searches-autocomplete__no-results
       = cstypo t('dummy.searches_component.show.no_results')
 
   - else
-    - model[:klasses].each do |klass, data|
+    - @search[:klasses].each do |klass, data|
       - next if data[:count] == 0
 
       .d-searches-autocomplete__klass
@@ -17,7 +17,7 @@
           a.d-searches-autocomplete__record href=url_for(record)
             = record.to_label
 
-    - if model[:count] > 5
+    - if @search[:count] > 5
       .d-searches-autocomplete__more
         a.d-searches-autocomplete__more-link href="#"
             = cstypo t('dummy.searches_component.show.more_results')

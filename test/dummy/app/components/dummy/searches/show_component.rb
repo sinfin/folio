@@ -29,4 +29,10 @@ class Dummy::Searches::ShowComponent < ApplicationComponent
             label: false,
             wrapper: false
   end
+
+  def data
+    stimulus_controller("d-searches-show", values: {
+      autocomplete_url: controller.main_app.autocomplete_dummy_search_path,
+    })
+  end
 end
