@@ -8,8 +8,6 @@ module Folio::HasAncestry
 
     validate :validate_allowed_type,
              if: :has_parent?
-
-    before_save :set_position
   end
 
   class_methods do
@@ -43,10 +41,9 @@ module Folio::HasAncestry
       end
     end
 
-    def set_position
-      if self.position.nil?
-        last = self.siblings.ordered.last
-        self.position = !last.nil? ? last.try(:position) || 0 + 1 : 0
+    if method_defined?(:positionable_last_record)
+      def positionable_last_record
+        self.siblings.ordered.last
       end
     end
 end
