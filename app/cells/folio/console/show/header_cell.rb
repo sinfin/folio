@@ -4,7 +4,7 @@ class Folio::Console::Show::HeaderCell < Folio::ConsoleCell
   class_name "f-c-show-header", :no_border, :tabs
 
   def edit_url
-    options[:edit_url] || url_for([:edit, :console, model])
+    options[:edit_url] || through_aware_console_url_for(model, action: :edit)
   rescue NoMethodError
   end
 

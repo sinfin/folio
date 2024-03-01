@@ -48,7 +48,7 @@
 - if options[:above_filters]
   == options[:above_filters]
 
-- if options[:index_filters] != false && index_filters.present?
+- if options[:index_filters] != false && has_visible_index_filters?
   == cell('folio/console/index/filters',
           klass: model,
           cancel_url: options[:filters_cancel_url])

@@ -1,4 +1,7 @@
-.f-c-form-errors.alert.alert-danger data-controller="f-c-form-errors"
+.f-c-form-errors.alert.alert-danger[
+  data-controller="f-c-form-errors"
+  class=options[:class_name]
+]
   - if model
     .fw-bold.mb-2 = model.error_notification
 

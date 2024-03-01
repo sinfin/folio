@@ -90,11 +90,11 @@ class Folio::Console::UsersController < Folio::Console::BaseController
           as: :text,
           autocomplete_attribute: :email,
         },
-      }
+      }.merge(role_filters)
     end
 
     def index_filters
-      default_index_filters.merge(role_filters)
+      default_index_filters
     end
 
     def role_filters

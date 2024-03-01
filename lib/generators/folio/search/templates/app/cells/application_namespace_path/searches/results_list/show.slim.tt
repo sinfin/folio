@@ -1,9 +1,10 @@
 .<%= classname_prefix %>-searches-results-list
   - model.each do |record|
-    == cell('<%= application_namespace_path %>/ui/card',
-            cover_placement: record.try(:cover_placement),
-            href: url_for(record),
-            title: record.to_label,
-            content: record.try(:perex) || record.try(:description),
-            small: true,
-            lazyload_image: false)
+    a href=url_for(record)
+      = record.try(:cover_placement)
+      br
+      = url_for(record)
+      br
+      = record.to_label
+      br
+      = record.try(:perex) || record.try(:description)

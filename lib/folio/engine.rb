@@ -86,6 +86,7 @@ module Folio
     config.folio_leads = false
     config.folio_newsletter_subscriptions = false
 
+    config.folio_users_use_phone = false
     config.folio_users_require_phone = false
     config.folio_users_sign_out_everywhere = true
     config.folio_users_confirmable = false

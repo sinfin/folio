@@ -375,6 +375,11 @@ end
 #  superadmin                :boolean          default(FALSE), not null
 #  console_path              :string
 #  console_path_updated_at   :datetime
+#  degree_pre                :string(32)
+#  degree_post               :string(32)
+#  phone_secondary           :string
+#  born_at                   :date
+#  bank_account_number       :string
 #
 # Indexes
 #

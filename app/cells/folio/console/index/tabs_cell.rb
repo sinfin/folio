@@ -37,11 +37,26 @@ class Folio::Console::Index::TabsCell < Folio::ConsoleCell
     end
   end
 
+  def per_tab_active?
+    return @per_tab_active unless @per_tab_active.nil?
+    @per_tab_active = model.any? { |tab| tab[:active] }
+  end
+
   def class_name(tab)
-    if tab[:force_active].nil?
-      active_class(tab[:href], start_with: false)
-    elsif tab[:force_active]
-      "active"
+    if per_tab_active?
+      tab[:active] ? "active" : nil
+    else
+      if tab[:force_active].nil?
+        active_class(tab[:href], start_with: false)
+      elsif tab[:force_active]
+        "active"
+      end
+    end
+  end
+
+  def text_color_class_name(tab)
+    if tab[:text_color]
+      "f-c-index-tabs__a--color-#{tab[:text_color]}"
     end
   end
 end

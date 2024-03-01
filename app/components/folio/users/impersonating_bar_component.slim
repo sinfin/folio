@@ -1,12 +1,13 @@
-.f-users-impersonating-bar.bg-warning
-  .container-fluid.py-2.text-center.fw-bold.fs-text-s
-    = folio_icon(:user)
+.f-users-impersonating-bar
+  - if alert_component
+    = render(alert_component)
 
-    span<>
-      = t(".label",
-          true_user: true_user_with_test_fallback.to_label,
-          impersonated_user: current_user_with_test_fallback.to_label)
+  - else
+    .bg-warning
+      .container-fluid.py-2.text-center.fw-bold.fs-text-s
+        = folio_icon(:user)
 
-    = link_to(t(".stop_impersonation"),
-              href,
-              data: {turbo: false})
+        span<>
+          = label
+
+        = stop_link

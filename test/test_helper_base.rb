@@ -11,6 +11,7 @@ require Folio::Engine.root.join("test/create_atom_helper")
 require Folio::Engine.root.join("test/create_and_host_site")
 require Folio::Engine.root.join("test/create_page_singleton")
 require Folio::Engine.root.join("test/omniauth_helper")
+require Folio::Engine.root.join("test/support/action_mailer_test_helper")
 require Folio::Engine.root.join("test/support/method_invoking_matchers_helper")
 require Folio::Engine.root.join("test/support/sites_helper")
 
@@ -30,6 +31,10 @@ class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
   include MethodInvokingMatchersHelper
   include SitesHelper
+end
+
+module ActiveJob::TestHelper
+  include ActionMailerTestHelper
 end
 
 class Cell::TestCase

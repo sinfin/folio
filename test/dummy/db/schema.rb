@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_13_061842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -460,6 +460,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_123901) do
     t.boolean "superadmin", default: false, null: false
     t.string "console_path"
     t.datetime "console_path_updated_at"
+    t.string "degree_pre", limit: 32
+    t.string "degree_post", limit: 32
+    t.string "phone_secondary"
+    t.date "born_at"
+    t.string "bank_account_number"
     t.index ["confirmation_token"], name: "index_folio_users_on_confirmation_token", unique: true
     t.index ["crossdomain_devise_token"], name: "index_folio_users_on_crossdomain_devise_token"
     t.index ["email"], name: "index_folio_users_on_email"
