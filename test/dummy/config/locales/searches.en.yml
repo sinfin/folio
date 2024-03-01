@@ -4,7 +4,8 @@ en:
     searches:
       show_component:
         title: Search
-        no_results: No results found. Make sure the term is spelled correctly, or try searching for other keywords.
+        no_results_long: No results found. Make sure the term is spelled correctly, or try searching for other keywords.
+        no_results_short: No results
         no_query: Enter a search term into the field above to search.
         more_results: See more
         placeholder: Search term

@@ -1,7 +1,4 @@
 .d-searches-show data=data
-  p.small
-    == @search.to_json
-
   .container-fluid
     = form do |f|
       h1.d-searches-show__title
@@ -12,7 +9,9 @@
         = query_input(f)
 
         button.d-searches-show__submit type="submit"
-          = dummy_ui_icon(:search, class_name: 'd-searches-show__submit-ico', height: 32)
+          = dummy_ui_icon(:search,
+                          class_name: 'd-searches-show__submit-ico',
+                          height: 32)
 
     .d-searches-show__tabs.mb-g
       - if @search[:tabs].present? && @search[:count] > 0
@@ -23,7 +22,7 @@
         .d-searches-show__no-results.mt-g
           p
             - if params[:q].present?
-              = cstypo t('.no_results')
+              = cstypo t('.no_results_long')
             - else
               = cstypo t('.no_query')
       - else
@@ -39,6 +38,7 @@
                     search_results: true)
 
             == cell('dummy/ui/pagy', @search[:active_results][:pagy])
+
           - else
             - @search[:klasses].each do |klass, data|
               - next if data[:count] == 0

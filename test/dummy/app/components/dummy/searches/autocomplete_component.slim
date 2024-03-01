@@ -1,9 +1,7 @@
 .d-searches-autocomplete.small
-  /= @search.to_json
-
   - if @search[:count] == 0
     .d-searches-autocomplete__no-results
-      = cstypo t('dummy.searches_component.show.no_results')
+      = cstypo t('dummy.searches.show_component.no_results_short')
 
   - else
     - @search[:klasses].each do |klass, data|
@@ -20,4 +18,4 @@
     - if @search[:count] > 5
       .d-searches-autocomplete__more
         a.d-searches-autocomplete__more-link href="#"
-            = cstypo t('dummy.searches_component.show.more_results')
+            = cstypo t('dummy.searches.show_component.more_results')

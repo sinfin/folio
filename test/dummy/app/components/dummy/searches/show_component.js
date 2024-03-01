@@ -1,122 +1,68 @@
 window.Folio.Stimulus.register('d-searches-show', class extends window.Stimulus.Controller {
   static values = {
+    autocompleteResults: []
   }
 
-})
+  loadAutocompleteResults(input, form, wrap) {
+    const value = input.value;
+    const cachedResult = this.autocompleteResultsValue.find(result => result.q === value);
 
-/*(function() {
-  var aborted, ajax, debouncedLoad, getCachedResult, load, resultsCache, setCachedResults, timeout;
-
-  resultsCache = [];
-
-  ajax = null;
-
-  aborted = false;
-
-  timeout = null;
-
-  getCachedResult = function(q) {
-    var result;
-    result = null;
-    resultsCache.forEach(function(cached) {
-      if (q === cached.q) {
-        result = cached;
-        return false;
-      }
-    });
-    return result;
-  };
-
-  setCachedResults = function(q, $wrap) {
-    var cachedResult;
-    cachedResult = getCachedResult(q);
-    if (cachedResult && (cachedResult.tabs != null) && (cachedResult.results != null)) {
-      $wrap.find('.d-searches-show__results-wrap').html(cachedResult.results);
-      $wrap.find('.d-searches-show__tabs').html(cachedResult.tabs);
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  load = function($input, $form, $wrap) {
-    var tabMatch, url, value;
-    value = $input.val();
-    if (setCachedResults(value, $wrap)) {
+    if (cachedResult && cachedResult.tabs != null && cachedResult.results != null) {
+      wrap.querySelector('.d-searches-show__results-wrap').innerHTML = cachedResult.results;
+      wrap.querySelector('.d-searches-show__tabs').innerHTML = cachedResult.tabs;
       return;
     }
-    url = ($form.prop('action')) + "?q=" + value;
-    tabMatch = window.location.search.match(/tab=[^&]+/);
+
+    let url = `${form.getAttribute('action')}?q=${value}`;
+    const tabMatch = window.location.search.match(/tab=[^&]+/);
+
     if (tabMatch && tabMatch[0]) {
-      url += "&" + tabMatch[0];
+      url += `&${tabMatch[0]}`;
     }
-    return $.ajax({
-      url: url,
-      method: 'GET',
-      success: function(response, status, jxHr) {
-        var $response, cacheEntry, resultsHtml, tabsHtml;
-        $response = $(response);
-        tabsHtml = $response.find('.d-searches-show__tabs').html();
-        resultsHtml = $response.find('.d-searches-show__results-wrap').html();
-        $wrap.find('.d-searches-show__tabs').html(tabsHtml);
-        $wrap.find('.d-searches-show__results-wrap').html(resultsHtml);
-        $wrap.removeClass('d-searches-show--loading');
-        cacheEntry = {
+
+    fetch(url)
+      .then(response => response.text())
+      .then(response => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(response, 'text/html');
+        const tabsHtml = doc.querySelector('.d-searches-show__tabs').innerHTML;
+        const resultsHtml = doc.querySelector('.d-searches-show__results-wrap').innerHTML;
+
+        wrap.querySelector('.d-searches-show__tabs').innerHTML = tabsHtml;
+        wrap.querySelector('.d-searches-show__results-wrap').innerHTML = resultsHtml;
+        wrap.classList.remove('d-searches-show--loading');
+
+        const cacheEntry = {
           q: value,
           tabs: tabsHtml,
           results: resultsHtml
         };
-        resultsCache = resultsCache.slice(0, 4);
-        resultsCache.unshift(cacheEntry);
-        return Turbolinks.controller.replaceHistoryWithLocationAndRestorationIdentifier(url, Turbolinks.uuid());
-      },
-      error: function() {
-        if (aborted) {
-          return aborted = false;
-        } else {
-          return Turbolinks.visist(($form.prop('action')) + "?q=" + value);
+
+        this.autocompleteResultsValue.unshift(cacheEntry);
+        this.autocompleteResultsValue = this.autocompleteResultsValue.slice(0, 4);
+        Turbolinks.controller.replaceHistoryWithLocationAndRestorationIdentifier(url, Turbolinks.uuid());
+      })
+      .catch(error => {
+        if (error.name !== 'AbortError') {
+          Turbolinks.visit(`${form.getAttribute('action')}?q=${value}`);
         }
-      }
+      });
+  }
+
+  debouncedLoadAutocompleteResults = window.Folio.debounce(this.loadAutocompleteResults, 300);
+
+  connect() {
+    const input = this.element.querySelector('.d-searches-show__input');
+    input.addEventListener('input', () => {
+      const form = input.closest('.d-searches-show__form');
+      const wrap = form.closest('.d-searches-show');
+      wrap.classList.add('d-searches-show--loading');
+      this.debouncedLoadAutocompleteResults(input, form, wrap);
     });
-  };
+  }
 
-  debouncedLoad = window.Folio.debounce(load, 300);
-
-  $(document).on('turbolinks:load', function() {
-    return $('.d-searches-show__input').on('keyup.dSearchesShow change.dSearchesShow', function(e) {
-      var perform;
-      perform = (function(_this) {
-        return function() {
-          var $form, $input, $wrap;
-          $input = $(_this);
-          $form = $input.closest('.d-searches-show__form');
-          $wrap = $form.closest('.d-searches-show');
-          if (setCachedResults(_this.value, $wrap)) {
-            return;
-          }
-          $wrap.addClass('d-searches-show--loading');
-          return debouncedLoad($input, $form, $wrap);
-        };
-      })(this);
-      if (e.type === "change") {
-        return timeout = setTimeout(perform, 100);
-      } else {
-        return perform();
-      }
-    });
-  }).on('turbolinks:request-start', function() {
-    var timeeout;
-    if (ajax) {
-      aborted = true;
-      ajax.abort();
-      ajax = null;
-    }
-    if (timeout) {
-      clearTimeout(timeout);
-      return timeeout = null;
-    }
-  }).on('turbolinks:before-render', function() {
-    return $('.d-searches-show__input').off('keyup.dSearchesShow change.dSearchesShow');
-  });
-
-}).call(this);*/
+  disconnect() {
+    const input = this.element.querySelector('.d-searches-show__input');
+    input.removeEventListener('input', () => {});
+  }
+});

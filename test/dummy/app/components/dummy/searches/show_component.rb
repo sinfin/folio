@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Dummy::Searches::ShowComponent < ApplicationComponent
-
   include Pagy::Frontend
   include SimpleForm::ActionViewExtensions::FormHelper
 

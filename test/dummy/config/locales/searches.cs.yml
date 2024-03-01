@@ -4,7 +4,8 @@ cs:
     searches:
       show_component:
         title: Vyhledávání
-        no_results: Nebyly nalezeny žádné výsledky. Ujistěte se, zda je výraz napsán správně, nebo zkuste hledat jiná klíčová slova.
+        no_results_long: Nebyly nalezeny žádné výsledky. Ujistěte se, zda je výraz napsán správně, nebo zkuste hledat jiná klíčová slova.
+        no_results_short: Žádné výsledky
         no_query: Pro vyhledávání zadejte hledaný výraz do políčka výše.
         more_results: Více výsledků
         placeholder: Hledaný výraz
