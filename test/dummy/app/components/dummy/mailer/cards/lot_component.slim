@@ -108,12 +108,7 @@ table.d-mailer-cards-lot[
                       span.d-mailer-cards-lot__limiting-end = @limiting_end
 
                   - if @button_label && @button_href
-                    .d-mailer-cards-lot__btn-wrapper
-                      a.btn.custom-btn.custom-btn--secondary.d-mailer-cards-lot__btn[
-                        href=@button_href
-                        style="color: #000000;padding: 0 14.5px 0 14.5px;"
-                      ]
-                        = @button_label
+                    = render(Dummy::Mailer::ButtonComponent.new(label: @button_label, href: @button_href, type: :secondary, size: :md))
 
             /[if mso]
               </td>
