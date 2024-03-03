@@ -2,11 +2,11 @@ $dummy-mailer-styles: false !default
 
 @if $dummy-mailer-styles
   @media (prefers-color-scheme: dark )
-    // show dark Mode-Only image
+    // show dark mode only image
     .dark-img-parent
       display: block !important
 
-    // hide Light Mode-Only image
+    // hide light mode only image
     .light-img-parent
       display: none !important
 
@@ -65,19 +65,26 @@ $dummy-mailer-styles: false !default
       border-top-color: $cloud-500 !important
     
     .btn-primary,
-    .folio-redactor-button > .btn-redactor
+    .btn-redactor--fill
       color: $mailer-secure-primary-black !important
       background-color: $mailer-secure-primary-white !important
 
-    .custom-btn:hover,
-    .custom-btn:focus
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-redactor--fill:hover,
+    .btn-redactor--fill:focus
       background-color: $cloud-200 !important
       text-underline-color: $cloud-200 !important
 
-    .custom-btn.custom-btn--secondary
+    .btn-secondary
       border: 2px solid $mailer-secure-primary-white !important
       background-color: transparent !important
       color: $mailer-secure-primary-white !important
+
+    .btn-secondary:hover,
+    .btn-secondary:focus
+      background-color: $cloud-800 !important
+      text-underline-color: $cloud-800 !important
 
     .d-mailer-order-summary__order-item-wrapper
       border-bottom-color: $cloud-700 !important
