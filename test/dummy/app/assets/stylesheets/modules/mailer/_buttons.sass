@@ -7,24 +7,28 @@ $dummy-mailer-styles: false !default
     border-radius: $mailer-btn-border-radius
     cursor: pointer
     margin: 0
-    background-color: $primary-black
     font-weight: $font-weight-semibold
     text-align: center
     text-decoration: none
-    text-underline-color: $primary-black
-    box-sizing: border-box
-    text-transform: uppercase
-    height: 40px
-    line-height: 40px
-    mso-line-height-rule: exactly
-    padding: 0 16px
-    border: 0
+    -webkit-text-size-adjust: none
 
-  .custom-btn.custom-btn--secondary
+  .btn-primary,
+  .btn-redactor--fill
+    background-color: $primary-black
+    text-underline-color: $primary-black
+    text-transform: uppercase
+
+  .btn.btn-primary,
+  .btn.btn-redactor--fill
+    color: $mailer-secure-primary-white
+
+  .btn-secondary
     border: 2px solid $primary-black
     background-color: transparent
-    padding: 0 14px
-    line-height: 38px
+    mso-hide: all
+
+  .btn.btn-secondary
+    color: $mailer-secure-primary-black
 
   .folio-redactor-button
     margin: 8px 0 8px 0
@@ -33,4 +37,5 @@ $dummy-mailer-styles: false !default
     margin: 20px 0 8px 0
 
   .folio-redactor-button > .btn-redactor
-    color: $primary-white
+    width: 150px
+    line-height: 40px
