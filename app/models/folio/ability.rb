@@ -56,6 +56,8 @@ class Folio::Ability
       can :manage, Folio::NewsletterSubscription, { site: }
       can :manage, Folio::EmailTemplate, { site: }
       can [:read, :update], Folio::Site, { id: site.id }
+
+      cannot :impersonate, Folio::User
     end
   end
 end

@@ -9,7 +9,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
                       superadmins: [:manage],
                       administrators: [:manage],
                       managers: [:manage],
-                      users: [:manage],
+                      users: [:manage, :impersonate, :stop_impersonating],
                       images: [:manage],
                       videos: [:manage],
                       audios: [:manage],
@@ -47,7 +47,9 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   test "administrator on his site" do
     user = create_user(roles: { site1 => [:administrator] })
     @tested_site = site1
-    allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new], sites: [:read, :modify] })
+    allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new],
+                                              users: [:manage, :stop_impersonating],
+                                              sites: [:read, :modify] })
 
     check_abilities(user, allowed_actions)
   end
@@ -55,7 +57,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   test "administrator on other site" do
     user = create_user(roles: { site1 => [:administrator] })
     @tested_site = site2
-    allowed_actions = {}
+    allowed_actions = { users: [:stop_impersonating] }
 
     check_abilities(user, allowed_actions)
   end
@@ -65,6 +67,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
     @tested_site = site1
     allowed_actions = MAXIMUM_ACTIONS.merge({ superadmins: [:new],
                                               administrators: [:new],
+                                              users: [:manage, :stop_impersonating],
                                               sites: [:read, :modify] })
 
     check_abilities(user, allowed_actions)
@@ -73,7 +76,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   test "manager on other site" do
     user = create_user(roles: { site1 => [:manager] })
     @tested_site = site2
-    allowed_actions = {}
+    allowed_actions = { users: [:stop_impersonating] }
 
     check_abilities(user, allowed_actions)
   end
@@ -81,7 +84,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   test "so called user on his site" do
     user = create_user(roles: { site1 => [] })
     @tested_site = site1
-    allowed_actions = {}
+    allowed_actions = { users: [:stop_impersonating] }
 
     check_abilities(user, allowed_actions)
   end
@@ -89,7 +92,7 @@ class Folio::AbilityTest < ActiveSupport::TestCase
   test "not yet user on his site" do
     user = create_user(email: "notyetuser@#{site1.domain}")
     @tested_site = site1
-    allowed_actions = {}
+    allowed_actions = { users: [:stop_impersonating] }
 
     check_abilities(user, allowed_actions)
   end
