@@ -6,20 +6,20 @@ $dummy-mailer-styles: false !default
     max-width: 648px
 
     &__logo-wrapper, &__contact-wrapper
-      padding: 32px 0 0 0
+      padding: $mailer-gap-g 0 0 0
 
     &__socials-title-wrapper
-      padding: 40px 0 16px 0
+      padding: $mailer-gap-h 0 $mailer-gap-d 0
 
     &__socials-table-wrapper
-      padding: 0 0 32px 0
+      padding: 0 0 $mailer-gap-g 0
 
     &__menu-wrapper
       padding: 0
 
     &__legal-wrapper
       +mailer-font-size-text-m
-      padding: 16px 0 32px 0
+      padding: $mailer-gap-d 0 $mailer-gap-g 0
       color: $cloud-400
 
     &__logo-link
@@ -30,12 +30,12 @@ $dummy-mailer-styles: false !default
       display: block
 
     &__contact-title
-      margin: 0 0 16px 0
+      margin: 0 0 $mailer-gap-d 0
 
     &__contact-detail
       +mailer-font-size-text-m
       display: block
-      margin: 0 0 4px 0
+      margin: 0 0 $mailer-gap-a 0
 
       &:last-child
         margin: 0

@@ -4,7 +4,7 @@ $dummy-mailer-styles: false !default
   .d-mailer-layout__content
     p
       +mailer-font-size-text-m
-      margin: 0 0 12px 0
+      margin: 0 0 $mailer-gap-c 0
       color: $cloud-700
 
     p.font-size-lg
@@ -21,11 +21,11 @@ $dummy-mailer-styles: false !default
     hr
       border-top: 1px solid $cloud-300
       border-bottom: 0
-      margin: 32px 0 32px 0
+      margin: $mailer-gap-g 0 $mailer-gap-g 0
       padding: 0
 
     p + hr
       margin-top: 44px
 
     .d-mailer-cards-extra-small-container + hr
-      margin: 8px 0 32px 0
+      margin: $mailer-gap-b 0 $mailer-gap-g 0

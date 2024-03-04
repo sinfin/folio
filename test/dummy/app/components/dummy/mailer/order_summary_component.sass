@@ -15,28 +15,28 @@ $dummy-mailer-styles: false !default
       table-layout: fixed
 
     &__title-wrapper
-      padding: 0 0 32px 0
+      padding: 0 0 $mailer-gap-g 0
 
     &__order-item-wrapper
       overflow: hidden
       text-overflow: ellipsis
       width: 100%
       font-size: 0
-      padding: 16px 0
+      padding: $mailer-gap-d 0
       border-bottom: 1px solid $cloud-200
 
     &__title
       +mailer-font-size-display-s
       font-weight: $font-weight-bold
-      margin: 0 0 8px 0
+      margin: 0 0 $mailer-gap-b 0
 
     &__order-wrapper
-      padding: 8px 24px 24px 24px
+      padding: $mailer-gap-b $mailer-gap-f $mailer-gap-f $mailer-gap-f
       background: $cloud-100
-      border-radius: 12px
+      border-radius: $mailer-border-radius
 
     &__info-wrapper
-      padding: 32px 0 8px 0
+      padding: $mailer-gap-g 0 $mailer-gap-b 0
       font-size: 0
 
     &__order-image-wrapper, &__order-title-wrapper, &__order-price-wrapper
@@ -47,23 +47,23 @@ $dummy-mailer-styles: false !default
     &__order-image-wrapper
       width: 100%
       max-width: 70px
-      padding: 0 16px 0 0
+      padding: 0 $mailer-gap-d 0 0
 
     &__order-title-wrapper
       width: 100%
       max-width: 372px
-      padding: 4px 32px 0 0
+      padding: $mailer-gap-b $mailer-gap-g 0 0
 
     &__order-price-wrapper
       width: 100%
       max-width: 110px
-      padding: 4px 0 0 0
+      padding: $mailer-gap-b 0 0 0
       height: 62px
 
     &__order-title
       +mailer-font-size-text-s
       font-weight: $font-weight-bold
-      margin: 0 0 4px 0
+      margin: 0 0 $mailer-gap-b 0
 
     &__order-subtitle
       +mailer-font-size-text-s
@@ -79,7 +79,7 @@ $dummy-mailer-styles: false !default
       font-weight: $font-weight-semibold
 
     &__total-price, &__unit-price
-      margin: 0 0 4px 0
+      margin: 0 0 $mailer-gap-b 0
 
     &__unit-price, &__count
       color: $cloud-400
@@ -89,7 +89,7 @@ $dummy-mailer-styles: false !default
       text-overflow: ellipsis
       width: 100%
       font-size: 0
-      padding: 16px 0 0 0
+      padding: $mailer-gap-d 0 0 0
 
     &__order-total-price-title,
     &__order-total-price
@@ -102,7 +102,7 @@ $dummy-mailer-styles: false !default
     &__order-total-price-title
       width: 100%
       max-width: 458px
-      padding: 0 32px 0 0
+      padding: 0 $mailer-gap-g 0 0
 
     &__order-total-price
       width: 100%

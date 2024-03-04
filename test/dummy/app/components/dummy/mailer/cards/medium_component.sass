@@ -5,16 +5,16 @@ $dummy-mailer-styles: false !default
     width: 100%
 
     &__wrapper
-      padding: 32px 0 0 0
+      padding: $mailer-gap-g 0 0 0
 
     &__inner
       width: 100%
       background-color: $cloud-100
-      border-radius: 12px
+      border-radius: $mailer-border-radius
 
     &__inner-wrapper
       font-size: 0
-      padding: 32px 0 0 0
+      padding: $mailer-gap-g 0 0 0
 
     &__image-wrapper, &__content-wrapper
       display: inline-block
@@ -28,10 +28,10 @@ $dummy-mailer-styles: false !default
       text-align: left
 
     &__image-inner
-      padding: 0 0 32px 32px
+      padding: 0 0 $mailer-gap-g $mailer-gap-g
 
     &__image
-      border-radius: 8px
+      border-radius: $mailer-border-radius-sm
 
     &__content-wrapper
       width: 100%
@@ -42,7 +42,7 @@ $dummy-mailer-styles: false !default
       max-width: 100%
 
     &__content-inner
-      padding: 0 32px 32px 32px
+      padding: 0 $mailer-gap-g $mailer-gap-g $mailer-gap-g
       text-align: left
 
     &__content-inner p
