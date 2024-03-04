@@ -1,10 +1,14 @@
 .d-searches-results-list
   - @search.each do |record|
-    a href=url_for(record)
-      = record.try(:cover_placement)
-      br
-      = url_for(record)
-      br
-      = record.to_label
-      br
-      = record.try(:perex) || record.try(:description)
+    a.d-searches-results-list__result href=url_for(record)
+      .d-searches-results-list__cover
+        = record.try(:cover_placement)
+
+      .d-searches-results-list__text
+        h3.d-searches-results-list__title
+          = record.to_label
+
+        p.d-searches-results-list__perex
+          = record.try(:perex) || record.try(:description)
+
+        p.small.d-searches-results-list__url = url_for(record)

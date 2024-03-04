@@ -33,10 +33,9 @@
                 .small.mb-3
                   = pagy_info @search[:active_results][:pagy]
 
-            - @search.inspect
-            /== render(::Dummy::Searches::ResultsListComponent.new(@search[:active_results][:records]))
+            == render(::Dummy::Searches::ResultsListComponent.new(@search[:active_results][:records]))
 
-            /== cell('dummy/ui/pagy', @search[:active_results][:pagy])
+            = render(Dummy::Ui::PagyComponent.new(pagy: @search[:active_results][:pagy]))
 
           - else
             - @search[:klasses].each do |klass, data|
@@ -46,8 +45,7 @@
                 a.d-unlink href=data[:href]
                   = data[:label]
 
-              - @search.inspect
-              /== render(::Dummy::Searches::ResultsListComponent.new(@search[:records]))
+              == render(::Dummy::Searches::ResultsListComponent.new(data[:records]))
 
               - if data[:pagy] && data[:pagy].pages > 1
                 a.btn.btn-primary href=data[:href]
