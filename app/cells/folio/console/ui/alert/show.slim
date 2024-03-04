@@ -1,6 +1,7 @@
 div[
   class=class_name
   class="f-c-ui-alert--#{variant}"
+  class=options[:class_name]
   role="alert"
   data-controller="f-c-ui-alert"
 ]
@@ -19,9 +20,10 @@ div[
     .f-c-ui-alert__content
       == model
 
-    button.f-c-ui-alert__close[
-      class="f-c-anti-container-fluid f-c-anti-container-fluid--padding"
-      type="button"
-      data-action="f-c-ui-alert#close"
-    ]
-      = folio_icon(:close)
+    - if options[:closable] != false
+      button.f-c-ui-alert__close[
+        class="f-c-anti-container-fluid f-c-anti-container-fluid--padding"
+        type="button"
+        data-action="f-c-ui-alert#close"
+      ]
+        = folio_icon(:close)

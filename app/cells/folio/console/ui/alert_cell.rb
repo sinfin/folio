@@ -8,6 +8,8 @@ class Folio::Console::Ui::AlertCell < Folio::ConsoleCell
   end
 
   def icon_key
+    return options[:icon] if options[:icon]
+
     case variant
     when :success
       :check_circle_outline
