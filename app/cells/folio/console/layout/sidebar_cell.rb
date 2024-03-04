@@ -257,7 +257,7 @@ class Folio::Console::Layout::SidebarCell < Folio::ConsoleCell
         links << link_for_site_class(site, Folio::NewsletterSubscription) if show_newsletter_subscriptions?
         links << link_for_site_class(site, Folio::EmailTemplate)
         links += site_links[:console_sidebar_before_site_links]
-        if can_now?(:manage, site)
+        if can_now?(:update, site)
           links << {
                       klass: "Folio::Site",
                       icon: :cog,
