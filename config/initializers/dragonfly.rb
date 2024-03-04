@@ -126,6 +126,7 @@ Dragonfly.app.configure do
               bucket_name: ENV.fetch("S3_BUCKET_NAME"),
               access_key_id: ENV.fetch("AWS_ACCESS_KEY_ID"),
               secret_access_key: ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+              session_token: ENV.fetch('AWS_SESSION_TOKEN', nil),
               url_scheme: ENV.fetch("S3_SCHEME"),
               region: ENV.fetch("S3_REGION"),
               root_path: "#{ENV.fetch('PROJECT_NAME')}/#{ENV.fetch('DRAGONFLY_RAILS_ENV') { Rails.env }}/files",

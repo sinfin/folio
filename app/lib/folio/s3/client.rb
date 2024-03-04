@@ -9,7 +9,7 @@ module Folio::S3::Client
     credentials: Aws::Credentials.new(
       ENV.fetch("AWS_ACCESS_KEY_ID"),
       ENV.fetch("AWS_SECRET_ACCESS_KEY"),
-      (ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN'].present?)
+      ENV.fetch('AWS_SESSION_TOKEN', nil)
     )
   )
   end

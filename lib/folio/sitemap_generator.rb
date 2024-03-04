@@ -37,7 +37,8 @@ unless Rails.env.development?
     ENV["S3_BUCKET_NAME"],
     aws_access_key_id: ENV["AWS_ACCESS_KEY_ID"],
     aws_secret_access_key: ENV["AWS_SECRET_ACCESS_KEY"],
-    aws_region: ENV["S3_REGION"]
+    aws_region: ENV["S3_REGION"],
+    aws_session_token: ENV.fetch('AWS_SESSION_TOKEN', nil)
   )
 end
 
