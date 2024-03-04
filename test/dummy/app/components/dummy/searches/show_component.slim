@@ -15,7 +15,7 @@
 
     .d-searches-show__tabs.mb-g
       - if @search[:tabs].present? && @search[:count] > 0
-        == render_view_component(::Dummy::Ui::TabsComponent.new(tabs: @search[:tabs]))
+        == render(::Dummy::Ui::TabsComponent.new(tabs: @search[:tabs]))
 
     .d-searches-show__results-wrap
       - if @search[:count] == 0
@@ -33,11 +33,10 @@
                 .small.mb-3
                   = pagy_info @search[:active_results][:pagy]
 
-            == cell(@search[:active_results][:results_cell],
-                    @search[:active_results][:records],
-                    search_results: true)
+            - @search.inspect
+            /== render(::Dummy::Searches::ResultsListComponent.new(@search[:active_results][:records]))
 
-            == cell('dummy/ui/pagy', @search[:active_results][:pagy])
+            /== cell('dummy/ui/pagy', @search[:active_results][:pagy])
 
           - else
             - @search[:klasses].each do |klass, data|
@@ -47,9 +46,8 @@
                 a.d-unlink href=data[:href]
                   = data[:label]
 
-              == cell(data[:results_cell],
-                      data[:records],
-                      search_results: false)
+              - @search.inspect
+              /== render(::Dummy::Searches::ResultsListComponent.new(@search[:records]))
 
               - if data[:pagy] && data[:pagy].pages > 1
                 a.btn.btn-primary href=data[:href]

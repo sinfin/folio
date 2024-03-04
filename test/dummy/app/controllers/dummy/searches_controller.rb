@@ -20,7 +20,7 @@ class Dummy::SearchesController < ApplicationController
   ]
 
   def show
-    @public_page_title =  t('dummy.searches_component.show.title')
+    @public_page_title = t("dummy.searches_component.show.title")
   end
 
   def autocomplete
@@ -37,7 +37,7 @@ class Dummy::SearchesController < ApplicationController
       }
 
       @search[:tabs] << {
-        label: t("dummy.searches.show.tabs.overview"),
+        label: t("dummy.searches.show_component.tabs.overview"),
         href: dummy_search_path(q: params[:q], tab: nil),
       }
 
