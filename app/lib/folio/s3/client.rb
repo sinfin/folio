@@ -4,9 +4,14 @@ module Folio::S3::Client
   TEST_PATH = "/tmp/folio_tmp_user_photo_uploads"
 
   def s3_client
-    @s3_client ||= Aws::S3::Client.new(region: ENV.fetch("S3_REGION"),
-                                       credentials: Aws::Credentials.new(ENV.fetch("AWS_ACCESS_KEY_ID"),
-                                                                         ENV.fetch("AWS_SECRET_ACCESS_KEY")))
+    @s3_client ||= Aws::S3::Client.new(
+    region: ENV.fetch("S3_REGION"),
+    credentials: Aws::Credentials.new(
+      ENV.fetch("AWS_ACCESS_KEY_ID"),
+      ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+      (ENV['AWS_SESSION_TOKEN'] if ENV['AWS_SESSION_TOKEN'].present?)
+    )
+  )
   end
 
   def s3_presigner
