@@ -10,17 +10,17 @@ $dummy-mailer-styles: false !default
       font-size: 0
 
     &--even &__wrapper
-      padding: 0 24px 24px 0
+      padding: 0 $mailer-gap-f $mailer-gap-f 0
 
     &--odd &__wrapper
-      padding: 0 0 24px 0
+      padding: 0 0 $mailer-gap-f 0
 
     &__image-wrapper
       width: 80px
       padding: 0
 
     &__content-wrapper--with-image
-      padding: 0 0 0 16px
+      padding: 0 0 0 $mailer-gap-d
 
     &__content-wrapper--full
       padding: 0
@@ -30,7 +30,7 @@ $dummy-mailer-styles: false !default
 
     &__image
       width: 80px
-      border-radius: 8px
+      border-radius: $mailer-border-radius-sm
 
     &__content-inner
       padding: 0
