@@ -1,12 +1,16 @@
 .d-searches-results-list
+  display: flex
+  flex-direction: column
+  gap: $grid-gutter-half
   &__result
     text-decoration: none
+    display: flex
 
   &__cover
-    flex 0 1 auto
+    flex: 0 0 auto
 
   &__text
-    flex 1 0 auto
+    flex: 1 1 auto
 
   &__title
     text-decoration: underline
@@ -18,6 +22,6 @@
     text-decoration: underline
     color: $shade-500
 
-  &__title:hover
+  &__title:hover,
   &__url:hover
     text-decoration: none

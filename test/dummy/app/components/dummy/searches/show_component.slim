@@ -41,7 +41,7 @@
             - @search[:klasses].each do |klass, data|
               - next if data[:count] == 0
 
-              h2.d-searches-show__results-title
+              h2.d-searches-show__results-title.mb-4
                 a.d-unlink href=data[:href]
                   = data[:label]
 
