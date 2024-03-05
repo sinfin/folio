@@ -1,7 +1,9 @@
-.f-c-addresses-fields
+.f-c-addresses-fields data=data
   .row
     - cols.each do |klass, key, toggle|
-      div class=(cols.size > 1 ? "col-lg-6" : "col-12")
+      .f-c-addresses-fields__col[
+        class=(cols.size > 1 ? "col-lg-6" : "col-12")
+      ]
         .d-flex.flex-wrap[
           class=(toggle ? "align-items-end" : nil)
         ]
@@ -9,18 +11,24 @@
             h2.me-auto.pe-g = klass.model_name.human
 
           - if toggle
-            = model.input toggle, wrapper_html: { class: 'pb-1' }
+            = model.input toggle,
+                          wrapper_html: { class: 'mb-3' },
+                          input_html: { data: stimulus_action('onToggle') }
 
-        = html_safe_fields_for model, key, build: true do |g|
-          - address_required = address_required?(key, g.object.attributes)
-          - fields_layout(g, key).each do |row|
-            - if row.is_a?(Hash)
-              - if row[:_html]
-                == row[:_html]
-              - else
-                .row
-                  - row.each do |key, col|
-                    div class="col-md-#{col}"
-                      = input(g, key, address_required: address_required)
-            - elsif row.is_a?(Symbol)
-              = input(g, row, address_required: address_required)
+        - disabled = options[:disabled]
+        - disabled ||= toggle && !model.object.send(toggle)
+
+        .f-c-addresses-fields__fields
+          = html_safe_fields_for model, key, build: true do |g|
+            - address_required = address_required?(key, g.object.attributes)
+            - fields_layout(g, key).each do |row|
+              - if row.is_a?(Hash)
+                - if row[:_html]
+                  == row[:_html]
+                - else
+                  .row
+                    - row.each do |key, col|
+                      div class="col-md-#{col}"
+                        = input(g, key, address_required:, disabled:)
+              - elsif row.is_a?(Symbol)
+                = input(g, row, address_required:, disabled:)
