@@ -292,3 +292,10 @@ $folio-cookie-consent-toggle-bg-readonly: $shade-400
 $folio-cookie-consent-toggle-knob-bg: $shade-200
 $folio-cookie-consent-webkit-scrollbar-bg: $shade-300
 $folio-cookie-consent-webkit-scrollbar-bg-hover: $shade-400
+
+// datepicker
+$td-light: $shade-light-contrast
+$td-disabled-color: $shade-200
+$td-alternate-color: $shade-300
+$td-btn-hover-bg: $shade-100
+$td-days-of-week-color: $shade-500
