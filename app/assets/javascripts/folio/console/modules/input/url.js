@@ -71,6 +71,7 @@ window.Folio.Stimulus.register('f-c-input-url', class extends window.Stimulus.Co
       this.element.value = e.params.data.id
       this.element.classList.add('form-control--hinted')
       this.element.focus()
+      this.element.dispatchEvent(new window.Event('change', { bubbles: true }))
 
       this.hintTimeout = window.setTimeout(() => {
         this.element.classList.remove('form-control--hinted')
