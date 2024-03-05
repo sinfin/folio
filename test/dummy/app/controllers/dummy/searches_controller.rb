@@ -20,7 +20,7 @@ class Dummy::SearchesController < ApplicationController
   ]
 
   def show
-    @public_page_title = t("dummy.searches_component.show.title")
+    @public_page_title = t("dummy.searches.show_component.title")
   end
 
   def autocomplete
