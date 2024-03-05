@@ -18,6 +18,7 @@
 //= require folio/nested_fields_component
 //= require folio/newsletter_subscriptions/form_component
 //= require folio/dropzone_component
+//= require folio/input/date_time
 
 //= require folio/image/image
 //= require dummy/searches/show/show
