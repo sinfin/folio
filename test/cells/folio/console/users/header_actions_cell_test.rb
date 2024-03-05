@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Folio::Console::Users::HeaderActionsCellTest < Folio::Console::CellTest
-#  include Devise::Test::ControllerHelpers
+  #  include Devise::Test::ControllerHelpers
 
   test "show" do
     skip "TODO: fix this test to make working `can_now?` method"
