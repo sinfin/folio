@@ -263,6 +263,7 @@ $input-focus-border-color: $shade-black-contrast
 $input-font-size: $ui-typo-text-m-font-size
 $input-box-shadow: none
 $input-focus-box-shadow: none
+$input-disabled-bg: $shade-100
 
 $form-label-margin-bottom: map-get($spacers, 1)
 $form-label-font-size: $ui-typo-text-s-font-size
@@ -272,3 +273,21 @@ $table-variants: ( )
 
 $hr-border-color: $shade-300
 $hr-opacity: 1
+
+$folio-addresses-fields-background: $shade-100
+$folio-addresses-fields-nested-background: $shade-light-contrast
+
+$folio-cookie-consent-btn-primary-text: $shade-light-contrast
+$folio-cookie-consent-btn-primary-bg: $shade-black-contrast
+$folio-cookie-consent-btn-primary-hover-bg: $shade-800
+$folio-cookie-consent-btn-secondary-text: $shade-black-contrast
+$folio-cookie-consent-btn-secondary-bg: $shade-100
+$folio-cookie-consent-btn-secondary-hover-bg: $shade-100
+$folio-cookie-consent-block-text: $shade-black-contrast
+$folio-cookie-consent-cookie-category-block-bg: $shade-100
+$folio-cookie-consent-cookie-category-block-bg-hover: $shade-200
+$folio-cookie-consent-cookie-table-border: $shade-200
+$folio-cookie-consent-toggle-bg-readonly: $shade-400
+$folio-cookie-consent-toggle-knob-bg: $shade-200
+$folio-cookie-consent-webkit-scrollbar-bg: $shade-300
+$folio-cookie-consent-webkit-scrollbar-bg-hover: $shade-400
