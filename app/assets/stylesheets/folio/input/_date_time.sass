@@ -1,11 +1,11 @@
 $folio-input-date-time-icon: true !default
 $folio-input-date-time-icon-background-url: image-url("folio/input/date_time/input-background-ico.svg") !default
 $folio-input-date-time-icon-background-size: 18px 18px !default
-$folio-input-date-time-icon-opacity: 0.5 !default
+$folio-input-date-time-icon-opacity: 1 !default
 $folio-input-date-time-widget-padding: $grid-gutter-width / 3 !default
 $folio-input-date-time-widget-box-shadow: $box-shadow !default
 
-$td-light: $white
+$td-light: $white !default
 $td-widget-background: $td-light
 $td-font-color: $body-color
 $td-timepicker-font-size: inherit
@@ -13,13 +13,14 @@ $td-active-bg: $blue
 $td-active-color: $white
 $td-active-border-color: $td-active-color
 $td-border-radius: $border-radius
-$td-btn-hover-bg: $medium-gray
-$td-disabled-color: $medium-gray
-$td-alternate-color: rgba(0, 0, 0, 0.38)
+$td-btn-hover-bg: $medium-gray !default
+$td-disabled-color: $medium-gray !default
+$td-alternate-color: rgba(0, 0, 0, 0.38) !default
 $td-secondary-border-color: #ccc
 $td-secondary-border-color-rgba: rgba(0, 0, 0, 0.2)
 $td-primary-border-color: $td-light
 $td-text-shadow: none
+$td-days-of-week-color: rgba(0, 0, 0, 0.5) !default
 
 @import 'tempus-dominus-scss/src/scss/tempus-dominus'
 
@@ -30,6 +31,8 @@ $td-text-shadow: none
 
   .date-container-days
     grid-auto-rows: 30px
+    .dow.no-highlight
+      color: $td-days-of-week-color
 
   svg
     width: 2em
