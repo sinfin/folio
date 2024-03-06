@@ -47,8 +47,6 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
     = render 'folio/console/partials/application_above_javascripts'
 
     - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
-      = javascript_include_tag 'folio/console/base'
-
       - if ENV['REACT_DEV']
         = javascript_include_tag 'http://localhost:3001/static/js/bundle.js'
         - 5.times do |i|

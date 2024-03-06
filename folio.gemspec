@@ -82,6 +82,7 @@ Gem::Specification.new do |s|
   s.add_dependency "slim"
   s.add_dependency "traco"
   s.add_dependency "turbolinks"
+  s.add_dependency "turbo-rails"
   s.add_dependency "uglifier"
   s.add_dependency "whenever"
   s.add_dependency "redis"

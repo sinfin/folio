@@ -9,6 +9,7 @@
 //= require strftime
 //= require moment/moment
 //= require moment/locale/cs
+//= require turbo-8.0.3
 
 //= require jquery-ui/jquery-ui
 //= require selectize
@@ -115,3 +116,5 @@
 $(document).on('ready', function () {
   $(document).trigger('turbolinks:load')
 })
+
+Turbo.session.drive = false

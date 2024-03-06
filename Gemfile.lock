@@ -77,6 +77,7 @@ PATH
       slim-rails
       terser
       traco
+      turbo-rails
       turbolinks
       uglifier
       view_component
@@ -638,6 +639,10 @@ GEM
     timeout (0.4.0)
     traco (5.3.3)
       activerecord (>= 4.2)
+    turbo-rails (2.0.4)
+      actionpack (>= 6.0.0)
+      activejob (>= 6.0.0)
+      railties (>= 6.0.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)

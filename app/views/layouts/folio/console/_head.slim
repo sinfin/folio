@@ -24,5 +24,7 @@ meta[
 == cell('folio/ui/icon').render(:_head)
 
 - if !Rails.env.test? || ENV['TEST_WITH_ASSETS'].present?
+  = javascript_include_tag 'folio/console/base'
+
   = preload_link_tag font_path('Roboto-Regular.woff2')
   = preload_link_tag font_path('Roboto-Bold.woff2')
