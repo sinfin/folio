@@ -57,7 +57,6 @@
 //= require folio/console/_data-destroy-association
 //= require folio/console/_modal-html-scroll
 //= require folio/console/_modal-lazyload
-//= require folio/console/_tabs
 //= require folio/console/modules/event_names
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
@@ -71,6 +70,7 @@
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
 //= require folio/console/ui/notification_modal/notification_modal
+//= require folio/console/ui/tabs_component
 
 //= require folio/console/aasm/email_modal/email_modal
 //= require folio/console/addresses/fields/fields

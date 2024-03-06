@@ -201,18 +201,18 @@ cs:
           confirm_de: Chcete přeložit stránku do němčiny?
           confirm_en: Chcete přeložit stránku do angličtiny?
       partials:
-        tabs:
-          analytics: Analytika
-          contacts: Emaily a kontakty
-          content: Obsah
-          documents: Dokumenty
-          gallery: Galerie
-          merge: Sloučení duplikátů
-          settings: Nastavení
-          site_social_links: Odkazy
         simple_form_with_atoms:
           editor: Editor
           settings: Nastavení
+      tabs:
+        analytics: Analytika
+        contacts: Emaily a kontakty
+        content: Obsah
+        documents: Dokumenty
+        gallery: Galerie
+        merge: Sloučení duplikátů
+        settings: Nastavení
+        site_social_links: Odkazy
       file:
         picker:
           add_file: Přidat soubor
