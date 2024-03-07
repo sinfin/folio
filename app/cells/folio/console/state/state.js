@@ -8,9 +8,9 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
       if (!window.confirm(trigger.dataset.confirmation)) return
     }
 
-    const modalPathName = trigger.dataset.modalPathName
+    const modalUrl = trigger.dataset.modalUrl
 
-    if (modalPathName) {
+    if (modalUrl) {
       return this.openModal(trigger)
     }
 
@@ -37,6 +37,7 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
       id: trigger.dataset.id,
       url: trigger.dataset.url,
       klass: trigger.dataset.klass,
+      modalUrl: trigger.dataset.modalUrl,
       trigger
     })
   }

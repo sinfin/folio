@@ -1,5 +1,8 @@
-= render(Folio::Console::Ui::ModalComponent.new(title: 'foo',
+= render(Folio::Console::Ui::ModalComponent.new(title: t('.title'),
                                                 class_name: CLASS_NAME,
                                                 size: :lg,
                                                 data:))
-  ' form modal
+  .f-c-aasm-form-modal__inner
+    .f-c-aasm-form-modal__form-wrap data=stimulus_target('formWrap')
+
+    span.folio-loader.f-c-aasm-form-modal__loader

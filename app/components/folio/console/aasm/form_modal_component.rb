@@ -2,6 +2,7 @@
 
 class Folio::Console::Aasm::FormModalComponent < Folio::Console::ApplicationComponent
   CLASS_NAME = "f-c-aasm-form-modal"
+  TARGET_FORM_CLASS_NAME = "f-c-aasm-form-modal-target"
 
   def initialize
   end
@@ -10,6 +11,7 @@ class Folio::Console::Aasm::FormModalComponent < Folio::Console::ApplicationComp
     stimulus_controller(CLASS_NAME,
                         action: {
                           "folioConsoleAasmFormModalOpen" => "openFromEvent"
-                        })
+                        },
+                        classes: %w[loading])
   end
 end

@@ -28,6 +28,17 @@
   z-index: 999
   box-shadow: $f-c-box-shadow-card
 
+  .modal &
+    position: relative
+    inset: 0 !important
+    box-shadow: none
+    padding: 0 !important
+    margin-top: $grid-gutter-width
+    min-height: 0 !important
+
+    &__container
+      padding: 0 !important
+
   .f-c-layout-html.slideout-open &
     display: none
 
@@ -53,3 +64,7 @@
     padding-top: 2 * $grid-gutter-width / 3
     padding-bottom: 2 * $grid-gutter-width / 3
     left: 220px
+
+.f-c-form-footer-spacer
+  .modal &
+    display: none !important

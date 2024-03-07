@@ -9,11 +9,22 @@ window.FolioConsole.AASM.FormModal.open = (data) => {
 }
 
 window.Folio.Stimulus.register('f-c-aasm-form-modal', class extends window.Stimulus.Controller {
-  connnect () {
-    console.log('f-c-aasm-form-modal')
-  }
+  static classes = ['loading']
+
+  static targets = ['formWrap']
 
   openFromEvent (e) {
-    console.log('openFromEvent', e.detail)
+    this.element.classList.add(this.loadingClass)
+    window.Folio.Modal.open(this.element)
+
+    window.Folio.Api.apiHtmlGet(e.detail.modalUrl).then((res) => {
+      const parser = new window.DOMParser()
+      const doc = parser.parseFromString(res, 'text/html')
+      const target = doc.querySelector('.f-c-aasm-form-modal-target')
+
+      this.formWrapTarget.innerHTML = target.outerHTML
+
+      this.element.classList.remove(this.loadingClass)
+    })
   }
 })
