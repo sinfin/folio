@@ -316,7 +316,7 @@ cs:
             text: Obsah e-mailu
 
       react:
-        modal:
+        modal_component:
           title: Zvolte soubor
           title/image: Zvolte obrázek
           title/video: Zvolte video

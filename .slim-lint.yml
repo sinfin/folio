@@ -21,6 +21,7 @@ exclude:
   - app/cells/folio/modal/_close.slim
   - app/cells/folio/ui/_typo.slim
   - app/cells/folio/ui/show.slim
+  - app/components/folio/console/react/modal_component.slim
   - app/components/folio/console/site_user_links/fields_component.slim
   - app/components/folio/nested_fields_component.slim
   - app/views/folio/console/accounts/_form.slim

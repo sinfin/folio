@@ -97,6 +97,8 @@ class Folio::Console::StateCell < Folio::ConsoleCell
   end
 
   def data_for_event(event)
+    raise "FIXME Not implemented yet" if event.options[:email_modal]
+
     {
       "confirmation" => confirm(event),
       "url" => remote_url_for(event),

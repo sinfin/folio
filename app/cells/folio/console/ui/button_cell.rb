@@ -53,8 +53,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
     end
 
     if model[:modal].present?
-      h[:data]["bs-toggle"] = "modal"
-      h[:data]["bs-target"] = model[:modal]
+      h[:data].merge!(stimulus_modal_toggle(model[:modal]))
     end
 
     if model[:notification_modal].present?

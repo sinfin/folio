@@ -37,8 +37,8 @@ html.f-c-layout-html.f-html--show-sensitive-content lang=I18n.locale
           == cell('folio/console/pagination', @pagy)
 
     = yield :modals
-    == cell('folio/console/aasm/email_modal')
-    == cell('folio/console/ui/notification_modal')
+    / == cell('folio/console/aasm/email_modal')
+    = render(Folio::Console::Ui::NotificationModalComponent.new)
     = render 'folio/console/partials/modals'
     = render 'folio/console/partials/react_modals'
 

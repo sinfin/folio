@@ -313,7 +313,7 @@ en:
             text: E-mail content
 
       react:
-        modal:
+        modal_component:
           title: Pick a file
           title/image: Pick an image
           title/video: Pick a video

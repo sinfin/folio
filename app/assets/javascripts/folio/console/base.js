@@ -31,6 +31,7 @@
 //= require folio/api
 //= require folio/s3_upload
 //= require folio/message_bus
+//= require folio/modal
 //= require folio/remote_scripts
 
 //= require folio/lazyload
@@ -55,8 +56,6 @@
 //= require folio/console/_data-change-value
 //= require folio/console/_data-cocoon-single-nested
 //= require folio/console/_data-destroy-association
-//= require folio/console/_modal-html-scroll
-//= require folio/console/_modal-lazyload
 //= require folio/console/modules/event_names
 //= require folio/console/modules/danger-box-shadow-blink
 //= require folio/console/modules/popover
@@ -69,7 +68,7 @@
 //= require folio/console/ui/boolean_toggle_component
 //= require folio/console/ui/button/button
 //= require folio/console/ui/buttons/buttons
-//= require folio/console/ui/notification_modal/notification_modal
+//= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/tabs_component
 
 //= require folio/console/aasm/email_modal/email_modal

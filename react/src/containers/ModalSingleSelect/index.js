@@ -15,7 +15,7 @@ class ModalSingleSelect extends Component {
     window.addEventListener(`${EVENT_NAME_BASE}/${this.props.fileType}/showModal`, (e) => {
       this.setState({ el: e.target })
       this.props.loadFiles(this.props.fileType, this.props.filesUrl)
-      this.jQueryModal().modal('show')
+      window.Folio.Modal.open(this.folioModal())
     })
   }
 
@@ -23,9 +23,8 @@ class ModalSingleSelect extends Component {
     return `.folio-console-react-picker__edit[data-file-type="${this.props.fileType}"]`
   }
 
-  jQueryModal () {
-    const $ = window.jQuery
-    return $('.f-c-r-modal').filter(`[data-klass="${this.props.fileType}"]`)
+  folioModal () {
+    return document.querySelector(`.f-c-r-modal[data-klass="${this.props.fileType}"]`)
   }
 
   selectFile = (fileType, file) => {
@@ -41,7 +40,7 @@ class ModalSingleSelect extends Component {
 
     window.postMessage({ type: 'setFormAsDirty' }, window.origin)
 
-    this.jQueryModal().modal('hide')
+    window.Folio.Modal.close(this.folioModal())
   }
 
   render () {

@@ -2,8 +2,8 @@ h1 Modals
 
 == cell('folio/console/ui/button',
         variant: :warning,
-        modal: Folio::Console::TestModalCell::CLASS_NAME,
+        modal: Folio::Console::Dummy::TestModalComponent::CLASS_NAME,
         label: 'dummy test modal')
 
 - content_for :modals
-  == cell('folio/console/test_modal')
+  = render(Folio::Console::Dummy::TestModalComponent.new)

@@ -36,10 +36,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal-trigger', class extend
 window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window.Stimulus.Controller {
   connect () {
     this.originalInnerHTML = this.element.innerHTML
-    this.bsModal = new window.bootstrap.Modal(this.element)
     this.submitted = null
-
-    this.element.addEventListener('hide.bs.modal', this.onBsModalHide)
   }
 
   disconnect () {
@@ -58,7 +55,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
     this.submitted = true
 
     if (this.closeOnSubmit) {
-      this.bsModal.hide()
+      window.Folio.Modal.close(this.element)
     }
   }
 
@@ -94,7 +91,7 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
         buttonsData.push({
           variant: 'tertiary',
           label: typeof data.cancel === "string" ? data.cancel : window.Folio.i18n(window.FolioConsole.Ui.NotificationModal.i18n, 'close'),
-          data: { bsDismiss: 'modal' }
+          data: { controller: 'f-modal-close', action: 'f-modal-close#click' }
         })
       }
 
@@ -116,10 +113,10 @@ window.Folio.Stimulus.register('f-c-ui-notification-modal', class extends window
       footer.parentNode.removeChild(footer)
     }
 
-    this.bsModal.show()
+    window.Folio.Modal.open(this.element)
   }
 
-  onBsModalHide = () => {
+  onModalClose = () => {
     if (!this.submitted && this.onCancel) {
       this.onCancel()
       delete this.onCancel
