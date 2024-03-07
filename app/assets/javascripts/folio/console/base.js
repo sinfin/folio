@@ -71,7 +71,7 @@
 //= require folio/console/ui/notification_modal_component
 //= require folio/console/ui/tabs_component
 
-//= require folio/console/aasm/email_modal/email_modal
+//= require folio/console/aasm/form_modal_component
 //= require folio/console/addresses/fields/fields
 //= require folio/console/atoms/layout_switch/layout_switch
 //= require folio/console/atoms/locale_switch/locale_switch
