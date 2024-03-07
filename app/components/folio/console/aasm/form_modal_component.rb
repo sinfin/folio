@@ -10,7 +10,8 @@ class Folio::Console::Aasm::FormModalComponent < Folio::Console::ApplicationComp
   def data
     stimulus_controller(CLASS_NAME,
                         action: {
-                          "folioConsoleAasmFormModalOpen" => "openFromEvent"
+                          "folioConsoleAasmFormModalOpen" => "openFromEvent",
+                          "submit" => "onFormSubmit"
                         },
                         classes: %w[loading])
   end

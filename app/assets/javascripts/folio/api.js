@@ -80,7 +80,7 @@ function responseToHtml (response) {
   return response.text()
 }
 
-function flashMessageFromMeta (response) {
+window.Folio.Api.flashMessageFromMeta = (response) => {
   if (window.FolioConsole && window.FolioConsole.Flash) {
     if (typeof response === 'object' && response.meta && response.meta.flash) {
       if (response.meta.flash.success) {
@@ -107,7 +107,7 @@ window.Folio.Api.api = (method, url, body, signal) => {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(checkResponse).then(responseToJson).then(flashMessageFromMeta)
+  return fetch(url, data).then(checkResponse).then(responseToJson).then(window.Folio.Api.flashMessageFromMeta)
 }
 
 window.Folio.Api.apiPost = (url, body, signal) => {
@@ -143,7 +143,7 @@ window.Folio.Api.htmlApi = (method, url, body, signal) => {
   // need to have this extra for MS Edge
   if (body) data.body = JSON.stringify(body)
 
-  return fetch(url, data).then(checkResponse).then(responseToHtml).then(flashMessageFromMeta)
+  return fetch(url, data).then(checkResponse).then(responseToHtml).then(window.Folio.Api.flashMessageFromMeta)
 }
 
 window.Folio.Api.apiHtmlGet = (url, body = null, signal) => {
