@@ -39,6 +39,9 @@ button_pointer:
 calendar_range:
   width: 24
   height: 24
+camera:
+  width: 24
+  height: 24
 camera_alt:
   width: 24
   height: 24
@@ -85,6 +88,9 @@ cog:
   width: 24
   height: 24
 content_copy:
+  width: 24
+  height: 24
+credit_card_scan_outline:
   width: 24
   height: 24
 crop:
