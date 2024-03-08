@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class Folio::Console::Aasm::FormModalComponent < Folio::Console::ApplicationComponent
-  CLASS_NAME = "f-c-aasm-form-modal"
-  TARGET_FORM_CLASS_NAME = "f-c-aasm-form-modal-target"
+class Folio::Console::FormModalComponent < Folio::Console::ApplicationComponent
+  CLASS_NAME = "f-c-form-modal"
+  TARGET_FORM_CLASS_NAME = "f-c-form-modal-target"
 
   def initialize
   end
@@ -10,7 +10,7 @@ class Folio::Console::Aasm::FormModalComponent < Folio::Console::ApplicationComp
   def data
     stimulus_controller(CLASS_NAME,
                         action: {
-                          "folioConsoleAasmFormModalOpen" => "openFromEvent",
+                          "folioConsoleFormModalOpen" => "openFromEvent",
                           "submit" => "onFormSubmit"
                         },
                         classes: %w[loading])

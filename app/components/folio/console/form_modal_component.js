@@ -1,14 +1,13 @@
 window.FolioConsole = window.FolioConsole || {}
-window.FolioConsole.AASM = window.FolioConsole.AASM || {}
-window.FolioConsole.AASM.FormModal = window.FolioConsole.AASM.FormModal || {}
+window.FolioConsole.FormModal = window.FolioConsole.FormModal || {}
 
-window.FolioConsole.AASM.FormModal.open = (data) => {
+window.FolioConsole.FormModal.open = (data) => {
   document
-    .querySelector('.f-c-aasm-form-modal')
-    .dispatchEvent(new window.CustomEvent('folioConsoleAasmFormModalOpen', { bubbles: true, detail: data }))
+    .querySelector('.f-c-form-modal')
+    .dispatchEvent(new window.CustomEvent('folioConsoleFormModalOpen', { bubbles: true, detail: data }))
 }
 
-window.Folio.Stimulus.register('f-c-aasm-form-modal', class extends window.Stimulus.Controller {
+window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.Controller {
   static classes = ['loading']
 
   static targets = ['formWrap']
@@ -53,7 +52,7 @@ window.Folio.Stimulus.register('f-c-aasm-form-modal', class extends window.Stimu
       if (res.startsWith('<!DOCTYPE')) {
         const parser = new window.DOMParser()
         const doc = parser.parseFromString(res, 'text/html')
-        const target = doc.querySelector('.f-c-aasm-form-modal-target')
+        const target = doc.querySelector('.f-c-form-modal-target')
 
         this.formWrapTarget.innerHTML = target.outerHTML
       } else if (res.startsWith('{')) {

@@ -32,7 +32,7 @@ window.Folio.Stimulus.register('f-c-state', class extends window.Stimulus.Contro
   }
 
   openModal (trigger) {
-    window.FolioConsole.AASM.FormModal.open({
+    window.FolioConsole.FormModal.open({
       event: trigger.dataset.eventName,
       id: trigger.dataset.id,
       url: trigger.dataset.url,
