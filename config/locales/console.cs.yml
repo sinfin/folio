@@ -307,10 +307,9 @@ cs:
         published_dates:
           from: Od
           until: Do
+      form_modal_component:
+        title/state: Změna stavu
       aasm:
-        form_modal_component:
-          title: Změna stavu
-
         email_modal:
           title: Opravdu si přejete změnit stav na „{STATE_NAME}“?
           send_email_label: Odeslat e-mail na {EMAIL}

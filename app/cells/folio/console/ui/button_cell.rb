@@ -57,7 +57,7 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
     end
 
     if model[:form_modal].present?
-      h[:data].merge!(stimulus_console_form_modal_trigger(model[:form_modal]))
+      h[:data].merge!(stimulus_console_form_modal_trigger(model[:form_modal], title: model[:form_modal_title]))
     end
 
     if model[:notification_modal].present?

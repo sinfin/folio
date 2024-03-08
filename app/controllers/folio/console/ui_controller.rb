@@ -106,6 +106,7 @@ class Folio::Console::UiController < Folio::Console::BaseController
       variant: :info,
       label: "current_user edit",
       form_modal: url_for([:edit, :console, current_user]),
+      form_modal_title: "custom title",
     }
   end
 

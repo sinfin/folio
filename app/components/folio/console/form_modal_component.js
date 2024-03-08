@@ -21,10 +21,12 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
     this.element.classList.add(this.loadingClass)
     window.Folio.Modal.open(this.element)
 
+    this.updateTitle(e.detail.title)
     this.triggerReference = e.detail.trigger
 
     window.Folio.Api.apiHtmlGet(e.detail.url).then((res) => {
       this.handleResponse(res)
+      if (!e.detail.title) this.tryToGetTitleFromH1()
       this.element.classList.remove(this.loadingClass)
     })
   }
@@ -81,15 +83,38 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
       throw new Error('Invalid response - not a string')
     }
   }
+
+  updateTitle (str) {
+    const titleElement = this.element.querySelector('.modal-title')
+
+    if (str) {
+      titleElement.innerText = str
+      titleElement.classList.remove('invisible')
+    } else {
+      titleElement.classList.add('invisible')
+    }
+  }
+
+  tryToGetTitleFromH1 () {
+    const h1 = this.element.querySelector('h1')
+
+    if (h1) {
+      this.updateTitle(h1.innerText)
+      h1.closest('.f-c-form-header').hidden = true
+    } else {
+      this.updateTitle()
+    }
+  }
 })
 
 window.Folio.Stimulus.register('f-c-form-modal-trigger', class extends window.Stimulus.Controller {
   static values = {
-    url: String
+    url: String,
+    title: { type: String, default: '' }
   }
 
   click (e) {
     e.preventDefault()
-    window.FolioConsole.FormModal.open({ trigger: this.element, url: this.urlValue })
+    window.FolioConsole.FormModal.open({ trigger: this.element, url: this.urlValue, title: this.titleValue })
   }
 })

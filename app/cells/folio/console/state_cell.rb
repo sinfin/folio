@@ -108,6 +108,7 @@ class Folio::Console::StateCell < Folio::ConsoleCell
       "url" => remote_url_for(event),
       "aasm-email-modal" => event.options[:email_modal],
       "modal-url" => event.options[:modal] ? controller.send(event.options[:modal][:path_name], model, _ajax: "1") : nil,
+      "modal-title" => event.options[:modal] ? t("folio.console.form_modal_component.title/state") : nil,
       "event-name" => event.name,
       "event-target-human-name" => event_target_human_name(event),
       "klass" => klass,

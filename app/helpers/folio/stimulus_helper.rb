@@ -152,9 +152,9 @@ module Folio::StimulusHelper
     result
   end
 
-  def stimulus_console_form_modal_trigger(url)
+  def stimulus_console_form_modal_trigger(url, title: "")
     stimulus_controller("f-c-form-modal-trigger",
-                        values: { url: },
+                        values: { url:, title: },
                         action: { click: "click" },
                         inline: true)
   end
