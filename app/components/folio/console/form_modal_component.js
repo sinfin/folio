@@ -96,14 +96,19 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
   }
 
   tryToGetTitleFromH1 () {
-    const h1 = this.element.querySelector('h1')
+    const formHeader = this.element.querySelector('.f-c-form-header')
 
-    if (h1) {
-      this.updateTitle(h1.innerText)
-      h1.closest('.f-c-form-header').hidden = true
-    } else {
-      this.updateTitle()
+    if (formHeader) {
+      const h1 = formHeader.querySelector('.f-c-form-header h1')
+
+      if (h1) {
+        this.updateTitle(h1.innerText)
+        formHeader.hidden = true
+        return
+      }
     }
+
+    this.updateTitle()
   }
 })
 

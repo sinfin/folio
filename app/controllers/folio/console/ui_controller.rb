@@ -102,12 +102,19 @@ class Folio::Console::UiController < Folio::Console::BaseController
       }
     ]
 
-    @button_model_for_form_modal = {
-      variant: :info,
-      label: "current_user edit",
-      form_modal: url_for([:edit, :console, current_user]),
-      form_modal_title: "custom title",
-    }
+    @button_model_for_form_modals = [
+      {
+        variant: :info,
+        label: "current_user edit",
+        form_modal: url_for([:edit, :console, current_user]),
+      },
+      {
+        variant: :info,
+        label: "current_user edit custom title",
+        form_modal: url_for([:edit, :console, current_user]),
+        form_modal_title: "custom title",
+      },
+    ]
   end
 
   def alerts
