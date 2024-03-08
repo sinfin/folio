@@ -56,6 +56,10 @@ class Folio::Console::Ui::ButtonCell < Folio::ConsoleCell
       h[:data].merge!(stimulus_modal_toggle(model[:modal]))
     end
 
+    if model[:form_modal].present?
+      h[:data].merge!(stimulus_console_form_modal_trigger(model[:form_modal]))
+    end
+
     if model[:notification_modal].present?
       if h[:data]["controller"]
         h[:data]["controller"] += " f-c-ui-notification-modal-trigger"

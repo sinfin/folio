@@ -23,7 +23,7 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
 
     this.triggerReference = e.detail.trigger
 
-    window.Folio.Api.apiHtmlGet(e.detail.modalUrl).then((res) => {
+    window.Folio.Api.apiHtmlGet(e.detail.url).then((res) => {
       this.handleResponse(res)
       this.element.classList.remove(this.loadingClass)
     })
@@ -38,10 +38,16 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
 
     const data = window.Folio.formToHash(e.target)
 
-    window.Folio.Api.apiHtmlPost(e.target.action, { ...data, _ajax: '1' }).then((res) => {
+    const methodName = data._method === 'patch' ? 'apiHtmlPatch' : 'apiHtmlPost'
+
+    window.Folio.Api[methodName](e.target.action, { ...data, _ajax: '1' }, null, 'error').then((res) => {
       this.handleResponse(res)
-      this.element.classList.remove(this.loadingClass)
-    }).catch((err) => {
+      if (this.keepLoadingClass) {
+        delete this.keepLoadingClass
+      } else {
+        this.element.classList.remove(this.loadingClass)
+      }
+    }).catch((err, a, b) => {
       window.Folio.Modal.close(this.element)
       window.FolioConsole.Flash.alert(err.message)
     })
@@ -62,6 +68,9 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
           this.triggerReference.closest('.f-c-state').outerHTML = json.data.state_html
           window.Folio.Modal.close(this.element)
           window.Folio.Api.flashMessageFromMeta(json)
+        } else if (json && json.data && json.data.redirected) {
+          this.keepLoadingClass = true
+          window.location.reload()
         } else {
           throw new Error('Invalid response - JSON missing data/success or data/state_html')
         }
@@ -71,5 +80,16 @@ window.Folio.Stimulus.register('f-c-form-modal', class extends window.Stimulus.C
     } else {
       throw new Error('Invalid response - not a string')
     }
+  }
+})
+
+window.Folio.Stimulus.register('f-c-form-modal-trigger', class extends window.Stimulus.Controller {
+  static values = {
+    url: String
+  }
+
+  click (e) {
+    e.preventDefault()
+    window.FolioConsole.FormModal.open({ trigger: this.element, url: this.urlValue })
   }
 })
