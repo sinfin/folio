@@ -81,7 +81,7 @@ function responseToJson (response) {
 
 function responseToHtml (response) {
   if (response.status === 204) return Promise.resolve('')
-  if (!response.ok && response.redirected) return Promise.resolve('{ "data": { "redirected": true }}')
+  if (response.redirected) return Promise.resolve('{ "data": { "redirected": true }}')
   return response.text()
 }
 
