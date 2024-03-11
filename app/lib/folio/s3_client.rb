@@ -6,7 +6,8 @@ module Folio::S3Client
   def s3_client
     @s3_client ||= Aws::S3::Client.new(region: ENV.fetch("S3_REGION"),
                                        credentials: Aws::Credentials.new(ENV.fetch("AWS_ACCESS_KEY_ID"),
-                                                                         ENV.fetch("AWS_SECRET_ACCESS_KEY")))
+                                                                         ENV.fetch("AWS_SECRET_ACCESS_KEY"),
+                                                                         ENV.fetch('AWS_SESSION_TOKEN', nil)))
   end
 
   def s3_presigner
