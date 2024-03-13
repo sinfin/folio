@@ -29,7 +29,6 @@ class Folio::SessionAttachment::Base < Folio::ApplicationRecord
   validates :web_session_id, :file,
             presence: true
 
-  belongs_to :user, optional: true
   belongs_to :placement, polymorphic: true,
                          optional: true,
                          touch: true
