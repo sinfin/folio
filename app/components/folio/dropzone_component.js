@@ -16,6 +16,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   static targets = ['trigger', 'previews', 'previewTemplate']
 
   connect () {
+    this.disconnected = false
+
     this.element.classList.add('dropzone')
 
     this.dropzone = window.Folio.S3Upload.createDropzone({
@@ -50,6 +52,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   }
 
   disconnect () {
+    this.disconnected = true
     this.element.classList.remove('dropzone')
 
     if (this.dropzone) {
@@ -59,6 +62,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   }
 
   removedFile (file) {
+    if (this.disconnected) return
+
     this.onCountChange()
     if (!this.destroyUrlValue) return
 
