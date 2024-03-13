@@ -9,7 +9,8 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     destroyUrl: { type: String, default: '' },
     indexUrl: { type: String, default: '' },
     maxFileSize: { type: Number, default: 0 },
-    persistedFileCount: Number
+    persistedFileCount: Number,
+    pendingFileCount: { type: Number, defualt: 0 }
   }
 
   static targets = ['trigger', 'previews', 'previewTemplate']
@@ -23,6 +24,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
       fileHumanType: this.fileHumanTypeValue,
       dontRemoveFileOnSuccess: true,
       maxFileSize: this.maxFileSizeValue,
+      onStart: () => { this.onCountChange() },
       onSuccess: () => { this.onCountChange() },
       onFailure: (s3Path, message) => {
         window.alert(`${this.dictValue.upload_failure}\n${message}`)
@@ -67,16 +69,24 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
   }
 
   onCountChange () {
-    let count = 0
+    let persistedCount = 0
+    let pendingCount = 0
 
     if (this.dropzone && this.dropzone.files) {
       this.dropzone.files.forEach((file) => {
-        if (file.id) { count += 1 }
+        if (file.id) {
+          persistedCount += 1
+        } else {
+          pendingCount += 1
+        }
       })
     }
 
-    this.persistedFileCountValue = count
-    this.dispatch('persistedFileCountChange', { detail: { count } })
+    this.persistedFileCountValue = persistedCount
+    this.pendingFileCountValue = pendingCount
+
+    this.dispatch('persistedFileCountChange', { detail: { count: persistedCount } })
+    this.dispatch('pendingFileCountChange', { detail: { count: pendingCount } })
   }
 
   addSerializedRecord (record) {

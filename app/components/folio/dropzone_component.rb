@@ -56,6 +56,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                           destroy_url: @destroy_url,
                           index_url: @index_url,
                           persisted_file_count:,
+                          pending_file_count: 0,
                         })
   end
 
