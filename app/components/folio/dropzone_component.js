@@ -1,3 +1,5 @@
+//= require folio/add_params_to_url
+
 window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Controller {
   static values = {
     records: Array,
@@ -5,8 +7,9 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     fileType: String,
     fileHumanType: String,
     destroyUrl: { type: String, default: '' },
+    indexUrl: { type: String, default: '' },
     maxFileSize: { type: Number, default: 0 },
-    persistedFileCount: Number,
+    persistedFileCount: Number
   }
 
   static targets = ['trigger', 'previews', 'previewTemplate']
@@ -24,7 +27,7 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
       dropzoneOptions: {
         ...this.dictValue,
         clickable: this.triggerTarget,
-        createImageThumbnails: this.fileHumanTypeValue === "image",
+        createImageThumbnails: this.fileHumanTypeValue === 'image',
         previewsContainer: this.previewsTarget,
         previewTemplate: this.previewTemplateTarget.innerHTML
       }
@@ -33,21 +36,12 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     this.dropzone.on('removedfile', (file) => { this.removedFile(file) })
 
     this.recordsValue.forEach((record) => {
-      const file = {
-        id: record.id,
-        name: record.file_name,
-        size: record.file_size
-      }
-
-      this.dropzone.files.push(file)
-      this.dropzone.emit('addedfile', file)
-
-      if (record.thumb) {
-        this.dropzone.emit('thumbnail', file, record.thumb)
-      }
-
-      return this.dropzone.emit('complete', file)
+      this.addSerializedRecord(record)
     })
+
+    if (this.indexUrlValue) {
+      this.fetchIndex()
+    }
   }
 
   disconnect () {
@@ -79,6 +73,33 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
     }
 
     this.persistedFileCountValue = count
-    this.dispatch('persistedFileCountChange', { detail: { count }})
+    this.dispatch('persistedFileCountChange', { detail: { count } })
+  }
+
+  addSerializedRecord (record) {
+    const file = {
+      id: record.id,
+      name: record.file_name,
+      size: record.file_size
+    }
+
+    this.dropzone.files.push(file)
+    this.dropzone.emit('addedfile', file)
+
+    if (record.thumb) {
+      this.dropzone.emit('thumbnail', file, record.thumb)
+    }
+
+    this.dropzone.emit('complete', file)
+  }
+
+  fetchIndex () {
+    const url = window.Folio.addParamsToUrl(this.indexUrlValue, { type: this.fileTypeValue })
+
+    window.Folio.Api.apiGet(url).then((res) => {
+      res.forEach((record) => {
+        this.addSerializedRecord(record)
+      })
+    })
   }
 })

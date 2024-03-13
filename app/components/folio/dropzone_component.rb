@@ -52,6 +52,7 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
                           max_file_size: @max_file_size,
                           dict: dict.to_json,
                           destroy_url: @destroy_url,
+                          index_url: @index_url,
                           persisted_file_count:,
                         })
   end

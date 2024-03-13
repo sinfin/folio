@@ -19,10 +19,13 @@ class Folio::SesionAttachments::DropzoneComponent < ApplicationComponent
   end
 
   def index_url
-    controller.folio.folio_session_attachments_path(format: :json)
+    controller.folio.folio_session_attachments_path(type: @klass.to_s,
+                                                    format: :json)
   end
 
   def destroy_url
-    controller.folio.folio_session_attachments_path("ID", format: :json)
+    controller.folio.folio_session_attachment_path("ID",
+                                                   type: @klass.to_s,
+                                                   format: :json)
   end
 end
