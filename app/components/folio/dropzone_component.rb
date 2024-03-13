@@ -32,6 +32,8 @@ class Folio::DropzoneComponent < Folio::ApplicationComponent
       dictCancelUploadConfirmation: t(".dictCancelUploadConfirmation"),
       dictRemoveFile: "",
       dictMaxFilesExceeded: t(".dictMaxFilesExceeded"),
+      destroy_failure: t(".destroy_failure"),
+      upload_failure: t(".upload_failure"),
     }
   end
 

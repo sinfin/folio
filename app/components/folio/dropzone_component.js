@@ -24,6 +24,9 @@ window.Folio.Stimulus.register('f-dropzone', class extends window.Stimulus.Contr
       dontRemoveFileOnSuccess: true,
       maxFileSize: this.maxFileSizeValue,
       onSuccess: () => { this.onCountChange() },
+      onFailure: (s3Path, message) => {
+        window.alert(`${this.dictValue.upload_failure}\n${message}`)
+      },
       dropzoneOptions: {
         ...this.dictValue,
         clickable: this.triggerTarget,
