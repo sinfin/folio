@@ -21,6 +21,13 @@ class Dummy::SearchesController < ApplicationController
 
   def show
     @public_page_title = t("dummy.searches.show_component.title")
+
+    respond_to do |format|
+      format.html { }
+      format.json do
+        render_component_json(Dummy::Searches::Show::ContentsComponent.new(search: @search))
+      end
+    end
   end
 
   def autocomplete
@@ -37,7 +44,7 @@ class Dummy::SearchesController < ApplicationController
       }
 
       @search[:tabs] << {
-        label: t("dummy.searches.show_component.tabs.overview"),
+        label: t("dummy.searches.show.contents_component.tabs/overview"),
         href: dummy_search_path(q: params[:q], tab: nil),
       }
 
@@ -56,7 +63,7 @@ class Dummy::SearchesController < ApplicationController
 
         klass_pagy, klass_records = pagy(scope, items: meta[:overview_limit] || DEFAULT_OVERVIEW_LIMIT)
         count = klass_pagy.count
-        label = I18n.t("dummy.searches.show.tabs.#{meta[:klass]}", default: meta[:klass].model_name.human(count: 2))
+        label = I18n.t("dummy.searches.show.contents_component.tabs/#{meta[:klass]}", default: meta[:klass].model_name.human(count: 2))
 
         tab_href = dummy_search_path(q: params[:q], tab: label)
 

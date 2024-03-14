@@ -1,10 +1,16 @@
 .d-searches-show
+  position: relative
+
   &__form
     display: flex
     align-items: center
 
   &__title
     margin: 0
+
+  &__inner
+    position: relative
+    min-height: 150px
 
   &__input
     font-size: inherit
@@ -36,15 +42,16 @@
     height: 41px
     padding-right: 10px
 
-  &__tabs:empty
+  &__loader
+    bottom: auto
+    height: 150px
+
+  &:not([data-d-searches-show-loading-value="true"]) &__loader
     display: none
 
-  &__results-wrap
-    position: relative
-    min-height: 150px
-
-  &:not(&--loading) &__loader
-    display: none
+  &[data-d-searches-show-loading-value="true"] &__contents-wrap
+    pointer-events: none
+    opacity: 0.1
 
   +media-breakpoint-down(sm)
     &__form

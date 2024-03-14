@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 
 class Dummy::Searches::ShowComponent < ApplicationComponent
-  include Pagy::Frontend
   include SimpleForm::ActionViewExtensions::FormHelper
+
+  def initialize(search:)
+    @search = search
+  end
 
   def form(&block)
     opts = {
       url: controller.main_app.dummy_search_path,
       method: :get,
-      html: { class: "d-searches-show__form h1", id: nil },
+      html: {
+        class: "d-searches-show__form h1",
+        id: nil,
+        data: stimulus_data(target: "form", action: "onFormSubmit")
+      },
     }
 
     simple_form_for("", opts, &block)
@@ -23,7 +30,7 @@ class Dummy::Searches::ShowComponent < ApplicationComponent
               autofocus: true,
               autocomplete: "off",
               id: nil,
-              onfocus: "var dSearchesShowValue = this.value; this.value = ''; this.value = dSearchesShowValue",
+              data: stimulus_data(target: "input", action: { input: "onInputInput", focus: "onInputFocus" })
             },
             label: false,
             wrapper: false
@@ -31,7 +38,7 @@ class Dummy::Searches::ShowComponent < ApplicationComponent
 
   def data
     stimulus_controller("d-searches-show", values: {
-      autocomplete_url: controller.main_app.autocomplete_dummy_search_path,
+      loading: false,
     })
   end
 end

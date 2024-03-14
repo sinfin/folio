@@ -1,7 +1,7 @@
 .d-searches-autocomplete.small
   - if @search[:count] == 0
     .d-searches-autocomplete__no-results
-      = cstypo t('dummy.searches.show_component.no_results_short')
+      = cstypo t('.no_results')
 
   - else
     - @search[:klasses].each do |klass, data|
