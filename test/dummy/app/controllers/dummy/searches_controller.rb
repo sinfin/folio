@@ -54,6 +54,10 @@ class Dummy::SearchesController < ApplicationController
       SEARCH_MODELS.each do |meta|
         scope = meta[:klass].published
 
+        if scope.respond_to?(:by_site)
+          scope = scope.by_site(current_site)
+        end
+
         scope = scope.includes(*meta[:includes]) if meta[:includes].present?
 
         if params[:q].present?

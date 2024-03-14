@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class <%= application_namespace %>::Searches::ResultsListComponent < ApplicationComponent
+  THUMB_SIZE = "150x100#"
+
   def initialize(search)
     @search = search
   end

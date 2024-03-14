@@ -1,8 +1,9 @@
 .d-searches-results-list
   - @search.each do |record|
       a.d-searches-results-list__result href=url_for(record)
-        .d-searches-results-list__cover
-          = record.try(:cover_placement)
+        - if cover_placement = record.try(:cover_placement)
+          .d-searches-results-list__cover
+            = dummy_ui_image(cover_placement, THUMB_SIZE)
 
         .d-searches-results-list__text
           h3.d-searches-results-list__title.m-0
