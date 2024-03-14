@@ -1,0 +1,40 @@
+.d-searches-show-contents
+  .d-searches-show-contents__tabs.mb-g
+    - if @search[:tabs].present? && @search[:count] > 0
+      = render(Dummy::Ui::TabsComponent.new(tabs: @search[:tabs]))
+
+  .d-searches-show-contents__results-wrap
+    - if @search[:count] == 0
+      .d-searches-show-contents__no-results.mt-g
+        p
+          - if params[:q].present?
+            = cstypo t('.no_results')
+          - else
+            = cstypo t('.no_query')
+    - else
+      .d-searches-show-contents__results
+        - if @search[:active_results]
+          - if @search[:active_results][:pagy]
+            - if @search[:active_results][:pagy].pages > 1
+              .small.mb-3
+                == pagy_info @search[:active_results][:pagy]
+
+          = render(Dummy::Searches::ResultsListComponent.new(@search[:active_results][:records]))
+
+          .mt-h.mt-lg-g
+            = render(Dummy::Ui::PagyComponent.new(pagy: @search[:active_results][:pagy]))
+
+        - else
+          - @search[:klasses].each do |klass, data|
+            - next if data[:count] == 0
+
+            h2.d-searches-show-contents__results-title.mb-4
+              a.d-unlink href=data[:href]
+                = data[:label]
+
+            = render(Dummy::Searches::ResultsListComponent.new(data[:records]))
+
+            - if data[:pagy] && data[:pagy].pages > 1
+              .mt-h.mt-lg-g
+                a.btn.btn-primary href=data[:href]
+                  = t('.more_results')

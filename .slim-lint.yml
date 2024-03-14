@@ -41,12 +41,13 @@ exclude:
   - app/views/layouts/folio/console/application.slim
   - app/views/layouts/folio/mailer.html.slim
   - lib/generators/folio/console/scaffold/templates/*
-  - test/dummy/app/cells/dummy/searches/show/show.slim
   - test/dummy/app/cells/dummy/ui/menu/show.slim
   - test/dummy/app/components/dummy/molecule/cards/full_width_component.slim
   - test/dummy/app/components/dummy/molecule/cards/medium_component.slim
   - test/dummy/app/components/dummy/molecule/cards/padded_image_component.slim
   - test/dummy/app/components/dummy/molecule/cards/small_component.slim
+  - test/dummy/app/components/dummy/searches/show/contents_component.slim
+  - test/dummy/app/components/dummy/searches/show_component.slim
   - test/dummy/app/components/dummy/ui/footer_component.slim
   - test/dummy/app/components/dummy/ui/header_component.slim
   - test/dummy/app/components/dummy/ui/image_component.slim

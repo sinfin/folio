@@ -2,12 +2,17 @@
 en:
   dummy:
     searches:
-      show:
+      autocomplete_component:
+        no_results: No results
+
+      show_component:
         title: Search
-        no_results: No results found. Make sure the term is spelled correctly, or try searching for other keywords.
-        no_query: Enter a search term into the field above to search.
-        more_results: See more
         placeholder: Search term
-        tabs:
-          overview: Overview
-          "Folio::Page": Stránky
+
+      show:
+        contents_component:
+          no_results: No results found. Make sure the term is spelled correctly, or try searching for other keywords.
+          no_query: Enter a search term into the field above to search.
+          more_results: See more
+          tabs/overview: Overview
+          tabs/Folio::Page: Pages

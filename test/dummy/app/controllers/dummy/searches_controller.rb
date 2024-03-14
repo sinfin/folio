@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Dummy::SearchesController < ApplicationController
+  include Folio::RenderComponentJson
+
   before_action :set_search
 
   DEFAULT_OVERVIEW_LIMIT = 4
   DEFAULT_LIMIT = 40
-  DEFAULT_RESULTS_CELL = "dummy/searches/results_list"
+  DEFAULT_RESULTS_COMPONENT = Dummy::Searches::ResultsListComponent
 
   SEARCH_MODELS = [
     {
@@ -13,16 +15,23 @@ class Dummy::SearchesController < ApplicationController
       limit: DEFAULT_LIMIT,
       overview_limit: DEFAULT_OVERVIEW_LIMIT,
       includes: [cover_placement: :file],
-      results_cell: DEFAULT_RESULTS_CELL,
+      results_component: DEFAULT_RESULTS_COMPONENT,
     },
   ]
 
   def show
-    @public_page_title = t(".title")
+    @public_page_title = t("dummy.searches.show_component.title")
+
+    respond_to do |format|
+      format.html { }
+      format.json do
+        render_component_json(Dummy::Searches::Show::ContentsComponent.new(search: @search))
+      end
+    end
   end
 
   def autocomplete
-    render json: { data: cell("dummy/searches/autocomplete", @search).show }
+    render_component_json(Dummy::Searches::AutocompleteComponent.new(search: @search))
   end
 
   private
@@ -35,7 +44,7 @@ class Dummy::SearchesController < ApplicationController
       }
 
       @search[:tabs] << {
-        label: t("dummy.searches.show.tabs.overview"),
+        label: t("dummy.searches.show.contents_component.tabs/overview"),
         href: dummy_search_path(q: params[:q], tab: nil),
       }
 
@@ -54,7 +63,7 @@ class Dummy::SearchesController < ApplicationController
 
         klass_pagy, klass_records = pagy(scope, items: meta[:overview_limit] || DEFAULT_OVERVIEW_LIMIT)
         count = klass_pagy.count
-        label = I18n.t("dummy.searches.show.tabs.#{meta[:klass]}", default: meta[:klass].model_name.human(count: 2))
+        label = I18n.t("dummy.searches.show.contents_component.tabs/#{meta[:klass]}", default: meta[:klass].model_name.human(count: 2))
 
         tab_href = dummy_search_path(q: params[:q], tab: label)
 
@@ -64,7 +73,7 @@ class Dummy::SearchesController < ApplicationController
           count:,
           label: "#{label} (#{count})",
           href: tab_href,
-          results_cell: meta[:results_cell] || DEFAULT_RESULTS_CELL,
+          results_component: meta[:results_component] || DEFAULT_RESULTS_COMPONENT,
         }
 
         @search[:count] += count
@@ -85,7 +94,7 @@ class Dummy::SearchesController < ApplicationController
             @search[:active_results] = {
               pagy: results_pagy,
               records: results_records,
-              results_cell: meta[:results_cell] || DEFAULT_RESULTS_CELL,
+              results_component: meta[:results_component] || DEFAULT_RESULTS_COMPONENT,
             }
           end
         end

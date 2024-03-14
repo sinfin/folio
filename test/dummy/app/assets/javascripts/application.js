@@ -20,8 +20,8 @@
 //= require folio/dropzone_component
 
 //= require folio/image/image
-//= require dummy/searches/show/show
 
+//= require dummy/searches/show_component
 //= require dummy/ui/alert_component
 //= require dummy/ui/boolean_toggle_component
 //= require dummy/ui/clipboard_component
