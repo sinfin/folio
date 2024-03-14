@@ -47,7 +47,7 @@ $ui-card-box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15) !default
     background: $shade-light-contrast
     border: 1px solid $transparent-300
     border-radius: $border-radius
-    min-height: 60px
+    min-height: 46px
     display: none
 
   &[data-<%= classname_prefix %>-ui-menu-toolbar-header-search-autocomplete-value="true"] &__autocomplete

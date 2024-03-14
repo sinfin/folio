@@ -2,12 +2,18 @@
 cs:
   dummy:
     searches:
-      show:
+      autocomplete_component:
+        no_results: Žádné výsledky
+        more_results: :dummy.searches.show.contents_component.more_results
+
+      show_component:
         title: Vyhledávání
-        no_results: Nebyly nalezeny žádné výsledky. Ujistěte se, zda je výraz napsán správně, nebo zkuste hledat jiná klíčová slova.
-        no_query: Pro vyhledávání zadejte hledaný výraz do políčka výše.
-        more_results: Více výsledků
         placeholder: Hledaný výraz
-        tabs:
-          overview: Přehled
-          "Folio::Page": Stránky
+
+      show:
+        contents_component:
+          no_results: Nebyly nalezeny žádné výsledky. Ujistěte se, zda je výraz napsán správně, nebo zkuste hledat jiná klíčová slova.
+          no_query: Pro vyhledávání zadejte hledaný výraz do políčka výše.
+          more_results: Více výsledků
+          tabs/overview: Přehled
+          tabs/Folio::Page: Stránky

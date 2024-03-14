@@ -339,3 +339,9 @@ cs:
         already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' pro stránky."
         already_exists_with_locale: "Je povolen jen jeden záznam '%{class}' s 'locale = \"%{rec_locale}\"'."
         already_exists: "Je povolen jen jeden záznam '%{class}'."
+
+    models:
+      folio/site_user_link:
+        attributes:
+         roles:
+           not_available_for_site: "Role %{roles} nejsou všechny dostupné pro web '%{site}'."

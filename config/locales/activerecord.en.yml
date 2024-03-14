@@ -249,3 +249,9 @@ en:
         already_exists_for_site: "Only one record of '%{class}' for each site is allowed."
         already_exists_with_locale: "Only one record of '%{class}' with 'locale = \"%{rec_locale}\"' is allowed."
         already_exists: "Only one record of '%{class}' is allowed."
+
+    models:
+      folio/site_user_link:
+        attributes:
+         roles:
+           not_available_for_site: "Roles %{roles} are not completelly availablefor site '%{site}'."

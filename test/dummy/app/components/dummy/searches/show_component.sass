@@ -1,0 +1,66 @@
+.d-searches-show
+  position: relative
+
+  &__form
+    display: flex
+    align-items: center
+
+  &__title
+    margin: 0
+
+  &__inner
+    position: relative
+    min-height: 150px
+
+  &__input
+    font-size: inherit
+    font-weight: $font-weight-normal
+    line-height: inherit
+    padding: 0
+    min-width: 0
+    height: auto
+    flex: 1 1 auto
+    border-radius: 0
+
+    &, &:hover, &:focus
+      color: inherit
+      border: 0
+      box-shadow: none
+
+  &__input-and-submit
+    flex: 1 1 auto
+    display: flex
+    align-items: center
+
+  &__submit
+    +unbutton
+    flex: 0 0 auto
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 41px
+    height: 41px
+    padding-right: 10px
+
+  &__loader
+    bottom: auto
+    height: 150px
+
+  &:not([data-d-searches-show-loading-value="true"]) &__loader
+    display: none
+
+  &[data-d-searches-show-loading-value="true"] &__contents-wrap
+    pointer-events: none
+    opacity: 0.1
+
+  +media-breakpoint-down(sm)
+    &__form
+      flex-wrap: wrap
+
+    &__title
+      flex: 0 0 100%
+
+  +media-breakpoint-up(sm)
+    &__title
+      margin-right: 0.5ch
+      flex: 0 0 auto

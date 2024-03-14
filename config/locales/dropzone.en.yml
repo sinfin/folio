@@ -12,3 +12,4 @@ en:
       dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?"
       dictMaxFilesExceeded: "You can not upload any more files."
       destroy_failure: "Failed to destroy the attachment."
+      upload_failure: "Failed to upload the file."

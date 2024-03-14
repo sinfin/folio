@@ -106,7 +106,21 @@ window.Folio.S3Upload.createDropzone = ({
       })
     },
 
-    error: function (file, message) {
+    error: function (file, rawMessage) {
+      let message = rawMessage
+
+      if (typeof message === 'string' && message.startsWith('<?xml')) {
+        const parser = new window.DOMParser()
+        const doc = parser.parseFromString(message, 'text/xml')
+
+        const codeNode = doc.querySelector('Code')
+        const messageNode = doc.querySelector('Message')
+
+        if (codeNode && messageNode) {
+          message = `${codeNode.innerHTML}: ${messageNode.innerHTML}`
+        }
+      }
+
       if (window.FolioConsole && window.FolioConsole.Flash) {
         if (typeof message === 'string') {
           window.FolioConsole.Flash.alert(message)
@@ -120,7 +134,7 @@ window.Folio.S3Upload.createDropzone = ({
         setTimeout(() => { dropzone.removeFile(file) }, 0)
       }
 
-      if (onFailure) onFailure(file.s3_path)
+      if (onFailure) onFailure(file.s3_path, message)
     },
 
     processing: function (file) {
