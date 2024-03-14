@@ -6,7 +6,7 @@ class <%= application_namespace %>::SearchesController < ApplicationController
   before_action :set_search
 
   DEFAULT_OVERVIEW_LIMIT = 4
-  DEFAULT_LIMIT = 40
+  DEFAULT_LIMIT = 20
   DEFAULT_RESULTS_COMPONENT = <%= application_namespace %>::Searches::ResultsListComponent
 
   SEARCH_MODELS = [

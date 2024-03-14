@@ -1,15 +1,15 @@
 .d-searches-results-list
-  - @search.each do |record|
-      a.d-searches-results-list__result href=url_for(record)
-        - if cover_placement = record.try(:cover_placement)
-          .d-searches-results-list__cover
-            = dummy_ui_image(cover_placement, THUMB_SIZE)
+  - @data[:records].each do |record|
+    a.d-searches-results-list__result href=url_for(record)
+      - if cover_placement = record.try(:cover_placement)
+        .d-searches-results-list__cover
+          = dummy_ui_image(cover_placement, THUMB_SIZE)
 
-        .d-searches-results-list__text
-          h3.d-searches-results-list__title.m-0
-            = record.to_label
+      .d-searches-results-list__text
+        h3.d-searches-results-list__title.m-0
+          = record.to_label
 
-          p.d-searches-results-list__perex.mt-2.mb-0
-            = record.try(:perex) || record.try(:description)
+        p.d-searches-results-list__perex.mt-2.mb-0
+          = record.try(:perex) || record.try(:description)
 
-          p.small.d-searches-results-list__url.my-2 = url_for(record)
+        p.small.d-searches-results-list__url.my-2 = url_for(record)

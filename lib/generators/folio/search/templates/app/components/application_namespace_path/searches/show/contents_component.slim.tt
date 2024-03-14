@@ -19,7 +19,7 @@
               .small.mb-3
                 == pagy_info @search[:active_results][:pagy]
 
-          = render(<%= application_namespace %>::Searches::ResultsListComponent.new(@search[:active_results][:records]))
+          = render(@search[:active_results][:results_component].new(data: @search[:active_results]))
 
           .mt-h.mt-lg-g
             = render(<%= application_namespace %>::Ui::PagyComponent.new(pagy: @search[:active_results][:pagy]))
@@ -32,7 +32,7 @@
               a.<%= classname_prefix %>-unlink href=data[:href]
                 = data[:label]
 
-            = render(<%= application_namespace %>::Searches::ResultsListComponent.new(data[:records]))
+            = render(data[:results_component].new(data:))
 
             - if data[:pagy] && data[:pagy].pages > 1
               .mt-h.mt-lg-g

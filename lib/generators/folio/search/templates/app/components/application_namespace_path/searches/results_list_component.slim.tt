@@ -1,15 +1,15 @@
 .<%= classname_prefix %>-searches-results-list
-  - @search.each do |record|
-      a.<%= classname_prefix %>-searches-results-list__result href=url_for(record)
-        - if cover_placement = record.try(:cover_placement)
-          .<%= classname_prefix %>-searches-results-list__cover
-            = <%= application_namespace_path %>_ui_image(cover_placement, THUMB_SIZE)
+  - @data[:records].each do |record|
+    a.<%= classname_prefix %>-searches-results-list__result href=url_for(record)
+      - if cover_placement = record.try(:cover_placement)
+        .<%= classname_prefix %>-searches-results-list__cover
+          = <%= application_namespace_path %>_ui_image(cover_placement, THUMB_SIZE)
 
-        .<%= classname_prefix %>-searches-results-list__text
-          h3.<%= classname_prefix %>-searches-results-list__title.m-0
-            = record.to_label
+      .<%= classname_prefix %>-searches-results-list__text
+        h3.<%= classname_prefix %>-searches-results-list__title.m-0
+          = record.to_label
 
-          p.<%= classname_prefix %>-searches-results-list__perex.mt-2.mb-0
-            = record.try(:perex) || record.try(:description)
+        p.<%= classname_prefix %>-searches-results-list__perex.mt-2.mb-0
+          = record.try(:perex) || record.try(:description)
 
-          p.small.<%= classname_prefix %>-searches-results-list__url.my-2 = url_for(record)
+        p.small.<%= classname_prefix %>-searches-results-list__url.my-2 = url_for(record)

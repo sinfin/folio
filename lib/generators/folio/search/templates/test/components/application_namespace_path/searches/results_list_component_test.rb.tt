@@ -4,10 +4,11 @@ require "test_helper"
 
 class <%= application_namespace %>::Searches::ResultsListComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
+    data = { records: create_list(:folio_page, 1) }
 
-    render_inline(<%= application_namespace %>::Searches::ResultsListComponent.new(model:))
+    render_inline(<%= application_namespace %>::Searches::ResultsListComponent.new(data:))
 
     assert_selector(".<%= classname_prefix %>-searches-results-list")
+    assert_selector(".<%= classname_prefix %>-searches-results-list__result")
   end
 end

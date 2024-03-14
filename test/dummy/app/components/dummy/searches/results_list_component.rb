@@ -3,11 +3,11 @@
 class Dummy::Searches::ResultsListComponent < ApplicationComponent
   THUMB_SIZE = "150x100#"
 
-  def initialize(search)
-    @search = search
+  def initialize(data:)
+    @data = data
   end
 
   def shows
-    render if @search.present?
+    render if @data.present? && @data[:records].present?
   end
 end
