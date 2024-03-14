@@ -4,6 +4,7 @@ en:
     searches:
       autocomplete_component:
         no_results: No results
+        more_results: :dummy.searches.show.contents_component.more_results
 
       show_component:
         title: Search

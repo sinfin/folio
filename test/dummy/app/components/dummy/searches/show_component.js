@@ -1,7 +1,15 @@
+//= require folio/add_params_to_url
+//= require folio/debounce
+
 window.Folio.Stimulus.register('d-searches-show', class extends window.Stimulus.Controller {
   static targets = ['form', 'input', 'contentsWrap']
+
   static values = {
     loading: Boolean
+  }
+
+  connect () {
+    this.moveInputCursor()
   }
 
   disconnect () {
@@ -9,16 +17,24 @@ window.Folio.Stimulus.register('d-searches-show', class extends window.Stimulus.
   }
 
   debouncedLoad = window.Folio.debounce(() => {
-    const paramsHash = { q: this.inputTarget.value }
+    const paramsHash = {}
+
+    if (this.inputTarget.value) {
+      paramsHash.q = this.inputTarget.value
+    }
 
     const urlParams = new URLSearchParams(window.location.href)
     const tab = urlParams.get('tab')
     if (tab) paramsHash.tab = tab
 
-    const url = window.Folio.addParamsToUrl(this.formTarget.action, paramsHash)
+    const url = Object.keys(paramsHash).length ? window.Folio.addParamsToUrl(this.formTarget.action, paramsHash) : this.formTarget.action
 
     this.abortLoad()
     this.abortController = new AbortController()
+
+    if (window.Turbolinks) {
+      window.Turbolinks.controller.replaceHistoryWithLocationAndRestorationIdentifier(url, window.Turbolinks.uuid())
+    }
 
     window.Folio.Api.apiGet(url, null, this.abortController.signal).then((res) => {
       if (res && res.data) {
@@ -41,14 +57,16 @@ window.Folio.Stimulus.register('d-searches-show', class extends window.Stimulus.
 
   onFormSubmit (e) {
     e.preventDefault()
-    console.log('onFormSubmit', e)
+    this.load()
   }
 
-  onInputFocus (e) {
-    // swaps the cursor to the back
-    const value = e.target.value
-    e.target.value = ''
-    e.target.value = value
+  onInputFocus () {
+    this.moveInputCursor()
+  }
+
+  moveInputCursor () {
+    const length = this.inputTarget.value.length
+    this.inputTarget.setSelectionRange(length, length)
   }
 
   onInputInput (e) {

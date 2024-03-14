@@ -4,6 +4,7 @@ cs:
     searches:
       autocomplete_component:
         no_results: Žádné výsledky
+        more_results: :dummy.searches.show.contents_component.more_results
 
       show_component:
         title: Vyhledávání

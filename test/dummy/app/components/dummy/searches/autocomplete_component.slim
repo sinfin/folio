@@ -17,5 +17,7 @@
 
     - if @search[:count] > 5
       .d-searches-autocomplete__more
-        a.d-searches-autocomplete__more-link href="#"
-            = cstypo t('dummy.searches.show_component.more_results')
+        a.d-searches-autocomplete__more-link[
+          href=controller.main_app.dummy_search_path(q: @search[:q])
+        ]
+            = cstypo t('.more_results')

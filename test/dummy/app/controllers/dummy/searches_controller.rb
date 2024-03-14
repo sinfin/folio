@@ -41,6 +41,7 @@ class Dummy::SearchesController < ApplicationController
         count: 0,
         tabs: [],
         active_results: nil,
+        q: params[:q]
       }
 
       @search[:tabs] << {
