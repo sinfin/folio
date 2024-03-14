@@ -1,0 +1,14 @@
+.<%= classname_prefix %>-searches-results-list
+  - @search.each do |record|
+      a.<%= classname_prefix %>-searches-results-list__result href=url_for(record)
+        .<%= classname_prefix %>-searches-results-list__cover
+          = record.try(:cover_placement)
+
+        .<%= classname_prefix %>-searches-results-list__text
+          h3.<%= classname_prefix %>-searches-results-list__title.m-0
+            = record.to_label
+
+          p.<%= classname_prefix %>-searches-results-list__perex.mt-2.mb-0
+            = record.try(:perex) || record.try(:description)
+
+          p.small.<%= classname_prefix %>-searches-results-list__url.my-2 = url_for(record)

@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class <%= application_namespace %>::Searches::ResultsListComponentTest < Folio::ComponentTest
+  def test_render
+    model = "hello"
+
+    render_inline(<%= application_namespace %>::Searches::ResultsListComponent.new(model:))
+
+    assert_selector(".<%= classname_prefix %>-searches-results-list")
+  end
+end

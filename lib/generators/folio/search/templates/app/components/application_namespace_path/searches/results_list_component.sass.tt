@@ -1,0 +1,27 @@
+.<%= classname_prefix %>-searches-results-list
+  display: flex
+  flex-direction: column
+  gap: $grid-gutter-half
+  &__result
+    text-decoration: none
+    display: flex
+
+  &__cover
+    flex: 0 0 auto
+
+  &__text
+    flex: 1 1 auto
+
+  &__title
+    text-decoration: underline
+
+  &__perex
+    color: $shade-700
+
+  &__url
+    text-decoration: underline
+    color: $shade-500
+
+  &__title:hover,
+  &__url:hover
+    text-decoration: none

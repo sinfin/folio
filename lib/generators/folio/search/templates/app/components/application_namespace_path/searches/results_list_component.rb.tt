@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+class <%= application_namespace %>::Searches::ResultsListComponent < ApplicationComponent
+  def initialize(search)
+    @search = search
+  end
+
+  def shows
+    render if @search.present?
+  end
+end

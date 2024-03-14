@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 
-class <%= application_namespace %>::Searches::ShowCell < ApplicationCell
-  include Pagy::Frontend
+class <%= application_namespace %>::Searches::ShowComponent < ApplicationComponent
   include SimpleForm::ActionViewExtensions::FormHelper
+
+  def initialize(search:)
+    @search = search
+  end
 
   def form(&block)
     opts = {
       url: controller.main_app.<%= application_namespace_path %>_search_path,
       method: :get,
-      html: { class: "<%= classname_prefix %>-searches-show__form h1", id: nil },
+      html: {
+        class: "<%= classname_prefix %>-searches-show__form h1",
+        id: nil,
+        data: stimulus_data(target: "form", action: "onFormSubmit")
+      },
     }
 
     simple_form_for("", opts, &block)
@@ -23,9 +30,15 @@ class <%= application_namespace %>::Searches::ShowCell < ApplicationCell
               autofocus: true,
               autocomplete: "off",
               id: nil,
-              onfocus: "var <%= classname_prefix %>SearchesShowValue = this.value; this.value = ''; this.value = <%= classname_prefix %>SearchesShowValue",
+              data: stimulus_data(target: "input", action: { input: "onInputInput", focus: "onInputFocus" })
             },
             label: false,
             wrapper: false
+  end
+
+  def data
+    stimulus_controller("<%= classname_prefix %>-searches-show", values: {
+      loading: false,
+    })
   end
 end
