@@ -1,0 +1,29 @@
+.d-blog-articles-show-header
+  margin-bottom: $grid-gutter-width
+  &__inner
+    display: flex
+    flex-direction: column
+    gap: $grid-gutter-width
+
+  &__title
+    margin-top: 0
+
+  &__info
+    display: flex
+    flex-direction: row
+    gap: $grid-gutter-width
+
+  &__date
+    color: $shade-700
+    +font-size-text-l
+
+  &__author
+    display: flex
+    gap: $grid-gutter-base
+    color: $brand-200
+    flex: 1 0 auto
+    font-weight: $font-weight-medium
+    +font-size-text-l
+
+  &__author-cover
+    flex: 0 0 px-to-rem(24px)

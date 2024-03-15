@@ -1,6 +1,29 @@
 .d-blog-articles-show-header
-  / test/dummy/app/cells/dummy/blog/articles/show_header/show.slim
   .container-fluid
-    h1 = @article.title
+    .d-blog-articles-show-header__inner
+      - if @article.cover_placement.present?
+        = dummy_ui_image(@article.cover_placement,
+                        COVER_SIZE,
+                        class_name: 'd-blog-articles-show-header__cover',
+                        border_radius: true,
+                        lightbox: true)
 
-    = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))
+      h1.d-blog-articles-show-header__title
+        = cstypo @article.title
+
+      .d-blog-articles-show-header__info
+        time.d-blog-articles-show-header__date[
+          datetime=l(@article.published_at, format: :console_html_datetime)
+        ]
+          = l(@article.published_at, format: :console_short_date)
+
+        //TODO: add real author data
+        .d-blog-articles-show-header__author
+          - if @article.cover_placement.present?
+            = dummy_ui_image(@article.cover_placement,
+                            AUTHOR_AVATAR_SIZE,
+                            class_name: 'd-blog-articles-show-header__author-cover',
+                            border_radius: true)
+          = "Name Surname"
+
+      = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))

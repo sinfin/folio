@@ -1,4 +1,4 @@
 .d-blog-articles-topic-tags
   - @topics.each do |topic|
-    a href=url_for(topic)
+    a.d-blog-articles-topic-tags__item href=url_for(topic)
       = topic.title
