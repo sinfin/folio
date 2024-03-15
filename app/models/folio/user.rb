@@ -281,12 +281,18 @@ class Folio::User < Folio::ApplicationRecord
 
     # user is able to do action, but can it be triggered now?
     if subject.respond_to?(:currently_available_actions)
-      subject.currently_available_actions.include?(action)
+      subject.currently_available_actions(self).include?(action)
     else
       true
     end
   end
 
+  def currently_allowed_actions_with(subject, ability_class = nil)
+    return [] unless subject.respond_to?(:currently_available_actions)
+
+    ability = (ability_class || Folio::Ability).new(self)
+    subject.currently_available_actions(self).select { |action| ability.can?(action, subject) }
+  end
 
   private
     def validate_first_name_and_last_name?

@@ -10,6 +10,8 @@ class Folio::Ability
     @user = user
     @site = site
 
+    alias_action :manage, to: :do_anything
+
     ability_rules
   end
 
@@ -20,7 +22,7 @@ class Folio::Ability
 
   def folio_console_rules
     if user.superadmin?
-      can :manage, :all
+      can :do_anything, :all
       can :access_console, Folio::Site
       cannot [:create, :new, :destroy], Folio::Site
       return
@@ -35,26 +37,26 @@ class Folio::Ability
       # can :display_miniprofiler, site
 
       if user.has_role?(site:, role: :administrator)
-        can :manage, Folio::User, site_user_links: { site: }
+        can :do_anything, Folio::User, site_user_links: { site: }
         can :read_administrators, Folio::User
         can :read_managers, Folio::User
       elsif user.has_role?(site:, role: :manager)
         can :read_managers, Folio::User
         # next do not work, because in the end it tries to do `[x,y,z].include?([x,y]) => false`
         # non_admin_roles = site.available_user_roles_ary - ["administrator"]
-        # can :manage, Folio::User, site_user_links: { site: , roles: non_admin_roles } do |user|
+        # can :do_anything, Folio::User, site_user_links: { site: , roles: non_admin_roles } do |user|
 
-        can :manage, Folio::User, Folio::User.without_site_roles(site:, roles: [:administrator]) do |user|
+        can :do_anything, Folio::User, Folio::User.without_site_roles(site:, roles: [:administrator]) do |user|
           !user.has_role?(site:, role: :administrator) && !user.superadmin?
         end
       end
 
-      can :manage, Folio::File, { site: }
-      can :manage, Folio::Page, { site: }
-      can :manage, Folio::Menu, { site: }
-      can :manage, Folio::Lead, { site: }
-      can :manage, Folio::NewsletterSubscription, { site: }
-      can :manage, Folio::EmailTemplate, { site: }
+      can :do_anything, Folio::File, { site: }
+      can :do_anything, Folio::Page, { site: }
+      can :do_anything, Folio::Menu, { site: }
+      can :do_anything, Folio::Lead, { site: }
+      can :do_anything, Folio::NewsletterSubscription, { site: }
+      can :do_anything, Folio::EmailTemplate, { site: }
       can [:read, :update], Folio::Site, { id: site.id }
 
       cannot :impersonate, Folio::User

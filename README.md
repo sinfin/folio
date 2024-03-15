@@ -99,6 +99,31 @@ Rails.application.config.folio_console_sidebar_link_class_names = [
   ....
 ```
 
+## Abilities
+What can user do now with object is defined by two things, what is allowed to him/her by ability and what are `currently_available_actions` of object.
+In `Folio::Ability` there are rules what user (mainly based by roles in SiteUserLink) is allowed to do. You can extend these rules by overriding
+`Folio::Ability#ability_rules` to include methods with app specific rules. Eg.
+
+```ruby
+Folio::Ability.class_eval do
+  def ability_rules
+    if user.superadmin?
+      can :do_anything, :all
+    end
+
+    folio_console_rules
+    sidekiq_rules
+    app_rules
+  end
+end
+```
+You can use `user` (current user) and `site` (current site) in your rules.
+
+Then You can define `object.currently_available_actions(user)` on your objects. If You don't, it will pretend than any action is available now.
+Finally **use method `can_now?(:action, object)`** to check permissions.
+There is also handy methods `user.can_now?(action, subject = nil, site: nil)` and `user.currently_allowed_actions_with(subject, ability_class = nil)`.
+
+
 ## Tips and Tricks
 - Check [Wiki](https://github.com/sinfin/folio/wiki)
 
