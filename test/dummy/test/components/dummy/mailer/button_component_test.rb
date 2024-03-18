@@ -4,9 +4,9 @@ require "test_helper"
 
 class Dummy::Mailer::ButtonComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
+    label = "hello"
 
-    render_inline(Dummy::Mailer::ButtonComponent.new(model:))
+    render_inline(Dummy::Mailer::ButtonComponent.new(label:))
 
     assert_selector(".d-mailer-button")
   end

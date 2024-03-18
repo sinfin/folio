@@ -4,9 +4,9 @@ require "test_helper"
 
 class Dummy::Mailer::FooterMenuComponentTest < Folio::ComponentTest
   def test_render
-    model = "hello"
+    site = create(:folio_site)
 
-    render_inline(Dummy::Mailer::FooterMenuComponent.new(model:))
+    render_inline(Dummy::Mailer::FooterMenuComponent.new(site:))
 
     assert_selector(".d-mailer-footer-menu")
   end
