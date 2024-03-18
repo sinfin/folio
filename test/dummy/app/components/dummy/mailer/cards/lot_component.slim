@@ -41,9 +41,11 @@ table.d-mailer-cards-lot[
             ]
               .d-mailer-cards-lot__content-inner
                 .d-mailer-cards-lot__title-block
-                  .d-mailer-cards-lot__author = @author
+                  - if @author.present?
+                    .d-mailer-cards-lot__author = @author
                   
-                  .d-mailer-cards-lot__name = @name
+                  - if @name.present?
+                    .d-mailer-cards-lot__name = @name
                   
                   .d-mailer-cards-lot__event
                     - if @event[:type].present?

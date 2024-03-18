@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::FooterMenuComponent < ApplicationComponent
-  def initialize(site:)
+  def initialize(site:, menu: nil)
     @site = site
-  end
-
-  def current_footer_menu
-    @current_footer_menu ||= Folio::Menu.where(type: "Dummy::Menu::Footer").first
+    @menu = menu
   end
 
   def menu
-    @menu ||= current_footer_menu
+    @menu ||= Folio::Menu.where(type: "Dummy::Menu::Footer").first
   end
 end
