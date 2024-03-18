@@ -2,7 +2,6 @@ $dummy-mailer-styles: false !default
 
 @if $dummy-mailer-styles
   .btn
-    +mailer-font-size-sm
     display: inline-block
     border-radius: $mailer-btn-border-radius
     cursor: pointer
@@ -11,6 +10,8 @@ $dummy-mailer-styles: false !default
     text-align: center
     text-decoration: none
     -webkit-text-size-adjust: none
+    padding: 8px 16px
+    mso-padding-alt: 0
 
   .btn-primary,
   .btn-redactor--fill
@@ -25,17 +26,21 @@ $dummy-mailer-styles: false !default
   .btn-secondary
     border: 2px solid $primary-black
     background-color: transparent
+    text-underline-color: transparent
     mso-hide: all
 
   .btn.btn-secondary
     color: $mailer-secure-primary-black
+
+  .btn-md,
+  .btn-redactor--fill
+    +mailer-font-size-sm
+
+  .btn-sm
+    +mailer-font-size-mini
 
   .folio-redactor-button
     margin: $mailer-gap-b 0 $mailer-gap-b 0
 
   p + .folio-redactor-button
     margin: $mailer-gap-e 0 $mailer-gap-b 0
-
-  .folio-redactor-button > .btn-redactor
-    width: 150px
-    line-height: 40px
