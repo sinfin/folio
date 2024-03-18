@@ -6,8 +6,4 @@
     .bg-body.p-g.mt-g.border.rounded data-bs-theme=theme
       h2.mt-0 Tabs - #{theme}
 
-      = dummy_ui_tabs(tabs: [ \
-        { href: "#", active: true, label: "Current tab" }, \
-        { href: "#", label: "Another tab", count: 123 }, \
-        { href: "#", label: "Another tab", disabled: true, count: 2 }, \
-      ])
+      = dummy_ui_tabs(tabs: @tabs)
