@@ -88,7 +88,8 @@ class Dummy::SearchesController < ApplicationController
           has_active ||= active
 
           @search[:tabs] << {
-            label: "#{label} (#{count})",
+            label:,
+            count:,
             active:,
             href: tab_href,
           }
