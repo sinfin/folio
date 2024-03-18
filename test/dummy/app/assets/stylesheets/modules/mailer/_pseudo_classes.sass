@@ -1,20 +1,20 @@
 $dummy-mailer-styles: false !default
 
 @if $dummy-mailer-styles
-  .d-mailer-footer-menu__menu-link:hover,
-  .d-mailer-footer-menu__menu-link:focus,
-  .link-style-override > a:hover,
-  .link-style-override > a:focus
+  a:hover,
+  a:focus,
     text-decoration: underline !important
 
   .btn-primary:hover,
   .btn-primary:focus,
   .btn-redactor--fill:hover,
   .btn-redactor--fill:focus
+    text-decoration: none !important
     background-color: $cloud-500 !important
     text-underline-color: $cloud-500 !important
 
   .btn-secondary:hover,
   .btn-secondary:focus
+    text-decoration: none !important
     background-color: $cloud-200 !important
     text-underline-color: $cloud-200 !important
