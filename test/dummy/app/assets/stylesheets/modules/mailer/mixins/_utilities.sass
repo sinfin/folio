@@ -3,7 +3,7 @@
   @return if($max and $max > 0, $max - .02, null)
 
 =mailer-media-breakpoint-down($name, $breakpoints: $mailer-breakpoints)
-  $max: breakpoint-max($name, $breakpoints)
+  $max: mailer-breakpoint-max($name, $breakpoints)
   @if $max
     @media (max-width: $max)
       @content

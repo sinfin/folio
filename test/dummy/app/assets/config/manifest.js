@@ -6,4 +6,4 @@
 //= link application.css
 
 //= link mailer.css
-//= link mailer_utilities.css
+//= link mailer_extras.css
