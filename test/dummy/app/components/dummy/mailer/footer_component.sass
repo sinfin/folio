@@ -19,7 +19,7 @@ $dummy-mailer-styles: false !default
 
     &__legal-wrapper
       +mailer-font-size-text-m
-      padding: $mailer-gap-d 0 $mailer-gap-g 0
+      padding: $mailer-gap-c 0 $mailer-gap-g 0
       color: $cloud-400
 
     &__logo-link
@@ -39,3 +39,8 @@ $dummy-mailer-styles: false !default
 
       &:last-child
         margin: 0
+
+    // rule for additional link tag added by mail clients
+    &__contact-detail > a
+      color: $cloud-600
+      text-decoration: none
