@@ -21,4 +21,20 @@ class Dummy::Mailer::Cards::ExtraSmallComponent < ApplicationComponent
       {}
     end
   end
+
+  def parent_class
+    if @even
+      "d-mailer-cards-extra-small--even"
+    else
+      "d-mailer-cards-extra-small--odd"
+    end
+  end
+
+  def content_wrapper_class
+    if @card[:image].present?
+      "d-mailer-cards-extra-small__content-wrapper--with-image"
+    else
+      "d-mailer-cards-extra-small__content-wrapper--full"
+    end
+  end
 end
