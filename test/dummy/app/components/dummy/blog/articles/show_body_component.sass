@@ -20,7 +20,7 @@
     flex-direction: column
     +media-breakpoint-up(lg)
       flex: 0 0 px-to-rem(360px) + 2 * $grid-gutter-width
-      padding-left: 1.5*$grid-gutter-width
+      padding-left: 2*$grid-gutter-width
       border-left: 1px solid $transparent-200
 
   &__recommended-articles
@@ -37,7 +37,7 @@
   &__recommended-title
     +font-size-display-xs
     font-weight: $font-weight-bold
-    margin: 0 0 $grid-gutter-half 0
+    margin: $grid-gutter-half $grid-gutter-base/2
 
   &__perex
     margin-bottom: 5*$grid-gutter-base

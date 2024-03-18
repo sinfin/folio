@@ -1,9 +1,11 @@
 .d-blog-articles-show-header
   &__inner
-    margin-bottom: $grid-gutter-width
     display: flex
     flex-direction: column
-    gap: 2.5*$grid-gutter-base
+    gap: $grid-gutter-half
+    margin-bottom: 2.5*$grid-gutter-base
+    +media-breakpoint-up(sm)
+      margin-bottom: 4*$grid-gutter-base
 
   &__title
     margin: 0
@@ -24,10 +26,16 @@
       +media-breakpoint-up(md)
         +font-size-display-s
 
+  &__cover
+    margin: 0 -4*$grid-gutter-base 0 -4*$grid-gutter-base
+    +media-breakpoint-up(sm)
+      margin: 0 0 $grid-gutter-base
+
   &__info
     display: flex
     flex-direction: row
     gap: $grid-gutter-width
+    margin-bottom: $grid-gutter-base
 
   &__date
     color: $shade-700

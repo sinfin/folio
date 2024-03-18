@@ -16,9 +16,11 @@ article.d-blog-articles-card[
         = @article.title
 
     .d-blog-articles-card__details
-      = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))
+      = render(Dummy::Blog::Articles::TopicTagsComponent.new(\
+               article: @article, size: :sm))
 
-      time.d-blog-articles-card__date[
-        datetime=l(@article.published_at, format: :console_html_datetime)
-      ]
-        = l(@article.published_at, format: :console_short_date)
+      -if @article.published_at.present?
+        time.d-blog-articles-card__date[
+          datetime=l(@article.published_at, format: :console_html_datetime)
+        ]
+          = l(@article.published_at, format: :console_short_date)

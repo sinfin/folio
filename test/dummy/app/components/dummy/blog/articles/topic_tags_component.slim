@@ -1,4 +1,6 @@
-.d-blog-articles-topic-tags
+.d-blog-articles-topic-tags[
+  class=(@size? "d-blog-articles-topic-tags--#{@size}" : nil)
+]
   - @topics.each do |topic|
     a.d-blog-articles-topic-tags__item href=url_for(topic)
       = topic.title

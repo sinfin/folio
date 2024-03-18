@@ -5,7 +5,7 @@
   flex-wrap: nowrap
   align-items: flex-start
   justify-content: flex-start
-  gap: $grid-gutter-width
+  gap: 2*$grid-gutter-base
   &__content
     flex: 1
 
@@ -23,7 +23,7 @@
     +font-size-display-xs
     font-weight: $font-weight-bold
     text-overflow: ellipsis
-    margin: 0 0 $grid-gutter-half 0
+    margin: 0 0 $grid-gutter-base 0
     +media-breakpoint-up(lg)
       +line-clamp(5)
 
@@ -52,5 +52,9 @@
       width: 100%
       flex: 1
 
-    .d-blog-articles-card__content
-      padding: 0 2*$grid-gutter-half $grid-gutter-width
+    .d-blog-articles-card
+      &__content
+        padding: 0 $grid-gutter-half $grid-gutter-width
+
+      &__title
+        margin-bottom: $grid-gutter-width

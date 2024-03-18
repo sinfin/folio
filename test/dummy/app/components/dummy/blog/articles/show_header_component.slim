@@ -14,10 +14,12 @@
         = cstypo @article.title
 
       .d-blog-articles-show-header__info
-        time.d-blog-articles-show-header__date[
-          datetime=l(@article.published_at, format: :console_html_datetime)
-        ]
-          = l(@article.published_at, format: :console_short_date)
+
+        -if @article.published_at.present?
+          time.d-blog-articles-show-header__date[
+            datetime=l(@article.published_at, format: :console_html_datetime)
+          ]
+            = l(@article.published_at, format: :console_short_date)
 
         //TODO: add real author data
         .d-blog-articles-show-header__author
