@@ -108,6 +108,29 @@ class <%= application_namespace %>::UiController < ApplicationController
     ]
   end
 
+  def tabs
+    @tabs = [
+      {
+        href: tabs_<%= application_namespace_path %>_ui_path(tab: "1"),
+        active: %w[2 3].exclude?(params[:tab]),
+        label: "Tab 1"
+      },
+      {
+        href: tabs_<%= application_namespace_path %>_ui_path(tab: "2"),
+        active: params[:tab] == "2",
+        label: "Tab 2",
+        count: 123
+      },
+      {
+        href: tabs_<%= application_namespace_path %>_ui_path(tab: "3"),
+        active: params[:tab] == "3",
+        label: "Tab 3",
+        disabled: true,
+        count: 2
+      }
+    ]
+  end
+
   private
     def only_allow_superadmins
       authenticate_user!
