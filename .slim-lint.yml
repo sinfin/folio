@@ -59,7 +59,11 @@ exclude:
   - test/dummy/app/components/dummy/mailer/layout_component.slim
   - test/dummy/app/components/dummy/mailer/header_component.slim
   - test/dummy/app/components/dummy/mailer/footer_component.slim
+  - test/dummy/app/components/dummy/mailer/socials_component.slim
+  - test/dummy/app/components/dummy/mailer/cards/extra_small_container_component.slim
   - test/dummy/app/components/dummy/mailer/cards/medium_component.slim
+  - test/dummy/app/components/dummy/mailer/cards/lot_component.slim
+  - test/dummy/app/components/dummy/mailer/order_summary_component.slim
   - test/dummy/app/views/dummy/developer_mailer/debug.html.slim
   - test/dummy/app/views/dummy/home/index.slim
   - test/dummy/app/views/dummy/ui/*.slim

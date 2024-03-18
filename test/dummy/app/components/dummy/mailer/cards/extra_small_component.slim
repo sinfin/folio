@@ -1,6 +1,6 @@
 table.d-mailer-cards-extra-small[
   role="presentation"
-  class=(@even ? "d-mailer-cards-extra-small--even" : "d-mailer-cards-extra-small--odd")
+  class=parent_class
 ]
   tr
     td.d-mailer-cards-extra-small__wrapper
@@ -19,7 +19,7 @@ table.d-mailer-cards-extra-small[
                 ]
 
           td.d-mailer-cards-extra-small__content-wrapper[
-            class=(@card[:image].present? ? "d-mailer-cards-extra-small__content-wrapper--with-image" : "d-mailer-cards-extra-small__content-wrapper--full")
+            class=content_wrapper_class
             align="left"
             valign="top"
           ]

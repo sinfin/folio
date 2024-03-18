@@ -18,7 +18,7 @@ table.d-mailer-cards-extra-small-container[
             <td style="width:312px;padding:0 0 24px 0;" align="left" valign="top">
 
         .d-mailer-cards-extra-small-container__card-wrapper[
-          class=(index.even? ? "d-mailer-cards-extra-small-container__card-wrapper--even" : "d-mailer-cards-extra-small-container__card-wrapper--odd")
+          class=card_wrapper_class(index)
         ]
           = render(Dummy::Mailer::Cards::ExtraSmallComponent.new(card: card, even: index.even?))
 

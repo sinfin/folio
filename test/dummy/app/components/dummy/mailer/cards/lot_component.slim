@@ -43,15 +43,15 @@ table.d-mailer-cards-lot[
                 .d-mailer-cards-lot__title-block
                   - if @author.present?
                     .d-mailer-cards-lot__author = @author
-                  
+
                   - if @name.present?
                     .d-mailer-cards-lot__name = @name
-                  
+
                   .d-mailer-cards-lot__event
                     - if @event[:type].present?
                       span.d-mailer-cards-lot__event-type
                         = event_type
-                    
+
                       span.d-mailer-cards-lot__whitespace-s
                         | &nbsp;
 
