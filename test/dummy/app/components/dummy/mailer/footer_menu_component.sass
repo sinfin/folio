@@ -5,17 +5,20 @@ $dummy-mailer-styles: false !default
     width: 100%
 
     &__menu-wrapper
-      padding: $mailer-gap-g 0 0 0
+      padding: $mailer-gap-f 0 0 0
       border-top: 1px solid $cloud-300
-
-    &__menu-link-wrapper
-      padding: 0 $mailer-gap-c 0 0
-
-      &:last-child
-        padding: 0
 
     &__menu-link
       +mailer-font-size-text-s
+      display: inline-block
       color: $cloud-600
       font-weight: $font-weight-normal
       text-decoration: none
+      margin: 0 $mailer-gap-c 0 0
+
+      &:last-child
+        margin: 0
+
+    // rule for vertical space between links
+    &__menu-link-wrapper > &__menu-link
+      line-height: 2.4
