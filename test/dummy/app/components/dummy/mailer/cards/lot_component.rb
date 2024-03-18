@@ -17,8 +17,8 @@ class Dummy::Mailer::Cards::LotComponent < ApplicationComponent
   }
 
   def initialize(folio_image: nil,
-                 author:,
-                 name:,
+                 author: nil,
+                 name: nil,
                  event: nil,
                  description: nil,
                  id: nil,

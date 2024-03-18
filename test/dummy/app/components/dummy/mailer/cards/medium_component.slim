@@ -41,7 +41,8 @@ table.d-mailer-cards-medium[
             ]
               .d-mailer-cards-medium__content-inner
                 - if @title.present?
-                  h2.d-mailer-cards-medium__title = @title
+                  *link_with_fallback_tag
+                    h2.d-mailer-cards-medium__title = @title
 
                 = content
 
