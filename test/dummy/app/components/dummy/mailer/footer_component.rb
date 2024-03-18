@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Dummy::Mailer::FooterComponent < ApplicationComponent
-  def initialize(site:, logo: false)
+  def initialize(site:, logo: false, menu: nil)
     @site = site
     @logo = logo
+    @menu = menu
   end
 
   def contact_details
@@ -18,11 +19,7 @@ class Dummy::Mailer::FooterComponent < ApplicationComponent
     h
   end
 
-  def current_footer_menu
-    @current_footer_menu ||= Folio::Menu.where(type: "Dummy::Menu::Footer").first
-  end
-
-  def menu
-    @menu ||= current_footer_menu
+  def current_footer_menu?
+    @menu || Folio::Menu.where(type: "Dummy::Menu::Footer").exists?
   end
 end
