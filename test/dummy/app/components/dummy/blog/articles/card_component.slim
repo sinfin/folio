@@ -1,8 +1,24 @@
-.d-blog-articles-card
-  .container-fluid
-    .my-3
-      h2
-        a href=url_for(@article)
-          = @article.title
+article.d-blog-articles-card[
+  class=(@size ? "d-blog-articles-card--#{@size}" : nil)
+]
+  - if @article.cover_placement.present?
+    a.d-blog-articles-card__top href=url_for(@article)
+      = dummy_ui_image(@article.cover_placement,
+                       @size == :md ? MAIN_COVER_SIZE : COVER_SIZE,
+                       class_name: 'd-blog-articles-card__cover',
+                       cover: true,
+                       hover_zoom: true,
+                       border_radius: true)
 
+  .d-blog-articles-card__content
+    h2.d-blog-articles-card__title
+      a.d-blog-articles-card__link href=url_for(@article)
+        = @article.title
+
+    .d-blog-articles-card__details
       = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))
+
+      time.d-blog-articles-card__date[
+        datetime=l(@article.published_at, format: :console_html_datetime)
+      ]
+        = l(@article.published_at, format: :console_short_date)

@@ -1,0 +1,25 @@
+.d-blog-articles-show-body
+  .container-fluid
+    .d-blog-articles-show-body__row
+      main.d-blog-articles-show-body__main
+        - if @article.perex.present?
+          p.d-blog-articles-show-body__perex
+            = cstypo @article.perex
+
+        .d-blog-articles-show-body__content
+          = render_atoms_in_molecules(@article.atoms_in_molecules)
+
+      aside.d-blog-articles-show-body__recommended
+
+        h2.d-blog-articles-show-body__recommended-title.m-0
+          = t('.recommended_articles')
+
+        .d-blog-articles-show-body__recommended-articles
+
+          - if @main_recommended_article.present?
+            = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                               articles: [@main_recommended_article]))
+
+          - if @recommended_articles.present?
+            = render(Dummy::Blog::Articles::CardsComponent.new(size: :sm,
+                                                               articles: @recommended_articles))

@@ -32,6 +32,8 @@ en:
       articles:
         index:
           title: Blog
+        show_body_component:
+          recommended_articles: Recommended articles
 
       topics:
         tag_list:

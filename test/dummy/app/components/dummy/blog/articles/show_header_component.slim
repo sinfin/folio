@@ -5,10 +5,12 @@
         = dummy_ui_image(@article.cover_placement,
                         COVER_SIZE,
                         class_name: 'd-blog-articles-show-header__cover',
-                        border_radius: true,
-                        lightbox: true)
+                        border_radius: true)
 
-      h1.d-blog-articles-show-header__title
+      h1.d-blog-articles-show-header__title[
+        class=(@article.title.size >= 200 ? 'd-blog-articles-show-header__title--small'\
+              : @article.title.size >= 100 ? 'd-blog-articles-show-header__title--medium' : nil)
+      ]
         = cstypo @article.title
 
       .d-blog-articles-show-header__info
@@ -20,10 +22,12 @@
         //TODO: add real author data
         .d-blog-articles-show-header__author
           - if @article.cover_placement.present?
-            = dummy_ui_image(@article.cover_placement,
-                            AUTHOR_AVATAR_SIZE,
-                            class_name: 'd-blog-articles-show-header__author-cover',
-                            border_radius: true)
+            .d-blog-articles-show-header__author-cover
+              = dummy_ui_image(@article.cover_placement,
+                              AUTHOR_AVATAR_SIZE,
+                              cover: true,
+                              class_name: 'd-blog-articles-show-header__author-cover-image',
+                              border_radius: true)
           = "Name Surname"
 
       = render(Dummy::Blog::Articles::TopicTagsComponent.new(article: @article))

@@ -22,6 +22,14 @@ class Dummy::Blog::ArticlesController < ApplicationController
 
   def show
     force_correct_path(url_for(@article))
+
+    articles = @klass.published
+                     .ordered
+                     .by_locale(I18n.locale)
+                     .includes(:published_topics,
+                               cover_placement: :file)
+
+    @articles = pagy(articles, items: 3)
   end
 
   private

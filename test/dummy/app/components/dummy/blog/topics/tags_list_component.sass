@@ -7,10 +7,16 @@
     border-radius: $border-radius-pill
     justify-content: center
     align-items: center
-    padding: 0 $grid-gutter-half
+    padding: $grid-gutter-base $grid-gutter-half
     color: $shade-700
     +font-size-text-s
+    font-weight: $font-weight-semibold
     text-decoration: none
+    line-height: 1
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    max-width: px-to-rem(200px)
     &:hover
       border-color: $brand-200
       color: $brand-200

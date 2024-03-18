@@ -1,0 +1,59 @@
+.d-blog-articles-show-body
+  &__row
+    display: flex
+    gap: 1.5*$grid-gutter-width
+    align-items: flex-start
+    flex-direction: column
+    +media-breakpoint-up(lg)
+      flex-direction: row
+      align-items: flex-start
+      justify-content: space-between
+
+  &__main
+    flex: 1 1 auto
+    overflow: hidden
+    text-overflow: ellipsis
+
+  &__recommended
+    display: flex
+    gap: $grid-gutter-width
+    flex-direction: column
+    +media-breakpoint-up(lg)
+      flex: 0 0 px-to-rem(360px) + 2 * $grid-gutter-width
+      padding-left: 1.5*$grid-gutter-width
+      border-left: 1px solid $transparent-200
+
+  &__recommended-articles
+    display: flex
+    gap: $grid-gutter-width
+    flex-direction: column
+    flex-wrap: nowrap
+    align-items: flex-start
+    +media-breakpoint-up(md)
+      flex-direction: row
+    +media-breakpoint-up(lg)
+      flex-direction: column
+
+  &__recommended-title
+    +font-size-display-xs
+    font-weight: $font-weight-bold
+    margin: 0 0 $grid-gutter-half 0
+
+  &__perex
+    margin-bottom: 5*$grid-gutter-base
+    padding-bottom: $grid-gutter-width
+    position: relative
+    +font-size-text-xl
+    font-weight: $font-weight-semibold
+    &:after
+      content: ""
+      position: absolute
+      left: 0
+      bottom: 0
+      display: block
+      width: px-to-rem(100px)
+      height: px-to-rem(4px)
+      background-color: $transparent-300
+
+  &__content
+    +font-size-text-l
