@@ -1,14 +1,14 @@
 .d-mailer-button
-  /[if mso]
-    = vml_start_code
-
   a.d-mailer-button__btn[
-    href=@href
-    style="font-size:#{dimensions[2]}px;line-height:#{dimensions[1]}px;width:#{dimensions[0]}px;"
-    class="btn btn-#{type}"
+    href=(@href.present? ? @href : "#")
+    class="btn btn-#{type} btn-#{size}"
+    target="_blank"
+    rel="noopener"
   ]
-    = @label
-
-  - if type == "primary"
     /[if mso]
-      = vml_end_code
+      = mso_padding_start
+
+    = label
+
+    /[if mso]
+      = mso_padding_end
