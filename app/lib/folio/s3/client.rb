@@ -23,7 +23,7 @@ module Folio::S3::Client
   end
 
   def s3_ls(prefix, max_keys: 1000)
-    s3_client.list_objects_v2(
+    s3_client.list_objects(
       bucket: s3_bucket,
       prefix:,
       max_keys:,
