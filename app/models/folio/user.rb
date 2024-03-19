@@ -290,10 +290,13 @@ class Folio::User < Folio::ApplicationRecord
     end
   end
 
-  def currently_allowed_actions_with(subject, ability_class = nil)
+  def currently_allowed_actions_with(subject, site: nil)
     return [] unless subject.respond_to?(:currently_available_actions)
 
-    ability = (ability_class || Folio::Ability).new(self)
+    site ||= subject&.try(:site)
+    subject = site if subject.blank?
+    ability = Folio::Ability.new(self, site)
+
     subject.currently_available_actions(self).select { |action| ability.can?(action, subject) }
   end
 
