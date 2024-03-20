@@ -1,0 +1,123 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-cards-lot
+    width: 100%
+
+    &__wrapper
+      padding: $mailer-gap-g 0 0 0
+
+    &__inner
+      width: 100%
+      background-color: $cloud-100
+      border-radius: $mailer-border-radius
+
+    &__inner-wrapper
+      font-size: 0
+      padding: $mailer-gap-f 0 0 0
+
+    &__image-wrapper, &__content-wrapper
+      display: inline-block
+      vertical-align: top
+
+    &__image-wrapper
+      padding: 0
+      width: 100%
+      max-width: 256px
+      vertical-align: top
+      text-align: left
+
+    &__image-inner
+      padding: 0 0 $mailer-gap-f $mailer-gap-f
+
+    &__image
+      box-shadow: $mailer-box-shadow
+
+    &__content-wrapper
+      width: 100%
+      max-width: 392px
+      vertical-align: top
+
+    &__content-wrapper.col-full
+      max-width: 100%
+
+    &__content-inner
+      padding: $mailer-gap-d $mailer-gap-f $mailer-gap-g $mailer-gap-g
+      text-align: left
+
+    &__author
+      +mailer-font-size-display-s
+      font-weight: $font-weight-bold
+
+    &__name
+      +mailer-font-size-text-xl
+
+    &__event
+      margin: $mailer-gap-a 0 0 0
+
+    &__event-type, &__event-name
+      +mailer-font-size-text-s
+
+    &__event-type
+      color: $cloud-700
+
+    &__event-name
+      color: $cloud-500
+
+    &__description-row
+      +mailer-font-size-text-s
+      color: $cloud-700
+
+    &__id-wrapper
+      margin: $mailer-gap-b 0 0 0
+
+    &__id, &__id-prefix
+      +mailer-font-size-text-xs
+      color: $cloud-400
+
+    &__auction-status
+      +mailer-font-size-text-m
+      font-weight: $font-weight-medium
+      margin: 0 0 $mailer-gap-a 0
+
+    &__current-price
+      margin: 0 0 $mailer-gap-b 0
+
+    &__price-label, &__price, &__currency
+      +mailer-font-size-text-m
+
+    &__price-label
+      font-weight: $font-weight-medium
+
+    &__price, &__currency
+      font-weight: $font-weight-bold
+      color: $mailer-brand-200
+
+    &__limiting-end-wrapper
+      margin: $mailer-gap-a 0 0 0
+
+    &__auction-date-label, &__auction-date,
+    &__limiting-end-label, &__limiting-end
+      +mailer-font-size-text-xs
+
+    &__auction-date-label,
+    &__limiting-end-label
+      font-weight: $font-weight-medium
+      color: $cloud-500
+
+    &__auction-date,
+    &__limiting-end
+      color: $cloud-400
+
+    &__whitespace-s
+      +mailer-font-size-text-s
+
+    &__whitespace-m
+      +mailer-font-size-text-m
+
+    &__hr
+      height: 1px
+      //width: 100%
+      background-color: $cloud-200
+      margin: $mailer-gap-e 0
+      padding: 0

@@ -1,0 +1,15 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  h3, .h3
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-g 0 $mailer-gap-b 0 !important
+
+  h4, .h4
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+     margin: $mailer-gap-b 0 $mailer-gap-b 0 !important
+
+  h5, .h5,
+  h6, .h6
+    +mailer-media-breakpoint-down($mailer-breakpoint-mobile)
+      margin: $mailer-gap-a 0 $mailer-gap-a 0 !important

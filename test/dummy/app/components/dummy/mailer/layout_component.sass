@@ -1,0 +1,42 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-layout
+    text-size-adjust: 100%
+    -webkit-text-size-adjust: 100%
+    -ms-text-size-adjust: 100%
+    background-color: $primary-white
+
+    &__table
+      width: 100%
+
+    &__main-wrapper, &__footer-wrapper
+      padding: 0
+
+    &__footer
+      background: $cloud-100
+
+    &__container
+      width: 94%
+      max-width: 744px
+      text-align: left
+
+    &__wrapper
+      padding: 0 $mailer-gap-d 0 $mailer-gap-d
+
+    &__content
+      width: 100%
+      max-width: 648px
+
+    &__content-inner
+      padding: 0 0 80px 0
+
+    &__hidden-preview-text
+      display: none
+      max-height: 0px
+      overflow: hidden
+
+    &__hidden-preview-hack
+      display: none
+      max-height: 0px
+      overflow: hidden

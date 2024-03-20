@@ -1,0 +1,46 @@
+$dummy-mailer-styles: false !default
+
+@if $dummy-mailer-styles
+  .d-mailer-footer
+    width: 100%
+    max-width: 648px
+
+    &__logo-wrapper, &__contact-wrapper
+      padding: $mailer-gap-g 0 0 0
+
+    &__socials-title-wrapper
+      padding: $mailer-gap-h 0 $mailer-gap-d 0
+
+    &__socials-table-wrapper
+      padding: 0 0 $mailer-gap-g 0
+
+    &__menu-wrapper
+      padding: 0
+
+    &__legal-wrapper
+      +mailer-font-size-text-m
+      padding: $mailer-gap-c 0 $mailer-gap-g 0
+      color: $cloud-400
+
+    &__logo-link
+      display: inline-block
+
+    &__contact-title, &__socials-title
+      +mailer-font-size-display-xs
+      display: block
+
+    &__contact-title
+      margin: 0 0 $mailer-gap-d 0
+
+    &__contact-detail
+      +mailer-font-size-text-m
+      display: block
+      margin: 0 0 $mailer-gap-a 0
+
+      &:last-child
+        margin: 0
+
+    // rule for additional link tag added by mail clients
+    &__contact-detail > a
+      color: $cloud-600
+      text-decoration: none

@@ -1,0 +1,45 @@
+table.d-mailer-footer[
+  role="presentation"
+]
+  - if @logo
+    tr
+      td.d-mailer-footer__logo-wrapper
+        a[
+          href="#"
+          class="d-unlink"
+          class="d-mailer-footer__logo-link"
+        ]
+          img[
+            src="https://auctea-com.s3.amazonaws.com/auctea/mailer/auctify_logo.svg"
+            alt="logo"
+            width="100"
+          ]
+
+  - if contact_details.present?
+    tr
+      td.d-mailer-footer__contact-wrapper
+        span.d-mailer-footer__contact-title.fw-bold
+          = t('.contact')
+
+        - contact_details.each do |key, value|
+          span.d-mailer-footer__contact-detail
+            = value
+
+  - if @site.social_links.present?
+    tr
+      td.d-mailer-footer__socials-title-wrapper
+        span.d-mailer-footer__socials-title.fw-bold
+          = t('.follow_us')
+
+    tr
+      td.d-mailer-footer__socials-table-wrapper
+        = render(Dummy::Mailer::SocialsComponent.new(site: @site))
+
+  - if menu
+    tr
+      td.d-mailer-footer__menu-wrapper
+        = render(Dummy::Mailer::FooterMenuComponent.new(site: @site))
+
+  tr
+    td.d-mailer-footer__legal-wrapper
+      = @site.copyright_info
