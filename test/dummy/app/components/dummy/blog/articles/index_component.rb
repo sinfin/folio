@@ -10,9 +10,8 @@ class Dummy::Blog::Articles::IndexComponent < ApplicationComponent
     if active_pagy?
       @small_articles = articles_a
     else
-      @main_article = articles_a.shift
-      @secondary_articles = articles_a.shift(2)
-      @small_articles = articles_a
+      @main_articles = articles_a.shift(7)
+      @secondary_articles = articles_a
     end
   end
 

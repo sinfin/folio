@@ -1,3 +1,11 @@
 .d-blog-articles-cards
-  - @articles.each do |article|
-    = render(Dummy::Blog::Articles::CardComponent.new(article:, size: @size))
+  .row.align-items-stretch
+    - @articles.each_with_index do |article, index|
+      -if @hero_size && index == 0
+        .col-12.mb-4
+          = render(Dummy::Blog::Articles::CardComponent.new(article:, size: @hero_size))
+      -else
+        .mb-4[
+         class=@column_classes
+        ]
+          = render(Dummy::Blog::Articles::CardComponent.new(article:, size: @size))

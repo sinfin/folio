@@ -4,7 +4,12 @@
   - if @topic.perex.present?
     .lead == cstypo simple_format @topic.perex
 
-= render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                   articles: @articles))
+  / TODO: add a custom content as in figma
+  / = render_atoms_in_molecules(@topic.atoms_in_molecules)
 
-= render(Dummy::Ui::PagyComponent.new(pagy: @pagy))
+  = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                     hero_size: :lg,
+                                                     column_classes: "col-12 col-sm-6 col-lg-4",
+                                                     articles: @articles))
+
+  = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))

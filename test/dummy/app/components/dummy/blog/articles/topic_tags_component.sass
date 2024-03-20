@@ -17,9 +17,16 @@
     overflow: hidden
     text-overflow: ellipsis
     max-width: px-to-rem(200px)
+    transition: color 0.15s ease, background-color 0.15s ease, border 0.15s ease
     &:hover
       border-color: $brand-200
       color: $brand-200
+      background-color: $shade-light-contrast
+
+    &--primary
+      border-color: $brand-200
+      background-color: $brand-200
+      color: $shade-light-contrast
 
   &--sm
     .d-blog-articles-topic-tags__item

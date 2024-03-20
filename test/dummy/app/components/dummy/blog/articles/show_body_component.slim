@@ -15,11 +15,7 @@
           = t('.recommended_articles')
 
         .d-blog-articles-show-body__recommended-articles
-
-          - if @main_recommended_article.present?
-            = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
-                                                               articles: [@main_recommended_article]))
-
           - if @recommended_articles.present?
             = render(Dummy::Blog::Articles::CardsComponent.new(size: :sm,
+                                                               hero_size: :md,
                                                                articles: @recommended_articles))

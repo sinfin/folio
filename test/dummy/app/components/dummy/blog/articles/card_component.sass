@@ -6,8 +6,10 @@
   align-items: flex-start
   justify-content: flex-start
   gap: 2*$grid-gutter-base
+  height: 100%
   &__content
-    flex: 1
+    flex: 1 1 auto
+    align-self: center
 
   &__top
     position: relative
@@ -22,7 +24,7 @@
   &__title
     +font-size-display-xs
     font-weight: $font-weight-bold
-    text-overflow: ellipsis
+    +line-clamp(6)
     margin: 0 0 $grid-gutter-base 0
     +media-breakpoint-up(lg)
       +line-clamp(5)
@@ -37,6 +39,7 @@
     flex-wrap: wrap
     gap: $grid-gutter-half
     align-items: center
+    margin-top: auto
 
   &__date
     color: $shade-400
@@ -50,11 +53,13 @@
       height: 0
       padding-bottom: 61.1111%
       width: 100%
-      flex: 1
 
     .d-blog-articles-card
       &__content
-        padding: 0 $grid-gutter-half $grid-gutter-width
+        padding: 0 2*$grid-gutter-base $grid-gutter-width
+        display: flex
+        flex-direction: column
+        align-self: flex-start
 
       &__title
         margin-bottom: $grid-gutter-width
