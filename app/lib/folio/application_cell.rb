@@ -66,7 +66,11 @@ class Folio::ApplicationCell < Cell::ViewModel
     end
   end
 
-  delegate :can_now?, to: :controller
+  # same as in Folio::ApplicationControllerBase but using "options hacks"
+  def can_now?(action, object = nil)
+    object ||= current_site
+    (current_user || Folio::User.new).can_now_by_ability?(current_ability, action, object)
+  end
 
   def current_site
     get_from_options_or_controller(:current_site)
@@ -74,6 +78,10 @@ class Folio::ApplicationCell < Cell::ViewModel
 
   def current_user
     get_from_options_or_controller(:current_user)
+  end
+
+  def current_ability
+    options[:current_ability] || Folio::Ability.new(current_user, current_site)
   end
 
   def user_signed_in?
