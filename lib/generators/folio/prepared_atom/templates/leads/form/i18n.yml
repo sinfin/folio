@@ -1,0 +1,13 @@
+---
+cs:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/leads/form: 
+    models:
+      application_namespace_path/atom/leads/form: Kontaktní formulář
+en:
+  activerecord:
+    attributes:
+      application_namespace_path/atom/leads/form: 
+    models:
+      application_namespace_path/atom/leads/form: Contact form

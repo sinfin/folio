@@ -17,6 +17,8 @@
 //= require folio/modal
 //= require folio/nested_fields_component
 //= require folio/newsletter_subscriptions/form_component
+//= require folio/leads/form_component
+//= require folio/recaptcha_field_component
 //= require folio/dropzone_component
 
 //= require folio/image/image

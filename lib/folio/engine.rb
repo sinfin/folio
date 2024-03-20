@@ -83,7 +83,7 @@ module Folio
 
     config.folio_content_templates_editable = false
 
-    config.folio_leads = false
+    config.folio_leads_from_component_class_name = nil
     config.folio_newsletter_subscriptions = false
 
     config.folio_users_use_phone = false

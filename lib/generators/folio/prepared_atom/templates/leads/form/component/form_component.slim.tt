@@ -1,0 +1,6 @@
+.<%= classname_prefix %>-atom.<%= classname_prefix %>-atom-leads-form.my-atom-lg
+  .container-fluid
+    - if @atom.title.present?
+      h2.mt-0 = cstypo @atom.title
+
+    = render(lead_component.new)

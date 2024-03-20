@@ -54,6 +54,9 @@ cellphone_text:
 check:
   width: 24
   height: 24
+check_circle:
+  width: 24
+  height: 24
 check_circle_outline:
   width: 24
   height: 24
