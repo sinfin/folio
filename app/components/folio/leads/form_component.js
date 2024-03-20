@@ -1,3 +1,5 @@
+//= require folio/form_to_hash
+
 window.Folio.Stimulus.register('f-leads-form', class extends window.Stimulus.Controller {
   static targets = ['form']
 
