@@ -4,10 +4,18 @@ en:
     attributes:
       dummy/atom/cards/person:
         large: Big image
+      dummy/atom/divider:
+        variant: Variant
+        variant/default: Default
+        variant/thin: Thin line
+        variant/thick: Thick line
+        variant/invisible: Space only
       dummy/atom/image_and_content:
         image_side: Image
         image_side/left: On the left
         image_side/right: On the right
+      dummy/atom/quotation:
+        large: Bigger font
       dummy/atom/text:
         highlight: Highlight
         highlight/nil: None
@@ -16,12 +24,6 @@ en:
         highlight/success: Green
         highlight/neutral: Blue
         highlight/gray: Gray
-      dummy/atom/divider:
-        variant: Variant
-        variant/default: Default
-        variant/thin: Thin line
-        variant/thick: Thick line
-        variant/invisible: Space only
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -29,8 +31,6 @@ en:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
-      dummy/atom/quotation:
-        large: Bigger font
     models:
       dummy/atom/cards/extra_small: Card - extra small
       dummy/atom/cards/full_width: Card - full width
@@ -42,6 +42,7 @@ en:
       dummy/atom/cards/person: Card - person
       dummy/atom/cards/small: Card - small
       dummy/atom/divider: Divider
+      dummy/atom/embed: Embed
       dummy/atom/image_and_content: Image & content
       dummy/atom/images/gallery: Images - gallery
       dummy/atom/images/grid_gallery: Images - gallery (grid)

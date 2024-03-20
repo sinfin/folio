@@ -5,10 +5,18 @@ cs:
       dummy/atom/cards/person:
         large: Velký obrázek
         job: Pozice
+      dummy/atom/divider:
+        variant: Varianta
+        variant/default: Výchozí
+        variant/thin: Tenká linka
+        variant/thick: Tlustá linka
+        variant/invisible: Pouze mezera
       dummy/atom/image_and_content:
         image_side: Obrázek
         image_side/left: Nalevo
         image_side/right: Napravo
+      dummy/atom/quotation:
+        large: Velké písmo
       dummy/atom/text:
         highlight: Zvýraznění
         highlight/nil: Žádné
@@ -17,12 +25,6 @@ cs:
         highlight/success: Zelené
         highlight/neutral: Modré
         highlight/gray: Šedé
-      dummy/atom/divider:
-        variant: Varianta
-        variant/default: Výchozí
-        variant/thin: Tenká linka
-        variant/thick: Tlustá linka
-        variant/invisible: Pouze mezera
       dummy/atom/title:
         tag: Tag
         tag/H1: H1
@@ -30,8 +32,6 @@ cs:
         tag/H3: H3
         tag/H4: H4
         tag/H5: H5
-      dummy/atom/quotation:
-        large: Velké písmo
     models:
       dummy/atom/cards/extra_small: Karta - extra malá
       dummy/atom/cards/full_width: Karta - na celou šířku
@@ -43,6 +43,7 @@ cs:
       dummy/atom/cards/person: Karta - osoba
       dummy/atom/cards/small: Karta - malá
       dummy/atom/divider: Oddělovač
+      dummy/atom/embed: Embed
       dummy/atom/image_and_content: Obrázek a obsah
       dummy/atom/images/gallery: Obrázky - galerie
       dummy/atom/images/grid_gallery: Obrázky - galerie v mřížce

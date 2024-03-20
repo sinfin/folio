@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-class <%= application_namespace %>::Atom::<%= class_name %> < Folio::Atom::Base
+class Dummy::Atom::Embed < Folio::Atom::Base
   ATTACHMENTS = %i[]
 
-  STRUCTURE = {}
+  STRUCTURE = {
+    embed_code: :code,
+  }
 
   ASSOCIATIONS = {}
-  <%- if options[:cell] -%>
 
-  def self.cell_name
-    "<%= atom_cell_name %>"
-  end
-  <%- end -%>
+  validates :embed_code,
+            presence: true
 end
 
 # == Schema Information
