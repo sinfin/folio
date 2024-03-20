@@ -29,7 +29,7 @@ class Folio::PreparedAtomGenerator < Rails::Generators::NamedBase
     if name == "all"
       keys = allowed_keys
     elsif allowed_keys.include?(name)
-      keys = [name.to_sym]
+      keys = [name]
     else
       raise UnknownAtomKey, "Unknown atom key #{name}. Allowed keys: #{allowed_keys.join(', ')}"
     end
