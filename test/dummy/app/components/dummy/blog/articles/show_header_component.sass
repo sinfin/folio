@@ -27,9 +27,58 @@
         +font-size-display-s
 
   &__cover
+    position: relative
+
+  &__cover-img
     margin: 0 -4*$grid-gutter-base 0 -4*$grid-gutter-base
     +media-breakpoint-up(sm)
       margin: 0 0 $grid-gutter-base
+
+  &__credits
+    position: absolute
+    z-index: 2
+    right: 0
+    bottom: $grid-gutter-half
+    max-width: 100%
+    border-radius: $border-radius
+    color: $shade-light-contrast
+    cursor: help
+    overflow: hidden
+    display: inline-flex
+    align-items: flex-start
+    justify-content: flex-start
+    flex-wrap: nowrap
+    background-color: $transparent-500
+    padding: $grid-gutter-base/2
+    +font-size-text-xs
+    +media-breakpoint-up(sm)
+      right: 2.5*$grid-gutter-base
+      bottom: 2.5*$grid-gutter-base
+      max-width: calc(100% - #{2.5*$grid-gutter-base})
+
+    &:hover, &:active
+      .d-blog-articles-show-header__credits-text
+        display: inline-block
+        overflow: hidden
+        max-width: none
+        +line-clamp(3)
+
+  &__credits-icon
+    flex: 0 0 px-to-rem(16px)
+    height: px-to-rem(16px)
+    display: flex
+    align-items: center
+    justify-content: center
+
+  &__credits-text
+    flex: 1
+    overflow: hidden
+    width: 100%
+    +line-clamp(3)
+    display: none
+    margin: 0
+    line-height: 1.2
+    padding: px-to-rem(1px) $grid-gutter-base/2 0
 
   &__info
     display: flex

@@ -35,7 +35,7 @@ cs:
         index:
           title: Blog
         show_body_component:
-          recommended_articles: Doporučené články
+          recommended_articles: Vybrané články
 
       topics:
         tag_list:
