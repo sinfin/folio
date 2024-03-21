@@ -5,7 +5,8 @@
         - if @article.cover_placement.present?
           = dummy_ui_image(@article.cover_placement,
                           COVER_SIZE,
-                          class_name: 'd-blog-articles-show-header__cover-img',
+                          class_name: \
+                          'd-blog-articles-show-header__cover-img',
                           border_radius: true)
 
         / TODO: Photo author/alt/title
