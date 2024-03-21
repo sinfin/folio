@@ -1,8 +1,14 @@
 .d-blog-articles-index
   .container-fluid
+    h1.d-blog-articles-index__title
+      = t('.blog')
+
+    // TODO: add editable optional blog intro
+    p.d-blog-articles-index__perex Lorem Ipsum blog intro here
+
     .mb-4
       - if @topics.present? && !active_pagy?
-        = render(Dummy::Blog::Topics::TagsListComponent.new(topics: @topics))
+        = render(Dummy::Blog::Topics::ListComponent.new(topics: @topics))
 
     - if @main_articles.present?
       = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,

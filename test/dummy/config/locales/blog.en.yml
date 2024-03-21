@@ -5,12 +5,15 @@ en:
       dummy/blog/article:
         topic: Topic
         topics: Topics
+
       dummy/blog/topic:
         articles_count: Articles
+
     models:
       dummy/blog/article:
         one: Article
         other: Articles
+
       dummy/blog/topic:
         one: Topic
         other: Topics
@@ -32,9 +35,13 @@ en:
       articles:
         index:
           title: Blog
+
         show_body_component:
           recommended_articles: Recommended articles
 
       topics:
-        tag_list:
+        list_component:
           topics: "Topics:"
+          all: All
+          collapse: Collapse
+          expand: Expand

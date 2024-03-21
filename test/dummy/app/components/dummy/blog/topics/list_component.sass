@@ -1,0 +1,117 @@
+.d-blog-topics-list
+  position: relative
+  &__list
+    display: flex
+    flex-wrap: wrap
+    gap: $grid-gutter-base
+    padding-right: px-to-rem(100px)
+    overflow: hidden
+    max-height: 1.75rem
+  &__item
+    display: flex
+    padding: 0
+    margin: 0
+    &--chosen
+      .d-blog-topics-list
+        &__link
+          border-color: $brand-200
+          background-color: $brand-200
+          color: $shade-light-contrast
+          padding-right: px-to-rem(30px)
+          position: relative
+          &:before, &:after
+            content: ""
+            width: px-to-rem(14px)
+            height: px-to-rem(1px)
+            display: block
+            position: absolute
+            right: $grid-gutter-half
+            top: 50%
+            margin-top: px-to-rem(-0.5px)
+            background-color: $shade-light-contrast
+            border-radius: $border-radius
+            transition: background-color 0.15s ease
+
+          &:before
+            transform: rotate(45deg)
+
+          &:after
+            transform: rotate(-45deg)
+
+      &:hover
+        .d-blog-topics-list
+          &__link
+              &:before, &:after
+                background-color: $brand-200
+
+    &--reset
+      .d-blog-topics-list__link
+          padding-right: $grid-gutter-half
+          &:before, &:after
+            display: none
+
+  &__link
+    max-width: px-to-rem(300px)
+    border: 1px solid $transparent-200
+    border-radius: $border-radius-pill
+    justify-content: center
+    align-items: center
+    padding: $grid-gutter-half/2 $grid-gutter-half
+    color: $shade-700
+    +font-size-text-s
+    font-weight: $font-weight-semibold
+    text-decoration: none
+    line-height: 1
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    transition: color 0.15s ease, background-color 0.15s ease, border 0.15s ease
+    &:hover
+      border-color: $brand-200
+      color: $brand-200
+      background-color: $shade-light-contrast
+
+  &__toggle-text
+    display: inline-block
+    position: absolute
+    right: 0
+    color: $brand-200
+    padding-right: px-to-rem(30px)
+    font-weight: $font-weight-semibold
+    &:before, &:after
+      content: ""
+      width: px-to-rem(8px)
+      height: px-to-rem(1px)
+      display: block
+      position: absolute
+      right: $grid-gutter-half
+      top: 50%
+      background-color: $brand-200
+      border-radius: $border-radius
+
+    &:before
+      transform: rotate(45deg) translate(-2px, 2px)
+
+    &:after
+      transform: rotate(-45deg) translate(2px, 2px)
+
+  &__toggle-collapse
+    display: none
+
+  &__toggle-input:checked ~ .d-blog-topics-list
+    &__toggle-text
+      &:before
+        transform: rotate(-45deg) translate(-2px, -2px)
+
+      &:after
+        transform: rotate(45deg) translate(2px, -2px)
+
+      .d-blog-topics-list
+        &__toggle-collapse
+          display: block
+
+        &__toggle-expand
+          display: none
+
+    &__list
+      max-height: none

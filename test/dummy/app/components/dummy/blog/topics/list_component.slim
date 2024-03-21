@@ -1,0 +1,31 @@
+.d-blog-topics-list
+  input[
+    hidden=true
+    class="d-blog-topics-list__toggle-input"
+    id="d-blog-topics-list__toggle-input"
+    type="checkbox"
+  ]
+
+  label.d-blog-topics-list__toggle-text for="d-blog-topics-list__toggle-input"
+    span.d-blog-topics-list__toggle-expand
+      =t('.expand')
+
+    span.d-blog-topics-list__toggle-collapse
+      =t('.collapse')
+
+  ul.d-blog-topics-list__list
+    li.d-blog-topics-list__item[
+      class="d-blog-topics-list__item--reset"
+      class=([true, false].sample ? 'd-blog-topics-list__item--chosen' : nil)
+    ]
+      / TODO: add reset button functionality
+      a.d-blog-topics-list__link href='#'
+        = t('.all')
+
+    - @topics.each do |topic|
+      / TODO: add topic chosen functionality
+      li.d-blog-topics-list__item[
+        class=([true, false].sample ? 'd-blog-topics-list__item--chosen' : nil)
+      ]
+        a.d-blog-topics-list__link href=url_for(topic)
+          = topic.title

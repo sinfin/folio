@@ -5,13 +5,16 @@ cs:
       dummy/blog/article:
         topic: Téma
         topics: Témata
+
       dummy/blog/topic:
         articles_count: Články
+
     models:
       dummy/blog/article:
         one: Článek
         few: Články
         other: Článků
+
       dummy/blog/topic:
         one: Téma
         few: Témata
@@ -34,9 +37,13 @@ cs:
       articles:
         index:
           title: Blog
+
         show_body_component:
           recommended_articles: Vybrané články
 
       topics:
-        tag_list:
+        list_component:
           topics: "Témata:"
+          all: "Vše"
+          collapse: Sbalit
+          expand: Rozbalit

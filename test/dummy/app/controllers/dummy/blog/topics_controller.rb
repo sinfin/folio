@@ -19,6 +19,6 @@ class Dummy::Blog::TopicsController < ApplicationController
                        .includes(:published_topics,
                                  cover_placement: :file)
 
-      @pagy, @articles = pagy(articles, items: 20)
+      @pagy, @articles = pagy(articles, items: 12)
     end
 end
