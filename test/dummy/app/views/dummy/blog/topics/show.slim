@@ -2,7 +2,7 @@
   h1 = cstypo @topic.title
 
   - if @topic.perex.present?
-    .lead == cstypo simple_format @topic.perex
+    .lead.mb-4 == cstypo simple_format @topic.perex
 
   / TODO: add a custom content as in figma
   / = render_atoms_in_molecules(@topic.atoms_in_molecules)

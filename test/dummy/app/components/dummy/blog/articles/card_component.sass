@@ -51,6 +51,8 @@
     align-items: stretch
     border: 1px solid $transparent-200
     height: 100%
+    overflow: hidden
+    gap: $grid-gutter-width
 
     .d-blog-articles-card
       &__top
@@ -71,7 +73,6 @@
   &--lg
     background-color: $shade-100
     border: 1px solid $shade-100
-    overflow: hidden
 
     +media-breakpoint-up(sm)
       flex-direction: row
