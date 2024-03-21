@@ -4,11 +4,11 @@ article.d-blog-articles-card[
   - if @article.cover_placement.present?
     a.d-blog-articles-card__top href=url_for(@article)
       = dummy_ui_image(@article.cover_placement,
-                       @size == :md ? MAIN_COVER_SIZE : COVER_SIZE,
+                       cover_size,
                        class_name: 'd-blog-articles-card__cover',
                        cover: true,
                        hover_zoom: true,
-                       border_radius: true)
+                       border_radius: @size != :lg ? true: false,)
 
   .d-blog-articles-card__content
     h2.d-blog-articles-card__title

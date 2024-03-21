@@ -1,11 +1,17 @@
 .d-blog-articles-cards
   .row.align-items-stretch
-    - @articles.each_with_index do |article, index|
-      -if @hero_size && index == 0
-        .col-12.mb-4
-          = render(Dummy::Blog::Articles::CardComponent.new(article:, size: @hero_size))
-      -else
-        .mb-4[
-         class=@column_classes
-        ]
-          = render(Dummy::Blog::Articles::CardComponent.new(article:, size: @size))
+    -if @hero_size
+      .mb-4[
+        class=@hero_classes
+      ]
+        = render(Dummy::Blog::Articles::CardComponent.new(article: @hero_article,
+                                                          size: @hero_size))
+
+    div class=@container_classes
+      .row.align-items-stretch
+        - @articles.each do |article|
+          .mb-4[
+           class=@column_classes
+          ]
+            = render(Dummy::Blog::Articles::CardComponent.new(article:,
+                                                              size: @size))

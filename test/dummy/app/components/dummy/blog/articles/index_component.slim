@@ -1,17 +1,20 @@
 .d-blog-articles-index
   .container-fluid
-    - if @topics.present? && !active_pagy?
-      = render(Dummy::Blog::Topics::TagsListComponent.new(topics: @topics))
+    .mb-4
+      - if @topics.present? && !active_pagy?
+        = render(Dummy::Blog::Topics::TagsListComponent.new(topics: @topics))
 
     - if @main_articles.present?
       = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
                                                          hero_size: :lg,
-                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+                                                         column_classes: \
+                                                         "col-12 col-sm-6 col-lg-4",
                                                          articles: @main_articles))
 
     - if @secondary_articles.present?
-      = render(Dummy::Blog::Articles::CardsComponent.new(size: :sm,
-                                                         column_classes: "col-12 col-sm-6 col-lg-4",
+      = render(Dummy::Blog::Articles::CardsComponent.new(size: :md,
+                                                         column_classes: \
+                                                         "col-12 col-sm-6 col-lg-4",
                                                          articles: @secondary_articles))
 
     = render(Dummy::Ui::PagyComponent.new(pagy: @pagy))

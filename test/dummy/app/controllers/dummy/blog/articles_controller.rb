@@ -11,7 +11,7 @@ class Dummy::Blog::ArticlesController < ApplicationController
                      .includes(:published_topics,
                                cover_placement: :file)
 
-    @pagy, @articles = pagy(articles, items: 10)
+    @pagy, @articles = pagy(articles, items: 12)
 
     @topics = Dummy::Blog::Topic.published
                                 .by_locale(I18n.locale)
